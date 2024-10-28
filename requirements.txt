@@ -1,0 +1,50 @@
+# ==========================
+# RULES
+# 1=DONT USE MINUS in moduleNames!!! thi and all next moduls will not applyed!!!
+# 2=how to install
+#   pip install -r .\requirements.txt               # without upgrade option is not enough!
+#   pip install -u -r .\requirements.txt            # just -u may not be recognized
+#   pip install --upgrade -r .\requirements.txt     # full "--upgrate" is the best way!
+
+# --------------------------
+# VERSION = (0, 0, 1)   # just add version
+# VERSION = (0, 0, 2)   # add funcs-aux
+# VERSION = (0, 0, 3)   # add block NESTED REQUIREMENTS
+# VERSION = (0, 0, 4)   # add logger-aux
+# VERSION = (0, 0, 5)   # add pytest-aux
+# VERSION = (0, 0, 6)   # add nested in COMMON
+# VERSION = (0, 0, 7)   # add new block TESTS +add classes_aux into COMMON
+# VERSION = (0, 0, 8)   # add [deploy]build+twine+setuptools+cli_user +add singleton-meta in common/rename common to BASE/regroup subsets
+# VERSION = (0, 0, 9)   # fix names without Minus!
+# VERSION = (0, 0, 10)  # add installation note
+
+# BASE =====================
+# deploy -------------------
+build
+twine
+setuptools
+
+cli_user
+
+# debug/test ---------------
+pytest
+logger_aux
+object_info
+
+# common -------------------
+requirements_checker
+classes_aux
+funcs_aux
+singleton_meta
+
+# nested -------------------
+numpy
+
+# ========================================
+# SPECIAL (FOR THIS PROJECT - ROOT) ------
+
+# TESTS ----------------------------------
+
+# NESTED ---------------------------------
+
+# ========================================
