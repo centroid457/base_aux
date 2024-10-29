@@ -1,16 +1,9 @@
-from typing import *
 import pytest
+from typing import *
 
-from pytest import mark
-from funcs_aux import *
-from classes_aux import *
-
-
-# =====================================================================================================================
-# KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS SOURCE!!!
-# if you will start tests directly in IDE - it will start and work correctly from CURRENT SOURCE!
-# but if you will start in CMD/PYTEST - it would work from PYPI!!!
-from pytest_aux import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================

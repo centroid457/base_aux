@@ -1,12 +1,9 @@
 from typing import *
 import pytest
 
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from configparser import ConfigParser
-
-from pytest_aux import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================

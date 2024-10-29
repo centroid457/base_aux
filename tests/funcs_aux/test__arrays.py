@@ -1,14 +1,7 @@
-import os
-
 import numpy as np
 import pytest
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from typing import *
-from configparser import ConfigParser
 
-from funcs_aux import *
+from base_aux.funcs_aux import *
 
 
 # =====================================================================================================================

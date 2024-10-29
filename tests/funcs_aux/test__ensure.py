@@ -1,8 +1,8 @@
 import pytest
-from pytest_aux import *
-from funcs_aux import *
-from object_info import *
-from classes_aux import *
+
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================
