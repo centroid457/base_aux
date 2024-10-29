@@ -78,6 +78,14 @@ class PROJECT(PROJECT_BASE):
          "compare",
          ],
 
+        # cli_user
+        "send commands into OS terminal",
+        "check if cli commands are accessible (special utilities is installed)",
+        "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
+        "use batch timeout for list",
+        "till_first_true",
+        "counter/counter_in_list",
+
     ]
 
     # HISTORY -----------------------------------------------
