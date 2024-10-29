@@ -2,9 +2,8 @@ from typing import *
 import pathlib
 import abc
 
-from annot_attrs import AnnotAux
-
-from private_values import Exx__FileNotExists, TYPE__PATH
+from base_aux.classes_aux import AnnotAux
+from . import Exx__FileNotExists, TYPE__PATH
 
 
 # =====================================================================================================================

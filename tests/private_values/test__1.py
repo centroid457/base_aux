@@ -6,10 +6,8 @@ from tempfile import TemporaryDirectory
 from typing import *
 import abc
 
-from annot_attrs import (
-    Exx__AnnotNotDefined,
-)
-from private_values import (
+from base_aux.classes_aux import Exx__AnnotNotDefined
+from base_aux.private_values import (
     PrivateAuto,
     PrivateEnv, PrivateCsv, PrivateIni, PrivateJson,
     PrivateAuthIni, PrivateAuthJson,
