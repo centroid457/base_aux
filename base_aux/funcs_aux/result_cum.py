@@ -8,11 +8,10 @@
 but maybe leave it on!
 """
 
-
 from typing import *
-from funcs_aux import *
-from object_info import *
-from classes_aux import *
+
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

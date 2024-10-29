@@ -127,7 +127,7 @@ class PROJECT(PROJECT_BASE):
         "create class with autoInit params from ATTRS",
         "[Valid*/Value*] ref/make all nested from VALID!!!",
 
-        # object_info
+        # object_aux
         "add TIMEOUT (use start in thread!) for print! use timeout for GETATTR!!!",
         [
             "realise PRINT_DIFFS=CHANGE_state/COMPARE_objects (one from different states like thread before and after start)!",

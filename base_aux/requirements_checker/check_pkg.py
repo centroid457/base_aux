@@ -540,7 +540,7 @@ self.last_exx_timeout=None
         Requires:
         Required-by:
 
-        C:\\Users\\a.starichenko>pip show object_info
+        C:\\Users\\a.starichenko>pip show object_aux
         Name: object-info
         Version: 0.1.12
         Summary: print info about object (attributes+properties+methods results)

@@ -1,5 +1,5 @@
 from typing import *
-from funcs_aux import Explicit
+from . import Explicit
 
 
 # =====================================================================================================================

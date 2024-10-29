@@ -1,6 +1,6 @@
 from typing import *
-from object_info import TypeChecker
-from funcs_aux import TYPE__ARGS, Default, ArgsEmpty
+from base_aux.object_aux import TypeChecker
+from . import TYPE__ARGS, Default, ArgsEmpty
 
 
 # =====================================================================================================================

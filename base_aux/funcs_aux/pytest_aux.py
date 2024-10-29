@@ -3,8 +3,7 @@ import pytest
 from pytest import mark
 
 from base_aux.funcs_aux import *
-from base_aux.classes_aux import *
-from base_aux.requirements_checker import *
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================
