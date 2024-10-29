@@ -24,11 +24,8 @@ build
 twine
 setuptools
 
-cli_user
-
 # debug/test ---------------
 pytest
-logger_aux
 
 # nested -------------------
 numpy
