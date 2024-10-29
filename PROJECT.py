@@ -91,6 +91,33 @@ class PROJECT(PROJECT_BASE):
         "Flags",
         "Bits",
 
+        # private_values
+        """
+        Designed to use private data like username/pwd kept secure in OsEnvironment or Ini/Json-File for your several home projects at ones.  
+        And not open it in public.  
+    
+        **CAUTION:**  
+        in requirements for other projects use fixed version! because it might be refactored so you would get exception soon.
+        """,
+
+        ["load values to instance attrs from",
+         "Environment",
+         "IniFile",
+         "JsonFile",
+         "CsvFile",
+         "direct text instead of file",
+         "direct dict instead of file",
+         ],
+
+        ["attr access",
+         "via any lettercase",
+         "by instance attr",
+         "like dict key on instance", ],
+
+        ["work with dict", "apply", "update", "preupdate"],
+
+        "update_dict as cumulative result - useful in case of settings result",
+
     ]
 
     # HISTORY -----------------------------------------------
