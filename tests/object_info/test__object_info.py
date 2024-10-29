@@ -1,12 +1,8 @@
 from typing import *
-import pathlib
 import time
-
 import pytest
-from pytest import mark
-from pytest_aux import *
 
-from object_info import *
+from base_aux.object_aux import *
 
 from PyQt5.QtCore import QThread
 

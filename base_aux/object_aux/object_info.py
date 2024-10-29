@@ -1,6 +1,4 @@
 from typing import *
-import re
-# from enum import Enum
 from dataclasses import dataclass, astuple, asdict, field
 
 from .type_checker import *

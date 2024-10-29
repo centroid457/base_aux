@@ -1,10 +1,9 @@
 from typing import *
 
+from .primitives import LAMBDA_TRUE
+
 
 # =====================================================================================================================
-LAMBDA_TRUE = lambda *args, **kwargs: True
-
-
 class Cls:
     def meth(self):
         pass

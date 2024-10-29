@@ -1,5 +1,5 @@
 from object_info import *
-from pytest_aux import *
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================
