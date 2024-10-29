@@ -4,6 +4,7 @@
 # VERSION = (0, 0, 3)#add DrawIo *.dtmp
 # VERSION = (0, 0, 4)#add LOGS
 # VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
+# VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
 
 # HELP ---------------------
 # 1=NESTING
@@ -58,12 +59,18 @@ manage.sh
 todo.org
 *.orig
 
+# C ========================
+# extensions (not sure???)
+*.so
+
+# THIRD-PARTY ==============
+# DrawIo
+*.dtmp
+
 # USER =====================
 # TEMP ---------------------
 TEMPORARY/
 -*
-# DrawIo
-*.dtmp
 
 # user saved data ----------
 USERDATA/

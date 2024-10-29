@@ -1,37 +1,28 @@
-![Ver/TestedPython](https://img.shields.io/pypi/pyversions/funcs_aux)
+![Ver/TestedPython](https://img.shields.io/pypi/pyversions/prj_name)
 ![Ver/Os](https://img.shields.io/badge/os_development-Windows-blue)  
-![repo/Created](https://img.shields.io/github/created-at/centroid457/funcs_aux)
-![Commit/Last](https://img.shields.io/github/last-commit/centroid457/funcs_aux)
-![Tests/GitHubWorkflowStatus](https://github.com/centroid457/funcs_aux/actions/workflows/test_linux.yml/badge.svg)
-![Tests/GitHubWorkflowStatus](https://github.com/centroid457/funcs_aux/actions/workflows/test_windows.yml/badge.svg)  
-![repo/Size](https://img.shields.io/github/repo-size/centroid457/funcs_aux)
-![Commit/Count/t](https://img.shields.io/github/commit-activity/t/centroid457/funcs_aux)
-![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/funcs_aux)
-![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/funcs_aux)
+![repo/Created](https://img.shields.io/github/created-at/centroid457/prj_name)
+![Commit/Last](https://img.shields.io/github/last-commit/centroid457/prj_name)
+![Tests/GitHubWorkflowStatus](https://github.com/centroid457/prj_name/actions/workflows/test_linux.yml/badge.svg)
+![Tests/GitHubWorkflowStatus](https://github.com/centroid457/prj_name/actions/workflows/test_windows.yml/badge.svg)  
+![repo/Size](https://img.shields.io/github/repo-size/centroid457/prj_name)
+![Commit/Count/t](https://img.shields.io/github/commit-activity/t/centroid457/prj_name)
+![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/prj_name)
+![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/prj_name)
 
-# funcs_aux (current v0.4.38/![Ver/Pypi Latest](https://img.shields.io/pypi/v/funcs_aux?label=pypi%20latest))
+# prj_name (current v0.0.0/![Ver/Pypi Latest](https://img.shields.io/pypi/v/prj_name?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
-useful funcs in one place
+descr short (git/prg descr)
 
 ## DESCRIPTION_LONG
-Now its just a beginning!
-Designed to collect useful funcs in one place!
+designed for ...
 
 
 ## Features
-1. RESULTS:  
-	- Explicit - resolved ambiguity with None-result for any method result!  
-	- ResultCum  
-2. ITERABLES:  
-	- work with any iterable data by path/...  
-3. STRINGS:  
-4. ValueWithUnit:  
-	- work with multipliers  
-	- work with positive/negative  
-	- full comparing + arithmetics  
-5. ValueFromVariant  
-6. Valid  
+1. feat1  
+2. feat2:  
+	- block1  
+	- block2  
 
 
 ********************************************************************************
@@ -45,18 +36,24 @@ See the [HISTORY.md](HISTORY.md) file for release history.
 
 ## Installation
 ```commandline
-pip install funcs-aux
+pip install prj-name
 ```
 
 
 ## Import
 ```python
-from funcs_aux import *
+from prj_name import *
 ```
 
 
 ********************************************************************************
 ## USAGE EXAMPLES
 See tests, sourcecode and docstrings for other examples.  
+
+------------------------------
+### 1. example1.py
+```python
+
+```
 
 ********************************************************************************

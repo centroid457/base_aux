@@ -29,13 +29,6 @@ cli_user
 # debug/test ---------------
 pytest
 logger_aux
-object_info
-
-# common -------------------
-requirements_checker
-classes_aux
-funcs_aux
-singleton_meta
 
 # nested -------------------
 numpy
