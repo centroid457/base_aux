@@ -1,16 +1,11 @@
-import os
+from typing import *
 import time
 import pytest
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from typing import *
-from configparser import ConfigParser
 
 
 # =====================================================================================================================
 # KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS SOURCE!!!
-from logger_aux import *
+from base_aux.logger_aux import *
 
 
 # =====================================================================================================================

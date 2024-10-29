@@ -1,5 +1,5 @@
-from logger_aux import *
-from object_info import ObjectInfo
+from base_aux.logger_aux import *
+from base_aux.object_aux import ObjectInfo
 
 
 # USAGE-1=DIRECT ===================================
