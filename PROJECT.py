@@ -55,6 +55,13 @@ class PROJECT(PROJECT_BASE):
         # "feat1",
         # ["feat2", "block1", "block2"],
 
+        # classes_aux
+        "cmp - apply for cmp object with others",
+        "getattr prefix",
+        "getattr echo",
+        "middle group",
+        "Number+NumberArithm - use class as number",
+        "Annotations - work with annotations +use special abilities+use nested classes",
     ]
 
     # HISTORY -----------------------------------------------
@@ -66,7 +73,8 @@ class PROJECT(PROJECT_BASE):
         "..."
     ]
     NEWS: list[str] = [
-        "[FuncsAux]move here",
+        "[classes_aux]move here",
+
     ]
 
 
