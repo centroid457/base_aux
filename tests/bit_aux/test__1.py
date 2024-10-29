@@ -1,13 +1,6 @@
-import os
 import pytest
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
 from typing import *
-from configparser import ConfigParser
-
-from object_info import *
-from bit_aux import *
+from base_aux.bit_aux import *
 
 
 # =====================================================================================================================
