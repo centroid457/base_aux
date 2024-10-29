@@ -1,9 +1,10 @@
 import sys
 from typing import *
 import re
-from object_info import *
-from funcs_aux import *
-from classes_aux import *
+
+from base_aux.object_aux import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

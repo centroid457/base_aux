@@ -1,6 +1,7 @@
 from typing import *
-from object_info import *
 import platform
+
+from base_aux.object_aux import *
 
 
 # =====================================================================================================================

@@ -1,8 +1,8 @@
 import pytest
 from typing import *
-from object_info import ObjectInfo
 
-from requirements_checker import *
+from base_aux.object_aux import ObjectInfo
+from base_aux.requirements_checker import *
 
 
 # =====================================================================================================================

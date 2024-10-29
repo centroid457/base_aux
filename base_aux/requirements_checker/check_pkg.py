@@ -3,9 +3,8 @@ import pathlib
 import re
 import sys
 
-from funcs_aux import *
-from cli_user import CliUser
-from object_info import *
+from base_aux.cli_user import CliUser
+from base_aux.object_aux import *
 from .check_version import Version
 
 

@@ -1,10 +1,9 @@
-import pathlib
 from typing import *
-from object_info import ObjectInfo
 import pytest
-from pytest_aux import *
+import pathlib
 
-from requirements_checker import *
+from base_aux.requirements_checker import *
+from base_aux.funcs_aux import *
 
 
 # =====================================================================================================================

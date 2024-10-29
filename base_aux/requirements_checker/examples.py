@@ -1,4 +1,4 @@
-from requirements_checker import *
+from base_aux.requirements_checker import *
 
 
 ReqCheckStr_Os().bool_if__WINDOWS()

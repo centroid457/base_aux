@@ -1,10 +1,8 @@
 from typing import *
 import pytest
-from pytest import mark
-from pytest_aux import *
 
-from requirements_checker import *
-from pytest_aux import *
+from base_aux.requirements_checker import *
+from base_aux.funcs_aux import *
 
 
 # =====================================================================================================================
