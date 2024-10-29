@@ -1,8 +1,8 @@
 from typing import *
 import re
-from object_info import ObjectInfo
-from classes_aux import NumberArithmTranslateToAttr, AnnotClsKeysAsValues
+
 from . import *
+from base_aux.funcs_aux import ValueNotExist
 
 
 # =====================================================================================================================

@@ -1,10 +1,9 @@
 from typing import *
-
 import pytest
-from pytest import mark
-
 from dataclasses import dataclass
-from classes_aux import *
+
+from base_aux.classes_aux import *
+
 
 # =====================================================================================================================
 def test__raise():

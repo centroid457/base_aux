@@ -1,7 +1,6 @@
 from typing import *
-from classes_aux import AnnotAux
 
-from funcs_aux import Exx__IndexOverlayed, BreederStrSeries, Exx__ItemNotExists, Exx__IndexNotSet
+from base_aux.classes_aux import AnnotAux, Exx__IndexOverlayed, BreederStrSeries, Exx__ItemNotExists, Exx__IndexNotSet
 
 
 # =====================================================================================================================

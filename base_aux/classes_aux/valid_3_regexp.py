@@ -1,7 +1,7 @@
 from typing import *
 import re
-from object_info import *
-from . import *
+
+from . import ValidAux
 
 
 # =====================================================================================================================

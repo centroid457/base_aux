@@ -2,8 +2,9 @@ from typing import *
 import pytest
 from pytest import mark
 
-from object_info import *
-from funcs_aux import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
+from base_aux.requirements_checker import *
 
 
 # =====================================================================================================================

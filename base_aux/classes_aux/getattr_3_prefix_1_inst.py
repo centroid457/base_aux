@@ -1,5 +1,5 @@
 from typing import *
-from object_info import *
+from base_aux.object_info import *
 
 from .valid_0_aux import ValidAux
 from .getattr_1_aux import GetattrAux

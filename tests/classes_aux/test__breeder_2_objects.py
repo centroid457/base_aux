@@ -1,7 +1,8 @@
 from typing import *
 import pytest
 
-from funcs_aux import BreederObjectList, BreederObjectList_GroupType, Exx__BreederObjectList_GroupNotExists
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

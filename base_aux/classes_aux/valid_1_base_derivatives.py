@@ -1,6 +1,6 @@
 import time
 
-from funcs_aux import Valid, TYPE__VALIDATE_LINK
+from base_aux.classes_aux import Valid, TYPE__VALIDATE_LINK
 
 
 # =====================================================================================================================

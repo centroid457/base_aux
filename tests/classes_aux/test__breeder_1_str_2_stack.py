@@ -1,6 +1,7 @@
 import pytest
 
-from funcs_aux import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

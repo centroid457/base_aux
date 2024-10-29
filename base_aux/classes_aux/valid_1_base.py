@@ -1,10 +1,10 @@
 from typing import *
 import time
-from object_info import *
 
 from .valid_0_aux import ValidAux
-from .ensure import args__ensure_tuple
-from .static import *
+
+from base_aux.object_info import TypeChecker
+from base_aux.funcs_aux import TYPE__ARGS, TYPE__KWARGS, args__ensure_tuple, TYPE__EXCEPTION, TYPE__SOURCE_LINK, ValueNotExist
 
 
 # =====================================================================================================================

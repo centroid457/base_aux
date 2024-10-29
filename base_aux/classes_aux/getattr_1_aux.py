@@ -1,5 +1,5 @@
 from typing import *
-from funcs_aux import ValueNotExist
+from base_aux.funcs_aux import ValueNotExist
 
 
 # =====================================================================================================================

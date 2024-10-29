@@ -1,9 +1,8 @@
-from . import *
 from typing import *
-from object_info import ObjectInfo
-import re
 
 from .valid_1_base import Valid
+from base_aux.funcs_aux import ValueNotExist
+
 
 # =====================================================================================================================
 class Exx__ValueNotInVariants(Exception):

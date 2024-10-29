@@ -1,8 +1,8 @@
 # FIXME: need to deprecate? no!
 
 from typing import *
-from object_info import *
-from funcs_aux import *
+from base_aux.object_info import *
+from base_aux.funcs_aux import *
 
 
 # =====================================================================================================================

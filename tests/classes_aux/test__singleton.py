@@ -1,14 +1,11 @@
-import os
+from typing import *
 import pytest
 import time
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from typing import *
 import threading
 import abc
 
-from singleton_meta import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

@@ -1,9 +1,7 @@
-from typing import Any, Callable, NoReturn
+from typing import *
 
-from object_info import TypeChecker
-
-from funcs_aux import TYPE__ARGS, TYPE__KWARGS
-
+from base_aux.object_info import TypeChecker
+from base_aux.funcs_aux import TYPE__ARGS, TYPE__KWARGS
 
 # =====================================================================================================================
 class ValidAux:

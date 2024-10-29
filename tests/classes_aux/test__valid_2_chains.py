@@ -1,7 +1,7 @@
 import pytest
-from pytest_aux import *
-from funcs_aux import *
-from funcs_aux import ValidNoCum, ValidSleep, ValidChains
+
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

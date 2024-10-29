@@ -1,9 +1,8 @@
 from typing import *
-import pathlib
 import pytest
-from pytest import mark
-from pytest_aux import *
-from classes_aux import *
+
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

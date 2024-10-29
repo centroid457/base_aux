@@ -1,7 +1,7 @@
 import pytest
-from pytest_aux import *
-from annot_attrs import *
-from annot_attrs import AnnotValuesIter
+
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
 
 
 # =====================================================================================================================

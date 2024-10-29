@@ -128,8 +128,8 @@ from .valid_1_base import (
     Valid,
     # AUX
     # TYPES
-    TYPE__EXCEPTION,
-    TYPE__SOURCE_LINK,
+    # TYPE__EXCEPTION,
+    # TYPE__SOURCE_LINK,
     TYPE__VALIDATE_LINK,
     TYPE__BOOL_LINK,
     # EXX
