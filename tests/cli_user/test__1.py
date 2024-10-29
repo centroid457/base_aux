@@ -1,9 +1,11 @@
 from typing import *
 import pytest
-from pytest_aux import *
 
-from cli_user import *
-from requirements_checker import *
+from base_aux.funcs_aux import *
+from base_aux.classes_aux import *
+from base_aux.requirements_checker import *
+
+from base_aux.cli_user import *
 
 
 # =====================================================================================================================
