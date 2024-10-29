@@ -86,6 +86,11 @@ class PROJECT(PROJECT_BASE):
         "till_first_true",
         "counter/counter_in_list",
 
+        # bit_aux
+        "designed for common work with bitfields-like objects",
+        "Flags",
+        "Bits",
+
     ]
 
     # HISTORY -----------------------------------------------
