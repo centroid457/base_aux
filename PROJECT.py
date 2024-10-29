@@ -91,6 +91,8 @@ class PROJECT(PROJECT_BASE):
     # HISTORY -----------------------------------------------
     VERSION: tuple[int, int, int] = (0, 0, 0)
     TODO: list[str] = [
+        # classes_aux
+        "create class with autoInit params from ATTRS",
         "[Valid*/Value*] ref/make all nested from VALID!!!",
 
         # object_info
