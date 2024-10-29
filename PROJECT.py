@@ -62,6 +62,11 @@ class PROJECT(PROJECT_BASE):
         "middle group",
         "Number+NumberArithm - use class as number",
         "Annotations - work with annotations +use special abilities+use nested classes",
+
+        # singleton
+        "perfect singleton (maybe thread safe!)",
+        "collect all instances",
+        "check correct instantiating singletons in tree project",
     ]
 
     # HISTORY -----------------------------------------------

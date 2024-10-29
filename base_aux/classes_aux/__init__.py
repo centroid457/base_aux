@@ -193,6 +193,18 @@ from .breeder_2_objects import (
     Exx__BreederObjectList_GroupNotExists,
     Exx__BreederObjectList_ObjCantAccessIndex,
 )
+# ---------------------------------------------------------------------------------------------------------------------
+from .singleton import (
+    # BASE
+    SingletonManagerBase,
+    SingletonMetaCallClass,
+    SingletonByCallMeta,
+    SingletonByNew,
+    # AUX
+    # TYPES
+    # EXX
+    Exx_SingletonNestingLevels,
+)
 
 
 # =====================================================================================================================
