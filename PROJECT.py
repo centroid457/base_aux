@@ -68,6 +68,15 @@ class PROJECT(PROJECT_BASE):
         "collect all instances",
         "check correct instantiating singletons in tree project",
 
+        # requirements_checker
+        "check requirements (systemOs), raise/bool if no match",
+        "create fuck(?)/source and is it for check for settings",
+        ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get_installed", "check_installed)", "upgrade pip"],
+        ["[VERSION]",
+         "parse",
+         "check",
+         "compare",
+         ],
 
     ]
 
@@ -88,6 +97,10 @@ class PROJECT(PROJECT_BASE):
         "merge items Property/Meth? - cause it does not matter callable or not (just add type info block)",
 
         "add check__instance_of_user_class",
+
+        # requirements_checker
+        "add check_file"
+
     ]
     FIXME: list[str] = [
         "..."
