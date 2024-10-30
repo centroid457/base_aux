@@ -2,9 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from object_info import *
 from typing import *
-from classes_aux import AnnotValuesIter
+from base_aux.classes import AnnotValuesIter
 
 
 # =====================================================================================================================

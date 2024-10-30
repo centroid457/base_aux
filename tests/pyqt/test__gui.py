@@ -1,6 +1,6 @@
 import pytest
 from typing import *
-from pyqt_templates import *
+from base_aux.pyqt import *
 
 
 # =====================================================================================================================

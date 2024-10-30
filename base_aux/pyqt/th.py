@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from .aux import Data_
+from .zero_stuff import Data_
 
 
 # =====================================================================================================================

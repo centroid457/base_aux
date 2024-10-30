@@ -4,8 +4,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from funcs_aux import *
-from .aux import Data_
+from base_aux.funcs import *
+from base_aux.classes import *
+from .zero_stuff import Data_
 
 
 # =====================================================================================================================

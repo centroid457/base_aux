@@ -1,15 +1,12 @@
+from typing import *
 import sys
-import time
 import pathlib
-from object_info import ObjectInfo
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from typing import *
-
-from .aux import Row_, Dev_, Data_
+from .zero_stuff import Row_, Dev_, Data_
 from .tm import TableModelTemplate
 from .th import HeaderViewCB
 from .highlighter import *

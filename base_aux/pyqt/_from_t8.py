@@ -1,11 +1,9 @@
-import sys
+from typing import *
 import pathlib
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-
-from typing import *
 
 
 # =====================================================================================================================

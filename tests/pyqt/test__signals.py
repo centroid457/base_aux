@@ -1,13 +1,7 @@
-import os
-import sys
 import pytest
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
 from typing import *
-from configparser import ConfigParser
 
-from pyqt_templates import *
+from base_aux.pyqt import *
 from PyQt5.QtCore import pyqtSignal
 
 
