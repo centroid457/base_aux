@@ -118,6 +118,12 @@ class PROJECT(PROJECT_BASE):
 
         "update_dict as cumulative result - useful in case of settings result",
 
+        # threading_manager
+        "use different managers for different funcs/methods if needed",
+        "use just one decorator to spawn threads from func / methods",
+        "keep all spawned threads in list by ThreadItem objects",
+        "ThreadItem keeps result/exx/is_alive attributes!",
+        "use wait_all/terminate_all()",
     ]
 
     # HISTORY -----------------------------------------------
@@ -141,7 +147,14 @@ class PROJECT(PROJECT_BASE):
         "add check__instance_of_user_class",
 
         # requirements_checker
-        "add check_file"
+        "add check_file",
+
+        # threading_manager
+        "add SERIAL execution as method wait_all_piped! paired up with wait_all_parallel()",
+        "add meta cumulative funks",
+        "add GROUP threads - in decorator+wait+...",
+        "maybe AUTO CLEAR if decorator get new funcName?",
+        "TIME item+group",
 
     ]
     FIXME: list[str] = [

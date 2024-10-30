@@ -32,6 +32,8 @@ numpy
 
 # ========================================
 # SPECIAL (FOR THIS PROJECT - ROOT) ------
+pydantic
+PyQt5
 
 # TESTS ----------------------------------
 
