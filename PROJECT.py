@@ -49,7 +49,7 @@ class PROJECT(PROJECT_BASE):
     DESCRIPTION_SHORT: str = "collect all previous moduls in one package"
     DESCRIPTION_LONG: str = """
     
-    bus_user
+    buses
     --------------
 NOTE: IT SEEMS THIS IS OLD DATA! see tests for actual usage!
     
@@ -73,7 +73,7 @@ other protocols mot recommended
     
     
     
-    monitor_utils
+    monitors
     --------------
     monitor exact data (urlTag/Email) and alert on changes by email/telegram (threading)
     ## IMPORTANT!
@@ -93,7 +93,7 @@ other protocols mot recommended
         # "feat1",
         # ["feat2", "block1", "block2"],
 
-        # classes_aux
+        # classes
         "cmp - apply for cmp object with others",
         "getattr prefix",
         "getattr echo",
@@ -106,7 +106,7 @@ other protocols mot recommended
         "collect all instances",
         "check correct instantiating singletons in tree project",
 
-        # requirements_checker
+        # requirements
         "check requirements (systemOs), raise/bool if no match",
         "create fuck(?)/source and is it for check for settings",
         ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get_installed", "check_installed)", "upgrade pip"],
@@ -116,7 +116,7 @@ other protocols mot recommended
          "compare",
          ],
 
-        # cli_user
+        # cli
         "send commands into OS terminal",
         "check if cli commands are accessible (special utilities is installed)",
         "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
@@ -124,7 +124,7 @@ other protocols mot recommended
         "till_first_true",
         "counter/counter_in_list",
 
-        # bit_aux
+        # bits
         "designed for common work with bitfields-like objects",
         "Flags",
         "Bits",
@@ -156,21 +156,21 @@ other protocols mot recommended
 
         "update_dict as cumulative result - useful in case of settings result",
 
-        # threading_manager
+        # threads
         "use different managers for different funcs/methods if needed",
         "use just one decorator to spawn threads from func / methods",
         "keep all spawned threads in list by ThreadItem objects",
         "ThreadItem keeps result/exx/is_alive attributes!",
         "use wait_all/terminate_all()",
 
-        # server_templates
+        # servers
         ["[SERVERS]",
          "[aiohttp] (try not to use, as old)",
          "[FastApi] (preferred)",
          ],
         "client_requests item+stack",
 
-        # bus_user
+        # buses
         ["[SerialClient]",
          "keep all found ports in base class!",
          ],
@@ -192,7 +192,7 @@ other protocols mot recommended
          "help - for show all variants (Units/Variants/Callables)!"
          ],
 
-        # monitor_utils
+        # monitors
         "Threading each monitor",
 
         ["monitor",
@@ -202,17 +202,21 @@ other protocols mot recommended
         ["Email/Telegram alert if",
          "monitored data changed (from last state)",
          "html structure was changed so parsing can't be finished",
-         "url became unreachable", ]
+         "url became unreachable", ],
+
+        # alerts
+        ["send alert msgs", "emails", "telegram",],
+        "threading",
     ]
 
     # HISTORY -----------------------------------------------
     VERSION: tuple[int, int, int] = (0, 0, 0)
     TODO: list[str] = [
-        # classes_aux
+        # classes
         "create class with autoInit params from ATTRS",
         "[Valid*/Value*] ref/make all nested from VALID!!!",
 
-        # object_aux
+        # objects
         "add TIMEOUT (use start in thread!) for print! use timeout for GETATTR!!!",
         [
             "realise PRINT_DIFFS=CHANGE_state/COMPARE_objects (one from different states like thread before and after start)!",
@@ -225,26 +229,30 @@ other protocols mot recommended
 
         "add check__instance_of_user_class",
 
-        # requirements_checker
+        # requirements
         "add check_file",
 
-        # threading_manager
+        # threads
         "add SERIAL execution as method wait_all_piped! paired up with wait_all_parallel()",
         "add meta cumulative funks",
         "add GROUP threads - in decorator+wait+...",
         "maybe AUTO CLEAR if decorator get new funcName?",
         "TIME item+group",
 
-        # monitor_utils
-        ["monitor_utils",
+        # monitors
+        ["monitors",
             "check requirement for python version!",
             "csv.reader(ofilepath, delimiter=self.CSV_DELIMITER)",
             "module 'private_values.csv' has no attribute 'reader'"
          ],
 
+        # alerts
+        "TODO test multyStart by one object (QThread)",
+        "FIX NEED SOLVE ABILITY to work without PV.FILE!!! as just a http client",
+
     ]
     NEWS: list[str] = [
-        "[classes_aux]move here",
+        "[ALL MODULES] move here",
     ]
 
 

@@ -6,7 +6,7 @@ from tempfile import TemporaryDirectory
 from typing import *
 import abc
 
-from base_aux.classes_aux import Exx__AnnotNotDefined
+from base_aux.classes import Exx__AnnotNotDefined
 from base_aux.private_values import (
     PrivateAuto,
     PrivateEnv, PrivateCsv, PrivateIni, PrivateJson,
@@ -16,7 +16,7 @@ from base_aux.private_values import (
 
 
 # =====================================================================================================================
-# TODO: merge Csv/Ini/Json tests via parametrisation
+# TODO: merge Csv/Ini/Json tests via parametrisation + SEPARATE TESTS ON FILES
 
 
 # =====================================================================================================================
