@@ -1,6 +1,6 @@
 from typing import *
-from testplans import DutBase
-from bus_user import *
+from base_aux.testplans import DutBase
+from base_aux.buses import *
 
 
 # =====================================================================================================================

@@ -1,8 +1,8 @@
-from testplans import *
-from funcs_aux import *
 from .tc0_groups import TcGroup_ATC220220
 
-from testplans import TYPE__RESULT_W_NORETURN
+from base_aux.testplans import *
+from base_aux.funcs import *
+from base_aux.classes import *
 
 
 # =====================================================================================================================

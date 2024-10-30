@@ -3,8 +3,9 @@ from typing import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from pyqt_templates import TableModelTemplate
-from funcs_aux import BreederStrSeries, BreederStrStack
+from base_aux.funcs import *
+from base_aux.classes import *
+from base_aux.pyqt import TableModelTemplate
 
 
 # =====================================================================================================================

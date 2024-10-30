@@ -1,6 +1,5 @@
 from typing import *
-from testplans import TestCaseBase, TYPE__RESULT_W_EXX
-from funcs_aux import *
+from base_aux.testplans import TestCaseBase, TYPE__RESULT_W_EXX
 
 
 # =====================================================================================================================

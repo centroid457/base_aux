@@ -4,8 +4,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from pyqt_templates import *
-from classes_aux import *
+from base_aux.testplans import *
+from base_aux.pyqt import *
+from base_aux.classes import *
 
 from .tc import TestCaseBase
 from .tm import TpTableModel

@@ -1,6 +1,9 @@
 from typing import *
 import uuid
-from funcs_aux import BreederObjectList
+
+from base_aux.testplans import *
+from base_aux.funcs import *
+from base_aux.classes import *
 
 from .tc import TestCaseBase
 from .models import *

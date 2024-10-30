@@ -3,11 +3,12 @@ import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from pyqt_templates import *
-from private_values import PrivateJson
-
-from logger_aux import Logger
-from funcs_aux import *
+from base_aux.servers import *
+from base_aux.funcs import *
+from base_aux.classes import *
+from base_aux.pyqt import *
+from base_aux.loggers import *
+from base_aux.private_values import PrivateJson
 
 from .types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *

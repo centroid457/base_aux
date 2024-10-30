@@ -1,6 +1,7 @@
 from typing import *
-from funcs_aux import *
-from classes_aux import *
+
+from base_aux.funcs import *
+from base_aux.classes import *
 
 from .types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 

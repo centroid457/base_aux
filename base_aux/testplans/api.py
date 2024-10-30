@@ -1,11 +1,12 @@
-import pathlib
 from typing import *
-from object_info import ObjectInfo
 
-from server_templates import *
 from aiohttp import web
 from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
+
+from base_aux.servers import *
+from base_aux.funcs import *
+from base_aux.classes import *
 
 from .models import *
 

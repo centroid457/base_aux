@@ -1,8 +1,9 @@
 # DON'T DELETE!
 # useful to start smth without pytest and not to run in main script!
 
-from server_templates import ServerAiohttpBase, Client_RequestsStack, Client_RequestItem
-from testplans import *
+from base_aux.testplans import *
+from base_aux.servers import *
+from base_aux.classes import *
 
 from DEVICES import dut, atc, ptb
 

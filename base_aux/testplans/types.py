@@ -1,5 +1,5 @@
 from typing import Union, NoReturn, Type
-from funcs_aux import Valid, ValidChains
+from base_aux.classes import *
 
 
 # =====================================================================================================================

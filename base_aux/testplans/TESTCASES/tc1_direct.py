@@ -1,7 +1,6 @@
 import time
-from testplans import *
-from funcs_aux import *
-from pytest_aux import *
+from base_aux.testplans import *
+from base_aux.classes import *
 
 
 # =====================================================================================================================

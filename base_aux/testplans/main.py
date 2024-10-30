@@ -17,13 +17,13 @@ from pathlib import Path
 from PyQt5.QtCore import QThread, pyqtSignal
 from importlib import import_module
 
-from pyqt_templates import *
-from logger_aux import *
-from classes_aux import *
-from server_templates import *
-from object_info import ObjectInfo
-from private_values import PrivateJson
-from funcs_aux import *
+from base_aux.testplans import *
+from base_aux.pyqt import *
+from base_aux.classes import *
+from base_aux.funcs import *
+from base_aux.loggers import *
+from base_aux.servers import *
+from base_aux.private_values import *
 
 
 # =====================================================================================================================

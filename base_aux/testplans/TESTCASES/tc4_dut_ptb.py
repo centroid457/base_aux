@@ -1,7 +1,6 @@
-from testplans import *
-from funcs_aux import *
-
-from testplans import TYPE__RESULT_W_NORETURN
+from base_aux.testplans import *
+from base_aux.funcs import *
+from base_aux.classes import *
 
 
 # =====================================================================================================================
