@@ -124,6 +124,13 @@ class PROJECT(PROJECT_BASE):
         "keep all spawned threads in list by ThreadItem objects",
         "ThreadItem keeps result/exx/is_alive attributes!",
         "use wait_all/terminate_all()",
+
+        # server_templates
+        ["[SERVERS]",
+         "[aiohttp] (try not to use, as old)",
+         "[FastApi] (preferred)",
+         ],
+        "client_requests item+stack",
     ]
 
     # HISTORY -----------------------------------------------
