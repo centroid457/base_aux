@@ -207,6 +207,11 @@ other protocols mot recommended
         # alerts
         ["send alert msgs", "emails", "telegram",],
         "threading",
+
+        # pyqt
+        "pyqt help examples and some other useful objects (overloaded pyqt classes)",
+        "good template for TableView/Model/Signals",
+        "add Events for TM/TV/PTE/...",
     ]
 
     # HISTORY -----------------------------------------------

@@ -30,7 +30,7 @@ class AnnotValuesIter(AnnotAux):
 
     SPECIALLY CREATED FOR
     ---------------------
-    pyqt_templates.pte_highlights.StylesPython
+    pyqt.pte_highlights.StylesPython
 
     WHY NOT - NAMEDTUPLE
     --------------------
