@@ -32,15 +32,18 @@ numpy
 
 # ========================================
 # SPECIAL (FOR THIS PROJECT - ROOT) ------
-pydantic
+pyserial    #
+smbus2      # linuxOnly
+
 PyQt5
-PyYAML      # yaml
 
 aiohttp
 FastAPI
 requests
-pyyaml
 uvicorn
+
+PyYAML
+pydantic
 
 # TESTS ----------------------------------
 
