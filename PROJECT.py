@@ -50,7 +50,7 @@ class PROJECT(PROJECT_BASE):
     DESCRIPTION_LONG: str = """
     
     bus_user
-    ###
+    --------------
 NOTE: IT SEEMS THIS IS OLD DATA! see tests for actual usage!
     
 !. MOST APPROPRIATE COMMAND PROTOCOL
@@ -70,6 +70,23 @@ other protocols mot recommended
     [FAIL] - any common not specified error
     [FAIL 0123] - any specified error without description
     [FAIL 02 VALUE OUT OF RANGE] - any specified error with description (full variant)
+    
+    
+    
+    monitor_utils
+    --------------
+    monitor exact data (urlTag/Email) and alert on changes by email/telegram (threading)
+    ## IMPORTANT!
+    NOT ALL WEBSITES WORKS! Sportmaster/Acra-rating/...
+
+    ## INSPIRATION
+    Suppose you wish to give blood to the Center.
+    So nowadays you need to make an appointment by website, BUT you can't do this while the Center actually don't need your group.
+    Group necessity shown on Center website and called DonorSvetofor.
+    And as result you need monitoring it manually, because there are no news, email notifications, subscriptions.
+    It's not difficult but if you do it as day routine (even once a day) its quite distracting.
+
+    So I created it first as Monitor_DonorSvetofor
     
 """
     FEATURES: list[str] = [
@@ -173,7 +190,19 @@ other protocols mot recommended
          "NONE is equivalent for SUCCESS",
          "no need params (like line_parsed as before)",
          "help - for show all variants (Units/Variants/Callables)!"
-         ]
+         ],
+
+        # monitor_utils
+        "Threading each monitor",
+
+        ["monitor",
+         "website data changes (tag text/attribute)",
+         "email received with subject (by regexp) in exact folder", ],
+
+        ["Email/Telegram alert if",
+         "monitored data changed (from last state)",
+         "html structure was changed so parsing can't be finished",
+         "url became unreachable", ]
     ]
 
     # HISTORY -----------------------------------------------
@@ -206,13 +235,16 @@ other protocols mot recommended
         "maybe AUTO CLEAR if decorator get new funcName?",
         "TIME item+group",
 
-    ]
-    FIXME: list[str] = [
-        "..."
+        # monitor_utils
+        ["monitor_utils",
+            "check requirement for python version!",
+            "csv.reader(ofilepath, delimiter=self.CSV_DELIMITER)",
+            "module 'private_values.csv' has no attribute 'reader'"
+         ],
+
     ]
     NEWS: list[str] = [
         "[classes_aux]move here",
-
     ]
 
 

@@ -17,8 +17,9 @@
 # VERSION = (0, 0, 8)   # add [deploy]build+twine+setuptools+cli_user +add singleton-meta in common/rename common to BASE/regroup subsets
 # VERSION = (0, 0, 9)   # fix names without Minus!
 # VERSION = (0, 0, 10)  # add installation note
+# VERSION = (0, 1, 0)   # combine all modules into one
 
-# BASE =====================
+# ==========================
 # deploy -------------------
 build
 twine
@@ -27,11 +28,9 @@ setuptools
 # debug/test ---------------
 pytest
 
-# nested -------------------
+# SPECIAL ------------------
 numpy
 
-# ========================================
-# SPECIAL (FOR THIS PROJECT - ROOT) ------
 pyserial    #
 smbus2      # linuxOnly
 
@@ -45,8 +44,7 @@ uvicorn
 PyYAML
 pydantic
 
-# TESTS ----------------------------------
+bs4
 
-# NESTED ---------------------------------
 
-# ========================================
+# ==========================
