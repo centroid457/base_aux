@@ -21,8 +21,6 @@ from base_aux.privates import (
 
 # =====================================================================================================================
 class Test__Env:
-    VICTIM: Type[PrivateEnv] = type("VICTIM", (PrivateEnv,), {})
-
     VALUE: str = "VALUE"
     NAME_Exists: str = "Exists"
     NAME_NotExists: str = "NotExists"
@@ -49,31 +47,32 @@ class Test__Env:
         del os.environ[cls.NAME_Exists]
 
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (PrivateEnv,), {})
+        self.Victim = PrivateEnv
+        self.Victim._RAISE = True
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__Exists(self):
-        assert self.VICTIM()[self.NAME_Exists] == self.VALUE
-        assert getattr(self.VICTIM(), self.NAME_Exists) == self.VALUE
+        assert self.Victim()[self.NAME_Exists] == self.VALUE
+        assert getattr(self.Victim(), self.NAME_Exists) == self.VALUE
 
     def test__notExists(self):
         try:
-            self.VICTIM()[self.NAME_NotExists]
-        except Exx__AnnotNotDefined:
+            self.Victim()[self.NAME_NotExists]
+        except AttributeError:
             return
         else:
             assert False
 
     def test__show(self):
         # uppercase - see docstring for method!
-        envs = self.VICTIM().get_dict(self.NAME_Exists)
+        envs = self.Victim().get_dict(self.NAME_Exists)
         print(envs)
         assert envs.get(self.NAME_Exists.upper()) == self.VALUE
 
 
 # =====================================================================================================================
 class Test__Csv:
-    VICTIM: Type[PrivateCsv] = type("VICTIM", (PrivateCsv,), {})
+    VICTIM: Type[PrivateCsv] = type("Victim", (PrivateCsv,), {})
     VICTIM2_FILENAME: str = f"{PrivateCsv.FILENAME}2"
     VICTIM2: Type[PrivateCsv] = type("VICTIM2", (PrivateCsv,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
@@ -101,7 +100,7 @@ name2:222
         shutil.rmtree(cls.DIRPATH)
 
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (PrivateCsv,), {})
+        self.VICTIM = type("Victim", (PrivateCsv,), {})
         self.VICTIM2 = type("VICTIM2", (PrivateCsv,), {"FILENAME": self.VICTIM2_FILENAME})
         self.VICTIM.DIRPATH = self.DIRPATH
         self.VICTIM2.DIRPATH = self.DIRPATH
@@ -140,7 +139,7 @@ name2:222
 
 # =====================================================================================================================
 class Test__Ini:
-    VICTIM: Type[PrivateIni] = type("VICTIM", (PrivateIni,), {})
+    VICTIM: Type[PrivateIni] = type("Victim", (PrivateIni,), {})
     VICTIM2_FILENAME: str = f"{PrivateIni.FILENAME}2"
     VICTIM2: Type[PrivateIni] = type("VICTIM2", (PrivateIni,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
@@ -178,7 +177,7 @@ name1=value12
         shutil.rmtree(cls.DIRPATH)
 
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (PrivateIni,), {})
+        self.VICTIM = type("Victim", (PrivateIni,), {})
         self.VICTIM2 = type("VICTIM2", (PrivateIni,), {"FILENAME": self.VICTIM2_FILENAME})
         self.VICTIM.DIRPATH = self.DIRPATH
         self.VICTIM2.DIRPATH = self.DIRPATH
@@ -261,7 +260,7 @@ name1=value12
 
 # =====================================================================================================================
 class Test__Json:
-    VICTIM: Type[PrivateJson] = type("VICTIM", (PrivateJson,), {})
+    VICTIM: Type[PrivateJson] = type("Victim", (PrivateJson,), {})
     VICTIM2_FILENAME: str = f"{PrivateJson.FILENAME}2"
     VICTIM2: Type[PrivateJson] = type("VICTIM2", (PrivateJson,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
@@ -305,7 +304,7 @@ class Test__Json:
         shutil.rmtree(cls.DIRPATH)
 
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (PrivateJson,), {})
+        self.VICTIM = type("Victim", (PrivateJson,), {})
         self.VICTIM2 = type("VICTIM2", (PrivateJson,), {"FILENAME": self.VICTIM2_FILENAME})
 
         self.VICTIM.DIRPATH = self.DIRPATH
@@ -480,7 +479,7 @@ class Test__Json:
 
 # =====================================================================================================================
 class Test__Auto:
-    VICTIM: Type[PrivateAuto] = type("VICTIM", (PrivateAuto,), {})
+    VICTIM: Type[PrivateAuto] = type("Victim", (PrivateAuto,), {})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
 
     TEXT0: str = f"""
@@ -537,7 +536,7 @@ name1=ini1
         shutil.rmtree(cls.DIRPATH)
 
     def setup_method(self, method):
-        self.VICTIM = type("VICTIM", (PrivateAuto,), {})
+        self.VICTIM = type("Victim", (PrivateAuto,), {})
         self.VICTIM.DIRPATH = self.DIRPATH
 
     # -----------------------------------------------------------------------------------------------------------------
