@@ -8,7 +8,7 @@ from base_aux.funcs import *
 from base_aux.classes import *
 from base_aux.pyqt import *
 from base_aux.loggers import *
-from base_aux.private_values import PrivateJson
+from base_aux.privates import PrivateJson
 
 from .types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *

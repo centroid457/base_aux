@@ -7,7 +7,7 @@ from typing import *
 import abc
 
 from base_aux.classes import Exx__AnnotNotDefined
-from base_aux.private_values import (
+from base_aux.privates import (
     PrivateAuto,
     PrivateEnv, PrivateCsv, PrivateIni, PrivateJson,
     PrivateAuthIni, PrivateAuthJson,

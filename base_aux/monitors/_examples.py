@@ -1,5 +1,5 @@
 # =======================================================================
-### 1. change or apply auth private data (see `private_values`)
+### 1. change or apply auth private data (see `privates`)
 
 # =======================================================================
 ### 2. create new desired class for your purpose

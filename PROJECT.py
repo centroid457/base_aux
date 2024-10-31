@@ -176,7 +176,7 @@ other protocols mot recommended
         "Flags",
         "Bits",
 
-        # private_values
+        # privates
         """
         Designed to use private data like username/pwd kept secure in OsEnvironment or Ini/Json-File for your several home projects at ones.  
         And not open it in public.  
@@ -295,7 +295,7 @@ other protocols mot recommended
         ["monitors",
             "check requirement for python version!",
             "csv.reader(ofilepath, delimiter=self.CSV_DELIMITER)",
-            "module 'private_values.csv' has no attribute 'reader'"
+            "module 'privates.csv' has no attribute 'reader'"
          ],
 
         # alerts

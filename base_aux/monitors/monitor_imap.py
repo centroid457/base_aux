@@ -6,7 +6,7 @@ import re
 import imaplib
 import email
 
-from base_aux.private_values import *
+from base_aux.privates import *
 from base_aux.alerts import *
 
 

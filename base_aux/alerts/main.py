@@ -6,7 +6,7 @@ from PyQt5.QtCore import QThread
 import smtplib
 import telebot
 
-from base_aux.private_values import *
+from base_aux.privates import *
 
 
 # =====================================================================================================================

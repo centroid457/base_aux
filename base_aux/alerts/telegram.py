@@ -5,7 +5,7 @@ from typing import *
 
 import telebot
 
-from base_aux.private_values import *
+from base_aux.privates import *
 
 
 # =====================================================================================================================

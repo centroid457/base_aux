@@ -23,7 +23,7 @@ from base_aux.classes import *
 from base_aux.funcs import *
 from base_aux.loggers import *
 from base_aux.servers import *
-from base_aux.private_values import *
+from base_aux.privates import *
 
 
 # =====================================================================================================================

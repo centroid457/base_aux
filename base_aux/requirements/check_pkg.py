@@ -251,15 +251,15 @@ ERROR ON DISTRIBUTION
 [#####################ERROR#####################]
 self.counter=1
 self.counter_in_list=0
-self.last_cmd='python -m pip install --upgrade private_values'
+self.last_cmd='python -m pip install --upgrade privates'
 self.last_duration=1.392156
 self.last_finished=True
 self.last_finished_success=False
 self.last_retcode=1
 --------------------------------------------------
 self.last_stdout=
-        |'Collecting private_values'
-        |'  Using cached private_values-0.5.4.tar.gz (8.8 kB)'
+        |'Collecting privates'
+        |'  Using cached privates-0.5.4.tar.gz (8.8 kB)'
         |'  Preparing metadata (setup.py): started'
         |"  Preparing metadata (setup.py): finished with status 'error'"
         |''

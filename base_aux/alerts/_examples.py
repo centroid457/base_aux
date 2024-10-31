@@ -25,9 +25,9 @@ class AlertSmtpMOD(AlertSmtp):
     SERVER_SMTP: SmtpAddress = SmtpServersMOD.EXAMPLE_RU  # or direct =SmtpAddress("smtp.EXAMPLE.ru", 123)
 
 # =========================================================================================
-#### 2. change authorisation data (see `private_values` for details)
+#### 2. change authorisation data (see `privates` for details)
 from base_aux.alerts import *
-from base_aux.private_values import *
+from base_aux.privates import *
 
 
 class AlertSmtpMOD(AlertSmtp):
@@ -82,7 +82,7 @@ monitor.ALERT("Hello")
 # All idea is similar to AlertSmtp.
 
 # add auth data
-# add pv.json or do smth else (for details see private_values.PrivateJsonTgBotAddress)
+# add pv.json or do smth else (for details see privates.PrivateJsonTgBotAddress)
 # json
 {
     "TG_ID": {"MyTgID": 1234567890},
