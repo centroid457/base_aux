@@ -1,7 +1,7 @@
 from typing import *
 import pytest
-from testplans import *
-from bus_user import *
+
+from base_aux.testplans import *
 
 
 # =====================================================================================================================
