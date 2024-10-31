@@ -262,7 +262,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 1)
+    VERSION: tuple[int, int, int] = (0, 0, 2)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -306,7 +306,7 @@ other protocols mot recommended
     FIXME: list[str] = [
     ]
     NEWS: list[str] = [
-        "[ALL_MODULES] collect in one pkg",
+        "[testplans] fix HL rules",
     ]
 
 
