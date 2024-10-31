@@ -13,5 +13,4 @@ class ReqCheckStr_Os_MY(ReqCheckStr_Os):
 
 ReqCheckStr_Os_MY()  # check requirement!
 
-# Packages().upgrade_pip()
-Packages().upgrade__centroid457()
+Packages().upgrade_pip()

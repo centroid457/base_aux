@@ -81,40 +81,6 @@ class Packages:
         "bdist-wheel-name",     # not necessary! works without it on new!
 
     ]
-    PKGSET__CENTROID_457: list[str] = [
-        # =============================
-        # CENTROID457 common projects
-        # -----------------------------
-        "requirements-checker",
-        "object-info",
-        "funcs-aux",
-        "classes-aux",
-
-        "singleton-meta",
-        "loggers-aux",
-
-        # =============================
-        # CENTROID457 other projects
-        # -----------------------------
-        "dummy-module",
-
-        "private-values",
-        "alerts-msg",
-        "monitor-utils",
-
-        "cli-user",
-        "bus-user",
-
-        "threading-manager",
-        "pyqt-templates",
-
-        "testplans",
-        "server-templates",
-
-        # =============================
-        *PKGSET__PyPI_DISTRIBUTION
-    ]
-
     PYTHON_PATH: str
     cli: CliUser
 
@@ -445,12 +411,6 @@ self.last_exx_timeout=None
             self.upgrade(project.NAME_INSTALL)
 
         return True
-
-    def upgrade__centroid457(self) -> bool:
-        """
-        upgrade all author modules by one command
-        """
-        return self.upgrade(self.PKGSET__CENTROID_457)
 
     # =================================================================================================================
     def check_prj_installed_latest(self, project: "PROJECT") -> bool:
