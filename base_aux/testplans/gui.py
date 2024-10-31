@@ -26,19 +26,23 @@ class TpHlStyles(HlStyles):
     RESULT_TRUE: HlStyle = HlStyle(
         FORMAT=format_make("", "", "lightGreen"),
         P_ITEMS=[
-            "validate_last_bool", "result",
+            "True",
         ],
         P_TEMPLATES=[
-            r'.*%s.*=\s*True.*',
+            r'.*validate_last_bool=%s.*',
+            r'.*result[^=]*=%s.*',
+            r'.*valid[^=]*=%s.*',
         ],
     )
     RESULT_FALSE: HlStyle = HlStyle(
         FORMAT=format_make("", "", "pink"),
         P_ITEMS=[
-            "validate_last_bool", "result",
+            "False",
         ],
         P_TEMPLATES=[
-            r'.*%s.*=\s*False.*',
+            r'.*validate_last_bool=%s.*',
+            r'.*result[^=]*=%s.*',
+            r'.*valid[^=]*=%s.*',
         ],
     )
     RESULT_FALSE_NOCUM: HlStyle = HlStyle(
@@ -47,12 +51,20 @@ class TpHlStyles(HlStyles):
             "ValidNoCum",
         ],
         P_TEMPLATES=[
-            r'.*%s.*validate_last_bool\s*=\s*False.*',
+            r'.*%s.*validate_last_bool=False.*',
         ],
     )
 
 
 PTE_ESULTS_EXAMPLE = """
+ПРОВЕРКА выделения текста результатов
+Valid=None    #без явного bool значения
+Result=True   #явное True
+Valid=True    #явное True
+Valid=False   #явное False
+ValidNoCum(123x=False, validate_last_bool=True)
+ValidNoCum(123x=True, validate_last_bool=False)  #неважный/неучтенный False
+
 result__startup=True
 ------------------------------------------------------------
 result=Valid(NAME=GET,skip_last=False,validate_last_bool=True,
@@ -64,6 +76,7 @@ result__teardown=ValidChains(NAME=,skip_last=False,validate_last_bool=True,
 ...VALUE_LINK=None,value_last=None,
 ...VALIDATE_LINK=True,validate_last=True,
 ,finished=True,timestamp_last=1730375895.0524113,
+result__startup=ValidSleep(NAME=Sleep,skip_last=False,validate_last_bool=True,
 ___0:(START) len=3/timestamp=1730375895.0524113
 ___1:ValidNoCum(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=False,
 ___1:ValidNoCum(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=True,
@@ -160,13 +173,6 @@ class TpGuiBase(Gui):
         # self.PTE.setMaximumBlockCount(15)
 
         # self.PTE.clear()
-        self.PTE.setPlainText("ПРОВЕРКА выделения текста результатов")
-        self.PTE.appendPlainText("Valid=None    #без явного bool значения")
-        self.PTE.appendPlainText("Result=True   #явное True")
-        self.PTE.appendPlainText("Valid=True    #явное True")
-        self.PTE.appendPlainText("Valid=False   #явное False")
-        self.PTE.appendPlainText("ValidNoCum=True")
-        self.PTE.appendPlainText("ValidNoCum=False    #неважный/неучтенный False")
         self.PTE.appendPlainText(PTE_ESULTS_EXAMPLE)
 
         # self.PTE.appendHtml("")
