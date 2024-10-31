@@ -17,7 +17,7 @@ class TpHlStyles(HlStyles):
     RESULT: HlStyle = HlStyle(
         FORMAT=format_make("", "", "lightGrey"),
         P_ITEMS=[
-            "Valid", "result",
+            "validate_last_bool", "result",
         ],
         P_TEMPLATES=[
             r'.*%s.*',
@@ -26,7 +26,7 @@ class TpHlStyles(HlStyles):
     RESULT_TRUE: HlStyle = HlStyle(
         FORMAT=format_make("", "", "lightGreen"),
         P_ITEMS=[
-            "Valid", "result",
+            "validate_last_bool", "result",
         ],
         P_TEMPLATES=[
             r'.*%s.*=\s*True.*',
@@ -35,7 +35,7 @@ class TpHlStyles(HlStyles):
     RESULT_FALSE: HlStyle = HlStyle(
         FORMAT=format_make("", "", "pink"),
         P_ITEMS=[
-            "Valid", "result",
+            "validate_last_bool", "result",
         ],
         P_TEMPLATES=[
             r'.*%s.*=\s*False.*',
@@ -47,9 +47,43 @@ class TpHlStyles(HlStyles):
             "ValidNoCum",
         ],
         P_TEMPLATES=[
-            r'.*%s.*=\s*False.*',
+            r'.*%s.*validate_last_bool\s*=\s*False.*',
         ],
     )
+
+
+PTE_ESULTS_EXAMPLE = """
+result__startup=True
+------------------------------------------------------------
+result=Valid(NAME=GET,skip_last=False,validate_last_bool=True,
+...VALUE_LINK=<function SerialClient.__getattr__.<locals>.<lambda> at 0x000001E5AABF6FC0>,ARGS__VALUE=('PRSNT',),value_last=0,
+...VALIDATE_LINK=0,validate_last=True,
+,finished=True,timestamp_last=1730375894.4305248,
+------------------------------------------------------------
+result__teardown=ValidChains(NAME=,skip_last=False,validate_last_bool=True,
+...VALUE_LINK=None,value_last=None,
+...VALIDATE_LINK=True,validate_last=True,
+,finished=True,timestamp_last=1730375895.0524113,
+___0:(START) len=3/timestamp=1730375895.0524113
+___1:ValidNoCum(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=False,
+___1:ValidNoCum(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=True,
+___1:ValidNoCum(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=None,
+___1:Valid(NAME=DUT.connect__only_if_address_resolved,skip_last=False,validate_last_bool=True,
+...VALUE_LINK=<bound method SerialClient.connect__only_if_address_resolved of <DEVICES.ptb.Device object at 0x000001E5AAB4B050>>,value_last=True,
+...VALIDATE_LINK=True,validate_last=True,
+,finished=True,timestamp_last=1730375895.0524113,
+___2:ValidRetry1(NAME=RST,skip_last=False,validate_last_bool=True,
+...VALUE_LINK=<function SerialClient.__getattr__.<locals>.<lambda> at 0x000001E5AABF7240>,value_last=OK,
+...VALIDATE_LINK=OK,validate_last=True,
+,finished=True,timestamp_last=1730375896.3252466,
+___3:ValidSleep(NAME=Sleep,skip_last=False,validate_last_bool=True,
+...VALUE_LINK=<built-in function sleep>,ARGS__VALUE=(1,),value_last=None,
+...VALIDATE_LINK=None,validate_last=True,
+,finished=True,timestamp_last=1730375896.9521606,
+___4:(FINISH) [result=False]/len=3
+------------------------------------------------------------
+DETAILS=====================
+"""
 
 
 # =====================================================================================================================
@@ -133,6 +167,8 @@ class TpGuiBase(Gui):
         self.PTE.appendPlainText("Valid=False   #явное False")
         self.PTE.appendPlainText("ValidNoCum=True")
         self.PTE.appendPlainText("ValidNoCum=False    #неважный/неучтенный False")
+        self.PTE.appendPlainText(PTE_ESULTS_EXAMPLE)
+
         # self.PTE.appendHtml("")
         # self.PTE.anchorAt(#)
         # self.PTE.setSizeAdjustPolicy(#)

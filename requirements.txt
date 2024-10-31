@@ -33,7 +33,6 @@ numpy
 
 pyserial    #
 smbus2      # linuxOnly
-
 telebot
 
 PyQt5
