@@ -53,7 +53,7 @@ class HlStyle(NamedTuple):
         return set(result)
 
     def get_regexps(self) -> list[QRegExp]:
-        return [QRegExp(pattern=pattern, cs=Qt.CaseSensitivity(0)) for pattern in self.get_patterns()]
+        return [QRegExp(pattern, cs=Qt.CaseSensitivity(0)) for pattern in self.get_patterns()]
 
     def get_rules(self) -> list[tuple[QRegExp, int, QTextCharFormat]]:
         return [(regexp, self.INDEX, self.FORMAT) for regexp in self.get_regexps()]

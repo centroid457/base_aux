@@ -51,7 +51,7 @@ from .tc_groups import (
     # TYPES
     # EXX
 )
-from .types import (
+from .tc_types import (
     # BASE
     # AUX
     # TYPES

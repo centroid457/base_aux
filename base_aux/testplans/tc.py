@@ -10,7 +10,7 @@ from base_aux.pyqt import *
 from base_aux.loggers import *
 from base_aux.privates import PrivateJson
 
-from .types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
+from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *
 from .tc_groups import *
 
