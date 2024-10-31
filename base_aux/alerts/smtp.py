@@ -1,4 +1,4 @@
-from .main import *
+from .base import *
 
 import time
 from typing import *

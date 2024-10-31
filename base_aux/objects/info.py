@@ -1,7 +1,7 @@
 from typing import *
 from dataclasses import dataclass, astuple, asdict, field
 
-from .type_checker import *
+from .types import *
 
 
 # =====================================================================================================================

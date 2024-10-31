@@ -17,7 +17,7 @@
 #     # EXX
 # )
 # ---------------------------------------------------------------------------------------------------------------------
-from .check_string import (
+from .strings import (
     # BASE
     ReqCheckStr_Base,
     ReqCheckStr_Os,
@@ -35,7 +35,7 @@ from .check_string import (
     Exx_RequirementCantGetActualValue,
     Exx_Requirement,
 )
-from .check_pkg import (
+from .pkgs import (
     # BASE
     Packages,
     CmdPattern,
@@ -48,7 +48,7 @@ from .check_pkg import (
     # TYPES
     # EXX
 )
-from .check_version import (
+from .versions import (
     # BASE
     Version,
     ReqCheckVersion,

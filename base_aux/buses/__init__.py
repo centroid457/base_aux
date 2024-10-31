@@ -18,7 +18,7 @@
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .history import HistoryIO
-from .line_parser import LineParsed
+from .parser import LineParsed
 from .serial_client import (
     # BASE
     SerialClient,

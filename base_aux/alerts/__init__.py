@@ -5,7 +5,7 @@
 
 
 # =====================================================================================================================
-from .main import AlertBase
+from .base import AlertBase
 from .smtp import SmtpAddress, SmtpServers, AlertSmtp
 from .telegram import RecipientTgID, AlertTelegram
 

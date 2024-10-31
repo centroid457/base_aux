@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from base_aux.funcs import *
 from base_aux.classes import *
-from .zero_stuff import Data_
+from .base import Data_
 
 
 # =====================================================================================================================

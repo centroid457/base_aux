@@ -5,7 +5,7 @@
 
 
 # =====================================================================================================================
-from .object_info import (
+from .info import (
     # BASE
     ObjectInfo,
     # AUX
@@ -14,7 +14,7 @@ from .object_info import (
     # TYPES
     # EXX
 )
-from .type_checker import (
+from .types import (
     # BASE
     TypeChecker,
     # AUX

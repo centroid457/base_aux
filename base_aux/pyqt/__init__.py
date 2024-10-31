@@ -45,7 +45,7 @@ from .tm import (
     # TYPES
     # EXX
 )
-from .highlighter import (
+from .hl import (
     # BASE
     format_make,
     HlStyle,
