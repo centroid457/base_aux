@@ -1,2 +1,4 @@
-# DON'T DELETE!
-# useful to start smth without pytest and not to run in main script!
+# usage example
+
+from base_aux.objects import ObjectInfo
+ObjectInfo(1).print()
