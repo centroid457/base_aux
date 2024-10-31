@@ -8,8 +8,8 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 # =====================================================================================================================
 import pathlib
 from PROJECT import PROJECT
-from requirements_checker import Packages
-from cli_user import *
+from base_aux.requirements import Packages
+from base_aux.cli import *
 
 
 # =====================================================================================================================
@@ -17,7 +17,8 @@ from cli_user import *
 # VERSION = (0, 0, 2)   # add commented testPypi
 # VERSION = (0, 0, 3)   # fix --Verbose!
 # VERSION = (0, 0, 4)   # fix param Noisolation! used to be able build with any modules in root PyFiles
-VERSION = (0, 0, 5)   # check latest before build
+# VERSION = (0, 0, 5)   # check latest before build
+VERSION = (0, 0, 6)    # collect all modules into one pkg!
 
 
 # =====================================================================================================================

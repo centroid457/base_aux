@@ -46,7 +46,7 @@ class PROJECT(PROJECT_BASE):
 
     # README -----------------------------------------------
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
-    DESCRIPTION_SHORT: str = "collect all previous moduls in one package"
+    DESCRIPTION_SHORT: str = "collect all my previous moduls in one package"
     DESCRIPTION_LONG: str = """
     
     buses
@@ -302,6 +302,9 @@ other protocols mot recommended
         "TODO test multyStart by one object (QThread)",
         "FIX NEED SOLVE ABILITY to work without PV.FILE!!! as just a http client",
 
+    ]
+    FIXME: list[str] = [
+        "[ALL MODULES] move here",
     ]
     NEWS: list[str] = [
         "[ALL MODULES] move here",

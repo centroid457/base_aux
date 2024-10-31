@@ -2,7 +2,7 @@ import pathlib
 import re
 import time
 from typing import *
-from cli_user import *
+from base_aux.cli import *
 
 # from PROJECT import PROJECT
 
@@ -17,7 +17,8 @@ from cli_user import *
 # VERSION = (0, 0, 7)   # [BADGES] separate TestLinWin
 # VERSION = (0, 0, 8)   # examples string add docstrings
 # VERSION = (0, 0, 9)   # add gen requirements_release_freezed
-VERSION = (0, 0, 10)   # requirements_release_freezed extend timeout (at home i need 3-4sec!)
+# VERSION = (0, 0, 10)  # requirements_release_freezed extend timeout (at home i need 3-4sec!)
+VERSION = (0, 0, 11)    # collect all modules into one pkg!
 
 
 # =====================================================================================================================

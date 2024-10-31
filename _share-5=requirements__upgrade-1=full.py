@@ -3,12 +3,13 @@ import time
 
 from PROJECT import PROJECT
 
-from requirements_checker import Packages
+from base_aux.requirements import Packages
 
 
 # =====================================================================================================================
 # VERSION = (0, 0, 1)   # use direct upgrade this module by PROJECT.NAME_INSTALL
-VERSION = (0, 0, 2)   # apply upgrade_prj
+# VERSION = (0, 0, 2)   # apply upgrade_prj
+VERSION = (0, 0, 3)     # collect all modules into one pkg!
 
 
 # =====================================================================================================================
