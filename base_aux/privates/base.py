@@ -22,14 +22,14 @@ class PrivateBase(AnnotAux, abc.ABC):
     -----
     if you dont need RAISE when no value get for exact annotated name - just define None!
     """
-    DONT_CHECK_VALUES_EXISTS: Optional[bool] = None
+    _RAISE: Optional[bool] = None
 
     SECTION: Optional[str] = None
 
     DIRPATH: Optional[TYPE__PATH] = pathlib.Path.home()
     FILENAME: Optional[str] = None
 
-    _text: Optional[str] = None     # TODO: need tests!!!
+    _text: Optional[str] = ""     # TODO: need tests!!!
     dict: Dict[str, Any] = None
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class PrivateBase(AnnotAux, abc.ABC):
             _text: Optional[str] = None,                # instead of file
             _dict: Optional[Dict[str, Any]] = None,     # instead of file
 
-            _dont_check_values_exists: Optional[bool] = None
+            _raise: Optional[bool] = None
     ):
         super().__init__()
         self.SECTION = _section or self.SECTION
@@ -59,16 +59,20 @@ class PrivateBase(AnnotAux, abc.ABC):
             self.FILENAME = None
             self._text = _text
         else:
-            self._filepath_apply_new(
+            if not self._filepath_apply_new(
                 _dirpath=_dirpath,
                 _filename=_filename,
                 _filepath=_filepath
-            )
+            ):
+                return
 
         if _dict is None:
             self.load_dict()
 
-        if not _dont_check_values_exists:
+        if _raise is not None:
+            self._RAISE = _raise
+
+        if self._RAISE:
             self.annot__raise_if_not_defined()
 
     def __str__(self):
@@ -91,7 +95,7 @@ class PrivateBase(AnnotAux, abc.ABC):
             _dirpath: TYPE__PATH = None,
             _filename: str = None,
             _filepath: TYPE__PATH = None
-    ) -> Optional[NoReturn]:
+    ) -> bool:
         """apply new file destination
         """
         if not _filepath:
@@ -102,11 +106,16 @@ class PrivateBase(AnnotAux, abc.ABC):
             self.FILENAME = pathlib.Path(_filepath).name
 
         if self.filepath and not self.filepath.exists():
-            msg = f'[CRITICAL]no[{self.filepath=}]'
-            raise Exx__FileNotExists(msg)
+            if self._RAISE:
+                msg = f'[CRITICAL]no[{self.filepath=}]'
+                raise Exx__FileNotExists(msg)
+            else:
+                return False
 
         if self.filepath:
             self._text = self.filepath.read_text()
+
+        return True
 
     @property
     def filepath(self) -> Optional[pathlib.Path]:

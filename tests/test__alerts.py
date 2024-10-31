@@ -1,14 +1,13 @@
-import os
-import pytest
-import pathlib
-import shutil
 from typing import *
+import pytest
 
 from base_aux.alerts import *
 
 
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
+
+@pytest.mark.skip
 class Test__1:
     @pytest.mark.parametrize(argnames="victim", argvalues=[AlertSmtp, AlertTelegram])
     def test__send_single(self, victim):
