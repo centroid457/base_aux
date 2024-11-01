@@ -9,11 +9,14 @@ from base_aux.classes import *
 JUST_LOAD = "JUST_LOAD"
 
 
-# =====================================================================================================================
-class Test__connect:
+@pytest.mark.skipif(not SerialClient.addresses_shorted__detect(), reason="NO addresses_shorted__detect")
+class Test__ShortedDetected:
     Victim: Type[SerialClient]
     victim: SerialClient
 
+
+# =====================================================================================================================
+class Test__ConnectSimple(Test__ShortedDetected):
     @classmethod
     def setup_class(cls):
         class Victim(SerialClient_FirstFree_Shorted):
@@ -44,10 +47,7 @@ class Test__connect:
 
 
 # =====================================================================================================================
-class Test__Shorted_AddressResolved:
-    Victim: Type[SerialClient]
-    victim: SerialClient
-
+class Test__AddressResolved(Test__ShortedDetected):
     @classmethod
     def setup_class(cls):
         class Victim(SerialClient_FirstFree_Shorted):
@@ -118,10 +118,7 @@ class Test__Shorted_AddressResolved:
 
 
 # =====================================================================================================================
-class Test__Shorted_Connect:
-    Victim: Type[SerialClient]
-    victim: SerialClient
-
+class Test__Connect2(Test__ShortedDetected):
     @classmethod
     def setup_class(cls):
         class Victim(SerialClient_FirstFree_Shorted):
@@ -238,7 +235,7 @@ class Test__Shorted_Connect:
 
 
 # =====================================================================================================================
-class Test__Shorted_Base:
+class Test__ShortedBase(Test__ShortedDetected):
     Victim: Type[SerialClient_FirstFree_Shorted]
     victim: SerialClient_FirstFree_Shorted
 
@@ -265,7 +262,7 @@ class Test__Shorted_Base:
 
 
 # =====================================================================================================================
-class Test__Shorted_WR(Test__Shorted_Base):
+class Test__WR_1(Test__ShortedBase):
     def test__wr_single(self):
         assert self.victim.connect(_raise=False)
         assert self.victim._write("") is True
@@ -394,7 +391,7 @@ class Test__Shorted_WR(Test__Shorted_Base):
 
 
 # =====================================================================================================================
-class Test__Shorted_WR_Getattr(Test__Shorted_Base):
+class Test__WR_2_Getattr(Test__ShortedBase):
     def test__getattr__1_STARTSWITH(self):
         assert self.victim.send__hello() == "hello"
 
@@ -426,7 +423,7 @@ class Test__Shorted_WR_Getattr(Test__Shorted_Base):
 
 
 # =====================================================================================================================
-class Test__Shorted_WR_ValueUnit(Test__Shorted_Base):
+class Test__WR_3_ValueUnit(Test__ShortedBase):
     def test__1(self):
         assert self.victim.send__123() == "123"
         assert self.victim.send__123() == 123
