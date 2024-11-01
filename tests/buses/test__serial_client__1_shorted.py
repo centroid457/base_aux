@@ -1,5 +1,6 @@
 from typing import *
 import pytest
+
 from base_aux.buses import *
 from base_aux.funcs import *
 from base_aux.classes import *
@@ -10,33 +11,47 @@ JUST_LOAD = "JUST_LOAD"
 
 
 @pytest.mark.skipif(not SerialClient.addresses_shorted__detect(), reason="NO addresses_shorted__detect")
-class Test__ShortedDetected:
-    Victim: Type[SerialClient]
-    victim: SerialClient
+class Test__ShortedBase:
+    Victim: Type[SerialClient_FirstFree_Shorted]
+    victim: SerialClient_FirstFree_Shorted
 
+    SETUP_CLS__CONNECT: bool = False
+    TEARDOWN__DISCONNECT: bool = True
 
-# =====================================================================================================================
-class Test__ConnectSimple(Test__ShortedDetected):
+    # -----------------------------------------------------------------------------------------------------------------
     @classmethod
     def setup_class(cls):
+        pass
+
         class Victim(SerialClient_FirstFree_Shorted):
             RAISE_CONNECT = False
 
         cls.Victim = Victim
+        cls.victim = cls.Victim()
+        if cls.SETUP_CLS__CONNECT and not cls.victim.connect():
+            msg = f"[ERROR] not found PORT shorted by Rx+Tx"
+            print(msg)
+            raise Exception(msg)
 
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
+    @classmethod
+    def teardown_class(cls):
+        pass
+        if hasattr(cls, "victim") and cls.victim:
+            cls.victim._addresses__release()
+            cls.victim.disconnect()
+
+    def setup_method(self, method):
+        pass
+
     def teardown_method(self, method):
         pass
-        if hasattr(self, "victim") and self.victim:
+        if self.TEARDOWN__DISCONNECT and hasattr(self, "victim") and self.victim:
             self.victim._addresses__release()
             self.victim.disconnect()
 
+
+# =====================================================================================================================
+class Test__ConnectSimple(Test__ShortedBase):
     # -----------------------------------------------------------------------------------------------------------------
     def test__address_check__resolved(self):
         self.victim = self.Victim()
@@ -47,27 +62,7 @@ class Test__ConnectSimple(Test__ShortedDetected):
 
 
 # =====================================================================================================================
-class Test__AddressResolved(Test__ShortedDetected):
-    @classmethod
-    def setup_class(cls):
-        class Victim(SerialClient_FirstFree_Shorted):
-            RAISE_CONNECT = False
-
-        cls.Victim = Victim
-
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    def teardown_method(self, method):
-        pass
-        if hasattr(self, "victim") and self.victim:
-            self.victim._addresses__release()
-            self.victim.disconnect()
-
+class Test__AddressResolved(Test__ShortedBase):
     # -----------------------------------------------------------------------------------------------------------------
     def test__address_check__resolved(self):
         self.victim = self.Victim()
@@ -118,7 +113,8 @@ class Test__AddressResolved(Test__ShortedDetected):
 
 
 # =====================================================================================================================
-class Test__Connect2(Test__ShortedDetected):
+class Test__Connect2(Test__ShortedBase):
+    # -----------------------------------------------------------------------------------------------------------------
     @classmethod
     def setup_class(cls):
         class Victim(SerialClient_FirstFree_Shorted):
@@ -133,21 +129,9 @@ class Test__Connect2(Test__ShortedDetected):
             print(msg)
             raise Exception(msg)
 
-    @classmethod
-    def teardown_class(cls):
-        if cls.victim:
-            cls.victim._addresses__release()
-            cls.victim.disconnect()
-
     def setup_method(self, method):
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        self.victim.address_forget()
         self.victim.connect(_raise=False)
-
-    def teardown_method(self, method):
-        pass
-        if hasattr(self, "victim") and self.victim:
-            self.victim._addresses__release()
-            self.victim.disconnect()
 
     # ADDRESS ---------------------------------------------------------------------------------------------------------
     def test__addresses_detect_available(self):
@@ -235,34 +219,13 @@ class Test__Connect2(Test__ShortedDetected):
 
 
 # =====================================================================================================================
-class Test__ShortedBase(Test__ShortedDetected):
-    Victim: Type[SerialClient_FirstFree_Shorted]
-    victim: SerialClient_FirstFree_Shorted
-
-    @classmethod
-    def setup_class(cls):
-        cls.Victim = SerialClient_FirstFree_Shorted
-        cls.victim = cls.Victim()
-        if not cls.victim.connect():
-            msg = f"[ERROR] not found PORT shorted by Rx+Tx"
-            print(msg)
-            raise Exception(msg)
-
-    @classmethod
-    def teardown_class(cls):
-        if cls.victim:
-            cls.victim._addresses__release()
-            cls.victim.disconnect()
-
-    # def setup_method(self, method):
-    #     pass
-    #
-    # def teardown_method(self, method):
-    #     pass
+class Test__WRBase(Test__ShortedBase):
+    SETUP_CLS__CONNECT: bool = True
+    TEARDOWN__DISCONNECT: bool = False
 
 
 # =====================================================================================================================
-class Test__WR_1(Test__ShortedBase):
+class Test__WR_1(Test__WRBase):
     def test__wr_single(self):
         assert self.victim.connect(_raise=False)
         assert self.victim._write("") is True
@@ -391,7 +354,7 @@ class Test__WR_1(Test__ShortedBase):
 
 
 # =====================================================================================================================
-class Test__WR_2_Getattr(Test__ShortedBase):
+class Test__WR_2_Getattr(Test__WRBase):
     def test__getattr__1_STARTSWITH(self):
         assert self.victim.send__hello() == "hello"
 
@@ -423,7 +386,7 @@ class Test__WR_2_Getattr(Test__ShortedBase):
 
 
 # =====================================================================================================================
-class Test__WR_3_ValueUnit(Test__ShortedBase):
+class Test__WR_3_ValueUnit(Test__WRBase):
     def test__1(self):
         assert self.victim.send__123() == "123"
         assert self.victim.send__123() == 123
