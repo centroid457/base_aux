@@ -56,7 +56,7 @@ class TpHlStyles(HlStyles):
     )
 
 
-PTE_ESULTS_EXAMPLE = """
+PTE_RESULTS_EXAMPLE = """
 ПРОВЕРКА выделения текста результатов
 Valid=None    #без явного bool значения
 Result=True   #явное True
@@ -173,7 +173,7 @@ class TpGuiBase(Gui):
         # self.PTE.setMaximumBlockCount(15)
 
         # self.PTE.clear()
-        self.PTE.appendPlainText(PTE_ESULTS_EXAMPLE)
+        self.PTE.appendPlainText(PTE_RESULTS_EXAMPLE)
 
         # self.PTE.appendHtml("")
         # self.PTE.anchorAt(#)
