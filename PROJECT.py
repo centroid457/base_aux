@@ -262,7 +262,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 2)
+    VERSION: tuple[int, int, int] = (0, 0, 3)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -306,7 +306,8 @@ other protocols mot recommended
     FIXME: list[str] = [
     ]
     NEWS: list[str] = [
-        "[testplans] fix HL rules",
+        "[classes.valueVariants] add getItem",
+        "[SerialClient.TestShorted] add skipIf not detected for all classes",
     ]
 
 

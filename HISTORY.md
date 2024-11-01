@@ -31,6 +31,11 @@
 ********************************************************************************
 ## NEWS
 
+0.0.3 (2024/11/01 21:40:45)
+------------------------------
+- [classes.valueVariants] add getItem  
+- [SerialClient.TestShorted] add skipIf not detected for all classes  
+
 0.0.2 (2024/10/31 15:14:48)
 ------------------------------
 - [testplans] fix HL rules  
