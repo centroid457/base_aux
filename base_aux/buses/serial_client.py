@@ -816,6 +816,10 @@ class SerialClient(Logger):
 
     @classmethod
     def addresses_paired__detect(cls) -> list[tuple[str, str]]:
+        # FIXME: IT SEEMS NOT WORKING!!!
+        if cls.addresses_system__count() < 2:
+            return []
+
         if SerialClient.ADDRESSES__PAIRED:
             return SerialClient.ADDRESSES__PAIRED
 
@@ -826,24 +830,30 @@ class SerialClient(Logger):
 
         system_ports = cls.addresses_system__detect()
 
+        # CONNECT ALL -----
         for address in system_ports:
             instance = SerialClient()
             if instance.connect(address=address, _raise=False, _touch_connection=True):
                 instances_free_remain.append(instance)
 
         while len(instances_free_remain) > 1:
-            main = instances_free_remain.pop(0)
-            main._write(load)
-            main.disconnect()
+            # take one port --------
+            master = instances_free_remain.pop(0)
+            _write_success = master._write(load)
+            master.disconnect()
+            time.sleep(0.5)
 
+            # try found pair ------
             for index, slave in enumerate(instances_free_remain):
-                read_lines = slave.read_lines(_timeout=0.3)
-                if read_lines and read_lines[-1] == load:
-                    result.append((main._SERIAL.port, slave._SERIAL.port))
-                    slave.disconnect()
-                    instances_free_remain.pop(index)
-                    break
+                read_lines = slave.read_lines(_timeout=2)
+                if read_lines:
+                    if read_lines[-1] == load or list(read_lines)[-1] == load:
+                        result.append((master._SERIAL.port, slave._SERIAL.port))
+                        instances_free_remain.pop(index)
+                        slave.disconnect()
+                        break
 
+        # disconnect all remain ---------
         for remain in instances_free_remain:
             remain.disconnect()
 

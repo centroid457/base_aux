@@ -1,44 +1,55 @@
 import pytest
 from typing import *
+
 from base_aux.buses import *
 from base_aux.funcs import *
 
 
 # =====================================================================================================================
+@pytest.mark.skipif(condition=not SerialClient.addresses_paired__detect(), reason="NO addresses_paired__detect====FIXME!!!")
 class Test__Paired:
-    Victim: Type[SerialClient]
-    victim: SerialClient
+    Victim: Type[SerialClient_FirstFree_Paired]
+    victim: SerialClient_FirstFree_Paired
+
+    SETUP_CLS__CONNECT: bool = False
+    TEARDOWN__DISCONNECT: bool = True
 
     @classmethod
     def setup_class(cls):
-        print(SerialClient.addresses_paired__detect())
+        print(SerialClient_FirstFree_Paired.addresses_paired__detect())
 
-        class Victim(SerialClient):
+        class Victim(SerialClient_FirstFree_Paired):
             LOG_ENABLE = True
 
-            _ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__PAIRED
             # def address__validate(self) -> Union[bool, NoReturn]:
             #     return self.write_read_line_last("echo") == "echo"
 
         cls.Victim = Victim
         cls.victim = cls.Victim()
-        if not cls.victim.connect():
-            msg = f"[ERROR] not found PORT paired"
+
+        class Victim(SerialClient_FirstFree_Shorted):
+            RAISE_CONNECT = False
+
+        cls.Victim = Victim
+        cls.victim = cls.Victim()
+        if cls.SETUP_CLS__CONNECT and not cls.victim.connect():
+            msg = f"[ERROR] not found PORTs PAIRED"
             print(msg)
             raise Exception(msg)
 
-    # @classmethod
-    # def teardown_class(cls):
-    #     if cls.victim:
-    #         cls.victim.disconnect()
-    #
-    # def setup_method(self, method):
-    #     self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__PAIRED
-    #     self.victim.connect()
+    @classmethod
+    def teardown_class(cls):
+        pass
+        if hasattr(cls, "victim") and cls.victim:
+            cls.victim._addresses__release()
+            cls.victim.disconnect()
+
+    def setup_method(self, method):
+        pass
 
     def teardown_method(self, method):
         pass
-        if self.victim:
+        if self.TEARDOWN__DISCONNECT and hasattr(self, "victim") and self.victim:
             self.victim._addresses__release()
             self.victim.disconnect()
 

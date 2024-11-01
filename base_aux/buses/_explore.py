@@ -1,6 +1,9 @@
-# DON'T DELETE!
-# useful to start smth without pytest and not to run in main script!
+from base_aux.buses.serial_client import SerialClient
+SerialClient.addresses_paired__detect()
 
+
+
+exit()
 from base_aux.buses import *
 from typing import *
 
