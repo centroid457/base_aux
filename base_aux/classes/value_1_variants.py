@@ -15,7 +15,7 @@ class Exx__VariantsIncompatible(Exception):     # TODO: seems need to deprecate 
 
 # =====================================================================================================================
 TYPE__VARIANT = Union[str, Any]
-TYPE__VARIANTS = Iterable[TYPE__VARIANT] | ValueNotExist
+TYPE__VARIANTS = list[TYPE__VARIANT] | ValueNotExist
 
 
 # =====================================================================================================================
@@ -58,7 +58,7 @@ class ValueVariants:
 
         if self.VARIANTS is ValueNotExist:
             if self.VALUE is not ValueNotExist:
-                self.VARIANTS = {self.VALUE, }
+                self.VARIANTS = [self.VALUE, ]
             # else:
             #     self.VARIANTS = set()
 
@@ -98,6 +98,9 @@ class ValueVariants:
         used to check compatibility
         """
         return self.value_validate(item)
+
+    def __getitem__(self, item: int) -> Any:
+        return self.VARIANTS[item]
 
     @property
     def VALUE(self) -> Any:

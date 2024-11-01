@@ -125,6 +125,11 @@ class Test__ValueVariants:
         assert list(self.Victim(variants=[0, ])) == [0, ]
         assert list(self.Victim(variants=[0, 1])) == [0, 1, ]
 
+    def test__getitem(self):
+        assert self.Victim(variants=[0, 1])[0] == 0
+        assert self.Victim(variants=[0, 1])[1] == 1
+        assert self.Victim(variants=[0, 1])[-1] == 1
+
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="source1, obj2, _EXPECTED",
