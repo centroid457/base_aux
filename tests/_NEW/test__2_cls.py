@@ -1,21 +1,19 @@
 from typing import *
 import pytest
 from pytest import mark
-from pytest_aux import *
 
-from PRJ_NEW__ import *
-from PRJ_NEW__ import NEW_CLASS____
+from base_aux.funcs import *
 
 
 # =====================================================================================================================
-class Test__888888888888:
-    Victim: Type[NEW_CLASS____]
-    victim: NEW_CLASS____
+class Test__New:
+    # Victim: Type[NEW_CLASS____]
+    # victim: NEW_CLASS____
 
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = type("VICTIM", (NEW_CLASS____,), {})
+        # cls.Victim = type("VICTIM", (NEW_CLASS____,), {})
 
     @classmethod
     def teardown_class(cls):
@@ -44,7 +42,7 @@ class Test__888888888888:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
         
     # -----------------------------------------------------------------------------------------------------------------
-    @pytest.mark.parametrize(argnames="func_link", argvalues=[int, bool, ])
+    @pytest.mark.parametrize(argnames="func_link", argvalues=[int, float, ])
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[

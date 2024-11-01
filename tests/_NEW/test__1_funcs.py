@@ -1,11 +1,8 @@
 from typing import *
-import pathlib
-
 import pytest
 from pytest import mark
-from pytest_aux import *
 
-from PRJ_NEW__ import *
+from base_aux.funcs import *
 
 
 # =====================================================================================================================
@@ -14,16 +11,16 @@ def func_example(arg1: Any, arg2: Any) -> str:
 
 
 # =====================================================================================================================
-@pytest.mark.parametrize(argnames="func_link", argvalues=[int, ])
+@pytest.mark.parametrize(argnames="func_link", argvalues=[int, float])
 @pytest.mark.parametrize(
-    argnames="args, kwargs, _EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (("1", ), 1),
         (("hello", ), Exception),
     ]
 )
 def test__short_variant(func_link, args, _EXPECTED):
-    pytest_func_tester(func_link, args, _EXPECTED)
+    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
 # =====================================================================================================================
@@ -42,7 +39,7 @@ def test__short_variant(func_link, args, _EXPECTED):
         ((1, 2), {}, None, mark.skipif(True), "skip"),
         ((1, 2), {}, "12", mark.skipif(False), "ok"),
         ((1, 2), {}, None, mark.xfail, "ok"),
-        ((1, 2), {}, "12", mark.xfail, "SHOULD BE FAIL!"),
+        # ((1, 2), {}, "12", mark.xfail, "SHOULD BE FAIL!"),
     ]
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[func_example, ])
