@@ -18,34 +18,35 @@
 # VERSION = (0, 0, 9)   # fix names without Minus!
 # VERSION = (0, 0, 10)  # add installation note
 # VERSION = (0, 1, 0)   # combine all modules into one
+# VERSION = (0, 1, 1)   # add comments for Lincenses
 
 # ==========================
 # deploy -------------------
-build
-twine
-setuptools
+build       #MIT
+twine       #Apache2
+setuptools  #MIT
 
 # debug/test ---------------
-pytest
+pytest      #MIT
 
 # SPECIAL ------------------
-numpy
+numpy       #BSD
 
-pyserial    #
-smbus2      # linuxOnly
-telebot
+pyserial    #BSD3
+smbus2      #MIT/linuxOnly
+telebot     #GPL2
 
-PyQt5
+PyQt5       #GPL3
 
-aiohttp
-FastAPI
-requests
-uvicorn
+aiohttp     #Apache2
+FastAPI     #MIT
+requests    #Apache2
+uvicorn     #BSD3
 
-PyYAML
-pydantic
+PyYAML      #MIT
+pydantic    #MIT
 
-bs4
+bs4         #MIT
 
 
 # ==========================
