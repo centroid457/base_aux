@@ -5,7 +5,6 @@ THIS IS THE REAL TESTPLAN!!!
 
 
 # =====================================================================================================================
-# from . import *
 from .tc import TestCaseBase
 from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, DevicesBreeder_Example
 from .gui import TpGuiBase
@@ -248,9 +247,11 @@ class TpMultyDutBase(Logger, QThread):
         Overwrite with super! super last!
         """
         if self.tc_active:
-            self.tc_active.terminate__cls()
+            if not self.tc_active.finished:
+                self.tc_active.terminate__cls()
         elif self.tc_prev:
-            self.tc_prev.teardown__cls()
+            if not self.tc_prev.finished:
+                self.tc_prev.teardown__cls()
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
