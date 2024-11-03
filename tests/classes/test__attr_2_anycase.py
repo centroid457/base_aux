@@ -6,7 +6,7 @@ from base_aux.classes import *
 
 
 # =====================================================================================================================
-class Victim(GetattrAnycase):
+class Victim(AttrAnycase):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"
@@ -26,12 +26,37 @@ class Victim(GetattrAnycase):
 
         ("ATTR_UPPERCASE", "VALUE"),
         ("attr_uppercase", "VALUE"),
+
+        ("     attr_uppercase", "VALUE"),
     ]
 )
-def test__value(attr, _EXPECTED):
+def test__attr(attr, _EXPECTED):
     args = (Victim(), attr)
     func_link = getattr
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="attr, _EXPECTED",
+    argvalues=[
+        (None, Exception),
+        (True, Exception),
+        ("", Exception),
+        (" TRUE", Exception),
+
+        ("attr_lowercase", "value"),
+        ("ATTR_LOWERCASE", "value"),
+
+        ("ATTR_UPPERCASE", "VALUE"),
+        ("attr_uppercase", "VALUE"),
+
+        ("     attr_uppercase", "VALUE"),
+    ]
+)
+def test__item(attr, _EXPECTED):
+    func_link = lambda _attr: Victim()[_attr]
+    pytest_func_tester__no_kwargs(func_link, attr, _EXPECTED)
 
 
 # =====================================================================================================================

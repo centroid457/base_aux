@@ -1,6 +1,6 @@
 from typing import *
 
-from .getattr_1_aux import GetattrAux
+from .attr_1_aux import AttrAux
 from .static import Exx__AnnotNotDefined
 
 
@@ -32,10 +32,10 @@ class AnnotAux:
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, item) -> Any | NoReturn:
-        return GetattrAux._getattr_anycase(item, self)
+        return AttrAux._getattr_anycase(item, self)
 
     def __getitem__(self, item) -> Any | NoReturn:
-        return GetattrAux._getattr_anycase(item, self)
+        return AttrAux._getattr_anycase(item, self)
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod

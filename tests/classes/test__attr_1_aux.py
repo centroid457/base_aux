@@ -6,7 +6,7 @@ from base_aux.classes import *
 
 
 # =====================================================================================================================
-class Victim(GetattrAux):
+class Victim(AttrAux):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"
@@ -27,11 +27,13 @@ class Victim(GetattrAux):
 
         ("ATTR_UPPERCASE", "ATTR_UPPERCASE"),
         ("attr_uppercase", "ATTR_UPPERCASE"),
+
+        ("     attr_uppercase", "ATTR_UPPERCASE"),
     ]
 )
 def test__get_name(attr, _EXPECTED):
     args = (attr, Victim())
-    func_link = GetattrAux._attr_anycase__find
+    func_link = AttrAux._attr_anycase__find
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
@@ -50,11 +52,13 @@ def test__get_name(attr, _EXPECTED):
 
         ("ATTR_UPPERCASE", "VALUE"),
         ("attr_uppercase", "VALUE"),
+
+        ("     attr_uppercase", "VALUE"),
     ]
 )
 def test__get_value(attr, _EXPECTED):
     args = (attr, Victim())
-    func_link = GetattrAux._getattr_anycase
+    func_link = AttrAux._getattr_anycase
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
@@ -74,13 +78,15 @@ def test__get_value(attr, _EXPECTED):
         ("ATTR_UPPERCASE", None),
         ("attr_uppercase", None),
 
+        ("     attr_uppercase", None),
+
         ("HELLO", None),
     ]
 )
 def test__set_value(attr, _EXPECTED):
     victim = Victim()
     args = (attr, 123, victim)
-    func_link = GetattrAux._setattr_anycase
+    func_link = AttrAux._setattr_anycase
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 

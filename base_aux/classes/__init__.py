@@ -65,16 +65,16 @@ from .getattr_0_echo import (
     # TYPES
     # EXX
 )
-from .getattr_1_aux import (
+from .attr_1_aux import (
     # BASE
-    GetattrAux,
+    AttrAux,
     # AUX
     # TYPES
     # EXX
 )
-from .getattr_2_anycase import (
+from .attr_2_anycase import (
     # BASE
-    GetattrAnycase,
+    AttrAnycase,
     # AUX
     # TYPES
     # EXX

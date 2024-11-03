@@ -3,7 +3,7 @@ from base_aux.funcs import ValueNotExist
 
 
 # =====================================================================================================================
-class GetattrAux:
+class AttrAux:
     """
     NOTICE
     ------

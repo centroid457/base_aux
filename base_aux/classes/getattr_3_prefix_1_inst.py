@@ -2,7 +2,7 @@ from typing import *
 from base_aux.objects import *
 
 from .valid_0_aux import ValidAux
-from .getattr_1_aux import GetattrAux
+from .attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
@@ -15,7 +15,7 @@ class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
 
 
 # =====================================================================================================================
-class GetattrPrefixInst(GetattrAux):
+class GetattrPrefixInst(AttrAux):
     """
     this is just a Base!
 
