@@ -28,7 +28,7 @@ class AttrAux:
 
         return
 
-    # GET -------------------------------------------------------------------------------------------------------------
+    # ATTR ------------------------------------------------------------------------------------------------------------
     @classmethod
     def _getattr_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
         """
@@ -41,9 +41,8 @@ class AttrAux:
 
         return getattr(obj, name_original)
 
-    # SET -------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _setattr_anycase(cls, item: str, value:Any, obj: Any) -> Any | Callable | NoReturn:
+    def _setattr_anycase(cls, item: str, value:Any, obj: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
@@ -61,7 +60,16 @@ class AttrAux:
             name_original = item
 
         # NOTE: you still have no exx with setattr(obj, "    HELLO", value) and ""
-        return setattr(obj, name_original, value)
+        setattr(obj, name_original, value)
+
+    # ITEM ------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def _getitem_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+        return cls._getattr_anycase(item, obj)
+
+    @classmethod
+    def _setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+        cls._setattr_anycase(item, value, obj)
 
 
 # =====================================================================================================================
