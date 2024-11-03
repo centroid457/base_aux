@@ -1,6 +1,6 @@
 from typing import *
-
 from enum import Enum, auto
+from base_aux.classes.static import *
 
 
 # =====================================================================================================================
@@ -10,19 +10,6 @@ TYPE__BREED_RESULT__GROUP = Union[
     list[TYPE__BREED_RESULT__ITEM]   # LIST variant
 ]
 TYPE__BREED_RESULT__GROUPS = dict[str, TYPE__BREED_RESULT__GROUP]
-
-
-# =====================================================================================================================
-class Exx__BreederObjectList_GroupsNotGenerated(Exception):
-    pass
-
-
-class Exx__BreederObjectList_GroupNotExists(Exception):
-    pass
-
-
-class Exx__BreederObjectList_ObjCantAccessIndex(Exception):
-    pass
 
 
 # =====================================================================================================================

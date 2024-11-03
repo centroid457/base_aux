@@ -1,16 +1,11 @@
 from typing import *
 
+from . import Exx__ValueNotInVariants
 from .valid_1_base import Valid
 from base_aux.funcs import ValueNotExist
 
 
 # =====================================================================================================================
-class Exx__ValueNotInVariants(Exception):
-    pass
-
-
-class Exx__VariantsIncompatible(Exception):     # TODO: seems need to deprecate it! it is not important!
-    pass
 
 
 # =====================================================================================================================

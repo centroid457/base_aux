@@ -1,27 +1,6 @@
 from typing import *
 
-
-# =====================================================================================================================
-class Exx__IndexOverlayed(Exception):
-    pass
-
-
-class Exx__IndexNotSet(Exception):
-    pass
-
-
-class Exx__ItemNotExists(Exception):
-    """
-    not exists INDEX (out of range) or NAME not in defined values
-    """
-    pass
-
-
-class Exx__StartOuterNONE_UsedInStackByRecreation(Exception):
-    """
-    in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
-    """
-    pass
+from base_aux.classes import Exx__ItemNotExists, Exx__StartOuterNONE_UsedInStackByRecreation
 
 
 # =====================================================================================================================

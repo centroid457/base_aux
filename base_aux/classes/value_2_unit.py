@@ -3,17 +3,10 @@ import re
 
 from . import *
 from base_aux.funcs import ValueNotExist
+from .static import Exx__ValueNotParsed, Exx__ValueUnitsIncompatible
 
 
 # =====================================================================================================================
-class Exx__ValueNotParsed(Exception):
-    pass
-
-
-class Exx__ValueUnitsIncompatible(Exception):
-    pass
-
-
 class UnitBase(AnnotClsKeysAsValues):
     """
     this is just an example! it will help you to use just strings by Object
