@@ -43,7 +43,7 @@ class GetattrPrefixInst(GetattrAux):
         2.You always need to CALL prefixed result! even if you access to not callable attribute!
         """
         for prefix in self._GETATTR__PREFIXES:
-            prefix_original = self._attr_anycase__get_name(prefix, self)
+            prefix_original = self._attr_anycase__find_name(prefix, self)
             if not prefix_original:
                 continue
             prefix_meth = getattr(self, prefix_original)

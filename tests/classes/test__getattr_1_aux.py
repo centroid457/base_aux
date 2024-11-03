@@ -16,6 +16,7 @@ class Victim(GetattrAux):
 @pytest.mark.parametrize(
     argnames="attr, _EXPECTED",
     argvalues=[
+        (1, None),
         (None, None),
         (True, None),
         ("", None),
@@ -28,9 +29,9 @@ class Victim(GetattrAux):
         ("attr_uppercase", "ATTR_UPPERCASE"),
     ]
 )
-def test__name(attr, _EXPECTED):
+def test__get_name(attr, _EXPECTED):
     args = (attr, Victim())
-    func_link = GetattrAux._attr_anycase__get_name
+    func_link = GetattrAux._attr_anycase__find_name
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
@@ -38,6 +39,7 @@ def test__name(attr, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="attr, _EXPECTED",
     argvalues=[
+        (1, Exception),
         (None, Exception),
         (True, Exception),
         ("", Exception),
@@ -50,9 +52,35 @@ def test__name(attr, _EXPECTED):
         ("attr_uppercase", "VALUE"),
     ]
 )
-def test__value(attr, _EXPECTED):
+def test__get_value(attr, _EXPECTED):
     args = (attr, Victim())
     func_link = GetattrAux._attr_anycase__get_value
+    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="attr, _EXPECTED",
+    argvalues=[
+        (1, Exception),
+        (None, Exception),
+        (True, Exception),
+        ("", Exception),
+        (" TRUE", None),    #->obj.TRUE!!!
+
+        ("attr_lowercase", None),
+        ("ATTR_LOWERCASE", None),
+
+        ("ATTR_UPPERCASE", None),
+        ("attr_uppercase", None),
+
+        ("HELLO", None),
+    ]
+)
+def test__set_value(attr, _EXPECTED):
+    victim = Victim()
+    args = (attr, 123, victim)
+    func_link = GetattrAux._attr_anycase__set_value
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 

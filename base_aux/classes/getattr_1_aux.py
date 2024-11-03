@@ -9,11 +9,16 @@ class GetattrAux:
     ------
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
+    # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _attr_anycase__get_name(cls, item: str | Any, obj: Any = ValueNotExist) -> str | None:
+    def _attr_anycase__find_name(cls, item: str | Any, obj: Any = ValueNotExist) -> str | None:
         """
         get attr name in original register
         """
+        if not isinstance(item, str):
+            return
+
+        item = item.strip()
         if obj == ValueNotExist:
             obj = cls   # seems it is not good idea!!!
 
@@ -21,17 +26,42 @@ class GetattrAux:
             if name.lower() == str(item).lower():
                 return name
 
+        return
+
+    # GET -------------------------------------------------------------------------------------------------------------
     @classmethod
     def _attr_anycase__get_value(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
         """
-        name_original = cls._attr_anycase__get_name(item, obj)
+        name_original = cls._attr_anycase__find_name(item, obj)
         if name_original is None:
             raise AttributeError(item)
 
         return getattr(obj, name_original)
+
+    # SET -------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def _attr_anycase__set_value(cls, item: str, value:Any, obj: Any) -> Any | Callable | NoReturn:
+        """
+        get attr value by name in any register
+        no execution! return pure value as represented in object!
+
+        NoReturn - in case of not accepted names when setattr
+        """
+        name_original = cls._attr_anycase__find_name(item, obj)
+        if name_original is None:
+            if not isinstance(item, str):
+                raise AttributeError(item)
+
+            item = item.strip()
+            if item in ["", ]:
+                raise AttributeError(item)
+            name_original = item
+
+        # NOTE: you still have no exx with setattr(obj, "    HELLO", value) and ""
+        return setattr(obj, name_original, value)
 
 
 # =====================================================================================================================
