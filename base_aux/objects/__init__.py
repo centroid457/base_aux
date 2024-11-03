@@ -14,7 +14,7 @@ from .info import (
     # TYPES
     # EXX
 )
-from .types import (
+from .obj_types import (
     # BASE
     TypeChecker,
     # AUX

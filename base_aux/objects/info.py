@@ -1,7 +1,7 @@
-from typing import *
-from dataclasses import dataclass, astuple, asdict, field
+# from typing import Optional, Any, Union, NamedTuple
+from dataclasses import dataclass, field
 
-from .types import *
+from .obj_types import *
 
 
 # =====================================================================================================================
@@ -39,18 +39,18 @@ class ObjectState:
     class for keeping results
     """
     # TODO: add sort method!!!
-    SKIPPED_FULLNAMES: List[str] = field(default_factory=list)
-    SKIPPED_PARTNAMES: List[str] = field(default_factory=list)
+    SKIPPED_FULLNAMES: list[str] = field(default_factory=list)
+    SKIPPED_PARTNAMES: list[str] = field(default_factory=list)
 
-    PROPERTIES__ELEMENTARY_SINGLE: Dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__ELEMENTARY_COLLECTION: Dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__OBJECTS: Dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__EXX: Dict[str, Exception] = field(default_factory=dict)
+    PROPERTIES__ELEMENTARY_SINGLE: dict[str, Any] = field(default_factory=dict)
+    PROPERTIES__ELEMENTARY_COLLECTION: dict[str, Any] = field(default_factory=dict)
+    PROPERTIES__OBJECTS: dict[str, Any] = field(default_factory=dict)
+    PROPERTIES__EXX: dict[str, Exception] = field(default_factory=dict)
 
-    METHODS__ELEMENTARY_SINGLE: Dict[str, Any] = field(default_factory=dict)
-    METHODS__ELEMENTARY_COLLECTION: Dict[str, Any] = field(default_factory=dict)
-    METHODS__OBJECTS: Dict[str, Any] = field(default_factory=dict)
-    METHODS__EXX: Dict[str, Exception] = field(default_factory=dict)
+    METHODS__ELEMENTARY_SINGLE: dict[str, Any] = field(default_factory=dict)
+    METHODS__ELEMENTARY_COLLECTION: dict[str, Any] = field(default_factory=dict)
+    METHODS__OBJECTS: dict[str, Any] = field(default_factory=dict)
+    METHODS__EXX: dict[str, Exception] = field(default_factory=dict)
 
 
 # =====================================================================================================================
@@ -64,10 +64,10 @@ class ObjectInfo:
     HIDE_BUILD_IN: bool = None
     LOG_ITER: bool = None
 
-    NAMES__USE_ONLY_PARTS: List[str] = []
-    NAMES__SKIP_FULL: List[str] = [
+    NAMES__USE_ONLY_PARTS: list[str] = []
+    NAMES__SKIP_FULL: list[str] = [
     ]
-    NAMES__SKIP_PARTS: List[str] = [
+    NAMES__SKIP_PARTS: list[str] = [
         # DANGER
         "init", "new", "create", "enter", "install",
         "set",
@@ -106,9 +106,9 @@ class ObjectInfo:
             hide_build_in: Optional[bool] = None,
             log_iter: Optional[bool] = None,
 
-            names__use_only_parts: Union[None, str, List[str]] = None,
-            names__skip_full: Union[None, str, List[str]] = None,
-            names__skip_parts: Union[None, str, List[str]] = None,
+            names__use_only_parts: Union[None, str, list[str]] = None,
+            names__skip_full: Union[None, str, list[str]] = None,
+            names__skip_parts: Union[None, str, list[str]] = None,
     ):
 
         # SETTINGS -----------------------------------------------------------

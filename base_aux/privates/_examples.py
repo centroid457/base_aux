@@ -1,8 +1,11 @@
 # ===================================================================
+from base_aux.privates import *
+import pathlib
+
+
+# ===================================================================
 # by instance attr
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
-
-from private_values import *
 
 class Cls:
     data = PrivateAuthJson(_section="AUTH")
@@ -13,7 +16,6 @@ class Cls:
 # like dict key on instance
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
 
-from private_values import *
 
 class Cls:
     data = PrivateAuthJson(_section="AUTH")
@@ -27,7 +29,6 @@ class Cls:
 # but you could not use it and however keep access to all existed params in used section!
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
 
-from private_values import *
 class MyPrivateJson(PrivateJson):
     NAME: str
     PWD: str
@@ -37,14 +38,11 @@ name = MyPrivateJson().NAME
 
 # ===================================================================
 # in example above you could simply use existed classes
-from private_values import *
 name = PrivateAuthJson().NAME
 
 
 # ===================================================================
 ### 1. Env
-
-from private_values import *
 
 class Cls:
    user = PrivateEnv["NAME"]
@@ -54,15 +52,12 @@ class Cls:
 # ===================================================================
 ### 2. IniFile
 # Use different sections
-from private_values import *
 class Cls:
    user = PrivateIni(_section="CustomSection").NAME
 
 
 # ===================================================================
 # Change full settings
-from private_values import *
-
 class CustomIniValues(PrivateIni):
    DIRPATH = "new/path/"
    DIRPATH = pathlib.Path("new/path/")
@@ -74,7 +69,6 @@ class Cls:
 
 # ===================================================================
 # Without creating new class
-from private_values import *
 class Cls:
    pv1 = PrivateIni(_filename="otherFilename").pv1
 
@@ -82,9 +76,6 @@ class Cls:
 # ===================================================================
 ### 3. JsonFile
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
-
-from private_values import *
-
 class MyPrivateJson(PrivateJson):
     SECTION = "AUTH"
     NAME: str
@@ -99,8 +90,6 @@ class Cls:
 # use already created templates (PrivateAuthJson/PrivateTgBotAddressJson) for standard attributes
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
 
-from private_values import *
-
 class Cls:
     data = PrivateAuthJson(_section="AUTH")
     def connect(self):
@@ -114,12 +103,11 @@ class Cls:
 
 # {"AUTH": {"NAME": "MyName", "PWD": "MyPwd"}}
 
-from private_values import *
-
 class MyPrivate(PrivateAuto):
     SECTION = "AUTH"
     NAME: str
     PWD: str
 
 name = MyPrivate().NAME
+
 # ===================================================================

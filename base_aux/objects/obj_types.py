@@ -1,7 +1,10 @@
+# DONT RENAME TO SIMPLE "TYPES"!!! it break by circular import
+
+
 from typing import *
 
-from .primitives import LAMBDA_TRUE
-
+from base_aux.objects.primitives import LAMBDA_TRUE
+# LAMBDA_TRUE = lambda *args, **kwargs: True
 
 # =====================================================================================================================
 class Cls:
