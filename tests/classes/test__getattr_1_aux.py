@@ -31,7 +31,7 @@ class Victim(GetattrAux):
 )
 def test__get_name(attr, _EXPECTED):
     args = (attr, Victim())
-    func_link = GetattrAux._attr_anycase__find_name
+    func_link = GetattrAux._attr_anycase__find
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
@@ -54,7 +54,7 @@ def test__get_name(attr, _EXPECTED):
 )
 def test__get_value(attr, _EXPECTED):
     args = (attr, Victim())
-    func_link = GetattrAux._attr_anycase__get_value
+    func_link = GetattrAux._getattr_anycase
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
@@ -80,7 +80,7 @@ def test__get_value(attr, _EXPECTED):
 def test__set_value(attr, _EXPECTED):
     victim = Victim()
     args = (attr, 123, victim)
-    func_link = GetattrAux._attr_anycase__set_value
+    func_link = GetattrAux._setattr_anycase
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 

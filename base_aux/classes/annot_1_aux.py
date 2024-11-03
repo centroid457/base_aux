@@ -32,10 +32,10 @@ class AnnotAux:
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, item) -> Any | NoReturn:
-        return GetattrAux._attr_anycase__get_value(item, self)
+        return GetattrAux._getattr_anycase(item, self)
 
     def __getitem__(self, item) -> Any | NoReturn:
-        return GetattrAux._attr_anycase__get_value(item, self)
+        return GetattrAux._getattr_anycase(item, self)
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
