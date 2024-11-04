@@ -235,7 +235,7 @@ class SerialServer_Base(Logger, QThread):
         self.LOGGER.debug("")
 
         meth_name__expected = f"{self._STARTSWITH__CMD}{line_parsed.CMD}"
-        meth_name__original = Iterables().item__get_original__case_insensitive(meth_name__expected, dir(self))
+        meth_name__original = IterAux().item__get_original__case_insensitive(meth_name__expected, dir(self))
         # GET METHOD --------------------
         if meth_name__original:
             meth = getattr(self, meth_name__original())
@@ -289,7 +289,7 @@ class SerialServer_Base(Logger, QThread):
             ARGS.extend(arg.split("/"))
 
         # WORK --------------------------------
-        param_value = Iterables().value_by_path__get(ARGS, self.PARAMS)
+        param_value = IterAux().value_by_path__get(ARGS, self.PARAMS)
         if not param_value:
             return self.ANSWER.ERR__NAME_CMD_OR_PARAM
 
@@ -330,11 +330,11 @@ class SerialServer_Base(Logger, QThread):
 
         # VALIDATE = check AVAILABLE TO CHANGE = exists all and not callable --------------
         for path, value_new in KWARGS.items():
-            path_name__original = Iterables().path__get_original(path, self.PARAMS)
+            path_name__original = IterAux().path__get_original(path, self.PARAMS)
             if not path_name__original:
                 return self.ANSWER.ERR__NAME_CMD_OR_PARAM
 
-            value_old = Iterables().value_by_path__get(path, self.PARAMS)()
+            value_old = IterAux().value_by_path__get(path, self.PARAMS)()
             if isinstance(value_old, ValueUnit):
                 # NOTE: ALL CLASSES/INSTANCES ARE CALLABLE!!!
                 pass
@@ -347,7 +347,7 @@ class SerialServer_Base(Logger, QThread):
         # SET --------------
         for path, value_new in KWARGS.items():
             value_new = Strings().try_convert_to__elementary(value_new)
-            value_old = Iterables().value_by_path__get(path, self.PARAMS)()
+            value_old = IterAux().value_by_path__get(path, self.PARAMS)()
             # SET ----------
             if isinstance(value_old, (ValueUnit, ValueVariants)):
                 try:
@@ -356,7 +356,7 @@ class SerialServer_Base(Logger, QThread):
                 except:
                     return self.ANSWER.ERR__VALUE_INCOMPATIBLE
             else:
-                result = Iterables().value_by_path__set(path, value_new, self.PARAMS)
+                result = IterAux().value_by_path__set(path, value_new, self.PARAMS)
 
             if not result:
                 return self.ANSWER.FAIL
@@ -399,7 +399,7 @@ class SerialServer_Base(Logger, QThread):
 
         # WORK --------------------------------
         meth_name__expected = f"{self._STARTSWITH__SCRIPT}{line_parsed.ARGS[0]}"
-        meth_name__original = Iterables().item__get_original__case_insensitive(meth_name__expected, dir(self))
+        meth_name__original = IterAux().item__get_original__case_insensitive(meth_name__expected, dir(self))
         if not meth_name__original:
             return self.ANSWER.ERR__NAME_SCRIPT
 

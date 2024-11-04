@@ -46,20 +46,20 @@ from .ensure import (
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
-from .result_cum import (
-    # BASE
-    ResultCum,
-    # AUX
-    # TYPES
-    TYPE__RESULT_CUM_STEP,
-    TYPE__RESULT_CUM_STEPS,
-    # EXX
-)
+# from .result_cum import (
+#     # BASE
+#     ResultCum,
+#     # AUX
+#     # TYPES
+#     TYPE__RESULT_CUM_STEP,
+#     TYPE__RESULT_CUM_STEPS,
+#     # EXX
+# )
 # ---------------------------------------------------------------------------------------------------------------------
 from .arrays import array_2d_get_compact_str
-from .iterables import (
+from .iter_aux import (
     # BASE
-    Iterables,
+    IterAux,
     # AUX
     # TYPES
     TYPE__ITERABLE_PATH_KEY,

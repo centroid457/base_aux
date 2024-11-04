@@ -1,5 +1,5 @@
 from typing import *
-from . import Explicit
+from base_aux.funcs.value_0_explicit import Explicit
 
 
 # =====================================================================================================================
@@ -10,7 +10,7 @@ TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]
 
 
 # =====================================================================================================================
-class Iterables:
+class IterAux:
     """
     collect universal funcs which work with collections
     """
@@ -22,10 +22,11 @@ class Iterables:
         self.DATA = data or {}
         self.PATH = []
 
+    @classmethod
     def item__get_original__case_insensitive(
-            self,
+            cls,
             item_expected: Any,
-            data: Optional[TYPE__ITERABLE] = None
+            source: TYPE__ITERABLE
     ) -> Optional[Explicit]:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
@@ -39,14 +40,12 @@ class Iterables:
         1. get key in dict
         2. find attribute name in objects
 
-        :param data:
+        :param source:
         :param item_expected:
         :return: actual item from collection
             None - if VALUE is unreachable
         """
-        if data is None:
-            data = self.DATA
-        for value in list(data):
+        for value in list(source):
             if str(value).lower() == str(item_expected).lower():
                 return Explicit(value)
 

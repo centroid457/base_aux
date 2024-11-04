@@ -7,7 +7,7 @@ from base_aux.objects import *
 class Test__1:
     @classmethod
     def setup_class(cls):
-        cls.victim = Iterables().item__get_original__case_insensitive
+        cls.victim = IterAux.item__get_original__case_insensitive
         pass
 
     # @classmethod
@@ -61,7 +61,7 @@ class Test__1:
 class Test__2:
     @classmethod
     def setup_class(cls):
-        cls.victim = Iterables().path__get_original
+        cls.victim = IterAux().path__get_original
         pass
 
     # @classmethod
@@ -132,7 +132,7 @@ class Test__2:
 class Test__3:
     @classmethod
     def setup_class(cls):
-        cls.victim = Iterables().value_by_path__get
+        cls.victim = IterAux().value_by_path__get
         pass
 
     # @classmethod
@@ -157,7 +157,7 @@ class Test__3:
 class Test__4:
     @classmethod
     def setup_class(cls):
-        cls.victim = Iterables().value_by_path__set
+        cls.victim = IterAux().value_by_path__set
         pass
 
     # @classmethod
