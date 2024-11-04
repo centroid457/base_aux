@@ -5,16 +5,16 @@ from . import *
 
 # =====================================================================================================================
 # TODO: add Csv???
-class PrivateAuto(PrivateJson, PrivateIni, PrivateEnv):
+class PrivateAuto(PrivateJson, PrivateIni, PrivateCsv, PrivateEnv):
     """This class will try all variants in order Json-Ini-Env.
     and take values ONLY from FIRST ONE source with all needed values!
     It will not merge sources!
     """
     def get_dict(self) -> Union[TYPE__PV_DICT, NoReturn]:
-        annots = self.annot__get_nested__dict_values()
+        annots = self.annot__get_not_defined()
         annots_lower = set(map(str.lower, annots))
 
-        for cls in [PrivateJson, PrivateIni, PrivateCsv, PrivateEnv]:
+        for cls in [PrivateAuto, PrivateJson, PrivateIni, PrivateCsv, PrivateEnv]:
             try:
                 self.FILENAME = super(cls, self).FILENAME
                 self._filepath_apply_new()
