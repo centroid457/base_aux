@@ -108,7 +108,7 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
         :param _subj_name: reuse new subject name instead of default
         :param _subtype: reuse new _subtype instead of default
         """
-        super().__init__(daemon=True)
+        super().__init__()
         self.TIMESTAMP = time.strftime("%Y.%m.%d %H:%M:%S")
 
         # self._mutex: threading.Lock = threading.Lock()
@@ -125,9 +125,11 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
             self.start()
 
     # =================================================================================================================
+    @property
     def RECIPIENT(self) -> str:
         """RECIPIENT actual/final
         """
+        pass
         return self.RECIPIENT_SPECIAL or self._recipient_self_get()
 
     @property

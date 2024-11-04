@@ -7,9 +7,12 @@ from base_aux.alerts import *
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
 
-@pytest.mark.skip
+# @pytest.mark.skip
 class Test__1:
-    @pytest.mark.parametrize(argnames="victim", argvalues=[AlertSmtp, AlertTelegram])
+    @pytest.mark.parametrize(argnames="victim", argvalues=[
+        AlertSmtp,
+        AlertTelegram,
+    ])
     def test__send_single(self, victim):
         assert victim("single").result_wait() is True
 
