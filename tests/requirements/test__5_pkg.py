@@ -13,6 +13,10 @@ DUMMY_MODULE_NAME = "dummy-module"
 # =====================================================================================================================
 @pytest.mark.skipif(condition=False, reason="too long")
 class Test_Pkg:
+    @classmethod
+    def setup_class(cls):
+        Packages().upgrade_pip()
+
     def setup_method(self, method):
         self.Victim = type("Victim", (Packages,), {})
 
@@ -20,14 +24,14 @@ class Test_Pkg:
     def test__all_methods(self):
         victim = self.Victim()
 
+        victim.uninstall(DUMMY_MODULE_NAME)
+        assert victim.version_get_installed(DUMMY_MODULE_NAME) is None
+        assert victim.check_installed(DUMMY_MODULE_NAME) is False
+
         for version in ["0.0.1", "0.0.2", ]:
             assert victim.upgrade(f"{DUMMY_MODULE_NAME}=={version}")
             assert victim.version_get_installed(DUMMY_MODULE_NAME) == version
             assert victim.check_installed(DUMMY_MODULE_NAME) is True
-
-        victim.uninstall(DUMMY_MODULE_NAME)
-        assert victim.version_get_installed(DUMMY_MODULE_NAME) is None
-        assert victim.check_installed(DUMMY_MODULE_NAME) is False
 
 
 # =====================================================================================================================
