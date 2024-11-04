@@ -1,7 +1,7 @@
-import trade_alerts
+from base_aux.stock.mt import *
 
 
-class MonitorADX(trade_alerts.MonitorADX):
+class MonitorADX(MonitorADX):
     THRESH_ADX_FAST_FULL = 80
     THRESH_ADX_SLOW_FULL = 50
 

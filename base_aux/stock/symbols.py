@@ -1,6 +1,4 @@
-from typing import *
-
-
+# =====================================================================================================================
 class Symbols:
     # FINAM COMMON AVAILABLE
     # see https://docs.comon.ru/general-information/schedule-and-financial-instruments/
@@ -94,3 +92,6 @@ class Symbols:
 
         'SGZH', 'GEMC', 'FMRU', 'VKCO', 'OBLG', 'LQDT', 'GOLD', 'EQMX', 'SPBE',
         'RCUS', 'SBGD', 'ORUP', 'SFTL']   # count = 275
+
+
+# =====================================================================================================================

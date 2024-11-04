@@ -13,10 +13,13 @@ if not mt5.initialize():
     print("initialize() failed, error code =", mt5.last_error())
     quit()
 
-rates = mt5.copy_rates_from_pos("BRV3", mt5.TIMEFRAME_M10, 0, BARS_COUNT)
+rates = mt5.copy_rates_from_pos("SBER", mt5.TIMEFRAME_M10, 0, BARS_COUNT)
 mt5.shutdown()
 
-print("Выведем полученные данные как есть")
+if rates is None:
+    print("[FAIL] seems symbol is very old and not accessible! no rates [like for BRV3 -> None, use SBER]")
+
+print("rates as is:")
 for rate in rates:
     print(rate)
     # (1675118400, 85.41, 85.43, 85.21, 85.21, 225, 1, 1065)

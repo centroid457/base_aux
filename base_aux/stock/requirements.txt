@@ -1,39 +1,25 @@
-# ==========================
-# RULES
-# 1=DONT USE MINUS in moduleNames!!! thi and all next moduls will not applyed!!!
-# 2=how to install
-#   pip install -r .\requirements.txt               # without upgrade option is not enough!
-#   pip install -u -r .\requirements.txt            # just -u may not be recognized
-#   pip install --upgrade -r .\requirements.txt     # full "--upgrate" is the best way!
-
-# --------------------------
-# VERSION = (0, 0, 1)   # just add version
-# VERSION = (0, 0, 2)   # add funcs-aux
-# VERSION = (0, 0, 3)   # add block NESTED REQUIREMENTS
-# VERSION = (0, 0, 4)   # add loggers-aux
-# VERSION = (0, 0, 5)   # add pytest-aux
-# VERSION = (0, 0, 6)   # add nested in COMMON
-# VERSION = (0, 0, 7)   # add new block TESTS +add classes into COMMON
-# VERSION = (0, 0, 8)   # add [deploy]build+twine+setuptools+cli +add singleton-meta in common/rename common to BASE/regroup subsets
-# VERSION = (0, 0, 9)   # fix names without Minus!
-# VERSION = (0, 0, 10)  # add installation note
-# VERSION = (0, 1, 0)   # combine all modules into one
-# VERSION = (0, 1, 1)   # add comments for Lincenses
-
-# ==========================
-# deploy -------------------
-build       #MIT
-twine       #Apache2
-setuptools  #MIT
-
-# debug/test ---------------
-pytest      #MIT
-
-# BASE ---------------------
 base_aux
 
 # SPECIAL ------------------
-numpy       #BSD
+numpy<2
+# 2024.11.04
+#Traceback (most recent call last):  File "C:\!_HPN277SR\!!!_GD_additional\!_base_aux\base_aux\stock\explore_indicators.py", line 2, in <module>
+#     import MetaTrader5 as mt5
+#   File "C:\Python3127x64\Lib\site-packages\MetaTrader5\__init__.py", line 258, in <module>
+#     from ._core import *
+# Traceback (most recent call last):
+#   File "C:\Python3127x64\Lib\site-packages\numpy\core\_multiarray_umath.py", line 44, in __getattr__
+#     raise ImportError(msg)
+# ImportError:
+# A module that was compiled using NumPy 1.x cannot be run in
+# NumPy 2.1.3 as it may crash. To support both 1.x and 2.x
+# versions of NumPy, modules must be compiled with NumPy 2.0.
+# Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+#
+# If you are a user of the module, the easiest solution will be to
+# downgrade to 'numpy<2' or try to upgrade the affected module.
+# We expect that some modules will need time to support NumPy 2.
+
 pandas
 
 # === TRADING ===

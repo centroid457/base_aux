@@ -2,7 +2,7 @@ from typing import *
 from enum import Enum, auto
 from dataclasses import dataclass
 
-from base_aux.annots import *
+from base_aux.classes import *
 
 
 # =====================================================================================================================
@@ -15,7 +15,7 @@ class IndicatorName(Enum):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class IndicatorParams_Base:
+class IndicatorParamsBase:
     NAME: IndicatorName = None
     COLUMN_NAME__TEMPLATE: str = None
     ROUND: int = None
@@ -27,7 +27,7 @@ class IndicatorParams_Base:
         return self.COLUMN_NAME__TEMPLATE % self.params_dict__get()
 
     def params_dict__get(self):
-        return AnnotAttrs().annots_get_dict(self)
+        return AnnotAux().annot__get_nested__dict_values(self)
 
     def bars_expected__get(self) -> int:
         """
@@ -50,7 +50,7 @@ class IndicatorParams_Base:
 
 # ---------------------------------------------------------------------------------------------------------------------
 @dataclass
-class IndicatorParams_WMA(IndicatorParams_Base):
+class IndicatorParams_WMA(IndicatorParamsBase):
     length: int
 
     NAME: IndicatorName = IndicatorName.WMA
@@ -60,7 +60,7 @@ class IndicatorParams_WMA(IndicatorParams_Base):
 
 
 @dataclass
-class IndicatorParams_STOCH(IndicatorParams_Base):
+class IndicatorParams_STOCH(IndicatorParamsBase):
     """
     always work with 14/3/3!!!
     """
@@ -75,7 +75,7 @@ class IndicatorParams_STOCH(IndicatorParams_Base):
 
 
 @dataclass
-class IndicatorParams_ADX(IndicatorParams_Base):
+class IndicatorParams_ADX(IndicatorParamsBase):
     length: int
     lensig: int
 
@@ -86,7 +86,7 @@ class IndicatorParams_ADX(IndicatorParams_Base):
 
 
 @dataclass
-class IndicatorParams_MACD(IndicatorParams_Base):
+class IndicatorParams_MACD(IndicatorParamsBase):
     fast: int
     slow: int
     signal: int
@@ -103,16 +103,13 @@ class IndicatorParams_MACD(IndicatorParams_Base):
 
 
 @dataclass
-class IndicatorParams_RSI(IndicatorParams_Base):
+class IndicatorParams_RSI(IndicatorParamsBase):
     length: int
 
     NAME: IndicatorName = IndicatorName.RSI
 
     COLUMN_NAME__TEMPLATE: str = "RSI_%(length)s"
     ROUND: int = 1
-
-
-Type_IndicatorParams = IndicatorParams_Base
 
 
 # =====================================================================================================================

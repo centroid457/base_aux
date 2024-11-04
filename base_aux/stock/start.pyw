@@ -1,3 +1,3 @@
-from trade_alerts import start
+from base_aux.stock import start
 
 start.main()

@@ -1,24 +1,19 @@
-import funcs_aux.np
-
-from .mt5 import *
+from base_aux.stock import *
 
 import sys
-import time
 from typing import *
-import datetime as dt
-import re
 import threading
 import abc
-from collections import deque
 
 import pandas as pd
 import numpy as np
 import pandas_ta as ta  # DONT DELETE!!!! VERY IMPORTANT!!! even if no used directly!!!!
+import MetaTrader5 as mt5
 
-from private_values import *
-from alerts_msg import *
-from threading_manager import *
-from funcs_aux import *
+from base_aux.funcs import *
+from base_aux.privates import *
+from base_aux.alerts import *
+from base_aux.threads import *
 
 
 # =====================================================================================================================
@@ -27,7 +22,7 @@ np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 
 # =====================================================================================================================
-class _MonitorBase(MT5, abc.ABC, threading.Thread):
+class MonitorBase(MT5, abc.ABC, threading.Thread):
     """Base monitor class.
 
     :ivar ALERT: Alert class used instantiating send msg
@@ -88,7 +83,7 @@ class ThreadManagerADX(ThreadsManager):
     pass
 
 
-class MonitorADX(_MonitorBase):
+class MonitorADX(MonitorBase):
     TF = 1
     ALERT: Type[AlertBase] = AlertTradeADX
 
@@ -143,7 +138,7 @@ class MonitorADX(_MonitorBase):
             self.state_full_column_1_10 = False
 
     def print__array_interpreted(self) -> None:
-        text = funcs_aux.array_2d_get_compact_str(
+        text = array_2d_get_compact_str(
             array=self.RESULTS,
             interpreter=self.ARRAY_INTERPRETER,
             separate_rows=20,
@@ -208,10 +203,10 @@ class MonitorADX(_MonitorBase):
     def results_length_get(self, length: int):
         return self.RESULTS[length - 1][self.TF_SHIFTED_MAX - length: self.TF_SHIFTED_MAX]
 
-    def check__state_pulse__tf_shifted(self, adx_fast: Type_PdSeries, adx_slow: Type_PdSeries) -> bool:
+    def check__state_pulse__tf_shifted(self, adx_fast: Type__PdSeries, adx_slow: Type__PdSeries) -> bool:
         return np.max(adx_fast) >= self.THRESH_ADX_FAST_FULL and np.max(adx_slow) >= self.THRESH_ADX_SLOW_FULL
 
-    def check__state_pulse__tf_shifted_edge(self, adx_fast: Type_PdSeries, adx_slow: Type_PdSeries) -> bool:
+    def check__state_pulse__tf_shifted_edge(self, adx_fast: Type__PdSeries, adx_slow: Type__PdSeries) -> bool:
         if np.max(adx_fast) >= self.THRESH_ADX_FAST_FULL:
             if np.max(adx_slow.head(len(adx_slow) - 1)) < self.THRESH_ADX_SLOW_FULL <= adx_slow.iloc[len(adx_slow) - 1]:
                 return True
@@ -252,7 +247,7 @@ class ThreadManager_MapDrawer_Shift(ThreadsManager):
 
 class IndicatorMapDrawer_Simple(MT5, abc.ABC, threading.Thread):
     ALERT: Type[AlertBase] = Alert_MapDrawer
-    INDICATOR: Type[Type_IndicatorParams] = IndicatorParams_RSI
+    INDICATOR: Type[IndicatorParamsBase] = IndicatorParams_RSI
     INDICATOR_SETTINGS: Iterable[int] = (5, )
 
     TF = mt5.TIMEFRAME_D1

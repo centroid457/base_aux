@@ -1,7 +1,8 @@
 from typing import *
 import pytest
-
-from trade_alerts import *
+from base_aux.stock import *
+from base_aux.stock.mt import *
+import MetaTrader5 as mt5
 
 
 # =====================================================================================================================
@@ -40,7 +41,7 @@ class Test_mt5:
         try:
             victim = self.VICTIM()
         except Exception as exx:
-            assert isinstance(exx, Exx_Mt5SymbolName)
+            assert isinstance(exx, Exx__Mt5SymbolName)
         else:
             assert False
 
@@ -120,7 +121,7 @@ elem=723/<class 'numpy.uint64'>
         result = victim._indicator_get_by_obj(IndicatorParams_ADX(2, 1), return_tail=2)
         print(f"[{result=}]")
         print(f"[{type(result)=}]")
-        assert isinstance(result, (Type_PdSeries))
+        assert isinstance(result, (Type__PdSeries))
 
     def test__indicator_get__WMA(self):
         victim = MT5()

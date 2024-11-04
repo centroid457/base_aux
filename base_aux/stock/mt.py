@@ -1,6 +1,4 @@
-from .indicators import *
-from .symbols import Symbols
-from .time_series import *
+from base_aux.stock import *
 
 import time
 from typing import *
@@ -14,8 +12,8 @@ import MetaTrader5 as mt5
 import pandas as pd
 import numpy as np
 
-from private_values import *
-from alerts_msg import *
+from base_aux.privates import *
+from base_aux.alerts import *
 
 
 # =====================================================================================================================
@@ -23,26 +21,23 @@ from alerts_msg import *
 
 
 # =====================================================================================================================
-Type_Symbol = Union[str, mt5.SymbolInfo]
-Type_SymbolOpt = Optional[Type_Symbol]
+Type__Symbol = Union[str, mt5.SymbolInfo]
+Type__SymbolOpt = Optional[Type__Symbol]
 
-Type_Tf = int
-Type_TfOpt = Optional[Type_Tf]
+Type__Tf = int
+Type__TfOpt = Optional[Type__Tf]
 
-Type_PdSeries = pd.core.series.Series
-Type_IndicatorValues = Union[None, float, Type_PdSeries]
-
-
-# =====================================================================================================================
-class Exx_Mt5Auth(Exception):
-    pass
-
-
-class Exx_Mt5SymbolName(Exception):
-    pass
+Type__PdSeries = pd.core.series.Series
+Type__IndicatorValues = Union[None, float, Type__PdSeries]
 
 
 # =====================================================================================================================
+class Exx__Mt5Auth(Exception):
+    pass
+
+
+class Exx__Mt5SymbolName(Exception):
+    pass
 
 
 # =====================================================================================================================
@@ -55,7 +50,7 @@ class PrivateMT5(PrivateAuthAuto):
 class MT5:
     MT5_AUTH: PrivateMT5 = PrivateMT5()
 
-    SYMBOL: Type_Symbol = "BRX3"
+    SYMBOL: Type__Symbol = "BRX3"
     TF: int = mt5.TIMEFRAME_M10
     __MT5_SYMBOLS_AVAILABLE: List[mt5.SymbolInfo] = None
 
@@ -100,29 +95,29 @@ class MT5:
             msg += f"\n{self.MT5_AUTH}"
 
             print(msg)
-            raise Exx_Mt5Auth(msg)
+            raise Exx__Mt5Auth(msg)
 
     # SYMBOL ==========================================================================================================
     def _SYMBOL_init(self, exx_if_none: bool = True) -> Optional[NoReturn]:
         self.SYMBOL = self.SYMBOL__get_active(exx_if_none=exx_if_none)
 
-    def SYMBOL__get_active(self, _symbol: Type_SymbolOpt = None, exx_if_none: bool = True) -> Union[mt5.SymbolInfo, NoReturn]:
+    def SYMBOL__get_active(self, _symbol: Type__SymbolOpt = None, exx_if_none: bool = True) -> Union[mt5.SymbolInfo, NoReturn]:
         _symbol = _symbol or self.SYMBOL
         if isinstance(_symbol, str):
             _symbol = mt5.symbol_info(_symbol)
             last_error = mt5.last_error()
             if last_error[0] != 1:
                 msg = f"incorrect {_symbol=}/{last_error=}"
-                raise Exx_Mt5SymbolName(msg)
+                raise Exx__Mt5SymbolName(msg)
 
         if not isinstance(_symbol, mt5.SymbolInfo):
             msg = f"incorrect {_symbol=}"
             if exx_if_none:
-                raise Exx_Mt5SymbolName(msg)
+                raise Exx__Mt5SymbolName(msg)
 
         return _symbol
 
-    def TF__get_active(self, _tf: Type_TfOpt = None):
+    def TF__get_active(self, _tf: Type__TfOpt = None):
         return _tf or self.TF
 
     # AVAILABLE -------------------------------------------------------------------------------------------------------
@@ -180,19 +175,19 @@ class MT5:
         return result
 
     # SHOW ------------------------------------------------------------------------------------------------------------
-    def _mt5_symbol_show(self, show: bool = True, _symbol: Type_SymbolOpt = None) -> bool:
+    def _mt5_symbol_show(self, show: bool = True, _symbol: Type__SymbolOpt = None) -> bool:
         _symbol = self.SYMBOL__get_active(_symbol)
         result = mt5.symbol_select(_symbol.name, show)
         print(f"[{result}]_mt5_symbol_show({_symbol})={mt5.last_error()=}")
         return result
 
-    def _mt5_symbol_show__check(self, _symbol: Type_SymbolOpt = None) -> bool:
+    def _mt5_symbol_show__check(self, _symbol: Type__SymbolOpt = None) -> bool:
         _symbol = self.SYMBOL__get_active(_symbol)
         if _symbol:
             return _symbol.select
 
     # INFO ------------------------------------------------------------------------------------------------------------
-    def _symbols_info__print_compare(self, symbols: List[Type_Symbol] = ["SBER", "AAPL-RM", "PYPL-RM"]):
+    def _symbols_info__print_compare(self, symbols: List[Type__Symbol] = ["SBER", "AAPL-RM", "PYPL-RM"]):
         """
         since SYMBOL_NAME not added into chart gui list - it will return zero to many attributes!
 
@@ -321,7 +316,7 @@ class MT5:
         print("*"*100)
 
     # VOLUME_PRICE -----------------------------------------------------
-    def _symbol_volume_price_get__last_day_finished(self, _symbol: Type_SymbolOpt = None, _devider: Optional[int] = None) -> float:
+    def _symbol_volume_price_get__last_day_finished(self, _symbol: Type__SymbolOpt = None, _devider: Optional[int] = None) -> float:
         """
         VolumePrice as priceMean * Volume
         +save result into self.symbols_volume_price for threading usage!
@@ -403,7 +398,7 @@ class MT5:
             self.BAR_LAST = bar_new
             return True
 
-    def tick_last__update(self, _symbol: Type_SymbolOpt = None, wait_tick_load: bool = True) -> bool:
+    def tick_last__update(self, _symbol: Type__SymbolOpt = None, wait_tick_load: bool = True) -> bool:
         """
 
         SYMBOL_NAME have to be in terminal! otherwise error
@@ -430,8 +425,8 @@ class MT5:
     # HISTORY ---------------------------------------------------------------------------------------------------------
     def bars__check_actual(
             self,
-            _symbol: Type_SymbolOpt = None,
-            _tf: Type_TfOpt = None
+            _symbol: Type__SymbolOpt = None,
+            _tf: Type__TfOpt = None
     ) -> bool:
         _symbol = self.SYMBOL__get_active(_symbol)
         _tf_td = dt.timedelta(minutes=self.TF__get_active(_tf))
@@ -449,8 +444,8 @@ class MT5:
             tf_split: Optional[int] = None,
             shrink: Optional[bool] = None,
             _start: Optional[int] = None,
-            _symbol: Type_SymbolOpt = None,
-            _tf: Type_TfOpt = None
+            _symbol: Type__SymbolOpt = None,
+            _tf: Type__TfOpt = None
     ) -> Union[np.ndarray]:
         """get history bars
 
@@ -500,16 +495,16 @@ class MT5:
     # INDICATOR =======================================================================================================
     def _indicator_get_by_obj(
             self,
-            indicator_params: Type_IndicatorParams,
+            indicator_params: IndicatorParamsBase,
             *,
             return_tail: Optional[int] = 1,
             tf_split: Optional[int] = None,
 
             _bars: Optional[np.ndarray] = None,
             _add_history: Optional[int] = None,
-            _tf: Type_TfOpt = None,
-            _symbol: Type_SymbolOpt = None,
-    ) -> Type_IndicatorValues:
+            _tf: Type__TfOpt = None,
+            _symbol: Type__SymbolOpt = None,
+    ) -> Type__IndicatorValues:
         # GET -----------------------------
         bars_np = _bars or self.bars_get__count(
             count=indicator_params.bars_expected__get(),
@@ -566,16 +561,16 @@ class MT5:
 
         return result
 
-    def indicator_WMA(self, args: Collection[int], **kwargs) -> Type_IndicatorValues:
+    def indicator_WMA(self, args: Collection[int], **kwargs) -> Type__IndicatorValues:
         return self._indicator_get_by_obj(IndicatorParams_WMA(*args), **kwargs)
 
-    def indicator_STOCH(self, args: Collection[int], **kwargs) -> Type_IndicatorValues:
+    def indicator_STOCH(self, args: Collection[int], **kwargs) -> Type__IndicatorValues:
         return self._indicator_get_by_obj(IndicatorParams_STOCH(*args), **kwargs)
 
-    def indicator_ADX(self, args: Collection[int], **kwargs) -> Type_IndicatorValues:
+    def indicator_ADX(self, args: Collection[int], **kwargs) -> Type__IndicatorValues:
         return self._indicator_get_by_obj(IndicatorParams_ADX(*args), **kwargs)
 
-    def indicator_MACD(self, args: Collection[int], **kwargs) -> Type_IndicatorValues:
+    def indicator_MACD(self, args: Collection[int], **kwargs) -> Type__IndicatorValues:
         return self._indicator_get_by_obj(IndicatorParams_MACD(*args), **kwargs)
 
 
