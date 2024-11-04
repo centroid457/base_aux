@@ -11,10 +11,10 @@ class PrivateAuto(PrivateJson, PrivateIni, PrivateEnv):
     It will not merge sources!
     """
     def get_dict(self) -> Union[TYPE__PV_DICT, NoReturn]:
-        annots = self.annots_get_set()
+        annots = self.annot__get_nested__dict_values()
         annots_lower = set(map(str.lower, annots))
 
-        for cls in [PrivateAuto, PrivateJson, PrivateIni, PrivateCsv]:
+        for cls in [PrivateJson, PrivateIni, PrivateCsv, PrivateEnv]:
             try:
                 self.FILENAME = super(cls, self).FILENAME
                 self._filepath_apply_new()

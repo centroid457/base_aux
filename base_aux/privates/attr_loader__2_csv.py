@@ -42,7 +42,7 @@ class PrivateCsv(PrivateBase):
 
         C:\\Users\\a.starichenko>
     """
-    FILENAME: str = "pv.csv"
+    FILENAME = "pv.csv"
     SEPARATOR: str = ":"
     SPACE_IN_KEYS: str = "_"
     RAISE_SAME_KEYS: bool = True

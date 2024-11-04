@@ -26,7 +26,7 @@ from .static import (
     Exx__FileNotExists,
     Exx__SameKeys,
 )
-from .base import (
+from .attr_loader__0_base import (
     # BASE
     PrivateBase,
     # AUX
@@ -37,33 +37,33 @@ from .derivatives import (
     PrivateTgBotAddress,
     # AUX
 )
-from .env import (
+from .attr_loader__1_env import (
     # BASE
     PrivateEnv,
     # AUX
 )
-from .csv import (
+from .attr_loader__2_csv import (
     # BASE
     PrivateCsv,
     PrivateAuthCsv,
     PrivateTgBotAddressCsv,
     # AUX
 )
-from .ini import (
+from .attr_loader__3_ini import (
     # BASE
     PrivateIni,
     PrivateAuthIni,
     PrivateTgBotAddressIni,
     # AUX
 )
-from .json import (
+from .attr_loader__4_json import (
     # BASE
     PrivateJson,
     PrivateAuthJson,
     PrivateTgBotAddressJson,
     # AUX
 )
-from .auto import (
+from .attr_loader__5_auto import (
     # BASE
     PrivateAuto,
     PrivateAuthAuto,

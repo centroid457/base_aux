@@ -22,7 +22,7 @@ class PrivateBase(AnnotAux, abc.ABC):
     -----
     if you dont need RAISE when no value get for exact annotated name - just define None!
     """
-    _RAISE: Optional[bool] = None
+    _RAISE: Optional[bool] = True
 
     SECTION: Optional[str] = None
 
@@ -31,6 +31,7 @@ class PrivateBase(AnnotAux, abc.ABC):
 
     _text: Optional[str] = ""     # TODO: need tests!!!
     dict: Dict[str, Any] = None
+
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(

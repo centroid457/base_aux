@@ -1,12 +1,6 @@
+from typing import *
 import os
 import pytest
-import pathlib
-import shutil
-from tempfile import TemporaryDirectory
-from typing import *
-import abc
-
-from base_aux.classes import Exx__AnnotNotDefined
 from base_aux.privates import PrivateEnv
 
 
