@@ -149,7 +149,7 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
         return cls.__name__
 
     # =================================================================================================================
-    def start(self):
+    def start(self, *args):
         """this is just add ability to collect started threads in class
         """
         self.__class__._threads_active.add(self)
