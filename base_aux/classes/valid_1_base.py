@@ -56,7 +56,7 @@ class Valid(ValidAux):
     VALUE_LINK: TYPE__SOURCE_LINK
     VALIDATE_LINK: TYPE__VALIDATE_LINK = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPE__BOOL_LINK = None
+    REVERSE_LINK: TYPE__BOOL_LINK = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!!!
 
     ARGS__VALUE: TYPE__ARGS = ()
     ARGS__VALIDATE: TYPE__ARGS = ()
@@ -219,7 +219,7 @@ class Valid(ValidAux):
                     self.validate_last = self.get_result_or_exx(self.VALIDATE_LINK, args=args_validate, kwargs=self.KWARGS__VALIDATE)
 
                 else:
-                    self.validate_last = self.compare_doublesided(self.value_last, self.VALIDATE_LINK)
+                    self.validate_last = self.compare_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
 
                 # FINISH retry
                 if not self.VALIDATE_RETRY or retry_count == self.VALIDATE_RETRY or self.validate_last_bool:
