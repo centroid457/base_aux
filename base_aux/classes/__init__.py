@@ -73,6 +73,10 @@ from .getattr_3_prefix_2_cls import (
     GetattrPrefixCls_MetaTemplate
 )
 
+from .attr_4_construct_on_init import (
+    ConstructOnInit_Item,
+    ConstructOnInit,
+)
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (
     DictDots,

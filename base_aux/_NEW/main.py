@@ -41,6 +41,9 @@ class NEW_CLASS____:
     REFERENCE
     ---------
 
+    REASON EXAMPLE
+    --------------
+
     """
     def meth(self):
         """
