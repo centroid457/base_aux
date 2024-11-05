@@ -105,9 +105,9 @@ class ValidAux:
         except:
             return False
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     @classmethod
-    def compare_doublesided(cls, obj1: Any, obj2: Any, return_bool: bool = None) -> bool | Exception:
+    def compare_doublesided_or_exx(cls, obj1: Any, obj2: Any, return_bool: bool = None) -> bool | Exception:
         """
         GOAL
         ----
@@ -176,9 +176,18 @@ class ValidAux:
         ---------------------
         Valid.value_validate
         """
-        return cls.compare_doublesided(obj1, obj2, return_bool=True)
+        return cls.compare_doublesided_or_exx(obj1, obj2, return_bool=True)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def compare_doublesided__reverse(cls, obj1: Any, obj2: Any) -> bool:
+        """
+        CREATED SPECIALLY FOR
+        ---------------------
+        Valid.value_validate
+        """
+        return cls.compare_doublesided__bool(obj1, obj2) is not True
+
+    # =================================================================================================================
     @staticmethod
     def ltgt(source: Any, low: Any | None = None, high: Any | None = None) -> bool | Exception:
         """

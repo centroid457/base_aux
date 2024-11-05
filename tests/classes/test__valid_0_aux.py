@@ -115,22 +115,28 @@ def test__get_bool(args, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
     argvalues=[
-        ((1, 1), True),
-        ((1, 2), False),
-        ((LAMBDA_TRUE, True), False),
+        ((1, 1),        (True, True, False)),
+        ((1, 2),        (False, False, True)),
+        ((LAMBDA_TRUE, True), (False, False, True)),
 
-        ((ClsEq(1), 1), True),
-        ((ClsEq(1), 2), False),
-        ((1, ClsEq(1)), True),
-        ((2, ClsEq(1)), False),
+        ((ClsEq(1), 1), (True, True, False)),
+        ((ClsEq(1), 2), (False, False, True)),
+        ((1, ClsEq(1)), (True, True, False)),
+        ((2, ClsEq(1)), (False, False, True)),
 
-        ((ClsEqExx(), 1), Exception),
-        ((1, ClsEqExx()), Exception),
+        ((ClsEqExx(), 1), (Exception, False, True)),
+        ((1, ClsEqExx()), (Exception, False, True)),
     ]
 )
 def test__compare_doublesided(args, _EXPECTED):
-    func_link = Valid.compare_doublesided
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    func_link = Valid.compare_doublesided_or_exx
+    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[0])
+
+    func_link = Valid.compare_doublesided__bool
+    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[1])
+
+    func_link = Valid.compare_doublesided__reverse
+    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[2])
 
 
 # =====================================================================================================================
