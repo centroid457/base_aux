@@ -1,6 +1,7 @@
 import time
 from typing import *
-import telebot
+
+from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
 from base_aux.privates import *
 from .base import *
 
@@ -14,16 +15,11 @@ class RecipientTgID(PrivateAuto):
 
 
 # =====================================================================================================================
-class AlertTelegram(AlertBase):
+class AlertTelegram(ConstructOnInit, AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------
-    SERVER_TG: PrivateTgBotAddressAuto = None
-
-    def __init__(self, *args, **kwargs):
-        if self.SERVER_TG is None:
-            self.SERVER_TG = PrivateTgBotAddressAuto(_section="TGBOT_DEF")
-        super().__init__(*args, **kwargs)
+    SERVER_TG: PrivateTgBotAddressAuto = ConstructOnInit_Item(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
 
     # AUX -----------------------------------------
     _conn: telebot.TeleBot

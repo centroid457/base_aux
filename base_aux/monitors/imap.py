@@ -6,6 +6,7 @@ import re
 import imaplib
 import email
 
+from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
 from base_aux.privates import *
 from base_aux.alerts import *
 
@@ -42,7 +43,7 @@ class AlertImap(AlertSelect.TELEGRAM_DEF):
 
 
 # =====================================================================================================================
-class MonitorImap(threading.Thread):
+class MonitorImap(ConstructOnInit, threading.Thread):
     """Monitor (threaded) email box for new letters. Notify if new letter appears corresponding to folder name and subject regexp.
 
     :ivar INTERVAL: monitoring interval in seconds
@@ -64,7 +65,7 @@ class MonitorImap(threading.Thread):
     INTERVAL: int = 1 * 1 * 10
 
     SERVER: ImapAddress = ImapServers.MAIL_RU
-    AUTH: PrivateBase = PrivateAuthAuto(_section="AUTH_EMAIL_DEF")
+    AUTH: PrivateBase = ConstructOnInit_Item(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
     FOLDER: Optional[str] = None
     SUBJECT_REGEXP: Optional[str] = None
     # MARK_AS_READ: bool = True

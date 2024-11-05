@@ -6,6 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
 from base_aux.privates import *
 
 
@@ -35,21 +36,16 @@ class SmtpServers:
 
 
 # =====================================================================================================================
-class AlertSmtp(AlertBase):
+class AlertSmtp(ConstructOnInit, AlertBase):
     """SMTP realisation for sending msg (email).
     """
     # SETTINGS ------------------------------------
     SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: PrivateAuth = None
+    AUTH: PrivateAuth = ConstructOnInit_Item(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------
     _conn:  smtplib.SMTP_SSL
-
-    def __init__(self, *args, **kwargs):
-        if self.AUTH is None:
-            self.AUTH = PrivateAuthAuto(_section="AUTH_EMAIL_DEF")
-        super().__init__(*args, **kwargs)
 
     def _connect_unsafe(self) -> Union[bool, NoReturn]:
         self._conn = smtplib.SMTP_SSL(self.SERVER_SMTP.ADDR, self.SERVER_SMTP.PORT, timeout=self.TIMEOUT_SEND)
