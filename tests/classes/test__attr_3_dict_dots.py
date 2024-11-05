@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 # from base_aux.funcs import *
-from base_aux.classes.attr_3_dict_dots import DictDots
+from base_aux.classes.attr_3_dict_dots_1_simple import DictDots
 
 
 # =====================================================================================================================

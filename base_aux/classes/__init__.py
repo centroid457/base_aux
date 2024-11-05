@@ -74,8 +74,11 @@ from .getattr_3_prefix_2_cls import (
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
-from .attr_3_dict_dots import (
+from .attr_3_dict_dots_1_simple import (
     DictDots,
+)
+from .attr_3_dict_dots_2_full import (
+    DictDotsFull,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .middle_group import (
