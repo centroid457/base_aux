@@ -56,7 +56,7 @@ class Valid(ValidAux):
     VALUE_LINK: TYPE__SOURCE_LINK
     VALIDATE_LINK: TYPE__VALIDATE_LINK = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPE__BOOL_LINK = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!!!
+    REVERSE_LINK: TYPE__BOOL_LINK = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
     ARGS__VALUE: TYPE__ARGS = ()
     ARGS__VALIDATE: TYPE__ARGS = ()
