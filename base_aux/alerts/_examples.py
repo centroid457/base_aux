@@ -1,6 +1,7 @@
 # =========================================================================================
 ### 0. BEST PRACTICE
-from base_aux.alerts import *
+from base_aux.alerts import AlertSelect
+
 
 class AlertADX(AlertSelect.TELEGRAM_DEF):
     pass

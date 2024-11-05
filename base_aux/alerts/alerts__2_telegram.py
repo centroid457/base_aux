@@ -18,7 +18,12 @@ class AlertTelegram(AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------
-    SERVER_TG: PrivateTgBotAddressAuto = PrivateTgBotAddressAuto(_section="TGBOT_DEF")
+    SERVER_TG: PrivateTgBotAddressAuto = None
+
+    def __init__(self, *args, **kwargs):
+        if self.SERVER_TG is None:
+            self.SERVER_TG = PrivateTgBotAddressAuto(_section="TGBOT_DEF")
+        super().__init__(*args, **kwargs)
 
     # AUX -----------------------------------------
     _conn: telebot.TeleBot

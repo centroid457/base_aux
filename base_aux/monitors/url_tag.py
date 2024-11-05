@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from base_aux.alerts import *
+from base_aux.alerts import AlertSelect
 
 
 # =====================================================================================================================

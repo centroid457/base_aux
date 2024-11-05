@@ -1,6 +1,5 @@
 from .base import *
 
-import time
 from typing import *
 
 import smtplib
@@ -41,11 +40,16 @@ class AlertSmtp(AlertBase):
     """
     # SETTINGS ------------------------------------
     SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: PrivateAuth = PrivateAuto(_section="AUTH_EMAIL_DEF")
+    AUTH: PrivateAuth = None
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------
     _conn:  smtplib.SMTP_SSL
+
+    def __init__(self, *args, **kwargs):
+        if self.AUTH is None:
+            self.AUTH = PrivateAuthAuto(_section="AUTH_EMAIL_DEF")
+        super().__init__(*args, **kwargs)
 
     def _connect_unsafe(self) -> Union[bool, NoReturn]:
         self._conn = smtplib.SMTP_SSL(self.SERVER_SMTP.ADDR, self.SERVER_SMTP.PORT, timeout=self.TIMEOUT_SEND)

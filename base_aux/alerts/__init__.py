@@ -5,16 +5,21 @@
 
 
 # =====================================================================================================================
-from .base import AlertBase
-from .alerts__1_smtp import SmtpAddress, SmtpServers, AlertSmtp
-from .alerts__2_telegram import RecipientTgID, AlertTelegram
-
-
-# =====================================================================================================================
-# FIXME: move to main!
-class AlertSelect:
-    SMTP_DEF = AlertSmtp
-    TELEGRAM_DEF = AlertTelegram
+from .base import (
+    AlertBase,
+)
+from .select import (
+    AlertSelect
+)
+from .alerts__1_smtp import (
+    SmtpAddress,
+    SmtpServers,
+    AlertSmtp,
+)
+from .alerts__2_telegram import (
+    RecipientTgID,
+    AlertTelegram,
+)
 
 
 # =====================================================================================================================

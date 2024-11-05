@@ -7,11 +7,9 @@ import abc
 
 import pandas as pd
 import numpy as np
-import pandas_ta as ta  # DONT DELETE!!!! VERY IMPORTANT!!! even if no used directly!!!!
 import MetaTrader5 as mt5
 
 from base_aux.funcs import *
-from base_aux.privates import *
 from base_aux.alerts import *
 from base_aux.threads import *
 
