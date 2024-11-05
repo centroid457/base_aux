@@ -57,7 +57,7 @@ class ValidChains(Valid):
         self.timestamp_last = time.time()
 
         # SKIP ---------------------
-        self.skip_last = self.get_bool(self.SKIP_LINK)
+        self.skip_last = self.get_result_bool(self.SKIP_LINK)
 
         if not self.skip_last:
             # WORK =======================

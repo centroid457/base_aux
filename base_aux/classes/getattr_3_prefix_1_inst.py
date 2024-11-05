@@ -7,9 +7,6 @@ from .attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
-
-
-# =====================================================================================================================
 class GetattrPrefixInst(AttrAux):
     """
     this is just a Base!
@@ -44,7 +41,7 @@ class GetattrPrefixInst(AttrAux):
             prefix_meth = getattr(self, prefix_original)
 
             if item.lower() == prefix.lower():
-                return lambda *prefix_args, **prefix_kwargs: ValidAux.get_result(
+                return lambda *prefix_args, **prefix_kwargs: ValidAux.get_result_or_raise(
                     source=prefix_meth,
                     args=prefix_args,
                     kwargs=prefix_kwargs
@@ -54,9 +51,9 @@ class GetattrPrefixInst(AttrAux):
                 item_short = item[len(prefix):]
                 item_value = self._getattr_anycase(item_short, self)
 
-                return lambda *meth_args, **meth_kwargs: ValidAux.get_result(
+                return lambda *meth_args, **meth_kwargs: ValidAux.get_result_or_raise(
                     source=prefix_meth,
-                    args=[ValidAux.get_result(source=item_value, args=meth_args, kwargs={k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
+                    args=[ValidAux.get_result_or_raise(source=item_value, args=meth_args, kwargs={k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
                     kwargs={k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 

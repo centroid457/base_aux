@@ -10,7 +10,7 @@ class ValidAux:
     """
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def get_result(
+    def get_result_or_raise(
             cls,
             source: Any | Callable[..., Any],
             args: TYPE__ARGS = None,
@@ -56,14 +56,14 @@ class ValidAux:
         1. in gui when its enough to get str() on result and see the result
         """
         try:
-            result = cls.get_result(source=source, args=args, kwargs=kwargs)
+            result = cls.get_result_or_raise(source=source, args=args, kwargs=kwargs)
         except Exception as exx:
             result = exx
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def get_bool(
+    def get_result_bool(
             cls,
             source: Any | Callable[..., Any],
             args: TYPE__ARGS = None,
@@ -98,7 +98,7 @@ class ValidAux:
         funcs.Valid.skip_link or else value/func assumed as bool result
         """
         try:
-            result = cls.get_result(source, args, kwargs)
+            result = cls.get_result_or_raise(source, args, kwargs)
             if TypeChecker.check__exception(result):
                 return False
             return bool(result)

@@ -34,18 +34,18 @@ from base_aux.objects import *
     ]
 )
 def test__get_result(args, _EXPECTED):
-    func_link = ValidAux.get_result
+    func_link = ValidAux.get_result_or_raise
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
 def test__get_result2():
     try:
-        ValidAux.get_result(LAMBDA_EXX)
+        ValidAux.get_result_or_raise(LAMBDA_EXX)
         assert False
     except:
         assert True
 
-    assert ValidAux.get_result(Exception) == Exception
+    assert ValidAux.get_result_or_raise(Exception) == Exception
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
@@ -107,7 +107,7 @@ def test__get_result_or_exx(args, _EXPECTED):
     ]
 )
 def test__get_bool(args, _EXPECTED):
-    func_link = Valid.get_bool
+    func_link = Valid.get_result_bool
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 

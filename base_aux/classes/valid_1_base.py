@@ -56,7 +56,7 @@ class Valid(ValidAux):
     VALUE_LINK: TYPE__SOURCE_LINK
     VALIDATE_LINK: TYPE__VALIDATE_LINK = True
     VALIDATE_RETRY: int = 0
-    VALIDATE_REVERSE: bool = None
+    REVERSE_LINK: TYPE__BOOL_LINK = None
 
     ARGS__VALUE: TYPE__ARGS = ()
     ARGS__VALIDATE: TYPE__ARGS = ()
@@ -69,6 +69,7 @@ class Valid(ValidAux):
     finished: bool | None = None
     value_last: Any | Exception = None              # direct result value for calculating func value_link
     validate_last: None | bool | Exception = True   # direct result value for calculating func validate_link === decide using only bool???
+    reverse_last: None | bool = None
     validate_last_bool: bool    # represented value for validation
     log_lines: list[str] = None
 
@@ -83,7 +84,7 @@ class Valid(ValidAux):
             validate_link: Optional[TYPE__VALIDATE_LINK] = None,
             validate_retry: Optional[int] = None,
             skip_link: Optional[TYPE__BOOL_LINK] = None,
-            validate_fail: Optional[bool] = None,
+            reverse_link: Optional[TYPE__BOOL_LINK] = None,
 
             args__value: TYPE__ARGS = (),
             args__validate: TYPE__ARGS = (),
@@ -118,8 +119,8 @@ class Valid(ValidAux):
             self.VALIDATE_LINK = validate_link
         if validate_retry is not None:
             self.VALIDATE_RETRY = validate_retry
-        if validate_fail is not None:
-            self.VALIDATE_REVERSE = validate_fail
+        if reverse_link is not None:
+            self.REVERSE_LINK = reverse_link
         if skip_link is not None:
             self.SKIP_LINK = skip_link
 
@@ -192,7 +193,7 @@ class Valid(ValidAux):
         self.timestamp_last = time.time()
 
         # SKIP ---------------------
-        self.skip_last = self.get_bool(self.SKIP_LINK)
+        self.skip_last = self.get_result_bool(self.SKIP_LINK)
 
         if not self.skip_last:
             retry_count = 0
@@ -226,6 +227,9 @@ class Valid(ValidAux):
                 else:
                     retry_count += 1
 
+            if self.REVERSE_LINK:
+                self.reverse_last = self.get_result_bool(self.REVERSE_LINK)
+
             self.finished = True
             # ============================
 
@@ -238,7 +242,7 @@ class Valid(ValidAux):
         if not self.finished:
             return False
 
-        if self.VALIDATE_REVERSE:
+        if self.reverse_last:
             return self.validate_last != True       # dont use validate_last_bool!!! recursion!
         else:
             return self.validate_last == True
@@ -255,7 +259,11 @@ class Valid(ValidAux):
         # result_str = STR_PATTERN.format(self)
 
         # -------------------------------------
-        result_str = f"{self.__class__.__name__}(NAME={self.NAME},skip_last={self.skip_last},validate_last_bool={self.validate_last_bool},\n"
+        result_str = f"{self.__class__.__name__}(NAME={self.NAME},skip_last={self.skip_last},validate_last_bool={self.validate_last_bool}"
+        if self.reverse_last:
+            result_str += f",reverse_last={self.reverse_last}"
+        result_str += f",\n"
+
         # value ----
         result_str += f"...VALUE_LINK={self.VALUE_LINK}"
         if self.ARGS__VALUE:
@@ -272,8 +280,8 @@ class Valid(ValidAux):
             result_str += f",KWARGS__VALIDATE={self.KWARGS__VALIDATE}"
 
         result_str += f",validate_last={self.validate_last}"
-        if self.VALIDATE_REVERSE:
-            result_str += f"*VALIDATE_REVERSE={self.VALIDATE_REVERSE}"
+        if self.REVERSE_LINK:
+            result_str += f"*REVERSE_LINK={self.REVERSE_LINK}"
         result_str += f",\n"
 
         # finish ----

@@ -47,7 +47,7 @@ class ValidReverse(Valid):
     """
     reverse direct valid result (if finished)
     """
-    VALIDATE_REVERSE = True
+    REVERSE_LINK = True
 
 
 # UTILS ---------------------------------------------------------------------------------------------------------------
