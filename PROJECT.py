@@ -262,7 +262,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 4)
+    VERSION: tuple[int, int, int] = (0, 0, 5)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -303,10 +303,18 @@ other protocols mot recommended
         "FIX NEED SOLVE ABILITY to work without PV.FILE!!! as just a http client",
 
     ]
+
+
+
+
+
     FIXME: list[str] = [
+        "[privates] for tests add check data loaded/available without raise"
     ]
     NEWS: list[str] = [
-        "[TESTPLANS] fix finish not started tc_active",
+        "[classes] add DictCaseinsense+DictDots",
+        "[stock] move here",
+        "[all] fix almost, so tests works (need fix privates for alerts)",
     ]
 
 

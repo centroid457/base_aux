@@ -27,9 +27,16 @@
 
 ********************************************************************************
 ## FIXME
+1. [privates] for tests add check data loaded/available without raise  
 
 ********************************************************************************
 ## NEWS
+
+0.0.5 (2024/11/05 10:33:43)
+------------------------------
+- [classes] add DictCaseinsense+DictDots  
+- [stock] move here  
+- [all] fix almost, so tests works (need fix privates for alerts)  
 
 0.0.4 (2024/11/02 15:58:43)
 ------------------------------
