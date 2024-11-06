@@ -6,7 +6,7 @@ import re
 import imaplib
 import email
 
-from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
+from base_aux.classes import CallLater, ConstructOnInit
 from base_aux.privates import *
 from base_aux.alerts import *
 
@@ -65,7 +65,7 @@ class MonitorImap(ConstructOnInit, threading.Thread):
     INTERVAL: int = 1 * 1 * 10
 
     SERVER: ImapAddress = ImapServers.MAIL_RU
-    AUTH: PrivateBase = ConstructOnInit_Item(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
+    AUTH: PrivateBase = CallLater(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
     FOLDER: Optional[str] = None
     SUBJECT_REGEXP: Optional[str] = None
     # MARK_AS_READ: bool = True

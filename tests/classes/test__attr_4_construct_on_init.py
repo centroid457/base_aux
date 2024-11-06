@@ -39,8 +39,8 @@ def test__special__define_and_init(value, _EXPECTED):
     # DEFINE ---------------------
     class Victim(ConstructOnInit):
         ATTR0 = 0
-        ATTR_INT = ConstructOnInit_Item(int, value)
-        ATTR_STR = ConstructOnInit_Item(str, value)
+        ATTR_INT = CallLater(int, value)
+        ATTR_STR = CallLater(str, value)
 
     assert True     # no exx above!
 

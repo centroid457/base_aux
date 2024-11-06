@@ -1,7 +1,7 @@
 import time
 from typing import *
 
-from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
+from base_aux.classes import CallLater, ConstructOnInit
 from base_aux.privates import *
 from .base import *
 
@@ -19,7 +19,7 @@ class AlertTelegram(ConstructOnInit, AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------
-    SERVER_TG: PrivateTgBotAddressAuto = ConstructOnInit_Item(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
+    SERVER_TG: PrivateTgBotAddressAuto = CallLater(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
 
     # AUX -----------------------------------------
     _conn: telebot.TeleBot

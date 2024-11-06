@@ -17,9 +17,14 @@ class ValidAux:
             kwargs: TYPE__KWARGS = None,
     ) -> Any | NoReturn:
         """
+        SPECIFIC LOGIC
+        --------------
+        if callable meth/func - call and return result.
+        else - return source.
+
         GOAL
         ----
-        get generic common expected for any python code result - simple calculate or raise!
+        get common expected for any python code result - simple calculate or raise!
         because of get_result_or_exx is not enough!
 
         CREATED SPECIALLY FOR
@@ -46,10 +51,9 @@ class ValidAux:
         """
         GOAL
         ----
-        if callable meth/func - call and return result or Exx.
-        else - return source.
-
+        same as get_result_or_raise but
         attempt to simplify result by not using try-sentence.
+        so if get raise in get_result_or_raise - return Exx object
 
         USEFUL IDEA
         -----------
@@ -72,6 +76,9 @@ class ValidAux:
         """
         GOAL
         ----
+        same as get_result_or_exx but
+        apply bool func on result
+
         ability to get bool result with meanings:
             - methods/funcs must be called
                 assert get_bool(LAMBDA_TRUE) is True
@@ -172,6 +179,9 @@ class ValidAux:
     @classmethod
     def compare_doublesided__bool(cls, obj1: Any, obj2: Any) -> bool:
         """
+        same as compare_doublesided_or_exx but
+        in case of Exx - return False
+
         CREATED SPECIALLY FOR
         ---------------------
         Valid.value_validate
@@ -181,9 +191,8 @@ class ValidAux:
     @classmethod
     def compare_doublesided__reverse(cls, obj1: Any, obj2: Any) -> bool:
         """
-        CREATED SPECIALLY FOR
-        ---------------------
-        Valid.value_validate
+        just reverse result for compare_doublesided__bool
+        so never get Exx, only bool
         """
         return cls.compare_doublesided__bool(obj1, obj2) is not True
 

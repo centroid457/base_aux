@@ -1,23 +1,44 @@
 from typing import *
-from base_aux.funcs import ValueNotExist
 
 
 # =====================================================================================================================
-class ConstructOnInit_Item:
-    """
-    Item for using with ConstructOnInit
-    """
-    CLS: Type[Any]
-    ARGS: tuple[Any, ...] = ()
-    KWARGS: dict[Any, Any] = {}
+TYPE__CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
+TYPE__CONSTRUCTOR_ARGS = tuple[Any, ...]
+TYPE__CONSTRUCTOR_KWARGS = dict[Any, Any]
 
-    def __init__(self, cls: Type[Any], *args, **kwargs) -> None:
-        self.CLS = cls
+
+class CallLater:
+    """
+    GOAL
+    ----
+    delay probable raising Exx on direct execution
+    like creating objects on Cls attributes
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Item for using with ConstructOnInit
+
+    WHY NOT 1=simple LAMBDA?
+    ------------------------
+    extremely good point!
+    but in case of at least ConstructOnInit you cant distinguish method or callable attribute!
+    so you explicitly define attributes/objects for later constructions
+
+    PARAMS
+    ======
+    :ivar CONSTRUCTOR: any class or function
+    """
+    CONSTRUCTOR: TYPE__CONSTRUCTOR
+    ARGS: TYPE__CONSTRUCTOR_ARGS = ()
+    KWARGS: TYPE__CONSTRUCTOR_KWARGS = {}
+
+    def __init__(self, constructor: TYPE__CONSTRUCTOR, *args, **kwargs) -> None:
+        self.CONSTRUCTOR = constructor
         self.ARGS = args
         self.KWARGS = kwargs
 
     def __call__(self) -> Any | NoReturn:
-        return self.CLS(*self.ARGS, **self.KWARGS)
+        return self.CONSTRUCTOR(*self.ARGS, **self.KWARGS)
 
 
 # =====================================================================================================================
@@ -46,7 +67,7 @@ class ConstructOnInit:
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         for attr in dir(self):
             value = getattr(self, attr)
-            if isinstance(value, ConstructOnInit_Item):
+            if isinstance(value, CallLater):
                 setattr(self, attr, value())
 
         super().__init__(*args, **kwargs)

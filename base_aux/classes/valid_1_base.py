@@ -47,6 +47,12 @@ class Valid(ValidAux):
 
     WHY NOT: 2?
     -----------
+
+
+    ATTRS
+    =====
+    :ivar REVERSE_LINK:
+    created specially for applying DRY in testplans - then PSU will not PowerOk on different HvIn
     """
 
     NAME: str = ""      # TODO: realise access to Valid from Chains!

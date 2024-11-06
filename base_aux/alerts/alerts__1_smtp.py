@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from base_aux.classes import ConstructOnInit_Item, ConstructOnInit
+from base_aux.classes import CallLater, ConstructOnInit
 from base_aux.privates import *
 
 
@@ -41,7 +41,7 @@ class AlertSmtp(ConstructOnInit, AlertBase):
     """
     # SETTINGS ------------------------------------
     SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: PrivateAuth = ConstructOnInit_Item(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
+    AUTH: PrivateAuth = CallLater(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------
