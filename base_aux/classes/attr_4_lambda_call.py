@@ -67,22 +67,12 @@ class Lambda:
         return self.CONSTRUCTOR(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_raise(self, *args, **kwargs) -> bool:
+    def get_result_or_raise(self, *args, **kwargs) -> bool | NoReturn:
         """
-        SPECIALLY CREATED FOR
-        ---------------------
-        check Privates in pytest for skipping
+        just a direct result
         """
-        return not self.check_no_raise(*args, **kwargs)
+        return self(*args, **kwargs)
 
-    def check_no_raise(self, *args, **kwargs) -> bool:
-        try:
-            self(*args, **kwargs)
-            return True
-        except Exception as exx:
-            return False
-
-    # -----------------------------------------------------------------------------------------------------------------
     def get_result_or_exx(self, *args, **kwargs) -> bool | Exception:
         """
         SPECIALLY CREATED FOR
@@ -94,9 +84,25 @@ class Lambda:
         except Exception as exx:
             return exx
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_raise(self, *args, **kwargs) -> bool:
+        """
+        SPECIALLY CREATED FOR
+        ---------------------
+        check Privates in pytest for skipping
+        """
+        try:
+            self(*args, **kwargs)
+            return False
+        except Exception as exx:
+            return True
+
+    def check_no_raise(self, *args, **kwargs) -> bool:
+        return not self.check_raise(*args, **kwargs)
+
 
 # =====================================================================================================================
-class Bool(Lambda):
+class LambdaBool(Lambda):
     """
     GOAL
     ----
@@ -111,28 +117,40 @@ class Bool(Lambda):
     --------------------------------
     because you cant keep callable link and reversing it by simply NOT
         skip_link__direct = bool        # correct
-        skip_link__direct = Bool(bool)  # correct
+        skip_link__direct = LambdaBool(bool)  # correct
         skip_link__reversal = not bool  # incorrect
-        skip_link__reversal = Bool(bool, attr).get_reverse  # correct
+        skip_link__reversal = LambdaBool(bool, attr).get_reverse  # correct
 
     but here we can use lambda
         skip_link__reversal = lambda attr: not bool(attr)  # correct but not so convenient ???
 
+    PARAMS
+    ======
+    :ivar _REVERSE: just for LambdaBoolReversed, no need to init
+
+    # FIXME: it seems ValidAux have same functions!!! need to combine in one object???
     """
+    _REVERSE: bool = False
+
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        return bool(self.CONSTRUCTOR(*args, **kwargs))
+        result = bool(self.CONSTRUCTOR(*args, **kwargs))
+        if self._REVERSE:
+            result = not result
+        return result
 
     def get_reverse(self, *args, **kwargs) -> bool | NoReturn:
         """
         if raise - raise
+
+        try not to use in LambdaBoolReversed
         """
         return not self(*args, **kwargs)
 
     def get_bool_only(self, *args, **kwargs) -> bool:
         """
-        if raise - return False
+        if raise - return False, else get result
         """
         try:
             return self(*args, **kwargs)
@@ -141,6 +159,14 @@ class Bool(Lambda):
 
     def get_bool_only__reverse(self, *args, **kwargs) -> bool:
         return not self.get_bool_only(*args, **kwargs)
+
+
+# -----------------------------------------------------------------------------------------------------------------
+class LambdaBoolReversed(LambdaBool):
+    """
+    just a reversed LambdaBool
+    """
+    _REVERSE: bool = True
 
 
 # =====================================================================================================================
