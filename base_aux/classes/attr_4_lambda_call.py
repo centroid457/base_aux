@@ -16,17 +16,22 @@ class Lambda:
         class Cls:
             ATTR = PrivateValues(123)   # Lambda(PrivateValues, 123)
 
-    2. replace simple lambda!
+    2. (not serious) replace simple lambda!
     by using lambda you should define args/kwargs any time! and im sick of it!
-        funk = lambda *args, **kwargs: sum(*args) + sum(**kwargs.values())  # its not a simple lambda!
-        funk = lambda *args: sum(*args)  # its simple lambda
-        result = funk(1, 2)
+        func = lambda *args, **kwargs: sum(*args) + sum(**kwargs.values())  # its not a simple lambda!
+        func = lambda *args: sum(*args)  # its simple lambda
+        result = func(1, 2)
     replace to
-        funk = Lambda(sum)
-        result = funk(1, 2)
+        func = Lambda(sum)
+        result = func(1, 2)
 
-        funk = Lambda(sum, 1, 2)
-        result = funk()
+        func = Lambda(sum, 1, 2)
+        result = func()
+    its те a good idea to replace lambda fully!
+    cause you cant replace following examples
+        func_link = lambda source: str(self.Victim(source))
+        func_link = lambda source1, source2: self.Victim(source1) == source2
+
 
     SPECIALLY CREATED FOR
     ---------------------
