@@ -75,6 +75,7 @@ from .getattr_3_prefix_2_cls import (
 
 from .attr_4_lambda_call import (
     Lambda,
+    Bool,
     AttrLambdaCall,
 
     TYPE__LAMBDA_CONSTRUCTOR,

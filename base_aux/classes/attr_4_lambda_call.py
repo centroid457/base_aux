@@ -60,11 +60,13 @@ class Lambda:
         self.ARGS = args
         self.KWARGS = kwargs
 
+    # -----------------------------------------------------------------------------------------------------------------
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
         return self.CONSTRUCTOR(*args, **kwargs)
 
+    # -----------------------------------------------------------------------------------------------------------------
     def check_raise(self, *args, **kwargs) -> bool:
         """
         SPECIALLY CREATED FOR
@@ -80,6 +82,7 @@ class Lambda:
         except Exception as exx:
             return False
 
+    # -----------------------------------------------------------------------------------------------------------------
     def get_result_or_exx(self, *args, **kwargs) -> bool | Exception:
         """
         SPECIALLY CREATED FOR
@@ -90,6 +93,54 @@ class Lambda:
             return self(*args, **kwargs)
         except Exception as exx:
             return exx
+
+
+# =====================================================================================================================
+class Bool(Lambda):
+    """
+    GOAL
+    ----
+    same as Lambda, in case of get result in bool variant
+    +add reverse
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    classes.Valid.skip_link with Reverse variant
+
+    why Reversing is so important?
+    --------------------------------
+    because you cant keep callable link and reversing it by simply NOT
+        skip_link__direct = bool        # correct
+        skip_link__direct = Bool(bool)  # correct
+        skip_link__reversal = not bool  # incorrect
+        skip_link__reversal = Bool(bool, attr).get_reverse  # correct
+
+    but here we can use lambda
+        skip_link__reversal = lambda attr: not bool(attr)  # correct but not so convenient ???
+
+    """
+    def __call__(self, *args, **kwargs) -> bool | NoReturn:
+        args = args or self.ARGS
+        kwargs = kwargs or self.KWARGS
+        return bool(self.CONSTRUCTOR(*args, **kwargs))
+
+    def get_reverse(self, *args, **kwargs) -> bool | NoReturn:
+        """
+        if raise - raise
+        """
+        return not self(*args, **kwargs)
+
+    def get_bool_only(self, *args, **kwargs) -> bool:
+        """
+        if raise - return False
+        """
+        try:
+            return self(*args, **kwargs)
+        except Exception as exx:
+            return False
+
+    def get_bool_only__reverse(self, *args, **kwargs) -> bool:
+        return not self.get_bool_only(*args, **kwargs)
 
 
 # =====================================================================================================================
