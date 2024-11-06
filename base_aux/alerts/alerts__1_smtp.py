@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from base_aux.classes import CallLater, ConstructOnInit
+from base_aux.classes import Lambda, AttrLambdaCall
 from base_aux.privates import *
 
 
@@ -36,12 +36,12 @@ class SmtpServers:
 
 
 # =====================================================================================================================
-class AlertSmtp(ConstructOnInit, AlertBase):
+class AlertSmtp(AttrLambdaCall, AlertBase):
     """SMTP realisation for sending msg (email).
     """
     # SETTINGS ------------------------------------
     SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: PrivateAuth = CallLater(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
+    AUTH: PrivateAuth = Lambda(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------

@@ -2,52 +2,71 @@ from typing import *
 
 
 # =====================================================================================================================
-TYPE__CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
-TYPE__CONSTRUCTOR_ARGS = tuple[Any, ...]
-TYPE__CONSTRUCTOR_KWARGS = dict[Any, Any]
+TYPE__LAMBDA_CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
+TYPE__LAMBDA_ARGS = tuple[Any, ...]
+TYPE__LAMBDA_KWARGS = dict[Any, Any]
 
 
-class CallLater:
+class Lambda:
     """
     GOAL
     ----
-    delay probable raising Exx on direct execution
+    1. delay probable raising Exx on direct execution (use with AttrLambdaCall)
     like creating objects on Cls attributes
+        class Cls:
+            ATTR = PrivateValues(123)   # Lambda(PrivateValues, 123)
+
+    2. replace simple lambda!
+    by using lambda you should define args/kwargs any time! and im sick of it!
+        funk = lambda *args, **kwargs: sum(*args) + sum(**kwargs.values())  # its not a simple lambda!
+        funk = lambda *args: sum(*args)  # its simple lambda
+        result = funk(1, 2)
+    replace to
+        funk = Lambda(sum)
+        result = funk(1, 2)
+
+        funk = Lambda(sum, 1, 2)
+        result = funk()
 
     SPECIALLY CREATED FOR
     ---------------------
-    Item for using with ConstructOnInit
+    Item for using with AttrLambdaCall
 
     WHY NOT 1=simple LAMBDA?
     ------------------------
     extremely good point!
-    but in case of at least ConstructOnInit you cant distinguish method or callable attribute!
+    but in case of at least AttrLambdaCall you cant distinguish method or callable attribute!
     so you explicitly define attributes/objects for later constructions
+
+    and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 
     PARAMS
     ======
     :ivar CONSTRUCTOR: any class or function
     """
-    CONSTRUCTOR: TYPE__CONSTRUCTOR
-    ARGS: TYPE__CONSTRUCTOR_ARGS = ()
-    KWARGS: TYPE__CONSTRUCTOR_KWARGS = {}
+    CONSTRUCTOR: TYPE__LAMBDA_CONSTRUCTOR
+    ARGS: TYPE__LAMBDA_ARGS = ()
+    KWARGS: TYPE__LAMBDA_KWARGS = {}
 
-    def __init__(self, constructor: TYPE__CONSTRUCTOR, *args, **kwargs) -> None:
+    def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
         self.CONSTRUCTOR = constructor
         self.ARGS = args
         self.KWARGS = kwargs
 
-    def __call__(self) -> Any | NoReturn:
-        return self.CONSTRUCTOR(*self.ARGS, **self.KWARGS)
+    def __call__(self, *args, **kwargs) -> Any | NoReturn:
+        args = args or self.ARGS
+        kwargs = kwargs or self.KWARGS
+        return self.CONSTRUCTOR(*args, **kwargs)
 
 
 # =====================================================================================================================
-class ConstructOnInit:
+class AttrLambdaCall:
     """
+    find and call all Lambda attrs On class inition
     GOAL
     ----
     if you need create object in classAttribute only on real inition of class
-    useful in case of raise exx on init, but you want to pass instance in class attribute with inplace initiation
+    useful in case of raising exx on init, but you want to pass instance in class attribute with inplace initiation
 
     REASON EXAMPLE
     --------------
@@ -67,7 +86,7 @@ class ConstructOnInit:
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         for attr in dir(self):
             value = getattr(self, attr)
-            if isinstance(value, CallLater):
+            if isinstance(value, Lambda):
                 setattr(self, attr, value())
 
         super().__init__(*args, **kwargs)

@@ -1,7 +1,7 @@
 import time
 from typing import *
 
-from base_aux.classes import CallLater, ConstructOnInit
+from base_aux.classes import Lambda, AttrLambdaCall
 from base_aux.privates import *
 from .base import *
 
@@ -15,11 +15,11 @@ class RecipientTgID(PrivateAuto):
 
 
 # =====================================================================================================================
-class AlertTelegram(ConstructOnInit, AlertBase):
+class AlertTelegram(AttrLambdaCall, AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------
-    SERVER_TG: PrivateTgBotAddressAuto = CallLater(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
+    SERVER_TG: PrivateTgBotAddressAuto = Lambda(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
 
     # AUX -----------------------------------------
     _conn: telebot.TeleBot

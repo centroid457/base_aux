@@ -73,13 +73,13 @@ from .getattr_3_prefix_2_cls import (
     GetattrPrefixCls_MetaTemplate
 )
 
-from .attr_4_construct_on_init import (
-    CallLater,
-    ConstructOnInit,
+from .attr_4_lambda_call import (
+    Lambda,
+    AttrLambdaCall,
 
-    TYPE__CONSTRUCTOR,
-    TYPE__CONSTRUCTOR_ARGS,
-    TYPE__CONSTRUCTOR_KWARGS,
+    TYPE__LAMBDA_CONSTRUCTOR,
+    TYPE__LAMBDA_ARGS,
+    TYPE__LAMBDA_KWARGS,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (

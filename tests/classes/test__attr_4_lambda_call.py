@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.classes.attr_4_construct_on_init import *
+from base_aux.classes.attr_4_lambda_call import *
 from base_aux.funcs import *
 
 
@@ -37,10 +37,10 @@ def test__common__define(value, _EXPECTED):
 )
 def test__special__define_and_init(value, _EXPECTED):
     # DEFINE ---------------------
-    class Victim(ConstructOnInit):
+    class Victim(AttrLambdaCall):
         ATTR0 = 0
-        ATTR_INT = CallLater(int, value)
-        ATTR_STR = CallLater(str, value)
+        ATTR_INT = Lambda(int, value)
+        ATTR_STR = Lambda(str, value)
 
     assert True     # no exx above!
 
