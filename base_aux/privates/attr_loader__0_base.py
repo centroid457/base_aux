@@ -32,7 +32,6 @@ class PrivateBase(AnnotAux, abc.ABC):
     _text: Optional[str] = ""     # TODO: need tests!!!
     dict: Dict[str, Any] = None
 
-
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
@@ -91,6 +90,20 @@ class PrivateBase(AnnotAux, abc.ABC):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def file_check_exists(cls) -> bool:
+        """
+        SPECIALLY CREATED FOR
+        ---------------------
+        for pytest when i use Privates
+        i need to skip tests when i have no Privates! like in githubActions or on workPC
+
+        by now just use
+            @pytest.mark.skipif(Lambda().check_raise(), reason="no file")
+        """
+        pass
+        # FIXME: finish when pigs fly!
+
     def _filepath_apply_new(
             self,
             _dirpath: TYPE__PATH = None,

@@ -40,10 +40,12 @@ class Lambda:
     WHY NOT 1=simple LAMBDA?
     ------------------------
     extremely good point!
-    but in case of at least AttrLambdaCall you cant distinguish method or callable attribute!
+    but
+    1. in case of at least AttrLambdaCall you cant distinguish method or callable attribute!
     so you explicitly define attributes/objects for later constructions
-
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
+
+    2.
 
     PARAMS
     ======
@@ -62,6 +64,32 @@ class Lambda:
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
         return self.CONSTRUCTOR(*args, **kwargs)
+
+    def check_raise(self, *args, **kwargs) -> bool:
+        """
+        SPECIALLY CREATED FOR
+        ---------------------
+        check Privates in pytest for skipping
+        """
+        return not self.check_no_raise(*args, **kwargs)
+
+    def check_no_raise(self, *args, **kwargs) -> bool:
+        try:
+            self(*args, **kwargs)
+            return True
+        except Exception as exx:
+            return False
+
+    def get_result_or_exx(self, *args, **kwargs) -> bool | Exception:
+        """
+        SPECIALLY CREATED FOR
+        ---------------------
+        just in case
+        """
+        try:
+            return self(*args, **kwargs)
+        except Exception as exx:
+            return exx
 
 
 # =====================================================================================================================
