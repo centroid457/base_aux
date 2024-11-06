@@ -262,7 +262,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 7)
+    VERSION: tuple[int, int, int] = (0, 0, 8)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -312,7 +312,7 @@ other protocols mot recommended
         "[privates] for tests add check data loaded/available without raise"
     ]
     NEWS: list[str] = [
-        "[classes.Lambda] add check_raise/*noRaise/*getResultOrExx",
+        "[classes.Lambda] add LambdaBool/+Reversed",
     ]
 
 
