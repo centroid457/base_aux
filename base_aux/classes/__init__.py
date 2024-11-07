@@ -110,8 +110,6 @@ from .valid_0_aux import ValidAux
 from .valid_1_base import (
     Valid,
 
-    TYPE__VALIDATE_LINK,
-    TYPE__BOOL_LINK,
 )
 from .valid_2_chains import (
     ValidChains,

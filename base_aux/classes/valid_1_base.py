@@ -5,11 +5,7 @@ from .valid_0_aux import ValidAux
 
 from base_aux.objects import TypeChecker
 from base_aux.funcs import *
-
-
-# =====================================================================================================================
-TYPE__VALIDATE_LINK = Union[bool, Any, TYPE__VALID_EXCEPTION, Callable[[Any, ...], bool | NoReturn]]
-TYPE__BOOL_LINK = Union[bool, Any, TYPE__VALID_EXCEPTION, Callable[[...], bool | NoReturn]]
+from ..funcs.static import TYPE__VALID_VALIDATOR
 
 
 # =====================================================================================================================
@@ -58,11 +54,11 @@ class Valid(ValidAux):
     NAME: str = ""      # TODO: realise access to Valid from Chains!
     COMMENT: str = ""
 
-    SKIP_LINK: TYPE__BOOL_LINK = None
+    SKIP_LINK: TYPE__VALID_SOURCE_BOOL = None
     VALUE_LINK: TYPE__VALID_SOURCE
-    VALIDATE_LINK: TYPE__VALIDATE_LINK = True
+    VALIDATE_LINK: TYPE__VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPE__BOOL_LINK = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
+    REVERSE_LINK: TYPE__VALID_SOURCE_BOOL = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
     ARGS__VALUE: TYPE__VALID_ARGS = ()
     ARGS__VALIDATE: TYPE__VALID_ARGS = ()
@@ -71,12 +67,12 @@ class Valid(ValidAux):
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
-    skip_last: bool = False
+    skip_last: TYPE__VALID_RESULT_BOOL = False
     finished: bool | None = None
-    value_last: Any | Exception = None              # direct result value for calculating func value_link
-    validate_last: None | bool | Exception = True   # direct result value for calculating func validate_link === decide using only bool???
-    reverse_last: None | bool = None
-    validate_last_bool: bool    # represented value for validation
+    value_last: TYPE__VALID_RESULT = None               # direct result value for calculating func value_link
+    validate_last: TYPE__VALID_RESULT_BOOL__EXX = True   # direct result value for calculating func validate_link === decide using only bool???
+    reverse_last: TYPE__VALID_RESULT_BOOL = None
+    validate_last_bool: TYPE__VALID_RESULT_BOOL         # represented value for validation
     log_lines: list[str] = None
 
     # CHAINS -------------------------------------
@@ -87,10 +83,10 @@ class Valid(ValidAux):
     def __init__(
             self,
             value_link: TYPE__VALID_SOURCE = ValueNotExist,
-            validate_link: Optional[TYPE__VALIDATE_LINK] = None,
+            validate_link: Optional[TYPE__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
-            skip_link: Optional[TYPE__BOOL_LINK] = None,
-            reverse_link: Optional[TYPE__BOOL_LINK] = None,
+            skip_link: TYPE__VALID_SOURCE_BOOL= None,
+            reverse_link: TYPE__VALID_SOURCE_BOOL = None,
 
             args__value: TYPE__VALID_ARGS = (),
             args__validate: TYPE__VALID_ARGS = (),

@@ -1,4 +1,5 @@
 from typing import *
+from typing import Union, Any, Type, Callable, NoReturn
 
 
 # =====================================================================================================================
@@ -41,6 +42,9 @@ class ValueNotExist:
     """
     pass
 
+    def __bool__(self):
+        return False
+
 
 # =====================================================================================================================
 TYPE__VALUE_NOT_PASSED = Type[ValueNotExist] | ValueNotExist
@@ -51,16 +55,41 @@ TYPE__VALID_ARGS = Union[tuple, Any, None, "TYPE__ARGS_EMPTY", "TYPE__EXPLICIT"]
 TYPE__VALID_KWARGS = Optional[dict[str, Any]]
 
 TYPE__VALID_EXCEPTION = Union[Exception, Type[Exception]]
+TYPE__VALID_callable_item = Callable[[...], Any | NoReturn]
 TYPE__VALID_SOURCE = Union[
-    Callable[[...], Any | NoReturn],    # as main idea! to get final generic
     Any,                                # as main idea! as already final generic
-    TYPE__VALID_EXCEPTION,              # fixme: hide? think no!
+    Callable[[...], Any | NoReturn],    # as main idea! to get final generic
+    # TYPE__VALID_EXCEPTION,              # fixme: hide? think no? we can pass in theory Exx! but why? for tests? why? we need it only in result! if need in tests Place it as Any!
     TYPE__VALUE_NOT_PASSED
 ]
-
 TYPE__VALID_RESULT = Union[
-    TYPE__VALID_EXCEPTION,  # as main idea! instead of raise
     Any,
+    TYPE__VALID_EXCEPTION,  # as main idea! instead of raise
+]
+# BOOL --------------------------------
+TYPE__VALID_SOURCE_BOOL = Union[
+    Any,                                # fixme: hide? does it need? for results like []/{}/()/0/"" think KEEP! it mean you must know that its expecting boolComparing in further logic!
+    bool,                               # as main idea! as already final generic
+    Callable[[...], bool | Any | NoReturn],   # as main idea! to get final generic
+    # TYPE__VALID_EXCEPTION,
+    TYPE__VALUE_NOT_PASSED
+]
+TYPE__VALID_RESULT_BOOL = Union[
+    # this is when you need get only bool! raise - as False!
+    bool,  # as main idea! instead of raise/exx
+]
+# FIXME: TODO: solve idea of BOOL!!! cant understand about Exx in here!
+TYPE__VALID_RESULT_BOOL__EXX = Union[
+    bool,
+    TYPE__VALID_EXCEPTION,
+]
+
+# ---------------------------------------------------------------------------------------------------------------------
+TYPE__VALID_VALIDATOR = Union[
+    Any,    # generic final instance as expecting value - direct comparison OR comparison instance like Valid!
+    # Type,   # Class as validator like Valid? fixme
+    TYPE__VALID_EXCEPTION,  # direct comparison
+    Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
 ]
 
 
