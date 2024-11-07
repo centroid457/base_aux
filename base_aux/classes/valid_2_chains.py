@@ -84,8 +84,8 @@ class ValidChains(Valid):
                         break
             # ITER -----------
 
-            self.log_lines.append(f"(FINISH) [result={bool(self)}]/len={len(self)}")
             self.finished = True
+            self.log_lines.append(f"(FINISH) [result={bool(self)}]/len={len(self)}")    # need after finish! to keep correct result
             # ============================
 
         return bool(self)
