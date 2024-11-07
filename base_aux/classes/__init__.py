@@ -83,13 +83,9 @@ from .getattr_3_prefix_2_cls import (
 )
 
 from .attr_4_lambda_call import (
-    Lambda,
-    LambdaBool,
-    LambdaBoolReversed,
-    LambdaTrySuccess,
-    LambdaTryFail,
     AttrLambdaCall,
 )
+from .lambdas import Lambda, LambdaBool, LambdaBoolReversed, LambdaTrySuccess, LambdaTryFail
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (
     DictDots,

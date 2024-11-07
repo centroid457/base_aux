@@ -1,4 +1,3 @@
-from typing import *
 import pytest
 
 from base_aux.classes.attr_4_lambda_call import *
