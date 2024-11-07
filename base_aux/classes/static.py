@@ -1,6 +1,7 @@
 # GOAL
 # KEEP STATIC OBJECTS like TYPE__* and Exx__* in separated file.
 # make clear importing by resolving circular imports!
+from typing import Type, Any, Callable, NoReturn
 
 
 # =====================================================================================================================
@@ -69,6 +70,12 @@ class Exx__BreederObjectList_GroupNotExists(Exception):
 
 class Exx__BreederObjectList_ObjCantAccessIndex(Exception):
     pass
+
+
+# =====================================================================================================================
+TYPE__LAMBDA_CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
+TYPE__LAMBDA_ARGS = tuple[Any, ...]
+TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 
 # =====================================================================================================================

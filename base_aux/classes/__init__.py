@@ -29,8 +29,14 @@ from .static import (
     Exx__IndexOverlayed,
     Exx__IndexNotSet,
     Exx__ItemNotExists,
-    Exx__StartOuterNONE_UsedInStackByRecreation, Exx__BreederObjectList_GroupsNotGenerated,
-    Exx__BreederObjectList_GroupNotExists, Exx__BreederObjectList_ObjCantAccessIndex,
+    Exx__StartOuterNONE_UsedInStackByRecreation,
+    Exx__BreederObjectList_GroupsNotGenerated,
+    Exx__BreederObjectList_GroupNotExists,
+    Exx__BreederObjectList_ObjCantAccessIndex,
+
+    TYPE__LAMBDA_CONSTRUCTOR,
+    TYPE__LAMBDA_ARGS,
+    TYPE__LAMBDA_KWARGS,
 )
 from .annot_1_aux import (
     AnnotAux,
@@ -80,11 +86,9 @@ from .attr_4_lambda_call import (
     Lambda,
     LambdaBool,
     LambdaBoolReversed,
+    LambdaTrySuccess,
+    LambdaTryFail,
     AttrLambdaCall,
-
-    TYPE__LAMBDA_CONSTRUCTOR,
-    TYPE__LAMBDA_ARGS,
-    TYPE__LAMBDA_KWARGS,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (

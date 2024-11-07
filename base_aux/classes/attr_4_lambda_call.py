@@ -1,12 +1,10 @@
 from typing import *
 
+from base_aux.classes.static import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
+from base_aux.classes.valid_0_aux import ValidAux
+
 
 # =====================================================================================================================
-TYPE__LAMBDA_CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
-TYPE__LAMBDA_ARGS = tuple[Any, ...]
-TYPE__LAMBDA_KWARGS = dict[str, Any]
-
-
 class Lambda:
     """
     # FIXME: it seems ValidAux have same functions!!! need to combine in one object???
@@ -58,16 +56,24 @@ class Lambda:
     ARGS: TYPE__LAMBDA_ARGS = ()
     KWARGS: TYPE__LAMBDA_KWARGS = {}
 
+    # OVERWRITE! ------------------------------------------------------------------------------------------------------
+    def __call__(self, *args, **kwargs) -> Any | NoReturn:
+        args = args or self.ARGS
+        kwargs = kwargs or self.KWARGS
+        return self.CONSTRUCTOR(*args, **kwargs)
+
+    def __eq__(self, other) -> bool | NoReturn:
+        return ValidAux.compare_doublesided__bool(other, self())
+
+    # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
         self.CONSTRUCTOR = constructor
         self.ARGS = args
         self.KWARGS = kwargs
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        args = args or self.ARGS
-        kwargs = kwargs or self.KWARGS
-        return self.CONSTRUCTOR(*args, **kwargs)
+    def __bool__(self) -> bool | NoReturn:
+        return bool(self(*self.ARGS, **self.KWARGS))
 
     # -----------------------------------------------------------------------------------------------------------------
     def get_result_or_raise(self, *args, **kwargs) -> bool | NoReturn:
@@ -93,6 +99,8 @@ class Lambda:
         SPECIALLY CREATED FOR
         ---------------------
         check Privates in pytest for skipping
+
+        USE LambdaTrySuccess instead!
         """
         try:
             self(*args, **kwargs)
@@ -129,15 +137,16 @@ class LambdaBool(Lambda):
 
     PARAMS
     ======
-    :ivar _REVERSE: just for LambdaBoolReversed, no need to init
+    :ivar BOOL_REVERSE: just for LambdaBoolReversed, no need to init
     """
-    _REVERSE: bool = False
+
+    BOOL_REVERSE: bool = False
 
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
         result = bool(self.CONSTRUCTOR(*args, **kwargs))
-        if self._REVERSE:
+        if self.BOOL_REVERSE:
             result = not result
         return result
 
@@ -167,7 +176,33 @@ class LambdaBoolReversed(LambdaBool):
     """
     just a reversed LambdaBool
     """
-    _REVERSE: bool = True
+    BOOL_REVERSE: bool = True
+
+
+# =====================================================================================================================
+class LambdaTrySuccess(LambdaBool):
+    """
+    just an ability to check if object is not raised on call
+
+    best practice
+    -------------
+    if LambdaTrySuccess(func):
+        return func()
+
+    @pytest.mark.skipif(LambdaTryFail(func), ...)
+    """
+    def __call__(self, *args, **kwargs) -> bool:
+        args = args or self.ARGS
+        kwargs = kwargs or self.KWARGS
+        try:
+            self.CONSTRUCTOR(*args, **kwargs)
+            return not self.BOOL_REVERSE
+        except:
+            return bool(self.BOOL_REVERSE)
+
+
+class LambdaTryFail(LambdaTrySuccess):
+    BOOL_REVERSE: bool = True
 
 
 # =====================================================================================================================
