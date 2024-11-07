@@ -1,10 +1,10 @@
 from typing import *
 from base_aux.objects import TypeChecker
-from . import TYPE__ARGS, Default, ArgsEmpty
+from . import TYPE__VALID_ARGS, Default, ArgsEmpty
 
 
 # =====================================================================================================================
-def args__ensure_tuple(args: TYPE__ARGS = (), none_as_empty: bool | None = None) -> tuple:
+def args__ensure_tuple(args: TYPE__VALID_ARGS = (), none_as_empty: bool | None = None) -> tuple:
     """
     GOAL
     ----

@@ -12,10 +12,10 @@ pass
 
 # =====================================================================================================================
 def pytest_func_tester(
-        func_link: TYPE__SOURCE_LINK, # if func would get Exx - instance of exx would be returned for value!
-        args: TYPE__ARGS = (),
-        kwargs: TYPE__KWARGS = None,
-        _EXPECTED: Union[Any, TYPE__EXCEPTION] = True,  # EXACT VALUE OR ExxClass
+        func_link: TYPE__VALID_SOURCE, # if func would get Exx - instance of exx would be returned for value!
+        args: TYPE__VALID_ARGS = (),
+        kwargs: TYPE__VALID_KWARGS = None,
+        _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
 
         # TODO: add validation func like in Valid!??
         _MARK: pytest.MarkDecorator | None = None,
@@ -70,11 +70,11 @@ def pytest_func_tester(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_args_kwargs(
-        func_link,
-        _EXPECTED = True,
+        func_link: TYPE__VALID_SOURCE,
+        _EXPECTED: TYPE__VALID_RESULT = True,
 
-        _MARK = None,
-        _COMMENT = None
+        _MARK: pytest.MarkDecorator | None = None,
+        _COMMENT: str | None = None
 ) -> NoReturn | None:
     """
     created specially for using inline operators like 'func_link=A>=B'
@@ -89,12 +89,12 @@ def pytest_func_tester__no_args_kwargs(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_kwargs(
-        func_link,
-        args,
-        _EXPECTED = True,
+        func_link: TYPE__VALID_SOURCE,
+        args: TYPE__VALID_ARGS,
+        _EXPECTED: TYPE__VALID_RESULT = True,
 
-        _MARK = None,
-        _COMMENT = None
+        _MARK: pytest.MarkDecorator | None = None,
+        _COMMENT: str | None = None
 ) -> NoReturn | None:
     """
     short variant in case of kwargs is not needed
@@ -108,12 +108,12 @@ def pytest_func_tester__no_kwargs(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_args(
-        func_link,
-        kwargs,
-        _EXPECTED = True,
+        func_link: TYPE__VALID_SOURCE,
+        kwargs: TYPE__VALID_KWARGS,
+        _EXPECTED: TYPE__VALID_RESULT = True,
 
-        _MARK = None,
-        _COMMENT = None
+        _MARK: pytest.MarkDecorator | None = None,
+        _COMMENT: str | None = None
 ) -> NoReturn | None:
     """
     short variant in case of args is not needed

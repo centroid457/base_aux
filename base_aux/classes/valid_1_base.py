@@ -4,12 +4,12 @@ import time
 from .valid_0_aux import ValidAux
 
 from base_aux.objects import TypeChecker
-from base_aux.funcs import TYPE__ARGS, TYPE__KWARGS, args__ensure_tuple, TYPE__EXCEPTION, TYPE__SOURCE_LINK, ValueNotExist
+from base_aux.funcs import *
 
 
 # =====================================================================================================================
-TYPE__VALIDATE_LINK = Union[bool, Any, TYPE__EXCEPTION, Callable[[Any, ...], bool | NoReturn]]
-TYPE__BOOL_LINK = Union[bool, Any, TYPE__EXCEPTION, Callable[[...], bool | NoReturn]]
+TYPE__VALIDATE_LINK = Union[bool, Any, TYPE__VALID_EXCEPTION, Callable[[Any, ...], bool | NoReturn]]
+TYPE__BOOL_LINK = Union[bool, Any, TYPE__VALID_EXCEPTION, Callable[[...], bool | NoReturn]]
 
 
 # =====================================================================================================================
@@ -59,15 +59,15 @@ class Valid(ValidAux):
     COMMENT: str = ""
 
     SKIP_LINK: TYPE__BOOL_LINK = None
-    VALUE_LINK: TYPE__SOURCE_LINK
+    VALUE_LINK: TYPE__VALID_SOURCE
     VALIDATE_LINK: TYPE__VALIDATE_LINK = True
     VALIDATE_RETRY: int = 0
     REVERSE_LINK: TYPE__BOOL_LINK = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
-    ARGS__VALUE: TYPE__ARGS = ()
-    ARGS__VALIDATE: TYPE__ARGS = ()
-    KWARGS__VALUE: TYPE__KWARGS = None
-    KWARGS__VALIDATE: TYPE__KWARGS = None
+    ARGS__VALUE: TYPE__VALID_ARGS = ()
+    ARGS__VALIDATE: TYPE__VALID_ARGS = ()
+    KWARGS__VALUE: TYPE__VALID_KWARGS = None
+    KWARGS__VALIDATE: TYPE__VALID_KWARGS = None
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
@@ -86,17 +86,17 @@ class Valid(ValidAux):
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            value_link: TYPE__SOURCE_LINK = ValueNotExist,
+            value_link: TYPE__VALID_SOURCE = ValueNotExist,
             validate_link: Optional[TYPE__VALIDATE_LINK] = None,
             validate_retry: Optional[int] = None,
             skip_link: Optional[TYPE__BOOL_LINK] = None,
             reverse_link: Optional[TYPE__BOOL_LINK] = None,
 
-            args__value: TYPE__ARGS = (),
-            args__validate: TYPE__ARGS = (),
+            args__value: TYPE__VALID_ARGS = (),
+            args__validate: TYPE__VALID_ARGS = (),
 
-            kwargs__value: TYPE__KWARGS = None,
-            kwargs__validate: TYPE__KWARGS = None,
+            kwargs__value: TYPE__VALID_KWARGS = None,
+            kwargs__validate: TYPE__VALID_KWARGS = None,
 
             name: Optional[str] = None,
             comment: Optional[str] = None,

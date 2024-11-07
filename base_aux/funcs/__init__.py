@@ -10,11 +10,12 @@ from .static import (
     ValueNotExist,
     # TYPES
     TYPE__VALUE_NOT_PASSED,
-    TYPE__ARGS,
-    TYPE__KWARGS,
-    TYPE__SOURCE_LINK,
-    # EXX
-    TYPE__EXCEPTION,
+
+    TYPE__VALID_SOURCE,
+    TYPE__VALID_RESULT,
+    TYPE__VALID_ARGS,
+    TYPE__VALID_KWARGS,
+    TYPE__VALID_EXCEPTION,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 

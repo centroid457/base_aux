@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.objects import TypeChecker
-from base_aux.funcs import TYPE__ARGS, TYPE__KWARGS
+from base_aux.funcs import *
 
 
 # =====================================================================================================================
@@ -13,9 +13,9 @@ class ValidAux:
     @classmethod
     def get_result_or_raise(
             cls,
-            source: Any | Callable[..., Any],
-            args: TYPE__ARGS = None,
-            kwargs: TYPE__KWARGS = None,
+            source: TYPE__VALID_SOURCE,
+            args: TYPE__VALID_ARGS = None,
+            kwargs: TYPE__VALID_KWARGS = None,
     ) -> Any | NoReturn:
         """
         SPECIFIC LOGIC
@@ -45,9 +45,9 @@ class ValidAux:
     @classmethod
     def get_result_or_exx(
             cls,
-            source: Any | Callable[..., Any],
-            args: TYPE__ARGS = None,
-            kwargs: TYPE__KWARGS = None,
+            source: TYPE__VALID_SOURCE,
+            args: TYPE__VALID_ARGS = None,
+            kwargs: TYPE__VALID_KWARGS = None,
     ) -> Any | Exception:
         """
         GOAL
@@ -70,9 +70,9 @@ class ValidAux:
     @classmethod
     def get_result_bool(
             cls,
-            source: Any | Callable[..., Any],
-            args: TYPE__ARGS = None,
-            kwargs: TYPE__KWARGS = None,
+            source: TYPE__VALID_SOURCE,
+            args: TYPE__VALID_ARGS = None,
+            kwargs: TYPE__VALID_KWARGS = None,
     ) -> bool:
         """
         GOAL

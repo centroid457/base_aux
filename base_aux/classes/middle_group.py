@@ -155,7 +155,7 @@ class ClsMiddleGroup:
             pass
     """
     MIDDLE_GROUP__NAME: None | str = None           # main cmp meth
-    MIDDLE_GROUP__CMP_ATTR: TYPE__ARGS = None       # additional cmp parameters
+    MIDDLE_GROUP__CMP_ATTR: TYPE__VALID_ARGS = None       # additional cmp parameters
 
     @classmethod
     def middle_group__check_equal__cls(cls, other: Any) -> bool | None:

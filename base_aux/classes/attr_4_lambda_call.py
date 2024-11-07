@@ -9,6 +9,9 @@ TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 class Lambda:
     """
+    # FIXME: it seems ValidAux have same functions!!! need to combine in one object???
+        in this case its perfect separating args without special Ensure_tuple! NO!!!
+
     GOAL
     ----
     1. delay probable raising Exx on direct execution (use with AttrLambdaCall)
@@ -127,8 +130,6 @@ class LambdaBool(Lambda):
     PARAMS
     ======
     :ivar _REVERSE: just for LambdaBoolReversed, no need to init
-
-    # FIXME: it seems ValidAux have same functions!!! need to combine in one object???
     """
     _REVERSE: bool = False
 
