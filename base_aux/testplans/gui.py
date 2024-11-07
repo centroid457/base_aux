@@ -31,7 +31,7 @@ class TpHlStyles(HlStyles):
         P_TEMPLATES=[
             r'.*validate_last_bool=%s.*',
             r'.*result[^=]*=%s.*',
-            r'.*valid[^=]*=%s.*',
+            # r'.*valid[^=]*=%s.*',
         ],
     )
     RESULT_FALSE: HlStyle = HlStyle(
@@ -42,7 +42,7 @@ class TpHlStyles(HlStyles):
         P_TEMPLATES=[
             r'.*validate_last_bool=%s.*',
             r'.*result[^=]*=%s.*',
-            r'.*valid[^=]*=%s.*',
+            # r'.*valid[^=]*=%s.*',
         ],
     )
     RESULT_FALSE_NOCUM: HlStyle = HlStyle(
