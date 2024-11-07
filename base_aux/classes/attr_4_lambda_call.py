@@ -4,7 +4,7 @@ from typing import *
 # =====================================================================================================================
 TYPE__LAMBDA_CONSTRUCTOR = Type[Any] | Callable[..., Any | NoReturn]
 TYPE__LAMBDA_ARGS = tuple[Any, ...]
-TYPE__LAMBDA_KWARGS = dict[Any, Any]
+TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 
 class Lambda:
