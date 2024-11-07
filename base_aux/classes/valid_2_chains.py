@@ -65,8 +65,8 @@ class ValidChains(Valid):
             self.log_lines.append(f"(START) len={len(self)}/timestamp={self.timestamp_last}")
 
             # init self.validate_last if None -----------
-            if self.validate_last is None:
-                self.validate_last = True
+            # if self.validate_last is None:
+            #     self.validate_last = True
 
             # ITER -----------
             for index, step in enumerate(self):
