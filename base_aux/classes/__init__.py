@@ -54,6 +54,9 @@ from .number import (
     TYPE__NUMBER,
 )
 # ---------------------------------------------------------------------------------------------------------------------
+from .exceptions import ExxBool
+
+# ---------------------------------------------------------------------------------------------------------------------
 from .getattr_0_echo import (
     GetattrEcho,
     GetattrEchoSpace,
@@ -107,13 +110,9 @@ from .value_2_unit import (
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .valid_0_aux import ValidAux
-from .valid_1_base import (
-    Valid,
-
-)
+from .valid_1_base import Valid
 from .valid_2_chains import (
     ValidChains,
-
     TYPE__CHAINS,
 )
 from .valid_1_base_derivatives import (
