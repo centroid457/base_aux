@@ -19,7 +19,8 @@ from base_aux.cli import *
 # VERSION = (0, 0, 9)   # add gen requirements_release_freezed
 # VERSION = (0, 0, 10)  # requirements_release_freezed extend timeout (at home i need 3-4sec!)
 # VERSION = (0, 0, 11)  # collect all modules into one pkg!
-VERSION = (0, 0, 12)    # add bundled licenses
+# VERSION = (0, 0, 12)  # add bundled licenses
+VERSION = (0, 0, 13)    # bundled licenses - fix lines
 
 
 # =====================================================================================================================
@@ -161,13 +162,13 @@ class ReleaseReadme(ReleaseFileBase):
             f"",
             self.LINE_SEPARATOR_MAIN,
             f"## License",
-            f"See the [LICENSE](LICENSE) file for license rights and limitations (MIT).",
-            f"See the [LICENSE_bundled.md](LICENSE_bundled.md) file for parent licenses.",
+            f"See the [LICENSE](LICENSE) file for license rights and limitations (MIT).  ",
+            f"See the [LICENSE_bundled.md](LICENSE_bundled.md) file for parent licenses.  ",
 
             f"",
             f"",
             f"## Release history",
-            f"See the [HISTORY.md](HISTORY.md) file for release history.",
+            f"See the [HISTORY.md](HISTORY.md) file for release history.  ",
 
             f"",
             f"",
