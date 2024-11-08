@@ -249,15 +249,18 @@ class Valid(ValidAux):
         else:
             return self.validate_last == True
 
-    def get_logstr_attr_if_have_value(self, item: str, prefix: str = "", suffix: str = "") -> str:
+    def get_logstr_attr(self, item: str, prefix: str = "", suffix: str = "", only_if_have_value: bool = None) -> str:
         """
         return at least blank line if no value
         """
         value = getattr(self, item)
-        if value:
+        if value or not only_if_have_value:
             return f"{prefix}{item}={value}{suffix}"
         else:
             return ""
+
+    def get_logstr_attr_if_have_value(self, item: str, prefix: str = "", suffix: str = "") -> str:
+        return self.get_logstr_attr(item=item, prefix=prefix, suffix=suffix, only_if_have_value=True)
 
     def __str__(self) -> str:
         # main ---------------
@@ -271,28 +274,39 @@ class Valid(ValidAux):
         # result_str = STR_PATTERN.format(self)
 
         # -------------------------------------
-        result_str = f"{self.__class__.__name__}(NAME={self.NAME}"
-        result_str += self.get_logstr_attr_if_have_value("skip_last", prefix=",")
-        result_str += self.get_logstr_attr_if_have_value("reverse_last", prefix=",")
-        result_str += f",validate_last_bool={self.validate_last_bool},\n"
+        result_str = f"{self.__class__.__name__}("
+        result_str += self.get_logstr_attr_if_have_value("NAME")
+        result_str += self.get_logstr_attr("validate_last_bool", prefix=",")
+        result_str += f",\n"
+
+        # VARIATIONS ----
+        if self.SKIP_LINK:
+            result_str += self.get_logstr_attr("SKIP_LINK", prefix="...")
+            result_str += self.get_logstr_attr("skip_last", prefix=",")
+            result_str += f",\n"
+
+        if self.REVERSE_LINK:
+            result_str += self.get_logstr_attr("REVERSE_LINK", prefix="...")
+            result_str += self.get_logstr_attr("reverse_last", prefix=",")
+            result_str += f",\n"
 
         # value ----
-        result_str += f"...VALUE_LINK={self.VALUE_LINK}"
+        result_str += self.get_logstr_attr("VALUE_LINK", prefix="...")
         result_str += self.get_logstr_attr_if_have_value("ARGS__VALUE", prefix=",")
         result_str += self.get_logstr_attr_if_have_value("KWARGS__VALUE", prefix=",")
-        result_str += f",value_last={self.value_last},\n"
+        result_str += self.get_logstr_attr("value_last", prefix=",")
+        result_str += f",\n"
 
         # validate ----
-        result_str += f"...VALIDATE_LINK={self.VALIDATE_LINK}"
+        result_str += self.get_logstr_attr("VALIDATE_LINK", prefix="...")
         result_str += self.get_logstr_attr_if_have_value("ARGS__VALIDATE", prefix=",")
         result_str += self.get_logstr_attr_if_have_value("KWARGS__VALIDATE", prefix=",")
-
-        result_str += f",validate_last={self.validate_last}"
-        result_str += self.get_logstr_attr_if_have_value("REVERSE_LINK", prefix=",")
+        result_str += self.get_logstr_attr("validate_last", prefix=",")
         result_str += f",\n"
 
         # finish ----
-        result_str += f",finished={self.finished},timestamp_last={self.timestamp_last},"
+        result_str += self.get_logstr_attr("finished", prefix="...")
+        result_str += self.get_logstr_attr("timestamp_last", prefix=",")
 
         # log ----------------
         for index, line in enumerate(self.log_lines):

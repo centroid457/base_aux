@@ -310,9 +310,9 @@ other protocols mot recommended
     ]
 
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 13)
+    VERSION: tuple[int, int, int] = (0, 0, 14)
     NEWS: list[str] = [
-        "[valid] fix str",
+        "[Valid] add/apply get_logstr_attr",
     ]
 
 
