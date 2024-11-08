@@ -7,6 +7,9 @@ REM 1. in all files (all docstrings) reuse single slash '\*' into double '\\*'!
 rem otherwise it will get WARNING in pytest
 
 rem ====================================
-rem start tests on directory "tests"
-pytest ../tests
+echo off
+cls
+cd ..
+
+pytest tests
 pause

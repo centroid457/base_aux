@@ -6,7 +6,6 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 
 
 # =====================================================================================================================
-import pathlib
 from PROJECT import PROJECT
 from base_aux.requirements import Packages
 from base_aux.cli import *
@@ -27,8 +26,8 @@ cli = CliUser()
 if not Packages().check_prj_installed_latest(PROJECT):
     print(f"NEED BUILD+PUBLISH+UPGRADE --> START PROCESS")
     # 1=old del --------------
-    cli.send("rd dist\ /q /s", 10)
-    cli.send("rd build\ /q /s", 10)
+    cli.send("rd dist/ /q /s", 10)
+    cli.send("rd build/ /q /s", 10)
 
     # 2=new build+publish --------------
     cmds_timeout = [

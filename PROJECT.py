@@ -1,5 +1,5 @@
 from typing import *
-from _share.release_files import release_files__update
+from share.release_files import release_files__update
 
 
 # =====================================================================================================================
@@ -265,7 +265,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 10)
+    VERSION: tuple[int, int, int] = (0, 0, 11)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -315,8 +315,7 @@ other protocols mot recommended
         "",
     ]
     NEWS: list[str] = [
-        "[_share*] separate in folder",
-        "",
+        "[share*] try fix",
     ]
 
 

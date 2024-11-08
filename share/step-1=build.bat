@@ -6,6 +6,7 @@ rem VERSION = (0, 0, 3)  # fix param Noisolation! used to be able build with any
 rem ====================================
 echo off
 cls
+cd ..
 
 rem DEL OLD DIST =======================
 REM del dist\ /q /s

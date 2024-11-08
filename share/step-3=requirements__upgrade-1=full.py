@@ -25,7 +25,7 @@ pkgs_cli.upgrade_prj(PROJECT)
 
 print()
 print("4=requirements.txt=====================================")
-filepath = pathlib.Path(__file__).parent.joinpath("requirements.txt")
+filepath = pathlib.Path(__file__).parent.parent.joinpath("requirements.txt")
 pkgs_cli.upgrade_file(filepath)
 
 

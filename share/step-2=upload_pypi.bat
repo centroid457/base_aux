@@ -4,6 +4,8 @@ REM -----------------------------------------------
 
 echo off
 cls
+cd ..
+
 echo UPLOAD TO PYPI?
 echo UPLOAD TO PYPI?
 echo UPLOAD TO PYPI?
