@@ -310,9 +310,9 @@ other protocols mot recommended
     ]
 
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 12)
+    VERSION: tuple[int, int, int] = (0, 0, 13)
     NEWS: list[str] = [
-        "[share*] move back some files",
+        "[valid] fix str",
     ]
 
 
