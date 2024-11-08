@@ -1,28 +1,23 @@
-# from typing import Optional, Any, Union, NamedTuple
 from dataclasses import dataclass, field
 
 from .obj_types import *
 
 
 # =====================================================================================================================
-pass
-
-
-# =====================================================================================================================
-def _value_search_by_list(source: Any | None = None, search_list: list[Any] | None = None):
+def _value_search_by_list(source: Any, search_list: list[Any]) -> Any | None:
     search_list = search_list or []
-    match_item = None
-
     for search_item in search_list:
         try:
-            result = search_item in source
+            if search_item in source:
+                return search_item
         except:
-            result = source == search_item
+            pass
 
-        if result:
-            match_item = search_item
-            break
-    return match_item
+        try:
+            if search_item == source:
+                return search_item
+        except:
+            pass
 
 
 # =====================================================================================================================
