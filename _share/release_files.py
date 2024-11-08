@@ -18,7 +18,8 @@ from base_aux.cli import *
 # VERSION = (0, 0, 8)   # examples string add docstrings
 # VERSION = (0, 0, 9)   # add gen requirements_release_freezed
 # VERSION = (0, 0, 10)  # requirements_release_freezed extend timeout (at home i need 3-4sec!)
-VERSION = (0, 0, 11)    # collect all modules into one pkg!
+# VERSION = (0, 0, 11)  # collect all modules into one pkg!
+VERSION = (0, 0, 12)    # add bundled licenses
 
 
 # =====================================================================================================================
@@ -161,6 +162,7 @@ class ReleaseReadme(ReleaseFileBase):
             self.LINE_SEPARATOR_MAIN,
             f"## License",
             f"See the [LICENSE](LICENSE) file for license rights and limitations (MIT).",
+            f"See the [LICENSE_bundled.md](LICENSE_bundled.md) file for parent licenses.",
 
             f"",
             f"",
@@ -318,7 +320,7 @@ class ReleaseHistory(ReleaseFileBase):
 
 
 # =====================================================================================================================
-def release_files_update(project: Type['PROJECT']):
+def release_files__update(project: Type['PROJECT']):
     CliUser().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
     ReleaseReadme(project).generate()
     ReleaseHistory(project).generate()

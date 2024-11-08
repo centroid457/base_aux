@@ -8,5 +8,5 @@ rem otherwise it will get WARNING in pytest
 
 rem ====================================
 rem start tests on directory "tests"
-pytest tests
+pytest ../tests
 pause
