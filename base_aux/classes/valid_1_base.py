@@ -249,6 +249,16 @@ class Valid(ValidAux):
         else:
             return self.validate_last == True
 
+    def get_logstr_attr_if_have_value(self, item: str, prefix: str = "", suffix: str = "") -> str:
+        """
+        return at least blank line if no value
+        """
+        value = getattr(self, item)
+        if value:
+            return f"{prefix}{item}={value}{suffix}"
+        else:
+            return ""
+
     def __str__(self) -> str:
         # main ---------------
         # # TODO: apply name from source!!! if not passed???
@@ -261,29 +271,24 @@ class Valid(ValidAux):
         # result_str = STR_PATTERN.format(self)
 
         # -------------------------------------
-        result_str = f"{self.__class__.__name__}(NAME={self.NAME},skip_last={self.skip_last},validate_last_bool={self.validate_last_bool}"
-        if self.reverse_last:
-            result_str += f",reverse_last={self.reverse_last}"
-        result_str += f",\n"
+        result_str = f"{self.__class__.__name__}(NAME={self.NAME}"
+        result_str += self.get_logstr_attr_if_have_value("skip_last", prefix=",")
+        result_str += self.get_logstr_attr_if_have_value("reverse_last", prefix=",")
+        result_str += f",validate_last_bool={self.validate_last_bool},\n"
 
         # value ----
         result_str += f"...VALUE_LINK={self.VALUE_LINK}"
-        if self.ARGS__VALUE:
-            result_str += f",ARGS__VALUE={self.ARGS__VALUE}"
-        if self.KWARGS__VALUE:
-            result_str += f",KWARGS__VALUE={self.KWARGS__VALUE}"
+        result_str += self.get_logstr_attr_if_have_value("ARGS__VALUE", prefix=",")
+        result_str += self.get_logstr_attr_if_have_value("KWARGS__VALUE", prefix=",")
         result_str += f",value_last={self.value_last},\n"
 
         # validate ----
         result_str += f"...VALIDATE_LINK={self.VALIDATE_LINK}"
-        if self.ARGS__VALIDATE:
-            result_str += f",ARGS__VALIDATE={self.ARGS__VALIDATE}"
-        if self.KWARGS__VALIDATE:
-            result_str += f",KWARGS__VALIDATE={self.KWARGS__VALIDATE}"
+        result_str += self.get_logstr_attr_if_have_value("ARGS__VALIDATE", prefix=",")
+        result_str += self.get_logstr_attr_if_have_value("KWARGS__VALIDATE", prefix=",")
 
         result_str += f",validate_last={self.validate_last}"
-        if self.REVERSE_LINK:
-            result_str += f"*REVERSE_LINK={self.REVERSE_LINK}"
+        result_str += self.get_logstr_attr_if_have_value("REVERSE_LINK", prefix=",")
         result_str += f",\n"
 
         # finish ----
