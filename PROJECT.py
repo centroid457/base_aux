@@ -5,7 +5,8 @@ from share.release_files import release_files__update
 # =====================================================================================================================
 # VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize attrs
 # VERSION = (0, 0, 4)   # add AUTHOR_NICKNAME_GITHUB for badges
-VERSION = (0, 0, 5)     # separate PROJECT_BASE #TODO: need to separate into module!
+# VERSION = (0, 0, 5)   # separate PROJECT_BASE #TODO: need to separate into module!
+VERSION = (0, 0, 6)     # group Ver+News just place together
 
 
 # =====================================================================================================================
@@ -265,7 +266,6 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 11)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -306,16 +306,13 @@ other protocols mot recommended
         "FIX NEED SOLVE ABILITY to work without PV.FILE!!! as just a http client",
 
     ]
-
-
-
-
-
     FIXME: list[str] = [
-        "",
     ]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    VERSION: tuple[int, int, int] = (0, 0, 12)
     NEWS: list[str] = [
-        "[share*] try fix",
+        "[share*] move back some files",
     ]
 
 

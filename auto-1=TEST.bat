@@ -9,7 +9,6 @@ rem otherwise it will get WARNING in pytest
 rem ====================================
 echo off
 cls
-cd ..
 
 pytest tests
 pause

@@ -17,7 +17,8 @@ from base_aux.cli import *
 # VERSION = (0, 0, 3)   # fix --Verbose!
 # VERSION = (0, 0, 4)   # fix param Noisolation! used to be able build with any modules in root PyFiles
 # VERSION = (0, 0, 5)   # check latest before build
-VERSION = (0, 0, 6)    # collect all modules into one pkg!
+# VERSION = (0, 0, 6)   # collect all modules into one pkg!
+VERSION = (0, 0, 7)     # fix slashes
 
 
 # =====================================================================================================================
@@ -26,8 +27,8 @@ cli = CliUser()
 if not Packages().check_prj_installed_latest(PROJECT):
     print(f"NEED BUILD+PUBLISH+UPGRADE --> START PROCESS")
     # 1=old del --------------
-    cli.send("rd dist/ /q /s", 10)
-    cli.send("rd build/ /q /s", 10)
+    cli.send("rd dist\\ /q /s", 10)
+    cli.send("rd build\\ /q /s", 10)
 
     # 2=new build+publish --------------
     cmds_timeout = [
