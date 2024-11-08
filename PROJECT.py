@@ -1,5 +1,5 @@
 from typing import *
-from _aux__release_files import release_files_update
+from _share.release_files import release_files__update
 
 
 # =====================================================================================================================
@@ -48,6 +48,9 @@ class PROJECT(PROJECT_BASE):
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
     DESCRIPTION_SHORT: str = "collect all my previous moduls in one package"
     DESCRIPTION_LONG: str = """
+    FIXME:!!!DONT SEE THIS DESCRIPTION!!! 
+    
+    
     
     buses
     --------------
@@ -262,7 +265,7 @@ other protocols mot recommended
     ]
 
     # HISTORY -----------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 9)
+    VERSION: tuple[int, int, int] = (0, 0, 10)
     TODO: list[str] = [
         # classes
         "create class with autoInit params from ATTRS",
@@ -312,14 +315,14 @@ other protocols mot recommended
         "",
     ]
     NEWS: list[str] = [
-        "[classes.Lambda] add LambdaTrySucess/+Fail",
-        "[classes.Exx] add ExxBool",
+        "[_share*] separate in folder",
+        "",
     ]
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    release_files_update(PROJECT)
+    release_files__update(PROJECT)
 
 
 # =====================================================================================================================

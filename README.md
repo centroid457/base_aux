@@ -9,13 +9,17 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/base_aux)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/base_aux)
 
-# base_aux (current v0.0.9/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
+# base_aux (current v0.0.10/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
 collect all my previous moduls in one package
 
 ## DESCRIPTION_LONG
-buses
+FIXME:!!!DONT SEE THIS DESCRIPTION!!! 
+    
+    
+    
+    buses
     --------------
 NOTE: IT SEEMS THIS IS OLD DATA! see tests for actual usage!
     
@@ -202,6 +206,7 @@ other protocols mot recommended
 ********************************************************************************
 ## License
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE_bundled.md](LICENSE_bundled.md) file for parent licenses.
 
 
 ## Release history
