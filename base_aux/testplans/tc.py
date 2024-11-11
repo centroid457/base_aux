@@ -8,7 +8,6 @@ from base_aux.funcs import *
 from base_aux.classes import *
 from base_aux.pyqt import *
 from base_aux.loggers import *
-from base_aux.privates import PrivateJson
 
 from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *
@@ -60,7 +59,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     _inst_inited: Optional[bool] = None
 
     INDEX: int
-    SETTINGS: PrivateJson = {}
+    SETTINGS: DictDots = {}
     DEVICES__BREEDER_INST: 'DevicesBreeder'
 
     result__startup: TYPE__RESULT_W_EXX = None
@@ -129,7 +128,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         if self.DEVICES__BREEDER_CLS:
             self.DEVICES__BREEDER_INST = self.DEVICES__BREEDER_CLS(index)
 
-        self.SETTINGS = PrivateJson(_dict=self.settings_read())
+        self.SETTINGS = DictDots(self.settings_read())
         self._inst_inited = True
 
     # =================================================================================================================
@@ -475,7 +474,7 @@ class _Info(_TestCaseBase):
 
         result += f"SETTINGS=====================\n"
         if self.SETTINGS:
-            for name, value in self.SETTINGS.dict.items():
+            for name, value in self.SETTINGS.items():
                 result += f"{name}: {value}\n"
 
         result += f"PROGRESS=====================\n"
