@@ -6,6 +6,7 @@ from PyQt5.QtGui import *
 from base_aux.funcs import *
 from base_aux.classes import *
 from base_aux.pyqt import TableModelTemplate
+from base_aux.breeders import *
 
 
 # =====================================================================================================================
