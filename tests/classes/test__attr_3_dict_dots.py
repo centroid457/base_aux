@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-# from base_aux.funcs import *
 from base_aux.classes.attr_3_dict_dots_1_simple import DictDots
+from base_aux.funcs import *
 
 
 # =====================================================================================================================
@@ -16,6 +16,43 @@ class Victim(DictDots):
 
 
 # =====================================================================================================================
+def test__init():
+    victim = Victim()
+    assert victim == {}
+    assert victim[1] == None
+    assert victim.lowercase == None
+
+    victim = Victim({})
+    assert victim == {}
+    assert victim[1] == None
+    assert victim.lowercase == None
+
+    victim = Victim(**{})
+    assert victim == {}
+    assert victim[1] == None
+    assert victim.lowercase == None
+
+    victim = Victim({1:1})
+    assert victim == {1:1}
+    assert victim[1] == 1
+    assert victim.lowercase == None
+
+    victim = Victim(dict_example)
+    assert victim == dict_example
+    assert victim[1] == None
+    assert victim.lowercase == "lowercase"
+
+    victim = Victim(**dict_example)
+    assert victim == dict_example
+    assert victim[1] == None
+    assert victim.lowercase == "lowercase"
+
+    victim = Victim(lowercase="lowercase")
+    assert victim == {"lowercase": "lowercase"}
+    assert victim[1] == None
+    assert victim.lowercase == "lowercase"
+
+# ---------------------------------------------------------------------------------------------------------------------
 def test__not_exist():
     victim = Victim(dict_example)
     assert victim == dict_example
