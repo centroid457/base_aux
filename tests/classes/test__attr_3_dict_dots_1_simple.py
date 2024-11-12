@@ -11,6 +11,7 @@ dict_example = {
     "nested": {"n1":1},
 }
 
+
 class Victim(DictDots):
     lowercase: str
 
@@ -52,6 +53,7 @@ def test__init():
     assert victim[1] == None
     assert victim.lowercase == "lowercase"
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 def test__not_exist():
     victim = Victim(dict_example)
@@ -63,12 +65,14 @@ def test__not_exist():
     assert victim.not_exist == 1
     assert victim["not_exist"] == 1
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 def test__access_get():
     victim = Victim(dict_example)
     assert victim == dict_example
     assert victim.get("lowercase") == "lowercase"
     assert victim.get("LOWERCASE") == "lowercase"
+
 
 def test__access_attrs():
     victim = Victim(dict_example)
@@ -84,6 +88,7 @@ def test__access_attrs():
     victim.LOWERCASE = 222
     assert victim.lowercase == 222
     assert victim.LOWERCASE == 222
+
 
 def test__access_items():
     victim = Victim(dict_example)
@@ -105,6 +110,7 @@ def test__access_items():
     victim[1] = 1
     assert victim[1] == 1
 
+
 def test__nested():
     victim = Victim(dict_example)
 
@@ -114,6 +120,7 @@ def test__nested():
     victim.nested.n1 = 2
     assert victim.nested.n1 != 2    # NESTED LEVELS ONLY READ ONLY!!!
     assert victim.nested.n1 == 1
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 def test__del():
@@ -129,6 +136,7 @@ def test__del():
     del victim.hello
     assert "hello" not in victim
 
+
 def test__pop():
     victim = Victim()
 
@@ -142,11 +150,13 @@ def test__pop():
     victim.pop("HELLO")
     assert "hello" not in victim
 
+
 def test__clear():
     victim = Victim({1:1})
     assert victim == {1:1}
     victim.clear()
     assert victim == {}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 def test__contain():
@@ -158,6 +168,7 @@ def test__contain():
     assert "lowercase" in victim
     assert "LOWERCASE" in victim
 
+
 def test__list_len_bool():
     victim = Victim()
     assert list(victim) == []
@@ -168,11 +179,13 @@ def test__list_len_bool():
     assert len(victim) == 1
     assert bool(victim) == True
 
+
 def test__iter():
     dict_1 = {1:1, "hello": 2}
     victim = Victim(dict_1)
     for key1, key2 in zip(victim, dict_1):
         assert key1 == key2
+
 
 def test__update():
     victim = Victim()
