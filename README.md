@@ -9,102 +9,13 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/base_aux)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/base_aux)
 
-# base_aux (current v0.0.14/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
+# base_aux (current v0.0.15/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
-collect all my previous moduls in one package
+collect all my previous modules in one package
 
 ## DESCRIPTION_LONG
-FIXME:!!!DONT SEE THIS DESCRIPTION!!! 
-    
-    
-    
-    buses
-    --------------
-NOTE: IT SEEMS THIS IS OLD DATA! see tests for actual usage!
-    
-!. MOST APPROPRIATE COMMAND PROTOCOL
-other protocols mot recommended
 
-1. all cmds must be as params (preferred) in equipment or as special command
-2. [<CMD_NAME>] - read param value or run special command  
-    [IDN] - read value IDN  
-    [DUMP] - run special command 
-3. [<CMD_NAME> <VALUE>] - write value in parameter or run special cmd with param  
-    [VOUT 12.3] - set value into parameter VOUT  
-4. [<CMD_NAME> ?] - get available values to write into parameter  
-    [MODE ?] - return [0 1 2 3]
-5. all command sent must return answer  
-    [OK] - if no value was asked
-    [<VALUE>] - if asked some value, returned without measurement unit
-    [FAIL] - any common not specified error
-    [FAIL 0123] - any specified error without description
-    [FAIL 02 VALUE OUT OF RANGE] - any specified error with description (full variant)
-    
-    
-    
-    monitors
-    --------------
-    monitor exact data (urlTag/Email) and alert on changes by email/telegram (threading)
-    ## IMPORTANT!
-    NOT ALL WEBSITES WORKS! Sportmaster/Acra-rating/...
-
-    ## INSPIRATION
-    Suppose you wish to give blood to the Center.
-    So nowadays you need to make an appointment by website, BUT you can't do this while the Center actually don't need your group.
-    Group necessity shown on Center website and called DonorSvetofor.
-    And as result you need monitoring it manually, because there are no news, email notifications, subscriptions.
-    It's not difficult but if you do it as day routine (even once a day) its quite distracting.
-
-    So I created it first as Monitor_DonorSvetofor
-    
-    
-    
-    
-    TESTPLANS
-    --------------
-    designed to apply testplan for several DUTs
-
-## ПОНЯТИЯ
-    TC - TestCase
-    TP - TestPlan
-    DUT - Device Under Test - тестируемое устройство
-
-## АРХИТЕКТУРА
-- тестплан
-    - работает в потоке,
-    - может быть остановлен в любой момент terminate(), при этом завершает все запущенные тесткейсы
-    - имеет настройки которые принимаются всеми тесткейсами за базовые и могут быть перезаписаны ими для себя
-    - имеет списки классов TC и обьектов DUT (генерирует обьекты TC для каждого DUT)
-    - для себя не разделяет обьекты тесткейсов, работает строго с классом тесткейса,
-    - выполняет все тесткейсы в порядке их следования на списке DUT
-    - в один момент времени выполняется только один класс тесткейса
-- тесткейсы
-    - работают в потоке,
-    - может быть остановлен в любой момент terminate(), при этом завершаются безопасно (исполняются все teardown обьектов и глобальный классовый тесткейса), 
-    - представляет собой класс инициируемый с входным параметром DUT,
-    - выполняются тесткейсы строго по очереди,
-    - каждый тесткейс выполняется на всех устройствах либо асинхронно, либо синхронно в зависимости от настройки,
-    - работа тесткейса полностью управляется классом тесткейса на серии устройств (возможно выполнение парных тестов с выбором нужных пар внутри тесткейса),
-- результаты
-    - все результаты находятся в пока в обьекте тесткейса
-    - итогового (result)
-    - промежуточных результатов (details)
-- настройки
-    - управление
-        - SKIP всех возможных вариантов (полностью тесткейс для всех устройств, полностью DUT для всех TC, отдельный TC на отдельном DUT),
-        - выполнение тесткейса синхронно/асинхронно
-    - данные для использования в тесткейсах
-        - реализовано в файлах JSON
-        - для каждого тесткейса и общие для тестплана (кейсовые накладываются на плановые)
-- GUI тестплана
-    - запуск GUI опциональный,
-    - старт/стоп тестплана,
-    - отображение текущего тесткейса,
-    - отображение результата тескейса на каждом тестируемом устройстве,
-    - отображение промежуточных результатов (details)
-- API 
-    - минимальное API и запуск
 
 
 ## Features
