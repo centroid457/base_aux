@@ -226,6 +226,8 @@ class DictDots(DictCaseinsense):
 # =====================================================================================================================
 class DictDotsAnnotRequired(DictDots, AnnotRequired):
     """
+    its a derivative for DictDots with applying AnnotRequired
+
     WHY NOT 1=just simple nesting AnnotRequired?
     --------------------------------------------
     in this case
