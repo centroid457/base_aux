@@ -29,6 +29,121 @@ victim2 = Victim2()
 
 
 # =====================================================================================================================
+class VictimDirect_Ok(AnnotAux):
+    ATTR1: int = 1
+    ATTR2: int = 2
+
+
+class VictimDirect_Fail(AnnotAux):
+    ATTR1: int
+    ATTR2: int = 2
+
+# -----------------------------------------------
+class VictimNested_FailParent(VictimDirect_Fail):
+    ATTR2: int = 2
+
+class VictimNested_FailChild(VictimDirect_Ok):
+    ATTR3: int
+
+# -----------------------------------------------
+class VictimNested_OkParent(VictimDirect_Ok):
+    ATTR1: int
+
+class VictimNested_OkCHild(VictimDirect_Fail):
+    ATTR1: int = 1
+
+# -----------------------------------------------
+class DictDirect_Ok(dict, AnnotAux):
+    ATTR1: int = 1
+    ATTR2: int = 2
+
+
+class DictDirect_Fail(dict, AnnotAux):
+    ATTR1: int
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (VictimDirect_Ok(), []),
+        (VictimDirect_Fail(), ["ATTR1", ]),
+
+        (VictimNested_FailParent(), ["ATTR1", ]),
+        (VictimNested_FailChild(), ["ATTR3", ]),
+
+        (VictimNested_OkParent(), []),
+        (VictimNested_OkCHild(), []),
+
+        (DictDirect_Ok(), []),
+        (DictDirect_Fail(), ["ATTR1", ]),
+    ]
+)
+def test__annot__get_not_defined(source, _EXPECTED):
+    assert AnnotAux.annot__get_not_defined(source) == _EXPECTED
+
+    func_link = source.annot__get_not_defined
+    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (VictimDirect_Ok(), True),
+        (VictimDirect_Fail(), False),
+
+        (VictimNested_FailParent(), False),
+        (VictimNested_FailChild(), False),
+
+        (VictimNested_OkParent(), True),
+        (VictimNested_OkCHild(), True),
+
+        (DictDirect_Ok(), True),
+        (DictDirect_Fail(), False),
+    ]
+)
+def test__annot__check_all_defined(source, _EXPECTED):
+    assert AnnotAux.annot__check_all_defined(source) == _EXPECTED
+
+    func_link = source.annot__check_all_defined
+    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (VictimDirect_Ok(), None),
+        (VictimDirect_Fail(), Exception),
+
+        (VictimNested_FailParent(), Exception),
+        (VictimNested_FailChild(), Exception),
+
+        (VictimNested_OkParent(), None),
+        (VictimNested_OkCHild(), None),
+
+        (DictDirect_Ok(), None),
+        (DictDirect_Fail(), Exception),
+    ]
+)
+def test__annot__raise_if_not_defined(source, _EXPECTED):
+    try:
+        AnnotAux.annot__raise_if_not_defined(source)
+        assert _EXPECTED is None
+    except:
+        assert _EXPECTED == Exception
+
+    func_link = source.annot__raise_if_not_defined
+    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
 class Test__Cmp:
     @classmethod
     def setup_class(cls):

@@ -38,10 +38,17 @@ class DictCaseinsense(dict):
 
         super().pop(item_original)
 
-    def get(self, item: Any) -> None:
+    def get(self, item: Any) -> Any:    # | NoReturn:
+        """
+        always get value or None!
+        if you need check real contain key - check contain)))) [assert key in self] or [self._getitem_original]
+        """
         key_original = self._getitem_original(item)
         if key_original is None:
-            return
+            return None
+            # key_original = item
+            # msg = f"{item=}"
+            # raise KeyError(msg)
         else:
             key_original = key_original()  # EXPLICIT get value
 
@@ -217,27 +224,45 @@ class DictDots(DictCaseinsense):
 
 
 # =====================================================================================================================
-# FIXME: NOT WORKING!!!
-# class DictDotsAnnotRequired(DictDots, AnnotRequired):
-#     """
-#     WHY NOT 1=just simple nesting AnnotRequired?
-#     --------------------------------------------
-#     in this case
-#     first we need apply DICT inition
-#     and only secondary we could check any by AnnotRequired.
-#     BUT DICT is a stopping/last class!!!
-#
-#     so we cant just call init with super()
-#     """
-#     def __init__(self, *args, **kwargs) -> None | NoReturn:
-#         super().__init__(*args, **kwargs)
-#         # super(AnnotRequired, self).__init__()
-#         self.annot__raise_if_not_defined()
+class DictDotsAnnotRequired(DictDots, AnnotRequired):
+    """
+    WHY NOT 1=just simple nesting AnnotRequired?
+    --------------------------------------------
+    in this case
+    first we need apply DICT inition
+    and only secondary we could check any by AnnotRequired.
+    BUT DICT is a stopping/last class!!!
+
+    so we cant just call init with super()
+    """
+    def __init__(self, *args, **kwargs) -> None | NoReturn:
+        super().__init__(*args, **kwargs)
+        # super(AnnotRequired, self).__init__()
+        # annot_types = self.annot__get_nested__dict_types()
+        # print(f"{annot_types=}")
+        not_def_list = self.annot__get_not_defined()
+        # FIXME: here I cant handle i parent methods order! i messed out! and break it by redefine by this not ideal solvation
+        # print(f"{not_def_list=}")
+        if not_def_list:
+            msg = f"{not_def_list=}"
+            raise Exception(msg)
+
+    def annot__get_not_defined(self) -> list[str]:
+        result = []
+        nested = self.annot__get_nested__dict_types()
+        for key in nested:
+            if key not in self:
+                result.append(key)
+        return result
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    pass
+    class Cls(DictDotsAnnotRequired):
+        ATTR1: str
+
+    victim = Cls()
+    ObjectInfo(victim).print()
 
 
 # =====================================================================================================================
