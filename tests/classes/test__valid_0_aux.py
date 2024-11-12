@@ -30,7 +30,7 @@ from base_aux.objects import *
 
         # (ClsBoolTrue(), ClsBoolTrue()),
         # (ClsBoolFalse(), ClsBoolFalse()),
-        # (ClsBoolExx(), ClsBoolExx()),
+        # (ClsBoolRaise(), ClsBoolRaise()),
     ]
 )
 def test__get_result(args, _EXPECTED):
@@ -71,7 +71,7 @@ def test__get_result2():
 
         # (ClsBoolTrue(), ClsBoolTrue()),
         # (ClsBoolFalse(), ClsBoolFalse()),
-        # (ClsBoolExx(), ClsBoolExx()),
+        # (ClsBoolRaise(), ClsBoolRaise()),
     ]
 )
 def test__get_result_or_exx(args, _EXPECTED):
@@ -103,7 +103,7 @@ def test__get_result_or_exx(args, _EXPECTED):
 
         (ClsBoolTrue(), True),
         (ClsBoolFalse(), False),
-        (ClsBoolExx(), False),
+        (ClsBoolRaise(), False),
     ]
 )
 def test__get_bool(args, _EXPECTED):
@@ -124,8 +124,8 @@ def test__get_bool(args, _EXPECTED):
         ((1, ClsEq(1)), (True, True, False)),
         ((2, ClsEq(1)), (False, False, True)),
 
-        ((ClsEqExx(), 1), (Exception, False, True)),
-        ((1, ClsEqExx()), (Exception, False, True)),
+        ((ClsEqRaise(), 1), (Exception, False, True)),
+        ((1, ClsEqRaise()), (Exception, False, True)),
     ]
 )
 def test__compare_doublesided(args, _EXPECTED):

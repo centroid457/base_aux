@@ -40,7 +40,9 @@ from .primitives import (
     FUNC_LIST_VALUES,
     FUNC_DICT,
     FUNC_EXX,
+    FUNC_RAISE,
     FUNC_GEN,
+    FUNC_ECHO_ARG,
 
     LAMBDA,
     LAMBDA_NONE,
@@ -52,9 +54,11 @@ from .primitives import (
     LAMBDA_LIST_VALUES,
     LAMBDA_DICT,
     LAMBDA_EXX,
+    LAMBDA_RAISE,
     LAMBDA_GEN,
+    LAMBDA_ECHO_ARG,
 
-    Exx,            INST_EXX,
+    Exx, INST_EXX,
 
     ClsInt,
     ClsFloat,
@@ -63,31 +67,32 @@ from .primitives import (
     ClsSet,
     ClsDict,
 
-    Cls,            INST,
-    ClsEmpty,       INST_EMPTY,
+    Cls, INST,
+    ClsEmpty, INST_EMPTY,
 
     ClsInitArgsKwargs,
-    ClsInitExx,
+    ClsInitRaise,
 
-    ClsCall,        INST_CALL,
-    ClsCallNone,    INST_CALL_NONE,
-    ClsCallTrue,    INST_CALL_TRUE,
-    ClsCallFalse,   INST_CALL_FALSE,
-    ClsCallExx,     INST_CALL_EXX,
+    ClsCall, INST_CALL,
+    ClsCallNone, INST_CALL_NONE,
+    ClsCallTrue, INST_CALL_TRUE,
+    ClsCallFalse, INST_CALL_FALSE,
+    ClsCallExx, INST_CALL_EXX,
+    ClsCallRaise, INST_CALL_RAISE,
 
-    ClsBoolTrue,    INST_BOOL_TRUE,
-    ClsBoolFalse,   INST_BOOL_FALSE,
-    ClsBoolExx,     INST_BOOL_EXX,
+    ClsBoolTrue, INST_BOOL_TRUE,
+    ClsBoolFalse, INST_BOOL_FALSE,
+    ClsBoolRaise, INST_BOOL_RAISE,
 
-    ClsIterYield,   INST_ITER_YIELD,
-    ClsGen,         INST_GEN,
+    ClsIterYield, INST_ITER_YIELD,
+    ClsGen, INST_GEN,
 
-    ClsEq,          INST_EQ,
-    ClsEqTrue,      INST_EQ_TRUE,
-    ClsEqFalse,     INST_EQ_FALSE,
-    ClsEqExx,       INST_EQ_EXX,
+    ClsEq, INST_EQ,
+    ClsEqTrue, INST_EQ_TRUE,
+    ClsEqFalse, INST_EQ_FALSE,
+    ClsEqRaise, INST_EQ_RAISE,
 
-    ClsFullTypes,   INST_FULL_TYPES,
+    ClsFullTypes, INST_FULL_TYPES,
 
     CALLABLE_LAMBDA,
     CALLABLE_FUNC,
@@ -106,9 +111,6 @@ from .primitives import (
     CALLABLE_METH_INST_STATICMETHOD,
     CALLABLE_METH_INST_PROPERTY,
     CALLABLE_METH_INST_PROPERTY_CLASSMETHOD,
-    # AUX
-    # TYPES
-    # EXX
 )
 
 # =====================================================================================================================

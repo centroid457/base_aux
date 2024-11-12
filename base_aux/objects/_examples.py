@@ -156,7 +156,7 @@ attrTuple           	tuple       :(1, 2, 3)
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
 attrGenCompr        	generator   :<generator object <genexpr> at 0x000001C74A47D780>
 attrInst            	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE35F0>
-attrInstBooExx      	ClsBoolExx  :<pytest_aux.primitives.ClsBoolExx object at 0x000001C74ACE37A0>
+attrInstBooExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
 attrInstBoolFalse   	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3770>
 attrInstBoolTrue    	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3740>
 attrInstGen         	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE3710>
@@ -193,7 +193,7 @@ attrFuncList        	list        :[<__main__.ClsMain object at 0x000001C739A83E0
 __class__           	ClsMain     :<__main__.ClsMain object at 0x000001C739C51A60>
 __subclasshook__    	NotImplementedType:NotImplemented
 attrCls             	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C739E91EB0>
-attrClsBoolExx      	ClsBoolExx  :<pytest_aux.primitives.ClsBoolExx object at 0x000001C74ACE2690>
+attrClsBoolExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE2690>
 attrClsBoolFalse    	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE27E0>
 attrClsBoolTrue     	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE28D0>
 attrClsCall         	ClsCall     :<pytest_aux.primitives.ClsCall object at 0x000001C74ACE2990>
@@ -274,7 +274,7 @@ attrTuple           	tuple       :(1, 2, 3)
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
 attrGenCompr        	generator   :<generator object <genexpr> at 0x000001C74A47D780>
 attrInst            	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE35F0>
-attrInstBooExx      	ClsBoolExx  :<pytest_aux.primitives.ClsBoolExx object at 0x000001C74ACE37A0>
+attrInstBooExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
 attrInstBoolFalse   	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3770>
 attrInstBoolTrue    	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3740>
 attrInstGen         	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE3710>
@@ -291,7 +291,7 @@ attrFuncDict        	dict        :{<__main__.ClsMain object at 0x000001C748B236B
 attrFuncList        	list        :[<__main__.ClsMain object at 0x000001C748B236B0>]
 ----------METHODS__OBJECTS--------------------------------------------------------------------------
 attrCls             	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE39E0>
-attrClsBoolExx      	ClsBoolExx  :<pytest_aux.primitives.ClsBoolExx object at 0x000001C74ACE3A10>
+attrClsBoolExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE3A10>
 attrClsBoolFalse    	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3A70>
 attrClsBoolTrue     	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3AA0>
 attrClsCall         	ClsCall     :<pytest_aux.primitives.ClsCall object at 0x000001C74ACE3AD0>

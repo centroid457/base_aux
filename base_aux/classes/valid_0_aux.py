@@ -99,7 +99,7 @@ class ValidAux:
                 assert get_bool(LAMBDA_LIST, [1, ]) is True
 
             - if on bool() exception raised - return False!
-                assert get_bool(ClsBoolExx()) is False
+                assert get_bool(ClsBoolRaise()) is False
 
         CREATED SPECIALLY FOR
         ---------------------

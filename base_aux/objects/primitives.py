@@ -99,11 +99,19 @@ def FUNC_DICT(*args, **kwargs) -> dict[Any, Any | None]:
 
 
 def FUNC_EXX(*args, **kwargs) -> NoReturn:
-    raise Exception("CALLABLE_EXX")
+    return Exception("FUNC_EXX")
+
+
+def FUNC_RAISE(*args, **kwargs) -> NoReturn:
+    raise Exception("CALLABLE_RAISE")
 
 
 def FUNC_GEN(*args, **kwargs) -> Generator:
     yield from range(5)
+
+
+def FUNC_ECHO_ARG(*args, **kwargs) -> Any | NoReturn:
+    return args[0]
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -119,16 +127,18 @@ LAMBDA_LIST_DIRECT = lambda *args, **kwargs: FUNC_LIST_DIRECT(*args, **kwargs)
 LAMBDA_LIST_VALUES = lambda *args, **kwargs: FUNC_LIST_VALUES(*args, **kwargs)
 LAMBDA_DICT = lambda *args, **kwargs: FUNC_DICT(*args, **kwargs)
 
-# LAMBDA_EXX = lambda *args, **kwargs: raise Exception("LAMBDA_EXX")      # raise=SyntaxError: invalid syntax
-LAMBDA_EXX = lambda *args, **kwargs: FUNC_EXX()
+LAMBDA_EXX = lambda *args, **kwargs: Exception("LAMBDA_EXX")
+# LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXX")      # raise=SyntaxError: invalid syntax
+LAMBDA_RAISE = lambda *args, **kwargs: FUNC_RAISE()
 # LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
 LAMBDA_GEN = lambda *args, **kwargs: FUNC_GEN()
+LAMBDA_ECHO_ARG = lambda *args, **kwargs: args[0]
 
 
 # =====================================================================================================================
 class Exx(Exception):
     pass
-INST_EXX = Exx()
+INST_EXX = Exx("Exception")
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class ClsBool(bool):  # cant use it!
@@ -191,9 +201,9 @@ class ClsInitArgsKwargs:
         self.KWARGS = kwargs
 
 
-class ClsInitExx:
+class ClsInitRaise:
     def __init__(self, *args, **kwargs) -> NoReturn:
-        raise Exception()
+        raise Exception("ClsInitRaise")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -226,10 +236,16 @@ class ClsCallFalse:
 INST_CALL_FALSE = ClsCallFalse()
 
 
+class ClsCallRaise:
+    def __call__(self, *args, **kwargs) -> NoReturn:
+        raise Exception("ClsCallRaise")
+INST_CALL_RAISE = ClsCallRaise()
+
+
 class ClsCallExx:
     def __call__(self, *args, **kwargs) -> NoReturn:
-        raise Exception()
-INST_CALL_EXX = ClsCallExx()
+        raise Exception("ClsCallRaise")
+INST_CALL_EXX = ClsCallRaise()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -255,7 +271,7 @@ class ClsBoolFalse(ClsInitArgsKwargs):
 INST_BOOL_FALSE = ClsBoolFalse()
 
 
-class ClsBoolExx(ClsInitArgsKwargs):
+class ClsBoolRaise(ClsInitArgsKwargs):
     """
     CREATED SPECIALLY FOR
     ---------------------
@@ -263,7 +279,7 @@ class ClsBoolExx(ClsInitArgsKwargs):
     """
     def __bool__(self):
         raise Exception()
-INST_BOOL_EXX = ClsBoolExx()
+INST_BOOL_RAISE = ClsBoolRaise()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -349,13 +365,13 @@ class ClsEqFalse(ClsInitArgsKwargs):
 INST_EQ_FALSE = ClsEqFalse()
 
 
-class ClsEqExx(ClsInitArgsKwargs):
+class ClsEqRaise(ClsInitArgsKwargs):
     def __eq__(self, other):
         raise Exception()
 
     def __ne__(self, other):
         raise Exception()
-INST_EQ_EXX = ClsEqExx()
+INST_EQ_RAISE = ClsEqRaise()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -375,6 +391,7 @@ class ClsFullTypes:
     attrFuncList = FUNC_LIST_DIRECT
     attrFuncDict = FUNC_DICT
     attrFuncExx = FUNC_EXX
+    attrFuncRaise = FUNC_RAISE
     attrFuncGen = FUNC_GEN
 
     attrGenCompr = GEN_COMPR
@@ -387,6 +404,8 @@ class ClsFullTypes:
     attrInstCall = ClsCall()
     attrClsCallTrue = ClsCallTrue
     attrInstCallTrue = ClsCallTrue()
+    attrClsCallRaise = ClsCallRaise
+    attrInstCallRaise = ClsCallRaise()
     attrClsCallExx = ClsCallExx
     attrInstCallExx = ClsCallExx()
 
@@ -399,8 +418,8 @@ class ClsFullTypes:
     attrInstBoolTrue = ClsBoolTrue()
     attrClsBoolFalse = ClsBoolFalse
     attrInstBoolFalse = ClsBoolFalse()
-    attrClsBoolExx = ClsBoolExx
-    attrInstBooExx = ClsBoolExx()
+    attrClsBoolRaise = ClsBoolRaise
+    attrInstBooRaise = ClsBoolRaise()
 
     attrSet = {1,2,3}
     attrList = [1,2,3]
@@ -420,8 +439,11 @@ class ClsFullTypes:
     def propertyInt(self) -> int:
         return 1
     @property
-    def propertyExx(self) -> NoReturn:
-        raise Exception("exxMsg")
+    def propertyExx(self) -> Exception:
+        return Exception("propertyExx")
+    @property
+    def propertyRaise(self) -> NoReturn:
+        raise Exception("propertyRaise")
     @property
     def propertyFunc(self) -> Callable:
         return FUNC
@@ -430,8 +452,10 @@ class ClsFullTypes:
         return
     def methInt(self) -> int:
         return 1
-    def methExx(self) -> NoReturn:
-        raise Exception("exxMsg")
+    def methExx(self) -> Exception:
+        return Exception("methExx")
+    def methRaise(self) -> NoReturn:
+        raise Exception("methRaise")
     def methFunc(self) -> Callable:
         return FUNC
     @classmethod
