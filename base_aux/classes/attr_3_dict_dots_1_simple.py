@@ -21,6 +21,11 @@ class DictCaseinsense(dict):
     # __len__ = dict.__len__    # и так работает!
 
     # -----------------------------------------------------------------------------------------------------------------
+    # GENERIC CLASSES LIKE DICT MUST APPLIED LAST IN MRO!!!
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def _getitem_original(self, item: Any) -> Explicit | None:
         return IterAux.item__get_original__case_insensitive(item, self)
 
@@ -209,6 +214,25 @@ class DictDots(DictCaseinsense):
 
     def __delattr__(self, item: str | Any) -> None:
         del self[item]
+
+
+# =====================================================================================================================
+# FIXME: NOT WORKING!!!
+# class DictDotsAnnotRequired(DictDots, AnnotRequired):
+#     """
+#     WHY NOT 1=just simple nesting AnnotRequired?
+#     --------------------------------------------
+#     in this case
+#     first we need apply DICT inition
+#     and only secondary we could check any by AnnotRequired.
+#     BUT DICT is a stopping/last class!!!
+#
+#     so we cant just call init with super()
+#     """
+#     def __init__(self, *args, **kwargs) -> None | NoReturn:
+#         super().__init__(*args, **kwargs)
+#         # super(AnnotRequired, self).__init__()
+#         self.annot__raise_if_not_defined()
 
 
 # =====================================================================================================================
