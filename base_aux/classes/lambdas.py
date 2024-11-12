@@ -2,6 +2,7 @@ from typing import *
 
 from base_aux.classes.static import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.classes.valid_0_aux import ValidAux
+from base_aux.objects import TypeChecker
 
 
 # =====================================================================================================================
@@ -76,7 +77,7 @@ class Lambda:
         """
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        if callable(self.CONSTRUCTOR):
+        if callable(self.CONSTRUCTOR) or TypeChecker.check__class(self.CONSTRUCTOR):
             return self.CONSTRUCTOR(*args, **kwargs)
         else:
             return self.CONSTRUCTOR
