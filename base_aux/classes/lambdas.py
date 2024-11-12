@@ -58,9 +58,7 @@ class Lambda:
 
     # OVERWRITE! ------------------------------------------------------------------------------------------------------
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        args = args or self.ARGS
-        kwargs = kwargs or self.KWARGS
-        return self.CONSTRUCTOR(*args, **kwargs)
+        return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
         return ValidAux.compare_doublesided__bool(other, self())
@@ -70,6 +68,18 @@ class Lambda:
         self.CONSTRUCTOR = constructor
         self.ARGS = args
         self.KWARGS = kwargs
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def construct(self, *args, **kwargs) -> Any | NoReturn:
+        """
+        unsafe (raise acceptable) get value
+        """
+        args = args or self.ARGS
+        kwargs = kwargs or self.KWARGS
+        if callable(self.CONSTRUCTOR):
+            return self.CONSTRUCTOR(*args, **kwargs)
+        else:
+            return self.CONSTRUCTOR
 
     # -----------------------------------------------------------------------------------------------------------------
     def __bool__(self) -> bool | NoReturn:
@@ -143,9 +153,7 @@ class LambdaBool(Lambda):
     BOOL_REVERSE: bool = False
 
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
-        args = args or self.ARGS
-        kwargs = kwargs or self.KWARGS
-        result = bool(self.CONSTRUCTOR(*args, **kwargs))
+        result = bool(self.construct(*args, **kwargs))
         if self.BOOL_REVERSE:
             result = not result
         return result
@@ -183,18 +191,27 @@ class LambdaTrySuccess(LambdaBool):
     """
     just an ability to check if object is not raised on call
 
-    best practice
+    BEST PRACTICE
     -------------
-    if LambdaTrySuccess(func):
-        return func()
+    1. direct/quick/shortest checks without big trySentence
+        if LambdaTrySuccess(func):
+            return func()
 
-    @pytest.mark.skipif(LambdaTryFail(func), ...)
+    2. pytestSkipIf
+        @pytest.mark.skipif(LambdaTryFail(func), ...)
+
+    3. pytest assertions
+
+        class Victim(DictDotsAnnotRequired):
+            lowercase: str
+
+        assert LambdaTryFail(Victim)
+        assert not LambdaTrySuccess(Victim)
+        assert LambdaTrySuccess(Victim, lowercase="lowercase")
     """
     def __call__(self, *args, **kwargs) -> bool:
-        args = args or self.ARGS
-        kwargs = kwargs or self.KWARGS
         try:
-            self.CONSTRUCTOR(*args, **kwargs)
+            self.construct(*args, **kwargs)
             return not self.BOOL_REVERSE
         except:
             return bool(self.BOOL_REVERSE)
