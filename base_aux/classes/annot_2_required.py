@@ -3,8 +3,10 @@ from .annot_1_aux import AnnotAux
 
 
 # =====================================================================================================================
-class AnnotAllDefined(AnnotAux):
-    """Check all annotated and not defined attributes in instance obtain values!
+class AnnotRequired(AnnotAux):
+    """Check all annotated and not defined attributes in instance have values!
+    else raise!
+
 
     # IS IT STILL USED???
     DONT INHERIT with typing.NamedTuple! will raise!                ???

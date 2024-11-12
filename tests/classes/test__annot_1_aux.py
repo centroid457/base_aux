@@ -146,7 +146,7 @@ def test__all_defined2():
 class Test__NamedTuple:
     def test__NT(self):
         try:
-            class Victim(AnnotAllDefined, NamedTuple):
+            class Victim(AnnotRequired, NamedTuple):
                 ATTR1: int
                 ATTR2: int = 2
             assert False

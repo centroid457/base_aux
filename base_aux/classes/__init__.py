@@ -44,8 +44,8 @@ from .annot_1_aux import (
 from .annot_3_iter_values import (
     AnnotValuesIter
 )
-from .annot_2_all_defined import (
-    AnnotAllDefined,
+from .annot_2_required import (
+    AnnotRequired,
 )
 from .annot_4_cls_keys_as_values import (
     AnnotClsKeysAsValues,
@@ -89,6 +89,7 @@ from .lambdas import Lambda, LambdaBool, LambdaBoolReversed, LambdaTrySuccess, L
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (
     DictDots,
+    DictDotsAnnotRequired,
 )
 from .attr_3_dict_dots_2_full import (
     DictDotsFull,
