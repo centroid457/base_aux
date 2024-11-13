@@ -17,7 +17,7 @@ TYPE__SIZE_TUPLE = tuple[Optional[int], Optional[int]]
 
 
 # =====================================================================================================================
-class Gui(QWidget):     # QMainWindow
+class Gui(QMainWindow):     # QWidget/QMainWindow
     # SETTINGS --------------------------------------------------
     START: bool = True
 
@@ -65,6 +65,8 @@ class Gui(QWidget):     # QMainWindow
     # COMMON ------------------------------------------------------
     DATA: Optional[Any] = None
 
+    _CENTRAL_WGT: QWidget = None
+    MENU: Optional[QMenu] = None
     BTN: Optional[QPushButton] = None
     CB: Optional[QCheckBox] = None
     TV: Optional[QTableView] = None
@@ -72,7 +74,6 @@ class Gui(QWidget):     # QMainWindow
     PTE: Optional[QPlainTextEdit] = None
     HL: Optional[QSyntaxHighlighter] = None
     HL_STYLES: Optional[HlStyles] = None
-    MENU: Optional[QMenu] = None
 
     def __init__(self, data: Optional[Any] = None):
         super().__init__()
@@ -190,6 +191,9 @@ class Gui(QWidget):     # QMainWindow
 
     # WINDOW ==========================================================================================================
     def wgt_create(self) -> None:
+        self._CENTRAL_WGT = QWidget()
+        self.setCentralWidget(self._CENTRAL_WGT)
+
         self.MENU_create()
         self.BTN_create()
         self.CB_create()
@@ -246,7 +250,7 @@ class Gui(QWidget):     # QMainWindow
         layout_main.addWidget(self.TV)
         layout_main.addLayout(layout_v)
 
-        self.setLayout(layout_main)
+        self._CENTRAL_WGT.setLayout(layout_main)
 
     # WGTS ============================================================================================================
     def MENU_create(self) -> None:
