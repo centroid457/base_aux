@@ -5,31 +5,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from base_aux.pyqt.static import COLOR_TUPLE_RGB
+
 
 # =====================================================================================================================
 # TODO: add COMBO with context-manu for add+delete+lastValue
 # TODO: create blank Objects to change state!!! GREEn/RED/Yellow/bare
-
-
-# =====================================================================================================================
-# original names is not enough soft and comfortable for eyes!
-# try to use ROUND NUMBERS!!! start use 0/100/200/255!!!
-COLOR_TUPLE_RGB__LIGHT_RED = (255, 200, 200)
-COLOR_TUPLE_RGB__LIGHT_GREEN = (200, 255, 200)
-COLOR_TUPLE_RGB__LIGHT_BLUE = (200, 200, 255)
-COLOR_TUPLE_RGB__LIGHT_YELLOW = (255, 255, 100)
-COLOR_TUPLE_RGB__LIGHT_GREY_240 = (240, 240, 240)   # #f2f2f2
-COLOR_TUPLE_RGB__LIGHT_GREY_220 = (220, 220, 220)
-COLOR_TUPLE_RGB__LIGHT_GREY_150 = (150, 150, 150)
-COLOR_TUPLE_RGB__WHITE = (255, 255, 255)
-
-MARGINS_0000 = QMargins(0, 0, 0, 0)
-MARGINS_5555 = QMargins(5, 5, 5, 5)
-MARGINS_9595 = QMargins(9, 5, 9, 5)
-
-ALIGNMENT_T = Qt.Alignment(Qt.AlignTop)
-ALIGNMENT_LT = Qt.Alignment(Qt.AlignLeft | Qt.AlignTop)
-ALIGNMENT_CENTER_HV = Qt.Alignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
 
 # ICONS ===============================================================================================================
@@ -65,13 +46,13 @@ class QWidget_ColorChange(QWidget):
         self._color_set_rgb(None)
 
     def color_set__light_green(self):
-        self._color_set_rgb(COLOR_TUPLE_RGB__LIGHT_GREEN)
+        self._color_set_rgb(COLOR_TUPLE_RGB.LIGHT_GREEN)
 
     def color_set__light_red(self):
-        self._color_set_rgb(COLOR_TUPLE_RGB__LIGHT_RED)
+        self._color_set_rgb(COLOR_TUPLE_RGB.LIGHT_RED)
 
     def color_set__light_yellow(self):
-        self._color_set_rgb(COLOR_TUPLE_RGB__LIGHT_YELLOW)
+        self._color_set_rgb(COLOR_TUPLE_RGB.LIGHT_YELLOW)
 
 
 class QPushButton(QPushButton, QWidget_ColorChange):
