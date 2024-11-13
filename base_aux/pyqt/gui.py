@@ -17,7 +17,7 @@ TYPE__SIZE_TUPLE = tuple[Optional[int], Optional[int]]
 
 
 # =====================================================================================================================
-class Gui(QWidget):
+class Gui(QWidget):     # QMainWindow
     # SETTINGS --------------------------------------------------
     START: bool = True
 
@@ -72,6 +72,7 @@ class Gui(QWidget):
     PTE: Optional[QPlainTextEdit] = None
     HL: Optional[QSyntaxHighlighter] = None
     HL_STYLES: Optional[HlStyles] = None
+    MENU: Optional[QMenu] = None
 
     def __init__(self, data: Optional[Any] = None):
         super().__init__()
@@ -189,6 +190,7 @@ class Gui(QWidget):
 
     # WINDOW ==========================================================================================================
     def wgt_create(self) -> None:
+        self.MENU_create()
         self.BTN_create()
         self.CB_create()
         self.TV_create()
@@ -247,6 +249,24 @@ class Gui(QWidget):
         self.setLayout(layout_main)
 
     # WGTS ============================================================================================================
+    def MENU_create(self) -> None:
+        """
+        '&'sign is for ALT+ running!
+
+        CONSTRAINTS
+        -----------
+        1. could create ONLY for QMainWindow! not for just a QWidget!
+        """
+        if not isinstance(self, QMainWindow):
+            return
+
+        self.MENU = self.menuBar()
+        file_menu = self.MENU.addMenu('&File')
+        edit_menu = self.MENU.addMenu('&Edit')
+        help_menu = self.MENU.addMenu('&Help')
+
+
+
     def BTN_create(self) -> None:
         self.BTN = QPushButton("BTN")
 
