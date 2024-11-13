@@ -73,6 +73,7 @@ class ObjectInfo:
 
         # PyQt5 Qthread
         "exec", "exec_", "pyqtConfigure",
+        "dump",     # 'dumpObjectInfo' from PyQt5.QMenu
 
         # GIT
         "checkout", "detach",
