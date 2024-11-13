@@ -31,7 +31,7 @@ class Gui(QWidget):
     SIZE: TYPE__SIZE_TUPLE = (None, None)
     MOVE: TYPE__SIZE_TUPLE = (None, None)
 
-    FLAGS: dict[Any, str] = {
+    FLAGS: dict[int, str] = {
         # TODO: use separated as CLASS!!! with special FLAG methods!!! sum/del/check/... and try to mark as True/False/None
 
         # UNCOMMENT IF NEEDED!
@@ -52,7 +52,7 @@ class Gui(QWidget):
         # Qt.WindowMaximizeButtonHint: "[btn]activate ONLY MAXimize",
         # Qt.WindowMinMaxButtonsHint: "[btn]activate ONLY MAX+MINimize",
         # Qt.WindowCloseButtonHint: "[btn]keep only CLOSE",
-        # Qt.WindowContextHelpButtonHint: "[btn]keep only HELP +CLOSE(but inactivated)",
+        # Qt.WindowContextHelpButtonHint: "[btn]keep only HELP +CLOSE(but inactivated) = почемуто нельзя обьединить с чемто еще!!!",
 
         # LAYERS -------------------------------------------------------------------------------
         # Qt.WindowStaysOnTopHint: "[layer] always on TOP",
