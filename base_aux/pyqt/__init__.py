@@ -16,49 +16,40 @@
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .gui import (
-    # BASE
     Gui,
-    # AUX
-    # TYPES
     TYPE__SIZE_TUPLE,
-    # EXX
 )
 from .signals import (
-    # BASE
     SignalsTemplate,
-    # AUX
-    # TYPES
-    # EXX
 )
 from .th import (
-    # BASE
     HeaderViewCB,
-    # AUX
-    # TYPES
-    # EXX
 )
 from .tm import (
-    # BASE
     Headers,
     TableModelTemplate,
-    # AUX
-    # TYPES
-    # EXX
 )
 from .hl import (
-    # BASE
     format_make,
     HlStyle,
     HlStyles,
     Highlighter,
-    # AUX
+
     HlStylesPython,
     HlStylesMultiline,
     HlStylesExample,
     start_example,
-    # TYPES
-    # EXX
 )
+from .static import (
+    COLOR_TUPLE_RGB,
+    MARGINS,
+    ALIGNMENT,
+)
+# from .mods import (
+#     Headers,
+#     TableModelTemplate,
+# )
+
 
 # =====================================================================================================================
 
