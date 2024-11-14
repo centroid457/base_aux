@@ -109,15 +109,15 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
             self.run()
 
     def run(self):
-        self.main_window_prepare()
+        self.main_window__prepare()
         self.wgt_create()
         self.slots_connect()
+        self.main_window__finalise()
 
         # GUI SHOW ----------------------------------------------------------------------------------------------------
-        self._wgt_main__apply_settings()
         self.show()
         if self.CENTER:
-            self._wgt_main__center()
+            self.main_window__center()
 
         # starting PYQT in thread - NOT AVAILABLE!!! ---------------------------
         # i tried switch all even show() into it - not working!
@@ -134,10 +134,10 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         sys.exit(exit_code)
 
     # MAIN WINDOW =====================================================================================================
-    def _wgt_main__apply_settings(self) -> None:
+    def main_window__finalise(self) -> None:
         # TITLE --------------------------------------------------
         self.setWindowTitle(self.TITLE)
-        self._wgt_main__apply_logo()
+        self.main_window__apply_logo()
 
         # FLAGS ---------------------------------------------------
         flag_cum = 0
@@ -174,7 +174,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
 
         # USER ------------------------------------------------
 
-    def _wgt_main__apply_logo(self) -> None:
+    def main_window__apply_logo(self) -> None:
         """
         need square size for logo!
         """
@@ -189,7 +189,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
             except:
                 pass
 
-    def _wgt_main__center(self):
+    def main_window__center(self) -> None:
         """
         center the main window considering MULTY MONITORS.
         NOTE: work incorrect in INIT!!! use in root module right after wgt.SHOW() not before!!!
@@ -215,7 +215,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         )
 
     # WINDOW ==========================================================================================================
-    def main_window_prepare(self) -> None:
+    def main_window__prepare(self) -> None:
         self.CENTRAL_WGT = QWidget()
         self.setCentralWidget(self.CENTRAL_WGT)
 
@@ -899,7 +899,7 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
     # SLOTS ===========================================================================================================
     def slots_connect(self) -> None:
         if self.BTN:
-            self.BTN.clicked.connect(self._wgt_main__center)
+            self.BTN.clicked.connect(self.main_window__center)
             if self.BTN.isCheckable():
                 self.BTN.toggled.connect(self.BTN__toggled)
             else:
