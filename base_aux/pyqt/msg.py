@@ -5,11 +5,13 @@ from PyQt5.QtWidgets import *
 
 
 def info():
-    QMessageBox.information(
+    answer = QMessageBox.information(
         None,
         'О программе',
         'This is important information.'
     )
+    # return always 1024
+    return answer
 
 
 # =====================================================================================================================
