@@ -61,7 +61,6 @@ from .number import (
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .exceptions import ExxBool
-
 # ---------------------------------------------------------------------------------------------------------------------
 from .getattr_0_echo import (
     GetattrEcho,
@@ -76,20 +75,29 @@ from .attr_2_anycase import (
 from .getattr_3_prefix_1_inst import (
     GetattrPrefixInst,
     GetattrPrefixInst_RaiseIf,
-
 )
 from .getattr_3_prefix_2_cls import (
     GetattrPrefixCls_MetaTemplate
 )
-
 from .attr_4_lambda_call import (
     AttrLambdaCall,
 )
-from .lambdas import Lambda, LambdaBool, LambdaBoolReversed, LambdaTrySuccess, LambdaTryFail
+# ---------------------------------------------------------------------------------------------------------------------
+from .lambdas import (
+    Lambda,
+
+    LambdaBool,
+    LambdaBoolReversed,
+
+    LambdaTrySuccess,
+    LambdaTryFail,
+
+    LambdaSleep,
+)
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (
     DictDots,
-    # DictDotsAnnotRequired,
+    DictDotsAnnotRequired,
 )
 from .attr_3_dict_dots_2_full import (
     DictDotsFull,
@@ -98,7 +106,6 @@ from .attr_3_dict_dots_2_full import (
 from .middle_group import (
     ClsMiddleGroup,
 )
-
 # ---------------------------------------------------------------------------------------------------------------------
 from .value_1_variants import (
     ValueVariants,

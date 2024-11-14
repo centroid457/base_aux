@@ -1,4 +1,5 @@
 from typing import *
+import time
 
 from base_aux.classes.static import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.classes.valid_0_aux import ValidAux
@@ -220,6 +221,26 @@ class LambdaTrySuccess(LambdaBool):
 
 class LambdaTryFail(LambdaTrySuccess):
     BOOL_REVERSE: bool = True
+
+
+# =====================================================================================================================
+class LambdaSleep(Lambda):
+    """
+    just delay construction
+    """
+
+    SEC: float = 1
+
+    def __init__(self, sec: float = None, *args, **kwargs) -> None:
+        if sec is not None:
+            self.SEC = sec
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, sec: float = None, *args, **kwargs) -> Any | NoReturn:
+        if sec is None:
+            sec = self.SEC
+        time.sleep(sec)
+        return self.construct(*args, **kwargs)
 
 
 # =====================================================================================================================
