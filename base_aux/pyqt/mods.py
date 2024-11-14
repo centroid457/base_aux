@@ -14,7 +14,10 @@ from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
 
 # ICONS ===============================================================================================================
-class QIcon_Set:
+class Icons:
+    """
+    this is just an example for keeping set of icons!
+    """
     _path: pathlib.Path = pathlib.Path().parent.joinpath('images')
 
     def __init__(self):
@@ -35,7 +38,7 @@ class QIcon_Set:
 
 
 # COLOR ===============================================================================================================
-class QWidget_ColorChange(QWidget):
+class WgtColorChange(QWidget):
     def _color_set_rgb(self, color=None):
         if color:
             self.setStyleSheet(f"background: rgb{color}")
@@ -55,20 +58,11 @@ class QWidget_ColorChange(QWidget):
         self._color_set_rgb(COLOR_TUPLE_RGB.LIGHT_YELLOW)
 
 
-class QPushButton(QPushButton, QWidget_ColorChange):
-    pass
-
-
-class QLineEdit(QLineEdit, QWidget_ColorChange):
-    pass
-
-
-class QComboBox(QComboBox, QWidget_ColorChange):
-    pass
-
-
-class QLabel(QLabel, QWidget_ColorChange):
-    pass
+class WgtColored:
+    BTN: QPushButton = type("BTN", (QPushButton, WgtColorChange), {})
+    LE: QPushButton = type("LE", (QLineEdit, WgtColorChange), {})
+    CB: QPushButton = type("CB", (QComboBox, WgtColorChange), {})
+    LBL: QPushButton = type("LBL", (QLabel, WgtColorChange), {})
 
 
 # =====================================================================================================================

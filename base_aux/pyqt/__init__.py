@@ -45,10 +45,12 @@ from .static import (
     MARGINS,
     ALIGNMENT,
 )
-# from .mods import (
-#     Headers,
-#     TableModelTemplate,
-# )
+from .mods import (
+    Icons,
+    WgtColorChange,
+    WgtColored,
+    QPushButton_Checkable,
+)
 
 
 # =====================================================================================================================
