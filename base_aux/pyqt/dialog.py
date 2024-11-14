@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import *
 
 import time
 from threading import Thread
-from base_aux.objects import LAMBDA_TRUE
+from base_aux.objects import LAMBDA_TRUE, SLEEP_TRUE
 from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
 
@@ -773,14 +773,9 @@ INSTRUCTION_HTML = """
 """
 
 
-def autoaccept_link():
-    time.sleep(1)
-    return True
-
-
 def _test__autoaccept():
-    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=autoaccept_link)
-    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=autoaccept_link)
+    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP_TRUE)
+    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP_TRUE)
 
 
 def _test__GuiDialog():
