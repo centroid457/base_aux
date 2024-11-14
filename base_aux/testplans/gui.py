@@ -136,7 +136,7 @@ class TpGuiBase(Gui):
         layout_details.addWidget(self.BTN_clear_all)
         layout_details.addWidget(self.PTE)
 
-        # layout_main -------------------------------------------------------------------------------------------------
+        # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         layout_main = QHBoxLayout()
         layout_main.addWidget(self.TV)
         layout_main.addLayout(layout_details)

@@ -65,8 +65,12 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
     # COMMON ------------------------------------------------------
     DATA: Optional[Any] = None
 
-    _CENTRAL_WGT: QWidget = None
     MENU: Optional[QMenu] = None
+    SB: Optional[QStatusBar] = None
+
+    CENTRAL_WGT: QWidget = None
+    LAYOUT_MAIN: QLayout = None
+
     BTN: Optional[QPushButton] = None
     CB: Optional[QCheckBox] = None
     TV: Optional[QTableView] = None
@@ -85,6 +89,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
             self.run()
 
     def run(self):
+        self.main_window_prepare()
         self.wgt_create()
         self.slots_connect()
 
@@ -190,11 +195,14 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         )
 
     # WINDOW ==========================================================================================================
-    def wgt_create(self) -> None:
-        self._CENTRAL_WGT = QWidget()
-        self.setCentralWidget(self._CENTRAL_WGT)
+    def main_window_prepare(self) -> None:
+        self.CENTRAL_WGT = QWidget()
+        self.setCentralWidget(self.CENTRAL_WGT)
 
         self.MENU_create()
+        self.SB_create()
+
+    def wgt_create(self) -> None:
         self.BTN_create()
         self.CB_create()
         self.TV_create()
@@ -237,7 +245,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         # layout_h = QHBoxLayout()
         # layout_h.addWidget(self.)
 
-        # layout_main -------------------------------------------------------------------------------------------------
+        # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         layout_v = QVBoxLayout()
         layout_v.addLayout(layout_grid)
         layout_v.addWidget(self.CB)
@@ -245,32 +253,49 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         # layout_v.addLayout(layout_h)
         layout_v.addWidget(self.PTE)
 
-        # layout_main -------------------------------------------------------------------------------------------------
-        layout_main = QHBoxLayout()
-        layout_main.addWidget(self.TV)
-        layout_main.addLayout(layout_v)
+        # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
+        self.LAYOUT_MAIN = QHBoxLayout()
+        self.LAYOUT_MAIN.addWidget(self.TV)
+        self.LAYOUT_MAIN.addLayout(layout_v)
 
-        self._CENTRAL_WGT.setLayout(layout_main)
+        self.CENTRAL_WGT.setLayout(self.LAYOUT_MAIN)
 
-    # WGTS ============================================================================================================
+    # MAINWINDOW ======================================================================================================
     def MENU_create(self) -> None:
         """
-        '&'sign is for ALT+ running!
+        '&'sign
+        -------
+        1. is for ALT+ running!
+        2. if exists several same links - it would be switched by circle
 
         CONSTRAINTS
         -----------
         1. could create ONLY for QMainWindow! not for just a QWidget!
+
+        TODO: add folder select + change title for it name
+            https://www.pythontutorial.net/pyqt/pyqt-qstatusbar/
         """
-        if not isinstance(self, QMainWindow):
-            return
+        if isinstance(self, QMainWindow):
+            self.MENU = self.menuBar()
+        elif isinstance(self, QWidget):
+            # this is just for future!
+            # self.MENU = QMenuBar()
+            pass
 
-        self.MENU = self.menuBar()
-        file_menu = self.MENU.addMenu('&File')
-        edit_menu = self.MENU.addMenu('&Edit')
-        help_menu = self.MENU.addMenu('&Help')
+        # menu_file = self.MENU.addMenu('&File')
+        # menu_edit = self.MENU.addMenu('&Edit')
+        menu_help = self.MENU.addMenu('&Справка')
+
+        about_action = QAction('O приложении', self)      # if no fileIcon exists - no error/warn!
+        about_action.setStatusTip('O приложении')
+        about_action.setShortcut('F1')
+        menu_help.addAction(about_action)
+
+    def SB_create(self) -> None:
+        self.SB = self.statusBar()
 
 
-
+    # WGTS ============================================================================================================
     def BTN_create(self) -> None:
         self.BTN = QPushButton("BTN")
 
