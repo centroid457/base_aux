@@ -23,7 +23,7 @@ class Dialogs:
     so to be sure there are no any other available!
     """
     @staticmethod
-    def msg__about() -> None:
+    def info__about() -> None:
         QMessageBox.information(
             None,
             'О программе',
@@ -37,6 +37,8 @@ class Dialogs:
 
 # =====================================================================================================================
 class Gui(QMainWindow):     # QWidget/QMainWindow
+    DATA: Optional[Any] = None
+
     # SETTINGS --------------------------------------------------
     START: bool = True
 
@@ -82,11 +84,10 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
     _QAPP: QApplication = QApplication([])
 
     # COMMON ------------------------------------------------------
-    DATA: Optional[Any] = None
+    DIALOGS: type[Dialogs] = Dialogs
 
     MENU: Optional[QMenu] = None
     SB: Optional[QStatusBar] = None
-
     CENTRAL_WGT: QWidget = None
     LAYOUT_MAIN: QLayout = None
 
@@ -308,7 +309,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         about_action = QAction('O приложении', self)      # if no fileIcon exists - no error/warn!
         # about_action.setStatusTip('O приложении')
         about_action.setShortcut('F1')
-        about_action.triggered.connect(Dialogs.msg__about)
+        about_action.triggered.connect(Dialogs.info__about)
         menu_help.addAction(about_action)
 
     def SB_create(self) -> None:
