@@ -305,9 +305,10 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         # menu_file = self.MENU.addMenu('&File')
         # menu_edit = self.MENU.addMenu('&Edit')
         menu_help = self.MENU.addMenu('&Справка')
+        menu_help.setStatusTip('Справка')   # not working on Menu
 
         about_action = QAction('O приложении', self)      # if no fileIcon exists - no error/warn!
-        # about_action.setStatusTip('O приложении')
+        about_action.setStatusTip('O приложении')       # working on ACTION
         about_action.setShortcut('F1')
         about_action.triggered.connect(Dialogs.info__about)
         menu_help.addAction(about_action)
@@ -316,7 +317,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
 
     def SB_create(self) -> None:
         self.SB = self.statusBar()
-        self.SB.showMessage('Ready', 3000)
+        self.SB.showMessage('Ready', 5000)
 
         # lbl_1 = QLabel("lbl: 0")
         # lbl_date = QLabel("Date: ...")
