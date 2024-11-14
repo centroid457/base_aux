@@ -312,6 +312,8 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         about_action.triggered.connect(Dialogs.info__about)
         menu_help.addAction(about_action)
 
+        menu_help.addSeparator()
+
     def SB_create(self) -> None:
         self.SB = self.statusBar()
         self.SB.showMessage('Ready', 3000)
