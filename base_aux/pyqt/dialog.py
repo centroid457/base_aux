@@ -14,8 +14,31 @@ from base_aux.objects import LAMBDA_TRUE, SLEEP_TRUE
 from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
 
-# =====================================================================================================================
+# SIMPLEST ============================================================================================================
+def info():
+    """
+    see [pyqt.gui.Dialogs] as example
+    """
+    answer = QMessageBox.information(
+        None,
+        'О программе',
+        'This is important information.'
+    )
+    # return always 1024
+    return answer
+
+
+def try__info():
+    app = QApplication([])
+    print(info())
+    app.exec()
+
+
+# OTHERS ==============================================================================================================
 class MessageDialog(QDialog):   # Шихалиев???
+    """
+    just found in corporate repo from not a really programming department
+    """
     def __init__(self, text, parent=None):
         super(MessageDialog, self).__init__(parent)
 
@@ -773,12 +796,12 @@ INSTRUCTION_HTML = """
 """
 
 
-def _test__autoaccept():
+def try__autoaccept():
     GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP_TRUE)
     GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP_TRUE)
 
 
-def _test__GuiDialog():
+def try__GuiDialog():
     GuiDialog().simple_1_info(INSTRUCTION_HTML)
     GuiDialog().simple_2_question('<h1>hel\nlo</h1><b>12345<br>1234</b> 21211212 <br>')
     GuiDialog().simple_3_critical()
@@ -791,14 +814,15 @@ def _test__GuiDialog():
     GuiDialog().simple_1_info(INSTRUCTION_HTML)
 
 
-def _test__static():
+def try__static():
     print(GuiDialog().simple_1_info(INSTRUCTION_HTML))
     print(GuiDialog().simple_1_info(INSTRUCTION_HTML))
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    _test__autoaccept()
+    try__info()
+    # try__autoaccept()
     # print(GuiDialog().simple_1_info('<h1>hel\nlo</h1><b>12345<br>1234</b> 21211212 <br>'))
     # print(GuiDialog().simple_1_info('<h1>hel\nlo</h1><b>12345<br>1234</b> 21211212 <br>'))
 

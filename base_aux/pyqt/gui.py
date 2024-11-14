@@ -17,6 +17,24 @@ from .hl import *
 TYPE__SIZE_TUPLE = tuple[Optional[int], Optional[int]]
 
 
+class Dialogs:
+    """
+    attempt to keep all  available dialogs in one place!
+    so to be sure there are no any other available!
+    """
+    @staticmethod
+    def msg__about() -> None:
+        QMessageBox.information(
+            None,
+            'О программе',
+            (
+                'ООО Элемент-Инжиниринг,\n'
+                'Программа проведения тестирования блоков питания\n'
+                '(стендовые испытания ОТК)'
+             )
+        )
+
+
 # =====================================================================================================================
 class Gui(QMainWindow):     # QWidget/QMainWindow
     # SETTINGS --------------------------------------------------
@@ -288,8 +306,9 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         menu_help = self.MENU.addMenu('&Справка')
 
         about_action = QAction('O приложении', self)      # if no fileIcon exists - no error/warn!
-        about_action.setStatusTip('O приложении')
+        # about_action.setStatusTip('O приложении')
         about_action.setShortcut('F1')
+        about_action.triggered.connect(Dialogs.msg__about)
         menu_help.addAction(about_action)
 
     def SB_create(self) -> None:
