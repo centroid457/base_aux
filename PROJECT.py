@@ -178,16 +178,14 @@ class PROJECT(PROJECT_BASE):
     # HISTORY -----------------------------------------------
     TODO: list[str] = [
         "fix info content TREE",
-
     ]
     FIXME: list[str] = [
     ]
-
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 15)
+    VERSION: tuple[int, int, int] = (0, 0, 16)
     NEWS: list[str] = [
-        "[DictDotsAnnotRequired] add",
-        "[_SAND] create and add first content",
+        "[gui] add SB+MENU +switch to MainWindow +add mods from t8 +add About",
+        "[primitives] add SLEEP* +LambdaSleep",
     ]
 
 
