@@ -12,6 +12,7 @@ USEFUL IDEAS
 """
 # ---------------------------------------------------------------------------------------------------------------------
 from typing import *
+import time
 
 
 # =====================================================================================================================
@@ -110,8 +111,42 @@ def FUNC_GEN(*args, **kwargs) -> Generator:
     yield from range(5)
 
 
-def FUNC_ECHO_ARG(*args, **kwargs) -> Any | NoReturn:
-    return args[0]
+def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
+    return echo
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+def SLEEP(sec: float = 1, *args, **kwargs) -> None:
+    time.sleep(sec)
+
+
+def SLEEP_NONE(sec: float = 1, *args, **kwargs) -> None:
+    time.sleep(sec)
+
+
+def SLEEP_TRUE(sec: float = 1, *args, **kwargs) -> bool:
+    time.sleep(sec)
+    return True
+
+
+def SLEEP_FALSE(sec: float = 1, *args, **kwargs) -> bool:
+    time.sleep(sec)
+    return False
+
+
+def SLEEP_EXX(sec: float = 1, *args, **kwargs) -> Exception:
+    time.sleep(sec)
+    return Exception("SLEEP_EXX")
+
+
+def SLEEP_RAISE(sec: float = 1, *args, **kwargs) -> NoReturn:
+    time.sleep(sec)
+    raise Exception("SLEEP_RAISE")
+
+
+def SLEEP_ECHO(sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
+    time.sleep(sec)
+    return echo
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -132,7 +167,7 @@ LAMBDA_EXX = lambda *args, **kwargs: Exception("LAMBDA_EXX")
 LAMBDA_RAISE = lambda *args, **kwargs: FUNC_RAISE()
 # LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
 LAMBDA_GEN = lambda *args, **kwargs: FUNC_GEN()
-LAMBDA_ECHO_ARG = lambda *args, **kwargs: args[0]
+LAMBDA_ECHO = lambda echo, *args, **kwargs: echo
 
 
 # =====================================================================================================================
