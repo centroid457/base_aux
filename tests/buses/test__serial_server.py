@@ -243,7 +243,7 @@ class Test__SerialServer_NoConnection:
 # =====================================================================================================================
 @pytest.mark.xfail  # FIXME: BROKEN
 class Test_SerialServer_WithConnection:
-    Victim: Type[SerialClient] = type("Victim", (SerialClient,), {})
+    Victim: type[SerialClient] = type("Victim", (SerialClient,), {})
     victim: SerialClient = None
 
     @classmethod

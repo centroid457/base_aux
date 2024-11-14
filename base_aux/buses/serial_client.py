@@ -185,7 +185,7 @@ class SerialClient(Logger):
     _GETATTR_SPLITTER__ARGS: str = "__"
 
     # test purpose EMULATOR -----------------
-    _EMULATOR__CLS: Type[
+    _EMULATOR__CLS: type[
         'SerialServer_Base'] = None  # IF USED - START it on PAIRED - it is exactly Emulator/Server! no need to use just another serialClient! _EMULATOR__INST could be used for test reason and check values in realtime!!
     _EMULATOR__INST: 'SerialServer_Base' = None
     _EMULATOR__START: bool = None  # DONT DELETE! it need when you reconnecting! cause of address replaced after disconnecting by exact str after PAIRED*

@@ -92,7 +92,7 @@ class DictDots(DictCaseinsense):
         first level - WriteRead
         all other nested levels - ReadOnly for root level! but no errors when set new!
     2. caseInsensitive
-    3. when object created it create new copy Dict - so it not the same as dict link!
+    3. when object created it create new copy dict - so it not the same as dict link!
 
 
 

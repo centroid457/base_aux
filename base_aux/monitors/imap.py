@@ -70,7 +70,7 @@ class MonitorImap(AttrLambdaCall, threading.Thread):
     SUBJECT_REGEXP: Optional[str] = None
     # MARK_AS_READ: bool = True
 
-    ALERT: Type[AlertBase] = AlertImap
+    ALERT: type[AlertBase] = AlertImap
     _conn: Optional[imaplib.IMAP4_SSL] = None
     stop_flag: Optional[bool] = None
     step_counter: int = 0
@@ -78,7 +78,7 @@ class MonitorImap(AttrLambdaCall, threading.Thread):
     def __init__(self):
         super().__init__(daemon=True)
 
-        self._detected: List[str] = []
+        self._detected: list[str] = []
         self.start()
 
     # CONNECT =========================================================================================================
@@ -165,7 +165,7 @@ class MonitorImap(AttrLambdaCall, threading.Thread):
             time.sleep(sleep)
 
     # MAIL ============================================================================================================
-    def get_unseen_subject_list(self) -> List[str]:
+    def get_unseen_subject_list(self) -> list[str]:
         """get all subgects for unseen emails
         """
         result = []

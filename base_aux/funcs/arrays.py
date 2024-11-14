@@ -5,7 +5,7 @@ import numpy as np
 # =====================================================================================================================
 def array_2d_get_compact_str(
         array: np.ndarray,
-        interpreter: Optional[Dict[Any, Any]] = None,
+        interpreter: Optional[dict[Any, Any]] = None,
         separate_rows: Optional[int] = None,
         wrap: Optional[bool] = None,
         use_rows_num: Optional[bool] = None

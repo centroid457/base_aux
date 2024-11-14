@@ -36,7 +36,7 @@ class TagAddressChain(NamedTuple):
         TagAddressChain("table", {"class": "donor-svetofor-restyle"}, None, 0),
     """
     NAME: str
-    ATTRS: Dict[str, str]
+    ATTRS: dict[str, str]
     TEXT: Optional[str]
     INDEX: int
 
@@ -75,9 +75,9 @@ class MonitorUrlTag(threading.Thread):
     URL: str = None
     TIMEOUT_REQUEST: int = 10
     INTERVAL: int = 1 * 60 * 60
-    TAG_CHAINS: List[TagAddressChain] = []
+    TAG_CHAINS: list[TagAddressChain] = []
     TAG_GET_ATTR: Optional[str] = None
-    ALERT: Type[AlertBase] = Alert_MonitorUrlTag
+    ALERT: type[AlertBase] = Alert_MonitorUrlTag
 
     DIRPATH: pathlib.Path = pathlib.Path("USERDATA")
     CSV_DELIMITER: str = ";"

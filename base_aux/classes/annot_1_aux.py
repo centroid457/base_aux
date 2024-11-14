@@ -41,7 +41,7 @@ class AnnotAux:
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def annot__get_nested__dict_types(cls, obj: Any | None = None) -> dict[str, Type[Any]]:
+    def annot__get_nested__dict_types(cls, obj: Any | None = None) -> dict[str, type[Any]]:
         """
         GOAL
         ----

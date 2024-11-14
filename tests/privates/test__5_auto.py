@@ -20,7 +20,7 @@ from base_aux.privates import (
 
 # =====================================================================================================================
 class Test__Auto:
-    VICTIM: Type[PrivateAuto] = type("Victim", (PrivateAuto,), {})
+    VICTIM: type[PrivateAuto] = type("Victim", (PrivateAuto,), {})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
 
     TEXT0: str = f"""

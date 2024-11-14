@@ -7,7 +7,7 @@ from base_aux.requirements import *
 
 # =====================================================================================================================
 class Test__Cls:
-    Victim: Type[ReqCheckStr_Base]
+    Victim: type[ReqCheckStr_Base]
     @classmethod
     def setup_class(cls):
         pass
@@ -92,7 +92,7 @@ class Test__Cls:
 
 # =====================================================================================================================
 class Test__Instance:
-    Victim: Type[ReqCheckStr_Base]
+    Victim: type[ReqCheckStr_Base]
     @classmethod
     def setup_class(cls):
         pass

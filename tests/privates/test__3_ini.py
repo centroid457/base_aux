@@ -9,9 +9,9 @@ from base_aux.classes import Exx__AnnotNotDefined
 
 # =====================================================================================================================
 class Test__Ini:
-    VICTIM: Type[PrivateIni] = type("Victim", (PrivateIni,), {})
+    VICTIM: type[PrivateIni] = type("Victim", (PrivateIni,), {})
     VICTIM2_FILENAME: str = f"{PrivateIni.FILENAME}2"
-    VICTIM2: Type[PrivateIni] = type("VICTIM2", (PrivateIni,), {"FILENAME": VICTIM2_FILENAME})
+    VICTIM2: type[PrivateIni] = type("VICTIM2", (PrivateIni,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
 
     TEXT1: str = f"""

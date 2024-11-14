@@ -89,8 +89,8 @@ class Default(Explicit):
 
 
 # =====================================================================================================================
-TYPE__EXPLICIT = Type[Explicit] | Explicit
-TYPE__DEFAULT = Type[Default] | Default
+TYPE__EXPLICIT = type[Explicit] | Explicit
+TYPE__DEFAULT = type[Default] | Default
 
 
 # =====================================================================================================================

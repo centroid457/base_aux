@@ -22,7 +22,7 @@ class HistoryShifted_Shrink:
             raise Exx_TimeSeries(msg)
 
     # FIELDS ----------------------------------------------------------------------------------------------------------
-    def _get_fields(self) -> Dict[str, Any]:
+    def _get_fields(self) -> dict[str, Any]:
         """
         {
             'time': (dtype('int64'), 0),

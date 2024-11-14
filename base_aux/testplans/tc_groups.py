@@ -23,7 +23,7 @@ class TcGroup_Base(ClsMiddleGroup):
         return True
 
     # @classmethod
-    # def middle_group__check_equal__cls(cls, other: Type[Self]) -> bool:
+    # def middle_group__check_equal__cls(cls, other: type[Self]) -> bool:
     #     """
     #
     #     this is will not work on classmethods!!!

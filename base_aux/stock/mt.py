@@ -52,7 +52,7 @@ class MT5:
 
     SYMBOL: Type__Symbol = "BRX3"
     TF: int = mt5.TIMEFRAME_M10
-    __MT5_SYMBOLS_AVAILABLE: List[mt5.SymbolInfo] = None
+    __MT5_SYMBOLS_AVAILABLE: list[mt5.SymbolInfo] = None
 
     BAR_LAST: np.ndarray = None
     """
@@ -70,7 +70,7 @@ class MT5:
     bar__lost: bool = None        # DONT SET! used only in STRATEGY!!!
     tick__lost: bool = None
 
-    _symbols_volume_price: Dict[str, float] = {}     # used as
+    _symbols_volume_price: dict[str, float] = {}     # used as
 
     # =================================================================================================================
     def __init__(self, _tf: Optional[int] = None, _symbol: Optional[str] = None):
@@ -122,7 +122,7 @@ class MT5:
 
     # AVAILABLE -------------------------------------------------------------------------------------------------------
     @property
-    def _MT5_SYMBOLS_AVAILABLE(self) -> List[mt5.SymbolInfo]:
+    def _MT5_SYMBOLS_AVAILABLE(self) -> list[mt5.SymbolInfo]:
         """
         too much time to get all items! dont use it without special needs!
         """
@@ -134,11 +134,11 @@ class MT5:
             self,
             mask: str = "",
             only_rus: bool = False
-    ) -> List[mt5.SymbolInfo]:
+    ) -> list[mt5.SymbolInfo]:
         # count=12976 ALL!!!!
         # count=275 rus!!!!
         count = 0
-        result: List[mt5.SymbolInfo] = []
+        result: list[mt5.SymbolInfo] = []
 
         if not mask:
             symbols = self._MT5_SYMBOLS_AVAILABLE
@@ -187,7 +187,7 @@ class MT5:
             return _symbol.select
 
     # INFO ------------------------------------------------------------------------------------------------------------
-    def _symbols_info__print_compare(self, symbols: List[Type__Symbol] = ["SBER", "AAPL-RM", "PYPL-RM"]):
+    def _symbols_info__print_compare(self, symbols: list[Type__Symbol] = ["SBER", "AAPL-RM", "PYPL-RM"]):
         """
         since SYMBOL_NAME not added into chart gui list - it will return zero to many attributes!
 
@@ -341,7 +341,7 @@ class MT5:
         self._symbols_volume_price.update({_symbol: result})
         return result
 
-    def _symbols_get_sorted_volume_price(self, limit_min=None, limit_max=None, _symbols: Optional[List[str]] = None, _devider: Optional[int] = None) -> Dict[str, float]:
+    def _symbols_get_sorted_volume_price(self, limit_min=None, limit_max=None, _symbols: Optional[list[str]] = None, _devider: Optional[int] = None) -> dict[str, float]:
         """
 
         (400 * 1000 * 1000)

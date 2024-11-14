@@ -45,7 +45,7 @@ class Test__DevicesBreeder_WithDut:
 
     def setup_method(self, method):
         pass
-        self.Victim: Type[DevicesBreeder_WithDut] = type("Victim", (DevicesBreeder_WithDut,), {})
+        self.Victim: type[DevicesBreeder_WithDut] = type("Victim", (DevicesBreeder_WithDut,), {})
 
     def teardown_method(self, method):
         pass

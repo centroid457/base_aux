@@ -12,7 +12,7 @@ class DevicesBreeder_Example(DevicesBreeder_WithDut):
     """
     # DEFINITIONS ---------------
     COUNT: int = 2
-    CLS_SINGLE__ATC: Type[DeviceBase] = DeviceBase
+    CLS_SINGLE__ATC: type[DeviceBase] = DeviceBase
 
     # JUST SHOW NAMES -----------
     ATC: DeviceBase

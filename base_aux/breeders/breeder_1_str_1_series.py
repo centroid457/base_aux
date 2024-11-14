@@ -51,7 +51,7 @@ class BreederStrSeries(NamedTuple):
         msg = f"{item=}"
         raise Exx__ItemNotExists(msg)
 
-    def get_dict__outer(self) -> Dict[int, str] | NoReturn:
+    def get_dict__outer(self) -> dict[int, str] | NoReturn:
         self._raise_if_start_outer_none()
 
         result_outer_sub = {}
@@ -63,7 +63,7 @@ class BreederStrSeries(NamedTuple):
             result_outer_sub.update({index_outer: value})
         return result_outer_sub
 
-    def get_dict__inner(self) -> Dict[int, str] | NoReturn:
+    def get_dict__inner(self) -> dict[int, str] | NoReturn:
         self._raise_if_start_outer_none()
 
         result_inner = {}

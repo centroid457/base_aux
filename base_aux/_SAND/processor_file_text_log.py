@@ -51,7 +51,7 @@ class ProcessorTextLog(ProcessorFileSelector):     # starichenko
     USAGE:
         1. if you need find pattern in data - use loglines_iter
     """
-    __LOGLINES: tp.List[tp.Union[str, bytes]] = []
+    __LOGLINES: list[tp.Union[str, bytes]] = []
     EOL = "\n"
 
     @property
@@ -64,7 +64,7 @@ class ProcessorTextLog(ProcessorFileSelector):     # starichenko
     def logdata_clear(self):
         self.__LOGLINES = []
 
-    def loglines_get_active(self, logdata: tp.Optional[tp.List[tp.Union[str, bytes]]] = None) -> tp.List[tp.Union[str, bytes]]:
+    def loglines_get_active(self, logdata: tp.Optional[list[tp.Union[str, bytes]]] = None) -> list[tp.Union[str, bytes]]:
         """
         used always get final logdata (from instanse or specified param)
         """

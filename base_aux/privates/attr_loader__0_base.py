@@ -30,7 +30,7 @@ class PrivateBase(AnnotAux, abc.ABC):
     FILENAME: Optional[str] = None
 
     _text: Optional[str] = ""     # TODO: need tests!!!
-    dict: Dict[str, Any] = None
+    DICT: dict[str, Any] = None
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
@@ -42,7 +42,7 @@ class PrivateBase(AnnotAux, abc.ABC):
             _filepath: TYPE__PATH = None,
 
             _text: Optional[str] = None,                # instead of file
-            _dict: Optional[Dict[str, Any]] = None,     # instead of file
+            _dict: Optional[dict[str, Any]] = None,     # instead of file
 
             _raise: Optional[bool] = None
     ):
@@ -148,39 +148,39 @@ class PrivateBase(AnnotAux, abc.ABC):
         section_dict = self.get_dict()
         self.apply_dict(section_dict)
 
-    def apply_dict(self, attrs: Optional[Dict[str, Any]] = None, update: Optional[bool] = None) -> None | NoReturn:
+    def apply_dict(self, attrs: Optional[dict[str, Any]] = None, update: Optional[bool] = None) -> None | NoReturn:
         """Apply passes dict into instance and check consistence.
         """
         # clear -----------------------
-        if self.dict and not update:
-            for key in self.dict:
+        if self.DICT and not update:
+            for key in self.DICT:
                 delattr(self, key)
 
         # work -----------------------
         if attrs is not None:
             if update:
-                self.dict.update(attrs)
+                self.DICT.update(attrs)
             else:
-                self.dict = dict(attrs)
+                self.DICT = dict(attrs)
 
-        if self.dict is None:
+        if self.DICT is None:
             return
 
-        for key, value in self.dict.items():
+        for key, value in self.DICT.items():
             setattr(self, key, value)
 
-    def update_dict(self, attrs: Optional[Dict[str, Any]]) -> None | NoReturn:
+    def update_dict(self, attrs: Optional[dict[str, Any]]) -> None | NoReturn:
         """Apply passes dict into instance and check consistence.
         """
         self.apply_dict(attrs, True)
 
-    def preupdate_dict(self, attrs: Dict[str, Any]) -> None | NoReturn:
+    def preupdate_dict(self, attrs: dict[str, Any]) -> None | NoReturn:
         """Apply passes dict into instance and check consistence.
         """
         # prepare  -----------------------
         new_dict = {}
         for key, value in attrs.items():
-            if key not in self.dict:
+            if key not in self.DICT:
                 new_dict.update({key: value})
 
         # work -----------------------
@@ -188,7 +188,7 @@ class PrivateBase(AnnotAux, abc.ABC):
 
     # -----------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def get_dict(self) -> Optional[Dict[str, Any]]:
+    def get_dict(self) -> Optional[dict[str, Any]]:
         """Obtain existed values from source in dict structure.
 
         return

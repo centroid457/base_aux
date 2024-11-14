@@ -9,7 +9,7 @@ class TpResults:
     """
     Results for whole testplan at one dut!!!
     """
-    TCS__CLS: Dict[Type['TC'], List['TC']]
+    TCS__CLS: dict[type['TC'], list['TC']]
 
     def __init__(self, tc: 'TC'):
         pass

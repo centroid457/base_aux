@@ -7,7 +7,7 @@ from base_aux.funcs import *
 # =====================================================================================================================
 @pytest.mark.skip   # FIXME: need to fix not working EMU
 class Test__Emulated:
-    Victim: Type[SerialClient_Emulated]
+    Victim: type[SerialClient_Emulated]
     victim: SerialClient_Emulated
 
     @classmethod

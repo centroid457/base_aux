@@ -458,7 +458,7 @@ class GuiDialog(QWidget):
         cls.ANSWER_READY = True
 
     # SIMPLE ----------------------------------------------------------------------------------------------------------
-    def _only_simple_0_nolock_noanswer(self, msg: Union[str, List[str]] = "msg", title: str = "title"):
+    def _only_simple_0_nolock_noanswer(self, msg: Union[str, list[str]] = "msg", title: str = "title"):
         if isinstance(msg, (list, tuple)):   # msg
             msg = '\n'.join(msg)
 

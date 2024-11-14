@@ -5,7 +5,7 @@ from base_aux.bits import *
 
 # =====================================================================================================================
 class Test__Bitfield:
-    VICTIM: Type[Bitfield] = type("VICTIM", (Bitfield,), {})
+    VICTIM: type[Bitfield] = type("VICTIM", (Bitfield,), {})
 
     @classmethod
     def setup_class(cls):

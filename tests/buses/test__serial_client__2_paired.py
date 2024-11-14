@@ -8,7 +8,7 @@ from base_aux.funcs import *
 # =====================================================================================================================
 @pytest.mark.skipif(condition=not SerialClient.addresses_paired__detect(), reason="NO addresses_paired__detect====FIXME!!!")
 class Test__Paired:
-    Victim: Type[SerialClient_FirstFree_Paired]
+    Victim: type[SerialClient_FirstFree_Paired]
     victim: SerialClient_FirstFree_Paired
 
     SETUP_CLS__CONNECT: bool = False

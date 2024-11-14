@@ -9,9 +9,9 @@ from base_aux.classes import Exx__AnnotNotDefined
 
 # =====================================================================================================================
 class Test__Csv:
-    VICTIM: Type[PrivateCsv] = type("Victim", (PrivateCsv,), {})
+    VICTIM: type[PrivateCsv] = type("Victim", (PrivateCsv,), {})
     VICTIM2_FILENAME: str = f"{PrivateCsv.FILENAME}2"
-    VICTIM2: Type[PrivateCsv] = type("VICTIM2", (PrivateCsv,), {"FILENAME": VICTIM2_FILENAME})
+    VICTIM2: type[PrivateCsv] = type("VICTIM2", (PrivateCsv,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
 
     TEXT1: str = f"""

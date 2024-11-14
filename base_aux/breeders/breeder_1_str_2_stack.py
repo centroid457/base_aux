@@ -84,7 +84,7 @@ class BreederStrStack(AnnotAux):
         result = {}
 
         # ATTRS ------------------
-        attrs: List[str] = []
+        attrs: list[str] = []
         for attr in self.annot__get_nested__dict_values():
             if not attr.startswith("_") and not callable(getattr(self, attr)):
                 attrs.append(attr)

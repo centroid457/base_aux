@@ -161,7 +161,7 @@ class Client_RequestItem(Logger, UrlCreator, QThread):
 # =====================================================================================================================
 class Client_RequestsStack(Logger, QThread):
     # SETTINGS -------------------------------------
-    REQUEST_CLS: Type[Client_RequestItem] = Client_RequestItem
+    REQUEST_CLS: type[Client_RequestItem] = Client_RequestItem
 
     # AUX ------------------------------------------
     __stack: deque

@@ -12,7 +12,7 @@ JUST_LOAD = "JUST_LOAD"
 
 @pytest.mark.skipif(not SerialClient.addresses_shorted__count(), reason="NO addresses_shorted__detect")
 class Test__ShortedBase:
-    Victim: Type[SerialClient_FirstFree_Shorted]
+    Victim: type[SerialClient_FirstFree_Shorted]
     victim: SerialClient_FirstFree_Shorted
 
     SETUP_CLS__CONNECT: bool = False

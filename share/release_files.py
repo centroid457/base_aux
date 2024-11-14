@@ -32,13 +32,13 @@ class Exx_HistorySameVersionOrNews(Exception):
 class ReleaseFileBase:
     # ------------------------------------------------
     FILE_NAME: str = "FILE.md"
-    PROJECT: Type['PROJECT'] = None
+    PROJECT: type['PROJECT'] = None
 
     # ------------------------------------------------
     LINE_SEPARATOR_MAIN: str = "*" * 80
     LINE_SEPARATOR_PART: str = "-" * 30
 
-    def __init__(self, project: Type['PROJECT']):
+    def __init__(self, project: type['PROJECT']):
         self.PROJECT = project
 
     @property
@@ -49,7 +49,7 @@ class ReleaseFileBase:
     def _file_clear(self) -> None:
         self.filepath.write_text("")
 
-    def _file_append_lines(self, lines: Optional[Union[str, List[str]]] = None) -> None:
+    def _file_append_lines(self, lines: Optional[Union[str, list[str]]] = None) -> None:
         # LINES ---------------------------------
         if not lines:
             lines = ""
@@ -62,8 +62,8 @@ class ReleaseFileBase:
                 fo_append.write(f"{lines}\n")
 
     # LINES ===========================================================================================================
-    def _lines_create__group(self, lines: List[str], title: Optional[str] = None, nums: bool = True) -> List[str]:
-        group: List[str] = []
+    def _lines_create__group(self, lines: list[str], title: Optional[str] = None, nums: bool = True) -> list[str]:
+        group: list[str] = []
 
         if title:
             group.append(title.upper())
@@ -190,7 +190,7 @@ class ReleaseReadme(ReleaseFileBase):
         """
         NOTE: don't skip none-python files! it could be as part of examples! just name it in appropriate way!
         """
-        LINES_EXAMPLES_START: List[str] = [
+        LINES_EXAMPLES_START: list[str] = [
             f"",
             f"",
             self.LINE_SEPARATOR_MAIN,
@@ -278,8 +278,8 @@ class ReleaseHistory(ReleaseFileBase):
         return True
 
     # WORK ============================================================================================================
-    def lines_create__news(self) -> List[str]:
-        group: List[str] = [
+    def lines_create__news(self) -> list[str]:
+        group: list[str] = [
             f"## NEWS",
             "",
             f"{self.PROJECT.VERSION_STR} ({time.strftime('%Y/%m/%d %H:%M:%S')})",
@@ -321,7 +321,7 @@ class ReleaseHistory(ReleaseFileBase):
 
 
 # =====================================================================================================================
-def release_files__update(project: Type['PROJECT']):
+def release_files__update(project: type['PROJECT']):
     CliUser().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
     ReleaseReadme(project).generate()
     ReleaseHistory(project).generate()

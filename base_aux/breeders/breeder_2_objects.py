@@ -42,8 +42,8 @@ class BreederObjectList:
     COUNT: int = 1
 
     # usage EXAMPLES ------------------------------------------------------
-    # CLS_LIST__DUT: Type[DutBase] = DutBase
-    # LIST__DUT: List[DutBase]
+    # CLS_LIST__DUT: type[DutBase] = DutBase
+    # LIST__DUT: list[DutBase]
     # DUT: DutBase
 
     # CLS_SINGLE__ATC: Callable[..., DeviceBase]
@@ -57,7 +57,7 @@ class BreederObjectList:
     # access ----------
     _STARTSWITH__ACCESS__OBJECT_LIST__IN_BREEDER: str = "LIST__"
     _STARTSWITH__ACCESS__OBJECT_LIST__IN_SOURCE: str = "INSTS"
-    _STARTSWITH__ACCESS__BREEDER_IN__SOURCE: str = "BREEDER"    # SINGLE:Type[Breeder] // LIST:Breeder
+    _STARTSWITH__ACCESS__BREEDER_IN__SOURCE: str = "BREEDER"    # SINGLE:type[Breeder] // LIST:Breeder
 
     # AUX --------
     __groups__are_generated: bool = False

@@ -10,9 +10,9 @@ from base_aux.classes import Exx__AnnotNotDefined
 
 # =====================================================================================================================
 class Test__Json:
-    VICTIM: Type[PrivateJson] = type("Victim", (PrivateJson,), {})
+    VICTIM: type[PrivateJson] = type("Victim", (PrivateJson,), {})
     VICTIM2_FILENAME: str = f"{PrivateJson.FILENAME}2"
-    VICTIM2: Type[PrivateJson] = type("VICTIM2", (PrivateJson,), {"FILENAME": VICTIM2_FILENAME})
+    VICTIM2: type[PrivateJson] = type("VICTIM2", (PrivateJson,), {"FILENAME": VICTIM2_FILENAME})
     DIRPATH: pathlib.Path = pathlib.Path(TemporaryDirectory().name)
 
     TEXT1: str = """
@@ -207,17 +207,17 @@ class Test__Json:
         assert victim.name1 == "value1"
         victim.apply_dict({"hello": 11})
 
-        assert dict(victim.dict) == {"hello": 11}
+        assert dict(victim.DICT) == {"hello": 11}
         assert victim.hello == 11
 
         victim.preupdate_dict({"hello1": 2222, "hello": 2222})
-        assert dict(victim.dict) == {"hello1": 2222, "hello": 11}
+        assert dict(victim.DICT) == {"hello1": 2222, "hello": 11}
         assert victim.hello == 11
         assert victim.hello1 == 2222
 
     def test__dict_in_init(self):
         victim = self.VICTIM(_dict={"hello": 11})
-        assert dict(victim.dict) == {"hello": 11}
+        assert dict(victim.DICT) == {"hello": 11}
         try:
             assert victim.name1 == "value1"
         except AttributeError:

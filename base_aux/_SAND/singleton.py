@@ -112,7 +112,7 @@ class _DictDotAttrAccess2_Singleton(_Singleton):    # starichenko
     2. dotted attribute access! (only for first level)
     3. work with json file (can autosave dict)
 
-    4. safe for input source Dict!!! no inline changes!
+    4. safe for input source dict!!! no inline changes!
 
     ------------------------------------
     USAGE

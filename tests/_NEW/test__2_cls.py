@@ -7,7 +7,7 @@ from base_aux.funcs import *
 
 # =====================================================================================================================
 class Test__New:
-    # Victim: Type[NEW_CLASS____]
+    # Victim: type[NEW_CLASS____]
     # victim: NEW_CLASS____
 
     @classmethod

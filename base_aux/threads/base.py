@@ -14,13 +14,13 @@ class ThreadItem(QThread):
     """Object for keeping thread data for better managing.
     """
     target: Callable
-    args: Tuple[Any, ...]
-    kwargs: Dict[str, Any]
+    args: tuple[Any, ...]
+    kwargs: dict[str, Any]
 
     result: Optional[Any] = None
     exx: Optional[Exception] = None
 
-    def __init__(self, target: Callable, args: Union[Tuple, Any, ] = None, kwargs=None, *_args, **_kwargs):
+    def __init__(self, target: Callable, args: Union[tuple, Any, ] = None, kwargs=None, *_args, **_kwargs):
         super().__init__(*_args, **_kwargs)
 
         if args and not isinstance(args, (tuple, list, )):
@@ -127,7 +127,7 @@ class ThreadsManager(SingletonByCallMeta):
     :param MUTEX: mutex for safe collecting threads in this manager, creates in init
     :param counter: counter for collected threads in this manager
     """
-    THREADS: List[ThreadItem]
+    THREADS: list[ThreadItem]
 
     _PARAM__NOTHREAD: str = "nothread"
 

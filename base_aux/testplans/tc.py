@@ -42,15 +42,15 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     skip_tc_dut: Optional[bool] = None
     ASYNC: Optional[bool] = True
     # STOP_IF_FALSE_RESULT: Optional[bool] = None     # NOT USED NOW! MAYBE NOT IMPORTANT!!!
-    SETTINGS_FILES: Union[None, pathlib.Path, List[pathlib.Path]] = None
+    SETTINGS_FILES: Union[None, pathlib.Path, list[pathlib.Path]] = None
 
-    DEVICES__BREEDER_CLS: Type['DevicesBreeder'] = None
+    DEVICES__BREEDER_CLS: type['DevicesBreeder'] = None
 
     # AUXILIARY -----------------------------------
     IsRunning__Cls: bool | None = None
 
     signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
-    _INSTS_DICT_CLS: dict[Type[Any], dict[Any, Any]]
+    _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
 
     result__startup_cls: TYPE__RESULT_BASE = None
     result__teardown_cls: TYPE__RESULT_BASE = None
@@ -74,7 +74,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # =================================================================================================================
     @classmethod
-    def devices__apply(cls, devices_cls: Type['DevicesBreeder'] = None) -> None:
+    def devices__apply(cls, devices_cls: type['DevicesBreeder'] = None) -> None:
         if devices_cls is not None:
             cls.DEVICES__BREEDER_CLS = devices_cls
             cls.TCS__LIST.clear()
@@ -152,7 +152,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # =================================================================================================================
     @classmethod
-    def settings_read(cls, files: Union[None, pathlib.Path, List[pathlib.Path]] = None) -> dict:
+    def settings_read(cls, files: Union[None, pathlib.Path, list[pathlib.Path]] = None) -> dict:
         result = {}
 
         _settings_files = files or cls.SETTINGS_FILES
@@ -215,14 +215,14 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     #     # cls.signals.signal__tc_state_changed.emit(cls)
 
     # DETAILS ---------------------------------------------------------------------------------------------------------
-    def details_update(self, details: Dict[str, Any]) -> None:
+    def details_update(self, details: dict[str, Any]) -> None:
         self.LOGGER.debug("")
         self.details.update(details)
         # self.signals.signal__tc_state_changed.emit(self)
 
     # =================================================================================================================
     @classmethod
-    def run__cls(cls, cls_prev: Type[Self] | None = None, single: bool | None = None) -> None | bool:
+    def run__cls(cls, cls_prev: type[Self] | None = None, single: bool | None = None) -> None | bool:
         """run TC on batch duts(??? may be INDEXES???)
         prefered using in thread on upper level!
 
@@ -523,7 +523,7 @@ class _Info(_TestCaseBase):
         return result
 
     @classmethod
-    def results__get_all(cls) -> list[Dict[str, Any]]:
+    def results__get_all(cls) -> list[dict[str, Any]]:
         results = []
         for tc_inst in cls.TCS__LIST:
             results.append(tc_inst.get__results())

@@ -8,7 +8,7 @@ from base_aux.objects import *
 
 # =====================================================================================================================
 # class Test__888888888888:
-#     Victim: Type[NEW_CLASS____]
+#     Victim: type[NEW_CLASS____]
 #     victim: NEW_CLASS____
 #
 #     @classmethod

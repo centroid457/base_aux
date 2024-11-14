@@ -80,7 +80,7 @@ class Bitfield:
         return bin(self.int()).count('1')
 
     # LISTS ---------------------------------------------------------------------------
-    def list_bits(self) -> List[int]:
+    def list_bits(self) -> list[int]:
         """in NOhuman order
         """
         result = []
@@ -89,7 +89,7 @@ class Bitfield:
         result.reverse()
         return result
 
-    def list_activated_indexes(self) -> List[int]:
+    def list_activated_indexes(self) -> list[int]:
         """Return activated flag indexes in field!
         in human order (but order is not important!)
 
@@ -101,7 +101,7 @@ class Bitfield:
                 result.append(index)
         return result
 
-    def list_activated_values(self) -> List[int]:
+    def list_activated_values(self) -> list[int]:
         """Return activated flag indexes in field!
         in human order (but order is not important!)
 

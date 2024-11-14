@@ -39,7 +39,7 @@ class SerialServer_Base(Logger, QThread):
     # TODO: not realised list access - best way to use pattern "name/index" and change same access with dict "name/key"
 
     # SETTINGS ------------------------------------------------
-    _SERIAL_CLIENT__CLS: Type[SerialClient] = SerialClient  # usually not redefines!
+    _SERIAL_CLIENT__CLS: type[SerialClient] = SerialClient  # usually not redefines!
     SERIAL_CLIENT: SerialClient
     ADDRESS: str = None     # DON'T DEPRECATE! usually use only as exact port or keep NONE!
 
@@ -50,7 +50,7 @@ class SerialServer_Base(Logger, QThread):
     ]
 
     PARAMS: dict[str, Union[Any, dict[Union[str, int], Any]]] = None
-    ANSWER: Type[AnswerVariants] = AnswerVariants
+    ANSWER: type[AnswerVariants] = AnswerVariants
 
     # AUX -----------------------------------------------------
     _STARTSWITH__CMD: str = "cmd__"

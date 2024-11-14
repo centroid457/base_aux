@@ -19,7 +19,7 @@ class AnnotRequired(AnnotAux):
 
     # TODO: deside is it really need NamedTuple and dataclasses??? seems its not need!!! - NEED!!! realise later!!!
 
-    # def annots_get_set(self, obj: Optional[Any] = None) -> Set[str]:
+    # def annots_get_set(self, obj: Optional[Any] = None) -> set[str]:
     #     """get undefined annotated attributes in class (not instance!)
     #     """
     #     annots = set()
@@ -37,7 +37,7 @@ class AnnotRequired(AnnotAux):
     #     # print(annots)
     #     return annots
     #
-    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[Dict[str, Any], NoReturn]:
+    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[dict[str, Any], NoReturn]:
     #     """get dict of undefined annotated attributes in class but defined in instance!
     #     """
     #     annots = dict()

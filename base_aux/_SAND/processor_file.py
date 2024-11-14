@@ -7,20 +7,21 @@
 # STARICHENKO UNIVERSAL IMPORT
 import sys
 sys.path.append("..")  # Adds higher directory to python modules path.
-import CONSTANTS
 
 import time
 import pathlib
-import typing as tp
+from typing import *
 
 import utilities.func_universal as UFU
-from gui.pyqt_import_all_by_star import *
+
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 # from users.user_profile import UserProfile_Singleton
 # from stands.stand import Stand_Singleton
 # from results.results_testplan import TestplanResults_Singleton
 # =====================================================================================================================
-
 import datetime
 import shutil
 
@@ -40,25 +41,25 @@ class ProcessorFileSelector:     # starichenko
     """
     FILEPATH_BACKUP: bool = None     # used right before dump
 
-    FILEPATH_DEFAULT: tp.Optional[pathlib.Path] = None  # REDEFINE!
-    __filepath: tp.Optional[pathlib.Path] = None
+    FILEPATH_DEFAULT: Optional[pathlib.Path] = None  # REDEFINE!
+    __filepath: Optional[pathlib.Path] = None
 
-    DIRPATH_DEFAULT: tp.Optional[pathlib.Path] = None  # REDEFINE! BUT IMPORTANT! use it only for perpose if you need to find filepath in exact dirpath
+    DIRPATH_DEFAULT: Optional[pathlib.Path] = None  # REDEFINE! BUT IMPORTANT! use it only for perpose if you need to find filepath in exact dirpath
 
     # FILEPATH ========================================================================================================
     @property
-    def filepath(self) -> tp.Optional[pathlib.Path]:
+    def filepath(self) -> Optional[pathlib.Path]:
         return self.__filepath or self.FILEPATH_DEFAULT
 
-    def filepath_check_exists(self, filepath: tp.Optional[pathlib.Path] = None) -> tp.Optional[bool]:
+    def filepath_check_exists(self, filepath: Optional[pathlib.Path] = None) -> Optional[bool]:
         filepath = self.filepath_get_active(filepath)
         if filepath:
             return filepath.exists()
 
     def filepath_get_active(
             self,
-            filepath: tp.Union[None, str, pathlib.Path] = None,
-    ) -> tp.Optional[pathlib.Path]:
+            filepath: Union[None, str, pathlib.Path] = None,
+    ) -> Optional[pathlib.Path]:
         """
         used always get final pathlib (from instanse or specified param)
         """
@@ -69,18 +70,18 @@ class ProcessorFileSelector:     # starichenko
 
         if filepath is None:
             msg = f"blank {filepath=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
         return filepath
 
     def filepath_get_by_name(
             self,
             name: str,
-            dirpath: tp.Union[None, str, pathlib.Path] = None,
+            dirpath: Union[None, str, pathlib.Path] = None,
             only_if_existed: bool = False
-    ) -> tp.Optional[pathlib.Path]:  # never add wildcard or short name WoExt!!!
+    ) -> Optional[pathlib.Path]:  # never add wildcard or short name WoExt!!!
         if not name:
             msg = f"no {name=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         dirpath = self.dirpath_get_active(dirpath)
@@ -91,18 +92,18 @@ class ProcessorFileSelector:     # starichenko
     def filepath_clear(self) -> None:
         self.__filepath = self.FILEPATH_DEFAULT
 
-    def filepath_set(self, filepath: tp.Union[str, pathlib.Path], only_if_existed: bool = False) -> tp.Optional[bool]:
+    def filepath_set(self, filepath: Union[str, pathlib.Path], only_if_existed: bool = False) -> Optional[bool]:
         self.filepath_clear()
         if not filepath:
             msg = f"blank {filepath=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         filepath = pathlib.Path(filepath)
 
         if only_if_existed and not filepath.exists():
             msg = f"file not exists {self.filepath=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         self.__filepath = filepath
@@ -111,9 +112,9 @@ class ProcessorFileSelector:     # starichenko
     def filepath_set_by_name(
             self,
             name: str,
-            dirpath: tp.Union[None, str, pathlib.Path] = None,
+            dirpath: Union[None, str, pathlib.Path] = None,
             only_if_existed: bool = False
-    ) -> tp.Optional[bool]:    # never add wildcard or short name WoExt!!!
+    ) -> Optional[bool]:    # never add wildcard or short name WoExt!!!
         filepath = self.filepath_get_by_name(name=name, dirpath=dirpath, only_if_existed=only_if_existed)
         if filepath:
             return self.filepath_set(filepath=filepath, only_if_existed=only_if_existed)
@@ -121,18 +122,18 @@ class ProcessorFileSelector:     # starichenko
     # BACKUPS ---------------------------------------------------------------------------------------------------------
     def filepath_get_with_new_stem(
             self,
-            filepath: tp.Union[None, str, pathlib.Path] = None,
-            start_suffix: tp.Optional[str] = None,
-            preend_suffix: tp.Optional[str] = None,
-            end_suffix: tp.Optional[str] = None
-    ) -> tp.Optional[pathlib.Path]:
+            filepath: Union[None, str, pathlib.Path] = None,
+            start_suffix: Optional[str] = None,
+            preend_suffix: Optional[str] = None,
+            end_suffix: Optional[str] = None
+    ) -> Optional[pathlib.Path]:
         """
         for backup actually!
         """
         filepath = self.filepath_get_active(filepath)
         if not filepath:
             msg = f"not exists {filepath=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         start_suffix = start_suffix or ""
@@ -144,10 +145,10 @@ class ProcessorFileSelector:     # starichenko
 
     def filepath_backup_make(
             self,
-            filepath: tp.Union[None, str, pathlib.Path] = None,
-            dirpath: tp.Union[None, str, pathlib.Path] = None,
-            backup: tp.Optional[bool] = None,
-    ) -> tp.Optional[bool]:
+            filepath: Union[None, str, pathlib.Path] = None,
+            dirpath: Union[None, str, pathlib.Path] = None,
+            backup: Optional[bool] = None,
+    ) -> Optional[bool]:
         # DECIDE --------------------------------
         backup = backup if backup is not None else self.FILEPATH_BACKUP
         if not backup:
@@ -157,7 +158,7 @@ class ProcessorFileSelector:     # starichenko
         source = self.filepath_get_active(filepath)
         if not source.exists():
             msg = f"not exists {source=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         # DESTINATION --------------------------------
@@ -177,17 +178,17 @@ class ProcessorFileSelector:     # starichenko
         except:
             pass
 
-    def file_backups_get_wildmask(self, filepath: tp.Union[None, str, pathlib.Path] = None) -> str:
+    def file_backups_get_wildmask(self, filepath: Union[None, str, pathlib.Path] = None) -> str:
         filepath = self.filepath_get_active(filepath)
         wmask = f"*{filepath.stem}*{filepath.suffix}"
         return wmask
 
     def filepath_backups_get(
             self,
-            filepath: tp.Optional[pathlib.Path] = None,
-            dirpath: tp.Optional[pathlib.Path] = None,
+            filepath: Optional[pathlib.Path] = None,
+            dirpath: Optional[pathlib.Path] = None,
             nested: bool = True
-    ) -> tp.List[pathlib.Path]:
+    ) -> list[pathlib.Path]:
         """
         find all backup files nearby
         """
@@ -201,7 +202,7 @@ class ProcessorFileSelector:     # starichenko
 
         return result
 
-    def file_backups_delete__except_last_count(self, count: int = 15, filepath: tp.Optional[pathlib.Path] = None, dirpath: tp.Optional[pathlib.Path] = None) -> None:
+    def file_backups_delete__except_last_count(self, count: int = 15, filepath: Optional[pathlib.Path] = None, dirpath: Optional[pathlib.Path] = None) -> None:
         """
         delete old backups
         """
@@ -214,9 +215,9 @@ class ProcessorFileSelector:     # starichenko
 
     def file_backups_delete__older(
             self,
-            point: tp.Union[int, float, datetime.datetime],
-            filepath: tp.Optional[pathlib.Path] = None,
-            dirpath: tp.Optional[pathlib.Path] = None) -> None:
+            point: Union[int, float, datetime.datetime],
+            filepath: Optional[pathlib.Path] = None,
+            dirpath: Optional[pathlib.Path] = None) -> None:
         """
         delete old backups
         """
@@ -239,7 +240,7 @@ class ProcessorFileSelector:     # starichenko
 
         return self.DIRPATH_DEFAULT or pathlib.Path.cwd()   # TODO: maybe delete cwd!!!!
 
-    def dirpath_get_active(self, dirpath: tp.Union[None, str, pathlib.Path] = None) -> pathlib.Path:
+    def dirpath_get_active(self, dirpath: Union[None, str, pathlib.Path] = None) -> pathlib.Path:
         """
         UNDER QUESTION!
             Дефолт дирпас - актуален только если вы не знаете какой будет файл но заранее известно в какой папке!
@@ -253,7 +254,7 @@ class ProcessorFileSelector:     # starichenko
         # INPUTED -------------------------------
         return pathlib.Path(dirpath)
 
-    def dirpath_ensure(self, dirpath: tp.Union[None, str, pathlib.Path] = None) -> bool:
+    def dirpath_ensure(self, dirpath: Union[None, str, pathlib.Path] = None) -> bool:
         dirpath = self.dirpath_get_active(dirpath=dirpath)
 
         try:
@@ -265,17 +266,17 @@ class ProcessorFileSelector:     # starichenko
             return True
         else:
             msg = f"CANT create {dirpath=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
     # FIND ------------------------------------------------------------------------------------------------------------
     def __find_in_dirpath(
             self,
             type_0files_1dirs: int,
-            dirpath: tp.Union[str, pathlib.Path] = None,
+            dirpath: Union[str, pathlib.Path] = None,
             return_0obj_1name: int = 0,               # TRY NOT TO USE STEMS!!!!
-            wmask: tp.Union[None, str, list] = None,
+            wmask: Union[None, str, list] = None,
             nested: bool = False,
-    ) -> tp.List[tp.Union[str, pathlib.Path]]:
+    ) -> list[Union[str, pathlib.Path]]:
         """
         list all variants. Repeated items not shown! order is preserved!
         """
@@ -296,7 +297,7 @@ class ProcessorFileSelector:     # starichenko
         if return_0obj_1name == 1:
             result = [path_obj.name for path_obj in result]
 
-        UFU.logging_and_print_debug(f"{result=}")
+        print(f"{result=}")
         return result
 
     def files_find_in_dirpath(self, **kwargs):
@@ -308,7 +309,7 @@ class ProcessorFileSelector:     # starichenko
     # DELETE ----------------------------------------------------------------------------------------------------------
     def files_find_and_delete_older(
             self,
-            point: tp.Union[None, int, float, datetime.datetime] = None,
+            point: Union[None, int, float, datetime.datetime] = None,
             **kwargs
     ) -> None:
         files = self.files_find_in_dirpath(**kwargs)
@@ -316,8 +317,8 @@ class ProcessorFileSelector:     # starichenko
 
     def files_delete_older(
             self,
-            files: tp.List[tp.Union[str, pathlib.Path]],
-            point: tp.Union[None, int, float, datetime.datetime] = None
+            files: list[Union[str, pathlib.Path]],
+            point: Union[None, int, float, datetime.datetime] = None
     ) -> None:
         # INPUT
         if isinstance(point, (datetime.datetime)):
@@ -336,7 +337,7 @@ class ProcessorFileSelector:     # starichenko
     # TODO: NOT WORKING!!!!! FINISH!!!! cant delete by access reason!!!
     def dirs_delete_if_blank(
             self,
-            dirpath: tp.Union[str, pathlib.Path],
+            dirpath: Union[str, pathlib.Path],
             nested: bool = False
     ):
         dirs = self.dirs_find_in_dirpath(dirpath=dirpath, nested=nested)
@@ -348,24 +349,24 @@ class ProcessorFileSelector:     # starichenko
 
     # READ/WRITE ======================================================================================================
     # READ ---------------------------------
-    def filepath_read_text(self, filepath=None) -> tp.Optional[str]:
+    def filepath_read_text(self, filepath=None) -> Optional[str]:
         filepath = self.filepath_get_active(filepath)
         if filepath.exists() and filepath.is_file():
             return filepath.read_text(encoding="utf-8")
 
-    def filepath_read_bytes(self, filepath=None) -> tp.Optional[bytes]:
+    def filepath_read_bytes(self, filepath=None) -> Optional[bytes]:
         filepath = self.filepath_get_active(filepath)
         if filepath.exists() and filepath.is_file():
             return filepath.read_bytes()
 
     # WRITE ---------------------------------
-    def filepath_write_text(self, text: str, filepath=None) -> tp.Optional[int]:
+    def filepath_write_text(self, text: str, filepath=None) -> Optional[int]:
         filepath = self.filepath_get_active(filepath)
         if filepath:
             self.dirpath_ensure(self.filepath.parent)
             return filepath.write_text(data=text, encoding="utf-8")
 
-    def filepath_write_bytes(self, data: bytes, filepath=None) -> tp.Optional[int]:
+    def filepath_write_bytes(self, data: bytes, filepath=None) -> Optional[int]:
         filepath = self.filepath_get_active(filepath)
         if filepath:
             self.dirpath_ensure(self.filepath.parent)

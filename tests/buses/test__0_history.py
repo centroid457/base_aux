@@ -6,7 +6,7 @@ from base_aux.funcs import *
 
 # =====================================================================================================================
 class Test__HistoryIO:
-    VICTIM: Type[HistoryIO] = type("Victim", (HistoryIO,), {})
+    VICTIM: type[HistoryIO] = type("Victim", (HistoryIO,), {})
 
     @classmethod
     def setup_class(cls):

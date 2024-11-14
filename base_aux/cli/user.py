@@ -99,7 +99,7 @@ class CliUser:
     TIMEOUT: Optional[float] = 2
     RAISE: Optional[bool] = None
 
-    CMDS_REQUIRED: Optional[Dict[str, Optional[str]]] = None
+    CMDS_REQUIRED: Optional[dict[str, Optional[str]]] = None
 
     _buffer_indent: str = "\t|"
 

@@ -22,7 +22,7 @@ class ValueNotExist:
     USAGE
     -----
     class Cls:
-        def __init__(self, value: Any | Type[ValueNotExist] | ValueNotExist = ValueNotExist):
+        def __init__(self, value: Any | type[ValueNotExist] | ValueNotExist = ValueNotExist):
             self.value = value
 
         def __eq__(self, other):
@@ -47,14 +47,14 @@ class ValueNotExist:
 
 
 # =====================================================================================================================
-TYPE__VALUE_NOT_PASSED = Type[ValueNotExist] | ValueNotExist
+TYPE__VALUE_NOT_PASSED = type[ValueNotExist] | ValueNotExist
 
 # ---------------------------------------------------------------------------------------------------------------------
 # SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
 TYPE__VALID_ARGS = Union[tuple, Any, None, "TYPE__ARGS_EMPTY", "TYPE__EXPLICIT"]
 TYPE__VALID_KWARGS = Optional[dict[str, Any]]
 
-TYPE__VALID_EXCEPTION = Union[Exception, Type[Exception]]
+TYPE__VALID_EXCEPTION = Union[Exception, type[Exception]]
 TYPE__VALID_callable_item = Callable[[...], Any | NoReturn]
 TYPE__VALID_SOURCE = Union[
     Any,                                # as main idea! as already final generic

@@ -6,21 +6,23 @@
 # STARICHENKO UNIVERSAL IMPORT
 import sys
 sys.path.append("..")  # Adds higher directory to python modules path.
-import CONSTANTS
 
 import time
+from typing import *
 import pathlib
-import typing as tp
 
-import utilities.func_universal as UFU
-from gui.pyqt_import_all_by_star import *
+
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 # from users.user_profile import UserProfile_Singleton
 # from stands.stand import Stand_Singleton
 # from results.results_testplan import TestplanResults_Singleton
 # =====================================================================================================================
 
-from utilities.processor_file import ProcessorFileSelector
+
+from .processor_file import ProcessorFileSelector
 import os
 import _io
 import pytest
@@ -37,11 +39,11 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             xml_data = xml_data or self.xml_element     # WRONG!!!
             xml_data = xml_data if xml_data is not None else self.xml_element     # CORRECT!!!
     """
-    __xml_element: tp.Optional[ET.Element] = None
+    __xml_element: Optional[ET.Element] = None
 
     # ELEMENT =========================================================================================================
     @property
-    def xml_element(self) -> tp.Optional[ET.Element]:
+    def xml_element(self) -> Optional[ET.Element]:
         return self.__xml_element
 
     def xml_element__check_empty(self) -> bool:
@@ -50,7 +52,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
     def xml_element__check_not_empty(self) -> bool:
         return self.xml_element is not None
 
-    def xml_element__get_active(self, xml_data: tp.Any = None) -> tp.Optional[ET.Element]:
+    def xml_element__get_active(self, xml_data: Any = None) -> Optional[ET.Element]:
         if xml_data is None:
             result = self.xml_element
         else:
@@ -58,7 +60,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
 
         if result is None:
             msg = f"NO DATA {self.xml_element=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
         return result
 
     def xml_element__set(self, xml_data) -> bool:
@@ -67,13 +69,13 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             return True
         else:
             msg = f"incorrect input {xml_data=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
-    def _xml_element__get_from_any(self, xml_data) -> tp.Optional[ET.Element]:
+    def _xml_element__get_from_any(self, xml_data) -> Optional[ET.Element]:
         # PRECHECK -------------------------------------------------
         if xml_data is None:
             msg = f"NO INPUT {xml_data=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         # WORK -------------------------------------------------
@@ -86,7 +88,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
         elif isinstance(xml_data, _io.TextIOWrapper):  # FILE_openObj
             encoding = xml_data.encoding
             if encoding.lower() not in ["utf-8", "utf8"]:
-                UFU.logging_and_print_warning(f"file object have incorrect [{encoding=}] may be ERRORS")
+                print(f"file object have incorrect [{encoding=}] may be ERRORS")
 
             element_obj = self.xml_element__read(xml_data)
         elif isinstance(xml_data, str):  # STR
@@ -97,7 +99,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
                     element_obj = ET.fromstring(xml_data)  # str=STR
                 except:
                     msg = f"inputData have no valid XML info!!! {type(xml_data)=}[{xml_data=}]"
-                    UFU.logging_and_print_warning(msg)
+                    print(msg)
 
         elif isinstance(xml_data, bytes):  # BYTES
             element_obj = ET.fromstring(xml_data)
@@ -105,13 +107,13 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
         # FINISH -------------------------------------------------
         if element_obj is None:
             msg = f"NO DATA cant create from {element_obj=}/{type(element_obj)}/{repr(element_obj)}///{xml_data=}/{type(xml_data)=}/{repr(xml_data)=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
         return element_obj
 
     # STRING ==========================================================================================================
     pass
 
-    def xml_element__check_no_decoding_errors(self, xml_data: tp.Any = None) -> bool:
+    def xml_element__check_no_decoding_errors(self, xml_data: Any = None) -> bool:
         """ can be only in bytes!
         """
         xml_bytes = self.xml_bytes__get_from_any(xml_data)
@@ -120,19 +122,19 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             return True
         except Exception as exx:
             msg = f"XML have NONPRINTABLE INCORRECT data!!!\n{exx!r}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             msg = f"НЕОБХОДИМО САМОСТОЯТЕЛЬНО НАЙТИ НЕКОРРЕКТНЫЕ ДАННЫЕ И ИХ количество!!!"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
     # BYTES -----------------------------------------------------------------------------------------------------------
-    def xml_bytes__get_from_any(self, xml_data: tp.Any = None) -> tp.Union[None, bytes]:
+    def xml_bytes__get_from_any(self, xml_data: Any = None) -> Union[None, bytes]:
         xml_element = self.xml_element__get_active(xml_data)
         if xml_element is None:
             return
         return ET.tostring(xml_element, encoding="utf-8", xml_declaration=True)
 
     # STR -------------------------------------------------------------------------------------------------------------
-    def xml_string__get_from_any(self, xml_data: tp.Any = None) -> tp.Union[None, str]:
+    def xml_string__get_from_any(self, xml_data: Any = None) -> Union[None, str]:
         xml_bytes = self.xml_bytes__get_from_any(xml_data)
         if xml_bytes is None:
             return
@@ -141,14 +143,14 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             xml_string = xml_bytes.decode(encoding="utf-8")
         except:
             msg = f"XML have NONPRINTABLE data!!!"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
             xml_string = xml_bytes.decode(encoding="utf-8", errors="ignore")
 
         return xml_string
 
     # PRETTY ----------------------------------------------------------------------------------------------------------
-    def xml_string_pretty__get_from_any(self, xml_data: tp.Any = None) -> tp.Union[None, str]:
+    def xml_string_pretty__get_from_any(self, xml_data: Any = None) -> Union[None, str]:
         xml_string = self.xml_string__get_from_any(xml_data)
         if xml_string is None:
             return
@@ -162,24 +164,24 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
 
         except:
             msg = f"NONPRINTABLE BYTES in XML [{xml_string=}]"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
         return xml_string
 
     # LOAD/DUMP =======================================================================================================
-    def xml_element__read(self, filepath=None) -> tp.Optional[ET.Element]:
+    def xml_element__read(self, filepath=None) -> Optional[ET.Element]:
         filepath = self.filepath_get_active(filepath)
         if filepath:
             tree_obj = ET.ElementTree(file=filepath)        # WORK WITH FileOpenObject and FileNAME!!!
             element_obj = tree_obj.getroot()
             return element_obj
 
-    def xml_element__load(self, filepath=None) -> tp.Optional[bool]:
+    def xml_element__load(self, filepath=None) -> Optional[bool]:
         element_obj = self.xml_element__read(filepath)
         if element_obj is not None:
             return self.xml_element__set(element_obj)
 
-    def xml_element__dump(self, xml_data=None, filepath=None) -> tp.Optional[bool]:
+    def xml_element__dump(self, xml_data=None, filepath=None) -> Optional[bool]:
         filepath = self.filepath_get_active(filepath)
         if not filepath:
             return
@@ -263,7 +265,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             else:
                 result.pop(key)
                 msg = f"conflict {key=}/{value=} already exists not equel [{result.get(key)}]"
-                UFU.logging_and_print_warning(msg)
+                print(msg)
 
         return result
 
@@ -371,7 +373,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             else:
                 result = xml_element.find(xpath)
 
-        UFU.logging_and_print_debug_or_warning(f"[{xpath=}/{result=}]", result=result is not None)
+        print(f"[{xpath=}/{result=}]", result=result is not None)
         return result
 
 

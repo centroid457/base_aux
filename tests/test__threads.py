@@ -27,7 +27,7 @@ class Test__ThreadItem:
 
 # =====================================================================================================================
 class Test__Manager:
-    # VICTIM: Type[ThreadsManager] = type("VICTIM", (ThreadsManager,), {})
+    # VICTIM: type[ThreadsManager] = type("VICTIM", (ThreadsManager,), {})
 
     def test__singleton(self):
         class ThreadManager1(ThreadsManager):

@@ -59,7 +59,7 @@ class ServerAiohttpBase(QThread):
     _ROUTE_FUNC_START_PATTERN: str = "response_%s__"
     _ROUTE_NAME_PREFIX_HTML_FOR_JSON: str = "html__"
     _app: web.Application
-    _ROUTES: Dict[str, List[str]] = {
+    _ROUTES: dict[str, list[str]] = {
         "get_html": [],
         "get_json": [],
         "post": [],
@@ -161,7 +161,7 @@ class ServerAiohttpBase(QThread):
     # =================================================================================================================
     def html_create(
             self,
-            data: Union[None, str, Dict] = None,
+            data: Union[None, str, dict] = None,
             redirect_time: Optional[int] = None,
             redirect_source: Optional[str] = None,
             request: Any = None,

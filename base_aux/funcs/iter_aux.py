@@ -4,7 +4,7 @@ from base_aux.funcs.value_0_explicit import Explicit
 
 # =====================================================================================================================
 TYPE__ITERABLE_PATH_KEY = Union[str, int]
-TYPE__ITERABLE_PATH_ORIGINAL = List[TYPE__ITERABLE_PATH_KEY]
+TYPE__ITERABLE_PATH_ORIGINAL = list[TYPE__ITERABLE_PATH_KEY]
 TYPE__ITERABLE_PATH_EXPECTED = Union[TYPE__ITERABLE_PATH_KEY, TYPE__ITERABLE_PATH_ORIGINAL]
 TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]
 
@@ -16,7 +16,7 @@ class IterAux:
     """
     # AUX ---------------------
     DATA: TYPE__ITERABLE
-    PATH: List[TYPE__ITERABLE_PATH_KEY]
+    PATH: list[TYPE__ITERABLE_PATH_KEY]
 
     def __init__(self, data: Optional[TYPE__ITERABLE] = None):
         self.DATA = data or {}
@@ -63,7 +63,7 @@ class IterAux:
         :param path_expected:
         :return:
             None - if path is unreachable/incorrect
-            List[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
+            list[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
         """
         if data is None:
             data = self.DATA

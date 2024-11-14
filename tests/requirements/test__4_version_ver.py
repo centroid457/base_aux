@@ -7,7 +7,7 @@ from base_aux.funcs import *
 
 # =====================================================================================================================
 class Test__Version:
-    Victim: Type[Version]
+    Victim: type[Version]
     @classmethod
     def setup_class(cls):
         pass

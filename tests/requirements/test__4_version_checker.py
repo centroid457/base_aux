@@ -7,7 +7,7 @@ from base_aux.funcs import *
 
 # =====================================================================================================================
 class Test__ReqCheckVersion_Python:
-    Victim: Type[ReqCheckVersion_Python]
+    Victim: type[ReqCheckVersion_Python]
     @classmethod
     def setup_class(cls):
         pass

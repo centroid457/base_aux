@@ -33,7 +33,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
     for exact working within internal data (keys, values) create exact special class!
 
     IMPORTANT:
-        1. class has name *JsonDict because json may work with List/tuple/int/float/... even in root level!
+        1. class has name *JsonDict because json may work with list/tuple/int/float/... even in root level!
         and we can certainly use it for dumping lists in this project in nearest future, i do!
         so in this class base data will always DICT! and always at least blank dict!
 

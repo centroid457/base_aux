@@ -47,9 +47,9 @@ class SingletonManagerBase:
 
     Bytheway, you can directly access to all this collections from any your singleton instance or even class! its basic!
     """
-    _SINGLETONS: List['SingletonManagerBase'] = []
-    _CLS_BLOCKED: Set[Any] = set()
-    _CLS_USED: Set[Any] = set()
+    _SINGLETONS: list['SingletonManagerBase'] = []
+    _CLS_BLOCKED: set[Any] = set()
+    _CLS_USED: set[Any] = set()
 
     _MUTEX_SINGLETON: Lock = Lock()  # keep this special name! dont use just MUTEX! (need uniq! in case of exists in source!)
     __INSTANCE: Any     # just to define usage!

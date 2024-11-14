@@ -97,7 +97,7 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
     _conn: Union[None, smtplib.SMTP_SSL, telebot.TeleBot] = None
     _result: Optional[bool] = None
 
-    _threads_active: Set['AlertBase'] = set()
+    _threads_active: set['AlertBase'] = set()
 
     # =================================================================================================================
     def __init__(self, body: Optional[Any] = None, _subj_name: Optional[str] = None, _subtype: Optional[str] = None):

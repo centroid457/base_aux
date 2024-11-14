@@ -96,10 +96,10 @@ class DevicesBreeder_WithDut(DevicesBreeder):
     READY TO USE WITH DUT
     """
     # DEFINITIONS ---------------
-    CLS_LIST__DUT: Type[DutBase] = DutBase
+    CLS_LIST__DUT: type[DutBase] = DutBase
 
     # JUST SHOW NAMES -----------
-    LIST__DUT: List[DutBase]
+    LIST__DUT: list[DutBase]
     DUT: DutBase
 
 
@@ -110,7 +110,7 @@ class DevicesBreeder_Example(DevicesBreeder_WithDut):
     """
     # DEFINITIONS ---------------
     COUNT: int = 2
-    CLS_SINGLE__ATC: Type[DeviceBase] = DeviceBase
+    CLS_SINGLE__ATC: type[DeviceBase] = DeviceBase
 
     # JUST SHOW NAMES -----------
     ATC: DeviceBase

@@ -63,11 +63,11 @@ class TpMultyDutBase(Logger, QThread):
     STAND_SN: Optional[str] = "StandSn"
 
     API_SERVER__START: bool = True
-    API_SERVER__CLS: Type[TpApi_FastApi] = TpApi_FastApi
+    API_SERVER__CLS: type[TpApi_FastApi] = TpApi_FastApi
     api_server: TpApi_FastApi
 
     GUI__START: bool = True
-    GUI__CLS: Type[TpGuiBase] = TpGuiBase
+    GUI__CLS: type[TpGuiBase] = TpGuiBase
 
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
@@ -77,32 +77,32 @@ class TpMultyDutBase(Logger, QThread):
     SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
     SETTINGS_BASE_FILEPATH: Path
 
-    DEVICES__BREEDER_CLS: Type[DevicesBreeder_WithDut] = DevicesBreeder_Example
+    DEVICES__BREEDER_CLS: type[DevicesBreeder_WithDut] = DevicesBreeder_Example
 
     # AUX -----------------------------------------------------------
-    TCS__CLS: Dict[Union[str, Type[TestCaseBase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
+    TCS__CLS: dict[Union[str, type[TestCaseBase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
     #     Tc2: True
     # }
 
-    # DEVICES__BREEDER_INST: List[Union[str, Type[DeviceBase]]]    # settings
+    # DEVICES__BREEDER_INST: list[Union[str, type[DeviceBase]]]    # settings
     # [
     #     Dev1,
     #     Dev2
     # ]
 
-    __tc_active: Optional[Type[TestCaseBase]] = None
-    tc_prev: Optional[Type[TestCaseBase]] = None
+    __tc_active: Optional[type[TestCaseBase]] = None
+    tc_prev: Optional[type[TestCaseBase]] = None
     progress: int = 0   # todo: use as property? by getting from TCS???
 
     # =================================================================================================================
     @property
-    def tc_active(self) -> Type[TestCaseBase] | None:
+    def tc_active(self) -> type[TestCaseBase] | None:
         return self.__tc_active
 
     @tc_active.setter
-    def tc_active(self, value: Type[TestCaseBase] | None) -> None:
+    def tc_active(self, value: type[TestCaseBase] | None) -> None:
         if self.__tc_active:
             self.tc_prev = self.__tc_active
         self.__tc_active = value
@@ -410,7 +410,7 @@ class TpInsideApi_Runner(TpApi_FastApi):
 
     UNFORTUNATELY: ITS NOT WORKING WAY for linux!!!
     """
-    TP_CLS: Type[TpMultyDutBase] = TpMultyDutBase
+    TP_CLS: type[TpMultyDutBase] = TpMultyDutBase
 
     def __init__(self, *args, **kwargs):
 
