@@ -1,3 +1,4 @@
+import time
 from typing import *
 import sys
 import pathlib
@@ -293,7 +294,15 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
 
     def SB_create(self) -> None:
         self.SB = self.statusBar()
+        self.SB.showMessage('Ready', 3000)
 
+        # lbl_1 = QLabel("lbl: 0")
+        # lbl_date = QLabel("Date: ...")
+        self.SB.addPermanentWidget(QLabel("..."))
+        # self.SB.addPermanentWidget(lbl_1)
+        # self.SB.addPermanentWidget(lbl_date)
+
+        # lbl_date.setText(f'Date: {time.time()}')
 
     # WGTS ============================================================================================================
     def BTN_create(self) -> None:
