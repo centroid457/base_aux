@@ -13,7 +13,7 @@ pass
 # =====================================================================================================================
 class Gui(QWidget):
     TITLE: str = "[GUI] Universal"
-    _QAPP: QApplication = QApplication([])
+    _QAPP: QApplication = QApplication([])      # maybe its not a good idea! at least use in init?
 
     def __init__(self):
         super().__init__()
