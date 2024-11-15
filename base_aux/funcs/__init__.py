@@ -19,7 +19,7 @@ from .static import (
     TYPE__VALID_RESULT_BOOL__EXX,
     TYPE__VALID_ARGS,
     TYPE__VALID_KWARGS,
-    TYPE__VALID_EXCEPTION,
+    TYPE__VALID_EXCEPTION, TYPES_ELEMENTARY_SINGLE, TYPES_ELEMENTARY_COLLECTION, TYPES_ELEMENTARY, TYPE__ELEMENTARY,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -73,15 +73,11 @@ from .iter_aux import (
     TYPE__ITERABLE,
     # EXX
 )
-from .strings import (
+from .text import (
     # BASE
-    Strings,
+    Text,
     # AUX
     # TYPES
-    TYPES_ELEMENTARY_SINGLE,
-    TYPES_ELEMENTARY_COLLECTION,
-    TYPES_ELEMENTARY,
-    TYPE_ELEMENTARY,
     # EXX
 )
 

@@ -544,8 +544,48 @@ self.last_exx_timeout=None
         self.cli.send(cmd, timeout=120)
 
     # =================================================================================================================
-    @classmethod
-    def parse_text(cls, text: AnyStr, patterns: list[AnyStr] | AnyStr) -> list[str]:
+    @staticmethod
+    def parse_lines__requirements(filepath: AnyStr | pathlib.Path) -> list[str]:
+        """
+        GOAL
+        ----
+        get req modules from requirements.txt
+        so just parse a req file
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        setup.py - get values for install_requires param!
+        """
+        return  # FIXME: finish!
+
+
+
+        filepath = pathlib.Path(filepath)
+        if not filepath.exists():
+            msg = f"[ERROR] file not found {filepath}"
+            print(msg)
+            return []
+
+        text = filepath.read_text(encoding="utf8")
+        print("-" * 20)
+        print(f"{filepath=}")
+        print(text)
+        print("-" * 20)
+
+        result = []
+        items = re.findall(r" #", text)
+        for modules_txt in items:
+            modules_txt = re.sub(r"\s*", "", modules_txt)
+            modules_list = modules_txt.split(",")
+            for module_new in modules_list:
+                module_path = module_new.split(".")
+                module_root = module_path[0]
+                if module_root not in result:
+                    result.append(module_root)
+        return result
+
+    @staticmethod
+    def parse_import_modules__txt(text: AnyStr, patterns: list[AnyStr] | AnyStr) -> list[str]:
         """
         GOAL
         ----
@@ -571,17 +611,18 @@ self.last_exx_timeout=None
         return result
 
     @classmethod
-    def parse_files(
+    def find_in_files(
             cls,
             patterns: list[AnyStr] | AnyStr,
             path: Union[str, pathlib.Path] | None = None,
-            print_empty: bool | None = None,
-            skip_paths: Union[str, list[str]] | None = None
+            print_empty_files: bool | None = None,
+            skip_paths: Union[str, list[str]] | None = None,
+            glob_mask: str = '**/*.py',
     ) -> list[str]:
         """
         GOAL
         ----
-
+        find values by patterns in files
         """
         if not TypeChecker.check__iterable_not_str(patterns):
             patterns = [patterns, ]
@@ -603,51 +644,50 @@ self.last_exx_timeout=None
             if skip_found:
                 return []
 
-        # DIRECTORY -------------------
+        # DIRECTORY ====================
         if path.is_dir():
             print("=" * 80)
-            print(f"[PARCE FILES]")
+            print(f"[PARSE FILES]")
             print(f"{path=}")
             print(f"patterns=")
             for pat in patterns:
                 print(f"\t[{pat}]")
             print("-" * 80)
 
-            result_dir = []
-            for file in path.glob('**/*.py'):
-                result_file = cls.parse_files(patterns=patterns, path=file, skip_paths=skip_paths)
-                for item in result_file:
-                    if item not in result_dir:
-                        result_dir.append(item)
+            result_for_dir = []
+            for file in path.glob(glob_mask):
+                result_for_file = cls.find_in_files(patterns=patterns, path=file, skip_paths=skip_paths)
+                for item in result_for_file:
+                    if item not in result_for_dir:
+                        result_for_dir.append(item)
 
             print("-" * 80)
             print(f"[SUMMARY MATCHES]:")
-            for item in  result_dir:
+            for item in  result_for_dir:
                 print(f"\t{item}")
             print("=" * 80)
-            return result_dir
+            return result_for_dir
 
-        # WORK =======================
-        # EXISTS----------------------
+        # SINGLE FILE ================
         if not path.exists():
             print(f"[not exists]{path=}")
+            return []   # or raise?
 
-        # FILE -------------------
         file_exx = None
-        result_file = []
+        result_for_file = []
         try:
             filetext = path.read_text(encoding="utf8")
-            result_file = cls.parse_text(text=filetext, patterns=patterns)
+            result_for_file = cls.parse_import_modules__txt(text=filetext, patterns=patterns)
         except Exception as exx:
             file_exx = exx
 
-        if (result_file or print_empty) or file_exx:
+        if (result_for_file or print_empty_files) or file_exx:
             print(f"{path}".ljust(80, "-"))
             if not file_exx:
-                print(f"\t{result_file}")
+                print(f"\t{result_for_file}")
             else:
                 print(f"\t{file_exx}")
-        return result_file
+        return result_for_file
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -658,7 +698,7 @@ self.last_exx_timeout=None
         get imported modules from text (python sourcecode)
         get only root names (no parts like pkg.module)
         """
-        return cls.parse_text(text, PATTERNS_IMPORT)
+        return cls.parse_import_modules__txt(text, PATTERNS_IMPORT)
 
     @classmethod
     def parse_files__import(
@@ -675,13 +715,13 @@ self.last_exx_timeout=None
 
         return one cumulated list
         """
-        return cls.parse_files(patterns=PATTERNS_IMPORT, path=path, print_empty=print_empty, skip_paths=skip_paths)
+        return cls.find_in_files(patterns=PATTERNS_IMPORT, path=path, print_empty_files=print_empty, skip_paths=skip_paths)
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
     # Packages.parse_files__import()
-    Packages.parse_files(r"Value_WithUnit", pathlib.Path.cwd().parent.parent, skip_paths=["venv", "t8", "build", ])
+    Packages.find_in_files(r"Value_WithUnit", pathlib.Path.cwd().parent.parent, skip_paths=["venv", "t8", "build", ])
 
 
 # =====================================================================================================================

@@ -9,7 +9,7 @@ from base_aux.objects import *
 class Test__1:
     @classmethod
     def setup_class(cls):
-        cls.victim = Strings().try_convert_to__elementary
+        cls.victim = Text().try_convert_to_object
         pass
 
     # @classmethod

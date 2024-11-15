@@ -54,8 +54,8 @@ setup(
   },
 
   packages=packages,
-  install_requires=[],
-  python_requires=">=3.6"
+  install_requires=[],  # FIXME: add!!!
+  python_requires=">=3.12"
 )
 
 
