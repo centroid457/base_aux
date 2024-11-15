@@ -182,10 +182,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 16)
+    VERSION: tuple[int, int, int] = (0, 0, 17)
     NEWS: list[str] = [
-        "[gui] add SB+MENU +switch to MainWindow +add mods from t8 +add About",
-        "[primitives] add SLEEP* +LambdaSleep",
+        "[tcs] apply last ver gui",
     ]
 
 
