@@ -40,10 +40,11 @@ def test__get_result(args, _EXPECTED):
 
 def test__get_result2():
     try:
-        ValidAux.get_result_or_raise(LAMBDA_EXX)
-        assert False
+        ValidAux.get_result_or_raise(LAMBDA_RAISE)
     except:
         assert True
+    else:
+        assert False
 
     assert ValidAux.get_result_or_raise(Exception) == Exception
 

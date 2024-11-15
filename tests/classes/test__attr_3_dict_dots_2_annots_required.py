@@ -27,9 +27,10 @@ def test__obj():
 
     try:
         victim = Victim()
-        assert False
     except:
         assert True
+    else:
+        assert False
 
     # assert victim == {}
     # assert victim.annot__get_nested__dict_types() == {"lowercase": str}

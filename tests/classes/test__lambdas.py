@@ -31,22 +31,25 @@ def test__Lambdas(source, args, _EXPECTED):
 
 
 # =====================================================================================================================
-# TODO: finish!
-# @pytest.mark.parametrize(
-#     argnames="source, sec, _EXPECTED",
-#     argvalues=[
-#         (1, (1, 2,), 1),
-#         (10, (1, 2,), (10, True, False, True, False)),
-#         (LAMBDA_TRUE, (1, 2,), (True, True, False, True, False)),
-#         (LAMBDA_RAISE, (1, 2,), (Exception, Exception, Exception, False, True)),
-#         (INST_CALL_RAISE, (1, 2,), (Exception, Exception, Exception, False, True)),
-#         (INST_BOOL_RAISE, (1, 2,), (INST_BOOL_RAISE, Exception, Exception, True, False)),
-#     ]
-# )
-# def test__LambdaSleep(source, sec, _EXPECTED):
-#     pass
-#
-#     pytest_func_tester__no_args_kwargs(LambdaSleep(source, *args), _EXPECTED[0])
+def test__LambdaSleep_Ok():
+    pause = 0.5
+    start_time = time.time()
+    assert LambdaSleep(sec=pause, constructor=11) == 11
+    duration_time = time.time() - start_time
+    assert pause * 0.9 < duration_time
+
+def test__LambdaSleep_Raise():
+    pause = 1
+    start_time = time.time()
+    try:
+        LambdaSleep(sec=pause, constructor=LAMBDA_RAISE)
+    except:
+        assert True
+    else:
+        assert False
+
+    duration_time = time.time() - start_time
+    assert duration_time > pause * 0.9
 
 
 # =====================================================================================================================

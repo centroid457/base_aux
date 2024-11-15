@@ -13,10 +13,10 @@ def test__raise():
 
     try:
         Victim()
-        assert False
     except Exx__AnnotNotDefined:
         assert True
-
+    else:
+        assert False
 
 def test__ok():
     class Victim(AnnotRequired):

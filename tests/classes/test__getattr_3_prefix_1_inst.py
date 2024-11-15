@@ -34,9 +34,10 @@ def test__direct():
 
     try:
         victim.bool__meth_echo()
-        assert False
     except:
         assert True
+    else:
+        assert False
 
     assert victim.bool__meth_echo(1) == True
     assert victim.bool__meth_echo(0) == False
