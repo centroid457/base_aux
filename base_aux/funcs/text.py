@@ -8,10 +8,11 @@ from base_aux.objects import TypeChecker
 
 # =====================================================================================================================
 class Text:
-    SOURCE: str
+    SOURCE: str = None
 
     def __init__(self, source: Optional[str] = None):
-        self.SOURCE = source
+        if source is not None:
+            self.SOURCE = source
 
     def try_convert_to_object(self, source: Optional[Any] = None) -> TYPE__ELEMENTARY | str:
         """
