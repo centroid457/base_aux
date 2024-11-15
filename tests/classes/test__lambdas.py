@@ -33,23 +33,26 @@ def test__Lambdas(source, args, _EXPECTED):
 # =====================================================================================================================
 def test__LambdaSleep_Ok():
     pause = 0.5
+
     start_time = time.time()
-    assert LambdaSleep(sec=pause, constructor=11) == 11
-    duration_time = time.time() - start_time
-    assert pause * 0.9 < duration_time
+    victim = LambdaSleep(sec=pause, constructor=11)
+    assert time.time() - start_time < 0.1
+    assert victim == 11     # execute on EQ
+    assert time.time() - start_time > pause * 0.9
+
 
 def test__LambdaSleep_Raise():
-    pause = 1
+    pause = 0.5
     start_time = time.time()
+    victim = LambdaSleep(sec=pause, constructor=LAMBDA_RAISE)
+    assert time.time() - start_time < 0.1
     try:
-        LambdaSleep(sec=pause, constructor=LAMBDA_RAISE)
+        result = victim == 11     # execute on EQ
     except:
         assert True
     else:
         assert False
-
-    duration_time = time.time() - start_time
-    assert duration_time > pause * 0.9
+    assert time.time() - start_time > pause * 0.9
 
 
 # =====================================================================================================================

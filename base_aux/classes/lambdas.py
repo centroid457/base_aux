@@ -9,15 +9,19 @@ from base_aux.objects import TypeChecker
 # =====================================================================================================================
 class Lambda:
     """
-    # FIXME: it seems ValidAux have same functions!!! need to combine in one object???
-        in this case its perfect separating args without special Ensure_tuple! NO!!!
+    # FIXME: it seems ValidAux have same functions!!! need to combine in one object??? - NO!!!
+        in this case its perfect separating args without special Ensure_tuple!
+
+    IDEA
+    ----
+    no calling on init!
 
     GOAL
     ----
-    1. delay probable raising Exx on direct execution (use with AttrLambdaCall)
+    1. (MAIN) delay probable raising on direct func execution (used with AttrLambdaCall)
     like creating objects on Cls attributes
         class Cls:
-            ATTR = PrivateValues(123)   # Lambda(PrivateValues, 123)
+            ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
 
     2. (not serious) replace simple lambda!
     by using lambda you should define args/kwargs any time! and im sick of it!
