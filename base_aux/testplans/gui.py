@@ -118,15 +118,15 @@ class TpGuiBase(Gui):
 
     # WINDOW ==========================================================================================================
     def wgt_create(self):
-        self.TV_create()
-        self.PTE_create()
         self.BTN_create()
         self.CB_create()
+        self.TV_create()
+        self.PTE_create()
         self.HL_create()
 
         # DETAILS -----------------------------------------------------------------------------------------------------
 
-        # layout_details ----------------------------------------------------------------------------------------------
+        # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         layout_details = QVBoxLayout()
         layout_details.addWidget(self.BTN_devs_detect)
         layout_details.addWidget(self.BTN_start)
@@ -137,10 +137,11 @@ class TpGuiBase(Gui):
         layout_details.addWidget(self.PTE)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
-        layout_main = QHBoxLayout()
-        layout_main.addWidget(self.TV)
-        layout_main.addLayout(layout_details)
-        self.setLayout(layout_main)
+        self.LAYOUT_MAIN = QHBoxLayout()
+        self.LAYOUT_MAIN.addWidget(self.TV)
+        self.LAYOUT_MAIN.addLayout(layout_details)
+
+        self.CENTRAL_WGT.setLayout(self.LAYOUT_MAIN)
 
     # WGTS ============================================================================================================
     def BTN_create(self) -> None:
