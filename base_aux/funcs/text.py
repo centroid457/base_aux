@@ -2,7 +2,7 @@ from typing import *
 import json
 import re
 
-from base_aux.funcs import TYPE__ELEMENTARY
+from base_aux.funcs import TYPE__ELEMENTARY, args__ensure_tuple
 from base_aux.objects import TypeChecker
 
 
@@ -14,7 +14,46 @@ class Text:
         if source is not None:
             self.SOURCE = source
 
-    def try_convert_to_object(self, source: Optional[Any] = None) -> TYPE__ELEMENTARY | str:
+    def prepare_for_json_parsing(self, source: Optional[str] = None) -> str:
+        """
+        GOAL
+        ----
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python objects
+        so it just same process as re.sub by one func for several values
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        try_convert_to_object
+        """
+        if source is None:
+            source = self.SOURCE
+        if isinstance(source, str):
+            # convert to json expected - VALUES FOR NULL/FALSE/TRUE
+            source = self.sub__word(r"True", "true", source)
+            source = self.sub__word(r"False", "false", source)
+            source = self.sub__word(r"None", "null", source)
+        return source
+
+    def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
+        """
+        GOAL
+        ----
+        replace exact word(defined by pattern) in text.
+        WORD means syntax word!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        prepare_for_json_parsing
+        """
+        if source is None:
+            source = self.SOURCE
+
+        word_pat = r"\b" + word_pat + r"\b"
+        result = re.sub(word_pat, new, source)
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def try_convert_to_object(self, source: Optional[str] = None) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
@@ -28,18 +67,12 @@ class Text:
         """
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
 
-        # INIT source -------------
         if source is None:
             source = self.SOURCE
 
         # PREPARE SOURCE ----------
         source_original = source
-        if isinstance(source, str):
-            # convert to json expected - VALUES FOR NULL/FALSE/TRUE
-            # FIXME: ref to values onlu without close chars!!!!
-            source = source.replace("True", "true")
-            source = source.replace("False", "false")
-            source = source.replace("None", "null")
+        source = self.prepare_for_json_parsing(source)
 
         # WORK --------------------
         try:
@@ -49,10 +82,11 @@ class Text:
             print(f"{exx!r}")
             return source_original
 
+    # -----------------------------------------------------------------------------------------------------------------
     def find_by_patterns(
             self,
             source: Optional[str] = None,
-            patterns: list[AnyStr] | AnyStr = None,
+            patterns: list[str] | str = None,
     ) -> list[str]:
         """
         GOAL
@@ -67,8 +101,7 @@ class Text:
             source = self.SOURCE
 
         result = []
-        if not TypeChecker.check__iterable_not_str(patterns):
-            patterns = [patterns, ]
+        patterns = args__ensure_tuple(patterns)
 
         for pat in patterns:
             result_i = re.findall(pat, source)
@@ -76,7 +109,6 @@ class Text:
                 if value not in result:
                     result.append(value)
         return result
-
 
 
 # =====================================================================================================================
