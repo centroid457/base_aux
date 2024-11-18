@@ -28,13 +28,13 @@ class Text:
         if source is None:
             source = self.SOURCE
         if isinstance(source, str):
-            # convert to json expected - VALUES FOR NULL/FALSE/TRUE
-            for work_pat, result in [
-                [r"True", "true"],
-                [r"False", "false"],
-                [r"None", "null"],
-            ]:
-                source = self.sub__word(work_pat, result, source)
+            source = self.sub__words(
+                rules = [
+                    (r"True", "true"),
+                    (r"False", "false"),
+                    (r"None", "null"),
+                ]
+            )
         return source
 
     def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
@@ -54,6 +54,14 @@ class Text:
         word_pat = r"\b" + word_pat + r"\b"
         result = re.sub(word_pat, new, source)
         return result
+
+    def sub__words(self, rules: list[tuple[str, str]], source: Optional[str] = None) -> str:
+        if source is None:
+            source = self.SOURCE
+
+        for work_pat, new in rules:
+            source = self.sub__word(work_pat, new, source)
+        return source
 
     # -----------------------------------------------------------------------------------------------------------------
     def try_convert_to_object(self, source: Optional[str] = None) -> TYPE__ELEMENTARY | str:
