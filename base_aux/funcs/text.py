@@ -26,6 +26,7 @@ class Text:
         ---------------------
         try_convert_to_object
         """
+        insource = source is None
         source = source or self.SOURCE
 
         if isinstance(source, str):
@@ -36,6 +37,8 @@ class Text:
                     (r"None", "null"),
                 ]
             )
+        if insource:
+            self.SOURCE = source
         return source
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -50,12 +53,15 @@ class Text:
         ---------------------
         prepare_for_json_parsing
         """
-        if source is None:
-            source = self.SOURCE
+        insource = source is None
+        source = source or self.SOURCE
 
         word_pat = r"\b" + word_pat + r"\b"
-        result = re.sub(word_pat, new, source)
-        return result
+        source = re.sub(word_pat, new, source)
+
+        if insource:
+            self.SOURCE = source
+        return source
 
     def sub__words(self, rules: list[tuple[str, str]], source: Optional[str] = None) -> str:
         source = source or self.SOURCE
@@ -70,22 +76,35 @@ class Text:
             source: Optional[str] = None,
     ) -> list[str]:
         pass
+        #TODO: finish
 
     # -----------------------------------------------------------------------------------------------------------------
     def clear_blank_lines(
             self,
             source: Optional[str] = None,
     ) -> str:
+        insource = source is None
+        source = source or self.SOURCE
+
         if isinstance(source, str):
             source = re.sub(pattern=r"^\s*$", repl="", string=source, flags=re.MULTILINE)
+
+        if insource:
+            self.SOURCE = source
         return source
 
     def clear_cmts(
             self,
             source: Optional[str] = None,
     ) -> str:
+        insource = source is None
+        source = source or self.SOURCE
+
         if isinstance(source, str):
             source = re.sub(pattern=r"\s*\#.*$", repl="", string=source, flags=re.MULTILINE)
+
+        if insource:
+            self.SOURCE = source
         return source
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -153,9 +172,11 @@ class Text:
             source: Optional[str] = None,
     ) -> list[str]:
         source = source or self.SOURCE
+
         source = self.clear_blank_lines(source)
         source = self.clear_cmts(source)
         result = self.find_by_pats(r"\w+", source)
+
         return result
 
 
