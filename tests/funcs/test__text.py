@@ -131,3 +131,22 @@ class Test__try_convert_to_object:
 
 
 # =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        ("None1", ["None1", ]),
+        ("None1   #cmt", ["None1", ]),
+        ("   None1   #cmt", ["None1", ]),
+        ("#cmt      None2", []),
+        ("#cmt \n \n None1 #cmt   hello \n   None2", ["None1", "None2", ]),
+
+        ("None>=1.1", ["None>=1.1", ]),
+        ("None>=1.1 #cmt \n None=[1.2, ]", ["None>=1.1", "None=[1.2, ]"]),
+    ]
+)
+def test__requirements__get_list(source, _EXPECTED):
+    func_link = Text(source).requirements__get_list
+    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================

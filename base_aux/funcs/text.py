@@ -27,10 +27,11 @@ class Text:
         try_convert_to_object
         """
         insource = source is None
-        source = source or self.SOURCE
-
+        if insource:
+            source = self.SOURCE
+        result = source
         if isinstance(source, str):
-            source = self.sub__words(
+            result = self.sub__words(
                 rules = [
                     (r"True", "true"),
                     (r"False", "false"),
@@ -38,8 +39,8 @@ class Text:
                 ]
             )
         if insource:
-            self.SOURCE = source
-        return source
+            self.SOURCE = result
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
@@ -54,29 +55,64 @@ class Text:
         prepare_for_json_parsing
         """
         insource = source is None
-        source = source or self.SOURCE
+        if insource:
+            source = self.SOURCE
 
         word_pat = r"\b" + word_pat + r"\b"
-        source = re.sub(word_pat, new, source)
+        result = re.sub(word_pat, new, source)
 
         if insource:
-            self.SOURCE = source
-        return source
+            self.SOURCE = result
+        return result
 
     def sub__words(self, rules: list[tuple[str, str]], source: Optional[str] = None) -> str:
-        source = source or self.SOURCE
+        insource = source is None
+        if insource:
+            source = self.SOURCE
 
+        result = source
         for work_pat, new in rules:
-            source = self.sub__word(work_pat, new, source)
-        return source
+            result = self.sub__word(work_pat, new, result)
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def split_lines(
+    def lines_split(
             self,
             source: Optional[str] = None,
     ) -> list[str]:
-        pass
-        #TODO: finish
+        insource = source is None
+        if insource:
+            source = self.SOURCE
+
+        result = source.splitlines()
+        return result
+
+    def lines_strip(
+            self,
+            lines: list[str] = None,
+    ) -> list[str]:
+        insource = lines is None
+        if insource:
+            lines = self.lines_split()
+
+        result = []
+        for line in lines:
+            result.append(line.strip())
+        return result
+
+    def lines_clear_blank(
+            self,
+            lines: list[str] = None,
+    ) -> list[str]:
+        insource = lines is None
+        if insource:
+            lines = self.lines_split()
+
+        result = []
+        for line in lines:
+            if line:
+                result.append(line)
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def clear_blank_lines(
@@ -84,28 +120,32 @@ class Text:
             source: Optional[str] = None,
     ) -> str:
         insource = source is None
-        source = source or self.SOURCE
+        if insource:
+            source = self.SOURCE
 
+        result = source
         if isinstance(source, str):
-            source = re.sub(pattern=r"^\s*$", repl="", string=source, flags=re.MULTILINE)
+            result = re.sub(pattern=r"^\s*$", repl="", string=result, flags=re.MULTILINE)
 
         if insource:
-            self.SOURCE = source
-        return source
+            self.SOURCE = result
+        return result
 
     def clear_cmts(
             self,
             source: Optional[str] = None,
     ) -> str:
         insource = source is None
-        source = source or self.SOURCE
+        if insource:
+            source = self.SOURCE
 
+        result = source
         if isinstance(source, str):
-            source = re.sub(pattern=r"\s*\#.*$", repl="", string=source, flags=re.MULTILINE)
+            result = re.sub(pattern=r"\s*\#.*$", repl="", string=result, flags=re.MULTILINE)
 
         if insource:
-            self.SOURCE = source
-        return source
+            self.SOURCE = result
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def try_convert_to_object(self, source: Optional[str] = None) -> TYPE__ELEMENTARY | str:
@@ -121,7 +161,9 @@ class Text:
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
-        source = source or self.SOURCE
+        insource = source is None
+        if insource:
+            source = self.SOURCE
 
         # PREPARE SOURCE ----------
         source_original = source
@@ -150,7 +192,9 @@ class Text:
         ----
         if pattern have group - return group value (as usual)
         """
-        source = source or self.SOURCE
+        insource = source is None
+        if insource:
+            source = self.SOURCE
 
         result = []
         patterns = args__ensure_tuple(patterns)
@@ -171,11 +215,16 @@ class Text:
             self,
             source: Optional[str] = None,
     ) -> list[str]:
-        source = source or self.SOURCE
+        insource = source is None
+        if insource:
+            source = self.SOURCE
 
-        source = self.clear_blank_lines(source)
-        source = self.clear_cmts(source)
-        result = self.find_by_pats(r"\w+", source)
+        result = source
+        result = self.clear_blank_lines(result)
+        result = self.clear_cmts(result)
+        result = self.lines_split(result)
+        result = self.lines_strip(result)
+        result = self.lines_clear_blank(result)
 
         return result
 
