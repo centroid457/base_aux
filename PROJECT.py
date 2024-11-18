@@ -182,9 +182,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 17)
+    VERSION: tuple[int, int, int] = (0, 0, 18)
     NEWS: list[str] = [
-        "[tcs] apply last ver gui",
+        "[setup] gen install_requires",
+        "[Text] create+ref",
     ]
 
 
