@@ -29,9 +29,12 @@ class Text:
             source = self.SOURCE
         if isinstance(source, str):
             # convert to json expected - VALUES FOR NULL/FALSE/TRUE
-            source = self.sub__word(r"True", "true", source)
-            source = self.sub__word(r"False", "false", source)
-            source = self.sub__word(r"None", "null", source)
+            for work_pat, result in [
+                [r"True", "true"],
+                [r"False", "false"],
+                [r"None", "null"],
+            ]:
+                source = self.sub__word(work_pat, result, source)
         return source
 
     def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
@@ -85,8 +88,8 @@ class Text:
     # -----------------------------------------------------------------------------------------------------------------
     def find_by_patterns(
             self,
-            source: Optional[str] = None,
             patterns: list[str] | str = None,
+            source: Optional[str] = None,
     ) -> list[str]:
         """
         GOAL
