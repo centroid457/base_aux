@@ -60,7 +60,7 @@ setup(
   },
 
   packages=packages,
-  install_requires=requirements_list,
+  install_requires=requirements_list,   # setup with "pip install"
   python_requires=">=3.12"
 )
 
