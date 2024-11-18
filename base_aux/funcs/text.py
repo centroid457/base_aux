@@ -26,8 +26,8 @@ class Text:
         ---------------------
         try_convert_to_object
         """
-        if source is None:
-            source = self.SOURCE
+        source = source or self.SOURCE
+
         if isinstance(source, str):
             source = self.sub__words(
                 rules = [
@@ -58,8 +58,7 @@ class Text:
         return result
 
     def sub__words(self, rules: list[tuple[str, str]], source: Optional[str] = None) -> str:
-        if source is None:
-            source = self.SOURCE
+        source = source or self.SOURCE
 
         for work_pat, new in rules:
             source = self.sub__word(work_pat, new, source)
@@ -103,9 +102,7 @@ class Text:
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
-
-        if source is None:
-            source = self.SOURCE
+        source = source or self.SOURCE
 
         # PREPARE SOURCE ----------
         source_original = source
@@ -134,8 +131,7 @@ class Text:
         ----
         if pattern have group - return group value (as usual)
         """
-        if source is None:
-            source = self.SOURCE
+        source = source or self.SOURCE
 
         result = []
         patterns = args__ensure_tuple(patterns)
