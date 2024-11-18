@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 from PROJECT import PROJECT
+from base_aux.funcs import Text
 
 
 # =====================================================================================================================
@@ -16,6 +17,11 @@ packages = [PROJECT.NAME_IMPORT, ]
 pkgs_internal = find_packages(where=PROJECT.NAME_IMPORT)
 for name in pkgs_internal:
     packages.append(f"{PROJECT.NAME_IMPORT}.{name}")
+
+with open("requirements.txt", mode="r", encoding="utf8") as f:
+    requirements_text = f.read()
+    requirements_list = Text(requirements_text).requirements__get_list()
+    print(f"{requirements_list=}")
 
 
 # =====================================================================================================================
@@ -54,7 +60,7 @@ setup(
   },
 
   packages=packages,
-  install_requires=[],  # FIXME: add!!!
+  install_requires=requirements_list,
   python_requires=">=3.12"
 )
 

@@ -5,6 +5,7 @@ import sys
 
 from base_aux.cli import CliUser
 from base_aux.objects import *
+from base_aux.funcs import Text
 from .versions import Version
 
 
@@ -545,7 +546,7 @@ self.last_exx_timeout=None
 
     # =================================================================================================================
     @staticmethod
-    def parse_lines__requirements(filepath: AnyStr | pathlib.Path) -> list[str]:
+    def parse__requirements(filepath: AnyStr | pathlib.Path) -> list[str]:
         """
         GOAL
         ----
@@ -556,10 +557,6 @@ self.last_exx_timeout=None
         ---------------------
         setup.py - get values for install_requires param!
         """
-        return  # FIXME: finish!
-
-
-
         filepath = pathlib.Path(filepath)
         if not filepath.exists():
             msg = f"[ERROR] file not found {filepath}"
@@ -569,19 +566,11 @@ self.last_exx_timeout=None
         text = filepath.read_text(encoding="utf8")
         print("-" * 20)
         print(f"{filepath=}")
-        print(text)
+        print(f"{text=}")
         print("-" * 20)
 
-        result = []
-        items = re.findall(r" #", text)
-        for modules_txt in items:
-            modules_txt = re.sub(r"\s*", "", modules_txt)
-            modules_list = modules_txt.split(",")
-            for module_new in modules_list:
-                module_path = module_new.split(".")
-                module_root = module_path[0]
-                if module_root not in result:
-                    result.append(module_root)
+        result = Text(text).requirements__get_list()
+
         return result
 
     @staticmethod
