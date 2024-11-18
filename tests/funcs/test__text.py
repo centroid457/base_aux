@@ -32,10 +32,25 @@ class Test__sub:
         func_link = Text(source).sub__word
         pytest_func_tester__no_kwargs(func_link, ("None", "null"), _EXPECTED)
 
-    # -----------------------------------------------------------------------------------------------------------------
+
+# =====================================================================================================================
+class Test__find:
+    @pytest.mark.parametrize(
+        argnames="source, pats, _EXPECTED",
+        argvalues=[
+            ("None123", r"\w*", ["None123", ]),
+            ("None123", r"\w+(?#*.*)", ["None123", ]),
+            ("None123  #cmt", r"\w+", ["None123", "cmt"]),
+            ("   None123  #cmt", r"\w+", ["None123", "cmt"]),
+        ]
+    )
+    def test__1(self, source, pats, _EXPECTED):
+        func_link = Text(source).find_by_pats
+        pytest_func_tester__no_kwargs(func_link, pats, _EXPECTED)
 
 
 # =====================================================================================================================
+
 # TODO: FINISH
 class Test__try_convert_to_object:
     # -----------------------------------------------------------------------------------------------------------------

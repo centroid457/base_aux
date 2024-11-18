@@ -14,6 +14,7 @@ class Text:
         if source is not None:
             self.SOURCE = source
 
+    # -----------------------------------------------------------------------------------------------------------------
     def prepare_for_json_parsing(self, source: Optional[str] = None) -> str:
         """
         GOAL
@@ -37,6 +38,7 @@ class Text:
             )
         return source
 
+    # -----------------------------------------------------------------------------------------------------------------
     def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
         """
         GOAL
@@ -61,6 +63,30 @@ class Text:
 
         for work_pat, new in rules:
             source = self.sub__word(work_pat, new, source)
+        return source
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def split_lines(
+            self,
+            source: Optional[str] = None,
+    ) -> list[str]:
+        pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def clear_blank_lines(
+            self,
+            source: Optional[str] = None,
+    ) -> str:
+        if isinstance(source, str):
+            source = re.sub(pattern=r"^\s*$", repl="", string=source, flags=re.MULTILINE)
+        return source
+
+    def clear_cmts(
+            self,
+            source: Optional[str] = None,
+    ) -> str:
+        if isinstance(source, str):
+            source = re.sub(pattern=r"\s*\#.*$", repl="", string=source, flags=re.MULTILINE)
         return source
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -94,9 +120,9 @@ class Text:
             return source_original
 
     # -----------------------------------------------------------------------------------------------------------------
-    def find_by_patterns(
+    def find_by_pats(
             self,
-            patterns: list[str] | str = None,
+            patterns: list[str] | str,
             source: Optional[str] = None,
     ) -> list[str]:
         """
@@ -117,8 +143,23 @@ class Text:
         for pat in patterns:
             result_i = re.findall(pat, source)
             for value in result_i:
+                value: str
+                if value == "":
+                    continue
+                value = value.strip()
                 if value not in result:
                     result.append(value)
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def requirements__get_list(
+            self,
+            source: Optional[str] = None,
+    ) -> list[str]:
+        source = source or self.SOURCE
+        source = self.clear_blank_lines(source)
+        source = self.clear_cmts(source)
+        result = self.find_by_pats(r"\w+", source)
         return result
 
 
