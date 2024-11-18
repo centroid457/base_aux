@@ -15,7 +15,7 @@ class Text:
             self.SOURCE = source
 
     # -----------------------------------------------------------------------------------------------------------------
-    def prepare_for_json_parsing(self, source: Optional[str] = None) -> str:
+    def prepare__json_loads(self, source: Optional[str] = None) -> str:
         """
         GOAL
         ----
@@ -38,6 +38,28 @@ class Text:
                     (r"None", "null"),
                 ]
             )
+        if insource:
+            self.SOURCE = result
+        return result
+
+    def prepare__requirements(self, source: Optional[str] = None) -> str:
+        """
+        GOAL
+        ----
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python objects
+        so it just same process as re.sub by one func for several values
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        try_convert_to_object
+        """
+        insource = source is None
+        if insource:
+            source = self.SOURCE
+
+        result = source
+        result = self.clear__cmts(result)
+        result = self.clear__blank_lines(result)
         if insource:
             self.SOURCE = result
         return result
@@ -75,47 +97,8 @@ class Text:
             result = self.sub__word(work_pat, new, result)
         return result
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def lines_split(
-            self,
-            source: Optional[str] = None,
-    ) -> list[str]:
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source.splitlines()
-        return result
-
-    def lines_strip(
-            self,
-            lines: list[str] = None,
-    ) -> list[str]:
-        insource = lines is None
-        if insource:
-            lines = self.lines_split()
-
-        result = []
-        for line in lines:
-            result.append(line.strip())
-        return result
-
-    def lines_clear_blank(
-            self,
-            lines: list[str] = None,
-    ) -> list[str]:
-        insource = lines is None
-        if insource:
-            lines = self.lines_split()
-
-        result = []
-        for line in lines:
-            if line:
-                result.append(line)
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def clear_blank_lines(
+    # =================================================================================================================
+    def clear__blank_lines(
             self,
             source: Optional[str] = None,
     ) -> str:
@@ -131,7 +114,7 @@ class Text:
             self.SOURCE = result
         return result
 
-    def clear_cmts(
+    def clear__cmts(
             self,
             source: Optional[str] = None,
     ) -> str:
@@ -147,7 +130,46 @@ class Text:
             self.SOURCE = result
         return result
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
+    def lines__split(
+            self,
+            source: Optional[str] = None,
+    ) -> list[str]:
+        insource = source is None
+        if insource:
+            source = self.SOURCE
+
+        result = source.splitlines()
+        return result
+
+    def lines__strip(
+            self,
+            lines: list[str] = None,
+    ) -> list[str]:
+        insource = lines is None
+        if insource:
+            lines = self.lines__split()
+
+        result = []
+        for line in lines:
+            result.append(line.strip())
+        return result
+
+    def lines__clear_blank(
+            self,
+            lines: list[str] = None,
+    ) -> list[str]:
+        insource = lines is None
+        if insource:
+            lines = self.lines__split()
+
+        result = []
+        for line in lines:
+            if line:
+                result.append(line)
+        return result
+
+    # =================================================================================================================
     def try_convert_to_object(self, source: Optional[str] = None) -> TYPE__ELEMENTARY | str:
         """
         GOAL
@@ -167,7 +189,7 @@ class Text:
 
         # PREPARE SOURCE ----------
         source_original = source
-        source = self.prepare_for_json_parsing(source)
+        source = self.prepare__json_loads(source)
 
         # WORK --------------------
         try:
@@ -215,16 +237,25 @@ class Text:
             self,
             source: Optional[str] = None,
     ) -> list[str]:
+        """
+        GOAL
+        ----
+        get list of required modules (actually full lines stripped and commentsCleared)
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        setup.py install_requires
+        """
         insource = source is None
         if insource:
             source = self.SOURCE
 
         result = source
-        result = self.clear_blank_lines(result)
-        result = self.clear_cmts(result)
-        result = self.lines_split(result)
-        result = self.lines_strip(result)
-        result = self.lines_clear_blank(result)
+        result = self.prepare__requirements(result)
+
+        result = self.lines__split(result)
+        result = self.lines__strip(result)
+        result = self.lines__clear_blank(result)
 
         return result
 
