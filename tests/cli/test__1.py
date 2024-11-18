@@ -91,6 +91,7 @@ class Test:
     @pytest.mark.parametrize(
         argnames="cmds, timeout, _EXPECTED",
         argvalues=[
+            # HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
             (CMD_PING_2, 0.1, False),
             ((CMD_PING_2, 0.1), 0.1, False),
             ((CMD_PING_2, 1.1), 0.1, True),

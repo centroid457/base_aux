@@ -118,14 +118,14 @@ class SerialServer_Example(SerialServer_Base):
         "VARIANT": ValueVariants(220, variants=[220, 380]),
     }
 
-    def cmd__upper(self, line_parsed: LineParsed) -> TYPE__CMD_RESULT:
+    def cmd__upper(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
         # usefull for tests
         return line_parsed.ORIGINAL.upper()
 
-    def cmd__lower(self, line_parsed: LineParsed) -> TYPE__CMD_RESULT:
+    def cmd__lower(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
         return line_parsed.ORIGINAL.lower()
 
-    def cmd__cmd(self, line_parsed: LineParsed) -> TYPE__CMD_RESULT:
+    def cmd__cmd(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
         # NOTE: NONE is equivalent for SUCCESS
         # do smth
         pass
@@ -136,7 +136,7 @@ class SerialServer_Example(SerialServer_Base):
         pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def script__script1(self, line_parsed: LineParsed) -> TYPE__CMD_RESULT:
+    def script__script1(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
         # do smth
         pass
 

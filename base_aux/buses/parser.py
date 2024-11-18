@@ -5,9 +5,14 @@ import re
 
 
 # =====================================================================================================================
-class LineParsed:
+class CmdArgsKwargs_ByStr:
     """
     ALL RESULTS IN LOWERCASE! (EXCEPT ORIGINAL ORIGINAL!)
+
+    GOAL
+    ----
+    parse string line for Cmd with args Kwargs in appropriate syntax
+    get exact values prefix/CMD/Args/Kwargs
     """
     # REAL STATE --------------
     ORIGINAL: str
@@ -34,6 +39,7 @@ class LineParsed:
         # PREFIX ----------------
         _prefix_expected = _prefix_expected or ""
         _prefix_expected = _prefix_expected.lower()
+
         self._PREFIX_EXPECTED = _prefix_expected
         if _prefix_expected and line_lower.startswith(_prefix_expected):
             self.PREFIX = _prefix_expected
@@ -59,8 +65,6 @@ class LineParsed:
         if self.ARGS:
             self.CMD = self.ARGS[0]
             self.ARGS = self.ARGS[1:]
-
-        pass
 
     def ARGS_count(self) -> int:
         return len(self.ARGS)

@@ -18,7 +18,7 @@
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .history import HistoryIO
-from .parser import LineParsed
+from .parser import CmdArgsKwargs_ByStr
 from .serial_client import (
     # BASE
     SerialClient,
