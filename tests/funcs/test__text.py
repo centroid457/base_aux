@@ -61,11 +61,13 @@ class Test__try_convert_to_object:
             1.0,
             1.1,
             -1.1,
+            "",
+            '',
             "hello",
             None,
             True,
             False,
-            [None, True, 1, -1.1, "hello"],
+            [None, True, 1, -1.1, "hello", "", ''],
             # [None, True, 1, -1.1, "hello", [], {1:1}],  #JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 37 (char 36)')=KEYS IS ONLY STRINGS
             [None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}],
 

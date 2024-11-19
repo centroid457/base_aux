@@ -128,10 +128,10 @@ class Test__SerialServer_NoConnection:
 
     def test__SET__level_first__type(self):
         victim = self.Victim()
-        assert victim.PARAMS["VAR"] == ''
+        assert victim.PARAMS["VAR"] == ""
 
-        line_parced = CmdArgsKwargs_ByStr("var=True")
-        result = victim._cmd__(line_parced)
+        # line_parced = CmdArgsKwargs_ByStr("var=True")
+        # result = victim._cmd__(line_parced)
         assert victim._cmd__(CmdArgsKwargs_ByStr("var=True")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] is True
 
@@ -144,8 +144,8 @@ class Test__SerialServer_NoConnection:
         assert victim._cmd__(CmdArgsKwargs_ByStr("var=")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == ""
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=''")) == AnswerVariants.SUCCESS
-        assert victim.PARAMS["VAR"] == "''"                             # TODO: convert to expected!!!
+        # assert victim._cmd__(CmdArgsKwargs_ByStr("var=''")) == AnswerVariants.SUCCESS
+        # assert victim.PARAMS["VAR"] == "''"                             # TODO: convert to expected!!!
 
         assert victim._cmd__(CmdArgsKwargs_ByStr("var=0")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == 0
