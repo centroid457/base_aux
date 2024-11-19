@@ -53,126 +53,6 @@ class PROJECT(PROJECT_BASE):
     FEATURES: list[str] = [
         # "feat1",
         # ["feat2", "block1", "block2"],
-
-        # classes
-        "cmp - apply for cmp object with others",
-        "getattr prefix",
-        "getattr echo",
-        "middle group",
-        "Number+NumberArithm - use class as number",
-        "Annotations - work with annotations +use special abilities+use nested classes",
-
-        # singleton
-        "perfect singleton (maybe thread safe!)",
-        "collect all instances",
-        "check correct instantiating singletons in tree project",
-
-        # requirements
-        "check requirements (systemOs), raise/bool if no match",
-        "create fuck(?)/source and is it for check for settings",
-        ["[python PACKAGES/MODULES]", "upgrade", "delete", "version_get_installed", "check_installed)", "upgrade pip"],
-        ["[VERSION]",
-         "parse",
-         "check",
-         "compare",
-         ],
-
-        # cli
-        "send commands into OS terminal",
-        "check if cli commands are accessible (special utilities is installed)",
-        "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
-        "use batch timeout for list",
-        "till_first_true",
-        "counter/counter_in_list",
-
-        # bits
-        "designed for common work with bitfields-like objects",
-        "Flags",
-        "Bits",
-
-        # privates
-        """
-        Designed to use private data like username/pwd kept secure in OsEnvironment or Ini/Json-File for your several home projects at ones.  
-        And not open it in public.  
-    
-        **CAUTION:**  
-        in requirements for other projects use fixed version! because it might be refactored so you would get exception soon.
-        """,
-
-        ["load values to instance attrs from",
-         "Environment",
-         "IniFile",
-         "JsonFile",
-         "CsvFile",
-         "direct text instead of file",
-         "direct dict instead of file",
-         ],
-
-        ["attr access",
-         "via any lettercase",
-         "by instance attr",
-         "like dict key on instance", ],
-
-        ["work with dict", "apply", "update", "preupdate"],
-
-        "update_dict as cumulative result - useful in case of settings result",
-
-        # threads
-        "use different managers for different funcs/methods if needed",
-        "use just one decorator to spawn threads from func / methods",
-        "keep all spawned threads in list by ThreadItem objects",
-        "ThreadItem keeps result/exx/is_alive attributes!",
-        "use wait_all/terminate_all()",
-
-        # servers
-        ["[SERVERS]",
-         "[aiohttp] (try not to use, as old)",
-         "[FastApi] (preferred)",
-         ],
-        "client_requests item+stack",
-
-        # buses
-        ["[SerialClient]",
-         "keep all found ports in base class!",
-         ],
-        ["Serial",
-         "Client+Server",
-         "connect with Type__AddressAutoAcceptVariant FIRST_FREE/FIRST_FREE__ANSWER_VALID",
-         "set/get params by SlashOrSpacePath addressing",
-         "handle BackSpace send manually from terminal",
-         ],
-        ["SerialServer values",
-         "as Callable",
-         "ValueUnit",
-         "ValueVariants",
-         "list_results",
-         ],
-        ["SerialServer cmd",
-         "NONE is equivalent for SUCCESS",
-         "no need params (like line_parsed as before)",
-         "help - for show all variants (Units/Variants/Callables)!"
-         ],
-
-        # monitors
-        "Threading each monitor",
-
-        ["monitor",
-         "website data changes (tag text/attribute)",
-         "email received with subject (by regexp) in exact folder", ],
-
-        ["Email/Telegram alert if",
-         "monitored data changed (from last state)",
-         "html structure was changed so parsing can't be finished",
-         "url became unreachable", ],
-
-        # alerts
-        ["send alert msgs", "emails", "telegram",],
-        "threading",
-
-        # pyqt
-        "pyqt help examples and some other useful objects (overloaded pyqt classes)",
-        "good template for TableView/Model/Signals",
-        "add Events for TM/TV/PTE/...",
     ]
 
     # HISTORY -----------------------------------------------
@@ -182,10 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 18)
+    VERSION: tuple[int, int, int] = (0, 0, 19)
     NEWS: list[str] = [
-        "[setup] gen install_requires",
-        "[Text] create+ref",
+        "zeor ref +add old modules PrjFiles",
     ]
 
 
