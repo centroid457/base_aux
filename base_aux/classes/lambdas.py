@@ -1,5 +1,6 @@
 from typing import *
 import time
+from enum import Enum, auto
 
 from base_aux.classes.static import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.classes.valid_0_aux import ValidAux
@@ -228,11 +229,16 @@ class LambdaTryFail(LambdaTrySuccess):
 
 
 # =====================================================================================================================
+class When(Enum):
+    BEFORE = auto
+    AFTER = auto
+
+
 class LambdaSleep(Lambda):
     """
     just delay construction
     """
-
+    WHEN: When = When.BEFORE
     SEC: float = 1
 
     def __init__(self, sec: float = None, *args, **kwargs) -> None:
@@ -243,8 +249,23 @@ class LambdaSleep(Lambda):
     def __call__(self, sec: float = None, *args, **kwargs) -> Any | NoReturn:
         if sec is None:
             sec = self.SEC
-        time.sleep(sec)
-        return self.construct(*args, **kwargs)
+
+        if self.WHEN == When.BEFORE:
+            time.sleep(sec)
+        result = self.construct(*args, **kwargs)
+        if self.WHEN == When.AFTER:
+            time.sleep(sec)
+        return result
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class LambdaSleepAfter(LambdaSleep):
+    """
+    CREATED SPECIALLY FOR
+    ---------------------
+    UART/ATC tests for RST command
+    """
+    WHEN: When = When.AFTER
 
 
 # =====================================================================================================================
