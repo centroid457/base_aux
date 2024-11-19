@@ -8,11 +8,22 @@ USEFUL IDEAS
 - in tests
 - could be clearly used in docstrings without needless defining
     assert get_bool(LAMBDA_EXX) is False
-
 """
 # ---------------------------------------------------------------------------------------------------------------------
 from typing import *
 import time
+
+
+# =====================================================================================================================
+BLANK_BOOL: bool = False
+BLANK_INT: int = 0
+BLANK_FLOAT: float = 0.0
+BLANK_STR: str = ""         # that is why i create all others BLANKS_*
+BLANK_LIST: list = []
+BLANK_TUPLE: tuple = ()
+BLANK_DICT: dict = {}
+BLANK_SET: set = set()
+BLANK_GEN = range(0)
 
 
 # =====================================================================================================================

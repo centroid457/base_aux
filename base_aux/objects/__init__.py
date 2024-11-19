@@ -27,6 +27,17 @@ from .obj_types import (
 
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
+    # BLANKS
+    BLANK_BOOL,
+    BLANK_INT,
+    BLANK_FLOAT,
+    BLANK_STR,
+    BLANK_LIST,
+    BLANK_TUPLE,
+    BLANK_DICT,
+    BLANK_SET,
+    BLANK_GEN,
+
     # BASE
     GEN_COMPR,
 
