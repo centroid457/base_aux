@@ -50,10 +50,35 @@ class Test__find:
 
 
 # =====================================================================================================================
-
-# TODO: FINISH
 class Test__try_convert_to_object:
     # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source",
+        argvalues=[
+            0,
+            1,
+            10,
+            1.0,
+            1.1,
+            -1.1,
+            "hello",
+            None,
+            True,
+            False,
+            [None, True, 1, -1.1, "hello"],
+            # [None, True, 1, -1.1, "hello", [], {1:1}],  #JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 37 (char 36)')=KEYS IS ONLY STRINGS
+            [None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}],
+
+            [],
+            # (),     # JSONDecodeError('Expecting value: line 1 column 1 (char 0)') - НЕСУЩЕСТВУЕТ TUPLE???
+            {},
+        ]
+    )
+    def test__MAIN_GOAL__string_source(self, source):
+        func_link = Text(str(source)).try_convert_to_object
+        pytest_func_tester__no_args_kwargs(func_link, source)
+
+    # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
         func_link = Text(source).try_convert_to_object
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)

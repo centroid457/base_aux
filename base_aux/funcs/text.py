@@ -38,6 +38,7 @@ class Text:
                     (r"None", "null"),
                 ]
             )
+            result = re.sub("\'", "\"", result)
         if insource:
             self.SOURCE = result
         return result
