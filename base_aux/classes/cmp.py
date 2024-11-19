@@ -22,7 +22,7 @@ class CmpInst:
 
     """
     __eq__ = lambda self, other: self.__cmp__(other) == 0
-    __ne__ = lambda self, other: self.__cmp__(other) != 0
+    # __ne__ = lambda self, other: self.__cmp__(other) != 0
 
     __lt__ = lambda self, other: self.__cmp__(other) < 0
     __gt__ = lambda self, other: self.__cmp__(other) > 0

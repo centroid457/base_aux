@@ -1,8 +1,10 @@
 from typing import *
 import re
 
-from . import *
 from base_aux.funcs import ValueNotExist
+from base_aux.classes.valid_1_base import Valid
+from base_aux.classes.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
+from base_aux.classes.number import NumberArithmTranslateToAttr
 from .static import Exx__ValueNotParsed, Exx__ValueUnitsIncompatible
 
 
@@ -196,6 +198,8 @@ class ValueUnit(NumberArithmTranslateToAttr):
             source = source.replace(',', ".")
             source = re.sub(r'-\s*', '-', source)
             source = re.sub(r'\+\s*', '', source)
+            source = re.sub(r'\'\'', '', source)
+            source = re.sub(r'\"\"', '', source)
 
             # WORK ---------------------------
             match = re.fullmatch(r'(-?[0-9.]+)(\s*)([a-zA-Zа-яА-Я]*)', source)
@@ -250,6 +254,8 @@ class ValueUnit(NumberArithmTranslateToAttr):
             0=self==other
             -1=self<other
         """
+        if Valid.compare_doublesided__bool(self.VALUE, other):
+            return 0
         if not isinstance(other, self.__class__):
             other = self.__class__(other)
 

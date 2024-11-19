@@ -1143,6 +1143,7 @@ class SerialClient(Logger):
         self.answer_is_fail(data)
 
         try:
+            # pass
             data = ValueUnit(data)
         except:
             pass

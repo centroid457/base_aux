@@ -138,6 +138,8 @@ class Test__WithUnit:
     @pytest.mark.parametrize(
         argnames="source1, source2, _EXPECTED",
         argvalues=[
+            (0, 0, 0),
+
             # minus/plus -----------------
             ("-1", 1, -1),
             ("- 1", 1, -1),
@@ -179,7 +181,7 @@ class Test__WithUnit:
             (ValueNotExist, "1", 0),
         ]
     )
-    def test__cmp_as_func(self, source1, source2, _EXPECTED):
+    def test__cmp_1__as_func(self, source1, source2, _EXPECTED):
         func_link = lambda: ValueUnit(source1).__cmp__(source2)
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
@@ -225,7 +227,7 @@ class Test__WithUnit:
             (ValueUnit(ValueNotExist), "1", True),
         ]
     )
-    def test__cmp_by_second_obj(self, source1, obj2, _EXPECTED):
+    def test__cmp_2__eq(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 

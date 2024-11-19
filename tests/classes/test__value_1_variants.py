@@ -134,21 +134,47 @@ class Test__ValueVariants:
     @pytest.mark.parametrize(
         argnames="source1, obj2, _EXPECTED",
         argvalues=[
+            (0, ValueVariants(0, variants=[0, 1]), True),
+            (1, ValueVariants(0, variants=[0, 1]), False),
+            (2, ValueVariants(0, variants=[0, 1]), False),
+
+            ("0", ValueVariants(0, variants=[0, 1]), True),
+            ("00", ValueVariants(0, variants=[0, 1]), False),
+
+            (ValueUnit(0), ValueVariants(0, variants=[0, 1]), True),
+        ]
+    )
+    def test__cmp_objs__value(self, source1, obj2, _EXPECTED):
+        func_link = lambda: source1 == obj2
+        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source1, obj2, _EXPECTED",
+        argvalues=[
             (0, ValueVariants(variants=[0, 1]), True),
             (1, ValueVariants(variants=[0, 1]), True),
             (2, ValueVariants(variants=[0, 1]), False),
 
-            (0, ValueVariants(0, variants=[0, 1]), True),
-            (1, ValueVariants(0, variants=[0, 1]), False),
+            ("0", ValueVariants(variants=[0, 1]), True),
+            ("00", ValueVariants(variants=[0, 1]), False),
 
-            # str -----------------------
-            ("0", ValueVariants(0, variants=[0, 1]), True),
-            ("00", ValueVariants(0, variants=[0, 1]), False),
+            (ValueVariants(variants=[0, 1]), ValueUnit(0), True),
+            (ValueUnit(0), ValueVariants(variants=[0, 1]), True),
         ]
     )
-    def test__cmp_objs(self, source1, obj2, _EXPECTED):
+    def test__cmp_objs__no_value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================
+def test__0():
+    vu = ValueUnit(0)
+    vv = ValueVariants(variants=[0, 1])
+
+    assert vv == vu
+    assert vu == vv
 
 
 # =====================================================================================================================
