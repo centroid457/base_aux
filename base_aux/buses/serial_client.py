@@ -1,19 +1,19 @@
+from typing import *
+
 import re
 import sys
 import glob
 import time
 import string
-from typing import *
 from enum import Enum, auto
 
 from base_aux.loggers import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.classes import ValueUnit, Valid
 
-from . import HistoryIO
+from .history import HistoryIO
 
 
 # =====================================================================================================================
