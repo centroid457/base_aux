@@ -8,7 +8,56 @@ from base_aux.objects import TypeChecker
 
 
 # =====================================================================================================================
-class Lambda:
+class ArgsKwargs:
+    """
+    GOAL
+    ----
+    idea to keep args and kwargs in appropriate form/one object without application (constructor or func).
+    so we can uncovering in later.
+    usage in test parametrisation.
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    ATC tests with using special param prefix="*"
+
+    BEST PRACTICE
+    -------------
+    for item, expect in [
+        (ArgsKwargs("get name"), "ATC"),
+        (ArgsKwargs("test gnd", _timeout=5), "PASS"),
+    ]:
+        assert serialDevice.send(*item.ARGS, **item.KWARGS) == expect
+
+    WHY NOT - 1=add direct __iter for args and smth like __dict for kwargs
+    ----------------------------------------------------------------------
+    and use then (*victim, **victim)
+    NO - there are no __dict like dander method!
+    but we can use ArgsKwargs(dict)!? - yes but it add all other methods!
+        class Cls(dict):
+            ARGS: tuple[Any, ...]
+            KWARGS: dict[str, Any]
+
+            def __init__(self, *args, **kwargs) -> None:
+                super().__init__(**kwargs)
+                self.ARGS = args
+                self.KWARGS = kwargs
+
+            def __iter__(self) -> Iterator[Any]:
+                yield from self.ARGS
+
+    so as result the best decision is (*item.ARGS, **item.KWARGS)
+    and we could use this class as simple base for Lambda for example!
+    """
+    ARGS: TYPE__LAMBDA_ARGS = ()
+    KWARGS: TYPE__LAMBDA_KWARGS = {}
+
+    def __init__(self, *args, **kwargs) -> None:
+        self.ARGS = args
+        self.KWARGS = kwargs
+
+
+# =====================================================================================================================
+class Lambda(ArgsKwargs):
     """
     # FIXME: it seems ValidAux have same functions!!! need to combine in one object??? - NO!!!
         in this case its perfect separating args without special Ensure_tuple!
@@ -60,8 +109,6 @@ class Lambda:
     :ivar CONSTRUCTOR: any class or function
     """
     CONSTRUCTOR: TYPE__LAMBDA_CONSTRUCTOR
-    ARGS: TYPE__LAMBDA_ARGS = ()
-    KWARGS: TYPE__LAMBDA_KWARGS = {}
 
     # OVERWRITE! ------------------------------------------------------------------------------------------------------
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
@@ -73,8 +120,7 @@ class Lambda:
     # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
         self.CONSTRUCTOR = constructor
-        self.ARGS = args
-        self.KWARGS = kwargs
+        super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def construct(self, *args, **kwargs) -> Any | NoReturn:

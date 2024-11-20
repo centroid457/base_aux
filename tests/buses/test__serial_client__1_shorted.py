@@ -299,7 +299,7 @@ class Test__WR_1(Test__WRBase):
             ("1V", ValueUnit(unit="V"), True),
             ("1", ValueUnit(unit="V"), True),
             ("1V", ValueUnit(unit=""), True),
-            ("1A", ValueUnit(unit="V"), False),
+            ("1A", ValueUnit(unit="V"), False),     # FIXME: dont understand!!!
 
             ("3", ValueVariants(variants=[3, ]), True),
         ],

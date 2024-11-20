@@ -1,7 +1,7 @@
 # GOAL
 # KEEP STATIC OBJECTS like TYPE__* and Exx__* in separated file.
 # make clear importing by resolving circular imports!
-from typing import Type, Any, Callable, NoReturn
+from typing import *
 
 
 # =====================================================================================================================

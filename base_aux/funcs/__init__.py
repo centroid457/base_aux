@@ -6,9 +6,8 @@
 
 # =====================================================================================================================
 from .static import (
-    # BASE
     ValueNotExist,
-    # TYPES
+
     TYPE__VALUE_NOT_PASSED,
 
     TYPE__VALID_VALIDATOR,
@@ -24,30 +23,20 @@ from .static import (
 # ---------------------------------------------------------------------------------------------------------------------
 
 from .value_0_explicit import (
-    # BASE
     Explicit,
     Default,
-    # AUX
-    # TYPES
+
     TYPE__EXPLICIT,
     TYPE__DEFAULT,
-    # EXX
 )
 from .args import (
-    # BASE
-    # AUX
     ArgsEmpty,
-    # TYPES
+
     TYPE__ARGS_EMPTY,
-    # EXX
 )
 from .ensure import (
-    # BASE
     args__ensure_tuple,
     ensure_class,
-    # AUX
-    # TYPES
-    # EXX
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -63,35 +52,24 @@ from .ensure import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .arrays import array_2d_get_compact_str
 from .iter_aux import (
-    # BASE
     IterAux,
-    # AUX
-    # TYPES
+
     TYPE__ITERABLE_PATH_KEY,
     TYPE__ITERABLE_PATH_ORIGINAL,
     TYPE__ITERABLE_PATH_EXPECTED,
     TYPE__ITERABLE,
-    # EXX
 )
 from .text import (
-    # BASE
     Text,
-    # AUX
-    # TYPES
-    # EXX
 )
 
 # =====================================================================================================================
 # ---------------------------------------------------------------------------------------------------------------------
 from .pytest_aux import (
-    # BASE
     pytest_func_tester,
     pytest_func_tester__no_kwargs,
     pytest_func_tester__no_args,
     pytest_func_tester__no_args_kwargs,
-    # AUX
-    # TYPES
-    # EXX
 )
 # ---------------------------------------------------------------------------------------------------------------------
 
