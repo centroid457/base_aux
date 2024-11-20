@@ -62,9 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 22)
+    VERSION: tuple[int, int, int] = (0, 0, 23)
     NEWS: list[str] = [
-        "[Lambdas] add ArgsKwargs",
+        "[serial] fix bool_if__LINUX stack",
     ]
 
 
