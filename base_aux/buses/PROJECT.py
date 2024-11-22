@@ -66,10 +66,10 @@ other protocols mot recommended
     VERSION: tuple[int, int, int] = (0, 4, 16)
     TODO: list[str] = [
         "add all other port settings into SerialClient",
-        "fix all tests! fix EMU"
+        "fix all tests! fix EMU",
     ]
     FIXME: list[str] = [
-        "..."
+        "add timeout into connect for AndreiK bluetooth comports stack",
     ]
     NEWS: list[str] = [
         "[SerialClient.writeReadLast*] fix timeoutRead on only first read! after first char timeout set default",
