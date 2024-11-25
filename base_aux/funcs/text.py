@@ -3,7 +3,6 @@ import json
 import re
 
 from base_aux.funcs import TYPE__ELEMENTARY, args__ensure_tuple
-from base_aux.objects import TypeChecker
 
 
 # =====================================================================================================================

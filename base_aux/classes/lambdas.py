@@ -115,7 +115,7 @@ class Lambda(ArgsKwargs):
         return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
-        return ValidAux.compare_doublesided__bool(other, self())
+        return ValidAux.eq_doublesided__bool(other, self())
 
     # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:

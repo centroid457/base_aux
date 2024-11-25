@@ -221,7 +221,7 @@ class Valid(ValidAux):
                     self.validate_last = self.get_result_or_exx(self.VALIDATE_LINK, args=args_validate, kwargs=self.KWARGS__VALIDATE)
 
                 else:
-                    self.validate_last = self.compare_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
+                    self.validate_last = self.eq_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
 
                 # FINISH retry
                 if not self.VALIDATE_RETRY or retry_count == self.VALIDATE_RETRY or self.validate_last_bool:

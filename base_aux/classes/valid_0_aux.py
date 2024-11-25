@@ -115,7 +115,7 @@ class ValidAux:
 
     # =================================================================================================================
     @classmethod
-    def compare_doublesided_or_exx(cls, obj1: Any, obj2: Any, return_bool: bool = None) -> bool | Exception:
+    def eq_doublesided_or_exx(cls, obj1: Any, obj2: Any, return_bool: bool = None) -> bool | Exception:
         """
         GOAL
         ----
@@ -178,7 +178,7 @@ class ValidAux:
             return result12
 
     @classmethod
-    def compare_doublesided__bool(cls, obj1: Any, obj2: Any) -> bool:
+    def eq_doublesided__bool(cls, obj1: Any, obj2: Any) -> bool:
         """
         same as compare_doublesided_or_exx but
         in case of Exx - return False
@@ -187,15 +187,15 @@ class ValidAux:
         ---------------------
         Valid.value_validate
         """
-        return cls.compare_doublesided_or_exx(obj1, obj2, return_bool=True)
+        return cls.eq_doublesided_or_exx(obj1, obj2, return_bool=True)
 
     @classmethod
-    def compare_doublesided__reverse(cls, obj1: Any, obj2: Any) -> bool:
+    def eq_doublesided__reverse(cls, obj1: Any, obj2: Any) -> bool:
         """
         just reverse result for compare_doublesided__bool
         so never get Exx, only bool
         """
-        return cls.compare_doublesided__bool(obj1, obj2) is not True
+        return cls.eq_doublesided__bool(obj1, obj2) is not True
 
     # =================================================================================================================
     @staticmethod

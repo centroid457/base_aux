@@ -48,7 +48,7 @@ class ValidRegExp:
         return False
 
     def run(self, source: Any) -> bool:
-        return ValidAux.compare_doublesided__bool(source, self)
+        return ValidAux.eq_doublesided__bool(source, self)
 
 
 # =====================================================================================================================

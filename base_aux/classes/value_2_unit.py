@@ -254,7 +254,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
             0=self==other
             -1=self<other
         """
-        if Valid.compare_doublesided__bool(self.VALUE, other):
+        if Valid.eq_doublesided__bool(self.VALUE, other):
             return 0
         if not isinstance(other, self.__class__):
             other = self.__class__(other)

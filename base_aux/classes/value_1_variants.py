@@ -109,7 +109,7 @@ class ValueVariants:
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | ValueNotExist:
         for variant in self.VARIANTS:
-            if Valid.compare_doublesided__bool(variant, value):
+            if Valid.eq_doublesided__bool(variant, value):
                 return variant
 
             if self.CASE_INSENSITIVE:
