@@ -4,6 +4,7 @@
 from typing import *
 
 from base_aux.objects.primitives import LAMBDA_TRUE
+# from base_aux.valid import ValidAux
 # LAMBDA_TRUE = lambda *args, **kwargs: True
 
 
@@ -260,6 +261,9 @@ class TypeChecker:
 
         specially created for pytest_aux for comparing with Exception!
         """
+        # source = ValidAux.get_result_or_exx(source)
+        # parent = ValidAux.get_result_or_exx(parent)
+
         if TypeChecker.check__instance(source):
             source = source.__class__
         if TypeChecker.check__instance(parent):

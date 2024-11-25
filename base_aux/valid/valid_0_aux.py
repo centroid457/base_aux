@@ -148,12 +148,21 @@ class ValidAux:
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get Exx and with switching i get correct result!!! (maybe fake! need explore!)
         """
+        if TypeChecker.check__exception(obj1):
+            if TypeChecker.check__nested__by_cls_or_inst(obj2, obj1):
+                return True
+        elif TypeChecker.check__exception(obj2):
+            if TypeChecker.check__nested__by_cls_or_inst(obj1, obj2):
+                return True
+
         try:
             result12 = obj1 == obj2
             if result12:
                 return True
         except Exception as exx:
             result12 = exx
+            # if TypeChecker.check__exception(obj2) and TypeChecker.check__nested__by_cls_or_inst(result12, obj2):
+            #     return True
 
         try:
             result21 = obj2 == obj1
@@ -161,6 +170,8 @@ class ValidAux:
                 return True
         except Exception as exx:
             result21 = exx
+            # if TypeChecker.check__exception(obj1) and TypeChecker.check__nested__by_cls_or_inst(result21, obj1):
+            #     return True
 
         try:
             result3 = obj2 is obj1
