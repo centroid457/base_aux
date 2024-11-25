@@ -133,6 +133,7 @@ class TpGuiBase(Gui):
         layout_details.addWidget(self.CB_tp_run_infinit)
         layout_details.addWidget(self.CB_tc_run_single)
         layout_details.addWidget(self.BTN_settings)
+        layout_details.addWidget(self.BTN_save)
         layout_details.addWidget(self.BTN_clear_all)
         layout_details.addWidget(self.PTE)
 
@@ -154,6 +155,7 @@ class TpGuiBase(Gui):
         self.BTN_settings = QPushButton("настройки")
         self.BTN_settings.setCheckable(True)
 
+        self.BTN_save = QPushButton("Сохранить результаты")
         self.BTN_clear_all = QPushButton("очистить результаты")
 
     def CB_create(self) -> None:
@@ -218,6 +220,7 @@ class TpGuiBase(Gui):
         self.BTN_start.toggled.connect(self.BTN_start__toggled)
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)
         self.BTN_devs_detect.clicked.connect(self.BTN_devs_detect__clicked)
+        self.BTN_save.clicked.connect(self.BTN_save__clicked)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
 
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
@@ -280,6 +283,9 @@ class TpGuiBase(Gui):
         self.TM._data_reread()
         self.DATA.DEVICES__BREEDER_CLS.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
         self.TM._data_reread()
+
+    def BTN_save__clicked(self) -> None:
+        pass
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
