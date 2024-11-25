@@ -4,7 +4,7 @@ from typing import *
 import time
 
 from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.valid import *
 
 
 # =====================================================================================================================
@@ -44,7 +44,7 @@ class CmdSchema:
         if self.SCHEMA == ValueNotExist:
             return str(value)
         else:
-            result = ValidAux.get_result_or_exx(self.SCHEMA, args=value)
+            result = ValidAux.get_result_or_exx(self.SCHEMA, value)
             return str(result)
 
 

@@ -14,8 +14,8 @@ class ValidAux:
     def get_result_or_raise(
             cls,
             source: TYPE__VALID_SOURCE,
-            args: TYPE__VALID_ARGS = None,
-            kwargs: TYPE__VALID_KWARGS = None,
+            *args: TYPE__VALID_ARGS,
+            **kwargs: TYPE__VALID_KWARGS,
     ) -> Any | NoReturn:
         """
         SPECIFIC LOGIC
@@ -46,8 +46,8 @@ class ValidAux:
     def get_result_or_exx(
             cls,
             source: TYPE__VALID_SOURCE,
-            args: TYPE__VALID_ARGS = None,
-            kwargs: TYPE__VALID_KWARGS = None,
+            *args: TYPE__VALID_ARGS,
+            **kwargs: TYPE__VALID_KWARGS,
     ) -> Any | Exception:
         """
         GOAL
@@ -60,8 +60,9 @@ class ValidAux:
         -----------
         1. in gui when its enough to get str() on result and see the result
         """
+        args = (source, *args)
         try:
-            result = cls.get_result_or_raise(source=source, args=args, kwargs=kwargs)
+            result = cls.get_result_or_raise(*args, **kwargs)
         except Exception as exx:
             result = exx
         return result
@@ -71,8 +72,8 @@ class ValidAux:
     def get_result_bool(
             cls,
             source: TYPE__VALID_SOURCE,
-            args: TYPE__VALID_ARGS = None,
-            kwargs: TYPE__VALID_KWARGS = None,
+            *args: TYPE__VALID_ARGS,
+            **kwargs: TYPE__VALID_KWARGS,
     ) -> bool:
         """
         GOAL
@@ -106,7 +107,7 @@ class ValidAux:
         funcs.Valid.skip_link or else value/func assumed as bool result
         """
         try:
-            result = cls.get_result_or_raise(source, args, kwargs)
+            result = cls.get_result_or_raise(source, *args, **kwargs)
             if TypeChecker.check__exception(result):
                 return False
             return bool(result)

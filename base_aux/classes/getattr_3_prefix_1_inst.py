@@ -41,20 +41,16 @@ class GetattrPrefixInst(AttrAux):
             prefix_meth = getattr(self, prefix_original)
 
             if item.lower() == prefix.lower():
-                return lambda *prefix_args, **prefix_kwargs: ValidAux.get_result_or_raise(
-                    source=prefix_meth,
-                    args=prefix_args,
-                    kwargs=prefix_kwargs
-                )
+                return lambda *prefix_args, **prefix_kwargs: ValidAux.get_result_or_raise(prefix_meth, *prefix_args, **prefix_kwargs)
 
             if prefix_original and item.lower().startswith(prefix.lower()):
                 item_short = item[len(prefix):]
                 item_value = self._getattr_anycase(item_short, self)
 
                 return lambda *meth_args, **meth_kwargs: ValidAux.get_result_or_raise(
-                    source=prefix_meth,
-                    args=[ValidAux.get_result_or_raise(source=item_value, args=meth_args, kwargs={k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
-                    kwargs={k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
+                    prefix_meth,
+                    *[ValidAux.get_result_or_raise(item_value, *meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
+                    **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 
         raise AttributeError(item)
@@ -71,7 +67,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
         _reverse = _reverse or False
-        result = ValidAux.get_result_or_exx(source=source)
+        result = ValidAux.get_result_or_exx(source)
         if TypeChecker.check__exception(result) or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 

@@ -5,7 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.servers import *
 from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.valid import *
 from base_aux.pyqt import *
 from base_aux.loggers import *
 

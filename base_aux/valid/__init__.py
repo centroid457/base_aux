@@ -7,6 +7,11 @@
 
 
 # =====================================================================================================================
+from .static import (
+    Exx__Valid,
+    Exx__ValueNotValidated,
+)
+
 from .value_1_variants import (
     ValueVariants,
 )

@@ -109,12 +109,12 @@ class Test__ValidTypes:
     )
     def test__validate__types(self, args, _EXPECTED):
         # DIRECT -------
-        func_link = lambda *_args: Valid(*_args).run()
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        func_link = Valid(*args)
+        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
         # REVERSE ------
-        func_link = lambda *_args: ValidReverse(*_args).run()
-        pytest_func_tester__no_kwargs(func_link, args, not _EXPECTED)
+        func_link =  ValidReverse(*args)
+        pytest_func_tester__no_args_kwargs(func_link, not _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -134,14 +134,14 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args, kwargs, validate, _EXPECTED",
+        argnames="source, args__value, kwargs__value, validate, _EXPECTED",
         argvalues=[
             # bool --------------------
             (0, (), {}, True, False),
-            (0, (1,2,), {1:1}, True, False),
+            (0, (1,2,), {1:1}, True, Exception),
 
             (2, (), {}, bool, True),
-            (2, (1,2,), {1:1}, bool, True),
+            (2, (1,2,), {1:1}, bool, Exception),
 
             # VALUE --------------------
             (LAMBDA_LIST_VALUES, (1,2,), {}, [1,2], True),
@@ -154,20 +154,20 @@ class Test__ValidTypes:
             (LAMBDA_LIST_VALUES, INST_GEN, {}, [INST_GEN, ], True),
         ]
     )
-    def test__validate__value_with_args_kwargs(self, source, args, kwargs, validate, _EXPECTED):
-        func_link = Valid(value_link=source, validate_link=validate, args__value=args, kwargs__value=kwargs).run
+    def test__value__args_kwargs(self, source, args__value, kwargs__value, validate, _EXPECTED):
+        func_link = Valid(value_link=source, validate_link=validate, args__value=args__value, kwargs__value=kwargs__value)
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args, kwargs, validate, _EXPECTED",
+        argnames="source, args__validate, kwargs__validate, validate, _EXPECTED",
         argvalues=[
             # bool --------------------
             (0, (), {}, True, False),
             (0, (1, 2,), {1: 1}, True, False),
 
             (2, (), {}, bool, True),
-            (2, (1, 2,), {1: 1}, bool, False),
+            (2, (1, 2,), {1: 1}, bool, Exception),
 
             # VALUE --------------------
             (LAMBDA_LIST_VALUES, (1, 2,), {}, [1, 2], False),
@@ -193,8 +193,8 @@ class Test__ValidTypes:
             (3, (None, 3,), {}, Valid.legt, False),
         ]
     )
-    def test__validate_with_args_kwargs__value(self, source, args, kwargs, validate, _EXPECTED):
-        func_link = Valid(value_link=source, validate_link=validate, args__validate=args, kwargs__validate=kwargs).run
+    def test__validate__args_kwargs(self, source, args__validate, kwargs__validate, validate, _EXPECTED):
+        func_link = Valid(value_link=source, validate_link=validate, args__validate=args__validate, kwargs__validate=kwargs__validate)
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------

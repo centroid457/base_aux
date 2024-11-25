@@ -180,6 +180,9 @@ class Valid(ValidAux):
         else:
             return bool(self)
 
+    def __call__(self, *args, **kwargs) -> bool:
+        return self.run(*args, **kwargs)
+
     def run(self, value_link: Any = ValueNotExist) -> bool:
         """
         CONSTRAINTS
@@ -207,7 +210,7 @@ class Valid(ValidAux):
                 self.timestamp_last = time.time()
 
                 # VALUE ---------------------
-                self.value_last = self.get_result_or_exx(value_link, args=self.ARGS__VALUE, kwargs=self.KWARGS__VALUE)
+                self.value_last = self.get_result_or_exx(value_link, *self.ARGS__VALUE, **self.KWARGS__VALUE)
 
                 # VALIDATE ------------------
                 if isinstance(self.value_last, Exception) and not TypeChecker.check__exception(self.VALIDATE_LINK):
@@ -217,8 +220,8 @@ class Valid(ValidAux):
                     self.validate_last = TypeChecker.check__nested__by_cls_or_inst(self.value_last, self.VALIDATE_LINK)
 
                 elif TypeChecker.check__callable_func_meth_inst(self.VALIDATE_LINK):
-                    args_validate = (self.value_last, *self.ARGS__VALIDATE)
-                    self.validate_last = self.get_result_or_exx(self.VALIDATE_LINK, args=args_validate, kwargs=self.KWARGS__VALIDATE)
+                    args_validate = (self.VALIDATE_LINK, self.value_last, *self.ARGS__VALIDATE)
+                    self.validate_last = self.get_result_or_exx(*args_validate, **self.KWARGS__VALIDATE)
 
                 else:
                     self.validate_last = self.eq_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
