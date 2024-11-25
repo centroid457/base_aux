@@ -32,9 +32,6 @@ class ValidAux:
         ---------------------
         GetattrPrefixInst
         """
-        args = args or []
-        kwargs = kwargs or {}
-
         if TypeChecker.check__callable_func_meth_inst(source):
             result = source(*args, **kwargs)
         else:
