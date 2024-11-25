@@ -6,6 +6,7 @@ from typing import *
 from base_aux.objects.primitives import LAMBDA_TRUE
 # LAMBDA_TRUE = lambda *args, **kwargs: True
 
+
 # =====================================================================================================================
 class Cls:
     def meth(self):
@@ -134,6 +135,20 @@ class TypeChecker:
 
     # CALLABLE --------------------------------------------------------------------------------------------------------
     @staticmethod
+    def check__callable_func_meth_inst_cls(source: Any) -> bool:
+        """
+        GOAL
+        ----
+        just any callable or CLASS!!! - so it is actually all CALLABLE!
+
+
+        CREATES SPECIALLY FOR
+        ---------------------
+        just to see difference and clearly using by name!!!
+        """
+        return callable(source)
+
+    @staticmethod
     def check__callable_func_meth_inst(source: Any) -> bool:
         """
         GOAL
@@ -141,7 +156,9 @@ class TypeChecker:
         just any callable but NO CLASS!!!
 
 
-        creates specially for detect all funcs like func/meth/or even DescriptedClasses (it is class but actually used like func!)
+        CREATES SPECIALLY FOR
+        ---------------------
+        detect all funcs like func/meth/or even DescriptedClasses (it is class but actually used like func!)
         recommended using instead of just Callable! cause Callable keeps additionally every class instead of just simple func/method!
         """
         if TypeChecker.check__class(source):
