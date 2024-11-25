@@ -1,5 +1,5 @@
 from typing import Union, NoReturn, Type
-from base_aux.classes import *
+from base_aux.valid import *
 
 
 # =====================================================================================================================

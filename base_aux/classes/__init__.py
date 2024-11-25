@@ -13,8 +13,6 @@ from .static import (
     Exx__NumberArithm_NoName,
     Exx__GetattrPrefix,
     Exx__GetattrPrefix_RaiseIf,
-    Exx__ValueNotInVariants,
-    Exx__VariantsIncompatible,
     Exx__ValueNotParsed,
     Exx__ValueUnitsIncompatible,
     Exx__IndexOverlayed,
@@ -99,35 +97,6 @@ from .attr_3_dict_dots_2_full import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .middle_group import (
     ClsMiddleGroup,
-)
-# ---------------------------------------------------------------------------------------------------------------------
-from .value_1_variants import (
-    ValueVariants,
-)
-from .value_2_unit import (
-    ValueUnit,
-
-    UnitBase,
-    UNIT_MULT__VARIANTS,
-)
-# ---------------------------------------------------------------------------------------------------------------------
-from .valid_0_aux import ValidAux
-from .valid_1_base import Valid
-from .valid_2_chains import (
-    ValidChains,
-    TYPE__CHAINS,
-)
-from .valid_1_base_derivatives import (
-    ValidRetry1,
-    ValidRetry2,
-    ValidFailStop,
-    ValidFailContinue,
-    ValidNoCum,
-    ValidReverse,
-    ValidSleep,
-)
-from .valid_3_regexp import (
-    ValidRegExp,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .text import (

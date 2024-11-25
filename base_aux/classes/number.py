@@ -4,6 +4,7 @@ import math
 from base_aux.objects import *
 from base_aux.classes import CmpInst, Exx__NumberArithm_NoName
 
+
 # =====================================================================================================================
 TYPE__NUMBER = int | float
 

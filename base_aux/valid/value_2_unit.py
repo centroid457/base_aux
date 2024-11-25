@@ -2,10 +2,10 @@ from typing import *
 import re
 
 from base_aux.funcs import ValueNotExist
-from base_aux.classes.valid_1_base import Valid
+from .valid_1_base import Valid
 from base_aux.classes.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.number import NumberArithmTranslateToAttr
-from .static import Exx__ValueNotParsed, Exx__ValueUnitsIncompatible
+from base_aux.classes.static import Exx__ValueNotParsed, Exx__ValueUnitsIncompatible
 
 
 # =====================================================================================================================

@@ -22,14 +22,6 @@ class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
     pass
 
 
-class Exx__ValueNotInVariants(Exception):
-    pass
-
-
-class Exx__VariantsIncompatible(Exception):     # TODO: seems need to deprecate it! it is not important!
-    pass
-
-
 class Exx__ValueNotParsed(Exception):
     pass
 

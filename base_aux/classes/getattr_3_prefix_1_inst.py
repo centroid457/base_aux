@@ -2,7 +2,7 @@ from typing import *
 from base_aux.objects import *
 from . import Exx__GetattrPrefix_RaiseIf
 
-from .valid_0_aux import ValidAux
+from base_aux.valid.valid_0_aux import ValidAux
 from .attr_1_aux import AttrAux
 
 

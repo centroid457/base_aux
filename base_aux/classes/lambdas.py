@@ -3,7 +3,7 @@ import time
 from enum import Enum, auto
 
 from base_aux.classes.static import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
-from base_aux.classes.valid_0_aux import ValidAux
+from base_aux.valid.valid_0_aux import ValidAux
 from base_aux.objects import TypeChecker
 
 

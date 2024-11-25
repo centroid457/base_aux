@@ -1,8 +1,7 @@
 from typing import *
 
-from . import Exx__ValueNotInVariants
+from .static import *
 from .valid_1_base import Valid
-from .value_2_unit import ValueUnit
 from base_aux.funcs import ValueNotExist
 
 
@@ -105,7 +104,7 @@ class ValueVariants:
         if variant != ValueNotExist:
             self.__value = variant
         else:
-            raise Exx__ValueNotInVariants()
+            raise Exx__ValueNotValidated()
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | ValueNotExist:
         for variant in self.VARIANTS:

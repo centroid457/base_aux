@@ -11,7 +11,7 @@ from base_aux.loggers import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.classes import ValueUnit, Valid
+from base_aux.valid import ValueUnit, Valid
 
 from .history import HistoryIO
 

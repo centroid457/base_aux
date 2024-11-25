@@ -1,7 +1,5 @@
 import time
-
-from base_aux.classes import Valid
-from base_aux.funcs.static import TYPE__VALID_VALIDATOR
+from base_aux.valid import Valid
 
 
 # =====================================================================================================================
