@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from PROJECT import PROJECT
-from base_aux.funcs import Text
+from base_aux.classes import Text
 
 
 # =====================================================================================================================

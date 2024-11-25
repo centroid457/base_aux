@@ -5,7 +5,7 @@ import sys
 
 from base_aux.cli import CliUser
 from base_aux.objects import *
-from base_aux.funcs import Text
+from base_aux.classes import Text
 from .versions import Version
 
 
