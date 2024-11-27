@@ -911,14 +911,17 @@ class SerialClient(Logger):
     pass
 
     # BUFFERS ---------------------------------------------------------------------------------------------------------
-    def _buffers_clear__read(self) -> None:
+    def _buffers_clear__read(self, _timeout: Optional[float] = None) -> None:
+        self._SERIAL.timeout = _timeout or self.TIMEOUT__READ or None
         for _ in range(2):
             try:
                 while self._SERIAL.readline(1):
                     pass
             except:
                 pass
-            time.sleep(0.1)
+            # time.sleep(0.1)
+
+        self._SERIAL.timeout = self.TIMEOUT__READ or None  # set back - final
 
     def _buffers_clear__write(self) -> None:
         """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
@@ -1449,10 +1452,10 @@ class SerialClient(Logger):
     # USER COMMANDS
     # -----------------------------------------------------------------------------------------------------------------
     def reset(self, sleep_after: float = 1) -> None:
-        if self.check__connected():
+        if self.connect__only_if_address_resolved():
             self.write_read(self.CMD__RESET)
-            time.sleep(sleep_after)
-            self._buffers_clear__read()
+            self._buffers_clear__read(sleep_after)
+        pass
 
 
 # =====================================================================================================================
