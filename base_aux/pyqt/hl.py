@@ -62,6 +62,11 @@ class HlStyle(NamedTuple):
 # =====================================================================================================================
 class HlStyles(AnnotValuesIter):
     """
+    NOTE
+    ----
+    ORDER is important!
+    LAST rule - would be final!
+
     EXAMPLE
     -------
     see HlStylesPython
