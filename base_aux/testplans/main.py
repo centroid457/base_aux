@@ -103,7 +103,7 @@ class TpMultyDutBase(Logger, QThread):
 
     @tc_active.setter
     def tc_active(self, value: type[TestCaseBase] | None) -> None:
-        if self.__tc_active:
+        if self.__tc_active and not self.__tc_active.SKIP:
             self.tc_prev = self.__tc_active
         self.__tc_active = value
 
