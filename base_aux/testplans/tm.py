@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.valid import *
 from base_aux.pyqt import TableModelTemplate
 from base_aux.breeders import *
 
@@ -103,6 +103,17 @@ class TpTableModel(TableModelTemplate):
                 if tc_inst:
                     if tc_inst.result is None:
                         return ""
+                    elif isinstance(tc_inst.result, Valid):
+                        if tc_inst.result.check__active():
+                            return "..."    #fixme: not working
+                        elif tc_inst.result.finished:
+                            if bool(tc_inst.result):
+                                return "PASS"
+                            else:
+                                return "FAIL"
+                        else:
+                            return
+
                     else:
                         if bool(tc_inst.result):
                             return "PASS"

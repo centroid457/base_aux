@@ -153,6 +153,9 @@ class Valid(ValidAux):
         self.validate_last = True
         self.log_lines = []
 
+    def check__active(self) -> bool:
+        return self.finished is False
+
     @property
     def validate_last_bool(self) -> bool:
         """
