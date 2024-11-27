@@ -62,9 +62,14 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 24)
+    VERSION: tuple[int, int, int] = (0, 0, 25)
     NEWS: list[str] = [
-        "[Valid/Lambdas] separate and full ref args/kwargs",
+        "[tp] fix not closing/teardown last tc",
+        "[tp] iterate only not skipped tcs",
+        "[tp.gui] on dut not show FAIL if in process",
+        "[tp.gui] add btn_reset_all",
+        "[tc] add finished_cls",
+        "[serialClient] add reset",
     ]
 
 

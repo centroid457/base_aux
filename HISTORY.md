@@ -10,6 +10,15 @@
 ********************************************************************************
 ## NEWS
 
+0.0.25 (2024/11/27 15:19:07)
+------------------------------
+- [tp] fix not closing/teardown last tc  
+- [tp] iterate only not skipped tcs  
+- [tp.gui] on dut not show FAIL if in process  
+- [tp.gui] add btn_reset_all  
+- [tc] add finished_cls  
+- [serialClient] add reset  
+
 0.0.24 (2024/11/26 10:24:31)
 ------------------------------
 - [Valid/Lambdas] separate and full ref args/kwargs  
