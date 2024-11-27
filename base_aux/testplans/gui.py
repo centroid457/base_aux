@@ -1,3 +1,4 @@
+import time
 from typing import *
 
 from PyQt5.QtCore import *
@@ -135,6 +136,7 @@ class TpGuiBase(Gui):
         layout_details.addWidget(self.BTN_settings)
         layout_details.addWidget(self.BTN_save)
         layout_details.addWidget(self.BTN_clear_all)
+        layout_details.addWidget(self.BTN_reset_all)
         layout_details.addWidget(self.PTE)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
@@ -156,7 +158,8 @@ class TpGuiBase(Gui):
         self.BTN_settings.setCheckable(True)
 
         self.BTN_save = QPushButton("Сохранить результаты")
-        self.BTN_clear_all = QPushButton("очистить результаты")
+        self.BTN_clear_all = QPushButton("Очистить все результаты")
+        self.BTN_reset_all = QPushButton("Отключить все устройства")
 
     def CB_create(self) -> None:
         self.CB_tp_run_infinit = QCheckBox("бесконечный цикл")
@@ -222,6 +225,7 @@ class TpGuiBase(Gui):
         self.BTN_devs_detect.clicked.connect(self.BTN_devs_detect__clicked)
         self.BTN_save.clicked.connect(self.BTN_save__clicked)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
+        self.BTN_reset_all.clicked.connect(self.BTN_reset_all__clicked)
 
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
         self.DATA.signal__tp_finished.connect(self.TM._data_reread)
@@ -286,6 +290,9 @@ class TpGuiBase(Gui):
 
     def BTN_save__clicked(self) -> None:
         pass
+
+    def BTN_reset_all__clicked(self) -> None:
+        self.DATA.DEVICES__BREEDER_CLS.group_call__("reset")
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
