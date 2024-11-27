@@ -913,13 +913,13 @@ class SerialClient(Logger):
     # BUFFERS ---------------------------------------------------------------------------------------------------------
     def _buffers_clear__read(self, _timeout: Optional[float] = None) -> None:
         self._SERIAL.timeout = _timeout or self.TIMEOUT__READ or None
-        for _ in range(2):
+        while True:
             try:
-                while self._SERIAL.readline(1):
-                    pass
+                if not self._SERIAL.readline(1):
+                    break
             except:
                 pass
-            # time.sleep(0.1)
+            time.sleep(0.1)
 
         self._SERIAL.timeout = self.TIMEOUT__READ or None  # set back - final
 
