@@ -1,6 +1,6 @@
 import time
 
-from base_aux.classes import *
+from base_aux.valid import *
 
 from . import tc1_direct
 from .tc0_groups import *

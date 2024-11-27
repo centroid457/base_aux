@@ -1,6 +1,6 @@
 import time
 from base_aux.testplans import *
-from base_aux.classes import *
+from base_aux.valid import *
 
 
 # =====================================================================================================================
