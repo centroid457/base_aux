@@ -299,8 +299,8 @@ class TpMultyDutBase(Logger, QThread):
                             break
             # if self.tc_prev:
             #     self.tc_prev.teardown__cls()
-            # if self.tc_active:
-            #     self.tc_active.teardown__cls()
+            if self.tc_active and self.tc_active.finished__cls is not None:
+                self.tc_active.teardown__cls()
             # FINISH TP CYCLE ---------------------------------------------------
             self.tp__teardown()
             self.LOGGER.debug("TP FINISH")
