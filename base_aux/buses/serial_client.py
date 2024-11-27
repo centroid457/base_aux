@@ -198,6 +198,9 @@ class SerialClient(Logger):
     ADDRESSES__SHORTED: list[str] = []
     ADDRESSES__PAIRED: list[tuple[str, str]] = []
 
+    # CMDS -----------------------------------------------------
+    CMD__RESET: str = "RST"
+
     # INIT ============================================================================================================
     pass
     pass
@@ -1441,6 +1444,15 @@ class SerialClient(Logger):
             **{k[1:]: v for k, v in _kwargs.items() if k.startswith("_")}
         )
         return result
+
+    # =================================================================================================================
+    # USER COMMANDS
+    # -----------------------------------------------------------------------------------------------------------------
+    def reset(self, sleep_after: float = 1) -> None:
+        if self.check__connected():
+            self.write_read(self.CMD__RESET)
+            time.sleep(sleep_after)
+            self._buffers_clear__read()
 
 
 # =====================================================================================================================
