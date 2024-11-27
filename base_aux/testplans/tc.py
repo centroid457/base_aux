@@ -47,7 +47,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     DEVICES__BREEDER_CLS: type['DevicesBreeder'] = None
 
     # AUXILIARY -----------------------------------
-    IsRunning__Cls: bool | None = None
+    finished__cls: bool | None = None
 
     signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
@@ -181,6 +181,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     @classmethod
     def clear__cls(cls):
+        cls.finished__cls = None
         cls.result__startup_cls = None
         cls.result__teardown_cls = None
         for tc in cls.TCS__LIST:
@@ -333,7 +334,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         """before batch work
         """
         print(f"startup__cls")
-        cls.IsRunning__Cls = True
+        cls.finished__cls = False
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
@@ -373,7 +374,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     def teardown__cls(cls) -> TYPE__RESULT_W_EXX:
         print(f"run__cls=teardown__cls")
 
-        if cls.IsRunning__Cls or cls.result__teardown_cls is None:
+        if not cls.finished__cls or cls.result__teardown_cls is None:
             result = cls.teardown__cls__wrapped
             result = Valid.get_result_or_exx(result)
             if isinstance(result, Valid):
@@ -386,7 +387,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         else:
             result = cls.result__teardown_cls
 
-        cls.IsRunning__Cls = False
+        cls.finished__cls = True
         return result
 
     # =================================================================================================================

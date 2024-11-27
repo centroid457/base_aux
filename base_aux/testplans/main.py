@@ -293,11 +293,14 @@ class TpMultyDutBase(Logger, QThread):
                     if self.tc_active:
                         self.tc_active.run__cls(single=True)
                 else:
-                    for self.tc_active in self.TCS__CLS:
+                    for self.tc_active in filter(lambda x: not x.SKIP, self.TCS__CLS):
                         tc_executed__result = self.tc_active.run__cls(cls_prev=self.tc_prev)
                         if tc_executed__result is False:
                             break
-
+            # if self.tc_prev:
+            #     self.tc_prev.teardown__cls()
+            # if self.tc_active:
+            #     self.tc_active.teardown__cls()
             # FINISH TP CYCLE ---------------------------------------------------
             self.tp__teardown()
             self.LOGGER.debug("TP FINISH")
