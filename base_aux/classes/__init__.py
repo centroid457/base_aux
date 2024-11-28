@@ -106,8 +106,10 @@ from .text import (
     Text,
 )
 # ---------------------------------------------------------------------------------------------------------------------
-from .translator import (
-    Translator,
+from .translatorbase import (
+    TranslatorBase,
+    TranslatorDirect,
+    TranslatorByAttr,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .singleton import (
