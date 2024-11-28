@@ -9,9 +9,22 @@ class AttrAux:
     ------
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
+
+    @classmethod
+    def attrs__iter_not_private(cls, source: Any):
+        for name in dir(source):
+            if not name.startswith("__"):
+                yield name
+
+    @classmethod
+    def attrs__iter_not_hidden(cls, source: Any):
+        for name in dir(source):
+            if not name.startswith("_"):
+                yield name
+
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _attr_anycase__find(cls, item: str | Any, obj: Any = ValueNotExist) -> str | None:
+    def _attr_anycase__find(cls, item: str | Any, source: Any = ValueNotExist) -> str | None:
         """
         get attr name in original register
         """
@@ -19,10 +32,10 @@ class AttrAux:
             return
 
         item = item.strip()
-        if obj == ValueNotExist:
-            obj = cls   # seems it is not good idea!!!
+        if source == ValueNotExist:
+            source = cls   # seems it is not good idea!!!
 
-        for name in dir(obj):
+        for name in cls.attrs__iter_not_private(source):
             if name.lower() == str(item).lower():
                 return name
 
@@ -70,6 +83,24 @@ class AttrAux:
     @classmethod
     def _setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
         cls._setattr_anycase(item, value, obj)
+
+    # DICT ------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def attrs__to_dict(cls, source: Any) -> dict[str, Any]:
+        """
+        GOAL
+        ____
+        make a dict from any object from attrs (not hidden)
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        using any object as rules for Translator
+        """
+        result = {}
+        for name in cls.attrs__iter_not_hidden(source):
+            result.update({name: getattr(source, name)})
+
+        return result
 
 
 # =====================================================================================================================
