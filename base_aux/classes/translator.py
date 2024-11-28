@@ -13,7 +13,7 @@ class TranslatorBase:
     RETURN_SOURCE_IF_NOT_FOUND: bool = True
 
     SELECTOR: Callable[[Any, Any], bool] = lambda self, source, var: source == var
-    RULES: dict[Any, Any]
+    RULES: dict[Any, Any]   # todo: add usage as object! not just a single generic dict!!!
 
     def __init__(self, rules, selector=None, return_source_if_not_found: bool = None, selector_attr: str = None):
         if selector is not None:
@@ -27,6 +27,10 @@ class TranslatorBase:
 
     def __call__(self, source: Any, *args, **kwargs) -> Any | type[ValueNotExist]:
         """
+        GOAL
+        ----
+        actually make translation
+
         any raise - assumed as not valid
         """
         for variant, result in self.RULES.items():
