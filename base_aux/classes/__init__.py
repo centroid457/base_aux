@@ -106,7 +106,7 @@ from .text import (
     Text,
 )
 # ---------------------------------------------------------------------------------------------------------------------
-from .translatorbase import (
+from .translator import (
     TranslatorBase,
     TranslatorDirect,
     TranslatorByAttr,

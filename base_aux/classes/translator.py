@@ -47,7 +47,7 @@ class TranslatorDirect(TranslatorBase):
     """
     just a clear derivative
     """
-    pass
+    SELECTOR: Callable[[Any, Any], bool] = lambda self, source, var: source == var
 
 
 class TranslatorByAttr(TranslatorBase):
