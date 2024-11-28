@@ -1,5 +1,6 @@
 from typing import *
 from base_aux.funcs.static import ValueNotExist
+from base_aux.classes import *
 
 
 # =====================================================================================================================
@@ -13,9 +14,9 @@ class TranslatorBase:
     RETURN_SOURCE_IF_NOT_FOUND: bool = True
 
     SELECTOR: Callable[[Any, Any], bool] = lambda self, source, var: source == var
-    RULES: dict[Any, Any]   # todo: add usage as object! not just a single generic dict!!!
+    RULES: dict[Any | str, Any]
 
-    def __init__(self, rules, selector=None, return_source_if_not_found: bool = None, selector_attr: str = None):
+    def __init__(self, rules: dict[Any, Any] | Any, selector=None, return_source_if_not_found: bool = None, selector_attr: str = None):
         if selector is not None:
             self.SELECTOR = selector
         if rules is not None:
@@ -24,6 +25,9 @@ class TranslatorBase:
             self.RETURN_SOURCE_IF_NOT_FOUND = return_source_if_not_found
         if selector_attr is not None:
             self.SELECTOR_ATTR = selector_attr
+
+        if not isinstance(self.RULES, dict):
+            self.RULES = AttrAux.attrs__to_dict(self.RULES)
 
     def __call__(self, source: Any, *args, **kwargs) -> Any | type[ValueNotExist]:
         """
