@@ -62,9 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 28)
+    VERSION: tuple[int, int, int] = (0, 0, 29)
     NEWS: list[str] = [
-        "[tp.gui] add and apply on finish devsDetect+Tp",
+        "[tp.gui] ero fix headers",
     ]
 
 

@@ -35,8 +35,8 @@ class TpTableModel(TableModelTemplate):
             TESTCASE: str = "ТЕСТКЕЙС"
             SKIP: str = "Пропустить"
             ASYNC: str = "Асинхр."
-            STARTUP_CLS: str = "Подготовка"
-            TEARDOWN_CLS: str = "Завершение"
+            STARTUP_CLS: str = "Подготовка\nтесткейса"
+            TEARDOWN_CLS: str = "Завершение\nтесткейса"
 
         self.HEADERS = Headers()
         self.HTRANSLATOR = Translator(HTRus)
