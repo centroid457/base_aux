@@ -196,24 +196,14 @@ class TpGuiBase(Gui):
         self.TV.setModel(self.TM)
         self.TV.setSelectionMode(QTableView.SingleSelection)
 
-        # self.TV.setStyleSheet("gridline-color: rgb(255, 0, 0)")
-        # self.TV.setMinimumSize(400, 300)
-        # self.TV.setShowGrid(True)
-        # self.TV.setFont(QFont("Calibri (Body)", 7))
-        # self.TV.setSortingEnabled(True)     # enable sorting
-        self.TV.resizeColumnsToContents()   # set column width to fit contents
-        # self.TV.setColumnWidth(0, 100)
-
-        #
         hh = self.TV.horizontalHeader()
         # hh.setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, True)
         hh.setSectionsClickable(False)
         # hh.setStretchLastSection(True)
+        hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # for index of column set stretch size
 
-        # self.TV.selectRow(1)      # not working
-        # self.TV.selectColumn(2)   # not working
-
-        # self.TV.setSelectionModel(QItemSelection().select())
+        self.TV.resizeColumnsToContents()
+        self.TV.resizeRowsToContents()
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):

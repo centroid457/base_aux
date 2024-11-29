@@ -40,6 +40,10 @@ class HeaderViewCB(QHeaderView):
         self.setSectionsClickable(True)
         self.sectionClicked.connect(self.on_sectionClicked)
 
+        # self.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        # self.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        # self.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+
     def count(self):
         return len(self.DATA.DEVS)
 

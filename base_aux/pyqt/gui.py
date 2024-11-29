@@ -849,24 +849,46 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
         # self.TV.setShowGrid(True)
         # self.TV.setFont(QFont("Calibri (Body)", 12))  # сразу на все!!! и на заголоски и на ячейки
         # self.TV.setStyleSheet("gridline-color: rgb(255, 0, 0)")
-
         # self.TV.setSortingEnabled(True)     # enable sorting
 
         # HEADER ---------
         self.TV.setHorizontalHeader(HeaderViewCB(self.DATA))   # you can add some additional HV object!
 
-        # hh = self.TV.horizontalHeader()
+        hh: QHeaderView = self.TV.horizontalHeader()
         # hh.setStretchLastSection(True)
         # hh.setSectionsClickable(False)
         # hh.setSectionsMovable(False)
         # hh.setVisible(False)
         # hh.swapSections(1,2)
+        hh.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
 
-        # GEOMETRY  ----------
+        hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # for index of column set stretch size
+        # hh.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        # hh.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+
+        # hh.setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, True)
+        # hh.setSectionsClickable(False)
+        # hh.setStretchLastSection(True)
+
+        vh: QHeaderView = self.TV.verticalHeader()
+        # vh.setCascadingSectionResizes(True)
+        vh.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+
+        # SELECTION ----------
+        # self.TV.selectRow(1)      # not working
+        # self.TV.selectColumn(2)   # not working
+
+        # self.TV.setSelectionModel(QItemSelection().select())
+
+        # GEOMETRY ----------
         # self.TV.setMinimumSize(400, 300)
         # self.TV.resize(400, 300)
         # self.TV.setColumnWidth(0, 100)
-        self.TV.resizeColumnsToContents()   # set column width to fit contents - NEED AFTER SetHEADER!!!
+
+        self.TV.resizeColumnsToContents()   #all= set column width to fit contents - NEED AFTER SetHEADER!!!
+        # self.TV.resizeColumnToContents(1) #exact
+        self.TV.resizeRowsToContents()
+        # self.TV.resizeRowToContents(1)
 
     def PTE_create(self) -> None:
         self.PTE = QPlainTextEdit()
