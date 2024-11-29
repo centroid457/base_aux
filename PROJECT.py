@@ -62,12 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 26)
+    VERSION: tuple[int, int, int] = (0, 0, 27)
     NEWS: list[str] = [
-        "[classes] add AttrInitKwargs+Translator",
-        "[AttrAux] add attrs__to_dict",
-        "[gui] apply Translator for headers"
-        "[gui] fix columns resizeByContents"
+        "[gui.tm] fix columns",
     ]
 
 
