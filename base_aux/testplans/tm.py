@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 
 from base_aux.funcs import *
 from base_aux.valid import *
+from base_aux.classes import Translator
 from base_aux.pyqt import TableModelTemplate
 from base_aux.breeders import *
 
@@ -13,6 +14,7 @@ from base_aux.breeders import *
 class TpTableModel(TableModelTemplate):
     DATA: "TpMultyDutBase"
     HEADERS: "Headers"
+    HTRANSLATOR: Translator
 
     # AUX -------------------------------------------
     open__settings: Optional[bool] = None
@@ -29,7 +31,15 @@ class TpTableModel(TableModelTemplate):
             TEARDOWN_CLS: None = None
             # FIXME: need resolve COUNT over DevicesIndexed!!!
 
+        class HTRus:
+            TESTCASE: str = "ТЕСТКЕЙС"
+            SKIP: str = "Пропустить"
+            ASYNC: str = "Асинхр."
+            STARTUP_CLS: str = "Подготовка"
+            TEARDOWN_CLS: str = "Завершение"
+
         self.HEADERS = Headers()
+        self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return len(self.DATA.TCS__CLS)

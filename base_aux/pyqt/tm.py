@@ -8,6 +8,7 @@ from base_aux.funcs import *
 from base_aux.classes import *
 from base_aux.breeders import *
 from .base import Data_
+from base_aux.classes import Translator
 
 
 # =====================================================================================================================
@@ -20,6 +21,7 @@ class Headers(BreederStrStack):
 class TableModelTemplate(QAbstractTableModel):
     DATA: Data_
     HEADERS: BreederStrStack = Headers()
+    HTRANSLATOR: Translator = None
 
     # METHODS USER ----------------------------------------------------------------------------------------------------
     def __init__(self, data: Optional[Any] = None):
@@ -44,7 +46,10 @@ class TableModelTemplate(QAbstractTableModel):
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:      # in headerData WORK ONLY DisplayRole+TOOLTIP!!!
             if orientation == Qt.Horizontal:
-                return self.HEADERS[section]
+                value = self.HEADERS[section]
+                if self.HTRANSLATOR:
+                    value = self.HTRANSLATOR(value)
+                return value
 
             if orientation == Qt.Vertical:
                 return str(section + 1)
