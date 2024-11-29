@@ -23,32 +23,32 @@ class Dialogs:
     so to be sure there are no any other available!
     """
     @staticmethod
-    def info__about() -> None:
+    def info__about(*args) -> None:
         QMessageBox.information(
             None,
-            'О программе',
+            "О программе",
             (
-                'ООО Элемент-Инжиниринг,\n'
-                'Программа проведения тестирования блоков питания\n'
-                '(стендовые испытания ОТК)'
+                "ООО Элемент-Инжиниринг,\n"
+                "Программа проведения тестирования блоков питания\n"
+                "(стендовые испытания ОТК)"
              )
         )
     @staticmethod
-    def finished__device_detection() -> None:
+    def finished__devs_detection(*args) -> None:
         QMessageBox.information(
             None,
-            'Поиск устройств',
+            "Поиск устройств",
             (
-                'Процесс завершен',
+                "Процесс завершен"
             )
         )
     @staticmethod
-    def finished__tp() -> None:
+    def finished__tp(*args) -> None:
         QMessageBox.information(
             None,
-            'Тестирование',
+            "Тестирование",
             (
-                'Процесс завершен',
+                "Процесс завершен"
              )
         )
 
@@ -328,7 +328,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         about_action = QAction('O приложении', self)      # if no fileIcon exists - no error/warn!
         about_action.setStatusTip('O приложении')       # working on ACTION
         about_action.setShortcut('F1')
-        about_action.triggered.connect(Dialogs.info__about)
+        about_action.triggered.connect(self.DIALOGS.info__about)
         menu_help.addAction(about_action)
 
         menu_help.addSeparator()

@@ -47,6 +47,7 @@ class TpMultyDutBase(Logger, QThread):
     signal__tp_start = pyqtSignal()
     signal__tp_stop = pyqtSignal()
     signal__tp_finished = pyqtSignal()
+    signal__devs_detected = pyqtSignal()
 
     _signal__tp_reset_duts_sn = pyqtSignal()
 
@@ -266,7 +267,11 @@ class TpMultyDutBase(Logger, QThread):
     # =================================================================================================================
     def terminate(self) -> None:
         pass
-        super().terminate()
+
+        need_msg: bool = False
+        if self.isRunning():
+            need_msg = True
+            super().terminate()
 
         # TERMINATE CHILDS!!! ---------------------
         # ObjectInfo(self.currentThread()).print()    # cant find childs!!!
@@ -277,7 +282,8 @@ class TpMultyDutBase(Logger, QThread):
 
         # finish ----------------------------
         self.tp__teardown(0)
-        self.signal__tp_finished.emit()
+        if need_msg:
+            self.signal__tp_finished.emit()
 
     def run(self) -> None:
         self.LOGGER.debug("TP START")

@@ -222,6 +222,9 @@ class TpGuiBase(Gui):
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
         self.DATA.signal__tp_finished.connect(self.TM._data_reread)
 
+        self.DATA.signal__devs_detected.connect(self.DIALOGS.finished__devs_detection)
+        self.DATA.signal__tp_finished.connect(self.DIALOGS.finished__tp)
+
         TestCaseBase.signals.signal__tc_state_changed.connect(lambda _: self.TM._data_reread())
 
         self.TV.selectionModel().selectionChanged.connect(self.TV_selectionChanged)
@@ -279,6 +282,7 @@ class TpGuiBase(Gui):
         self.TM._data_reread()
         self.DATA.DEVICES__BREEDER_CLS.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
         self.TM._data_reread()
+        self.DATA.signal__devs_detected.emit()
 
     def BTN_save__clicked(self) -> None:
         pass
