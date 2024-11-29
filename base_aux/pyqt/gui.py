@@ -33,6 +33,24 @@ class Dialogs:
                 '(стендовые испытания ОТК)'
              )
         )
+    @staticmethod
+    def finished__device_detection() -> None:
+        QMessageBox.information(
+            None,
+            'Поиск устройств',
+            (
+                'Процесс завершен',
+            )
+        )
+    @staticmethod
+    def finished__tp() -> None:
+        QMessageBox.information(
+            None,
+            'Тестирование',
+            (
+                'Процесс завершен',
+             )
+        )
 
 
 # =====================================================================================================================
