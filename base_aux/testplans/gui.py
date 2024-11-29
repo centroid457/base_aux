@@ -196,11 +196,12 @@ class TpGuiBase(Gui):
         self.TV.setModel(self.TM)
         self.TV.setSelectionMode(QTableView.SingleSelection)
 
-        hh = self.TV.horizontalHeader()
+        hh: QHeaderView = self.TV.horizontalHeader()
         # hh.setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, True)
         hh.setSectionsClickable(False)
         # hh.setStretchLastSection(True)
         hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # for index of column set stretch size
+        hh.setMinimumSize(0, QHeaderView.ResizeMode.Stretch)
 
         self.TV.resizeColumnsToContents()
         self.TV.resizeRowsToContents()

@@ -868,7 +868,6 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
 
         # hh.setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, True)
         # hh.setSectionsClickable(False)
-        # hh.setStretchLastSection(True)
 
         vh: QHeaderView = self.TV.verticalHeader()
         # vh.setCascadingSectionResizes(True)
@@ -880,10 +879,12 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
 
         # self.TV.setSelectionModel(QItemSelection().select())
 
-        # GEOMETRY ----------
+        # SIZE ----------
         # self.TV.setMinimumSize(400, 300)
         # self.TV.resize(400, 300)
+
         # self.TV.setColumnWidth(0, 100)
+        # self.TV.setMinimumWidth(100)
 
         self.TV.resizeColumnsToContents()   #all= set column width to fit contents - NEED AFTER SetHEADER!!!
         # self.TV.resizeColumnToContents(1) #exact

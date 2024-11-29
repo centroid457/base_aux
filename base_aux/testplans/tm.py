@@ -92,7 +92,8 @@ class TpTableModel(TableModelTemplate):
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:
             if col == self.HEADERS.TESTCASE:
-                return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
+                # return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
+                return f"{tc_cls.DESCRIPTION}"
             if col == self.HEADERS.SKIP:
                 return '+' if tc_cls.SKIP else '-'
             if col == self.HEADERS.ASYNC:
