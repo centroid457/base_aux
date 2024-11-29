@@ -16,22 +16,14 @@ class Test__1:
             ({1:11, 2:22}, True, "hello", "hello"),
             ({1:11, 2:22}, False, "hello", ValueNotExist),
 
-            (AttrInitKwargs(**{"hello": 22}), False, "hello", 22),
+            (AttrInitKwargs(**{"a1": 22}), False, "a11", ValueNotExist),
+            (AttrInitKwargs(**{"a1": 22}), True, "a11", "a11"),
+
+            (AttrInitKwargs(**{"a1": 22}), None, "a1", 22),
         ]
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):
-        func_link = TranslatorDirect(rules=rules, return_source_if_not_found=notFound)
-        pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @pytest.mark.parametrize(
-        argnames="rules, notFound, source, _EXPECTED",
-        argvalues=[
-            ({1:11, 2:22}, None, AttrInitKwargs(**{"hello": 2}), 22),
-        ]
-    )
-    def test__ByAttr(self, rules, notFound, source, _EXPECTED):
-        func_link = TranslatorByAttr(rules=rules, return_source_if_not_found=notFound, selector_attr="hello")
+        func_link = Translator(rules=rules, return_source_if_not_found=notFound)
         pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
 
 
