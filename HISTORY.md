@@ -10,6 +10,12 @@
 ********************************************************************************
 ## NEWS
 
+0.0.26 (2024/11/29 14:12:13)
+------------------------------
+- [classes] add AttrInitKwargs+Translator  
+- [AttrAux] add attrs__to_dict  
+- [gui] apply Translator for headers[gui] fix columns resizeByContents  
+
 0.0.25 (2024/11/27 15:19:07)
 ------------------------------
 - [tp] fix not closing/teardown last tc  
