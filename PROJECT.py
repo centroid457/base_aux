@@ -62,9 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 0, 27)
+    VERSION: tuple[int, int, int] = (0, 0, 28)
     NEWS: list[str] = [
-        "[gui.tm] fix columns",
+        "[tp.gui] add and apply on finish devsDetect+Tp",
     ]
 
 
