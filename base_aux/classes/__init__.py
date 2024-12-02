@@ -24,7 +24,6 @@ from .static import (
     Exx__BreederObjectList_ObjCantAccessIndex,
 
 )
-from ..argskwargs.argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from .annot_1_aux import (
     AnnotAux,
 )

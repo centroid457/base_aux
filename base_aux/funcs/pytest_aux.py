@@ -2,7 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.argskwargs.argskwargs import *
+from base_aux.argskwargs import *
 from base_aux.funcs import *
 from base_aux.objects import *
 
