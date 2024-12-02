@@ -10,6 +10,12 @@
 ********************************************************************************
 ## NEWS
 
+0.1.0 (2024/12/02 18:25:39)
+------------------------------
+- [argsKwargs] separate all variants and apply in pytest+add derivatives  
+- [enums] separate typical  
+- [t8] add/separate some files  
+
 0.0.29 (2024/11/29 16:43:16)
 ------------------------------
 - [tp.gui] ero fix headers  
