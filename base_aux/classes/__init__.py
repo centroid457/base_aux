@@ -77,6 +77,9 @@ from .attr_4_lambda_call import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .lambdas import (
     ArgsKwargs,
+    Args,
+    Kwargs,
+
     Lambda,
 
     LambdaBool,

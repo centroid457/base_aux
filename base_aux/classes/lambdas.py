@@ -62,6 +62,29 @@ class ArgsKwargs:
             return False
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+class Args(ArgsKwargs):
+    """
+    just a derivative to clearly show only Args is important
+    """
+    def __bool__(self) -> bool:
+        if self.ARGS:
+            return True
+        else:
+            return False
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class Kwargs(ArgsKwargs):
+    """
+    just a derivative to clearly show only KwArgs is important
+    """
+    def __bool__(self) -> bool:
+        if self.KWARGS:
+            return True
+        else:
+            return False
+
 # =====================================================================================================================
 class Lambda(ArgsKwargs):
     """
