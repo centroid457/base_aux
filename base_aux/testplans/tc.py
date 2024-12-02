@@ -524,7 +524,7 @@ class _Info(_TestCaseBase):
         return result
 
     @classmethod
-    def results__get_all(cls) -> list[dict[str, Any]]:
+    def get__results_all(cls) -> list[dict[str, Any]]:
         results = []
         for tc_inst in cls.TCS__LIST:
             results.append(tc_inst.get__results())

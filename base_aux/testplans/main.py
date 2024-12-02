@@ -361,7 +361,7 @@ class TpMultyDutBase(Logger, QThread):
         """
         TCS_RESULTS = []
         for tc in self.TCS__CLS:
-            TCS_RESULTS.append(tc.results__get_all())
+            TCS_RESULTS.append(tc.get__results_all())
 
         result = {
             **self.get__info__stand(),
