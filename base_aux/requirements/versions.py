@@ -331,8 +331,10 @@ class Version(CmpInst):
 
 
 # =====================================================================================================================
-class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
+class CheckVersion(GetattrPrefixInst_RaiseIf):
     SOURCE: Union[Any, Callable[..., Any]] = sys.version.split()[0]
+    # print(sys.version_info)   # sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
+    # return sys.version_info[:3]     # (3, 8, 10)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, source: Any | Callable | None = None):
@@ -371,15 +373,15 @@ class ReqCheckVersion(GetattrPrefixInst_RaiseIf):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class ReqCheckVersion_Python(ReqCheckVersion):
+class CheckVersion_Python(CheckVersion):
     """
     check version of python interpreter.
 
     USAGE
     -----
-    ReqCheckVersion_Python().raise_if_not__check_ge("2")
-    ReqCheckVersion_Python().raise_if_not__check_ge("3.11")
-    ReqCheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
+    CheckVersion_Python().raise_if_not__check_ge("2")
+    CheckVersion_Python().raise_if_not__check_ge("3.11")
+    CheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
     """
     SOURCE = sys.version.split()[0]
 
