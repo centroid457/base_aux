@@ -2,6 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
+from base_aux.classes import ArgsKwargs
 from base_aux.funcs import *
 from base_aux.objects import *
 
@@ -35,6 +36,11 @@ def pytest_func_tester(
 
     TODO: apply Valid or merge them into single one!
     """
+    if isinstance(args, ArgsKwargs):
+        args = args.ARGS
+    if isinstance(kwargs, ArgsKwargs):
+        kwargs = kwargs.KWARGS
+
     args = args__ensure_tuple(args)
     kwargs = kwargs or dict()
     comment = _COMMENT or ""
