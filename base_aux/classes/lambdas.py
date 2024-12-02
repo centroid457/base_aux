@@ -55,6 +55,12 @@ class ArgsKwargs:
         self.ARGS = args
         self.KWARGS = kwargs
 
+    def __bool__(self) -> bool:
+        if self.ARGS or self.KWARGS:
+            return True
+        else:
+            return False
+
 
 # =====================================================================================================================
 class Lambda(ArgsKwargs):
