@@ -1,27 +1,16 @@
 ﻿# =====================================================================================================================
-# STARICHENKO UNIVERSAL IMPORT
-import sys
-sys.path.append("..")  # Adds higher directory to python modules path.
-import CONSTANTS
-
 import time
 import pathlib
 import typing as tp
 
-# import utilities.func_universal as UFU   #TODO: DONT IMPORT IT!!!
-# from gui.pyqt_import_all_by_star import *
-
-# from users.user_profile import UserProfile_Singleton
-# from stands.stand import Stand_Singleton
-# from results.results_testplan import ResultsTestplan_Singleton
 # =====================================================================================================================
-
 import csv
 import json
 import functools
 import logging
 import multiprocessing.pool
 import os
+import sys
 import random
 import re
 import copy
@@ -44,12 +33,7 @@ from subprocess import check_output
 from importlib import import_module
 from threading import Thread
 
-from gui.wgt_logger import LogProgressBarTimeout
-from dataclasses import dataclass, field
-
 # CONSTANTS ===========================================================================================================
-pass
-
 # VALUES --------------------------------------------------------------------------------------------------------------
 TYPE_ELEMENTARY_SINGLE_TUPLE = (str, int, float, bool, type(None), bytes, )     # starichenko
 TYPE_ELEMENTARY_CONTAINER_TUPLE = (set, list, tuple, dict, )     # starichenko
@@ -116,10 +100,9 @@ def python_version_get():
 
 
 def python_check_version_min(expected_min=None, raise_if_wrong=True):
-    expected_min = expected_min or CONSTANTS.PYTHON_VER_MINIMUM
     result = sys.version_info >= expected_min
     msg = f"требуется версия Python>={expected_min}/текущая={python_version_get()}"
-    logging_and_print_debug_or_warning(msg, result)
+    print(msg, result)
     if raise_if_wrong and not result:
         raise Exception(msg)
 
@@ -4497,9 +4480,6 @@ def datetime_get_date_str(add_weekday=False, time_struct=None):     # starichenk
     return _timedate_get_part_str(pattern)
 
 
-# DEVICES ============================================================================================================
-
-
 # SETTINGS PROCESSING =================================================================================================
 # TODO<STARICHENKO>: you should move all setting function to MeasurementClass! to automatic use self.pid for DUT! do it right now!
 # тольк для этого придется алгоритм менять!!!
@@ -4748,86 +4728,6 @@ def cartesian4(range_param):
     return range_param_new
 
 
-def return_channel_number(channel_string):
-    """Возвращает номер канала из строки или None.
-
-    :param channel_string: Строка из которой следует достать номер канала. Примеры разбираемых строк:
-      "CH 33 IN => Line OUT", "Line IN => CH 33 OUT", 33, "33", "CH 33e IN => Line OUT", "CH 33.5 IN => Line OUT",
-      "CH 33".
-    :type channel_string: str
-
-    :return: Возвращает номер канала из строки или None.
-    :rtype: int | float | str | None
-
-    """
-    channel_string = str(channel_string)
-    pattern_ch_num = r'^\d+$'  # Для '33' или 33
-    pattern_ch_num += r'|\d+\.\d+'  # Для 'CH 33.5 IN ...'
-    pattern_ch_num += r'|[ ]\d+[ ]'  # Для 'CH 33 IN ...'
-    pattern_ch_num += r'|[ ]\d+$'  # Для 'CH 33'
-    pattern_ch_num += r'|\d+[e]'  # Для 'CH 33e IN ...'
-
-    re_search = re.search(pattern_ch_num, channel_string)
-    if re_search is None:
-        return None
-
-    ch_num_str = re_search.group().strip()
-    if '.' in ch_num_str:
-        return float(ch_num_str)
-    if 'e' in ch_num_str:
-        return ch_num_str
-    try:
-        return int(ch_num_str)
-    except Exception as exx:
-        logging_and_print_warning(f"Не найден номер канала в строке '{channel_string}'. {exx!r}")
-        return None
-
-
-def parse_channels_from_pid(pid):
-    """ Takes pid and parses channels
-        into string, otherwise returns None
-    """
-    if pid.startswith('OADMD-') or pid.startswith('OADM-'):
-        channels = None
-        pattern_list = [
-            r'.+?-(\d+[/]\d+)-([CС]\d+(\(\d+\))?[/][CС]\d+(\(\d+\))?)-.+',
-            r'.+?-(\d+[/]\d+)-(?:[\w-]*)[CС](.+)-.+',
-            r'.+?-(\d+[/]\d+)-\d+\s?\(([CС]\d+[/][CС]\d+)\)',
-            r'.+?-(\d+[/]\d+)-(?:[\w-]*)[CС](.+)-\d+',
-            r'.+?-(\d+[/]\d+)-\d+\s?\(([CС]\d+[/][CС]\d+)\)'
-        ]
-        current_match = None
-
-        for current_pattern in pattern_list:
-            current_match = re.match(current_pattern, pid.replace('DCI-', ''))
-            if current_match:
-                break
-
-        if current_match:
-
-            channel_numbers = range_to_tuple_of_lists(current_match.group(1))
-            new_group = []
-            for i in current_match.groups():
-                if not i is None:
-                    new_group.append(i)
-            if len(new_group) > 2:
-                current_string = current_match.group(2) \
-                    .replace(current_match.group(3), '/' + current_match.group(3)[1:-1]) \
-                    .replace(current_match.group(4), '/' + current_match.group(4)[1:-1])
-            else:
-                current_string = current_match.group(2)
-            channels = range_to_tuple_of_lists(str_replace_russian_letters(current_string.upper()).replace('C', ''))
-            for i in range(len(channels)):
-                if len(channels[i]) < int(channel_numbers[int(i * len(channel_numbers) / len(channels))][0]):
-                    for j in range(len(channels[i]), channel_numbers[int(i * len(channel_numbers) / len(channels))][0]):
-                        channels[i].append(channels[i][-1] + 1)  # дополнить недостающие каналы
-            if pid.startswith('OADMD-') and (len(channels) < 2):
-                channels = (channels[0], channels[0][:])
-            return collapse(channels)
-
-    return None
-
-
 def collapse(channels):
     """ Takes tuple with channels lists and
         returns collapsed string of channels like this:
@@ -4881,109 +4781,6 @@ def read_csv_and_return_matrix_of_values(csv_path):
                     matrix_of_values.append(each_line)
 
     return matrix_of_values
-
-
-def convert_protocol_from_ATLAS_to_BERT(protocol_string, BER_type='PowerBlazer8800', reverse=False):
-    """ For given 'protocol_string' tries to convert it for BER-analyzer format.
-        If 'reverse' is True, converting otherwise.
-    """
-    available_bert_protocols = tuple()
-    converted_protocol_string = str_replace_russian_letters(protocol_string)
-    if BER_type == 'PowerBlazer8800':
-        available_bert_protocols = ('LANE4X10', 'LANE4X25', 'LANE10X10', 'OTU3E1', 'OTU3E2', 'SERIALOTU3',
-                                    'SERIALOTU3E1', 'SERIALOTU3E2', 'SERIALOC768', 'SERIALSTM256', '101001000MELEC',
-                                    '10GELAN', '10GEWAN', '100MOPTICAL', '1GEOPTICAL', 'STM0', 'STM1', 'STM4', 'STM16',
-                                    'STM64', 'OC1', 'OC3', 'OC12', 'OC48', 'OC192', 'OTU1', 'OTU2', 'OTU1E', 'OTU2E',
-                                    'OTU1F', 'OTU2F', 'STM0E', 'STM1E', 'STS1E', 'STS3E', '1X', '2X', '4X', '8X', '10X',
-                                    '16X', 'CPRI12G', 'CPRI24G', 'CPRI31G', 'CPRI49G', 'CPRI61G', 'CPRI98G', 'OBSAI31G')
-
-        if not reverse:
-            converted_protocol_string = ''.join(converted_protocol_string.upper().replace('-', '').split())
-
-            if 'GIGABITETHERNET' in converted_protocol_string or 'GE' in converted_protocol_string:
-                converted_protocol_string = converted_protocol_string.replace('GIGABITETHERNET', 'GE')
-                if converted_protocol_string == 'GE':
-                    converted_protocol_string = '1GE'
-
-                if converted_protocol_string.endswith('GE'):
-                    if converted_protocol_string.startswith('100'):
-                        converted_protocol_string = converted_protocol_string.replace('GE', 'M') \
-                                                    + 'OPTICAL'
-                    elif converted_protocol_string.startswith('10'):
-                        converted_protocol_string = converted_protocol_string + 'LAN'
-                    elif converted_protocol_string.startswith('1'):
-                        converted_protocol_string = converted_protocol_string + 'OPTICAL'
-
-                elif converted_protocol_string.startswith('10'):
-                    if '6.2' in converted_protocol_string:
-                        converted_protocol_string = '10GELAN'
-                    elif '7.3' in converted_protocol_string:
-                        converted_protocol_string = '10GELAN'
-
-            elif 'FIBERCHANNEL' in converted_protocol_string or 'FC' in converted_protocol_string:
-                converted_protocol_string = \
-                    converted_protocol_string.replace('FIBERCHANNEL', '') \
-                        .replace('FC', 'X') \
-                        .replace('G', 'X') \
-                        .strip()
-
-            elif 'OTU' in converted_protocol_string:
-                converted_protocol_string = converted_protocol_string.replace('FECRS', '')
-
-            if converted_protocol_string not in available_bert_protocols:
-                logging_and_print_debug("'{}' нет в списке доступных протоколов для '{}'".format(
-                    protocol_string, BER_type))
-                return None
-        else:
-            raise NotImplementedError(
-                "Нет описания для преобразования из '{}' в 'ATLAS' данного типа протокола: {}".format(
-                    BER_type, protocol_string))
-    else:
-        logging_and_print_warning('Нет реализации для данного типа BER-анализатора: {}'.format(BER_type))
-        raise NotImplementedError('Необходимо реализовать для других BER-анализаторов')
-    return converted_protocol_string
-
-
-def convert_protocol_from_BERT_to_ATLAS(protocol_string, BER_type='PowerBlazer8800'):
-    """ For given 'protocol_string' tries to convert it for ATLAS format.
-    """
-    return convert_protocol_from_ATLAS_to_BERT(protocol_string, BER_type=BER_type, reverse=True)
-
-
-def convert_protocols_dict_from_ATLAS_to_BERT(protocols_dict, BER_type='PowerBlazer8800', reverse=False):
-    """ For given 'protocols_dict' tries to convert every key (*protocol) in it for BER-analyzer format.
-        If 'reverse' is True, converting otherwise.
-    """
-    new_protocols_dict = {}
-
-    if protocols_dict:
-        if not reverse:
-            for protocol, value in protocols_dict.items():
-                try:
-                    converted_protocol_string = convert_protocol_from_ATLAS_to_BERT(protocol,
-                                                                                    BER_type=BER_type)
-                    if converted_protocol_string:
-                        new_protocols_dict[converted_protocol_string] = value
-                except Exception as E:
-                    logging_and_print_debug('{} - {}'.format(type(E), E))
-        else:
-            for protocol, value in protocols_dict.items():
-                try:
-                    converted_protocol_string = convert_protocol_from_BERT_to_ATLAS(protocol,
-                                                                                    BER_type=BER_type)
-                    if converted_protocol_string:
-                        new_protocols_dict[converted_protocol_string] = value
-                except Exception as E:
-                    logging_and_print_debug('{} - {}'.format(type(E), E))
-
-    return new_protocols_dict
-
-
-def convert_protocols_dict_from_BERT_to_ATLAS(protocols_dict, BER_type='PowerBlazer8800'):
-    """ For given 'protocols_dict' tries to convert every key (*protocol) in it for ATLAS format.
-    """
-    return convert_protocols_dict_from_ATLAS_to_BERT(protocols_dict, BER_type=BER_type, reverse=True)
-
 
 def ping(host, return_boolean=True):
     """ Ping-check for device availability,

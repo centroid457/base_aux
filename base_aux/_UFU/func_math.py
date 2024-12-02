@@ -1,7 +1,4 @@
 import math
-from utilities.exceptions import MathExpressionError
-import logging
-
 c_light_velocity = 299792458.0
 
 
@@ -9,8 +6,8 @@ def convert_to_decibel(val):
     try:
         dB = 10 * math.log10(val)
     except ValueError as e:
-        logging.error('Ошибка конвертации в децибелы значения: ' + str(val))
-        raise MathExpressionError(e.args)
+        print('Ошибка конвертации в децибелы значения: ' + str(val))
+        raise Exception(e.args)
     return dB
 
 
@@ -34,9 +31,9 @@ def noise_figure(pin, pout, osnr_out, osnr_in):
         # osnr_sum = convert_to_decibel(1/(convert_from_decibel(osnr_out)-1) - 1/(convert_from_decibel(osnr_in)-1))
     # последующее деление на 0 будет событием странным
     except ZeroDivisionError as e:
-        logging.error('Ошибка при вычислении суммарного osnr -- в знаменателе ноль:\n'
+        print('Ошибка при вычислении суммарного osnr -- в знаменателе ноль:\n'
                       '\tOSNR_in = {} dB; OSNR_out = {} dB'.format(osnr_in, osnr_out))
-        raise MathExpressionError(e.args)
+        raise Exception(e.args)
 
     nf = convert_from_decibel(58 + pin - osnr_sum)
     g = convert_from_decibel(- gain(pin, pout, osnr_out))
@@ -90,18 +87,18 @@ def convert_channel_to_wavelength(channel):
                 channel_as_str = channel
                 if 'e' in symbol_in_channel:
                     channel = int(channel.split(symbol_in_channel[0])[0]) + 0.5
-                    logging.debug(
+                    print(
                         "Номер канала преобразован из вида {} в {} для конвертирования его в частоту.".format(
                             channel_as_str, channel
                         ))
                 if '.' in symbol_in_channel:
                     channel = float(channel)
-                    logging.debug(
+                    print(
                         "Номер канала преобразован из вида {} в {} для конвертирования его в частоту.".format(
                             channel_as_str, channel
                         ))
             except:
-                logging.warning("Не могу сконвертировать номер канала {} в частоту.".format(channel))
+                print("Не могу сконвертировать номер канала {} в частоту.".format(channel))
                 return
     freq_thz = channel / 10 + 190
     return convert_freq_to_wavelength(freq_thz)
