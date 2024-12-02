@@ -154,6 +154,8 @@ def test__func_all(args, kwargs, _EXPECTED):
         ((1, None), {"2": 22, "3": None}, True),
         ((None, None), {"2": True, "3": None}, True),
         ((None, None), {"2": False, "3": None}, False),
+
+        ((None, None), {"2": False, "3": None}, False),
     ]
 )
 def test__func_any(args, kwargs, _EXPECTED):

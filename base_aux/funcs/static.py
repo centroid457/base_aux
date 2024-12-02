@@ -1,5 +1,6 @@
 from typing import *
 from typing import Union, Any, Callable, NoReturn
+from base_aux.classes import ArgsKwargs
 
 
 # =====================================================================================================================
@@ -51,8 +52,8 @@ TYPE__VALUE_NOT_PASSED = type[ValueNotExist] | ValueNotExist
 
 # ---------------------------------------------------------------------------------------------------------------------
 # SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
-TYPE__VALID_ARGS = Union[tuple, Any, None, "TYPE__ARGS_EMPTY", "TYPE__EXPLICIT"]
-TYPE__VALID_KWARGS = Optional[dict[str, Any]]
+TYPE__VALID_ARGS = Union[tuple, Any, None, "TYPE__ARGS_EMPTY", "TYPE__EXPLICIT", ArgsKwargs]
+TYPE__VALID_KWARGS = Union[None, dict[str, Any], ArgsKwargs]
 
 TYPE__VALID_EXCEPTION = Union[Exception, type[Exception]]
 TYPE__VALID_callable_item = Callable[[...], Any | NoReturn]
