@@ -2,23 +2,10 @@
 # TODO: implement JSON_DUMP_DEFAULT__MERGE
 
 # =====================================================================================================================
-# STARICHENKO UNIVERSAL IMPORT
 import sys
-sys.path.append("..")  # Adds higher directory to python modules path.
-import CONSTANTS
-
 import time
 import pathlib
 import typing as tp
-
-import utilities.func_universal as UFU
-from gui.pyqt_import_all_by_star import *
-
-# from users.user_profile import UserProfile_Singleton
-# from stands.stand import Stand_Singleton
-# from results.results_testplan import TestplanResults_Singleton
-# =====================================================================================================================
-
 import copy
 import json
 from utilities.processor_file import ProcessorFileSelector
@@ -122,14 +109,14 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
             return True
         else:
             msg = f"data is NOT clear {self.json_dict=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
     def json_check_no_clear(self) -> bool:
         if self._json_dict != self.JSON_DICT_DEFAULT:
             return True
         else:
             msg = f"data is clear {self.json_dict=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
     # MERGE -----------------------------------------------------------------------------------------------------------
     def json_merge(self, new_dict: dict, validate: bool = False, autodump: tp.Optional[bool] = None) -> tp.Optional[bool]:   # dont use name *UPDATE! its incorrect!!!
@@ -141,7 +128,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
             ])
         if validate and not self.json_validate(json_dict=result_dict):
             msg = f"ERROR merge {new_dict=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         self._json_dict = result_dict
@@ -170,7 +157,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
         """
         if key not in self.json_dict:
             msg = f"no {key=} in {self.json_dict=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
         self.json_dict[key] = value
         self.json_dump_try_autodump(autodump)
@@ -182,7 +169,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
         """
         if key not in self.json_dict:
             msg = f"no {key=} in {self.json_dict=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
         value_old = self.json_value_get(key)
         if isinstance(value_old, dict) and isinstance(value, dict):
@@ -191,7 +178,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
 
         else:
             msg = f"cant merge {key=} with {value_old=}/{value=}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return False
 
     def json_value_get(self, key: str, default: tp.Any = None) -> tp.Any:
@@ -227,7 +214,7 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
                 return value
 
         msg = f"no {keypath=} in any files {wmask=} in {dirpath=}"
-        UFU.logging_and_print_warning(msg)
+        print(msg)
 
     # OTHER -----------------------------------------------------------------------------------------------------------
     def json_get_serialisable(self, json_dict: tp.Optional[dict] = None) -> dict:
@@ -249,14 +236,14 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
             file_text = filepath.read_text(encoding="utf-8")
         except Exception as exx:
             msg = f"ERROR loading {filepath=}/{exx!r}"
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         try:
             json_dict = json.loads(file_text)
         except Exception as exx:
             msg = f'ERROR decoding Json {filepath=}/{exx!r}'
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         if validate:
@@ -307,21 +294,21 @@ class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN
             data_text = json.dumps(data_serialisable, indent=4, ensure_ascii=False)
         except Exception as exx:
             msg = f'ERROR encoding {json_dict=}/{exx!r}'
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
         if not data_text:
             msg = f'data for dump is empty [{data_text=}]'
-            UFU.logging_and_print_warning(msg)
+            print(msg)
 
         try:
             result = filepath.write_text(data=data_text, encoding='utf-8')
-            UFU.logging_and_print_debug_or_warning(f"{filepath=} dump", result)
+            print(f"{filepath=} dump", result)
             if result:
                 return True
         except Exception as exx:
             msg = f'ERROR dumping {filepath=}/{exx!r}'
-            UFU.logging_and_print_warning(msg)
+            print(msg)
             return
 
     def json_dump_try_autodump(self, dump: tp.Optional[bool] = None) -> tp.Optional[bool]:
