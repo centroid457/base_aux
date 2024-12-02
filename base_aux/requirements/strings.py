@@ -49,6 +49,8 @@ class _GetattrClassmethod_Meta(type):
         ReqCheckStr_Os.raise_if_not__LINUX
     """
 
+    # TODO: move into classes!!! checkers/others
+
     # dont change markers! use exists!
     _MARKER__BOOL_IF: str = "bool_if__"
     _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
