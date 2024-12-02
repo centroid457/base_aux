@@ -285,7 +285,7 @@ class TpGuiBase(Gui):
         self.DATA.signal__devs_detected.emit()
 
     def BTN_save__clicked(self) -> None:
-        pass
+        print(TestCaseBase._INSTS_DICT_CLS)
 
     def BTN_reset_all__clicked(self) -> None:
         self.DATA.DEVICES__BREEDER_CLS.group_call__("reset")
