@@ -1,15 +1,9 @@
 import pathlib
-
 import pytest
 import time
 import threading
-
 import os
 import copy
-
-import utilities.func_other
-import utilities.func_universal as UFU
-from utilities.processor_file_excel import _ExcelProcessor
 
 
 # Пример измерения как сценария:
@@ -1480,38 +1474,6 @@ def test__str_try_to_int(p1, p2, _EXPECTED):
 def test__str_try_to_float(p1, p2, p3, _EXPECTED):
     test_obj_link = UFU.str_try_to_float
     result = test_obj_link(source=p1, none_if_exception=p2, round_float=p3)
-    assert result == _EXPECTED
-
-
-@pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,_EXPECTED",
-    argvalues=[
-        (None, 5, "...", 3, None),
-        ("", 5, "...", 3, ""),
-        ("123456", 3, "...", 3, "..."),
-
-        ("123", 3, "#", 3, "123"),
-
-        ("1223", 3, "#", 1, "#23"),
-        ("1223", 3, "#", 2, "1#3"),
-        ("1223", 3, "#", 3, "12#"),
-
-        ("1223", 3, "##", 1, "##3"),
-        ("1223", 3, "##", 2, "##3"),
-        ("1223", 3, "##", 3, "1##"),
-
-        ("1223", 3, "###", 1, "###"),
-        ("1223", 3, "###", 2, "###"),
-        ("1223", 3, "###", 3, "###"),
-
-        ("1223", 1, "###", 1, "#"),
-        ("1223", 1, "###", 2, "#"),
-        ("1223", 1, "###", 3, "#"),
-    ]
-)
-def test__str_short_with_multydots(p1,p2,p3,p4,_EXPECTED):
-    test_obj_link = UFU.str_short_with_multydots
-    result = test_obj_link(source=p1, max_len=p2, marker=p3, short_part_1start_2mid_3end=p4)
     assert result == _EXPECTED
 
 

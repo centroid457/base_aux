@@ -3,7 +3,6 @@ import time
 import pathlib
 import typing as tp
 
-# =====================================================================================================================
 import csv
 import json
 import functools
@@ -20,12 +19,6 @@ import ipaddress
 import socket
 import winsound
 import datetime
-
-try:
-    import git  # need try statement! if not installed git.exe raise Exx even if module was setup!!!
-except:
-    pass
-
 import numpy as np
 from multiprocessing.context import TimeoutError
 from platform import system
@@ -91,64 +84,6 @@ LIST_RUSSIAM_LETTERS_UPPERCASE = list("АБВГДЕЁЖЗИЙКЛМНОПРСТ�
 LIST_RUSSIAM_LETTERS_ALLCASE = LIST_RUSSIAM_LETTERS_LOWERCASE + LIST_RUSSIAM_LETTERS_UPPERCASE
 
 LIST_FILESYSTEM_WRONG_NAME_CHARS = list("\\/:*?\"<>|")
-
-
-# SYSTEM ==============================================================================================================
-def python_version_get():
-    # print(sys.version_info)   # sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
-    return sys.version_info[:3]     # (3, 8, 10)
-
-
-def python_check_version_min(expected_min=None, raise_if_wrong=True):
-    result = sys.version_info >= expected_min
-    msg = f"требуется версия Python>={expected_min}/текущая={python_version_get()}"
-    print(msg, result)
-    if raise_if_wrong and not result:
-        raise Exception(msg)
-
-
-# GIT =================================================================================================================
-def git_get_last_commit_short_info_str(source_path=None):    # starichenko
-    """
-    return last commit short info
-    for git repository found in passed path
-    """
-    git_obj = None
-
-    if not source_path:
-        source_path = pathlib.Path.cwd()
-
-    try:
-        git_obj = git.Repo(source_path)
-    except Exception as exx:
-        logging_and_print_warning(f"{exx!r}")
-
-    if git_obj:
-        committer = git_obj.head.object.committer
-
-        try:
-            branch = git_obj.active_branch.name
-            branch = str_short_with_multydots(source=branch, max_len=15)
-        except Exception as exx:
-            msg = f"GIT DETACHED HEAD - you work not on last commit on brange! {exx!r}"
-            logging_and_print_warning(msg)
-            branch = "*DETACHED_HEAD*"
-
-        summary = git_obj.commit().summary
-        summary = str_short_with_multydots(source=summary, max_len=15)
-
-        hexsha = git_obj.head.object.hexsha[0:8]
-
-        committed_datetime = str(git_obj.head.object.committed_datetime)[0:19]
-
-        result = f"{branch}/{summary}/{committer}/{hexsha}/{committed_datetime}"
-
-    else:
-        result = f"возможно GIT не установлен"
-
-    git_mark = f"[git_mark//{result}]"
-    logging_and_print_debug(f"{git_mark=}")
-    return git_mark
 
 
 # SOUND ===============================================================================================================
@@ -1782,32 +1717,7 @@ def params_check_deviation_or_equel__str_or_float(
     return result
 
 
-# BOOL PROCESSING ====================================================================================================
-pass
-
-
 # STR PROCESSING =====================================================================================================
-# str-PART -----------------------------------------------------------------------------------------------------------
-def str_short_with_multydots(source, max_len, marker="...", short_part_1start_2mid_3end=3):    # starichenko
-    source = str(source)
-    if len(source) > max_len:
-        len_source = len(source)
-        len_marker = len(marker)
-
-        if max_len <= len_marker:
-            return marker[0:max_len]
-
-        if short_part_1start_2mid_3end == 1:
-            source = marker + source[-(max_len - len_marker):len_source]
-        elif short_part_1start_2mid_3end == 2:
-            len_start = (max_len)//2 - len_marker//2
-            len_finish = max_len - len_start - len_marker
-            source = source[0:len_start] + marker + source[-len_finish:]
-        elif short_part_1start_2mid_3end == 3:
-            source = source[0:max_len - len_marker] + marker
-    return source
-
-
 # str-SPLIT ----------------------------------------------------------------------------------------------------------
 def str_get_alphanum_list(source, use_float=False, float_signs=".", strip_spaces=False, return_text=False):
     """ Turn a string into a list of string and int/float-number chunks.
