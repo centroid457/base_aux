@@ -3,6 +3,7 @@ import json
 import re
 
 from base_aux.funcs import TYPE__ELEMENTARY, args__ensure_tuple
+from base_aux.enums import *
 
 
 # =====================================================================================================================
@@ -170,7 +171,34 @@ class Text:
         return result
 
     # =================================================================================================================
-    def try_convert_to_object(self, source: Optional[str] = None) -> TYPE__ELEMENTARY | str:
+    def shortcut(
+            self,
+            maxlen: int = 15,
+            where: Where3 = Where3.LAST,
+            source: str = None,
+            sub: str = "...",
+    ) -> str:
+        source = str(source) or self.SOURCE
+        if len(source) > maxlen:
+            len_source = len(source)
+            len_sub = len(sub)
+
+            if maxlen <= len_sub:
+                return sub[0:maxlen]
+
+            if where == where.FIRST:
+                source = sub + source[-(maxlen - len_sub):]
+            elif where == where.LAST:
+                source = source[0:maxlen - len_sub] + sub
+            elif where == where.MIDDLE:
+                len_start = maxlen // 2 - len_sub // 2
+                len_finish = maxlen - len_start - len_sub
+                source = source[0:len_start] + sub + source[-len_finish:]
+
+        return source
+
+    # =================================================================================================================
+    def try_convert_to_object(self, source: str = None) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
