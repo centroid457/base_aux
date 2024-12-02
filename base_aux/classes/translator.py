@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.funcs.static import ValueNotExist
+from base_aux.argskwargs.novalue import NoValue
 from base_aux.classes import *
 
 
@@ -26,7 +26,7 @@ class Translator:
         if not isinstance(self.RULES, dict):
             self.RULES = AttrAux.attrs__to_dict(self.RULES)
 
-    def __call__(self, source: Any, *args, **kwargs) -> Any | type[ValueNotExist]:
+    def __call__(self, source: Any, *args, **kwargs) -> Any | type[NoValue]:
         """
         GOAL
         ----
@@ -44,7 +44,7 @@ class Translator:
         if self.RETURN_SOURCE_IF_NOT_FOUND:
             return source
         else:
-            return ValueNotExist
+            return NoValue
 
 
 # =====================================================================================================================
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     assert victim(3) == 3
 
     victim = Translator({1:11, 2:22}, return_source_if_not_found=False)
-    assert victim(3) == ValueNotExist
+    assert victim(3) == NoValue
     # run_over_api()
 
 

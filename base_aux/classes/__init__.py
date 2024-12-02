@@ -23,10 +23,8 @@ from .static import (
     Exx__BreederObjectList_GroupNotExists,
     Exx__BreederObjectList_ObjCantAccessIndex,
 
-    TYPE__LAMBDA_CONSTRUCTOR,
-    TYPE__LAMBDA_ARGS,
-    TYPE__LAMBDA_KWARGS,
 )
+from ..argskwargs.argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from .annot_1_aux import (
     AnnotAux,
 )
@@ -76,10 +74,6 @@ from .attr_4_lambda_call import (
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .lambdas import (
-    ArgsKwargs,
-    Args,
-    Kwargs,
-
     Lambda,
 
     LambdaBool,

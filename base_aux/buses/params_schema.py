@@ -11,18 +11,18 @@ from base_aux.valid import *
 # FIXME: this is just an attempt to replace simple dict!!!
 class CmdSchema:
     NAME: str
-    SCHEMA: Any | Valid | ValueNotExist = ValueNotExist
+    SCHEMA: Any | Valid | NoValue = NoValue
     TIMEOUT: float = 0
-    DEFAULT: Any | ValueNotExist = ValueNotExist
+    DEFAULT: Any | NoValue = NoValue
 
-    __value: Any = ValueNotExist
+    __value: Any = NoValue
 
     # todo: add init
 
     @property
     def value(self) -> Any:
         pass
-        # if self.__value == ValueNotExist:
+        # if self.__value == NoValue:
         #     result = self.
 
         # return result
@@ -37,11 +37,11 @@ class CmdSchema:
     def __str__(self) -> str:
         return self.output()
 
-    def output(self, value: Any | ValueNotExist = ValueNotExist) -> str:
-        if value == ValueNotExist:
+    def output(self, value: Any | NoValue = NoValue) -> str:
+        if value == NoValue:
             value = self.DEFAULT
 
-        if self.SCHEMA == ValueNotExist:
+        if self.SCHEMA == NoValue:
             return str(value)
         else:
             result = ValidAux.get_result_or_exx(self.SCHEMA, value)

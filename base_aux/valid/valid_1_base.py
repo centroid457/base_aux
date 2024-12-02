@@ -5,6 +5,9 @@ from .valid_0_aux import ValidAux
 
 from base_aux.objects import TypeChecker
 from base_aux.funcs import *
+from ..argskwargs.argskwargs import TYPE__VALID_ARGS, TYPE__VALID_KWARGS
+from ..argskwargs.ensure import args__ensure_tuple
+from ..argskwargs.novalue import NoValue
 from ..funcs.static import TYPE__VALID_VALIDATOR
 
 
@@ -82,7 +85,7 @@ class Valid(ValidAux):
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            value_link: TYPE__VALID_SOURCE = ValueNotExist,
+            value_link: TYPE__VALID_SOURCE = NoValue,
             validate_link: Optional[TYPE__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
             skip_link: TYPE__VALID_SOURCE_BOOL= None,
@@ -186,15 +189,15 @@ class Valid(ValidAux):
     def __call__(self, *args, **kwargs) -> bool:
         return self.run(*args, **kwargs)
 
-    def run(self, value_link: Any = ValueNotExist) -> bool:
+    def run(self, value_link: Any = NoValue) -> bool:
         """
         CONSTRAINTS
         -----------
         careful about 1 comparing (assert 0 == False, assert 1 == True, assert 2 != True)
 
-        :param value_link: BE CAREFUL created specially for value_link=ValueNotExist on init
+        :param value_link: BE CAREFUL created specially for value_link=NoValue on init
         """
-        if value_link == ValueNotExist:
+        if value_link == NoValue:
             value_link = self.VALUE_LINK
 
         self.clear()
@@ -244,7 +247,7 @@ class Valid(ValidAux):
         # FINISH final ---------------------
         return self.validate_last_bool
 
-    # def validate(self, value_link: Any = ValueNotExist) -> bool:
+    # def validate(self, value_link: Any = NoValue) -> bool:
 
     def __bool__(self) -> bool:
         if not self.finished:
@@ -348,7 +351,7 @@ class Valid(ValidAux):
         assert "1.0" != ValidTypeFloat()
         assert 1.0 == ValidTypeFloat()
         """
-        if self.VALUE_LINK == ValueNotExist:
+        if self.VALUE_LINK == NoValue:
             return self.run(other)
         else:
             # todo: maybe its not so good here/need ref? - seems OK!

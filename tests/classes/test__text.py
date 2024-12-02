@@ -2,7 +2,8 @@ import pytest
 
 from base_aux.funcs import *
 from base_aux.classes import *
-from base_aux.objects import *
+from base_aux.argskwargs import *
+from base_aux.enums import *
 
 
 # =====================================================================================================================
@@ -54,32 +55,32 @@ class Test__shortcut:
     @pytest.mark.parametrize(
         argnames="p1,p2,p3,p4,_EXPECTED",
         argvalues=[
-            (None, 5, "...", 3, None),
-            ("", 5, "...", 3, ""),
-            ("123456", 3, "...", 3, "..."),
+            (None, 5, "...", Where3.LAST, "None"),
+            ("", 5, "...", Where3.LAST, ""),
+            ("123456", 3, "...", Where3.LAST, "..."),
 
-            ("123", 3, "#", 3, "123"),
+            ("123", 3, "#", Where3.LAST, "123"),
 
-            ("1223", 3, "#", 1, "#23"),
-            ("1223", 3, "#", 2, "1#3"),
-            ("1223", 3, "#", 3, "12#"),
+            ("1223", 3, "#", Where3.FIRST, "#23"),
+            ("1223", 3, "#", Where3.MIDDLE, "1#3"),
+            ("1223", 3, "#", Where3.LAST, "12#"),
 
-            ("1223", 3, "##", 1, "##3"),
-            ("1223", 3, "##", 2, "##3"),
-            ("1223", 3, "##", 3, "1##"),
+            ("1223", 3, "##", Where3.FIRST, "##3"),
+            ("1223", 3, "##", Where3.MIDDLE, "##3"),
+            ("1223", 3, "##", Where3.LAST, "1##"),
 
-            ("1223", 3, "###", 1, "###"),
-            ("1223", 3, "###", 2, "###"),
-            ("1223", 3, "###", 3, "###"),
+            ("1223", 3, "###", Where3.FIRST, "###"),
+            ("1223", 3, "###", Where3.MIDDLE, "###"),
+            ("1223", 3, "###", Where3.LAST, "###"),
 
-            ("1223", 1, "###", 1, "#"),
-            ("1223", 1, "###", 2, "#"),
-            ("1223", 1, "###", 3, "#"),
+            ("1223", 1, "###", Where3.FIRST, "#"),
+            ("1223", 1, "###", Where3.MIDDLE, "#"),
+            ("1223", 1, "###", Where3.LAST, "#"),
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
         func_link = Text(source=p1).shortcut
-        pytest_func_tester__no_args(func_link, ArgsKwargs(maxlen=p2, sub=p3, where=p4), _EXPECTED)
+        pytest_func_tester__no_args(func_link, Kwargs(maxlen=p2, sub=p3, where=p4), _EXPECTED)
 
 
 # =====================================================================================================================

@@ -6,20 +6,16 @@
 
 # =====================================================================================================================
 from .static import (
-    ValueNotExist,
-
-    TYPE__VALUE_NOT_PASSED,
-
     TYPE__VALID_VALIDATOR,
     TYPE__VALID_SOURCE,
     TYPE__VALID_SOURCE_BOOL,
     TYPE__VALID_RESULT,
     TYPE__VALID_RESULT_BOOL,
     TYPE__VALID_RESULT_BOOL__EXX,
-    TYPE__VALID_ARGS,
-    TYPE__VALID_KWARGS,
     TYPE__VALID_EXCEPTION, TYPES_ELEMENTARY_SINGLE, TYPES_ELEMENTARY_COLLECTION, TYPES_ELEMENTARY, TYPE__ELEMENTARY,
 )
+from ..argskwargs.argskwargs import TYPE__VALID_ARGS, TYPE__VALID_KWARGS
+from ..argskwargs.novalue import NoValue, TYPE__NOVALUE
 # ---------------------------------------------------------------------------------------------------------------------
 
 from .value_0_explicit import (
@@ -29,15 +25,10 @@ from .value_0_explicit import (
     TYPE__EXPLICIT,
     TYPE__DEFAULT,
 )
-from .args import (
-    ArgsEmpty,
-
-    TYPE__ARGS_EMPTY,
-)
 from .ensure import (
-    args__ensure_tuple,
     ensure_class,
 )
+from ..argskwargs.ensure import args__ensure_tuple
 
 # ---------------------------------------------------------------------------------------------------------------------
 # from .result_cum import (

@@ -43,8 +43,6 @@ class Test__Args:
             (Default, ()),
             (Default(), (None, )),
             (Default(None), (None, )),
-            (ArgsEmpty, ()),
-            (ArgsEmpty(), ()),
 
             # None --------------
             (None, (None, )),

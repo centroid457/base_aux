@@ -1,4 +1,3 @@
-from typing import *
 import pytest
 
 from base_aux.funcs import *
@@ -176,9 +175,9 @@ class Test__WithUnit:
             ("1d", "1д", 0),
 
             # VALUENOTEXISTS ------------
-            ("1", ValueNotExist, 0),
-            ("1", ValueNotExist, 0),
-            (ValueNotExist, "1", 0),
+            ("1", NoValue, 0),
+            ("1", NoValue, 0),
+            (NoValue, "1", 0),
         ]
     )
     def test__cmp_1__as_func(self, source1, source2, _EXPECTED):
@@ -218,13 +217,13 @@ class Test__WithUnit:
             ("1d", ValueUnit("1д"), True),
 
             # VALUENOTEXISTS ------------
-            ("1", ValueUnit(ValueNotExist), True),
-            ("1V", ValueUnit(ValueNotExist), True),
-            ("1V", ValueUnit(ValueNotExist, unit="V"), True),
-            ("1V", ValueUnit(ValueNotExist, unit="A"), False),
-            ("1", ValueUnit(ValueNotExist, unit="A"), True),
-            ("1m", ValueUnit(ValueNotExist, unit="A"), True),
-            (ValueUnit(ValueNotExist), "1", True),
+            ("1", ValueUnit(NoValue), True),
+            ("1V", ValueUnit(NoValue), True),
+            ("1V", ValueUnit(NoValue, unit="V"), True),
+            ("1V", ValueUnit(NoValue, unit="A"), False),
+            ("1", ValueUnit(NoValue, unit="A"), True),
+            ("1m", ValueUnit(NoValue, unit="A"), True),
+            (ValueUnit(NoValue), "1", True),
         ]
     )
     def test__cmp_2__eq(self, source1, obj2, _EXPECTED):

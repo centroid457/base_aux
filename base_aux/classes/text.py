@@ -2,7 +2,8 @@ from typing import *
 import json
 import re
 
-from base_aux.funcs import TYPE__ELEMENTARY, args__ensure_tuple
+from base_aux.funcs import TYPE__ELEMENTARY
+from base_aux.argskwargs.ensure import args__ensure_tuple
 from base_aux.enums import *
 
 
@@ -178,6 +179,8 @@ class Text:
             source: str = None,
             sub: str = "...",
     ) -> str:
+        if source is None:
+            source = self.SOURCE
         source = str(source) or self.SOURCE
         if len(source) > maxlen:
             len_source = len(source)
@@ -186,11 +189,11 @@ class Text:
             if maxlen <= len_sub:
                 return sub[0:maxlen]
 
-            if where == where.FIRST:
+            if where == Where3.FIRST:
                 source = sub + source[-(maxlen - len_sub):]
-            elif where == where.LAST:
+            elif where == Where3.LAST:
                 source = source[0:maxlen - len_sub] + sub
-            elif where == where.MIDDLE:
+            elif where == Where3.MIDDLE:
                 len_start = maxlen // 2 - len_sub // 2
                 len_finish = maxlen - len_start - len_sub
                 source = source[0:len_start] + sub + source[-len_finish:]

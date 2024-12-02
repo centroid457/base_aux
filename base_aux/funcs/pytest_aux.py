@@ -2,20 +2,16 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.classes import ArgsKwargs
+from base_aux.argskwargs.argskwargs import *
 from base_aux.funcs import *
 from base_aux.objects import *
 
 
 # =====================================================================================================================
-pass
-
-
-# =====================================================================================================================
 def pytest_func_tester(
         func_link: TYPE__VALID_SOURCE, # if func would get Exx - instance of exx would be returned for value!
-        args: TYPE__VALID_ARGS = (),
-        kwargs: TYPE__VALID_KWARGS = None,
+        args: TYPE__VALID_ARGS = Args(),
+        kwargs: TYPE__VALID_KWARGS = Kwargs(),
         _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
 
         # TODO: add validation func like in Valid!??
@@ -40,6 +36,11 @@ def pytest_func_tester(
         args = args.ARGS
     if isinstance(kwargs, ArgsKwargs):
         kwargs = kwargs.KWARGS
+
+    if isinstance(args, NoValue):
+        args = ()
+    if isinstance(kwargs, NoValue):
+        kwargs = dict()
 
     args = args__ensure_tuple(args)
     kwargs = kwargs or dict()

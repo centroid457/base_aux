@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.funcs import ValueNotExist
+from base_aux.argskwargs.novalue import NoValue
 
 
 # =====================================================================================================================
@@ -24,7 +24,7 @@ class AttrAux:
 
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _attr_anycase__find(cls, item: str | Any, source: Any = ValueNotExist) -> str | None:
+    def _attr_anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
         """
         get attr name in original register
         """
@@ -32,7 +32,7 @@ class AttrAux:
             return
 
         item = item.strip()
-        if source == ValueNotExist:
+        if source == NoValue:
             source = cls   # seems it is not good idea!!!
 
         for name in cls.attrs__iter_not_private(source):

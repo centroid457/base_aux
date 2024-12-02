@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.funcs import ValueNotExist
+from ..argskwargs.novalue import NoValue
 from .valid_1_base import Valid
 from base_aux.classes.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.number import NumberArithmTranslateToAttr
@@ -93,13 +93,13 @@ class ValueUnit(NumberArithmTranslateToAttr):
         assert ValueUnit(1001) > '1kV'
         assert ValueUnit(1000) < '1.1kV'
 
-        - ValueNotExist - same as object as pattern!
+        - NoValue - same as object as pattern!
 
-        assert "1" == ValueUnit(ValueNotExist)
-        assert "1V" == ValueUnit(ValueNotExist)
-        assert "1V" == ValueUnit(ValueNotExist, unit="V")
-        assert "1" == ValueUnit(ValueNotExist, unit="V")
-        assert "1A" != ValueUnit(ValueNotExist, unit="V")
+        assert "1" == ValueUnit(NoValue)
+        assert "1V" == ValueUnit(NoValue)
+        assert "1V" == ValueUnit(NoValue, unit="V")
+        assert "1" == ValueUnit(NoValue, unit="V")
+        assert "1A" != ValueUnit(NoValue, unit="V")
 
     """
     # NESTED ----------------------
@@ -135,7 +135,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
         self.VALUE = value
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, source: Union[int, float, str, Any] = ValueNotExist, unit: str = None, separator: str = None, mult_disable: bool = None):
+    def __init__(self, source: Union[int, float, str, Any] = NoValue, unit: str = None, separator: str = None, mult_disable: bool = None):
         """
         :param source:
         :param unit: use it only if not exists in source!
@@ -150,7 +150,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
         self.source = source
 
         # first parse -----------------
-        if source is ValueNotExist:
+        if source is NoValue:
             pass
         else:
             self.parse(source)
@@ -259,7 +259,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
         if not isinstance(other, self.__class__):
             other = self.__class__(other)
 
-        if self.source == ValueNotExist or other.source == ValueNotExist:
+        if self.source == NoValue or other.source == NoValue:
             if not self.UNIT_BASE or not other.UNIT_BASE or self.UNIT_BASE == other.UNIT_BASE:
                 return 0
             else:

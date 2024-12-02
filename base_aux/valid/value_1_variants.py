@@ -2,12 +2,11 @@ from typing import *
 
 from .static import *
 from .valid_1_base import Valid
-from base_aux.funcs import ValueNotExist
-
+from ..argskwargs.novalue import NoValue
 
 # =====================================================================================================================
 TYPE__VARIANT = Union[str, Any]
-TYPE__VARIANTS = list[TYPE__VARIANT] | ValueNotExist
+TYPE__VARIANTS = list[TYPE__VARIANT] | NoValue
 
 
 # =====================================================================================================================
@@ -24,13 +23,13 @@ class ValueVariants:
 
     # SETTINGS -----------------------
     CASE_INSENSITIVE: bool = True
-    VARIANTS: TYPE__VARIANTS = ValueNotExist
-    VALUE_DEFAULT: Any = ValueNotExist
+    VARIANTS: TYPE__VARIANTS = NoValue
+    VALUE_DEFAULT: Any = NoValue
 
     # DATA ---------------------------
-    __value: Any = ValueNotExist
+    __value: Any = NoValue
 
-    def __init__(self, value: Union[str, Any] = ValueNotExist, variants: TYPE__VARIANTS = ValueNotExist, case_insensitive: bool = None):
+    def __init__(self, value: Union[str, Any] = NoValue, variants: TYPE__VARIANTS = NoValue, case_insensitive: bool = None):
         """
         """
         if case_insensitive is not None:
@@ -38,18 +37,18 @@ class ValueVariants:
 
         self._variants_apply(variants)
 
-        if value != ValueNotExist:
+        if value != NoValue:
             self.VALUE = value
             self.VALUE_DEFAULT = self.VALUE
 
         self._variants_apply(variants)  # need secondary!!!
 
-    def _variants_apply(self, variants: set[Union[str, Any]] | ValueNotExist = ValueNotExist) -> None:
-        if variants is not ValueNotExist:
+    def _variants_apply(self, variants: set[Union[str, Any]] | NoValue = NoValue) -> None:
+        if variants is not NoValue:
             self.VARIANTS = variants
 
-        if self.VARIANTS is ValueNotExist:
-            if self.VALUE is not ValueNotExist:
+        if self.VARIANTS is NoValue:
+            if self.VALUE is not NoValue:
                 self.VARIANTS = [self.VALUE, ]
             # else:
             #     self.VARIANTS = set()
@@ -65,12 +64,12 @@ class ValueVariants:
 
     def __eq__(self, other):
         if isinstance(other, ValueVariants):
-            if other.VALUE == ValueNotExist:
+            if other.VALUE == NoValue:
                 return self.VALUE in other
             else:
                 other = other.VALUE
 
-        if self.VALUE == ValueNotExist:
+        if self.VALUE == NoValue:
             return self.value_validate(other)
 
         # todo: decide is it correct using comparing by str()??? by now i think it is good enough! but maybe add it as parameter
@@ -101,12 +100,12 @@ class ValueVariants:
     @VALUE.setter
     def VALUE(self, value: Any) -> Optional[NoReturn]:
         variant = self.value_get_variant(value)
-        if variant != ValueNotExist:
+        if variant != NoValue:
             self.__value = variant
         else:
             raise Exx__ValueNotValidated()
 
-    def value_get_variant(self, value: Any) -> TYPE__VARIANT | ValueNotExist:
+    def value_get_variant(self, value: Any) -> TYPE__VARIANT | NoValue:
         for variant in self.VARIANTS:
             if Valid.eq_doublesided__bool(variant, value):
                 return variant
@@ -118,16 +117,16 @@ class ValueVariants:
             if result:
                 return variant
 
-        return ValueNotExist
+        return NoValue
 
     def value_validate(self, value: Any) -> Any | None:
-        return self.value_get_variant(value) != ValueNotExist
+        return self.value_get_variant(value) != NoValue
 
     def reset(self) -> None:
         """
         set VALUE into default only if default is exists!
         """
-        if self.VALUE_DEFAULT != ValueNotExist:
+        if self.VALUE_DEFAULT != NoValue:
             self.VALUE = self.VALUE_DEFAULT
 
 

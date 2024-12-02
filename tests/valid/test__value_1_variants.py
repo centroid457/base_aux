@@ -1,4 +1,3 @@
-from typing import *
 import pytest
 
 from base_aux.funcs import *
@@ -76,7 +75,7 @@ class Test__ValueVariants:
 
     def test__types__None(self):
         victim = self.Victim(variants=["NONE", ])
-        assert victim.VALUE == ValueNotExist
+        assert victim.VALUE == NoValue
         # assert str(victim) == "NONE"
 
         victim = self.Victim(value=None, variants=["NONE", ])

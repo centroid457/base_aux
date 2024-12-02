@@ -1,8 +1,10 @@
 import pytest
 from typing import *
 
-from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.funcs.pytest_aux import pytest_func_tester__no_kwargs, pytest_func_tester
+from base_aux.funcs.value_0_explicit import Default
+from base_aux.argskwargs import *
+from base_aux.classes.cmp import CmpInst
 from base_aux.objects import *
 
 
@@ -155,7 +157,7 @@ def test__func_all(args, kwargs, _EXPECTED):
         ((None, None), {"2": True, "3": None}, True),
         ((None, None), {"2": False, "3": None}, False),
 
-        ((None, None), {"2": False, "3": None}, False),
+        (Args(None, None), {"2": False, "3": None}, False),
     ]
 )
 def test__func_any(args, kwargs, _EXPECTED):

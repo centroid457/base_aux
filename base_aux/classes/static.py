@@ -1,6 +1,3 @@
-from typing import *
-
-
 # =====================================================================================================================
 class Exx__AnnotNotDefined(Exception):
     """Exception in case of not defined attribute in instance
@@ -59,12 +56,6 @@ class Exx__BreederObjectList_GroupNotExists(Exception):
 
 class Exx__BreederObjectList_ObjCantAccessIndex(Exception):
     pass
-
-
-# =====================================================================================================================
-TYPE__LAMBDA_CONSTRUCTOR = Any | type[Any] | Callable[..., Any | NoReturn]
-TYPE__LAMBDA_ARGS = tuple[Any, ...]
-TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 
 # =====================================================================================================================

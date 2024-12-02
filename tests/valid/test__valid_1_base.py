@@ -120,10 +120,10 @@ class Test__ValidTypes:
     @pytest.mark.parametrize(
         argnames="source, args, _EXPECTED",
         argvalues=[
-            (1, (ValueNotExist, lambda x: float(x) >= 1), True),
-            ("1", (ValueNotExist, lambda x: float(x) >= 1), True),
-            ("0", (ValueNotExist, lambda x: float(x) >= 1), False),
-            ("hello", (ValueNotExist, lambda x: float(x) >= 1), False),
+            (1, (NoValue, lambda x: float(x) >= 1), True),
+            ("1", (NoValue, lambda x: float(x) >= 1), True),
+            ("0", (NoValue, lambda x: float(x) >= 1), False),
+            ("hello", (NoValue, lambda x: float(x) >= 1), False),
         ]
     )
     def test__not_passed(self, source, args, _EXPECTED):

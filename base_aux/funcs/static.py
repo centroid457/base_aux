@@ -1,67 +1,15 @@
-from typing import *
 from typing import Union, Any, Callable, NoReturn
-from base_aux.classes import ArgsKwargs
+from base_aux.argskwargs.novalue import TYPE__NOVALUE
 
 
 # =====================================================================================================================
-class ValueNotExist:
-    """
-    DEPRECATE???
-    ---------
-    use direct ArgsEmpty???
-
-    GOAL
-    ----
-    it is different from Default!
-    there is no value!
-    used when we need to change logic with not passed value!
-
-    SPECIALLY CREATED FOR
-    ---------------------
-    Valid as universal validation object under cmp other objects!
-
-    USAGE
-    -----
-    class Cls:
-        def __init__(self, value: Any | type[ValueNotExist] | ValueNotExist = ValueNotExist):
-            self.value = value
-
-        def __eq__(self, other):
-            if self.value is ValueNotExist:
-                return other is True
-                # or
-                return self.__class__(other).run()
-            else:
-                return other == self.value
-
-        def run(self):
-            return bool(self.value)
-
-    SAME AS
-    -------
-    args.ArgsEmpty but single and really not defined
-    """
-    pass
-
-    def __bool__(self):
-        return False
-
-
-# =====================================================================================================================
-TYPE__VALUE_NOT_PASSED = type[ValueNotExist] | ValueNotExist
-
-# ---------------------------------------------------------------------------------------------------------------------
-# SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
-TYPE__VALID_ARGS = Union[tuple, Any, None, "TYPE__ARGS_EMPTY", "TYPE__EXPLICIT", ArgsKwargs]
-TYPE__VALID_KWARGS = Union[None, dict[str, Any], ArgsKwargs]
-
 TYPE__VALID_EXCEPTION = Union[Exception, type[Exception]]
 TYPE__VALID_callable_item = Callable[[...], Any | NoReturn]
 TYPE__VALID_SOURCE = Union[
     Any,                                # as main idea! as already final generic
     Callable[[...], Any | NoReturn],    # as main idea! to get final generic
     # TYPE__VALID_EXCEPTION,              # fixme: hide? think no? we can pass in theory Exx! but why? for tests? why? we need it only in result! if need in tests Place it as Any!
-    TYPE__VALUE_NOT_PASSED
+    TYPE__NOVALUE
 ]
 TYPE__VALID_RESULT = Union[
     Any,
@@ -73,7 +21,7 @@ TYPE__VALID_SOURCE_BOOL = Union[
     bool,                               # as main idea! as already final generic
     Callable[[...], bool | Any | NoReturn],   # as main idea! to get final generic
     # TYPE__VALID_EXCEPTION,
-    TYPE__VALUE_NOT_PASSED
+    TYPE__NOVALUE
 ]
 TYPE__VALID_RESULT_BOOL = Union[
     # this is when you need get only bool! raise - as False!
