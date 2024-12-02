@@ -87,7 +87,6 @@ from .lambdas import (
 
     LambdaSleep,
     LambdaSleepAfter,
-    When,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .attr_3_dict_dots_1_simple import (

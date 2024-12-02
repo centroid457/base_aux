@@ -42,8 +42,8 @@ from .pkgs import (
 )
 from .versions import (
     Version,
-    ReqCheckVersion,
-    ReqCheckVersion_Python,
+    CheckVersion,
+    CheckVersion_Python,
 
     VersionBlock,
 
