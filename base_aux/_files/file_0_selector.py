@@ -3,31 +3,17 @@
 # TODO-1=add delete blank dirs in dicrpath
 # TODO-1=add delete dirtree
 
-# =====================================================================================================================
-# STARICHENKO UNIVERSAL IMPORT
-import sys
-sys.path.append("..")  # Adds higher directory to python modules path.
 
+# =====================================================================================================================
+from typing import *
 import time
 import pathlib
-from typing import *
-
-import utilities.func_universal as UFU
-
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-
-# from users.user_profile import UserProfile_Singleton
-# from stands.stand import Stand_Singleton
-# from results.results_testplan import TestplanResults_Singleton
-# =====================================================================================================================
 import datetime
 import shutil
 
 
 # =====================================================================================================================
-class ProcessorFileSelector:     # starichenko
+class ProcessorFileSelector:
     """
     BASE CLASS FOR WORKING WITH FILES! and selecting only one!
     if you need work only with path objects in FileSystem (list_dir for example) without exactly opening files

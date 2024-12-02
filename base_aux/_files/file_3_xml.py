@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import *
 # =====================================================================================================================
 
 
-from .processor_file import ProcessorFileSelector
+from .file_0_selector import ProcessorFileSelector
 import os
 import _io
 import pytest
