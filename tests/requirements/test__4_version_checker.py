@@ -7,11 +7,11 @@ from base_aux.funcs import *
 
 # =====================================================================================================================
 class Test__ReqCheckVersion_Python:
-    Victim: type[ReqCheckVersion_Python]
+    Victim: type[CheckVersion_Python]
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = ReqCheckVersion_Python
+        cls.Victim = CheckVersion_Python
 
     # @classmethod
     # def teardown_class(cls):
