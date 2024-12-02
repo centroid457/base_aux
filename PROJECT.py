@@ -62,11 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 0)
+    VERSION: tuple[int, int, int] = (0, 1, 1)
     NEWS: list[str] = [
-        "[argsKwargs] separate all variants and apply in pytest+add derivatives",
-        "[enums] separate typical",
-        "[t8] add/separate some files",
+        "[zero] just fix imports and errors",
     ]
 
 
