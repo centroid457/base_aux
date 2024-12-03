@@ -95,55 +95,6 @@ class Kwargs(ArgsKwargs):
 
 
 # =====================================================================================================================
-# class _ArgsEmpty(Default):
-#     """
-#     # FIXME: DEPRECATED!!! dont use it!! and del later
-#     THIS IS JUST A PARTIAL CASE FOR ARGS Default
-#
-#     DEPRECATE ???
-#     ---------
-#     USE DIRECTLY THE CONSTANT VALUE ()!!!
-#     its clear and
-#
-#     GOAL
-#     ----
-#     explicit pass
-#     resolve not passed parameters in case of None VALUE!
-#
-#     special object used as VALUE to show that parameter was not passed!
-#     dont pass it directly! keep it only as default parameter in class and in methods instead of None Value!
-#     it used only in special cases! not always even in one method!!!
-#
-#     SAME AS
-#     -------
-#     value_explicit.NoValue but just blank collection
-#     """
-#     def __init__(self):
-#         super().__init__(source=())
-#
-#     # # NOTE: this is not nesessory!!! and even need not to use for sure!
-#     # @classmethod
-#     # def __str__(cls):
-#     #     return "()"
-#     #
-#     # @classmethod
-#     # def __repr__(cls):
-#     #     return str(cls)
-#     #
-#     # @classmethod
-#     # def __len__(cls):
-#     #     return 0
-#     #
-#     # @classmethod
-#     # def __bool__(cls):
-#     #     return False
-#     #
-#     # @classmethod
-#     # def __iter__(cls):
-#     #     yield from ()
-#
-
-# =====================================================================================================================
 # SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
 TYPE__VALID_ARGS = Union[NoValue, Any, tuple, "TYPE__EXPLICIT", ArgsKwargs, Args]   # dont use None! use clear Args()/NoValue
 TYPE__VALID_KWARGS = Union[NoValue, dict[str, Any], ArgsKwargs, Kwargs]             # dont use None! use clear Kwargs()/NoValue
