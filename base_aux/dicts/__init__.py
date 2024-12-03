@@ -12,6 +12,8 @@ from .dict_dots_1_simple import (
 from .dict_dots_2_full import (
     DictDotsFull,
 )
-
+from .modifier import (
+    Dicts,
+)
 
 # =====================================================================================================================

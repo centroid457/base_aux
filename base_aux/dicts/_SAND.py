@@ -648,65 +648,6 @@ def dict_value_get_with_default_and_replacing(source, key, default=None, replace
     return result
 
 
-def dict_collapse_values_dict_by_key(source, key_priority_seq=[], default=None):     # starichenko
-    """
-    specially created for 2level-dicts!
-    main idia to use values like dicts as variety and we can select now exact composition! remain other values without variants
-
-    dicts like
-        {
-            1: {1:1, 2:2, 3:3},
-            2: {1:1, 2:None},
-            3: {1:1},
-            4: 4,
-        }
-    for key=2 return
-        {
-            1: 2,
-            2: None,
-            3: None,
-            4: 4,
-        }
-
-    ??????
-    # test_dict = {1: {1: 1}, 2: {2: 2, 3: 3}, 3: {3: 3, 4: {1: 1, 2: 2}}, 4: {3: {1: 1, 4: 4}}}
-    # test_list = [2, 3, 4]
-
-    """
-    # INPUT ---------------------------------------------------
-    if not key_priority_seq:
-        msg = f"blank input {key_priority_seq=}"
-        logging_and_print_warning(msg)
-        return
-    key_priority_seq = sequence_make_ensured_if_not(key_priority_seq)
-
-    # PRECHECK ---------------------------------------------------
-    if not isinstance(source, dict):
-        msg = f"incorrect input {source=}"
-        logging_and_print_warning(msg)
-        return
-
-    # WORK ---------------------------------------------------
-    result = dict()
-    for root_key, root_value in source.items():
-        if not isinstance(root_value, dict):
-            result[root_key] = root_value   # dont change not dicts
-            continue
-
-        value = None
-        for key in key_priority_seq:
-            if key in root_value:
-                value = root_value.get(key)
-                break
-        # if not found
-        if value is None:
-            value = default
-
-        result[root_key] = value
-
-    return result
-
-
 def dict_value_get_by_keypath(source: dict, keypath: tp.Union[str, list]) -> tp.Optional[tp.Any]:      # Starichenko
     """get value from dictionary specifying by keys like a path
 
