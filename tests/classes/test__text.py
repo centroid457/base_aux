@@ -2,8 +2,8 @@ import pytest
 
 from base_aux.funcs import *
 from base_aux.classes import *
-from base_aux.argskwargs import *
-from base_aux.enums import *
+from base_aux.base_argskwargs import *
+from base_aux.base_enums import *
 
 
 # =====================================================================================================================

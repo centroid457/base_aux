@@ -3,8 +3,8 @@ import json
 import re
 
 from base_aux.funcs import TYPE__ELEMENTARY
-from base_aux.argskwargs.ensure import args__ensure_tuple
-from base_aux.enums import *
+from base_aux.base_argskwargs.ensure import args__ensure_tuple
+from base_aux.base_enums import *
 
 
 # =====================================================================================================================
