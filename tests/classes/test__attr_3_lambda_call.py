@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.classes.attr_4_lambda_call import *
+from base_aux.classes.attr_3_lambda_call import *
 from base_aux.funcs import *
 
 

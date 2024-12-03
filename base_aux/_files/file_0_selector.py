@@ -387,3 +387,117 @@ class File(Dir):
 
 
 # =====================================================================================================================
+# FILE ----------------------------------------------------------------------------------------------------------------
+def file_wait_while_exists(path, timeout=5):
+    """ Waits while file exists for 'timeout'.
+    """
+    path = pathlib.Path(path)
+
+    for i in range(timeout):
+        if not path.exists():
+            return True
+        time.sleep(1)
+    return
+
+
+def file_save_data(data=None, filename="FILE.DUMP", dirpath=None, append=False):
+    # INPUTS ------------------------------------------------
+    if dirpath:
+        dirpath = pathlib.Path(dirpath)
+    else:
+        dirpath = CONSTANTS.DIRPATH_TEMP
+
+    dirpath.mkdir(parents=True, exist_ok=True)
+
+    filepath = dirpath.joinpath(filename)
+
+    if append:
+        _type = "a"
+    else:
+        _type = "w"
+
+    # WORK -------------------------------------------------
+    with open(file=filepath, encoding="UTF-8", mode=_type) as _fo:
+        _fo.write(data)
+
+    return True
+
+
+# PATH ----------------------------------------------------------------------------------------------------------------
+def path_dirs_create_all_pathlib_links_from_module_link(source):
+    """
+    specially create for creating all pathlib-tree-links from CONSTANTS (module)!
+    if pathlib link is file - create tree-dir to it!
+    desined for module-link but it can be work for any object (but not actually usefull)!
+
+    :param source:
+    :return:
+    """
+    if not type_is_1_module_link(source):
+        msg = f"type incorrect {source=} need MODULE"
+        print(msg)
+        return
+
+    elements_dict = obj_elements_get_dict_all(source)
+    if elements_dict:
+        for element_name, element_obj in elements_dict.items():
+            if isinstance(element_obj, pathlib.Path):
+                if len(element_obj.drive) > 2:
+                    # detected LAN path
+                    continue
+                if not element_obj.drive:
+                    msg = f"detected not absolute path {element_obj=} need to make it absolute!"
+                    print(msg)
+                    continue
+
+                if not element_obj.exists():
+                    if "." in element_obj.name:
+                        dirpath = element_obj.parent
+                    else:
+                        dirpath = element_obj
+
+                    dirpath.mkdir(parents=True, exist_ok=True)
+                    msg = f"makedirs {dirpath}"
+                    print(msg)
+
+    return True
+
+
+def path_cwd_check_run_correctly(filename, path_cwd, raise_if_false=True):
+    """show if you correctly starting your project!
+
+    используется только в корневом файле проекта, который запускает пользователь!
+    причина появления функции - пользователь может открыть терминал CMD и закинуть в него корневой файл проекта
+    проект может запуститься НО корневая директория будет считаться корневой директорией терминала а не директорией проекта!!
+    от этого все внутренние ссылки в проекте на текущий каталог будут неверными и ниодного файла/каталога не будет видно!
+
+    RECOMMENDED USAGE!!!!
+        import pathlib
+        path_cwd_check_run_correctly(__file__, pathlib.Path.cwd())    # PLACE ONLY IN ROOT(__MAIN__) FILE!!!
+
+    :param filename: recommended __file__
+    :param path_cwd: recommended pass pathlib.Path.cwd() but you can use str or else
+    """
+    # todo: in future you may can work with stack! use __name_/__main__ ets...
+
+    dirpath = pathlib.Path(filename).parent
+    path_cwd = pathlib.Path(path_cwd)
+    result = dirpath == path_cwd
+    if not result:
+        msg = f"""
+            НЕВЕРНЫЙ КОРНЕВОЙ ПУТЬ (CWD) ЗАПУСКА ПРОГРАММЫ\n
+            ПОСЛЕДСТВИЯ - программа не увидит папки и файлы проекта\n
+            скорее всего запуск прозошел в терминале CMD\n
+            фактическое расположение файла=[{dirpath=}]
+            определен текущий каталог программой=[{path_cwd=}]
+
+            для корректного запуска - в используемом терминале перейдите из [path_cwd] в [path_file]
+        """
+        print(msg)
+        if raise_if_false:
+            raise Exception(msg)
+
+    return result
+
+
+# =====================================================================================================================

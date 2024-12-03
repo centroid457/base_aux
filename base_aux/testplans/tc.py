@@ -3,6 +3,7 @@ import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from base_aux.dicts import *
 from base_aux.servers import *
 from base_aux.funcs import *
 from base_aux.valid import *

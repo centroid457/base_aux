@@ -68,7 +68,7 @@ from .getattr_3_prefix_1_inst import (
 from .getattr_3_prefix_2_cls import (
     GetattrPrefixCls_MetaTemplate
 )
-from .attr_4_lambda_call import (
+from .attr_3_lambda_call import (
     AttrLambdaCall,
 )
 # ---------------------------------------------------------------------------------------------------------------------
@@ -83,14 +83,6 @@ from .lambdas import (
 
     LambdaSleep,
     LambdaSleepAfter,
-)
-# ---------------------------------------------------------------------------------------------------------------------
-from .attr_3_dict_dots_1_simple import (
-    DictDots,
-    DictDotsAnnotRequired,
-)
-from .attr_3_dict_dots_2_full import (
-    DictDotsFull,
 )
 # ---------------------------------------------------------------------------------------------------------------------
 from .middle_group import (

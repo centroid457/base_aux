@@ -74,6 +74,7 @@ class TpMultyDutBase(Logger, QThread):
 
     # DIRPATH_TPS: Union[str, Path] = "TESTPLANS"
     DIRPATH_TCS: Union[str, Path] = "TESTCASES"
+    DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
     # DIRPATH_DEVS: Union[str, Path] = "DEVICES__BREEDER_INST"
     SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
     SETTINGS_BASE_FILEPATH: Path
@@ -367,6 +368,19 @@ class TpMultyDutBase(Logger, QThread):
             "STAND" : self.get__info__stand(),
             "TCS": TCS_RESULTS,
         }
+        return result
+
+    def save__results(self) -> dict[str, Any]:
+        TCS_RESULTS = {}
+        for tc_cls in self.TCS__CLS:
+            TCS_RESULTS.update({tc_cls: tc_cls.get__results_all()})
+
+        result = {
+            "STAND" : self.get__info__stand(),
+            "TCS": TCS_RESULTS,
+        }
+
+
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
