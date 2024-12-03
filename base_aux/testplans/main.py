@@ -359,32 +359,14 @@ class TpMultyDutBase(Logger, QThread):
         """
         get all results for stand/TP
         """
-        TCS_RESULTS = []
-        for tc in self.TCS__CLS:
-            TCS_RESULTS.append(tc.get__results_all())
-
-        result = {
-            **self.get__info__stand(),
-            "TESTCASES": TCS_RESULTS,
-        }
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def get__results__dut(self, dut: int | DutBase) -> dict[str, Any]:
-        if isinstance(dut, DutBase):
-            dut_index = dut.INDEX
-        else:
-            dut_index = dut
-
-        result = {
-            **self.get__info__stand(),
-        }
-
+        TCS_RESULTS = {}
         for tc_cls in self.TCS__CLS:
-            pass
-        #     tc_dut__result = tc_cls.TCS__LIST[dut_index].      # TODO: FINISH
-        #     tc_inst.get__results()
-        # return result
+            TCS_RESULTS.update({tc_cls: tc_cls.get__results_all()})
+
+        result = {
+            "STAND" : self.get__info__stand(),
+            "TCS": TCS_RESULTS,
+        }
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -404,8 +386,6 @@ class TpMultyDutBase(Logger, QThread):
             **tc_results,
         }
         self.api_client.send(body=body)
-
-    # -----------------------------------------------------------------------------------------------------------------
 
 
 # =====================================================================================================================
