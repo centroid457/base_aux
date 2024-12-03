@@ -74,16 +74,24 @@ class Args(ArgsKwargs):
         else:
             return False
 
+    # def __iter__(self):
+    #     yield from self.ARGS
+    # NOTE: dont use any danders! its too complicated! be simple and get access to self.ARGS!
+
 
 class Kwargs(ArgsKwargs):
     """
     just a derivative to clearly show only KwArgs is important
     """
+    # TODO: decide apply dict nesting or not! by now it seems more clear
     def __bool__(self) -> bool:
         if self.KWARGS:
             return True
         else:
             return False
+
+    # def __iter__(self):
+    #     yield from self.KWARGS
 
 
 # =====================================================================================================================
