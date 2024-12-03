@@ -62,5 +62,18 @@ class Dicts(dict):  # use name *s to not mess with typing.Dict
 
         return result
 
+    def prepare_serialisation(self, source: dict = None) -> dict:
+        result = {}
+        if source is None:
+            source = self
+        pass
+
+
+
+
+
+        
+        return result
+
 
 # =====================================================================================================================

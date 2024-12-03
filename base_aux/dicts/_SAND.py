@@ -1,4 +1,4 @@
-
+import copy
 
 
 # =====================================================================================================================
@@ -178,7 +178,7 @@ def dict_find_pattern(
                 elif return_first_found_path_list:
                     return [key, ]
                 else:
-                    logging_and_print_debug(f"найден подходящий ключ=[{key}] со значением=[{value}] идем дальше")
+                    print(f"найден подходящий ключ=[{key}] со значением=[{value}] идем дальше")
                     if key not in result_dict or value == result_dict[key]:
                         result_dict.update({key: value})
 
@@ -275,6 +275,7 @@ def dict_keys_delete_by_values(**kwargs):        # starichenko
     # raise Exception("use directly dict_values_replace with param DeleteKeys=True")
     return dict_values_replace(**kwargs, delete_found_keys=True)
 
+
 def dict_key_rename__by_name(source: dict, key: tp.Any, new_key: tp.Any) -> dict:  # starichenko
     result = {}
     for _key, value in source.items():
@@ -310,17 +311,17 @@ def dict_key_get_short_name(key_fullname, subkeys_list=[]):  # starichenko
         subkeys_string_actual = match.group(2)
         if subkeys_string_actual:
             subkeys_list_actual = sequence_delete_items_blank(subkeys_string_actual.replace(' ', '').split("#"))
-            logging_and_print_debug(f"-требуется совпадение ключей subkeys_list_actual={subkeys_list_actual}")
+            print(f"-требуется совпадение ключей subkeys_list_actual={subkeys_list_actual}")
 
             if sequence_check_included_in_supersequence(subkeys_list_actual, subkeys_list):
-                logging_and_print_debug(
+                print(
                     f"+все ключи {subkeys_list_actual} имеются в subkeys_list={subkeys_list} key_fullname=[{key_fullname}]")
                 name_short = name_short_temp
             else:
-                logging_and_print_debug(
+                print(
                     f"-НЕ ДОСТАТОЧНО исходных ключей subkeys_list={subkeys_list} в key_fullname=[{key_fullname}] идем дальше")
         else:
-            logging_and_print_debug(f"+НЕ требуется совпадения ключей")
+            print(f"+НЕ требуется совпадения ключей")
             name_short = name_short_temp
 
     return name_short
@@ -351,27 +352,27 @@ def dict_keys_short_names(source, subkeys_list=[], get_flatten=True):   # staric
 
     for key_fullname, value in source.items():
         key_fullname = str(key_fullname)
-        logging_and_print_debug(f"смотрим [{key_fullname}]")
+        print(f"смотрим [{key_fullname}]")
 
         key_short_name = dict_key_get_short_name(key_fullname, subkeys_list)
         if key_short_name is not None:
             if key_short_name not in result_dict:
-                logging_and_print_debug(f"+найдено первое значение [{key_fullname}] идем дальше")
+                print(f"+найдено первое значение [{key_fullname}] идем дальше")
                 result_dict.update({key_short_name: value})
             elif result_dict[key_short_name] == value:
                 pass    # same value - pass silent!
             else:
-                logging_and_print_debug(f"result_dict+key_short_name=[{key_short_name}]=", result_dict[key_short_name])
-                logging_and_print_debug(f"source+key_fullname=[{key_fullname}]=", value)
+                print(f"result_dict+key_short_name=[{key_short_name}]=", result_dict[key_short_name])
+                print(f"source+key_fullname=[{key_fullname}]=", value)
                 logging_and_print_warning(f"-в словаре имеется НЕСКОЛЬКО СООТВЕТСТВУЮЩИХ нам параметров с именем {key_short_name} - выходим")
                 raise Exception(f"-в словаре имеется НЕСКОЛЬКО СООТВЕТСТВУЮЩИХ нам параметров с именем {key_short_name} - выходим")
         else:
-            logging_and_print_debug(f"в словаре найден элемент без именованного значения (неподходящего для subkeys_list={subkeys_list})! [{key_fullname}]")
+            print(f"в словаре найден элемент без именованного значения (неподходящего для subkeys_list={subkeys_list})! [{key_fullname}]")
 
     if result_dict == dict():
         logging_and_print_warning(f"---в словаре НЕ НАЙДЕНО именованных параметров с ключами subkeys_list={subkeys_list}")
     else:
-        logging_and_print_debug(f"+в словаре НАЙДЕНЫ ИМЕНОВАННЫЕ параметры с subkeys_list={subkeys_list} result_dict={result_dict}")
+        print(f"+в словаре НАЙДЕНЫ ИМЕНОВАННЫЕ параметры с subkeys_list={subkeys_list} result_dict={result_dict}")
 
     return result_dict
 
@@ -808,7 +809,7 @@ def dict_values_get_list_for_key(
             else:
                 value_list = lists_sum([value_list, subresult_list], no_repetitions=no_repetitions)
 
-    logging_and_print_debug(f"source[{key_find}]list={value_list=}")
+    print(f"source[{key_find}]list={value_list=}")
     return value_list
 
 
@@ -935,7 +936,7 @@ def dict_flatten(source,
                     logging_and_print_warning(msg)
 
     if not _is_recursion_applied:
-        logging_and_print_debug(f"result_dict={result_dict}")
+        print(f"result_dict={result_dict}")
     return result_dict
 
 

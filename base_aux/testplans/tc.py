@@ -515,10 +515,10 @@ class _Info(_TestCaseBase):
             "timestamp_start": self.timestamp_start,
             "tc_active": self.isRunning(),
             "tc_progress": self.progress,
-            "tc_result_startup": self.result__startup,
+            "tc_result_startup": bool(self.result__startup),
             "tc_result": bool(self.result),
             "tc_details": self.details,
-            "result__teardown": self.result__teardown,
+            "result__teardown": bool(self.result__teardown),
             "timestamp_last": self.timestamp_last,
             "log": self.get__results_pretty(),
         }

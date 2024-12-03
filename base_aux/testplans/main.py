@@ -382,7 +382,7 @@ class TpMultyDutBase(Logger, QThread):
             result_i = {}
             for tc_cls in self.TCS__CLS:
                 try:
-                    tc_inst_result = self.TCS__CLS.TCS__LIST[index].get__results()
+                    tc_inst_result = tc_cls.TCS__LIST[index].get__results()
                 except:
                     tc_inst_result = None
 
