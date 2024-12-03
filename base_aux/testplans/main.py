@@ -2,7 +2,8 @@
 """
 THIS IS THE REAL TESTPLAN!!!
 """
-
+import json
+import pathlib
 
 # =====================================================================================================================
 from .tc import TestCaseBase
@@ -23,6 +24,7 @@ from base_aux.funcs import *
 from base_aux.loggers import *
 from base_aux.servers import *
 from base_aux.privates import *
+from base_aux.datetimes import *
 
 
 # =====================================================================================================================
@@ -120,6 +122,10 @@ class TpMultyDutBase(Logger, QThread):
         self.DIRPATH_TCS: Path = Path(self.DIRPATH_TCS)
         # self.DIRPATH_DEVS: Path = Path(self.DIRPATH_DEVS)
         self.SETTINGS_BASE_FILEPATH = self.DIRPATH_TCS.joinpath(self.SETTINGS_BASE_NAME)
+
+        self.DIRPATH_RESULTS = pathlib.Path(self.DIRPATH_RESULTS)
+        if not self.DIRPATH_RESULTS.exists():
+            self.DIRPATH_RESULTS.mkdir(parents=True, exist_ok=True)
 
         if not self.DIRPATH_TCS.exists():
             msg = f"[ERROR] not found path {self.DIRPATH_TCS.name=}"
@@ -362,7 +368,7 @@ class TpMultyDutBase(Logger, QThread):
         """
         TCS_RESULTS = {}
         for tc_cls in self.TCS__CLS:
-            TCS_RESULTS.update({tc_cls: tc_cls.get__results_all()})
+            TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
             "STAND" : self.get__info__stand(),
@@ -370,18 +376,23 @@ class TpMultyDutBase(Logger, QThread):
         }
         return result
 
-    def save__results(self) -> dict[str, Any]:
-        TCS_RESULTS = {}
-        for tc_cls in self.TCS__CLS:
-            TCS_RESULTS.update({tc_cls: tc_cls.get__results_all()})
+    def save__results(self) -> None:
+        name_prefix = DateTime().get_str()
+        for index in range(self.DEVICES__BREEDER_CLS.COUNT):
+            result_i = {}
+            for tc_cls in self.TCS__CLS:
+                try:
+                    tc_inst_result = self.TCS__CLS.TCS__LIST[index].get__results()
+                except:
+                    tc_inst_result = None
 
-        result = {
-            "STAND" : self.get__info__stand(),
-            "TCS": TCS_RESULTS,
-        }
+                result_i.update({tc_cls.NAME: tc_inst_result})
 
+            data_text = json.dumps(result_i, indent=4, ensure_ascii=False)
 
-        return result
+            filename = f"{name_prefix}[{index}].json"
+            filepath = pathlib.Path(self.DIRPATH_RESULTS, filename)
+            filepath.write_text(data=data_text, encoding='utf-8')
 
     # -----------------------------------------------------------------------------------------------------------------
     def post__tc_results(self, tc_inst: TestCaseBase) -> None:

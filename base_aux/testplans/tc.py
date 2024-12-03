@@ -525,7 +525,7 @@ class _Info(_TestCaseBase):
         return result
 
     @classmethod
-    def get__results_all(cls) -> dict[int, dict[str, Any]]:
+    def get__results__all(cls) -> dict[int, dict[str, Any]]:
         results = {}
         for tc_inst in cls.TCS__LIST:
             results.update({tc_inst.INDEX: tc_inst.get__results()})
