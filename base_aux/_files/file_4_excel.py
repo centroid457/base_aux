@@ -20,7 +20,7 @@ import string
 from win32com.client import Dispatch
 import pythoncom
 from gui.wgt_logger import LogProgressBarValue, LogProgressBarTimeout, LogProgressBarCounter
-from utilities.processor_file import ProcessorFileSelector
+from utilities.processor_file import File
 
 
 # funcs ===============================================================================================================

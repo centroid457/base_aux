@@ -8,12 +8,12 @@ import pathlib
 import typing as tp
 import copy
 import json
-from utilities.processor_file import ProcessorFileSelector
+from utilities.processor_file import File
 from dataclasses import dataclass, asdict
 
 
 # =====================================================================================================================
-class ProcessorJsonDict(ProcessorFileSelector):     # P*JsonDICT IS IMPORTANT IN NAME!!! because Json may parce LIST or even digit!
+class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because Json may parce LIST or even digit!
     """
     class for working with json data file!
     result is self.json_dict!

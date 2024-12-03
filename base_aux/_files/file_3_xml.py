@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import *
 # =====================================================================================================================
 
 
-from .file_0_selector import ProcessorFileSelector
+from .file_0_selector import File
 import os
 import _io
 import pytest
@@ -31,7 +31,7 @@ from xml.dom.minidom import parseString
 import xml.etree.ElementTree as ET
 
 
-class ProcessorXml(ProcessorFileSelector):  # starichenko
+class ProcessorXml(File):  # starichenko
     """common Xml wrapper
 
     ERRORS IMPORTANT:
@@ -170,7 +170,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
 
     # LOAD/DUMP =======================================================================================================
     def xml_element__read(self, filepath=None) -> Optional[ET.Element]:
-        filepath = self.filepath_get_active(filepath)
+        filepath = self.get_active__filepath(filepath)
         if filepath:
             tree_obj = ET.ElementTree(file=filepath)        # WORK WITH FileOpenObject and FileNAME!!!
             element_obj = tree_obj.getroot()
@@ -182,7 +182,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
             return self.xml_element__set(element_obj)
 
     def xml_element__dump(self, xml_data=None, filepath=None) -> Optional[bool]:
-        filepath = self.filepath_get_active(filepath)
+        filepath = self.get_active__filepath(filepath)
         if not filepath:
             return
 
@@ -190,7 +190,7 @@ class ProcessorXml(ProcessorFileSelector):  # starichenko
         if text is None:
             return
 
-        return self.filepath_write_text(text=text, filepath=filepath)
+        return self.write__text(text=text, filepath=filepath)
 
     # ATTR ============================================================================================================
     def xml_element_attr__get_dict(self, xml_data=None):

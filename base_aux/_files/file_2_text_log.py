@@ -24,11 +24,11 @@ from gui.pyqt_import_all_by_star import *
 
 import re
 import pytest
-from utilities.processor_file import ProcessorFileSelector
+from utilities.processor_file import File
 
 
 # =====================================================================================================================
-class ProcessorTextLog(ProcessorFileSelector):     # starichenko
+class ProcessorTextLog(File):     # starichenko
     """
     Simplify working with logFiles
 
