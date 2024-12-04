@@ -254,12 +254,11 @@ class TpMultyDutBase(Logger, QThread):
         """
         Overwrite with super! super last!
         """
-        if self.tc_active:
-            if not self.tc_active.finished:
-                self.tc_active.terminate__cls()
-        elif self.tc_prev:
-            if not self.tc_prev.finished:
-                self.tc_prev.teardown__cls()
+        if self.tc_active and not self.tc_active.finished:
+            self.tc_active.terminate__cls()
+        if self.tc_prev and not self.tc_prev.finished:
+            self.tc_prev.teardown__cls()
+            self.tc_prev = None
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
@@ -306,7 +305,7 @@ class TpMultyDutBase(Logger, QThread):
                     if self.tc_active:
                         self.tc_active.run__cls(single=True)
                 else:
-                    for self.tc_active in filter(lambda x: not x.SKIP, self.TCS__CLS):
+                    for self.tc_active in filter(lambda x: not x.SKIP, self.TCS__CLS):  # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
                         tc_executed__result = self.tc_active.run__cls(cls_prev=self.tc_prev)
                         if tc_executed__result is False:
                             break
