@@ -62,11 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 2)
+    VERSION: tuple[int, int, int] = (0, 1, 3)
     NEWS: list[str] = [
-        "[datetimes] unsand with minimals",
-        "[dicts] separate",
-        "[tp] make save results",
+        "[TP]fix finish last tc",
     ]
 
 
