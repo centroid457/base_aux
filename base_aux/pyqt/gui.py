@@ -11,6 +11,7 @@ from .base import Row_, Dev_, Data_
 from .tm import TableModelTemplate
 from .th import HeaderViewCB
 from .hl import *
+from base_aux.pyqt.static import *
 
 
 # =====================================================================================================================
@@ -285,6 +286,8 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         layout_v = QVBoxLayout()
+        layout_v.setAlignment(ALIGNMENT.T)
+
         layout_v.addLayout(layout_grid)
         layout_v.addWidget(self.CB)
         layout_v.addWidget(self.BTN)
@@ -296,6 +299,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         self.LAYOUT_MAIN.addWidget(self.TV)
         self.LAYOUT_MAIN.addLayout(layout_v)
 
+        # CENTRAL -----------------------------------------------------------------------------------------------------
         self.CENTRAL_WGT.setLayout(self.LAYOUT_MAIN)
 
     # MAINWINDOW ======================================================================================================

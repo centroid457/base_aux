@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 from base_aux.testplans import *
 from base_aux.pyqt import *
 from base_aux.classes import *
+from base_aux.pyqt.static import *
 
 from .tc import TestCaseBase
 from .tm import TpTableModel
@@ -107,7 +108,7 @@ class TpGuiBase(Gui):
     START = False
 
     TITLE = "[TestPlan] Title"
-    SIZE = (600, 300)
+    SIZE = (1500, 800)
 
     HL_STYLES = TpHlStyles()
 
@@ -115,7 +116,7 @@ class TpGuiBase(Gui):
     DATA: "TpMultyDutBase"
 
     def __init__(self, data):
-        self.TITLE = f"[TestPlan]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
+        self.TITLE = f"[Тестплан]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
         super().__init__(data)
 
     # WINDOW ==========================================================================================================
@@ -126,26 +127,27 @@ class TpGuiBase(Gui):
         self.PTE_create()
         self.HL_create()
 
-        # DETAILS -----------------------------------------------------------------------------------------------------
+        # LAYOUT_CONTROL ----------------------------------------------------------------------------------------------
+        layout_control = QVBoxLayout()
+        layout_control.setAlignment(ALIGNMENT.T)
 
-        # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
-        layout_details = QVBoxLayout()
-        layout_details.addWidget(self.BTN_devs_detect)
-        layout_details.addWidget(self.BTN_start)
-        layout_details.addWidget(self.CB_tp_run_infinit)
-        layout_details.addWidget(self.CB_tc_run_single)
-        layout_details.addWidget(self.BTN_settings)
-        layout_details.addWidget(self.BTN_save)
-        layout_details.addWidget(self.BTN_clear_all)
-        layout_details.addWidget(self.BTN_reset_all)
-        layout_details.addWidget(self.BTN_extended_mode)
-        layout_details.addWidget(self.PTE)
+        layout_control.addWidget(self.BTN_devs_detect)
+        layout_control.addWidget(self.BTN_start)
+        layout_control.addWidget(self.CB_tp_run_infinit)
+        layout_control.addWidget(self.CB_tc_run_single)
+        layout_control.addWidget(self.BTN_settings)
+        layout_control.addWidget(self.BTN_save)
+        layout_control.addWidget(self.BTN_clear_all)
+        layout_control.addWidget(self.BTN_reset_all)
+        layout_control.addWidget(self.BTN_extended_mode)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         self.LAYOUT_MAIN = QHBoxLayout()
+        self.LAYOUT_MAIN.addLayout(layout_control)
         self.LAYOUT_MAIN.addWidget(self.TV)
-        self.LAYOUT_MAIN.addLayout(layout_details)
+        self.LAYOUT_MAIN.addWidget(self.PTE)
 
+        # CENTRAL -----------------------------------------------------------------------------------------------------
         self.CENTRAL_WGT.setLayout(self.LAYOUT_MAIN)
 
     # WGTS ============================================================================================================
@@ -181,6 +183,7 @@ class TpGuiBase(Gui):
         # self.PTE.setUndoRedoEnabled(True)
         # self.PTE.setReadOnly(True)
         # self.PTE.setMaximumBlockCount(15)
+        self.PTE.setMaximumWidth(500)
 
         # self.PTE.clear()
         self.PTE.appendPlainText(PTE_RESULTS_EXAMPLE)
