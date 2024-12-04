@@ -10,6 +10,11 @@ from base_aux.pyqt import TableModelTemplate
 from base_aux.breeders import *
 
 
+class TcResultMsg:
+    PASS: str = "Успех"
+    FAIL: str = "Ошибка"
+
+
 # =====================================================================================================================
 class TpTableModel(TableModelTemplate):
     DATA: "TpMultyDutBase"
@@ -116,20 +121,20 @@ class TpTableModel(TableModelTemplate):
                         return ""
                     elif isinstance(tc_inst.result, Valid):
                         if tc_inst.result.check__active():
-                            return "..."    #fixme: not working
+                            return "..."    # work only after StartUpDUT!
                         elif tc_inst.result.finished:
                             if bool(tc_inst.result):
-                                return "PASS"
+                                return TcResultMsg.PASS
                             else:
-                                return "FAIL"
+                                return TcResultMsg.FAIL
                         else:
                             return
 
                     else:
                         if bool(tc_inst.result):
-                            return "PASS"
+                            return TcResultMsg.PASS
                         else:
-                            return "FAIL"
+                            return TcResultMsg.FAIL
 
             # TEARDOWN -------------------
             if col == self.HEADERS.TEARDOWN_CLS:

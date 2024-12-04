@@ -37,7 +37,7 @@ class Dialogs:
     def finished__devs_detection(*args) -> None:
         QMessageBox.information(
             None,
-            "Поиск устройств",
+            "Определение устройств",
             (
                 "Процесс завершен"
             )

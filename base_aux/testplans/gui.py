@@ -151,7 +151,7 @@ class TpGuiBase(Gui):
     def BTN_create(self) -> None:
         self.BTN_devs_detect = QPushButton("определить устройства")
 
-        self.BTN_start = QPushButton("ЗАПУСК ТЕСТОВ")
+        self.BTN_start = QPushButton("ЗАПУСК ТЕСТИРОВАНИЯ")
         self.BTN_start.setCheckable(True)
 
         self.BTN_settings = QPushButton("настройки")
