@@ -138,6 +138,7 @@ class TpGuiBase(Gui):
         layout_details.addWidget(self.BTN_save)
         layout_details.addWidget(self.BTN_clear_all)
         layout_details.addWidget(self.BTN_reset_all)
+        layout_details.addWidget(self.BTN_extended_mode)
         layout_details.addWidget(self.PTE)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
@@ -160,6 +161,9 @@ class TpGuiBase(Gui):
         self.BTN_save = QPushButton("Сохранить результаты")
         self.BTN_clear_all = QPushButton("Очистить все результаты")
         self.BTN_reset_all = QPushButton("Отключить все устройства")
+
+        self.BTN_extended_mode = QPushButton("Расширенный режим")
+        self.BTN_extended_mode.setCheckable(True)
 
     def CB_create(self) -> None:
         self.CB_tp_run_infinit = QCheckBox("бесконечный цикл тестирования")
@@ -184,6 +188,7 @@ class TpGuiBase(Gui):
         # self.PTE.appendHtml("")
         # self.PTE.anchorAt(#)
         # self.PTE.setSizeAdjustPolicy(#)
+        self.PTE.setHidden(True)
 
         # METHODS COMMON -----------------------------------
         self.PTE.setFont(QFont("Calibri (Body)", 7))
@@ -217,6 +222,7 @@ class TpGuiBase(Gui):
         self.BTN_save.clicked.connect(self.BTN_save__clicked)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
         self.BTN_reset_all.clicked.connect(self.BTN_reset_all__clicked)
+        self.BTN_extended_mode.toggled.connect(self.BTN_extended_mode__toggled)
 
         # self.DATA.signal__tp_finished.connect(self.BTN_reset_all__clicked)
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
@@ -293,6 +299,9 @@ class TpGuiBase(Gui):
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
         self.TM._data_reread()
+
+    def BTN_extended_mode__toggled(self, state: Optional[bool] = None) -> None:
+        self.PTE.setHidden(not state)
 
     def TV_hh_sectionClicked(self, index: int) -> None:
         if index == self.TM.HEADERS.STARTUP_CLS:
