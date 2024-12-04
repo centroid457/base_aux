@@ -1,6 +1,3 @@
-# DON'T DELETE!
-# useful to start smth without pytest and not to run in main script!
-
 from base_aux.testplans import *
 from base_aux.servers import *
 from base_aux.classes import *
