@@ -259,7 +259,7 @@ class TpTableModel(TableModelTemplate):
 
                 # font.setOverline(True)  # надчеркнутый
                 # font.setStrikeOut(True)  # зачеркнутый
-                font.setUnderline(True)  # подчеркнутый
+                # font.setUnderline(True)  # подчеркнутый
 
                 # не понял!! --------------------
                 # font.setStretch(5)
