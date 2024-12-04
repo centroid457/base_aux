@@ -12,46 +12,11 @@ from .tm import TableModelTemplate
 from .th import HeaderViewCB
 from .hl import *
 from base_aux.pyqt.static import *
+from base_aux.pyqt.dialog import *
 
 
 # =====================================================================================================================
 TYPE__SIZE_TUPLE = tuple[Optional[int], Optional[int]]
-
-
-class Dialogs:
-    """
-    attempt to keep all  available dialogs in one place!
-    so to be sure there are no any other available!
-    """
-    @staticmethod
-    def info__about(*args) -> None:
-        QMessageBox.information(
-            None,
-            "О программе",
-            (
-                "ООО Элемент-Инжиниринг,\n"
-                "Программа проведения тестирования блоков питания\n"
-                "(стендовые испытания ОТК)"
-             )
-        )
-    @staticmethod
-    def finished__devs_detection(*args) -> None:
-        QMessageBox.information(
-            None,
-            "Определение устройств",
-            (
-                "Процесс завершен"
-            )
-        )
-    @staticmethod
-    def finished__tp(*args) -> None:
-        QMessageBox.information(
-            None,
-            "Тестирование",
-            (
-                "Процесс завершен"
-             )
-        )
 
 
 # =====================================================================================================================
@@ -103,7 +68,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
     _QAPP: QApplication = QApplication([])
 
     # COMMON ------------------------------------------------------
-    DIALOGS: type[Dialogs] = Dialogs
+    DIALOGS: type[DialogsSet] = DialogsSet
 
     MENU: Optional[QMenu] = None
     SB: Optional[QStatusBar] = None

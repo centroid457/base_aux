@@ -14,6 +14,42 @@ from base_aux.objects import LAMBDA_TRUE, SLEEP_TRUE
 from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
 
+# SET ============================================================================================================
+class DialogsSet:
+    """
+    attempt to keep all available dialogs for current project in one place!
+    so to be sure there are no any other available!
+    """
+    @staticmethod
+    def info__about(*args) -> None:
+        QMessageBox.information(
+            None,
+            "О программе",
+            (
+                "ООО Элемент-Инжиниринг,\n"
+                "Программа проведения тестирования блоков питания\n"
+                "(стендовые испытания ОТК)"
+             )
+        )
+    @staticmethod
+    def finished__devs_detection(*args) -> None:
+        QMessageBox.information(
+            None,
+            "Определение устройств",
+            (
+                "Процесс завершен"
+            )
+        )
+    @staticmethod
+    def finished__tp(*args) -> None:
+        QMessageBox.information(
+            None,
+            "Тестирование",
+            (
+                "Процесс завершен"
+             )
+        )
+
 # SIMPLEST ============================================================================================================
 def info():
     """
