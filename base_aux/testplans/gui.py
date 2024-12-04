@@ -136,6 +136,8 @@ class TpGuiBase(Gui):
         layout_control.addWidget(self.CB_tp_run_infinit)
         layout_control.addWidget(self.CB_tc_run_single)
         layout_control.addWidget(self.BTN_save)
+        layout_control.addStretch()
+
         layout_control.addWidget(self.BTN_settings)
         layout_control.addWidget(self.BTN_clear_all)
         layout_control.addWidget(self.BTN_reset_all)
@@ -169,7 +171,7 @@ class TpGuiBase(Gui):
 
     def CB_create(self) -> None:
         self.CB_tp_run_infinit = QCheckBox("бесконечный цикл тестирования")
-        self.CB_tc_run_single = QCheckBox("запустить только выбранный тесткейс")
+        self.CB_tc_run_single = QCheckBox("запускать только выбранный тесткейс")
 
         # SETTINGS -------------------------
         # self.CB_tp_run_infinit.setText("CB_text")
