@@ -162,7 +162,7 @@ class TpGuiBase(Gui):
         self.BTN_reset_all = QPushButton("Отключить все устройства")
 
     def CB_create(self) -> None:
-        self.CB_tp_run_infinit = QCheckBox("бесконечный цикл")
+        self.CB_tp_run_infinit = QCheckBox("бесконечный цикл тестирования")
         self.CB_tc_run_single = QCheckBox("запустить только выбранный тесткейс")
 
         # SETTINGS -------------------------
