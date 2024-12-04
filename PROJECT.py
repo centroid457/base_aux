@@ -62,9 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 3)
+    VERSION: tuple[int, int, int] = (0, 1, 4)
     NEWS: list[str] = [
-        "[TP]fix finish last tc",
+        "[TP.gui] separate layoutCtrl +DialogsSet",
     ]
 
 
