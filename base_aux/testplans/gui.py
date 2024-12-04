@@ -150,7 +150,6 @@ class TpGuiBase(Gui):
     # WGTS ============================================================================================================
     def BTN_create(self) -> None:
         self.BTN_devs_detect = QPushButton("определить устройства")
-        self.BTN_devs_detect.setCheckable(False)
 
         self.BTN_start = QPushButton("ЗАПУСК ТЕСТОВ")
         self.BTN_start.setCheckable(True)
@@ -219,7 +218,7 @@ class TpGuiBase(Gui):
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
         self.BTN_reset_all.clicked.connect(self.BTN_reset_all__clicked)
 
-        self.DATA.signal__tp_finished.connect(self.BTN_reset_all__clicked)
+        # self.DATA.signal__tp_finished.connect(self.BTN_reset_all__clicked)
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
         self.DATA.signal__tp_finished.connect(self.TM._data_reread)
 
