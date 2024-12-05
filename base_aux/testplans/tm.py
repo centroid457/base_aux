@@ -18,24 +18,6 @@ class TcResultMsg:
     WAIT: str = "..."
 
 
-class Index:
-    """
-    i dont know how to create QModelIndex so i decide make monkey class
-    """
-    __column: int = 0
-    __row: int = 0
-
-    def __init__(self, column: int = 0, row: int = 0):
-        self.__column = column
-        self.__row = row
-
-    def column(self) -> int:
-        return self.__column
-
-    def row(self) -> int:
-        return self.__row
-
-
 # =====================================================================================================================
 class TpTableModel(TableModelTemplate):
     DATA: "TpMultyDutBase"
