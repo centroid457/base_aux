@@ -99,13 +99,13 @@ class TpTableModel(TableModelTemplate):
             result_i = self.index(row, col).data()
             result.append(result_i)
 
-        print(f"{col=}/{result=}")
+        # print(f"{col=}/{result=}")
         return result
 
     def get_summary_result(self, col: int) -> bool | None:
         for row in range(self.rowCount() - 1):
             result_i = self.index(row, col).data()
-            print(f"{col=}/{row=}/{result_i=}")
+            # print(f"{col=}/{row=}/{result_i=}")
             if result_i == TcResultMsg.PASS:
                 continue
             elif result_i == TcResultMsg.FAIL:
