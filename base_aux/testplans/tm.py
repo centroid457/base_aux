@@ -11,9 +11,29 @@ from base_aux.breeders import *
 from base_aux.pyqt.static import *
 
 
+# =====================================================================================================================
 class TcResultMsg:
     PASS: str = "Успех"
     FAIL: str = "Ошибка"
+    WAIT: str = "..."
+
+
+class Index:
+    """
+    i dont know how to create QModelIndex so i decide make monkey class
+    """
+    __column: int = 0
+    __row: int = 0
+
+    def __init__(self, column: int = 0, row: int = 0):
+        self.__column = column
+        self.__row = row
+
+    def column(self) -> int:
+        return self.__column
+
+    def row(self) -> int:
+        return self.__row
 
 
 # =====================================================================================================================
@@ -89,8 +109,39 @@ class TpTableModel(TableModelTemplate):
             pass
 
         # clear SELECTABLE ---------
-
         return flags
+
+    def get_summary_results__str(self, col: int) -> list[str]:
+        result = []
+        for row in range(self.rowCount() - 1):
+            result_i = self.index(row, col).data()
+            result.append(result_i)
+
+        print(f"{col=}/{result=}")
+        return result
+
+    def get_summary_result(self, col: int) -> bool | None:
+        for row in range(self.rowCount() - 1):
+            result_i = self.index(row, col).data()
+            print(f"{col=}/{row=}/{result_i=}")
+            if result_i == TcResultMsg.PASS:
+                continue
+            elif result_i == TcResultMsg.FAIL:
+                return False
+            elif result_i == TcResultMsg.WAIT:
+                return
+            else:
+                return
+        return True
+
+    def get_summary_result__str(self, col: int) -> str:
+        result = self.get_summary_result(col)
+        if result is True:
+            return TcResultMsg.PASS
+        elif result is False:
+            return TcResultMsg.FAIL
+        else:
+            return ""
 
     def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
         # PREPARE -----------------------------------------------------------------------------------------------------
@@ -142,13 +193,14 @@ class TpTableModel(TableModelTemplate):
             # DUTS -------------------
             if col in self.HEADERS.DUTS:
                 if row_is_summary:
-                    return
+                    return self.get_summary_result__str(col)
                 if tc_inst:
                     if tc_inst.result is None:
                         return ""
                     elif isinstance(tc_inst.result, Valid):
                         if tc_inst.result.check__active():
-                            return "..."    # work only after StartUpDUT!
+                            return TcResultMsg.WAIT
+
                         elif tc_inst.result.finished:
                             if bool(tc_inst.result):
                                 return TcResultMsg.PASS
@@ -182,7 +234,8 @@ class TpTableModel(TableModelTemplate):
                 return f"{tc_cls.DESCRIPTION}"
             elif col in self.HEADERS.DUTS:
                 if row_is_summary:
-                    return
+                    # return
+                    return str(self.get_summary_results__str(col))
                 if tc_inst:
                     return f"{tc_inst.result}"
 
@@ -228,19 +281,20 @@ class TpTableModel(TableModelTemplate):
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.BackgroundColorRole:
-            if row_is_summary:
-                return
-
-            if tc_cls.SKIP:
+            if tc_cls and tc_cls.SKIP:
                 return QColor('#e2e2e2')
 
             # ACTIVE ---------------------
             if col == self.HEADERS.TESTCASE:
+                if row_is_summary:
+                    return
                 if self.DATA.tc_active == tc_cls:
                     return QColor("#FFFF50")
 
             # STARTUP -------------------
             if col == self.HEADERS.STARTUP_CLS:
+                if row_is_summary:
+                    return
                 if tc_cls.result__startup_cls is None:
                     return
                 elif bool(tc_cls.result__startup_cls) is True:
@@ -250,6 +304,14 @@ class TpTableModel(TableModelTemplate):
 
             # DUTS -------------------
             if col in self.HEADERS.DUTS:
+                if row_is_summary:
+                    result_i = self.get_summary_result(col)
+                    if result_i is True:
+                        return QColor("#00FF00")
+                    elif result_i is False:
+                        return QColor("#FF5050")
+                    else:
+                        return
                 if tc_inst.skip_tc_dut or dut.SKIP or not dut.DEV_FOUND:
                     return QColor('#e2e2e2')
                 elif tc_inst.result__startup is not None and not bool(tc_inst.result__startup):
@@ -267,6 +329,8 @@ class TpTableModel(TableModelTemplate):
 
             # TEARDOWN -------------------
             if col == self.HEADERS.TEARDOWN_CLS:
+                if row_is_summary:
+                    return
                 if tc_cls.result__teardown_cls is None:
                     return
                 elif bool(tc_cls.result__teardown_cls) is True:
