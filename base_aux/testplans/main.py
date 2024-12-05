@@ -380,14 +380,22 @@ class TpMultyDutBase(Logger, QThread):
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
             result_i = {}
             for tc_cls in self.TCS__CLS:
+                tc_inst = None
                 try:
-                    tc_inst_result = tc_cls.TCS__LIST[index].get__results()
+                    tc_inst: TestCaseBase = tc_cls.TCS__LIST[index]
+                    tc_inst_result = tc_inst.get__results(add_info_dut=False, add_info_tc=False)["tc_result"]
                 except:
                     tc_inst_result = None
 
                 result_i.update({tc_cls.NAME: tc_inst_result})
 
-            data_text = json.dumps(result_i, indent=4, ensure_ascii=False)
+            dut_info = tc_inst.DEVICES__BREEDER_INST.DUT.get__info__dev()
+            result_dut = {
+                "STAND": self.get__info__stand(),
+                "DUT": dut_info,
+                "RESULTS": result_i,
+            }
+            data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
 
             filename = f"{name_prefix}[{index}].json"
             filepath = pathlib.Path(self.DIRPATH_RESULTS, filename)

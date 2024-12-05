@@ -499,24 +499,30 @@ class _Info(_TestCaseBase):
         return result
 
     # =================================================================================================================
-    def get__results(self) -> dict[str, Any]:
+    def get__results(self, add_info_dut: bool = True, add_info_tc: bool = True) -> dict[str, Any]:
         self.LOGGER.debug("")
 
+        info_dut = {}
         try:
-            dut_info = self.DEVICES__BREEDER_INST.DUT.get__info__dev()
+            if add_info_dut:
+                info_dut = self.DEVICES__BREEDER_INST.DUT.get__info__dev()
         except:
-            dut_info = {}
+            pass
+
+        info_tc = {}
+        if add_info_tc:
+            info_tc = self.get__info__tc()
 
         result = {
-            **self.get__info__tc(),
-            **dut_info,
+            **info_tc,
+            **info_dut,
 
             # RESULTS
             "timestamp_start": self.timestamp_start,
             "tc_active": self.isRunning(),
             "tc_progress": self.progress,
             "tc_result_startup": bool(self.result__startup),
-            "tc_result": bool(self.result),
+            "tc_result": None if self.result is None else bool(self.result),
             "tc_details": self.details,
             "result__teardown": bool(self.result__teardown),
             "timestamp_last": self.timestamp_last,
