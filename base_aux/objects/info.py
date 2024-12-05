@@ -347,7 +347,7 @@ class ObjectInfo:
     # =================================================================================================================
     def print(self) -> None:
         """print all params from object
-        if method - try to start it!
+        if callable - try to call it!
         """
         WRAPPER_MAIN_LINE = "="*min(90, self.MAX_LINE_LEN)  # here we need use less then
 

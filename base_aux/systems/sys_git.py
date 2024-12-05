@@ -1,4 +1,5 @@
 import pathlib
+import datetime
 from base_aux.classes import Text
 
 try:
@@ -43,7 +44,10 @@ class Git:
         - git setup
         - repo created
         """
-        pass
+        if self.REPO:
+            return True
+        else:
+            return False
 
     def check_status(self) -> bool:
         """
@@ -56,11 +60,21 @@ class Git:
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def COMMITTER(self) -> str | None:
+        """
+        EXAMPLE
+        -------
+        ndrei Starichenko
+        """
         if self.REPO:
             return self.REPO.head.object.committer
 
     @property
     def BRANCH(self) -> str | None:
+        """
+        EXAMPLE
+        -------
+        main
+        """
         if self.REPO:
             try:
                 result = self.REPO.active_branch.name
@@ -72,16 +86,49 @@ class Git:
 
     @property
     def SUMMARY(self) -> str | None:
+        """
+        actual commit text
+
+        EXAMPLE
+        -------
+        [Text] add shortcut_nosub
+        """
         if self.REPO:
             return self.REPO.commit().summary
 
     @property
     def HEXSHA(self) -> str | None:
+        """
+        NOTE
+        ----
+        more useful work with 8 chars! that's enough!
+
+        EXAMPLE
+        -------
+        9fddeb5a9bed20895d56dd9871a69fd9dee5fbf7
+        """
         if self.REPO:
             return self.REPO.head.object.hexsha
 
     @property
-    def DATETIME(self) -> str | None:
+    def HEXSHA8(self) -> str | None:
+        """
+        derivative for main HEXSHA cut by 8 chars
+
+        EXAMPLE
+        -------
+        9fddeb5a
+        """
+        if self.REPO:
+            return self.HEXSHA[:8]
+
+    @property
+    def DATETIME(self) -> datetime.datetime | None:
+        """
+        EXAMPLE
+        -------
+        2024-12-05 11:30:17+03:00
+        """
         if self.REPO:
             return self.REPO.head.object.committed_datetime
 
@@ -93,11 +140,11 @@ class Git:
         git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
         if self.REPO:
-            branch = Text(source=self.BRANCH).shortcut(maxlen=15)
-            summary = Text(source=self.SUMMARY).shortcut(maxlen=15)
-            dt = str(self.DATETIME)[0:19]
+            branch = Text(self.BRANCH).shortcut(15)
+            summary = Text(self.SUMMARY).shortcut(15)
+            dt = Text(self.DATETIME).shortcut_nosub(19)
 
-            result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA[0:8]}/{dt}"
+            result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
         else:
             result = f"возможно GIT не установлен"
@@ -109,7 +156,8 @@ class Git:
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    Git().mark_str()
+    from base_aux.objects import *
+    ObjectInfo(Git()).print()
 
 
 # =====================================================================================================================
