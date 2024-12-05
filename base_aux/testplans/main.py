@@ -387,7 +387,7 @@ class TpMultyDutBase(Logger, QThread):
                 except:
                     tc_inst_result = None
 
-                result_i.update({tc_cls.NAME: tc_inst_result})
+                result_i.update({tc_cls.DESCRIPTION: tc_inst_result})
 
             dut_info = tc_inst.DEVICES__BREEDER_INST.DUT.get__info__dev()
             result_dut = {
