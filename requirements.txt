@@ -48,5 +48,6 @@ pydantic    #MIT
 
 bs4         #MIT
 
+gitpython   #BSD3
 
 # ==========================
