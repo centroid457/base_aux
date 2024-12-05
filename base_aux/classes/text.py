@@ -177,14 +177,25 @@ class Text:
             maxlen: int = 15,
             where: Where3 = Where3.LAST,
             source: str = None,
-            sub: str = "...",
+            sub: str | None = "...",
     ) -> str:
+        """
+        MAIN IDEA-1=for SUB
+        -------------------
+        if sub is exists in result - means it was SHORTED!
+        if not exists - was not shorted!
+        """
+        sub = sub or ""
+
         if source is None:
             source = self.SOURCE
-        source = str(source) or self.SOURCE
+        source = str(source) or str(self.SOURCE)
         if len(source) > maxlen:
             len_source = len(source)
             len_sub = len(sub)
+
+            if len_source <= maxlen:
+                return source
 
             if maxlen <= len_sub:
                 return sub[0:maxlen]
@@ -199,6 +210,20 @@ class Text:
                 source = source[0:len_start] + sub + source[-len_finish:]
 
         return source
+
+    def shortcut_nosub(
+            self,
+            maxlen: int = 15,
+            where: Where3 = Where3.LAST,
+            source: str = None,
+    ) -> str:
+        """
+        GOAL
+        ----
+        derivative-link for shortcut but no using subs!
+        so it same as common slice
+        """
+        return self.shortcut(maxlen=maxlen, where=where, source=source, sub=None)
 
     # =================================================================================================================
     def try_convert_to_object(self, source: str = None) -> TYPE__ELEMENTARY | str:

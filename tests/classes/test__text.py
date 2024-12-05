@@ -76,6 +76,13 @@ class Test__shortcut:
             ("1223", 1, "###", Where3.FIRST, "#"),
             ("1223", 1, "###", Where3.MIDDLE, "#"),
             ("1223", 1, "###", Where3.LAST, "#"),
+
+            #
+            ("123", 1, "##", Where3.FIRST, "#"),
+            ("123", 2, "##", Where3.FIRST, "##"),
+            ("123", 3, "##", Where3.FIRST, "123"),
+            ("123", 4, "##", Where3.FIRST, "123"),
+            ("123", 5, "##", Where3.FIRST, "123"),
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
