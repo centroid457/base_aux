@@ -36,7 +36,7 @@ class TableModelTemplate(QAbstractTableModel):
 
     # =================================================================================================================
     def rowCount(self, parent: Any = None, *args, **kwargs) -> int:
-        return len(self.DATA.ROWS)
+        return len(self.DATA.ROWS)  # + 1  # [+1]for finalResults
 
     def columnCount(self, parent: Any = None, *args, **kwargs) -> int:
         return len(self.DATA.DEVS) + 1

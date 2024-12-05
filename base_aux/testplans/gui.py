@@ -334,20 +334,30 @@ class TpGuiBase(Gui):
         row = index.row()
         col = index.column()
 
-        tc_cls = list(self.DATA.TCS__CLS)[row]
+        try:
+            tc_cls = list(self.DATA.TCS__CLS)[row]
+        except:
+            tc_cls = None
 
-        if self.DATA._TC_RUN_SINGLE:
+        row_is_summary: bool = tc_cls is None
+
+        if self.DATA._TC_RUN_SINGLE and not row_is_summary:
             self.DATA.tc_active = tc_cls
 
         if col == self.TM.HEADERS.STARTUP_CLS:
-            self.PTE.setPlainText(str(tc_cls.result__startup_cls))
+            if not row_is_summary:
+                self.PTE.setPlainText(str(tc_cls.result__startup_cls))
 
         if col in self.TM.HEADERS.DUTS:
-            dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[col - self.TM.HEADERS.DUTS.START_OUTER]
-            self.PTE.setPlainText(tc_cls.TCS__LIST[dut.INDEX].get__results_pretty())
+            if row_is_summary:
+                pass    # TODO: add summary_result
+            else:
+                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[col - self.TM.HEADERS.DUTS.START_OUTER]
+                self.PTE.setPlainText(tc_cls.TCS__LIST[dut.INDEX].get__results_pretty())
 
         if col == self.TM.HEADERS.TEARDOWN_CLS:
-            self.PTE.setPlainText(str(tc_cls.result__teardown_cls))
+            if not row_is_summary:
+                self.PTE.setPlainText(str(tc_cls.result__teardown_cls))
 
         self.TM._data_reread()
 

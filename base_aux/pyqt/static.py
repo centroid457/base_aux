@@ -27,8 +27,17 @@ class MARGINS:
 
 class ALIGNMENT:
     T: Qt.Alignment = Qt.Alignment(Qt.AlignTop)
-    LT: Qt.Alignment = Qt.Alignment(Qt.AlignLeft | Qt.AlignTop)
-    CENTER_HV: Qt.Alignment = Qt.Alignment(Qt.AlignHCenter | Qt.AlignVCenter)
+    TL: Qt.Alignment = Qt.Alignment(Qt.AlignTop | Qt.AlignLeft)
+    TR: Qt.Alignment = Qt.Alignment(Qt.AlignTop | Qt.AlignRight)
+
+    C: Qt.Alignment = Qt.Alignment(Qt.AlignVCenter | Qt.AlignHCenter)
+    CH: Qt.Alignment = Qt.Alignment(Qt.AlignHCenter)
+    CV: Qt.Alignment = Qt.Alignment(Qt.AlignVCenter)
+
+    CT: Qt.Alignment = Qt.Alignment(Qt.AlignHCenter | Qt.AlignTop)
+    CB: Qt.Alignment = Qt.Alignment(Qt.AlignHCenter | Qt.AlignBottom)
+    CL: Qt.Alignment = Qt.Alignment(Qt.AlignVCenter | Qt.AlignLeft)
+    CR: Qt.Alignment = Qt.Alignment(Qt.AlignVCenter | Qt.AlignRight)
 
 
 # =====================================================================================================================

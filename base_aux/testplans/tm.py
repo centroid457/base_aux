@@ -8,6 +8,7 @@ from base_aux.valid import *
 from base_aux.classes import Translator
 from base_aux.pyqt import TableModelTemplate
 from base_aux.breeders import *
+from base_aux.pyqt.static import *
 
 
 class TcResultMsg:
@@ -47,7 +48,7 @@ class TpTableModel(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TCS__CLS)
+        return len(self.DATA.TCS__CLS) + 1  # [+1]for finalResults
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -67,10 +68,20 @@ class TpTableModel(TableModelTemplate):
         col = index.column()
         row = index.row()
 
+        try:
+            tc_cls = list(self.DATA.TCS__CLS)[row]
+        except:
+            tc_cls = None
+
+        row_is_summary: bool = tc_cls is None
+
         # -------------------------------------------------------------------------------------------------------------
         flags = super().flags(index)
 
-        if col in [self.HEADERS.SKIP, self.HEADERS.ASYNC] or col in self.HEADERS.DUTS:
+        if row_is_summary:
+            pass
+
+        elif col in [self.HEADERS.SKIP, self.HEADERS.ASYNC] or col in self.HEADERS.DUTS:
             flags |= Qt.ItemIsUserCheckable
             # flags |= Qt.ItemIsSelectable
         else:
@@ -85,11 +96,17 @@ class TpTableModel(TableModelTemplate):
         # PREPARE -----------------------------------------------------------------------------------------------------
         col = index.column()
         row = index.row()
-        tc_cls = list(self.DATA.TCS__CLS)[row]
+
+        try:
+            tc_cls = list(self.DATA.TCS__CLS)[row]
+        except:
+            tc_cls = None
+
+        row_is_summary: bool = tc_cls is None
 
         dut = None
         tc_inst = None
-        if col in self.HEADERS.DUTS:
+        if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
             dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[index]
             tc_inst = tc_cls.TCS__LIST[index]
@@ -98,14 +115,22 @@ class TpTableModel(TableModelTemplate):
         if role == Qt.DisplayRole:
             if col == self.HEADERS.TESTCASE:
                 # return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
+                if row_is_summary:
+                    return "ИТОГ:"
                 return f"{tc_cls.DESCRIPTION}"
             if col == self.HEADERS.SKIP:
+                if row_is_summary:
+                    return
                 return '+' if tc_cls.SKIP else '-'
             if col == self.HEADERS.ASYNC:
+                if row_is_summary:
+                    return
                 return '+' if tc_cls.ASYNC else '-'
 
             # STARTUP -------------------
             if col == self.HEADERS.STARTUP_CLS:
+                if row_is_summary:
+                    return
                 group_name = tc_cls.MIDDLE_GROUP__NAME or ""
                 if tc_cls.result__startup_cls is None:
                     return group_name
@@ -116,6 +141,8 @@ class TpTableModel(TableModelTemplate):
 
             # DUTS -------------------
             if col in self.HEADERS.DUTS:
+                if row_is_summary:
+                    return
                 if tc_inst:
                     if tc_inst.result is None:
                         return ""
@@ -138,19 +165,26 @@ class TpTableModel(TableModelTemplate):
 
             # TEARDOWN -------------------
             if col == self.HEADERS.TEARDOWN_CLS:
+                if row_is_summary:
+                    return
                 if tc_cls.result__teardown_cls is None:
                     return
-                elif bool(tc_cls.result__teardown_cls) is True:
+                if bool(tc_cls.result__teardown_cls) is True:
                     return '+'
-                elif bool(tc_cls.result__teardown_cls) is False:
+                if bool(tc_cls.result__teardown_cls) is False:
                     return '-'
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.ToolTipRole:
             if col == self.HEADERS.TESTCASE:
+                if row_is_summary:
+                    return "Результаты суммарные по всем тесткейсам\nдля каждого устройства"
                 return f"{tc_cls.DESCRIPTION}"
-            elif col in self.HEADERS.DUTS and tc_inst:
-                return f"{tc_inst.result}"
+            elif col in self.HEADERS.DUTS:
+                if row_is_summary:
+                    return
+                if tc_inst:
+                    return f"{tc_inst.result}"
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.TextAlignmentRole:
@@ -179,17 +213,24 @@ class TpTableModel(TableModelTemplate):
             AlignVertical_Mask = 480    # LEFT+VCENTER
             """
             if col == self.HEADERS.TESTCASE:
-                return Qt.AlignVCenter
+                if row_is_summary:
+                    return ALIGNMENT.CR
+                return ALIGNMENT.CL
             else:
-                return Qt.AlignCenter
+                return ALIGNMENT.C
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.TextColorRole:
+            if row_is_summary:
+                return
             if tc_cls.SKIP:
                 return QColor('#a2a2a2')
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.BackgroundColorRole:
+            if row_is_summary:
+                return
+
             if tc_cls.SKIP:
                 return QColor('#e2e2e2')
 
@@ -235,6 +276,8 @@ class TpTableModel(TableModelTemplate):
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.CheckStateRole:
+            if row_is_summary:
+                return
             if self.open__settings:
                 if col == self.HEADERS.SKIP:
                     if tc_cls.SKIP:
@@ -276,17 +319,25 @@ class TpTableModel(TableModelTemplate):
         # PREPARE -----------------------------------------------------------------------------------------------------
         row = index.row()
         col = index.column()
-        tc_cls = list(self.DATA.TCS__CLS)[row]
+
+        try:
+            tc_cls = list(self.DATA.TCS__CLS)[row]
+        except:
+            tc_cls = None
+
+        row_is_summary: bool = tc_cls is None
 
         dut = None
         tc_inst = None
-        if col in self.HEADERS.DUTS:
+        if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
             dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[index]
             tc_inst = tc_cls(index=index)
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.CheckStateRole:
+            if row_is_summary:
+                return True
             if col == self.HEADERS.SKIP:
                 tc_cls.SKIP = value == Qt.Checked
 
