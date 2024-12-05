@@ -21,8 +21,8 @@ class DialogsSet:
     so to be sure there are no any other available!
     """
     @staticmethod
-    def info__about(*args) -> None:
-        QMessageBox.information(
+    def info__about(*args) -> int:
+        answer = QMessageBox.information(
             None,
             "О программе",
             (
@@ -31,42 +31,38 @@ class DialogsSet:
                 "(стендовые испытания ОТК)"
              )
         )
+        # return always 1024
+        return answer
+
     @staticmethod
-    def finished__devs_detection(*args) -> None:
-        QMessageBox.information(
+    def finished__devs_detection(*args) -> int:
+        answer = QMessageBox.information(
             None,
             "Определение устройств",
             (
                 "Процесс завершен"
             )
         )
+        # return always 1024
+        return answer
+
     @staticmethod
-    def finished__tp(*args) -> None:
-        QMessageBox.information(
+    def finished__tp(*args) -> int:
+        answer = QMessageBox.information(
             None,
             "Тестирование",
             (
                 "Процесс завершен"
              )
         )
+        # return always 1024
+        return answer
+
 
 # SIMPLEST ============================================================================================================
-def info():
-    """
-    see [pyqt.gui.Dialogs] as example
-    """
-    answer = QMessageBox.information(
-        None,
-        'О программе',
-        'This is important information.'
-    )
-    # return always 1024
-    return answer
-
-
 def try__info():
     app = QApplication([])
-    print(info())
+    print(DialogsSet.info__about())
     app.exec()
 
 
