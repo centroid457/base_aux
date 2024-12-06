@@ -15,15 +15,16 @@ import time
 
 
 # =====================================================================================================================
-BLANK_BOOL: bool = False
-BLANK_INT: int = 0
-BLANK_FLOAT: float = 0.0
-BLANK_STR: str = ""         # that is why i create all others BLANKS_*
-BLANK_LIST: list = []
-BLANK_TUPLE: tuple = ()
-BLANK_DICT: dict = {}
-BLANK_SET: set = set()
-BLANK_GEN = range(0)
+class BLANK:
+    BOOL: bool = False
+    INT: int = 0
+    FLOAT: float = 0.0
+    STR: str = ""         # that is why i create all others BLANKS_*
+    LIST: list = []
+    TUPLE: tuple = ()
+    DICT: dict = {}
+    SET: set = set()
+    GEN = range(0)
 
 
 # =====================================================================================================================
@@ -358,6 +359,17 @@ class ClsIterYield:
         # yield from [1,2,3]  #OK
         yield from range(5)   #OK
 INST_ITER_YIELD = ClsIterYield()
+
+
+class ClsIterArgs:
+    ARGS: tuple
+
+    def __init__(self, *args):
+        self.ARGS = args
+
+    def __iter__(self):
+        yield from self.ARGS
+INST_ITER_ARGS = ClsIterArgs()
 
 
 class ClsGen:

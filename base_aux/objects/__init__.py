@@ -28,15 +28,7 @@ from .obj_types import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
     # BLANKS
-    BLANK_BOOL,
-    BLANK_INT,
-    BLANK_FLOAT,
-    BLANK_STR,
-    BLANK_LIST,
-    BLANK_TUPLE,
-    BLANK_DICT,
-    BLANK_SET,
-    BLANK_GEN,
+    BLANK,
 
     # BASE
     GEN_COMPR,
@@ -92,6 +84,7 @@ from .primitives import (
     ClsBoolRaise, INST_BOOL_RAISE,
 
     ClsIterYield, INST_ITER_YIELD,
+    ClsIterArgs, INST_ITER_ARGS,
     ClsGen, INST_GEN,
 
     ClsEq, INST_EQ,
@@ -119,5 +112,6 @@ from .primitives import (
     CALLABLE_METH_INST_PROPERTY,
     CALLABLE_METH_INST_PROPERTY_CLASSMETHOD,
 )
+
 
 # =====================================================================================================================
