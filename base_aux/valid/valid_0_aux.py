@@ -1,8 +1,8 @@
 from typing import *
-
+from base_aux.base_argskwargs import TYPE__VALID_ARGS, TYPE__VALID_KWARGS
 from base_aux.objects import TypeChecker
-from base_aux.funcs import *
-from base_aux.base_argskwargs import *
+
+from base_aux.funcs.static import TYPE__VALID_SOURCE
 
 
 # =====================================================================================================================

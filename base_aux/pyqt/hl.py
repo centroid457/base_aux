@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from typing import *
-from base_aux.classes import AnnotValuesIter
+from base_aux.attrs import AnnotValuesIter
 
 
 # =====================================================================================================================

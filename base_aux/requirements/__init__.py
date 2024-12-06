@@ -5,18 +5,6 @@
 
 
 # =====================================================================================================================
-# TEMPLATE
-# from .main import (
-#     # BASE
-#     EXACT_OBJECTS,
-#
-#     # AUX
-#
-#     # TYPES
-#
-#     # EXX
-# )
-# ---------------------------------------------------------------------------------------------------------------------
 from .strings import (
     ReqCheckStr_Base,
     ReqCheckStr_Os,
@@ -53,11 +41,6 @@ from .versions import (
 
     TYPE__VERSION_BLOCKS,
     TYPE__SOURCE_VERSION,
-
-    Exx_VersionIncompatible,
-    Exx_VersionIncompatibleBlock,
-    Exx_VersionIncompatibleCheck,
 )
-
 
 # =====================================================================================================================

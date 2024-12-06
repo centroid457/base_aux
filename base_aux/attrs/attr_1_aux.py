@@ -1,26 +1,49 @@
 from typing import *
 from base_aux.base_argskwargs.novalue import NoValue
+from base_aux.objects.info import TypeChecker
+
+from base_aux.valid.valid_0_aux import ValidAux
 
 
 # =====================================================================================================================
 class AttrAux:
     """
-    NOTICE
-    ------
+    NOTE
+    ----
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
 
     @classmethod
-    def attrs__iter_not_private(cls, source: Any):
+    def attrs__iter(cls, source: Any, use_callable: bool = None, skip_startswith: str = None) -> Iterable[str]:
         for name in dir(source):
-            if not name.startswith("__"):
-                yield name
+            if not use_callable and TypeChecker.check__callable_func_meth(source):
+                continue
+            if skip_startswith and name.startswith(skip_startswith):
+                continue
+            yield name
 
     @classmethod
-    def attrs__iter_not_hidden(cls, source: Any):
-        for name in dir(source):
-            if not name.startswith("_"):
-                yield name
+    def attrs__iter_not_private(cls, source: Any, use_callable: bool = None) -> Iterable[str]:
+        return cls.attrs__iter(source=source, use_callable=use_callable, skip_startswith="__")
+
+    @classmethod
+    def attrs__iter_not_hidden(cls, source: Any, use_callable: bool = None) -> Iterable[str]:
+        return cls.attrs__iter(source=source, use_callable=use_callable, skip_startswith="_")
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def attrs__check_eq_values(cls, o1: Any, o2: Any, use_callable: bool = None):
+        """
+        GOAL
+        ----
+        check two objects over attrs values
+        """
+        pass
+        # TODO: FINISH!!!
+
+
+
+
 
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -86,7 +109,7 @@ class AttrAux:
 
     # DICT ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def attrs__to_dict(cls, source: Any) -> dict[str, Any]:
+    def attrs__to_dict(cls, source: Any, use_callable: bool = None) -> dict[str, Any]:
         """
         GOAL
         ____
@@ -97,8 +120,12 @@ class AttrAux:
         using any object as rules for Translator
         """
         result = {}
-        for name in cls.attrs__iter_not_hidden(source):
-            result.update({name: getattr(source, name)})
+        for name in cls.attrs__iter_not_hidden(source=source, use_callable=use_callable):
+            value = getattr(source, name)
+            if use_callable and TypeChecker.check__callable_func_meth(value):
+                value = ValidAux.get_result_or_exx(value)
+
+            result.update({name: value})
 
         return result
 

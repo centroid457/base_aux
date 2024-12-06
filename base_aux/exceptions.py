@@ -1,3 +1,19 @@
+from typing import *
+
+
+# =====================================================================================================================
+class ExxBool(Exception):
+    """
+    just a solution to bet correct bool if get Exx as value
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    classes.VALID if
+    """
+    def __bool__(self):
+        return False
+
+
 # =====================================================================================================================
 class Exx__AnnotNotDefined(Exception):
     """Exception in case of not defined attribute in instance
@@ -56,6 +72,32 @@ class Exx__BreederObjectList_GroupNotExists(Exception):
 
 class Exx__BreederObjectList_ObjCantAccessIndex(Exception):
     pass
+
+
+# =====================================================================================================================
+class Exx__Valid(Exception):
+    pass
+
+
+class Exx__ValueNotValidated(Exx__Valid):
+    pass
+
+
+# =====================================================================================================================
+class Exx__VersionIncompatible(Exception):
+    """
+    """
+
+
+# =====================================================================================================================
+if __name__ == '__main__':
+    # REASON --------------
+    assert bool(Exception(0)) is True
+    assert bool(Exception(False)) is True
+
+    # SOLUTION --------------
+    assert bool(ExxBool(0)) is False
+    assert bool(ExxBool(False)) is False
 
 
 # =====================================================================================================================

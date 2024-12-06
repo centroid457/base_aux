@@ -6,9 +6,11 @@ import re
 import imaplib
 import email
 
-from base_aux.classes import Lambda, AttrLambdaCall
+from base_aux.classes import Lambda
 from base_aux.privates import *
 from base_aux.alerts import *
+from base_aux.exceptions import *
+from base_aux.attrs import *
 
 
 # =====================================================================================================================

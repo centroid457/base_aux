@@ -1,9 +1,10 @@
 import pytest
 
-from base_aux.base_argskwargs import *
+from base_aux.base_argskwargs import NoValue
 
-from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.attrs import AttrInitKwargs
+from base_aux.funcs.pytest_aux import pytest_func_tester__no_kwargs
+from base_aux.classes.translator import Translator
 
 
 # =====================================================================================================================

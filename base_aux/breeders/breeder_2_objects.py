@@ -1,6 +1,6 @@
 from typing import *
 from enum import Enum, auto
-from base_aux.classes.static import *
+from base_aux.exceptions import *
 
 
 # =====================================================================================================================

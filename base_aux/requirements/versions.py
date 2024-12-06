@@ -2,9 +2,11 @@ import sys
 from typing import *
 import re
 
-from base_aux.objects import *
-from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.exceptions import *
+from base_aux.objects.obj_types import TypeChecker
+
+from base_aux.classes.cmp import CmpInst
+from base_aux.attrs.getattr_3_prefix_1_inst import GetattrPrefixInst_RaiseIf
 
 
 # =====================================================================================================================
@@ -36,19 +38,6 @@ from base_aux.classes import *
 
 
 # =====================================================================================================================
-class Exx_VersionIncompatibleBlock(Exception):
-    """
-    """
-
-
-class Exx_VersionIncompatible(Exception):
-    """
-    """
-
-
-class Exx_VersionIncompatibleCheck(Exception):
-    """
-    """
 
 
 # =====================================================================================================================
@@ -86,11 +75,11 @@ class VersionBlock(CmpInst):
     def __init__(self, source: TYPE__SOURCE_BLOCKS):
         self._SOURCE = source
         if not self._validate_source(source):
-            raise Exx_VersionIncompatibleBlock()
+            raise Exx__VersionIncompatible()
 
         string = self._prepare_string(source)
         if not self._validate_string(string):
-            raise Exx_VersionIncompatibleBlock()
+            raise Exx__VersionIncompatible()
 
         self.ELEMENTS = self._parse_elements(string)
 
@@ -219,7 +208,7 @@ class Version(CmpInst):
         string = self._prepare_string(source)
         self.BLOCKS = self._parse_blocks(string)
         if not self.check_blocks_enough() and self.RAISE:
-            raise Exx_VersionIncompatible()
+            raise Exx__VersionIncompatible()
 
     def check_blocks_enough(self, count: int = None) -> bool:
         if count is None:
@@ -247,11 +236,11 @@ class Version(CmpInst):
                 break
 
         if "," in result and "." in result:
-            raise Exx_VersionIncompatible()
+            raise Exx__VersionIncompatible()
 
         for pattern in PatternsVer.VALIDATE_BRACKETS_NEGATIVE:
             if re.search(pattern, result):
-                raise Exx_VersionIncompatible()
+                raise Exx__VersionIncompatible()
 
         result = re.sub(r"\A\D+", "", result)   # ver/version
         result = re.sub(r",+", ".", result)

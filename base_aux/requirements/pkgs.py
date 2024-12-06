@@ -2,10 +2,10 @@ from typing import *
 import pathlib
 import re
 import sys
+from base_aux.objects.obj_types import TypeChecker
 
-from base_aux.cli import CliUser
-from base_aux.objects import *
-from base_aux.classes import Text
+from base_aux.cli.user import CliUser
+from base_aux.classes.text import Text
 from .versions import Version
 
 
