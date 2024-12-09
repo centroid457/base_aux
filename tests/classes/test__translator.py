@@ -2,6 +2,7 @@ import pytest
 
 from base_aux.base_argskwargs import *
 from base_aux.pytester import *
+from base_aux.attrs import *
 from base_aux.classes import *
 
 

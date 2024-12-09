@@ -1,6 +1,6 @@
 from typing import *
 from base_aux.base_argskwargs.novalue import NoValue
-from base_aux.classes import *
+from base_aux.attrs import *
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 from typing import *
 # from base_aux.funcs import Iterables
 from base_aux.funcs import IterAux, Explicit
-from base_aux.classes import *
+from base_aux.attrs import *
 from base_aux.objects import ObjectInfo
 
 

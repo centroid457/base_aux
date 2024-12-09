@@ -1,5 +1,5 @@
 from base_aux.exceptions import *
-from base_aux.classes import *
+from base_aux.attrs import *
 
 
 # =====================================================================================================================

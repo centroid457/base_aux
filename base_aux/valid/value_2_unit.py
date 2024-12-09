@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.classes.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
+from base_aux.attrs.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.number import NumberArithmTranslateToAttr
 from base_aux.exceptions import *
 from base_aux.base_argskwargs.novalue import NoValue
