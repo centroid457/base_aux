@@ -22,6 +22,13 @@ class DialogsSet:
     """
     @staticmethod
     def info__about(*args) -> int:
+        # tis all not working!
+        # wgt = QMessageBox()
+        # wgt.resize(1000, 1000)
+        # wgt.setBaseSize(1000, 1000)
+        # wgt.setToolTip("hello")
+        # answer = wgt.information(
+
         answer = QMessageBox.information(
             None,
             "About Program",

@@ -15,7 +15,9 @@ class DialogsSetTp(DialogsSet):
     """
     @staticmethod
     def info__about(*args) -> int:
-        answer = QMessageBox.information(
+        wgt = QMessageBox()
+        wgt.setMaximumWidth(1000)
+        answer = wgt.information(
             None,
             "О программе",
             (
@@ -29,11 +31,15 @@ class DialogsSetTp(DialogsSet):
 
     @staticmethod
     def finished__devs_detection(*args) -> int:
-        answer = QMessageBox.information(
+        wgt = QMessageBox()
+        wgt.resize(1000, 1000)
+        wgt.setBaseSize(1000, 1000)
+        wgt.setToolTip("hello")
+        answer = wgt.information(
             None,
             "Определение устройств",
             (
-                "Процесс завершен"
+                "Процесс завершен" + " "*30
             )
         )
         # return always 1024
@@ -55,7 +61,7 @@ class DialogsSetTp(DialogsSet):
     def finished__save(*args) -> int:
         answer = QMessageBox.information(
             None,
-            "Сохранение результатов",
+            "Сохранение",
             (
                 "Процесс завершен"
              )
@@ -66,12 +72,10 @@ class DialogsSetTp(DialogsSet):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    DialogsSetTp.info__about()
+    # DialogsSetTp.info__about()
     DialogsSetTp.finished__devs_detection()
-    DialogsSetTp.finished__tp()
-    # try__autoaccept()
-    # print(GuiDialog().simple_1_info('<h1>hel\nlo</h1><b>12345<br>1234</b> 21211212 <br>'))
-    # print(GuiDialog().simple_1_info('<h1>hel\nlo</h1><b>12345<br>1234</b> 21211212 <br>'))
+    # DialogsSetTp.finished__tp()
+    # DialogsSetTp.finished__save()
 
 
 # =====================================================================================================================
