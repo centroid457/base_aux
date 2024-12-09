@@ -13,6 +13,7 @@ from base_aux.pyqt.static import *
 
 from .tc import TestCaseBase
 from .tm import TpTableModel
+from .dialog import DialogsSetTp
 
 
 # =====================================================================================================================
@@ -111,6 +112,7 @@ class TpGuiBase(Gui):
     SIZE = (1500, 800)
 
     HL_STYLES = TpHlStyles()
+    DIALOGS = DialogsSetTp
 
     # NEW -------------------------------------------
     DATA: "TpMultyDutBase"

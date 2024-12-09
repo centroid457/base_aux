@@ -24,35 +24,11 @@ class DialogsSet:
     def info__about(*args) -> int:
         answer = QMessageBox.information(
             None,
-            "О программе",
+            "About Program",
             (
-                "ООО Элемент-Инжиниринг,\n"
-                "Программа проведения тестирования блоков питания\n"
-                "(стендовые испытания ОТК)"
-             )
-        )
-        # return always 1024
-        return answer
-
-    @staticmethod
-    def finished__devs_detection(*args) -> int:
-        answer = QMessageBox.information(
-            None,
-            "Определение устройств",
-            (
-                "Процесс завершен"
-            )
-        )
-        # return always 1024
-        return answer
-
-    @staticmethod
-    def finished__tp(*args) -> int:
-        answer = QMessageBox.information(
-            None,
-            "Тестирование",
-            (
-                "Процесс завершен"
+                "LLC CompanyName,\n"
+                "Program name\n"
+                "(purpose)"
              )
         )
         # return always 1024
