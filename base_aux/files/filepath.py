@@ -5,6 +5,15 @@ from base_aux.objects import *
 
 # =====================================================================================================================
 class FilePath:
+    """
+    GOAL
+    ----
+    resolve inition filepath by any variant
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    base_aux.files
+    """
     NAME: str = None
     EXT: str = None
     DIRPATH: pathlib.Path = None
@@ -31,9 +40,15 @@ class FilePath:
             name: str = None,
             ext: str = None,
             dirpath: str | pathlib.Path = None,
-            filepath: str | pathlib.Path = None,
             nameext: str = None,
+
+            filepath: str | pathlib.Path = None,
     ):
+        """
+        NOTE
+        ----
+        you can use "filepath" as base/default and others (name/ext/...) for overwrite some of them base parts
+        """
 
         if filepath is not None:
             filepath = pathlib.Path(filepath)
@@ -43,6 +58,8 @@ class FilePath:
 
         if dirpath is not None:
             self.DIRPATH = pathlib.Path(dirpath)
+        if self.DIRPATH is None and dirpath is None:
+            self.DIRPATH = pathlib.Path().cwd()
 
         if nameext is not None:
             name_ext: list[str] = nameext.rsplit(".", 1)
