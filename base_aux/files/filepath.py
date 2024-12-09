@@ -31,7 +31,6 @@ class FilePath:
             name: str = None,
             ext: str = None,
             dirpath: str | pathlib.Path = None,
-            /,
             filepath: str | pathlib.Path = None,
             nameext: str = None,
     ):

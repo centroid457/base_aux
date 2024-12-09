@@ -10,14 +10,16 @@ from base_aux.files import *
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, args, _EXPECTED",
+    argnames="kwargs",
     argvalues=[
-        (INST_BOOL_RAISE, Kwargs(name="name"), INST_BOOL_RAISE),
+        Kwargs(name="name"),
     ]
 )
-def test__1(source, args, _EXPECTED):
-    func_link = FilePath
-    pytest_func_tester__no_args_kwargs(Lambda(source, *args), _EXPECTED[0])
+def test__1(kwargs):
+    victim = FilePath(**kwargs.KWARGS)
+    # assert victim
+    #
+    # assert
 
 
 # =====================================================================================================================
