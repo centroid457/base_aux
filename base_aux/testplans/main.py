@@ -298,6 +298,9 @@ class TpMultyDutBase(Logger, QThread):
 
         cycle_count = 0
         while True:
+            if not self._TC_RUN_SINGLE:
+                self.tcs_clear()
+
             cycle_count += 1
 
             if self.tp__startup():
