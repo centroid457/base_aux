@@ -62,9 +62,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 6)
+    VERSION: tuple[int, int, int] = (0, 1, 7)
     NEWS: list[str] = [
-        "[TP.gui.TV] zero del prints",
+        "[files] add filepath",
+        "[TP.gui] add save results MsgBox+hide in extend mode skip/async settings",
     ]
 
 

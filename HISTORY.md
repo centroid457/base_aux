@@ -10,6 +10,11 @@
 ********************************************************************************
 ## NEWS
 
+0.1.7 (2024/12/09 17:03:42)
+------------------------------
+- [files] add filepath  
+- [TP.gui] add save results MsgBox+hide in extend mode skip/async settings  
+
 0.1.6 (2024/12/05 18:48:36)
 ------------------------------
 - [TP.gui.TV] zero del prints  
