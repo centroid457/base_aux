@@ -121,6 +121,10 @@ class TpGuiBase(Gui):
         self.TITLE = f"[Тестплан]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
         super().__init__(data)
 
+    def main_window__finalise(self):
+        super().main_window__finalise()
+        self.BTN_extended_mode__toggled()
+
     # WINDOW ==========================================================================================================
     def wgt_create(self):
         self.BTN_create()
@@ -195,7 +199,7 @@ class TpGuiBase(Gui):
         # self.PTE.appendHtml("")
         # self.PTE.anchorAt(#)
         # self.PTE.setSizeAdjustPolicy(#)
-        self.PTE.setHidden(True)
+        # self.PTE.setHidden(True)
 
         # METHODS COMMON -----------------------------------
         self.PTE.setFont(QFont("Calibri (Body)", 7))
@@ -312,6 +316,12 @@ class TpGuiBase(Gui):
 
     def BTN_extended_mode__toggled(self, state: Optional[bool] = None) -> None:
         self.PTE.setHidden(not state)
+
+        hh: QHeaderView = self.TV.horizontalHeader()
+        hh.setSectionHidden(self.TM.HEADERS.SKIP, not state)
+        hh.setSectionHidden(self.TM.HEADERS.ASYNC, not state)
+        hh.setSectionHidden(self.TM.HEADERS.STARTUP_CLS, not state)
+        hh.setSectionHidden(self.TM.HEADERS.TEARDOWN_CLS, not state)
 
     def TV_hh_sectionClicked(self, index: int) -> None:
         if index == self.TM.HEADERS.STARTUP_CLS:
