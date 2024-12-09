@@ -1,7 +1,6 @@
 import pytest
 
 from base_aux.funcs import *
-from base_aux.classes import *
 from base_aux.objects import *
 
 
@@ -52,7 +51,7 @@ class Test__ensure:
         ]
     )
     def test__ensure_class(self, args, _EXPECTED):
-        func_link = ensure_class
+        func_link = TypeEnsure.ensure__class
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------

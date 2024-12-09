@@ -276,3 +276,22 @@ class TypeChecker:
 
 
 # =====================================================================================================================
+class TypeEnsure:
+    @staticmethod
+    def ensure__class(source: Any) -> type:
+        """
+        GOAL
+        ----
+        get class from any object
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        classes.ClsMiddleGroup
+        """
+        if TypeChecker.check__class(source):
+            return source
+        else:
+            return source.__class__
+
+
+# =====================================================================================================================

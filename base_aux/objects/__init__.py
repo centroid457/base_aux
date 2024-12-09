@@ -6,28 +6,22 @@
 
 # =====================================================================================================================
 from .info import (
-    # BASE
     ObjectInfo,
-    # AUX
+
     ItemInternal,
     ObjectState,
-    # TYPES
-    # EXX
 )
 from .obj_types import (
-    # BASE
     TypeChecker,
-    # AUX
-    # TYPES
+    TypeEnsure,
+
     TYPE__NONE,
     TYPE__FUNCTION,
     TYPE__METHOD,
-    # EXX
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
-    # BLANKS
     BLANK,
 
     # BASE

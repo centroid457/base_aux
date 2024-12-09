@@ -23,9 +23,6 @@ from .value_0_explicit import (
     TYPE__EXPLICIT,
     TYPE__DEFAULT,
 )
-from .ensure import (
-    ensure_class,
-)
 
 # ---------------------------------------------------------------------------------------------------------------------
 # from .result_cum import (
