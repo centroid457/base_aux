@@ -299,6 +299,7 @@ class TpGuiBase(Gui):
 
     def BTN_save__clicked(self) -> None:
         self.DATA.save__results()
+        self.DIALOGS.finished__save()
 
     def BTN_reset_all__clicked(self) -> None:
         self.DATA.DEVICES__BREEDER_CLS.group_call__("reset")

@@ -51,6 +51,18 @@ class DialogsSetTp(DialogsSet):
         # return always 1024
         return answer
 
+    @staticmethod
+    def finished__save(*args) -> int:
+        answer = QMessageBox.information(
+            None,
+            "Сохранение результатов",
+            (
+                "Процесс завершен"
+             )
+        )
+        # return always 1024
+        return answer
+
 
 # =====================================================================================================================
 if __name__ == '__main__':
