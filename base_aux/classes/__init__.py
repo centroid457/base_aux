@@ -8,22 +8,6 @@
 
 # =====================================================================================================================
 # ---------------------------------------------------------------------------------------------------------------------
-from .static import (
-    Exx__AnnotNotDefined,
-    Exx__NumberArithm_NoName,
-    Exx__GetattrPrefix,
-    Exx__GetattrPrefix_RaiseIf,
-    Exx__ValueNotParsed,
-    Exx__ValueUnitsIncompatible,
-    Exx__IndexOverlayed,
-    Exx__IndexNotSet,
-    Exx__ItemNotExists,
-    Exx__StartOuterNONE_UsedInStackByRecreation,
-    Exx__BreederObjectList_GroupsNotGenerated,
-    Exx__BreederObjectList_GroupNotExists,
-    Exx__BreederObjectList_ObjCantAccessIndex,
-
-)
 from .annot_1_aux import (
     AnnotAux,
 )
@@ -45,8 +29,6 @@ from .number import (
     NumberArithmTranslateToAttr,
     TYPE__NUMBER,
 )
-# ---------------------------------------------------------------------------------------------------------------------
-from .exceptions import ExxBool
 # ---------------------------------------------------------------------------------------------------------------------
 from .getattr_0_echo import (
     GetattrEcho,

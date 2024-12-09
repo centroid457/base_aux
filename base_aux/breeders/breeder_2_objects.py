@@ -1,7 +1,7 @@
 from typing import *
 from enum import Enum, auto
-from base_aux.classes.static import *
 
+from base_aux.exceptions import *
 
 # =====================================================================================================================
 TYPE__BREED_RESULT__ITEM = Union[Any, Exception]

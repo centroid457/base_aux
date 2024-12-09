@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.classes import Exx__ItemNotExists, Exx__StartOuterNONE_UsedInStackByRecreation
+from base_aux.exceptions import *
 
 
 # =====================================================================================================================

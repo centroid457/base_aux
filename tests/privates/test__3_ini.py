@@ -4,7 +4,7 @@ import pytest
 import shutil
 from tempfile import TemporaryDirectory
 from base_aux.privates import PrivateIni, PrivateAuthIni, Exx__FileNotExists
-from base_aux.classes import Exx__AnnotNotDefined
+from base_aux.exceptions import *
 
 
 # =====================================================================================================================

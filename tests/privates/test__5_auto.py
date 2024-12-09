@@ -5,7 +5,7 @@ import shutil
 from tempfile import TemporaryDirectory
 from typing import *
 
-from base_aux.classes import Exx__AnnotNotDefined
+from base_aux.exceptions import *
 from base_aux.privates import (
     PrivateAuto,
     PrivateEnv, PrivateIni, PrivateJson,

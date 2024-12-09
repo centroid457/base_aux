@@ -1,8 +1,10 @@
 from typing import *
 import math
 
+from base_aux.exceptions import *
+
 from base_aux.objects import *
-from base_aux.classes import CmpInst, Exx__NumberArithm_NoName
+from base_aux.classes import CmpInst
 
 
 # =====================================================================================================================
