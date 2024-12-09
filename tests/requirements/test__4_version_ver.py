@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.requirements import *
-from base_aux.funcs import *
+from base_aux.pytester import *
 
 
 # =====================================================================================================================

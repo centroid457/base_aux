@@ -2,7 +2,7 @@ import pytest
 import time
 
 from base_aux.classes.lambdas import *
-from base_aux.funcs import *
+from base_aux.pytester import *
 from base_aux.objects.primitives import *
 
 

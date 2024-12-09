@@ -3,7 +3,7 @@ import pytest
 import pathlib
 
 from base_aux.requirements import *
-from base_aux.funcs import *
+from base_aux.pytester import *
 
 
 # =====================================================================================================================
