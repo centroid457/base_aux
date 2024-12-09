@@ -162,7 +162,7 @@ class TpGuiBase(Gui):
     def BTN_create(self) -> None:
         self.BTN_devs_detect = QPushButton("определить устройства")
 
-        self.BTN_start = QPushButton("ЗАПУСК ТЕСТИРОВАНИЯ")
+        self.BTN_start = QPushButton_Checkable(["ТЕСТИРОВАНИЕ запустить", "ТЕСТИРОВАНИЕ остановить"])
         self.BTN_start.setCheckable(True)
 
         self.BTN_settings = QPushButton("настройки")
@@ -282,11 +282,11 @@ class TpGuiBase(Gui):
 
         if state:
             self.DATA.start()
-            self.TM._data_reread()
-        elif state is False:
+        elif not state:
             # if not self.DATA.isFinished():
             self.DATA.terminate()
-            self.TM._data_reread()
+
+        self.TM._data_reread()
 
     def BTN_settings__toggled(self, state: Optional[bool] = None) -> None:
         # print(f"BTN_select_tc_on_duts__toggled {state=}")

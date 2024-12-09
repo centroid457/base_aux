@@ -68,7 +68,7 @@ class WgtColored:
 # =====================================================================================================================
 class QPushButton_Checkable(QPushButton):
     def __init__(self, *args, **kwargs):
-        self.__text_toggle: list = ["PushDown", "Release"]  # dont move to class method!!! will not work correct!
+        self.__text_toggle: list[str] = ["PushDown", "Release"]  # dont move to class method!!! will not work correct!
 
         # make available init with list!!! -------------------
         args = list(args)
