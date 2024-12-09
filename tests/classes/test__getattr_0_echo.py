@@ -2,8 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.attrs import *
 
 
 # =====================================================================================================================

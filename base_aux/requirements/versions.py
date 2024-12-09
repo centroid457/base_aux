@@ -3,7 +3,7 @@ from typing import *
 import re
 
 from base_aux.objects import *
-from base_aux.funcs import *
+from base_aux.attrs import *
 from base_aux.classes import *
 
 

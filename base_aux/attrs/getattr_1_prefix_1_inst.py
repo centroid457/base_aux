@@ -3,7 +3,7 @@ from base_aux.objects import *
 from base_aux.exceptions import *
 
 from base_aux.valid.valid_0_aux import ValidAux
-from .attr_1_aux import AttrAux
+from base_aux.classes.attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
