@@ -220,9 +220,11 @@ class TpGuiBase(Gui):
 
         # hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # for index of column set stretch size
         # hh.setMinimumSize(0, QHeaderView.ResizeMode.Stretch)
+        hh.setMinimumWidth(1000)    # dont understand it is not work at least with ResizeToContents
 
         self.TV.resizeColumnsToContents()
         self.TV.resizeRowsToContents()
+
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
