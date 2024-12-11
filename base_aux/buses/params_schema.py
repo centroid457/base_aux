@@ -2,6 +2,7 @@ from typing import *
 import time
 
 from base_aux.base_argskwargs import *
+from base_aux.classes.lambdas import *
 from base_aux.valid import *
 
 from . import *
@@ -44,7 +45,7 @@ class CmdSchema:
         if self.SCHEMA == NoValue:
             return str(value)
         else:
-            result = ValidAux.get_result_or_exx(self.SCHEMA, value)
+            result = Lambda(self.SCHEMA, value).get_result_or_exx()
             return str(result)
 
 

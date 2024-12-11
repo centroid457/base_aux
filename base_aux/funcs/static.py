@@ -4,13 +4,6 @@ from base_aux.base_argskwargs.novalue import TYPE__NOVALUE
 
 # =====================================================================================================================
 TYPE__VALID_EXCEPTION = Union[Exception, type[Exception]]
-TYPE__VALID_callable_item = Callable[[...], Any | NoReturn]
-TYPE__VALID_SOURCE = Union[
-    Any,                                # as main idea! as already final generic
-    Callable[[...], Any | NoReturn],    # as main idea! to get final generic
-    # TYPE__VALID_EXCEPTION,              # fixme: hide? think no? we can pass in theory Exx! but why? for tests? why? we need it only in result! if need in tests Place it as Any!
-    TYPE__NOVALUE
-]
 TYPE__VALID_RESULT = Union[
     Any,
     TYPE__VALID_EXCEPTION,  # as main idea! instead of raise

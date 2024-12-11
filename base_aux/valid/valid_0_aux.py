@@ -3,7 +3,6 @@ from typing import *
 from base_aux.base_argskwargs import *
 
 from base_aux.objects import TypeChecker
-from base_aux.funcs import *
 
 
 # =====================================================================================================================
@@ -11,107 +10,6 @@ class ValidAux:
     """
     Try to keep all validating funcs in separated place
     """
-    # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def get_result_or_raise(
-            cls,
-            source: TYPE__VALID_SOURCE,
-            *args: TYPE__VALID_ARGS,
-            **kwargs: TYPE__VALID_KWARGS,
-    ) -> Any | NoReturn:
-        """
-        SPECIFIC LOGIC
-        --------------
-        if callable meth/func - call and return result.
-        else - return source.
-
-        GOAL
-        ----
-        get common expected for any python code result - simple calculate or raise!
-        because of get_result_or_exx is not enough!
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        GetattrPrefixInst
-        """
-        if TypeChecker.check__callable_func_meth_inst(source):
-            result = source(*args, **kwargs)
-        else:
-            result = source
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def get_result_or_exx(
-            cls,
-            source: TYPE__VALID_SOURCE,
-            *args: TYPE__VALID_ARGS,
-            **kwargs: TYPE__VALID_KWARGS,
-    ) -> Any | Exception:
-        """
-        GOAL
-        ----
-        same as get_result_or_raise but
-        attempt to simplify result by not using try-sentence.
-        so if get raise in get_result_or_raise - return Exx object
-
-        USEFUL IDEA
-        -----------
-        1. in gui when its enough to get str() on result and see the result
-        """
-        args = (source, *args)
-        try:
-            result = cls.get_result_or_raise(*args, **kwargs)
-        except Exception as exx:
-            result = exx
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def get_result_bool(
-            cls,
-            source: TYPE__VALID_SOURCE,
-            *args: TYPE__VALID_ARGS,
-            **kwargs: TYPE__VALID_KWARGS,
-    ) -> bool:
-        """
-        GOAL
-        ----
-        same as get_result_or_exx but
-        apply bool func on result
-
-        ability to get bool result with meanings:
-            - methods/funcs must be called
-                assert get_bool(LAMBDA_TRUE) is True
-                assert get_bool(LAMBDA_NONE) is False
-
-            - Exceptions assumed as False
-                assert get_bool(Exception) is False
-                assert get_bool(Exception("FAIL")) is False
-                assert get_bool(LAMBDA_EXX) is False
-
-            - for other values get classic bool()
-                assert get_bool(None) is False
-                assert get_bool([]) is False
-                assert get_bool([None, ]) is True
-
-                assert get_bool(LAMBDA_LIST) is False
-                assert get_bool(LAMBDA_LIST, [1, ]) is True
-
-            - if on bool() exception raised - return False!
-                assert get_bool(ClsBoolRaise()) is False
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        funcs.Valid.skip_link or else value/func assumed as bool result
-        """
-        try:
-            result = cls.get_result_or_raise(source, *args, **kwargs)
-            if TypeChecker.check__exception(result):
-                return False
-            return bool(result)
-        except:
-            return False
 
     # =================================================================================================================
     @classmethod

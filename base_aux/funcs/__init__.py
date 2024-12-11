@@ -7,7 +7,6 @@
 # =====================================================================================================================
 from .static import (
     TYPE__VALID_VALIDATOR,
-    TYPE__VALID_SOURCE,
     TYPE__VALID_SOURCE_BOOL,
     TYPE__VALID_RESULT,
     TYPE__VALID_RESULT_BOOL,

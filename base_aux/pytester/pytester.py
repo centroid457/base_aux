@@ -4,13 +4,13 @@ from pytest import mark
 
 from base_aux.base_argskwargs import *
 
-from base_aux.funcs import TYPE__VALID_SOURCE, TYPE__VALID_RESULT
+from base_aux.funcs import TYPE__VALID_RESULT
 from base_aux.objects import *
 
 
 # =====================================================================================================================
 def pytest_func_tester(
-        func_link: TYPE__VALID_SOURCE, # if func would get Exx - instance of exx would be returned for value!
+        func_link: TYPE__LAMBDA_CONSTRUCTOR, # if func would get Exx - instance of exx would be returned for value!
         args: TYPE__VALID_ARGS = Args(),
         kwargs: TYPE__VALID_KWARGS = Kwargs(),
         _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
@@ -78,7 +78,7 @@ def pytest_func_tester(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_args_kwargs(
-        func_link: TYPE__VALID_SOURCE,
+        func_link: TYPE__LAMBDA_CONSTRUCTOR,
         _EXPECTED: TYPE__VALID_RESULT = True,
 
         _MARK: pytest.MarkDecorator | None = None,
@@ -97,7 +97,7 @@ def pytest_func_tester__no_args_kwargs(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_kwargs(
-        func_link: TYPE__VALID_SOURCE,
+        func_link: TYPE__LAMBDA_CONSTRUCTOR,
         args: TYPE__VALID_ARGS,
         _EXPECTED: TYPE__VALID_RESULT = True,
 
@@ -116,7 +116,7 @@ def pytest_func_tester__no_kwargs(
 
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_args(
-        func_link: TYPE__VALID_SOURCE,
+        func_link: TYPE__LAMBDA_CONSTRUCTOR,
         kwargs: TYPE__VALID_KWARGS,
         _EXPECTED: TYPE__VALID_RESULT = True,
 

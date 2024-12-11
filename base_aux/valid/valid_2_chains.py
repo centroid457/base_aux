@@ -1,6 +1,7 @@
 from typing import *
 import time
 
+from base_aux.classes.lambdas import Lambda
 from . import Valid
 
 
@@ -57,7 +58,7 @@ class ValidChains(Valid):
         self.timestamp_last = time.time()
 
         # SKIP ---------------------
-        self.skip_last = self.get_result_bool(self.SKIP_LINK)
+        self.skip_last = Lambda(self.SKIP_LINK).get_result_bool()
 
         if not self.skip_last:
             # WORK =======================

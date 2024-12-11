@@ -3,8 +3,8 @@ from .novalue import NoValue
 
 
 # =====================================================================================================================
-TYPE__LAMBDA_CONSTRUCTOR = Any | type[Any] | Callable[..., Any | NoReturn]
-TYPE__LAMBDA_ARGS = tuple[Any, ...]
+TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
+TYPE__LAMBDA_ARGS = tuple[...]
 TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 

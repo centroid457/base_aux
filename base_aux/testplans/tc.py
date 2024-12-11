@@ -339,7 +339,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
-        result = Valid.get_result_or_exx(result)
+        result = Lambda(result).get_result_or_exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         print(f"{cls.result__startup_cls=}")
@@ -351,7 +351,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         self.progress = 1
 
         result = self.startup__wrapped
-        result = Valid.get_result_or_exx(result)
+        result = Lambda(result).get_result_or_exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         self.result__startup = result
@@ -363,7 +363,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         self.progress = 99
 
         result = self.teardown__wrapped
-        result = Valid.get_result_or_exx(result)
+        result = Lambda(result).get_result_or_exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
 
@@ -377,7 +377,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
         if not cls.finished__cls or cls.result__teardown_cls is None:
             result = cls.teardown__cls__wrapped
-            result = Valid.get_result_or_exx(result)
+            result = Lambda(result).get_result_or_exx()
             if isinstance(result, Valid):
                 result.run__if_not_finished()
             cls.result__teardown_cls = result

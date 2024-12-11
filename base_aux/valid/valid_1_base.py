@@ -5,6 +5,7 @@ from base_aux.base_argskwargs import *
 
 from base_aux.objects import TypeChecker
 from base_aux.funcs import *
+from base_aux.classes.lambdas import *
 from base_aux.funcs.static import TYPE__VALID_VALIDATOR
 
 from .valid_0_aux import ValidAux
@@ -57,7 +58,7 @@ class Valid(ValidAux):
     COMMENT: str = ""
 
     SKIP_LINK: TYPE__VALID_SOURCE_BOOL = None
-    VALUE_LINK: TYPE__VALID_SOURCE
+    VALUE_LINK: TYPE__LAMBDA_CONSTRUCTOR
     VALIDATE_LINK: TYPE__VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
     REVERSE_LINK: TYPE__VALID_SOURCE_BOOL = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
@@ -84,7 +85,7 @@ class Valid(ValidAux):
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            value_link: TYPE__VALID_SOURCE = NoValue,
+            value_link: TYPE__LAMBDA_CONSTRUCTOR = NoValue,
             validate_link: Optional[TYPE__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
             skip_link: TYPE__VALID_SOURCE_BOOL= None,
@@ -203,7 +204,7 @@ class Valid(ValidAux):
         self.timestamp_last = time.time()
 
         # SKIP ---------------------
-        self.skip_last = self.get_result_bool(self.SKIP_LINK)
+        self.skip_last = Lambda(self.SKIP_LINK).get_result_bool()
 
         if not self.skip_last:
             retry_count = 0
@@ -215,7 +216,7 @@ class Valid(ValidAux):
                 self.timestamp_last = time.time()
 
                 # VALUE ---------------------
-                self.value_last = self.get_result_or_exx(value_link, *self.ARGS__VALUE, **self.KWARGS__VALUE)
+                self.value_last = Lambda(value_link).get_result_or_exx(*self.ARGS__VALUE, **self.KWARGS__VALUE)
 
                 # VALIDATE ------------------
                 if isinstance(self.value_last, Exception) and not TypeChecker.check__exception(self.VALIDATE_LINK):
@@ -225,8 +226,7 @@ class Valid(ValidAux):
                     self.validate_last = TypeChecker.check__nested__by_cls_or_inst(self.value_last, self.VALIDATE_LINK)
 
                 elif TypeChecker.check__callable_func_meth_inst(self.VALIDATE_LINK):
-                    args_validate = (self.VALIDATE_LINK, self.value_last, *self.ARGS__VALIDATE)
-                    self.validate_last = self.get_result_or_exx(*args_validate, **self.KWARGS__VALIDATE)
+                    self.validate_last = Lambda(self.VALIDATE_LINK).get_result_or_exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
 
                 else:
                     self.validate_last = self.eq_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
@@ -238,7 +238,7 @@ class Valid(ValidAux):
                     retry_count += 1
 
             if self.REVERSE_LINK:
-                self.reverse_last = self.get_result_bool(self.REVERSE_LINK)
+                self.reverse_last = Lambda(self.REVERSE_LINK).get_result_bool()
 
             self.finished = True
             # ============================

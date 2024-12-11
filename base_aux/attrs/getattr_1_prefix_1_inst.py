@@ -2,8 +2,8 @@ from typing import *
 from base_aux.base_exceptions import *
 
 from base_aux.objects import *
-from base_aux.valid.valid_0_aux import ValidAux
 from base_aux.attrs.attr_1_aux import AttrAux
+from base_aux.classes.lambdas import Lambda
 
 
 # =====================================================================================================================
@@ -41,15 +41,14 @@ class GetattrPrefixInst(AttrAux):
             prefix_meth = getattr(self, prefix_original)
 
             if item.lower() == prefix.lower():
-                return lambda *prefix_args, **prefix_kwargs: ValidAux.get_result_or_raise(prefix_meth, *prefix_args, **prefix_kwargs)
+                return lambda *prefix_args, **prefix_kwargs: Lambda(prefix_meth).get_result_or_raise(*prefix_args, **prefix_kwargs)
 
             if prefix_original and item.lower().startswith(prefix.lower()):
                 item_short = item[len(prefix):]
                 item_value = self._getattr_anycase(item_short, self)
 
-                return lambda *meth_args, **meth_kwargs: ValidAux.get_result_or_raise(
-                    prefix_meth,
-                    *[ValidAux.get_result_or_raise(item_value, *meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
+                return lambda *meth_args, **meth_kwargs: Lambda(prefix_meth).get_result_or_raise(
+                    *[Lambda(item_value).get_result_or_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
                     **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 
@@ -67,7 +66,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
         _reverse = _reverse or False
-        result = ValidAux.get_result_or_exx(source)
+        result = Lambda(source).get_result_or_exx()
         if TypeChecker.check__exception(result) or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 

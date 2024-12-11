@@ -1,10 +1,10 @@
 from typing import *
 import time
 
-from base_aux.base_argskwargs.argskwargs import ArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
+from base_aux.base_argskwargs.argskwargs import *
 from base_aux.base_enums.enums import When2
-
 from base_aux.objects import TypeChecker
+
 from base_aux.valid.valid_0_aux import ValidAux
 
 
@@ -81,7 +81,7 @@ class Lambda(ArgsKwargs):
         """
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        if callable(self.CONSTRUCTOR) or TypeChecker.check__class(self.CONSTRUCTOR):
+        if callable(self.CONSTRUCTOR):  # callable accept all variants! TypeChecker.check__callable_func_meth_inst_cls!
             return self.CONSTRUCTOR(*args, **kwargs)
         else:
             return self.CONSTRUCTOR
@@ -94,19 +94,84 @@ class Lambda(ArgsKwargs):
     def get_result_or_raise(self, *args, **kwargs) -> bool | NoReturn:
         """
         just a direct result
+
+        SPECIFIC LOGIC
+        --------------
+        if callable - call and return result.
+        else - return source.
+
+        GOAL
+        ----
+        get common expected for any python code result - simple calculate or raise!
+        because of get_result_or_exx is not enough!
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        GetattrPrefixInst
         """
         return self(*args, **kwargs)
 
     def get_result_or_exx(self, *args, **kwargs) -> bool | Exception:
         """
+        GOAL
+        ----
+        same as get_result_or_raise but
+        attempt to simplify result by not using try-sentence.
+        so if get raise in get_result_or_raise - return Exx object
+
+        USEFUL IDEA
+        -----------
+        1. in gui when its enough to get str() on result and see the result
+
         SPECIALLY CREATED FOR
         ---------------------
         just in case
+
         """
         try:
             return self(*args, **kwargs)
         except Exception as exx:
             return exx
+
+    def get_result_bool(self, *args, **kwargs) -> bool:
+        """
+        GOAL
+        ----
+        same as get_result_or_exx but
+        apply bool func on result
+
+        ability to get bool result with meanings:
+            - methods/funcs must be called
+                assert get_bool(LAMBDA_TRUE) is True
+                assert get_bool(LAMBDA_NONE) is False
+
+            - Exceptions assumed as False
+                assert get_bool(Exception) is False
+                assert get_bool(Exception("FAIL")) is False
+                assert get_bool(LAMBDA_EXX) is False
+
+            - for other values get classic bool()
+                assert get_bool(None) is False
+                assert get_bool([]) is False
+                assert get_bool([None, ]) is True
+
+                assert get_bool(LAMBDA_LIST) is False
+                assert get_bool(LAMBDA_LIST, [1, ]) is True
+
+            - if on bool() exception raised - return False!
+                assert get_bool(ClsBoolRaise()) is False
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        funcs.Valid.skip_link or else value/func assumed as bool result
+        """
+        try:
+            result = Lambda(self.CONSTRUCTOR).get_result_or_raise(*args, **kwargs)
+            if TypeChecker.check__exception(result):
+                return False
+            return bool(result)
+        except:
+            return False
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_raise(self, *args, **kwargs) -> bool:
