@@ -2,10 +2,6 @@ import pytest
 import time
 import pathlib
 
-from base_aux.base_argskwargs import *
-from base_aux.classes.lambdas import *
-from base_aux.funcs import *
-from base_aux.objects.primitives import *
 from base_aux.files import *
 
 

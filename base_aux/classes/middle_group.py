@@ -1,9 +1,9 @@
 # FIXME: need to deprecate? no!
 
 from typing import *
-from base_aux.objects import *
-from base_aux.funcs import *
+
 from base_aux.base_argskwargs import *
+from base_aux.objects import *
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 from typing import *
+from base_aux.base_exceptions import Exx__AnnotNotDefined
 
 from .attr_1_aux import AttrAux
-from base_aux.exceptions import Exx__AnnotNotDefined
 from base_aux.objects.obj_types import TypeChecker
 
 

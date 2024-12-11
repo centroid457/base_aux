@@ -1,9 +1,8 @@
 from typing import *
 
-from base_aux.objects import TypeChecker
+from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.funcs import *
 from base_aux.valid import ValidAux
-from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 
 
 # =====================================================================================================================

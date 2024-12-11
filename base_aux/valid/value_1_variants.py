@@ -1,8 +1,9 @@
 from typing import *
 
+from base_aux.base_argskwargs.novalue import NoValue
+
 from .static import *
 from .valid_1_base import Valid
-from base_aux.base_argskwargs.novalue import NoValue
 
 
 # =====================================================================================================================

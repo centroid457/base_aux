@@ -3,8 +3,10 @@ import pathlib
 import pytest
 import shutil
 from tempfile import TemporaryDirectory
+
+from base_aux.base_exceptions import *
+
 from base_aux.privates import PrivateIni, PrivateAuthIni, Exx__FileNotExists
-from base_aux.exceptions import *
 
 
 # =====================================================================================================================

@@ -3,8 +3,9 @@ import time
 
 from base_aux.base_argskwargs.argskwargs import ArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2
-from base_aux.valid.valid_0_aux import ValidAux
+
 from base_aux.objects import TypeChecker
+from base_aux.valid.valid_0_aux import ValidAux
 
 
 # =====================================================================================================================

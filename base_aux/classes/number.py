@@ -1,7 +1,7 @@
 from typing import *
 import math
 
-from base_aux.exceptions import *
+from base_aux.base_exceptions import *
 
 from base_aux.objects import *
 from base_aux.classes import CmpInst

@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.exceptions import *
+from base_aux.base_exceptions import *
 
 
 # =====================================================================================================================

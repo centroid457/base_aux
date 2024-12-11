@@ -4,8 +4,10 @@ import pytest
 import abc
 import shutil
 from tempfile import TemporaryDirectory
+
+from base_aux.base_exceptions import *
+
 from base_aux.privates import *
-from base_aux.exceptions import *
 
 
 # =====================================================================================================================
