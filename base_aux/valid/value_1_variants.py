@@ -3,7 +3,7 @@ from typing import *
 from base_aux.base_argskwargs.novalue import NoValue
 
 from .static import *
-from .valid_1_base import Valid
+from .valid_0_aux import ValidAux
 
 
 # =====================================================================================================================
@@ -109,7 +109,7 @@ class ValueVariants:
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | NoValue:
         for variant in self.VARIANTS:
-            if Valid.eq_doublesided__bool(variant, value):
+            if ValidAux.eq_doublesided__bool(variant, value):
                 return variant
 
             if self.CASE_INSENSITIVE:

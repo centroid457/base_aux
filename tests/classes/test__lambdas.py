@@ -28,13 +28,13 @@ from base_aux.objects.primitives import *
         ([None, ], (), (None, None, False)),
         ([1, ], (), (1, 1, True)),
 
-        (INST_CALL_TRUE, (True, True, True)),
-        (INST_CALL_FALSE, (False, False, False)),
-        (INST_CALL_RAISE, (Exception, Exception, False)),
+        (INST_CALL_TRUE, (), (True, True, True)),
+        (INST_CALL_FALSE, (), (False, False, False)),
+        (INST_CALL_RAISE, (), (Exception, Exception, False)),
 
-        (INST_BOOL_TRUE, (INST_BOOL_TRUE, INST_BOOL_TRUE, True)),
-        (INST_BOOL_FALSE, (INST_BOOL_FALSE, INST_BOOL_FALSE, False)),
-        (INST_BOOL_RAISE, (INST_BOOL_RAISE, INST_BOOL_RAISE, False)),
+        (INST_BOOL_TRUE, (), (INST_BOOL_TRUE, INST_BOOL_TRUE, True)),
+        (INST_BOOL_FALSE, (), (INST_BOOL_FALSE, INST_BOOL_FALSE, False)),
+        (INST_BOOL_RAISE, (), (INST_BOOL_RAISE, INST_BOOL_RAISE, False)),
     ]
 )
 def test__get_result_s(source, args, _EXPECTED):

@@ -24,13 +24,13 @@ from base_aux.objects import *
     ]
 )
 def test__compare_doublesided(args, _EXPECTED):
-    func_link = Valid.eq_doublesided_or_exx
+    func_link = ValidAux.eq_doublesided_or_exx
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[0])
 
-    func_link = Valid.eq_doublesided__bool
+    func_link = ValidAux.eq_doublesided__bool
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[1])
 
-    func_link = Valid.eq_doublesided__reverse
+    func_link = ValidAux.eq_doublesided__reverse
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[2])
 
 
