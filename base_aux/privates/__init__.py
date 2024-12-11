@@ -9,66 +9,47 @@
 # =====================================================================================================================
 # TEMPLATE
 # from .static import (
-#     # TYPES
-#     # EXX
 # )
 # from .main import (
-#     # BASE
-#     # AUX
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .static import (
-    # TYPES
     TYPE__PV_DICT,
     TYPE__PATH,
     TYPE__VALUE,
-    # EXX
+
     Exx__FileNotExists,
     Exx__SameKeys,
 )
 from .attr_loader__0_base import (
-    # BASE
     PrivateBase,
-    # AUX
 )
 from .derivatives import (
-    # BASE
     PrivateAuth,
     PrivateTgBotAddress,
-    # AUX
 )
 from .attr_loader__1_env import (
-    # BASE
     PrivateEnv,
-    # AUX
 )
 from .attr_loader__2_csv import (
-    # BASE
     PrivateCsv,
     PrivateAuthCsv,
     PrivateTgBotAddressCsv,
-    # AUX
 )
 from .attr_loader__3_ini import (
-    # BASE
     PrivateIni,
     PrivateAuthIni,
     PrivateTgBotAddressIni,
-    # AUX
 )
 from .attr_loader__4_json import (
-    # BASE
     PrivateJson,
     PrivateAuthJson,
     PrivateTgBotAddressJson,
-    # AUX
 )
 from .attr_loader__5_auto import (
-    # BASE
     PrivateAuto,
     PrivateAuthAuto,
     PrivateTgBotAddressAuto,
-    # AUX
 )
 
 # =====================================================================================================================

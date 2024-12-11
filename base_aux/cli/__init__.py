@@ -7,24 +7,15 @@
 # =====================================================================================================================
 # TEMPLATE
 # from .main import (
-#     # BASE
 #     EXACT_OBJECTS,
-#
-#     # AUX
-#
-#     # TYPES
-#
-#     # EXX
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .user import (
-    # BASE
     CliUser,
-    # AUX
-    # TYPES
+
     TYPE__CMD,
     TYPE__CMDS,
-    # EXX
+
     Exx_CliNotAvailable,
     Exx_CliTimeout,
     Exx_CliRetcode,

@@ -24,10 +24,7 @@ from .value_2_unit import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .valid_0_aux import ValidAux
 from .valid_1_base import Valid
-from .valid_2_chains import (
-    ValidChains,
-    TYPE__CHAINS,
-)
+
 from .valid_1_base_derivatives import (
     ValidRetry1,
     ValidRetry2,
@@ -37,8 +34,12 @@ from .valid_1_base_derivatives import (
     ValidReverse,
     ValidSleep,
 )
-from .valid_3_regexp import (
+from .valid_2_regexp import (
     ValidRegExp,
+)
+from .valid_10_chains import (
+    ValidChains,
+    TYPE__CHAINS,
 )
 
 # =====================================================================================================================
