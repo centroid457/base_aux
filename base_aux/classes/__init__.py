@@ -39,15 +39,6 @@ from .text import (
 from .translator import (
     Translator,
 )
-# ---------------------------------------------------------------------------------------------------------------------
-from .singleton import (
-    SingletonManagerBase,
-    SingletonMetaCallClass,
-    SingletonByCallMeta,
-    SingletonByNew,
-
-    Exx_SingletonNestingLevels,
-)
 
 
 # =====================================================================================================================

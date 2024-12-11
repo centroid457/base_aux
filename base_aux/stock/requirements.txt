@@ -20,6 +20,7 @@ numpy<2
 # downgrade to 'numpy<2' or try to upgrade the affected module.
 # We expect that some modules will need time to support NumPy 2.
 
+pytz
 pandas
 
 # === TRADING ===

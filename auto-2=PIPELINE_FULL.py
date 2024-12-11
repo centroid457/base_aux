@@ -8,7 +8,7 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 # =====================================================================================================================
 from PROJECT import PROJECT
 from base_aux.requirements import Packages
-from base_aux.cli import *
+from base_aux.cli import CliUser
 
 
 # =====================================================================================================================
