@@ -192,6 +192,7 @@ class TpMultyDutBase(Logger, QThread):
         result = {}
         for item, using in self.TCS__CLS.items():
             # print(dir(TESTCASES))
+            print(f"touch {self.DIRPATH_TCS} {item=}")
             if isinstance(item, str):   # filename
                 # tc_cls = import_module(item, "TESTCASES").TestCase    # not working!
                 # tc_cls = getattr(TESTCASES, item).TestCase      # not working
@@ -199,11 +200,11 @@ class TpMultyDutBase(Logger, QThread):
                 try:
                     tc_cls = import_module(f"{self.DIRPATH_TCS.name}.{item}").TestCase
                 except:
-                    msg = f"[WARN] no 'TestCase' class in file [{self.DIRPATH_TCS.name}]"
+                    msg = f"[WARN] no 'TestCase' class in file [{self.DIRPATH_TCS}/{item}]"
                     print(msg)
                     continue
                 if not tc_cls:
-                    msg = f"[ERROR] file not found[{item=}] in /{self.DIRPATH_TCS.name}/"
+                    msg = f"[ERROR] file not found[{item=}] in /{self.DIRPATH_TCS}/"
                     raise Exx__TcItemNotFound(msg)
                 tc_cls.NAME = item
             elif isinstance(type(item), type) and issubclass(item, TestCaseBase):
