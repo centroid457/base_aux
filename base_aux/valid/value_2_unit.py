@@ -7,7 +7,7 @@ from base_aux.base_argskwargs.novalue import NoValue
 # from base_aux.attrs.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.number import NumberArithmTranslateToAttr
 
-from .valid_1_base import Valid
+from base_aux.valid.valid_0_aux import ValidAux
 
 
 # =====================================================================================================================
@@ -257,7 +257,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
             0=self==other
             -1=self<other
         """
-        if Valid.eq_doublesided__bool(self.VALUE, other):
+        if ValidAux.eq_doublesided__bool(self.VALUE, other):
             return 0
         if not isinstance(other, self.__class__):
             other = self.__class__(other)
