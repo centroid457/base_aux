@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.classes.lambdas import Lambda
+from base_aux.lambdas.lambdas import Lambda
 
 
 # =====================================================================================================================

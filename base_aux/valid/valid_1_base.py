@@ -1,10 +1,7 @@
-from typing import *
-import time
-
 from base_aux.base_argskwargs import *
 
 from base_aux.funcs import *
-from base_aux.classes.lambdas import *
+from base_aux.lambdas.lambdas import *
 from base_aux.funcs.static import TYPE__VALID_VALIDATOR
 
 

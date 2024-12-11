@@ -1,8 +1,8 @@
 from typing import *
 import time
 
-from base_aux.classes.lambdas import Lambda
-from . import Valid
+from base_aux.valid.valid_1_base import Valid
+from base_aux.lambdas.lambdas import Lambda
 
 
 # =====================================================================================================================

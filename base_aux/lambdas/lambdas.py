@@ -11,9 +11,6 @@ from base_aux.valid.valid_0_aux import ValidAux
 # =====================================================================================================================
 class Lambda(ArgsKwargs):
     """
-    # FIXME: it seems ValidAux have same functions!!! need to combine in one object??? - NO!!!
-        in this case its perfect separating args without special Ensure_tuple!
-
     IDEA
     ----
     no calling on init!

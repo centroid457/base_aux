@@ -15,18 +15,6 @@ from .number import (
     TYPE__NUMBER,
 )
 # ---------------------------------------------------------------------------------------------------------------------
-from .lambdas import (
-    Lambda,
-
-    LambdaBool,
-    LambdaBoolReversed,
-
-    LambdaTrySuccess,
-    LambdaTryFail,
-
-    LambdaSleep,
-    LambdaSleepAfter,
-)
 # ---------------------------------------------------------------------------------------------------------------------
 from .middle_group import (
     ClsMiddleGroup,

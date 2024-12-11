@@ -1,9 +1,8 @@
-from typing import *
 from base_aux.base_exceptions import *
 
 from base_aux.objects import *
 from base_aux.attrs.attr_1_aux import AttrAux
-from base_aux.classes.lambdas import Lambda
+from base_aux.lambdas.lambdas import Lambda
 
 
 # =====================================================================================================================

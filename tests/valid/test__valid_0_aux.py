@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.pytester import *
-from base_aux.valid import *
+from base_aux.valid.valid_0_aux import ValidAux
 from base_aux.objects import *
 
 

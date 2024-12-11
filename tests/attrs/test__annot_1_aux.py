@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.pytester import *
-from base_aux.attrs import *
+from base_aux.pytester.pytester import pytest_func_tester__no_args_kwargs, pytest_func_tester__no_kwargs
+from base_aux.attrs import AnnotAux, AnnotRequired
 
 
 # =====================================================================================================================

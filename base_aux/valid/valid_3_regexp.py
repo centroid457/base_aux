@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from . import ValidAux
+from base_aux.valid.valid_0_aux import ValidAux
 
 
 # =====================================================================================================================

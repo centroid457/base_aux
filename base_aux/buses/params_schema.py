@@ -1,8 +1,4 @@
-from typing import *
-import time
-
-from base_aux.base_argskwargs import *
-from base_aux.classes.lambdas import *
+from base_aux.lambdas.lambdas import *
 from base_aux.valid import *
 
 from . import *
