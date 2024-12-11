@@ -3,9 +3,8 @@ import pytest
 import requests
 from aiohttp import web
 
-from base_aux.requirements import ReqCheckStr_Os
+from base_aux.requirements.strings import ReqCheckStr_Os
 
-from base_aux.servers.url import UrlCreator
 from base_aux.servers.server_aiohttp import ServerAiohttpBase
 
 

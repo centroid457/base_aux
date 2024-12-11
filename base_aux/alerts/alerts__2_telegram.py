@@ -2,7 +2,7 @@ import time
 from typing import *
 
 from base_aux.lambdas import Lambda
-from base_aux.attrs import AttrLambdaCall
+from base_aux.attrs.attr_3_lambda_call import AttrLambdaCall
 from base_aux.privates import *
 from .base import *
 

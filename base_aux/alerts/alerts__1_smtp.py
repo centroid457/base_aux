@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 
 from base_aux.lambdas import Lambda
 from base_aux.privates import *
-from base_aux.attrs import *
+from base_aux.attrs.attr_3_lambda_call import AttrLambdaCall
 
 
 # =====================================================================================================================
