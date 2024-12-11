@@ -1,12 +1,12 @@
 from base_aux.singletons import *
 
-class MySingleton(SingletonByCallMeta):
+class MySingleton(SingletonCallMeta):
     pass
 
-class MySingleton2(SingletonByCallMeta):
+class MySingleton2(SingletonCallMeta):
     pass
 
-class MySingleton(metaclass=SingletonMetaCallClass):
+class MySingleton(metaclass=SingletonCallMetaType):
     pass
 
 
@@ -14,19 +14,19 @@ class MySingleton(metaclass=SingletonMetaCallClass):
 # 2. access to created instances
 from base_aux.singletons import *
 
-class Victim1(SingletonByCallMeta):
+class Victim1(SingletonCallMeta):
     attr = 1
 
-class Victim2(SingletonByCallMeta):
+class Victim2(SingletonCallMeta):
     attr = 2
 
-assert SingletonByCallMeta._SINGLETONS == []
+assert SingletonCallMeta._SINGLETONS == []
 Victim1()
-assert SingletonByCallMeta._SINGLETONS == [Victim1(), ]
+assert SingletonCallMeta._SINGLETONS == [Victim1(), ]
 assert Victim1._SINGLETONS == [Victim1(), ]
 assert Victim1()._SINGLETONS == [Victim1(), ]
 Victim2()
-assert SingletonByCallMeta._SINGLETONS == [Victim1(), Victim2(), ]
+assert SingletonCallMeta._SINGLETONS == [Victim1(), Victim2(), ]
 
 
 # ===============================
@@ -34,7 +34,7 @@ assert SingletonByCallMeta._SINGLETONS == [Victim1(), Victim2(), ]
 # don't use nesting from any Your Singletons!
 from base_aux.singletons import *
 
-class MySingleton(SingletonByCallMeta):  # OK
+class MySingleton(SingletonCallMeta):  # OK
     pass
 
 class MySingleton2(MySingleton):  # WRONG

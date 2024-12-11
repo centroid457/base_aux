@@ -95,7 +95,7 @@ class ThreadItem(QThread):
 
 
 # =====================================================================================================================
-class ThreadsManager(SingletonByCallMeta):
+class ThreadsManager(SingletonCallMeta):
     """Manager for spawning threads and keep its instances with additional data.
     Singleton! do you dont need saving instances!
 

@@ -1,9 +1,9 @@
 # =====================================================================================================================
 from .singleton import (
     SingletonManagerBase,
-    SingletonMetaCallClass,
-    SingletonByCallMeta,
-    SingletonByNew,
+    SingletonCallMetaType,
+    SingletonCallMeta,
+    SingletonNew,
 
     Exx_SingletonNestingLevels,
 )

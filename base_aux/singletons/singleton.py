@@ -47,7 +47,7 @@ class SingletonManagerBase:
 
     Bytheway, you can directly access to all this collections from any your singleton instance or even class! its basic!
     """
-    _SINGLETONS: list['SingletonManagerBase'] = []
+    _SINGLETONS: list[Self] = []
     _CLS_BLOCKED: set[Any] = set()
     _CLS_USED: set[Any] = set()
 
@@ -123,7 +123,7 @@ class SingletonManagerBase:
 
 
 # =====================================================================================================================
-class SingletonMetaCallClass(SingletonManagerBase, type):
+class SingletonCallMetaType(SingletonManagerBase, type):
     """metaclass which create the singletons by Call method
 
     USAGE
@@ -157,8 +157,8 @@ class SingletonMetaCallClass(SingletonManagerBase, type):
         return cls.__INSTANCE
 
 
-class SingletonByCallMeta(metaclass=SingletonMetaCallClass):
-    """same as original metaclass SingletonMetaCallClass but just an another variant of using it by simple nesting
+class SingletonCallMeta(metaclass=SingletonCallMetaType):
+    """same as original metaclass SingletonCallMetaType but just an another variant of using it by simple nesting
     (without direct using metaclass parameter).
 
     USAGE
@@ -175,7 +175,7 @@ class SingletonByCallMeta(metaclass=SingletonMetaCallClass):
 
 
 # =====================================================================================================================
-class SingletonByNew(SingletonManagerBase):
+class SingletonNew(SingletonManagerBase):
     """Singleton manager, creating them by using NEW method without metaclassing
     else one variant after SingletonWMetaCall, in case of metaclass is not acceptable.
 
@@ -201,6 +201,12 @@ class SingletonByNew(SingletonManagerBase):
         cls._MUTEX_SINGLETON.release()
         # -----------------------------------------
         return cls.__INSTANCE
+
+
+# =====================================================================================================================
+class Multiton:
+    # todo: create!!!
+    pass
 
 
 # =====================================================================================================================
