@@ -9,7 +9,7 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/base_aux)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/base_aux)
 
-# base_aux (current v0.1.7/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
+# base_aux (current v0.1.8/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
 collect all my previous modules in one package

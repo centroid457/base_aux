@@ -62,10 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 7)
+    VERSION: tuple[int, int, int] = (0, 1, 8)
     NEWS: list[str] = [
-        "[files] add filepath",
-        "[TP.gui] add save results MsgBox+hide in extend mode skip/async settings",
+        "start separating parts [exceptions/TypeEnsure/pytester/attrs]",
     ]
 
 
