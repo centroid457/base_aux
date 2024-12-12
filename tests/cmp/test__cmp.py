@@ -3,7 +3,7 @@ import pytest
 from pytest import mark
 
 from base_aux.pytester import *
-from base_aux.classes import *
+from base_aux.cmp.cmp import CmpInst
 
 
 # =====================================================================================================================
