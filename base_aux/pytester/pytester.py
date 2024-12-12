@@ -3,9 +3,9 @@ import pytest
 from pytest import mark
 
 from base_aux.base_argskwargs import *
+from base_aux.base_objects import *
 
 from base_aux.funcs import TYPE__VALID_RESULT
-from base_aux.base_objects import *
 
 
 # =====================================================================================================================

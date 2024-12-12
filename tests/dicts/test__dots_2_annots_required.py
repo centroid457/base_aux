@@ -1,11 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.base_objects import LAMBDA_EXX
-
 from base_aux.lambdas import *
 from base_aux.dicts import *
-# from base_aux.classes import *
 
 
 # =====================================================================================================================

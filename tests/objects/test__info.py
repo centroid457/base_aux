@@ -2,9 +2,9 @@ from typing import *
 import time
 import pytest
 
-from base_aux.base_objects import *
-
 from PyQt5.QtCore import QThread
+
+from base_aux.base_objects import *
 
 
 # =====================================================================================================================

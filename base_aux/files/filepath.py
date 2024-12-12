@@ -1,5 +1,6 @@
 import pathlib
 from typing import *
+
 from base_aux.base_objects import *
 
 
@@ -77,6 +78,9 @@ class FilePath:
             self.NAME = name
         if ext is not None:
             self.EXT = ext
+
+    def resolve(self) -> pathlib.Path:
+        return self.FILEPATH
 
 
 # =====================================================================================================================

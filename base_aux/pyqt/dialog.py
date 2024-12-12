@@ -3,14 +3,15 @@
 
 # =====================================================================================================================
 from typing import *
+import time
+from threading import Thread
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import time
-from threading import Thread
 from base_aux.base_objects import LAMBDA_TRUE, SLEEP_TRUE
+
 from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
 
