@@ -69,7 +69,7 @@ class ObjectInfo:
         "clone", "copy", "move",
         "next",
         "clear", "reduce",
-        "close", "del", "exit", "kill",
+        "close", "del", "exit", "kill", "abort",
 
         # PyQt5 Qthread
         "exec", "exec_", "pyqtConfigure",
