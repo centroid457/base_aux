@@ -1,4 +1,13 @@
 
 REM pyinstaller.exe --onefile --noconsole ../start.py
-pyinstaller.exe --clean --distpath ./pyinstaller/dist --workpath ./pyinstaller/build --specpath ./pyinstaller --onefile ./setup.py
 
+
+REM you should delete previouse ./pyinstaller/ before starting!
+
+pyinstaller.exe
+    --clean
+    --contents-directory ./pyinstaller
+    --collect-all TESTCASES
+    --onefile
+    -y
+    ./setup.py
