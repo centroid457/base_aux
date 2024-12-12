@@ -128,37 +128,30 @@ def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def SLEEP(sec: float = 1, *args, **kwargs) -> None:
+def SLEEP(sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
     time.sleep(sec)
+    return echo
 
 
 def SLEEP_NONE(sec: float = 1, *args, **kwargs) -> None:
-    time.sleep(sec)
+    return SLEEP(sec=sec, echo=None, *args, **kwargs)
 
 
 def SLEEP_TRUE(sec: float = 1, *args, **kwargs) -> bool:
-    time.sleep(sec)
-    return True
+    return SLEEP(sec=sec, echo=True, *args, **kwargs)
 
 
 def SLEEP_FALSE(sec: float = 1, *args, **kwargs) -> bool:
-    time.sleep(sec)
-    return False
+    return SLEEP(sec=sec, echo=False, *args, **kwargs)
 
 
 def SLEEP_EXX(sec: float = 1, *args, **kwargs) -> Exception:
-    time.sleep(sec)
-    return Exception("SLEEP_EXX")
+    return SLEEP(sec=sec, echo=Exception("SLEEP_EXX"), *args, **kwargs)
 
 
 def SLEEP_RAISE(sec: float = 1, *args, **kwargs) -> NoReturn:
     time.sleep(sec)
     raise Exception("SLEEP_RAISE")
-
-
-def SLEEP_ECHO(sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
-    time.sleep(sec)
-    return echo
 
 
 # ---------------------------------------------------------------------------------------------------------------------
