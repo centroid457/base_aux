@@ -7,9 +7,6 @@
 
 
 # =====================================================================================================================
-from .cmp import (
-    CmpInst,
-)
 from .number import (
     NumberArithmTranslateToAttr,
     TYPE__NUMBER,
