@@ -142,7 +142,7 @@
 0.0.9 (2024/11/07 16:35:46)
 ------------------------------
 - [classes.Lambda] add LambdaTrySucess/+Fail  
-- [classes.Exx] add ExxBool  
+- [classes.ClsException] add ExxBool  
 
 0.0.8 (2024/11/06 19:01:54)
 ------------------------------

@@ -5,7 +5,7 @@ from base_aux.base_argskwargs.argskwargs import *
 from base_aux.base_enums.enums import When2
 from base_aux.base_objects import TypeChecker
 
-from base_aux.valid.valid_0_aux import ValidAux
+from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
@@ -64,7 +64,7 @@ class Lambda(ArgsKwargs):
         return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
-        return ValidAux.eq_doublesided__bool(other, self())
+        return Eq.eq_doublesided__bool(other, self())
 
     # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
@@ -114,7 +114,7 @@ class Lambda(ArgsKwargs):
         ----
         same as get_result_or_raise but
         attempt to simplify result by not using try-sentence.
-        so if get raise in get_result_or_raise - return Exx object
+        so if get raise in get_result_or_raise - return ClsException object
 
         USEFUL IDEA
         -----------

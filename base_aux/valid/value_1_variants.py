@@ -2,8 +2,9 @@ from typing import *
 
 from base_aux.base_argskwargs.novalue import NoValue
 
+from base_aux.cmp.eq import Eq
+
 from .static import *
-from .valid_0_aux import ValidAux
 
 
 # =====================================================================================================================
@@ -109,7 +110,7 @@ class ValueVariants:
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | NoValue:
         for variant in self.VARIANTS:
-            if ValidAux.eq_doublesided__bool(variant, value):
+            if Eq.eq_doublesided__bool(variant, value):
                 return variant
 
             if self.CASE_INSENSITIVE:

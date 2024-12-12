@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.valid.valid_0_aux import ValidAux
+from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
@@ -48,7 +48,7 @@ class ValidRegExp:
         return False
 
     def run(self, source: Any) -> bool:
-        return ValidAux.eq_doublesided__bool(source, self)
+        return Eq.eq_doublesided__bool(source, self)
 
 
 # =====================================================================================================================

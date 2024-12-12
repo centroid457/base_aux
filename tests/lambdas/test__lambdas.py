@@ -50,7 +50,8 @@ def test__get_result_or_raise__raise():
     else:
         assert False
 
-    assert Lambda(Exception).get_result_or_raise() == Exception
+    assert Lambda(Exception).get_result_or_raise() == Exception()
+    assert Lambda().get_result_or_raise() == Exception()
 
 # =====================================================================================================================
 # DERIVATIVES

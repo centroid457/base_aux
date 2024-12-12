@@ -51,7 +51,7 @@ from .primitives import (
     LAMBDA_DICT,
     LAMBDA_GEN,
 
-    Exx, INST_EXX,
+    ClsException, INST_EXCEPTION,
 
     ClsInt,
     ClsFloat,

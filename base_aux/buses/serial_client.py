@@ -11,7 +11,8 @@ from base_aux.loggers import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.valid import ValueUnit, ValidAux
+from base_aux.valid import ValueUnit
+from base_aux.cmp.eq import Eq
 
 from .history import HistoryIO
 
@@ -1360,7 +1361,7 @@ class SerialClient(Logger):
                     if (
                             str(output_last).lower() == str(expect_var).lower()
                             or
-                            ValidAux.eq_doublesided__bool(output_last, expect_var)
+                            Eq.eq_doublesided__bool(output_last, expect_var)
                     ):
                         return True
 

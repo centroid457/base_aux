@@ -176,9 +176,9 @@ LAMBDA_ECHO = lambda echo, *args, **kwargs: echo
 
 
 # =====================================================================================================================
-class Exx(Exception):
+class ClsException(Exception):
     pass
-INST_EXX = Exx("Exception")
+INST_EXCEPTION = ClsException("Exception")
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class ClsBool(bool):  # cant use it!
@@ -253,7 +253,7 @@ class ClsCall:
 
     def meth(self, *args, **kwargs) -> None:
         """
-        for other results like None/True/False/Exx use direct LAMBDA/FUNC_*! or wait special necessity.
+        for other results like None/True/False/ClsException use direct LAMBDA/FUNC_*! or wait special necessity.
         """
         pass
 INST_CALL = ClsCall()

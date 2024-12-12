@@ -78,8 +78,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -126,8 +126,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -174,8 +174,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -223,8 +223,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -272,8 +272,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -321,8 +321,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -380,8 +380,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -429,8 +429,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -479,8 +479,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -528,8 +528,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -577,8 +577,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -626,8 +626,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -675,8 +675,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -724,8 +724,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), False),
-            (Exx, False),
-            (Exx(), False),
+            (ClsException, False),
+            (ClsException(), False),
 
             (Cls, False),
             (Cls(), False),
@@ -774,8 +774,8 @@ class Test__1:
 
             (Exception, True),
             (Exception(), False),
-            (Exx, True),
-            (Exx(), False),
+            (ClsException, True),
+            (ClsException(), False),
 
             (Cls, True),
             (Cls(), False),
@@ -823,8 +823,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), True),
-            (Exx, False),
-            (Exx(), True),
+            (ClsException, False),
+            (ClsException(), True),
 
             (Cls, False),
             (Cls(), True),
@@ -872,8 +872,8 @@ class Test__1:
 
             (Exception, False),
             (Exception(), True),
-            (Exx, False),
-            (Exx(), True),
+            (ClsException, False),
+            (ClsException(), True),
 
             (Cls, False),
             (Cls(), True),
@@ -922,8 +922,8 @@ class Test__1:
 
             (Exception, True),
             (Exception(), True),
-            (Exx, True),
-            (Exx(), True),
+            (ClsException, True),
+            (ClsException(), True),
 
             (Cls, False),
             (Cls(), False),
@@ -969,15 +969,15 @@ class Test__1:
             ((Exception, Exception()), True),
             ((Exception(), Exception()), True),
 
-            ((Exx, Exception), True),
-            ((Exx(), Exception), True),
-            ((Exx, Exception()), True),
-            ((Exx(), Exception()), True),
+            ((ClsException, Exception), True),
+            ((ClsException(), Exception), True),
+            ((ClsException, Exception()), True),
+            ((ClsException(), Exception()), True),
 
-            ((Exception, Exx), False),      # REMEMBER! not clear!
-            ((Exception(), Exx), False),    # REMEMBER! not clear!
-            ((Exception, Exx()), False),    # REMEMBER! not clear!
-            ((Exception(), Exx()), False),  # REMEMBER! not clear!
+            ((Exception, ClsException), False),      # REMEMBER! not clear!
+            ((Exception(), ClsException), False),    # REMEMBER! not clear!
+            ((Exception, ClsException()), False),    # REMEMBER! not clear!
+            ((Exception(), ClsException()), False),  # REMEMBER! not clear!
 
             ((Cls, Cls), True),
             ((Cls, Cls()), True),
