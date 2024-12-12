@@ -1,22 +1,18 @@
 # DONT RENAME TO SIMPLE "TYPES"!!! it break by circular import
 
-
 from typing import *
-
-from base_aux.objects.primitives import LAMBDA_TRUE
-# LAMBDA_TRUE = lambda *args, **kwargs: True
 
 
 # =====================================================================================================================
-class Cls:
+class _Cls:
     def meth(self):
         pass
 
 
 # =====================================================================================================================
 TYPE__NONE = type(None)
-TYPE__FUNCTION = type(LAMBDA_TRUE)
-TYPE__METHOD = type(Cls().meth)
+TYPE__FUNCTION = type(lambda: True)
+TYPE__METHOD = type(_Cls().meth)
 
 
 # =====================================================================================================================
@@ -185,7 +181,7 @@ class TypeChecker:
         if TypeChecker.check__callable_cls_as_func_builtin(source):
             result = True
         else:
-            result = type(LAMBDA_TRUE) in source.__class__.__mro__
+            result = TYPE__FUNCTION in source.__class__.__mro__
         return result
 
     @staticmethod
@@ -200,7 +196,7 @@ class TypeChecker:
         ---------------------
         not special! just as ones found ability to!
         """
-        result = not TypeChecker.check__class(source) and type(Cls().meth) in source.__class__.__mro__
+        result = not TypeChecker.check__class(source) and type(_Cls().meth) in source.__class__.__mro__
         return result
 
     @staticmethod
