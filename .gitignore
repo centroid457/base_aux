@@ -5,6 +5,7 @@
 # VERSION = (0, 0, 4)#add LOGS
 # VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
 # VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
+# VERSION = (0, 0, 7)#add pyinstaller +TEMP/ as short
 
 # HELP ---------------------
 # 1=NESTING

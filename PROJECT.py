@@ -64,9 +64,7 @@ class PROJECT(PROJECT_BASE):
     # -----------------------------------------------------------------------------------------------------------------
     VERSION: tuple[int, int, int] = (0, 1, 9)
     NEWS: list[str] = [
-        "[ValidAux -> lambdas] move all get_result_or_raise/*",
-        "separate others",
-        "[tests] work",
+        # "[pyinstaller] start creating",
     ]
 
 
