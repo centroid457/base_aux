@@ -20,12 +20,12 @@ from base_aux.base_objects.primitives import *
         (LAMBDA_FALSE, (), (False, False, False)),
         (LAMBDA_NONE, (), (None, None, False)),
 
-        ((), (), (Exception, Exception, False)),    # ????
+        ((), (), ((), (), False)),
         ([], (), ([], [], False)),
         (LAMBDA_LIST_DIRECT, (), ([], [], False)),
 
-        ([None, ], (), (None, None, False)),
-        ([1, ], (), (1, 1, True)),
+        ([None, ], (), ([None, ], [None, ], True)),
+        ([1, ], (), ([1, ], [1, ], True)),
 
         (INST_CALL_TRUE, (), (True, True, True)),
         (INST_CALL_FALSE, (), (False, False, False)),
@@ -36,10 +36,10 @@ from base_aux.base_objects.primitives import *
         (INST_BOOL_RAISE, (), (INST_BOOL_RAISE, INST_BOOL_RAISE, False)),
     ]
 )
-def test__get_result_s(source, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(Lambda(source, *args).get_result_or_raise, args, _EXPECTED[0])
-    pytest_func_tester__no_kwargs(Lambda(source, *args).get_result_or_exx, args, _EXPECTED[1])
-    pytest_func_tester__no_kwargs(Lambda(source, *args).get_result_bool, args, _EXPECTED[2])
+def test__get_result(source, args, _EXPECTED):
+    pytest_func_tester__no_args_kwargs(Lambda(source, *args).get_result_or_raise, _EXPECTED[0])
+    pytest_func_tester__no_args_kwargs(Lambda(source, *args).get_result_or_exx, _EXPECTED[1])
+    pytest_func_tester__no_args_kwargs(Lambda(source, *args).get_result_bool, _EXPECTED[2])
 
 
 def test__get_result_or_raise__raise():
@@ -50,8 +50,9 @@ def test__get_result_or_raise__raise():
     else:
         assert False
 
-    assert Lambda(Exception).get_result_or_raise() == Exception()
-    assert Lambda().get_result_or_raise() == Exception()
+    assert Lambda(INST_EXCEPTION).get_result_or_raise() == INST_EXCEPTION
+    assert isinstance(Lambda(Exception).get_result_or_raise(), Exception)
+
 
 # =====================================================================================================================
 # DERIVATIVES
