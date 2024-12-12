@@ -2,7 +2,7 @@ import sys
 from typing import *
 import re
 
-from base_aux.objects import *
+from base_aux.base_objects import *
 from base_aux.attrs import *
 from base_aux.classes import *
 

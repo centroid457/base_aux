@@ -3,7 +3,7 @@
 from typing import *
 
 from base_aux.base_argskwargs import *
-from base_aux.objects import *
+from base_aux.base_objects import *
 
 
 # =====================================================================================================================
@@ -11,7 +11,7 @@ class ClsMiddleGroup:
     """
     NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only attrs!
     ------------------------
-    1. comparing direct methods on objects will not work!!!
+    1. comparing direct methods on base_objects will not work!!!
         -------------------------
             class Cls:
                 def meth(self):
@@ -110,7 +110,7 @@ class ClsMiddleGroup:
     USAGE
     -----
     1. create some middle classes which will define groups.
-    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so objects could be compared not just by names!
+    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so base_objects could be compared not just by names!
     3. do nesting your final classes by Groups
 
         # BEFORE --------------------------

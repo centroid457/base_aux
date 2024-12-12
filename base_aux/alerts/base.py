@@ -38,14 +38,14 @@ class _AlertInterface:
         pass
 
     def _recipient_self_get(self) -> str:
-        """RECIPIENT SelfSending, get from obvious class objects!
+        """RECIPIENT SelfSending, get from obvious class base_objects!
         """
         pass
 
 
 # =====================================================================================================================
 class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simle!
-    """Base class for Alert objects.
+    """Base class for Alert base_objects.
 
     FEATURE:
     - send msg,

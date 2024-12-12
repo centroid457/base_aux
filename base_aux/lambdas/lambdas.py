@@ -3,7 +3,7 @@ import time
 
 from base_aux.base_argskwargs.argskwargs import *
 from base_aux.base_enums.enums import When2
-from base_aux.objects import TypeChecker
+from base_aux.base_objects import TypeChecker
 
 from base_aux.valid.valid_0_aux import ValidAux
 
@@ -18,7 +18,7 @@ class Lambda(ArgsKwargs):
     GOAL
     ----
     1. (MAIN) delay probable raising on direct func execution (used with AttrLambdaCall)
-    like creating objects on Cls attributes
+    like creating base_objects on Cls attributes
         class Cls:
             ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
 
@@ -48,7 +48,7 @@ class Lambda(ArgsKwargs):
     extremely good point!
     but
     1. in case of at least AttrLambdaCall you cant distinguish method or callable attribute!
-    so you explicitly define attributes/objects for later constructions
+    so you explicitly define attributes/base_objects for later constructions
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 
     2.

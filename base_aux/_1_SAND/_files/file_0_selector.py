@@ -147,7 +147,7 @@ class Dir:
 class File(Dir):
     """
     BASE CLASS FOR WORKING WITH FILES! and selecting only one!
-    if you need work only with path objects in FileSystem (list_dir for example) without exactly opening files
+    if you need work only with path base_objects in FileSystem (list_dir for example) without exactly opening files
     use it directly or create special class.
     In other cases with special file types use other special classes inherited from this - Json/Log
 

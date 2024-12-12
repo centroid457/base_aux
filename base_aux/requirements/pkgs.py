@@ -3,7 +3,7 @@ import pathlib
 import re
 import sys
 
-from base_aux.objects import TypeChecker
+from base_aux.base_objects import TypeChecker
 from base_aux.cli.user import CliUser
 from base_aux.classes.text import Text
 
@@ -497,7 +497,7 @@ self.last_exx_timeout=None
         Requires:
         Required-by:
 
-        C:\\Users\\a.starichenko>pip show objects
+        C:\\Users\\a.starichenko>pip show base_objects
         Name: object-info
         Version: 0.1.12
         Summary: print info about object (attributes+properties+methods results)

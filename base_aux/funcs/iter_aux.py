@@ -38,7 +38,7 @@ class IterAux:
 
         USEFUL in case-insensitive systems (like terminals or serial devices) or object structured by prefix-names:
         1. get key in dict
-        2. find attribute name in objects
+        2. find attribute name in base_objects
 
         :param source:
         :param item_expected:

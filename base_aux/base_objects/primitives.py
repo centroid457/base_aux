@@ -1,7 +1,7 @@
 """
 GOAL
 ----
-collect all obvious variants of code objects
+collect all obvious variants of code base_objects
 
 USEFUL IDEAS
 ------------

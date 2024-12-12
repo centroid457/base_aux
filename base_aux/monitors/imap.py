@@ -61,7 +61,7 @@ class MonitorImap(AttrLambdaCall, threading.Thread):
     :ivar stop_flag: flag for stop monitoring, now is stops only after calculating
     :ivar step_counter: just a counter for actually finished CALCULATING cycles
 
-    :ivar _detected: detected email objects
+    :ivar _detected: detected email base_objects
     """
     INTERVAL: int = 1 * 1 * 10
 

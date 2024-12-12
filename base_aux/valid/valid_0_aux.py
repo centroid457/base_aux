@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.objects import TypeChecker
+from base_aux.base_objects import TypeChecker
 
 
 # =====================================================================================================================
@@ -25,7 +25,7 @@ class ValidAux:
 
         CREATED SPECIALLY FOR
         ---------------------
-        manipulate objects which have special methods for __cmp__
+        manipulate base_objects which have special methods for __cmp__
         for cases when we can switch places
 
         BEST USAGE

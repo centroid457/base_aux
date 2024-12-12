@@ -3,7 +3,7 @@ import pytest
 
 from base_aux.funcs import *
 from base_aux.classes import *
-from base_aux.objects import *
+from base_aux.base_objects import *
 
 
 # =====================================================================================================================

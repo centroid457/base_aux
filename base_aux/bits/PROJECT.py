@@ -24,7 +24,7 @@ class PROJECT:
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
     DESCRIPTION_SHORT: str = "work with bits (bitfields/flags/bites...)"
     DESCRIPTION_LONG: str = """
-    designed for common work with bitfields-like objects
+    designed for common work with bitfields-like base_objects
     """
     FEATURES: List[str] = [
         # "feat1",

@@ -8,7 +8,7 @@ TYPE__IO = tuple[str, list[str]]
 # =====================================================================================================================
 # TODO:
 #   USE OBJECTS instead of tuples? + internal add+read
-#   1. use deque with objects Write Read WEol REol None(not used)?
+#   1. use deque with base_objects Write Read WEol REol None(not used)?
 #   2. add top(n=10)
 #   if when writeLine - always readLines?
 

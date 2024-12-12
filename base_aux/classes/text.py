@@ -21,7 +21,7 @@ class Text:
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python objects
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python base_objects
         so it just same process as re.sub by one func for several values
 
         SPECIALLY CREATED FOR
@@ -49,7 +49,7 @@ class Text:
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python objects
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python base_objects
         so it just same process as re.sub by one func for several values
 
         SPECIALLY CREATED FOR

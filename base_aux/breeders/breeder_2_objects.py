@@ -22,7 +22,7 @@ class BreederObjectList_GroupType(Enum):
 # =====================================================================================================================
 class BreederObjectList:
     """
-    class which keep all objects in one place!
+    class which keep all base_objects in one place!
     useful for multyObject systems.
 
     If you need just one object_instance for all duts - use direct attribute,
@@ -80,7 +80,7 @@ class BreederObjectList:
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
     def generate__objects(cls, force: bool | None = None) -> None:
-        """exact and only one method to Gen all objects - dont forget to call it!
+        """exact and only one method to Gen all base_objects - dont forget to call it!
         """
         if force:
             cls.__groups__are_generated = False

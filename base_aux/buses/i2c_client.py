@@ -10,7 +10,7 @@ from typing import *
 import re
 from smbus2 import SMBus
 
-from base_aux.objects import ObjectInfo
+from base_aux.base_objects import ObjectInfo
 from base_aux.cli import CliUser
 
 

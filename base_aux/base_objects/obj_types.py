@@ -83,7 +83,7 @@ class TypeChecker:
         GOAL
         ----
         MOST PREFERRED to use for ensure_collection! and apply for Args!
-        all other objects (ClsInst) will covered by brackets!
+        all other base_objects (ClsInst) will covered by brackets!
         """
         return isinstance(source, TypeChecker.TYPES__ELEMENTARY_COLLECTION)
 

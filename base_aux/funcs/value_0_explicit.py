@@ -17,7 +17,7 @@ class Explicit:
 
     OLD ---- WHY: NamedTuple
     ----------------
-    cause of we need to be able to compare different objects by values.
+    cause of we need to be able to compare different base_objects by values.
     maybe we need just add __eq__ method instead of it!!!
 
     USAGE

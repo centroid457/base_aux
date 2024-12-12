@@ -1,4 +1,4 @@
-from typing import Any, Callable, NoReturn, Union
+from typing import *
 from .novalue import NoValue
 
 

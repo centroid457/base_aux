@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.pytester import *
-from base_aux.objects import *
+from base_aux.base_objects import *
 
 
 # =====================================================================================================================

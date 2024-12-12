@@ -2,7 +2,7 @@ import pytest
 import requests
 
 from base_aux.servers.server_fastapi import ServerFastApi_Thread
-from base_aux.objects import ObjectInfo
+from base_aux.base_objects import ObjectInfo
 
 
 # =====================================================================================================================
