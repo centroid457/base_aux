@@ -106,7 +106,7 @@ class ValidAux:
 
     # =================================================================================================================
     @staticmethod
-    def ltgt(source: Any, low: Any | None = None, high: Any | None = None) -> bool | Exception:
+    def ltgt(source: Any, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         """
         NOTE
         ----
@@ -120,7 +120,7 @@ class ValidAux:
         return result
 
     @staticmethod
-    def ltge(source: Any, low: Any | None = None, high: Any | None = None) -> bool | Exception:
+    def ltge(source: Any, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         result = True
         if low is not None:
             result &= source > low
@@ -129,7 +129,7 @@ class ValidAux:
         return result
 
     @staticmethod
-    def legt(source: Any, low: Any | None = None, high: Any | None = None) -> bool | Exception:
+    def legt(source: Any, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         result = True
         if low is not None:
             result &= source >= low
@@ -138,7 +138,7 @@ class ValidAux:
         return result
 
     @staticmethod
-    def lege(source: Any, low: Any | None = None, high: Any | None = None) -> bool | Exception:
+    def lege(source: Any, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         result = True
         if low is not None:
             result &= source >= low
