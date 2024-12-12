@@ -62,9 +62,11 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 8)
+    VERSION: tuple[int, int, int] = (0, 1, 9)
     NEWS: list[str] = [
-        "start separating parts [exceptions/TypeEnsure/pytester/attrs]",
+        "[ValidAux -> lambdas] move all get_result_or_raise/*",
+        "separate others",
+        "[tests] work",
     ]
 
 

@@ -10,6 +10,12 @@
 ********************************************************************************
 ## NEWS
 
+0.1.9 (2024/12/12 11:20:41)
+------------------------------
+- [ValidAux -> lambdas] move all get_result_or_raise/*  
+- separate others  
+- [tests] work  
+
 0.1.8 (2024/12/11 11:41:19)
 ------------------------------
 - start separating parts [exceptions/TypeEnsure/pytester/attrs]   
