@@ -199,8 +199,8 @@ class TpMultyDutBase(Logger, QThread):
                 tc_cls = None
                 try:
                     tc_cls = import_module(f"{self.DIRPATH_TCS.name}.{item}").TestCase
-                except:
-                    msg = f"[WARN] no 'TestCase' class in file [{self.DIRPATH_TCS}/{item}]"
+                except Exception as exx:
+                    msg = f"[WARN] no 'TestCase' class in file [{self.DIRPATH_TCS}/{item}] {exx=}"
                     print(msg)
                     continue
                 if not tc_cls:

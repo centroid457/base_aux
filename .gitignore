@@ -40,6 +40,9 @@ dist/
 
 *.egg-info/
 
+# pyinstaller --------------
+pyinstaller/
+
 # documentation ------------
 #documentation/build/*
 #documentation/source/_build/*
@@ -70,6 +73,7 @@ todo.org
 # USER =====================
 # TEMP ---------------------
 TEMPORARY/
+TEMP/
 -*
 
 # user saved data ----------
