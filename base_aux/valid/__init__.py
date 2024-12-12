@@ -22,7 +22,7 @@ from .value_2_unit import (
     UNIT_MULT__VARIANTS,
 )
 # ---------------------------------------------------------------------------------------------------------------------
-from .valid_0_aux import ValidAux
+from .valid_0_lg import ValidLg
 from .valid_1_base import Valid
 
 from .valid_1_base_derivatives import (

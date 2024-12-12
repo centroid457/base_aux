@@ -179,20 +179,20 @@ class Test__ValidTypes:
             (LAMBDA_LIST_VALUES, (1, 2,), {"1": 11, }, [], True),
 
             # VALUE --------------------
-            (0, (1, 3,), {}, ValidAux.legt, False),
-            (1, (1, 3,), {}, ValidAux.legt, True),
-            (2, (1, 3,), {}, ValidAux.legt, True),
-            (3, (1, 3,), {}, ValidAux.legt, False),
-            (4, (1, 3,), {}, ValidAux.legt, False),
+            (0, (1, 3,), {}, ValidLg.legt, False),
+            (1, (1, 3,), {}, ValidLg.legt, True),
+            (2, (1, 3,), {}, ValidLg.legt, True),
+            (3, (1, 3,), {}, ValidLg.legt, False),
+            (4, (1, 3,), {}, ValidLg.legt, False),
 
-            (0, (1, None,), {}, ValidAux.legt, False),
-            (1, (1, None,), {}, ValidAux.legt, True),
-            (2, (1, None,), {}, ValidAux.legt, True),
+            (0, (1, None,), {}, ValidLg.legt, False),
+            (1, (1, None,), {}, ValidLg.legt, True),
+            (2, (1, None,), {}, ValidLg.legt, True),
 
-            (0, (None, 3,), {}, ValidAux.legt, True),
-            (1, (None, 3,), {}, ValidAux.legt, True),
-            (2, (None, 3,), {}, ValidAux.legt, True),
-            (3, (None, 3,), {}, ValidAux.legt, False),
+            (0, (None, 3,), {}, ValidLg.legt, True),
+            (1, (None, 3,), {}, ValidLg.legt, True),
+            (2, (None, 3,), {}, ValidLg.legt, True),
+            (3, (None, 3,), {}, ValidLg.legt, False),
         ]
     )
     def test__validate__args_kwargs(self, source, args__validate, kwargs__validate, validate, _EXPECTED):

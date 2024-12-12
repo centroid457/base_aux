@@ -2,7 +2,7 @@ from typing import *
 
 
 # =====================================================================================================================
-class ValidAux:
+class ValidLg:
     """
     Try to keep all validating funcs in separated place
     """
