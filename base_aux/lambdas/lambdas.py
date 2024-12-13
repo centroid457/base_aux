@@ -275,6 +275,13 @@ class LambdaTrySuccess(LambdaBool):
         assert LambdaTryFail(Victim)
         assert not LambdaTrySuccess(Victim)
         assert LambdaTrySuccess(Victim, lowercase="lowercase")
+
+    EXAMPLES
+    --------
+        if callables_drop and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
+            continue
+
+        so here raise is acceptable in getattr(source, name) in case of PROPERTY_RAISE
     """
     def __call__(self, *args, **kwargs) -> bool:
         try:

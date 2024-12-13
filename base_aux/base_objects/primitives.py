@@ -541,14 +541,30 @@ class CALLABLE:
     METH_CLS: Callable = ClsFullTypes.methNone
     METH_CLS_CLASSMETHOD: Callable = ClsFullTypes.classmethodNone
     METH_CLS_STATICMETHOD: Callable = ClsFullTypes.staticmethodNone
-    METH_CLS_PROPERTY = ClsFullTypes.propertyNone
-    METH_CLS_PROPERTY_CLASSMETHOD = ClsFullTypes.propertyClassmethodNone
+    METH_CLS_PROPERTY = ClsFullTypes.propertyNone                           # NOT CALLABLE!!!
+    METH_CLS_PROPERTY_CLASSMETHOD = ClsFullTypes.propertyClassmethodNone    # NOT CALLABLE!!!
 
-    METH_INST: Callable = ClsFullTypes().methNone
-    METH_INST_CLASSMETHOD: Callable = ClsFullTypes().classmethodNone
-    METH_INST_STATICMETHOD: Callable = ClsFullTypes().staticmethodNone
-    METH_INST_PROPERTY = ClsFullTypes().propertyNone
-    METH_INST_PROPERTY_CLASSMETHOD = ClsFullTypes().propertyClassmethodNone
+    METH_INST: Callable = INST_FULL_TYPES.methNone
+    METH_INST_CLASSMETHOD: Callable = INST_FULL_TYPES.classmethodNone
+    METH_INST_STATICMETHOD: Callable = INST_FULL_TYPES.staticmethodNone
+    METH_INST_PROPERTY = INST_FULL_TYPES.propertyNone                           # NOT CALLABLE!!!
+    METH_INST_PROPERTY_CLASSMETHOD = INST_FULL_TYPES.propertyClassmethodNone    # NOT CALLABLE!!!
+
+    # PROPERTIES is not callables cause of when we access the attribute, decorator will return really final value not callable
+
+
+def _callable__show_who_really_are():
+    # from base_aux.base_objects import ObjectInfo
+    # ObjectInfo(CALLABLE).print()
+    # exit()
+    from base_aux.attrs import AttrAuxDump
+    for name, item in AttrAuxDump.to_dict__direct(CALLABLE).items():
+        print(f"{name}={callable(item)}")
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _callable__show_who_really_are()
 
 
 # =====================================================================================================================

@@ -1,5 +1,6 @@
 from typing import *
 from base_aux.base_argskwargs.novalue import NoValue
+from base_aux.lambdas import LambdaTrySuccess
 
 
 # =====================================================================================================================
@@ -89,9 +90,8 @@ class AttrAuxAnycase:
 
 # =====================================================================================================================
 class AttrAuxDump:
-    # DICT ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def attrs__to_dict(cls, source: Any) -> dict[str, Any]:
+    def to_dict__direct(cls, source: Any, callables_drop: bool = None) -> dict[str, Any]:
         """
         GOAL
         ____
@@ -104,8 +104,19 @@ class AttrAuxDump:
         result = {}
         for name in AttrAuxIter.attrs__iter_not_hidden(source):
             result.update({name: getattr(source, name)})
+            # TODO: finish!!!
+
+
+            if callables_drop and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
+                continue
+
 
         return result
+
+    @classmethod
+    def to_dict__not_callable(cls, source: Any) -> dict[str, Any]:
+        pass
+
 
 
 # =====================================================================================================================

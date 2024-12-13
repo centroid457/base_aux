@@ -12,12 +12,11 @@ class Resolver:
     ---------------------
     dump attrs with values in gitMark
     """
-    SOURCE: Any
 
-    def __init__(self, source: Any):
-        self.SOURCE = source
+    def __call__(self, *args, **kwargs):
+        return self.resolve()
 
-    def resolve(self) -> dict[str, Any]:
+    def resolve(self):
         pass
 
 
