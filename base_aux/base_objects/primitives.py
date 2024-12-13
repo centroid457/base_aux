@@ -133,30 +133,32 @@ def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def SLEEP(sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
-    time.sleep(sec)
-    return echo
+class SLEEP:
+    @classmethod
+    def ECHO(cls, sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
+        time.sleep(sec)
+        return echo
 
+    @classmethod
+    def NONE(cls, sec: float = 1, *args, **kwargs) -> None:
+        return cls.ECHO(sec=sec, echo=None, *args, **kwargs)
 
-def SLEEP_NONE(sec: float = 1, *args, **kwargs) -> None:
-    return SLEEP(sec=sec, echo=None, *args, **kwargs)
+    @classmethod
+    def TRUE(cls, sec: float = 1, *args, **kwargs) -> bool:
+        return cls.ECHO(sec=sec, echo=True, *args, **kwargs)
 
+    @classmethod
+    def FALSE(cls, sec: float = 1, *args, **kwargs) -> bool:
+        return cls.ECHO(sec=sec, echo=False, *args, **kwargs)
 
-def SLEEP_TRUE(sec: float = 1, *args, **kwargs) -> bool:
-    return SLEEP(sec=sec, echo=True, *args, **kwargs)
+    @classmethod
+    def EXX(cls, sec: float = 1, *args, **kwargs) -> Exception:
+        return cls.ECHO(sec=sec, echo=Exception("SLEEP.EXX"), *args, **kwargs)
 
-
-def SLEEP_FALSE(sec: float = 1, *args, **kwargs) -> bool:
-    return SLEEP(sec=sec, echo=False, *args, **kwargs)
-
-
-def SLEEP_EXX(sec: float = 1, *args, **kwargs) -> Exception:
-    return SLEEP(sec=sec, echo=Exception("SLEEP_EXX"), *args, **kwargs)
-
-
-def SLEEP_RAISE(sec: float = 1, *args, **kwargs) -> NoReturn:
-    time.sleep(sec)
-    raise Exception("SLEEP_RAISE")
+    @classmethod
+    def RAISE(cls, sec: float = 1, *args, **kwargs) -> NoReturn:
+        time.sleep(sec)
+        raise Exception("SLEEP.RAISE")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -524,23 +526,29 @@ INST_FULL_TYPES = ClsFullTypes()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-CALLABLE_LAMBDA = LAMBDA
-CALLABLE_FUNC = FUNC
+class CALLABLE:
+    """
+    GOAL
+    ----
+    collect all callables in one place
+    """
+    LAMBDA: Callable = LAMBDA
+    FUNC: Callable = FUNC
 
-CALLABLE_CLS = ClsCall
-CALLABLE_INST = ClsCall()
+    CLS: type = ClsCall
+    INST: Callable = ClsCall()
 
-CALLABLE_METH_CLS = ClsFullTypes.methNone
-CALLABLE_METH_CLS_CLASSMETHOD = ClsFullTypes.classmethodNone
-CALLABLE_METH_CLS_STATICMETHOD = ClsFullTypes.staticmethodNone
-CALLABLE_METH_CLS_PROPERTY = ClsFullTypes.propertyNone
-CALLABLE_METH_CLS_PROPERTY_CLASSMETHOD = ClsFullTypes.propertyClassmethodNone
+    METH_CLS: Callable = ClsFullTypes.methNone
+    METH_CLS_CLASSMETHOD: Callable = ClsFullTypes.classmethodNone
+    METH_CLS_STATICMETHOD: Callable = ClsFullTypes.staticmethodNone
+    METH_CLS_PROPERTY = ClsFullTypes.propertyNone
+    METH_CLS_PROPERTY_CLASSMETHOD = ClsFullTypes.propertyClassmethodNone
 
-CALLABLE_METH_INST = ClsFullTypes().methNone
-CALLABLE_METH_INST_CLASSMETHOD = ClsFullTypes().classmethodNone
-CALLABLE_METH_INST_STATICMETHOD = ClsFullTypes().staticmethodNone
-CALLABLE_METH_INST_PROPERTY = ClsFullTypes().propertyNone
-CALLABLE_METH_INST_PROPERTY_CLASSMETHOD = ClsFullTypes().propertyClassmethodNone
+    METH_INST: Callable = ClsFullTypes().methNone
+    METH_INST_CLASSMETHOD: Callable = ClsFullTypes().classmethodNone
+    METH_INST_STATICMETHOD: Callable = ClsFullTypes().staticmethodNone
+    METH_INST_PROPERTY = ClsFullTypes().propertyNone
+    METH_INST_PROPERTY_CLASSMETHOD = ClsFullTypes().propertyClassmethodNone
 
 
 # =====================================================================================================================

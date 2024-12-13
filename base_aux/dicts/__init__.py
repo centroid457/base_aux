@@ -5,11 +5,11 @@
 
 
 # =====================================================================================================================
-from .dict_dots_1_simple import (
+from .dots_1_simple import (
     DictDots,
     DictDotsAnnotRequired,
 )
-from .dict_dots_2_full import (
+from .dots_2_full import (
     DictDotsFull,
 )
 from .modifier import (

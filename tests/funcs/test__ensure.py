@@ -43,8 +43,8 @@ class Test__ensure:
             (LAMBDA_NONE, TYPE__FUNCTION),
             (LAMBDA_EXX, TYPE__FUNCTION),
 
-            (CALLABLE_METH_INST, TYPE__METHOD),
-            (CALLABLE_METH_CLS, TYPE__FUNCTION),
+            (CALLABLE.METH_INST, TYPE__METHOD),
+            (CALLABLE.METH_CLS, TYPE__FUNCTION),
 
             (ClsGen, ClsGen),
             (INST_GEN, ClsGen),
