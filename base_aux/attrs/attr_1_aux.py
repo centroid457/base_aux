@@ -3,25 +3,27 @@ from base_aux.base_argskwargs.novalue import NoValue
 
 
 # =====================================================================================================================
-class AttrAux:
-    """
-    NOTICE
-    ------
-    if there are several same attrs in different cases - you should resolve it by yourself!
-    """
-
+class AttrAuxIter:
     @classmethod
-    def attrs__iter_not_private(cls, source: Any):
+    def attrs__iter_not_private(cls, source: Any) -> Iterable[str]:
         for name in dir(source):
             if not name.startswith("__"):
                 yield name
 
     @classmethod
-    def attrs__iter_not_hidden(cls, source: Any):
+    def attrs__iter_not_hidden(cls, source: Any) -> Iterable[str]:
         for name in dir(source):
             if not name.startswith("_"):
                 yield name
 
+
+# =====================================================================================================================
+class AttrAuxAnycase:
+    """
+    NOTICE
+    ------
+    if there are several same attrs in different cases - you should resolve it by yourself!
+    """
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
     def _attr_anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
@@ -33,9 +35,9 @@ class AttrAux:
 
         item = item.strip()
         if source == NoValue:
-            source = cls   # seems it is not good idea!!!
+            source = cls  # seems it is not good idea!!!
 
-        for name in cls.attrs__iter_not_private(source):
+        for name in AttrAuxIter.attrs__iter_not_private(source):
             if name.lower() == str(item).lower():
                 return name
 
@@ -55,7 +57,7 @@ class AttrAux:
         return getattr(obj, name_original)
 
     @classmethod
-    def _setattr_anycase(cls, item: str, value:Any, obj: Any) -> None | NoReturn:
+    def _setattr_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
@@ -84,6 +86,9 @@ class AttrAux:
     def _setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
         cls._setattr_anycase(item, value, obj)
 
+
+# =====================================================================================================================
+class AttrAuxDump:
     # DICT ------------------------------------------------------------------------------------------------------------
     @classmethod
     def attrs__to_dict(cls, source: Any) -> dict[str, Any]:
@@ -97,10 +102,15 @@ class AttrAux:
         using any object as rules for Translator
         """
         result = {}
-        for name in cls.attrs__iter_not_hidden(source):
+        for name in AttrAuxIter.attrs__iter_not_hidden(source):
             result.update({name: getattr(source, name)})
 
         return result
+
+
+# =====================================================================================================================
+class AttrAux(AttrAuxIter, AttrAuxAnycase, AttrAuxDump):
+    pass
 
 
 # =====================================================================================================================

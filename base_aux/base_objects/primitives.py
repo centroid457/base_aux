@@ -16,6 +16,11 @@ import time
 
 # =====================================================================================================================
 class BLANK:
+    """
+    GOAL
+    ----
+    keep all variants in one object with ability to iterate in bunch checks!
+    """
     BOOL: bool = False
     INT: int = 0
     FLOAT: float = 0.0

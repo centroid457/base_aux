@@ -20,6 +20,10 @@ from .attr_0_init_kwargs import (
 )
 from .attr_1_aux import (
     AttrAux,
+
+    AttrAuxIter,
+    AttrAuxAnycase,
+    AttrAuxDump,
 )
 from .attr_2_anycase import (
     AttrAnycase,
