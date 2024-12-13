@@ -4,21 +4,21 @@ import re
 from base_aux.base_exceptions import *
 from base_aux.base_argskwargs.novalue import NoValue
 
-# from base_aux.attrs.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
+from base_aux.attrs.annot_4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.number import NumberArithmTranslateToAttr
 
 from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
-# class UnitBase(AnnotClsKeysAsValues):
-class UnitBase:
+class UnitBase(AnnotClsKeysAsValues):
+    # class UnitBase:
     """
     this is just an example! it will help you to use just strings by Object
     """
-    V: str = "V"
-    A: str = "A"
-    C: str = "C"
+    V: str
+    A: str
+    C: str
 
 
 UNIT_MULT__VARIANTS: dict[str, float | int] = {

@@ -133,7 +133,7 @@ class Git:
             return self.REPO.head.object.committed_datetime
 
     # -----------------------------------------------------------------------------------------------------------------
-    def mark_str(self) -> str:
+    def info_string(self) -> str:
         """
         EXAMPLE
         -------

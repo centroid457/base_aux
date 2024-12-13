@@ -39,7 +39,6 @@ class Tp_Example(TpMultyDutBase):
     # api_client: Client_RequestsStack = None
 
     DEVICES__BREEDER_CLS = DevicesBreeder__Tp
-
     API_SERVER__CLS = TpApi_FastApi
 
     GUI__START = True
