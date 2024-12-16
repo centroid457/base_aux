@@ -34,10 +34,10 @@ class AnnotAux:
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, item) -> Any | NoReturn:
-        return AttrAux._getattr_anycase(item, self)
+        return AttrAux.getattr_anycase(item, self)
 
     def __getitem__(self, item) -> Any | NoReturn:
-        return AttrAux._getattr_anycase(item, self)
+        return AttrAux.getattr_anycase(item, self)
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod

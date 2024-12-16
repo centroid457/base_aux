@@ -27,7 +27,7 @@ class AttrAuxAnycase:
     """
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _attr_anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
+    def attr_anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
         """
         get attr name in original register
         """
@@ -46,26 +46,26 @@ class AttrAuxAnycase:
 
     # ATTR ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _getattr_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+    def getattr_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
         """
-        name_original = cls._attr_anycase__find(item, obj)
+        name_original = cls.attr_anycase__find(item, obj)
         if name_original is None:
             raise AttributeError(item)
 
         return getattr(obj, name_original)
 
     @classmethod
-    def _setattr_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+    def setattr_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
 
         NoReturn - in case of not accepted names when setattr
         """
-        name_original = cls._attr_anycase__find(item, obj)
+        name_original = cls.attr_anycase__find(item, obj)
         if name_original is None:
             if not isinstance(item, str):
                 raise AttributeError(item)
@@ -80,12 +80,12 @@ class AttrAuxAnycase:
 
     # ITEM ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _getitem_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
-        return cls._getattr_anycase(item, obj)
+    def getitem_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+        return cls.getattr_anycase(item, obj)
 
     @classmethod
-    def _setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
-        cls._setattr_anycase(item, value, obj)
+    def setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+        cls.setattr_anycase(item, value, obj)
 
 
 # =====================================================================================================================
@@ -116,7 +116,6 @@ class AttrAuxDump:
     @classmethod
     def to_dict__not_callable(cls, source: Any) -> dict[str, Any]:
         pass
-
 
 
 # =====================================================================================================================
