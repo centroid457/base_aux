@@ -2,21 +2,22 @@ import pathlib
 from typing import *
 
 from base_aux.base_objects import *
+from base_aux.base_resolver import *
 
 
 # =====================================================================================================================
-class FilePath:
+class FilePath(Resolver):
     """
     GOAL
     ----
-    resolve inition filepath by any variant
+    resolve filepath by any variant
 
     SPECIALLY CREATED FOR
     ---------------------
     base_aux.files
     """
     NAME: str = None
-    EXT: str = None
+    EXT: str = None     # LAST EXT if exists!
     DIRPATH: pathlib.Path = None
 
     # as properties -------
@@ -79,6 +80,7 @@ class FilePath:
         if ext is not None:
             self.EXT = ext
 
+    # -----------------------------------------------------------------------------------------------------------------
     def resolve(self) -> pathlib.Path:
         return self.FILEPATH
 

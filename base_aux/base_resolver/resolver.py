@@ -6,17 +6,24 @@ class Resolver:
     """
     GOAL
     ----
-    ability to get dict from objects
+    just show that nested class used basically for main purpose which will returned by .resolve() method
+    its like an aux-function but with better handling
+
+    NOTE
+    ----
+    dont use it as type!
+    dont keep in attributes!
+    resolve ti inline!
 
     SPECIALLY CREATED FOR
     ---------------------
-    dump attrs with values in gitMark
+    files.filepath
     """
 
     def __call__(self, *args, **kwargs):
         return self.resolve()
 
-    def resolve(self):
+    def resolve(self) -> Any:
         pass
 
 
