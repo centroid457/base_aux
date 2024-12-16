@@ -56,15 +56,16 @@ from .primitives import (
     ClsFloat,
     ClsStr,
     ClsList,
+    ClsTuple,
     ClsSet,
     ClsDict,
 
     ClsInitArgsKwargs,
     ClsInitRaise,
 
+    # CLS with INST -----
     ClsException, INST_EXCEPTION,
 
-    # CLS with INST -----
     Cls, INST,
     ClsEmpty, INST_EMPTY,
 

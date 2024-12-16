@@ -210,6 +210,10 @@ class ClsList(list):
     pass
 
 
+class ClsTuple(tuple):
+    pass
+
+
 class ClsSet(set):
     pass
 
