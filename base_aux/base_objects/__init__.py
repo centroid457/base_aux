@@ -22,9 +22,12 @@ from .obj_types import (
 
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
+    # SETS -----
     BLANK,
+    SLEEP,
+    CALLABLE,
 
-    # BASE
+    # FUNCS ----
     GEN_COMPR,
 
     FUNC,
@@ -37,7 +40,6 @@ from .primitives import (
     FUNC_DICT,
     FUNC_GEN,
 
-    SLEEP,
 
     LAMBDA,
     LAMBDA_NONE, LAMBDA_TRUE, LAMBDA_FALSE, LAMBDA_ECHO,
@@ -49,8 +51,7 @@ from .primitives import (
     LAMBDA_DICT,
     LAMBDA_GEN,
 
-    ClsException, INST_EXCEPTION,
-
+    # CLS -----
     ClsInt,
     ClsFloat,
     ClsStr,
@@ -58,11 +59,14 @@ from .primitives import (
     ClsSet,
     ClsDict,
 
-    Cls, INST,
-    ClsEmpty, INST_EMPTY,
-
     ClsInitArgsKwargs,
     ClsInitRaise,
+
+    ClsException, INST_EXCEPTION,
+
+    # CLS with INST -----
+    Cls, INST,
+    ClsEmpty, INST_EMPTY,
 
     ClsCall, INST_CALL,
     ClsCallNone, INST_CALL_NONE,
@@ -85,9 +89,6 @@ from .primitives import (
     ClsEqRaise, INST_EQ_RAISE,
 
     ClsFullTypes, INST_FULL_TYPES,
-
-    # -----------------------------0
-    CALLABLE,
 )
 
 
