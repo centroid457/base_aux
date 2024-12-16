@@ -21,10 +21,12 @@ class BLANK:
     ----
     keep all variants in one object with ability to iterate in bunch checks!
     """
+    NONE: None = None
     BOOL: bool = False
     INT: int = 0
     FLOAT: float = 0.0
     STR: str = ""         # that is why i create all others BLANKS_*
+    BYTES: bytes = b""
     LIST: list = []
     TUPLE: tuple = ()
     DICT: dict = {}
@@ -167,19 +169,19 @@ LAMBDA_NONE = lambda *args, **kwargs: None
 LAMBDA_TRUE = lambda *args, **kwargs: True
 LAMBDA_FALSE = lambda *args, **kwargs: False
 
-LAMBDA_ALL = lambda *args, **kwargs: FUNC_ALL(*args, **kwargs)
-LAMBDA_ANY = lambda *args, **kwargs: FUNC_ANY(*args, **kwargs)
-
-LAMBDA_LIST_DIRECT = lambda *args, **kwargs: FUNC_LIST_DIRECT(*args, **kwargs)
-LAMBDA_LIST_VALUES = lambda *args, **kwargs: FUNC_LIST_VALUES(*args, **kwargs)
-LAMBDA_DICT = lambda *args, **kwargs: FUNC_DICT(*args, **kwargs)
-
 LAMBDA_EXX = lambda *args, **kwargs: Exception("LAMBDA_EXX")
 # LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXX")      # raise=SyntaxError: invalid syntax
 LAMBDA_RAISE = lambda *args, **kwargs: FUNC_RAISE()
 # LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
 LAMBDA_GEN = lambda *args, **kwargs: FUNC_GEN()
 LAMBDA_ECHO = lambda echo, *args, **kwargs: echo
+
+LAMBDA_ALL = lambda *args, **kwargs: FUNC_ALL(*args, **kwargs)
+LAMBDA_ANY = lambda *args, **kwargs: FUNC_ANY(*args, **kwargs)
+
+LAMBDA_LIST_DIRECT = lambda *args, **kwargs: FUNC_LIST_DIRECT(*args, **kwargs)
+LAMBDA_LIST_VALUES = lambda *args, **kwargs: FUNC_LIST_VALUES(*args, **kwargs)
+LAMBDA_DICT = lambda *args, **kwargs: FUNC_DICT(*args, **kwargs)
 
 
 # =====================================================================================================================
@@ -459,25 +461,25 @@ class ClsFullTypes:
     attrInstMeth = ClsCall().meth
 
     attrClsCall = ClsCall
-    attrInstCall = ClsCall()
+    attrInstCall = INST_CALL
     attrClsCallTrue = ClsCallTrue
-    attrInstCallTrue = ClsCallTrue()
+    attrInstCallTrue = INST_CALL_TRUE
     attrClsCallRaise = ClsCallRaise
-    attrInstCallRaise = ClsCallRaise()
+    attrInstCallRaise = INST_CALL_RAISE
     attrClsCallExx = ClsCallExx
-    attrInstCallExx = ClsCallExx()
+    attrInstCallExx = INST_CALL_EXX
 
     attrClsIterYield = ClsIterYield
-    attrInstIterYield = ClsIterYield()
+    attrInstIterYield = INST_ITER_YIELD
     attrClsGen = ClsGen
-    attrInstGen = ClsGen()
+    attrInstGen = INST_GEN
 
     attrClsBoolTrue = ClsBoolTrue
-    attrInstBoolTrue = ClsBoolTrue()
+    attrInstBoolTrue = INST_BOOL_TRUE
     attrClsBoolFalse = ClsBoolFalse
-    attrInstBoolFalse = ClsBoolFalse()
+    attrInstBoolFalse = INST_BOOL_FALSE
     attrClsBoolRaise = ClsBoolRaise
-    attrInstBooRaise = ClsBoolRaise()
+    attrInstBooRaise = INST_BOOL_RAISE
 
     attrSet = {1,2,3}
     attrList = [1,2,3]
@@ -535,20 +537,20 @@ class CALLABLE:
     LAMBDA: Callable = LAMBDA
     FUNC: Callable = FUNC
 
-    CLS: type = ClsCall
-    INST: Callable = ClsCall()
+    CLS: Callable | type = ClsCall
+    INST: Callable = INST_CALL
 
-    METH_CLS: Callable = ClsFullTypes.methNone
+    METH_CLS: Callable | type = ClsFullTypes.methNone
     METH_CLS_CLASSMETHOD: Callable = ClsFullTypes.classmethodNone
     METH_CLS_STATICMETHOD: Callable = ClsFullTypes.staticmethodNone
-    METH_CLS_PROPERTY = ClsFullTypes.propertyNone                           # NOT CALLABLE!!!
-    METH_CLS_PROPERTY_CLASSMETHOD = ClsFullTypes.propertyClassmethodNone    # NOT CALLABLE!!!
+    METH_CLS_PROPERTY: Any = ClsFullTypes.propertyNone                           # NOT CALLABLE!!!
+    METH_CLS_PROPERTY_CLASSMETHOD: Any = ClsFullTypes.propertyClassmethodNone    # NOT CALLABLE!!!
 
     METH_INST: Callable = INST_FULL_TYPES.methNone
     METH_INST_CLASSMETHOD: Callable = INST_FULL_TYPES.classmethodNone
     METH_INST_STATICMETHOD: Callable = INST_FULL_TYPES.staticmethodNone
-    METH_INST_PROPERTY = INST_FULL_TYPES.propertyNone                           # NOT CALLABLE!!!
-    METH_INST_PROPERTY_CLASSMETHOD = INST_FULL_TYPES.propertyClassmethodNone    # NOT CALLABLE!!!
+    METH_INST_PROPERTY: Any = INST_FULL_TYPES.propertyNone                           # NOT CALLABLE!!!
+    METH_INST_PROPERTY_CLASSMETHOD: Any = INST_FULL_TYPES.propertyClassmethodNone    # NOT CALLABLE!!!
 
     # PROPERTIES is not callables cause of when we access the attribute, decorator will return really final value not callable
 
