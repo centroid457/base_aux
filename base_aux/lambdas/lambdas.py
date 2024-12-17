@@ -278,7 +278,7 @@ class LambdaTrySuccess(LambdaBool):
 
     EXAMPLES
     --------
-        if callables_drop and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
+        if callables and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
             continue
 
         so here raise is acceptable in getattr(source, name) in case of PROPERTY_RAISE

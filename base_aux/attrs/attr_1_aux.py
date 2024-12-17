@@ -6,13 +6,13 @@ from base_aux.lambdas import LambdaTrySuccess
 # =====================================================================================================================
 class AttrAuxIter:
     @classmethod
-    def attrs__iter_not_private(cls, source: Any) -> Iterable[str]:
+    def iter__not_private(cls, source: Any) -> Iterable[str]:
         for name in dir(source):
             if not name.startswith("__"):
                 yield name
 
     @classmethod
-    def attrs__iter_not_hidden(cls, source: Any) -> Iterable[str]:
+    def iter__not_hidden(cls, source: Any) -> Iterable[str]:
         for name in dir(source):
             if not name.startswith("_"):
                 yield name
@@ -27,7 +27,7 @@ class AttrAuxAnycase:
     """
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def attr_anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
+    def anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
         """
         get attr name in original register
         """
@@ -38,7 +38,7 @@ class AttrAuxAnycase:
         if source == NoValue:
             source = cls  # seems it is not good idea!!!
 
-        for name in AttrAuxIter.attrs__iter_not_private(source):
+        for name in AttrAuxIter.iter__not_private(source):
             if name.lower() == str(item).lower():
                 return name
 
@@ -46,26 +46,26 @@ class AttrAuxAnycase:
 
     # ATTR ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def getattr_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+    def anycase__getattr(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
         """
-        name_original = cls.attr_anycase__find(item, obj)
+        name_original = cls.anycase__find(item, obj)
         if name_original is None:
             raise AttributeError(item)
 
         return getattr(obj, name_original)
 
     @classmethod
-    def setattr_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+    def anycase__setattr(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
 
         NoReturn - in case of not accepted names when setattr
         """
-        name_original = cls.attr_anycase__find(item, obj)
+        name_original = cls.anycase__find(item, obj)
         if name_original is None:
             if not isinstance(item, str):
                 raise AttributeError(item)
@@ -80,18 +80,18 @@ class AttrAuxAnycase:
 
     # ITEM ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def getitem_anycase(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
-        return cls.getattr_anycase(item, obj)
+    def anycase__getitem(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+        return cls.anycase__getattr(item, obj)
 
     @classmethod
-    def setitem_anycase(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
-        cls.setattr_anycase(item, value, obj)
+    def anycase__setitem(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+        cls.anycase__setattr(item, value, obj)
 
 
 # =====================================================================================================================
 class AttrAuxDump:
     @classmethod
-    def to_dict__direct(cls, source: Any, callables_drop: bool = None) -> dict[str, Any]:
+    def to_dict__direct(cls, source: Any, callables_skip: bool = None, callables_resolve: bool = None) -> dict[str, Any | Callable]:
         """
         GOAL
         ____
@@ -102,20 +102,31 @@ class AttrAuxDump:
         using any object as rules for Translator
         """
         result = {}
-        for name in AttrAuxIter.attrs__iter_not_hidden(source):
-            result.update({name: getattr(source, name)})
-            # TODO: finish!!!
-
-
-            if callables_drop and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
+        for name in AttrAuxIter.iter__not_hidden(source):
+            if callables_skip and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
                 continue
 
+            value = getattr(source, name)
+            if callables_resolve:
+                pass
+                pass
+                pass
+                pass
+                pass
+                pass
+
+            result.update({name: value})
 
         return result
 
     @classmethod
-    def to_dict__not_callable(cls, source: Any) -> dict[str, Any]:
-        pass
+    def to_dict__direct_callables_skip(cls, source: Any) -> dict[str, Any]:
+        return cls.to_dict__direct(source=source, callables_skip=True)
+
+    @classmethod
+    def to_dict__callables_resolve(cls, source: Any) -> dict[str, Any]:
+        return cls.to_dict__direct(source=source, callables_resolve=True)
+
 
 
 # =====================================================================================================================
