@@ -17,8 +17,5 @@ class ToDict:
     def __init__(self, source: Any):
         self.SOURCE = source
 
-    def resolve(self) -> dict[str, Any]:
-        pass
-
 
 # =====================================================================================================================
