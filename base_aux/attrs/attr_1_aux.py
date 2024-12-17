@@ -1,6 +1,6 @@
 from typing import *
 from base_aux.base_argskwargs.novalue import NoValue
-from base_aux.lambdas import LambdaTrySuccess
+from base_aux.lambdas import LambdaTrySuccess, Lambda
 
 
 # =====================================================================================================================
@@ -91,7 +91,7 @@ class AttrAuxAnycase:
 # =====================================================================================================================
 class AttrAuxDump:
     @classmethod
-    def to_dict__direct(cls, source: Any, callables_skip: bool = None, callables_resolve: bool = None) -> dict[str, Any | Callable]:
+    def to_dict(cls, source: Any, callables_skip: bool = None, callables_resolve: bool = None) -> dict[str, Any | Callable | Exception]:
         """
         GOAL
         ____
@@ -108,25 +108,19 @@ class AttrAuxDump:
 
             value = getattr(source, name)
             if callables_resolve:
-                pass
-                pass
-                pass
-                pass
-                pass
-                pass
+                value = Lambda(value).get_result_or_exx()
 
             result.update({name: value})
 
         return result
 
     @classmethod
-    def to_dict__direct_callables_skip(cls, source: Any) -> dict[str, Any]:
-        return cls.to_dict__direct(source=source, callables_skip=True)
+    def to_dict__callables_skip(cls, source: Any) -> dict[str, Any]:
+        return cls.to_dict(source=source, callables_skip=True)
 
     @classmethod
     def to_dict__callables_resolve(cls, source: Any) -> dict[str, Any]:
-        return cls.to_dict__direct(source=source, callables_resolve=True)
-
+        return cls.to_dict(source=source, callables_resolve=True)
 
 
 # =====================================================================================================================
