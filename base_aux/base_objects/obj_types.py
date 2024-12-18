@@ -10,24 +10,29 @@ class _Cls:
 
 
 # =====================================================================================================================
-TYPE__NONE = type(None)
-TYPE__FUNCTION = type(lambda: True)
-TYPE__METHOD = type(_Cls().meth)
+TYPE__NONE: type = type(None)
+TYPE__FUNCTION: type = type(lambda: True)
+TYPE__METHOD: type = type(_Cls().meth)
+
+TYPES__ELEMENTARY_SINGLE: tuple[type, ...] = (
+    type(None),
+    bool,
+    str, bytes,
+    int, float,
+)
+TYPES__ELEMENTARY_COLLECTION: tuple[type, ...] = (
+    tuple, list,
+    set, dict,
+)
+TYPES__ELEMENTARY: tuple[type, ...] = (
+    *TYPES__ELEMENTARY_SINGLE,
+    *TYPES__ELEMENTARY_COLLECTION,
+)
 
 
 # =====================================================================================================================
 @final
 class TypeChecker:
-    TYPES__ELEMENTARY_SINGLE: tuple = (
-        type(None), bool,
-        str, bytes,
-        int, float,
-    )
-    TYPES__ELEMENTARY_COLLECTION: tuple = (
-        tuple, list,
-        set, dict,
-    )
-    TYPES__ELEMENTARY: tuple = (*TYPES__ELEMENTARY_SINGLE, *TYPES__ELEMENTARY_COLLECTION,)
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -55,11 +60,11 @@ class TypeChecker:
     def check__elementary(source: Any) -> bool:
         if callable(source):
             return False
-        return isinstance(source, TypeChecker.TYPES__ELEMENTARY)
+        return isinstance(source, TYPES__ELEMENTARY)
 
     @staticmethod
     def check__elementary_single(source: Any) -> bool:
-        return isinstance(source, TypeChecker.TYPES__ELEMENTARY_SINGLE)
+        return isinstance(source, TYPES__ELEMENTARY_SINGLE)
 
     @staticmethod
     def check__elementary_single_not_none(source: Any) -> bool:
@@ -85,11 +90,11 @@ class TypeChecker:
         MOST PREFERRED to use for ensure_collection! and apply for Args!
         all other base_objects (ClsInst) will covered by brackets!
         """
-        return isinstance(source, TypeChecker.TYPES__ELEMENTARY_COLLECTION)
+        return isinstance(source, TYPES__ELEMENTARY_COLLECTION)
 
     @staticmethod
     def check__elementary_collection_not_dict(source: Any) -> bool:
-        return isinstance(source, TypeChecker.TYPES__ELEMENTARY_COLLECTION) and not isinstance(source, dict)
+        return isinstance(source, TYPES__ELEMENTARY_COLLECTION) and not isinstance(source, dict)
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -158,7 +163,7 @@ class TypeChecker:
         recommended using instead of just Callable! cause Callable keeps additionally every class instead of just simple func/method!
         """
         if TypeChecker.check__class(source):
-            result = issubclass(source, TypeChecker.TYPES__ELEMENTARY)
+            result = issubclass(source, TYPES__ELEMENTARY)
         else:
             result = callable(source)
         return result
@@ -214,7 +219,7 @@ class TypeChecker:
         """
         if class and class is as func like int/str/*  or nested
         """
-        return TypeChecker.check__class(source) and issubclass(source, TypeChecker.TYPES__ELEMENTARY)
+        return TypeChecker.check__class(source) and issubclass(source, TYPES__ELEMENTARY)
 
     # CLS/INST --------------------------------------------------------------------------------------------------------
     @staticmethod

@@ -18,6 +18,10 @@ from .obj_types import (
     TYPE__NONE,
     TYPE__FUNCTION,
     TYPE__METHOD,
+
+    TYPES__ELEMENTARY_SINGLE,
+    TYPES__ELEMENTARY_COLLECTION,
+    TYPES__ELEMENTARY,
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
