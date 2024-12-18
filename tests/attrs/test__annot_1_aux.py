@@ -2,11 +2,11 @@ from typing import *
 import pytest
 
 from base_aux.pytester.pytester import pytest_func_tester__no_args_kwargs, pytest_func_tester__no_kwargs
-from base_aux.attrs import AnnotAux, AnnotRequired
+from base_aux.attrs import AnnotsBase, AnnotsAux, AnnotsRequired
 
 
 # =====================================================================================================================
-class Victim1(AnnotAux):
+class Victim1(AnnotsBase):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -29,12 +29,12 @@ victim2 = Victim2()
 
 
 # =====================================================================================================================
-class VictimDirect_Ok(AnnotAux):
+class VictimDirect_Ok(AnnotsBase):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class VictimDirect_Fail(AnnotAux):
+class VictimDirect_Fail(AnnotsBase):
     ATTR1: int
     ATTR2: int = 2
 
@@ -53,12 +53,12 @@ class VictimNested_OkCHild(VictimDirect_Fail):
     ATTR1: int = 1
 
 # -----------------------------------------------
-class DictDirect_Ok(dict, AnnotAux):
+class DictDirect_Ok(dict, AnnotsBase):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class DictDirect_Fail(dict, AnnotAux):
+class DictDirect_Fail(dict, AnnotsBase):
     ATTR1: int
 
 
@@ -80,10 +80,10 @@ class DictDirect_Fail(dict, AnnotAux):
     ]
 )
 def test__annot__get_not_defined(source, _EXPECTED):
-    assert AnnotAux.annot__get_not_defined(source) == _EXPECTED
+    assert AnnotsAux.get_not_defined(source) == _EXPECTED
 
-    func_link = source.annot__get_not_defined
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    # func_link = AnnotsAux.get_not_defined
+    # pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
 
 # =====================================================================================================================
@@ -104,9 +104,9 @@ def test__annot__get_not_defined(source, _EXPECTED):
     ]
 )
 def test__annot__check_all_defined(source, _EXPECTED):
-    assert AnnotAux.annot__check_all_defined(source) == _EXPECTED
+    assert AnnotsAux.check_all_defined(source) == _EXPECTED
 
-    func_link = source.annot__check_all_defined
+    func_link = source.check_all_defined
     pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
 
@@ -129,12 +129,12 @@ def test__annot__check_all_defined(source, _EXPECTED):
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
     try:
-        AnnotAux.annot__raise_if_not_defined(source)
+        AnnotsAux.check_all_defined_or_raise(source)
         assert _EXPECTED is None
     except:
         assert _EXPECTED == Exception
 
-    func_link = source.annot__raise_if_not_defined
+    func_link = source.check_all_defined_or_raise
     pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
 
@@ -170,98 +170,70 @@ class Test__Cmp:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="asker, source, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
-            (victim1, None, VICTIM1_DICT_TYPES),
-            (victim1, victim1, VICTIM1_DICT_TYPES),
-            (victim2, victim1, VICTIM1_DICT_TYPES),
-            (AnnotAux, victim1, VICTIM1_DICT_TYPES),
-
-            (victim2, None, VICTIM2_DICT_TYPES),
-            (victim2, victim2, VICTIM2_DICT_TYPES),
-            (victim1, victim2, VICTIM2_DICT_TYPES),
-            (AnnotAux, victim2, VICTIM2_DICT_TYPES),
+            (victim1, VICTIM1_DICT_TYPES),
+            (victim2, VICTIM2_DICT_TYPES),
         ]
     )
-    def test__dict_types(self, asker, source, _EXPECTED):
-        func_link = asker.annot__get_nested__dict_types
+    def test__dict_types(self, source, _EXPECTED):
+        func_link = AnnotsAux.get_nested__dict_types
         pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="asker, source, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
-            (victim1, None, VICTIM1_DICT_VALUES),
-            (victim1, victim1, VICTIM1_DICT_VALUES),
-            (victim2, victim1, VICTIM1_DICT_VALUES),
-            (AnnotAux, victim1, VICTIM1_DICT_VALUES),
-
-            (victim2, None, VICTIM2_DICT_VALUES),
-            (victim2, victim2, VICTIM2_DICT_VALUES),
-            (victim1, victim2, VICTIM2_DICT_VALUES),
-            (AnnotAux, victim2, VICTIM2_DICT_VALUES),
+            (victim1, VICTIM1_DICT_VALUES),
+            (victim2, VICTIM2_DICT_VALUES),
         ]
     )
-    def test__dict_values(self, asker, source, _EXPECTED):
-        func_link = asker.annot__get_nested__dict_values
+    def test__dict_values(self, source, _EXPECTED):
+        func_link = AnnotsAux.get_nested__dict_values
         pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="asker, source, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
-            (victim1, None, list(VICTIM1_DICT_VALUES.values())),
-            (victim1, victim1, list(VICTIM1_DICT_VALUES.values())),
-            (victim2, victim1, list(VICTIM1_DICT_VALUES.values())),
-            (AnnotAux, victim1, list(VICTIM1_DICT_VALUES.values())),
-
-            (victim2, None, list(VICTIM2_DICT_VALUES.values())),
-            (victim2, victim2, list(VICTIM2_DICT_VALUES.values())),
-            (victim1, victim2, list(VICTIM2_DICT_VALUES.values())),
-            (AnnotAux, victim2, list(VICTIM2_DICT_VALUES.values())),
+            (victim1, list(VICTIM1_DICT_VALUES.values())),
+            (victim2, list(VICTIM2_DICT_VALUES.values())),
         ]
     )
-    def test__iter_values(self, asker, source, _EXPECTED):
-        func_link = lambda arg: list(asker.annot__iter_values(arg))
+    def test__iter_values(self, source, _EXPECTED):
+        func_link = lambda: list(AnnotsAux.iter_values(source))
         pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="asker, source, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
-            (victim1, None, False),
-            (victim1, victim1, False),
-            (victim2, victim1, False),
-            (AnnotAux, victim1, False),
-
-            (victim2, None, False),
-            (victim2, victim2, False),
-            (victim1, victim2, False),
-            (AnnotAux, victim2, False),
+            (victim1, False),
+            (victim2, False),
         ]
     )
-    def test__all_defined(self, asker, source, _EXPECTED):
-        func_link = asker.annot__check_all_defined
+    def test__all_defined(self, source, _EXPECTED):
+        func_link = AnnotsAux.check_all_defined
         pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
 
 
 # =====================================================================================================================
 def test__all_defined2():
-    class Victim11(AnnotAux):
+    class Victim11(AnnotsBase):
         ATTR1: int = 1
         ATTR2: int = 2
         ATTR01 = 11
 
     victim11 = Victim11()
-    assert victim1.annot__check_all_defined() == False
-    assert victim11.annot__check_all_defined() == True
+    assert victim1.check_all_defined() == False
+    assert victim11.check_all_defined() == True
 
 
 # =====================================================================================================================
 class Test__NamedTuple:
     def test__NT(self):
         try:
-            class Victim(AnnotRequired, NamedTuple):
+            class Victim(AnnotsRequired, NamedTuple):
                 ATTR1: int
                 ATTR2: int = 2
             assert False
@@ -277,10 +249,10 @@ class Test__NamedTuple:
 
         victimNT = Victim(1)
 
-        assert AnnotAux().annot__get_not_defined(victimNT) == ["ATTR1", ]
-        assert AnnotAux().annot__check_all_defined(victimNT) == False
-        assert AnnotAux().annot__get_nested__dict_types(victimNT) == {"ATTR1": int, }
-        assert AnnotAux().annot__get_nested__dict_values(victimNT) == {"ATTR1": 1, }
+        assert AnnotsAux.get_not_defined(victimNT) == ["ATTR1", ]
+        assert AnnotsAux.check_all_defined(victimNT) == False
+        assert AnnotsAux.get_nested__dict_types(victimNT) == {"ATTR1": int, }
+        assert AnnotsAux.get_nested__dict_values(victimNT) == {"ATTR1": 1, }
 
 
 # =====================================================================================================================

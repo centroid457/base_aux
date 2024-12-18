@@ -225,32 +225,32 @@ class DictDots(DictCaseinsense):
 
 
 # =====================================================================================================================
-class DictDotsAnnotRequired(DictDots, AnnotRequired):
+class DictDotsAnnotRequired(DictDots, AnnotsRequired):
     """
-    its a derivative for DictDots with applying AnnotRequired
+    its a derivative for DictDots with applying AnnotsRequired
 
-    WHY NOT 1=just simple nesting AnnotRequired?
+    WHY NOT 1=just simple nesting AnnotsRequired?
     --------------------------------------------
     in this case
     first we need apply DICT inition
-    and only secondary we could check any by AnnotRequired.
+    and only secondary we could check any by AnnotsRequired.
     BUT DICT is a stopping/last class!!!
 
     so we cant just call init with super()
     """
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
-        # super(AnnotRequired, self).__init__()
+        # super(AnnotsRequired, self).__init__()
         # annot_types = self.annot__get_nested__dict_types()
         # print(f"{annot_types=}")
-        not_def_list = self.annot__get_not_defined()
+        not_def_list = self.get_not_defined()
         # FIXME: here I cant handle i parent methods order! i messed out! and break it by redefine by this not ideal solvation
         # print(f"{not_def_list=}")
         if not_def_list:
             msg = f"{not_def_list=}"
             raise Exception(msg)
 
-    def annot__get_not_defined(self) -> list[str]:
+    def annot__get_not_defined(self) -> list[str]:          # FIXME!!!!
         result = []
         nested = self.annot__get_nested__dict_types()
         for key in nested:

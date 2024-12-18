@@ -27,7 +27,7 @@ class IndicatorParamsBase:
         return self.COLUMN_NAME__TEMPLATE % self.params_dict__get()
 
     def params_dict__get(self):
-        return AnnotAux().annot__get_nested__dict_values(self)
+        return AnnotsAux().get_nested__dict_values(self)
 
     def bars_expected__get(self) -> int:
         """

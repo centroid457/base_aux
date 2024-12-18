@@ -1,8 +1,8 @@
-from .annot_1_aux import AnnotAux
+from .annot_1_aux import AnnotsBase, AnnotsAux
 
 
 # =====================================================================================================================
-class AnnotValuesIter(AnnotAux):
+class AnnotsValuesIter(AnnotsBase):
     """
     GOAL
     ----
@@ -13,7 +13,7 @@ class AnnotValuesIter(AnnotAux):
         class Item:
             pass
 
-        class Example(AnnotValuesIter):
+        class Example(AnnotsValuesIter):
             def meth(self):
                 pass
 
@@ -38,7 +38,7 @@ class AnnotValuesIter(AnnotAux):
     """
 
     def __iter__(self):
-        yield from self.annot__iter_values()
+        yield from AnnotsAux.iter_values(self)
 
 
 # =====================================================================================================================

@@ -11,7 +11,7 @@ class PrivateAuto(PrivateJson, PrivateIni, PrivateCsv, PrivateEnv):
     It will not merge sources!
     """
     def get_dict(self) -> Union[TYPE__PV_DICT, NoReturn]:
-        annots = self.annot__get_not_defined()
+        annots = self.get_not_defined()
         annots_lower = set(map(str.lower, annots))
 
         for cls in [PrivateAuto, PrivateJson, PrivateIni, PrivateCsv, PrivateEnv]:

@@ -4,7 +4,7 @@ from base_aux.attrs import *
 
 # =====================================================================================================================
 def test__raise():
-    class Victim(AnnotRequired):
+    class Victim(AnnotsRequired):
         ATTR1: int
         ATTR2: int = 2
 
@@ -16,7 +16,7 @@ def test__raise():
         assert False
 
 def test__ok():
-    class Victim(AnnotRequired):
+    class Victim(AnnotsRequired):
         ATTR1: int = 1
         ATTR2: int = 2
 
@@ -36,7 +36,7 @@ def test__ok():
 #     # -----------------------------------------------------------------------------------------------------------------
 #     def test__dataclass(self):
 #         @dataclass
-#         class Cls(AnnotRequired):
+#         class Cls(AnnotsRequired):
 #             ATTR1: int
 #             ATTR2: int = 2
 #
@@ -55,8 +55,8 @@ def test__ok():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #
 #         # 01------------------
 #         class Cls:
@@ -69,9 +69,9 @@ def test__ok():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
 #         try:
-#             assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#             assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #         except Exx__AnnotNotDefined:
 #             pass   # its GOOD!!!
 #         else:
@@ -89,8 +89,8 @@ def test__ok():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #
 #     def test__PROPERTY_w_ITER_w_VALUES(self):
 #         # 1---------------------------------------------------------
@@ -106,9 +106,9 @@ def test__ok():
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#         assert list(AnnotRequired().annots_get_values(obj)) == [1, ]
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
 #
 #         # 2---------------------------------------------------------
 #         # this will RAISE!
@@ -121,16 +121,16 @@ def test__ok():
 #                 return sum(self)
 #
 #             def __iter__(self):
-#                 yield from AnnotRequired().annots_get_values(self)
+#                 yield from AnnotsRequired().annots_get_values(self)
 #
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
 #
 #         try:
-#             assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#             # assert list(AnnotRequired().annots_get_values(obj)) == [1, ]
+#             assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#             # assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
 #         except RecursionError:
 #             pass
 #         else:
@@ -146,14 +146,14 @@ def test__ok():
 #                 return sum(self)
 #
 #             def __iter__(self):
-#                 yield from AnnotRequired().annots_get_values(self)
+#                 yield from AnnotsRequired().annots_get_values(self)
 #
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#         assert list(AnnotRequired().annots_get_values(obj)) == [1, ]
+#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
 
 
 # =====================================================================================================================

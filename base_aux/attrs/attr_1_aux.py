@@ -1,5 +1,4 @@
 from typing import *
-from base_aux.base_argskwargs.novalue import NoValue
 from base_aux.lambdas import LambdaTrySuccess, Lambda
 
 
@@ -27,65 +26,66 @@ class AttrAuxAnycase:
     """
     # NAME ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def anycase__find(cls, item: str | Any, source: Any = NoValue) -> str | None:
+    def anycase__find(cls, name: str | Any, source: Any) -> str | None:
         """
         get attr name in original register
         """
-        if not isinstance(item, str):
+        if not isinstance(name, str):
             return
 
-        item = item.strip()
-        if source == NoValue:
-            source = cls  # seems it is not good idea!!!
-
+        name = name.strip()
         for name in AttrAuxIter.iter__not_private(source):
-            if name.lower() == str(item).lower():
+            if name.lower() == str(name).lower():
                 return name
 
         return
 
+    @classmethod
+    def anycase__check_exists(cls, name: str | Any, source: Any) -> bool:
+        return cls.anycase__find(name=name,source=source) is None
+
     # ATTR ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def anycase__getattr(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
+    def anycase__getattr(cls, name: str, source: Any) -> Any | Callable | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
         """
-        name_original = cls.anycase__find(item, obj)
+        name_original = cls.anycase__find(name, source)
         if name_original is None:
-            raise AttributeError(item)
+            raise AttributeError(name)
 
-        return getattr(obj, name_original)
+        return getattr(source, name_original)
 
     @classmethod
-    def anycase__setattr(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
+    def anycase__setattr(cls, name: str, value: Any, source: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
 
         NoReturn - in case of not accepted names when setattr
         """
-        name_original = cls.anycase__find(item, obj)
+        name_original = cls.anycase__find(name, source)
         if name_original is None:
-            if not isinstance(item, str):
-                raise AttributeError(item)
+            if not isinstance(name, str):
+                raise AttributeError(name)
 
-            item = item.strip()
-            if item in ["", ]:
-                raise AttributeError(item)
-            name_original = item
+            name = name.strip()
+            if name in ["", ]:
+                raise AttributeError(name)
+            name_original = name
 
-        # NOTE: you still have no exx with setattr(obj, "    HELLO", value) and ""
-        setattr(obj, name_original, value)
+        # NOTE: you still have no exx with setattr(source, "    HELLO", value) and ""
+        setattr(source, name_original, value)
 
     # ITEM ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def anycase__getitem(cls, item: str, obj: Any) -> Any | Callable | NoReturn:
-        return cls.anycase__getattr(item, obj)
+    def anycase__getitem(cls, name: str, source: Any) -> Any | Callable | NoReturn:
+        return cls.anycase__getattr(name, source)
 
     @classmethod
-    def anycase__setitem(cls, item: str, value: Any, obj: Any) -> None | NoReturn:
-        cls.anycase__setattr(item, value, obj)
+    def anycase__setitem(cls, name: str, value: Any, source: Any) -> None | NoReturn:
+        cls.anycase__setattr(name, value, source)
 
 
 # =====================================================================================================================

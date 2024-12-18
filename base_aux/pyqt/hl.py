@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from typing import *
-from base_aux.attrs import AnnotValuesIter
+from base_aux.attrs import AnnotsValuesIter
 
 
 # =====================================================================================================================
@@ -60,7 +60,7 @@ class HlStyle(NamedTuple):
 
 
 # =====================================================================================================================
-class HlStyles(AnnotValuesIter):
+class HlStyles(AnnotsValuesIter):
     """
     NOTE
     ----

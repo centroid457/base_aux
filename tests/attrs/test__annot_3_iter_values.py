@@ -4,7 +4,7 @@ from base_aux.attrs import *
 
 
 # =====================================================================================================================
-class Victim1(AnnotAux):
+class Victim1(AnnotsBase):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -17,7 +17,7 @@ class Victim2(Victim1):
 
 
 # =====================================================================================================================
-class VictimIterValues(Victim2, AnnotValuesIter):
+class VictimIterValues(Victim2, AnnotsValuesIter):
     pass
 
 

@@ -6,7 +6,7 @@ from base_aux.breeders import *
 
 
 # =====================================================================================================================
-class BreederStrStack(AnnotAux):
+class BreederStrStack(AnnotsBase):
     """
     CREATED SPECIALLY FOR
     ---------------------
@@ -85,7 +85,7 @@ class BreederStrStack(AnnotAux):
 
         # ATTRS ------------------
         attrs: list[str] = []
-        for attr in self.annot__get_nested__dict_values():
+        for attr in AnnotsAux.get_nested__dict_values(self):
             if not attr.startswith("_") and not callable(getattr(self, attr)):
                 attrs.append(attr)
 

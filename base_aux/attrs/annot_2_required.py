@@ -1,9 +1,9 @@
 from typing import *
-from .annot_1_aux import AnnotAux
+from .annot_1_aux import AnnotsBase, AnnotsAux
 
 
 # =====================================================================================================================
-class AnnotRequired(AnnotAux):
+class AnnotsRequired(AnnotsBase):
     """Check all annotated and not defined attributes in instance have values!
     else raise!
 
@@ -15,7 +15,7 @@ class AnnotRequired(AnnotAux):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.annot__raise_if_not_defined()  # check only after superInit!
+        AnnotsAux.check_all_defined_or_raise(self)  # check only after superInit!
 
     # TODO: deside is it really need NamedTuple and dataclasses??? seems its not need!!! - NEED!!! realise later!!!
 

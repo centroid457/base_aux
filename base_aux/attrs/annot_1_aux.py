@@ -7,7 +7,107 @@ from .attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
-class AnnotAux:
+@final
+class AnnotsAux:
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def get_not_defined(cls, source: Any) -> list[str]:
+        """
+        GOAL
+        ----
+        return list of not defined annotations
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        annot__check_all_defined
+        """
+
+        result = []
+        nested = cls.get_nested__dict_types(source)
+        for key in nested:
+            if not AttrAux.anycase__check_exists(key, source):
+                result.append(key)
+        return result
+
+    @classmethod
+    def check_all_defined(cls, source: Any) -> bool:
+        """
+        GOAL
+        ----
+        check if all annotated attrs have value!
+        """
+        return not cls.get_not_defined(source)
+
+    @classmethod
+    def check_all_defined_or_raise(cls, source: Any) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        check if all annotated attrs have value!
+        """
+        not_defined = cls.get_not_defined(source)
+        if not_defined:
+            dict_type = cls.get_nested__dict_types(source)
+            msg = f"[CRITICAL]{not_defined=} in {dict_type}"
+            raise Exx__AnnotNotDefined(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def get_nested__dict_types(cls, source: Any) -> dict[str, type[Any]]:
+        """
+        GOAL
+        ----
+        get all annotations in correct order (nesting available)!
+
+        RETURN
+        ------
+        keys - all attr names (defined and not)
+        values - Types!!! not instances!!!
+        """
+        try:
+            mro = source.__mro__
+        except:
+            mro = source.__class__.__mro__
+
+        if not mro:
+            """
+            created specially for
+            ---------------------
+            DictDotsAnnotRequired(dict)
+            it is not working without it!!!
+            """
+            return {}
+
+        result = {}
+        for cls_i in mro:
+            if cls_i in [AnnotsBase, object, *TYPES.ELEMENTARY]:
+                continue
+
+            _result_i = dict(cls_i.__annotations__)
+            _result_i.update(result)
+            result = _result_i
+        return result
+
+    @classmethod
+    def get_nested__dict_values(cls, source: Any) -> dict[str, Any]:
+        """
+        GOAL
+        ----
+        get dict with only existed values! no raise if value not exists!
+        """
+        result = {}
+        for key in cls.get_nested__dict_types(source):
+            if hasattr(source, key):
+                result.update({key: getattr(source, key)})
+        return result
+
+    @classmethod
+    def iter_values(cls, source: Any) -> Iterable[Any]:
+        yield from cls.get_nested__dict_values(source).values()
+
+
+# =====================================================================================================================
+class AnnotsBase:
     """
     access to all __annotations__
         from all nested classes
@@ -33,126 +133,21 @@ class AnnotAux:
         # atr4:<class 'int'>
     """
     # -----------------------------------------------------------------------------------------------------------------
-    def __getattr__(self, item) -> Any | NoReturn:
-        return AttrAux.anycase__getattr(item, self)
+    def __getattr__(self, name) -> Any | NoReturn:
+        return AttrAux.anycase__getattr(name=name, source=self)
 
-    def __getitem__(self, item) -> Any | NoReturn:
-        return AttrAux.anycase__getattr(item, self)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def annot__get_nested__dict_types(cls, obj: Any | None = None) -> dict[str, type[Any]]:
-        """
-        GOAL
-        ----
-        get all annotations in correct order (nesting available)!
-
-        RETURN
-        ------
-        keys - all attr names (defined and not)
-        values - Types!!! not instances!!!
-        """
-        if obj is None:
-            obj = cls
-
-        try:
-            mro = obj.__mro__
-        except:
-            mro = obj.__class__.__mro__
-
-        if not mro:
-            """
-            created specially for
-            ---------------------
-            DictDotsAnnotRequired(dict)
-            it is not working without it!!!
-            """
-            return {}
-
-        result = {}
-        for cls_i in mro:
-            if cls_i in [AnnotAux, object, *TYPES.ELEMENTARY]:
-                continue
-
-            _result_i = dict(cls_i.__annotations__)
-            _result_i.update(result)
-            result = _result_i
-        return result
-
-    def annot__get_nested__dict_values(self, obj: Any | None = None) -> dict[str, Any]:
-        """
-        GOAL
-        ----
-        get dict with only existed values! no raise if value not exists!
-        """
-        if obj is None:
-            obj = self
-
-        result = {}
-        for key in self.annot__get_nested__dict_types(obj):
-            if hasattr(obj, key):
-                result.update({key: getattr(obj, key)})
-        return result
-
-    def annot__iter_values(self, obj: Any = None):
-        yield from self.annot__get_nested__dict_values(obj).values()
+    def __getitem__(self, name) -> Any | NoReturn:
+        return AttrAux.anycase__getattr(name, self)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def annot__get_not_defined(self, obj: Any | None = None) -> list[str]:
-        """
-        GOAL
-        ----
-        return list of not defined annotations
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        annot__check_all_defined
-        """
-        if obj is None:
-            obj = self
-
-        result = []
-        nested = self.annot__get_nested__dict_types(obj)
-        for key in nested:
-            if not self.attr__check_defined(key, obj):
-                result.append(key)
-        return result
-
-    def attr__check_defined(self, item: str, obj: Any | None = None) -> bool:
-        if obj is None:
-            obj = self
-
-        return hasattr(obj, item)
-
-    def annot__check_all_defined(self, obj: Any | None = None) -> bool:
-        """
-        GOAL
-        ----
-        check if all annotated attrs have value!
-        """
-        return not self.annot__get_not_defined(obj)
-
-    def annot__raise_if_not_defined(self, obj: Any | None = None) -> None | NoReturn:
-        """
-        GOAL
-        ----
-        check if all annotated attrs have value!
-        """
-        not_defined = self.annot__get_not_defined(obj)
-        if not_defined:
-            dict_type = self.annot__get_nested__dict_types(obj)
-            msg = f"[CRITICAL]{not_defined=} in {dict_type}"
-            raise Exx__AnnotNotDefined(msg)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def annot__print(self, obj: Any = None) -> str:
+    def annots__print(self, source: Any = None) -> str:
         """just a pretty print for debugging or research.
         """
-        if obj is None:
-            obj = self
+        if source is None:
+            source = self
 
-        result = f"{obj.__class__.__name__}(Annotations):"
-        annots = self.annot__get_nested__dict_values(obj)
+        result = f"{source.__class__.__name__}(Annotations):"
+        annots = AnnotsAux.get_nested__dict_values(source)
         if annots:
             for key, value in annots.items():
                 result += f"\n\t{key}={value}"
@@ -162,7 +157,7 @@ class AnnotAux:
         return result
 
     def __str__(self):
-        return self.annot__print()
+        return self.annots__print()
 
 
 # =====================================================================================================================

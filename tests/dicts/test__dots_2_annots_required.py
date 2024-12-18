@@ -33,7 +33,7 @@ def test__obj():
 
     # assert victim == {}
     # assert victim.annot__get_nested__dict_types() == {"lowercase": str}
-    # assert victim.annot__get_not_defined() == ["lowercase", ]
+    # assert victim.get_not_defined() == ["lowercase", ]
     # victim.annot__raise_if_not_defined()
 
 

@@ -2,7 +2,7 @@ from typing import *
 import pathlib
 import abc
 
-from base_aux.attrs import AnnotAux
+from base_aux.attrs import AnnotsBase
 from . import Exx__FileNotExists, TYPE__PATH
 
 
@@ -11,7 +11,7 @@ from . import Exx__FileNotExists, TYPE__PATH
 
 
 # =====================================================================================================================
-class PrivateBase(AnnotAux, abc.ABC):
+class PrivateBase(AnnotsBase, abc.ABC):
     """Base class to get values from sources.
 
     :ivar SECTION: first level name in source, for ini - root section, for json - rootKey, for env - not used
@@ -73,7 +73,7 @@ class PrivateBase(AnnotAux, abc.ABC):
             self._RAISE = _raise
 
         if self._RAISE:
-            self.annot__raise_if_not_defined()
+            self.check_all_defined_or_raise()
 
     def __str__(self):
         """return pretty string
