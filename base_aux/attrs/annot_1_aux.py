@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_exceptions import Exx__AnnotNotDefined
-from base_aux.base_objects.obj_types import TYPES__ELEMENTARY
+from base_aux.base_objects.obj_types import TYPES
 
 from .attr_1_aux import AttrAux
 
@@ -71,7 +71,7 @@ class AnnotAux:
 
         result = {}
         for cls_i in mro:
-            if cls_i in [AnnotAux, object, *TYPES__ELEMENTARY]:
+            if cls_i in [AnnotAux, object, *TYPES.ELEMENTARY]:
                 continue
 
             _result_i = dict(cls_i.__annotations__)

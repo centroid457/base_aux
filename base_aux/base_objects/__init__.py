@@ -12,16 +12,10 @@ from .info import (
     ObjectState,
 )
 from .obj_types import (
+    TYPES,
+
     TypeChecker,
     TypeEnsure,
-
-    TYPE__NONE,
-    TYPE__FUNCTION,
-    TYPE__METHOD,
-
-    TYPES__ELEMENTARY_SINGLE,
-    TYPES__ELEMENTARY_COLLECTION,
-    TYPES__ELEMENTARY,
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -43,7 +37,6 @@ from .primitives import (
     FUNC_LIST_VALUES,
     FUNC_DICT,
     FUNC_GEN,
-
 
     LAMBDA,
     LAMBDA_NONE, LAMBDA_TRUE, LAMBDA_FALSE, LAMBDA_ECHO,

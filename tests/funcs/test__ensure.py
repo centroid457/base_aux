@@ -25,7 +25,7 @@ class Test__ensure:
         argnames="args, _EXPECTED",
         argvalues=[
             # DEF --------------
-            (None, TYPE__NONE),
+            (None, TYPES.NONE),
             (((None,), ), tuple),
 
             (0, int),
@@ -39,12 +39,12 @@ class Test__ensure:
             (({1:1},), dict),
 
             # CALLABLES --------------
-            (LAMBDA_TRUE, TYPE__FUNCTION),
-            (LAMBDA_NONE, TYPE__FUNCTION),
-            (LAMBDA_EXX, TYPE__FUNCTION),
+            (LAMBDA_TRUE, TYPES.FUNCTION),
+            (LAMBDA_NONE, TYPES.FUNCTION),
+            (LAMBDA_EXX, TYPES.FUNCTION),
 
-            (CALLABLE.METH_INST, TYPE__METHOD),
-            (CALLABLE.METH_CLS, TYPE__FUNCTION),
+            (CALLABLE.METH_INST, TYPES.METHOD),
+            (CALLABLE.METH_CLS, TYPES.FUNCTION),
 
             (ClsGen, ClsGen),
             (INST_GEN, ClsGen),

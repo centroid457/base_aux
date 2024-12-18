@@ -57,12 +57,6 @@ pass    # place debug point here
 
         "add check__instance_of_user_class",
     ]
-    FIXME: list[str] = [
-        "..."
-    ]
-    NEWS: list[str] = [
-        "add TYPE__NONE/func/meth",
-    ]
 
 
 # =====================================================================================================================
