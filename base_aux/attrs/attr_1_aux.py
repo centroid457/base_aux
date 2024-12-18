@@ -124,6 +124,7 @@ class AttrAuxDump:
 
 
 # =====================================================================================================================
+@final
 class AttrAux(AttrAuxIter, AttrAuxAnycase, AttrAuxDump):
     pass
 
