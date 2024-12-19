@@ -36,7 +36,7 @@ class GetattrPrefixInst:
         2.You always need to CALL prefixed result! even if you access to not callable attribute!
         """
         for prefix in self._GETATTR__PREFIXES:
-            prefix_original = AttrAux.anycase__find(prefix, self)
+            prefix_original = AttrAux(self).anycase__find(prefix)
             if not prefix_original:
                 continue
             prefix_meth = getattr(self, prefix_original)
@@ -46,7 +46,7 @@ class GetattrPrefixInst:
 
             if prefix_original and item.lower().startswith(prefix.lower()):
                 item_short = item[len(prefix):]
-                item_value = AttrAux.anycase__getattr(item_short, self)
+                item_value = AttrAux(self).anycase__getattr(item_short)
 
                 return lambda *meth_args, **meth_kwargs: Lambda(prefix_meth).get_result_or_raise(
                     *[Lambda(item_value).get_result_or_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],

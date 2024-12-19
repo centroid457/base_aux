@@ -1,97 +1,91 @@
 from typing import *
 from base_aux.lambdas import LambdaTrySuccess, Lambda
+from base_aux.base_source import *
+from base_aux.base_enums import CallablesUse
 
 
 # =====================================================================================================================
-class AttrAuxIter:
-    @classmethod
-    def iter__not_private(cls, source: Any) -> Iterable[str]:
-        for name in dir(source):
+class AttrAuxIter(Source):
+    def iter__not_private(self) -> Iterable[str]:
+        for name in dir(self.SOURCE):
             if not name.startswith("__"):
                 yield name
 
-    @classmethod
-    def iter__not_hidden(cls, source: Any) -> Iterable[str]:
-        for name in dir(source):
+    def iter__not_hidden(self) -> Iterable[str]:
+        for name in dir(self.SOURCE):
             if not name.startswith("_"):
                 yield name
 
 
 # =====================================================================================================================
-class AttrAuxAnycase:
+class AttrAuxAnycase(Source):
     """
     NOTICE
     ------
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
     # NAME ------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def anycase__find(cls, name: str | Any, source: Any) -> str | None:
+    def anycase__find(self, name: str) -> str | None:
         """
         get attr name in original register
         """
         if not isinstance(name, str):
             return
 
-        name = name.strip()
-        for name in AttrAuxIter.iter__not_private(source):
-            if name.lower() == str(name).lower():
-                return name
+        name = str(name).strip()
+        for name_original in AttrAuxIter(self.SOURCE).iter__not_private():
+            if name_original.lower() == name.lower():
+                return name_original
 
         return
 
-    @classmethod
-    def anycase__check_exists(cls, name: str | Any, source: Any) -> bool:
-        return cls.anycase__find(name=name,source=source) is None
+    def anycase__check_exists(self, name: str) -> bool:
+        return self.anycase__find(name) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def anycase__getattr(cls, name: str, source: Any) -> Any | Callable | NoReturn:
+    def anycase__getattr(self, name: str) -> Any | Callable | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
         """
-        name_original = cls.anycase__find(name, source)
+        name_original = self.anycase__find(name)
         if name_original is None:
             raise AttributeError(name)
 
-        return getattr(source, name_original)
+        return getattr(self.SOURCE, name_original)
 
-    @classmethod
-    def anycase__setattr(cls, name: str, value: Any, source: Any) -> None | NoReturn:
+    def anycase__setattr(self, name: str, value: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
 
         NoReturn - in case of not accepted names when setattr
         """
-        name_original = cls.anycase__find(name, source)
-        if name_original is None:
-            if not isinstance(name, str):
-                raise AttributeError(name)
+        if not isinstance(name, str):
+            raise AttributeError(name)
 
-            name = name.strip()
-            if name in ["", ]:
-                raise AttributeError(name)
+        name = name.strip()
+        if name in ["", ]:
+            raise AttributeError(name)
+
+        name_original = self.anycase__find(name)
+        if name_original is None:
             name_original = name
 
-        # NOTE: you still have no exx with setattr(source, "    HELLO", value) and ""
-        setattr(source, name_original, value)
+        # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
+        setattr(self.SOURCE, name_original, value)
 
     # ITEM ------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def anycase__getitem(cls, name: str, source: Any) -> Any | Callable | NoReturn:
-        return cls.anycase__getattr(name, source)
+    def anycase__getitem(self, name: str) -> Any | Callable | NoReturn:
+        return self.anycase__getattr(name)
 
-    @classmethod
-    def anycase__setitem(cls, name: str, value: Any, source: Any) -> None | NoReturn:
-        cls.anycase__setattr(name, value, source)
+    def anycase__setitem(self, name: str, value: Any) -> None | NoReturn:
+        self.anycase__setattr(name, value)
 
 
 # =====================================================================================================================
-class AttrAuxDump:
-    @classmethod
-    def to_dict(cls, source: Any, callables_skip: bool = None, callables_resolve: bool = None) -> dict[str, Any | Callable | Exception]:
+class AttrAuxDump(Source):
+    def to_dict(self, callables_do: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception]:
         """
         GOAL
         ____
@@ -102,25 +96,23 @@ class AttrAuxDump:
         using any object as rules for Translator
         """
         result = {}
-        for name in AttrAuxIter.iter__not_hidden(source):
-            if callables_skip and LambdaTrySuccess(getattr, source, name) and callable(getattr(source, name)):
+        for name in AttrAuxIter(self.SOURCE).iter__not_hidden():
+            if callables_do == CallablesUse.SKIP and LambdaTrySuccess(getattr, self.SOURCE, name) and callable(getattr(self.SOURCE, name)):
                 continue
 
-            value = getattr(source, name)
-            if callables_resolve:
+            value = getattr(self.SOURCE, name)
+            if callables_do == CallablesUse.RESOLVE_EXX:
                 value = Lambda(value).get_result_or_exx()
 
             result.update({name: value})
 
         return result
 
-    @classmethod
-    def to_dict__callables_skip(cls, source: Any) -> dict[str, Any]:
-        return cls.to_dict(source=source, callables_skip=True)
+    def to_dict__callables_skip(self) -> dict[str, Any]:
+        return self.to_dict(CallablesUse.SKIP)
 
-    @classmethod
-    def to_dict__callables_resolve(cls, source: Any) -> dict[str, Any]:
-        return cls.to_dict(source=source, callables_resolve=True)
+    def to_dict__callables_resolve(self) -> dict[str, Any]:
+        return self.to_dict(CallablesUse.RESOLVE_EXX)
 
 
 # =====================================================================================================================

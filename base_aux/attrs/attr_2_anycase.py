@@ -5,17 +5,17 @@ from .attr_1_aux import AttrAux
 # =====================================================================================================================
 class AttrAnycase:
     def __getattr__(self, item) -> Any | NoReturn:
-        return AttrAux.anycase__getattr(item, self)
+        return AttrAux(self).anycase__getattr(item)
 
     def __setattr__(self, item, value) -> None | NoReturn:
-        return AttrAux.anycase__setattr(item, value, self)
+        return AttrAux(self).anycase__setattr(item, value)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __getitem__(self, item) -> Any | NoReturn:
-        return AttrAux.anycase__getitem(item, self)
+        return AttrAux(self).anycase__getitem(item)
 
     def __setitem__(self, item, value) -> None | NoReturn:
-        return AttrAux.anycase__setitem(item, value, self)
+        return AttrAux(self).anycase__setitem(item, value)
 
 
 # =====================================================================================================================

@@ -25,7 +25,7 @@ class AnnotsAux:
         result = []
         nested = cls.get_nested__dict_types(source)
         for key in nested:
-            if not AttrAux.anycase__check_exists(key, source):
+            if not AttrAux(source).anycase__check_exists(key):
                 result.append(key)
         return result
 
@@ -134,10 +134,10 @@ class AnnotsBase:
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, name) -> Any | NoReturn:
-        return AttrAux.anycase__getattr(name=name, source=self)
+        return AttrAux(self).anycase__getattr(name)
 
     def __getitem__(self, name) -> Any | NoReturn:
-        return AttrAux.anycase__getattr(name, self)
+        return AttrAux(self).anycase__getattr(name)
 
     # -----------------------------------------------------------------------------------------------------------------
     def annots__print(self, source: Any = None) -> str:
