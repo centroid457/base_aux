@@ -15,7 +15,7 @@ class AnnotsRequired(AnnotsBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        AnnotsAux.check_all_defined_or_raise(self)  # check only after superInit!
+        AnnotsAux(self).check_all_defined_or_raise()  # check only after superInit!
 
     # TODO: deside is it really need NamedTuple and dataclasses??? seems its not need!!! - NEED!!! realise later!!!
 

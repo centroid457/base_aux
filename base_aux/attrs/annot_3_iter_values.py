@@ -38,7 +38,7 @@ class AnnotsValuesIter(AnnotsBase):
     """
 
     def __iter__(self):
-        yield from AnnotsAux.iter_values(self)
+        yield from AnnotsAux(self).iter_values()
 
 
 # =====================================================================================================================

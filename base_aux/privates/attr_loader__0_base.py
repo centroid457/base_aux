@@ -2,7 +2,7 @@ from typing import *
 import pathlib
 import abc
 
-from base_aux.attrs import AnnotsBase
+from base_aux.attrs import *
 from . import Exx__FileNotExists, TYPE__PATH
 
 
@@ -73,7 +73,7 @@ class PrivateBase(AnnotsBase, abc.ABC):
             self._RAISE = _raise
 
         if self._RAISE:
-            self.check_all_defined_or_raise()
+            AnnotsAux(self).check_all_defined_or_raise()
 
     def __str__(self):
         """return pretty string

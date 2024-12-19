@@ -31,11 +31,6 @@ def test__obj():
     else:
         assert False
 
-    # assert victim == {}
-    # assert victim.annot__get_nested__dict_types() == {"lowercase": str}
-    # assert victim.get_not_defined() == ["lowercase", ]
-    # victim.annot__raise_if_not_defined()
-
 
 def test__dict_only():
     assert LambdaTrySuccess(DictDotsAnnotRequired) == True

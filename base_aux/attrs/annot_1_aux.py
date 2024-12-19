@@ -2,16 +2,16 @@ from typing import *
 
 from base_aux.base_exceptions import Exx__AnnotNotDefined
 from base_aux.base_objects.obj_types import TYPES
+from base_aux.base_source import *
 
 from .attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
 @final
-class AnnotsAux:
+class AnnotsAux(Source):
     # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def get_not_defined(cls, source: Any) -> list[str]:
+    def get_not_defined(self) -> list[str]:
         """
         GOAL
         ----
@@ -21,39 +21,35 @@ class AnnotsAux:
         ---------------------
         annot__check_all_defined
         """
-
         result = []
-        nested = cls.get_nested__dict_types(source)
+        nested = self.get_nested__dict_types()
         for key in nested:
-            if not AttrAux(source).anycase__check_exists(key):
+            if not AttrAux(self.SOURCE).anycase__check_exists(key):
                 result.append(key)
         return result
 
-    @classmethod
-    def check_all_defined(cls, source: Any) -> bool:
+    def check_all_defined(self) -> bool:
         """
         GOAL
         ----
         check if all annotated attrs have value!
         """
-        return not cls.get_not_defined(source)
+        return not self.get_not_defined()
 
-    @classmethod
-    def check_all_defined_or_raise(cls, source: Any) -> None | NoReturn:
+    def check_all_defined_or_raise(self) -> None | NoReturn:
         """
         GOAL
         ----
         check if all annotated attrs have value!
         """
-        not_defined = cls.get_not_defined(source)
+        not_defined = self.get_not_defined()
         if not_defined:
-            dict_type = cls.get_nested__dict_types(source)
+            dict_type = self.get_nested__dict_types()
             msg = f"[CRITICAL]{not_defined=} in {dict_type}"
             raise Exx__AnnotNotDefined(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def get_nested__dict_types(cls, source: Any) -> dict[str, type[Any]]:
+    def get_nested__dict_types(self) -> dict[str, type[Any]]:
         """
         GOAL
         ----
@@ -65,9 +61,9 @@ class AnnotsAux:
         values - Types!!! not instances!!!
         """
         try:
-            mro = source.__mro__
+            mro = self.SOURCE.__mro__
         except:
-            mro = source.__class__.__mro__
+            mro = self.SOURCE.__class__.__mro__
 
         if not mro:
             """
@@ -88,22 +84,37 @@ class AnnotsAux:
             result = _result_i
         return result
 
-    @classmethod
-    def get_nested__dict_values(cls, source: Any) -> dict[str, Any]:
+    def get_nested__dict_values(self) -> dict[str, Any]:
         """
         GOAL
         ----
         get dict with only existed values! no raise if value not exists!
         """
         result = {}
-        for key in cls.get_nested__dict_types(source):
-            if hasattr(source, key):
-                result.update({key: getattr(source, key)})
+        for key in self.get_nested__dict_types():
+            if hasattr(self.SOURCE, key):
+                result.update({key: getattr(self.SOURCE, key)})
         return result
 
-    @classmethod
-    def iter_values(cls, source: Any) -> Iterable[Any]:
-        yield from cls.get_nested__dict_values(source).values()
+    def iter_values(self) -> Iterable[Any]:
+        yield from self.get_nested__dict_values().values()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def dump_str(self) -> str:
+        """just a pretty string for debugging or research.
+        """
+        result = f"{self.SOURCE.__class__.__name__}(Annotations):"
+        annots = AnnotsAux(self).get_nested__dict_values()
+        if annots:
+            for key, value in annots.items():
+                result += f"\n\t{key}={value}"
+        else:
+            result += f"\nEmpty=Empty"
+
+        return result
+
+    def __str__(self):
+        return self.dump_str()
 
 
 # =====================================================================================================================
@@ -138,26 +149,6 @@ class AnnotsBase:
 
     def __getitem__(self, name) -> Any | NoReturn:
         return AttrAux(self).anycase__getattr(name)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def annots__print(self, source: Any = None) -> str:
-        """just a pretty print for debugging or research.
-        """
-        if source is None:
-            source = self
-
-        result = f"{source.__class__.__name__}(Annotations):"
-        annots = AnnotsAux.get_nested__dict_values(source)
-        if annots:
-            for key, value in annots.items():
-                result += f"\n\t{key}={value}"
-        else:
-            result += f"\nEmpty=Empty"
-
-        return result
-
-    def __str__(self):
-        return self.annots__print()
 
 
 # =====================================================================================================================

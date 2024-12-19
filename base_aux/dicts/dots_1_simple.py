@@ -243,7 +243,7 @@ class DictDotsAnnotRequired(DictDots, AnnotsRequired):
         # super(AnnotsRequired, self).__init__()
         # annot_types = self.annot__get_nested__dict_types()
         # print(f"{annot_types=}")
-        not_def_list = self.get_not_defined()
+        not_def_list = AnnotsAux(self).get_not_defined()
         # FIXME: here I cant handle i parent methods order! i messed out! and break it by redefine by this not ideal solvation
         # print(f"{not_def_list=}")
         if not_def_list:
