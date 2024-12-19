@@ -3,7 +3,7 @@ from .attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
-class AttrAnycase:
+class AttrAnycaseGSAI:
     def __getattr__(self, name) -> Any | NoReturn:
         return AttrAux(self).anycase__getattr(name)
 

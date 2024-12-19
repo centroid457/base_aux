@@ -6,7 +6,7 @@ from base_aux.attrs import *
 
 
 # =====================================================================================================================
-class Victim(AttrAnycase):
+class Victim(AttrAnycaseGSAI):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"

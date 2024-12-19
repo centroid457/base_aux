@@ -27,7 +27,7 @@ from .attr_1_aux import (
     AttrAuxDump,
 )
 from .attr_2_anycase import (
-    AttrAnycase,
+    AttrAnycaseGSAI,
 )
 from .attr_3_lambda_call import (
     AttrLambdaCall,
