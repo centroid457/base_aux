@@ -121,7 +121,7 @@
 0.0.16 (2024/11/14 18:40:40)
 ------------------------------
 - [gui] add SB+MENU +switch to MainWindow +add mods from t8 +add About  
-- [primitives] add SLEEP* +LambdaSleep  
+- [primitives] add Sleep* +LambdaSleep  
 
 0.0.15 (2024/11/12 18:04:29)
 ------------------------------

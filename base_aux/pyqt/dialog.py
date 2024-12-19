@@ -10,7 +10,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.base_objects import LAMBDA_TRUE, SLEEP
+from base_aux.base_objects import LAMBDA_TRUE
+from base_aux.sleep.sleep import Sleep
 
 from base_aux.pyqt.static import COLOR_TUPLE_RGB
 
@@ -813,8 +814,8 @@ INSTRUCTION_HTML = """
 
 
 def try__autoaccept():
-    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP.TRUE)
-    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=SLEEP.TRUE)
+    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=Sleep.TRUE)
+    GuiDialog().simple_1_info(INSTRUCTION_HTML, autoaccept_link=Sleep.TRUE)
 
 
 def try__GuiDialog():

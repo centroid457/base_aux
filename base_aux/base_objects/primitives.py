@@ -11,7 +11,6 @@ USEFUL IDEAS
 """
 # ---------------------------------------------------------------------------------------------------------------------
 from typing import *
-import time
 
 
 # =====================================================================================================================
@@ -133,37 +132,6 @@ def FUNC_GEN(*args, **kwargs) -> Generator:
 
 def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
     return echo
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class SLEEP:
-    @classmethod
-    def ECHO(cls, sec: float = 1, echo: Any = None, *args, **kwargs) -> Any:
-        time.sleep(sec)
-        return echo
-
-    @classmethod
-    def NONE(cls, sec: float = 1, *args, **kwargs) -> None:
-        return cls.ECHO(sec=sec, echo=None, *args, **kwargs)
-
-    @classmethod
-    def TRUE(cls, sec: float = 1, *args, **kwargs) -> bool:
-        return cls.ECHO(sec=sec, echo=True, *args, **kwargs)
-
-    @classmethod
-    def FALSE(cls, sec: float = 1, *args, **kwargs) -> bool:
-        return cls.ECHO(sec=sec, echo=False, *args, **kwargs)
-
-    @classmethod
-    def EXX(cls, sec: float = 1, *args, **kwargs) -> Exception:
-        return cls.ECHO(sec=sec, echo=Exception("SLEEP.EXX"), *args, **kwargs)
-
-    @classmethod
-    def RAISE(cls, sec: float = 1, *args, **kwargs) -> NoReturn:
-        time.sleep(sec)
-        raise Exception("SLEEP.RAISE")
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 LAMBDA = lambda *args, **kwargs: None

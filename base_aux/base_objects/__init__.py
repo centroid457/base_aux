@@ -20,7 +20,6 @@ from .obj_types import (
 from .primitives import (
     # SETS -----
     VALUES_BLANK,
-    SLEEP,
     VALUES_CALLABLE,
 
     # FUNCS ----
