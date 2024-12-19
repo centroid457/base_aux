@@ -4,7 +4,7 @@ from base_aux.lambdas.lambdas import Lambda
 
 
 # =====================================================================================================================
-class AttrLambdaCall:
+class AttrsLambdasResolve:
     """
     find and call all Lambda attrs On class inition
     GOAL

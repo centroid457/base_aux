@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 
 from base_aux.lambdas import Lambda
 from base_aux.privates import *
-from base_aux.attrs.attr_3_lambda_call import AttrLambdaCall
+from base_aux.attrs.attr_3_lambdas_resolve import AttrsLambdasResolve
 
 
 # =====================================================================================================================
@@ -37,7 +37,7 @@ class SmtpServers:
 
 
 # =====================================================================================================================
-class AlertSmtp(AttrLambdaCall, AlertBase):
+class AlertSmtp(AttrsLambdasResolve, AlertBase):
     """SMTP realisation for sending msg (email).
     """
     # SETTINGS ------------------------------------

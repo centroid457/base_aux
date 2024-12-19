@@ -17,7 +17,7 @@ class Lambda(InitArgsKwargs):
 
     GOAL
     ----
-    1. (MAIN) delay probable raising on direct func execution (used with AttrLambdaCall)
+    1. (MAIN) delay probable raising on direct func execution (used with AttrsLambdasResolve)
     like creating base_objects on Cls attributes
         class Cls:
             ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
@@ -41,13 +41,13 @@ class Lambda(InitArgsKwargs):
 
     SPECIALLY CREATED FOR
     ---------------------
-    Item for using with AttrLambdaCall
+    Item for using with AttrsLambdasResolve
 
     WHY NOT 1=simple LAMBDA?
     ------------------------
     extremely good point!
     but
-    1. in case of at least AttrLambdaCall you cant distinguish method or callable attribute!
+    1. in case of at least AttrsLambdasResolve you cant distinguish method or callable attribute!
     so you explicitly define attributes/base_objects for later constructions
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 

@@ -2,7 +2,7 @@ import time
 from typing import *
 
 from base_aux.lambdas import Lambda
-from base_aux.attrs.attr_3_lambda_call import AttrLambdaCall
+from base_aux.attrs.attr_3_lambdas_resolve import AttrsLambdasResolve
 from base_aux.privates import *
 from .base import *
 
@@ -16,7 +16,7 @@ class RecipientTgID(PrivateAuto):
 
 
 # =====================================================================================================================
-class AlertTelegram(AttrLambdaCall, AlertBase):
+class AlertTelegram(AttrsLambdasResolve, AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------

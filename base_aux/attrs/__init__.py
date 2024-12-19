@@ -25,8 +25,8 @@ from .attr_1_aux import (
 from .attr_2_anycase import (
     AttrAnycaseGSAI,
 )
-from .attr_3_lambda_call import (
-    AttrLambdaCall,
+from .attr_3_lambdas_resolve import (
+    AttrsLambdasResolve,
 )
 
 
