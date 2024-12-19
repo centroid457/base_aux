@@ -1,5 +1,5 @@
 from base_aux.base_argskwargs.argskwargs import *
-from base_aux.base_objects import TypeChecker
+from base_aux.base_objects import TypeCheck
 
 from base_aux.funcs.value_0_explicit import Default
 
@@ -55,7 +55,7 @@ def args__ensure_tuple(args: TYPE__VALID_ARGS = (), none_as_empty: bool | None =
         args = args()
 
     # ENSURE TUPLE --------------------------
-    if not TypeChecker.check__elementary_collection(args):
+    if not TypeCheck(args).check__elementary_collection():
         result = (args, )
     else:
         result = tuple(args)

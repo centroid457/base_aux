@@ -3,7 +3,7 @@ import time
 
 from base_aux.base_argskwargs.argskwargs import *
 from base_aux.base_enums.enums import When2
-from base_aux.base_objects import TypeChecker
+from base_aux.base_objects import TypeCheck
 
 from base_aux.cmp.eq import Eq
 
@@ -78,7 +78,7 @@ class Lambda(InitArgsKwargs):
         """
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        if callable(self.CONSTRUCTOR):  # callable accept all variants! TypeChecker.check__callable_func_meth_inst_cls!
+        if callable(self.CONSTRUCTOR):  # callable accept all variants! TypeCheck.check__callable_func_meth_inst_cls!
             return self.CONSTRUCTOR(*args, **kwargs)
         else:
             return self.CONSTRUCTOR
@@ -164,7 +164,7 @@ class Lambda(InitArgsKwargs):
         """
         try:
             result = Lambda(self.CONSTRUCTOR).get_result_or_raise(*args, **kwargs)
-            if TypeChecker.check__exception(result):
+            if TypeCheck(result).check__exception():
                 return False
             return bool(result)
         except:

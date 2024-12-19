@@ -22,21 +22,20 @@ class Test__ensure:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             # DEF --------------
             (None, TYPES.NONE),
-            (((None,), ), tuple),
+            ((None, ), tuple),
 
             (0, int),
-            ((0, ),int),
-            (((0,),), tuple),
+            (0,int),
+            ((0,), tuple),
 
-            (((),), tuple),
-            (([],), list),
-            (({},), dict),
-            ({1:1}, int),
-            (({1:1},), dict),
+            ((), tuple),
+            ([], list),
+            ({}, dict),
+            ({1:1}, dict),
 
             # CALLABLES --------------
             (LAMBDA_TRUE, TYPES.FUNCTION),
@@ -50,9 +49,9 @@ class Test__ensure:
             (INST_GEN, ClsGen),
         ]
     )
-    def test__ensure_class(self, args, _EXPECTED):
-        func_link = TypeEnsure.ensure__class
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    def test__ensure_class(self, source, _EXPECTED):
+        func_link = TypeCheck(source).ensure__class
+        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
 

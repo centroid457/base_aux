@@ -47,7 +47,7 @@ def pytest_func_tester(
     kwargs = kwargs or dict()
     comment = _COMMENT or ""
 
-    if TypeChecker.check__callable_func_meth_inst(func_link):
+    if TypeCheck(func_link).check__callable_func_meth_inst():
         try:
             actual_value = func_link(*args, **kwargs)
         except Exception as exx:
@@ -65,13 +65,13 @@ def pytest_func_tester(
         pytest.skip("skipIF")
 
     if _MARK == mark.xfail:
-        if TypeChecker.check__exception(_EXPECTED):
-            assert not TypeChecker.check__nested__by_cls_or_inst(actual_value, _EXPECTED), f"[xfail]{comment}"
+        if TypeCheck(_EXPECTED).check__exception():
+            assert not TypeCheck(actual_value).check__nested__by_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
         else:
             assert actual_value != _EXPECTED, f"[xfail]{comment}"
     else:
-        if TypeChecker.check__exception(_EXPECTED):
-            assert TypeChecker.check__nested__by_cls_or_inst(actual_value, _EXPECTED)
+        if TypeCheck(_EXPECTED).check__exception():
+            assert TypeCheck(actual_value).check__nested__by_cls_or_inst(_EXPECTED)
         else:
             assert actual_value == _EXPECTED
 

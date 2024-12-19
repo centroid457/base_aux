@@ -154,7 +154,7 @@ class ObjectInfo:
                 print(f"{pos}:\t{name}")
 
             # FILTER -----------------------------------------------------------------------
-            if self.HIDE_BUILD_IN and TypeChecker.check__name_is_build_in(name):
+            if self.HIDE_BUILD_IN and TypeCheck._name_is_buildin(name):
                 continue
 
             if self.NAMES__USE_ONLY_PARTS:
@@ -204,13 +204,13 @@ class ObjectInfo:
             # print(f"{name=}/{attr_obj=}/type={type(attr_obj)}/elementary={isinstance(attr_obj, TYPES.ELEMENTARY)}")
 
             # PLACE VALUE ---------------------------------------------------------------------
-            if TypeChecker.check__elementary_single(value):
+            if TypeCheck(value).check__elementary_single():
                 if attr_is_method:
                     self.ITEM.METHODS__ELEMENTARY_SINGLE.update({name: value})
                 else:
                     self.ITEM.PROPERTIES__ELEMENTARY_SINGLE.update({name: value})
 
-            elif TypeChecker.check__elementary_collection(value):
+            elif TypeCheck(value).check__elementary_collection():
                 if attr_is_method:
                     self.ITEM.METHODS__ELEMENTARY_COLLECTION.update({name: value})
                 else:
@@ -257,7 +257,7 @@ class ObjectInfo:
         block_value = f"{value}"
         if isinstance(value, ItemInternal):
             block_type = f"{value.KEY}:{value.VALUE}"
-        elif TypeChecker.check__exception(value):
+        elif TypeCheck(value).check__exception():
             block_value = f"{value!r}"
 
         # -------------------------------
@@ -270,7 +270,7 @@ class ObjectInfo:
         print(result)
 
         # -------------------------------
-        if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeChecker.check__exception(value):
+        if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeCheck(value).check__exception():
             # additional print repr()
             self._print_line__name_type_value(name=None, type_replace="__repr()", value=repr(value))
 
@@ -316,7 +316,7 @@ class ObjectInfo:
             return
 
         # COLLECTION -----------------------------------------------------------------------------
-        if TypeChecker.check__elementary_collection(value):
+        if TypeCheck(value).check__elementary_collection():
             # start some pretty style -------------------------------------
             if not isinstance(value, dict):
                 _index = 0
@@ -338,9 +338,9 @@ class ObjectInfo:
 
         # SINGLE/EXX/OBJECTS ---------------------------------------------------------------------
         if any([
-            TypeChecker.check__elementary_single(value),
-            TypeChecker.check__exception(value),
-            TypeChecker.check__instance(value),
+            TypeCheck(value).check__elementary_single(),
+            TypeCheck(value).check__exception(),
+            TypeCheck(value).check__instance(),
         ]):
             pass    # DONT USE RETURN HERE OR ELIF IN NEXT LINE!!!
 
@@ -358,7 +358,7 @@ class ObjectInfo:
         for group_name, group_values in self.ITEM.__getstate__().items():
             self._print_line__group_separator(group_name)
 
-            if TypeChecker.check__elementary_collection_not_dict(group_values):
+            if TypeCheck(group_values).check__elementary_collection_not_dict():
                 for pos, name in enumerate(group_values, start=1):
                     print(f"{pos}:\t{name}")
             else:

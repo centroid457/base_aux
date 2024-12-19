@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.base_objects import TypeChecker
+from base_aux.base_objects import TypeCheck
 
 
 # =====================================================================================================================
@@ -40,11 +40,11 @@ class Eq:
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
-        if TypeChecker.check__exception(obj1):
-            if TypeChecker.check__nested__by_cls_or_inst(obj2, obj1):
+        if TypeCheck(obj1).check__exception():
+            if TypeCheck(obj2).check__nested__by_cls_or_inst(obj1):
                 return True
-        elif TypeChecker.check__exception(obj2):
-            if TypeChecker.check__nested__by_cls_or_inst(obj1, obj2):
+        elif TypeCheck(obj2).check__exception():
+            if TypeCheck(obj1).check__nested__by_cls_or_inst(obj2):
                 return True
 
         try:
@@ -53,7 +53,7 @@ class Eq:
                 return True
         except Exception as exx:
             result12 = exx
-            # if TypeChecker.check__exception(obj2) and TypeChecker.check__nested__by_cls_or_inst(result12, obj2):
+            # if TypeCheck(obj2).check__exception() and TypeCheck(result12).check__nested__by_cls_or_inst(obj2):
             #     return True
 
         try:
@@ -62,7 +62,7 @@ class Eq:
                 return True
         except Exception as exx:
             result21 = exx
-            # if TypeChecker.check__exception(obj1) and TypeChecker.check__nested__by_cls_or_inst(result21, obj1):
+            # if TypeCheck.check__exception(obj1) and TypeCheck.check__nested__by_cls_or_inst(result21, obj1):
             #     return True
 
         try:

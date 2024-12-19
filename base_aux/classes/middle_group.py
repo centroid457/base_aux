@@ -163,10 +163,10 @@ class ClsMiddleGroup:
         """
         middle groups could be cmp only by this method!
         """
-        if not TypeChecker.check__nested__by_cls_or_inst(other, ClsMiddleGroup):
+        if not TypeCheck(other).check__nested__by_cls_or_inst(ClsMiddleGroup):
             return
 
-        other = TypeEnsure.ensure__class(other)
+        other = TypeCheck(other).ensure__class()
 
         # in case of used only empty base MiddleGroup and no any Group configured!
         if cls.MIDDLE_GROUP__NAME == other.MIDDLE_GROUP__NAME == cls.MIDDLE_GROUP__CMP_ATTR == other.MIDDLE_GROUP__CMP_ATTR is None:

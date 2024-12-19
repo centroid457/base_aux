@@ -162,7 +162,7 @@ class ReqCheckStr_Base(metaclass=_GetattrClassmethod_Meta):
             msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
-        if TypeChecker.check__callable_func_meth_inst(cls._GETTER):
+        if TypeCheck(cls._GETTER).check__callable_func_meth_inst():
             try:
                 cls._value_actual = str(cls._GETTER()).lower()
             except Exception as exx:

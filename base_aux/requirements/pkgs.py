@@ -3,7 +3,7 @@ import pathlib
 import re
 import sys
 
-from base_aux.base_objects import TypeChecker
+from base_aux.base_objects import TypeCheck
 from base_aux.cli.user import CliUser
 from base_aux.classes.text import Text
 
@@ -579,7 +579,7 @@ self.last_exx_timeout=None
         get only root names (no parts like pkg.module)
         """
         # SINGLE -------------
-        if not TypeChecker.check__iterable_not_str(patterns):
+        if not TypeCheck(patterns).check__iterable_not_str():
             patterns = [patterns, ]
 
         # ITERABLE -------------
@@ -610,7 +610,7 @@ self.last_exx_timeout=None
         ----
         find values by patterns in files
         """
-        if not TypeChecker.check__iterable_not_str(patterns):
+        if not TypeCheck(patterns).check__iterable_not_str():
             patterns = [patterns, ]
 
         # PATH -------------------
@@ -622,7 +622,7 @@ self.last_exx_timeout=None
         # skip_paths -------------------
         if skip_paths is None:
             skip_paths = []
-        if not TypeChecker.check__iterable_not_str(skip_paths):
+        if not TypeCheck(skip_paths).check__iterable_not_str():
             skip_paths = [skip_paths, ]
 
         for skip_path in skip_paths:

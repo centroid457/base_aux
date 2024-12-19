@@ -68,7 +68,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
         _reverse = _reverse or False
         result = Lambda(source).get_result_or_exx()
-        if TypeChecker.check__exception(result) or bool(result) != bool(_reverse):
+        if TypeCheck(result).check__exception() or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 
     def raise_if_not__(self, source: Any, comment: str = "") -> None | NoReturn:

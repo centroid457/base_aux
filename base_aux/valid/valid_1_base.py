@@ -214,13 +214,13 @@ class Valid:
                 self.value_last = Lambda(value_link).get_result_or_exx(*self.ARGS__VALUE, **self.KWARGS__VALUE)
 
                 # VALIDATE ------------------
-                if isinstance(self.value_last, Exception) and not TypeChecker.check__exception(self.VALIDATE_LINK):
+                if isinstance(self.value_last, Exception) and not TypeCheck(self.VALIDATE_LINK).check__exception():
                     self.validate_last = False
 
-                elif TypeChecker.check__exception(self.VALIDATE_LINK):
-                    self.validate_last = TypeChecker.check__nested__by_cls_or_inst(self.value_last, self.VALIDATE_LINK)
+                elif TypeCheck(self.VALIDATE_LINK).check__exception():
+                    self.validate_last = TypeCheck(self.value_last).check__nested__by_cls_or_inst(self.VALIDATE_LINK)
 
-                elif TypeChecker.check__callable_func_meth_inst(self.VALIDATE_LINK):
+                elif TypeCheck(self.VALIDATE_LINK).check__callable_func_meth_inst():
                     self.validate_last = Lambda(self.VALIDATE_LINK).get_result_or_exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
 
                 else:

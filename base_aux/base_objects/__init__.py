@@ -13,9 +13,7 @@ from .info import (
 )
 from .obj_types import (
     TYPES,
-
-    TypeChecker,
-    TypeEnsure,
+    TypeCheck,
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
