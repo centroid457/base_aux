@@ -8,6 +8,11 @@ from base_aux.lambdas.lambdas import Lambda
 
 
 # =====================================================================================================================
+# FIXME: rebuild to separated special class RaiseIfPositive
+#   by now it seems to sophisticated!
+
+
+# =====================================================================================================================
 class GetattrPrefixInst:
     """
     this is just a Base!
