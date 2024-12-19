@@ -5,7 +5,18 @@ from base_aux.base_enums import CallablesUse
 
 
 # =====================================================================================================================
-class AttrAuxIter(Source):
+@final
+class AttrAux(Source):
+    """
+    NOTICE
+    ------
+    if there are several same attrs in different cases - you should resolve it by yourself!
+    """
+
+    # =================================================================================================================
+    pass
+
+    # ITER ------------------------------------------------------------------------------------------------------------
     def iter__not_private(self) -> Iterable[str]:
         for name in dir(self.SOURCE):
             if not name.startswith("__"):
@@ -16,14 +27,9 @@ class AttrAuxIter(Source):
             if not name.startswith("_"):
                 yield name
 
+    # =================================================================================================================
+    pass
 
-# =====================================================================================================================
-class AttrAuxAnycase(Source):
-    """
-    NOTICE
-    ------
-    if there are several same attrs in different cases - you should resolve it by yourself!
-    """
     # NAME ------------------------------------------------------------------------------------------------------------
     def anycase__find(self, name: str) -> str | None:
         """
@@ -33,7 +39,7 @@ class AttrAuxAnycase(Source):
             return
 
         name = str(name).strip()
-        for name_original in AttrAuxIter(self.SOURCE).iter__not_private():
+        for name_original in self.iter__not_private():
             if name_original.lower() == name.lower():
                 return name_original
 
@@ -82,10 +88,11 @@ class AttrAuxAnycase(Source):
     def anycase__setitem(self, name: str, value: Any) -> None | NoReturn:
         self.anycase__setattr(name, value)
 
+    # =================================================================================================================
+    pass
 
-# =====================================================================================================================
-class AttrAuxDump(Source):
-    def to_dict(self, callables_do: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception]:
+    # DUMP ------------------------------------------------------------------------------------------------------------
+    def dump_dict(self, callables_do: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception]:
         """
         GOAL
         ____
@@ -96,7 +103,7 @@ class AttrAuxDump(Source):
         using any object as rules for Translator
         """
         result = {}
-        for name in AttrAuxIter(self.SOURCE).iter__not_hidden():
+        for name in self.iter__not_hidden():
             if callables_do == CallablesUse.SKIP and LambdaTrySuccess(getattr, self.SOURCE, name) and callable(getattr(self.SOURCE, name)):
                 continue
 
@@ -108,17 +115,11 @@ class AttrAuxDump(Source):
 
         return result
 
-    def to_dict__callables_skip(self) -> dict[str, Any]:
-        return self.to_dict(CallablesUse.SKIP)
+    def dump_dict__callables_skip(self) -> dict[str, Any]:
+        return self.dump_dict(CallablesUse.SKIP)
 
-    def to_dict__callables_resolve(self) -> dict[str, Any]:
-        return self.to_dict(CallablesUse.RESOLVE_EXX)
-
-
-# =====================================================================================================================
-@final
-class AttrAux(AttrAuxIter, AttrAuxAnycase, AttrAuxDump):
-    pass
+    def dump_dict__callables_resolve(self) -> dict[str, Any]:
+        return self.dump_dict(CallablesUse.RESOLVE_EXX)
 
 
 # =====================================================================================================================

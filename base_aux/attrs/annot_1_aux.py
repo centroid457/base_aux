@@ -48,12 +48,13 @@ class AnnotsAux(Source):
         annot__check_all_defined
         """
         result = []
-        nested = self.get_nested__dict_types()
+        nested = self.dump__dict_types()
         for key in nested:
             if not AttrAux(self.SOURCE).anycase__check_exists(key):
                 result.append(key)
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
     def check_all_defined(self) -> bool:
         """
         GOAL
@@ -70,12 +71,12 @@ class AnnotsAux(Source):
         """
         not_defined = self.get_not_defined()
         if not_defined:
-            dict_type = self.get_nested__dict_types()
+            dict_type = self.dump__dict_types()
             msg = f"[CRITICAL]{not_defined=} in {dict_type}"
             raise Exx__AnnotNotDefined(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get_nested__dict_types(self) -> dict[str, type[Any]]:
+    def dump__dict_types(self) -> dict[str, type[Any]]:
         """
         GOAL
         ----
@@ -110,27 +111,31 @@ class AnnotsAux(Source):
             result = _result_i
         return result
 
-    def get_nested__dict_values(self) -> dict[str, Any]:
+    def dump__dict_values(self) -> dict[str, Any]:
         """
         GOAL
         ----
         get dict with only existed values! no raise if value not exists!
         """
         result = {}
-        for key in self.get_nested__dict_types():
+        for key in self.dump__dict_types():
             if hasattr(self.SOURCE, key):
                 result.update({key: getattr(self.SOURCE, key)})
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
     def iter_values(self) -> Iterable[Any]:
-        yield from self.get_nested__dict_values().values()
+        yield from self.dump__dict_values().values()
+
+    def iter_names(self) -> Iterable[Any]:
+        yield from self.dump__dict_values()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_str(self) -> str:
+    def dump__pretty_str(self) -> str:
         """just a pretty string for debugging or research.
         """
         result = f"{self.SOURCE.__class__.__name__}(Annotations):"
-        annots = self.get_nested__dict_values()
+        annots = self.dump__dict_values()
         if annots:
             for key, value in annots.items():
                 result += f"\n\t{key}={value}"
@@ -140,7 +145,7 @@ class AnnotsAux(Source):
         return result
 
     def __str__(self):
-        return self.dump_str()
+        return self.dump__pretty_str()
 
 
 # =====================================================================================================================

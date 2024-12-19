@@ -167,7 +167,7 @@ class Test__Cmp:
         ]
     )
     def test__dict_types(self, source, _EXPECTED):
-        func_link = AnnotsAux(source).get_nested__dict_types
+        func_link = AnnotsAux(source).dump__dict_types
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # =================================================================================================================
@@ -179,7 +179,7 @@ class Test__Cmp:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = AnnotsAux(source).get_nested__dict_values
+        func_link = AnnotsAux(source).dump__dict_values
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # =================================================================================================================
@@ -241,8 +241,8 @@ class Test__NamedTuple:
 
         assert AnnotsAux(victimNT).get_not_defined() == ["ATTR1", ]
         assert AnnotsAux(victimNT).check_all_defined() == False
-        assert AnnotsAux(victimNT).get_nested__dict_types() == {"ATTR1": int, }
-        assert AnnotsAux(victimNT).get_nested__dict_values() == {"ATTR1": 1, }
+        assert AnnotsAux(victimNT).dump__dict_types() == {"ATTR1": int, }
+        assert AnnotsAux(victimNT).dump__dict_values() == {"ATTR1": 1, }
 
 
 # =====================================================================================================================

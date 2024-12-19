@@ -25,7 +25,7 @@ class Translator:
             self.RETURN_SOURCE_IF_NOT_FOUND = return_source_if_not_found
 
         if not isinstance(self.RULES, dict):
-            self.RULES = AttrAux(self.RULES).to_dict()
+            self.RULES = AttrAux(self.RULES).dump_dict()
 
     def __call__(self, source: Any, *args, **kwargs) -> Any | type[NoValue]:
         """
