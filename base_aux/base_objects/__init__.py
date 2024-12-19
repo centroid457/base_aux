@@ -19,9 +19,9 @@ from .obj_types import (
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
     # SETS -----
-    BLANK,
+    VALUES_BLANK,
     SLEEP,
-    CALLABLE,
+    VALUES_CALLABLE,
 
     # FUNCS ----
     GEN_COMPR,
