@@ -17,7 +17,7 @@ from .annot_4_cls_keys_as_values import (
 
 # =====================================================================================================================
 from .attr_0_init_kwargs import (
-    AttrInitKwargs,
+    AttrsInitKwargs,
 )
 from .attr_1_aux import (
     AttrAux,

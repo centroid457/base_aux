@@ -6,7 +6,7 @@ from base_aux.base_enums import CallablesUse
 
 # =====================================================================================================================
 @final
-class AttrAux(Source):
+class AttrAux(InitSource):
     """
     NOTICE
     ------

@@ -13,7 +13,7 @@ from .argskwargs import (
     TYPE__LAMBDA_KWARGS,
     TYPE__LAMBDA_CONSTRUCTOR,
 
-    ArgsKwargs,
+    InitArgsKwargs,
     Args,
     Kwargs,
 

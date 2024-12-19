@@ -72,7 +72,7 @@
 
 0.0.26 (2024/11/29 14:12:13)
 ------------------------------
-- [classes] add AttrInitKwargs+Translator  
+- [classes] add AttrsInitKwargs+Translator  
 - [AttrAux] add attrs__to_dict  
 - [gui] apply Translator for headers[gui] fix columns resizeByContents  
 
@@ -95,7 +95,7 @@
 
 0.0.22 (2024/11/20 17:28:32)
 ------------------------------
-- [Lambdas] add ArgsKwargs  
+- [Lambdas] add InitArgsKwargs  
 
 0.0.21 (2024/11/20 13:49:46)
 ------------------------------

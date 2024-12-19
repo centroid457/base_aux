@@ -9,7 +9,7 @@ TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 
 # =====================================================================================================================
-class ArgsKwargs:
+class InitArgsKwargs:
     """
     GOAL
     ----
@@ -24,8 +24,8 @@ class ArgsKwargs:
     BEST PRACTICE
     -------------
     for item, expect in [
-        (ArgsKwargs("get name"), "ATC"),
-        (ArgsKwargs("test gnd", _timeout=5), "PASS"),
+        (InitArgsKwargs("get name"), "ATC"),
+        (InitArgsKwargs("test gnd", _timeout=5), "PASS"),
     ]:
         assert serialDevice.send(*item.ARGS, **item.KWARGS) == expect
 
@@ -33,7 +33,7 @@ class ArgsKwargs:
     ----------------------------------------------------------------------
     and use then (*victim, **victim)
     NO - there are no __dict like dander method!
-    but we can use ArgsKwargs(dict)!? - yes but it add all other methods!
+    but we can use InitArgsKwargs(dict)!? - yes but it add all other methods!
         class Cls(dict):
             ARGS: tuple[Any, ...]
             KWARGS: dict[str, Any]
@@ -64,7 +64,7 @@ class ArgsKwargs:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Args(ArgsKwargs):
+class Args(InitArgsKwargs):
     """
     just a derivative to clearly show only Args is important
     """
@@ -79,7 +79,7 @@ class Args(ArgsKwargs):
     # NOTE: dont use any danders! its too complicated! be simple and get access to self.ARGS!
 
 
-class Kwargs(ArgsKwargs):
+class Kwargs(InitArgsKwargs):
     """
     just a derivative to clearly show only KwArgs is important
     """
@@ -96,8 +96,8 @@ class Kwargs(ArgsKwargs):
 
 # =====================================================================================================================
 # SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
-TYPE__VALID_ARGS = Union[NoValue, Any, tuple, "TYPE__EXPLICIT", ArgsKwargs, Args]   # dont use None! use clear Args()/NoValue
-TYPE__VALID_KWARGS = Union[NoValue, dict[str, Any], ArgsKwargs, Kwargs]             # dont use None! use clear Kwargs()/NoValue
+TYPE__VALID_ARGS = Union[NoValue, Any, tuple, "TYPE__EXPLICIT", InitArgsKwargs, Args]   # dont use None! use clear Args()/NoValue
+TYPE__VALID_KWARGS = Union[NoValue, dict[str, Any], InitArgsKwargs, Kwargs]             # dont use None! use clear Kwargs()/NoValue
 
 
 # =====================================================================================================================

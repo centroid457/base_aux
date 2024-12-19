@@ -9,7 +9,7 @@ from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
-class Lambda(ArgsKwargs):
+class Lambda(InitArgsKwargs):
     """
     IDEA
     ----

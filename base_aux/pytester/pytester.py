@@ -33,9 +33,9 @@ def pytest_func_tester(
 
     TODO: apply Valid or merge them into single one!
     """
-    if isinstance(args, ArgsKwargs):
+    if isinstance(args, InitArgsKwargs):
         args = args.ARGS
-    if isinstance(kwargs, ArgsKwargs):
+    if isinstance(kwargs, InitArgsKwargs):
         kwargs = kwargs.KWARGS
 
     if isinstance(args, NoValue):

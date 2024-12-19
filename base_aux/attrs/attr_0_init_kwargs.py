@@ -2,7 +2,7 @@ from typing import *
 
 
 # =====================================================================================================================
-class AttrInitKwargs:
+class AttrsInitKwargs:
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         for name, value in kwargs.items():

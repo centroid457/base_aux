@@ -9,7 +9,7 @@ from .attr_1_aux import AttrAux
 
 # =====================================================================================================================
 @final
-class AnnotsAux(Source):
+class AnnotsAux(InitSource):
     """
     GOAL
     ----
