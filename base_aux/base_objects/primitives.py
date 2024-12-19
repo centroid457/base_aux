@@ -14,24 +14,58 @@ from typing import *
 
 
 # =====================================================================================================================
-@final
-class VALUES_BLANK:
-    """
-    GOAL
-    ----
-    keep all variants in one object with ability to iterate in bunch checks!
-    """
+class VALUES_BLANK__ELEMENTARY_SINGLE:
     NONE: None = None
     BOOL: bool = False
     INT: int = 0
     FLOAT: float = 0.0
     STR: str = ""         # that is why i create all others BLANKS_*
     BYTES: bytes = b""
+
+
+class VALUES_BLANK__ELEMENTARY_COLLECTION:
     LIST: list = []
     TUPLE: tuple = ()
     DICT: dict = {}
     SET: set = set()
     GEN = range(0)
+
+
+@final
+class VALUES_BLANK(VALUES_BLANK__ELEMENTARY_SINGLE, VALUES_BLANK__ELEMENTARY_COLLECTION):
+    """
+    GOAL
+    ----
+    keep all variants in one object with ability to iterate in bunch checks!
+    """
+    pass
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class VALUES_NOT_BLANK__ELEMENTARY_SINGLE:
+    # NONE: None = None
+    BOOL: bool = True
+    INT: int = 1
+    FLOAT: float = 1.2
+    STR: str = "str"         # that is why i create all others BLANKS_*
+    BYTES: bytes = b"bytes"
+
+
+class VALUES__ELEMENTARY_SINGLE(VALUES_NOT_BLANK__ELEMENTARY_SINGLE):
+    NONE: None = None
+
+
+class VALUES_NOT_BLANK__ELEMENTARY_COLLECTION:
+    LIST: list = [1, 2, ]
+    TUPLE: tuple = (1, 2, )
+    DICT: dict = {1: 11}
+    SET: set = (1, 2, )
+    GEN = range(3)
+
+
+@final
+class VALUES_NOT_BLANK(VALUES_NOT_BLANK__ELEMENTARY_SINGLE, VALUES_NOT_BLANK__ELEMENTARY_COLLECTION):
+    pass
 
 
 # =====================================================================================================================
@@ -190,6 +224,8 @@ class ClsSet(set):
 
 class ClsDict(dict):
     pass
+
+
 
 
 # =====================================================================================================================
