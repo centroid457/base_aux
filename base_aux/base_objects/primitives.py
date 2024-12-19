@@ -226,6 +226,7 @@ class ClsDict(dict):
     pass
 
 
+CLASSES__AS_FUNC: tuple[type, ...] = (ClsInt, ClsFloat, ClsStr, ClsList, ClsTuple, ClsSet, ClsDict, )   # actually this is keep all buildIn
 
 
 # =====================================================================================================================

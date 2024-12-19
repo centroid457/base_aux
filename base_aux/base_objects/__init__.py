@@ -62,6 +62,8 @@ from .primitives import (
     ClsSet,
     ClsDict,
 
+    CLASSES__AS_FUNC,
+
     ClsInitArgsKwargs,
     ClsInitRaise,
 
