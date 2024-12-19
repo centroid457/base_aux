@@ -121,5 +121,20 @@ class AttrAux(InitSource):
     def dump_dict__callables_resolve(self) -> dict[str, Any]:
         return self.dump_dict(CallablesUse.RESOLVE_EXX)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def dump__pretty_str(self) -> str:
+        result = f"{self.SOURCE.__class__.__name__}(Attributes):"
+        data = self.dump_dict__callables_resolve()
+        if data:
+            for key, value in data.items():
+                result += f"\n\t{key}={value}"
+        else:
+            result += f"\nEmpty=Empty"
+
+        return result
+
+    def __str__(self):
+        return self.dump__pretty_str()
+
 
 # =====================================================================================================================
