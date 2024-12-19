@@ -7,20 +7,20 @@ from base_aux.attrs import *
 
 # =====================================================================================================================
 def test__GetattrEcho():
-    assert GetattrEcho.hello == "hello"
-    assert GetattrEcho.Hello == "Hello"
-    assert GetattrEcho.ПРИВЕТ == "ПРИВЕТ"
+    assert GetattrClsEcho.hello == "hello"
+    assert GetattrClsEcho.Hello == "Hello"
+    assert GetattrClsEcho.ПРИВЕТ == "ПРИВЕТ"
 
-    assert GetattrEcho.hello_world == "hello_world"
+    assert GetattrClsEcho.hello_world == "hello_world"
 
 
 def test__GetattrEchoSpace():
-    assert GetattrEchoSpace.hello == "hello"
-    assert GetattrEchoSpace.Hello == "Hello"
-    assert GetattrEchoSpace.ПРИВЕТ == "ПРИВЕТ"
+    assert GetattrClsEchoSpace.hello == "hello"
+    assert GetattrClsEchoSpace.Hello == "Hello"
+    assert GetattrClsEchoSpace.ПРИВЕТ == "ПРИВЕТ"
 
-    assert GetattrEchoSpace.hello_world == "hello world"
-    assert GetattrEchoSpace.hello__world == "hello  world"
+    assert GetattrClsEchoSpace.hello_world == "hello world"
+    assert GetattrClsEchoSpace.hello__world == "hello  world"
 
 
 # =====================================================================================================================

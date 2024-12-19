@@ -2,7 +2,7 @@ from typing import *
 
 
 # =====================================================================================================================
-class GetattrCls_Meta__Echo(type):
+class GetattrClsEcho_Meta(type):
     """
     GOAL
     ----
@@ -10,7 +10,7 @@ class GetattrCls_Meta__Echo(type):
 
     CREATED SPECIALLY FOR
     ---------------------
-    here is GetattrEcho
+    here is GetattrClsEcho
     """
     def __getattr__(cls, item: str) -> str:
         """if no exists attr/meth
@@ -21,7 +21,7 @@ class GetattrCls_Meta__Echo(type):
 
 
 # =====================================================================================================================
-class GetattrEcho(metaclass=GetattrCls_Meta__Echo):
+class GetattrClsEcho(metaclass=GetattrClsEcho_Meta):
     """
     GOAL
     ----
@@ -42,18 +42,18 @@ class GetattrEcho(metaclass=GetattrCls_Meta__Echo):
 
     BEST USAGE
     ----------
-    assert GetattrEcho.hello == "hello"
-    assert GetattrEcho.hello_world == "hello_world"
-    print(GetattrEcho.Hello)   # "Hello"
+    assert GetattrClsEcho.hello == "hello"
+    assert GetattrClsEcho.hello_world == "hello_world"
+    print(GetattrClsEcho.Hello)   # "Hello"
     """
     _UNDERSCORE_AS_SPACE: bool | None = None
 
 
-class GetattrEchoSpace(GetattrEcho):
+class GetattrClsEchoSpace(GetattrClsEcho):
     """
     GOAL
     ----
-    SAME AS: base parent class GetattrEcho! see all there!
+    SAME AS: base parent class GetattrClsEcho! see all there!
     DIFFERENCE: just replaced all UNDERSCORE-signs by Space!
     """
     _UNDERSCORE_AS_SPACE = True

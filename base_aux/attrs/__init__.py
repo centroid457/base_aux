@@ -32,8 +32,8 @@ from .attr_3_lambdas_resolve import (
 
 # =====================================================================================================================
 from .getattr_0_echo import (
-    GetattrEcho,
-    GetattrEchoSpace,
+    GetattrClsEcho,
+    GetattrClsEchoSpace,
 )
 from .getattr_1_prefix_1_inst import (
     GetattrPrefixInst,
