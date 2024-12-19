@@ -10,6 +10,32 @@ from .attr_1_aux import AttrAux
 # =====================================================================================================================
 @final
 class AnnotsAux(Source):
+    """
+    GOAL
+    ----
+    work with all __annotations__
+        from all nested classes
+        in correct order
+
+    RULES
+    -----
+    4. nesting available with correct order!
+        class ClsFirst(BreederStrStack):
+            atr1: int
+            atr3: int = None
+
+        class ClsLast(BreederStrStack):
+            atr2: int = None
+            atr4: int
+
+        for key, value in ClsLast.annotations__get_nested().items():
+            print(f"{key}:{value}")
+
+        # atr1:<class 'int'>
+        # atr3:<class 'int'>
+        # atr2:<class 'int'>
+        # atr4:<class 'int'>
+    """
     # -----------------------------------------------------------------------------------------------------------------
     def get_not_defined(self) -> list[str]:
         """
@@ -104,7 +130,7 @@ class AnnotsAux(Source):
         """just a pretty string for debugging or research.
         """
         result = f"{self.SOURCE.__class__.__name__}(Annotations):"
-        annots = AnnotsAux(self).get_nested__dict_values()
+        annots = self.get_nested__dict_values()
         if annots:
             for key, value in annots.items():
                 result += f"\n\t{key}={value}"
@@ -119,30 +145,6 @@ class AnnotsAux(Source):
 
 # =====================================================================================================================
 class AnnotsBase:
-    """
-    access to all __annotations__
-        from all nested classes
-        in correct order
-
-    RULES
-    -----
-    4. nesting available with correct order!
-        class ClsFirst(BreederStrStack):
-            atr1: int
-            atr3: int = None
-
-        class ClsLast(BreederStrStack):
-            atr2: int = None
-            atr4: int
-
-        for key, value in ClsLast.annotations__get_nested().items():
-            print(f"{key}:{value}")
-
-        # atr1:<class 'int'>
-        # atr3:<class 'int'>
-        # atr2:<class 'int'>
-        # atr4:<class 'int'>
-    """
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, name) -> Any | NoReturn:
         return AttrAux(self).anycase__getattr(name)
