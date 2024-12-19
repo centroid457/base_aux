@@ -81,12 +81,22 @@ class AttrAux(InitSource):
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
 
+    def anycase__delattr(self, name: str) -> None:
+        name_original = self.anycase__find(name)
+        if name_original is None:
+            return      # already not exists
+
+        delattr(self.SOURCE, name_original)
+
     # ITEM ------------------------------------------------------------------------------------------------------------
     def anycase__getitem(self, name: str) -> Any | Callable | NoReturn:
         return self.anycase__getattr(name)
 
     def anycase__setitem(self, name: str, value: Any) -> None | NoReturn:
         self.anycase__setattr(name, value)
+
+    def anycase__delitem(self, name: str) -> None:
+        self.anycase__delattr(name)
 
     # =================================================================================================================
     pass
