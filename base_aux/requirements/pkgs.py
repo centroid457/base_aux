@@ -5,7 +5,7 @@ import sys
 
 from base_aux.base_objects import TypeCheck
 from base_aux.cli.user import CliUser
-from base_aux.classes.text import Text
+from base_aux.text.text import Text
 
 from .versions import Version
 
