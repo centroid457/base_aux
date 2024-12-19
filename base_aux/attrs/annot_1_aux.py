@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_exceptions import Exx__AnnotNotDefined
-from base_aux.base_objects.obj_types import TYPES
+from base_aux.base_objects.obj_types import TYPES, TypeEnsure
 from base_aux.base_source import *
 
 from .attr_1_aux import AttrAux
@@ -87,10 +87,8 @@ class AnnotsAux(InitSource):
         keys - all attr names (defined and not)
         values - Types!!! not instances!!!
         """
-        try:
-            mro = self.SOURCE.__mro__
-        except:
-            mro = self.SOURCE.__class__.__mro__
+        cls = TypeEnsure.ensure__class(self.SOURCE)
+        mro = cls.__mro__
 
         if not mro:
             """
