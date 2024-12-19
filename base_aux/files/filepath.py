@@ -6,7 +6,7 @@ from base_aux.base_resolver import *
 
 
 # =====================================================================================================================
-class FilePath(Resolver):
+class ResolveFilePath(Resolver):
     """
     GOAL
     ----

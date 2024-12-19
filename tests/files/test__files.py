@@ -16,7 +16,7 @@ CWD = pathlib.Path().cwd()
 # )
 
 def test__name():
-    victim = FilePath(name="name")
+    victim = ResolveFilePath(name="name")
     assert victim.NAME == "name"
     assert victim.EXT == None
     assert victim.NAMEEXT == "name"
@@ -24,7 +24,7 @@ def test__name():
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
 def test__name_ext():
-    victim = FilePath(name="name", ext="ext")
+    victim = ResolveFilePath(name="name", ext="ext")
     assert victim.NAME == "name"
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == "name.ext"
@@ -32,28 +32,28 @@ def test__name_ext():
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
 def test__nameext():
-    victim = FilePath(nameext="name.ext")
+    victim = ResolveFilePath(nameext="name.ext")
     assert victim.NAME == "name"
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == "name.ext"
     assert victim.DIRPATH == CWD
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
-    victim = FilePath(nameext="name")
+    victim = ResolveFilePath(nameext="name")
     assert victim.NAME == "name"
     assert victim.EXT == None
     assert victim.NAMEEXT == "name"
     assert victim.DIRPATH == CWD
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
-    victim = FilePath(nameext="name.")
+    victim = ResolveFilePath(nameext="name.")
     assert victim.NAME == "name"
     assert victim.EXT == ""
     assert victim.NAMEEXT == "name."
     assert victim.DIRPATH == CWD
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
-    victim = FilePath(nameext=".ext")
+    victim = ResolveFilePath(nameext=".ext")
     assert victim.NAME == ""
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == ".ext"
@@ -61,7 +61,7 @@ def test__nameext():
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
 def test__ext():
-    victim = FilePath(ext="ext")
+    victim = ResolveFilePath(ext="ext")
     assert victim.NAME == None
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == ".ext"
@@ -70,21 +70,21 @@ def test__ext():
 
 
 def test__filepath():
-    victim = FilePath(filepath=CWD.joinpath("name.ext"))
+    victim = ResolveFilePath(filepath=CWD.joinpath("name.ext"))
     assert victim.NAME == "name"
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == "name.ext"
     assert victim.DIRPATH == CWD
     assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
-    victim = FilePath(name="name2", filepath=CWD.joinpath("name.ext"))
+    victim = ResolveFilePath(name="name2", filepath=CWD.joinpath("name.ext"))
     assert victim.NAME == "name2"
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == "name2.ext"
     assert victim.DIRPATH == CWD
     assert victim.FILEPATH == CWD.joinpath("name2.ext")
 
-    victim = FilePath(filepath=CWD.joinpath("path1", "name.ext"))
+    victim = ResolveFilePath(filepath=CWD.joinpath("path1", "name.ext"))
     assert victim.NAME == "name"
     assert victim.EXT == "ext"
     assert victim.NAMEEXT == "name.ext"
