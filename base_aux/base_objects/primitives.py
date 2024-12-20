@@ -159,7 +159,7 @@ def FUNC_DICT(*args, **kwargs) -> dict[Any, Any | None]:
     return result
 
 
-def FUNC_EXX(*args, **kwargs) -> NoReturn:
+def FUNC_EXX(*args, **kwargs) -> Exception:
     return Exception("FUNC_EXX")
 
 
@@ -326,9 +326,9 @@ INST_CALL_RAISE = ClsCallRaise()
 
 
 class ClsCallExx:
-    def __call__(self, *args, **kwargs) -> NoReturn:
-        raise Exception("ClsCallRaise")
-INST_CALL_EXX = ClsCallRaise()
+    def __call__(self, *args, **kwargs) -> Exception:
+        return Exception("ClsCallExx")
+INST_CALL_EXX = ClsCallExx()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
