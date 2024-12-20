@@ -18,6 +18,12 @@ from .obj_types import (
 
 # ---------------------------------------------------------------------------------------------------------------------
 from .primitives import (
+    # RANGES ---
+    RANGE0,
+    RANGE1,
+    RANGE2,
+    RANGE3,
+
     # SETS -----
     VALUES_BLANK,
     VALUES_BLANK__ELEMENTARY_SINGLE,

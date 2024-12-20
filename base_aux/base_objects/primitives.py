@@ -9,8 +9,15 @@ USEFUL IDEAS
 - could be clearly used in docstrings without needless defining
     assert get_bool(LAMBDA_EXX) is False
 """
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 from typing import *
+
+
+# =====================================================================================================================
+RANGE0: Iterable[int] = range(0)
+RANGE1: Iterable[int] = range(1)
+RANGE2: Iterable[int] = range(2)
+RANGE3: Iterable[int] = range(3)
 
 
 # =====================================================================================================================
@@ -28,7 +35,7 @@ class VALUES_BLANK__ELEMENTARY_COLLECTION:
     TUPLE: tuple = ()
     DICT: dict = {}
     SET: set = set()
-    GEN = range(0)
+    RANGE: Iterable = RANGE0
 
 
 @final
@@ -60,7 +67,7 @@ class VALUES_NOT_BLANK__ELEMENTARY_COLLECTION:
     TUPLE: tuple = (1, 2, )
     DICT: dict = {1: 11}
     SET: set = (1, 2, )
-    GEN = range(3)
+    RANGE: Iterable = RANGE1
 
 
 @final
@@ -69,7 +76,7 @@ class VALUES_NOT_BLANK(VALUES_NOT_BLANK__ELEMENTARY_SINGLE, VALUES_NOT_BLANK__EL
 
 
 # =====================================================================================================================
-GEN_COMPR = (i for i in range(3))
+GEN_COMPR: Iterable = (i for i in range(3))
 
 
 # ---------------------------------------------------------------------------------------------------------------------
