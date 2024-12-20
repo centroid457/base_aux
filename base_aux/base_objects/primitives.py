@@ -174,21 +174,37 @@ def FUNC_GEN(*args, **kwargs) -> Generator:
 def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
     return echo
 
+
+# =====================================================================================================================
+LAMBDA_ARGS: Callable[..., tuple[Any, ...]] = lambda *args: args        # used as resolve ARGS
+LAMBDA_KWARGS: Callable[..., dict[str, Any]] = lambda **kwargs: kwargs  # used as resolve KWARGS
+"""
+GOAL
+----
+smth like ensure tuple
+
+USAGE
+-----
+for i in LAMBDA_ARGS(1, 2, 3):
+    print(i)
+"""
+
+
 # ---------------------------------------------------------------------------------------------------------------------
-LAMBDA = lambda *args, **kwargs: None
-LAMBDA_NONE = lambda *args, **kwargs: None
-LAMBDA_TRUE = lambda *args, **kwargs: True
-LAMBDA_FALSE = lambda *args, **kwargs: False
+LAMBDA: Callable[..., Any] = lambda *args, **kwargs: None
+LAMBDA_NONE: Callable[..., None] = lambda *args, **kwargs: None
+LAMBDA_TRUE: Callable[..., bool] = lambda *args, **kwargs: True
+LAMBDA_FALSE: Callable[..., bool] = lambda *args, **kwargs: False
 
-LAMBDA_EXX = lambda *args, **kwargs: Exception("LAMBDA_EXX")
+LAMBDA_EXX: Callable[..., Exception] = lambda *args, **kwargs: Exception("LAMBDA_EXX")
 # LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXX")      # raise=SyntaxError: invalid syntax
-LAMBDA_RAISE = lambda *args, **kwargs: FUNC_RAISE()
+LAMBDA_RAISE: Callable[..., NoReturn] = lambda *args, **kwargs: FUNC_RAISE()
 # LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
-LAMBDA_GEN = lambda *args, **kwargs: FUNC_GEN()
-LAMBDA_ECHO = lambda echo, *args, **kwargs: echo
+LAMBDA_GEN: Callable[..., Iterable[Any]] = lambda *args, **kwargs: FUNC_GEN()
+LAMBDA_ECHO: Callable[..., Any] = lambda echo, *args, **kwargs: echo
 
-LAMBDA_ALL = lambda *args, **kwargs: FUNC_ALL(*args, **kwargs)
-LAMBDA_ANY = lambda *args, **kwargs: FUNC_ANY(*args, **kwargs)
+LAMBDA_ALL: Callable[..., bool] = lambda *args, **kwargs: FUNC_ALL(*args, **kwargs)
+LAMBDA_ANY: Callable[..., bool] = lambda *args, **kwargs: FUNC_ANY(*args, **kwargs)
 
 LAMBDA_LIST_DIRECT = lambda *args, **kwargs: FUNC_LIST_DIRECT(*args, **kwargs)
 LAMBDA_LIST_VALUES = lambda *args, **kwargs: FUNC_LIST_VALUES(*args, **kwargs)

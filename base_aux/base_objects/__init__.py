@@ -49,6 +49,10 @@ from .primitives import (
     FUNC_DICT,
     FUNC_GEN,
 
+    # LAMBDAS ----
+    LAMBDA_ARGS,
+    LAMBDA_KWARGS,
+
     LAMBDA,
     LAMBDA_NONE, LAMBDA_TRUE, LAMBDA_FALSE, LAMBDA_ECHO,
     LAMBDA_EXX, LAMBDA_RAISE,
