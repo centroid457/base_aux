@@ -181,7 +181,9 @@ LAMBDA_KWARGS: Callable[..., dict[str, Any]] = lambda **kwargs: kwargs  # used a
 """
 GOAL
 ----
-smth like ensure tuple
+smth like 
+for ARGS - ensure tuple
+for KWARGS - use strings without quotes in dicts - but ypu may use directly dict(key1=1, ...)
 
 USAGE
 -----
