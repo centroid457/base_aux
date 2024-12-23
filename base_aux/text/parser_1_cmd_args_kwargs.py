@@ -5,13 +5,15 @@ import re
 # =====================================================================================================================
 class CmdArgsKwargsParser:
     """
-    ALL RESULTS IN LOWERCASE! (EXCEPT SOURCE!)
-
     GOAL
     ----
     parse string line for Cmd with args Kwargs with syntax
         "prefix cmdName arg1 arg2 kwarg1=val1 kwarg2=val2"
     get exact values prefix/CMD/Args/Kwargs
+
+    NOTE
+    ----
+    ALL RESULTS IN LOWERCASE! (EXCEPT SOURCE!)
 
     SPECIALLY CREATED FOR
     ---------------------
