@@ -27,7 +27,7 @@ class Test__RequestItem:
 
         # SERVER -------------------------------------
         class Server(ServerFastApi_Thread):
-            PORT = self.PORT_TEST
+            PORT = self.PORT_TEST + 3
 
         server = Server()
         server.start()
@@ -41,7 +41,7 @@ class Test__RequestItem:
         # check VICTIM ------------------------------
         class VictimPost(Client_RequestItem):
             START_ON_INIT = True
-            PORT = self.PORT_TEST
+            PORT = server.PORT
             ROUTE = "/post/dict"
 
         victim = VictimPost(body=TEST_DATA)
@@ -51,7 +51,7 @@ class Test__RequestItem:
 
         class VictimGet(Client_RequestItem):
             START_ON_INIT = True
-            PORT = self.PORT_TEST
+            PORT = server.PORT
             ROUTE = "/return_types/str"
             METHOD = ResponseMethod.GET
 
@@ -142,7 +142,7 @@ class Test__RequestsStack:
 
         # SERVER -------------------------------------
         class Server(ServerFastApi_Thread):
-            PORT = self.PORT_TEST + 1
+            PORT = self.PORT_TEST + 4
 
         server = Server()
         server.start()
@@ -155,7 +155,7 @@ class Test__RequestsStack:
 
         # check VICTIM ------------------------------
         class ClientRequestItem_1(Client_RequestItem):
-            PORT = Server.PORT
+            PORT = server.PORT
             ROUTE = "/post/dict"
 
         class Victim(Client_RequestsStack):

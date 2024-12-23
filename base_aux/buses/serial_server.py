@@ -1,14 +1,14 @@
-from . import *
-
 from typing import *
 import time
 
 from PyQt5.QtCore import QThread
 
 from base_aux.funcs import *
-from base_aux.classes import *
+from base_aux.text import CmdArgsKwargsParser
 from base_aux.valid import *
 from base_aux.loggers import Logger
+
+from . import *
 
 
 # =====================================================================================================================
