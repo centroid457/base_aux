@@ -117,10 +117,10 @@ class SerialServer_Example(SerialServer_Base):
 
     def cmd__upper(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # usefull for tests
-        return line_parsed.ORIGINAL.upper()
+        return line_parsed.SOURCE.upper()
 
     def cmd__lower(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
-        return line_parsed.ORIGINAL.lower()
+        return line_parsed.SOURCE.lower()
 
     def cmd__cmd(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # NOTE: NONE is equivalent for SUCCESS

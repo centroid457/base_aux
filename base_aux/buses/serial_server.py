@@ -111,7 +111,7 @@ class SerialServer_Base(Logger, QThread):
         """
         result = []
         for line in lines:
-            line_parsed = CmdArgsKwargsParser(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
+            line_parsed = CmdArgsKwargsParser(line, prefix_expected=self.SERIAL_CLIENT.PREFIX)
             line_result = self._cmd__(line_parsed)
             result.append(f"{line}={line_result}")
 
@@ -221,7 +221,7 @@ class SerialServer_Base(Logger, QThread):
     def _execute_line(self, line: str) -> bool:
         self.LOGGER.debug("")
 
-        line_parsed = CmdArgsKwargsParser(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
+        line_parsed = CmdArgsKwargsParser(line, prefix_expected=self.SERIAL_CLIENT.PREFIX)
         cmd_result = self._cmd__(line_parsed)
 
         # blank line - SEND!!! because value may be BLANK!!!!
@@ -384,7 +384,7 @@ class SerialServer_Base(Logger, QThread):
         pass
 
         # WORK --------------------------------
-        return line_parsed.ORIGINAL
+        return line_parsed.SOURCE
 
     # CMDS - SCRIPTS --------------------------------------------------------------------------------------------------
     def cmd__script(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
@@ -477,10 +477,10 @@ class SerialServer_Example(SerialServer_Base):
 
     def cmd__upper(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # usefull for tests
-        return line_parsed.ORIGINAL.upper()
+        return line_parsed.SOURCE.upper()
 
     def cmd__lower(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
-        return line_parsed.ORIGINAL.lower()
+        return line_parsed.SOURCE.lower()
 
     def cmd__cmd(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # NOTE: NONE is equivalent for SUCCESS
