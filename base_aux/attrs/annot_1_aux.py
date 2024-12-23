@@ -123,10 +123,16 @@ class AnnotsAux(InitSource):
 
     # -----------------------------------------------------------------------------------------------------------------
     def iter_values(self) -> Iterable[Any]:
+        """
+        only existed
+        """
         yield from self.dump__dict_values().values()
 
-    def iter_names(self) -> Iterable[Any]:
-        yield from self.dump__dict_values()
+    def iter_names(self) -> Iterable[str]:
+        """
+        iter all (with not existed)
+        """
+        yield from self.dump__dict_types()
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
