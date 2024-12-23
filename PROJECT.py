@@ -62,9 +62,13 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 1, 9)
+    VERSION: tuple[int, int, int] = (0, 1, 10)
     NEWS: list[str] = [
-        # "[pyinstaller] start creating",
+        "[pyinstaller] add",
+        "[primitives] combine separated in one class Sleep/Callables/ValueBlank/Types.",
+        "[resolver] reSAND",
+        "[AUX classes] apply @final +nesting from InitSOURCE",
+        "[attrs/type_check] big ref",
     ]
 
 
