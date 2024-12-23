@@ -11,7 +11,7 @@
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .history import HistoryIO
-from .parser import CmdArgsKwargs_ByStr
+from .parser import CmdArgsKwargsParser
 from .serial_client import (
     SerialClient,
 

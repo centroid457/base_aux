@@ -9,7 +9,7 @@ class Test__LineParsed:
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = type("Victim", (CmdArgsKwargs_ByStr,), {})
+        cls.Victim = type("Victim", (CmdArgsKwargsParser,), {})
 
     # @classmethod
     # def teardown_class(cls):

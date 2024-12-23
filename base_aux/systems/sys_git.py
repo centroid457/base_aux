@@ -1,6 +1,6 @@
 import pathlib
 import datetime
-from base_aux.classes import Text
+from base_aux.text import Text
 
 try:
     import git  # GITPYTHON # need try statement! if not installed git.exe raise Exx even if module was setup!!!

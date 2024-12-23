@@ -24,8 +24,8 @@ class Test__SerialServer_NoConnection:
     # -----------------------------------------------------------------------------------------------------------------
     def test__cmd__script(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("script1")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
-        assert victim._cmd__(CmdArgsKwargs_ByStr("script script1")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("script1")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("script script1")) == AnswerVariants.SUCCESS
 
     def test__LISTS(self):
         victim = self.Victim()
@@ -44,161 +44,161 @@ class Test__SerialServer_NoConnection:
 
     def test__cmd__cmd(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("cmd")) == AnswerVariants.SUCCESS
-        assert victim._cmd__(CmdArgsKwargs_ByStr("cmd_no_line")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("cmd")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("cmd_no_line")) == AnswerVariants.SUCCESS
 
     def test__cmd__echo(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("echo 123")) == "echo 123"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("echo HELLO")) == "echo HELLO"
+        assert victim._cmd__(CmdArgsKwargsParser("echo 123")) == "echo 123"
+        assert victim._cmd__(CmdArgsKwargsParser("echo HELLO")) == "echo HELLO"
 
     def test__cmd__upper_lower(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("upper HELLO")) == "UPPER HELLO"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("lower HELLO")) == "lower hello"
+        assert victim._cmd__(CmdArgsKwargsParser("upper HELLO")) == "UPPER HELLO"
+        assert victim._cmd__(CmdArgsKwargsParser("lower HELLO")) == "lower hello"
 
     def test__GET__single(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("hello123")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("hello123")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get str")) == "str"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("str")) == "str"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("blanc")) == ""
-        assert victim._cmd__(CmdArgsKwargs_ByStr("zero")) == '0'
+        assert victim._cmd__(CmdArgsKwargsParser("get str")) == "str"
+        assert victim._cmd__(CmdArgsKwargsParser("str")) == "str"
+        assert victim._cmd__(CmdArgsKwargsParser("blanc")) == ""
+        assert victim._cmd__(CmdArgsKwargsParser("zero")) == '0'
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("int")) == '1'
-        assert victim._cmd__(CmdArgsKwargs_ByStr("float")) == '1.1'
+        assert victim._cmd__(CmdArgsKwargsParser("int")) == '1'
+        assert victim._cmd__(CmdArgsKwargsParser("float")) == '1.1'
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("none")) == "None"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("true")) == "True"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("false")) == "False"
+        assert victim._cmd__(CmdArgsKwargsParser("none")) == "None"
+        assert victim._cmd__(CmdArgsKwargsParser("true")) == "True"
+        assert victim._cmd__(CmdArgsKwargsParser("false")) == "False"
 
         try:
-            float(victim._cmd__(CmdArgsKwargs_ByStr("call")))
+            float(victim._cmd__(CmdArgsKwargsParser("call")))
         except:
             assert False
-        assert victim._cmd__(CmdArgsKwargs_ByStr("exx")) == AnswerVariants.ERR__PARAM_CALLING
+        assert victim._cmd__(CmdArgsKwargsParser("exx")) == AnswerVariants.ERR__PARAM_CALLING
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list")) == "[0, 1, 2]"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("_set")) == "{0, 1, 2}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get _set")) == "{0, 1, 2}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short")) == "{1: 11}"
+        assert victim._cmd__(CmdArgsKwargsParser("list")) == "[0, 1, 2]"
+        assert victim._cmd__(CmdArgsKwargsParser("_set")) == "{0, 1, 2}"
+        assert victim._cmd__(CmdArgsKwargsParser("get _set")) == "{0, 1, 2}"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short")) == "{1: 11}"
 
     def test__GET__nested__list(self):
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list")) == "[0, 1, 2]"
+        assert victim._cmd__(CmdArgsKwargsParser("list")) == "[0, 1, 2]"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list 1")) == "1"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list/1")) == "1"
+        assert victim._cmd__(CmdArgsKwargsParser("list 1")) == "1"
+        assert victim._cmd__(CmdArgsKwargsParser("list/1")) == "1"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get list 1")) == "1"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get list/1")) == "1"
+        assert victim._cmd__(CmdArgsKwargsParser("get list 1")) == "1"
+        assert victim._cmd__(CmdArgsKwargsParser("get list/1")) == "1"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list/10")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("list/10")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
 
         # -----
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list_2")) == "[[11]]"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list_2/0")) == "[11]"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list_2/0/0")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("list_2")) == "[[11]]"
+        assert victim._cmd__(CmdArgsKwargsParser("list_2/0")) == "[11]"
+        assert victim._cmd__(CmdArgsKwargsParser("list_2/0/0")) == "11"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("list_2 0 0")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get list_2 0 0")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("list_2 0 0")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("get list_2 0 0")) == "11"
 
     def test__GET__dict(self):
         # TODO: add BOOL/NONE
         victim = self.Victim()
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2")) == "{'HEllo': {1: 11}}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get dict_short_2")) == "{'HEllo': {1: 11}}"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2")) == "{'HEllo': {1: 11}}"
+        assert victim._cmd__(CmdArgsKwargsParser("get dict_short_2")) == "{'HEllo': {1: 11}}"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2/hello")) == "{1: 11}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2 hello")) == "{1: 11}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get dict_short_2 hello")) == "{1: 11}"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2/hello11111")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2/hello")) == "{1: 11}"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2 hello")) == "{1: 11}"
+        assert victim._cmd__(CmdArgsKwargsParser("get dict_short_2 hello")) == "{1: 11}"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2/hello11111")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2/hello/1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get dict_short_2/hello/1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2 hello/1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get dict_short_2 hello/1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2 hello 1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("get dict_short_2 hello 1")) == "11"
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2/hello/11111")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2/hello/1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("get dict_short_2/hello/1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2 hello/1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("get dict_short_2 hello/1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2 hello 1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("get dict_short_2 hello 1")) == "11"
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2/hello/11111")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("dict_short_2/hello/1/9/9/9/9/")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("dict_short_2/hello/1/9/9/9/9/")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
 
     def test__SET__level_first__type(self):
         victim = self.Victim()
         assert victim.PARAMS["VAR"] == ""
 
-        # line_parced = CmdArgsKwargs_ByStr("var=True")
+        # line_parced = CmdArgsKwargsParser("var=True")
         # result = victim._cmd__(line_parced)
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=True")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=True")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] is True
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=false")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=false")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] is False
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=null")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=null")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] is None
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == ""
 
-        # assert victim._cmd__(CmdArgsKwargs_ByStr("var=''")) == AnswerVariants.SUCCESS
+        # assert victim._cmd__(CmdArgsKwargsParser("var=''")) == AnswerVariants.SUCCESS
         # assert victim.PARAMS["VAR"] == "''"                             # TODO: convert to expected!!!
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=0")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=0")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == 0
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=123")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=123")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == 123
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=1.1")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=1.1")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == 1.1
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=1,1")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=1,1")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] != 1.1
 
         # ITERABLES --------------------
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=[]")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=[]")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == []
 
-        # assert victim._cmd__(CmdArgsKwargs_ByStr("var=[1, 2]")) == AnswerVariants.SUCCESS  # TODO: CLEAR ALL INTERNAL SPACES!!!
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=[1,2]")) == AnswerVariants.SUCCESS
+        # assert victim._cmd__(CmdArgsKwargsParser("var=[1, 2]")) == AnswerVariants.SUCCESS  # TODO: CLEAR ALL INTERNAL SPACES!!!
+        assert victim._cmd__(CmdArgsKwargsParser("var=[1,2]")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == [1, 2]
 
     def test__SET__level_first__syntax(self):
         victim = self.Victim()
         assert victim.PARAMS["INT"] == 1
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("set int=10")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("set int=10")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 10
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("int=11")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("int=11")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 11
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("int    =12")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("int    =12")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 12
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("int=     13")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("int=     13")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 13
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("   int       =     14   ")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("   int       =     14   ")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 14
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("   int =======     15   ")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("   int =======     15   ")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["INT"] == 15
 
         # several
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var 1 int=16")) == AnswerVariants.ERR__ARGS_VALIDATION
+        assert victim._cmd__(CmdArgsKwargsParser("var 1 int=16")) == AnswerVariants.ERR__ARGS_VALIDATION
         assert victim.PARAMS["INT"] == 15
 
         victim.PARAMS["VAR"] = 1
         assert victim.PARAMS["VAR"] == 1
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=11 int=16")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("var=11 int=16")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] == 11
         assert victim.PARAMS["INT"] == 16
 
         # NOCHANGES if wrong name exists
-        assert victim._cmd__(CmdArgsKwargs_ByStr("var=110 int123=160")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
+        assert victim._cmd__(CmdArgsKwargsParser("var=110 int123=160")) == AnswerVariants.ERR__NAME_CMD_OR_PARAM
         assert victim.PARAMS["VAR"] == 11
         assert victim.PARAMS["INT"] == 16
 
@@ -207,13 +207,13 @@ class Test__SerialServer_NoConnection:
         victim = self.Victim()
         victim.PARAMS["UNIT123"] = ValueUnit(1, unit="V")
         assert victim.PARAMS["UNIT123"] == ValueUnit(1, unit="V")
-        assert victim._cmd__(CmdArgsKwargs_ByStr("unit123")) == "1V"
+        assert victim._cmd__(CmdArgsKwargsParser("unit123")) == "1V"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("unit123=11")) == AnswerVariants.SUCCESS
-        assert victim._cmd__(CmdArgsKwargs_ByStr("unit123")) == "11V"
+        assert victim._cmd__(CmdArgsKwargsParser("unit123=11")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("unit123")) == "11V"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("unit123=1.00")) == AnswerVariants.SUCCESS
-        assert victim._cmd__(CmdArgsKwargs_ByStr("unit123")) == "1.0V"
+        assert victim._cmd__(CmdArgsKwargsParser("unit123=1.00")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("unit123")) == "1.0V"
 
         assert victim.PARAMS["UNIT123"] == ValueUnit(1.0, unit="V")
 
@@ -222,13 +222,13 @@ class Test__SerialServer_NoConnection:
         victim = self.Victim()
 
         victim.PARAMS["VARIANT"] = ValueVariants(220, variants=[220, 380])
-        assert victim._cmd__(CmdArgsKwargs_ByStr("variant")) == "220"
+        assert victim._cmd__(CmdArgsKwargsParser("variant")) == "220"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("variant=11")) == AnswerVariants.ERR__VALUE_INCOMPATIBLE
-        assert victim._cmd__(CmdArgsKwargs_ByStr("variant")) == "220"
+        assert victim._cmd__(CmdArgsKwargsParser("variant=11")) == AnswerVariants.ERR__VALUE_INCOMPATIBLE
+        assert victim._cmd__(CmdArgsKwargsParser("variant")) == "220"
 
-        assert victim._cmd__(CmdArgsKwargs_ByStr("variant=380")) == AnswerVariants.SUCCESS
-        assert victim._cmd__(CmdArgsKwargs_ByStr("variant")) == "380"
+        assert victim._cmd__(CmdArgsKwargsParser("variant=380")) == AnswerVariants.SUCCESS
+        assert victim._cmd__(CmdArgsKwargsParser("variant")) == "380"
 
         assert victim.PARAMS["VARIANT"] == ValueVariants(380, variants=[220, 380])
 

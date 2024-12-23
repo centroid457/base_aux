@@ -111,7 +111,7 @@ class SerialServer_Base(Logger, QThread):
         """
         result = []
         for line in lines:
-            line_parsed = CmdArgsKwargs_ByStr(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
+            line_parsed = CmdArgsKwargsParser(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
             line_result = self._cmd__(line_parsed)
             result.append(f"{line}={line_result}")
 
@@ -221,7 +221,7 @@ class SerialServer_Base(Logger, QThread):
     def _execute_line(self, line: str) -> bool:
         self.LOGGER.debug("")
 
-        line_parsed = CmdArgsKwargs_ByStr(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
+        line_parsed = CmdArgsKwargsParser(line, _prefix_expected=self.SERIAL_CLIENT.PREFIX)
         cmd_result = self._cmd__(line_parsed)
 
         # blank line - SEND!!! because value may be BLANK!!!!
@@ -232,7 +232,7 @@ class SerialServer_Base(Logger, QThread):
         return write_result
 
     # CMD - ENTRY POINT -----------------------------------------------------------------------------------------------
-    def _cmd__(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def _cmd__(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         self.LOGGER.debug("")
 
         meth_name__expected = f"{self._STARTSWITH__CMD}{line_parsed.CMD}"
@@ -258,7 +258,7 @@ class SerialServer_Base(Logger, QThread):
             result = self.ANSWER.SUCCESS
         return result
 
-    def _cmd__param_as_cmd(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def _cmd__param_as_cmd(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # PREPARE -------------------------------
         if line_parsed.CMD:
             line_parsed.ARGS = [line_parsed.CMD, *line_parsed.ARGS]
@@ -277,7 +277,7 @@ class SerialServer_Base(Logger, QThread):
             return self.cmd__set(line_parsed)
 
     # CMD - PARAMS ----------------------------------------------------------------------------------------------------
-    def cmd__get(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__get(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         """
         use only single name!!!
         """
@@ -313,7 +313,7 @@ class SerialServer_Base(Logger, QThread):
         param_value = str(param_value)
         return param_value
 
-    def cmd__set(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__set(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         """
         for ARGS - available only one param!
         for KWARGS - available MULTY params! fail protected!
@@ -365,21 +365,21 @@ class SerialServer_Base(Logger, QThread):
         return self.ANSWER.SUCCESS
 
     # CMDS - STD ------------------------------------------------------------------------------------------------------
-    def cmd__hello(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__hello(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # ERR__ARGS_VALIDATION --------------------------------
         pass
 
         # WORK --------------------------------
         return self.HELLO_MSG
 
-    def cmd__help(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__help(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # ERR__ARGS_VALIDATION --------------------------------
         pass
 
         # WORK --------------------------------
         return self._LIST__HELP
 
-    def cmd__echo(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__echo(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # ERR__ARGS_VALIDATION --------------------------------
         pass
 
@@ -387,13 +387,13 @@ class SerialServer_Base(Logger, QThread):
         return line_parsed.ORIGINAL
 
     # CMDS - SCRIPTS --------------------------------------------------------------------------------------------------
-    def cmd__script(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__script(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         """
         it is as template! you can create/use your awn script-run cmd!
         """
         return self._script__(line_parsed)
 
-    def _script__(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def _script__(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # ERR__ARGS_VALIDATION --------------------------------
         if line_parsed.ARGS_count() == 0:
             return self.ANSWER.ERR__ARGS_VALIDATION
@@ -421,7 +421,7 @@ class SerialServer_Base(Logger, QThread):
             result = self.ANSWER.SUCCESS
         return result
 
-    # def cmd__exit(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    # def cmd__exit(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
     #     self.disconnect()
     #     exit()
 
@@ -475,14 +475,14 @@ class SerialServer_Example(SerialServer_Base):
         "VARIANT": ValueVariants(220, variants=[220, 380]),
     }
 
-    def cmd__upper(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__upper(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # usefull for tests
         return line_parsed.ORIGINAL.upper()
 
-    def cmd__lower(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__lower(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         return line_parsed.ORIGINAL.lower()
 
-    def cmd__cmd(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def cmd__cmd(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # NOTE: NONE is equivalent for SUCCESS
         # do smth
         pass
@@ -493,7 +493,7 @@ class SerialServer_Example(SerialServer_Base):
         pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def script__script1(self, line_parsed: CmdArgsKwargs_ByStr) -> TYPE__CMD_RESULT:
+    def script__script1(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # do smth
         pass
 

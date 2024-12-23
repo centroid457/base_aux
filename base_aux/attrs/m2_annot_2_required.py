@@ -1,5 +1,5 @@
 from typing import *
-from .annot_1_aux import AnnotsBase, AnnotsAux
+from .m2_annot_1_aux import AnnotsBase, AnnotsAux
 
 
 # =====================================================================================================================
