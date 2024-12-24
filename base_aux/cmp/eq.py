@@ -2,6 +2,8 @@ from typing import *
 from base_aux.base_objects import TypeCheck
 from base_aux.base_source import InitSource
 from base_aux.base_argskwargs import *
+from base_aux.attrs import *
+from base_aux.lambdas import *
 
 
 # =====================================================================================================================
@@ -97,8 +99,27 @@ class Eq(InitSource):
         """
         return self.eq_doublesided__bool(other) is not True
 
-    def eq_by_dict(self, other: TYPE__LAMBDA_KWARGS) -> bool:
-        pass
+    def eq_by_dict__direct(self, other: TYPE__LAMBDA_KWARGS) -> bool:
+        """
+        GOAL
+        ----
+        cmp directly
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        """
+        for key, expected in other.items():
+            key_real = AttrAux(self.SOURCE).anycase__find(key)
+            if key_real is None:
+                if expected is None:
+                    continue
+                else:
+                    return False
+            actual = Lambda(getattr, self.SOURCE, key).get_result_or_exx()
+            if actual != expected:
+                msg = f"for {key_real=} {actual=}/{expected=}"
+                print(msg)
+                return False
 
 
 # =====================================================================================================================
