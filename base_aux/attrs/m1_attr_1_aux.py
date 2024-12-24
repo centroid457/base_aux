@@ -103,7 +103,7 @@ class AttrAux(InitSource):
     pass
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_do: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception]:
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         GOAL
         ____
@@ -115,11 +115,17 @@ class AttrAux(InitSource):
         """
         result = {}
         for name in self.iter__not_hidden():
-            if callables_do == CallablesUse.SKIP and LambdaTrySuccess(getattr, self.SOURCE, name) and callable(getattr(self.SOURCE, name)):
+            if (
+                    callables_use == CallablesUse.SKIP
+                    and
+                    LambdaTrySuccess(getattr, self.SOURCE, name)
+                    and
+                    callable(getattr(self.SOURCE, name))
+            ):
                 continue
 
             value = getattr(self.SOURCE, name)
-            if callables_do == CallablesUse.RESOLVE_EXX:
+            if callables_use == CallablesUse.RESOLVE_EXX:
                 value = Lambda(value).get_result_or_exx()
 
             result.update({name: value})
@@ -129,13 +135,16 @@ class AttrAux(InitSource):
     def dump_dict__callables_skip(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.SKIP)
 
-    def dump_dict__callables_resolve(self) -> TYPE__LAMBDA_KWARGS:
+    def dump_dict__callables_resolve_exx(self) -> dict[str, Any | Exception]:
         return self.dump_dict(CallablesUse.RESOLVE_EXX)
+
+    def dump_dict__callables_resolve_raise(self) -> dict[str, Any] | NoReturn:
+        return self.dump_dict(CallablesUse.RESOLVE_RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        data = self.dump_dict__callables_resolve()
+        data = self.dump_dict__callables_resolve_exx()
         if data:
             for key, value in data.items():
                 result += f"\n\t{key}={value}"
