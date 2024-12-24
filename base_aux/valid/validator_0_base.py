@@ -28,7 +28,7 @@ class EqValidator:
         args = (other, *self.ARGS)
         expected = Lambda(self.VALIDATE_LINK).get_result_or_exx(*args, **self.KWARGS)
 
-        result = Eq.eq_doublesided__bool(other, expected)
+        result = Eq(other).eq_doublesided__bool(expected)
         return result
 
     def __call__(self, other: Any) -> bool:

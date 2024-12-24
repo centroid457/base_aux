@@ -64,7 +64,7 @@ class Lambda(InitArgsKwargs):
         return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
-        return Eq.eq_doublesided__bool(other, self())
+        return Eq(self()).eq_doublesided__bool(other)
 
     # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:

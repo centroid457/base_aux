@@ -224,7 +224,7 @@ class Valid:
                     self.validate_last = Lambda(self.VALIDATE_LINK).get_result_or_exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
 
                 else:
-                    self.validate_last = Eq.eq_doublesided_or_exx(self.value_last, self.VALIDATE_LINK)
+                    self.validate_last = Eq(self.value_last).eq_doublesided_or_exx(self.VALIDATE_LINK)
 
                 # FINISH retry
                 if not self.VALIDATE_RETRY or retry_count == self.VALIDATE_RETRY or self.validate_last_bool:

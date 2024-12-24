@@ -1,11 +1,11 @@
 from typing import *
 from base_aux.base_objects import TypeCheck
+from base_aux.base_source import InitSource
 
 
 # =====================================================================================================================
-class Eq:
-    @classmethod
-    def eq_doublesided_or_exx(cls, obj1: Any, obj2: Any, return_bool: bool = None) -> bool | Exception:
+class Eq(InitSource):
+    def eq_doublesided_or_exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
         """
         GOAL
         ----
@@ -40,33 +40,33 @@ class Eq:
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
-        if TypeCheck(obj1).check__exception():
-            if TypeCheck(obj2).check__nested__by_cls_or_inst(obj1):
+        if TypeCheck(self.SOURCE).check__exception():
+            if TypeCheck(other).check__nested__by_cls_or_inst(self.SOURCE):
                 return True
-        elif TypeCheck(obj2).check__exception():
-            if TypeCheck(obj1).check__nested__by_cls_or_inst(obj2):
+        elif TypeCheck(other).check__exception():
+            if TypeCheck(self.SOURCE).check__nested__by_cls_or_inst(other):
                 return True
 
         try:
-            result12 = obj1 == obj2
+            result12 = self.SOURCE == other
             if result12:
                 return True
         except Exception as exx:
             result12 = exx
-            # if TypeCheck(obj2).check__exception() and TypeCheck(result12).check__nested__by_cls_or_inst(obj2):
+            # if TypeCheck(other).check__exception() and TypeCheck(result12).check__nested__by_cls_or_inst(other):
             #     return True
 
         try:
-            result21 = obj2 == obj1
+            result21 = other == self.SOURCE
             if result21:
                 return True
         except Exception as exx:
             result21 = exx
-            # if TypeCheck.check__exception(obj1) and TypeCheck.check__nested__by_cls_or_inst(result21, obj1):
+            # if TypeCheck(self.SOURCE).check__exception() and TypeCheck(result21).check__nested__by_cls_or_inst(self.SOURCE):
             #     return True
 
         try:
-            result3 = obj2 is obj1
+            result3 = other is self.SOURCE
             if result3:
                 return True
         except Exception as exx:
@@ -78,8 +78,7 @@ class Eq:
         else:
             return result12
 
-    @classmethod
-    def eq_doublesided__bool(cls, obj1: Any, obj2: Any) -> bool:
+    def eq_doublesided__bool(self, other: Any) -> bool:
         """
         same as compare_doublesided_or_exx but
         in case of ClsException - return False
@@ -88,15 +87,14 @@ class Eq:
         ---------------------
         Valid.value_validate
         """
-        return cls.eq_doublesided_or_exx(obj1, obj2, return_bool=True)
+        return self.eq_doublesided_or_exx(other, return_bool=True)
 
-    @classmethod
-    def eq_doublesided__reverse(cls, obj1: Any, obj2: Any) -> bool:
+    def eq_doublesided__reverse(self, other: Any) -> bool:
         """
         just reverse result for compare_doublesided__bool
         so never get ClsException, only bool
         """
-        return cls.eq_doublesided__bool(obj1, obj2) is not True
+        return self.eq_doublesided__bool(other) is not True
 
 
 

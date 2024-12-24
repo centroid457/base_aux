@@ -1361,7 +1361,7 @@ class SerialClient(Logger):
                     if (
                             str(output_last).lower() == str(expect_var).lower()
                             or
-                            Eq.eq_doublesided__bool(output_last, expect_var)
+                            Eq(output_last).eq_doublesided__bool(expect_var)
                     ):
                         return True
 
