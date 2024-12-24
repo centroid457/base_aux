@@ -96,8 +96,8 @@ class Kwargs(InitArgsKwargs):
 
 # =====================================================================================================================
 # SEE SAME BUT DIFFERS: TYPE__LAMBDA_ARGS *
-TYPE__VALID_ARGS = Union[NoValue, Any, tuple, "TYPE__EXPLICIT", InitArgsKwargs, Args]   # dont use None! use clear Args()/NoValue
-TYPE__VALID_KWARGS = Union[NoValue, dict[str, Any], InitArgsKwargs, Kwargs]             # dont use None! use clear Kwargs()/NoValue
+TYPE__VALID_ARGS = Union[NoValue, Any, TYPE__LAMBDA_ARGS, "TYPE__EXPLICIT", InitArgsKwargs, Args]   # dont use None! use clear Args()/NoValue
+TYPE__VALID_KWARGS = Union[NoValue, TYPE__LAMBDA_KWARGS, InitArgsKwargs, Kwargs]             # dont use None! use clear Kwargs()/NoValue
 
 
 # =====================================================================================================================

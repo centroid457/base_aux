@@ -37,7 +37,7 @@ class AnnotsRequired(AnnotsBase):
     #     # print(annots)
     #     return annots
     #
-    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[dict[str, Any], NoReturn]:
+    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[TYPE__LAMBDA_KWARGS, NoReturn]:
     #     """get dict of undefined annotated attributes in class but defined in instance!
     #     """
     #     annots = dict()

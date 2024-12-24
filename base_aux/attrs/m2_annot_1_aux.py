@@ -3,6 +3,7 @@ from typing import *
 from base_aux.base_exceptions import Exx__AnnotNotDefined
 from base_aux.base_objects.obj_types import TYPES, TypeCheck
 from base_aux.base_source import *
+from base_aux.base_argskwargs import *
 
 from .m1_attr_1_aux import AttrAux
 
@@ -109,7 +110,7 @@ class AnnotsAux(InitSource):
             result = _result_i
         return result
 
-    def dump__dict_values(self) -> dict[str, Any]:
+    def dump__dict_values(self) -> TYPE__LAMBDA_KWARGS:
         """
         GOAL
         ----

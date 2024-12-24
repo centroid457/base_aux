@@ -1,6 +1,7 @@
 from typing import *
 from base_aux.base_objects import TypeCheck
 from base_aux.base_source import InitSource
+from base_aux.base_argskwargs import *
 
 
 # =====================================================================================================================
@@ -96,6 +97,8 @@ class Eq(InitSource):
         """
         return self.eq_doublesided__bool(other) is not True
 
+    def eq_by_dict(self, other: TYPE__LAMBDA_KWARGS) -> bool:
+        pass
 
 
 # =====================================================================================================================

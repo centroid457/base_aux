@@ -1,6 +1,7 @@
 from typing import *
 from base_aux.lambdas import LambdaTrySuccess, Lambda
 from base_aux.base_source import *
+from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS
 from base_aux.base_enums import CallablesUse
 
 
@@ -125,10 +126,10 @@ class AttrAux(InitSource):
 
         return result
 
-    def dump_dict__callables_skip(self) -> dict[str, Any]:
+    def dump_dict__callables_skip(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.SKIP)
 
-    def dump_dict__callables_resolve(self) -> dict[str, Any]:
+    def dump_dict__callables_resolve(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.RESOLVE_EXX)
 
     # -----------------------------------------------------------------------------------------------------------------

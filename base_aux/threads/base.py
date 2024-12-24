@@ -3,6 +3,7 @@ import time
 
 from PyQt5.QtCore import QThread
 from base_aux.singletons import *
+from base_aux.base_argskwargs import *
 
 
 # =====================================================================================================================
@@ -11,7 +12,7 @@ class ThreadItem(QThread):
     """
     target: Callable
     args: tuple[Any, ...]
-    kwargs: dict[str, Any]
+    kwargs: TYPE__LAMBDA_KWARGS
 
     result: Optional[Any] = None
     exx: Optional[Exception] = None
