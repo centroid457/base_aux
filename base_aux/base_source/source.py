@@ -14,10 +14,11 @@ class InitSource:
     ---------------------
     apply in AttrAux and same others
     """
-    SOURCE: Any
+    SOURCE: Any = None
 
-    def __init__(self, source: Any) -> None:
-        self.SOURCE = source
+    def __init__(self, source: Any = None) -> None:
+        if source is not None:
+            self.SOURCE = source
 
 
 # =====================================================================================================================
