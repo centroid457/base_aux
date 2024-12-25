@@ -38,10 +38,11 @@ class Where3(Enum):
 # =====================================================================================================================
 class CallablesUse(Enum):
     DIRECT = auto()
-    SKIP = auto()
     RESOLVE_EXX = auto()
     RESOLVE_RAISE = auto()
-    RESOLVE_EXX_SKIP = auto()
+
+    SKIP = auto()
+    RESOLVE_RAISE_SKIP = auto()
 
 
 # =====================================================================================================================

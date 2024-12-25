@@ -2,7 +2,7 @@ from typing import *
 import time
 
 from base_aux.base_argskwargs.argskwargs import *
-from base_aux.base_enums.enums import When2
+from base_aux.base_enums.enums import When2, CallablesUse
 from base_aux.base_objects import TypeCheck
 
 from base_aux.cmp.eq import Eq
@@ -88,7 +88,30 @@ class Lambda(InitArgsKwargs):
         return bool(self(*self.ARGS, **self.KWARGS))
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get_result_or_raise(self, *args, **kwargs) -> bool | NoReturn:
+    def get_result(self, callable_use: CallablesUse = CallablesUse.RESOLVE_RAISE, *args, **kwargs) -> Any | Exception | NoReturn:
+        if not callable(self.CONSTRUCTOR):
+            return self.CONSTRUCTOR
+
+        # callables -----------
+        if callable_use == CallablesUse.DIRECT:
+            return self.CONSTRUCTOR
+
+        elif callable_use == CallablesUse.RESOLVE_EXX:
+            return self.get_result_or_exx(*args, **kwargs)
+
+        elif callable_use == CallablesUse.RESOLVE_RAISE:
+            return self.get_result_or_raise(*args, **kwargs)
+
+        elif callable_use == CallablesUse.SKIP:
+            return
+
+        elif callable_use == CallablesUse.RESOLVE_RAISE_SKIP:
+            try:
+                return self(*args, **kwargs)
+            except:
+                return
+
+    def get_result_or_raise(self, *args, **kwargs) -> Any | NoReturn:
         """
         just a direct result
 
@@ -108,7 +131,7 @@ class Lambda(InitArgsKwargs):
         """
         return self(*args, **kwargs)
 
-    def get_result_or_exx(self, *args, **kwargs) -> bool | Exception:
+    def get_result_or_exx(self, *args, **kwargs) -> Any | Exception:
         """
         GOAL
         ----

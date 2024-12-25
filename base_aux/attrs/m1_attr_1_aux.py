@@ -72,16 +72,32 @@ class AttrAux(InitSource):
         return self.anycase__find(name) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
-    def anycase__getattr(self, name: str) -> Any | Callable | NoReturn:
+    def anycase__getattr(self, name: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Optional[Any | Callable | Exception] | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
+
+        :param callables_use: common used only DIRECT/RESOLVE_EXX/RESOLVE_RAISE! others would return None instead of raise (just for logic)!
         """
         name_original = self.anycase__find(name)
         if name_original is None:
             raise AttributeError(name)
 
-        return getattr(self.SOURCE, name_original)
+        value = None
+        # resolve properties --------------
+        if LambdaTryFail(getattr, self.SOURCE, name_original):
+            if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
+                return
+            elif callables_use == CallablesUse.RESOLVE_EXX:
+                value = Lambda(getattr, self.SOURCE, name_original).get_result_or_exx()
+        else:
+            value = getattr(self.SOURCE, name_original)
+
+        # resolve callables ------------------
+        if callable(value):
+            value = Lambda(value).get_result(callables_use=callables_use)
+
+        return value
 
     def anycase__setattr(self, name: str, value: Any) -> None | NoReturn:
         """
@@ -125,13 +141,18 @@ class AttrAux(InitSource):
     pass
 
     # LOAD ------------------------------------------------------------------------------------------------------------
-    def load(self, other: dict | Any) -> Any | AttrsDump:
+    def load(self, other: dict | Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+        """
+        GOAL
+        ----
+        load attrs by dict/attrs in other object
+        """
         if isinstance(other, dict):
-            return self._load__by_dict(other)
+            return self.load__by_dict(other)
         else:
-            return self._load__by_obj(other)
+            return self.load__by_obj(other, callables_use=callables_use)
 
-    def _load__by_dict(self, other: dict) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -142,7 +163,7 @@ class AttrAux(InitSource):
             self.anycase__setattr(key, value)
         return self.SOURCE
 
-    def _load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+    def load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
         """
         GOAL
         ----
@@ -152,8 +173,8 @@ class AttrAux(InitSource):
         ----
         return AttrsDump in case of using directly without source AttrsAux().load__by_obj(other) -> AttrsDump()
         """
-        other = AttrAux(other).dump_dict(callables_use)
-        return self._load__by_dict(other)
+        other = AttrAux(other).dump_dict(callables_use=callables_use)
+        return self.load__by_dict(other, callables_use=CallablesUse.DIRECT)     # here must be DIRECT
 
     # =================================================================================================================
     pass
@@ -186,7 +207,7 @@ class AttrAux(InitSource):
             value = None
             # resolve properties --------------
             if LambdaTryFail(getattr, self.SOURCE, name):
-                if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_EXX_SKIP:
+                if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
                     continue
                 elif callables_use == CallablesUse.RESOLVE_EXX:
                     value = Lambda(getattr, self.SOURCE, name).get_result_or_exx()
@@ -204,7 +225,7 @@ class AttrAux(InitSource):
                 elif callables_use == CallablesUse.RESOLVE_RAISE:
                     value = value()
 
-                elif callables_use == CallablesUse.RESOLVE_EXX_SKIP:
+                elif callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
                     try:
                         value = value()
                     except:
