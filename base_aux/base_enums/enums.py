@@ -41,6 +41,7 @@ class CallablesUse(Enum):
     SKIP = auto()
     RESOLVE_EXX = auto()
     RESOLVE_RAISE = auto()
+    RESOLVE_EXX_SKIP = auto()
 
 
 # =====================================================================================================================

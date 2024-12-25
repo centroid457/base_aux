@@ -19,10 +19,10 @@ class Test__1:
             ({1:11, 2:22}, True, "hello", "hello"),
             ({1:11, 2:22}, False, "hello", NoValue),
 
-            (AttrsInitKwargs(**{"a1": 22}), False, "a11", NoValue),
-            (AttrsInitKwargs(**{"a1": 22}), True, "a11", "a11"),
+            (AttrsInitByKwArgs(a1=22), False, "a11", NoValue),
+            (AttrsInitByKwArgs(a1=22), True, "a11", "a11"),
 
-            (AttrsInitKwargs(**{"a1": 22}), None, "a1", 22),
+            (AttrsInitByKwArgs(a1=22), None, "a1", 22),
         ]
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):

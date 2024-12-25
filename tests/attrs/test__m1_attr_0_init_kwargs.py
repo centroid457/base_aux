@@ -16,7 +16,7 @@ from base_aux.attrs import *
 )
 def test__get_name(kwargs, init_ok):
     try:
-        victim = AttrsInitKwargs(**kwargs)
+        victim = AttrsInitByKwArgs(**kwargs)
     except:
         assert not init_ok
         return
