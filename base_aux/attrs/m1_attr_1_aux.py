@@ -1,8 +1,21 @@
 from typing import *
-from base_aux.lambdas import LambdaTrySuccess, Lambda
+from base_aux.lambdas import LambdaTrySuccess, Lambda, LambdaTryFail
 from base_aux.base_source import *
 from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS
 from base_aux.base_enums import CallablesUse
+
+
+# =====================================================================================================================
+@final
+class AttrsDump:
+    """
+    GOAL
+    ----
+    just an initial blank class with would be loaded by attrs!
+    used further as template or dumped values for dynamic values like properties
+    """
+    pass
+    # def __contains__(self, item):     # cant do this here!!!!
 
 
 # =====================================================================================================================
@@ -14,8 +27,14 @@ class AttrAux(InitSource):
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
 
+    def __init__(self, source: Any = None):
+        super().__init__(source)    # not necessary! just to keep ide inspection in correct way
+        if source is None:
+            self.SOURCE = AttrsDump()
+
     # =================================================================================================================
-    pass
+    def __contains__(self, item: str):
+        return self.anycase__find(item) is not None
 
     # ITER ------------------------------------------------------------------------------------------------------------
     def iter__not_private(self) -> Iterable[str]:
@@ -27,6 +46,9 @@ class AttrAux(InitSource):
         for name in dir(self.SOURCE):
             if not name.startswith("_"):
                 yield name
+
+    def __iter__(self):
+        yield from self.iter__not_hidden()
 
     # =================================================================================================================
     pass
@@ -102,9 +124,50 @@ class AttrAux(InitSource):
     # =================================================================================================================
     pass
 
-    # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.DIRECT) -> dict[str, Any | Callable | Exception] | NoReturn:
+    # LOAD ------------------------------------------------------------------------------------------------------------
+    def load(self, other: dict | Any) -> Any | AttrsDump:
+        if isinstance(other, dict):
+            return self._load__by_dict(other)
+        else:
+            return self._load__by_obj(other)
+
+    def _load__by_dict(self, other: dict) -> Any | AttrsDump:
         """
+        MAIN ITEA
+        ----------
+        LOAD MEANS basically setup final values for final not callables values!
+        but you can use any types for your own!
+        """
+        for key, value in other.items():
+            self.anycase__setattr(key, value)
+        return self.SOURCE
+
+    def _load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+        """
+        GOAL
+        ----
+        set only final not callables attrs
+
+        NOTE
+        ----
+        return AttrsDump in case of using directly without source AttrsAux().load__by_obj(other) -> AttrsDump()
+        """
+        other = AttrAux(other).dump_dict(callables_use)
+        return self._load__by_dict(other)
+
+    # =================================================================================================================
+    pass
+
+    # DUMP ------------------------------------------------------------------------------------------------------------
+    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | Any = None) -> AttrsDump | NoReturn:
+        pass
+
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | Any = None) -> dict[str, Any | Callable | Exception] | NoReturn:
+        """
+        MAIN ITEA
+        ----------
+        BUMPS MEANS basically save final values for all (even any dynamic/callables) values! or only not callables!
+
         GOAL
         ____
         make a dict from any object from attrs (not hidden)
@@ -114,19 +177,38 @@ class AttrAux(InitSource):
         using any object as rules for Translator
         """
         result = {}
-        for name in self.iter__not_hidden():
-            if (
-                    callables_use == CallablesUse.SKIP
-                    and
-                    LambdaTrySuccess(getattr, self.SOURCE, name)
-                    and
-                    callable(getattr(self.SOURCE, name))
-            ):
-                continue
+        if template is not None:
+            template: AttrsDump = AttrAux().load(template)
 
-            value = getattr(self.SOURCE, name)
-            if callables_use == CallablesUse.RESOLVE_EXX:
-                value = Lambda(value).get_result_or_exx()
+        for name in self.iter__not_hidden():
+
+
+            value = None
+            # resolve properties --------------
+            if LambdaTryFail(getattr, self.SOURCE, name):
+                if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_EXX_SKIP:
+                    continue
+                elif callables_use == CallablesUse.RESOLVE_EXX:
+                    value = Lambda(getattr, self.SOURCE, name).get_result_or_exx()
+            else:
+                value = getattr(self.SOURCE, name)
+
+            # resolve callables ------------------
+            if callable(value):
+                if callables_use == CallablesUse.SKIP:
+                    continue
+
+                elif callables_use == CallablesUse.RESOLVE_EXX:
+                    value = Lambda(value).get_result_or_exx()
+
+                elif callables_use == CallablesUse.RESOLVE_RAISE:
+                    value = value()
+
+                elif callables_use == CallablesUse.RESOLVE_EXX_SKIP:
+                    try:
+                        value = value()
+                    except:
+                        continue
 
             result.update({name: value})
 
@@ -144,7 +226,7 @@ class AttrAux(InitSource):
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        data = self.dump_dict__callables_resolve_exx()
+        data = self.dump_dict(CallablesUse.RESOLVE_EXX)
         if data:
             for key, value in data.items():
                 result += f"\n\t{key}={value}"
