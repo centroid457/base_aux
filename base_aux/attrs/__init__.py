@@ -1,6 +1,6 @@
 # =====================================================================================================================
 from .m1_attr_0_init_kwargs import (
-    AttrsInitKwargs,
+    AttrsInitByKwArgs,
 )
 from .m1_attr_1_aux import (
     AttrAux,
