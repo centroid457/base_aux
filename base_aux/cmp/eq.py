@@ -99,11 +99,12 @@ class Eq(InitSource):
         """
         return self.eq_doublesided__bool(other) is not True
 
+    # -----------------------------------------------------------------------------------------------------------------
     def eq_by_dict__direct(self, other: TYPE__LAMBDA_KWARGS) -> bool:
         """
         GOAL
         ----
-        cmp directly
+        cmp direct values
 
         CREATED SPECIALLY FOR
         ---------------------
