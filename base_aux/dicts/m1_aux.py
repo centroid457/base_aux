@@ -1,6 +1,7 @@
 from typing import *
 
 from base_aux.base_source import InitSource
+from base_aux.lambdas import Lambda
 
 
 # =====================================================================================================================
@@ -10,6 +11,14 @@ class DictAux(InitSource):  # use name *s to not mess with typing.Dict
     ----
     decide where to work - source or copy????
     """
+
+    SOURCE: dict[Any, Any] = Lambda(dict)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def clear_values(self) -> dict[Any, None]:
+        return dict.fromkeys(self.SOURCE)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def collapse_key(self, key: Any) -> dict[Any, Any]:
         """
         GOAL
@@ -63,6 +72,7 @@ class DictAux(InitSource):  # use name *s to not mess with typing.Dict
 
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
     def prepare_serialisation(self) -> dict:
         result = {}
         # TODO: FINISH

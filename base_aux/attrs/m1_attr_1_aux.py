@@ -26,11 +26,7 @@ class AttrAux(InitSource):
     ------
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
-
-    def __init__(self, source: Any = None):
-        super().__init__(source)    # not necessary! just to keep ide inspection in correct way
-        if source is None:
-            self.SOURCE = AttrsDump()
+    SOURCE = Lambda(AttrsDump)
 
     # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
