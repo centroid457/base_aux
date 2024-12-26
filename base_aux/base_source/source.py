@@ -15,7 +15,17 @@ class InitSource:
     ---------------------
     apply in AttrAux and same others
 
-    :ivar SOURCE: use Lambda to make a callableGenerate default value! like dict or other user instance
+    :ivar SOURCE: use Lambda or even simple Callable to make a callableGenerate default value! like dict or other user class.
+        main Idea for Callable Source is generate independent value in instances.
+        it keeps callable type only in class attribute! in instance it will be resolved by calling!
+
+    BEST USAGE
+    ----------
+        class ClsAux(InitSource):
+            SOURCE = MyClass
+            SOURCE = Lambda(dict)
+            SOURCE = dict
+            SOURCE = dict
     """
     # SOURCE: dict = Lambda(dict)     # for callable
     # SOURCE: Any | Lambda = Lambda(None)     # generic final value
