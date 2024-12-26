@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.base_source import *
+from base_aux.base_source.source import InitSource
 
 
 # =====================================================================================================================

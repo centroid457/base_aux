@@ -1,9 +1,9 @@
 from typing import *
-from base_aux.base_objects import TypeCheck
-from base_aux.base_source import InitSource
-from base_aux.base_argskwargs import *
-from base_aux.attrs import *
-from base_aux.lambdas import *
+from base_aux.base_source.source import InitSource
+from base_aux.base_objects.obj_types import TypeCheck
+from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS
+
+from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
@@ -116,7 +116,11 @@ class Eq(InitSource):
                     continue
                 else:
                     return False
-            actual = Lambda(getattr, self.SOURCE, key).get_result_or_exx()
+            try:
+                actual = getattr(self.SOURCE, key)
+            except Exception as exx:
+                actual = exx
+
             if actual != expected:
                 msg = f"for {key_real=} {actual=}/{expected=}"
                 print(msg)

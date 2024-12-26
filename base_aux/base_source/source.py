@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.lambdas import Lambda
+# from base_aux.lambdas.lambdas import Lambda     # CIRCULAR IMPORT
 
 
 # =====================================================================================================================
@@ -17,14 +17,15 @@ class InitSource:
 
     :ivar SOURCE: use Lambda to make a callableGenerate default value! like dict or other user instance
     """
-    SOURCE: dict = Lambda(dict)     # for callable
-    SOURCE: Any | Lambda = Lambda(None)     # generic final value
+    # SOURCE: dict = Lambda(dict)     # for callable
+    # SOURCE: Any | Lambda = Lambda(None)     # generic final value
     SOURCE: Any = None                      # generic final value
 
     @classmethod
     @property
     def SOURCE_DEF(cls) -> Any:
-        if isinstance(cls.SOURCE, Lambda):
+        # if isinstance(cls.SOURCE, Lambda):
+        if callable(cls.SOURCE):
             result = cls.SOURCE()
         else:
             result = cls.SOURCE

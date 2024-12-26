@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.attrs import *
+from base_aux.attrs.m1_attr_0_init_kwargs import AttrsInitByKwArgs
 
 
 # =====================================================================================================================

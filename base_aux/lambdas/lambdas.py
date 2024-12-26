@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.base_argskwargs.argskwargs import *
+from base_aux.base_argskwargs.argskwargs import InitArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2, CallablesUse
 from base_aux.base_objects import TypeCheck
 

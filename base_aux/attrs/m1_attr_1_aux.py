@@ -1,8 +1,9 @@
 from typing import *
-from base_aux.lambdas import LambdaTrySuccess, Lambda, LambdaTryFail
-from base_aux.base_source import *
-from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS
-from base_aux.base_enums import CallablesUse
+from base_aux.base_source.source import InitSource
+from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
+from base_aux.base_enums.enums import CallablesUse
+
+# from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
 
 
 # =====================================================================================================================
@@ -26,7 +27,8 @@ class AttrAux(InitSource):
     ------
     if there are several same attrs in different cases - you should resolve it by yourself!
     """
-    SOURCE = Lambda(AttrsDump)
+    # SOURCE = Lambda(AttrsDump)
+    SOURCE = AttrsDump
 
     # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
@@ -80,21 +82,6 @@ class AttrAux(InitSource):
             raise AttributeError(name)
 
         value = getattr(self.SOURCE, name_original)
-
-        # value = None
-        # # resolve properties --------------
-        # if LambdaTryFail(getattr, self.SOURCE, name_original):
-        #     if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
-        #         return
-        #     elif callables_use == CallablesUse.RESOLVE_EXX:
-        #         value = Lambda(getattr, self.SOURCE, name_original).get_result_or_exx()
-        # else:
-        #     value = getattr(self.SOURCE, name_original)
-        #
-        # # resolve callables ---------------
-        # if callable(value):
-        #     value = Lambda(value).get_result(callables_use=callables_use)
-
         return value
 
     def anycase__setattr(self, name: str, value: Any) -> None | NoReturn:
@@ -205,33 +192,30 @@ class AttrAux(InitSource):
 
         for name in self.iter__not_hidden():
 
-
             value = None
             # resolve properties --------------
-            if LambdaTryFail(getattr, self.SOURCE, name):
+            try:
+                value = getattr(self.SOURCE, name)
+            except Exception as exx:
                 if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
                     continue
                 elif callables_use == CallablesUse.RESOLVE_EXX:
-                    value = Lambda(getattr, self.SOURCE, name).get_result_or_exx()
-            else:
-                value = getattr(self.SOURCE, name)
+                    value = exx
 
             # resolve callables ------------------
             if callable(value):
                 if callables_use == CallablesUse.SKIP:
                     continue
 
-                elif callables_use == CallablesUse.RESOLVE_EXX:
-                    value = Lambda(value).get_result_or_exx()
-
-                elif callables_use == CallablesUse.RESOLVE_RAISE:
+                try:
                     value = value()
-
-                elif callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
-                    try:
-                        value = value()
-                    except:
+                except Exception as exx:
+                    if callables_use == CallablesUse.RESOLVE_EXX:
+                        value = exx
+                    elif callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
                         continue
+                    elif callables_use == CallablesUse.RESOLVE_RAISE:
+                        raise exx
 
             result.update({name: value})
 

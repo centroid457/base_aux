@@ -1,6 +1,7 @@
+from typing import *
 from dataclasses import dataclass, field
 
-from .obj_types import *
+from .obj_types import TypeCheck
 
 
 # =====================================================================================================================
