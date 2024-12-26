@@ -1,4 +1,6 @@
+from typing import *
 import copy
+import re
 
 
 # =====================================================================================================================
@@ -276,7 +278,7 @@ def dict_keys_delete_by_values(**kwargs):        # starichenko
     return dict_values_replace(**kwargs, delete_found_keys=True)
 
 
-def dict_key_rename__by_name(source: dict, key: tp.Any, new_key: tp.Any) -> dict:  # starichenko
+def dict_key_rename__by_name(source: dict, key: Any, new_key: Any) -> dict:  # starichenko
     result = {}
     for _key, value in source.items():
         if key == _key:
@@ -285,7 +287,7 @@ def dict_key_rename__by_name(source: dict, key: tp.Any, new_key: tp.Any) -> dict
     return result
 
 
-def dict_keys_rename__by_func(source: dict, func: tp.Callable[[tp.Any], tp.Any]) -> dict:  # starichenko
+def dict_keys_rename__by_func(source: dict, func: Callable[[Any], Any]) -> dict:  # starichenko
     result = {}
     for key, value in source.items():
         key = func(key)
@@ -381,7 +383,7 @@ def dict_keys_short_names(source, subkeys_list=[], get_flatten=True):   # staric
 def dicts_compare_full(
         target: dict,
         compare: dict,
-        func: tp.Optional[tp.Callable[[tp.Any, tp.Any], bool]] = None,
+        func: Optional[Callable[[Any, Any], bool]] = None,
 ) -> "Result":    # starichenko
     """Compare dicts 1 level.
 
@@ -424,7 +426,7 @@ def dicts_compare_full(
 def dict_compare_by_same_values(
         source: dict,
         compare: dict,
-        func: tp.Optional[tp.Callable[[tp.Any, tp.Any], bool]] = None,
+        func: Optional[Callable[[Any, Any], bool]] = None,
         return_by: int = 0
 ) -> dict:    # starichenko
     """Return new dict by Delete from source dict keys with same values from compare dict!
@@ -649,7 +651,7 @@ def dict_value_get_with_default_and_replacing(source, key, default=None, replace
     return result
 
 
-def dict_value_get_by_keypath(source: dict, keypath: tp.Union[str, list]) -> tp.Optional[tp.Any]:      # Starichenko
+def dict_value_get_by_keypath(source: dict, keypath: Union[str, list]) -> Optional[ny]:      # Starichenko
     """get value from dictionary specifying by keys like a path
 
     example:

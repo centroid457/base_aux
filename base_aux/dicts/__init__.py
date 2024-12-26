@@ -5,14 +5,14 @@
 
 
 # =====================================================================================================================
-from .dots_1_simple import (
+from .m2_dots_1_simple import (
     DictDots,
     DictDotsAnnotRequired,
 )
-from .dots_2_full import (
+from .m2_dots_2_full import (
     DictDotsFull,
 )
-from .modifier import (
+from .m1_aux import (
     Dicts,
 )
 
