@@ -88,7 +88,7 @@ class Lambda(InitArgsKwargs):
         return bool(self(*self.ARGS, **self.KWARGS))
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get_result(self, callable_use: CallablesUse = CallablesUse.RESOLVE_RAISE, *args, **kwargs) -> Any | Exception | NoReturn:
+    def get_result(self, callable_use: CallablesUse = CallablesUse.RESOLVE_RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn:
         if not callable(self.CONSTRUCTOR):
             return self.CONSTRUCTOR
 

@@ -33,8 +33,8 @@ class AttrAux(InitSource):
             self.SOURCE = AttrsDump()
 
     # =================================================================================================================
-    def __contains__(self, item: str):
-        return self.anycase__find(item) is not None
+    # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
+    #     return self.anycase__check_exists(item)
 
     # ITER ------------------------------------------------------------------------------------------------------------
     def iter__not_private(self) -> Iterable[str]:
@@ -47,8 +47,8 @@ class AttrAux(InitSource):
             if not name.startswith("_"):
                 yield name
 
-    def __iter__(self):
-        yield from self.iter__not_hidden()
+    # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
+    #     yield from self.iter__not_hidden()
 
     # =================================================================================================================
     pass
@@ -72,30 +72,32 @@ class AttrAux(InitSource):
         return self.anycase__find(name) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
-    def anycase__getattr(self, name: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Optional[Any | Callable | Exception] | NoReturn:
+    def anycase__getattr(self, name: str) -> Any | Callable | NoReturn:
         """
+        GOAL
+        ----
         get attr value by name in any register
-        no execution! return pure value as represented in object!
-
-        :param callables_use: common used only DIRECT/RESOLVE_EXX/RESOLVE_RAISE! others would return None instead of raise (just for logic)!
+        no execution/resolving! return pure value as represented in object!
         """
         name_original = self.anycase__find(name)
         if name_original is None:
             raise AttributeError(name)
 
-        value = None
-        # resolve properties --------------
-        if LambdaTryFail(getattr, self.SOURCE, name_original):
-            if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
-                return
-            elif callables_use == CallablesUse.RESOLVE_EXX:
-                value = Lambda(getattr, self.SOURCE, name_original).get_result_or_exx()
-        else:
-            value = getattr(self.SOURCE, name_original)
+        value = getattr(self.SOURCE, name_original)
 
-        # resolve callables ------------------
-        if callable(value):
-            value = Lambda(value).get_result(callables_use=callables_use)
+        # value = None
+        # # resolve properties --------------
+        # if LambdaTryFail(getattr, self.SOURCE, name_original):
+        #     if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
+        #         return
+        #     elif callables_use == CallablesUse.RESOLVE_EXX:
+        #         value = Lambda(getattr, self.SOURCE, name_original).get_result_or_exx()
+        # else:
+        #     value = getattr(self.SOURCE, name_original)
+        #
+        # # resolve callables ---------------
+        # if callable(value):
+        #     value = Lambda(value).get_result(callables_use=callables_use)
 
         return value
 
@@ -152,12 +154,16 @@ class AttrAux(InitSource):
         else:
             return self.load__by_obj(other, callables_use=callables_use)
 
-    def load__by_dict(self, other: dict, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
         LOAD MEANS basically setup final values for final not callables values!
         but you can use any types for your own!
+
+        NOTE
+        ----
+        dont use callables_use
         """
         for key, value in other.items():
             self.anycase__setattr(key, value)
@@ -165,16 +171,13 @@ class AttrAux(InitSource):
 
     def load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
         """
-        GOAL
-        ----
-        set only final not callables attrs
-
+        its a derivative additional meth for load__by_dict
         NOTE
         ----
         return AttrsDump in case of using directly without source AttrsAux().load__by_obj(other) -> AttrsDump()
         """
         other = AttrAux(other).dump_dict(callables_use=callables_use)
-        return self.load__by_dict(other, callables_use=CallablesUse.DIRECT)     # here must be DIRECT
+        return self.load__by_dict(other)     # here must be DIRECT
 
     # =================================================================================================================
     pass
@@ -234,6 +237,9 @@ class AttrAux(InitSource):
             result.update({name: value})
 
         return result
+
+    def dump_dict__direct(self) -> TYPE__LAMBDA_KWARGS:
+        return self.dump_dict(CallablesUse.DIRECT)
 
     def dump_dict__callables_skip(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.SKIP)
