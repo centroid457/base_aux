@@ -1,12 +1,16 @@
 from typing import *
 
+from base_aux.base_source import InitSource
+
 
 # =====================================================================================================================
-class Dicts(dict):  # use name *s to not mess with typing.Dict
+class DictAux(InitSource):  # use name *s to not mess with typing.Dict
     """
-    just a class which keep all meths for dicts
+    NOTE
+    ----
+    decide where to work - source or copy????
     """
-    def collapse_key(self, key: Any, source: dict = None) -> dict:
+    def collapse_key(self, key: Any) -> dict[Any, Any]:
         """
         GOAL
         ----
@@ -51,10 +55,7 @@ class Dicts(dict):  # use name *s to not mess with typing.Dict
 
         """
         result = {}
-        if source is None:
-            source = self
-
-        for root_key, root_value in source.items():
+        for root_key, root_value in self.SOURCE.items():
             if isinstance(root_value, dict) and key in root_value:
                 root_value = root_value.get(key)
 
@@ -62,17 +63,10 @@ class Dicts(dict):  # use name *s to not mess with typing.Dict
 
         return result
 
-    def prepare_serialisation(self, source: dict = None) -> dict:
+    def prepare_serialisation(self) -> dict:
         result = {}
-        if source is None:
-            source = self
-        pass
+        # TODO: FINISH
 
-
-
-
-
-        
         return result
 
 

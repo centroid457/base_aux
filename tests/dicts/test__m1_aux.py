@@ -14,7 +14,7 @@ VICTIM = {
 
 
 def test__collapse_key():
-    victim = Dicts(VICTIM)
+    victim = DictAux(VICTIM)
     victim = victim.collapse_key(4)
     assert victim == VICTIM
     assert victim[1] == {1: 1, 2: 2, 3: 3}
@@ -22,7 +22,7 @@ def test__collapse_key():
     assert victim[3] == {1: 1}
     assert victim[4] == 4
 
-    victim = Dicts(VICTIM)
+    victim = DictAux(VICTIM)
     victim = victim.collapse_key(3)
     assert victim != VICTIM
     assert victim[1] == 3
@@ -30,7 +30,7 @@ def test__collapse_key():
     assert victim[3] == {1: 1}
     assert victim[4] == 4
 
-    victim = Dicts(VICTIM)
+    victim = DictAux(VICTIM)
     victim = victim.collapse_key(2)
     assert victim != VICTIM
     assert victim[1] == 2
