@@ -39,4 +39,11 @@ def test__collapse_key():
     assert victim[4] == 4
 
 
+def test__clear_values():
+    victim = DictAux(VICTIM)
+    victim = victim.clear_values()
+    assert victim != VICTIM
+    assert victim == dict.fromkeys(VICTIM)
+
+
 # =====================================================================================================================
