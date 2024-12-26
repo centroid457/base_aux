@@ -160,6 +160,7 @@ class AttrAux(InitSource):
         ----------
         LOAD MEANS basically setup final values for final not callables values!
         but you can use any types for your own!
+        expected you know what you do and do exactly ready to use final values/not callables in otherObj!
 
         NOTE
         ----
@@ -185,15 +186,16 @@ class AttrAux(InitSource):
     # DUMP ------------------------------------------------------------------------------------------------------------
     def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | Any = None) -> AttrsDump | NoReturn:
         pass
+        # TODO: finish
 
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | Any = None) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.RESOLVE_EXX, template: dict | Any = None) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN ITEA
         ----------
         BUMPS MEANS basically save final values for all (even any dynamic/callables) values! or only not callables!
 
         GOAL
-        ____
+        ----
         make a dict from any object from attrs (not hidden)
 
         SPECIALLY CREATED FOR
@@ -201,6 +203,7 @@ class AttrAux(InitSource):
         using any object as rules for Translator
         """
         result = {}
+        # TODO: add template!
         if template is not None:
             template: AttrsDump = AttrAux().load(template)
 
@@ -238,14 +241,17 @@ class AttrAux(InitSource):
 
         return result
 
+    def dump_dict__callables_resolve_exx(self) -> dict[str, Any | Exception]:
+        """
+        MAIN DERIVATIVE!
+        """
+        return self.dump_dict(CallablesUse.RESOLVE_EXX)
+
     def dump_dict__direct(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.DIRECT)
 
     def dump_dict__callables_skip(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.SKIP)
-
-    def dump_dict__callables_resolve_exx(self) -> dict[str, Any | Exception]:
-        return self.dump_dict(CallablesUse.RESOLVE_EXX)
 
     def dump_dict__callables_resolve_raise(self) -> dict[str, Any] | NoReturn:
         return self.dump_dict(CallablesUse.RESOLVE_RAISE)
