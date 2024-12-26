@@ -5,6 +5,7 @@ from base_aux.lambdas import Lambda
 
 
 # =====================================================================================================================
+@final
 class DictAux(InitSource):  # use name *s to not mess with typing.Dict
     """
     NOTE

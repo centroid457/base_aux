@@ -7,6 +7,7 @@ from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
+@final
 class Eq(InitSource):
     def eq_doublesided_or_exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
         """
