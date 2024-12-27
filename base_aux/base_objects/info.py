@@ -2,6 +2,7 @@ from typing import *
 from dataclasses import dataclass, field
 
 from .obj_types import TypeCheck
+from base_aux.attrs.m0_static import check_name__buildin
 
 
 # =====================================================================================================================
@@ -155,7 +156,7 @@ class ObjectInfo:
                 print(f"{pos}:\t{name}")
 
             # FILTER -----------------------------------------------------------------------
-            if self.HIDE_BUILD_IN and TypeCheck._name_is_buildin(name):
+            if self.HIDE_BUILD_IN and check_name__buildin(name):
                 continue
 
             if self.NAMES__USE_ONLY_PARTS:

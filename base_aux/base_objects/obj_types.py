@@ -44,11 +44,6 @@ class TYPES:
 @final
 class TypeCheck(InitSource):
     # -----------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def _name_is_buildin(name: str) -> bool:
-        return name.startswith("__") and name.endswith("__") and len(name) > 4
-
-    # -----------------------------------------------------------------------------------------------------------------
     def check__bool_none(self) -> bool:
         """
         GOAL

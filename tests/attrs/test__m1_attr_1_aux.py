@@ -2,7 +2,9 @@ from typing import *
 import pytest
 
 from base_aux.pytester import *
-from base_aux.attrs import *
+from base_aux.attrs.m0_static import check_name__buildin
+from base_aux.attrs.m1_attr_0_init_kwargs import AttrsInitByKwArgs
+from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
@@ -10,6 +12,44 @@ class Victim:
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        ("_", False),
+        ("__", False),
+        ("____", False),
+
+        ("___abc___", True),
+        ("__abc__", True),
+        ("__abc_", False),
+        ("__abc", False),
+
+        ("_abc__", False),
+        ("_abc_", False),
+        ("_abc", False),
+
+        ("abc__", False),
+        ("abc_", False),
+        ("abc", False),
+    ]
+)
+def test__name_is_build_in(source, _EXPECTED):
+    func_link = check_name__buildin(source)
+    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (AttrsInitByKwArgs(a=1, b=2, _h=11, __p=22), (dict(a=1, b=2), dict(a=1, b=2, _h=11), )),
+    ]
+)
+def test__iter(source, _EXPECTED):
+    # pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[0]))
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[1]))
 
 
 # =====================================================================================================================

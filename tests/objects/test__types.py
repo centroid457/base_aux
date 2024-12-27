@@ -7,32 +7,6 @@ from base_aux.pytester import *
 
 # =====================================================================================================================
 class Test__1:
-    # -----------------------------------------------------------------------------------------------------------------
-    @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
-        argvalues=[
-            ("_", False),
-            ("__", False),
-            ("____", False),
-
-            ("___abc___", True),
-            ("__abc__", True),
-            ("__abc_", False),
-            ("__abc", False),
-
-            ("_abc__", False),
-            ("_abc_", False),
-            ("_abc", False),
-
-            ("abc__", False),
-            ("abc_", False),
-            ("abc", False),
-        ]
-    )
-    def test__name_is_build_in(self, source, _EXPECTED):
-        func_link = TypeCheck._name_is_buildin(source)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
-
     # =================================================================================================================
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",

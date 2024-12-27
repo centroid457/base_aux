@@ -31,18 +31,49 @@ class AttrAux(InitSource):
     SOURCE = AttrsDump
 
     # =================================================================================================================
+    def check_name__private_mro(self, name: str) -> bool:
+        """
+        REASON
+        ------
+        here in example - "__hello" will never appear directly with original name!!!
+        class Cls:
+            ATTR1 = 1
+            def __hello(self, *args) -> None:
+                kwargs = dict.fromkeys(args)
+                self.__init_kwargs(**kwargs)
+
+        name='_Cls__hello' hasattr(self.SOURCE, name)=True
+        name='__class__' hasattr(self.SOURCE, name)=True
+        name='__delattr__' hasattr(self.SOURCE, name)=True
+        name='__dict__' hasattr(self.SOURCE, name)=True
+        name='__dir__' hasattr(self.SOURCE, name)=True
+        name='__doc__' hasattr(self.SOURCE, name)=True
+        ///
+        name='ATTR1' hasattr(self.SOURCE, name)=True
+        """
+        pass
+
+    # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
     # ITER ------------------------------------------------------------------------------------------------------------
-    def iter__not_private(self) -> Iterable[str]:
-        for name in dir(self.SOURCE):
-            if not name.startswith("__"):
-                yield name
-
     def iter__not_hidden(self) -> Iterable[str]:
+        """
+        NOTE
+        ----
+        hidden names are more simple to detect then private!
+        cause of private methods(!) changes to "_<ClsName><__MethName>"
+
+        """
         for name in dir(self.SOURCE):
             if not name.startswith("_"):
+                yield name
+
+    def iter__not_private(self) -> Iterable[str]:
+        for name in dir(self.SOURCE):
+            print(f"{name=} {hasattr(self.SOURCE, name)=}")
+            if not name.startswith("__"):
                 yield name
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
