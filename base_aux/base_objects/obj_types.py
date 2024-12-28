@@ -244,7 +244,6 @@ class TypeCheck(InitSource):
         """
         # todo: finish
 
-
     def check__instance(self) -> bool:
         return not self.check__class() and not self.check__callable_func() and not self.check__callable_meth()
 
@@ -255,13 +254,18 @@ class TypeCheck(InitSource):
         """
         any of both variant (Instance/Class) of any Exception!
         """
-        if isinstance(self.SOURCE, Exception):
-            return True
         try:
-            return issubclass(self.SOURCE, Exception)
+            return issubclass(self.SOURCE, Exception)   # check it first!!! in try cover
         except:
-            pass
-        return False
+            return isinstance(self.SOURCE, Exception)
+
+        # if isinstance(self.SOURCE, Exception):
+        #     return True
+        # try:
+        #     return issubclass(self.SOURCE, Exception)
+        # except:
+        #     pass
+        # return False
 
     def check__nested__by_cls_or_inst(self, parent: Any) -> bool | None:
         """
