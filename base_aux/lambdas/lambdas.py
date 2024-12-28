@@ -3,7 +3,7 @@ import time
 
 from base_aux.base_argskwargs.argskwargs import InitArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2, CallablesUse
-from base_aux.base_objects import TypeCheck
+# from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
 
 from base_aux.cmp.eq import Eq
 
@@ -187,7 +187,12 @@ class Lambda(InitArgsKwargs):
         """
         try:
             result = Lambda(self.CONSTRUCTOR).get_result_or_raise(*args, **kwargs)
-            if TypeCheck(result).check__exception():
+            try:
+                is_exx = issubclass(result, Exception)
+            except:
+                is_exx = isinstance(result, Exception)
+
+            if is_exx:
                 return False
             return bool(result)
         except:
