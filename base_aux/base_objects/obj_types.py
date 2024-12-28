@@ -214,11 +214,36 @@ class TypeCheck(InitSource):
         """
         works both for funcs/meths for any Сды/Штые1 see tests test__check__class
         """
+        # 1 -----------------
         # return hasattr(self.SOURCE, "__class__")     # this is incorrect!!! tests get fail!
+
+        # 2 -----------------
+        # INCORRECT! metaclasses have middle class(MetaType)!
+        # if self.SOURCE.__class__ is type:
+        #     return True
+
+        # 3 -----------------
+        # CORRECT! only Class can be subclass!!! otherwise Raise!
         try:
             return issubclass(self.SOURCE, object)
         except:
             return False
+
+        # 4 -----------------
+        # CORRECT! only Class have __mro__!!! otherwise Raise!
+        # try:
+        #     _ = self.SOURCE.__mro__
+        #     return True
+        # except:
+        #     return False
+
+    def check_metaclassed(self) -> bool:
+        """
+        just an idea to show that class crates by metaclass!
+        no idea how and where to use! just a toy for playing and deeper understanding
+        """
+        # todo: finish
+
 
     def check__instance(self) -> bool:
         return not self.check__class() and not self.check__callable_func() and not self.check__callable_meth()
