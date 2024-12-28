@@ -33,6 +33,10 @@ class AttrAux(InitSource):
     # =================================================================================================================
     def check_name__private_mro(self, name: str) -> bool:
         """
+        GOAL
+        ----
+        check if name is real Private! but we need test it only ON REAL OBJECT!!! NO GENERIC!!!
+
         REASON
         ------
         here in example - "__hello" will never appear directly with original name!!!
@@ -51,7 +55,20 @@ class AttrAux(InitSource):
         ///
         name='ATTR1' hasattr(self.SOURCE, name)=True
         """
-        pass
+        # obvious -------
+        if not name.startswith("_"):
+            return False
+
+        # get Cls -------
+        try:
+            mro = self.SOURCE.__mro__
+        except:
+            mro = self.SOURCE.__class__.__mro__
+
+        for cls in mro:
+            if name.startswith(f"_{cls.__name__}__"):
+                return True
+        return False
 
     # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
@@ -71,10 +88,40 @@ class AttrAux(InitSource):
                 yield name
 
     def iter__not_private(self) -> Iterable[str]:
+        privates: set[str] = set(self.iter__private())
+
         for name in dir(self.SOURCE):
-            print(f"{name=} {hasattr(self.SOURCE, name)=}")
-            if not name.startswith("__"):
-                yield name
+            # print(f"{name=} {hasattr(self.SOURCE, name)=}")
+            if name in privates:
+                continue
+
+            yield name
+
+    def iter__private(self) -> Iterable[str]:
+        """
+        GOAL
+        ----
+        collect all privates in original names! without ClassName-Prefix
+
+        BEST IDEA
+        ---------
+        keep list of iters
+        """
+        for name in dir(self.SOURCE):
+            # obvious -------
+            if not name.startswith("_"):
+                continue
+
+            # get Cls -------
+            try:
+                mro = self.SOURCE.__mro__
+            except:
+                mro = self.SOURCE.__class__.__mro__
+
+            for cls in mro:
+                if name.startswith(f"_{cls.__name__}__"):
+                    name = name.replace(f"_{cls.__name__}", "")
+                    yield name
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()

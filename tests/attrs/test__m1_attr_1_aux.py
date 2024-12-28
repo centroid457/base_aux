@@ -41,15 +41,23 @@ def test__name_is_build_in(source, _EXPECTED):
 
 
 # =====================================================================================================================
+class Victim:
+    a=1
+    _h=2
+    __p=3
+
+
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
-        (AttrsInitByKwArgs(a=1, b=2, _h=11, __p=22), (dict(a=1, b=2), dict(a=1, b=2, _h=11), )),
+        (Victim, (dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (Victim(), (dict(a=None), dict(a=None, _h=None), dict(__p=None))),
     ]
 )
 def test__iter(source, _EXPECTED):
-    # pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[0]))
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[1]))
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[0]))
+    # pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[1]))
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__private()), set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -68,10 +76,12 @@ def test__iter(source, _EXPECTED):
         ("ATTR_UPPERCASE", ("ATTR_UPPERCASE", "VALUE", None, )),
         ("attr_uppercase", ("ATTR_UPPERCASE", "VALUE", None, )),
 
-        ("     attr_uppercase",("ATTR_UPPERCASE", "VALUE", None, )),
+        ("     attr_uppercase", ("ATTR_UPPERCASE", "VALUE", None, )),
     ]
 )
 def test__anycase__xxx(attr, _EXPECTED):
+    # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
+
     pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__find, attr, _EXPECTED[0])
     pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__getattr, attr, _EXPECTED[1])
     pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__setattr, (attr, 123), _EXPECTED[2])
