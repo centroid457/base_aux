@@ -41,15 +41,49 @@ class Victim:
     __p=3
 
 
+class VictimNested_Old(Victim):
+    pass
+
+class VictimNested_ReNew(Victim):
+    a = 1
+    _h = 2
+    __p = 3
+
+class VictimNested_New(Victim):
+    a2 = 1
+    _h2 = 2
+    __p2 = 3
+
+
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
         (Victim,    (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
         (Victim(),  (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+
+        (VictimNested_Old, (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (VictimNested_Old(), (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+
+        (VictimNested_ReNew, (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (VictimNested_ReNew(), (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+
+        (VictimNested_New,
+         (
+                dict(a=None, _h=None, __p=None, a2=None, _h2=None, __p2=None),
+                dict(a=None, a2=None),
+                dict(a=None, _h=None, a2=None, _h2=None),
+                dict(__p=None, __p2=None)
+         )),
+        (VictimNested_New(),
+         (
+                 dict(a=None, _h=None, __p=None, a2=None, _h2=None, __p2=None),
+                 dict(a=None, a2=None),
+                 dict(a=None, _h=None, a2=None, _h2=None),
+                 dict(__p=None, __p2=None)
+         )),
     ]
 )
 def test__iter(source, _EXPECTED):
-    # TODO: add tests for NESTED objects!
     pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__external_not_builtin()), set(_EXPECTED[0]))
     pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[1]))
     pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[2]))
