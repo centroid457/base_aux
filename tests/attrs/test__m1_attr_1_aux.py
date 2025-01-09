@@ -8,12 +8,6 @@ from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
 # =====================================================================================================================
-class Victim:
-    attr_lowercase = "value"
-    ATTR_UPPERCASE = "VALUE"
-    Attr_CamelCase = "Value"
-
-# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
@@ -61,6 +55,12 @@ def test__iter(source, _EXPECTED):
 
 
 # =====================================================================================================================
+class Victim2:
+    attr_lowercase = "value"
+    ATTR_UPPERCASE = "VALUE"
+    Attr_CamelCase = "Value"
+
+
 @pytest.mark.parametrize(
     argnames="attr, _EXPECTED",
     argvalues=[
@@ -82,9 +82,9 @@ def test__iter(source, _EXPECTED):
 def test__anycase__xxx(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__find, attr, _EXPECTED[0])
-    pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__getattr, attr, _EXPECTED[1])
-    pytest_func_tester__no_kwargs(AttrAux(Victim()).anycase__setattr, (attr, 123), _EXPECTED[2])
+    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__find, attr, _EXPECTED[0])
+    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__getattr, attr, _EXPECTED[1])
+    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__setattr, (attr, 123), _EXPECTED[2])
 
 
 # =====================================================================================================================
