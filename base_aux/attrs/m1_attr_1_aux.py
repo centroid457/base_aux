@@ -1,7 +1,10 @@
 from typing import *
+import re
+
 from base_aux.base_source.source import InitSource
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
-from base_aux.base_enums.enums import CallablesUse
+from base_aux.base_enums.enums import CallablesUse, FormIntExt
+
 
 # from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
 
@@ -31,15 +34,17 @@ class AttrAux(InitSource):
     SOURCE = AttrsDump
 
     # =================================================================================================================
-    def check_name__private_mro(self, name: str) -> bool:
+    def get_name__private_external(self, dirname: str) -> str | None:
         """
+        typically BUILTIN - NOT INCLUDED!
+
         GOAL
         ----
-        check if name is real Private! but we need test it only ON REAL OBJECT!!! NO GENERIC!!!
+        using name (from dir(obj)) return user-friendly name! external name!
 
         REASON
         ------
-        here in example - "__hello" will never appear directly with original name!!!
+        here in example - "__hello" will never appear directly!!!
         class Cls:
             ATTR1 = 1
             def __hello(self, *args) -> None:
@@ -55,26 +60,57 @@ class AttrAux(InitSource):
         ///
         name='ATTR1' hasattr(self.SOURCE, name)=True
         """
-        # obvious -------
-        if not name.startswith("_"):
-            return False
+        # filter not hidden -------
+        if not dirname.startswith("_"):
+            return
 
-        # get Cls -------
-        try:
-            mro = self.SOURCE.__mro__
-        except:
-            mro = self.SOURCE.__class__.__mro__
+        # filter private builtin -------
+        if dirname.startswith("__"):
+            return
 
-        for cls in mro:
-            if name.startswith(f"_{cls.__name__}__"):
-                return True
-        return False
+        # parse private user -------
+        if re.fullmatch(r"_.+__.+", dirname):
+            try:
+                mro = self.SOURCE.__mro__
+            except:
+                mro = self.SOURCE.__class__.__mro__
+
+            for cls in mro:
+                if dirname.startswith(f"_{cls.__name__}__"):
+                    name_external = dirname.replace(f"_{cls.__name__}", "")
+                    return name_external
 
     # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
     # ITER ------------------------------------------------------------------------------------------------------------
+    def iter__external_not_builtin(self) -> Iterable[str]:
+        """
+        GOAL
+        ----
+        1/ iter only without builtins!!!
+        2/ use EXT private names!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        this class - all iterations!
+        """
+        for name in dir(self.SOURCE):
+            # filter builtin ----------
+            if name.startswith("__"):
+                continue
+
+            # filter private external ----------
+            name_private_ext = self.get_name__private_external(name)
+            if name_private_ext:
+                yield name_private_ext
+                continue
+
+            # direct user attr ----------
+            yield name
+
+    # -----------------------------------------------------------------------------------------------------------------
     def iter__not_hidden(self) -> Iterable[str]:
         """
         NOTE
@@ -83,22 +119,19 @@ class AttrAux(InitSource):
         cause of private methods(!) changes to "_<ClsName><__MethName>"
 
         """
-        for name in dir(self.SOURCE):
+        for name in self.iter__external_not_builtin():
             if not name.startswith("_"):
                 yield name
 
-    def iter__not_private(self) -> Iterable[str]:   # FIXME: smth goes wrong here!!!
-        privates: set[str] = set(self.iter__private())
+    def iter__not_private(self) -> Iterable[str]:
+        for name in self.iter__external_not_builtin():
+            if not name.startswith("__"):
+                yield name
 
-        for name in dir(self.SOURCE):
-            # print(f"{name=} {hasattr(self.SOURCE, name)=}")
-            if name in privates:
-                continue
-
-            yield name
-
-    def iter__private(self) -> Iterable[str]:   # FIXME: smth goes wrong here!!!
+    def iter__private(self) -> Iterable[str]:
         """
+        BUILTIN - NOT INCLUDED!
+
         GOAL
         ----
         collect all privates in original names! without ClassName-Prefix
@@ -107,21 +140,9 @@ class AttrAux(InitSource):
         ---------
         keep list of iters
         """
-        for name in dir(self.SOURCE):
-            # obvious -------
-            if not name.startswith("_"):
-                continue
-
-            # get Cls -------
-            try:
-                mro = self.SOURCE.__mro__
-            except:
-                mro = self.SOURCE.__class__.__mro__
-
-            for cls in mro:
-                if name.startswith(f"_{cls.__name__}__"):
-                    name = name.replace(f"_{cls.__name__}", "")
-                    yield name
+        for name in self.iter__external_not_builtin():
+            if name.startswith("__"):
+                yield name
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
@@ -141,7 +162,7 @@ class AttrAux(InitSource):
         if not name:
             return
 
-        for name_original in dir(self.SOURCE):         # self.iter__not_private(): FIXME: not working!!! dir(self.SOURCE)/self.iter__not_hidden()
+        for name_original in self.iter__external_not_builtin():
             if name_original.lower() == name.lower():
                 return name_original
 
