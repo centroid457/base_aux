@@ -87,7 +87,7 @@ class AttrAux(InitSource):
             if not name.startswith("_"):
                 yield name
 
-    def iter__not_private(self) -> Iterable[str]:     # FIXME: DONT WORK!!!
+    def iter__not_private(self) -> Iterable[str]:   # FIXME: smth goes wrong here!!!
         privates: set[str] = set(self.iter__private())
 
         for name in dir(self.SOURCE):
@@ -97,13 +97,8 @@ class AttrAux(InitSource):
 
             yield name
 
-    def iter__private(self) -> Iterable[str]:   # FIXME: DONT WORK!!!
+    def iter__private(self) -> Iterable[str]:   # FIXME: smth goes wrong here!!!
         """
-        CAREFUL
-        -------
-        DONT USE!!! not work!!
-
-        ==============
         GOAL
         ----
         collect all privates in original names! without ClassName-Prefix
