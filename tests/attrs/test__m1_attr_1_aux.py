@@ -49,8 +49,9 @@ class Victim:
     ]
 )
 def test__iter(source, _EXPECTED):
+    # TODO: add tests for NESTED objects!
     pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[0]))
-    # pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[1]))
+    # pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[1]))  # FIXME: need working!
     pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__private()), set(_EXPECTED[2]))
 
 
