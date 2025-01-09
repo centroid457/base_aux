@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.pytester import *
-from base_aux.attrs import *
+from base_aux.attrs import GetattrPrefixInst
 
 
 # =====================================================================================================================
@@ -25,7 +25,7 @@ victim = Victim()
 
 
 # =====================================================================================================================
-def test__direct():
+def test__1():
     assert victim.bool__() == False
     assert victim.bool__(True) == True
 
@@ -44,6 +44,13 @@ def test__direct():
     assert victim.bool__meth_echo(True) == True
     assert victim.bool__meth_echo(False) == False
 
+
+def test__anycase():
+    assert victim.BOOL__() == False
+    assert victim.BOOL__(True) == True
+
+    assert victim.BOOL__TRUE() == True
+    assert victim.BOOL__METH_TRUE() == True
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
