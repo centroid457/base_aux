@@ -1,4 +1,5 @@
 from base_aux.base_argskwargs import *
+from base_aux.base_objects.obj_types import TypeCheck
 
 from base_aux.funcs import *
 from base_aux.lambdas.lambdas import *
