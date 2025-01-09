@@ -220,29 +220,28 @@ def test__all_defined2():
 
 
 # =====================================================================================================================
-class Test__NamedTuple:
-    def test__NT(self):
-        try:
-            class Victim(AnnotsRequired, NamedTuple):
-                ATTR1: int
-                ATTR2: int = 2
-            assert False
-        except TypeError:
-            # TypeError: can only inherit from a NamedTuple type and Generic
-            pass
-
-    @pytest.mark.skip   # seems its not need
-    def test__NT_by_obj(self):
+class Test__SpecialObjects:
+    def test__NamedTuple(self):
         class Victim(NamedTuple):
             ATTR1: int
             ATTR2: int = 2
 
+        try:
+            victimNT = Victim() # will not need! raised just on NamedTuple!
+            assert False
+        except:
+            pass
+
         victimNT = Victim(1)
 
-        assert AnnotsAux(victimNT).get_not_defined() == ["ATTR1", ]
-        assert AnnotsAux(victimNT).check_all_defined() == False
-        assert AnnotsAux(victimNT).dump__dict_types() == {"ATTR1": int, }
-        assert AnnotsAux(victimNT).dump__dict_values() == {"ATTR1": 1, }
+        assert AnnotsAux(victimNT).get_not_defined() == []
+        assert AnnotsAux(victimNT).check_all_defined() == True
+        assert AnnotsAux(victimNT).dump__dict_types() == {"ATTR1": int, "ATTR2": int, }
+        assert AnnotsAux(victimNT).dump__dict_values() == {"ATTR1": 1, "ATTR2": 2, }
+
+    @pytest.mark.skip
+    def test__DataClass(self):
+        pass
 
 
 # =====================================================================================================================

@@ -1,3 +1,5 @@
+from typing import *
+
 from base_aux.base_exceptions import *
 from base_aux.attrs import *
 
@@ -27,6 +29,17 @@ def test__ok():
         assert False
     except:
         assert False
+
+
+def test__NT():
+    try:
+        class Victim(AnnotsRequired, NamedTuple):
+            ATTR1: int
+            ATTR2: int = 2
+        assert False
+    except TypeError:
+        # TypeError: can only inherit from a NamedTuple type and Generic
+        pass
 
 
 # =====================================================================================================================
