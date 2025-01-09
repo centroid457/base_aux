@@ -46,7 +46,7 @@ class CallablesUse(Enum):
 
 
 # =====================================================================================================================
-class NameIntExt(Enum):
+class FormIntExt(Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
