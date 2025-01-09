@@ -3,7 +3,7 @@ import pytest
 
 from base_aux.base_exceptions import *
 from base_aux.pytester import *
-from base_aux.attrs import *
+from base_aux.attrs import GetattrPrefixInst_RaiseIf
 
 
 # =====================================================================================================================
@@ -18,15 +18,13 @@ class Victim(GetattrPrefixInst_RaiseIf):
 
 # =====================================================================================================================
 def test__register():
-    # --------------------------------
-    assert Victim().TRUE is True
+    victim = Victim()
 
-    try:
-        assert Victim().true is True
-    except AttributeError:
-        pass
-    else:
-        assert False
+    # --------------------------------
+    assert victim.TRUE is True
+    print(1)
+    assert victim.true is True
+    print(1)
 
     # --------------------------------
     try:

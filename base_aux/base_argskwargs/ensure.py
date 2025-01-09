@@ -1,5 +1,5 @@
 from base_aux.base_argskwargs.argskwargs import *
-from base_aux.base_objects import TypeCheck
+from base_aux.base_objects.obj_types import TypeCheck
 
 from base_aux.funcs.value_0_explicit import Default
 

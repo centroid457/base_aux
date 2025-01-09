@@ -40,26 +40,38 @@ class GetattrPrefixInst:
         1. prefix - callable with first parameter as catching item_value (may be callable or not).
         2.You always need to CALL prefixed result! even if you access to not callable attribute!
         """
+        # pretend DIRECT anycase name ----------
+        print("-"*10)
+        print(item)
+
+        item_original = AttrAux(self).anycase__find(item)
+        if item_original:
+            if item_original != item:
+                return getattr(self, item_original)
+
+        # pretend PREFIX ----------
         for prefix in self._GETATTR__PREFIXES:
+            print(prefix)
             prefix_original = AttrAux(self).anycase__find(prefix)
             if not prefix_original:
                 continue
             prefix_meth = getattr(self, prefix_original)
 
             # direct prefix ----------
-            if item.lower() == prefix.lower():
-                return lambda *prefix_args, **prefix_kwargs: Lambda(prefix_meth).get_result_or_raise(*prefix_args, **prefix_kwargs)
+            # if item.lower() == prefix.lower():
+            #     return lambda *prefix_args, **prefix_kwargs: Lambda(prefix_meth).get_result_or_raise(*prefix_args, **prefix_kwargs)
 
             # direct prefix ----------
             if prefix_original and item.lower().startswith(prefix.lower()):
-                item_short = item[len(prefix):]
-                item_value = AttrAux(self).anycase__getattr(item_short)
+                item_attr = item[len(prefix):]
+                item_value = AttrAux(self).anycase__getattr(item_attr)
 
                 return lambda *meth_args, **meth_kwargs: Lambda(prefix_meth).get_result_or_raise(
                     *[Lambda(item_value).get_result_or_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
                     **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 
+        print(3)
         raise AttributeError(item)
 
 
@@ -73,7 +85,6 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
-        _reverse = _reverse or False
         result = Lambda(source).get_result_or_exx()
         if TypeCheck(result).check__exception() or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
@@ -87,8 +98,28 @@ def _example():
     class GetattrPrefixInst_RaiseIf_data(GetattrPrefixInst_RaiseIf):
         ATTR0 = 0
         ATTR1 = 1
+
+        TRUE = True
+        FALSE = False
+        NONE = None
+
+        def meth(self, value: Any = None):
+            return value
+
         def METH(self, arg1=1, arg2=2):
             return arg1 == arg2
+
+    print(1)
+    assert GetattrPrefixInst_RaiseIf_data().TRUE is True
+    print(1)
+    assert GetattrPrefixInst_RaiseIf_data().true is True
+    print(1)
+    assert GetattrPrefixInst_RaiseIf_data().raise_if__none() is None
+    print(1)
+    print(1)
+    print(1)
+    print(1)
+
 
     # ON ATTRIBUTE --------------------
     # apply prefix+item
@@ -113,6 +144,11 @@ def _example():
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1, arg2=2, comment="WRONG!")    # RAISE comment argument invalid for meth()!!!
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1, arg2=2, COMMENT="CORRECT!")  # OK
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(2, arg2=2, COMMENT="CORRECT!")  # Exx__GetattrPrefix_RaiseIf
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _example()
 
 
 # =====================================================================================================================
