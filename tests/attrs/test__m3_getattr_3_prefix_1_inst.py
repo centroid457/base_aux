@@ -25,6 +25,13 @@ victim = Victim()
 
 
 # =====================================================================================================================
+def test__anycase():
+    assert victim.TRUE == True
+    assert victim.true == True
+    assert victim.NONE == False
+    assert victim.none == False
+
+
 def test__1():
     assert victim.bool__() == False
     assert victim.bool__(True) == True
