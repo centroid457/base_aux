@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_exceptions import *
-from base_aux.base_objects import *
+from base_aux.base_objects import TypeCheck
 
 from base_aux.attrs.m1_attr_1_aux import AttrAux
 from base_aux.lambdas.lambdas import Lambda

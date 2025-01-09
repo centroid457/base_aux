@@ -146,7 +146,7 @@ class AttrAux(InitSource):
         if not name:
             return
 
-        for name_original in self.iter__not_hidden():         # self.iter__not_private(): FIXME: not working!!!
+        for name_original in dir(self.SOURCE):         # self.iter__not_private(): FIXME: not working!!!
             if name_original.lower() == name.lower():
                 return name_original
 
