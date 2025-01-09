@@ -46,9 +46,11 @@ class GetattrPrefixInst:
                 continue
             prefix_meth = getattr(self, prefix_original)
 
+            # direct prefix ----------
             if item.lower() == prefix.lower():
                 return lambda *prefix_args, **prefix_kwargs: Lambda(prefix_meth).get_result_or_raise(*prefix_args, **prefix_kwargs)
 
+            # direct prefix ----------
             if prefix_original and item.lower().startswith(prefix.lower()):
                 item_short = item[len(prefix):]
                 item_value = AttrAux(self).anycase__getattr(item_short)
