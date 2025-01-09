@@ -3,7 +3,6 @@ import pytest
 
 from base_aux.pytester import *
 from base_aux.attrs.m0_static import check_name__buildin
-from base_aux.attrs.m1_attr_0_init_kwargs import AttrsInitByKwArgs
 from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
