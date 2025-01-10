@@ -88,22 +88,10 @@ class AnnotsAux(InitSource):
         keys - all attr names (defined and not)
         values - Types!!! not instances!!!
         """
-        mro = TypeCheck(self.SOURCE).get_mro()
-        if not mro:
-            """
-            created specially for
-            ---------------------
-            DictDotsAnnotRequired(dict)
-            it is not working without it!!!
-            """
-            return {}
 
         result = {}
-        for cls_i in mro:
-            if cls_i in [AnnotsBase, object, *TYPES.ELEMENTARY]:
-                continue
-
-            _result_i = dict(cls_i.__annotations__)
+        for cls in self.iter_mro():
+            _result_i = dict(cls.__annotations__)
             _result_i.update(result)
             result = _result_i
         return result
@@ -135,6 +123,14 @@ class AnnotsAux(InitSource):
         return result
 
     # =================================================================================================================
+    def iter_mro(self) -> Iterable[type]:
+        """
+        GOAL
+        ----
+        iter only important user classes from mro
+        """
+        yield from TypeCheck(self.SOURCE).iter_mro_user(AnnotsBase)
+
     def iter_names(self) -> Iterable[str]:
         """
         iter all (with not existed)
@@ -148,7 +144,7 @@ class AnnotsAux(InitSource):
         yield from self.dump__dict_values().values()
 
     # =================================================================================================================
-    def values__clear(self) -> None:
+    def values__set_none__existed(self) -> None:
         """
         GOAL
         ----
@@ -158,7 +154,7 @@ class AnnotsAux(InitSource):
             if hasattr(self.SOURCE, name):
                 setattr(self.SOURCE, name, None)
 
-    def values__set_none(self) -> None:
+    def values__set_none__all(self) -> None:
         """
         GOAL
         ----
@@ -178,15 +174,41 @@ class AnnotsAux(InitSource):
                 delattr(self.SOURCE, name)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def names__delete(self, names: Iterable[str] = None) -> None:
+    def names__delete(self, *names: str) -> None:
         """
+        ATTENTION
+        ---------
+        its not good idea!!! dont use it! yoг will change real CLASS parameters|
+
         GOAL
         ----
         del names from annots! if existed
         """
+        if not names:
+            names = self.iter_names()
+
         for name in names:
-            if hasattr(self.SOURCE, name):
-                setattr(self.SOURCE, name, None)
+            for cls in self.iter_mro():
+                if name in cls.__annotations__:
+                    cls.__annotations__.pop(name)
+
+    def names__add(self, *names: str) -> None:
+        """
+        ATTENTION
+        ---------
+        its not good idea!!! dont use it! yoг will change real CLASS parameters|
+
+        GOAL
+        ----
+        add names into annots!
+        """
+        cls = TypeCheck(self).get__class()
+
+        for name in names:
+            annots = cls.__annotations__
+            if name not in annots:
+                cls.__annotations__.update({name: Any})
+
 
 # =====================================================================================================================
 class AnnotsBase:

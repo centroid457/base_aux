@@ -273,12 +273,12 @@ class TypeCheck(InitSource):
 
         specially created for pytest_aux for comparing with Exception!
         """
-        source_cls = self.ensure__class()
-        parent_cls = TypeCheck(parent).ensure__class()
+        source_cls = self.get__class()
+        parent_cls = TypeCheck(parent).get__class()
         return issubclass(source_cls, parent_cls)
 
     # =================================================================================================================
-    def ensure__class(self) -> type:
+    def get__class(self) -> type:
         """
         GOAL
         ----
@@ -297,11 +297,31 @@ class TypeCheck(InitSource):
         """
         GAOL
         ----
-        get mro for instance/class!
+        get DIRECT mro for instance/class!
         """
-        cls = self.ensure__class()
+        cls = self.get__class()
         mro = cls.__mro__
         return mro
+
+    def iter_mro_user(self, *exclude: type) -> Iterable[type]:
+        """
+        GAOL
+        ----
+        iter only user classes
+        """
+        mro = self.get_mro()
+        if not mro:
+            """
+            created specially for
+            ---------------------
+            DictDotsAnnotRequired(dict)
+            it is not working without it!!!
+            """
+            mro = ()
+
+        for cls in mro:
+            if cls not in [*exclude, object, *TYPES.ELEMENTARY]:
+                yield cls
 
 
 # =====================================================================================================================

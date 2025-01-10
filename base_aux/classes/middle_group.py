@@ -166,7 +166,7 @@ class ClsMiddleGroup:
         if not TypeCheck(other).check__nested__by_cls_or_inst(ClsMiddleGroup):
             return
 
-        other = TypeCheck(other).ensure__class()
+        other = TypeCheck(other).get__class()
 
         # in case of used only empty base MiddleGroup and no any Group configured!
         if cls.MIDDLE_GROUP__NAME == other.MIDDLE_GROUP__NAME == cls.MIDDLE_GROUP__CMP_ATTR == other.MIDDLE_GROUP__CMP_ATTR is None:

@@ -50,7 +50,7 @@ class Test__ensure:
         ]
     )
     def test__ensure_class(self, source, _EXPECTED):
-        func_link = TypeCheck(source).ensure__class
+        func_link = TypeCheck(source).get__class
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
