@@ -21,7 +21,7 @@ class GetattrPrefixInst:
     --------
     see GetattrPrefixInst_RaiseIf with tests
     """
-    _GETATTR__PREFIXES: list[str] = []
+    _GETATTR_PREFIXES: list[str] = []
 
     def __getattr__(self, item: str) -> Any | Callable | NoReturn:
         """
@@ -40,31 +40,31 @@ class GetattrPrefixInst:
         1. prefix - callable with first parameter as catching item_value (may be callable or not).
         2.You always need to CALL prefixed result! even if you access to not callable attribute!
         """
-        # pretend DIRECT anycase name ----------
         print("-"*10)
-        print(item)
-
+        print(f"{item=}start")
+        # pretend DIRECT anycase name/prefix ----------
         item_original = AttrAux(self).anycase__find(item)
         if item_original:
-            if item_original != item:
+            if item_original.lower() == item.lower():
                 return getattr(self, item_original)
 
         # pretend PREFIX ----------
-        for prefix in self._GETATTR__PREFIXES:
-            print(prefix)
+        for prefix in self._GETATTR_PREFIXES:
+            print(f"{prefix=}start")
             prefix_original = AttrAux(self).anycase__find(prefix)
             if not prefix_original:
                 continue
+
             prefix_meth = getattr(self, prefix_original)
 
             # direct prefix ----------
             # if item.lower() == prefix.lower():
             #     return lambda *prefix_args, **prefix_kwargs: Lambda(prefix_meth).get_result_or_raise(*prefix_args, **prefix_kwargs)
 
-            # direct prefix ----------
-            if prefix_original and item.lower().startswith(prefix.lower()):
-                item_attr = item[len(prefix):]
-                item_value = AttrAux(self).anycase__getattr(item_attr)
+            # prefix ----------
+            if item.lower().startswith(prefix.lower()):
+                item_name = item[len(prefix):]
+                item_value = AttrAux(self).anycase__getattr(item_name)
 
                 return lambda *meth_args, **meth_kwargs: Lambda(prefix_meth).get_result_or_raise(
                     *[Lambda(item_value).get_result_or_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
@@ -81,7 +81,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     RULES
     -----
     """
-    _GETATTR__PREFIXES = ["raise_if__", "raise_if_not__"]
+    _GETATTR_PREFIXES = ["raise_if__", "raise_if_not__"]
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:

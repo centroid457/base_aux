@@ -7,7 +7,7 @@ from base_aux.attrs import GetattrPrefixInst
 
 # =====================================================================================================================
 class Victim(GetattrPrefixInst):
-    _GETATTR__PREFIXES = ["bool__", ]
+    _GETATTR_PREFIXES = ["bool__", ]
     TRUE = True
     NONE = None
 
@@ -25,11 +25,11 @@ victim = Victim()
 
 
 # =====================================================================================================================
-def test__anycase():
+def test__anycase_attr():
     assert victim.TRUE == True
     assert victim.true == True
-    assert victim.NONE == False
-    assert victim.none == False
+    assert victim.NONE == None
+    assert victim.none == None
 
 
 def test__1():
@@ -52,7 +52,7 @@ def test__1():
     assert victim.bool__meth_echo(False) == False
 
 
-def test__anycase():
+def test__anycase_meth():
     assert victim.BOOL__() == False
     assert victim.BOOL__(True) == True
 

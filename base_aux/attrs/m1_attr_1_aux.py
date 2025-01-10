@@ -70,9 +70,13 @@ class AttrAux(InitSource):
 
         # parse private user -------
         if re.fullmatch(r"_.+__.+", dirname):
+            # print(f"{dirname=}")
+            # print(f"{self.SOURCE=}")
             try:
+                # print(11)
                 mro = self.SOURCE.__mro__
             except:
+                # print(111)
                 mro = self.SOURCE.__class__.__mro__
 
             for cls in mro:

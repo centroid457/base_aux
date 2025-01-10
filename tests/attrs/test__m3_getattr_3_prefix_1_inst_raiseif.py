@@ -18,13 +18,9 @@ class Victim(GetattrPrefixInst_RaiseIf):
 
 # =====================================================================================================================
 def test__register():
-    victim = Victim()
-
     # --------------------------------
-    assert victim.TRUE is True
-    print(1)
-    assert victim.true is True
-    print(1)
+    assert Victim().TRUE is True
+    assert Victim().true is True
 
     # --------------------------------
     try:
@@ -105,9 +101,10 @@ def test__attr__static():
 def test__meth_not_passed():
     # NOT_PASSED ---------------------
     assert Victim().meth() is None
+    assert Victim().METH() is None
 
     try:
-        Victim().METH()
+        Victim().METH2()
     except AttributeError:
         pass
     else:
