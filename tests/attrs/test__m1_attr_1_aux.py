@@ -57,36 +57,36 @@ class VictimNested_New(Victim):
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
-        (Victim,    (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
-        (Victim(),  (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (Victim,    ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
+        (Victim(),  ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
 
-        (VictimNested_Old, (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
-        (VictimNested_Old(), (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (VictimNested_Old,      ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
+        (VictimNested_Old(),    ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
 
-        (VictimNested_ReNew, (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
-        (VictimNested_ReNew(), (dict(a=None, _h=None, __p=None), dict(a=None), dict(a=None, _h=None), dict(__p=None))),
+        (VictimNested_ReNew,    ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
+        (VictimNested_ReNew(),  ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
 
         (VictimNested_New,
          (
-                dict(a=None, _h=None, __p=None, a2=None, _h2=None, __p2=None),
-                dict(a=None, a2=None),
-                dict(a=None, _h=None, a2=None, _h2=None),
-                dict(__p=None, __p2=None)
+                {"a", "_h", "__p", "a2", "_h2", "__p2", },
+                {"a", "a2", },
+                {"a", "_h", "a2", "_h2", },
+                {"__p", "__p2", },
          )),
         (VictimNested_New(),
          (
-                 dict(a=None, _h=None, __p=None, a2=None, _h2=None, __p2=None),
-                 dict(a=None, a2=None),
-                 dict(a=None, _h=None, a2=None, _h2=None),
-                 dict(__p=None, __p2=None)
+                 {"a", "_h", "__p", "a2", "_h2", "__p2", },
+                 {"a", "a2", },
+                 {"a", "_h", "a2", "_h2", },
+                 {"__p", "__p2", },
          )),
     ]
 )
 def test__iter(source, _EXPECTED):
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__external_not_builtin()), set(_EXPECTED[0]))
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), set(_EXPECTED[1]))
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), set(_EXPECTED[2]))
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__private()), set(_EXPECTED[3]))
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__external_not_builtin()), _EXPECTED[0])
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), _EXPECTED[1])
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), _EXPECTED[2])
+    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__private()), _EXPECTED[3])
 
 
 # =====================================================================================================================
