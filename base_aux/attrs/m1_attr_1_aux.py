@@ -5,7 +5,7 @@ from base_aux.base_source.source import InitSource
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
 from base_aux.base_enums.enums import CallablesUse
 
-from base_aux.attrs.m0_static import AttrsDump
+from base_aux.attrs.m0_static import AttrsDump, AnnotsTemplate
 
 # from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
 
@@ -223,18 +223,18 @@ class AttrAux(InitSource):
     pass
 
     # LOAD ------------------------------------------------------------------------------------------------------------
-    def load(self, other: dict | Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+    def load(self, other: dict | Any, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
         """
         GOAL
         ----
         load attrs by dict/attrs in other object
         """
         if isinstance(other, dict):
-            return self.load__by_dict(other)
+            return self.load__by_dict(other, template=template)
         else:
-            return self.load__by_obj(other, callables_use=callables_use)
+            return self.load__by_obj(other, callables_use=callables_use, template=template)
 
-    def load__by_dict(self, other: dict) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -245,19 +245,34 @@ class AttrAux(InitSource):
         NOTE
         ----
         dont use callables_use
+
+
+        :param template: used as filter!
+            if you have callables and dont want to use them (raise acceptable) or not need some attrs - just use it as filter!
         """
+        # template ----------
+        if not isinstance(template, dict):
+            template = template.__annotations__
+        template_dump = AttrAux().load(template)
+
+        # work ----------
         for key, value in other.items():
-            self.anycase__setattr(key, value)
+            if template:
+                if AttrAux(template_dump).anycase__check_exists(key):
+                    key = AttrAux(template_dump).anycase__find(key)
+                    self.anycase__setattr(key, value)
+            else:
+                self.anycase__setattr(key, value)
         return self.SOURCE
 
-    def load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | AttrsDump:
+    def load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
         """
         its a derivative additional meth for load__by_dict
         NOTE
         ----
         return AttrsDump in case of using directly without source AttrsAux().load__by_obj(other) -> AttrsDump()
         """
-        other = AttrAux(other).dump_dict(callables_use=callables_use)
+        other = AttrAux(other).dump_dict(callables_use=callables_use, template=template)
         return self.load__by_dict(other)     # here must be DIRECT
 
     # =================================================================================================================
@@ -284,8 +299,8 @@ class AttrAux(InitSource):
         """
         result = {}
         # TODO: add template!
-        if template is not None:
-            template: AttrsDump = AttrAux().load(template)
+        # if template is not None:
+        #     template: AttrsDump = AttrAux().load(template)
 
         for name in self.iter__not_hidden():
 
