@@ -293,5 +293,15 @@ class TypeCheck(InitSource):
         else:
             return self.SOURCE.__class__
 
+    def get_mro(self) -> tuple[type, ...]:
+        """
+        GAOL
+        ----
+        get mro for instance/class!
+        """
+        cls = self.ensure__class()
+        mro = cls.__mro__
+        return mro
+
 
 # =====================================================================================================================

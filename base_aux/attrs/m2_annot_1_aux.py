@@ -88,9 +88,7 @@ class AnnotsAux(InitSource):
         keys - all attr names (defined and not)
         values - Types!!! not instances!!!
         """
-        cls = TypeCheck(self.SOURCE).ensure__class()
-        mro = cls.__mro__
-
+        mro = TypeCheck(self.SOURCE).get_mro()
         if not mro:
             """
             created specially for
@@ -179,6 +177,16 @@ class AnnotsAux(InitSource):
             if hasattr(self.SOURCE, name):
                 delattr(self.SOURCE, name)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def names__delete(self, names: Iterable[str] = None) -> None:
+        """
+        GOAL
+        ----
+        del names from annots! if existed
+        """
+        for name in names:
+            if hasattr(self.SOURCE, name):
+                setattr(self.SOURCE, name, None)
 
 # =====================================================================================================================
 class AnnotsBase:
