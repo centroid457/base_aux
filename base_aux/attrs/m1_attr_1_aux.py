@@ -114,7 +114,7 @@ class AttrAux(InitSource):
                 continue
 
             # direct user attr ----------
-            print(f"{name=}")
+            # print(f"{name=}")
             yield name
 
     # -----------------------------------------------------------------------------------------------------------------
