@@ -3,23 +3,11 @@ import re
 
 from base_aux.base_source.source import InitSource
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
-from base_aux.base_enums.enums import CallablesUse, FormIntExt
+from base_aux.base_enums.enums import CallablesUse
 
+from base_aux.attrs.m0_static import AttrsDump
 
 # from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
-
-
-# =====================================================================================================================
-@final
-class AttrsDump:
-    """
-    GOAL
-    ----
-    just an initial blank class with would be loaded by attrs!
-    used further as template or dumped values for dynamic values like properties
-    """
-    pass
-    # def __contains__(self, item):     # cant do this here!!!!
 
 
 # =====================================================================================================================
