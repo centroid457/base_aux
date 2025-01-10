@@ -40,8 +40,8 @@ class GetattrPrefixInst:
         1. prefix - callable with first parameter as catching item_value (may be callable or not).
         2.You always need to CALL prefixed result! even if you access to not callable attribute!
         """
-        print("-"*10)
-        print(f"{item=}start")
+        # print("-"*10)
+        # print(f"{item=}start")
         # pretend DIRECT anycase name/prefix ----------
         item_original = AttrAux(self).anycase__find(item)
         if item_original:
@@ -50,7 +50,7 @@ class GetattrPrefixInst:
 
         # pretend PREFIX ----------
         for prefix in self.GETATTR_PREFIXES:
-            print(f"{prefix=}start")
+            # print(f"{prefix=}start")
             prefix_original = AttrAux(self).anycase__find(prefix)
             if not prefix_original:
                 continue
@@ -71,7 +71,7 @@ class GetattrPrefixInst:
                     **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 
-        print(3)
+        # print(3)
         raise AttributeError(item)
 
 
@@ -109,17 +109,9 @@ def _example():
         def METH(self, arg1=1, arg2=2):
             return arg1 == arg2
 
-    print(1)
     assert GetattrPrefixInst_RaiseIf_data().TRUE is True
-    print(1)
     assert GetattrPrefixInst_RaiseIf_data().true is True
-    print(1)
     assert GetattrPrefixInst_RaiseIf_data().raise_if__none() is None
-    print(1)
-    print(1)
-    print(1)
-    print(1)
-
 
     # ON ATTRIBUTE --------------------
     # apply prefix+item
