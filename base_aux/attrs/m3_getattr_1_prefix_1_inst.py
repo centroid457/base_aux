@@ -21,7 +21,7 @@ class GetattrPrefixInst:
     --------
     see GetattrPrefixInst_RaiseIf with tests
     """
-    _GETATTR_PREFIXES: list[str] = []
+    GETATTR_PREFIXES: list[str] = []
 
     def __getattr__(self, item: str) -> Any | Callable | NoReturn:
         """
@@ -49,7 +49,7 @@ class GetattrPrefixInst:
                 return getattr(self, item_original)
 
         # pretend PREFIX ----------
-        for prefix in self._GETATTR_PREFIXES:
+        for prefix in self.GETATTR_PREFIXES:
             print(f"{prefix=}start")
             prefix_original = AttrAux(self).anycase__find(prefix)
             if not prefix_original:
@@ -81,7 +81,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     RULES
     -----
     """
-    _GETATTR_PREFIXES = ["raise_if__", "raise_if_not__"]
+    GETATTR_PREFIXES = ["raise_if__", "raise_if_not__"]     # dont use name like _*__*!
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:

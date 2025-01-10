@@ -7,7 +7,7 @@ from base_aux.attrs import GetattrPrefixInst
 
 # =====================================================================================================================
 class Victim(GetattrPrefixInst):
-    _GETATTR_PREFIXES = ["bool__", ]
+    GETATTR_PREFIXES = ["bool__", ]
     TRUE = True
     NONE = None
 
