@@ -55,7 +55,7 @@ class AnnotsAux(InitSource):
                 result.append(key)
         return result
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     def check_all_defined(self) -> bool:
         """
         GOAL
@@ -76,7 +76,7 @@ class AnnotsAux(InitSource):
             msg = f"[CRITICAL]{not_defined=} in {dict_type}"
             raise Exx__AnnotNotDefined(msg)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     def dump__dict_types(self) -> dict[str, type[Any]]:
         """
         GOAL
@@ -123,19 +123,6 @@ class AnnotsAux(InitSource):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def iter_values(self) -> Iterable[Any]:
-        """
-        only existed
-        """
-        yield from self.dump__dict_values().values()
-
-    def iter_names(self) -> Iterable[str]:
-        """
-        iter all (with not existed)
-        """
-        yield from self.dump__dict_types()
-
-    # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         """just a pretty string for debugging or research.
         """
@@ -149,8 +136,48 @@ class AnnotsAux(InitSource):
 
         return result
 
-    def __str__(self):
-        return self.dump__pretty_str()
+    # =================================================================================================================
+    def iter_names(self) -> Iterable[str]:
+        """
+        iter all (with not existed)
+        """
+        yield from self.dump__dict_types()
+
+    def iter_values(self) -> Iterable[Any]:
+        """
+        only existed
+        """
+        yield from self.dump__dict_values().values()
+
+    # =================================================================================================================
+    def values__clear(self) -> None:
+        """
+        GOAL
+        ----
+        set None for all annotated attrs! only existed!
+        """
+        for name in self.iter_names():
+            if hasattr(self.SOURCE, name):
+                setattr(self.SOURCE, name, None)
+
+    def values__set_none(self) -> None:
+        """
+        GOAL
+        ----
+        set None for all annotated attrs! even not existed!
+        """
+        for name in self.iter_names():
+            setattr(self.SOURCE, name, None)
+
+    def values__delete(self) -> None:
+        """
+        GOAL
+        ----
+        delattr all annotated attrs!
+        """
+        for name in self.iter_names():
+            if hasattr(self.SOURCE, name):
+                delattr(self.SOURCE, name)
 
 
 # =====================================================================================================================
