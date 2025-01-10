@@ -357,8 +357,5 @@ class AttrAux(InitSource):
 
         return result
 
-    def __str__(self):
-        return self.dump__pretty_str()
-
 
 # =====================================================================================================================
