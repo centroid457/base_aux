@@ -7,7 +7,7 @@ from base_aux.base_enums.enums import CallablesUse
 from base_aux.base_callables import CallableAux
 # from base_aux.base_objects import TypeCheck
 
-from base_aux.attrs.m0_static import AttrsDump, AnnotsTemplate
+from base_aux.attrs.m0_static import AttrsDump
 
 # from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
 
@@ -229,7 +229,7 @@ class AttrAux(InitSource):
         CallableAux(*).resolve_*
 
         WHY NOT-1=CallableAux(*).resolve_*
-        -----------------------------
+        ----------------------------------
         it is really the same, BUT
         1. additional try for properties (could be raised without calling)
         2. cant use here cause of Circular import accused
@@ -259,7 +259,7 @@ class AttrAux(InitSource):
         return result
 
     # =================================================================================================================
-    def load__by_dict(self, other: dict[str, Any], template: dict[str, Any] = None) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict[str, Any]) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -269,30 +269,21 @@ class AttrAux(InitSource):
 
         NOTE
         ----
-        dont use callables_use here
-
-        :param template: used as filter! no default values!
-            if you have callables and dont want to use them (raise acceptable) or not need some attrs - just use it as filter!
+        1/ dont use callables_use here
+        2/ dont add any TEMPLATES!!! its responsibility for DictAux! use it by yourself!!!
         """
-        # template ----------
-        if template:
-            template = AttrAux().load__by_dict(template)
-
         # work ----------
         for key, value in other.items():
-            if template:
-                if not AttrAux(template).anycase__check_exists(key):
-                    continue
-
             self.anycase__setattr(key, value)
+
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict[str, Any] = None) -> AttrsDump | NoReturn:
+    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT) -> AttrsDump | NoReturn:
         pass
         # TODO: finish
 
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXCEPTION, template: Iterable[str] = None) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXCEPTION) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -307,10 +298,6 @@ class AttrAux(InitSource):
         using any object as rules for Translator
         """
         result = {}
-        # TODO: add template!
-        if template is not None:
-            template_lower: list[str] = list(map(str.lower, template))
-
         for name in self.iter__external_not_builtin():
             value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
             if value == CallablesUse.SKIP_CALLABLE:

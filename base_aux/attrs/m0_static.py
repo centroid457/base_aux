@@ -25,6 +25,8 @@ class AttrsDump:
 # =====================================================================================================================
 class AnnotsTemplate:
     """
+    FIXME: DECIDE TO DELETE!!! not needed any templates
+
     GOAL
     ----
     use object as template
