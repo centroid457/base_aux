@@ -259,7 +259,7 @@ class AttrAux(InitSource):
         return result
 
     # =================================================================================================================
-    def load__by_dict(self, other: dict, template: dict[str, Any] = None) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict[str, Any], template: dict[str, Any] = None) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -269,10 +269,9 @@ class AttrAux(InitSource):
 
         NOTE
         ----
-        dont use callables_use
+        dont use callables_use here
 
-
-        :param template: used as filter!
+        :param template: used as filter! no default values!
             if you have callables and dont want to use them (raise acceptable) or not need some attrs - just use it as filter!
         """
         # template ----------
@@ -284,8 +283,6 @@ class AttrAux(InitSource):
             if template:
                 if not AttrAux(template).anycase__check_exists(key):
                     continue
-
-                key = AttrAux(template).anycase__find(key)
 
             self.anycase__setattr(key, value)
         return self.SOURCE

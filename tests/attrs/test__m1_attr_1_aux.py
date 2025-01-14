@@ -95,7 +95,7 @@ def test__anycase__xxx(attr, _EXPECTED):
 
 
 # =====================================================================================================================
-def test__load():
+def test__load__wo_template():
     other = AttrAux().load__by_dict(dict(attr=1))
     assert isinstance(other, AttrsDump)
     assert other.attr == 1
@@ -116,8 +116,27 @@ def test__load():
     assert other == victim
     assert other.attr == 2
 
-    assert hasattr(victim, "attr")
     assert not hasattr(victim, "ATTR")
+
+
+def test__load__w_template():
+    other = AttrAux().load__by_dict(dict(attr=1), template=dict(attr000=None))
+    assert isinstance(other, AttrsDump)
+    assert not hasattr(other, "attr")
+    assert not hasattr(other, "attr000")
+
+    other = AttrAux().load__by_dict(dict(attr=1), template=dict(attr=None))
+    assert isinstance(other, AttrsDump)
+    assert other.attr == 1
+
+    other = AttrAux().load__by_dict(dict(attr=1), template=dict(ATTR=None))
+    assert isinstance(other, AttrsDump)
+    assert other.attr == 1
+
+    other = AttrAux().load__by_dict(dict(attr=1))
+    AttrAux(other).load__by_dict(dict(attr=11), template=dict(ATTR=None))
+    assert isinstance(other, AttrsDump)
+    assert other.attr == 11
 
 
 # =====================================================================================================================
