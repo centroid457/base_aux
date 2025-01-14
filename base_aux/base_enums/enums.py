@@ -40,8 +40,9 @@ class CallablesUse(Enum):
     EXCEPTION = auto()
     RAISE = auto()
     RAISE_AS_NONE = auto()
+    BOOL = auto()
 
-    SKIP = auto()
+    SKIP_CALLABLE = auto()
     SKIP_RAISED = auto()
 
 
