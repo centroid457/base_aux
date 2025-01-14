@@ -2,12 +2,13 @@ from typing import *
 import pytest
 
 from base_aux.alerts import *
+from base_aux.base_callables import *
 
 
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
 
-@pytest.mark.skipif(AlertSmtp.AUTH.check_raise(), reason="no file")
+@pytest.mark.skipif(CallableAux(AlertSmtp.AUTH).check_raise(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="victim", argvalues=[
         AlertSmtp,

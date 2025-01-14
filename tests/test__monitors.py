@@ -2,6 +2,7 @@ import pytest
 
 from base_aux.monitors import *
 from base_aux.alerts import *
+from base_aux.base_callables import *
 
 
 # =====================================================================================================================
@@ -9,7 +10,7 @@ from base_aux.alerts import *
 
 
 # =====================================================================================================================
-@pytest.mark.skipif(AlertSmtp.AUTH.check_raise(), reason="no file")
+@pytest.mark.skipif(CallableAux(AlertSmtp.AUTH).check_raise(), reason="no file")
 class Test_UrlTag:
     def test__1(self):
         Monitor_DonorSvetofor()
@@ -28,7 +29,7 @@ class Test_UrlTag:
 
 
 # =====================================================================================================================
-@pytest.mark.skipif(AlertSmtp.AUTH.check_raise(), reason="no file")
+@pytest.mark.skipif(CallableAux(AlertSmtp.AUTH).check_raise(), reason="no file")
 @pytest.mark.parametrize(argnames="pattern", argvalues=[None, r"\[ALERT\]test1"])
 def test__imap(pattern):
     _subj_name = "test1"

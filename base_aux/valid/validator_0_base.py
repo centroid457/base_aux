@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.funcs import *
-from base_aux.lambdas.lambdas import Lambda
+from base_aux.base_callables import *
 from base_aux.cmp.eq import Eq
 
 
@@ -24,9 +24,9 @@ class EqValidator:
         self.KWARGS = kwargs
 
     def __eq__(self, other) -> bool:
-        other = Lambda(other).get_result_or_exx()
+        other = CallableAux(other).resolve_exx()
         args = (other, *self.ARGS)
-        expected = Lambda(self.VALIDATE_LINK).get_result_or_exx(*args, **self.KWARGS)
+        expected = CallableAux(self.VALIDATE_LINK).resolve_exx(*args, **self.KWARGS)
 
         result = Eq(other).eq_doublesided__bool(expected)
         return result

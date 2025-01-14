@@ -220,21 +220,46 @@ class AttrAux(InitSource):
         self.anycase__delattr(name)
 
     # =================================================================================================================
-    pass
-
-    # LOAD ------------------------------------------------------------------------------------------------------------
-    def load(self, other: dict | Any, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
+    def getattr__callable_resolve(self, realname: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | Callable | CallablesUse:
         """
-        GOAL
-        ----
-        load attrs by dict/attrs in other object
+        WHY NOT-1=CalableAux(*).resolve_*
+        -----------------------------
+        it is really the same, BUT
+        1. additional try for properties
+        2. cant use here cause of Circular import accused
         """
-        if isinstance(other, dict):
-            return self.load__by_dict(other, template=template)
-        else:
-            return self.load__by_obj(other, callables_use=callables_use, template=template)
+        value = None
+        # resolve properties --------------
+        try:
+            value = getattr(self.SOURCE, realname)
+        except Exception as exx:
+            if callables_use == CallablesUse.SKIP_CALLABLE or callables_use == CallablesUse.SKIP_RAISED:
+                return CallablesUse.SKIP_CALLABLE   # SKIPPED
+            elif callables_use == CallablesUse.EXCEPTION:
+                value = exx
 
-    def load__by_dict(self, other: dict, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
+        # resolve callables ------------------
+        if callable(value):
+            if callables_use == CallablesUse.SKIP_CALLABLE:
+                return CallablesUse.SKIP_CALLABLE   # SKIPPED
+
+            try:
+                value = value()
+            except Exception as exx:
+                if callables_use == CallablesUse.EXCEPTION:
+                    return exx
+                elif callables_use == CallablesUse.RAISE_AS_NONE:
+                    return None
+                elif callables_use == CallablesUse.SKIP_RAISED:
+                    return CallablesUse.SKIP_CALLABLE  # SKIPPED
+                elif callables_use == CallablesUse.RAISE:
+                    raise exx
+
+        # final ----------
+        return value
+
+    # =================================================================================================================
+    def load__by_dict(self, other: dict, template: dict[str, Any] = None) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -251,41 +276,28 @@ class AttrAux(InitSource):
             if you have callables and dont want to use them (raise acceptable) or not need some attrs - just use it as filter!
         """
         # template ----------
-        if not isinstance(template, dict):
-            template = template.__annotations__
-        template_dump = AttrAux().load(template)
+        if template:
+            template = AttrAux().load__by_dict(template)
 
         # work ----------
         for key, value in other.items():
             if template:
-                if AttrAux(template_dump).anycase__check_exists(key):
-                    key = AttrAux(template_dump).anycase__find(key)
-                    self.anycase__setattr(key, value)
-            else:
-                self.anycase__setattr(key, value)
+                if not AttrAux(template).anycase__check_exists(key):
+                    continue
+
+                key = AttrAux(template).anycase__find(key)
+
+            self.anycase__setattr(key, value)
         return self.SOURCE
 
-    def load__by_obj(self, other: Any, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | type[AnnotsTemplate] = None) -> Any | AttrsDump:
-        """
-        its a derivative additional meth for load__by_dict
-        NOTE
-        ----
-        return AttrsDump in case of using directly without source AttrsAux().load__by_obj(other) -> AttrsDump()
-        """
-        other = AttrAux(other).dump_dict(callables_use=callables_use, template=template)
-        return self.load__by_dict(other)     # here must be DIRECT
-
-    # =================================================================================================================
-    pass
-
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict | Any = None) -> AttrsDump | NoReturn:
+    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT, template: dict[str, Any] = None) -> AttrsDump | NoReturn:
         pass
         # TODO: finish
 
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.RESOLVE_EXX, template: dict | Any = None) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXCEPTION, template: Iterable[str] = None) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
-        MAIN ITEA
+        MAIN IDEA
         ----------
         BUMPS MEANS basically save final values for all (even any dynamic/callables) values! or only not callables!
 
@@ -299,36 +311,13 @@ class AttrAux(InitSource):
         """
         result = {}
         # TODO: add template!
-        # if template is not None:
-        #     template: AttrsDump = AttrAux().load(template)
+        if template is not None:
+            template_lower: list[str] = list(map(str.lower, template))
 
-        for name in self.iter__not_hidden():
-
-            value = None
-            # resolve properties --------------
-            try:
-                value = getattr(self.SOURCE, name)
-            except Exception as exx:
-                if callables_use == CallablesUse.SKIP or callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
-                    continue
-                elif callables_use == CallablesUse.RESOLVE_EXX:
-                    value = exx
-
-            # resolve callables ------------------
-            if callable(value):
-                if callables_use == CallablesUse.SKIP:
-                    continue
-
-                try:
-                    value = value()
-                except Exception as exx:
-                    if callables_use == CallablesUse.RESOLVE_EXX:
-                        value = exx
-                    elif callables_use == CallablesUse.RESOLVE_RAISE_SKIP:
-                        continue
-                    elif callables_use == CallablesUse.RESOLVE_RAISE:
-                        raise exx
-
+        for name in self.iter__external_not_builtin():
+            value = self.getattr__callable_resolve(realname=name, callables_use=callables_use)
+            if value == CallablesUse.SKIP_CALLABLE:
+                continue
             result.update({name: value})
 
         return result
@@ -337,21 +326,21 @@ class AttrAux(InitSource):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(CallablesUse.RESOLVE_EXX)
+        return self.dump_dict(CallablesUse.EXCEPTION)
 
     def dump_dict__direct(self) -> TYPE__LAMBDA_KWARGS:
         return self.dump_dict(CallablesUse.DIRECT)
 
     def dump_dict__callables_skip(self) -> TYPE__LAMBDA_KWARGS:
-        return self.dump_dict(CallablesUse.SKIP)
+        return self.dump_dict(CallablesUse.SKIP_CALLABLE)
 
     def dump_dict__callables_resolve_raise(self) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(CallablesUse.RESOLVE_RAISE)
+        return self.dump_dict(CallablesUse.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        data = self.dump_dict(CallablesUse.RESOLVE_EXX)
+        data = self.dump_dict(CallablesUse.EXCEPTION)
         if data:
             for key, value in data.items():
                 result += f"\n\t{key}={value}"

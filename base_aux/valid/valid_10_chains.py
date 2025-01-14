@@ -2,7 +2,7 @@ from typing import *
 import time
 
 from base_aux.valid.valid_1_base import Valid
-from base_aux.lambdas.lambdas import Lambda
+from base_aux.base_callables import *
 
 
 # =====================================================================================================================
@@ -58,7 +58,7 @@ class ValidChains(Valid):
         self.timestamp_last = time.time()
 
         # SKIP ---------------------
-        self.skip_last = Lambda(self.SKIP_LINK).get_result_bool()
+        self.skip_last = CallableAux(self.SKIP_LINK).resolve_bool()
 
         if not self.skip_last:
             # WORK =======================

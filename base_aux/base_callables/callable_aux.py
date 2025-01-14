@@ -56,9 +56,9 @@ class CallableAux(InitSource):
         """
         GOAL
         ----
-        same as get_result_or_raise but
+        same as resolve_raise but
         attempt to simplify result by not using try-sentence.
-        so if get raise in get_result_or_raise - return ClsException object
+        so if get raise in resolve_raise - return ClsException object
 
         USEFUL IDEA
         -----------
@@ -86,7 +86,7 @@ class CallableAux(InitSource):
         GOAL
         ----
         get common expected for any python code result - simple calculate or raise!
-        because of get_result_or_exx is not enough!
+        because of resolve_exx is not enough!
 
         CREATED SPECIALLY FOR
         ---------------------
@@ -116,7 +116,7 @@ class CallableAux(InitSource):
         """
         GOAL
         ----
-        same as get_result_or_exx but
+        same as resolve_exx but
         apply bool func on result
 
         ability to get bool result with meanings:
