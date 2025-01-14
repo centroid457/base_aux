@@ -2,7 +2,7 @@ from typing import *
 import time
 
 from base_aux.base_argskwargs.argskwargs import InitArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
-from base_aux.base_enums.enums import When2, CallablesUse
+from base_aux.base_enums.enums import When2
 # from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
 
 from base_aux.cmp.eq import Eq
@@ -59,13 +59,6 @@ class Lambda(InitArgsKwargs):
     """
     CONSTRUCTOR: TYPE__LAMBDA_CONSTRUCTOR
 
-    # OVERWRITE! ------------------------------------------------------------------------------------------------------
-    def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        return self.construct(*args, **kwargs)
-
-    def __eq__(self, other) -> bool | NoReturn:
-        return Eq(self()).eq_doublesided__bool(other)
-
     # UNIVERSAL =======================================================================================================
     def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
         self.CONSTRUCTOR = constructor
@@ -87,134 +80,12 @@ class Lambda(InitArgsKwargs):
     def __bool__(self) -> bool | NoReturn:
         return bool(self(*self.ARGS, **self.KWARGS))
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def get_result(self, callable_use: CallablesUse = CallablesUse.RESOLVE_RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn:
-        if not callable(self.CONSTRUCTOR):
-            return self.CONSTRUCTOR
+    # OVERWRITE! ======================================================================================================
+    def __call__(self, *args, **kwargs) -> Any | NoReturn:
+        return self.construct(*args, **kwargs)
 
-        # callables -----------
-        if callable_use == CallablesUse.DIRECT:
-            return self.CONSTRUCTOR
-
-        elif callable_use == CallablesUse.RESOLVE_EXX:
-            return self.get_result_or_exx(*args, **kwargs)
-
-        elif callable_use == CallablesUse.RESOLVE_RAISE:
-            return self.get_result_or_raise(*args, **kwargs)
-
-        elif callable_use == CallablesUse.SKIP:
-            return
-
-        elif callable_use == CallablesUse.RESOLVE_RAISE_SKIP:
-            try:
-                return self(*args, **kwargs)
-            except:
-                return
-
-    def get_result_or_raise(self, *args, **kwargs) -> Any | NoReturn:
-        """
-        just a direct result
-
-        SPECIFIC LOGIC
-        --------------
-        if callable - call and return result.
-        else - return source.
-
-        GOAL
-        ----
-        get common expected for any python code result - simple calculate or raise!
-        because of get_result_or_exx is not enough!
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        GetattrPrefixInst
-        """
-        return self(*args, **kwargs)
-
-    def get_result_or_exx(self, *args, **kwargs) -> Any | Exception:
-        """
-        GOAL
-        ----
-        same as get_result_or_raise but
-        attempt to simplify result by not using try-sentence.
-        so if get raise in get_result_or_raise - return ClsException object
-
-        USEFUL IDEA
-        -----------
-        1. in gui when its enough to get str() on result and see the result
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        just in case
-
-        """
-        try:
-            return self(*args, **kwargs)
-        except Exception as exx:
-            return exx
-
-    def get_result_bool(self, *args, **kwargs) -> bool:
-        """
-        GOAL
-        ----
-        same as get_result_or_exx but
-        apply bool func on result
-
-        ability to get bool result with meanings:
-            - methods/funcs must be called
-                assert get_bool(LAMBDA_TRUE) is True
-                assert get_bool(LAMBDA_NONE) is False
-
-            - Exceptions assumed as False
-                assert get_bool(Exception) is False
-                assert get_bool(Exception("FAIL")) is False
-                assert get_bool(LAMBDA_EXX) is False
-
-            - for other values get classic bool()
-                assert get_bool(None) is False
-                assert get_bool([]) is False
-                assert get_bool([None, ]) is True
-
-                assert get_bool(LAMBDA_LIST) is False
-                assert get_bool(LAMBDA_LIST, [1, ]) is True
-
-            - if on bool() exception raised - return False!
-                assert get_bool(ClsBoolRaise()) is False
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        funcs.Valid.skip_link or else value/func assumed as bool result
-        """
-        try:
-            result = Lambda(self.CONSTRUCTOR).get_result_or_raise(*args, **kwargs)
-            try:
-                is_exx = issubclass(result, Exception)
-            except:
-                is_exx = isinstance(result, Exception)
-
-            if is_exx:
-                return False
-            return bool(result)
-        except:
-            return False
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def check_raise(self, *args, **kwargs) -> bool:
-        """
-        SPECIALLY CREATED FOR
-        ---------------------
-        check Privates in pytest for skipping
-
-        USE LambdaTrySuccess instead!
-        """
-        try:
-            self(*args, **kwargs)
-            return False
-        except Exception as exx:
-            return True
-
-    def check_no_raise(self, *args, **kwargs) -> bool:
-        return not self.check_raise(*args, **kwargs)
+    def __eq__(self, other) -> bool | NoReturn:
+        return Eq(self()).eq_doublesided__bool(other)
 
 
 # =====================================================================================================================
