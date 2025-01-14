@@ -21,7 +21,7 @@ class CallableAux(InitSource):
             return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self, callable_use: CallablesUse = CallablesUse.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | CallablesUse:
+    def resolve(self, callable_use: CallablesUse = CallablesUse.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | CallablesUse | bool:
         """
         NOTE
         ----
@@ -40,23 +40,18 @@ class CallableAux(InitSource):
             return self.resolve_raise(*args, **kwargs)
 
         elif callable_use == CallablesUse.RAISE_AS_NONE:
-            try:
-                return self.resolve_raise(*args, **kwargs)
-            except:
-                return None
+            return self.resolve_raise_as_none(*args, **kwargs)
 
-        elif callable_use == CallablesUse.SKIP:
-            if callable(self.SOURCE):
-                return CallablesUse.SKIP    # TODO: decide using None ???
-            else:
-                return self.SOURCE
+        elif callable_use == CallablesUse.SKIP_CALLABLE:
+            return self.resolve_skip_callables(*args, **kwargs)
 
         elif callable_use == CallablesUse.SKIP_RAISED:
-            try:
-                return self.resolve_raise(*args, **kwargs)
-            except:
-                return CallablesUse.SKIP    # TODO: decide using None ???
+            return self.resolve_skip_raised(*args, **kwargs)
 
+        elif callable_use == CallablesUse.BOOL:
+            return self.resolve_bool(*args, **kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def resolve_exx(self, *args, **kwargs) -> Any | Exception:
         """
         GOAL
@@ -98,6 +93,24 @@ class CallableAux(InitSource):
         GetattrPrefixInst
         """
         return self(*args, **kwargs)
+
+    def resolve_raise_as_none(self, *args, **kwargs) -> Any | None:
+        try:
+            return self.resolve_raise(*args, **kwargs)
+        except:
+            return None
+
+    def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
+        if callable(self.SOURCE):
+            return CallablesUse.SKIP_CALLABLE  # TODO: decide using None ???
+        else:
+            return self.SOURCE
+
+    def resolve_skip_raised(self, *args, **kwargs) -> Any | NoReturn:
+        try:
+            return self.resolve_raise(*args, **kwargs)
+        except:
+            return CallablesUse.SKIP_CALLABLE  # TODO: decide using None ???
 
     def resolve_bool(self, *args, **kwargs) -> bool:
         """
