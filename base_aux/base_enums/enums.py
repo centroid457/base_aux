@@ -7,7 +7,6 @@ USAGE
 -----
     if WHEN == When2.BEFORE:
         pass
-
 """
 
 
@@ -38,11 +37,12 @@ class Where3(Enum):
 # =====================================================================================================================
 class CallablesUse(Enum):
     DIRECT = auto()
-    RESOLVE_EXX = auto()
-    RESOLVE_RAISE = auto()
+    EXCEPTION = auto()
+    RAISE = auto()
+    RAISE_AS_NONE = auto()
 
     SKIP = auto()
-    RESOLVE_RAISE_SKIP = auto()
+    SKIP_RAISED = auto()
 
 
 # =====================================================================================================================
