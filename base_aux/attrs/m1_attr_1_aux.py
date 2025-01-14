@@ -4,6 +4,8 @@ import re
 from base_aux.base_source.source import InitSource
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
 from base_aux.base_enums.enums import CallablesUse
+from base_aux.base_callables import CallableAux
+# from base_aux.base_objects import TypeCheck
 
 from base_aux.attrs.m0_static import AttrsDump, AnnotsTemplate
 
@@ -220,43 +222,41 @@ class AttrAux(InitSource):
         self.anycase__delattr(name)
 
     # =================================================================================================================
-    def getattr__callable_resolve(self, realname: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | Callable | CallablesUse:
+    def getattr__callable_resolve(self, name: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | Callable | CallablesUse | NoReturn:
         """
-        WHY NOT-1=CalableAux(*).resolve_*
+        SAME AS
+        -------
+        CallableAux(*).resolve_*
+
+        WHY NOT-1=CallableAux(*).resolve_*
         -----------------------------
         it is really the same, BUT
-        1. additional try for properties
+        1. additional try for properties (could be raised without calling)
         2. cant use here cause of Circular import accused
         """
-        value = None
-        # resolve properties --------------
+        # resolve property --------------
+        # result_property = CallableAux(getattr).resolve(callables_use, self.SOURCE, realname)
+        # TypeCheck
+
         try:
-            value = getattr(self.SOURCE, realname)
+            value = self.anycase__getattr(name)
         except Exception as exx:
-            if callables_use == CallablesUse.SKIP_CALLABLE or callables_use == CallablesUse.SKIP_RAISED:
+            if callables_use == CallablesUse.SKIP_RAISED:
                 return CallablesUse.SKIP_CALLABLE   # SKIPPED
             elif callables_use == CallablesUse.EXCEPTION:
-                value = exx
+                return exx
+            elif callables_use == CallablesUse.RAISE_AS_NONE:
+                return None
+            elif callables_use == CallablesUse.RAISE:
+                raise exx
+            elif callables_use == CallablesUse.BOOL:
+                return False
+            else:
+                raise exx
 
         # resolve callables ------------------
-        if callable(value):
-            if callables_use == CallablesUse.SKIP_CALLABLE:
-                return CallablesUse.SKIP_CALLABLE   # SKIPPED
-
-            try:
-                value = value()
-            except Exception as exx:
-                if callables_use == CallablesUse.EXCEPTION:
-                    return exx
-                elif callables_use == CallablesUse.RAISE_AS_NONE:
-                    return None
-                elif callables_use == CallablesUse.SKIP_RAISED:
-                    return CallablesUse.SKIP_CALLABLE  # SKIPPED
-                elif callables_use == CallablesUse.RAISE:
-                    raise exx
-
-        # final ----------
-        return value
+        result = CallableAux(value).resolve(callables_use)
+        return result
 
     # =================================================================================================================
     def load__by_dict(self, other: dict, template: dict[str, Any] = None) -> Any | AttrsDump:
@@ -315,7 +315,7 @@ class AttrAux(InitSource):
             template_lower: list[str] = list(map(str.lower, template))
 
         for name in self.iter__external_not_builtin():
-            value = self.getattr__callable_resolve(realname=name, callables_use=callables_use)
+            value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
             if value == CallablesUse.SKIP_CALLABLE:
                 continue
             result.update({name: value})
