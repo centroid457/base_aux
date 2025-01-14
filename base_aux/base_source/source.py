@@ -25,17 +25,17 @@ class InitSource:
             SOURCE = MyClass
             SOURCE = Lambda(dict)
             SOURCE = dict
-            SOURCE = dict
     """
-    # SOURCE: dict = Lambda(dict)     # for callable
-    # SOURCE: Any | Lambda = Lambda(None)     # generic final value
-    SOURCE: Any = None                      # generic final value
+    # SOURCE: dict = Lambda(dict)               # for callable
+    # SOURCE: Any | Lambda = Lambda(None)       # generic final value
+    SOURCE: Any = None                          # generic final value
+    # SOURCE_DEF__CALL_IF_CALLABLE: bool = True   # used only for CLS.SOURCE! not for param source! really it is NOT NEED!
 
     @classmethod
     @property
     def SOURCE_DEF(cls) -> Any:
         # if isinstance(cls.SOURCE, Lambda):
-        if callable(cls.SOURCE):
+        if callable(cls.SOURCE):        # and cls.SOURCE_DEF__CALL_IF_CALLABLE:
             result = cls.SOURCE()
         else:
             result = cls.SOURCE
