@@ -1,6 +1,7 @@
 import pytest
 
 from base_aux.pytester import *
+from base_aux.attrs.m0_static import AttrsDump
 from base_aux.attrs.m1_attr_1_aux import AttrAux
 
 
@@ -91,6 +92,32 @@ def test__anycase__xxx(attr, _EXPECTED):
     pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__find, attr, _EXPECTED[0])
     pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__getattr, attr, _EXPECTED[1])
     pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__setattr, (attr, 123), _EXPECTED[2])
+
+
+# =====================================================================================================================
+def test__load():
+    other = AttrAux().load__by_dict(dict(attr=1))
+    assert isinstance(other, AttrsDump)
+    assert other.attr == 1
+
+    class Victim:
+        pass
+
+    victim = Victim()
+    assert not hasattr(victim, "attr")
+    assert not hasattr(victim, "ATTR")
+
+    other = AttrAux(victim).load__by_dict(dict(attr=1))
+    assert isinstance(other, Victim)
+    assert other == victim
+    assert other.attr == 1
+
+    other = AttrAux(victim).load__by_dict(dict(ATTR=2))
+    assert other == victim
+    assert other.attr == 2
+
+    assert hasattr(victim, "attr")
+    assert not hasattr(victim, "ATTR")
 
 
 # =====================================================================================================================
