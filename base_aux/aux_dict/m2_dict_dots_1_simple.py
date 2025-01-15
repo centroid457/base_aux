@@ -29,14 +29,12 @@ class DictCaseinsense(dict):
 
     # -----------------------------------------------------------------------------------------------------------------
     def _getitem_original(self, item: Any) -> Explicit | None:
-        return IterAux.item__get_original__case_insensitive(item, self)
+        return IterAux(self).item__get_original(item)
 
     def pop(self, item: Any) -> None:
         item_original = self._getitem_original(item)
         if item_original is None:
             item_original = item
-        else:
-            item_original = item_original()
 
         super().pop(item_original)
 

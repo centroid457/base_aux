@@ -1,13 +1,13 @@
 from typing import *
-from base_aux.funcs.value_0_explicit import Explicit
+# from base_aux.funcs.value_0_explicit import Explicit
 from base_aux.base_source import InitSource
 
 
 # =====================================================================================================================
-TYPE__ITERABLE_PATH_KEY = Union[str, int]
-TYPE__ITERABLE_PATH_ORIGINAL = list[TYPE__ITERABLE_PATH_KEY]
-TYPE__ITERABLE_PATH_EXPECTED = Union[TYPE__ITERABLE_PATH_KEY, TYPE__ITERABLE_PATH_ORIGINAL]
-TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]
+TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Iterable!!!
+
+TYPE__ITERABLE_PATH_KEY = Union[Any, int]
+TYPE__ITERABLE_PATH = tuple[TYPE__ITERABLE_PATH_KEY, ...]
 
 
 # =====================================================================================================================
@@ -15,128 +15,107 @@ TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]
 class IterAux(InitSource):
     """
     collect universal funcs which work with collections
+
+    NOTE
+    ----
+    for access abilities passing with strings - resolve it by yourself
+
+        assert self.victim("1/2", {1: 11, }) is None
+        assert self.victim("1/2", {1: {2: 22}, }) == Explicit([1, 2, ])
+        assert self.victim("1/2/1", {1: {2: [30, 31, 32]}, }) == Explicit([1, 2, 1])
+
+        assert self.victim("hello", {"hello": [1]}) == Explicit(["hello", ])
+        assert self.victim("hello/1", {"hello": [1]}) is None
+        assert self.victim("hello/0", {"hello": [1]}) == Explicit(["hello", 0])
+
+        assert self.victim("hello1/hello2", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2"])
+        assert self.victim("hello1/hello2/0", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2", 0, ])
+        assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
-    # AUX ---------------------
-    DATA: TYPE__ITERABLE
-    PATH: list[TYPE__ITERABLE_PATH_KEY]
+    SOURCE: TYPE__ITERABLE = dict
+    # PATH: list[TYPE__ITERABLE_PATH_KEY]
 
-    def __init__(self, data: Optional[TYPE__ITERABLE] = None):
-        self.DATA = data or {}
-        self.PATH = []
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.PATH = []
 
-    def item__get_original__case_insensitive(
-            self,
-            item_expected: Any,
-    ) -> Optional[Explicit]:
+    def item__get_original(self, item: Any) -> Any | None:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
 
-        NOTE:
-        1. NONE RESULT__VALUE - RESOLVED!!!
-        2. SEVERAL VALUES - not used! by now it is just FIRST matched!
-            several items? - it is not useful!!! returning first is most expected!
-
-        USEFUL in case-insensitive systems (like terminals or serial devices) or object structured by prefix-names:
-        1. get key in dict
-        2. find attribute name in base_objects
-
-        :param source:
-        :param item_expected:
-        :return: actual item from collection
-            None - if VALUE is unreachable
+        # NOTE:
+        # 1. NONE RESULT__VALUE - RESOLVED!!!
+        # 2. SEVERAL VALUES - not used! by now it is just FIRST matched!
+        #     several items? - it is not useful!!! returning first is most expected!
+        #
+        # USEFUL in case-insensitive systems (like terminals or serial devices) or object structured by prefix-names:
+        # 1. get key in dict
+        # 2. find attribute name in base_objects
+        #
+        # :param item:
+        # :return: actual item from collection
+        #     None - if VALUE is unreachable/notFind
         """
-        for value in list(self.SOURCE):
-            if str(value).lower() == str(item_expected).lower():
-                return Explicit(value)
+        for value in self.SOURCE:
+            if value == item or str(value).lower() == str(item).lower():
+                return value
 
-    def path__get_original(
-            self,
-            path_expected: TYPE__ITERABLE_PATH_EXPECTED,
-            data: Optional[TYPE__ITERABLE] = None,
-    ) -> Optional[Explicit]:
+    def path__get_original(self, *path: TYPE__ITERABLE_PATH_KEY) -> TYPE__ITERABLE_PATH | None:
         """
         NOTES:
         1. path used as address KEY for dicts and as INDEX for other listed data
         2. separator is only simple SLASH '/'!
 
-        :param data:
-        :param path_expected:
+        :param path:
         :return:
             None - if path is unreachable/incorrect
-            list[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
+            tuple[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
         """
-        if data is None:
-            data = self.DATA
-
-        # prepare type ----------------------------
-        if isinstance(path_expected, (list, tuple, set)):
-            path_expected = list(path_expected)
-        else:
-            path_expected = str(path_expected)
-
-        if isinstance(path_expected, str):
-            path_expected = path_expected.split("/")
+        source = self.SOURCE
+        if not path:
+            return ()
 
         # work ----------------------------
-        path_original = []
-        for path_part in path_expected:
-            if isinstance(data, dict):
-                # DICT ----------------
-                address_original = self.item__get_original__case_insensitive(path_part, data)
+        result = []
+        for path_i in path:
+            if isinstance(source, dict):
+                address_original = IterAux(source).item__get_original(path_i)
                 if not address_original:
                     return
-                address_original = address_original()
-                data = data[address_original]
+                source = source[address_original]
 
-            elif isinstance(data, (list, tuple)):
-                # ITERABLE ----------------
+            else:
+                # elif isinstance(source, (list, tuple)) or True:
                 try:
-                    address_original = int(path_part)
-                    data = data[address_original]
+                    address_original = int(path_i)
+                    source = source[address_original]
                 except:
                     return
-            else:
-                return
-            path_original.append(address_original)
 
-        return Explicit(path_original)
+            result.append(address_original)
 
-    def value_by_path__get(
-            self,
-            path_expected: TYPE__ITERABLE_PATH_EXPECTED,
-            data: Optional[TYPE__ITERABLE] = None
-    ) -> Optional[Explicit]:
-        if data is None:
-            data = self.DATA
+        return tuple(result)
 
-        # work ----------------------------
-        path_original = self.path__get_original(path_expected, data)
-        try:
-            for path_part in path_original():
-                data = data[path_part]
-        except:
-            return
+    # -----------------------------------------------------------------------------------------------------------------
+    def value__get(self, *path: TYPE__ITERABLE_PATH_KEY) -> Any | NoReturn:
+        result = self.SOURCE
+        path = self.path__get_original(*path)
+        for path_i in path:
+            result = result[path_i]
+        return result
 
-        return Explicit(data)
-
-    def value_by_path__set(
-            self,
-            path_expected: TYPE__ITERABLE_PATH_EXPECTED,
-            value: Any,
-            data: Optional[TYPE__ITERABLE] = None
-    ) -> bool:
-        if data is None:
-            data = self.DATA
+    def value__set(self, path: TYPE__ITERABLE_PATH, value: Any) -> bool:
+        source = self.SOURCE
 
         # work ----------------------------
-        path_original = self.path__get_original(path_expected, data)
+        path = self.path__get_original(*path)
         try:
-            length = len(path_original())
-            for pos, path_part in enumerate(path_original(), start=1):
+            length = len(path)
+            for pos, path_i in enumerate(path, start=1):
                 if pos == length:
-                    data[path_part] = value
+                    source[path_i] = value
                 else:
-                    data = data[path_part]
+                    source = source[path_i]
         except:
             return False
 

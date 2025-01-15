@@ -1,82 +1,62 @@
+import pytest
+from base_aux.aux_pytester import *
+
 from base_aux.funcs import *
 from base_aux.aux_iter import *
 
 
 # =====================================================================================================================
-class Test__1:
-    @classmethod
-    def setup_class(cls):
-        cls.victim = IterAux.item__get_original__case_insensitive
-        pass
+@pytest.mark.parametrize(
+    argnames="source, item, _EXPECTED",
+    argvalues=[
+        ((1, ), "1", 1),
+        ((1, ), 1, 1),
 
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    #
-    # def teardown_method(self, method):
-    #     pass
+        (("1", ), 1, "1"),
+        (("1", ), "1", "1"),
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__int(self):
-        assert self.victim(0, [1]) is None
+        (("1", ), " 1 ", None),
 
-        assert self.victim(1, [1]) == Explicit(1)
-        assert self.victim(1, [1, 2]) == Explicit(1)
-        assert self.victim(2, [1, 2]) == Explicit(2)
+        (("hello", ), "HELLO", "hello"),
 
-        assert self.victim(1, ["1", 2]) == Explicit("1")
-        assert self.victim("1", ["1", 2]) == Explicit("1")
-
-        assert self.victim(1, ["1", 1]) == Explicit("1")
-        assert self.victim(1, [1, "1"]) == Explicit(1)
-
-        assert self.victim("1", [1, 1]) == Explicit(1)
-
-    def test__collections_1__iterables(self):
-        assert self.victim(1, [1, 2]) == Explicit(1)
-        assert self.victim(1, (1, 2)) == Explicit(1)
-        assert self.victim(1, {1, 2}) == Explicit(1)
-        assert self.victim(1, range(5)) == Explicit(1)
-
-    def test__collections_2__dict(self):
-        assert self.victim(2, {1: 11, 2: 22}) == Explicit(2)
-        assert self.victim("2", {1: 11, 2: 22}) == Explicit(2)
-        assert self.victim(2, {1: 11, "2": 22}) == Explicit("2")
-        assert self.victim("2", {1: 11, "2": 22}) == Explicit("2")
-
-    def test__case(self):
-        assert self.victim("hell", ["hello123", 'hello']) is None
-
-        assert self.victim("hello", ["hello123", 'hello']) == Explicit("hello")
-        assert self.victim("hello", ["hello123", 'HELLO']) == Explicit("HELLO")
-        assert self.victim("heLLO", ["hello123", 'Hello']) == Explicit("Hello")
+        ([1,], "1", 1),
+        ({1,}, "1", 1),
+        ({1: 11}, "1", 1),
+    ]
+)
+def test__item__get_original(source, item, _EXPECTED):
+    func_link = IterAux(source).item__get_original
+    pytest_func_tester__no_kwargs(func_link, item, _EXPECTED)
 
 
 # =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, path, _EXPECTED",
+    argvalues=[
+        ((1, ), "1", (1, )),
+        ((1, ), 1, 1),
+
+        (("1", ), 1, "1"),
+        (("1", ), "1", "1"),
+
+        (("1", ), " 1 ", None),
+
+        (("hello", ), "HELLO", "hello"),
+
+        ([1,], "1", 1),
+        ({1,}, "1", 1),
+        ({1: 11}, "1", 1),
+    ]
+)
+def test__path__get_original(source, path, _EXPECTED):
+    func_link = IterAux(source).path__get_original
+    pytest_func_tester__no_kwargs(func_link, path, _EXPECTED)
+
+
 class Test__2:
-    @classmethod
-    def setup_class(cls):
-        cls.victim = IterAux().path__get_original
-        pass
-
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    #
-    # def teardown_method(self, method):
-    #     pass
-
     # -----------------------------------------------------------------------------------------------------------------
     def test__path__list(self):
-        assert self.victim([0, ], [[1], 2]) == Explicit([0, ])
+        assert IterAux([[1], 2]).path__get_original([0, ]) == Explicit([0, ])
         assert self.victim(["0", ], [[1], 2]) == Explicit([0, ])
 
         assert self.victim([0, 0], [1]) is None
@@ -113,25 +93,14 @@ class Test__2:
         assert self.victim("1", {1: 11, }) == Explicit([1, ])
         assert self.victim(1, {1: 11, }) == Explicit([1, ])
 
-        assert self.victim("1/2", {1: 11, }) is None
-        assert self.victim("1/2", {1: {2: 22}, }) == Explicit([1, 2, ])
-        assert self.victim("1/2/1", {1: {2: [30, 31, 32]}, }) == Explicit([1, 2, 1])
 
-    def test__value__dict__with_list(self):
-        assert self.victim("hello", {"hello": [1]}) == Explicit(["hello", ])
-        assert self.victim("hello/1", {"hello": [1]}) is None
-        assert self.victim("hello/0", {"hello": [1]}) == Explicit(["hello", 0])
-
-        assert self.victim("hello1/hello2", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2"])
-        assert self.victim("hello1/hello2/0", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2", 0, ])
-        assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
 
 
 # =====================================================================================================================
 class Test__3:
     @classmethod
     def setup_class(cls):
-        cls.victim = IterAux().value_by_path__get
+        cls.victim = IterAux().value__get
         pass
 
     # @classmethod
@@ -154,45 +123,29 @@ class Test__3:
 
 # =====================================================================================================================
 class Test__4:
-    @classmethod
-    def setup_class(cls):
-        cls.victim = IterAux().value_by_path__set
-        pass
-
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    #
-    # def teardown_method(self, method):
-    #     pass
-
     # -----------------------------------------------------------------------------------------------------------------
     def test__1(self):
         data = [0,1,2,]
-        assert not self.victim(5, 11, data)
+        assert not IterAux(data).value__set(5, 11, )
         assert data[1] == 1
         assert data == [0,1,2,]
 
         data = [0,1,2,]
-        assert self.victim(1, 11, data) is True
+        assert IterAux(data).value__set(1, 11) is True
         assert data[1] == 11
         assert data == [0,11,2,]
 
         data = [[0],1,2,]
-        assert self.victim("0/0", 11, data) is True
+        assert IterAux(data).value__set("0/0", 11) is True
         assert data[0] == [11]
         assert data == [[11],1,2,]
 
         data = {"hello": [0,1,2,]}
-        assert self.victim("hello", 11, data) is True
+        assert IterAux(data).value__set("hello", 11) is True
         assert data == {"hello": 11}
 
         data = {"hello": [0,1,2,]}
-        assert self.victim("hello/1", 11, data) is True
+        assert IterAux(data).value__set("hello/1", 11) is True
         assert data == {"hello": [0,11,2,]}
 
 

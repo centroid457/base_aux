@@ -9,8 +9,7 @@ from .m1_iter_aux import (
     IterAux,
 
     TYPE__ITERABLE_PATH_KEY,
-    TYPE__ITERABLE_PATH_ORIGINAL,
-    TYPE__ITERABLE_PATH_EXPECTED,
+    TYPE__ITERABLE_PATH,
     TYPE__ITERABLE,
 )
 

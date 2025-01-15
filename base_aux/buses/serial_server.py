@@ -7,7 +7,8 @@ from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS, TYPE__LAMBDA_ARGS
 from base_aux.aux_text import CmdArgsKwargsParser
 from base_aux.valid import *
 from base_aux.loggers import Logger
-from base_aux.aux_iter import *
+from base_aux.aux_iter import IterAux
+from base_aux.aux_text import TextAux
 
 from . import *
 
@@ -237,10 +238,10 @@ class SerialServer_Base(Logger, QThread):
         self.LOGGER.debug("")
 
         meth_name__expected = f"{self._STARTSWITH__CMD}{line_parsed.CMD}"
-        meth_name__original = IterAux().item__get_original__case_insensitive(meth_name__expected, dir(self))
+        meth_name__original = IterAux(dir(self)).item__get_original(meth_name__expected)
         # GET METHOD --------------------
         if meth_name__original:
-            meth = getattr(self, meth_name__original())     #Explcite need CALL!
+            meth = getattr(self, meth_name__original)     #Explcite need CALL!
         else:
             meth = self._cmd__param_as_cmd
 
@@ -291,11 +292,9 @@ class SerialServer_Base(Logger, QThread):
             ARGS.extend(arg.split("/"))
 
         # WORK --------------------------------
-        param_value = IterAux().value_by_path__get(ARGS, self.PARAMS)
+        param_value = IterAux(self.PARAMS).value__get(ARGS)
         if not param_value:
             return self.ANSWER.ERR__NAME_CMD_OR_PARAM
-
-        param_value = param_value()
 
         # VARIANTS ------------------------------------------------------------------
         # ValueUnit -------------------------------
@@ -332,11 +331,11 @@ class SerialServer_Base(Logger, QThread):
 
         # VALIDATE = check AVAILABLE TO CHANGE = exists all and not callable --------------
         for path, value_new in KWARGS.items():
-            path_name__original = IterAux().path__get_original(path, self.PARAMS)
+            path_name__original = IterAux(self.PARAMS).path__get_original(path)
             if not path_name__original:
                 return self.ANSWER.ERR__NAME_CMD_OR_PARAM
 
-            value_old = IterAux().value_by_path__get(path, self.PARAMS)()
+            value_old = IterAux(self.PARAMS).value__get(path)
             if isinstance(value_old, ValueUnit):
                 # NOTE: ALL CLASSES/INSTANCES ARE CALLABLE!!!
                 pass
@@ -349,7 +348,7 @@ class SerialServer_Base(Logger, QThread):
         # SET --------------
         for path, value_new in KWARGS.items():
             value_new = TextAux(value_new).try_convert_to_object()
-            value_old = IterAux().value_by_path__get(path, self.PARAMS)()
+            value_old = IterAux(self.PARAMS).value__get(path)
             # SET ----------
             if isinstance(value_old, (ValueUnit, ValueVariants)):
                 try:
@@ -358,7 +357,7 @@ class SerialServer_Base(Logger, QThread):
                 except:
                     return self.ANSWER.ERR__VALUE_INCOMPATIBLE
             else:
-                result = IterAux().value_by_path__set(path, value_new, self.PARAMS)
+                result = IterAux(self.PARAMS).value__set(path, value_new)
 
             if not result:
                 return self.ANSWER.FAIL
@@ -401,11 +400,11 @@ class SerialServer_Base(Logger, QThread):
 
         # WORK --------------------------------
         meth_name__expected = f"{self._STARTSWITH__SCRIPT}{line_parsed.ARGS[0]}"
-        meth_name__original = IterAux().item__get_original__case_insensitive(meth_name__expected, dir(self))
+        meth_name__original = IterAux(dir(self)).item__get_original(meth_name__expected)
         if not meth_name__original:
             return self.ANSWER.ERR__NAME_SCRIPT
 
-        meth = getattr(self, meth_name__original())
+        meth = getattr(self, meth_name__original)
 
         # EXEC METHOD --------------------
         try:
