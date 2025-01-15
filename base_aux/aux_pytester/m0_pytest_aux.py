@@ -16,101 +16,63 @@ from base_aux.funcs import TYPE__VALID_RESULT
 class PytestAux(InitSourceKwArgs):
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
-    def check(
-            self,
-            EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
-            _MARK: pytest.MarkDecorator | None = None,
-            _COMMENT: str | None = None
-    ) -> None | NoReturn:
-        """
-        NOTE
-        ----
-        this is same as funcs.Valid! except following:
-            - if validation is Fail - raise assert!
-            - no skips/cumulates/logs/ last_results/*values
+def check(
+        self,
+        EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
+        _MARK: pytest.MarkDecorator | None = None,
+        _COMMENT: str | None = None
+) -> None | NoReturn:
+    """
+    NOTE
+    ----
+    this is same as funcs.Valid! except following:
+        - if validation is Fail - raise assert!
+        - no skips/cumulates/logs/ last_results/*values
 
-        GOAL
-        ----
-        test target func/obj with exact parameters
-        no exception withing target func!
+    GOAL
+    ----
+    test target func/obj with exact parameters
+    no exception withing target func!
 
-        TODO: apply Valid or merge them into single one!
-        """
-        comment = _COMMENT or ""
-        actual_value = CallableAux(self.SOURCE).resolve_exx(*self.ARGS, **self.KWARGS)
+    TODO: apply Valid or merge them into single one!
+    """
+    comment = _COMMENT or ""
+    actual_value = CallableAux(self.SOURCE).resolve_exx(*self.ARGS, **self.KWARGS)
 
-        print(f"pytest=ARGS={self.ARGS}/KWARGS={self.KWARGS}//{actual_value=}/{EXPECTED=}")
+    print(f"pytest=ARGS={self.ARGS}/KWARGS={self.KWARGS}//{actual_value=}/{EXPECTED=}")
 
-        # MARKS -------------------------
-        # print(f"{mark.skipif(True)=}")
-        if _MARK == mark.skip:
-            pytest.skip("skip")
-        elif isinstance(_MARK, pytest.MarkDecorator) and _MARK.name == "skipif" and all(_MARK.args):
-            pytest.skip("skipIF")
+    # MARKS -------------------------
+    # print(f"{mark.skipif(True)=}")
+    if _MARK == mark.skip:
+        pytest.skip("skip")
+    elif isinstance(_MARK, pytest.MarkDecorator) and _MARK.name == "skipif" and all(_MARK.args):
+        pytest.skip("skipIF")
 
-        if _MARK == mark.xfail:
-            if TypeCheck(EXPECTED).check__exception():
-                assert not TypeCheck(actual_value).check__nested__by_cls_or_inst(EXPECTED), f"[xfail]{comment}"
-            else:
-                assert actual_value != EXPECTED, f"[xfail]{comment}"
+    if _MARK == mark.xfail:
+        if TypeCheck(EXPECTED).check__exception():
+            assert not TypeCheck(actual_value).check__nested__by_cls_or_inst(EXPECTED), f"[xfail]{comment}"
         else:
-            if TypeCheck(EXPECTED).check__exception():
-                assert TypeCheck(actual_value).check__nested__by_cls_or_inst(EXPECTED)
-            else:
-                assert actual_value == EXPECTED
+            assert actual_value != EXPECTED, f"[xfail]{comment}"
+    else:
+        if TypeCheck(EXPECTED).check__exception():
+            assert TypeCheck(actual_value).check__nested__by_cls_or_inst(EXPECTED)
+        else:
+            assert actual_value == EXPECTED
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_args_kwargs(
-        func_link: TYPE__LAMBDA_CONSTRUCTOR,
-        _EXPECTED: TYPE__VALID_RESULT = True,
-
-        _MARK: pytest.MarkDecorator | None = None,
-        _COMMENT: str | None = None
-) -> NoReturn | None:
-    """
-    created specially for using inline operators like 'func_link=A>=B'
-
-    CAREFUL
-    -------
-    BUT be careful cause of exceptions!
-    recommended using pytest_func_tester__no_args instead with 'func_link=lambda: A>=B'!!!
-    """
-    check(func_link=func_link, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+def pytest_func_tester__no_args_kwargs():
+    pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_kwargs(
-        func_link: TYPE__LAMBDA_CONSTRUCTOR,
-        args: TYPE__LAMBDA_ARGS,
-        _EXPECTED: TYPE__VALID_RESULT = True,
-
-        _MARK: pytest.MarkDecorator | None = None,
-        _COMMENT: str | None = None
-) -> NoReturn | None:
-    """
-    short variant in case of kwargs is not needed
-
-    WHY IT NEED
-    -----------
-    params passed by pytest while parametrisation as TUPLE!!!! so you cant miss any param in the middle!
-    """
-    check(func_link=func_link, args=args, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+def pytest_func_tester__no_kwargs():
+    pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_args(
-        func_link: TYPE__LAMBDA_CONSTRUCTOR,
-        kwargs: TYPE__LAMBDA_KWARGS,
-        _EXPECTED: TYPE__VALID_RESULT = True,
-
-        _MARK: pytest.MarkDecorator | None = None,
-        _COMMENT: str | None = None
-) -> NoReturn | None:
-    """
-    short variant in case of args is not needed
-    """
-    check(func_link=func_link, kwargs=kwargs, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+def pytest_func_tester__no_args():
+    pass
 
 
 # =====================================================================================================================
@@ -156,7 +118,7 @@ def _func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
-    check(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT)
+    PytestAux(func_link, *args, **kwargs).check(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================
@@ -170,7 +132,7 @@ def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     
     ]
 )
 def test__short_variant(func_link, args, kwargs, _EXPECTED):
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -185,7 +147,7 @@ def test__short_variant(func_link, args, kwargs, _EXPECTED):
     ]
 )
 def test__shortest_variant(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, *args).check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -204,7 +166,7 @@ def test__shortest_variant(func_link, args, _EXPECTED):
     ]
 )
 def test__expressions(expression):
-    pytest_func_tester__no_args_kwargs(expression)
+    PytestAux(expression).check()
 
 
 # =====================================================================================================================

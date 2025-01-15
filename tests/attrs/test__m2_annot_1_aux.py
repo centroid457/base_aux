@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester.pytester import pytest_func_tester__no_args_kwargs, pytest_func_tester__no_kwargs
+from base_aux.aux_pytester.m0_pytest_aux import pytest_func_tester__no_args_kwargs, pytest_func_tester__no_kwargs
 from base_aux.aux_attr import AnnotsBase, AnnotsAux, AnnotsRequired
 
 
