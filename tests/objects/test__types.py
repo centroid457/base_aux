@@ -9,7 +9,7 @@ from base_aux.aux_pytester import *
 class Test__1:
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None,      (True, True, True, False, False, )),
             (True,      (True, True, True, True, False, )),
@@ -72,7 +72,7 @@ class Test__1:
 
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -122,7 +122,7 @@ class Test__1:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args, EXPECTED",
+        argnames="source, args, _EXPECTED",
         argvalues=[
             ("str", (True, True), True),
             ("str", (True, False), False),
@@ -180,7 +180,7 @@ class Test__1:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -230,7 +230,7 @@ class Test__1:
 
     # CALLABLE --------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -279,7 +279,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -328,7 +328,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -377,7 +377,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -426,7 +426,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -475,7 +475,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -525,7 +525,7 @@ class Test__1:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -574,7 +574,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, True),
             (True, True),
@@ -623,7 +623,7 @@ class Test__1:
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -673,7 +673,7 @@ class Test__1:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, False),
             (True, False),
@@ -723,7 +723,7 @@ class Test__1:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, parent, EXPECTED",
+        argnames="source, parent, _EXPECTED",
         argvalues=[
             ("str", "str", True),
             ("str", str, True),

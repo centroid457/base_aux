@@ -133,7 +133,7 @@ class Test__ValueVariants:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source1, obj2, EXPECTED",
+        argnames="source1, obj2, _EXPECTED",
         argvalues=[
             (0, ValueVariants(0, variants=[0, 1]), True),
             (1, ValueVariants(0, variants=[0, 1]), False),
@@ -151,7 +151,7 @@ class Test__ValueVariants:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source1, obj2, EXPECTED",
+        argnames="source1, obj2, _EXPECTED",
         argvalues=[
             (0, ValueVariants(variants=[0, 1]), True),
             (1, ValueVariants(variants=[0, 1]), True),

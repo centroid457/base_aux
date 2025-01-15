@@ -23,7 +23,7 @@ class Test__ReqExp:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="pats, value, EXPECTED",
+        argnames="pats, value, _EXPECTED",
         argvalues=[
             (r"\d?", 1, True),
             ([r"\d?", r"\s*\d*"], 1, True),

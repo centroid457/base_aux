@@ -84,7 +84,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             ("import m1 \n   import m1  ", ["m1", ]),
         ]
@@ -95,7 +95,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             # -----------------------------
             ("import m1", ["m1", ]),
@@ -113,7 +113,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             # -----------------------------
             ("import m1, m2  ", ["m1", "m2"]),
@@ -131,7 +131,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             ("import (m1.p1, m2)  ", ["m1", "m2"]),
             ("import   (  m1.p1  ,  m2  )  ", ["m1", "m2"]),
@@ -148,7 +148,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             ("from m1.p1 import p11", ["m1", ]),
 
@@ -162,7 +162,7 @@ class Test__Parse:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (
                     "import m11.p1, m12\nimport m13, m14.p4\n\n\n\n\nimport (m21.p1.p11, m22)\nimport (m23,\nm24.p4)\n\n\n\n\nfrom m31.p1 import p11 \nfrom m32.p2.p22 import p222",

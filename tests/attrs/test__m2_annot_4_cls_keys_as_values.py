@@ -16,7 +16,7 @@ Victim_VALUES = ("ATTR1", "ATTR2", "ATTR3")
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         ("ATTR1", "ATTR1"),
         ("attr1", AttributeError),
@@ -32,7 +32,7 @@ def test__values(args, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (0, "ATTR1"),
         (1, "ATTR2"),

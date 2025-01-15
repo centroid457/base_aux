@@ -112,7 +112,7 @@ def test__meth_not_passed():
 
 
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (None, None),
         (True, Exx__GetattrPrefix_RaiseIf),
@@ -124,7 +124,7 @@ def test___meth__raise_if(args, _EXPECTED):
     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (None, Exx__GetattrPrefix_RaiseIf),
         (True, None),

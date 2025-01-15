@@ -283,7 +283,7 @@ class Test__WR_1(Test__WRBase):
         assert self.victim.write_read__last(["hello1", "hello2"]) == "hello2"
 
     @pytest.mark.parametrize(
-        argnames="write, read, EXPECTED",
+        argnames="write, read, _EXPECTED",
         argvalues=[
             ("hello", "hello", True),
             (["hello1", "hello2"], "hello2", True),
@@ -309,7 +309,7 @@ class Test__WR_1(Test__WRBase):
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="write, read, EXPECTED",
+        argnames="write, read, _EXPECTED",
         argvalues=[
             ("hello", "he.*", True),
             ("hello", ["he.*", ], True),

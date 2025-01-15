@@ -7,7 +7,7 @@ from base_aux.aux_pytester import *
 # =====================================================================================================================
 @pytest.mark.parametrize(argnames="func_link", argvalues=[SerialClient._data_ensure__bytes, ])
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (111, Exception),
         (str, Exception),
@@ -36,7 +36,7 @@ def test__data_ensure__bytes(func_link, args, _EXPECTED):
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(argnames="func_link", argvalues=[SerialClient._data_ensure__string, ])
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (111, "111"),
 
@@ -70,7 +70,7 @@ class Victim(SerialClient):
 
 @pytest.mark.parametrize(argnames="func_link", argvalues=[Victim._bytes_eol__ensure, ])
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (111, Exception),
         (str, Exception),
@@ -99,7 +99,7 @@ def test__bytes_eol__ensures(func_link, args, _EXPECTED):
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(argnames="func_link", argvalues=[Victim._data_eol__clear, ])
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (111, Exception),
         (str, Exception),
@@ -128,7 +128,7 @@ def test__data_eol__clear(func_link, args, _EXPECTED):
 # =====================================================================================================================
 @pytest.mark.parametrize(argnames="func_link", argvalues=[SerialClient()._create_cmd_line, ])
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         ("", ""),
         ("\r", ""),

@@ -40,7 +40,7 @@ class Test__Args:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             ((), ()),
             ([], ()),

@@ -29,7 +29,7 @@ def test____LE__():
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="func_link, args, kwargs, EXPECTED, _pytestExpected",
+    argnames="func_link, args, kwargs, _EXPECTED, _pytestExpected",
     argvalues=[
         # not callable ------------
         (True, Default, None, True, True),
@@ -49,7 +49,7 @@ def test____LE__():
 )
 def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
-        check(func_link=func_link, args=args, kwargs=kwargs, _EXPECTED=_EXPECTED)
+        PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
     except:
         assert not _pytestExpected
     else:
@@ -58,7 +58,7 @@ def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, kwargs, EXPECTED",
+    argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, []),
         (None, {}, [None, ]),
@@ -73,12 +73,12 @@ def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected
 )
 def test__func_list_direct(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_DIRECT
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, kwargs, EXPECTED",
+    argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, []),
         (None, {}, [None, ]),
@@ -93,12 +93,12 @@ def test__func_list_direct(args, kwargs, _EXPECTED):
 )
 def test__func_list_values(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_VALUES
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, kwargs, EXPECTED",
+    argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, {}),
         (None, {}, {None: None}),
@@ -113,12 +113,12 @@ def test__func_list_values(args, kwargs, _EXPECTED):
 )
 def test__func_dict(args, kwargs, _EXPECTED):
     func_link = LAMBDA_DICT
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, kwargs, EXPECTED",
+    argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, True),
         (None, {}, False),
@@ -135,12 +135,12 @@ def test__func_dict(args, kwargs, _EXPECTED):
 )
 def test__func_all(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ALL
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, kwargs, EXPECTED",
+    argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, False),
         (None, {}, False),
@@ -162,7 +162,7 @@ def test__func_all(args, kwargs, _EXPECTED):
 )
 def test__func_any(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ANY
-    check(func_link, args, kwargs, _EXPECTED)
+    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

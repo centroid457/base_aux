@@ -14,7 +14,7 @@ class Victim(AttrAnycaseGSAI):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="attr, EXPECTED",
+    argnames="attr, _EXPECTED",
     argvalues=[
         (None, Exception),
         (True, Exception),
@@ -38,7 +38,7 @@ def test__attr(attr, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="attr, EXPECTED",
+    argnames="attr, _EXPECTED",
     argvalues=[
         (None, Exception),
         (True, Exception),

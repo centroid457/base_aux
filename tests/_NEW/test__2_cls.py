@@ -31,7 +31,7 @@ class Test__New:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (("1",), 1),
             (("hello",), Exception),
@@ -44,7 +44,7 @@ class Test__New:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(argnames="func_link", argvalues=[int, float, ])
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (("1",), 1),
             (("hello",), Exception),

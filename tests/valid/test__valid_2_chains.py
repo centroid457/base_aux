@@ -24,7 +24,7 @@ class Test__ValidChains:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="chains, EXPECTED",
+        argnames="chains, _EXPECTED",
         argvalues=[
             ([True, ], True),
             ([False, ], False),
@@ -55,7 +55,7 @@ class Test__ValidChains:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="chains, EXPECTED",
+        argnames="chains, _EXPECTED",
         argvalues=[
             ([True, True, True], True),
             ([True, False, True], False),

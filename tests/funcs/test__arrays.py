@@ -11,7 +11,7 @@ STR_EXCEPTION_MARK = "***STR_EXCEPTION_MARK***"
 # =====================================================================================================================
 # !!!!!!!!!!!!!!!!!!!!!!! ТИПОВОЙ ПРИМЕР РАБОТЫ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # @pytest.mark.parametrize(
-#     argnames="p1,_func_result,EXPECTED,_EXPECT_COMPARE",   #_EXPECT_COMPARE=ожидание по сравнению
+#     argnames="p1,_func_result,_EXPECTED,_EXPECT_COMPARE",   #_EXPECT_COMPARE=ожидание по сравнению
 #     argvalues=[
 #         (None, None, {}, True),       # BLANK input
 #         ({}, None, {}, True),
@@ -28,7 +28,7 @@ STR_EXCEPTION_MARK = "***STR_EXCEPTION_MARK***"
 #         ({1: 1}, str, "{1: 1}", True),
 #         ({1: 1, "a": "a"}, str, "{1: 1, 'a': 'a'}", True),
 #     ])
-# def test__DictDotAttrAccess(p1, _func_result, EXPECTED, _EXPECT_COMPARE):  # starichenko
+# def test__DictDotAttrAccess(p1, _func_result, _EXPECTED, _EXPECT_COMPARE):  # starichenko
 #     test_obj_link = UFU.DictDotAttrAccess
 #
 #     if _func_result is None:
@@ -44,14 +44,14 @@ STR_EXCEPTION_MARK = "***STR_EXCEPTION_MARK***"
 #     except:
 #         result = UFU.STR_EXCEPTION_MARK
 #
-#     assert (result == EXPECTED) == _EXPECT_COMPARE
+#     assert (result == _EXPECTED) == _EXPECT_COMPARE
 
 
 # =====================================================================================================================
 class Test__np:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="p1,p2,p3,p4,p5,_func_result,EXPECTED,_EXPECT_COMPARE",
+        argnames="p1,p2,p3,p4,p5,_func_result,_EXPECTED,_EXPECT_COMPARE",
         argvalues=[
             (np.array([[1, 2, ], [1, 2, ]]), None, None, None, None, None, "12\n12", True),
             (np.array([[1, 2, ], [1, 2, ]]), {1: "#"}, None, None, None, None, "#2\n#2", True),

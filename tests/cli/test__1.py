@@ -88,7 +88,7 @@ class Test:
         assert victim.send([CMD_PING_1, CMD_PING_2])
 
     @pytest.mark.parametrize(
-        argnames="cmds, timeout, EXPECTED",
+        argnames="cmds, timeout, _EXPECTED",
         argvalues=[
 
             (CMD_PING_2, 0.1, False),

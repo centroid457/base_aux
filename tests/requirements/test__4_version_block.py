@@ -26,7 +26,7 @@ class Test__VersionBlock:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (True, True),
             (1, True),
@@ -56,7 +56,7 @@ class Test__VersionBlock:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (True, "true"),
             (1, "1"),
@@ -86,7 +86,7 @@ class Test__VersionBlock:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (True, False),
             (1, False),
@@ -116,7 +116,7 @@ class Test__VersionBlock:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
 
             # NOTE: THIS TESTS IS NOT USEFUL!!! many values is not accured in real parced string!!
@@ -151,7 +151,7 @@ class Test__VersionBlock:
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (True, "true"),
             (1, "1"),
@@ -181,7 +181,7 @@ class Test__VersionBlock:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (True, 1),
             (1, 1),
@@ -211,7 +211,7 @@ class Test__VersionBlock:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, EXPECTED",
+        argnames="args, _EXPECTED",
         argvalues=[
             (("None", None), True),
             (("1rc2", None), False),

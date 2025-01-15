@@ -10,7 +10,7 @@ from base_aux.aux_text import *
 # =====================================================================================================================
 class Test__sub:
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             # NOT ACCEPTED -------------
             ("None123", 'None123'),
@@ -38,7 +38,7 @@ class Test__sub:
 # =====================================================================================================================
 class Test__find:
     @pytest.mark.parametrize(
-        argnames="source, pats, EXPECTED",
+        argnames="source, pats, _EXPECTED",
         argvalues=[
             ("None123", r"\w*", ["None123", ]),
             ("None123", r"\w+(?#*.*)", ["None123", ]),
@@ -54,7 +54,7 @@ class Test__find:
 # =====================================================================================================================
 class Test__shortcut:
     @pytest.mark.parametrize(
-        argnames="p1,p2,p3,p4,EXPECTED",
+        argnames="p1,p2,p3,p4,_EXPECTED",
         argvalues=[
             (None, 5, "...", Where3.LAST, "None"),
             ("", 5, "...", Where3.LAST, ""),
@@ -129,7 +129,7 @@ class Test__try_convert_to_object:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (None, None),
             (True, True),
@@ -144,7 +144,7 @@ class Test__try_convert_to_object:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             ("null", None),
             ("true", True),
@@ -166,7 +166,7 @@ class Test__try_convert_to_object:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             (0, 0),
             ("0", 0),
@@ -185,7 +185,7 @@ class Test__try_convert_to_object:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             ("[]", []),
             # ("()", ()),     #JSONDecodeError('Expecting value: line 1 column 1 (char 0)'
@@ -201,7 +201,7 @@ class Test__try_convert_to_object:
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, EXPECTED",
+    argnames="source, _EXPECTED",
     argvalues=[
         ("None1", ["None1", ]),
         ("None1   #cmt", ["None1", ]),

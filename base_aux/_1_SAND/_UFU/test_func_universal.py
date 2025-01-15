@@ -321,7 +321,7 @@ pass
 
 # !!!!!!!!!!!!!!!!!!!!!!! ТИПОВОЙ ПРИМЕР РАБОТЫ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @pytest.mark.parametrize(
-    argnames="p1,_func_result,EXPECTED,_EXPECT_COMPARE",   #_EXPECT_COMPARE=ожидание по сравнению
+    argnames="p1,_func_result,_EXPECTED,_EXPECT_COMPARE",   #_EXPECT_COMPARE=ожидание по сравнению
     argvalues=[
         (None, None, {}, True),       # BLANK input
         ({}, None, {}, True),
@@ -415,7 +415,7 @@ def test__ClsCountExecutions():
 
 # DECORATORS =========================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,_p1,_p2,EXPECTED",
+    argnames="p1,_p1,_p2,_EXPECTED",
     argvalues=[
         # correct
         (1, 0.1, True, True),
@@ -450,7 +450,7 @@ def test__decorator_if_error_return_none_and_log_explanation():
 
 # FUNCS ===============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (lambda: 123, []),
         (lambda a: 123, ["a", ]),
@@ -466,7 +466,7 @@ def test__func_get_arg_names_list(p1, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED,__counter",
+    argnames="p1,p2,p3,_EXPECTED,__counter",
     argvalues=[
         # LINKS BARE -------------------------------------------------------------
         # TRIVIAL ONE
@@ -776,7 +776,7 @@ def test__funcs_all_true(p1,p2,p3,_EXPECTED,__counter):
     assert result == _EXPECTED and count_called_funcs == __counter
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         # TRIVIAL
         (lambda _p1: _p1, {"_p1": True}, 30, True),
@@ -809,7 +809,7 @@ def test__func_wait_true(p1,p2,p3,_EXPECTED):
 
 # VALUES ==============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,p5,EXPECTED",
+    argnames="p1,p2,p3,p4,p5,_EXPECTED",
     argvalues=[
         # TRIVIAL
         ("", True, True, False, [], True),
@@ -866,7 +866,7 @@ def test__value_convert_to_bool():
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         # DIRECT PATTERN
         ("", r"", [str, int, float], True),
@@ -890,7 +890,7 @@ def test__value_check_by_pattern(p1, p2, p3, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (None, True, []),
         (None, False, [None]),
@@ -922,7 +922,7 @@ def test__value_make_sequence_if_not_sequence(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         (None, ["1", ], 1, None),   # 0=not string
         (None, ["1", None], 1, None),
@@ -961,7 +961,7 @@ def test__value_search_by_list(p1, p2, p3, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         (None, {}, 1, r"\{\{.*\}\}", (None, None)),   # 0=not string
         (None, {"1": "1", }, 1, r"\{\{.*\}\}", (None, None)),
@@ -1008,7 +1008,7 @@ def test__value_search_by_dict_return_key_and_value(p1, p2, p3, p4, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         (None, {}, 1, True, None),   # 0=not string
         (None, {}, 1, False, None),
@@ -1039,7 +1039,7 @@ def test__value_try_replace_by_dict(p1, p2, p3, p4, _EXPECTED):
 
 # PARAMS ==============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (None, None, []),
         ({}, None, []),
@@ -1073,7 +1073,7 @@ def test__params_check_dependencies_return_wrong_list(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         ([], None, False),
 
@@ -1101,7 +1101,7 @@ def test__params_check_deviation_or_equel__str_or_float(p1, p2, _EXPECTED):
 
 # TYPE ================================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # P1 = different SOURCE
         (123, str, False),
@@ -1139,7 +1139,7 @@ def test__type_check_by_variants(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (None, True),
         (True, True),
@@ -1181,7 +1181,7 @@ def test__type_is_elementary_single_or_container(p1,_EXPECTED):
     assert result == _EXPECTED
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (None, True),
         (True, True),
@@ -1224,7 +1224,7 @@ def test__type_is_elementary_single(p1,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # all types
         (None, False, False),
@@ -1271,7 +1271,7 @@ def test__type_is_intable(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         # all types
         (None, False),
@@ -1358,7 +1358,7 @@ argvalues_for__type_is_iterable=[
 ]
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=argvalues_for__type_is_iterable
 )
 def test__type_is_iterable(p1,p2,p3,_EXPECTED):
@@ -1370,7 +1370,7 @@ def test__type_is_iterable(p1,p2,p3,_EXPECTED):
 
 @pytest.mark.skip("СДЕЛАТЬ ПОТОМ!!!**********************************************************")
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=argvalues_for__type_is_iterable
 )
 def test__type_is_iterable_but_not_str(p1,p2,p3,_EXPECTED):
@@ -1394,7 +1394,7 @@ def test__type_is_instance_of_any_user_class():
 
 # STRING ==============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # TRIVIAL
         ("", False, ""),
@@ -1433,7 +1433,7 @@ def test__str_try_to_int(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         # TRIVIAL
         ("", False, None, ""),
@@ -1478,7 +1478,7 @@ def test__str_try_to_float(p1, p2, p3, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         # trivial
         (None, None),
@@ -1499,7 +1499,7 @@ def test__str_replace_blank_lines(p1, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         # trivial
         (None, None),
@@ -1520,7 +1520,7 @@ def test__str_delete_wightspaces(p1, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         # trivial
         (None, None, None, None),
@@ -1549,7 +1549,7 @@ def test__str_replace_nonprintable(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # trivial
         (None, [], None),
@@ -1573,7 +1573,7 @@ def test__str_get_number_near_measure_unit_or_none(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,p5,EXPECTED",
+    argnames="p1,p2,p3,p4,p5,_EXPECTED",
     argvalues=[
         ("000", True, ".", True, False, [0]),
         ("1", True, ".", True, False, [1]),
@@ -1605,7 +1605,7 @@ def test__str_get_alphanum_list(p1,p2,p3,p4,p5,_EXPECTED):
 
 # NUMBER ==============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (0, 1, 0),
         (0, 2, 0),
@@ -1634,7 +1634,7 @@ def test__number_get_bit_in_position(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         # 1=zero_is_first=True
         ([0, 1], -1, True, []),
@@ -1665,7 +1665,7 @@ def test__number_convert_to_list_by_baselist(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (321.123, None, 321.123),
         (321.123, 0, 321.123),
@@ -1690,7 +1690,7 @@ def test__number_cutting(p1, p2, _EXPECTED):
 
 # SEQUENCE ============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,p5,p6,EXPECTED",
+    argnames="p1,p2,p3,p4,p5,p6,_EXPECTED",
     argvalues=[
         ([1, ],             "",     True, False, False, False, "1"),
         ([1, 2, 3],         "",     True, False, False, False, "123"),
@@ -1721,7 +1721,7 @@ def test__sequence_join_to_string_simple(p1,p2,p3,p4,p5,p6,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         # blank
         (None, [None]),
@@ -1762,7 +1762,7 @@ def test__sequence_make_ensured_if_not(p1, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (None, [], None),
         (1, [], None),
@@ -1783,7 +1783,7 @@ def test__sequences_get_different_elements(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         ([1, 2], None, None, [1, 2]),
         ([1, 2], 0, None, [1, 2]),
@@ -1812,7 +1812,7 @@ def test__list_split_by_groups(p1,p2,p3,_EXPECTED):
 
 # LISTS ===============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
 
         ([], False, []),
@@ -1833,7 +1833,7 @@ def test__lists_sum(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
 
         ([], 0, []),
@@ -1858,7 +1858,7 @@ def test__list_tuples_del_index(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
 
         ([0, 1, 2], 0, 0),
@@ -1873,7 +1873,7 @@ def test__list_get_item_by_circle_index(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         ([], True, True, []),
 
@@ -1906,7 +1906,7 @@ def test__list_sort_simple_floatable_items(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         ([], True, []),
 
@@ -1941,7 +1941,7 @@ def test__list_sort_with_correct_inner_numbs(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # nums
         ([], [], []),
@@ -1975,7 +1975,7 @@ def test__list_sort_by_patterns(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         (["", "1", "2", "11"], "1", None, ["", "2", ]),
         (["", "1", "2", "11"], "1", 100, ["", "2", ]),
@@ -1990,7 +1990,7 @@ def test__list_delete_strings_by_substring(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         ([1, 2, 3, 1], 1, 11, True, [11, 2, 3, 11]),
         ([1, 2, 3, 1], 1, 11, False, [11, 2, 3, 1]),
@@ -2004,7 +2004,7 @@ def test__list_replace_element(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (None, None),
         (1, None),
@@ -2028,7 +2028,7 @@ def test__list_get_repeated_elements(p1,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
 
         # TRIVIALS
@@ -2053,7 +2053,7 @@ def test__list_shrink_by_patterns(p1,p2,p3,_EXPECTED):
 
 # DICTS ===============================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         #
         # # TRIVIALS
@@ -2075,7 +2075,7 @@ def test__dict_compare_by_same_values(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
 
         # TRIVIALS
@@ -2098,7 +2098,7 @@ def test__dicts_merge(p1, p2, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         ({}, 1, 2, {}),
         ({1:1}, 1, 2, {2:1}),
@@ -2116,7 +2116,7 @@ def test__dict_key_rename(p1, p2, p3, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4_EXPECTEDD",
     argvalues=[
         # 0=trivial
         (None, None, None, None, None),
@@ -2149,7 +2149,7 @@ def test__dict_keys_delete_by_name(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,p5,p6,EXPECTED",
+    argnames="p1,p2,p3,p4,p5,p6,_EXPECTED",
     argvalues=[
         # 0=trivial
         (None, [], None, None, None, None, None),
@@ -2200,7 +2200,7 @@ def test__dict_values_replace(p1,p2,p3,p4,p5,p6,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         # TRIVIALS
         ({}, None, None),
@@ -2226,7 +2226,7 @@ def test__dict_value_get_by_keypath(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
 
         # 1=LEVEL ----------------------------
@@ -2273,7 +2273,7 @@ def test__dicts_merge(p1,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,p5,EXPECTED",
+    argnames="p1,p2,p3,p4,p5,_EXPECTED",
     argvalues=[
         # 0=trivial
         (None, 1, False, True, False, None),
@@ -2314,7 +2314,7 @@ def test__dict_values_get_list_for_key(p1,p2,p3,p4,p5,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         ({}, None, None, None),
         ({}, {}, None, True),
@@ -2334,7 +2334,7 @@ def test__dicts_compare(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         ({}, None, True, True, False),
         ({1:1}, "", True, True, False),
@@ -2379,7 +2379,7 @@ def test__dict_validate_by_etalon(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,EXPECTED",
+    argnames="p1,p2,p3,_EXPECTED",
     argvalues=[
         (None, None, None, None),
         ({}, None, None, None),
@@ -2405,7 +2405,7 @@ def test__dict_collapse_values_dict_by_key(p1,p2,p3,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
 
         # TRIVIALS
@@ -2512,7 +2512,7 @@ def test__timedate_get_date_or_time_structtime_part():
 
 # OTHER ================================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (0, ""),
         (1, "A"),
@@ -2540,7 +2540,7 @@ pass    # ======================================================================
 
 #  PYTEST INVESTIGATE =================================================================================================
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         # TRIVIAL
         ("", True, True, [], True),
@@ -2565,13 +2565,13 @@ def test__HOW_TO_PYTEST_DIRECT_ACCESS_TO_ALL_DEBUG_DATA(request, p1, p2, p3, p4,
     # DONT CORRECT BELOW!!!
     _PARAMS_DICT = {**request.node.callspec.params, **params_dict_additional}
     try:
-        _PARAMS_DICT.pop("EXPECTED")
+        _PARAMS_DICT.pop("_EXPECTED")
     except:
         pass
     _STATUS = result == _EXPECTED
     _FUNC_TESTED = FUNC_LINK.__name__
     _FAIL_MSG = UFU.STR_PATTERN_FOR_PYTEST_FAIL_MSG.format(_FUNC_TESTED, _PARAMS_DICT, result, _EXPECTED)
-    assert result == _EXPECTED, _FAIL_MSG   # you need to place here 'result == EXPECTED' not the _STATUS!!!
+    assert result == _EXPECTED, _FAIL_MSG   # you need to place here 'result == _EXPECTED' not the _STATUS!!!
 
 
 @pytest.mark.parametrize(argnames="p1,p2", argvalues=[(55,55), (66,66)])

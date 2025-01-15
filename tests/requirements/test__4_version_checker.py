@@ -63,14 +63,14 @@ class Test__ReqCheckVersion_Python:
             assert False
 
     # @pytest.mark.parametrize(
-    #     argnames="args, EXPECTED",
+    #     argnames="args, _EXPECTED",
     #     argvalues=[
     #         (("1.2rc2.3", "1.2rc2.3"), True),
     #     ]
     # )
-    # def test__inst__cmp__eq(self, args, EXPECTED):
+    # def test__inst__cmp__eq(self, args, _EXPECTED):
     #     func_link = lambda source1, source2: self.Victim().check_eq("1.02rc2.3")
-    #     pytest_func_tester__no_kwargs(func_link, args, EXPECTED)
+    #     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
 
 # =====================================================================================================================

@@ -15,7 +15,7 @@ class Victim(NumberArithmTranslateToAttr):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (Victim(0), "0"),
         (Victim(0.0), "0"),
@@ -39,7 +39,7 @@ def test__precision_str(args, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, EXPECTED",
+    argnames="args, _EXPECTED",
     argvalues=[
         (0, 0),
         (1, 1),
@@ -111,7 +111,7 @@ class Test__Number:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="expr, EXPECTED",
+        argnames="expr, _EXPECTED",
         argvalues=[
             (Victim(0.001), 0.001),
             (Victim(0.001) - 0.001, 0),
@@ -126,7 +126,7 @@ class Test__Number:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="expr, EXPECTED",
+        argnames="expr, _EXPECTED",
         argvalues=[
             (Victim(0), "0"),
             (Victim(0.0), "0"),

@@ -416,7 +416,7 @@ TEST_XML_LOGIN_FILENAME = f"-TEST_XML_LOGIN_FILENAME.xml"
 TEST_XML_LOGIN_atr_DICT = dict(Action="Authorize", Result="OK", ErrorCode="0", Msg="")
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (None, None),
         (123, None),
@@ -451,7 +451,7 @@ def test__xml_element_set__file():
 
 
 @pytest.mark.parametrize(
-    argnames="p1,EXPECTED",
+    argnames="p1,_EXPECTED",
     argvalues=[
         (None, None),
         (123, None),
@@ -477,7 +477,7 @@ def test__xml_element_attr_get_dict():
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (None, "Action", None),
         (123, "Action", None),
@@ -494,7 +494,7 @@ def test__xml_element_attr_get_value(p1,p2,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
 
         # trivial
@@ -538,7 +538,7 @@ def test__xml_find_element_first(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         # only_direct_childs=True
         (TEST_XML_SIMPLE_STRING, None,    True, False, ["tag1a", "tag1b", "tag1c"]),
@@ -561,7 +561,7 @@ def test__xml_elements_iter(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,EXPECTED",
+    argnames="p1,p2,p3,p4,_EXPECTED",
     argvalues=[
         ("""
             <tag0 attr1="attr1">
@@ -598,7 +598,7 @@ def test__xml_dict_get(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,EXPECTED",
+    argnames="p1,p2,_EXPECTED",
     argvalues=[
         (TEST_XML_LOGIN_STRING, True, {"LOGIN": "SuperUser"}),
         (TEST_XML_SIMPLE_STRING_REPEATS, True, {'tag1a': 'tag1atext', 'tag1b': 'tag1btext'}),

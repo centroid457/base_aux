@@ -36,7 +36,7 @@ class VictimAttr1CmpAttr2_TryBreak(VictimAttr1CmpAttr2):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="obj, other, EXPECTED",
+    argnames="obj, other, _EXPECTED",
     argvalues=[
         (Victim, True, None),
         (Victim(), True, None),
