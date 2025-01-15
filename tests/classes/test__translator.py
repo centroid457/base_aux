@@ -10,7 +10,7 @@ from base_aux.classes import *
 # =====================================================================================================================
 class Test__1:
     @pytest.mark.parametrize(
-        argnames="rules, notFound, source, _EXPECTED",
+        argnames="rules, notFound, source, EXPECTED",
         argvalues=[
             ({1:11, 2:22}, None, 1, 11),
             ({1:11, 2:22}, None, 2, 22),

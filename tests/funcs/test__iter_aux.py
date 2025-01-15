@@ -7,7 +7,7 @@ from base_aux.aux_iter import *
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, item, _EXPECTED",
+    argnames="source, item, EXPECTED",
     argvalues=[
         ((1, ), "1", 1),
         ((1, ), 1, 1),
@@ -31,7 +31,7 @@ def test__item__get_original(source, item, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, path, _EXPECTED",
+    argnames="source, path, EXPECTED",
     argvalues=[
         ((1, ), "1", (1, )),
         ((1, ), 1, 1),

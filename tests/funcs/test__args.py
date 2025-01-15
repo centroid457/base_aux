@@ -40,33 +40,28 @@ class Test__Args:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
-            # DEF --------------
-            (Default, ()),
-            (Default(), (None, )),
-            (Default(None), (None, )),
+            ((), ()),
+            ([], ()),
+            ({}, ()),
+
+            ((1,), (1,)),
+            ([1, ], (1,)),
+            ({1: 1}, (1,)),
 
             # None --------------
             (None, (None, )),
             ((None, ), (None, )),
 
-            ((None, True), ()),
-            (((None, ), True), (None, )),
+            ((None, True), (None, True)),
+            (((None, ), True), ((None, ), True)),
 
             # INT --------------
             (0, (0, )),
             ((0, ), (0, )),
             (1, (1, )),
             (1+1, (2, )),
-
-            ((), ()),
-            ([], ()),
-            ({}, ()),
-
-            ((1,), (1,)),
-            ([1,], (1,)),
-            ({1:1}, (1,)),
 
             # CALLABLES --------------
             (LAMBDA_TRUE, (LAMBDA_TRUE, )),

@@ -45,7 +45,7 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             # BOOLS ---------------
             # direct TRUE
@@ -120,7 +120,7 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args, _EXPECTED",
+        argnames="source, args, EXPECTED",
         argvalues=[
             (1, (NoValue, lambda x: float(x) >= 1), True),
             ("1", (NoValue, lambda x: float(x) >= 1), True),
@@ -136,7 +136,7 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args__value, kwargs__value, validate, _EXPECTED",
+        argnames="source, args__value, kwargs__value, validate, EXPECTED",
         argvalues=[
             # bool --------------------
             (0, (), {}, True, False),
@@ -162,7 +162,7 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, args__validate, kwargs__validate, validate, _EXPECTED",
+        argnames="source, args__validate, kwargs__validate, validate, EXPECTED",
         argvalues=[
             # bool --------------------
             (0, (), {}, True, False),
@@ -264,7 +264,7 @@ class Test__ValidTypes:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, validate_link, retry, _EXPECTED",
+        argnames="source, validate_link, retry, EXPECTED",
         argvalues=[
             # bool --------------------
             ([True, False, False], list.pop, 0, False),

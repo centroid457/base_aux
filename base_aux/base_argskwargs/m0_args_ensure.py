@@ -25,7 +25,7 @@ def args__ensure_tuple(args: Any = ()) -> tuple:
 
     USAGE
     -----
-        def func1(*args):
+        def func1(var, args):
             args = ensure_tuple(args)
 
         def func2(link: Callable, args):
@@ -39,18 +39,14 @@ def args__ensure_tuple(args: Any = ()) -> tuple:
 
         unpacked iterables/generators - if need unpack it manually!!! its not difficult and so clear!
         elementary collection would unpack!
-
-    :param none_as_empty:
-        use carefully!
-
     """
     # TODO: move to object-info or funcsAux???
 
     # ENSURE TUPLE --------------------------
-    if not TypeCheck(args).check__elementary_collection():
-        result = (args, )
-    else:
+    if TypeCheck(args).check__elementary_collection():
         result = tuple(args)
+    else:
+        result = (args,)
     return result
 
 

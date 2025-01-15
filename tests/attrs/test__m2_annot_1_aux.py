@@ -64,7 +64,7 @@ class DictDirect_Fail(dict, AnnotsBase):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, EXPECTED",
     argvalues=[
         (VictimDirect_Ok(), []),
         (VictimDirect_Fail(), ["ATTR1", ]),
@@ -86,7 +86,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, EXPECTED",
     argvalues=[
         (VictimDirect_Ok(), True),
         (VictimDirect_Fail(), False),
@@ -108,7 +108,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, EXPECTED",
     argvalues=[
         (VictimDirect_Ok(), None),
         (VictimDirect_Fail(), Exception),
@@ -160,7 +160,7 @@ class Test__Cmp:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, EXPECTED",
         argvalues=[
             (victim1, VICTIM1_DICT_TYPES),
             (victim2, VICTIM2_DICT_TYPES),
@@ -172,7 +172,7 @@ class Test__Cmp:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, EXPECTED",
         argvalues=[
             (victim1, VICTIM1_DICT_VALUES),
             (victim2, VICTIM2_DICT_VALUES),
@@ -184,7 +184,7 @@ class Test__Cmp:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, EXPECTED",
         argvalues=[
             (victim1, list(VICTIM1_DICT_VALUES.values())),
             (victim2, list(VICTIM2_DICT_VALUES.values())),
@@ -196,7 +196,7 @@ class Test__Cmp:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, EXPECTED",
         argvalues=[
             (victim1, False),
             (victim2, False),

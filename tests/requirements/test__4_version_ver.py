@@ -26,7 +26,7 @@ class Test__Version:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
             (True, ""),     # Exx_VersionIncompatible
@@ -67,7 +67,7 @@ class Test__Version:
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
             (True, Exx_VersionIncompatible),
@@ -107,7 +107,7 @@ class Test__Version:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             (True, Exx_VersionIncompatible),
             (1, 1),
@@ -137,7 +137,7 @@ class Test__Version:
         pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             (("1rc2", "1rc2"), True),
 

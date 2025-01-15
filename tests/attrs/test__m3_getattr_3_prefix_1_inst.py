@@ -61,7 +61,7 @@ def test__anycase_meth():
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="meth, args, _EXPECTED",
+    argnames="meth, args, EXPECTED",
     argvalues=[
         ("bool__", (),  False),
         ("BOOL__", (), False),

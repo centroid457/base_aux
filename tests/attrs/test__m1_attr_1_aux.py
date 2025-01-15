@@ -27,7 +27,7 @@ class VictimNested_New(Victim):
 
 
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, EXPECTED",
     argvalues=[
         (Victim,    ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
         (Victim(),  ({"a", "_h", "__p"}, {"a", }, {"a", "_h", }, {"__p", })),
@@ -69,7 +69,7 @@ class Victim2:
 
 
 @pytest.mark.parametrize(
-    argnames="attr, _EXPECTED",
+    argnames="attr, EXPECTED",
     argvalues=[
         (1, (None, Exception, Exception, )),
         (None, (None, Exception, Exception, )),

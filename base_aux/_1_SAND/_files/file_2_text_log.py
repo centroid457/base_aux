@@ -305,7 +305,7 @@ def _test__ProcessorTextLog__save_load():
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,_EXPECTED",
+    argnames="p1,p2,p3,p4,EXPECTED",
     argvalues=[
 
         (None, 1, None, False, []),
@@ -334,7 +334,7 @@ def test__ProcessorTextLog__loglines_iter_by_patterns(p1,p2,p3,p4,_EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="p1,p2,p3,p4,_EXPECTED",
+    argnames="p1,p2,p3,p4,EXPECTED",
     argvalues=[
 
         (None, "1", 0, True, []),

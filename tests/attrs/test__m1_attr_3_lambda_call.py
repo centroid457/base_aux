@@ -6,7 +6,7 @@ from base_aux.aux_pytester import *
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="value, _EXPECTED",
+    argnames="value, EXPECTED",
     argvalues=[
         (1, True),
         ("hello", Exception),
@@ -28,7 +28,7 @@ def test__common__define(value, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="value, _EXPECTED",
+    argnames="value, EXPECTED",
     argvalues=[
         (1, True),
         ("hello", Exception),

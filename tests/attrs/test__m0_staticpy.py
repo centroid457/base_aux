@@ -6,7 +6,7 @@ from base_aux.aux_attr import check_name__buildin
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, EXPECTED",
     argvalues=[
         ("_", False),
         ("__", False),

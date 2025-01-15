@@ -74,7 +74,7 @@ class Test__Cmp:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="expr, _EXPECTED",
+        argnames="expr, EXPECTED",
         argvalues=[
             (Victim(0).ltgt(1, 3), False),
             (Victim(1).ltgt(1, 3), False),

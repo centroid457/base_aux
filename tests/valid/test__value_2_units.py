@@ -24,7 +24,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             (-0, True),
             (0, True),
@@ -94,7 +94,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             (1, "1"),
             (1.1, "1.1"),
@@ -114,7 +114,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="args, EXPECTED",
         argvalues=[
             (1, 1),
             (1.1, 1),
@@ -137,7 +137,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source1, source2, _EXPECTED",
+        argnames="source1, source2, EXPECTED",
         argvalues=[
             (0, 0, 0),
 
@@ -188,7 +188,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source1, obj2, _EXPECTED",
+        argnames="source1, obj2, EXPECTED",
         argvalues=[
             # unit -----------------------
             (1, ValueUnit(1), True),

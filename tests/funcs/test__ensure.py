@@ -22,7 +22,7 @@ class Test__ensure:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, EXPECTED",
         argvalues=[
             # DEF --------------
             (None, TYPES.NONE),

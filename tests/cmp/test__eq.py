@@ -9,7 +9,7 @@ from base_aux.cmp.eq import Eq
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, other, _EXPECTED",
+    argnames="source, other, EXPECTED",
     argvalues=[
         (1, 1,        (True, True, False)),
         (1, 2,        (False, False, True)),

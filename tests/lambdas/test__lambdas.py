@@ -21,7 +21,7 @@ def test__raise():
 # =====================================================================================================================
 # DERIVATIVES
 @pytest.mark.parametrize(
-    argnames="source, args, _EXPECTED",
+    argnames="source, args, EXPECTED",
     argvalues=[
         (1, (1,2,), (1, True, False, True, False)),
         (10, (1,2,), (10, True, False, True, False)),
@@ -32,7 +32,7 @@ def test__raise():
     ]
 )
 def test__derivatives(source, args, _EXPECTED):
-    # for Cls, Expected in zip(, _EXPECTED):    # tis good idea but we cant see directly exact line!
+    # for Cls, Expected in zip(, EXPECTED):    # tis good idea but we cant see directly exact line!
 
     pytest_func_tester__no_args_kwargs(Lambda(source, *args), _EXPECTED[0])
 
