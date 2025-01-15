@@ -5,7 +5,7 @@ from base_aux.funcs.value_0_explicit import Default
 
 
 # =====================================================================================================================
-def args__ensure_tuple(args: TYPE__VALID_ARGS = (), none_as_empty: bool | None = None) -> tuple:
+def args__ensure_tuple(args: TYPE__LAMBDA_ARGS = (), none_as_empty: bool | None = None) -> tuple:
     """
     GOAL
     ----
