@@ -49,7 +49,7 @@ def test____LE__():
 )
 def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
-        test(func_link=func_link, args=args, kwargs=kwargs, _EXPECTED=_EXPECTED)
+        check(func_link=func_link, args=args, kwargs=kwargs, _EXPECTED=_EXPECTED)
     except:
         assert not _pytestExpected
     else:
@@ -73,7 +73,7 @@ def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected
 )
 def test__func_list_direct(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_DIRECT
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ def test__func_list_direct(args, kwargs, _EXPECTED):
 )
 def test__func_list_values(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_VALUES
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ def test__func_list_values(args, kwargs, _EXPECTED):
 )
 def test__func_dict(args, kwargs, _EXPECTED):
     func_link = LAMBDA_DICT
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # =====================================================================================================================
@@ -135,7 +135,7 @@ def test__func_dict(args, kwargs, _EXPECTED):
 )
 def test__func_all(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ALL
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ def test__func_all(args, kwargs, _EXPECTED):
 )
 def test__func_any(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ANY
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # =====================================================================================================================

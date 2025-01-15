@@ -44,7 +44,7 @@ def test__short_variant(func_link, args, _EXPECTED):
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[func_example, ])
 def test__long_variant(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):
-    test(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT)
+    check(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================

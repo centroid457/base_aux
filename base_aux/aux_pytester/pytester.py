@@ -15,7 +15,8 @@ from base_aux.funcs import TYPE__VALID_RESULT
 @final
 class PytestAux(InitSourceKwArgs):
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
-    def test(
+
+    def check(
             self,
             EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
             _MARK: pytest.MarkDecorator | None = None,
@@ -30,7 +31,7 @@ class PytestAux(InitSourceKwArgs):
 
         GOAL
         ----
-        test target func with exact parameters
+        test target func/obj with exact parameters
         no exception withing target func!
 
         TODO: apply Valid or merge them into single one!
@@ -75,7 +76,7 @@ def pytest_func_tester__no_args_kwargs(
     BUT be careful cause of exceptions!
     recommended using pytest_func_tester__no_args instead with 'func_link=lambda: A>=B'!!!
     """
-    test(func_link=func_link, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+    check(func_link=func_link, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -94,7 +95,7 @@ def pytest_func_tester__no_kwargs(
     -----------
     params passed by pytest while parametrisation as TUPLE!!!! so you cant miss any param in the middle!
     """
-    test(func_link=func_link, args=args, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+    check(func_link=func_link, args=args, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -109,7 +110,7 @@ def pytest_func_tester__no_args(
     """
     short variant in case of args is not needed
     """
-    test(func_link=func_link, kwargs=kwargs, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
+    check(func_link=func_link, kwargs=kwargs, _EXPECTED=_EXPECTED, _MARK=_MARK, _COMMENT=_COMMENT)
 
 
 # =====================================================================================================================
@@ -155,7 +156,7 @@ def _func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
-    test(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT)
+    check(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================
@@ -169,7 +170,7 @@ def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     
     ]
 )
 def test__short_variant(func_link, args, kwargs, _EXPECTED):
-    test(func_link, args, kwargs, _EXPECTED)
+    check(func_link, args, kwargs, _EXPECTED)
 
 
 # =====================================================================================================================
