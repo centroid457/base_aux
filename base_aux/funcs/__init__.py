@@ -35,14 +35,5 @@ from .value_0_explicit import (
 # )
 # ---------------------------------------------------------------------------------------------------------------------
 from .arrays import array_2d_get_compact_str
-from .iter_aux import (
-    IterAux,
-
-    TYPE__ITERABLE_PATH_KEY,
-    TYPE__ITERABLE_PATH_ORIGINAL,
-    TYPE__ITERABLE_PATH_EXPECTED,
-    TYPE__ITERABLE,
-)
-
 
 # =====================================================================================================================
