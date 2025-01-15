@@ -3,8 +3,8 @@ import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from base_aux.dicts import *
-from base_aux.base_callables import *
+from base_aux.aux_dict import *
+from base_aux.aux_callable import *
 # from base_aux.lambdas import Lambda
 from base_aux.servers import *
 from base_aux.funcs import *

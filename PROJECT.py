@@ -3,7 +3,7 @@ from share.release_files import release_files__update
 
 
 # =====================================================================================================================
-# VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize attrs
+# VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize aux_attr
 # VERSION = (0, 0, 4)   # add AUTHOR_NICKNAME_GITHUB for badges
 # VERSION = (0, 0, 5)   # separate PROJECT_BASE #TODO: need to separate into module!
 VERSION = (0, 0, 6)     # group Ver+News just place together
@@ -68,7 +68,7 @@ class PROJECT(PROJECT_BASE):
         "[primitives] combine separated in one class Sleep/Callables/ValueBlank/Types.",
         "[resolver] reSAND",
         "[AUX classes] apply @final +nesting from InitSOURCE",
-        "[attrs/type_check] big ref",
+        "[aux_attr/type_check] big ref",
     ]
 
 

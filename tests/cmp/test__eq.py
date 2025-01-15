@@ -3,7 +3,7 @@ import pytest
 
 from base_aux.base_objects import *
 
-from base_aux.pytester import *
+from base_aux.aux_pytester import *
 from base_aux.cmp.eq import Eq
 
 

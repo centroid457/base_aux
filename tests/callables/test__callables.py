@@ -2,9 +2,9 @@ import pytest
 
 from base_aux.base_objects.primitives import *
 from base_aux.base_enums import *
-from base_aux.base_callables import *
+from base_aux.aux_callable import *
 
-from base_aux.pytester import *
+from base_aux.aux_pytester import *
 
 
 # =====================================================================================================================

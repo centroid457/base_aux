@@ -5,7 +5,7 @@ import sys
 
 from base_aux.base_objects import TypeCheck
 from base_aux.cli.user import CliUser
-from base_aux.text.text import Text
+from base_aux.aux_text.m1_text_aux import TextAux
 
 from .versions import Version
 
@@ -326,7 +326,7 @@ self.last_stderr=
         |'    exec(code, locals())'
         |'  File "<string>", line 22, in <module>'
         |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\__init__.py", line 108, in setup'
-        |'    return distutils.core.setup(**attrs)'
+        |'    return distutils.core.setup(**aux_attr)'
         |'           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
         |'  File "C:\\Python3117x64\\Lib\\site-packages\\setuptools\\_distutils\\core.py", line 184, in setup'
         |'    return run_commands(dist)'
@@ -566,7 +566,7 @@ self.last_exx_timeout=None
         print(f"{text=}")
         print("-" * 20)
 
-        result = Text(text).requirements__get_list()
+        result = TextAux(text).requirements__get_list()
 
         return result
 

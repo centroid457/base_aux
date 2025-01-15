@@ -201,7 +201,7 @@ class File(Dir):
         """
         GOAL
         ----
-        same as attrs caseInsensitive for classes but for obvious finding files
+        same as aux_attr caseInsensitive for classes but for obvious finding files
         it could mention with extension or not
         """
         pass

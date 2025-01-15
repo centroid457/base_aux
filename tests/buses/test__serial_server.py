@@ -2,7 +2,7 @@ import pytest
 from typing import *
 from base_aux.buses import *
 from base_aux.valid import *
-from base_aux.text import *
+from base_aux.aux_text import *
 
 
 # =====================================================================================================================

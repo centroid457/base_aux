@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.alerts import *
-from base_aux.base_callables import *
+from base_aux.aux_callable import *
 
 
 # =====================================================================================================================

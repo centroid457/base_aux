@@ -14,7 +14,7 @@ class PROJECT:
 
     # README -----------------------------------------------
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
-    DESCRIPTION_SHORT: str = "update values into class attrs from OsEnvironment or Ini/Json File"
+    DESCRIPTION_SHORT: str = "update values into class aux_attr from OsEnvironment or Ini/Json File"
     DESCRIPTION_LONG: str = """
     Designed to use private data like username/pwd kept secure in OsEnvironment or Ini/Json-File for your several home projects at ones.  
     And not open it in public.  
@@ -26,7 +26,7 @@ class PROJECT:
         # "feat1",
         # ["feat2", "block1", "block2"],
 
-        ["load values to instance attrs from",
+        ["load values to instance aux_attr from",
          "Environment",
          "IniFile",
          "JsonFile",

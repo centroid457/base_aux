@@ -2,7 +2,7 @@ from typing import *
 from enum import Enum, auto
 from dataclasses import dataclass
 
-from base_aux.attrs import *
+from base_aux.aux_attr import *
 
 
 # =====================================================================================================================

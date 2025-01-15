@@ -1,5 +1,6 @@
 from typing import *
 # from base_aux.lambdas.lambdas import Lambda     # CIRCULAR IMPORT
+from base_aux.base_argskwargs import *
 
 
 # =====================================================================================================================
@@ -49,6 +50,22 @@ class InitSource:
             self.SOURCE = source
         else:
             self.SOURCE = self.SOURCE_DEF
+
+
+# =====================================================================================================================
+class InitSourceKwArgs(InitSource):
+    """
+    GOAL
+    ----
+    just to make inition source with KwArgs
+    """
+    ARGS: TYPE__LAMBDA_ARGS = ()
+    KWARGS: TYPE__LAMBDA_KWARGS = {}
+
+    def __init__(self, source: Any = None, *args, **kwargs) -> None:
+        self.ARGS = args
+        self.KWARGS = kwargs
+        super().__init__(source)
 
 
 # =====================================================================================================================

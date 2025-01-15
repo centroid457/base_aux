@@ -12,7 +12,7 @@ class AttrsDump:
     """
     GOAL
     ----
-    just an initial blank class with would be loaded by attrs!
+    just an initial blank class with would be loaded by aux_attr!
     used further as template or dumped values for dynamic values like properties
 
     WHY NOT-1: simple DICT?

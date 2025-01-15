@@ -7,7 +7,7 @@ class AttrsInitByKwArgs:
     """
     GOAL
     ----
-    create object with attrs as dict model / template
+    create object with aux_attr as dict model / template
 
     SAME AS
     -------

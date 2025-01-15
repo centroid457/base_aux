@@ -2,7 +2,7 @@ from typing import *
 import pathlib
 import abc
 
-from base_aux.attrs import *
+from base_aux.aux_attr import *
 from . import Exx__FileNotExists, TYPE__PATH
 
 

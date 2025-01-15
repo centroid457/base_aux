@@ -9,7 +9,7 @@ from base_aux.base_objects import *
 # =====================================================================================================================
 class ClsMiddleGroup:
     """
-    NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only attrs!
+    NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only aux_attr!
     ------------------------
     1. comparing direct methods on base_objects will not work!!!
         -------------------------

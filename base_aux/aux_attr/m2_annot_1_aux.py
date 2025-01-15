@@ -60,7 +60,7 @@ class AnnotsAux(InitSource):
         """
         GOAL
         ----
-        check if all annotated attrs have value!
+        check if all annotated aux_attr have value!
         """
         return not self.get_not_defined()
 
@@ -68,7 +68,7 @@ class AnnotsAux(InitSource):
         """
         GOAL
         ----
-        check if all annotated attrs have value!
+        check if all annotated aux_attr have value!
         """
         not_defined = self.get_not_defined()
         if not_defined:
@@ -148,7 +148,7 @@ class AnnotsAux(InitSource):
         """
         GOAL
         ----
-        set None for all annotated attrs! only existed!
+        set None for all annotated aux_attr! only existed!
         """
         for name in self.iter_names():
             if hasattr(self.SOURCE, name):
@@ -158,7 +158,7 @@ class AnnotsAux(InitSource):
         """
         GOAL
         ----
-        set None for all annotated attrs! even not existed!
+        set None for all annotated aux_attr! even not existed!
         """
         for name in self.iter_names():
             setattr(self.SOURCE, name, None)
@@ -167,7 +167,7 @@ class AnnotsAux(InitSource):
         """
         GOAL
         ----
-        delattr all annotated attrs!
+        delattr all annotated aux_attr!
         """
         for name in self.iter_names():
             if hasattr(self.SOURCE, name):

@@ -7,8 +7,8 @@
 
 
 # =====================================================================================================================
-from .text import (
-    Text,
+from .m1_text_aux import (
+    TextAux,
 )
 from .parser_1_cmd_args_kwargs import (
     CmdArgsKwargsParser,

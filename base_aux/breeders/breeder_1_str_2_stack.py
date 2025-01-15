@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_exceptions import *
-from base_aux.attrs import *
+from base_aux.aux_attr import *
 from base_aux.breeders import *
 
 

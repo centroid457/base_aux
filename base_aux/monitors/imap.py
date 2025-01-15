@@ -8,7 +8,7 @@ import email
 
 from base_aux.lambdas import Lambda
 from base_aux.privates import *
-from base_aux.attrs.m1_attr_3_lambdas_resolve import AttrsLambdasResolve
+from base_aux.aux_attr.m1_attr_3_lambdas_resolve import AttrsLambdasResolve
 from base_aux.alerts import *
 
 

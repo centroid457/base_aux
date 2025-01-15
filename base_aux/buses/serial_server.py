@@ -4,10 +4,10 @@ import time
 from PyQt5.QtCore import QThread
 
 from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS, TYPE__LAMBDA_ARGS
-from base_aux.text import CmdArgsKwargsParser
+from base_aux.aux_text import CmdArgsKwargsParser
 from base_aux.valid import *
 from base_aux.loggers import Logger
-from base_aux.iters import *
+from base_aux.aux_iter import *
 
 from . import *
 
@@ -348,7 +348,7 @@ class SerialServer_Base(Logger, QThread):
 
         # SET --------------
         for path, value_new in KWARGS.items():
-            value_new = Text(value_new).try_convert_to_object()
+            value_new = TextAux(value_new).try_convert_to_object()
             value_old = IterAux().value_by_path__get(path, self.PARAMS)()
             # SET ----------
             if isinstance(value_old, (ValueUnit, ValueVariants)):

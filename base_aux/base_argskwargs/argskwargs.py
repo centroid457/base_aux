@@ -9,7 +9,7 @@ TYPE__LAMBDA_KWARGS = dict[str, Any]
 
 
 # =====================================================================================================================
-class InitArgsKwargs:
+class InitArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for direct KwArgs
     """
     GOAL
     ----
@@ -56,7 +56,7 @@ class InitArgsKwargs:
         self.ARGS = args
         self.KWARGS = kwargs
 
-    def __bool__(self) -> bool:
+    def __bool__(self) -> bool:     # todo: decide to deprecate! it meshed when nesting!
         if self.ARGS or self.KWARGS:
             return True
         else:

@@ -4,10 +4,10 @@ import re
 from base_aux.base_source.source import InitSource
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_KWARGS
 from base_aux.base_enums.enums import CallablesUse
-from base_aux.base_callables import CallableAux
+from base_aux.aux_callable import CallableAux
 # from base_aux.base_objects import TypeCheck
 
-from base_aux.attrs.m0_static import AttrsDump
+from base_aux.aux_attr.m0_static import AttrsDump
 
 # from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
 
@@ -18,7 +18,7 @@ class AttrAux(InitSource):
     """
     NOTICE
     ------
-    if there are several same attrs in different cases - you should resolve it by yourself!
+    if there are several same aux_attr in different cases - you should resolve it by yourself!
     """
     # SOURCE = Lambda(AttrsDump)
     SOURCE = AttrsDump
@@ -291,7 +291,7 @@ class AttrAux(InitSource):
 
         GOAL
         ----
-        make a dict from any object from attrs (not hidden)
+        make a dict from any object from aux_attr (not hidden)
 
         SPECIALLY CREATED FOR
         ---------------------

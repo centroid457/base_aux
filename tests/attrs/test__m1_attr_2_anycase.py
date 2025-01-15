@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.pytester import *
-from base_aux.attrs import *
+from base_aux.aux_pytester import *
+from base_aux.aux_attr import *
 
 
 # =====================================================================================================================

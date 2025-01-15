@@ -4,17 +4,14 @@ import re
 
 from base_aux.base_argskwargs.ensure import args__ensure_tuple
 from base_aux.base_enums import *
+from base_aux.base_source import InitSource
 
 from base_aux.funcs import TYPE__ELEMENTARY
 
 
 # =====================================================================================================================
-class Text:
+class TextAux(InitSource):
     SOURCE: str = None
-
-    def __init__(self, source: Optional[str] = None):
-        if source is not None:
-            self.SOURCE = source
 
     # -----------------------------------------------------------------------------------------------------------------
     def prepare__json_loads(self, source: Optional[str] = None) -> str:

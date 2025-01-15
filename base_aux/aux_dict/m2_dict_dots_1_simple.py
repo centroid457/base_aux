@@ -2,8 +2,9 @@ from typing import *
 from base_aux.base_objects import ObjectInfo
 
 # from base_aux.funcs import Iterables
-from base_aux.funcs import IterAux, Explicit
-from base_aux.attrs import *
+from base_aux.funcs import Explicit
+from base_aux.aux_attr import *
+from base_aux.aux_iter import IterAux
 
 
 # =====================================================================================================================

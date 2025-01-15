@@ -10,7 +10,7 @@ class ToDict:
 
     SPECIALLY CREATED FOR
     ---------------------
-    dump attrs with values in gitMark
+    dump aux_attr with values in gitMark
     """
     SOURCE: Any
 

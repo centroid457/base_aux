@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
 from base_aux.funcs import *
-from base_aux.base_callables import *
+from base_aux.aux_callable import *
 from base_aux.cmp.eq import Eq
 
 

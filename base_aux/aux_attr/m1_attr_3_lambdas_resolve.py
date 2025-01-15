@@ -6,7 +6,7 @@ from base_aux.lambdas.lambdas import Lambda
 # =====================================================================================================================
 class AttrsLambdasResolve:
     """
-    find and call all Lambda attrs On class inition
+    find and call all Lambda aux_attr On class inition
     GOAL
     ----
     if you need create object in classAttribute only on real inition of class

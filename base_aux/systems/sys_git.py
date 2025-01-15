@@ -1,6 +1,6 @@
 import pathlib
 import datetime
-from base_aux.text import Text
+from base_aux.aux_text import TextAux
 
 try:
     import git  # GITPYTHON # need try statement! if not installed git.exe raise Exx even if module was setup!!!
@@ -140,9 +140,9 @@ class Git:
         git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
         if self.REPO:
-            branch = Text(self.BRANCH).shortcut(15)
-            summary = Text(self.SUMMARY).shortcut(15)
-            dt = Text(self.DATETIME).shortcut_nosub(19)
+            branch = TextAux(self.BRANCH).shortcut(15)
+            summary = TextAux(self.SUMMARY).shortcut(15)
+            dt = TextAux(self.DATETIME).shortcut_nosub(19)
 
             result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 

@@ -3,8 +3,8 @@ import pytest
 from base_aux.base_argskwargs import *
 from base_aux.base_enums import *
 
-from base_aux.pytester import *
-from base_aux.text import *
+from base_aux.aux_pytester import *
+from base_aux.aux_text import *
 
 
 # =====================================================================================================================
@@ -31,7 +31,7 @@ class Test__sub:
         ]
     )
     def test__1(self, source, _EXPECTED):
-        func_link = Text(source).sub__word
+        func_link = TextAux(source).sub__word
         pytest_func_tester__no_kwargs(func_link, ("None", "null"), _EXPECTED)
 
 
@@ -47,7 +47,7 @@ class Test__find:
         ]
     )
     def test__1(self, source, pats, _EXPECTED):
-        func_link = Text(source).find_by_pats
+        func_link = TextAux(source).find_by_pats
         pytest_func_tester__no_kwargs(func_link, pats, _EXPECTED)
 
 
@@ -87,7 +87,7 @@ class Test__shortcut:
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
-        func_link = Text(source=p1).shortcut
+        func_link = TextAux(source=p1).shortcut
         pytest_func_tester__no_args(func_link, Kwargs(maxlen=p2, sub=p3, where=p4), _EXPECTED)
 
 
@@ -119,12 +119,12 @@ class Test__try_convert_to_object:
         ]
     )
     def test__MAIN_GOAL__string_source(self, source):
-        func_link = Text(str(source)).try_convert_to_object
+        func_link = TextAux(str(source)).try_convert_to_object
         pytest_func_tester__no_args_kwargs(func_link, source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
-        func_link = Text(source).try_convert_to_object
+        func_link = TextAux(source).try_convert_to_object
         pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
     # =================================================================================================================
@@ -214,7 +214,7 @@ class Test__try_convert_to_object:
     ]
 )
 def test__requirements__get_list(source, _EXPECTED):
-    func_link = Text(source).requirements__get_list
+    func_link = TextAux(source).requirements__get_list
     pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
 
 

@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.dicts import *
+from base_aux.aux_dict import *
 from base_aux.funcs import *
 
 

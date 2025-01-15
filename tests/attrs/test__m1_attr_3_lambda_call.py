@@ -1,7 +1,7 @@
 import pytest
 
-from base_aux.attrs.m1_attr_3_lambdas_resolve import *
-from base_aux.pytester import *
+from base_aux.aux_attr.m1_attr_3_lambdas_resolve import *
+from base_aux.aux_pytester import *
 
 
 # =====================================================================================================================

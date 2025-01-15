@@ -48,7 +48,6 @@ class _GetattrClassmethod_Meta(type):
         from requirements import ReqCheckStr_Os
         ReqCheckStr_Os.raise_if_not__LINUX
     """
-
     # TODO: move into classes!!! checkers/others
 
     # dont change markers! use exists!

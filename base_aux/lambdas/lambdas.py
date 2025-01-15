@@ -1,15 +1,16 @@
 from typing import *
 import time
 
-from base_aux.base_argskwargs.argskwargs import InitArgsKwargs, TYPE__LAMBDA_CONSTRUCTOR
+from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2
 # from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
+from base_aux.base_source import *
 
 from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
-class Lambda(InitArgsKwargs):
+class Lambda(InitSourceKwArgs):
     """
     IDEA
     ----
@@ -57,24 +58,19 @@ class Lambda(InitArgsKwargs):
     ======
     :ivar CONSTRUCTOR: any class or function
     """
-    CONSTRUCTOR: TYPE__LAMBDA_CONSTRUCTOR
+    SOURCE: TYPE__LAMBDA_CONSTRUCTOR
 
     # UNIVERSAL =======================================================================================================
-    def __init__(self, constructor: TYPE__LAMBDA_CONSTRUCTOR, *args, **kwargs) -> None:
-        self.CONSTRUCTOR = constructor
-        super().__init__(*args, **kwargs)
-
-    # -----------------------------------------------------------------------------------------------------------------
     def construct(self, *args, **kwargs) -> Any | NoReturn:
         """
         unsafe (raise acceptable) get value
         """
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        if callable(self.CONSTRUCTOR):  # callable accept all variants! TypeCheck.check__callable_func_meth_inst_cls!
-            return self.CONSTRUCTOR(*args, **kwargs)
+        if callable(self.SOURCE):  # callable accept all variants! TypeCheck.check__callable_func_meth_inst_cls!
+            return self.SOURCE(*args, **kwargs)
         else:
-            return self.CONSTRUCTOR
+            return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
     def __bool__(self) -> bool | NoReturn:
