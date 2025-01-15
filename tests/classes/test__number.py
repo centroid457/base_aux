@@ -107,7 +107,7 @@ class Test__Number:
         ]
     )
     def test__cmp(self, expr):
-        pytest_func_tester__no_args_kwargs(expr)
+        PytestAux(expr).assert_check()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -122,7 +122,7 @@ class Test__Number:
         ]
     )
     def test__precision(self, expr, _EXPECTED):
-        pytest_func_tester__no_args_kwargs(expr, _EXPECTED)
+        PytestAux(expr).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -142,7 +142,7 @@ class Test__Number:
     )
     def test__str(self, expr, _EXPECTED):
         func_link = str(expr)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

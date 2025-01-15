@@ -306,7 +306,7 @@ class Test__WR_1(Test__WRBase):
     )
     def test__wr_last_validate(self, write, read, _EXPECTED):
         func_link = lambda: self.victim.write_read__last_validate(write, read)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="write, read, _EXPECTED",
@@ -320,7 +320,7 @@ class Test__WR_1(Test__WRBase):
     )
     def test__wr_last_validate_regexp(self, write, read, _EXPECTED):
         func_link = lambda: self.victim.write_read__last_validate_regexp(write, read)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     def test__wr_ReadFailPattern(self):
         self.victim.RAISE_READ_FAIL_PATTERN = True

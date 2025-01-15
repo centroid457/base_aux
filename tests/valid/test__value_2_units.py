@@ -110,7 +110,7 @@ class Test__WithUnit:
     )
     def test__str(self, args, _EXPECTED):
         func_link = lambda: str(ValueUnit(args))
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -133,7 +133,7 @@ class Test__WithUnit:
     )
     def test__multiplier(self, args, _EXPECTED):
         func_link = lambda: ValueUnit(args).MULT
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -184,7 +184,7 @@ class Test__WithUnit:
     )
     def test__cmp_1__as_func(self, source1, source2, _EXPECTED):
         func_link = lambda: ValueUnit(source1).__cmp__(source2)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -230,7 +230,7 @@ class Test__WithUnit:
     )
     def test__cmp_2__eq(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

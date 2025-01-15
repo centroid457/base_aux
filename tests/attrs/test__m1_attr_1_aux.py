@@ -55,10 +55,10 @@ class VictimNested_New(Victim):
     ]
 )
 def test__iter(source, _EXPECTED):
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__external_not_builtin()), _EXPECTED[0])
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_hidden()), _EXPECTED[1])
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__not_private()), _EXPECTED[2])
-    pytest_func_tester__no_args_kwargs(set(AttrAux(source).iter__private()), _EXPECTED[3])
+    PytestAux(set(AttrAux(source).iter__external_not_builtin())).assert_check(_EXPECTED[0])
+    PytestAux(set(AttrAux(source).iter__not_hidden())).assert_check(_EXPECTED[1])
+    PytestAux(set(AttrAux(source).iter__not_private())).assert_check(_EXPECTED[2])
+    PytestAux(set(AttrAux(source).iter__private())).assert_check(_EXPECTED[3])
 
 
 # =====================================================================================================================

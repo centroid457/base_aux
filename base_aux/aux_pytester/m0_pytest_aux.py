@@ -2,7 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.base_source import InitSourceKwArgs
+from base_aux.base_source import InitSourceKwArgs_Indirect
 from base_aux.base_argskwargs import *
 from base_aux.base_objects import *
 
@@ -13,14 +13,14 @@ from base_aux.funcs import TYPE__VALID_RESULT
 
 # =====================================================================================================================
 @final
-class PytestAux(InitSourceKwArgs):
+class PytestAux(InitSourceKwArgs_Indirect):
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
     def assert_check(
             self,
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
             _MARK: pytest.MarkDecorator | None = None,
-            _COMMENT: str | None = None
+            _COMMENT: str | None = None,
     ) -> None | NoReturn:
         """
         NOTE
@@ -36,10 +36,13 @@ class PytestAux(InitSourceKwArgs):
 
         TODO: apply Valid or merge them into single one!
         """
-        comment = _COMMENT or ""
-        actual_value = CallableAux(self.SOURCE).resolve_exx(*self.ARGS, **self.KWARGS)
+        args = self.ARGS
+        kwargs = self.KWARGS
 
-        print(f"pytest=ARGS={self.ARGS}/KWARGS={self.KWARGS}//{actual_value=}/{_EXPECTED=}")
+        comment = _COMMENT or ""
+        actual_value = CallableAux(self.SOURCE).resolve_exx(*args, **kwargs)
+
+        print(f"pytest={args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}")
 
         # MARKS -------------------------
         # print(f"{mark.skipif(True)=}")
@@ -61,11 +64,6 @@ class PytestAux(InitSourceKwArgs):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_args_kwargs():
-    pass
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_kwargs():
     pass
 
@@ -73,6 +71,7 @@ def pytest_func_tester__no_kwargs():
 # ---------------------------------------------------------------------------------------------------------------------
 def pytest_func_tester__no_args():
     pass
+
 
 # =====================================================================================================================
 pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------

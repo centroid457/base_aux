@@ -120,12 +120,12 @@ class Test__try_convert_to_object:
     )
     def test__MAIN_GOAL__string_source(self, source):
         func_link = TextAux(str(source)).try_convert_to_object
-        pytest_func_tester__no_args_kwargs(func_link, source)
+        PytestAux(func_link).assert_check(source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
         func_link = TextAux(source).try_convert_to_object
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -215,7 +215,7 @@ class Test__try_convert_to_object:
 )
 def test__requirements__get_list(source, _EXPECTED):
     func_link = TextAux(source).requirements__get_list
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

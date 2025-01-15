@@ -23,7 +23,7 @@ def test__common__define(value, _EXPECTED):
     except Exception as exx:
         define_was_ok = exx
 
-    pytest_func_tester__no_args_kwargs(define_was_ok, _EXPECTED)
+    PytestAux(define_was_ok).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -54,7 +54,7 @@ def test__special__define_and_init(value, _EXPECTED):
         assert victim.ATTR_INT == value
         assert victim.ATTR_STR == str(value)
 
-    pytest_func_tester__no_args_kwargs(init_was_ok, _EXPECTED)
+    PytestAux(init_was_ok).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -147,7 +147,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -166,7 +166,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__no_value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

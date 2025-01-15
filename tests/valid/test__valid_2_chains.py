@@ -51,7 +51,7 @@ class Test__ValidChains:
     )
     def test__types_single(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -75,7 +75,7 @@ class Test__ValidChains:
     )
     def test__chains(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

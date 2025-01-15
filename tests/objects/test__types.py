@@ -60,12 +60,11 @@ class Test__1:
     def test__check__bool_none(self, source, _EXPECTED):
         victim = TypeCheck(source)
 
-        pytest_func_tester__no_args_kwargs(victim.check__bool_none, _EXPECTED[0])
-        pytest_func_tester__no_args_kwargs(victim.check__elementary, _EXPECTED[1])
-        pytest_func_tester__no_args_kwargs(victim.check__elementary_single, _EXPECTED[2])
-        pytest_func_tester__no_args_kwargs(victim.check__elementary_single_not_none, _EXPECTED[3])
-        pytest_func_tester__no_args_kwargs(victim.check__elementary_collection, _EXPECTED[4])
-
+        PytestAux(victim.check__bool_none).assert_check(_EXPECTED[0])
+        PytestAux(victim.check__elementary).assert_check(_EXPECTED[1])
+        PytestAux(victim.check__elementary_single).assert_check(_EXPECTED[2])
+        PytestAux(victim.check__elementary_single_not_none).assert_check(_EXPECTED[3])
+        PytestAux(victim.check__elementary_collection).assert_check(_EXPECTED[4])
 
 
 
@@ -118,7 +117,7 @@ class Test__1:
     )
     def test__check__elementary_collection_not_dict(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__elementary_collection_not_dict
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -226,7 +225,7 @@ class Test__1:
     )
     def test__iterable_not_str(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__iterable_not_str
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # CALLABLE --------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -276,7 +275,7 @@ class Test__1:
     )
     def test__check__callable_func_meth_inst(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_func_meth_inst
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -325,7 +324,7 @@ class Test__1:
     )
     def test__check__callable_func_meth(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_func_meth
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -374,7 +373,7 @@ class Test__1:
     )
     def test__check__callable_func(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_func
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -423,7 +422,7 @@ class Test__1:
     )
     def test__check__callable_meth(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_meth
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -472,7 +471,7 @@ class Test__1:
     )
     def test__check__callable_inst(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_inst
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -521,7 +520,7 @@ class Test__1:
     )
     def test__check__callable_cls_as_func_builtin(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__callable_cls_as_func_builtin
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -571,7 +570,7 @@ class Test__1:
     )
     def test__check__class(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__class
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -620,7 +619,7 @@ class Test__1:
     )
     def test__check__instance(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__instance
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -669,7 +668,7 @@ class Test__1:
     )
     def test__check__instance_not_elementary(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__instance_not_elementary
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -719,7 +718,7 @@ class Test__1:
     )
     def test__check__exception(self, source, _EXPECTED):
         func_link = TypeCheck(source).check__exception
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(

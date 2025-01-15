@@ -181,7 +181,7 @@ class Test__Version:
         ]
     )
     def test__inst__cmp(self, expression):
-        pytest_func_tester__no_args_kwargs(expression)
+        PytestAux(expression).assert_check()
 
     # PARTS -----------------------------------------------------------------------------------------------------------
     def test__parts(self):

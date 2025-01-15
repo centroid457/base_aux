@@ -70,7 +70,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__eq(self, expr):
-        pytest_func_tester__no_args_kwargs(expr)
+        PytestAux(expr).assert_check()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -102,7 +102,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__lg(self, expr, _EXPECTED):
-        pytest_func_tester__no_args_kwargs(expr, _EXPECTED)
+        PytestAux(expr).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

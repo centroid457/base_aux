@@ -9,7 +9,7 @@
 # =====================================================================================================================
 from .source import (
     InitSource,
-    InitSourceKwArgs,
+    InitSourceKwArgs_Indirect,
 )
 
 

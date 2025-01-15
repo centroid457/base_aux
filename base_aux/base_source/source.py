@@ -42,7 +42,8 @@ class InitSource:
             result = cls.SOURCE
         return result
 
-    def __init__(self, source: Any = None) -> None:
+    def __init__(self, source: Any = None, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.init_source(source)
 
     def init_source(self, source: Any = None) -> None:
@@ -53,7 +54,7 @@ class InitSource:
 
 
 # =====================================================================================================================
-class InitSourceKwArgs(InitSource):
+class InitSourceKwArgs_Indirect(InitSource):
     """
     GOAL
     ----
@@ -66,6 +67,24 @@ class InitSourceKwArgs(InitSource):
         self.ARGS = args
         self.KWARGS = kwargs
         super().__init__(source)
+
+
+# =====================================================================================================================
+class InitSourceKwArgs_Direct(InitSource):
+    """
+    GOAL
+    ----
+
+
+    FOR PYTESTAUX!
+    """
+    ARGS: TYPE__LAMBDA_ARGS = ()
+    KWARGS: TYPE__LAMBDA_KWARGS = {}
+
+    def __init__(self, source: Any = None, args=(), kwargs=dict(), *args2, **kwargs2) -> None:
+        self.ARGS = args__ensure_tuple(args)
+        self.KWARGS = kwargs
+        super().__init__(source, *args2, **kwargs2)
 
 
 # =====================================================================================================================

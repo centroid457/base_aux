@@ -64,7 +64,7 @@ class VictimAttr1CmpAttr2_TryBreak(VictimAttr1CmpAttr2):
 )
 def test__victim__check_equal__cls(obj, other, _EXPECTED):
     func_link = lambda: obj.middle_group__check_equal__cls(other)
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

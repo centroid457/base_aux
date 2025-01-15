@@ -104,7 +104,7 @@ class Test:
     )
     def test__tuple(self, cmds, timeout, _EXPECTED):        # HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
         func_link = CliUser().send(cmd=cmds, timeout=timeout)
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     def test__list__till_first_true(self):
         victim = CliUser()

@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester.m0_pytest_aux import pytest_func_tester__no_args_kwargs, pytest_func_tester__no_kwargs
+from base_aux.aux_pytester.m0_pytest_aux import *
 from base_aux.aux_attr import AnnotsBase, AnnotsAux, AnnotsRequired
 
 
@@ -81,7 +81,7 @@ class DictDirect_Fail(dict, AnnotsBase):
 )
 def test__annot__get_not_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).get_not_defined
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -103,7 +103,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
 )
 def test__annot__check_all_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).check_all_defined
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -125,7 +125,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).check_all_defined_or_raise
-    pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -168,7 +168,7 @@ class Test__Cmp:
     )
     def test__dict_types(self, source, _EXPECTED):
         func_link = AnnotsAux(source).dump__dict_types
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -180,7 +180,7 @@ class Test__Cmp:
     )
     def test__dict_values(self, source, _EXPECTED):
         func_link = AnnotsAux(source).dump__dict_values
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -192,7 +192,7 @@ class Test__Cmp:
     )
     def test__iter_values(self, source, _EXPECTED):
         func_link = list(AnnotsAux(source).iter_values())
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -204,7 +204,7 @@ class Test__Cmp:
     )
     def test__all_defined(self, source, _EXPECTED):
         func_link = AnnotsAux(source).check_all_defined
-        pytest_func_tester__no_args_kwargs(func_link, _EXPECTED)
+        PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
