@@ -1,23 +1,63 @@
 from typing import *
 
 from base_aux.base_source import InitSource
-from base_aux.lambdas import Lambda
+from base_aux.base_enums import FormIntExt
 
 
 # =====================================================================================================================
 @final
-class DictAux(InitSource):  # use name *s to not mess with typing.Dict
+class DictAux(InitSource):
     """
     NOTE
     ----
     decide where to work - source or copy????
     """
-
-    SOURCE: dict[Any, Any] = Lambda(dict)
+    SOURCE: dict[Any, Any] = dict
 
     # -----------------------------------------------------------------------------------------------------------------
-    def clear_values(self) -> dict[Any, None]:
-        return dict.fromkeys(self.SOURCE)
+    def clear_values(self, form: FormIntExt = FormIntExt.EXTERNAL) -> dict[Any, None]:
+        keys = list(self.SOURCE)
+        new_dict = dict.fromkeys(keys)
+        if form == FormIntExt.EXTERNAL:
+            return new_dict
+
+        if form == FormIntExt.INTERNAL:
+            self.SOURCE.clear()
+            self.SOURCE.update(new_dict)
+            return self.SOURCE
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def keys_del(self, *keys: Any) -> None:
+        for key in keys:
+            try:
+                self.SOURCE.pop(key)
+            except:
+                pass
+
+    def keys_rename__by_func(self, func: Callable[[Any], Any], form: FormIntExt = FormIntExt.EXTERNAL) -> dict[Any, Any]:
+        """
+        GOAL
+        ----
+        useful to rename keys by func like str.LOWER/upper
+        raise on func - delete key from origin! applied like filter
+        """
+        result = {}
+        if form == FormIntExt.EXTERNAL:
+            result = {}
+        elif form == FormIntExt.INTERNAL:
+            result = self.SOURCE
+
+        # -----------------------
+        for key in list(self.SOURCE):
+            value = self.SOURCE.get(key)
+            DictAux(result).keys_del(key)
+            try:
+                key_new = func(key)
+                result.update({key_new: value})
+            except:
+                pass
+
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def collapse_key(self, key: Any) -> dict[Any, Any]:
