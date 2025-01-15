@@ -5,14 +5,14 @@
 
 
 # =====================================================================================================================
-from .m2_dots_1_simple import (
+from .m2_dict_dots_1_simple import (
     DictDots,
     DictDotsAnnotRequired,
 )
-from .m2_dots_2_full import (
+from .m2_dict_dots_2_full import (
     DictDotsFull,
 )
-from .m1_aux import (
+from .m1_dict_aux import (
     DictAux,
 )
 
