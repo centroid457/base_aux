@@ -1,16 +1,18 @@
 from base_aux.base_argskwargs.argskwargs import *
 from base_aux.base_objects.obj_types import TypeCheck
 
-from base_aux.funcs.value_0_explicit import Default
-
 
 # =====================================================================================================================
-def args__ensure_tuple(args: TYPE__LAMBDA_ARGS = (), none_as_empty: bool | None = None) -> tuple:
+def args__ensure_tuple(args: Any = ()) -> tuple:
     """
     GOAL
     ----
     used in methods which handle with *args/args (like in funcs.Valid)
     when we want to apply singular value without tuple
+
+    SO IT ONLY ONE DIRECTION
+    1/ IF SINGLE - MAKE TUPLE!
+    2/ IF ANY COLLECTION - KEEP ORIGINAL!
 
     CREATED SPECIALLY FOR
     ---------------------
@@ -43,16 +45,6 @@ def args__ensure_tuple(args: TYPE__LAMBDA_ARGS = (), none_as_empty: bool | None 
 
     """
     # TODO: move to object-info or funcsAux???
-
-    # None --------------------------
-    if args is None and none_as_empty:
-        return ()
-
-    # APPLY DEFAULT --------------------------
-    if args is Default:
-        args = ()
-    elif isinstance(args, Default):
-        args = args()
 
     # ENSURE TUPLE --------------------------
     if not TypeCheck(args).check__elementary_collection():
