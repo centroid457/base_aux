@@ -1,9 +1,10 @@
 from typing import *
 import pytest
 
-from base_aux.buses import *
-from base_aux.aux_pytester import *
+from base_aux.aux_pytester.m0_pytest_aux import PytestAux
+
 from base_aux.valid import *
+from base_aux.buses import *
 
 
 # =====================================================================================================================

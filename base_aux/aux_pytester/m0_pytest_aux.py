@@ -2,12 +2,13 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.base_source import InitSource
-from base_aux.aux_argskwargs import *
-from base_aux.base_objects import *
+from base_aux.base_source.m1_source import InitSource
+from base_aux.base_objects.obj_types import TypeCheck
 
-from base_aux.aux_callable import CallableAux
-from base_aux.funcs import TYPE__VALID_RESULT
+from base_aux.aux_callable.callable_aux import CallableAux
+from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
+
+from base_aux.funcs.static import TYPE__VALID_RESULT
 
 
 # =====================================================================================================================
@@ -17,8 +18,8 @@ class PytestAux(InitSource):
 
     def assert_check(
             self,
-            args: TYPE__ARGS_FINAL | Any = (),
-            kwargs: TYPE__KWARGS_FINAL | None = None,
+            args: TYPE__ARGS_DRAFT = (),
+            kwargs: TYPE__KWARGS_DRAFT = None,
 
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
             _MARK: pytest.MarkDecorator | None = None,

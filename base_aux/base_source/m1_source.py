@@ -1,6 +1,5 @@
 from typing import *
 # from base_aux.lambdas.lambdas import Lambda     # CIRCULAR IMPORT
-from base_aux.aux_argskwargs import *
 
 
 # =====================================================================================================================
@@ -51,40 +50,6 @@ class InitSource:
             self.SOURCE = source
         else:
             self.SOURCE = self.SOURCE_DEF
-
-
-# =====================================================================================================================
-class InitSourceKwArgs_Indirect(InitSource):
-    """
-    GOAL
-    ----
-    just to make inition source with KwArgs
-    """
-    ARGS: TYPE__ARGS_FINAL = ()
-    KWARGS: TYPE__KWARGS_FINAL = {}
-
-    def __init__(self, source: Any = None, *args, **kwargs) -> None:
-        self.ARGS = args
-        self.KWARGS = kwargs
-        super().__init__(source)
-
-
-# =====================================================================================================================
-class InitSourceKwArgs_Direct(InitSource):
-    """
-    GOAL
-    ----
-
-
-    FOR PYTESTAUX!
-    """
-    ARGS: TYPE__ARGS_FINAL = ()
-    KWARGS: TYPE__KWARGS_FINAL = {}
-
-    def __init__(self, source: Any = None, args=(), kwargs=dict(), *args2, **kwargs2) -> None:
-        self.ARGS = args__ensure_tuple(args)
-        self.KWARGS = kwargs
-        super().__init__(source, *args2, **kwargs2)
 
 
 # =====================================================================================================================

@@ -2,7 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.aux_pytester import *
+from base_aux.aux_pytester.m0_pytest_aux import PytestAux
 
 
 # =====================================================================================================================
