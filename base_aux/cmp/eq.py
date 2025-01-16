@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.base_source.source import InitSource
 from base_aux.base_objects.obj_types import TypeCheck
-from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS
+from base_aux.base_argskwargs import TYPE__KWARGS_INDIRECT
 
 from base_aux.aux_attr.m1_attr_1_aux import AttrAux
 
@@ -101,7 +101,7 @@ class Eq(InitSource):
         return self.eq_doublesided__bool(other) is not True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def eq_by_dict__direct(self, other: TYPE__LAMBDA_KWARGS) -> bool:
+    def eq_by_dict__direct(self, other: TYPE__KWARGS_INDIRECT) -> bool:
         """
         GOAL
         ----

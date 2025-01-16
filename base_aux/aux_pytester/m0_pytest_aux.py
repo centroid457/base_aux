@@ -2,22 +2,24 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.base_source import InitSourceKwArgs_Indirect
+from base_aux.base_source import InitSource
 from base_aux.base_argskwargs import *
 from base_aux.base_objects import *
 
 from base_aux.aux_callable import CallableAux
-
 from base_aux.funcs import TYPE__VALID_RESULT
 
 
 # =====================================================================================================================
 @final
-class PytestAux(InitSourceKwArgs_Indirect):
+class PytestAux(InitSource):
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
     def assert_check(
             self,
+            args: TYPE__ARGS_INDIRECT | Any = (),
+            kwargs: TYPE__KWARGS_INDIRECT | None = None,
+
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
             _MARK: pytest.MarkDecorator | None = None,
             _COMMENT: str | None = None,
@@ -36,8 +38,8 @@ class PytestAux(InitSourceKwArgs_Indirect):
 
         TODO: apply Valid or merge them into single one!
         """
-        args = self.ARGS
-        kwargs = self.KWARGS
+        if not kwargs:
+            kwargs = {}
 
         comment = _COMMENT or ""
         actual_value = CallableAux(self.SOURCE).resolve_exx(*args, **kwargs)

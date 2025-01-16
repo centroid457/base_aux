@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.base_argskwargs.argskwargs import TYPE__LAMBDA_ARGS, TYPE__LAMBDA_KWARGS
+from base_aux.base_argskwargs.m1_argskwargs import TYPE__ARGS_INDIRECT, TYPE__KWARGS_INDIRECT
 from base_aux.funcs import *
 from base_aux.aux_callable import *
 from base_aux.cmp.eq import Eq
@@ -15,8 +15,8 @@ class EqValidator:
 
     VALIDATE_LINK: TYPE__VALID_VALIDATOR
     EXPECTED: bool | Any
-    ARGS: TYPE__LAMBDA_ARGS
-    KWARGS: TYPE__LAMBDA_KWARGS
+    ARGS: TYPE__ARGS_INDIRECT
+    KWARGS: TYPE__KWARGS_INDIRECT
 
     def __init__(self, validate_link: TYPE__VALID_VALIDATOR, *args, **kwargs) -> None:
         self.VALIDATE_LINK = validate_link

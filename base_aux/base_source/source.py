@@ -60,8 +60,8 @@ class InitSourceKwArgs_Indirect(InitSource):
     ----
     just to make inition source with KwArgs
     """
-    ARGS: TYPE__LAMBDA_ARGS = ()
-    KWARGS: TYPE__LAMBDA_KWARGS = {}
+    ARGS: TYPE__ARGS_INDIRECT = ()
+    KWARGS: TYPE__KWARGS_INDIRECT = {}
 
     def __init__(self, source: Any = None, *args, **kwargs) -> None:
         self.ARGS = args
@@ -78,8 +78,8 @@ class InitSourceKwArgs_Direct(InitSource):
 
     FOR PYTESTAUX!
     """
-    ARGS: TYPE__LAMBDA_ARGS = ()
-    KWARGS: TYPE__LAMBDA_KWARGS = {}
+    ARGS: TYPE__ARGS_INDIRECT = ()
+    KWARGS: TYPE__KWARGS_INDIRECT = {}
 
     def __init__(self, source: Any = None, args=(), kwargs=dict(), *args2, **kwargs2) -> None:
         self.ARGS = args__ensure_tuple(args)

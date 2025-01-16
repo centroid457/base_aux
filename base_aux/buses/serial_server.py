@@ -3,7 +3,7 @@ import time
 
 from PyQt5.QtCore import QThread
 
-from base_aux.base_argskwargs import TYPE__LAMBDA_KWARGS, TYPE__LAMBDA_ARGS
+from base_aux.base_argskwargs import TYPE__KWARGS_INDIRECT, TYPE__ARGS_INDIRECT
 from base_aux.aux_text import CmdArgsKwargsParser
 from base_aux.valid import *
 from base_aux.loggers import Logger
@@ -120,7 +120,7 @@ class SerialServer_Base(Logger, QThread):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, params: TYPE__LAMBDA_KWARGS = None):
+    def __init__(self, params: TYPE__KWARGS_INDIRECT = None):
         # FIXME: deprecate param params??? used for tests?
         super().__init__()
 

@@ -1,11 +1,12 @@
 from typing import *
-from .novalue import NoValue
+from .m0_novalue import NoValue
 
 
 # =====================================================================================================================
 TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
-TYPE__LAMBDA_ARGS = tuple[Any, ...]
-TYPE__LAMBDA_KWARGS = dict[str, Any]
+
+TYPE__ARGS_INDIRECT = TYPE__ARGS_FINAL = tuple[Any, ...]
+TYPE__KWARGS_INDIRECT = TYPE__KWARGS_FINAL = dict[str, Any]
 
 
 # =====================================================================================================================
@@ -13,7 +14,8 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
     """
     NOTE
     ----
-    DONT NESTING! (expect Args/Kwargs)
+    1/ DONT NEST! (expect Args/Kwargs)
+    2/ DONT USE!
 
     GOAL
     ----
@@ -53,8 +55,8 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
     so as result the best decision is (*item.ARGS, **item.KWARGS)
     and we could use this class as simple base for Lambda for example!
     """
-    ARGS: TYPE__LAMBDA_ARGS = ()
-    KWARGS: TYPE__LAMBDA_KWARGS = {}
+    ARGS: TYPE__ARGS_INDIRECT = ()
+    KWARGS: TYPE__KWARGS_INDIRECT = {}
 
     def __init__(self, *args, **kwargs) -> None:
         self.ARGS = args
@@ -102,6 +104,11 @@ class Kwargs(ArgsKwargs):
 
     def __call__(self):
         return self.KWARGS
+
+
+# =====================================================================================================================
+TYPE__ARGS_DIRECT = TYPE__ARGS_DRAFT = Union[Any, TYPE__ARGS_INDIRECT, Args]           # you can use direct single value
+TYPE__KWARGS_DIRECT = TYPE__KWARGS_DRAFT = Union[None, TYPE__KWARGS_INDIRECT, Kwargs]  # if passed NONE - no data!
 
 
 # =====================================================================================================================
