@@ -40,8 +40,6 @@ def args__ensure_tuple(args: Any = ()) -> tuple:
         unpacked iterables/generators - if need unpack it manually!!! its not difficult and so clear!
         elementary collection would unpack!
     """
-    # TODO: move to object-info or funcsAux???
-
     # ENSURE TUPLE --------------------------
     if TypeCheck(args).check__elementary_collection():
         result = tuple(args)

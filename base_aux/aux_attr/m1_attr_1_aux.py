@@ -2,7 +2,7 @@ from typing import *
 import re
 
 from base_aux.base_source.source import InitSource
-from base_aux.base_argskwargs.m1_argskwargs import TYPE__KWARGS_INDIRECT
+from base_aux.base_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
 from base_aux.base_enums.enums import CallablesUse
 from base_aux.aux_callable import CallableAux
 # from base_aux.base_objects import TypeCheck
@@ -312,10 +312,10 @@ class AttrAux(InitSource):
         """
         return self.dump_dict(CallablesUse.EXCEPTION)
 
-    def dump_dict__direct(self) -> TYPE__KWARGS_INDIRECT:
+    def dump_dict__direct(self) -> TYPE__KWARGS_FINAL:
         return self.dump_dict(CallablesUse.DIRECT)
 
-    def dump_dict__callables_skip(self) -> TYPE__KWARGS_INDIRECT:
+    def dump_dict__callables_skip(self) -> TYPE__KWARGS_FINAL:
         return self.dump_dict(CallablesUse.SKIP_CALLABLE)
 
     def dump_dict__callables_resolve_raise(self) -> dict[str, Any] | NoReturn:

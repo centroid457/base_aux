@@ -12,7 +12,7 @@ class ThreadItem(QThread):
     """
     target: Callable
     args: tuple[Any, ...]
-    kwargs: TYPE__KWARGS_INDIRECT
+    kwargs: TYPE__KWARGS_FINAL
 
     result: Optional[Any] = None
     exx: Optional[Exception] = None

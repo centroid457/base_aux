@@ -17,8 +17,8 @@ class PytestAux(InitSource):
 
     def assert_check(
             self,
-            args: TYPE__ARGS_INDIRECT | Any = (),
-            kwargs: TYPE__KWARGS_INDIRECT | None = None,
+            args: TYPE__ARGS_FINAL | Any = (),
+            kwargs: TYPE__KWARGS_FINAL | None = None,
 
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
             _MARK: pytest.MarkDecorator | None = None,

@@ -96,7 +96,7 @@ class AnnotsAux(InitSource):
             result = _result_i
         return result
 
-    def dump__dict_values(self) -> TYPE__KWARGS_INDIRECT:
+    def dump__dict_values(self) -> TYPE__KWARGS_FINAL:
         """
         GOAL
         ----

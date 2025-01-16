@@ -63,10 +63,10 @@ class Valid:
     VALIDATE_RETRY: int = 0
     REVERSE_LINK: TYPE__VALID_SOURCE_BOOL = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
-    ARGS__VALUE: TYPE__ARGS_INDIRECT = ()
-    ARGS__VALIDATE: TYPE__ARGS_INDIRECT = ()
-    KWARGS__VALUE: TYPE__ARGS_INDIRECT = None
-    KWARGS__VALIDATE: TYPE__ARGS_INDIRECT = None
+    ARGS__VALUE: TYPE__ARGS_FINAL = ()
+    ARGS__VALIDATE: TYPE__ARGS_FINAL = ()
+    KWARGS__VALUE: TYPE__ARGS_FINAL = None
+    KWARGS__VALIDATE: TYPE__ARGS_FINAL = None
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
@@ -91,11 +91,11 @@ class Valid:
             skip_link: TYPE__VALID_SOURCE_BOOL= None,
             reverse_link: TYPE__VALID_SOURCE_BOOL = None,
 
-            args__value: TYPE__ARGS_INDIRECT = (),
-            args__validate: TYPE__ARGS_INDIRECT = (),
+            args__value: TYPE__ARGS_FINAL = (),
+            args__validate: TYPE__ARGS_FINAL = (),
 
-            kwargs__value: TYPE__KWARGS_INDIRECT = None,
-            kwargs__validate: TYPE__KWARGS_INDIRECT = None,
+            kwargs__value: TYPE__KWARGS_FINAL = None,
+            kwargs__validate: TYPE__KWARGS_FINAL = None,
 
             name: Optional[str] = None,
             comment: Optional[str] = None,
