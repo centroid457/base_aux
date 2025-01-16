@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.base_source.m1_source import InitSource
 
-from base_aux.aux_argskwargs.m2_argskwargs_aux import ArgsKwargsAux
+from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 
 
 # =====================================================================================================================
@@ -12,8 +12,8 @@ class InitSourceKwArgs_Implicite(InitSource):
     ----
     just to make inition source with KwArgs
     """
-    ARGS: tuple = ()
-    KWARGS: dict[str, Any] = {}
+    ARGS: TYPE__ARGS_FINAL = ()
+    KWARGS: TYPE__KWARGS_FINAL = dict()
 
     def __init__(self, source: Any = None, *args, **kwargs) -> None:
         self.ARGS = args
@@ -29,10 +29,10 @@ class InitSourceKwArgs_Explicite(InitSource):
 
     FOR PYTESTAUX!
     """
-    ARGS: tuple = ()
-    KWARGS: dict[str, Any] = {}
+    ARGS: TYPE__ARGS_FINAL = ()
+    KWARGS: TYPE__KWARGS_FINAL = dict()
 
-    def __init__(self, source: Any = None, args=(), kwargs=None, *args2, **kwargs2) -> None:
+    def __init__(self, source: Any = None, args: TYPE__ARGS_DRAFT = (), kwargs: TYPE__KWARGS_DRAFT = None, *args2, **kwargs2) -> None:
         self.ARGS = ArgsKwargsAux(args).resolve_args()
         self.KWARGS = ArgsKwargsAux(kwargs).resolve_kwargs()
         super().__init__(source, *args2, **kwargs2)

@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.classes import *
+from base_aux.classes.middle_group import *
 
 
 # =====================================================================================================================
@@ -63,8 +63,7 @@ class VictimAttr1CmpAttr2_TryBreak(VictimAttr1CmpAttr2):
     ]
 )
 def test__victim__check_equal__cls(obj, other, _EXPECTED):
-    func_link = lambda: obj.middle_group__check_equal__cls(other)
-    PytestAux(func_link).assert_check(_EXPECTED)
+    PytestAux(obj.middle_group__check_equal__cls, other).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

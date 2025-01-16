@@ -1,9 +1,9 @@
 import pytest
 
-from base_aux.aux_argskwargs import *
+from base_aux.aux_argskwargs.m0_novalue import *
 
-from base_aux.aux_pytester import *
-from base_aux.valid import ValueUnit
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.valid.value_2_unit import ValueUnit
 
 
 # =====================================================================================================================
@@ -57,7 +57,7 @@ class Test__WithUnit:
     )
     def test__validate(self, args, _EXPECTED):
         func_link = ValueUnit.validate
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

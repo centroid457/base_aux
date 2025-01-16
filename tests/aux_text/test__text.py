@@ -1,10 +1,10 @@
 import pytest
 
-from base_aux.aux_argskwargs import *
-from base_aux.base_enums import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.aux_pytester import *
-from base_aux.aux_text import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.base_enums.enums import *
+from base_aux.aux_text.m1_text_aux import TextAux
 
 
 # =====================================================================================================================
@@ -31,14 +31,15 @@ class Test__sub:
         ]
     )
     def test__1(self, source, _EXPECTED):
+        args = ("None", "null")
         func_link = TextAux(source).sub__word
-        pytest_func_tester__no_kwargs(func_link, ("None", "null"), _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
 class Test__find:
     @pytest.mark.parametrize(
-        argnames="source, pats, _EXPECTED",
+        argnames="source, patts, _EXPECTED",
         argvalues=[
             ("None123", r"\w*", ["None123", ]),
             ("None123", r"\w+(?#*.*)", ["None123", ]),
@@ -46,9 +47,9 @@ class Test__find:
             ("   None123  #cmt", r"\w+", ["None123", "cmt"]),
         ]
     )
-    def test__1(self, source, pats, _EXPECTED):
+    def test__1(self, source, patts, _EXPECTED):
         func_link = TextAux(source).find_by_pats
-        pytest_func_tester__no_kwargs(func_link, pats, _EXPECTED)
+        PytestAux(func_link, patts).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -87,8 +88,8 @@ class Test__shortcut:
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
-        func_link = TextAux(source=p1).shortcut
-        pytest_func_tester__no_args(func_link, Kwargs(maxlen=p2, sub=p3, where=p4), _EXPECTED)
+        func_link = TextAux(p1).shortcut
+        PytestAux(func_link, kwargs=dict(maxlen=p2, sub=p3, where=p4)).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

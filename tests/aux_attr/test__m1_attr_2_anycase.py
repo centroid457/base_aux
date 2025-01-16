@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester import *
-from base_aux.aux_attr import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_attr.m1_attr_2_anycase import *
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class Victim(AttrAnycaseGSAI):
 def test__attr(attr, _EXPECTED):
     args = (Victim(), attr)
     func_link = getattr
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -56,7 +56,7 @@ def test__attr(attr, _EXPECTED):
 )
 def test__item(attr, _EXPECTED):
     func_link = lambda _attr: Victim()[_attr]
-    pytest_func_tester__no_kwargs(func_link, attr, _EXPECTED)
+    PytestAux(func_link, attr).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

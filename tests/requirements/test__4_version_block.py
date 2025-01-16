@@ -1,8 +1,9 @@
 from typing import *
 import pytest
 
-from base_aux.requirements import *
-from base_aux.aux_pytester import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+
+from base_aux.requirements.versions import *
 
 
 # =====================================================================================================================
@@ -53,7 +54,7 @@ class Test__VersionBlock:
     )
     def test__validate_source(self, args, _EXPECTED):
         func_link = self.Victim._validate_source
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -83,7 +84,7 @@ class Test__VersionBlock:
     )
     def test___prepare_string(self, args, _EXPECTED):
         func_link = self.Victim._prepare_string
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -113,7 +114,7 @@ class Test__VersionBlock:
     )
     def test__validate_string(self, args, _EXPECTED):
         func_link = self.Victim._validate_string
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -147,7 +148,7 @@ class Test__VersionBlock:
     )
     def test__parce_elements(self, args, _EXPECTED):
         func_link = self.Victim._parse_elements
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -178,7 +179,7 @@ class Test__VersionBlock:
     )
     def test__inst__string(self, args, _EXPECTED):
         func_link = lambda source: str(self.Victim(source))
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -208,7 +209,7 @@ class Test__VersionBlock:
     )
     def test__inst__len(self, args, _EXPECTED):
         func_link = lambda source: len(self.Victim(source))
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -236,7 +237,7 @@ class Test__VersionBlock:
     )
     def test__inst__cmp__eq(self, args, _EXPECTED):
         func_link = lambda source1, source2: self.Victim(source1) == source2
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

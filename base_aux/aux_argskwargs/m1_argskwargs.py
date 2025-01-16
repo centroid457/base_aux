@@ -92,6 +92,14 @@ class Args(ArgsKwargs):
 class Kwargs(ArgsKwargs):
     """
     just a derivative to clearly show only KwArgs is important
+
+    NOTE
+    ----
+    for combine clear kwargs use direct DICT(key1=1, ...)
+
+    WHY NOT - 1: DIRECT DICT(key1=1, ...)
+    -------------------------------------
+    you are write! use it!
     """
     def __bool__(self) -> bool:
         if self.KWARGS:

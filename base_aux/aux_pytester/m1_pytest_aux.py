@@ -18,7 +18,7 @@ class PytestAux(InitSourceKwArgs_Explicite):
 
     def assert_check(
             self,
-            # args: TYPE__ARGS_DRAFT = (),
+            # args: TYPE__ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPE__KWARGS_DRAFT = None,
 
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
@@ -66,16 +66,6 @@ class PytestAux(InitSourceKwArgs_Explicite):
                 assert actual_value == _EXPECTED
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_kwargs():
-    pass
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-def pytest_func_tester__no_args():
-    pass
-
-
 # =====================================================================================================================
 pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
 pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
@@ -119,7 +109,7 @@ def _func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================
@@ -133,7 +123,7 @@ def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     
     ]
 )
 def test__short_variant(func_link, args, kwargs, _EXPECTED):
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -148,7 +138,7 @@ def test__short_variant(func_link, args, kwargs, _EXPECTED):
     ]
 )
 def test__shortest_variant(func_link, args, _EXPECTED):
-    PytestAux(func_link, *args).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -177,25 +167,17 @@ def test__expressions(expression):
 #         ((1, 1),        (True, True, False)),
 #         ((1, 2),        (False, False, True)),
 #         ((LAMBDA_TRUE, True), (False, False, True)),
-#
-#         ((ClsEq(1), 1), (True, True, False)),
-#         ((ClsEq(1), 2), (False, False, True)),
-#         ((1, ClsEq(1)), (True, True, False)),
-#         ((2, ClsEq(1)), (False, False, True)),
-#
-#         ((ClsEqRaise(), 1), (Exception, False, True)),
-#         ((1, ClsEqRaise()), (Exception, False, True)),
 #     ]
 # )
-# def test__compare_doublesided(args, _EXPECTED):
+# def test__several_expected(args, _EXPECTED):
 #     func_link = Valid.compare_doublesided_or_exx
-#     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[0])
+#     PytestAux(func_link, args).assert_check(_EXPECTED[0])
 #
 #     func_link = Valid.compare_doublesided__bool
-#     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[1])
+#     PytestAux(func_link, args).assert_check(_EXPECTED[1])
 #
 #     func_link = Valid.compare_doublesided__reverse
-#     pytest_func_tester__no_kwargs(func_link, args, _EXPECTED[2])
+#     PytestAux(func_link, args).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================

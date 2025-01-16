@@ -1,10 +1,10 @@
 import pytest
 
-from base_aux.base_objects.m0_primitives import *
-from base_aux.base_enums import *
-from base_aux.aux_callable import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.aux_pytester import *
+from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.base_enums.enums import *
 
 
 # =====================================================================================================================
@@ -63,16 +63,14 @@ from base_aux.aux_pytester import *
     ]
 )
 def test__get_result(source, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(CallableAux(source).check_raise, args, _EXPECTED[0])
-    pytest_func_tester__no_kwargs(CallableAux(source).check_no_raise, args, _EXPECTED[1])
-
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_raise, args, _EXPECTED[2])
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_raise_as_none, args, _EXPECTED[3])
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_exx, args, _EXPECTED[4])
-
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_bool, args, _EXPECTED[5])
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_skip_callables, args, _EXPECTED[6])
-    pytest_func_tester__no_kwargs(CallableAux(source).resolve_skip_raised, args, _EXPECTED[7])
+    PytestAux(CallableAux(source).check_raise, args).assert_check(_EXPECTED[0])
+    PytestAux(CallableAux(source).check_no_raise, args).assert_check(_EXPECTED[1])
+    PytestAux(CallableAux(source).resolve_raise, args).assert_check(_EXPECTED[2])
+    PytestAux(CallableAux(source).resolve_raise_as_none, args).assert_check(_EXPECTED[3])
+    PytestAux(CallableAux(source).resolve_exx, args).assert_check(_EXPECTED[4])
+    PytestAux(CallableAux(source).resolve_bool, args).assert_check(_EXPECTED[5])
+    PytestAux(CallableAux(source).resolve_skip_callables, args).assert_check(_EXPECTED[6])
+    PytestAux(CallableAux(source).resolve_skip_raised, args).assert_check(_EXPECTED[7])
 
 
 # =====================================================================================================================

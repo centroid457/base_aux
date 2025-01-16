@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester import *
-from base_aux.valid import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.valid.valid_2_regexp import *
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class Test__ReqExp:
     )
     def test__validate(self, pats, value, _EXPECTED):
         func_link = ValidRegExp(pats).run
-        pytest_func_tester__no_kwargs(func_link, value, _EXPECTED)
+        PytestAux(func_link, value).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 import pytest
 
-from base_aux.aux_pytester import *
-from base_aux.aux_attr import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_attr.m2_annot_4_cls_keys_as_values import *
 
 
 # =====================================================================================================================
@@ -28,8 +28,7 @@ Victim_VALUES = ("ATTR1", "ATTR2", "ATTR3")
 )
 def test__values(args, _EXPECTED):
     func_link = lambda value: getattr(Victim, value)
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
-
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
@@ -46,8 +45,7 @@ def test__values(args, _EXPECTED):
 )
 def test__geitem(args, _EXPECTED):
     func_link = lambda value: Victim[value]
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
-
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 def test__iter():
     assert tuple(Victim) == Victim_VALUES

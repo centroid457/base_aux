@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.classes import *
+from base_aux.classes.number import *
 
 
 # =====================================================================================================================
@@ -34,7 +34,7 @@ class Victim(NumberArithmTranslateToAttr):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = NumberArithmTranslateToAttr.number__get_string_no_zeros
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -61,7 +61,7 @@ def test__precision_str(args, _EXPECTED):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = NumberArithmTranslateToAttr.number__try_int_if_same
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

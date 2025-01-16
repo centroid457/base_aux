@@ -1,7 +1,8 @@
-import pytest
 from typing import *
-from base_aux.buses import *
+import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+
+from base_aux.buses.serial_client import *
 
 
 # =====================================================================================================================
@@ -30,7 +31,7 @@ from base_aux.aux_pytester.m1_pytest_aux import PytestAux
     ]
 )
 def test__data_ensure__bytes(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -60,7 +61,7 @@ def test__data_ensure__bytes(func_link, args, _EXPECTED):
     ]
 )
 def test__data_ensure__string(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -93,7 +94,7 @@ class Victim(SerialClient):
     ]
 )
 def test__bytes_eol__ensures(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -122,7 +123,7 @@ def test__bytes_eol__ensures(func_link, args, _EXPECTED):
     ]
 )
 def test__data_eol__clear(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -152,7 +153,7 @@ def test__data_eol__clear(func_link, args, _EXPECTED):
     ]
 )
 def test__create_cmd_line(func_link, args, _EXPECTED):
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

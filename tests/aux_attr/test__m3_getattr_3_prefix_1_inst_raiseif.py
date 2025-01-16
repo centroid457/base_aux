@@ -1,9 +1,10 @@
 from typing import *
 import pytest
 
-from base_aux.base_exceptions import *
-from base_aux.aux_pytester import *
-from base_aux.aux_attr import GetattrPrefixInst_RaiseIf
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+
+from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.aux_attr.m3_getattr_1_prefix_1_inst import GetattrPrefixInst_RaiseIf
 
 
 # =====================================================================================================================
@@ -121,7 +122,8 @@ def test__meth_not_passed():
 )
 def test___meth__raise_if(args, _EXPECTED):
     func_link = Victim().raise_if__METH
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
+
 
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
@@ -133,7 +135,7 @@ def test___meth__raise_if(args, _EXPECTED):
 )
 def test___meth__raise_if_not(args, _EXPECTED):
     func_link = Victim().raise_if_not__METH
-    pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

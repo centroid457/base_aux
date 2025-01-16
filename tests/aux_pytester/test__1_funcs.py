@@ -1,9 +1,9 @@
 import pytest
 
-from base_aux.base_objects import *
+from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.aux_argskwargs import *
 
 from base_aux.funcs.value_0_explicit import Default
 from base_aux.cmp.cmp import CmpInst
@@ -25,7 +25,8 @@ class Cls(CmpInst):
 
 
 def test____LE__():
-    pytest_func_tester__no_kwargs(func_link=lambda result: result == 1, args=Cls(1), _EXPECTED=True)
+    func_link = lambda result: result == 1
+    PytestAux(func_link, Cls(1)).assert_check(True)
 
 
 # =====================================================================================================================
@@ -50,7 +51,7 @@ def test____LE__():
 )
 def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
-        PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+        PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
     except:
         assert not _pytestExpected
     else:
@@ -74,7 +75,7 @@ def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected
 )
 def test__func_list_direct(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_DIRECT
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -94,7 +95,7 @@ def test__func_list_direct(args, kwargs, _EXPECTED):
 )
 def test__func_list_values(args, kwargs, _EXPECTED):
     func_link = LAMBDA_LIST_VALUES
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -114,7 +115,7 @@ def test__func_list_values(args, kwargs, _EXPECTED):
 )
 def test__func_dict(args, kwargs, _EXPECTED):
     func_link = LAMBDA_DICT
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -136,7 +137,7 @@ def test__func_dict(args, kwargs, _EXPECTED):
 )
 def test__func_all(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ALL
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -163,7 +164,7 @@ def test__func_all(args, kwargs, _EXPECTED):
 )
 def test__func_any(args, kwargs, _EXPECTED):
     func_link = LAMBDA_ANY
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

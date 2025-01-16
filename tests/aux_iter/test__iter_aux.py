@@ -1,8 +1,8 @@
 import pytest
 from base_aux.aux_pytester.m1_pytest_aux import  PytestAux
 
-from base_aux.funcs import *
-from base_aux.aux_iter import IterAux
+from base_aux.aux_iter.m1_iter_aux import IterAux
+from base_aux.funcs.value_0_explicit import *
 
 
 # =====================================================================================================================
@@ -26,7 +26,7 @@ from base_aux.aux_iter import IterAux
 )
 def test__item__get_original(source, item, _EXPECTED):
     func_link = IterAux(source).item__get_original
-    pytest_func_tester__no_kwargs(func_link, item, _EXPECTED)
+    PytestAux(func_link, item).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -50,7 +50,7 @@ def test__item__get_original(source, item, _EXPECTED):
 )
 def test__path__get_original(source, path, _EXPECTED):
     func_link = IterAux(source).path__get_original
-    pytest_func_tester__no_kwargs(func_link, path, _EXPECTED)
+    PytestAux(func_link, path).assert_check(_EXPECTED)
 
 
 class Test__2:

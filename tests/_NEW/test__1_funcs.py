@@ -20,7 +20,7 @@ def func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__short_variant(func_link, args, _EXPECTED):
-    PytestAux(func_link, *args).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -44,7 +44,7 @@ def test__short_variant(func_link, args, _EXPECTED):
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[func_example, ])
 def test__long_variant(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):
-    PytestAux(func_link, *args, **kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
+    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================

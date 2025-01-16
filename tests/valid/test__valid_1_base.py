@@ -1,10 +1,15 @@
 import pytest
 
-from base_aux.aux_argskwargs import *
-from base_aux.base_objects import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.aux_pytester import *
-from base_aux.valid import *
+from base_aux.aux_argskwargs import *
+from base_aux.base_objects.m0_primitives import *
+
+from base_aux.valid.valid_0_lg import *
+from base_aux.valid.valid_10_chains import *
+from base_aux.valid.valid_1_base_derivatives import *
+from base_aux.valid.value_1_variants import *
+from base_aux.valid.value_2_unit import *
 
 
 # =====================================================================================================================
@@ -132,7 +137,7 @@ class Test__ValidTypes:
         # assert source == Valid(*valid_args)
 
         func_link = lambda *_args: source == Valid(*_args)
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

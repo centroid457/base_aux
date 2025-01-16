@@ -1,10 +1,10 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester import *
-from base_aux.requirements import *
+from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.requirements.strings import *
 
-from base_aux.cli import *
+from base_aux.cli.m1_cli_user import *
 
 
 # =====================================================================================================================

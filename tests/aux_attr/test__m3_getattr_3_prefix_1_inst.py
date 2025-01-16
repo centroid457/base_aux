@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester import *
-from base_aux.aux_attr import GetattrPrefixInst
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_attr.m3_getattr_1_prefix_1_inst import GetattrPrefixInst
 
 
 # =====================================================================================================================
@@ -82,8 +82,8 @@ def test__anycase_meth():
     ]
 )
 def test__batch(meth, args, _EXPECTED):
-    func = lambda *_args: getattr(victim, meth)(*_args)
-    pytest_func_tester__no_kwargs(func, args, _EXPECTED)
+    func_link = lambda *_args: getattr(victim, meth)(*_args)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

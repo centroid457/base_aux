@@ -1,9 +1,12 @@
 import pytest
 
-from base_aux.base_objects import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.aux_pytester import *
-from base_aux.valid import *
+from base_aux.base_objects.m0_primitives import *
+
+from base_aux.valid.valid_1_base import *
+from base_aux.valid.valid_10_chains import *
+from base_aux.valid.valid_1_base_derivatives import *
 
 
 # =====================================================================================================================

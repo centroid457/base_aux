@@ -1,9 +1,9 @@
 import pytest
 
-from base_aux.aux_argskwargs import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.aux_pytester import *
-from base_aux.valid import *
+from base_aux.valid.value_1_variants import *
+from base_aux.valid.value_2_unit import *
 
 
 # =====================================================================================================================

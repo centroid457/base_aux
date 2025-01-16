@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester import *
+from base_aux.aux_pytester.m1_pytest_aux import *
 from base_aux.aux_attr.m0_static import AttrsDump
 from base_aux.aux_attr.m1_attr_1_aux import AttrAux
 
@@ -89,9 +89,9 @@ class Victim2:
 def test__anycase__xxx(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__find, attr, _EXPECTED[0])
-    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__getattr, attr, _EXPECTED[1])
-    pytest_func_tester__no_kwargs(AttrAux(Victim2()).anycase__setattr, (attr, 123), _EXPECTED[2])
+    PytestAux(AttrAux(Victim2()).anycase__find, attr).assert_check(_EXPECTED[0])
+    PytestAux(AttrAux(Victim2()).anycase__getattr, attr).assert_check(_EXPECTED[1])
+    PytestAux(AttrAux(Victim2()).anycase__setattr, (attr, 123)).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================

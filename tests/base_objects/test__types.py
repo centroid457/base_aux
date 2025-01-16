@@ -1,8 +1,9 @@
 from typing import *
 import pytest
 
-from base_aux.base_objects import *
-from base_aux.aux_pytester import *
+from base_aux.base_objects.m1_obj_types import *
+from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 
 # =====================================================================================================================
@@ -176,7 +177,7 @@ class Test__1:
     )
     def test__iterable(self, source, args, _EXPECTED):
         func_link = TypeCheck(source).check__iterable
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+        PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -763,7 +764,7 @@ class Test__1:
     )
     def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
         func_link = TypeCheck(source).check__nested__by_cls_or_inst
-        pytest_func_tester__no_kwargs(func_link, parent, _EXPECTED)
+        PytestAux(func_link, parent).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

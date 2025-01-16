@@ -1,10 +1,10 @@
 import pytest
 
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 from base_aux.aux_argskwargs import *
 
-from base_aux.aux_pytester import *
-from base_aux.aux_attr import *
-from base_aux.classes import *
+from base_aux.aux_attr.m1_attr_0_init_kwargs import *
+from base_aux.classes.translator import *
 
 
 # =====================================================================================================================
@@ -27,7 +27,7 @@ class Test__1:
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):
         func_link = Translator(rules=rules, return_source_if_not_found=notFound)
-        pytest_func_tester__no_kwargs(func_link, source, _EXPECTED)
+        PytestAux(func_link, source).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
