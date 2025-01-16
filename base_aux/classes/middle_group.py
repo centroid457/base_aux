@@ -2,8 +2,9 @@
 
 from typing import *
 
-from base_aux.aux_argskwargs import *
-from base_aux.base_objects import *
+from base_aux.base_objects.m1_obj_types import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 
 
 # =====================================================================================================================
@@ -178,11 +179,11 @@ class ClsMiddleGroup:
 
         attrs = []
         if cls.MIDDLE_GROUP__CMP_ATTR:
-            attrs1 = args__ensure_tuple(cls.MIDDLE_GROUP__CMP_ATTR)
+            attrs1 = ArgsKwargsAux(cls.MIDDLE_GROUP__CMP_ATTR).resolve_args()
             attrs.extend(attrs1)
 
         if other.MIDDLE_GROUP__CMP_ATTR:
-            attrs2 = args__ensure_tuple(other.MIDDLE_GROUP__CMP_ATTR)
+            attrs2 = ArgsKwargsAux(other.MIDDLE_GROUP__CMP_ATTR).resolve_args()
             attrs.extend(attrs2)
 
         # cmp ------------------

@@ -2,10 +2,11 @@ from typing import *
 import json
 import re
 
-from base_aux.base_enums import *
-from base_aux.base_source import InitSource
+from base_aux.base_enums.enums import *
+from base_aux.aux_argskwargs.m2_argskwargs_aux import *
+from base_aux.base_source.m1_source import InitSource
 
-from base_aux.funcs import TYPE__ELEMENTARY
+from base_aux.funcs.static import TYPE__ELEMENTARY
 
 
 # =====================================================================================================================
@@ -272,7 +273,7 @@ class TextAux(InitSource):
             source = self.SOURCE
 
         result = []
-        patterns = args__ensure_tuple(patterns)
+        patterns = ArgsKwargsAux(patterns).resolve_args()
 
         for pat in patterns:
             result_i = re.findall(pat, source)

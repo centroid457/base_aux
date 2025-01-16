@@ -1,14 +1,16 @@
 from typing import *
 import time
 
-from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.base_objects.m1_obj_types import TypeCheck
 
-from base_aux.funcs import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-# from base_aux.lambdas.lambdas import *
-from base_aux.funcs.static import TYPE__VALID_VALIDATOR
+
+from base_aux.funcs.static import *
 from base_aux.cmp.eq import Eq
+
+# from base_aux.lambdas.lambdas import *
 
 
 # =====================================================================================================================
@@ -65,8 +67,8 @@ class Valid:
 
     ARGS__VALUE: TYPE__ARGS_FINAL = ()
     ARGS__VALIDATE: TYPE__ARGS_FINAL = ()
-    KWARGS__VALUE: TYPE__ARGS_FINAL = None
-    KWARGS__VALIDATE: TYPE__ARGS_FINAL = None
+    KWARGS__VALUE: TYPE__KWARGS_FINAL = None
+    KWARGS__VALIDATE: TYPE__KWARGS_FINAL = None
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
@@ -130,8 +132,8 @@ class Valid:
             self.SKIP_LINK = skip_link
 
         # ARGS/KWARGS --------------------------------
-        self.ARGS__VALUE = args__ensure_tuple(args__value)
-        self.ARGS__VALIDATE = args__ensure_tuple(args__validate)
+        self.ARGS__VALUE = ArgsKwargsAux(args__value).resolve_args()
+        self.ARGS__VALIDATE = ArgsKwargsAux(args__validate).resolve_args()
 
         self.KWARGS__VALUE = kwargs__value or {}
         self.KWARGS__VALIDATE = kwargs__validate or {}
