@@ -10,7 +10,10 @@
 from .m1_source import (
     InitSource,
 )
-from .m2_source_kwargs import InitSourceKwArgs_Indirect, InitSourceKwArgs_Direct
+from .m2_source_kwargs import (
+    InitSourceKwArgs_Indirect,
+    InitSourceKwArgs_Direct,
+)
 
 
 # =====================================================================================================================
