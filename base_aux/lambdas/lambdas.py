@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.base_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
+from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2
 # from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
 from base_aux.base_source import *

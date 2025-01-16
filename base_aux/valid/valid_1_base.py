@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.base_argskwargs import *
+from base_aux.aux_argskwargs import *
 from base_aux.base_objects.obj_types import TypeCheck
 
 from base_aux.funcs import *

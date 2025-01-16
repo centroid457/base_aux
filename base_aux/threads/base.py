@@ -3,7 +3,7 @@ import time
 
 from PyQt5.QtCore import QThread
 from base_aux.singletons import *
-from base_aux.base_argskwargs import *
+from base_aux.aux_argskwargs import *
 
 
 # =====================================================================================================================

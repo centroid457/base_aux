@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.base_argskwargs.m1_argskwargs import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
+from base_aux.aux_argskwargs.m1_argskwargs import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 from base_aux.funcs import *
 from base_aux.aux_callable import *
 from base_aux.cmp.eq import Eq

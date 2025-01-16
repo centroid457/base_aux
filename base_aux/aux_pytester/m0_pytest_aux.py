@@ -3,7 +3,7 @@ import pytest
 from pytest import mark
 
 from base_aux.base_source import InitSource
-from base_aux.base_argskwargs import *
+from base_aux.aux_argskwargs import *
 from base_aux.base_objects import *
 
 from base_aux.aux_callable import CallableAux

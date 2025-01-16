@@ -3,7 +3,7 @@ import time
 
 from PyQt5.QtCore import QThread
 
-from base_aux.base_argskwargs import TYPE__KWARGS_FINAL, TYPE__ARGS_FINAL
+from base_aux.aux_argskwargs import TYPE__KWARGS_FINAL, TYPE__ARGS_FINAL
 from base_aux.aux_text import CmdArgsKwargsParser
 from base_aux.valid import *
 from base_aux.loggers import Logger
