@@ -13,7 +13,7 @@ from base_aux.funcs.static import TYPE__VALID_RESULT
 
 # =====================================================================================================================
 @final
-class PytestAux(InitSourceKwArgs_Direct):
+class PytestAux(InitSourceKwArgs_Explicite):
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
     def assert_check(

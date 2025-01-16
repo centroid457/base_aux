@@ -6,7 +6,7 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import ArgsKwargsAux
 
 
 # =====================================================================================================================
-class InitSourceKwArgs_Indirect(InitSource):
+class InitSourceKwArgs_Implicite(InitSource):
     """
     GOAL
     ----
@@ -22,7 +22,7 @@ class InitSourceKwArgs_Indirect(InitSource):
 
 
 # =====================================================================================================================
-class InitSourceKwArgs_Direct(InitSource):
+class InitSourceKwArgs_Explicite(InitSource):
     """
     GOAL
     ----

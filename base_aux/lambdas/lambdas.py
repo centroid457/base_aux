@@ -4,13 +4,13 @@ import time
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.enums import When2
 # from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
-from base_aux.base_source.m2_source_kwargs import InitSourceKwArgs_Indirect
+from base_aux.base_source.m2_source_kwargs import InitSourceKwArgs_Implicite
 
 from base_aux.cmp.eq import Eq
 
 
 # =====================================================================================================================
-class Lambda(InitSourceKwArgs_Indirect):
+class Lambda(InitSourceKwArgs_Implicite):
     """
     IDEA
     ----
