@@ -107,8 +107,8 @@ class Kwargs(ArgsKwargs):
 
 
 # =====================================================================================================================
-TYPE__ARGS_DRAFT = Union[Any, TYPE__ARGS_FINAL, Args]           # you can use direct single value
-TYPE__KWARGS_DRAFT = Union[None, TYPE__KWARGS_FINAL, Kwargs]  # if passed NONE - no data!
+TYPE__ARGS_DRAFT = Union[Any, TYPE__ARGS_FINAL, ArgsKwargs]           # you can use direct single value
+TYPE__KWARGS_DRAFT = Union[None, TYPE__KWARGS_FINAL, ArgsKwargs]  # if passed NONE - no data!
 
 
 # =====================================================================================================================
