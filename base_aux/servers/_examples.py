@@ -1,4 +1,4 @@
-from base_aux.servers import ServerAiohttpBase
+from base_aux.servers.server_aiohttp import ServerAiohttpBase
 
 
 server = ServerAiohttpBase()

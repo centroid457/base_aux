@@ -6,8 +6,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from base_aux.lambdas import Lambda
-from base_aux.privates import *
+from base_aux.lambdas.lambdas import Lambda
+from base_aux.privates.derivatives import *
+from base_aux.privates.attr_loader__5_auto import *
 from base_aux.aux_attr.m1_attr_3_lambdas_resolve import AttrsLambdasResolve
 
 

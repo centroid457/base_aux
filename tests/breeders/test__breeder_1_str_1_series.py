@@ -1,5 +1,5 @@
 from base_aux.base_exceptions import *
-from base_aux.breeders import *
+from base_aux.breeders.breeder_1_str_1_series import *
 
 
 # =====================================================================================================================

@@ -1,6 +1,8 @@
 import pathlib
 import datetime
-from base_aux.aux_text import TextAux
+from base_aux.aux_text.m1_text_aux import TextAux
+from base_aux.base_objects.m2_info import ObjectInfo
+
 
 try:
     import git  # GITPYTHON # need try statement! if not installed git.exe raise Exx even if module was setup!!!

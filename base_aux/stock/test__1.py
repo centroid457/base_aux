@@ -1,8 +1,9 @@
-from typing import *
 import pytest
-from base_aux.stock import *
-from base_aux.stock.mt import *
 import MetaTrader5 as mt5
+
+from base_aux.stock.strategy import *
+from base_aux.stock.indicators import *
+from base_aux.stock.mt import *
 
 
 # =====================================================================================================================

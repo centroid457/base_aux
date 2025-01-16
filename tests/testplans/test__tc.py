@@ -1,8 +1,6 @@
 import pytest
-from typing import *
 
-from base_aux.testplans import *
-from base_aux.buses import *
+from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================

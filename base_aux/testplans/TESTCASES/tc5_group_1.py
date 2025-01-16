@@ -1,6 +1,5 @@
-from base_aux.testplans import *
-from base_aux.funcs import *
-from base_aux.valid import *
+from base_aux.testplans.tc import *
+from base_aux.valid.valid_1_base_derivatives import *
 
 from .tc0_groups import TcGroup_ATC220220
 

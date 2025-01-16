@@ -4,7 +4,8 @@ from aiohttp import web
 from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
 
-from base_aux.servers import *
+from base_aux.servers.server_aiohttp import *
+from base_aux.servers.server_fastapi import *
 from base_aux.funcs import *
 from base_aux.classes import *
 

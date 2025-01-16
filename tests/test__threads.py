@@ -2,7 +2,7 @@ import time
 from typing import *
 import pytest
 
-from base_aux.threads import *
+from base_aux.threads.base import *
 
 
 # =====================================================================================================================

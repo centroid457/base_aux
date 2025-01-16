@@ -1,6 +1,4 @@
-from typing import *
 import pytest
-import pathlib
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 

@@ -1,7 +1,5 @@
 import pytest
-from typing import *
-from base_aux.buses import *
-from base_aux.funcs import *
+from base_aux.buses.m0_history import *
 
 
 # =====================================================================================================================

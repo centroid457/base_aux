@@ -1,5 +1,5 @@
 import time
-from base_aux.valid import Valid
+from base_aux.valid.valid_1_base import Valid
 
 
 # =====================================================================================================================

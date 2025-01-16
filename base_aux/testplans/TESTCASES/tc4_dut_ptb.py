@@ -1,6 +1,5 @@
-from base_aux.testplans import *
-from base_aux.funcs import *
-from base_aux.valid import *
+from base_aux.testplans.tc import *
+from base_aux.valid.valid_10_chains import *
 
 
 # =====================================================================================================================

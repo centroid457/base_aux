@@ -4,10 +4,6 @@ SerialClient.addresses_paired__detect()
 
 
 exit()
-from base_aux.buses import *
-from typing import *
-
-
 class Dev(SerialClient_FirstFree_Shorted):
     BAUDRATE: int = 115200
     EOL__SEND = b"\r\n"

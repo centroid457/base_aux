@@ -1,7 +1,10 @@
 from .tc0_groups import TcGroup_ATC220220
 
-from base_aux.testplans import *
-from base_aux.valid import *
+from base_aux.valid.valid_1_base_derivatives import *
+from base_aux.testplans.main import TestCaseBase
+from base_aux.testplans.tc_types import TYPE__RESULT_W_EXX, TYPE__RESULT_W_NORETURN
+
+
 
 
 # =====================================================================================================================

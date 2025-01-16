@@ -1,4 +1,4 @@
-from base_aux.cli import *
+from base_aux.cli.m1_cli_user import *
 
 print()
 print()

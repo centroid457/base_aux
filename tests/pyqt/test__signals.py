@@ -1,7 +1,7 @@
 import pytest
 from typing import *
 
-from base_aux.pyqt import *
+from base_aux.pyqt.signals import *
 from PyQt5.QtCore import pyqtSignal
 
 

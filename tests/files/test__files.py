@@ -2,7 +2,7 @@ import pytest
 import time
 import pathlib
 
-from base_aux.files import *
+from base_aux.files.filepath import *
 
 
 # =====================================================================================================================

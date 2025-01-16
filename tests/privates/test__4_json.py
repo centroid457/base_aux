@@ -1,4 +1,3 @@
-from typing import *
 import pathlib
 import pytest
 import abc
@@ -7,7 +6,8 @@ from tempfile import TemporaryDirectory
 
 from base_aux.base_exceptions import *
 
-from base_aux.privates import *
+from base_aux.privates.attr_loader__4_json import *
+from base_aux.privates.static import *
 
 
 # =====================================================================================================================

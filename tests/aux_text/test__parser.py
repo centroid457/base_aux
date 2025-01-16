@@ -1,7 +1,6 @@
-from typing import *
 import pytest
 
-from base_aux.aux_text import *
+from base_aux.aux_text.parser_1_cmd_args_kwargs import *
 
 
 # =====================================================================================================================

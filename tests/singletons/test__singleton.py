@@ -4,7 +4,7 @@ import time
 import threading
 import abc
 
-from base_aux.singletons import *
+from base_aux.singletons.singleton import *
 
 
 # =====================================================================================================================

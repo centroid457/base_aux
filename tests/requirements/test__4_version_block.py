@@ -1,8 +1,6 @@
-from typing import *
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-
 from base_aux.requirements.versions import *
 
 

@@ -4,7 +4,7 @@
 # errors will be get within it.
 
 from typing import *
-from base_aux.buses import *
+from base_aux.buses.serial_client import *
 
 # SHOW (optional) COMMANDS EXPLICITLY by annotations without values!
 # ------------------------------------------------------------------

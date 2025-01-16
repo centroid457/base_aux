@@ -1,9 +1,7 @@
-from typing import *
 import pytest
 
-from base_aux.funcs import *
-from base_aux.classes import *
-from base_aux.breeders import *
+from base_aux.breeders.breeder_1_str_2_stack import *
+from base_aux.breeders.breeder_1_str_1_series import *
 
 
 # =====================================================================================================================

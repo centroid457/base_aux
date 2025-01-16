@@ -1,4 +1,3 @@
-from typing import *
 import pytest
 
 from base_aux.requirements.versions import *

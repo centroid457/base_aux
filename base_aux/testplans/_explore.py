@@ -1,6 +1,5 @@
-from base_aux.testplans import *
-from base_aux.servers import *
-from base_aux.classes import *
+from base_aux.testplans.main import  *
+from base_aux.servers.client_requests import *
 
 from DEVICES import dut, atc, ptb
 

@@ -2,7 +2,7 @@ from typing import *
 import time
 
 from base_aux.valid.valid_1_base import Valid
-from base_aux.aux_callable import *
+from base_aux.aux_callable.m1_callable_aux import *
 
 
 # =====================================================================================================================

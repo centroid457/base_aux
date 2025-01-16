@@ -1,8 +1,6 @@
-from typing import *
 import pytest
-from pytest import mark
 
-from base_aux.aux_attr import *
+from base_aux.aux_attr.m3_getattr_0_echo import *
 
 
 # =====================================================================================================================

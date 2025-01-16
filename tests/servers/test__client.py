@@ -1,5 +1,4 @@
 import pytest
-from typing import *
 import requests
 
 from base_aux.servers.client_requests import Client_RequestItem, ResponseMethod, Client_RequestsStack

@@ -1,8 +1,9 @@
 import pytest
 
-from base_aux.monitors import *
-from base_aux.alerts import *
-from base_aux.aux_callable import *
+from base_aux.monitors.imap import *
+from base_aux.monitors.url_tag__derivatives import *
+from base_aux.alerts.alerts__1_smtp import *
+from base_aux.aux_callable.m1_callable_aux import *
 
 
 # =====================================================================================================================

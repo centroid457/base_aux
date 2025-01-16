@@ -1,6 +1,6 @@
 from base_aux.base_objects import *
 
-from base_aux.funcs import *
+from base_aux.funcs.value_0_explicit import *
 from base_aux.classes import *
 
 

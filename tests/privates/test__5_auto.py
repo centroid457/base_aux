@@ -3,16 +3,14 @@ import pytest
 import pathlib
 import shutil
 from tempfile import TemporaryDirectory
-from typing import *
 
 from base_aux.base_exceptions import *
 
-from base_aux.privates import (
-    PrivateAuto,
-    PrivateEnv, PrivateIni, PrivateJson,
-    PrivateAuthJson,
-    Exx__FileNotExists,
-)
+from base_aux.privates.attr_loader__1_env import PrivateEnv
+from base_aux.privates.attr_loader__3_ini import PrivateIni
+from base_aux.privates.attr_loader__4_json import PrivateJson
+from base_aux.privates.attr_loader__5_auto import PrivateAuto
+
 
 
 # =====================================================================================================================

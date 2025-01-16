@@ -1,8 +1,7 @@
-from typing import *
 import pytest
 
-from base_aux.lambdas import *
-from base_aux.aux_dict import *
+from base_aux.lambdas.lambdas import *
+from base_aux.aux_dict.m2_dict_dots_1_simple import *
 
 
 # =====================================================================================================================

@@ -1,5 +1,4 @@
-from typing import Union, NoReturn, Type
-from base_aux.valid import *
+from base_aux.valid.valid_10_chains import *
 
 
 # =====================================================================================================================

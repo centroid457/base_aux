@@ -1,6 +1,4 @@
-from typing import *
 import pytest
-from pytest import mark
 
 from base_aux.aux_pytester.m1_pytest_aux import *
 from base_aux.cmp.cmp import CmpInst

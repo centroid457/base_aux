@@ -1,7 +1,6 @@
-from typing import *
 import pytest
 
-from base_aux.requirements import *
+from base_aux.requirements.strings import *
 
 
 # =====================================================================================================================

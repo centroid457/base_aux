@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.aux_dict import *
-from base_aux.base_enums import FormIntExt
+from base_aux.aux_dict.m1_dict_aux import *
+from base_aux.base_enums.enums import FormIntExt
 from base_aux.base_objects.m0_primitives import LAMBDA_ECHO
 
 

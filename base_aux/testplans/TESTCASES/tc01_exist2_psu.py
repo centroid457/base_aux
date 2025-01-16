@@ -1,6 +1,6 @@
-from typing import *
-from base_aux.testplans import TestCaseBase, TYPE__RESULT_W_EXX
-from base_aux.valid import *
+from base_aux.testplans.tc import *
+from base_aux.valid.valid_1_base_derivatives import *
+from base_aux.valid.valid_10_chains import *
 
 
 # =====================================================================================================================

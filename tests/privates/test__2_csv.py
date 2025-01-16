@@ -1,10 +1,10 @@
-from typing import *
 import pathlib
 import pytest
 import shutil
 
 from tempfile import TemporaryDirectory
-from base_aux.privates import PrivateCsv, Exx__FileNotExists
+from base_aux.privates.attr_loader__2_csv import PrivateCsv
+from base_aux.privates.static import Exx__FileNotExists
 
 
 # =====================================================================================================================

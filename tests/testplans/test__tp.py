@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.testplans import *
+from base_aux.testplans.main import *
 
 
 # =====================================================================================================================

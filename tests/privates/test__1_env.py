@@ -1,7 +1,6 @@
-from typing import *
 import os
 import pytest
-from base_aux.privates import PrivateEnv
+from base_aux.privates.attr_loader__1_env import PrivateEnv
 
 
 # =====================================================================================================================

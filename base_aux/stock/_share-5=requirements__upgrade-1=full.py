@@ -3,7 +3,7 @@ import time
 
 from PROJECT import PROJECT
 
-from base_aux.requirements import Packages
+from base_aux.requirements.pkgs import Packages
 
 
 # =====================================================================================================================

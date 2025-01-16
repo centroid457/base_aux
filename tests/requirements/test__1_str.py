@@ -1,9 +1,7 @@
 import pytest
-from typing import *
 
-from base_aux.base_objects import ObjectInfo
-
-from base_aux.requirements import *
+from base_aux.base_objects.m2_info import ObjectInfo
+from base_aux.requirements.strings import *
 
 
 # =====================================================================================================================

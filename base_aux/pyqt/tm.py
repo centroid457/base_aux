@@ -4,11 +4,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.funcs import *
-from base_aux.classes import *
-from base_aux.breeders import *
+from base_aux.breeders.breeder_1_str_2_stack import *
+from base_aux.breeders.breeder_1_str_1_series import *
 from .base import Data_
-from base_aux.classes import Translator
+from base_aux.classes.translator import Translator
 
 
 # =====================================================================================================================

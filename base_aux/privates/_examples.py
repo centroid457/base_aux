@@ -1,5 +1,8 @@
 # ===================================================================
-from base_aux.privates import *
+from base_aux.privates.attr_loader__1_env import *
+from base_aux.privates.attr_loader__3_ini import *
+from base_aux.privates.attr_loader__4_json import *
+from base_aux.privates.attr_loader__5_auto import *
 import pathlib
 
 

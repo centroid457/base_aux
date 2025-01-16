@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.buses import *
+from base_aux.buses.serial_derivatives import *
 
 
 # =====================================================================================================================

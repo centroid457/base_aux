@@ -1,4 +1,6 @@
-from base_aux.testplans import *
+from base_aux.testplans.tc import *
+from base_aux.valid.valid_1_base_derivatives import *
+from base_aux.valid.valid_10_chains import *
 
 
 # =====================================================================================================================

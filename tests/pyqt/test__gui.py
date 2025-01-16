@@ -1,6 +1,6 @@
 import pytest
 from typing import *
-from base_aux.pyqt import *
+from base_aux.pyqt.gui import *
 
 
 # =====================================================================================================================

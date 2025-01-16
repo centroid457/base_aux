@@ -6,7 +6,7 @@ from base_aux.base_enums.enums import CallablesUse
 # from base_aux.base_objects import TypeCheck
 
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
-from base_aux.aux_callable import CallableAux
+from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_attr.m0_static import AttrsDump
 
 

@@ -1,4 +1,3 @@
-from typing import *
 import pytest
 
 from base_aux.aux_attr.m1_attr_0_init_kwargs import AttrsInitByKwArgs

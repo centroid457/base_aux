@@ -1,6 +1,5 @@
 import pytest
-from typing import *
-from base_aux.bits import *
+from base_aux.bits.m1_bits import *
 
 
 # =====================================================================================================================

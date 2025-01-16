@@ -1,4 +1,6 @@
 # =====================================================================================================================
+
+
 class Exx__AnnotNotDefined(Exception):
     """Exception in case of not defined attribute in instance
     """

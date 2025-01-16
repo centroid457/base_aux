@@ -1,8 +1,8 @@
-from typing import *
 import pytest
 
-from base_aux.alerts import *
-from base_aux.aux_callable import *
+from base_aux.alerts.alerts__1_smtp import *
+from base_aux.alerts.alerts__2_telegram import *
+from base_aux.aux_callable.m1_callable_aux import *
 
 
 # =====================================================================================================================

@@ -1,10 +1,9 @@
-from typing import *
 import time
 import pytest
 
 from PyQt5.QtCore import QThread
 
-from base_aux.base_objects import *
+from base_aux.base_objects.m2_info import *
 
 
 # =====================================================================================================================
