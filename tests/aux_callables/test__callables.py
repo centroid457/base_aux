@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_objects.primitives import *
+from base_aux.base_objects.m0_primitives import *
 from base_aux.base_enums import *
 from base_aux.aux_callable import *
 

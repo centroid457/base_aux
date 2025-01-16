@@ -4,12 +4,7 @@
 #   from .main import EXACT_OBJECTS     # CORRECT
 # VERSION = (0, 0, 2)   # del blank lines
 # VERSION = (0, 0, 3)   # separate all types/exx into static.py!
-
-
-# =====================================================================================================================
-from .callable_aux import (
-    CallableAux,
-)
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
 
 # =====================================================================================================================

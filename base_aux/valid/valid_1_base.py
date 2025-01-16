@@ -2,10 +2,10 @@ from typing import *
 import time
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.base_objects.obj_types import TypeCheck
+from base_aux.base_objects.m1_obj_types import TypeCheck
 
 from base_aux.funcs import *
-from base_aux.aux_callable.callable_aux import CallableAux
+from base_aux.aux_callable.m1_callable_aux import CallableAux
 # from base_aux.lambdas.lambdas import *
 from base_aux.funcs.static import TYPE__VALID_VALIDATOR
 from base_aux.cmp.eq import Eq

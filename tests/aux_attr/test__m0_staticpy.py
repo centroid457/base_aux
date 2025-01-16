@@ -1,7 +1,7 @@
 import pytest
 
-from base_aux.aux_pytester.m0_pytest_aux import PytestAux
-from base_aux.aux_attr import check_name__buildin
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_attr.m0_static import check_name__buildin
 
 
 # =====================================================================================================================

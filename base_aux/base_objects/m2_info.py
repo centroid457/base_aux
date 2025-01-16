@@ -1,7 +1,7 @@
 from typing import *
 from dataclasses import dataclass, field
 
-from .obj_types import TypeCheck
+from .m1_obj_types import TypeCheck
 from base_aux.aux_attr.m0_static import check_name__buildin
 
 

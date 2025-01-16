@@ -1,19 +1,10 @@
 # =====================================================================================================================
 # VERSION = (0, 0, 1)   # use import EXACT_OBJECTS! not *
-#   from .main import *                 # INcorerct
-#   from .main import EXACT_OBJECTS     # CORERCT
+#   from .main import *                 # INcorrect
+#   from .main import EXACT_OBJECTS     # CORRECT
+# VERSION = (0, 0, 2)   # del blank lines
+# VERSION = (0, 0, 3)   # separate all types/exx into static.py!
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
-
-# =====================================================================================================================
-from .m2_dict_dots_1_simple import (
-    DictDots,
-    DictDotsAnnotRequired,
-)
-from .m2_dict_dots_2_full import (
-    DictDotsFull,
-)
-from .m1_dict_aux import (
-    DictAux,
-)
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_objects.primitives import *
+from base_aux.base_objects.m0_primitives import *
 
 from base_aux.lambdas.lambdas import *
 from base_aux.aux_pytester import *

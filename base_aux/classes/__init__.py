@@ -4,21 +4,7 @@
 #   from .main import EXACT_OBJECTS     # CORRECT
 # VERSION = (0, 0, 2)   # del blank lines
 # VERSION = (0, 0, 3)   # separate all types/exx into static.py!
-
-
-# =====================================================================================================================
-from .number import (
-    NumberArithmTranslateToAttr,
-    TYPE__NUMBER,
-)
-# ---------------------------------------------------------------------------------------------------------------------
-from .middle_group import (
-    ClsMiddleGroup,
-)
-# ---------------------------------------------------------------------------------------------------------------------
-from .translator import (
-    Translator,
-)
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
 
 # =====================================================================================================================

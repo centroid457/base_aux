@@ -2,25 +2,9 @@
 # VERSION = (0, 0, 1)   # use import EXACT_OBJECTS! not *
 #   from .main import *                 # INcorrect
 #   from .main import EXACT_OBJECTS     # CORRECT
-
-
-# =====================================================================================================================
-# TEMPLATE
-# from .main import (
-#     EXACT_OBJECTS,
-# )
-# ---------------------------------------------------------------------------------------------------------------------
-from .user import (
-    CliUser,
-
-    TYPE__CMD,
-    TYPE__CMDS,
-
-    Exx_CliNotAvailable,
-    Exx_CliTimeout,
-    Exx_CliRetcode,
-    Exx_CliStderr,
-)
+# VERSION = (0, 0, 2)   # del blank lines
+# VERSION = (0, 0, 3)   # separate all types/exx into static.py!
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
 
 # =====================================================================================================================

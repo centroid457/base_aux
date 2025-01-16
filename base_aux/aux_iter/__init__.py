@@ -2,16 +2,9 @@
 # VERSION = (0, 0, 1)   # use import EXACT_OBJECTS! not *
 #   from .main import *                 # INcorrect
 #   from .main import EXACT_OBJECTS     # CORRECT
-
-
-# =====================================================================================================================
-from .m1_iter_aux import (
-    IterAux,
-
-    TYPE__ITERABLE_PATH_KEY,
-    TYPE__ITERABLE_PATH,
-    TYPE__ITERABLE,
-)
+# VERSION = (0, 0, 2)   # del blank lines
+# VERSION = (0, 0, 3)   # separate all types/exx into static.py!
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
 
 # =====================================================================================================================

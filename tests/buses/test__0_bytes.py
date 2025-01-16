@@ -1,7 +1,7 @@
 import pytest
 from typing import *
 from base_aux.buses import *
-from base_aux.aux_pytester.m0_pytest_aux import PytestAux
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 
 # =====================================================================================================================

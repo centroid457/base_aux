@@ -3,9 +3,9 @@ import pytest
 from pytest import mark
 
 from base_aux.base_source.m1_source import InitSource
-from base_aux.base_objects.obj_types import TypeCheck
+from base_aux.base_objects.m1_obj_types import TypeCheck
 
-from base_aux.aux_callable.callable_aux import CallableAux
+from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
 
 from base_aux.funcs.static import TYPE__VALID_RESULT

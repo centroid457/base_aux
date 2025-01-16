@@ -1,29 +1,10 @@
 # =====================================================================================================================
 # VERSION = (0, 0, 1)   # use import EXACT_OBJECTS! not *
-#   from .main import *                 # INcorerct
-#   from .main import EXACT_OBJECTS     # CORERCT
-
-
-# =====================================================================================================================
-from .m0_novalue import (
-    NoValue,
-)
-from .m1_argskwargs import (
-    ArgsKwargs,
-    Args,
-    Kwargs,
-
-    TYPE__LAMBDA_CONSTRUCTOR,
-
-    TYPE__ARGS_FINAL,
-    TYPE__KWARGS_FINAL,
-
-    TYPE__ARGS_DRAFT,
-    TYPE__KWARGS_DRAFT,
-)
-from .m2_argskwargs_aux import (
-    ArgsKwargsAux,
-)
+#   from .main import *                 # INcorrect
+#   from .main import EXACT_OBJECTS     # CORRECT
+# VERSION = (0, 0, 2)   # del blank lines
+# VERSION = (0, 0, 3)   # separate all types/exx into static.py!
+# VERSION = (0, 0, 4)   # DELETE ALL IMPORTS! dont use it! CIRCULAR IMPORTS
 
 
 # =====================================================================================================================
