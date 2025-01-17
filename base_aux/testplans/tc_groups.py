@@ -1,4 +1,4 @@
-from base_aux.classes.middle_group import *
+from base_aux.classes.m2_middle_group import *
 
 from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 

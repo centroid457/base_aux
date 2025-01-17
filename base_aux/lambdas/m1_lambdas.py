@@ -2,11 +2,11 @@ from typing import *
 import time
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
-from base_aux.base_enums.enums import When2
+from base_aux.base_enums.m0_enums import When2
 # from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
 from base_aux.base_source.m2_source_kwargs import InitSourceKwArgs_Implicite
 
-from base_aux.cmp.eq import Eq
+from base_aux.cmp.m2_eq import Eq
 
 
 # =====================================================================================================================

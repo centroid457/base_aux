@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.cmp.eq import Eq
+from base_aux.cmp.m2_eq import Eq
 
 
 # =====================================================================================================================

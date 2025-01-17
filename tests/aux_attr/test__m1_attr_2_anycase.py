@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.aux_attr.m1_attr_2_anycase import *
+from base_aux.aux_attr.m1_attr2_anycase import *
 
 
 # =====================================================================================================================

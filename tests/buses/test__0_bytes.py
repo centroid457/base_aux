@@ -1,7 +1,7 @@
 import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.buses.serial_client import *
+from base_aux.buses.m1_serial1_client import *
 
 
 # =====================================================================================================================

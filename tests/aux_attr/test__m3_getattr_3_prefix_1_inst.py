@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.aux_attr.m3_getattr_1_prefix_1_inst import GetattrPrefixInst
+from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst
 
 
 # =====================================================================================================================

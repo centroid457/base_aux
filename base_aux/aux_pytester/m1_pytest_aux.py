@@ -3,7 +3,7 @@ import pytest
 from pytest import mark
 
 from base_aux.base_source.m2_source_kwargs import *
-from base_aux.base_objects.m1_obj_types import TypeCheck
+from base_aux.base_objects.m1_obj1_types import TypeCheck
 
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT

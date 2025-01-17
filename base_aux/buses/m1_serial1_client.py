@@ -12,7 +12,7 @@ from base_aux.loggers import Logger
 from serial import Serial
 from serial.tools import list_ports
 from base_aux.valid import ValueUnit
-from base_aux.cmp.eq import Eq
+from base_aux.cmp.m2_eq import Eq
 
 from .m0_history import HistoryIO
 

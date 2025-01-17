@@ -1,10 +1,10 @@
 from typing import *
 
 from base_aux.base_exceptions import *
-from base_aux.base_objects.m1_obj_types import TypeCheck
+from base_aux.base_objects.m1_obj1_types import TypeCheck
 from base_aux.aux_callable import *
 
-from base_aux.aux_attr.m1_attr_1_aux import AttrAux
+from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

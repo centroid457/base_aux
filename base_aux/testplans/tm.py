@@ -5,10 +5,10 @@ from PyQt5.QtGui import *
 
 from base_aux.funcs import *
 from base_aux.valid.valid_1_base import *
-from base_aux.classes.translator import Translator
+from base_aux.classes.m1_translator import Translator
 from base_aux.pyqt.tm import TableModelTemplate
-from base_aux.breeders.breeder_1_str_2_stack import *
-from base_aux.breeders.breeder_1_str_1_series import *
+from base_aux.breeders.m1_breeder_str2_stack import *
+from base_aux.breeders.m1_breeder_str1_series import *
 from base_aux.pyqt.static import *
 
 

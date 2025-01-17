@@ -1,12 +1,12 @@
 from typing import *
 
 from base_aux.base_exceptions import Exx__AnnotNotDefined
-from base_aux.base_objects.m1_obj_types import TYPES, TypeCheck
+from base_aux.base_objects.m1_obj1_types import TYPES, TypeCheck
 from base_aux.base_source import InitSource
 
 from base_aux.aux_argskwargs import *
 
-from .m1_attr_1_aux import AttrAux
+from .m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

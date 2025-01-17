@@ -1,6 +1,6 @@
 from typing import *
 
-from .m2_annot_1_aux import AnnotsAux
+from .m2_annot1_aux import AnnotsAux
 
 
 # =====================================================================================================================

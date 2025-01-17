@@ -7,8 +7,8 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 
-from base_aux.alerts.select import *
-from base_aux.alerts.base import *
+from base_aux.alerts.m2_select import *
+from base_aux.alerts.m0_base import *
 
 
 # =====================================================================================================================

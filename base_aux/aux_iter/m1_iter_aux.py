@@ -1,6 +1,6 @@
 from typing import *
 # from base_aux.funcs.value_0_explicit import Explicit
-from base_aux.base_source import InitSource
+from base_aux.base_source.m1_source import InitSource
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class IterAux(InitSource):
         assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
     SOURCE: TYPE__ITERABLE = dict
-    # PATH: list[TYPE__ITERABLE_PATH_KEY]
+    # PATH: list[TYPE__ITERABLE_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)

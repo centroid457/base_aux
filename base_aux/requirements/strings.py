@@ -1,7 +1,7 @@
 from typing import *
 import platform
 
-from base_aux.base_objects.m1_obj_types import *
+from base_aux.base_objects.m1_obj1_types import *
 
 
 # =====================================================================================================================

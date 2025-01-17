@@ -2,7 +2,7 @@
 
 from typing import *
 
-from base_aux.base_objects.m1_obj_types import *
+from base_aux.base_objects.m1_obj1_types import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 

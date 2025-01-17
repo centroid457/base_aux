@@ -1,8 +1,8 @@
 # =========================================================================================
 ### 0. BEST PRACTICE
-from base_aux.alerts.select import *
-from base_aux.alerts.alerts__1_smtp import *
-from base_aux.alerts.alerts__2_telegram import *
+from base_aux.alerts.m2_select import *
+from base_aux.alerts.m1_alerts1_smtp import *
+from base_aux.alerts.m1_alerts2_telegram import *
 
 
 class AlertADX(AlertSelect.TELEGRAM_DEF):
@@ -30,7 +30,7 @@ class AlertSmtpMOD(AlertSmtp):
 # =========================================================================================
 #### 2. change authorisation data (see `privates` for details)
 from base_aux.alerts import *
-from base_aux.privates.attr_loader__5_auto import *
+from base_aux.privates.m1_loader5_auto import *
 
 
 class AlertSmtpMOD(AlertSmtp):

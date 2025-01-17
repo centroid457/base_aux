@@ -4,7 +4,7 @@ import pytest
 
 # =====================================================================================================================
 # KEEP FILES IN ROOT! OR IMPORT PRJ_MODULE WOULD FROM SYSTEM! NOT THIS SOURCE!!!
-from base_aux.loggers.main import *
+from base_aux.loggers.m1_logger import *
 
 
 # =====================================================================================================================

@@ -3,7 +3,7 @@ from typing import *
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 from base_aux.funcs.static import *
 from base_aux.aux_callable.m1_callable_aux import *
-from base_aux.cmp.eq import Eq
+from base_aux.cmp.m2_eq import Eq
 
 
 # =====================================================================================================================

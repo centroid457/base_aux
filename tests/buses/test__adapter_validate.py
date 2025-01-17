@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.buses.serial_derivatives import *
+from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================

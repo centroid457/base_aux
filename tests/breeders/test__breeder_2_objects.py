@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.breeders.breeder_2_objects import *
+from base_aux.breeders.m2_breeder_objects import *
 
 
 # =====================================================================================================================

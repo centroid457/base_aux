@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_text.parser_1_cmd_args_kwargs import *
+from base_aux.aux_text.m2_parser1_cmd_args_kwargs import *
 
 
 # =====================================================================================================================

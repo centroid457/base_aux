@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_attr.m1_attr_0_init_kwargs import AttrsInitByKwArgs
+from base_aux.aux_attr.m1_attr0_init_kwargs import AttrsInitByKwArgs
 
 
 # =====================================================================================================================

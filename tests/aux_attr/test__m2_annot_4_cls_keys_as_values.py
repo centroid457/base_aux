@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.aux_attr.m2_annot_4_cls_keys_as_values import *
+from base_aux.aux_attr.m2_annot4_cls_keys_as_values import *
 
 
 # =====================================================================================================================

@@ -24,7 +24,7 @@ from base_aux.funcs import *
 from base_aux.loggers import *
 from base_aux.servers import *
 from base_aux.privates import *
-from base_aux.aux_datetime import *
+from base_aux.aux_datetime.m1_datetime import DateTimeAux
 
 
 # =====================================================================================================================
@@ -380,7 +380,7 @@ class TpMultyDutBase(Logger, QThread):
         return result
 
     def save__results(self) -> None:
-        name_prefix = DateTime().get_str()
+        name_prefix = DateTimeAux().get_str()
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
             result_i = {}
             for tc_cls in self.TCS__CLS:

@@ -1,14 +1,14 @@
 from typing import *
 import time
 
-from base_aux.base_objects.m1_obj_types import TypeCheck
+from base_aux.base_objects.m1_obj1_types import TypeCheck
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 
 from base_aux.funcs.static import *
-from base_aux.cmp.eq import Eq
+from base_aux.cmp.m2_eq import Eq
 
 # from base_aux.lambdas.lambdas import *
 

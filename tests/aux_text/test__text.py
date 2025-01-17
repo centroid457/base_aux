@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.base_enums.enums import *
+from base_aux.base_enums.m0_enums import *
 from base_aux.aux_text.m1_text_aux import TextAux
 
 

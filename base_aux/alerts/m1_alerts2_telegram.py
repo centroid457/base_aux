@@ -1,10 +1,10 @@
 import time
 from typing import *
 
-from base_aux.lambdas.lambdas import Lambda
-from base_aux.aux_attr.m1_attr_3_lambdas_resolve import AttrsLambdasResolve
-from base_aux.privates.attr_loader__5_auto import *
-from .base import *
+from base_aux.lambdas.m1_lambdas import Lambda
+from base_aux.aux_attr.m1_attr3_lambdas_resolve import AttrsLambdasResolve
+from base_aux.privates.m1_loader5_auto import *
+from .m0_base import *
 
 
 # =====================================================================================================================

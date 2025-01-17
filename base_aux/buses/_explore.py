@@ -1,4 +1,4 @@
-from base_aux.buses.serial_client import SerialClient
+from base_aux.buses.m1_serial1_client import SerialClient
 SerialClient.addresses_paired__detect()
 
 

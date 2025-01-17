@@ -1,8 +1,8 @@
 from typing import *
 
 from base_aux.base_exceptions import *
-from base_aux.aux_attr import *
-from base_aux.breeders import *
+from base_aux.aux_attr.m2_annot1_aux import *
+from base_aux.breeders.m1_breeder_str1_series import *
 
 
 # =====================================================================================================================

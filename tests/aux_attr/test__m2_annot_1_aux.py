@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import *
-from base_aux.aux_attr.m2_annot_1_aux import AnnotsBase, AnnotsAux
+from base_aux.aux_attr.m2_annot1_aux import AnnotsBase, AnnotsAux
 
 
 # =====================================================================================================================

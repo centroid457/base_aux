@@ -6,8 +6,8 @@ from tempfile import TemporaryDirectory
 
 from base_aux.base_exceptions import *
 
-from base_aux.privates.attr_loader__4_json import *
-from base_aux.privates.static import *
+from base_aux.privates.m1_loader4_json import *
+from base_aux.privates.m0_static import *
 
 
 # =====================================================================================================================

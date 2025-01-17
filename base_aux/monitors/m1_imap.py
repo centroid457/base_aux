@@ -6,10 +6,12 @@ import re
 import imaplib
 import email
 
-from base_aux.lambdas import Lambda
-from base_aux.privates import *
-from base_aux.aux_attr.m1_attr_3_lambdas_resolve import AttrsLambdasResolve
-from base_aux.alerts import *
+from base_aux.lambdas.m1_lambdas import Lambda
+from base_aux.privates.m1_loader0_base import *
+from base_aux.privates.m1_loader5_auto import *
+from base_aux.aux_attr.m1_attr3_lambdas_resolve import AttrsLambdasResolve
+from base_aux.alerts.m2_select import *
+from base_aux.alerts.m0_base import *
 
 
 # =====================================================================================================================

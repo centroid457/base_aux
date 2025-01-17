@@ -1,5 +1,5 @@
 from base_aux.base_exceptions import *
-from base_aux.aux_attr.m2_annot_2_required import *
+from base_aux.aux_attr.m2_annot2_required import *
 
 
 # =====================================================================================================================

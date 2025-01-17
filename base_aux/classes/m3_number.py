@@ -2,9 +2,9 @@ from typing import *
 import math
 
 from base_aux.base_exceptions import *
-from base_aux.base_objects import *
+from base_aux.base_objects.m1_obj2_info import *
 
-from base_aux.cmp.cmp import CmpInst
+from base_aux.cmp.m1_cmp import CmpInst
 
 
 # =====================================================================================================================

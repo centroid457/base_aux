@@ -1,7 +1,7 @@
 import pytest
 
-from base_aux.aux_attr.m2_annot_1_aux import *
-from base_aux.aux_attr.m2_annot_3_iter_values import *
+from base_aux.aux_attr.m2_annot1_aux import *
+from base_aux.aux_attr.m2_annot3_iter_values import *
 
 
 # =====================================================================================================================

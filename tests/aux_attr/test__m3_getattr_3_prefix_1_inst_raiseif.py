@@ -4,7 +4,7 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 from base_aux.base_exceptions.m1_exceptions import *
-from base_aux.aux_attr.m3_getattr_1_prefix_1_inst import GetattrPrefixInst_RaiseIf
+from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst_RaiseIf
 
 
 # =====================================================================================================================

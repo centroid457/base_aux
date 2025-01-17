@@ -5,8 +5,8 @@ from tempfile import TemporaryDirectory
 
 from base_aux.base_exceptions import *
 
-from base_aux.privates.attr_loader__3_ini import PrivateIni, PrivateAuthIni
-from base_aux.privates.static import Exx__FileNotExists
+from base_aux.privates.m1_loader3_ini import PrivateIni, PrivateAuthIni
+from base_aux.privates.m0_static import Exx__FileNotExists
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.aux_argskwargs.m0_novalue import NoValue
 
-from base_aux.aux_attr.m1_attr_1_aux import AttrAux
+from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

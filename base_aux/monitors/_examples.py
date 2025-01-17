@@ -10,12 +10,12 @@
 # see source
 
 # =======================================================================
-from base_aux.monitors.url_tag__derivatives import Monitor_CbrKeyRate
+from base_aux.monitors.m2_url_tag2__derivatives import Monitor_CbrKeyRate
 Monitor_CbrKeyRate()
 
 
 #### MonitorUrlTag
-from base_aux.monitors.url_tag__derivatives import MonitorUrlTag, TagAddressChain
+from base_aux.monitors.m2_url_tag2__derivatives import MonitorUrlTag, TagAddressChain
 class Monitor_CbrKeyRate(MonitorUrlTag):
     """
     MONITOR CentralBankRussia KeyRate

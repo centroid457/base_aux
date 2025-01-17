@@ -1,5 +1,5 @@
-from base_aux.alerts.alerts__1_smtp import AlertSmtp
-from base_aux.alerts.alerts__2_telegram import AlertTelegram
+from base_aux.alerts.m1_alerts1_smtp import AlertSmtp
+from base_aux.alerts.m1_alerts2_telegram import AlertTelegram
 
 
 # =====================================================================================================================

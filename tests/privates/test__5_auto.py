@@ -6,10 +6,10 @@ from tempfile import TemporaryDirectory
 
 from base_aux.base_exceptions import *
 
-from base_aux.privates.attr_loader__1_env import PrivateEnv
-from base_aux.privates.attr_loader__3_ini import PrivateIni
-from base_aux.privates.attr_loader__4_json import PrivateJson
-from base_aux.privates.attr_loader__5_auto import PrivateAuto
+from base_aux.privates.m1_loader1_env import PrivateEnv
+from base_aux.privates.m1_loader3_ini import PrivateIni
+from base_aux.privates.m1_loader4_json import PrivateJson
+from base_aux.privates.m1_loader5_auto import PrivateAuto
 
 
 

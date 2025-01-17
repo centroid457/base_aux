@@ -1,5 +1,5 @@
 from typing import *
-from .m1_attr_1_aux import AttrAux
+from .m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

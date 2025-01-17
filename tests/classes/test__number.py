@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.classes.number import *
+from base_aux.classes.m3_number import *
 
 
 # =====================================================================================================================
