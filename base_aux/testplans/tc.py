@@ -2,7 +2,7 @@ import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from base_aux.aux_dict.m2_dict_dots_1_simple import *
+from base_aux.aux_dict.m2_dict_dots1_simple import *
 from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *

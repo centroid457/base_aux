@@ -26,11 +26,8 @@ class DictCaseinsense(dict):
     #     super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _getitem_original(self, item: Any) -> Any | None:
-        return IterAux(self).item__get_original(item)
-
     def pop(self, item: Any) -> None:
-        item_original = self._getitem_original(item)
+        item_original = IterAux(self).item__get_original(item)
         if item_original is None:
             item_original = item
 
@@ -39,16 +36,14 @@ class DictCaseinsense(dict):
     def get(self, item: Any) -> Any:    # | NoReturn:
         """
         always get value or None!
-        if you need check real contain key - check contain)))) [assert key in self] or [self._getitem_original]
+        if you need check real contain key - check contain)))) [assert key in self] or [getitem_original]
         """
-        key_original = self._getitem_original(item)
+        key_original = IterAux(self).item__get_original(item)
         if key_original is None:
             return None
             # key_original = item
             # msg = f"{item=}"
             # raise KeyError(msg)
-        else:
-            key_original = key_original()  # EXPLICIT get value
 
         return super().get(key_original)
 
@@ -56,16 +51,14 @@ class DictCaseinsense(dict):
 
     def update(self, m, /, **kwargs) -> None:
         for item, value in m.items():
-            key_original = self._getitem_original(item)
+            key_original = IterAux(self).item__get_original(item)
             if key_original is None:
                 key_original = item
-            else:
-                key_original = key_original()  # EXPLICIT get value
 
             super().update({key_original: value})
 
     def __contains__(self, item: Any) -> bool:
-        if self._getitem_original(item) is not None:
+        if IterAux(self).item__get_original(item) is not None:
             return True
 
     # -----------------------------------------------------------------------------------------------------------------

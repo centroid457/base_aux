@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.lambdas.m1_lambdas import *
-from base_aux.aux_dict.m2_dict_dots_1_simple import *
+from base_aux.aux_dict.m2_dict_dots1_simple import *
 
 
 # =====================================================================================================================
