@@ -34,16 +34,20 @@ def test____LE__():
     argvalues=[
         # not callable ------------
         (True, (), None, True, True),
-        (True, 111, {111: 222}, True, True),
+
+        (True, 111, {"111": 222}, True, True),
+        (True, 111, {"111": 222}, False, False),
+        (True, 111, {"111": 222}, Exception, False),
+
         (False, (), {}, True, False),
 
         # callable ------------
-        (lambda value: value, (), {}, True, False),
+        (LAMBDA_ECHO, (), {}, True, False),
 
-        (lambda value: value, None, {}, True, False),
-        (lambda value: value, None, {}, None, True),
-        (lambda value: value, True, {}, True, True),
-        (lambda value: value, (True, ), {}, True, True),
+        (LAMBDA_ECHO, None, {}, True, False),
+        (LAMBDA_ECHO, None, {}, None, True),
+        (LAMBDA_ECHO, True, {}, True, True),
+        (LAMBDA_ECHO, (True, ), {}, True, True),
         (lambda value: value, (), {"value": True}, True, True),
         (lambda value: value, (), {"value": None}, True, False),
     ]
