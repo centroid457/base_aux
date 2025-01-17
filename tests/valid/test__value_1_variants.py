@@ -2,8 +2,8 @@ import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.valid.m6_value1_variants import *
-from base_aux.valid.m6_value2_unit import *
+from base_aux.aux_values.m2_variants import *
+from base_aux.aux_values.m3_unit import *
 
 
 # =====================================================================================================================

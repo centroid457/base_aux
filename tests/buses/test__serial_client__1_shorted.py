@@ -3,8 +3,7 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 from base_aux.valid.m2_valid_base import *
-from base_aux.valid.m6_value1_variants import *
-from base_aux.valid.m6_value2_unit import *
+from base_aux.aux_values.m2_variants import *
 from base_aux.buses.m1_serial1_client import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 

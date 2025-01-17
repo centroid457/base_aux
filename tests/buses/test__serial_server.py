@@ -1,9 +1,8 @@
 import pytest
-from typing import *
 from base_aux.buses.m1_serial3_server import *
 from base_aux.buses.m1_serial1_client import *
-from base_aux.valid.m6_value1_variants import *
-from base_aux.valid.m6_value2_unit import *
+from base_aux.aux_values.m2_variants import *
+from base_aux.aux_values.m3_unit import *
 from base_aux.aux_text.m2_parser1_cmd_args_kwargs import *
 
 

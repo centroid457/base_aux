@@ -2,7 +2,7 @@ from typing import *
 import re
 
 from base_aux.base_exceptions import *
-from base_aux.aux_argskwargs.m0_novalue import NoValue
+from base_aux.aux_values.m0_novalue import NoValue
 
 from base_aux.aux_attr.m2_annot4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.m3_number import NumberArithmTranslateToAttr

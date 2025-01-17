@@ -1,6 +1,4 @@
 from typing import *
-from .m0_novalue import NoValue
-
 
 # =====================================================================================================================
 TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]

@@ -1,10 +1,8 @@
 from typing import *
 
-from base_aux.aux_argskwargs.m0_novalue import NoValue
-
+from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.cmp.m2_eq import Eq
-
-from .m0_static import *
+from base_aux.valid.m0_static import *
 
 
 # =====================================================================================================================

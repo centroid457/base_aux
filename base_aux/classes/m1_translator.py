@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.aux_argskwargs.m0_novalue import NoValue
+from base_aux.aux_values.m0_novalue import NoValue
 
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
