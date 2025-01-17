@@ -54,7 +54,6 @@ def test__path__get_original(source, path, _EXPECTED):
     func_link = IterAux(source).path__get_original
     PytestAux(func_link, path).assert_check(_EXPECTED)
 
-
 class Test__2:
     # -----------------------------------------------------------------------------------------------------------------
     def test__path__list(self):
@@ -94,6 +93,20 @@ class Test__2:
         assert self.victim("1", {"1": 11, }) == Explicit(["1", ])
         assert self.victim("1", {1: 11, }) == Explicit([1, ])
         assert self.victim(1, {1: 11, }) == Explicit([1, ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

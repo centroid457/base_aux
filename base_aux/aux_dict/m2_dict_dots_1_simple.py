@@ -1,7 +1,6 @@
 from typing import *
 from base_aux.base_objects.m1_obj2_info import ObjectInfo
 
-from base_aux.funcs.m1_explicit import Explicit
 from base_aux.aux_attr.m2_annot2_required import *
 from base_aux.aux_iter.m1_iter_aux import IterAux
 
@@ -27,7 +26,7 @@ class DictCaseinsense(dict):
     #     super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _getitem_original(self, item: Any) -> Explicit | None:
+    def _getitem_original(self, item: Any) -> Any | None:
         return IterAux(self).item__get_original(item)
 
     def pop(self, item: Any) -> None:

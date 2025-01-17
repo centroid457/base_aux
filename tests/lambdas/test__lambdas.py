@@ -59,10 +59,9 @@ def test__LambdaSleep_Raise():
     assert time.time() - start_time < 0.1
     try:
         result = victim == 11     # execute on EQ
+        assert False
     except:
         assert True
-    else:
-        assert False
     assert time.time() - start_time > pause * 0.9
 
 

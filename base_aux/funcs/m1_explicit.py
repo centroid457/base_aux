@@ -1,9 +1,14 @@
 from typing import *
 
+from base_aux.base_source.m1_source import InitSource
+
 
 # =====================================================================================================================
-# TODO: use as ValueExplicit and VariantsExplicit(*args)
-class Explicit:
+# TODO: use as ValueExplicit
+# FIXME: deprecate???
+
+@final
+class Explicit(InitSource):
     """
     GOAL
     ----
@@ -15,14 +20,16 @@ class Explicit:
     return object if you get final result!
     return None if there are any errors withing execution
 
-    OLD ---- WHY: NamedTuple
+    OLD ----
+
+    WHY NOT-1: NamedTuple
     ----------------
     cause of we need to be able to compare different base_objects by values.
     maybe we need just add __eq__ method instead of it!!!
 
     USAGE
     -----
-    to get exact value - just CALL instance! dont use VALUE access by attribute!
+    to get exact value - just CALL instance! dont use .VALUE attr-access by attribute!
 
         from funcs import *
 
@@ -41,56 +48,20 @@ class Explicit:
         if result:
             print(result())         # None
     """
-    __VALUE: Any   # dont use VALUE access by attribute
-
-    def __init__(self, source: Any = None):
-        self.__VALUE = source
+    SOURCE: Any   # dont use SOURCE access by attribute
 
     def __call__(self, *args, **kwargs) -> Any:
-        return self.__VALUE
+        return self.SOURCE
 
     def __str__(self):
-        return f"{self.__class__.__name__}({self.__VALUE})"
+        return f"{self.__class__.__name__}({self.SOURCE})"
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.__VALUE == other()
+            return self.SOURCE == other()
         else:
-            return self.__VALUE == other
-
-
-# =====================================================================================================================
-class Default(Explicit):
-    """
-    GOAL
-    ----
-    just a derivative for Explicit!
-    use in funcs as explicitly define for not passed params!
-
-    USAGE
-    -----
-    1. AUTO_WORK (preferred)
-        when get Default instance - call it to get source value!
-        if get Default class - get None as value!
-
-        def func(source = Default(1)):
-            if isinstance(source, Default):
-                source = source()
-
-    2. MANUAL_WORK (not preferred)
-        you can apply inside func
-
-        def func(source = Default):
-            if source == Default:
-                source = 1
-    """
-    pass
-
-
-# =====================================================================================================================
-TYPE__EXPLICIT = type[Explicit] | Explicit
-TYPE__DEFAULT = type[Default] | Default
+            return self.SOURCE == other
 
 
 # =====================================================================================================================

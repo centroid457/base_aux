@@ -28,7 +28,7 @@ Victim_VALUES = ("ATTR1", "ATTR2", "ATTR3")
 )
 def test__values(args, _EXPECTED):
     func_link = lambda value: getattr(Victim, value)
-    PytestAux(func_link).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
@@ -45,7 +45,7 @@ def test__values(args, _EXPECTED):
 )
 def test__geitem(args, _EXPECTED):
     func_link = lambda value: Victim[value]
-    PytestAux(func_link).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 def test__iter():
     assert tuple(Victim) == Victim_VALUES

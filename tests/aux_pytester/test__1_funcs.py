@@ -5,7 +5,6 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.funcs.m1_explicit import Default
 from base_aux.cmp.m1_cmp import CmpInst
 
 
@@ -34,19 +33,19 @@ def test____LE__():
     argnames="func_link, args, kwargs, _EXPECTED, _pytestExpected",
     argvalues=[
         # not callable ------------
-        (True, Default, None, True, True),
+        (True, (), None, True, True),
         (True, 111, {111: 222}, True, True),
-        (False, Default, {}, True, False),
+        (False, (), {}, True, False),
 
         # callable ------------
-        (lambda value: value, Default, {}, True, False),
+        (lambda value: value, (), {}, True, False),
 
         (lambda value: value, None, {}, True, False),
         (lambda value: value, None, {}, None, True),
         (lambda value: value, True, {}, True, True),
         (lambda value: value, (True, ), {}, True, True),
-        (lambda value: value, Default, {"value": True}, True, True),
-        (lambda value: value, Default, {"value": None}, True, False),
+        (lambda value: value, (), {"value": True}, True, True),
+        (lambda value: value, (), {"value": None}, True, False),
     ]
 )
 def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected):

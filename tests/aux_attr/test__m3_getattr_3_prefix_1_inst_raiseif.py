@@ -122,7 +122,7 @@ def test__meth_not_passed():
 )
 def test___meth__raise_if(args, _EXPECTED):
     func_link = Victim().raise_if__METH
-    PytestAux(func_link).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -135,7 +135,7 @@ def test___meth__raise_if(args, _EXPECTED):
 )
 def test___meth__raise_if_not(args, _EXPECTED):
     func_link = Victim().raise_if_not__METH
-    PytestAux(func_link).assert_check(_EXPECTED)
+    PytestAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

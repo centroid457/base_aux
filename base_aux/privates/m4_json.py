@@ -2,6 +2,7 @@ from typing import *
 import json
 
 from base_aux.privates.m0_base import *
+from base_aux.privates.m0_static import *
 from base_aux.privates.m6_derivatives import *
 
 
