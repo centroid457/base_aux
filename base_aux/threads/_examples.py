@@ -1,4 +1,4 @@
-from base_aux.threads.base import *
+from base_aux.threads.m1_threads import *
 import time
 
 

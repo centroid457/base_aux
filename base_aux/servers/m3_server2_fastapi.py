@@ -3,7 +3,7 @@ from enum import Enum
 from PyQt5.QtCore import QThread
 import time
 
-from base_aux.servers.url import UrlCreator
+from base_aux.servers.m0_url import UrlCreator
 
 from fastapi import FastAPI, Path, Query, Body, Response
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -14,7 +14,7 @@ import uvicorn
 from starlette import status
 from starlette.responses import Response
 
-from base_aux.loggers import Logger
+from base_aux.loggers.m1_logger import Logger
 
 
 # =====================================================================================================================

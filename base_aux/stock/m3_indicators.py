@@ -2,16 +2,16 @@ from typing import *
 from enum import Enum, auto
 from dataclasses import dataclass
 
-from base_aux.aux_attr import *
+from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
 class IndicatorName(Enum):
-    WMA = 1
-    STOCH = 2
-    ADX = 3
-    MACD = 4
-    RSI = 5
+    WMA = auto()
+    STOCH = auto()
+    ADX = auto()
+    MACD = auto()
+    RSI = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------

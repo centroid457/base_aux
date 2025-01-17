@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import *
 from base_aux.testplans import *
 from base_aux.pyqt import *
 from base_aux.classes import *
-from base_aux.pyqt.static import *
+from base_aux.pyqt.m0_static import *
 
 from .tc import TestCaseBase
 from .tm import TpTableModel

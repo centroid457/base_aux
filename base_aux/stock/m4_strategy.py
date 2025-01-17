@@ -1,7 +1,5 @@
-from base_aux.stock import *
-
-import sys
 from typing import *
+import sys
 import threading
 import abc
 
@@ -9,9 +7,13 @@ import pandas as pd
 import numpy as np
 import MetaTrader5 as mt5
 
-from base_aux.funcs import *
-from base_aux.alerts import *
-from base_aux.threads import *
+from base_aux.funcs.m2_arrays import *
+from base_aux.alerts.m0_base import *
+from base_aux.alerts.m2_select import *
+from base_aux.threads.m1_threads import *
+
+from base_aux.stock.m3_indicators import *
+from base_aux.stock.m1_mt import *
 
 
 # =====================================================================================================================

@@ -1,9 +1,10 @@
+from typing import *
+
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from typing import *
-from base_aux.aux_attr import AnnotsValuesIter
+from base_aux.aux_attr.m2_annot3_iter_values import AnnotsValuesIter
 
 
 # =====================================================================================================================

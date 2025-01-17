@@ -3,7 +3,7 @@ from typing import *
 
 from base_aux.lambdas.m1_lambdas import Lambda
 from base_aux.aux_attr.m1_attr3_lambdas_resolve import AttrsLambdasResolve
-from base_aux.privates.m1_loader5_auto import *
+from base_aux.privates.m5_auto import *
 from .m0_base import *
 
 

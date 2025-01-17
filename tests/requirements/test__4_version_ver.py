@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.requirements.versions import *
+from base_aux.requirements.m3_versions import *
 from base_aux.aux_pytester.m1_pytest_aux import *
 
 

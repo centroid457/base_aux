@@ -4,9 +4,9 @@ from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 from base_aux.base_objects.m0_primitives import *
 
-from base_aux.valid.valid_1_base import *
-from base_aux.valid.valid_10_chains import *
-from base_aux.valid.valid_1_base_derivatives import *
+from base_aux.valid.m2_valid_base import *
+from base_aux.valid.m4_valid_chains import *
+from base_aux.valid.m2_valid_base2_derivatives import *
 
 
 # =====================================================================================================================

@@ -1,8 +1,8 @@
 import pytest
 import requests
 
-from base_aux.servers.client_requests import Client_RequestItem, ResponseMethod, Client_RequestsStack
-from base_aux.servers.server_fastapi import ServerFastApi_Thread
+from base_aux.servers.m1_client_requests import Client_RequestItem, ResponseMethod, Client_RequestsStack
+from base_aux.servers.m3_server2_fastapi import ServerFastApi_Thread
 
 
 # =====================================================================================================================

@@ -4,7 +4,7 @@ from base_aux.aux_argskwargs.m0_novalue import NoValue
 
 from base_aux.cmp.m2_eq import Eq
 
-from .static import *
+from .m0_static import *
 
 
 # =====================================================================================================================

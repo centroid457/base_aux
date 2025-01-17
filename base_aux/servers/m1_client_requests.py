@@ -6,8 +6,8 @@ from enum import Enum, auto
 
 from PyQt5.QtCore import QThread
 
-from base_aux.loggers import Logger
-from .url import UrlCreator
+from base_aux.loggers.m1_logger import Logger
+from .m0_url import UrlCreator
 
 
 # =====================================================================================================================

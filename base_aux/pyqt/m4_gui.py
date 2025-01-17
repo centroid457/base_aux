@@ -7,12 +7,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from .base import Row_, Dev_, Data_
-from .tm import TableModelTemplate
-from .th import HeaderViewCB
-from .hl import *
-from base_aux.pyqt.static import *
-from base_aux.pyqt.dialog import *
+from .m0_base import Row_, Dev_, Data_
+from .m3_tm import TableModelTemplate
+from .m0_base2_th import HeaderViewCB
+from .m0_base1_hl import *
+from base_aux.pyqt.m0_static import *
+from base_aux.pyqt.m1_dialog import *
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 # DON'T DELETE!
 # useful to start smth without pytest and not to run in main script!
 
-from base_aux.pyqt.gui import *
+from base_aux.pyqt.m4_gui import *
 
 
 class Example(Gui):

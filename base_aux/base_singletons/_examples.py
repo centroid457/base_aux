@@ -1,4 +1,4 @@
-from base_aux.singletons import *
+from base_aux.base_singletons.m1_singleton import *
 
 class MySingleton(SingletonCallMeta):
     pass
@@ -12,7 +12,7 @@ class MySingleton(metaclass=SingletonCallMetaType):
 
 # ===============================
 # 2. access to created instances
-from base_aux.singletons import *
+from base_aux.base_singletons.m1_singleton import *
 
 class Victim1(SingletonCallMeta):
     attr = 1
@@ -32,7 +32,7 @@ assert SingletonCallMeta._SINGLETONS == [Victim1(), Victim2(), ]
 # ===============================
 # 3. NOTICE: all your Singletons must be only last classes!
 # don't use nesting from any Your Singletons!
-from base_aux.singletons import *
+from base_aux.base_singletons import *
 
 class MySingleton(SingletonCallMeta):  # OK
     pass

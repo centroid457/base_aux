@@ -1,9 +1,9 @@
 from base_aux.lambdas.m1_lambdas import *
 from base_aux.aux_text.m2_parser1_cmd_args_kwargs import *
 
-from base_aux.valid.valid_1_base import *
-from base_aux.valid.value_1_variants import *
-from base_aux.valid.value_2_unit import *
+from base_aux.valid.m2_valid_base import *
+from base_aux.valid.m6_value1_variants import *
+from base_aux.valid.m6_value2_unit import *
 
 from base_aux.buses.m1_serial3_server import *
 

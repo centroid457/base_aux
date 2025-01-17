@@ -30,7 +30,7 @@ class AlertSmtpMOD(AlertSmtp):
 # =========================================================================================
 #### 2. change authorisation data (see `privates` for details)
 from base_aux.alerts import *
-from base_aux.privates.m1_loader5_auto import *
+from base_aux.privates.m5_auto import *
 
 
 class AlertSmtpMOD(AlertSmtp):

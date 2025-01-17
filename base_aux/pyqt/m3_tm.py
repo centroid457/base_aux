@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from base_aux.breeders.m1_breeder_str2_stack import *
 from base_aux.breeders.m1_breeder_str1_series import *
-from .base import Data_
+from .m0_base import Data_
 from base_aux.classes.m1_translator import Translator
 
 

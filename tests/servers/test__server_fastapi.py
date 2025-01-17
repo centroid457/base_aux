@@ -3,7 +3,7 @@ import requests
 
 from base_aux.base_objects.m1_obj2_info import ObjectInfo
 
-from base_aux.servers.server_fastapi import ServerFastApi_Thread
+from base_aux.servers.m3_server2_fastapi import ServerFastApi_Thread
 
 
 # =====================================================================================================================

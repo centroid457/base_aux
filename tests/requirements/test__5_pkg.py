@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
-from base_aux.requirements.pkgs import *
+from base_aux.requirements.m1_pkgs import *
 
 
 # =====================================================================================================================

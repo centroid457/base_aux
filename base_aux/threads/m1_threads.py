@@ -2,16 +2,19 @@ from typing import *
 import time
 
 from PyQt5.QtCore import QThread
-from base_aux.singletons import *
-from base_aux.aux_argskwargs import *
+
+from base_aux.base_singletons.m1_singleton import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
 
 
 # =====================================================================================================================
 class ThreadItem(QThread):
     """Object for keeping thread data for better managing.
     """
+
+    # TODO: nest from InitSource???
     target: Callable
-    args: tuple[Any, ...]
+    args: TYPE__ARGS_FINAL
     kwargs: TYPE__KWARGS_FINAL
 
     result: Optional[Any] = None

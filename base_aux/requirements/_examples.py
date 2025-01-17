@@ -1,5 +1,5 @@
-from base_aux.requirements.strings import *
-from base_aux.requirements.pkgs import *
+from base_aux.requirements.m2_strings import *
+from base_aux.requirements.m1_pkgs import *
 
 
 ReqCheckStr_Os().bool_if__WINDOWS()

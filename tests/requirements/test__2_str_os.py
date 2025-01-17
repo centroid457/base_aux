@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.requirements.strings import *
+from base_aux.requirements.m2_strings import *
 
 
 # =====================================================================================================================

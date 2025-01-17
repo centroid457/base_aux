@@ -3,7 +3,7 @@ import pytest
 import shutil
 
 from tempfile import TemporaryDirectory
-from base_aux.privates.m1_loader2_csv import PrivateCsv
+from base_aux.privates.m2_csv import PrivateCsv
 from base_aux.privates.m0_static import Exx__FileNotExists
 
 

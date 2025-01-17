@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_argskwargs.m0_novalue import *
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-from base_aux.valid.value_2_unit import ValueUnit
+from base_aux.valid.m6_value2_unit import ValueUnit
 
 
 # =====================================================================================================================

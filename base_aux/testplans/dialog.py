@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.pyqt.dialog import DialogsSet
+from base_aux.pyqt.m1_dialog import DialogsSet
 
 
 # SET ============================================================================================================
