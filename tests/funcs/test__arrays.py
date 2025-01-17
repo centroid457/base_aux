@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from base_aux.funcs.arrays import *
+from base_aux.funcs.m2_arrays import *
 
 
 # =====================================================================================================================
