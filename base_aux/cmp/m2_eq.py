@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.base_source.m1_source import InitSource
 from base_aux.base_objects.m1_obj1_types import TypeCheck
-from base_aux.aux_argskwargs import TYPE__KWARGS_FINAL
+from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
 
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
 

@@ -1,5 +1,6 @@
-import time
 from typing import *
+
+import time
 import sys
 import pathlib
 

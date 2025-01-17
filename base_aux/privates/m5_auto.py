@@ -1,7 +1,11 @@
 from typing import *
-from base_aux.aux_attr import *
 
-from . import *
+from base_aux.privates.m0_base import *
+from base_aux.privates.m1_env import *
+from base_aux.privates.m2_csv import *
+from base_aux.privates.m3_ini import *
+from base_aux.privates.m4_json import *
+from base_aux.privates.m6_derivatives import *
 
 
 # =====================================================================================================================

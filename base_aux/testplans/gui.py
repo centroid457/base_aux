@@ -1,17 +1,16 @@
-import pathlib
-import time
 from typing import *
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.testplans import *
-from base_aux.pyqt import *
-from base_aux.classes import *
-from base_aux.pyqt.m0_static import *
+from base_aux.testplans.tc import *
 
-from .tc import TestCaseBase
+from base_aux.pyqt.m0_static import *
+from base_aux.pyqt.m0_base1_hl import *
+from base_aux.pyqt.m4_gui import *
+from base_aux.pyqt.m2_mods import *
+
 from .tm import TpTableModel
 from .dialog import DialogsSetTp
 

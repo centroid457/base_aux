@@ -6,8 +6,6 @@ from fastapi.responses import RedirectResponse
 
 from base_aux.servers.m2_server1_aiohttp import *
 from base_aux.servers.m3_server2_fastapi import *
-from base_aux.funcs import *
-from base_aux.classes import *
 
 from .models import *
 

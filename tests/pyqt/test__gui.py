@@ -1,5 +1,6 @@
-import pytest
 from typing import *
+
+import pytest
 from base_aux.pyqt.m4_gui import *
 
 

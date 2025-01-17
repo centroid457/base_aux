@@ -1,16 +1,14 @@
 from typing import *
-import time
 
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_argskwargs import TYPE__KWARGS_FINAL, TYPE__ARGS_FINAL
-from base_aux.aux_text import CmdArgsKwargsParser
-from base_aux.valid import *
-from base_aux.loggers import Logger
-from base_aux.aux_iter import IterAux
-from base_aux.aux_text import TextAux
+from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL, TYPE__ARGS_FINAL
+from base_aux.valid.m6_value1_variants import *
 
-from . import *
+from base_aux.buses.m1_serial1_client import *
+from base_aux.aux_iter.m1_iter_aux import IterAux
+from base_aux.aux_text.m1_text_aux import TextAux
+from base_aux.aux_text.m2_parser1_cmd_args_kwargs import CmdArgsKwargsParser
 
 
 # =====================================================================================================================

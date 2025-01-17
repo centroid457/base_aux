@@ -1,6 +1,6 @@
 from typing import *
-from base_aux.testplans import DutBase
-from base_aux.buses import *
+from base_aux.testplans.devices import DutBase
+from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================

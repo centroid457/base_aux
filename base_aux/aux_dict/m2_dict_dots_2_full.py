@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.aux_dict import *
+from base_aux.aux_dict.m2_dict_dots_1_simple import *
 
 
 # =====================================================================================================================

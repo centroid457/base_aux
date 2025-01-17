@@ -103,7 +103,7 @@ class ReqCheckStr_Base(metaclass=_GetattrClassmethod_Meta):
         False - if partial match by finding mentioned values in _value_actual
 
     :ivar _GETTER: function which will get the exact value to check
-    :ivar _sample_actual:
+    :ivar _value_actual:
     """
     # SETTINGS -------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None

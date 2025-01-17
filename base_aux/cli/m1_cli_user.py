@@ -42,7 +42,7 @@ class CliUser:
     :ivar TIMEOUT: default timeout for execution process
         if timeout expired and process still not finished - raise exx
     :ivar _last_sp: Popen object
-    :ivar _last_exx_timeout: saved Exx_CliTimeout if it was
+    :ivar last_exx_timeout: saved Exx_CliTimeout if it was
     :ivar last_cmd: command for execution
     :ivar last_stdout: full stdout data
     :ivar last_stderr: full stderr data

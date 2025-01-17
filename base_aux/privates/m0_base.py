@@ -3,7 +3,7 @@ import pathlib
 import abc
 
 from base_aux.aux_attr.m2_annot1_aux import *
-from . import Exx__FileNotExists, TYPE__PATH
+from .m0_static import Exx__FileNotExists, TYPE__PATH
 
 
 # =====================================================================================================================

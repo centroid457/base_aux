@@ -2,9 +2,7 @@ from typing import *
 import uuid
 
 from base_aux.testplans import *
-from base_aux.funcs import *
-from base_aux.classes import *
-from base_aux.breeders import *
+from base_aux.breeders.m2_breeder_objects import *
 
 from .tc import TestCaseBase
 from .models import *

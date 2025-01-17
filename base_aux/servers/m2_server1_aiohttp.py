@@ -1,6 +1,7 @@
+from typing import *
+
 import pathlib
 import json
-from typing import *
 import functools
 
 import requests

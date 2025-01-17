@@ -1,8 +1,7 @@
-import sys
 from typing import *
-import re
 
-from base_aux.base_objects.m1_obj1_types import *
+import sys
+import re
 
 from base_aux.aux_attr.m3_getattr1_prefix_1_inst import *
 from base_aux.cmp.m1_cmp import CmpInst

@@ -1,7 +1,8 @@
 from typing import *
 import os
 
-from . import TYPE__PV_DICT, PrivateBase
+from base_aux.privates.m0_static import *
+from base_aux.privates.m0_base import *
 
 
 # =====================================================================================================================

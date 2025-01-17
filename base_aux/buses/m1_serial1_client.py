@@ -7,11 +7,11 @@ import time
 import string
 from enum import Enum, auto
 
-from base_aux.loggers import Logger
+from base_aux.loggers.m1_logger import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.valid import ValueUnit
+from base_aux.valid.m6_value2_unit import ValueUnit
 from base_aux.cmp.m2_eq import Eq
 
 from .m0_history import HistoryIO

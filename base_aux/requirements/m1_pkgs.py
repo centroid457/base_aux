@@ -3,7 +3,7 @@ import pathlib
 import re
 import sys
 
-from base_aux.base_objects import TypeCheck
+from base_aux.base_objects.m1_obj1_types import TypeCheck
 from base_aux.cli.m1_cli_user import CliUser
 from base_aux.aux_text.m1_text_aux import TextAux
 

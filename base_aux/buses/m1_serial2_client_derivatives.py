@@ -1,6 +1,7 @@
 from typing import *
 
-from . import SerialClient, Type__AddressAutoAcceptVariant, SerialServer_Base, SerialServer_Example
+from base_aux.buses.m1_serial1_client import SerialClient, Type__AddressAutoAcceptVariant
+from base_aux.buses.m1_serial3_server import SerialServer_Base, SerialServer_Example
 
 
 # =====================================================================================================================

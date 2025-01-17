@@ -1,19 +1,22 @@
-from base_aux.stock import *
+from typing import *
 
 import time
-from typing import *
 import datetime as dt
 import re
 import json
 import threading
 
 import MetaTrader5 as mt5
-
 import pandas as pd
 import numpy as np
 
-from base_aux.privates import *
-from base_aux.alerts import *
+
+from base_aux.stock.m0_symbols import *
+from base_aux.stock.m2_time_series import *
+from base_aux.stock.m3_indicators import *
+
+from base_aux.privates.m5_auto import *
+from base_aux.alerts.m0_base import *
 
 
 # =====================================================================================================================

@@ -1,10 +1,9 @@
 from typing import *
-from base_aux.base_objects import ObjectInfo
+from base_aux.base_objects.m1_obj2_info import ObjectInfo
 
-# from base_aux.funcs import Iterables
-from base_aux.funcs import Explicit
-from base_aux.aux_attr import *
-from base_aux.aux_iter import IterAux
+from base_aux.funcs.m1_explicit import Explicit
+from base_aux.aux_attr.m2_annot2_required import *
+from base_aux.aux_iter.m1_iter_aux import IterAux
 
 
 # =====================================================================================================================

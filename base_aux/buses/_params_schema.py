@@ -1,4 +1,5 @@
 from base_aux.lambdas.m1_lambdas import *
+from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.aux_text.m2_parser1_cmd_args_kwargs import *
 
 from base_aux.valid.m2_valid_base import *
@@ -45,7 +46,7 @@ class CmdSchema:
         if self.SCHEMA == NoValue:
             return str(value)
         else:
-            result = Lambda(self.SCHEMA, value).get_result_or_exx()
+            result = CallableAux(self.SCHEMA, value).resolve_exx()
             return str(result)
 
 

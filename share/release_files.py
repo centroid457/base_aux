@@ -1,8 +1,9 @@
 import pathlib
 import re
-import time
 from typing import *
-from base_aux.cli import *
+import time
+
+from base_aux.cli.m1_cli_user import *
 
 # from PROJECT import PROJECT
 

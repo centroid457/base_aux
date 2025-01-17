@@ -2,29 +2,23 @@
 """
 THIS IS THE REAL TESTPLAN!!!
 """
+from typing import *
+import time
 import json
-import pathlib
+from pathlib import Path
+
+from PyQt5.QtCore import QThread, pyqtSignal
+from importlib import import_module
+
+from base_aux.servers.m1_client_requests import *
+from base_aux.aux_datetime.m1_datetime import DateTimeAux
+from base_aux.loggers.m1_logger import *
 
 # =====================================================================================================================
 from .tc import TestCaseBase
 from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, DevicesBreeder_Example
 from .gui import TpGuiBase
 from .api import TpApi_FastApi
-
-import time
-from typing import *
-from pathlib import Path
-from PyQt5.QtCore import QThread, pyqtSignal
-from importlib import import_module
-
-from base_aux.testplans import *
-from base_aux.pyqt import *
-from base_aux.classes import *
-from base_aux.funcs import *
-from base_aux.loggers import *
-from base_aux.servers import *
-from base_aux.privates import *
-from base_aux.aux_datetime.m1_datetime import DateTimeAux
 
 
 # =====================================================================================================================

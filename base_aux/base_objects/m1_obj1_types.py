@@ -102,7 +102,6 @@ class TypeCheck(InitSource):
     ) -> bool:
         """checks if SOURCE is iterable.
 
-        :param source: SOURCE data
         :param dict_as_iterable: if you dont want to use dict in your selecting,
             becouse maybe you need flatten all elements in list/set/tuple into one sequence
             and dict (as extended list) will be irrelevant!

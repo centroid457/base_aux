@@ -596,7 +596,7 @@ def _callable__show_who_really_are():
     # from base_aux.base_objects import ObjectInfo
     # ObjectInfo(VALUES_CALLABLE).print()
     # exit()
-    from base_aux.aux_attr import AttrAux
+    from base_aux.aux_attr.m2_annot1_aux import AttrAux
     for name, item in AttrAux(VALUES_CALLABLE).dump_dict().items():
         print(f"{name}={callable(item)}")
 

@@ -1,8 +1,9 @@
-from . import *
 from typing import *
 from configparser import ConfigParser
 
-from . import TYPE__PV_DICT
+from base_aux.privates.m0_static import *
+from base_aux.privates.m0_base import *
+from base_aux.privates.m6_derivatives import *
 
 
 # =====================================================================================================================

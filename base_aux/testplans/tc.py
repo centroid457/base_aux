@@ -1,16 +1,12 @@
-import pathlib
 import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from base_aux.aux_dict import *
-from base_aux.aux_callable import *
-# from base_aux.lambdas import Lambda
-from base_aux.servers import *
-from base_aux.funcs import *
-from base_aux.valid import *
-from base_aux.pyqt import *
-from base_aux.loggers import *
+from base_aux.aux_dict.m2_dict_dots_1_simple import *
+from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.valid.m2_valid_base import *
+from base_aux.pyqt.m0_signals import *
+from base_aux.loggers.m1_logger import *
 
 from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *

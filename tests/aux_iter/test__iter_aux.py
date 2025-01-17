@@ -33,19 +33,21 @@ def test__item__get_original(source, item, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="source, path, _EXPECTED",
     argvalues=[
-        ((1, ), "1", (1, )),
-        ((1, ), 1, 1),
+        # ONE DIMENTION ===============
+        ((1, ), 0, (0, )),
+        ((1, ), "0", (0, )),
 
-        (("1", ), 1, "1"),
-        (("1", ), "1", "1"),
+        ((1, ), "1", None),
+        ((1, ), 1, None),
 
-        (("1", ), " 1 ", None),
+        # diff collections
+        ([1,], 0, (0, )),
+        ({1,}, 0, (0, )),       # FIXME: !!! set()!
 
-        (("hello", ), "HELLO", "hello"),
-
-        ([1,], "1", 1),
-        ({1,}, "1", 1),
-        ({1: 11}, "1", 1),
+        # DICTS ---------
+        ({1: 11}, 0, None),
+        ({1: 11}, 1, (1, )),
+        ({1: 11}, "1", (1, )),
     ]
 )
 def test__path__get_original(source, path, _EXPECTED):

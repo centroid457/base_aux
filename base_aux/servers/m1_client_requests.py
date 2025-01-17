@@ -30,7 +30,7 @@ class Client_RequestItem(Logger, UrlCreator, QThread):
 
     create object and wait result by wait() or connect slot finished
 
-    :param TIMEOUT_SEND: be careful! it is not so clear! timeout for connection is basically 3 sec!
+    :ivar TIMEOUT_SEND: be careful! it is not so clear! timeout for connection is basically 3 sec!
 
     """
     # SETTINGS -------------------------------------

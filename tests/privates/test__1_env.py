@@ -1,5 +1,4 @@
 import os
-import pytest
 from base_aux.privates.m1_env import PrivateEnv
 
 

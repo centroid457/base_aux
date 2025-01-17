@@ -23,7 +23,6 @@ from gui.pyqt_import_all_by_star import *
 # =====================================================================================================================
 
 import re
-import pytest
 from utilities.processor_file import File
 
 

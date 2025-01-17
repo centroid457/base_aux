@@ -56,7 +56,7 @@ class Lambda(InitSourceKwArgs_Implicite):
 
     PARAMS
     ======
-    :ivar CONSTRUCTOR: any class or function
+    :ivar SOURCE: any class or function
     """
     SOURCE: Union[Callable, Any]
 

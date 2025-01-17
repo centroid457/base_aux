@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from PROJECT import PROJECT
-from base_aux.aux_text import TextAux
+from base_aux.aux_text.m1_text_aux import TextAux
 
 
 # =====================================================================================================================

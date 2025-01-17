@@ -1,5 +1,5 @@
-from base_aux.loggers import *
-from base_aux.base_objects import ObjectInfo
+from base_aux.loggers.m1_logger import *
+from base_aux.base_objects.m1_obj2_info import ObjectInfo
 
 
 # USAGE-1=DIRECT ===================================
