@@ -17,7 +17,7 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
 
     GOAL
     ----
-    idea to keep args and kwargs in appropriate form/one object without application (constructor or func).
+    idea to keep args and kwargs in appropriate form/one object without application (constructor/cls or func).
     so we can uncovering in later.
     usage in test parametrisation.
 

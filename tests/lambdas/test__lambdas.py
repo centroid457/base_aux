@@ -46,7 +46,7 @@ def test__LambdaSleep_Ok():
     pause = 0.5
 
     start_time = time.time()
-    victim = LambdaSleep(sec=pause, constructor=11)
+    victim = LambdaSleep(sec=pause, source=11)
     assert time.time() - start_time < 0.1
     assert victim == 11     # execute on EQ
     assert time.time() - start_time > pause * 0.9
@@ -55,7 +55,7 @@ def test__LambdaSleep_Ok():
 def test__LambdaSleep_Raise():
     pause = 0.5
     start_time = time.time()
-    victim = LambdaSleep(sec=pause, constructor=LAMBDA_RAISE)
+    victim = LambdaSleep(sec=pause, source=LAMBDA_RAISE)
     assert time.time() - start_time < 0.1
     try:
         result = victim == 11     # execute on EQ
