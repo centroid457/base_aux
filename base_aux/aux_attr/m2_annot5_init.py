@@ -13,7 +13,7 @@ class AnnotsInitByTypes_All:
 
     SPECIALLY CREATED FOR
     ---------------------
-    game1_noun5letters.CharsMask
+    game1_noun5letters.CharMask
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:

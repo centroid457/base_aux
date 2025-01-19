@@ -29,8 +29,10 @@ check by this code
 import pathlib
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_source.m2_source_kwargs import *
+from base_aux.aux_attr.m2_annot5_init import *
 
 
+# =====================================================================================================================
 def check_lack_words() -> None:
     applicants: list[str] = """
 проверка_СТАРТ 
@@ -52,33 +54,69 @@ def check_lack_words() -> None:
 
 
 # =====================================================================================================================
-class CharsMask:
-    DETECTED_POS: list[str]
-    INCLUDE: set[str]
-    EXCLUDE: set[str]
+@final
+class CharMask(AnnotsInitByTypes_NotExisted):
+    # HIDDEN: str
+    # ATTEMPTS: list[str]
+    POS: list[str]
+    INCL: set[str]
+    EXCL: set[str]
+
+    def __init__(self, length: int):
+        super().__init__()
+        self.POS = ["", ] * length
+
+    @property
+    def POS_WM(self) -> str:
+        result = ""
+        for pos in self.POS:
+            if not pos:
+                pos = "*"
+            result += pos
+        return result
+
+    def __str__(self):
+        incl = f"[{''.join(self.INCL)}]"
+        excl = f"[{''.join(self.EXCL)}]"
+        return f"{self.__class__.__name__}({self.POS_WM},{incl=},{excl=})"
 
 
-class FilterMask(InitSource):
+# ---------------------------------------------------------------------------------------------------------------------
+class FilterMask(InitSourceKwArgs_Implicite):
     SOURCE: str
-    ATTEMPTS: set[str]
-    CHARS_INCLUDE: set[str]
-    CHARS_EXCLUDE: set[str]
+    ARGS: tuple[str]    # ATTEMPTS
 
-    def __init__(self, source: str, attempts: Collection[str] = None, chars_include: Iterable[str] = None, chars_exclude: Iterable[str] = None) -> None:
-        super().__init__(source)
-        self.ATTEMPTS = attempts or set()
-        self.CHARS_INCLUDE = chars_include or set()
-        self.CHARS_EXCLUDE = chars_exclude or set()
+    CHARMASK: CharMask
 
-    def get_mask(self) -> CharsMask:
-        for attempt in self.ATTEMPTS:
-            pass
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.get_mask()
+
+    def get_mask(self) -> CharMask:
+        self.CHARMASK = CharMask(5)
+        self.CHARMASK.HIDDEN = self.SOURCE
+        # result = CharMask(5)
+        for attempt in self.ARGS:
+            self.attemtp_apply(attempt)
+
+        return self.CHARMASK
+
+    def attemtp_apply(self, word: str) -> None:
+        for index, char_i in enumerate(word):
+            # POS ------
+            if self.SOURCE[index] == char_i:
+                self.CHARMASK.POS[index] = char_i
+
+            # HAVE ------
+            if char_i in self.SOURCE:
+                self.CHARMASK.INCL.update(char_i)
+            else:
+                self.CHARMASK.EXCL.update(char_i)
 
 
-
-
-
-
+# ---------------------------------------------------------------------------------------------------------------------
+def check_mask() -> None:
+    pass
 
 
 # =====================================================================================================================
