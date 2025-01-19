@@ -28,6 +28,7 @@ check by this code
 """
 import pathlib
 from base_aux.aux_text.m1_text_aux import TextAux
+from base_aux.base_source.m2_source_kwargs import *
 
 
 def check_lack_words() -> None:
@@ -48,6 +49,30 @@ def check_lack_words() -> None:
     for item in applicants:
         if item and item not in words:
             print(item)
+
+
+# =====================================================================================================================
+class CharsMask:
+    DETECTED_POS: list[str]
+    INCLUDE: set[str]
+    EXCLUDE: set[str]
+
+
+class FilterMask(InitSource):
+    SOURCE: str
+    ATTEMPTS: set[str]
+    CHARS_INCLUDE: set[str]
+    CHARS_EXCLUDE: set[str]
+
+    def __init__(self, source: str, attempts: Collection[str] = None, chars_include: Iterable[str] = None, chars_exclude: Iterable[str] = None) -> None:
+        super().__init__(source)
+        self.ATTEMPTS = attempts or set()
+        self.CHARS_INCLUDE = chars_include or set()
+        self.CHARS_EXCLUDE = chars_exclude or set()
+
+    def get_mask(self) -> CharsMask:
+        for attempt in self.ATTEMPTS:
+
 
 
 # =====================================================================================================================
