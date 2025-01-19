@@ -27,21 +27,26 @@ check by this code
 
 """
 import pathlib
+from base_aux.aux_text.m1_text_aux import TextAux
 
 
 def check_lack_words() -> None:
     applicants: list[str] = """
+проверка_СТАРТ 
+
 ЯГОДА
 ЯГУАР
+
+проверка_ФИНИШ
     """.lower().split()
 
     file = pathlib.Path(__file__, "..", "nouns5rus.txt")
     text = file.read_text(encoding="utf8").lower()
 
-    words: set[str] = set(text.split())
+    words: set[str] = set(TextAux(text).get_lines(True))
 
     for item in applicants:
-        if item not in words:
+        if item and item not in words:
             print(item)
 
 

@@ -14,8 +14,17 @@ from base_aux.funcs.m0_static import TYPE__ELEMENTARY
 class TextAux(InitSource):
     SOURCE: str = None
 
-    def get_lines(self) -> list[str]:
-        return self.SOURCE.split()
+    def get_lines(self, skip_blanks: bool = None) -> list[str]:
+        lines_all = self.SOURCE.split()
+        if skip_blanks:
+            result_no_blanks = []
+            for line in lines_all:
+                if line:
+                    result_no_blanks.append(line)
+            return result_no_blanks
+
+        else:
+            return lines_all
 
     # -----------------------------------------------------------------------------------------------------------------
     def prepare__json_loads(self, source: Optional[str] = None) -> str:
