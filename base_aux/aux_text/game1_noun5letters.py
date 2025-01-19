@@ -31,8 +31,8 @@ import pathlib
 
 def check_lack_words() -> None:
     applicants: list[str] = """
-    ЯГОДА
-    ЯГУАР
+ЯГОДА
+ЯГУАР
     """.lower().split()
 
     file = pathlib.Path(__file__, "..", "nouns5rus.txt")
@@ -43,3 +43,11 @@ def check_lack_words() -> None:
     for item in applicants:
         if item not in words:
             print(item)
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    check_lack_words()
+
+
+# =====================================================================================================================
