@@ -174,6 +174,33 @@ class AnnotsAux(InitSource):
             if hasattr(self.SOURCE, name):
                 delattr(self.SOURCE, name)
 
+    def values__reinit_by_types(self, not_existed: bool = None) -> None:
+        """
+        GOAL
+        ----
+        delattr all annotated aux_attr!
+        """
+        for name, value in self.dump__dict_types().items():
+            if not_existed and hasattr(self.SOURCE, name):
+                continue
+
+            if value in [type(None), None]:
+                setattr(self.SOURCE, name, None)
+
+            elif value in [
+                bool,
+                int, float,
+                str, bytes,
+                list, set, dict,
+                tuple,       # TODO: resolve what to do with tuples!
+            ]:
+                setattr(self.SOURCE, name, value())
+
+            else:
+                setattr(self.SOURCE, name, value())
+
+            # fixme: UNION? OPTIONAL || callable/iterable//...
+
     # -----------------------------------------------------------------------------------------------------------------
     def names__delete(self, *names: str) -> None:
         """
