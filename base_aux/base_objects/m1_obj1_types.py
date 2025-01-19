@@ -27,8 +27,8 @@ class TYPES:
     ELEMENTARY_SINGLE: tuple[type, ...] = (
         type(None),
         bool,
-        str, bytes,
         int, float,
+        str, bytes,
     )
     ELEMENTARY_COLLECTION: tuple[type, ...] = (
         tuple, list,
@@ -321,6 +321,42 @@ class TypeCheck(InitSource):
         for cls in mro:
             if cls not in [*exclude, object, *TYPES.ELEMENTARY]:
                 yield cls
+
+    # =================================================================================================================
+    def type__init_value__default(self) -> Any | NoReturn:
+        source: type[Any] = self.SOURCE
+
+        if source in [type(None), None]:
+            return None
+
+        if source in [
+            bool,
+            int, float,
+            str, bytes,
+
+            list,
+            tuple,  # TODO: resolve what to do with tuples!
+            set, dict,
+        ]:
+            return source()
+
+        if source.__module__ == "typing":
+            if str(source).startswith("typing.Optional"):
+                return None
+            if str(source).startswith("typing.Union"):
+                return TypeCheck(source.__args__[0]).type__init_value__default()
+            if str(source).startswith("typing.Callable"):
+                return source()
+            if str(source).startswith("typing.Iterable") or str(source).startswith("typing.Generator"):
+                return []
+            # fixme: add other //... ||
+
+        # FINAL ------------------------------------
+        # USERCLASS
+        if callable(source):
+            return source()
+        else:
+            return source()
 
 
 # =====================================================================================================================

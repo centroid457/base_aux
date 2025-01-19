@@ -185,37 +185,8 @@ class AnnotsAux(InitSource):
             if not_existed and hasattr(self.SOURCE, name):
                 continue
 
-            value = self._type__init_value__default(value)
+            value = TypeCheck(value).type__init_value__default()
             setattr(self.SOURCE, name, value)
-
-    @classmethod
-    def _type__init_value__default(cls, source: type) -> Any:
-        if source in [type(None), None]:
-            return None
-
-        if source in [
-            bool,
-            int, float,
-            str, bytes,
-
-            list,
-            tuple,  # TODO: resolve what to do with tuples!
-            set, dict,
-        ]:
-            return source()
-
-        if source.__module__ == "typing":
-            # fixme: callable/iterable//... ||
-
-            if str(source).startswith("typing.Optional"):
-                return None
-            if str(source).startswith("typing.Union"):
-                result = cls._type__init_value__default(source.__args__[0])
-                return result
-
-        # FINAL ------------------------------------
-        # USERCLASS
-        return source()
 
     # -----------------------------------------------------------------------------------------------------------------
     def names__delete(self, *names: str) -> None:
