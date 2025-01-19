@@ -6,6 +6,10 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 # =====================================================================================================================
 class InitSourceKwArgs_Implicite(InitSource):
     """
+    NOTE
+    ----
+    InitSourceKwArgs_Explicite is more useful!
+
     GOAL
     ----
     just to make inition source with KwArgs
@@ -22,6 +26,8 @@ class InitSourceKwArgs_Implicite(InitSource):
 # =====================================================================================================================
 class InitSourceKwArgs_Explicite(InitSource):
     """
+    MORE USEFUL THEN InitSourceKwArgs_Implicite
+
     GOAL
     ----
 
