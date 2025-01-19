@@ -72,6 +72,12 @@ class FilterMask(InitSource):
 
     def get_mask(self) -> CharsMask:
         for attempt in self.ATTEMPTS:
+            pass
+
+
+
+
+
 
 
 
