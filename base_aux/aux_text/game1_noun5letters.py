@@ -26,22 +26,20 @@ split groupes by first letter
 check by this code
 
 """
-
 import pathlib
 
 
-file = pathlib.Path(__file__, "..", "nouns5rus.txt")
-text = file.read_text(encoding="utf8").lower()
+def check_lack_words() -> None:
+    applicants: list[str] = """
+    ЯГОДА
+    ЯГУАР
+    """.lower().split()
 
-words: set[str] = set(text.split())
+    file = pathlib.Path(__file__, "..", "nouns5rus.txt")
+    text = file.read_text(encoding="utf8").lower()
 
-lacks_source: str = """
-ЯГОДА
-ЯГУАР
-""".lower()
+    words: set[str] = set(text.split())
 
-lacks_words = lacks_source.split()
-for test in lacks_words:
-    if test not in words:
-        print(test)
-
+    for item in applicants:
+        if item not in words:
+            print(item)
