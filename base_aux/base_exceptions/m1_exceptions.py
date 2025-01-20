@@ -1,6 +1,103 @@
 # =====================================================================================================================
+# USE COMMON TYPES
+
+# base ----
+BaseException
+Exception
+
+# USER ----
+UserWarning
+BytesWarning
+Warning
+DeprecationWarning
+PendingDeprecationWarning
+
+AssertionError
+
+NotImplemented
+NotImplementedError
+
+# std ------
+TypeError
+NameError
+ValueError
+AttributeError
+
+SyntaxWarning
+SyntaxError
+
+# imports -----
+ImportError
+ImportWarning
+ModuleNotFoundError
+
+WindowsError
+IOError
+OSError
+EnvironmentError
+SystemError
+PermissionError
+ChildProcessError
+MemoryError
+
+KeyError
+KeyboardInterrupt
+
+FileExistsError
+FileNotFoundError
+
+ConnectionError
+ConnectionAbortedError
+ConnectionResetError
+ConnectionRefusedError
+TimeoutError
+EOFError
+BufferError
+
+LookupError
+IndexError
+
+EncodingWarning
+
+UnicodeWarning
+UnicodeDecodeError
+UnicodeEncodeError
+UnicodeTranslateError
+
+ZeroDivisionError
+UnboundLocalError
+TabError
+SystemExit
+
+BrokenPipeError
+
+StopIteration
+StopAsyncIteration
+RuntimeWarning
+ResourceWarning
+ReferenceError
+RecursionError
+ProcessLookupError
+OverflowError
+RuntimeError
+NotADirectoryError
+IsADirectoryError
+InterruptedError
+IndentationError
+GeneratorExit
+FutureWarning
+FloatingPointError
+ExceptionGroup
+BlockingIOError
+BaseExceptionGroup
+
+ArithmeticError
+
+# REAL VALUE = None
+NotImplemented      # NotImplemented = None # (!) real value is 'NotImplemented'
 
 
+# =====================================================================================================================
 class Exx__AnnotNotDefined(Exception):
     """Exception in case of not defined attribute in instance
     """
