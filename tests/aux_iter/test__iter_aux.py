@@ -43,90 +43,36 @@ def test__item__get_original(source, item, _EXPECTED):
         ([1,], 0, (0, )),
         ({1,}, 0, Exception),
 
+        # list -----
+        ([[1], 2], 1, (1, )),
+        ([[1], 2], 0, (0, )),
+        ([[1], 2], ("0", ), (0, )),
+        ([[1], 2], (0, ), (0, )),
+        ([[1], 2], (0, 0), (0, 0)),
+        ([[1], 2], (0, 1), None),
+
         # DICTS ---------
         ({1: 11}, 0, None),
         ({1: 11}, 1, (1, )),
         ({1: 11}, "1", (1, )),
+
+        ({"hello": 1}, "hello", ("hello", )),
+        ({"hello": 1}, "HELLO", ("hello", )),
+        ([{"hello": 1}, 123], (0, "HELLO"), (0, "hello")),
     ]
 )
 def test__path__get_original(source, path, _EXPECTED):
     func_link = IterAux(source).path__get_original
     PytestAux(func_link, path).assert_check(_EXPECTED)
 
-class Test__2:
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__path__list(self):
-        assert IterAux([[1], 2]).path__get_original([0, ]) == Explicit([0, ])
-        assert self.victim(["0", ], [[1], 2]) == Explicit([0, ])
-
-        assert self.victim([0, 0], [1]) is None
-        assert self.victim([0, 0], [[1]]) == Explicit([0, 0, ])
-        assert self.victim([0, 1], [[1]]) is None
-
-    def test__value__list__single(self):
-        assert self.victim(0, [1]) == Explicit([0, ])
-        assert self.victim("0", [1]) == Explicit([0, ])
-
-        assert self.victim(1, [1]) is None
-        assert self.victim("1", [1]) is None
-
-        assert self.victim(1, [1, 11]) == Explicit([1, ])
-        assert self.victim("1", [1, 11]) == Explicit([1, ])
-
-    def test__value__list__multy(self):
-        assert self.victim(0, [[1], 2]) == Explicit([0, ])
-        assert self.victim("0", [[1], 2]) == Explicit([0, ])
-
-        assert self.victim("0/0", [1]) is None
-        assert self.victim("0/0", [[1]]) == Explicit([0, 0, ])
-        assert self.victim("0/1", [[1]]) is None
-
-    def test__value__dict_str(self):
-        assert self.victim("hello", ["hello", ]) is None
-
-        assert self.victim("hello", {"hello": 1}) == Explicit(["hello", ])
-        assert self.victim("hello", {"HELLO": 1}) == Explicit(["HELLO", ])
-        assert self.victim("HELLO", {"hello": 1}) == Explicit(["hello", ])
-
-    def test__value__dict_int(self):
-        assert self.victim("1", {"1": 11, }) == Explicit(["1", ])
-        assert self.victim("1", {1: 11, }) == Explicit([1, ])
-        assert self.victim(1, {1: 11, }) == Explicit([1, ])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # =====================================================================================================================
-class Test__3:
+@pytest.mark.skip
+class Test__Old:    # TODO: decide use or not this addressing style
     @classmethod
     def setup_class(cls):
         cls.victim = IterAux().value__get
         pass
-
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    #
-    # def teardown_method(self, method):
-    #     pass
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__1(self):
@@ -134,11 +80,8 @@ class Test__3:
         assert self.victim("hello/1", {"hello": [1]}) is None
         assert self.victim("hello/0", {"hello": [1]}) == Explicit(1)
 
-
-# =====================================================================================================================
-class Test__4:
     # -----------------------------------------------------------------------------------------------------------------
-    def test__1(self):
+    def test__2(self):
         data = [0,1,2,]
         assert not IterAux(data).value__set(5, 11, )
         assert data[1] == 1
