@@ -345,12 +345,24 @@ class TypeCheck(InitSource):
                 return None
             if str(source).startswith("typing.Union"):
                 return TypeCheck(source.__args__[0]).type__init_value__default()
-            if str(source).startswith("typing.Iterable") or str(source).startswith("typing.Generator"):
+            if (
+                    str(source).startswith("typing.Iterable")
+                    or
+                    str(source).startswith("typing.Generator")
+                    or
+                    str(source).startswith("typing.Container")
+            ):
                 return []
 
-            # if str(source).startswith("typing.Callable"): # it is not correct!!!
-            #     return source()
-            # fixme: add Callable/other //... ||
+            if (
+                    # fixme: add Callable/other //... ||
+                    str(source).startswith("typing.Callable")
+                    or
+                    str(source).startswith("typing.Any")
+                    or
+                    False
+            ):
+                raise NotImplemented()
 
         # FINAL ------------------------------------
         # USERCLASS

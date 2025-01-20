@@ -15,7 +15,6 @@ WORDS source
 https://github.com/cwaterloo/5bukv/blob/main/russian5.txt   -5letters for exact game
 https://gist.github.com/kissarat/bd30c324439cee668f0ac76732d6c825   -all counts (notFull!!!)
 
-
 NOTE
 ----
 how to find new words
@@ -24,8 +23,8 @@ how to find new words
 find combinations
 split groupes by first letter
 check by this code
-
 """
+
 import pathlib
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_source.m2_source_kwargs import *
