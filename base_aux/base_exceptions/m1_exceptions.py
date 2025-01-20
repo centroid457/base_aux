@@ -1,101 +1,102 @@
 # =====================================================================================================================
 # USE COMMON TYPES
 
+_std = [
 # base ----
-BaseException
-Exception
+BaseException,
+Exception,
 
 # USER ----
-UserWarning
-BytesWarning
-Warning
-DeprecationWarning
-PendingDeprecationWarning
+UserWarning,
+BytesWarning,
+Warning,
+DeprecationWarning,
+PendingDeprecationWarning,
 
-AssertionError
+AssertionError,
 
-NotImplemented
-NotImplementedError
+NotImplemented,
+NotImplementedError,
 
 # std ------
-TypeError
-NameError
-ValueError
-AttributeError
+TypeError,
+NameError,
+ValueError,
+AttributeError,
 
-SyntaxWarning
-SyntaxError
+SyntaxWarning,
+SyntaxError,
 
 # imports -----
-ImportError
-ImportWarning
-ModuleNotFoundError
+ImportError,
+ImportWarning,
+ModuleNotFoundError,
 
-WindowsError
-IOError
-OSError
-EnvironmentError
-SystemError
-PermissionError
-ChildProcessError
-MemoryError
+WindowsError,
+IOError,
+OSError,
+EnvironmentError,
+SystemError,
+PermissionError,
+ChildProcessError,
+MemoryError,
 
-KeyError
-KeyboardInterrupt
+KeyError,
+KeyboardInterrupt,
 
-FileExistsError
-FileNotFoundError
+FileExistsError,
+FileNotFoundError,
 
-ConnectionError
-ConnectionAbortedError
-ConnectionResetError
-ConnectionRefusedError
-TimeoutError
-EOFError
-BufferError
+ConnectionError,
+ConnectionAbortedError,
+ConnectionResetError,
+ConnectionRefusedError,
+TimeoutError,
+EOFError,
+BufferError,
 
-LookupError
-IndexError
+LookupError,
+IndexError,
 
-EncodingWarning
+EncodingWarning,
 
-UnicodeWarning
-UnicodeDecodeError
-UnicodeEncodeError
-UnicodeTranslateError
+UnicodeWarning,
+UnicodeDecodeError,
+UnicodeEncodeError,
+UnicodeTranslateError,
 
-ZeroDivisionError
-UnboundLocalError
-TabError
-SystemExit
+ZeroDivisionError,
+UnboundLocalError,
+TabError,
+SystemExit,
 
-BrokenPipeError
+BrokenPipeError,
 
-StopIteration
-StopAsyncIteration
-RuntimeWarning
-ResourceWarning
-ReferenceError
-RecursionError
-ProcessLookupError
-OverflowError
-RuntimeError
-NotADirectoryError
-IsADirectoryError
-InterruptedError
-IndentationError
-GeneratorExit
-FutureWarning
-FloatingPointError
-ExceptionGroup
-BlockingIOError
-BaseExceptionGroup
+StopIteration,
+StopAsyncIteration,
+RuntimeWarning,
+ResourceWarning,
+ReferenceError,
+RecursionError,
+ProcessLookupError,
+OverflowError,
+RuntimeError,
+NotADirectoryError,
+IsADirectoryError,
+InterruptedError,
+IndentationError,
+GeneratorExit,
+FutureWarning,
+FloatingPointError,
+ExceptionGroup,
+BlockingIOError,
+BaseExceptionGroup,
 
-ArithmeticError
+ArithmeticError,
 
-# REAL VALUE = None
-NotImplemented      # NotImplemented = None # (!) real value is 'NotImplemented'
-
+# REAL VALUE = NOT AN EXCEPTION!!!
+NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
+]
 
 # =====================================================================================================================
 class Exx__AnnotNotDefined(Exception):
