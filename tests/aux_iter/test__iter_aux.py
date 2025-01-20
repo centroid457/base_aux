@@ -41,7 +41,7 @@ def test__item__get_original(source, item, _EXPECTED):
 
         # diff collections
         ([1,], 0, (0, )),
-        ({1,}, 0, (0, )),       # FIXME: !!! set()!
+        ({1,}, 0, Exception),
 
         # DICTS ---------
         ({1: 11}, 0, None),

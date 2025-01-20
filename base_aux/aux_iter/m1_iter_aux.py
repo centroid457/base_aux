@@ -84,6 +84,10 @@ class IterAux(InitSource):
                     return
                 source = source[address_original]
 
+            elif isinstance(source, set):
+                msg = f"{source=},inconvenient type SET"
+                raise TypeError(msg)
+
             else:
                 # elif isinstance(source, (list, tuple)) or True:
                 try:
