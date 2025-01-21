@@ -343,7 +343,7 @@ class SerialServer_Base(Logger, QThread):
 
         # SET --------------
         for path, value_new in KWARGS.items():
-            value_new = TextAux(value_new).try_convert_to_object()
+            value_new = TextAux(value_new).make__object_try()
             value_old = IterAux(self.PARAMS).value__get(path)
             # SET ----------
             if isinstance(value_old, (ValueUnit, ValueVariants)):

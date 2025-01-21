@@ -12,24 +12,70 @@ from base_aux.funcs.m0_static import TYPE__ELEMENTARY
 # =====================================================================================================================
 @final
 class TextAux(InitSource):
-    SOURCE: str = None
+    SOURCE: str
 
     def init_post(self) -> None | NoReturn:
-        self.SOURCE = self.SOURCE or ""
         self.SOURCE = str(self.SOURCE)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def split_lines(self, skip_blanks: bool = None) -> list[str]:
-        lines_all = self.SOURCE.splitlines()
-        if skip_blanks:
-            result_no_blanks = []
-            for line in lines_all:
-                if line:
-                    result_no_blanks.append(line)
-            return result_no_blanks
+    # EDIT ============================================================================================================
+    def clear__blank_lines(self) -> str:
+        self.SOURCE = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
 
-        else:
-            return lines_all
+    def clear__cmts(self) -> str:
+        self.SOURCE = re.sub(pattern=r"\s*\#.*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
+
+    def clear__spaces_all(self) -> str:
+        """
+        GOAL
+        ----
+        make a shortest string for like a str() from any container!
+        assert str([1,2]) == "[1, 2]"
+        assert func(str([1,2])) == "[1,2]"
+        """
+        self.SOURCE = re.sub(pattern=r" ", repl="", string=self.SOURCE)
+        return self.SOURCE
+
+    def clear__spaces_double(self) -> str:
+        self.SOURCE = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
+        return self.SOURCE
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def strip__lines(self) -> str:
+        self.SOURCE = re.sub(pattern=r"^\s*", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        self.SOURCE = re.sub(pattern=r"\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def sub__regexp(self, pat: str, new: str = "") -> str:
+        """
+        GOAL
+        ----
+        just a strait method
+        """
+        self.SOURCE = re.sub(pat, new, self.SOURCE)
+        return self.SOURCE
+
+    def sub__word(self, word_pat: str, new: str = "") -> str:
+        """
+        GOAL
+        ----
+        replace exact word(defined by pattern) in text.
+        WORD means syntax word!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        prepare_for_json_parsing
+        """
+        word_pat = r"\b" + word_pat + r"\b"
+        self.SOURCE = re.sub(word_pat, new, self.SOURCE)
+        return self.SOURCE
+
+    def sub__words(self, rules: list[tuple[str, str]]) -> str:
+        for work_pat, new in rules:
+            self.sub__word(work_pat, new)
+        return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
     def prepare__json_loads(self) -> str:
@@ -43,15 +89,16 @@ class TextAux(InitSource):
         ---------------------
         try_convert_to_object
         """
-        result = self.sub__words(
+        self.SOURCE = self.sub__words(
             rules = [
                 (r"True", "true"),
                 (r"False", "false"),
                 (r"None", "null"),
             ]
         )
-        result = re.sub("\'", "\"", result)
-        return result
+        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
+        self.SOURCE = re.sub("\'", "\"", self.SOURCE)
+        return self.SOURCE
 
     def prepare__requirements(self) -> str:
         """
@@ -64,58 +111,25 @@ class TextAux(InitSource):
         ---------------------
         try_convert_to_object
         """
-        result = self.SOURCE
-        result = TextAux(result).clear__cmts()
-        result = TextAux(result).clear__blank_lines()
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def sub__word(self, word_pat: str, new: str = "") -> str:
-        """
-        GOAL
-        ----
-        replace exact word(defined by pattern) in text.
-        WORD means syntax word!
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        prepare_for_json_parsing
-        """
-        word_pat = r"\b" + word_pat + r"\b"
-        result = re.sub(word_pat, new, self.SOURCE)
-        return result
-
-    def sub__words(self, rules: list[tuple[str, str]]) -> str:
-        result = self.SOURCE
-        for work_pat, new in rules:
-            result = TextAux(result).sub__word(work_pat, new)
-        return result
+        self.clear__cmts()
+        self.clear__blank_lines()
+        return self.SOURCE
 
     # =================================================================================================================
-    def clear__blank_lines(self) -> str:
-        result = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return result
+    def split_lines(self, skip_blanks: bool = None) -> list[str]:
+        lines_all = self.SOURCE.splitlines()
+        if skip_blanks:
+            result_no_blanks = []
+            for line in lines_all:
+                if line:
+                    result_no_blanks.append(line)
+            return result_no_blanks
 
-    def clear__cmts(self) -> str:
-        result = re.sub(pattern=r"\s*\#.*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return result
-
-    def clear__spaces_all(self) -> str:
-        result = re.sub(pattern=r" +", repl="", string=self.SOURCE)
-        return result
-
-    def clear__spaces_double(self) -> str:
-        result = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
-        return result
-
-    def strip__lines(self) -> str:
-        result = self.SOURCE
-        result = re.sub(pattern=r"^\s*", repl="", string=result, flags=re.MULTILINE)
-        result = re.sub(pattern=r"\s*$", repl="", string=result, flags=re.MULTILINE)
-        return result
+        else:
+            return lines_all
 
     # =================================================================================================================
-    def shortcut(
+    def make__shortcut(
             self,
             maxlen: int = 15,
             where: Where3 = Where3.LAST,
@@ -138,17 +152,20 @@ class TextAux(InitSource):
                 return sub[0:maxlen]
 
             if where == Where3.FIRST:
-                source = sub + source[-(maxlen - sub_len):]
+                result = sub + source[-(maxlen - sub_len):]
             elif where == Where3.LAST:
-                source = source[0:maxlen - sub_len] + sub
+                result = source[0:maxlen - sub_len] + sub
             elif where == Where3.MIDDLE:
                 len_start = maxlen // 2 - sub_len // 2
                 len_finish = maxlen - len_start - sub_len
-                source = source[0:len_start] + sub + source[-len_finish:]
+                result = source[0:len_start] + sub + source[-len_finish:]
+            else:
+                result = source
+            return result
 
         return source
 
-    def shortcut_nosub(
+    def make__shortcut_nosub(
             self,
             maxlen: int = 15,
             where: Where3 = Where3.LAST,
@@ -159,10 +176,10 @@ class TextAux(InitSource):
         derivative-link for shortcut but no using subs!
         so it same as common slice
         """
-        return self.shortcut(maxlen=maxlen, where=where, sub=None)
+        return self.make__shortcut(maxlen=maxlen, where=where, sub=None)
 
-    # =================================================================================================================
-    def try_convert_to_object(self) -> TYPE__ELEMENTARY | str:
+    # -----------------------------------------------------------------------------------------------------------------
+    def make__object_try(self) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
@@ -177,18 +194,18 @@ class TextAux(InitSource):
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
         # PREPARE SOURCE ----------
         source_original = self.SOURCE
-        source = self.prepare__json_loads()
 
         # WORK --------------------
         try:
-            source_elementary = json.loads(source)
-            return source_elementary
+            result = self.prepare__json_loads()
+            result = json.loads(result)
+            return result
         except Exception as exx:
             print(f"{exx!r}")
             return source_original
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def find_by_pats(self, patterns: list[str] | str) -> list[str]:
+    # =================================================================================================================
+    def find__by_pats(self, patterns: list[str] | str) -> list[str]:
         """
         GOAL
         ----
@@ -223,10 +240,10 @@ class TextAux(InitSource):
         ---------------------
         setup.py install_requires
         """
-        result = self.prepare__requirements()
-        result = TextAux(result).strip__lines()
-        result = TextAux(result).clear__blank_lines()
-        result = TextAux(result).split_lines()
+        self.prepare__requirements()
+        self.clear__blank_lines()
+        self.strip__lines()
+        result = self.split_lines()
         return result
 
 

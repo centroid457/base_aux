@@ -142,9 +142,9 @@ class Git:
         git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
         if self.REPO:
-            branch = TextAux(self.BRANCH).shortcut(15)
-            summary = TextAux(self.SUMMARY).shortcut(15)
-            dt = TextAux(self.DATETIME).shortcut_nosub(19)
+            branch = TextAux(self.BRANCH).make__shortcut(15)
+            summary = TextAux(self.SUMMARY).make__shortcut(15)
+            dt = TextAux(self.DATETIME).make__shortcut_nosub(19)
 
             result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
