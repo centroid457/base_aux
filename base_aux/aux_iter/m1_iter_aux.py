@@ -6,8 +6,8 @@ from base_aux.base_source.m1_source import InitSource
 # =====================================================================================================================
 TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Iterable!!!
 
-TYPE__ITERABLE_PATH_KEY = Union[Any, int]
-TYPE__ITERABLE_PATH = tuple[TYPE__ITERABLE_PATH_KEY, ...]
+TYPE__ITER_PATH_KEY = Union[Any, int]
+TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class IterAux(InitSource):
         assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
     SOURCE: TYPE__ITERABLE = dict
-    # PATH: list[TYPE__ITERABLE_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
+    # PATH: list[TYPE__ITER_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
@@ -60,7 +60,7 @@ class IterAux(InitSource):
             if value == item or str(value).lower() == str(item).lower():
                 return value
 
-    def path__get_original(self, *path: TYPE__ITERABLE_PATH_KEY) -> TYPE__ITERABLE_PATH | None:
+    def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None:
         """
         NOTES:
         1. path used as address KEY for dicts and as INDEX for other listed data
@@ -101,14 +101,19 @@ class IterAux(InitSource):
         return tuple(result)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def value__get(self, *path: TYPE__ITERABLE_PATH_KEY) -> Any | NoReturn:
+    def value__get(self, *path: TYPE__ITER_PATH_KEY) -> Any | NoReturn:
         result = self.SOURCE
         path = self.path__get_original(*path)
         for path_i in path:
             result = result[path_i]
         return result
 
-    def value__set(self, path: TYPE__ITERABLE_PATH, value: Any) -> bool:
+    def value__set(self, path: TYPE__ITER_PATH, value: Any) -> bool:
+        """
+        GOAL
+        ----
+        INLINE WORK!
+        """
         source = self.SOURCE
 
         # work ----------------------------

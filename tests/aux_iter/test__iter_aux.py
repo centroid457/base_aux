@@ -1,7 +1,6 @@
 import pytest
 from base_aux.aux_pytester.m1_pytest_aux import  PytestAux
 from base_aux.aux_iter.m1_iter_aux import IterAux
-from base_aux.aux_values.m1_explicit import *
 
 
 # =====================================================================================================================
@@ -33,77 +32,77 @@ def test__item__get_original(source, item, _EXPECTED):
     argnames="source, path, _EXPECTED",
     argvalues=[
         # ONE DIMENTION ===============
-        ((1, ), 0, (0, )),
-        ((1, ), "0", (0, )),
+        ((1, ), 0, [(0, ), 1]),
+        ((1, ), "0", [(0, ), 1]),
 
-        ((1, ), "1", None),
-        ((1, ), 1, None),
+        ((1, ), "1", [None, Exception]),
+        ((1, ), 1, [None, Exception]),
 
         # diff collections
-        ([1,], 0, (0, )),
-        ({1,}, 0, Exception),
+        ((1,), 0, [(0, ), 1]),
+        ([1,], 0, [(0, ), 1]),
+        ({1,}, 0, [Exception, Exception]),
 
         # list -----
-        ([[1], 2], 1, (1, )),
-        ([[1], 2], 0, (0, )),
-        ([[1], 2], ("0", ), (0, )),
-        ([[1], 2], (0, ), (0, )),
-        ([[1], 2], (0, 0), (0, 0)),
-        ([[1], 2], (0, 1), None),
+        ([[1], 2], 1, [(1, ), 2]),
+        ([[1], 2], 0, [(0, ), [1]]),
+        ([[1], 2], ("0", ), [(0, ), [1]]),
+        ([[1], 2], (0, ), [(0, ), [1]]),
+        ([[1], 2], (0, 0), [(0, 0), 1]),
+        ([[1], 2], (0, 1), [None, Exception]),
 
         # DICTS ---------
-        ({1: 11}, 0, None),
-        ({1: 11}, 1, (1, )),
-        ({1: 11}, "1", (1, )),
+        ({1: 11}, 0, [None, Exception]),
+        ({1: 11}, 1, [(1, ), 11]),
+        ({1: 11}, "1", [(1, ), 11]),
 
-        ({"hello": 1}, "hello", ("hello", )),
-        ({"hello": 1}, "HELLO", ("hello", )),
-        ([{"hello": 1}, 123], (0, "HELLO"), (0, "hello")),
+        ({"hello": 1}, "hello", [("hello", ), 1]),
+        ({"hello": 1}, "HELLO", [("hello", ), 1]),
+        ([{"hello": 1}, 123], (0, "HELLO"), [(0, "hello"), 1]),
+
+        # TODO: decide use or not this addressing style
+        # ({"hello": [1]}, "hello", (0, "hello")),
+        # hello/1
     ]
 )
-def test__path__get_original(source, path, _EXPECTED):
+def test__path__get_original__value_get(source, path, _EXPECTED):
     func_link = IterAux(source).path__get_original
-    PytestAux(func_link, path).assert_check(_EXPECTED)
+    PytestAux(func_link, path).assert_check(_EXPECTED[0])
+
+    func_link = IterAux(source).value__get
+    PytestAux(func_link, path).assert_check(_EXPECTED[1])
 
 
 # =====================================================================================================================
-@pytest.mark.skip
-class Test__Old:    # TODO: decide use or not this addressing style
-    @classmethod
-    def setup_class(cls):
-        cls.victim = IterAux().value__get
-        pass
+# @pytest.mark.skip
+def test__valuse_set():
+    data = [0,1,2,]
+    assert data[1] == 1
+    assert IterAux(data).value__set((5, ), 11) is False
+    assert data[1] == 1
+    assert data == [0,1,2,]
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__1(self):
-        assert self.victim("hello", {"hello": [1]}) == Explicit([1])
-        assert self.victim("hello/1", {"hello": [1]}) is None
-        assert self.victim("hello/0", {"hello": [1]}) == Explicit(1)
+    data = [0,1,2,]
+    assert data[1] == 1
+    assert IterAux(data).value__set((1, ), 11) is True
+    assert data[1] == 11
+    assert data == [0,11,2,]
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__2(self):
-        data = [0,1,2,]
-        assert not IterAux(data).value__set(5, 11, )
-        assert data[1] == 1
-        assert data == [0,1,2,]
+    data = [0,[1],2,]
+    assert data[1] == [1]
+    assert IterAux(data).value__set((1,0), 11) is True
+    assert data[1] == [11]
+    assert data == [0,[11],2,]
 
-        data = [0,1,2,]
-        assert IterAux(data).value__set(1, 11) is True
-        assert data[1] == 11
-        assert data == [0,11,2,]
+    data = [0,[1],2,]
+    assert data[1] == [1]
+    assert IterAux(data).value__set((1,0), 11) is True
+    assert data[1] == [11]
+    assert data == [0,[11],2,]
 
-        data = [[0],1,2,]
-        assert IterAux(data).value__set("0/0", 11) is True
-        assert data[0] == [11]
-        assert data == [[11],1,2,]
-
-        data = {"hello": [0,1,2,]}
-        assert IterAux(data).value__set("hello", 11) is True
-        assert data == {"hello": 11}
-
-        data = {"hello": [0,1,2,]}
-        assert IterAux(data).value__set("hello/1", 11) is True
-        assert data == {"hello": [0,11,2,]}
+    data = [0,{"hello": [0,1,2,]},2,]
+    assert IterAux(data).value__set((1, "hello", 1), 11) is True
+    assert data == [0,{"hello": [0,11,2,]},2,]
 
 
 # =====================================================================================================================
