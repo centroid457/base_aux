@@ -1,46 +1,13 @@
 import pytest
-from base_aux.aux_argskwargs import *
-from base_aux.base_objects import *
-
-from base_aux.aux_pytester import *
-from base_aux.funcs.value_0_explicit import Default
-from base_aux.cmp.cmp import CmpInst
-
-
-# =====================================================================================================================
-class Cls(CmpInst):
-    def __init__(self, value):
-        self.VALUE = value
-
-    def __cmp__(self, other):
-        other = Cls(other)
-        if self.VALUE == other.VALUE:
-            return 0
-        if self.VALUE > other.VALUE:
-            return 1
-        if self.VALUE < other.VALUE:
-            return -1
+from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.base_objects.m0_primitives import *
 
 
 # =====================================================================================================================
 class Test__Args:
-    # @classmethod
-    # def setup_class(cls):
-    #     pass
-    #     cls.Victim = type("Victim", (ValueUnit,), {})
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    # def teardown_method(self, method):
-    #     pass
-
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             ((), ()),
             ([], ()),
@@ -72,9 +39,9 @@ class Test__Args:
             (INST_GEN, (INST_GEN, )),
         ]
     )
-    def test__ensure_tuple(self, args, _EXPECTED):
-        func_link = args__ensure_tuple
-        pytest_func_tester__no_kwargs(func_link, args, _EXPECTED)
+    def test__ensure_tuple(self, source, _EXPECTED):
+        func_link = ArgsKwargsAux(source).resolve_args
+        PytestAux(func_link).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================
