@@ -44,12 +44,27 @@ class InitSource:
     def __init__(self, source: Any = None, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.init_source(source)
+        self.init_post()
 
     def init_source(self, source: Any = None) -> None:
         if source is not None:
             self.SOURCE = source
         else:
             self.SOURCE = self.SOURCE_DEF
+
+    def init_post(self) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        user initions
+
+        TYPICAL USAGE
+        -------------
+        make some conversations for source, like str for text
+        or
+        make initial tests/checks for source, like typecheck
+        """
+        return NotImplemented
 
 
 # =====================================================================================================================
