@@ -18,14 +18,6 @@ class TextAux(InitSource):
         self.SOURCE = str(self.SOURCE)
 
     # EDIT ============================================================================================================
-    def clear__blank_lines(self) -> str:
-        self.SOURCE = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return self.SOURCE
-
-    def clear__cmts(self) -> str:
-        self.SOURCE = re.sub(pattern=r"\s*\#.*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return self.SOURCE
-
     def clear__spaces_all(self) -> str:
         """
         GOAL
@@ -41,10 +33,45 @@ class TextAux(InitSource):
         self.SOURCE = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
         return self.SOURCE
 
+    def clear__blank_lines(self) -> str:
+        self.SOURCE = re.sub(pattern=r"^\s*\n", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        self.SOURCE = re.sub(pattern=r"\n\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        self.SOURCE = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
+
+    def clear__cmts(self) -> str:
+        """
+        NOTE
+        ----
+        if oneline cmt - full line would be deleted!
+        """
+        self.SOURCE = re.sub(pattern=r"\s*\#.*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
+
     # -----------------------------------------------------------------------------------------------------------------
     def strip__lines(self) -> str:
-        self.SOURCE = re.sub(pattern=r"^\s*", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        self.lstrip__lines()
+        self.rstrip__lines()
+        return self.SOURCE
+
+    def rstrip__lines(self) -> str:
+        """
+        GOAL
+        ----
+            " line1 \n line2 " --> " line1\n line2"
+
+        """
         self.SOURCE = re.sub(pattern=r"\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        return self.SOURCE
+
+    def lstrip__lines(self) -> str:
+        """
+        NOTE
+        ----
+        less usefull as lstrip__lines
+        but for the company)
+        """
+        self.SOURCE = re.sub(pattern=r"^\s*", repl="", string=self.SOURCE, flags=re.MULTILINE)
         return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------

@@ -1,10 +1,126 @@
 import pytest
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
-
-from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.base_enums.m0_enums import *
 from base_aux.aux_text.m1_text_aux import TextAux
+from base_aux.base_enums.m0_enums import *
+
+
+# =====================================================================================================================
+class Test__Edit:
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (" " * 2, ""),
+            (" " * 3, ""),
+            ("line   line", "lineline"),
+
+            (" \n ", "\n"),
+
+            (" 1, _\n\n  \n \t  \r  ()", '1,_\n\n\n\t\r()'),
+        ]
+    )
+    def test__spaces_all(self, source, _EXPECTED):
+        func_link = TextAux(source).clear__spaces_all
+        PytestAux(func_link).assert_check(_EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (" " * 2, " "),
+            (" " * 3, " "),
+            ("line   line", "line line"),
+
+            (" \n  ", " \n "),
+
+            (" 1, _\n\n  \n \t  \r  ()", ' 1, _\n\n \n \t \r ()'),
+        ]
+    )
+    def test__spaces_double(self, source, _EXPECTED):
+        func_link = TextAux(source).clear__spaces_double
+        PytestAux(func_link).assert_check(_EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            # BLANK -----
+            ("\n", ""),
+            (" \n ", ""),
+
+            # EDGES -----
+            ("\n line1", " line1"),
+            (" \n line1", " line1"),
+            (" line1 \n ", " line1 "),
+
+            # MIDDLE -----
+            (" line1 \n\n \nline2 ", " line1 \nline2 "),
+
+            # OTHER -----
+            (" line1 \n \n line3 ", " line1 \n line3 "),
+            (" line1 \n \t\r\n line3 ", " line1 \n line3 "),
+        ]
+    )
+    def test__blank_lines(self, source, _EXPECTED):
+        func_link = TextAux(source).clear__blank_lines
+        PytestAux(func_link).assert_check(_EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            # ZERO -----
+            ("line1 ", "line1 "),
+
+            # SEPARATED -----
+            ("#cmt #", ""),
+            ("##cmt #", ""),
+
+            ("#cmt ", ""),
+            ("  # cmt 1 ", ""),
+
+            # INLINE -----
+            ("line  # cmt 1 ", "line"),
+
+            # SEVERAL LINES ====
+            ("line1  # cmt1 \n line2 ", "line1\n line2 "),
+            ("line1  # cmt1 \n line2 #cmt2", "line1\n line2"),
+            ("line1  # cmt1 \n #cmt \n line2 #cmt2", "line1\n line2"),
+        ]
+    )
+    def test__clear__cmts(self, source, _EXPECTED):
+        func_link = TextAux(source).clear__cmts
+        PytestAux(func_link).assert_check(_EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            # ZERO -----
+            ("line1 ", "line1 "),
+
+            # SEPARATED -----
+            ("#cmt #", ""),
+            ("##cmt #", ""),
+
+            ("#cmt ", ""),
+            ("  # cmt 1 ", ""),
+
+            # INLINE -----
+            ("line  # cmt 1 ", "line"),
+
+            # SEVERAL LINES ====
+            ("line1  # cmt1 \n line2 ", "line1\n line2 "),
+            ("line1  # cmt1 \n line2 #cmt2", "line1\n line2"),
+            ("line1  # cmt1 \n #cmt \n line2 #cmt2", "line1\n line2"),
+        ]
+    )
+    def test__strip__lines(self, source, _EXPECTED):
+        func_link = TextAux(source).strip__lines
+        PytestAux(func_link).assert_check(_EXPECTED)
+
+
+
+
+
+
 
 
 # =====================================================================================================================
@@ -13,18 +129,18 @@ class Test__sub:
         argnames="source, _EXPECTED",
         argvalues=[
             # NOT ACCEPTED -------------
-            ("None123", 'None123'),
-            ("None_123", 'None_123'),
+            ("None123", "None123"),
+            ("None_123", "None_123"),
 
             # ACCEPTED -------------
-            ("null", 'null'),
-            ("None", 'null'),
-            ("None-123", 'null-123'),
+            ("null", "null"),
+            ("None", "null"),
+            ("None-123", "null-123"),
 
             # CONTAINERS -------------
-            ("[null]", '[null]'),
-            ("[None]", '[null]'),
-            ("[None, ]", '[null, ]'),
+            ("[null]", "[null]"),
+            ("[None]", "[null]"),
+            ("[None, ]", "[null, ]"),
 
             (" None, 123", " null, 123"),
             ("[None, null, 123]", "[null, null, 123]"),
