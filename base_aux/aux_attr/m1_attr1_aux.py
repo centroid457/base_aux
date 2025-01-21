@@ -2,7 +2,7 @@ from typing import *
 import re
 
 from base_aux.base_source.m1_source import InitSource
-from base_aux.base_enums.m0_enums import CallablesUse
+from base_aux.base_enums.m0_enums import *
 # from base_aux.base_objects import TypeCheck
 
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
@@ -18,7 +18,6 @@ class AttrAux(InitSource):
     ------
     if there are several same aux_attr in different cases - you should resolve it by yourself!
     """
-    # SOURCE = Lambda(AttrsDump)
     SOURCE: Any = AttrsDump
 
     # =================================================================================================================
@@ -240,7 +239,7 @@ class AttrAux(InitSource):
             value = self.anycase__getattr(name)
         except Exception as exx:
             if callables_use == CallablesUse.SKIP_RAISED:
-                return CallablesUse.SKIP_CALLABLE   # SKIPPED
+                return CallableResult.SKIPPED
             elif callables_use == CallablesUse.EXCEPTION:
                 return exx
             elif callables_use == CallablesUse.RAISE_AS_NONE:
@@ -298,7 +297,7 @@ class AttrAux(InitSource):
         result = {}
         for name in self.iter__external_not_builtin():
             value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
-            if value == CallablesUse.SKIP_CALLABLE:
+            if value == CallableResult.SKIPPED:
                 continue
             result.update({name: value})
 

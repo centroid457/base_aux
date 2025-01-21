@@ -12,20 +12,20 @@ from base_aux.base_enums.m0_enums import *
     argnames="source, args, _EXPECTED",
     argvalues=[
         (Exception, (), (False, True,
-                Exception, Exception, Exception, False, CallablesUse.SKIP_CALLABLE, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
+                Exception, Exception, Exception, False, CallableResult.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
         (Exception(), (), (False, True,
                 Exception, Exception, Exception, False, Exception, Exception)),
         (LAMBDA_EXX, (), (False, True,
-                Exception, Exception, Exception, False, CallablesUse.SKIP_CALLABLE, Exception)),
+                Exception, Exception, Exception, False, CallableResult.SKIPPED, Exception)),
         (LAMBDA_RAISE, (), (True, False,
-                Exception, None, Exception, False, CallablesUse.SKIP_CALLABLE, CallablesUse.SKIP_CALLABLE)),
+                Exception, None, Exception, False, CallableResult.SKIPPED, CallableResult.SKIPPED)),
 
         (LAMBDA_TRUE, (), (False, True,
-                True, True, True, True, CallablesUse.SKIP_CALLABLE, True)),
+                True, True, True, True, CallableResult.SKIPPED, True)),
         (LAMBDA_FALSE, (), (False, True,
-                False, False, False, False, CallablesUse.SKIP_CALLABLE, False)),
+                False, False, False, False, CallableResult.SKIPPED, False)),
         (LAMBDA_NONE, (), (False, True,
-                None, None, None, False, CallablesUse.SKIP_CALLABLE, None)),
+                None, None, None, False, CallableResult.SKIPPED, None)),
 
         (True, (), (False, True,
                 True, True, True, True, True, True)),
@@ -35,11 +35,11 @@ from base_aux.base_enums.m0_enums import *
                 None, None, None, False, None, None)),
 
         (INST_CALL_TRUE, (), (False, True,
-                True, True, True, True, CallablesUse.SKIP_CALLABLE, True)),
+                True, True, True, True, CallableResult.SKIPPED, True)),
         (INST_CALL_FALSE, (), (False, True,
-                False, False, False, False, CallablesUse.SKIP_CALLABLE, False)),
+                False, False, False, False, CallableResult.SKIPPED, False)),
         (INST_CALL_RAISE, (), (True, False,
-                Exception, None, Exception, False, CallablesUse.SKIP_CALLABLE, CallablesUse.SKIP_CALLABLE)),
+                Exception, None, Exception, False, CallableResult.SKIPPED, CallableResult.SKIPPED)),
 
         (INST_BOOL_TRUE, (),  (False, True,
                 INST_BOOL_TRUE, INST_BOOL_TRUE, INST_BOOL_TRUE, True, INST_BOOL_TRUE, INST_BOOL_TRUE)),
@@ -54,7 +54,7 @@ from base_aux.base_enums.m0_enums import *
         ([], (), (False, True,
                 [], [], [], False, [], [])),
         (LAMBDA_LIST_DIRECT, (), (False, True,
-                [], [], [], False, CallablesUse.SKIP_CALLABLE, [])),
+                [], [], [], False, CallableResult.SKIPPED, [])),
 
         ([None, ], (), (False, True,
                 [None, ], [None, ], [None, ], True, [None, ], [None, ])),

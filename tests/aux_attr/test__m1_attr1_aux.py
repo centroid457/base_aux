@@ -86,7 +86,7 @@ class Victim2:
         ("     attr_uppercase", ("ATTR_UPPERCASE", "VALUE", None, )),
     ]
 )
-def test__anycase__xxx(attr, _EXPECTED):
+def test__anycase__getset(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
     PytestAux(AttrAux(Victim2()).anycase__find, attr).assert_check(_EXPECTED[0])
@@ -95,7 +95,7 @@ def test__anycase__xxx(attr, _EXPECTED):
 
 
 # =====================================================================================================================
-def test__load__wo_template():
+def test__load():
     other = AttrAux().load__by_dict(dict(attr=1))
     assert isinstance(other, AttrsDump)
     assert other.attr == 1

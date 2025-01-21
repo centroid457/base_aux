@@ -47,6 +47,23 @@ class CallablesUse(Enum):
 
 
 # =====================================================================================================================
+class CallableResult(Enum):
+    """
+    GOAL
+    ----
+    define special values for methods
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    CallableAux.resolve when returns SKIPPED like object!
+    """
+    SUCCESS = auto()
+    FAILED = auto()
+    RAISED = auto()
+    SKIPPED = auto()
+
+
+# =====================================================================================================================
 class FormIntExt(Enum):
     """
     SPECIALLY CREATED FOR

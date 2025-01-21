@@ -1,6 +1,6 @@
 from typing import *
 from base_aux.base_source.m1_source import InitSource
-from base_aux.base_enums.m0_enums import CallablesUse
+from base_aux.base_enums.m0_enums import *
 
 
 # =====================================================================================================================
@@ -102,7 +102,7 @@ class CallableAux(InitSource):
 
     def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
-            return CallablesUse.SKIP_CALLABLE  # TODO: decide using None ???
+            return CallableResult.SKIPPED  # TODO: decide using None ???
         else:
             return self.SOURCE
 
@@ -110,7 +110,7 @@ class CallableAux(InitSource):
         try:
             return self.resolve_raise(*args, **kwargs)
         except:
-            return CallablesUse.SKIP_CALLABLE  # TODO: decide using None ???
+            return CallableResult.SKIPPED  # TODO: decide using None ???
 
     def resolve_bool(self, *args, **kwargs) -> bool:
         """
