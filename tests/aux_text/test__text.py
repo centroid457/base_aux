@@ -93,34 +93,18 @@ class Test__Edit:
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
-            # ZERO -----
-            ("line1 ", "line1 "),
+            ("  ", ("", "", "")),
+            ("line1  ", ("line1", "line1  ", "line1")),
+            ("  line1 ", ("line1", "line1 ", "  line1")),
 
-            # SEPARATED -----
-            ("#cmt #", ""),
-            ("##cmt #", ""),
-
-            ("#cmt ", ""),
-            ("  # cmt 1 ", ""),
-
-            # INLINE -----
-            ("line  # cmt 1 ", "line"),
-
-            # SEVERAL LINES ====
-            ("line1  # cmt1 \n line2 ", "line1\n line2 "),
-            ("line1  # cmt1 \n line2 #cmt2", "line1\n line2"),
-            ("line1  # cmt1 \n #cmt \n line2 #cmt2", "line1\n line2"),
+            ("line1  \n  line2", ("line1\nline2", "line1  \nline2", "line1\n  line2")),
+            ("line1  \n  \n  line2", ("line1\nline2", "line1  \nline2", "line1\n  line2")),
         ]
     )
     def test__strip__lines(self, source, _EXPECTED):
-        func_link = TextAux(source).strip__lines
-        PytestAux(func_link).assert_check(_EXPECTED)
-
-
-
-
-
-
+        PytestAux(TextAux(source).strip__lines).assert_check(_EXPECTED[0])
+        PytestAux(TextAux(source).lstrip__lines).assert_check(_EXPECTED[1])
+        PytestAux(TextAux(source).rstrip__lines).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================

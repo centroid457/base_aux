@@ -58,7 +58,13 @@ class TextAux(InitSource):
         """
         GOAL
         ----
+        keep indents! strip right!
             " line1 \n line2 " --> " line1\n line2"
+
+        NOTE
+        ----
+        it can strip blank lines!
+            " line1 \n \n  line2 " --> " line1\nline2"
 
         """
         self.SOURCE = re.sub(pattern=r"\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
