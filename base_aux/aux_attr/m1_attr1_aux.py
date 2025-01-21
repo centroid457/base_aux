@@ -9,8 +9,6 @@ from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_attr.m0_static import AttrsDump
 
-# from base_aux.lambdas.lambdas import Lambda   # CIRCULAR_IMPORT=TRY USE IT ONLY ON OUT CODE! not inside base_aux!
-
 
 # =====================================================================================================================
 @final
@@ -21,7 +19,7 @@ class AttrAux(InitSource):
     if there are several same aux_attr in different cases - you should resolve it by yourself!
     """
     # SOURCE = Lambda(AttrsDump)
-    SOURCE = AttrsDump
+    SOURCE: Any = AttrsDump
 
     # =================================================================================================================
     def get_name__private_external(self, dirname: str) -> str | None:
