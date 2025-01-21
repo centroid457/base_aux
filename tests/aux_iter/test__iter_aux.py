@@ -1,5 +1,6 @@
 import pytest
-from base_aux.aux_pytester.m1_pytest_aux import  PytestAux
+
+from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 from base_aux.aux_iter.m1_iter_aux import IterAux
 
 
