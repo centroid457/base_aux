@@ -3,6 +3,8 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import *
 from base_aux.aux_attr.m0_static import AttrsDump
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.base_objects.m0_primitives import *
+from base_aux.base_enums.m0_enums import *
 
 
 # =====================================================================================================================
@@ -15,10 +17,12 @@ class Victim:
 class VictimNested_Old(Victim):
     pass
 
+
 class VictimNested_ReNew(Victim):
     a = 1
     _h = 2
     __p = 3
+
 
 class VictimNested_New(Victim):
     a2 = 1
@@ -117,6 +121,54 @@ def test__load():
     assert other.attr == 2
 
     assert not hasattr(victim, "ATTR")
+
+
+# =====================================================================================================================
+class Victim:
+    NONE = None
+    TRUE = True
+    LTRUE = LAMBDA_TRUE
+    RAISE = LAMBDA_RAISE
+
+
+class Test__Dump:
+    def test__zero(self):
+        assert AttrAux().dump_dict() == dict()
+
+    def test__names(self):
+        class VictimNames:
+            attr = None
+            _attr = None
+            __attr = None
+
+        result = AttrAux(VictimNames()).dump_dict()
+        assert result == {"attr": None, "_attr": None}
+
+    @pytest.mark.parametrize(
+        argnames="cal_use, _EXPECTED",
+        argvalues=[
+            (CallablesUse.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE, )),
+            (CallablesUse.EXCEPTION, (None, True, True, Exception, )),
+            # (CallablesUse.RAISE, Exception),          # need special tests!
+            (CallablesUse.RAISE_AS_NONE, (None, True, True, None, )),
+            (CallablesUse.BOOL, (False, True, True, False, )),
+            (CallablesUse.SKIP_CALLABLE, (None, True, None, None, )),
+            (CallablesUse.SKIP_RAISED, (None, True, True, None, )),
+        ]
+    )
+    def test__callable_use(self, cal_use, _EXPECTED):
+        result_dict = AttrAux(Victim).dump_dict(cal_use)
+        PytestAux(dict.get, (result_dict, "NONE")).assert_check(_EXPECTED[0])
+        PytestAux(dict.get, (result_dict, "TRUE")).assert_check(_EXPECTED[1])
+        PytestAux(dict.get, (result_dict, "LTRUE")).assert_check(_EXPECTED[2])
+        PytestAux(dict.get, (result_dict, "RAISE")).assert_check(_EXPECTED[3])
+
+    def test__callable_use__special_raise(self):
+        try:
+            result_dict = AttrAux(Victim).dump_dict(CallablesUse.RAISE)
+            assert False
+        except:
+            assert True
 
 
 # =====================================================================================================================

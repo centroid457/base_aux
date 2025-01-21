@@ -25,6 +25,10 @@ class AttrAux(InitSource):
         """
         typically BUILTIN - NOT INCLUDED!
 
+        NOTE
+        ----
+        BEST WAY TO USE EXACTLY iter__not_private
+
         GOAL
         ----
         using name (from dir(obj)) return user-friendly name! external name!
@@ -80,6 +84,10 @@ class AttrAux(InitSource):
     # ITER ------------------------------------------------------------------------------------------------------------
     def iter__external_not_builtin(self) -> Iterable[str]:
         """
+        NOTE
+        ----
+        BEST WAY TO USE EXACTLY iter__not_private
+
         GOAL
         ----
         1/ iter only without builtins!!!
@@ -118,6 +126,11 @@ class AttrAux(InitSource):
                 yield name
 
     def iter__not_private(self) -> Iterable[str]:
+        """
+        NOTE
+        ----
+        BEST WAY TO USE EXACTLY iter__not_private
+        """
         for name in self.iter__external_not_builtin():
             if not name.startswith("__"):
                 yield name
@@ -125,6 +138,10 @@ class AttrAux(InitSource):
     def iter__private(self) -> Iterable[str]:
         """
         BUILTIN - NOT INCLUDED!
+
+        NOTE
+        ----
+        BEST WAY TO USE EXACTLY iter__not_private
 
         GOAL
         ----
@@ -286,6 +303,10 @@ class AttrAux(InitSource):
         ----------
         BUMPS MEANS basically save final values for all (even any dynamic/callables) values! or only not callables!
 
+        NOTE
+        ----
+        DUMP WITHOUT PRIVATE NAMES
+
         GOAL
         ----
         make a dict from any object from aux_attr (not hidden)
@@ -295,7 +316,7 @@ class AttrAux(InitSource):
         using any object as rules for Translator
         """
         result = {}
-        for name in self.iter__external_not_builtin():
+        for name in self.iter__not_private():
             value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
             if value == CallableResult.SKIPPED:
                 continue
@@ -303,7 +324,7 @@ class AttrAux(InitSource):
 
         return result
 
-    def dump_dict__callables_resolve_exx(self) -> dict[str, Any | Exception]:
+    def dump_dict__resolve_exx(self) -> dict[str, Any | Exception]:
         """
         MAIN DERIVATIVE!
         """
