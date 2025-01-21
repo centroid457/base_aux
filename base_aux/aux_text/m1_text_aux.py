@@ -14,8 +14,13 @@ from base_aux.funcs.m0_static import TYPE__ELEMENTARY
 class TextAux(InitSource):
     SOURCE: str = None
 
-    def get_lines(self, skip_blanks: bool = None) -> list[str]:
-        lines_all = self.SOURCE.split()
+    def init_post(self) -> None | NoReturn:
+        self.SOURCE = self.SOURCE or ""
+        self.SOURCE = str(self.SOURCE)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def split_lines(self, skip_blanks: bool = None) -> list[str]:
+        lines_all = self.SOURCE.splitlines()
         if skip_blanks:
             result_no_blanks = []
             for line in lines_all:
@@ -27,7 +32,7 @@ class TextAux(InitSource):
             return lines_all
 
     # -----------------------------------------------------------------------------------------------------------------
-    def prepare__json_loads(self, source: Optional[str] = None) -> str:
+    def prepare__json_loads(self) -> str:
         """
         GOAL
         ----
@@ -38,24 +43,17 @@ class TextAux(InitSource):
         ---------------------
         try_convert_to_object
         """
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-        result = source
-        if isinstance(source, str):
-            result = self.sub__words(
-                rules = [
-                    (r"True", "true"),
-                    (r"False", "false"),
-                    (r"None", "null"),
-                ]
-            )
-            result = re.sub("\'", "\"", result)
-        if insource:
-            self.SOURCE = result
+        result = self.sub__words(
+            rules = [
+                (r"True", "true"),
+                (r"False", "false"),
+                (r"None", "null"),
+            ]
+        )
+        result = re.sub("\'", "\"", result)
         return result
 
-    def prepare__requirements(self, source: Optional[str] = None) -> str:
+    def prepare__requirements(self) -> str:
         """
         GOAL
         ----
@@ -66,19 +64,13 @@ class TextAux(InitSource):
         ---------------------
         try_convert_to_object
         """
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source
-        result = self.clear__cmts(result)
-        result = self.clear__blank_lines(result)
-        if insource:
-            self.SOURCE = result
+        result = self.SOURCE
+        result = TextAux(result).clear__cmts()
+        result = TextAux(result).clear__blank_lines()
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def sub__word(self, word_pat: str, new: str = "", source: Optional[str] = None) -> str:
+    def sub__word(self, word_pat: str, new: str = "") -> str:
         """
         GOAL
         ----
@@ -89,97 +81,37 @@ class TextAux(InitSource):
         ---------------------
         prepare_for_json_parsing
         """
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
         word_pat = r"\b" + word_pat + r"\b"
-        result = re.sub(word_pat, new, source)
-
-        if insource:
-            self.SOURCE = result
+        result = re.sub(word_pat, new, self.SOURCE)
         return result
 
-    def sub__words(self, rules: list[tuple[str, str]], source: Optional[str] = None) -> str:
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source
+    def sub__words(self, rules: list[tuple[str, str]]) -> str:
+        result = self.SOURCE
         for work_pat, new in rules:
-            result = self.sub__word(work_pat, new, result)
+            result = TextAux(result).sub__word(work_pat, new)
         return result
 
     # =================================================================================================================
-    def clear__blank_lines(
-            self,
-            source: Optional[str] = None,
-    ) -> str:
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source
-        if isinstance(source, str):
-            result = re.sub(pattern=r"^\s*$", repl="", string=result, flags=re.MULTILINE)
-
-        if insource:
-            self.SOURCE = result
+    def clear__blank_lines(self) -> str:
+        result = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
         return result
 
-    def clear__cmts(
-            self,
-            source: Optional[str] = None,
-    ) -> str:
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source
-        if isinstance(source, str):
-            result = re.sub(pattern=r"\s*\#.*$", repl="", string=result, flags=re.MULTILINE)
-
-        if insource:
-            self.SOURCE = result
+    def clear__cmts(self) -> str:
+        result = re.sub(pattern=r"\s*\#.*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
         return result
 
-    # =================================================================================================================
-    def lines__split(
-            self,
-            source: Optional[str] = None,
-    ) -> list[str]:
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source.splitlines()
+    def clear__spaces_all(self) -> str:
+        result = re.sub(pattern=r" +", repl="", string=self.SOURCE)
         return result
 
-    def lines__strip(
-            self,
-            lines: list[str] = None,
-    ) -> list[str]:
-        insource = lines is None
-        if insource:
-            lines = self.lines__split()
-
-        result = []
-        for line in lines:
-            result.append(line.strip())
+    def clear__spaces_double(self) -> str:
+        result = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
         return result
 
-    def lines__clear_blank(
-            self,
-            lines: list[str] = None,
-    ) -> list[str]:
-        insource = lines is None
-        if insource:
-            lines = self.lines__split()
-
-        result = []
-        for line in lines:
-            if line:
-                result.append(line)
+    def strip__lines(self) -> str:
+        result = self.SOURCE
+        result = re.sub(pattern=r"^\s*", repl="", string=result, flags=re.MULTILINE)
+        result = re.sub(pattern=r"\s*$", repl="", string=result, flags=re.MULTILINE)
         return result
 
     # =================================================================================================================
@@ -187,7 +119,6 @@ class TextAux(InitSource):
             self,
             maxlen: int = 15,
             where: Where3 = Where3.LAST,
-            source: str = None,
             sub: str | None = "...",
     ) -> str:
         """
@@ -197,27 +128,22 @@ class TextAux(InitSource):
         if not exists - was not shorted!
         """
         sub = sub or ""
+        sub_len = len(sub)
 
-        if source is None:
-            source = self.SOURCE
-        source = str(source) or str(self.SOURCE)
-        if len(source) > maxlen:
-            len_source = len(source)
-            len_sub = len(sub)
+        source = self.SOURCE
+        source_len = len(source)
 
-            if len_source <= maxlen:
-                return source
-
-            if maxlen <= len_sub:
+        if source_len > maxlen:
+            if maxlen <= sub_len:
                 return sub[0:maxlen]
 
             if where == Where3.FIRST:
-                source = sub + source[-(maxlen - len_sub):]
+                source = sub + source[-(maxlen - sub_len):]
             elif where == Where3.LAST:
-                source = source[0:maxlen - len_sub] + sub
+                source = source[0:maxlen - sub_len] + sub
             elif where == Where3.MIDDLE:
-                len_start = maxlen // 2 - len_sub // 2
-                len_finish = maxlen - len_start - len_sub
+                len_start = maxlen // 2 - sub_len // 2
+                len_finish = maxlen - len_start - sub_len
                 source = source[0:len_start] + sub + source[-len_finish:]
 
         return source
@@ -226,7 +152,6 @@ class TextAux(InitSource):
             self,
             maxlen: int = 15,
             where: Where3 = Where3.LAST,
-            source: str = None,
     ) -> str:
         """
         GOAL
@@ -234,10 +159,10 @@ class TextAux(InitSource):
         derivative-link for shortcut but no using subs!
         so it same as common slice
         """
-        return self.shortcut(maxlen=maxlen, where=where, source=source, sub=None)
+        return self.shortcut(maxlen=maxlen, where=where, sub=None)
 
     # =================================================================================================================
-    def try_convert_to_object(self, source: str = None) -> TYPE__ELEMENTARY | str:
+    def try_convert_to_object(self) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
@@ -250,13 +175,9 @@ class TextAux(InitSource):
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
         # PREPARE SOURCE ----------
-        source_original = source
-        source = self.prepare__json_loads(source)
+        source_original = self.SOURCE
+        source = self.prepare__json_loads()
 
         # WORK --------------------
         try:
@@ -267,11 +188,7 @@ class TextAux(InitSource):
             return source_original
 
     # -----------------------------------------------------------------------------------------------------------------
-    def find_by_pats(
-            self,
-            patterns: list[str] | str,
-            source: Optional[str] = None,
-    ) -> list[str]:
+    def find_by_pats(self, patterns: list[str] | str) -> list[str]:
         """
         GOAL
         ----
@@ -281,15 +198,11 @@ class TextAux(InitSource):
         ----
         if pattern have group - return group value (as usual)
         """
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
         result = []
         patterns = ArgsKwargsAux(patterns).resolve_args()
 
         for pat in patterns:
-            result_i = re.findall(pat, source)
+            result_i = re.findall(pat, self.SOURCE)
             for value in result_i:
                 value: str
                 if value == "":
@@ -300,10 +213,7 @@ class TextAux(InitSource):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def requirements__get_list(
-            self,
-            source: Optional[str] = None,
-    ) -> list[str]:
+    def requirements__get_list(self) -> list[str]:
         """
         GOAL
         ----
@@ -313,17 +223,10 @@ class TextAux(InitSource):
         ---------------------
         setup.py install_requires
         """
-        insource = source is None
-        if insource:
-            source = self.SOURCE
-
-        result = source
-        result = self.prepare__requirements(result)
-
-        result = self.lines__split(result)
-        result = self.lines__strip(result)
-        result = self.lines__clear_blank(result)
-
+        result = self.prepare__requirements()
+        result = TextAux(result).strip__lines()
+        result = TextAux(result).clear__blank_lines()
+        result = TextAux(result).split_lines()
         return result
 
 
