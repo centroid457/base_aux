@@ -57,27 +57,30 @@ def check_lack_words() -> None:
 class CharMask(AnnotsInitByTypes_NotExisted):
     # HIDDEN: str
     # ATTEMPTS: list[str]
-    POS: list[str]
+    POS_DET: list[str]
+    POS_EXCL: list[set[str]]
     INCL: set[str]
     EXCL: set[str]
 
     def __init__(self, length: int):
         super().__init__()
-        self.POS = ["", ] * length
+        self.POS_DET = ["", ] * length
+        self.POS_EXCL = [set(), ] * length
 
     @property
-    def POS_WM(self) -> str:
+    def POS_DET_WM(self) -> str:
         result = ""
-        for pos in self.POS:
+        for pos in self.POS_DET:
             if not pos:
-                pos = "*"
+                pos = "?"
             result += pos
         return result
 
     def __str__(self):
-        incl = f"[{''.join(self.INCL)}]"
-        excl = f"[{''.join(self.EXCL)}]"
-        return f"{self.__class__.__name__}({self.POS_WM},{incl=},{excl=})"
+        INCL = f"[{''.join(self.INCL)}]"
+        EXCL = f"[{''.join(self.EXCL)}]"
+        POS_EXCL = str(self.POS_EXCL).replace(" ", "")
+        return f"{self.__class__.__name__}({self.POS_DET_WM},{POS_EXCL},{INCL=},{EXCL=})"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -93,22 +96,22 @@ class FilterMask(InitSourceKwArgs_Implicite):
 
     def get_mask(self) -> CharMask:
         self.CHARMASK = CharMask(5)
-        self.CHARMASK.HIDDEN = self.SOURCE
+        # self.CHARMASK.HIDDEN = self.SOURCE
         # result = CharMask(5)
         for attempt in self.ARGS:
             self.attemtp_apply(attempt)
 
         return self.CHARMASK
 
-    def attemtp_apply(self, word: str) -> None:
-        for index, char_i in enumerate(word):
-            # POS ------
-            if self.SOURCE[index] == char_i:
-                self.CHARMASK.POS[index] = char_i
-
-            # HAVE ------
+    def attemtp_apply(self, attempt: str) -> None:
+        for index, char_i in enumerate(attempt):
             if char_i in self.SOURCE:
                 self.CHARMASK.INCL.update(char_i)
+
+                if self.SOURCE[index] == char_i:
+                    self.CHARMASK.POS_DET[index] = char_i
+                else:
+                    self.CHARMASK.POS_EXCL[index].update(char_i)
             else:
                 self.CHARMASK.EXCL.update(char_i)
 
