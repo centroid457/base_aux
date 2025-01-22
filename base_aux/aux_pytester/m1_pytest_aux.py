@@ -65,6 +65,10 @@ class PytestAux(InitSourceKwArgs_Explicite):
             else:
                 assert actual_value == _EXPECTED
 
+    def bool_check(self):
+        # FIXME: deside using CMP/EQ!
+        return NotImplemented
+
 
 # =====================================================================================================================
 pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------

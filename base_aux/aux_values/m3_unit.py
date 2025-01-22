@@ -257,7 +257,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
             0=self==other
             -1=self<other
         """
-        if EqAux(self.VALUE).eq_doublesided__bool(other):
+        if EqAux(self.VALUE).check_doubleside__bool(other):
             return 0
         if not isinstance(other, self.__class__):
             other = self.__class__(other)

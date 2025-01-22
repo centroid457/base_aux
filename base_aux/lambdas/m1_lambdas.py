@@ -81,7 +81,7 @@ class Lambda(InitSourceKwArgs_Implicite):
         return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
-        return EqAux(self()).eq_doublesided__bool(other)
+        return EqAux(self()).check_doubleside__bool(other)
 
 
 # =====================================================================================================================

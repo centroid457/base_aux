@@ -24,9 +24,9 @@ from base_aux.cmp.m2_eq import EqAux
     ]
 )
 def test__compare_doublesided(source, args, _EXPECTED):
-    PytestAux(EqAux(source).eq_doublesided_or_exx, args).assert_check(_EXPECTED[0])
-    PytestAux(EqAux(source).eq_doublesided__bool, args).assert_check(_EXPECTED[1])
-    PytestAux(EqAux(source).eq_doublesided__reverse, args).assert_check(_EXPECTED[2])
+    PytestAux(EqAux(source).check_doubleside__exx, args).assert_check(_EXPECTED[0])
+    PytestAux(EqAux(source).check_doubleside__bool, args).assert_check(_EXPECTED[1])
+    PytestAux(EqAux(source).check_doubleside__reverse, args).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================

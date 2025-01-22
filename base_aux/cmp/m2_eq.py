@@ -1,4 +1,5 @@
 from typing import *
+
 from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
@@ -9,7 +10,19 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 # =====================================================================================================================
 @final
 class EqAux(InitSource):
-    def eq_doublesided_or_exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_oneside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
+        # fixme: finish one side!!!!
+        return NotImplemented
+
+    def check_oneside__bool(self, other: Any) -> bool:
+        return self.check_oneside__exx(other, return_bool=True)
+
+    def check_oneside__reverse(self, other: Any) -> bool:
+        return self.check_oneside__bool(other) is not True
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_doubleside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
         """
         GOAL
         ----
@@ -82,7 +95,7 @@ class EqAux(InitSource):
         else:
             return result12
 
-    def eq_doublesided__bool(self, other: Any) -> bool:
+    def check_doubleside__bool(self, other: Any) -> bool:
         """
         same as compare_doublesided_or_exx but
         in case of ClsException - return False
@@ -91,17 +104,17 @@ class EqAux(InitSource):
         ---------------------
         Valid.value_validate
         """
-        return self.eq_doublesided_or_exx(other, return_bool=True)
+        return self.check_doubleside__exx(other, return_bool=True)
 
-    def eq_doublesided__reverse(self, other: Any) -> bool:
+    def check_doubleside__reverse(self, other: Any) -> bool:
         """
         just reverse result for compare_doublesided__bool
         so never get ClsException, only bool
         """
-        return self.eq_doublesided__bool(other) is not True
+        return self.check_doubleside__bool(other) is not True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def eq_by_dict__direct(self, other: TYPE__KWARGS_FINAL) -> bool:
+    def check_by_dict__direct(self, other: TYPE__KWARGS_FINAL) -> bool:
         """
         GOAL
         ----
