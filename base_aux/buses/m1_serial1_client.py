@@ -12,7 +12,7 @@ from base_aux.loggers.m1_logger import Logger
 from serial import Serial
 from serial.tools import list_ports
 from base_aux.aux_values.m3_unit import ValueUnit
-from base_aux.cmp.m2_eq import Eq
+from base_aux.cmp.m2_eq import EqAux
 
 from .m0_history import HistoryIO
 
@@ -1361,7 +1361,7 @@ class SerialClient(Logger):
                     if (
                             str(output_last).lower() == str(expect_var).lower()
                             or
-                            Eq(output_last).eq_doublesided__bool(expect_var)
+                            EqAux(output_last).eq_doublesided__bool(expect_var)
                     ):
                         return True
 

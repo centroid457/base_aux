@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.base_exceptions import Exx__ValueNotValidated
-from base_aux.cmp.m2_eq import Eq
+from base_aux.cmp.m2_eq import EqAux
 
 
 # =====================================================================================================================
@@ -108,7 +108,7 @@ class ValueVariants:
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | NoValue:
         for variant in self.VARIANTS:
-            if Eq(variant).eq_doublesided__bool(value):
+            if EqAux(variant).eq_doublesided__bool(value):
                 return variant
 
             if self.CASE_INSENSITIVE:

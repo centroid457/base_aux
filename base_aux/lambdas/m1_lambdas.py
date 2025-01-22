@@ -6,7 +6,7 @@ from base_aux.base_enums.m0_enums import When2
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 from base_aux.base_source.m2_source_kwargs import InitSourceKwArgs_Implicite
 
-from base_aux.cmp.m2_eq import Eq
+from base_aux.cmp.m2_eq import EqAux
 
 
 # =====================================================================================================================
@@ -81,7 +81,7 @@ class Lambda(InitSourceKwArgs_Implicite):
         return self.construct(*args, **kwargs)
 
     def __eq__(self, other) -> bool | NoReturn:
-        return Eq(self()).eq_doublesided__bool(other)
+        return EqAux(self()).eq_doublesided__bool(other)
 
 
 # =====================================================================================================================

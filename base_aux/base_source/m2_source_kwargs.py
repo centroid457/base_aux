@@ -14,8 +14,8 @@ class InitSourceKwArgs_Implicite(InitSource):
     ----
     just to make inition source with KwArgs
     """
-    ARGS: TYPE__ARGS_FINAL = ()
-    KWARGS: TYPE__KWARGS_FINAL = dict()
+    ARGS: TYPE__ARGS_FINAL
+    KWARGS: TYPE__KWARGS_FINAL
 
     def __init__(self, source: Any = None, *args, **kwargs) -> None:
         self.ARGS = args
@@ -33,8 +33,8 @@ class InitSourceKwArgs_Explicite(InitSource):
 
     FOR PYTESTAUX!
     """
-    ARGS: TYPE__ARGS_FINAL = ()
-    KWARGS: TYPE__KWARGS_FINAL = dict()
+    ARGS: TYPE__ARGS_FINAL
+    KWARGS: TYPE__KWARGS_FINAL
 
     def __init__(self, source: Any = None, args: TYPE__ARGS_DRAFT = (), kwargs: TYPE__KWARGS_DRAFT = None, *args2, **kwargs2) -> None:
         self.ARGS = ArgsKwargsAux(args).resolve_args()

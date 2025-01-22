@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 from base_aux.aux_types.m0_primitives import *
 
-from base_aux.cmp.m2_eq import Eq
+from base_aux.cmp.m2_eq import EqAux
 
 
 # =====================================================================================================================
@@ -24,9 +24,9 @@ from base_aux.cmp.m2_eq import Eq
     ]
 )
 def test__compare_doublesided(source, args, _EXPECTED):
-    PytestAux(Eq(source).eq_doublesided_or_exx, args).assert_check(_EXPECTED[0])
-    PytestAux(Eq(source).eq_doublesided__bool, args).assert_check(_EXPECTED[1])
-    PytestAux(Eq(source).eq_doublesided__reverse, args).assert_check(_EXPECTED[2])
+    PytestAux(EqAux(source).eq_doublesided_or_exx, args).assert_check(_EXPECTED[0])
+    PytestAux(EqAux(source).eq_doublesided__bool, args).assert_check(_EXPECTED[1])
+    PytestAux(EqAux(source).eq_doublesided__reverse, args).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================
