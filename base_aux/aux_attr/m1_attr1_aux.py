@@ -293,10 +293,6 @@ class AttrAux(InitSource):
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallablesUse = CallablesUse.DIRECT) -> AttrsDump | NoReturn:
-        pass
-        # TODO: finish
-
     def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXCEPTION) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
@@ -333,19 +329,23 @@ class AttrAux(InitSource):
     def dump_dict__direct(self) -> TYPE__KWARGS_FINAL:
         return self.dump_dict(CallablesUse.DIRECT)
 
-    def dump_dict__callables_skip(self) -> TYPE__KWARGS_FINAL:
+    def dump_dict__skip_callables(self) -> TYPE__KWARGS_FINAL:
         return self.dump_dict(CallablesUse.SKIP_CALLABLE)
 
-    def dump_dict__callables_resolve_raise(self) -> dict[str, Any] | NoReturn:
+    def dump_dict__skip_raised(self) -> dict[str, Any] | NoReturn:
         return self.dump_dict(CallablesUse.RAISE)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def dump_obj(self, callables_use: CallablesUse = CallablesUse.EXCEPTION) -> AttrsDump | NoReturn:
+        data = self.dump_dict(callables_use)
+        obj = AttrAux().load__by_dict(data)
+        return obj
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        data = self.dump_dict(CallablesUse.EXCEPTION)
-        if data:
-            for key, value in data.items():
-                result += f"\n\t{key}={value}"
+        for key, value in self.dump_dict(CallablesUse.EXCEPTION).items():
+            result += f"\n\t{key}={value}"
         else:
             result += f"\nEmpty=Empty"
 
