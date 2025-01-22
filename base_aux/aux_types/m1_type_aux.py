@@ -300,7 +300,7 @@ class TypeAux(InitSource):
         ---------------------
         AnnotAux.init_values
         """
-        source: type[Any] = self.SOURCE
+        source: type[Any] = self.get__class()
 
         if source in [type(None), None]:
             return None
