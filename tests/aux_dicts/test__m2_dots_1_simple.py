@@ -2,7 +2,6 @@ from typing import *
 import pytest
 
 from base_aux.aux_dict.m2_dict_dots1_simple import *
-from base_aux.funcs import *
 
 
 # =====================================================================================================================

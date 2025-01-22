@@ -3,7 +3,6 @@ from typing import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from base_aux.funcs import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.classes.m1_translator import Translator
 from base_aux.pyqt.m3_tm import TableModelTemplate

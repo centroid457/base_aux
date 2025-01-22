@@ -10,7 +10,6 @@
 #
 # from typing import *
 #
-# # from base_aux.funcs import *
 # from base_aux.classes import Valid
 #
 #
