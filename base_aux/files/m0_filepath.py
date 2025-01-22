@@ -17,7 +17,7 @@ class ResolveFilePath(Resolver):
     base_aux.files
     """
     NAME: str = None
-    EXT_LAST: str = None
+    EXTLAST: str = None
     DIRPATH: pathlib.Path = None
 
     # as properties -------
@@ -29,8 +29,8 @@ class ResolveFilePath(Resolver):
         result = ""
         if self.NAME is not None:
             result += f"{self.NAME}"
-        if self.EXT_LAST is not None:
-            result += f".{self.EXT_LAST}"
+        if self.EXTLAST is not None:
+            result += f".{self.EXTLAST}"
         return result
 
     @property
@@ -40,7 +40,7 @@ class ResolveFilePath(Resolver):
     def __init__(
             self,
             name: str = None,
-            ext_last: str = None,
+            extlast: str = None,
             dirpath: str | pathlib.Path = None,
             nameext: str = None,
 
@@ -49,14 +49,14 @@ class ResolveFilePath(Resolver):
         """
         NOTE
         ----
-        you can use "filepath" as base/default and others (name/ext_last/...) for overwrite some of them base parts
+        you can use "filepath" as base/default and others (name/extlast/...) for overwrite some of them base parts
         """
 
         if filepath is not None:
             filepath = pathlib.Path(filepath)
             self.DIRPATH = filepath.parent
             self.NAME = filepath.stem
-            self.EXT_LAST = filepath.suffix.rsplit(".", 1)[-1]
+            self.EXTLAST = filepath.suffix.rsplit(".", 1)[-1]
 
         if dirpath is not None:
             self.DIRPATH = pathlib.Path(dirpath)
@@ -66,9 +66,9 @@ class ResolveFilePath(Resolver):
         if nameext is not None:
             name_ext: list[str] = nameext.rsplit(".", 1)
             if len(name_ext) == 2:  # DOT exists!
-                name, ext_last = name_ext
-                if ext_last:
-                    self.EXT_LAST = ext_last
+                name, extlast = name_ext
+                if extlast:
+                    self.EXTLAST = extlast
                 if name:
                     self.NAME = name
             else:
@@ -77,8 +77,8 @@ class ResolveFilePath(Resolver):
         # most important! overwrite previous set!
         if name is not None:
             self.NAME = name
-        if ext_last is not None:
-            self.EXT_LAST = ext_last
+        if extlast is not None:
+            self.EXTLAST = extlast
 
     # -----------------------------------------------------------------------------------------------------------------
     def resolve(self) -> pathlib.Path:
