@@ -3,7 +3,7 @@ import pytest
 
 from base_aux.aux_dict.m1_dict_aux import *
 from base_aux.base_enums.m0_enums import FormIntExt
-from base_aux.base_objects.m0_primitives import LAMBDA_ECHO
+from base_aux.aux_types.m0_primitives import LAMBDA_ECHO
 
 
 # =====================================================================================================================

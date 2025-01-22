@@ -1,6 +1,6 @@
 from typing import *
 from base_aux.base_source.m1_source import InitSource
-from base_aux.base_objects.m1_obj1_types import TypeCheck
+from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
 
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
@@ -23,7 +23,7 @@ class Eq(InitSource):
 
         CREATED SPECIALLY FOR
         ---------------------
-        manipulate base_objects which have special methods for __cmp__
+        manipulate aux_types which have special methods for __cmp__
         for cases when we can switch places
 
         BEST USAGE
@@ -44,11 +44,11 @@ class Eq(InitSource):
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
-        if TypeCheck(self.SOURCE).check__exception():
-            if TypeCheck(other).check__nested__by_cls_or_inst(self.SOURCE):
+        if TypeAux(self.SOURCE).check__exception():
+            if TypeAux(other).check__nested__by_cls_or_inst(self.SOURCE):
                 return True
-        elif TypeCheck(other).check__exception():
-            if TypeCheck(self.SOURCE).check__nested__by_cls_or_inst(other):
+        elif TypeAux(other).check__exception():
+            if TypeAux(self.SOURCE).check__nested__by_cls_or_inst(other):
                 return True
 
         try:
@@ -57,7 +57,7 @@ class Eq(InitSource):
                 return True
         except Exception as exx:
             result12 = exx
-            # if TypeCheck(other).check__exception() and TypeCheck(result12).check__nested__by_cls_or_inst(other):
+            # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__by_cls_or_inst(other):
             #     return True
 
         try:
@@ -66,7 +66,7 @@ class Eq(InitSource):
                 return True
         except Exception as exx:
             result21 = exx
-            # if TypeCheck(self.SOURCE).check__exception() and TypeCheck(result21).check__nested__by_cls_or_inst(self.SOURCE):
+            # if TypeAux(self.SOURCE).check__exception() and TypeAux(result21).check__nested__by_cls_or_inst(self.SOURCE):
             #     return True
 
         try:

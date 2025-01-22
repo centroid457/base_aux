@@ -3,7 +3,7 @@ import re
 
 from base_aux.base_source.m1_source import InitSource
 from base_aux.base_enums.m0_enums import *
-# from base_aux.base_objects import TypeCheck
+# from base_aux.aux_types import TypeAux
 
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
 from base_aux.aux_callable.m1_callable_aux import CallableAux
@@ -250,7 +250,7 @@ class AttrAux(InitSource):
         """
         # resolve property --------------
         # result_property = CallableAux(getattr).resolve(callables_use, self.SOURCE, realname)
-        # TypeCheck
+        # TypeAux
 
         try:
             value = self.anycase__getattr(name)

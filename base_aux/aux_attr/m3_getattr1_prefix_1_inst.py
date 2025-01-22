@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_exceptions import *
-from base_aux.base_objects.m1_obj1_types import TypeCheck
+from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_callable.m1_callable_aux import *
 
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
@@ -86,7 +86,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
         result = CallableAux(source).resolve_exx()
-        if TypeCheck(result).check__exception() or bool(result) != bool(_reverse):
+        if TypeAux(result).check__exception() or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 
     def raise_if_not__(self, source: Any, comment: str = "") -> None | NoReturn:

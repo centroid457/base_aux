@@ -1,7 +1,7 @@
 """
 GOAL
 ----
-collect all obvious variants of code base_objects
+collect all obvious variants of code aux_types
 
 USEFUL IDEAS
 ------------
@@ -593,7 +593,7 @@ class VALUES_CALLABLE:
 
 
 def _callable__show_who_really_are():
-    # from base_aux.base_objects import ObjectInfo
+    # from base_aux.aux_types import ObjectInfo
     # ObjectInfo(VALUES_CALLABLE).print()
     # exit()
     from base_aux.aux_attr.m2_annot1_aux import AttrAux

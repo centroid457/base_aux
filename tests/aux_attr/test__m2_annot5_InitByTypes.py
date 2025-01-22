@@ -4,7 +4,7 @@ from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 from base_aux.aux_attr.m2_annot5_init import *
 from base_aux.aux_values.m1_explicit import *
 
-from base_aux.base_objects.m1_obj2_info import *
+from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================

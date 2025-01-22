@@ -3,7 +3,7 @@ import pytest
 from pytest import mark
 
 from base_aux.base_source.m2_source_kwargs import *
-from base_aux.base_objects.m1_obj1_types import TypeCheck
+from base_aux.aux_types.m1_type_aux import TypeAux
 
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
@@ -55,13 +55,13 @@ class PytestAux(InitSourceKwArgs_Explicite):
             pytest.skip("skipIF")
 
         if _MARK == mark.xfail:
-            if TypeCheck(_EXPECTED).check__exception():
-                assert not TypeCheck(actual_value).check__nested__by_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
+            if TypeAux(_EXPECTED).check__exception():
+                assert not TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
             else:
                 assert actual_value != _EXPECTED, f"[xfail]{comment}"
         else:
-            if TypeCheck(_EXPECTED).check__exception():
-                assert TypeCheck(actual_value).check__nested__by_cls_or_inst(_EXPECTED)
+            if TypeAux(_EXPECTED).check__exception():
+                assert TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED)
             else:
                 assert actual_value == _EXPECTED
 

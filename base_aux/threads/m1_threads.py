@@ -149,7 +149,7 @@ class ThreadsManager(SingletonCallMeta):
     def decorator__to_thread(self, _func) -> Callable:
         """Decorator which start thread from funcs and methods.
 
-        always collect base_objects threads in result object! even if nothread! so you can get results from group!
+        always collect aux_types threads in result object! even if nothread! so you can get results from group!
 
         :param _func: decorated target
         """

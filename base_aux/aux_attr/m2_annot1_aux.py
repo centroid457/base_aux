@@ -1,8 +1,8 @@
 from typing import *
 
 from base_aux.base_exceptions import Exx__AnnotNotDefined
-from base_aux.base_objects.m1_obj1_types import TypeCheck
-from ..base_objects.m0_types import TYPES
+from base_aux.aux_types.m1_type_aux import TypeAux
+from ..aux_types.m0_types import TYPES
 from base_aux.base_source.m1_source import InitSource
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
@@ -132,7 +132,7 @@ class AnnotsAux(InitSource):
         ----
         iter only important user classes from mro
         """
-        yield from TypeCheck(self.SOURCE).iter_mro_user(AnnotsBase)
+        yield from TypeAux(self.SOURCE).iter_mro_user(AnnotsBase)
 
     def iter_names(self) -> Iterable[str]:
         """
@@ -186,7 +186,7 @@ class AnnotsAux(InitSource):
             if not_existed and hasattr(self.SOURCE, name):
                 continue
 
-            value = TypeCheck(value).type__init_value__default()
+            value = TypeAux(value).type__init_value__default()
             setattr(self.SOURCE, name, value)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -218,7 +218,7 @@ class AnnotsAux(InitSource):
         ----
         add names into annots!
         """
-        cls = TypeCheck(self).get__class()
+        cls = TypeAux(self).get__class()
 
         for name in names:
             annots = cls.__annotations__

@@ -1,12 +1,12 @@
 from typing import *
 
-from base_aux.base_objects.m0_types import TYPES
+from base_aux.aux_types.m0_types import TYPES
 from base_aux.base_source.m1_source import InitSource
 
 
 # =====================================================================================================================
 @final
-class TypeCheck(InitSource):
+class TypeAux(InitSource):
     SOURCE: type[Any] | Any
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ class TypeCheck(InitSource):
         GOAL
         ----
         MOST PREFERRED to use for ensure_collection! and apply for Args!
-        all other base_objects (ClsInst) will covered by brackets!
+        all other aux_types (ClsInst) will covered by brackets!
         """
         return isinstance(self.SOURCE, TYPES.ELEMENTARY_COLLECTION)
 
@@ -215,6 +215,17 @@ class TypeCheck(InitSource):
     def check__instance_not_elementary(self) -> bool:
         return self.check__instance() and not self.check__elementary()
 
+    def check__nested__by_cls_or_inst(self, parent: Any) -> bool | None:
+        """
+        any of both variant (Instance/Class) comparing with TARGET of both variant (Instance/Class)
+
+        specially created for pytest_aux for comparing with Exception!
+        """
+        source_cls = self.get__class()
+        parent_cls = TypeAux(parent).get__class()
+        return issubclass(source_cls, parent_cls)
+
+    # EXX -------------------------------------------------------------------------------------------------------------
     def check__exception(self) -> bool:
         """
         any of both variant (Instance/Class) of any Exception!
@@ -231,16 +242,6 @@ class TypeCheck(InitSource):
         # except:
         #     pass
         # return False
-
-    def check__nested__by_cls_or_inst(self, parent: Any) -> bool | None:
-        """
-        any of both variant (Instance/Class) comparing with TARGET of both variant (Instance/Class)
-
-        specially created for pytest_aux for comparing with Exception!
-        """
-        source_cls = self.get__class()
-        parent_cls = TypeCheck(parent).get__class()
-        return issubclass(source_cls, parent_cls)
 
     # =================================================================================================================
     def get__class(self) -> type:
@@ -290,6 +291,15 @@ class TypeCheck(InitSource):
 
     # =================================================================================================================
     def type__init_value__default(self) -> Any | NoReturn:
+        """
+        GOAL
+        ----
+        gen default values by type if available
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        AnnotAux.init_values
+        """
         source: type[Any] = self.SOURCE
 
         if source in [type(None), None]:
@@ -310,7 +320,7 @@ class TypeCheck(InitSource):
             if str(source).startswith("typing.Optional"):
                 return None
             if str(source).startswith("typing.Union"):
-                return TypeCheck(source.__args__[0]).type__init_value__default()
+                return TypeAux(source.__args__[0]).type__init_value__default()
             if (
                     str(source).startswith("typing.Iterable")
                     or

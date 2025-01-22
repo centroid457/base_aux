@@ -6,7 +6,7 @@ from base_aux.base_enums.m0_enums import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.base_source.m1_source import InitSource
 
-from base_aux.base_objects.m0_types import TYPE__ELEMENTARY
+from base_aux.aux_types.m0_types import TYPE__ELEMENTARY
 
 
 # =====================================================================================================================
@@ -115,7 +115,7 @@ class TextAux(InitSource):
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python base_objects
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         so it just same process as re.sub by one func for several values
 
         SPECIALLY CREATED FOR
@@ -137,7 +137,7 @@ class TextAux(InitSource):
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python base_objects
+        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         so it just same process as re.sub by one func for several values
 
         SPECIALLY CREATED FOR

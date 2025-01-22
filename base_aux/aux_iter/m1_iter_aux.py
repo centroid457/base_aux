@@ -50,7 +50,7 @@ class IterAux(InitSource):
         #
         # USEFUL in case-insensitive systems (like terminals or serial devices) or object structured by prefix-names:
         # 1. get key in dict
-        # 2. find attribute name in base_objects
+        # 2. find attribute name in aux_types
         #
         # :param item:
         # :return: actual item from collection

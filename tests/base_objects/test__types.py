@@ -1,8 +1,8 @@
 from typing import *
 import pytest
 
-from base_aux.base_objects.m1_obj1_types import *
-from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_types.m1_type_aux import *
+from base_aux.aux_types.m0_primitives import *
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux
 
 
@@ -59,7 +59,7 @@ class Test__1:
         ]
     )
     def test__check__bool_none(self, source, _EXPECTED):
-        victim = TypeCheck(source)
+        victim = TypeAux(source)
 
         PytestAux(victim.check__bool_none).assert_check(_EXPECTED[0])
         PytestAux(victim.check__elementary).assert_check(_EXPECTED[1])
@@ -117,7 +117,7 @@ class Test__1:
         ]
     )
     def test__check__elementary_collection_not_dict(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__elementary_collection_not_dict
+        func_link = TypeAux(source).check__elementary_collection_not_dict
         PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ class Test__1:
         ]
     )
     def test__iterable(self, source, args, _EXPECTED):
-        func_link = TypeCheck(source).check__iterable
+        func_link = TypeAux(source).check__iterable
         PytestAux(func_link, args).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -225,7 +225,7 @@ class Test__1:
         ]
     )
     def test__iterable_not_str(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__iterable_not_str
+        func_link = TypeAux(source).check__iterable_not_str
         PytestAux(func_link).assert_check(_EXPECTED)
 
     # CALLABLE --------------------------------------------------------------------------------------------------------
@@ -275,7 +275,7 @@ class Test__1:
         ]
     )
     def test__check__callable_func_meth_inst(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_func_meth_inst
+        func_link = TypeAux(source).check__callable_func_meth_inst
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -324,7 +324,7 @@ class Test__1:
         ]
     )
     def test__check__callable_func_meth(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_func_meth
+        func_link = TypeAux(source).check__callable_func_meth
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -373,7 +373,7 @@ class Test__1:
         ]
     )
     def test__check__callable_func(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_func
+        func_link = TypeAux(source).check__callable_func
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -422,7 +422,7 @@ class Test__1:
         ]
     )
     def test__check__callable_meth(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_meth
+        func_link = TypeAux(source).check__callable_meth
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -471,7 +471,7 @@ class Test__1:
         ]
     )
     def test__check__callable_inst(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_inst
+        func_link = TypeAux(source).check__callable_inst
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -520,7 +520,7 @@ class Test__1:
         ]
     )
     def test__check__callable_cls_as_func_builtin(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__callable_cls_as_func_builtin
+        func_link = TypeAux(source).check__callable_cls_as_func_builtin
         PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -570,7 +570,7 @@ class Test__1:
         ]
     )
     def test__check__class(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__class
+        func_link = TypeAux(source).check__class
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -619,7 +619,7 @@ class Test__1:
         ]
     )
     def test__check__instance(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__instance
+        func_link = TypeAux(source).check__instance
         PytestAux(func_link).assert_check(_EXPECTED)
 
     @pytest.mark.parametrize(
@@ -668,7 +668,7 @@ class Test__1:
         ]
     )
     def test__check__instance_not_elementary(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__instance_not_elementary
+        func_link = TypeAux(source).check__instance_not_elementary
         PytestAux(func_link).assert_check(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -718,7 +718,7 @@ class Test__1:
         ]
     )
     def test__check__exception(self, source, _EXPECTED):
-        func_link = TypeCheck(source).check__exception
+        func_link = TypeAux(source).check__exception
         PytestAux(func_link).assert_check(_EXPECTED)
 
     # =================================================================================================================
@@ -763,7 +763,7 @@ class Test__1:
         ]
     )
     def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
-        func_link = TypeCheck(source).check__nested__by_cls_or_inst
+        func_link = TypeAux(source).check__nested__by_cls_or_inst
         PytestAux(func_link, parent).assert_check(_EXPECTED)
 
 

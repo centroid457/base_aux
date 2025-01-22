@@ -3,7 +3,7 @@ import time
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_enums.m0_enums import When2
-# from base_aux.base_objects import TypeCheck   # CIRCULAR IMPORT
+# from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 from base_aux.base_source.m2_source_kwargs import InitSourceKwArgs_Implicite
 
 from base_aux.cmp.m2_eq import Eq
@@ -19,7 +19,7 @@ class Lambda(InitSourceKwArgs_Implicite):
     GOAL
     ----
     1. (MAIN) delay probable raising on direct func execution (used with AttrsLambdasResolve)
-    like creating base_objects on Cls attributes
+    like creating aux_types on Cls attributes
         class Cls:
             ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
 
@@ -49,7 +49,7 @@ class Lambda(InitSourceKwArgs_Implicite):
     extremely good point!
     but
     1. in case of at least AttrsLambdasResolve you cant distinguish method or callable attribute!
-    so you explicitly define attributes/base_objects for later constructions
+    so you explicitly define attributes/aux_types for later constructions
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 
     2.
@@ -67,7 +67,7 @@ class Lambda(InitSourceKwArgs_Implicite):
         """
         args = args or self.ARGS
         kwargs = kwargs or self.KWARGS
-        if callable(self.SOURCE):  # callable accept all variants! TypeCheck.check__callable_func_meth_inst_cls!
+        if callable(self.SOURCE):  # callable accept all variants! TypeAux.check__callable_func_meth_inst_cls!
             return self.SOURCE(*args, **kwargs)
         else:
             return self.SOURCE

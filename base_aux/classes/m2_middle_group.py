@@ -2,7 +2,7 @@
 
 from typing import *
 
-from base_aux.base_objects.m1_obj1_types import *
+from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 
@@ -12,7 +12,7 @@ class ClsMiddleGroup:
     """
     NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only aux_attr!
     ------------------------
-    1. comparing direct methods on base_objects will not work!!!
+    1. comparing direct methods on aux_types will not work!!!
         -------------------------
             class Cls:
                 def meth(self):
@@ -111,7 +111,7 @@ class ClsMiddleGroup:
     USAGE
     -----
     1. create some middle classes which will define groups.
-    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so base_objects could be compared not just by names!
+    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so aux_types could be compared not just by names!
     3. do nesting your final classes by Groups
 
         # BEFORE --------------------------
@@ -164,10 +164,10 @@ class ClsMiddleGroup:
         """
         middle groups could be cmp only by this method!
         """
-        if not TypeCheck(other).check__nested__by_cls_or_inst(ClsMiddleGroup):
+        if not TypeAux(other).check__nested__by_cls_or_inst(ClsMiddleGroup):
             return
 
-        other = TypeCheck(other).get__class()
+        other = TypeAux(other).get__class()
 
         # in case of used only empty base MiddleGroup and no any Group configured!
         if cls.MIDDLE_GROUP__NAME == other.MIDDLE_GROUP__NAME == cls.MIDDLE_GROUP__CMP_ATTR == other.MIDDLE_GROUP__CMP_ATTR is None:

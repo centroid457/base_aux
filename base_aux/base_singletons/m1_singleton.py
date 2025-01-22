@@ -103,7 +103,7 @@ class SingletonManagerBase:
 
     @classmethod
     def instance__collect(cls, cls_obj: Any) -> None:
-        """collect all singleton base_objects from all classes
+        """collect all singleton aux_types from all classes
 
         dont know why but it is not working! both in meta and noMeta
         """

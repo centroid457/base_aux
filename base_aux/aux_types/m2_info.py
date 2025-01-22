@@ -1,7 +1,7 @@
 from typing import *
 from dataclasses import dataclass, field
 
-from .m1_obj1_types import TypeCheck
+from .m1_type_aux import TypeAux
 from base_aux.aux_attr.m0_static import check_name__buildin
 
 
@@ -206,13 +206,13 @@ class ObjectInfo:
             # print(f"{name=}/{attr_obj=}/type={type(attr_obj)}/elementary={isinstance(attr_obj, TYPES.ELEMENTARY)}")
 
             # PLACE VALUE ---------------------------------------------------------------------
-            if TypeCheck(value).check__elementary_single():
+            if TypeAux(value).check__elementary_single():
                 if attr_is_method:
                     self.ITEM.METHODS__ELEMENTARY_SINGLE.update({name: value})
                 else:
                     self.ITEM.PROPERTIES__ELEMENTARY_SINGLE.update({name: value})
 
-            elif TypeCheck(value).check__elementary_collection():
+            elif TypeAux(value).check__elementary_collection():
                 if attr_is_method:
                     self.ITEM.METHODS__ELEMENTARY_COLLECTION.update({name: value})
                 else:
@@ -259,7 +259,7 @@ class ObjectInfo:
         block_value = f"{value}"
         if isinstance(value, ItemInternal):
             block_type = f"{value.KEY}:{value.VALUE}"
-        elif TypeCheck(value).check__exception():
+        elif TypeAux(value).check__exception():
             block_value = f"{value!r}"
 
         # -------------------------------
@@ -272,7 +272,7 @@ class ObjectInfo:
         print(result)
 
         # -------------------------------
-        if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeCheck(value).check__exception():
+        if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeAux(value).check__exception():
             # additional print repr()
             self._print_line__name_type_value(name=None, type_replace="__repr()", value=repr(value))
 
@@ -318,7 +318,7 @@ class ObjectInfo:
             return
 
         # COLLECTION -----------------------------------------------------------------------------
-        if TypeCheck(value).check__elementary_collection():
+        if TypeAux(value).check__elementary_collection():
             # start some pretty style -------------------------------------
             if not isinstance(value, dict):
                 _index = 0
@@ -340,9 +340,9 @@ class ObjectInfo:
 
         # SINGLE/EXX/OBJECTS ---------------------------------------------------------------------
         if any([
-            TypeCheck(value).check__elementary_single(),
-            TypeCheck(value).check__exception(),
-            TypeCheck(value).check__instance(),
+            TypeAux(value).check__elementary_single(),
+            TypeAux(value).check__exception(),
+            TypeAux(value).check__instance(),
         ]):
             pass    # DONT USE RETURN HERE OR ELIF IN NEXT LINE!!!
 
@@ -360,7 +360,7 @@ class ObjectInfo:
         for group_name, group_values in self.ITEM.__getstate__().items():
             self._print_line__group_separator(group_name)
 
-            if TypeCheck(group_values).check__elementary_collection_not_dict():
+            if TypeAux(group_values).check__elementary_collection_not_dict():
                 for pos, name in enumerate(group_values, start=1):
                     print(f"{pos}:\t{name}")
             else:

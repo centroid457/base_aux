@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_types.m0_primitives import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.aux_pytester.m1_pytest_aux import PytestAux

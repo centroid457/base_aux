@@ -767,7 +767,7 @@ class SettingsInt(int):
         Attribute 'SettingsInt.keys' contains a set of all other keys.
 
         Class is used for storing and selecting one integer number
-        from several base_objects.
+        from several aux_types.
     """
 
     def __init__(self, ordered_dict_with_empty_values):
@@ -788,7 +788,7 @@ class SettingsFloat(float):
         Attribute 'SettingsFloat.keys' contains a set of all other keys.
 
         Class is used for storing and selecting one float number
-        from several base_objects.
+        from several aux_types.
     """
 
     def __init__(self, ordered_dict_with_empty_values):
@@ -1322,7 +1322,7 @@ def type_is_elementary_single(source):   # starichenko
     not iterable except str!
 
     str/int/float/NoneType/bool - True
-    not any base_objects/otherIterabled - False
+    not any aux_types/otherIterabled - False
     """
     return isinstance(source, TYPE_ELEMENTARY_SINGLE_TUPLE)
 
@@ -2423,7 +2423,7 @@ def sequences_get_longest(*seqs):
 def sequences_flatten(*seqs, miss_value_list=[]):     # starichenko
     """flatten all nested elements in all sequences
     if need actually dict flatten - use func dict_flatten!
-    if dict or another extended data (base_objects) - will used as original!
+    if dict or another extended data (aux_types) - will used as original!
 
     :param miss_value_list: miss element if found in sequence
         you can miss any object even exact dict!

@@ -10,7 +10,7 @@ class PROJECT:
     ]
     # README --------------------------------------------------
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
-    DESCRIPTION_SHORT: str = "pyqt help examples and some other useful base_objects (overloaded pyqt classes)"
+    DESCRIPTION_SHORT: str = "pyqt help examples and some other useful aux_types (overloaded pyqt classes)"
     DESCRIPTION_LONG: str = """Designed for ..."""
     FEATURES: list[str] = [
         # "feat1",

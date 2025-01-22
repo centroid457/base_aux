@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_pytester.m1_pytest_aux import *
 from base_aux.aux_attr.m0_static import AttrsDump
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
-from base_aux.base_objects.m0_primitives import *
+from base_aux.aux_types.m0_primitives import *
 from base_aux.base_enums.m0_enums import *
 
 

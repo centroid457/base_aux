@@ -1,7 +1,7 @@
 from typing import *
 import platform
 
-from base_aux.base_objects.m1_obj1_types import *
+from base_aux.aux_types.m1_type_aux import *
 
 
 # =====================================================================================================================
@@ -161,7 +161,7 @@ class ReqCheckStr_Base(metaclass=_GetattrClassmethod_Meta):
             msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
             raise Exx_RequirementCantGetActualValue(msg)
 
-        if TypeCheck(cls._GETTER).check__callable_func_meth_inst():
+        if TypeAux(cls._GETTER).check__callable_func_meth_inst():
             try:
                 cls._value_actual = str(cls._GETTER()).lower()
             except Exception as exx:

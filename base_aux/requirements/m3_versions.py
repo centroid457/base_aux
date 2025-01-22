@@ -343,7 +343,7 @@ class CheckVersion(GetattrPrefixInst_RaiseIf):
 
     @property
     def ACTUAL(self) -> Version:
-        if TypeCheck(self.SOURCE).check__callable_func_meth_inst():
+        if TypeAux(self.SOURCE).check__callable_func_meth_inst():
             value = self.SOURCE()
         else:
             value = self.SOURCE

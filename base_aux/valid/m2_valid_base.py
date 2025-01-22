@@ -220,13 +220,13 @@ class Valid:
                 self.value_last = CallableAux(value_link).resolve_exx(*self.ARGS__VALUE, **self.KWARGS__VALUE)
 
                 # VALIDATE ------------------
-                if isinstance(self.value_last, Exception) and not TypeCheck(self.VALIDATE_LINK).check__exception():
+                if isinstance(self.value_last, Exception) and not TypeAux(self.VALIDATE_LINK).check__exception():
                     self.validate_last = False
 
-                elif TypeCheck(self.VALIDATE_LINK).check__exception():
-                    self.validate_last = TypeCheck(self.value_last).check__nested__by_cls_or_inst(self.VALIDATE_LINK)
+                elif TypeAux(self.VALIDATE_LINK).check__exception():
+                    self.validate_last = TypeAux(self.value_last).check__nested__by_cls_or_inst(self.VALIDATE_LINK)
 
-                elif TypeCheck(self.VALIDATE_LINK).check__callable_func_meth_inst():
+                elif TypeAux(self.VALIDATE_LINK).check__callable_func_meth_inst():
                     self.validate_last = CallableAux(self.VALIDATE_LINK).resolve_exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
 
                 else:

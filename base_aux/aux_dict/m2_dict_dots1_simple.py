@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.base_objects.m1_obj2_info import ObjectInfo
+from base_aux.aux_types.m2_info import ObjectInfo
 
 from base_aux.aux_attr.m2_annot2_required import *
 from base_aux.aux_iter.m1_iter_aux import IterAux

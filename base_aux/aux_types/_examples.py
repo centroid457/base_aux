@@ -1,5 +1,5 @@
-from base_aux.base_objects.m0_primitives import *
-from base_aux.base_objects.m1_obj2_info import *
+from base_aux.aux_types.m0_primitives import *
+from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================

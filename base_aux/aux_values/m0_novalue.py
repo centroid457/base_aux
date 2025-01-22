@@ -13,7 +13,7 @@ class NoValue:
 
     SPECIALLY CREATED FOR
     ---------------------
-    Valid as universal validation object under cmp other base_objects!
+    Valid as universal validation object under cmp other aux_types!
 
     USAGE
     -----

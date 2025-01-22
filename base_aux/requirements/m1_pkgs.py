@@ -3,7 +3,7 @@ import pathlib
 import re
 import sys
 
-from base_aux.base_objects.m1_obj1_types import TypeCheck
+from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.cli.m1_cli_user import CliUser
 from base_aux.aux_text.m1_text_aux import TextAux
 
@@ -497,7 +497,7 @@ self.last_exx_timeout=None
         Requires:
         Required-by:
 
-        C:\\Users\\a.starichenko>pip show base_objects
+        C:\\Users\\a.starichenko>pip show aux_types
         Name: object-info
         Version: 0.1.12
         Summary: print info about object (attributes+properties+methods results)
@@ -579,7 +579,7 @@ self.last_exx_timeout=None
         get only root names (no parts like pkg.module)
         """
         # SINGLE -------------
-        if not TypeCheck(patterns).check__iterable_not_str():
+        if not TypeAux(patterns).check__iterable_not_str():
             patterns = [patterns, ]
 
         # ITERABLE -------------
@@ -610,7 +610,7 @@ self.last_exx_timeout=None
         ----
         find values by patterns in files
         """
-        if not TypeCheck(patterns).check__iterable_not_str():
+        if not TypeAux(patterns).check__iterable_not_str():
             patterns = [patterns, ]
 
         # PATH -------------------
@@ -622,7 +622,7 @@ self.last_exx_timeout=None
         # skip_paths -------------------
         if skip_paths is None:
             skip_paths = []
-        if not TypeCheck(skip_paths).check__iterable_not_str():
+        if not TypeAux(skip_paths).check__iterable_not_str():
             skip_paths = [skip_paths, ]
 
         for skip_path in skip_paths:

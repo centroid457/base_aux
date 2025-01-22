@@ -24,7 +24,7 @@ class Explicit(InitSource):
 
     WHY NOT-1: NamedTuple
     ----------------
-    cause of we need to be able to compare different base_objects by values.
+    cause of we need to be able to compare different aux_types by values.
     maybe we need just add __eq__ method instead of it!!!
 
     USAGE

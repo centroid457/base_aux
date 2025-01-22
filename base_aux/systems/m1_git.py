@@ -1,7 +1,7 @@
 import pathlib
 import datetime
 from base_aux.aux_text.m1_text_aux import TextAux
-from base_aux.base_objects.m1_obj2_info import ObjectInfo
+from base_aux.aux_types.m2_info import ObjectInfo
 
 
 try:
@@ -158,7 +158,7 @@ class Git:
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    from base_aux.base_objects import *
+    from base_aux.aux_types import *
     ObjectInfo(Git()).print()
 
 

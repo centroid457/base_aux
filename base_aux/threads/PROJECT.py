@@ -31,7 +31,7 @@ class PROJECT:
 
         "use different managers for different funcs/methods if needed",
         "use just one decorator to spawn threads from func / methods",
-        "keep all spawned threads in list by ThreadItem base_objects",
+        "keep all spawned threads in list by ThreadItem aux_types",
         "ThreadItem keeps result/exx/is_alive attributes!",
         "use wait_all/terminate_all()",
     ]

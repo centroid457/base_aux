@@ -2,7 +2,7 @@ from typing import *
 import math
 
 from base_aux.base_exceptions import *
-from base_aux.base_objects.m1_obj2_info import *
+from base_aux.aux_types.m2_info import *
 
 from base_aux.cmp.m1_cmp import CmpInst
 
@@ -54,7 +54,7 @@ class NumberArithmTranslateToAttr(CmpInst):
             raise Exx__NumberArithm_NoName()
 
         result = getattr(self, self.NUMBER_ARITHM__GETATTR_NAME)
-        if TypeCheck(result).check__callable_func_meth_inst():
+        if TypeAux(result).check__callable_func_meth_inst():
             result = result()
         return result
 
