@@ -35,8 +35,7 @@ class IterAux(InitSource):
     SOURCE: TYPE__ITERABLE = dict
     # PATH: list[TYPE__ITER_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
+    # def init_post(self):
     #     self.PATH = []
 
     def item__get_original(self, item: Any) -> Any | None:
@@ -60,6 +59,7 @@ class IterAux(InitSource):
             if value == item or str(value).lower() == str(item).lower():
                 return value
 
+    # -----------------------------------------------------------------------------------------------------------------
     def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None:
         """
         NOTES:
@@ -71,6 +71,8 @@ class IterAux(InitSource):
             None - if path is unreachable/incorrect
             tuple[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
         """
+
+        # TODO: add attribute acceptable in path! and separate as Extruder?
         source = self.SOURCE
         if not path:
             return ()
