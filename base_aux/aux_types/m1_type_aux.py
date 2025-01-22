@@ -300,7 +300,7 @@ class TypeAux(InitSource):
         ---------------------
         AnnotAux.init_values
         """
-        source: type[Any] = self.get__class()
+        source: type[Any] = self.SOURCE  # self.get__class() # DONT USE!
 
         if source in [type(None), None]:
             return None
@@ -343,9 +343,9 @@ class TypeAux(InitSource):
         # FINAL ------------------------------------
         # USERCLASS
         if callable(source):
-            return source()
+            return source
         else:
-            return source()
+            return source
 
 
 # =====================================================================================================================
