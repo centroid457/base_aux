@@ -36,17 +36,4 @@ TYPE__VALID_VALIDATOR = Union[
 
 
 # =====================================================================================================================
-TYPES_ELEMENTARY_SINGLE: tuple[type, ...] = (
-    type(None), bool,
-    str, bytes,
-    int, float,
-)
-TYPES_ELEMENTARY_COLLECTION: tuple[type, ...] = (
-    tuple, list,
-    set, dict,
-)
-TYPES_ELEMENTARY: tuple[type, ...] = (*TYPES_ELEMENTARY_SINGLE, *TYPES_ELEMENTARY_COLLECTION, )
-TYPE__ELEMENTARY = Union[*TYPES_ELEMENTARY]
 
-
-# =====================================================================================================================

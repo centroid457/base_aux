@@ -1,48 +1,14 @@
 from typing import *
 
+from base_aux.base_objects.m0_types import TYPES
 from base_aux.base_source.m1_source import InitSource
-
-
-# =====================================================================================================================
-class _Cls:
-    def meth(self):
-        pass
-
-
-# =====================================================================================================================
-@final
-class TYPES:
-    """
-    GOAL
-    ----
-    collect all types variants
-    """
-
-    # SINGLE ---------------------------
-    NONE: type = type(None)
-    FUNCTION: type = type(lambda: True)
-    METHOD: type = type(_Cls().meth)
-
-    # COLLECTIONS ---------------------------
-    ELEMENTARY_SINGLE: tuple[type, ...] = (
-        type(None),
-        bool,
-        int, float,
-        str, bytes,
-    )
-    ELEMENTARY_COLLECTION: tuple[type, ...] = (
-        tuple, list,
-        set, dict,
-    )
-    ELEMENTARY: tuple[type, ...] = (
-        *ELEMENTARY_SINGLE,
-        *ELEMENTARY_COLLECTION,
-    )
 
 
 # =====================================================================================================================
 @final
 class TypeCheck(InitSource):
+    SOURCE: type[Any] | Any
+
     # -----------------------------------------------------------------------------------------------------------------
     def check__bool_none(self) -> bool:
         """
@@ -190,7 +156,7 @@ class TypeCheck(InitSource):
         ---------------------
         not special! just as ones found ability to!
         """
-        result = not self.check__class() and type(_Cls().meth) in self.SOURCE.__class__.__mro__
+        result = not self.check__class() and TYPES.METHOD in self.SOURCE.__class__.__mro__
         return result
 
     def check__callable_inst(self) -> bool:
