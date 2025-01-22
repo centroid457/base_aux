@@ -1,5 +1,6 @@
 from typing import *
 
+from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
@@ -8,8 +9,9 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================
-@final
-class EqAux(InitSource):
+class _EqAuxBase(InitSource):
+    CALLABLES: bool = None
+
     # -----------------------------------------------------------------------------------------------------------------
     def check_oneside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
         # fixme: finish one side!!!!
@@ -57,6 +59,15 @@ class EqAux(InitSource):
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
+        if self.CALLABLES:
+            self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
+
+            try:
+                other = CallableAux(other).resolve_raise()
+            except Exception as exx:
+                return exx
+
+        # --------------------------
         if TypeAux(self.SOURCE).check__exception():
             if TypeAux(other).check__nested__by_cls_or_inst(self.SOURCE):
                 return True
@@ -139,6 +150,18 @@ class EqAux(InitSource):
                 msg = f"for {key_real=} {actual=}/{expected=}"
                 print(msg)
                 return False
+
+
+# =====================================================================================================================
+@final
+class EqAuxSimple(_EqAuxBase):
+    CALLABLES = False
+
+
+@final
+class EqAuxCallable(_EqAuxBase):
+    # NOTE: for acllables DONT USE ARGS/KWARGS! its just about
+    CALLABLES = True
 
 
 # =====================================================================================================================
