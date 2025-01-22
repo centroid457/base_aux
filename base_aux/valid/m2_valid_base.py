@@ -1,12 +1,12 @@
-from typing import *
 import time
 
 from base_aux.aux_values.m0_novalue import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
+from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__VALID_SOURCE_BOOL, TYPE__VALID_RESULT_BOOL, \
+    TYPE__VALID_RESULT_BOOL__EXX, TYPE__VALID_VALIDATOR
 
-from base_aux.funcs.m0_static import *
 from base_aux.cmp.m2_eq import Eq
 
 # from base_aux.lambdas.lambdas import *

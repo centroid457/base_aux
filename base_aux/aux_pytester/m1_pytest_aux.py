@@ -8,7 +8,7 @@ from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
 
-from base_aux.funcs.m0_static import TYPE__VALID_RESULT
+from base_aux.aux_types.m0_types import TYPE__VALID_RESULT
 
 
 # =====================================================================================================================
