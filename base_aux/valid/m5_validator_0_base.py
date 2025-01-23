@@ -11,6 +11,11 @@ from base_aux.cmp.m2_eq import EqAux
 # =====================================================================================================================
 class EqValidator:
     """
+    NOTE
+    ----
+    preferably not use directly this object!
+    USE DERIVATIVES!!! without validator passing
+
     GOAL
     ----
     base object to make a validation by direct comparing with other object
