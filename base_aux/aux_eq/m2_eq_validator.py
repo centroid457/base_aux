@@ -13,8 +13,12 @@ class _EqValidator:
     """
     NOTE
     ----
-    preferably not use directly this object!
+    1/ preferably not use directly this object!
     USE DERIVATIVES!!! without validator passing
+
+    2/ MAIN IDEA - NEVER RAISED!!! if any - return FALSE!!! if need - check manually!
+    why so? - because i need smth to make a tests with final result of any source!
+    dont mind reason!
 
     GOAL
     ----
@@ -75,15 +79,7 @@ class _EqValidator:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def _explore_1():
-    print(_EqValidator(bool) == 2)
-    print(_EqValidator(bool) == 1)
-    print(_EqValidator(bool) != 0)
-    print(_EqValidator(bool) == LAMBDA_TRUE)
-
-
-# =====================================================================================================================
-class _EqValid_Base(_EqValidator):
+class EqValid_Base(_EqValidator):
     def __init__(self, *args, **kwargs):
         # print(args, kwargs)
         # super(ArgsKwargs, self).__init__(*args, **kwargs)     # not working!
@@ -92,9 +88,10 @@ class _EqValid_Base(_EqValidator):
         self.ARGS = args
         self.KWARGS = kwargs
 
-# ---------------------------------------------------------------------------------------------------------------------
+
+# =====================================================================================================================
 @final
-class EqValid_Variants(_EqValid_Base):
+class EqValid_Variants(EqValid_Base):
     def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
         if other in args:
             return True
@@ -102,15 +99,9 @@ class EqValid_Variants(_EqValid_Base):
             return False
 
 
-def _explore_21():
-    print(EqValid_Variants(0, 1, 2) == 1)
-    print(EqValid_Variants(0, 1, 2) != 3)
-    print(EqValid_Variants(*"123") == "1")
-    print(EqValid_Variants(*"123") != "false")
-
-
+# ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_VariantsStrLow(_EqValid_Base):
+class EqValid_VariantsStrLow(EqValid_Base):
     def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
         other = str(other).lower()
         args = (str(arg).lower() for arg in args)
@@ -120,83 +111,48 @@ class EqValid_VariantsStrLow(_EqValid_Base):
             return False
 
 
-def _explore_22():
-    print(EqValid_VariantsStrLow(*"ABC") == "A")
-    print(EqValid_VariantsStrLow(*"ABC") == "a")
-    print(EqValid_VariantsStrLow(*"ABC") != "d")
-
-
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 @final
-class EqValid_Exx(_EqValid_Base):
+class EqValid_Exx(EqValid_Base):
     def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
         return TypeAux(other).check__exception()
 
 
-def _explore_3():
-    print(EqValid_Exx() != False)
-    print(EqValid_Exx() != 1)
-    print(EqValid_Exx() == Exception)
-    print(EqValid_Exx() == Exception())
-    print(EqValid_Exx() == LAMBDA_EXX)
-    print(EqValid_Exx() == LAMBDA_RAISE)
-
-
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Raise(_EqValid_Base):
+class EqValid_Raise(EqValid_Base):
     def VALIDATOR(self, other, *args, **kwargs) -> bool:
         return self.OTHER_RAISED
 
 
-def _explore_4():
-    print(EqValid_Raise() != False)
-    print(EqValid_Raise() != Exception)
-    print(EqValid_Raise() != Exception())
-    print(EqValid_Raise() == LAMBDA_RAISE)
-
-
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 @final
-class EqValid_LtGt(_EqValid_Base):
+class EqValid_LtGt(EqValid_Base):
     def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other).ltgt(low, high)
 
 
 @final
-class EqValid_LtGe(_EqValid_Base):
+class EqValid_LtGe(EqValid_Base):
     def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other).ltge(low, high)
 
 
 @final
-class EqValid_LeGt(_EqValid_Base):
+class EqValid_LeGt(EqValid_Base):
     def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other).legt(low, high)
 
+
 @final
-class EqValid_LeGe(_EqValid_Base):
+class EqValid_LeGe(EqValid_Base):
     def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other).lege(low, high)
 
 
-def _explore_5():
-    print(EqValid_LtGt(1, 3) != 1)
-    print(EqValid_LtGt(1, 3) == 2)
-    print(EqValid_LtGt(1, 3) != 3)
-
-
 # =====================================================================================================================
 if __name__ == "__main__":
-    _explore_1()
-    print()
-    _explore_21()
-    print()
-    _explore_22()
-    print()
-    _explore_3()
-    print()
-    _explore_4()
+    pass
 
 
 # =====================================================================================================================

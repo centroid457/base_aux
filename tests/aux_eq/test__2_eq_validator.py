@@ -1,0 +1,84 @@
+import pytest
+
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_types.m0_primitives import *
+
+
+from base_aux.aux_eq.m2_eq_validator import _EqValidator
+from base_aux.aux_eq.m2_eq_validator import *
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, other, _EXPECTED",
+    argvalues=[
+        (bool, None, False),
+        (bool, 0, False),
+        (bool, 1, True),
+        (bool, 2, True),
+        (bool, LAMBDA_TRUE, True),
+        (bool, LAMBDA_FALSE, False),
+    ]
+)
+def test___EqValidator(source, other, _EXPECTED):
+    ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="args, other, _EXPECTED",
+    argvalues=[
+        ([1,2], 1, (True, True)),
+        ([1,2], "1", (False, True)),
+        ([1,2], 10, (False, False)),
+        ([*"12"], "1", (True, True)),
+        ([*"12"], "10", (False, False)),
+        ([*"12"], "hello", (False, False)),
+
+        ([*"ABC"], "A", (True, True)),
+        ([*"ABC"], "a", (False, True)),
+        ([*"ABC"], "f", (False, False)),
+    ]
+)
+def test__variants(args, other, _EXPECTED):
+    ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_VariantsStrLow(*args) == other).check_assert(_EXPECTED[1])
+
+
+@pytest.mark.parametrize(
+    argnames="other, _EXPECTED",
+    argvalues=[
+        (False, (False, False)),
+        (True, (False, False)),
+        (1, (False, False)),
+        (Exception, (True, False)),
+        (Exception(), (True, False)),
+        (LAMBDA_EXX, (True, False)),
+        (LAMBDA_RAISE, (True, True)),
+    ]
+)
+def test__exx_raise(other, _EXPECTED):
+    ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[1])
+
+
+@pytest.mark.parametrize(
+    argnames="args, other, _EXPECTED",
+    argvalues=[
+        ((1,2), False, (False, False, False, False)),
+        ((1,2), Exception, (False, False, False, False)),
+        ((Exception,2), 1, (False, False, False, False)),
+
+        ((1,2), 0, (False, False, False, False)),
+        ((1,2), 1, (False, False, True, True)),
+        ((1,2), 2, (False, True, False, True)),
+        ((1,2), 3, (False, False, False, False)),
+    ]
+)
+def test__LG(args, other, _EXPECTED):
+    ExpectAux(EqValid_LtGt(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_LtGe(*args) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_LeGt(*args) == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_LeGe(*args) == other).check_assert(_EXPECTED[3])
+
+
+# =====================================================================================================================
