@@ -47,7 +47,7 @@ class CallablesUse(Enum):
 
 
 # =====================================================================================================================
-class CallableResult(Enum):
+class CallableFinish(Enum):
     """
     GOAL
     ----
@@ -57,10 +57,12 @@ class CallableResult(Enum):
     ---------------------
     CallableAux.resolve when returns SKIPPED like object!
     """
-    SUCCESS = auto()
-    FAILED = auto()
+    NONE = auto()
+    STARTED = auto()
     RAISED = auto()
     SKIPPED = auto()
+    STOPPED = auto()
+    SUCCESS = auto()
 
 
 # =====================================================================================================================
