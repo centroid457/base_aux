@@ -5,6 +5,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m0_types import TYPE__VALID_VALIDATOR
 from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.valid.m1_aux_valid_lg import *
 
 
 # =====================================================================================================================
@@ -157,25 +158,32 @@ def _explore_4():
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_GtLt(_EqValid_Base):
-    def VALIDATOR(self, other, low: float = None, high: float = None) -> bool | NoReturn:
-        result = True
+class EqValid_LtGt(_EqValid_Base):
+    def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other).ltgt(low, high)
 
-        # low ----------
-        if low is not None:
-            result &= low < other
 
-        # high ----------
-        if high is not None:
-            result &= other < high
+@final
+class EqValid_LtGe(_EqValid_Base):
+    def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other).ltge(low, high)
 
-        # final ----------
-        return result
+
+@final
+class EqValid_LeGt(_EqValid_Base):
+    def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other).legt(low, high)
+
+@final
+class EqValid_LeGe(_EqValid_Base):
+    def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other).lege(low, high)
+
 
 def _explore_5():
-    print(EqValid_GtLt(1, 3) != 1)
-    print(EqValid_GtLt(1, 3) == 2)
-    print(EqValid_GtLt(1, 3) != 3)
+    print(EqValid_LtGt(1, 3) != 1)
+    print(EqValid_LtGt(1, 3) == 2)
+    print(EqValid_LtGt(1, 3) != 3)
 
 
 # =====================================================================================================================
