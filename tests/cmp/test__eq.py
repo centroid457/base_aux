@@ -14,6 +14,7 @@ from base_aux.cmp.m2_eq import EqAux
         (1, 2,              (False, False, True,    False, False, True)),
         (LAMBDA_TRUE, True, (False, False, True,    False, False, True)),
 
+        # __EQ__=in single obj!
         (ClsEq(1), 1,       (True, True, False,     True, True, False)),
         (ClsEq(1), 2,       (False, False, True,    False, False, True)),
         (1, ClsEq(1),       (True, True, False,    True, True, False)),
@@ -21,6 +22,11 @@ from base_aux.cmp.m2_eq import EqAux
 
         (INST_EQ_RAISE, 1,  (Exception, False, True,    Exception, False, True)),
         (1, INST_EQ_RAISE,  (Exception, False, True,    Exception, False, True)),
+
+        # __EQ__=in both objs!
+        (INST_EQ_TRUE, INST_EQ_FALSE, (True, True, False,   True, True, False)),
+        (INST_EQ_FALSE, INST_EQ_TRUE, (False, False, True,  True, True, False)),
+
     ]
 )
 def test__eq_aux(source, args, _EXPECTED):
