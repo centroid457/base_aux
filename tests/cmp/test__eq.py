@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_types.m0_primitives import *
 
-from base_aux.cmp.m2_eq import EqAux
+from base_aux.aux_eq.m1_eq_aux import EqAux
 
 
 # =====================================================================================================================

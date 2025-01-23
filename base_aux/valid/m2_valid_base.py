@@ -7,7 +7,7 @@ from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__VALID_SOURCE_BOOL, TYPE__VALID_RESULT_BOOL, \
     TYPE__VALID_RESULT_BOOL__EXX, TYPE__VALID_VALIDATOR
 
-from base_aux.cmp.m2_eq import EqAux
+from base_aux.aux_eq.m1_eq_aux import EqAux
 
 # from base_aux.lambdas.lambdas import *
 

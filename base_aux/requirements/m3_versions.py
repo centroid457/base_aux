@@ -1,10 +1,8 @@
-from typing import *
-
 import sys
 import re
 
 from base_aux.aux_attr.m3_getattr1_prefix_1_inst import *
-from base_aux.cmp.m1_cmp import CmpInst
+from base_aux.aux_eq.m0_cmp_inst import CmpInst
 
 
 # =====================================================================================================================

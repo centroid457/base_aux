@@ -5,7 +5,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
-from base_aux.cmp.m1_cmp import CmpInst
+from base_aux.aux_eq.m0_cmp_inst import CmpInst
 
 
 # =====================================================================================================================

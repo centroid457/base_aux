@@ -7,7 +7,7 @@ from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.aux_attr.m2_annot4_cls_keys_as_values import AnnotClsKeysAsValues
 from base_aux.classes.m3_number import NumberArithmTranslateToAttr
 
-from base_aux.cmp.m2_eq import EqAux
+from base_aux.aux_eq.m1_eq_aux import EqAux
 
 
 # =====================================================================================================================

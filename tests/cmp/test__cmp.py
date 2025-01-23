@@ -1,7 +1,5 @@
-import pytest
-
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.cmp.m1_cmp import CmpInst
+from base_aux.aux_eq.m0_cmp_inst import CmpInst
 
 
 # =====================================================================================================================
