@@ -42,7 +42,7 @@ def check_lack_words() -> None:
 проверка_ФИНИШ
     """.lower().split()
 
-    file = pathlib.Path(__file__, "..", "nouns5rus.txt")
+    file = pathlib.Path(__file__, "..", "game1_nouns5rus.txt")
     text = file.read_text(encoding="utf8").lower()
 
     words: set[str] = set(TextAux(text).split_lines(True))
