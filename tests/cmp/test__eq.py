@@ -10,23 +10,27 @@ from base_aux.cmp.m2_eq import EqAux
 @pytest.mark.parametrize(
     argnames="source, args, _EXPECTED",
     argvalues=[
-        (1, 1,        (True, True, False)),
-        (1, 2,        (False, False, True)),
-        (LAMBDA_TRUE, True, (False, False, True)),
+        (1, 1,              (True, True, False,     True, True, False)),
+        (1, 2,              (False, False, True,    False, False, True)),
+        (LAMBDA_TRUE, True, (False, False, True,    False, False, True)),
 
-        (ClsEq(1), 1, (True, True, False)),
-        (ClsEq(1), 2, (False, False, True)),
-        (1, ClsEq(1), (True, True, False)),
-        (2, ClsEq(1), (False, False, True)),
+        (ClsEq(1), 1,       (True, True, False,     True, True, False)),
+        (ClsEq(1), 2,       (False, False, True,    False, False, True)),
+        (1, ClsEq(1),       (True, True, False,    True, True, False)),
+        (2, ClsEq(1),       (False, False, True,    False, False, True)),
 
-        (ClsEqRaise(), 1, (Exception, False, True)),
-        (1, ClsEqRaise(), (Exception, False, True)),
+        (INST_EQ_RAISE, 1,  (Exception, False, True,    Exception, False, True)),
+        (1, INST_EQ_RAISE,  (Exception, False, True,    Exception, False, True)),
     ]
 )
-def test__compare_doublesided(source, args, _EXPECTED):
-    ExpectAux(EqAux(source).check_doubleside__exx, args).check_assert(_EXPECTED[0])
-    ExpectAux(EqAux(source).check_doubleside__bool, args).check_assert(_EXPECTED[1])
-    ExpectAux(EqAux(source).check_doubleside__reverse, args).check_assert(_EXPECTED[2])
+def test__eq_aux(source, args, _EXPECTED):
+    ExpectAux(EqAux(source).check_oneside__exx, args).check_assert(_EXPECTED[0])
+    ExpectAux(EqAux(source).check_oneside__bool, args).check_assert(_EXPECTED[1])
+    ExpectAux(EqAux(source).check_oneside__reverse, args).check_assert(_EXPECTED[2])
+
+    ExpectAux(EqAux(source).check_doubleside__exx, args).check_assert(_EXPECTED[3])
+    ExpectAux(EqAux(source).check_doubleside__bool, args).check_assert(_EXPECTED[4])
+    ExpectAux(EqAux(source).check_doubleside__reverse, args).check_assert(_EXPECTED[5])
 
 
 # =====================================================================================================================

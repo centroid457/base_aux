@@ -50,7 +50,7 @@ class ExpectAux(InitSourceKwArgs_Explicite):
         comment = _COMMENT or ""
         actual_value = CallableAux(self.SOURCE).resolve_exx(*args, **kwargs)
 
-        print(f"pytest={args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}")
+        print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
 
         # MARKS -------------------------
         # print(f"{mark.skipif(True)=}")

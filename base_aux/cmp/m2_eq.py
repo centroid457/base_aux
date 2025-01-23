@@ -11,13 +11,38 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 # =====================================================================================================================
 @final
 class EqAux(InitSource):
+    # FIXME: decide about callables/KwAgs
     # CALLABLES: bool = None   # NOTE: DONT use callables here in Eq!!!
     # NOTE: dont use Args/Kwargs here in EqAux! - no callables! just final objects!
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_oneside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
-        # fixme: finish one side!!!!
-        return NotImplemented
+        # if self.CALLABLES:
+        #     self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
+        #
+        #     try:
+        #         other = CallableAux(other).resolve_raise()
+        #     except Exception as exx:
+        #         return exx
+
+        # EXX ------
+        if TypeAux(other).check__exception():
+            if TypeAux(self.SOURCE).check__nested__by_cls_or_inst(other):   # CORRECT ORDER!!!
+                return True
+        # WORK ------
+        try:
+            result = self.SOURCE == other
+            if result:
+                return True
+        except Exception as exx:
+            result = exx
+            # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__by_cls_or_inst(other):
+            #     return True
+            if return_bool:
+                result = False
+
+        # FINAL ------
+        return result
 
     def check_oneside__bool(self, other: Any) -> bool:
         return self.check_oneside__exx(other, return_bool=True)
@@ -61,52 +86,25 @@ class EqAux(InitSource):
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
-        # if self.CALLABLES:
-        #     self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
-        #
-        #     try:
-        #         other = CallableAux(other).resolve_raise()
-        #     except Exception as exx:
-        #         return exx
+        # ONESIDE ------
+        result12 = self.check_oneside__exx(other=other, return_bool=return_bool)
+        if result12 is True:
+            return True
 
-        # --------------------------
-        if TypeAux(self.SOURCE).check__exception():
-            if TypeAux(other).check__nested__by_cls_or_inst(self.SOURCE):
-                return True
-        elif TypeAux(other).check__exception():
-            if TypeAux(self.SOURCE).check__nested__by_cls_or_inst(other):
-                return True
+        result21 = EqAux(other).check_oneside__exx(other=self.SOURCE, return_bool=return_bool)
+        if result21 is True:
+            return True
 
-        try:
-            result12 = self.SOURCE == other
-            if result12:
-                return True
-        except Exception as exx:
-            result12 = exx
-            # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__by_cls_or_inst(other):
-            #     return True
-
-        try:
-            result21 = other == self.SOURCE
-            if result21:
-                return True
-        except Exception as exx:
-            result21 = exx
-            # if TypeAux(self.SOURCE).check__exception() and TypeAux(result21).check__nested__by_cls_or_inst(self.SOURCE):
-            #     return True
-
-        try:
-            result3 = other is self.SOURCE
-            if result3:
-                return True
-        except Exception as exx:
-            result3 = exx
-            pass
-
-        if False in [result12, result21] or return_bool:
+        # BOOL TRUE ------
+        if return_bool:
             return False
-        else:
-            return result12
+
+        # BOOL FALSE ------
+        if False in [result12, result21]:
+            return False
+
+        # FINAL -----------
+        return result12
 
     def check_doubleside__bool(self, other: Any) -> bool:
         """
