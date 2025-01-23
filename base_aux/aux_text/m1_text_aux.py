@@ -36,7 +36,7 @@ class TextAux(InitSource):
     def clear__blank_lines(self) -> str:
         self.SOURCE = re.sub(pattern=r"^\s*\n", repl="", string=self.SOURCE, flags=re.MULTILINE)
         self.SOURCE = re.sub(pattern=r"\n\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        self.SOURCE = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
+        self.SOURCE = re.sub(pattern=r"^\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)  # not enough!
         return self.SOURCE
 
     def clear__cmts(self) -> str:
