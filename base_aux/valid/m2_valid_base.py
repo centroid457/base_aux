@@ -7,7 +7,7 @@ from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__VALID_SOURCE_BOOL, TYPE__VALID_RESULT_BOOL, \
     TYPE__VALID_RESULT_BOOL__EXX, TYPE__VALID_VALIDATOR
 
-from base_aux.cmp.m2_eq import EqAuxSimple
+from base_aux.cmp.m2_eq import EqAux
 
 # from base_aux.lambdas.lambdas import *
 
@@ -230,7 +230,7 @@ class Valid:
                     self.validate_last = CallableAux(self.VALIDATE_LINK).resolve_exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
 
                 else:
-                    self.validate_last = EqAuxSimple(self.value_last).check_doubleside__exx(self.VALIDATE_LINK)
+                    self.validate_last = EqAux(self.value_last).check_doubleside__exx(self.VALIDATE_LINK)
 
                 # FINISH retry
                 if not self.VALIDATE_RETRY or retry_count == self.VALIDATE_RETRY or self.validate_last_bool:

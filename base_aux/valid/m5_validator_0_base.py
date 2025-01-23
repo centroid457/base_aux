@@ -5,7 +5,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m0_types import TYPE__VALID_VALIDATOR
 from base_aux.aux_callable.m1_callable_aux import *
-from base_aux.cmp.m2_eq import EqAuxSimple
+from base_aux.cmp.m2_eq import EqAux
 
 
 # =====================================================================================================================
@@ -46,7 +46,7 @@ class EqValidator:
         """
         # other_result = CallableAux(other, *_args, **_kwargs).resolve_exx()
         # expected = CallableAux(self.SOURCE).resolve_exx(*args, **self.KWARGS)
-        # result = EqAuxSimple(other_result).eq_doublesided__bool(expected)
+        # result = EqAux(other_result).eq_doublesided__bool(expected)
 
         # ------
         other_result = CallableAux(other).resolve_exx(*other_args, **other_kwargs)

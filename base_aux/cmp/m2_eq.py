@@ -9,8 +9,10 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================
-class _EqAuxBase(InitSource):
-    CALLABLES: bool = None
+@final
+class EqAux(InitSource):
+    # CALLABLES: bool = None   # NOTE: DONT use callables here in Eq!!!
+    # NOTE: dont use Args/Kwargs here in EqAux! - no callables! just final objects!
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_oneside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
@@ -59,13 +61,13 @@ class _EqAuxBase(InitSource):
         example above is not clear! cause of comparison works ok if any of object has __eq__() meth even on second place!
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
-        if self.CALLABLES:
-            self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
-
-            try:
-                other = CallableAux(other).resolve_raise()
-            except Exception as exx:
-                return exx
+        # if self.CALLABLES:
+        #     self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
+        #
+        #     try:
+        #         other = CallableAux(other).resolve_raise()
+        #     except Exception as exx:
+        #         return exx
 
         # --------------------------
         if TypeAux(self.SOURCE).check__exception():
@@ -154,12 +156,7 @@ class _EqAuxBase(InitSource):
 
 # =====================================================================================================================
 @final
-class EqAuxSimple(_EqAuxBase):
-    CALLABLES = False
-
-
-@final
-class EqAuxCallable(_EqAuxBase):
+class EqAuxValidator:
     # NOTE: for acllables DONT USE ARGS/KWARGS! its just about
     CALLABLES = True
 
