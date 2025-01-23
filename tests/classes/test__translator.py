@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.aux_attr.m1_attr0_init_kwargs import *
 from base_aux.classes.m1_translator import *
@@ -26,7 +26,7 @@ class Test__1:
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):
         func_link = Translator(rules=rules, return_source_if_not_found=notFound)
-        PytestAux(func_link, source).assert_check(_EXPECTED)
+        ExpectAux(func_link, source).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

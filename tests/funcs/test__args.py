@@ -1,5 +1,5 @@
 import pytest
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_types.m0_primitives import *
 
 
@@ -41,7 +41,7 @@ class Test__Args:
     )
     def test__ensure_tuple(self, source, _EXPECTED):
         func_link = ArgsKwargsAux(source).resolve_args
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

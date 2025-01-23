@@ -1,4 +1,4 @@
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.requirements.m2_strings import *
 
 from base_aux.cli.m1_cli_user import *
@@ -101,7 +101,7 @@ class Test:
     )
     def test__tuple(self, cmds, timeout, _EXPECTED):        # HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
         func_link = CliUser().send(cmd=cmds, timeout=timeout)
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     def test__list__till_first_true(self):
         victim = CliUser()

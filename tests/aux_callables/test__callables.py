@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.aux_types.m0_primitives import *
 from base_aux.aux_callable.m1_callable_aux import *
@@ -63,14 +63,14 @@ from base_aux.base_enums.m0_enums import *
     ]
 )
 def test__get_result(source, args, _EXPECTED):
-    PytestAux(CallableAux(source).check_raise, args).assert_check(_EXPECTED[0])
-    PytestAux(CallableAux(source).check_no_raise, args).assert_check(_EXPECTED[1])
-    PytestAux(CallableAux(source).resolve_raise, args).assert_check(_EXPECTED[2])
-    PytestAux(CallableAux(source).resolve_raise_as_none, args).assert_check(_EXPECTED[3])
-    PytestAux(CallableAux(source).resolve_exx, args).assert_check(_EXPECTED[4])
-    PytestAux(CallableAux(source).resolve_bool, args).assert_check(_EXPECTED[5])
-    PytestAux(CallableAux(source).resolve_skip_callables, args).assert_check(_EXPECTED[6])
-    PytestAux(CallableAux(source).resolve_skip_raised, args).assert_check(_EXPECTED[7])
+    ExpectAux(CallableAux(source).check_raise, args).check_assert(_EXPECTED[0])
+    ExpectAux(CallableAux(source).check_no_raise, args).check_assert(_EXPECTED[1])
+    ExpectAux(CallableAux(source).resolve_raise, args).check_assert(_EXPECTED[2])
+    ExpectAux(CallableAux(source).resolve_raise_as_none, args).check_assert(_EXPECTED[3])
+    ExpectAux(CallableAux(source).resolve_exx, args).check_assert(_EXPECTED[4])
+    ExpectAux(CallableAux(source).resolve_bool, args).check_assert(_EXPECTED[5])
+    ExpectAux(CallableAux(source).resolve_skip_callables, args).check_assert(_EXPECTED[6])
+    ExpectAux(CallableAux(source).resolve_skip_raised, args).check_assert(_EXPECTED[7])
 
 
 # =====================================================================================================================

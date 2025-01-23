@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.aux_types.m0_primitives import *
 
@@ -54,7 +54,7 @@ class Test__ValidChains:
     )
     def test__types_single(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -78,7 +78,7 @@ class Test__ValidChains:
     )
     def test__chains(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

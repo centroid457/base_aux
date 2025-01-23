@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_attr.m2_annot1_aux import AnnotsBase, AnnotsAux
 
 
@@ -81,7 +81,7 @@ class DictDirect_Fail(dict, AnnotsBase):
 )
 def test__annot__get_not_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).get_not_defined
-    PytestAux(func_link).assert_check(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -103,7 +103,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
 )
 def test__annot__check_all_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).check_all_defined
-    PytestAux(func_link).assert_check(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -125,7 +125,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
     func_link = AnnotsAux(source).check_all_defined_or_raise
-    PytestAux(func_link).assert_check(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -168,7 +168,7 @@ class Test__Cmp:
     )
     def test__dict_types(self, source, _EXPECTED):
         func_link = AnnotsAux(source).dump__dict_types
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -180,7 +180,7 @@ class Test__Cmp:
     )
     def test__dict_values(self, source, _EXPECTED):
         func_link = AnnotsAux(source).dump__dict_values
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -192,7 +192,7 @@ class Test__Cmp:
     )
     def test__iter_values(self, source, _EXPECTED):
         func_link = list(AnnotsAux(source).iter_values())
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -204,7 +204,7 @@ class Test__Cmp:
     )
     def test__all_defined(self, source, _EXPECTED):
         func_link = AnnotsAux(source).check_all_defined
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

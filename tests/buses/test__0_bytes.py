@@ -1,5 +1,5 @@
 import pytest
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.buses.m1_serial1_client import *
 
@@ -30,7 +30,7 @@ from base_aux.buses.m1_serial1_client import *
     ]
 )
 def test__data_ensure__bytes(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ def test__data_ensure__bytes(func_link, args, _EXPECTED):
     ]
 )
 def test__data_ensure__string(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -93,7 +93,7 @@ class Victim(SerialClient):
     ]
 )
 def test__bytes_eol__ensures(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ def test__bytes_eol__ensures(func_link, args, _EXPECTED):
     ]
 )
 def test__data_eol__clear(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -152,7 +152,7 @@ def test__data_eol__clear(func_link, args, _EXPECTED):
     ]
 )
 def test__create_cmd_line(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,5 +1,5 @@
 import pytest
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.requirements.m3_versions import *
 
@@ -69,7 +69,7 @@ class Test__ReqCheckVersion_Python:
     # )
     # def test__inst__cmp__eq(self, args, _EXPECTED):
     #     func_link = lambda source1, source2: self.Victim().check_eq("1.02rc2.3")
-    #     PytestAux(func_link, args).assert_check(_EXPECTED)
+    #     ExpectAux(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

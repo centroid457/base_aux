@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_iter.m1_iter_aux import IterAux
 
 
@@ -25,7 +25,7 @@ from base_aux.aux_iter.m1_iter_aux import IterAux
 )
 def test__item__get_original(source, item, _EXPECTED):
     func_link = IterAux(source).item__get_original
-    PytestAux(func_link, item).assert_check(_EXPECTED)
+    ExpectAux(func_link, item).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -68,10 +68,10 @@ def test__item__get_original(source, item, _EXPECTED):
 )
 def test__path__get_original__value_get(source, path, _EXPECTED):
     func_link = IterAux(source).path__get_original
-    PytestAux(func_link, path).assert_check(_EXPECTED[0])
+    ExpectAux(func_link, path).check_assert(_EXPECTED[0])
 
     func_link = IterAux(source).value__get
-    PytestAux(func_link, path).assert_check(_EXPECTED[1])
+    ExpectAux(func_link, path).check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

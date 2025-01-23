@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_attr.m1_attr3_lambdas_resolve import *
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 
 
 # =====================================================================================================================
@@ -23,7 +23,7 @@ def test__common__define(value, _EXPECTED):
     except Exception as exx:
         define_was_ok = exx
 
-    PytestAux(define_was_ok).assert_check(_EXPECTED)
+    ExpectAux(define_was_ok).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -54,7 +54,7 @@ def test__special__define_and_init(value, _EXPECTED):
         assert victim.ATTR_INT == value
         assert victim.ATTR_STR == str(value)
 
-    PytestAux(init_was_ok).assert_check(_EXPECTED)
+    ExpectAux(init_was_ok).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m1_attr2_anycase import *
 
 
@@ -32,7 +32,7 @@ class Victim(AttrAnycaseGSAI):
 def test__attr(attr, _EXPECTED):
     args = (Victim(), attr)
     func_link = getattr
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -55,7 +55,7 @@ def test__attr(attr, _EXPECTED):
 )
 def test__item(attr, _EXPECTED):
     func_link = lambda _attr: Victim()[_attr]
-    PytestAux(func_link, attr).assert_check(_EXPECTED)
+    ExpectAux(func_link, attr).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

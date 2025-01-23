@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.cmp.m1_cmp import CmpInst
 
 
@@ -68,7 +68,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__eq(self, expr):
-        PytestAux(expr).assert_check()
+        ExpectAux(expr).check_assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -100,7 +100,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__lg(self, expr, _EXPECTED):
-        PytestAux(expr).assert_check(_EXPECTED)
+        ExpectAux(expr).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

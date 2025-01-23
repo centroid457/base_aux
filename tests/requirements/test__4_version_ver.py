@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.requirements.m3_versions import *
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 
 
 # =====================================================================================================================
@@ -62,7 +62,7 @@ class Test__Version:
     )
     def test___prepare_string(self, args, _EXPECTED):
         func_link = self.Victim._prepare_string
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -103,7 +103,7 @@ class Test__Version:
     )
     def test__inst__string(self, args, _EXPECTED):
         func_link = lambda source: str(self.Victim(source))
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -133,7 +133,7 @@ class Test__Version:
     )
     def test__inst__len(self, args, _EXPECTED):
         func_link = lambda source: len(self.Victim(source))
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -163,7 +163,7 @@ class Test__Version:
     )
     def test__inst__cmp__eq(self, args, _EXPECTED):
         func_link = lambda source1, source2: self.Victim(source1) == source2
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="expression",
@@ -180,7 +180,7 @@ class Test__Version:
         ]
     )
     def test__inst__cmp(self, expression):
-        PytestAux(expression).assert_check()
+        ExpectAux(expression).check_assert()
 
     # PARTS -----------------------------------------------------------------------------------------------------------
     def test__parts(self):

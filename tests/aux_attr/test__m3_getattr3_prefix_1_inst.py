@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst
 
 
@@ -83,7 +83,7 @@ def test__anycase_meth():
 )
 def test__batch(meth, args, _EXPECTED):
     func_link = lambda *_args: getattr(victim, meth)(*_args)
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

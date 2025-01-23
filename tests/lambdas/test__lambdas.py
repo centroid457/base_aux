@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_types.m0_primitives import *
 
 from base_aux.lambdas.m1_lambdas import *
@@ -34,11 +34,11 @@ def test__raise():
 def test__derivatives(source, args, _EXPECTED):
     # for Cls, Expected in zip(, _EXPECTED):    # tis good idea but we cant see directly exact line!
 
-    PytestAux(Lambda(source, *args)).assert_check(_EXPECTED[0])
-    PytestAux(LambdaBool(source, *args)).assert_check(_EXPECTED[1])
-    PytestAux(LambdaBoolReversed(source, *args)).assert_check(_EXPECTED[2])
-    PytestAux(LambdaTrySuccess(source, *args)).assert_check(_EXPECTED[3])
-    PytestAux(LambdaTryFail(source, *args)).assert_check(_EXPECTED[4])
+    ExpectAux(Lambda(source, *args)).check_assert(_EXPECTED[0])
+    ExpectAux(LambdaBool(source, *args)).check_assert(_EXPECTED[1])
+    ExpectAux(LambdaBoolReversed(source, *args)).check_assert(_EXPECTED[2])
+    ExpectAux(LambdaTrySuccess(source, *args)).check_assert(_EXPECTED[3])
+    ExpectAux(LambdaTryFail(source, *args)).check_assert(_EXPECTED[4])
 
 
 # =====================================================================================================================

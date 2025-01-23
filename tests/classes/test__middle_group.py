@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.classes.m2_middle_group import *
 
 
@@ -62,7 +62,7 @@ class VictimAttr1CmpAttr2_TryBreak(VictimAttr1CmpAttr2):
     ]
 )
 def test__victim__check_equal__cls(obj, other, _EXPECTED):
-    PytestAux(obj.middle_group__check_equal__cls, other).assert_check(_EXPECTED)
+    ExpectAux(obj.middle_group__check_equal__cls, other).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

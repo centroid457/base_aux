@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m0_static import check_name__buildin
 
 
@@ -28,7 +28,7 @@ from base_aux.aux_attr.m0_static import check_name__buildin
 )
 def test__name_is_build_in(source, _EXPECTED):
     func_link = check_name__buildin(source)
-    PytestAux(func_link).assert_check(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

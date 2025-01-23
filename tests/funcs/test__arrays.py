@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_arrays.m1_arrays_aux import *
 
 
@@ -16,7 +16,7 @@ from base_aux.aux_arrays.m1_arrays_aux import *
     ])
 def test__array_2d_get_compact_str(source, p2, p3, p4, p5, _EXPECTED):
     funk_link = ArrayAux(source).d2_get_compact_str
-    PytestAux(funk_link, kwargs=dict(interpreter=p2, separate_rows=p3, wrap=p4, use_rows_num=p5)).assert_check(_EXPECTED)
+    ExpectAux(funk_link, kwargs=dict(interpreter=p2, separate_rows=p3, wrap=p4, use_rows_num=p5)).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_types.m0_primitives import *
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 
 
@@ -44,7 +44,7 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 )
 def test__args(source, _EXPECTED):
     source = ArgsKwargsAux(source).resolve_args
-    PytestAux(source).assert_check(_EXPECTED)
+    ExpectAux(source).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

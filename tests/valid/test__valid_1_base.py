@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.aux_types.m0_primitives import *
 
@@ -115,11 +115,11 @@ class Test__ValidTypes:
     def test__validate__types(self, args, _EXPECTED):
         # DIRECT -------
         func_link = Valid(*args)
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
         # REVERSE ------
         func_link =  ValidReverse(*args)
-        PytestAux(func_link).assert_check(not _EXPECTED)
+        ExpectAux(func_link).check_assert(not _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -135,7 +135,7 @@ class Test__ValidTypes:
         # assert source == Valid(*valid_args)
 
         func_link = lambda *_args: source == Valid(*_args)
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -161,7 +161,7 @@ class Test__ValidTypes:
     )
     def test__value__args_kwargs(self, source, args__value, kwargs__value, validate, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate, args__value=args__value, kwargs__value=kwargs__value)
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -200,7 +200,7 @@ class Test__ValidTypes:
     )
     def test__validate__args_kwargs(self, source, args__validate, kwargs__validate, validate, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate, args__validate=args__validate, kwargs__validate=kwargs__validate)
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -277,7 +277,7 @@ class Test__ValidTypes:
     )
     def test__retry(self, source, validate_link, retry, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate_link, validate_retry=retry).run
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.classes.m3_number import *
 
 
@@ -33,7 +33,7 @@ class Victim(NumberArithmTranslateToAttr):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = NumberArithmTranslateToAttr.number__get_string_no_zeros
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -60,7 +60,7 @@ def test__precision_str(args, _EXPECTED):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = NumberArithmTranslateToAttr.number__try_int_if_same
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -106,7 +106,7 @@ class Test__Number:
         ]
     )
     def test__cmp(self, expr):
-        PytestAux(expr).assert_check()
+        ExpectAux(expr).check_assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -121,7 +121,7 @@ class Test__Number:
         ]
     )
     def test__precision(self, expr, _EXPECTED):
-        PytestAux(expr).assert_check(_EXPECTED)
+        ExpectAux(expr).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -141,7 +141,7 @@ class Test__Number:
     )
     def test__str(self, expr, _EXPECTED):
         func_link = str(expr)
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

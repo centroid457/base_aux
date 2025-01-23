@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_attr.m0_static import AttrsDump
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
 from base_aux.aux_types.m0_primitives import *
@@ -59,10 +59,10 @@ class VictimNested_New(Victim):
     ]
 )
 def test__iter(source, _EXPECTED):
-    PytestAux(set(AttrAux(source).iter__external_not_builtin())).assert_check(_EXPECTED[0])
-    PytestAux(set(AttrAux(source).iter__not_hidden())).assert_check(_EXPECTED[1])
-    PytestAux(set(AttrAux(source).iter__not_private())).assert_check(_EXPECTED[2])
-    PytestAux(set(AttrAux(source).iter__private())).assert_check(_EXPECTED[3])
+    ExpectAux(set(AttrAux(source).iter__external_not_builtin())).check_assert(_EXPECTED[0])
+    ExpectAux(set(AttrAux(source).iter__not_hidden())).check_assert(_EXPECTED[1])
+    ExpectAux(set(AttrAux(source).iter__not_private())).check_assert(_EXPECTED[2])
+    ExpectAux(set(AttrAux(source).iter__private())).check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================
@@ -93,9 +93,9 @@ class Victim2:
 def test__anycase__getset(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    PytestAux(AttrAux(Victim2()).anycase__find, attr).assert_check(_EXPECTED[0])
-    PytestAux(AttrAux(Victim2()).anycase__getattr, attr).assert_check(_EXPECTED[1])
-    PytestAux(AttrAux(Victim2()).anycase__setattr, (attr, 123)).assert_check(_EXPECTED[2])
+    ExpectAux(AttrAux(Victim2()).anycase__find, attr).check_assert(_EXPECTED[0])
+    ExpectAux(AttrAux(Victim2()).anycase__getattr, attr).check_assert(_EXPECTED[1])
+    ExpectAux(AttrAux(Victim2()).anycase__setattr, (attr, 123)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
@@ -158,10 +158,10 @@ class Test__Dump:
     )
     def test__callable_use(self, cal_use, _EXPECTED):
         result_dict = AttrAux(Victim).dump_dict(cal_use)
-        PytestAux(dict.get, (result_dict, "NONE")).assert_check(_EXPECTED[0])
-        PytestAux(dict.get, (result_dict, "TRUE")).assert_check(_EXPECTED[1])
-        PytestAux(dict.get, (result_dict, "LTRUE")).assert_check(_EXPECTED[2])
-        PytestAux(dict.get, (result_dict, "RAISE")).assert_check(_EXPECTED[3])
+        ExpectAux(dict.get, (result_dict, "NONE")).check_assert(_EXPECTED[0])
+        ExpectAux(dict.get, (result_dict, "TRUE")).check_assert(_EXPECTED[1])
+        ExpectAux(dict.get, (result_dict, "LTRUE")).check_assert(_EXPECTED[2])
+        ExpectAux(dict.get, (result_dict, "RAISE")).check_assert(_EXPECTED[3])
 
     def test__callable_use__special_raise(self):
         try:

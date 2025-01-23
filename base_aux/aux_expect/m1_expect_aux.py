@@ -13,10 +13,15 @@ from base_aux.aux_types.m0_types import TYPE__VALID_RESULT
 
 # =====================================================================================================================
 @final
-class PytestAux(InitSourceKwArgs_Explicite):
+class ExpectAux(InitSourceKwArgs_Explicite):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    unit tests bypytest
+    """
     SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
-    def assert_check(
+    def check_assert(
             self,
             # args: TYPE__ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPE__KWARGS_DRAFT = None,
@@ -65,9 +70,17 @@ class PytestAux(InitSourceKwArgs_Explicite):
             else:
                 assert actual_value == _EXPECTED
 
-    def bool_check(self):
-        # FIXME: deside using CMP/EQ!
-        return NotImplemented
+    def check_bool(self, *args, **kwargs) -> bool:
+        """
+        GOAL
+        ----
+        extend work for not only in unittests
+        """
+        try:
+            self.check_assert(*args, **kwargs)
+            return True
+        except:
+            return False
 
 
 # =====================================================================================================================
@@ -113,7 +126,7 @@ def _func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
-    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
+    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================
@@ -127,7 +140,7 @@ def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     
     ]
 )
 def test__short_variant(func_link, args, kwargs, _EXPECTED):
-    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED)
+    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -142,7 +155,7 @@ def test__short_variant(func_link, args, kwargs, _EXPECTED):
     ]
 )
 def test__shortest_variant(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -161,7 +174,7 @@ def test__shortest_variant(func_link, args, _EXPECTED):
     ]
 )
 def test__expressions(expression):
-    PytestAux(expression).assert_check()
+    ExpectAux(expression).check_assert()
 
 
 # =====================================================================================================================
@@ -175,13 +188,13 @@ def test__expressions(expression):
 # )
 # def test__several_expected(args, _EXPECTED):
 #     func_link = Valid.compare_doublesided_or_exx
-#     PytestAux(func_link, args).assert_check(_EXPECTED[0])
+#     ExpectAux(func_link, args).assert_check(_EXPECTED[0])
 #
 #     func_link = Valid.compare_doublesided__bool
-#     PytestAux(func_link, args).assert_check(_EXPECTED[1])
+#     ExpectAux(func_link, args).assert_check(_EXPECTED[1])
 #
 #     func_link = Valid.compare_doublesided__reverse
-#     PytestAux(func_link, args).assert_check(_EXPECTED[2])
+#     ExpectAux(func_link, args).assert_check(_EXPECTED[2])
 
 
 # =====================================================================================================================

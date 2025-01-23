@@ -1,6 +1,6 @@
 from base_aux.aux_types.m0_primitives import *
 from base_aux.aux_types.m1_type_aux import *
-from base_aux.aux_pytester.m1_pytest_aux import *
+from base_aux.aux_expect.m1_expect_aux import *
 
 
 # =====================================================================================================================
@@ -50,7 +50,7 @@ class Test__ensure:
     )
     def test__ensure_class(self, source, _EXPECTED):
         func_link = TypeAux(source).get__class
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

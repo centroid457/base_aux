@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m2_annot5_init import *
 from base_aux.aux_values.m1_explicit import *
 
@@ -54,7 +54,7 @@ victim1 = Victim1()
 )
 def test__all(args, _EXPECTED):
     func_link = lambda attr: getattr(victim1, attr)
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -76,7 +76,7 @@ victim2 = Victim2()
 )
 def test__not_existed(args, _EXPECTED):
     func_link = lambda attr: getattr(victim2, attr)
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

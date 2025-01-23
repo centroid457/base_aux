@@ -2,7 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 
 # =====================================================================================================================
@@ -20,7 +20,7 @@ def func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__short_variant(func_link, args, _EXPECTED):
-    PytestAux(func_link, args).assert_check(_EXPECTED)
+    ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -44,7 +44,7 @@ def test__short_variant(func_link, args, _EXPECTED):
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[func_example, ])
 def test__long_variant(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):
-    PytestAux(func_link, args, kwargs).assert_check(_EXPECTED, _MARK, _COMMENT)
+    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================

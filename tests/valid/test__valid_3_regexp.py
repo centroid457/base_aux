@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.valid.m3_valid_regexp import *
 
 
@@ -33,7 +33,7 @@ class Test__ReqExp:
     )
     def test__validate(self, pats, value, _EXPECTED):
         func_link = ValidRegExp(pats).run
-        PytestAux(func_link, value).assert_check(_EXPECTED)
+        ExpectAux(func_link, value).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_pytester.m1_pytest_aux import PytestAux
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_enums.m0_enums import *
 
@@ -21,7 +21,7 @@ class Test__Edit:
     )
     def test__spaces_all(self, source, _EXPECTED):
         func_link = TextAux(source).clear__spaces_all
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -37,7 +37,7 @@ class Test__Edit:
     )
     def test__spaces_double(self, source, _EXPECTED):
         func_link = TextAux(source).clear__spaces_double
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -61,7 +61,7 @@ class Test__Edit:
     )
     def test__blank_lines(self, source, _EXPECTED):
         func_link = TextAux(source).clear__blank_lines
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -87,7 +87,7 @@ class Test__Edit:
     )
     def test__clear__cmts(self, source, _EXPECTED):
         func_link = TextAux(source).clear__cmts
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -102,9 +102,9 @@ class Test__Edit:
         ]
     )
     def test__strip__lines(self, source, _EXPECTED):
-        PytestAux(TextAux(source).strip__lines).assert_check(_EXPECTED[0])
-        PytestAux(TextAux(source).lstrip__lines).assert_check(_EXPECTED[1])
-        PytestAux(TextAux(source).rstrip__lines).assert_check(_EXPECTED[2])
+        ExpectAux(TextAux(source).strip__lines).check_assert(_EXPECTED[0])
+        ExpectAux(TextAux(source).lstrip__lines).check_assert(_EXPECTED[1])
+        ExpectAux(TextAux(source).rstrip__lines).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
@@ -133,7 +133,7 @@ class Test__sub:
     def test__1(self, source, _EXPECTED):
         args = ("None", "null")
         func_link = TextAux(source).sub__word
-        PytestAux(func_link, args).assert_check(_EXPECTED)
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -149,7 +149,7 @@ class Test__find:
     )
     def test__1(self, source, patts, _EXPECTED):
         func_link = TextAux(source).find__by_pats
-        PytestAux(func_link, patts).assert_check(_EXPECTED)
+        ExpectAux(func_link, patts).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -189,7 +189,7 @@ class Test__shortcut:
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
         func_link = TextAux(p1).make__shortcut
-        PytestAux(func_link, kwargs=dict(maxlen=p2, sub=p3, where=p4)).assert_check(_EXPECTED)
+        ExpectAux(func_link, kwargs=dict(maxlen=p2, sub=p3, where=p4)).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -221,12 +221,12 @@ class Test__try_convert_to_object:
     )
     def test__MAIN_GOAL__string_source(self, source):
         func_link = TextAux(str(source)).make__object_try
-        PytestAux(func_link).assert_check(source)
+        ExpectAux(func_link).check_assert(source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
         func_link = TextAux(source).make__object_try
-        PytestAux(func_link).assert_check(_EXPECTED)
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -317,7 +317,7 @@ class Test__try_convert_to_object:
 )
 def test__requirements__get_list(source, _EXPECTED):
     func_link = TextAux(source).requirements__get_list
-    PytestAux(func_link).assert_check(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
