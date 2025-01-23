@@ -439,33 +439,23 @@ class ClsEq:
 
     def __eq__(self, other):
         return other == self.VAL
-
-    def __ne__(self, other):
-        return other != self.VAL
 INST_EQ = ClsEq()
 
 
 class ClsEqTrue(ClsInitArgsKwargs):
     def __eq__(self, other):
-        raise True
-    def __ne__(self, other):
-        raise False
+        return True
 INST_EQ_TRUE = ClsEqTrue()
 
 
 class ClsEqFalse(ClsInitArgsKwargs):
     def __eq__(self, other):
-        raise False
-    def __ne__(self, other):
-        raise True
+        return False
 INST_EQ_FALSE = ClsEqFalse()
 
 
 class ClsEqRaise(ClsInitArgsKwargs):
     def __eq__(self, other):
-        raise Exception()
-
-    def __ne__(self, other):
         raise Exception()
 INST_EQ_RAISE = ClsEqRaise()
 
