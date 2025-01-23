@@ -8,7 +8,7 @@ from base_aux.aux_callable.m1_callable_aux import *
 
 
 # =====================================================================================================================
-class _EqValidator(ArgsKwargs):
+class _EqValidator:
     """
     NOTE
     ----
