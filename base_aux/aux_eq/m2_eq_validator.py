@@ -9,8 +9,17 @@ from base_aux.valid.m1_aux_valid_lg import *
 
 
 # =====================================================================================================================
+ARGS_FINAL__NOT_USED = ()     # just to show that here it is not used
+KWARGS_FINAL__NOT_USED = {}   # just to show that here it is not used
+
+
+# =====================================================================================================================
 class _EqValidator:
     """
+    MAIN IDEA
+    ---------
+    ALL WHAT PASSED INTO INIT WOULD PASS INTO VALIDATOR() AFTER FIRST ARG (OTHER)
+
     NOTE
     ----
     1/ preferably not use directly this object!
@@ -92,20 +101,26 @@ class EqValid_Base(_EqValidator):
 # =====================================================================================================================
 @final
 class EqValid_Variants(EqValid_Base):
-    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
-        if other in v_args:
+    ARGS: TYPE__ARGS_FINAL
+    KWARGS = KWARGS_FINAL__NOT_USED
+
+    def VALIDATOR(self, other: Any, *variants: Any):
+        if other in variants:
             return True
         else:
             return False
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_VariantsStrLow(EqValid_Base):
-    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
+    ARGS: tuple[str, ...]
+    KWARGS = KWARGS_FINAL__NOT_USED
+
+    def VALIDATOR(self, other: Any, *variants: Any):
         other = str(other).lower()
-        v_args = (str(arg).lower() for arg in v_args)
-        if other in v_args:
+        variants = (str(var).lower() for var in variants)
+
+        if other in variants:
             return True
         else:
             return False
@@ -120,6 +135,9 @@ class EqValid_Raise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
+    ARGS = ARGS_FINAL__NOT_USED
+    KWARGS = KWARGS_FINAL__NOT_USED
+
     def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool:
         return self.OTHER_RAISED
 
@@ -132,6 +150,9 @@ class EqValid_Exx(EqValid_Base):
     True - if Other object is exact Exception or Exception()
     if raised - return False!!
     """
+    ARGS = ARGS_FINAL__NOT_USED
+    KWARGS = KWARGS_FINAL__NOT_USED
+
     def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         return not self.OTHER_RAISED and TypeAux(other).check__exception()
 
@@ -144,6 +165,9 @@ class EqValid_ExxRaised(EqValid_Base):
     ----
     True - if Other object is exact Exception or Exception() or Raised
     """
+    ARGS = ARGS_FINAL__NOT_USED
+    KWARGS = KWARGS_FINAL__NOT_USED
+
     def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         return self.OTHER_RAISED or TypeAux(other).check__exception()
 
@@ -174,6 +198,11 @@ class EqValid_LeGe(EqValid_Base):
 
 
 # =====================================================================================================================
+@final
+class EqValid_RegexpAll(EqValid_Base):
+    def VALIDATOR(self, other, *regexps: str, ignorecase: bool = True, bool_collect: BoolCollection = BoolCollection.ALL) -> bool | NoReturn:
+        pass
+        # return ValidAux(other).lege(low, high)
 
 
 # =====================================================================================================================
