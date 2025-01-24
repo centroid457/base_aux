@@ -24,6 +24,7 @@ def test___EqValidator(source, other, _EXPECTED):
     ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
 
 
+# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -44,6 +45,7 @@ def test__variants(args, other, _EXPECTED):
     ExpectAux(EqValid_VariantsStrLow(*args) == other).check_assert(_EXPECTED[1])
 
 
+# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
@@ -62,6 +64,7 @@ def test__exx_raise(other, _EXPECTED):
     ExpectAux(EqValid_ExxRaised() == other).check_assert(_EXPECTED[2])
 
 
+# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -75,11 +78,30 @@ def test__exx_raise(other, _EXPECTED):
         ((1,2), 3, (False, False, False, False)),
     ]
 )
-def test__LG(args, other, _EXPECTED):
+def test__lg(args, other, _EXPECTED):
     ExpectAux(EqValid_LtGt(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_LtGe(*args) == other).check_assert(_EXPECTED[1])
     ExpectAux(EqValid_LeGt(*args) == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_LeGe(*args) == other).check_assert(_EXPECTED[3])
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="args, other, _EXPECTED",
+    argvalues=[
+        ((r"\d", ), 1, (True, True, False, False)),
+        ((r"\d\d", ), 1, (False, False, True, True)),
+        ((r"\d", r"\d\d", ), 1, (False, True, False, True)),
+    ]
+)
+def test__regexp(args, other, _EXPECTED):
+    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCollect.TRUE_ALL) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCollect.TRUE_ANY) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCollect.FALSE_ALL) == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCollect.FALSE_ANY) == other).check_assert(_EXPECTED[3])
+
+    ExpectAux(EqValid_RegexpAllTrue(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_RegexpAnyTrue(*args) == other).check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

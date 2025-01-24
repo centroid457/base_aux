@@ -5,7 +5,7 @@ from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_types.m0_primitives import *
 
 from base_aux.valid.m2_valid_base import *
-from base_aux.valid.m4_valid_chains import *
+from base_aux.valid.m3_valid_chains import *
 from base_aux.valid.m2_valid_base2_derivatives import *
 
 
