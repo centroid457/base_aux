@@ -87,10 +87,10 @@ class BoolCollect(Enum):
     ---------------------
     EqValid_RegexpAllTrue
     """
-    TRUE_ALL = auto()
-    TRUE_ANY = auto()
-    FALSE_ANY = auto()
-    FALSE_ALL = auto()
+    ALL_TRUE = auto()
+    ANY_TRUE = auto()
+    ANY_FALSE = auto()
+    ALL_FALSE = auto()
 
 
 # =====================================================================================================================

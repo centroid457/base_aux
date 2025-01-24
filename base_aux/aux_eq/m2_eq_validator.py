@@ -204,7 +204,7 @@ class EqValid_Regexp(EqValid_Base):
     V_ARGS: tuple[str, ...]
     V_KWARGS: TYPE__KWARGS_FINAL
 
-    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
+    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
 
     def VALIDATOR(
             self,
@@ -220,21 +220,21 @@ class EqValid_Regexp(EqValid_Base):
             result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
 
             # CUMULATE --------
-            if bool_collect == BoolCollect.TRUE_ALL:
+            if bool_collect == BoolCollect.ALL_TRUE:
                 if not result_i:
                     return False
-            elif bool_collect == BoolCollect.TRUE_ANY:
+            elif bool_collect == BoolCollect.ANY_TRUE:
                 if result_i:
                     return True
-            elif bool_collect == BoolCollect.FALSE_ALL:
+            elif bool_collect == BoolCollect.ALL_FALSE:
                 if result_i:
                     return False
-            elif bool_collect == BoolCollect.FALSE_ANY:
+            elif bool_collect == BoolCollect.ANY_FALSE:
                 if not result_i:
                     return True
 
         # FINAL ------------
-        if bool_collect in [BoolCollect.TRUE_ALL, BoolCollect.FALSE_ALL]:
+        if bool_collect in [BoolCollect.ALL_TRUE, BoolCollect.ALL_FALSE]:
             return True
         else:
             return False
@@ -242,22 +242,22 @@ class EqValid_Regexp(EqValid_Base):
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
+    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
 
 
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ANY
+    BOOL_COLLECT: BoolCollect = BoolCollect.ANY_TRUE
 
 
 @final
 class EqValid_RegexpAllFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.FALSE_ALL
+    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_FALSE
 
 
 @final
 class EqValid_RegexpAnyFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.FALSE_ANY
+    BOOL_COLLECT: BoolCollect = BoolCollect.ANY_FALSE
 
 
 # =====================================================================================================================
