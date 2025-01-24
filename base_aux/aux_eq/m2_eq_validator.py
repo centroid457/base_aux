@@ -113,16 +113,39 @@ class EqValid_VariantsStrLow(EqValid_Base):
 
 # =====================================================================================================================
 @final
+class EqValid_Raise(EqValid_Base):
+    """
+    GOAL
+    ----
+    True - if Other object called with raised
+    if other is exact final Exception without raising - it would return False!
+    """
+    def VALIDATOR(self, other, *args, **kwargs) -> bool:
+        return self.OTHER_RAISED
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
 class EqValid_Exx(EqValid_Base):
+    """
+    GOAL
+    ----
+    True - if Other object is exact Exception or Exception()
+    if raised - return False!!
+    """
     def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
-        return TypeAux(other).check__exception()
+        return not self.OTHER_RAISED and TypeAux(other).check__exception()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Raise(EqValid_Base):
-    def VALIDATOR(self, other, *args, **kwargs) -> bool:
-        return self.OTHER_RAISED
+class EqValid_ExxRaised(EqValid_Base):
+    """
+    GOAL
+    ----
+    True - if Other object is exact Exception or Exception() or Raised
+    """
+    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
+        return self.OTHER_RAISED or TypeAux(other).check__exception()
 
 
 # =====================================================================================================================
