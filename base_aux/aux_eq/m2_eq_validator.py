@@ -206,11 +206,18 @@ class EqValid_Regexp(EqValid_Base):
 
     BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
 
-    def VALIDATOR(self, other_result, *regexps: str, ignorecase: bool = True, bool_collect: BoolCollect = None) -> bool | NoReturn:
+    def VALIDATOR(
+            self,
+            other_result,
+            *regexps: str,
+            ignorecase: bool = True,
+            bool_collect: BoolCollect = None,
+            match_link: Callable = re.fullmatch,
+    ) -> bool | NoReturn:
         bool_collect = bool_collect or self.BOOL_COLLECT
 
         for pattern in regexps:
-            result_i = re.fullmatch(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
+            result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
 
             # CUMULATE --------
             if bool_collect == BoolCollect.TRUE_ALL:

@@ -3,7 +3,6 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_types.m0_primitives import *
 
-
 from base_aux.aux_eq.m2_eq_validator import _EqValidator
 from base_aux.aux_eq.m2_eq_validator import *
 
@@ -92,6 +91,13 @@ def test__lg(args, other, _EXPECTED):
         ((r"\d", ), 1, (True, True, False, False)),
         ((r"\d\d", ), 1, (False, False, True, True)),
         ((r"\d", r"\d\d", ), 1, (False, True, False, True)),
+
+        ((r"\d\d",), LAMBDA_RAISE, (False, False, True, True)),
+        ((r"\d\d",), LAMBDA_EXX, (False, False, True, True)),
+
+        ((r"true",), "Tr", (False, False, True, True)),
+        ((r"true",), "True", (True, True, False, False)),
+        ((r"true",), LAMBDA_TRUE, (True, True, False, False)),
     ]
 )
 def test__regexp(args, other, _EXPECTED):
