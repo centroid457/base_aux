@@ -102,6 +102,8 @@ def test__regexp(args, other, _EXPECTED):
 
     ExpectAux(EqValid_RegexpAllTrue(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_RegexpAnyTrue(*args) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_RegexpAllFalse(*args) == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_RegexpAnyFalse(*args) == other).check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================

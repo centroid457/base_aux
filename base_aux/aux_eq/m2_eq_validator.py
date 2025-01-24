@@ -232,6 +232,7 @@ class EqValid_Regexp(EqValid_Base):
         else:
             return False
 
+# ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
     BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
@@ -240,6 +241,16 @@ class EqValid_RegexpAllTrue(EqValid_Regexp):
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
     BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ANY
+
+
+@final
+class EqValid_RegexpAllFalse(EqValid_Regexp):
+    BOOL_COLLECT: BoolCollect = BoolCollect.FALSE_ALL
+
+
+@final
+class EqValid_RegexpAnyFalse(EqValid_Regexp):
+    BOOL_COLLECT: BoolCollect = BoolCollect.FALSE_ANY
 
 
 # =====================================================================================================================
