@@ -36,13 +36,13 @@ class _EqValidator:
 
     OTHER_RAISED: bool = None
 
-    def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *args, **kwargs) -> None:
+    def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, **v_kwargs) -> None:
         if validator is not None:
             self.VALIDATOR = validator
 
-        # super(ArgsKwargs, self).__init__(*args, **kwargs)
-        self.ARGS = args
-        self.KWARGS = kwargs
+        # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
+        self.ARGS = v_args
+        self.KWARGS = v_kwargs
 
     def __eq__(self, other) -> bool:
         return self.validate(other)
@@ -74,26 +74,26 @@ class _EqValidator:
         result = CallableAux(self.VALIDATOR).resolve_bool(other_result, *self.ARGS, **self.KWARGS)
         return result
 
-    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         return NotImplemented
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class EqValid_Base(_EqValidator):
-    def __init__(self, *args, **kwargs):
-        # print(args, kwargs)
-        # super(ArgsKwargs, self).__init__(*args, **kwargs)     # not working!
+    def __init__(self, *v_args, **v_kwargs):
+        # print(v_args, v_kwargs)
+        # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)     # not working!
 
-        # super().__init__(*args, **kwargs)
-        self.ARGS = args
-        self.KWARGS = kwargs
+        # super().__init__(*v_args, **v_kwargs)
+        self.ARGS = v_args
+        self.KWARGS = v_kwargs
 
 
 # =====================================================================================================================
 @final
 class EqValid_Variants(EqValid_Base):
-    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
-        if other in args:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
+        if other in v_args:
             return True
         else:
             return False
@@ -102,10 +102,10 @@ class EqValid_Variants(EqValid_Base):
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_VariantsStrLow(EqValid_Base):
-    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         other = str(other).lower()
-        args = (str(arg).lower() for arg in args)
-        if other in args:
+        v_args = (str(arg).lower() for arg in v_args)
+        if other in v_args:
             return True
         else:
             return False
@@ -120,7 +120,7 @@ class EqValid_Raise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
-    def VALIDATOR(self, other, *args, **kwargs) -> bool:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool:
         return self.OTHER_RAISED
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ class EqValid_Exx(EqValid_Base):
     True - if Other object is exact Exception or Exception()
     if raised - return False!!
     """
-    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         return not self.OTHER_RAISED and TypeAux(other).check__exception()
 
 
@@ -144,7 +144,7 @@ class EqValid_ExxRaised(EqValid_Base):
     ----
     True - if Other object is exact Exception or Exception() or Raised
     """
-    def VALIDATOR(self, other, *args, **kwargs) -> bool | NoReturn:
+    def VALIDATOR(self, other, *v_args, **v_kwargs) -> bool | NoReturn:
         return self.OTHER_RAISED or TypeAux(other).check__exception()
 
 
@@ -171,6 +171,9 @@ class EqValid_LeGt(EqValid_Base):
 class EqValid_LeGe(EqValid_Base):
     def VALIDATOR(self, other, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other).lege(low, high)
+
+
+# =====================================================================================================================
 
 
 # =====================================================================================================================
