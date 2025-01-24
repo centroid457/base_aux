@@ -1,5 +1,7 @@
 from typing import *
 
+import re
+
 from base_aux.aux_types.m0_primitives import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.base_source.m2_source_kwargs import *
@@ -198,11 +200,46 @@ class EqValid_LeGe(EqValid_Base):
 
 
 # =====================================================================================================================
+class EqValid_Regexp(EqValid_Base):
+    V_ARGS: tuple[str, ...]
+    V_KWARGS: TYPE__KWARGS_FINAL
+
+    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
+
+    def VALIDATOR(self, other_result, *regexps: str, ignorecase: bool = True, bool_collect: BoolCollect = None) -> bool | NoReturn:
+        bool_collect = bool_collect or self.BOOL_COLLECT
+
+        for pattern in regexps:
+            result_i = re.fullmatch(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
+
+            # CUMULATE --------
+            if bool_collect == BoolCollect.TRUE_ALL:
+                if not result_i:
+                    return False
+            elif bool_collect == BoolCollect.TRUE_ANY:
+                if result_i:
+                    return True
+            elif bool_collect == BoolCollect.FALSE_ALL:
+                if result_i:
+                    return False
+            elif bool_collect == BoolCollect.FALSE_ANY:
+                if not result_i:
+                    return True
+
+        # FINAL ------------
+        if bool_collect in [BoolCollect.TRUE_ALL, BoolCollect.FALSE_ALL]:
+            return True
+        else:
+            return False
+
 @final
-class EqValid_RegexpAll(EqValid_Base):
-    def VALIDATOR(self, other_result, *regexps: str, ignorecase: bool = True, bool_collect: BoolCollection = BoolCollection.ALL) -> bool | NoReturn:
-        pass
-        # return ValidAux(other_result).lege(low, high)
+class EqValid_RegexpAllTrue(EqValid_Regexp):
+    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ALL
+
+
+@final
+class EqValid_RegexpAnyTrue(EqValid_Regexp):
+    BOOL_COLLECT: BoolCollect = BoolCollect.TRUE_ANY
 
 
 # =====================================================================================================================

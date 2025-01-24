@@ -77,7 +77,7 @@ class FormIntExt(Enum):
 
 
 # =====================================================================================================================
-class BoolCollection(Enum):
+class BoolCollect(Enum):
     """
     GOAL
     ----
@@ -85,12 +85,12 @@ class BoolCollection(Enum):
 
     SPECIALLY CREATED FOR
     ---------------------
-    EqValid_Regexp
+    EqValid_RegexpAllTrue
     """
-    ALL = auto()
-    ANY = auto()
-    NOT_ANY = auto()
-    NOT_ALL = auto()
+    TRUE_ALL = auto()
+    TRUE_ANY = auto()
+    FALSE_ANY = auto()
+    FALSE_ALL = auto()
 
 
 # =====================================================================================================================
