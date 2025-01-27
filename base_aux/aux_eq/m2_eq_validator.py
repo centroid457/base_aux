@@ -41,6 +41,7 @@ class _EqValidator:
     V_KWARGS: TYPE__KWARGS_FINAL
 
     OTHER_RAISED: bool = None
+    OTHER_RESULT: Any | Exception = None
 
     def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, **v_kwargs) -> None:
         if validator is not None:
@@ -71,13 +72,13 @@ class _EqValidator:
         # ------
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         try:
-            other_result = CallableAux(other_draft).resolve_raise(*other_args, **other_kwargs)
+            self.OTHER_RESULT = CallableAux(other_draft).resolve_raise(*other_args, **other_kwargs)
             self.OTHER_RAISED = False
         except Exception as exx:
             self.OTHER_RAISED = True
-            other_result = exx
+            self.OTHER_RESULT = exx
 
-        result = CallableAux(self.VALIDATOR).resolve_bool(other_result, *self.V_ARGS, **self.V_KWARGS)
+        result = CallableAux(self.VALIDATOR).resolve_bool(self.OTHER_RESULT, *self.V_ARGS, **self.V_KWARGS)
         return result
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
