@@ -1,0 +1,58 @@
+import pytest
+
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_values.m1_value_valid_eq import *
+from base_aux.aux_eq.m1_eq_aux import *
+from base_aux.aux_eq.m2_eq_validator import *
+from base_aux.aux_eq.m3_eq_validator_chains import *
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, eq, _EXPECTED",
+    argvalues=[
+        (1, NoValue, True),
+        (1, EqValid_LeGe(1), True),
+        (1, EqValid_LeGe(2), Exception),
+        (1, EqValid_Variants(1), True),
+        (1, EqValid_Variants(2), Exception),
+    ]
+)
+def test__1_init(source, eq, _EXPECTED):
+    func_link = ValueEqValid
+    ExpectAux(func_link, (source, eq)).check_assert(_EXPECTED)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    argnames="source, eq, new, _EXPECTED",
+    argvalues=[
+        (1, NoValue, 10, True),
+        (1, EqValid_LeGe(1), 10, True),
+        (1, EqValid_LeGe(1), 0, Exception),
+        (1, EqValid_Variants(1), 10, Exception),
+        (1, EqValid_Variants(1, 10), 10, True),
+    ]
+)
+def test__2_reset(source, eq, new, _EXPECTED):
+    func_link = ValueEqValid(source, eq).reset
+    ExpectAux(func_link, new).check_assert(_EXPECTED)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# @pytest.mark.parametrize(
+#     argnames="source, eq, new, _EXPECTED",
+#     argvalues=[
+#         (1, NoValue, 10, True),
+#         (1, EqValid_LeGe(1), 10, True),
+#         (1, EqValid_LeGe(1), 0, Exception),
+#         (1, EqValid_Variants(1), 10, Exception),
+#         (1, EqValid_Variants(1, 10), 10, True),
+#     ]
+# )
+# def test__3_eq(source, eq, new, _EXPECTED):
+#     func_link = ValueEqValid(source, eq).reset
+#     ExpectAux(func_link, new).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================

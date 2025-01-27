@@ -31,9 +31,9 @@ class ValueEqValid:
 
     def __eq__(self, other) -> bool | NoReturn:
         if isinstance(other, ValueEqValid):
-            return self.VALUE == other.VALUE
-        else:
-            return self.VALUE == other
+            other = other.VALUE
+
+        return EqAux(self.VALUE).check_doubleside__bool(other)
 
     @property
     def VALUE(self) -> Any:
@@ -46,14 +46,16 @@ class ValueEqValid:
         else:
             raise Exx__ValueNotValidated()
 
-    def reset(self, value: Any | NoValue = NoValue) -> None:
+    def reset(self, value: Any | NoValue = NoValue) -> bool | NoReturn:
         """
-        set VALUE into default only if default is exists!
+        set new value or default
         """
         if value == NoValue:
             self.VALUE = self.VALUE_DEFAULT
         else:
             self.VALUE = value
+
+        return True     # True - is for success only!
 
 
 # =====================================================================================================================
