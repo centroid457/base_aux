@@ -48,19 +48,20 @@ def test__variants(args, other, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
-        (False, (False, False, False)),
-        (True, (False, False, False)),
-        (1, (False, False, False)),
-        (Exception, (True, False, True)),
-        (Exception(), (True, False, True)),
-        (LAMBDA_EXX, (True, False, True)),
-        (LAMBDA_RAISE, (False, True, True)),
+        (False, (False, False, True, False)),
+        (True, (False, False, True, False)),
+        (1, (False, False, True, False)),
+        (Exception, (True, False, True, True)),
+        (Exception(), (True, False, True, True)),
+        (LAMBDA_EXX, (True, False, True, True)),
+        (LAMBDA_RAISE, (False, True, False, True)),
     ]
 )
 def test__exx_raise(other, _EXPECTED):
     ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_ExxRaised() == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_ExxRaised() == other).check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================

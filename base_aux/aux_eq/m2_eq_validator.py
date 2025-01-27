@@ -139,6 +139,23 @@ class EqValid_Raise(EqValid_Base):
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
         return self.OTHER_RAISED
 
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_NotRaise(EqValid_Base):
+    """
+    GOAL
+    ----
+    True - if Other object called with raised
+    if other is exact final Exception without raising - it would return False!
+    """
+    V_ARGS = ARGS_FINAL__NOT_USED
+    V_KWARGS = KWARGS_FINAL__NOT_USED
+
+    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
+        return not self.OTHER_RAISED
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Exx(EqValid_Base):
