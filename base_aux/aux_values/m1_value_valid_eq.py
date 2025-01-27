@@ -1,6 +1,7 @@
 from typing import *
 
-from base_aux.base_exceptions import Exx__ValueNotValidated
+from base_aux.base_exceptions.m1_exceptions import Exx__ValueNotValidated
+from base_aux.aux_types import *
 
 from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.aux_eq.m1_eq_aux import *
@@ -14,9 +15,18 @@ class ValueEqValid:
     VALUE_DEFAULT: Any = NoValue
     EQ: EqValid_Base | EqValidChain | Any | NoValue = NoValue
 
-    def __init__(self, value: Any = NoValue, eq: EqValid_Base | EqValidChain = NoValue) -> None:
+    def __init__(
+            self,
+            value: Any = NoValue,
+            eq: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue,
+            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,
+            eq_kwargs: TYPE__KWARGS_DRAFT = KWARGS_FINAL__BLANK,
+    ) -> None:
         if eq:
             self.EQ = eq
+
+        if TypeAux(self.EQ).check__class() and issubclass(self.EQ, EqValid_Base):
+            self.EQ = self.EQ(*eq_args, **eq_kwargs)
 
         if value is not NoValue:
             self.VALUE = value
@@ -56,6 +66,25 @@ class ValueEqValid:
             self.VALUE = value
 
         return True     # True - is for success only!
+
+
+# =====================================================================================================================
+class ValueEqValid_Variants(ValueEqValid):
+    EQ: EqValid_Base | EqValidChain | Any | NoValue = EqValid_Variants
+
+    def __init__(
+            self,
+            value: Any = NoValue,
+            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,
+            eq_kwargs: TYPE__KWARGS_DRAFT = KWARGS_FINAL__BLANK,
+    ) -> None:
+        super().__init__(value=value, eq=NoValue, *eq_args, **eq_kwargs)
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    assert ValueEqValid_Variants(1, 1,2)
+    assert ValueEqValid_Variants(1, 2,2)
 
 
 # =====================================================================================================================

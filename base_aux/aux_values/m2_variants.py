@@ -11,6 +11,8 @@ TYPE__VARIANTS = list[TYPE__VARIANT] | NoValue
 
 
 # =====================================================================================================================
+# FOXME: DEPRECATE for new Eq style
+
 class ValueVariants:
     """
     used to keep separated VALUE and measure unit
