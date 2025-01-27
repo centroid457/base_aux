@@ -21,6 +21,7 @@ from base_aux.aux_eq.m2_eq_validator import *
 )
 def test___EqValidator(source, other, _EXPECTED):
     ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
+    ExpectAux(_EqValidator(source, reverse=True) == other).check_assert(not _EXPECTED)
 
 
 # =====================================================================================================================
@@ -41,7 +42,9 @@ def test___EqValidator(source, other, _EXPECTED):
 )
 def test__variants(args, other, _EXPECTED):
     ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_VariantsStrLow(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -84,6 +87,11 @@ def test__lg(args, other, _EXPECTED):
     ExpectAux(EqValid_LeGt(*args) == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_LeGe(*args) == other).check_assert(_EXPECTED[3])
 
+    ExpectAux(EqValid_LtGt(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_LtGe(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+    ExpectAux(EqValid_LeGt(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
+    ExpectAux(EqValid_LeGe(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
+
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
@@ -111,6 +119,11 @@ def test__regexp(args, other, _EXPECTED):
     ExpectAux(EqValid_RegexpAnyTrue(*args) == other).check_assert(_EXPECTED[1])
     ExpectAux(EqValid_RegexpAllFalse(*args) == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_RegexpAnyFalse(*args) == other).check_assert(_EXPECTED[3])
+
+    ExpectAux(EqValid_RegexpAllTrue(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_RegexpAnyTrue(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+    ExpectAux(EqValid_RegexpAllFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
+    ExpectAux(EqValid_RegexpAnyFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
 
 
 # =====================================================================================================================

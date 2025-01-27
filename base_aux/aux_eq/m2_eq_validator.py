@@ -40,14 +40,17 @@ class _EqValidator:
     V_ARGS: TYPE__ARGS_FINAL
     V_KWARGS: TYPE__KWARGS_FINAL
 
+    REVERSE: bool = None
+
     OTHER_RAISED: bool = None
     OTHER_RESULT: Any | Exception = None
 
-    # todo: add reverse to use like {not EqI == other} in EqChains! raised - always is False!!!
-
-    def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, **v_kwargs) -> None:
+    def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, reverse: bool = None, **v_kwargs) -> None:
         if validator is not None:
             self.VALIDATOR = validator
+
+        if reverse is not None:
+            self.REVERSE = reverse
 
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
         self.V_ARGS = v_args
@@ -81,6 +84,8 @@ class _EqValidator:
             self.OTHER_RESULT = exx
 
         result = CallableAux(self.VALIDATOR).resolve_bool(self.OTHER_RESULT, *self.V_ARGS, **self.V_KWARGS)
+        if self.REVERSE:
+            result = not result
         return result
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
@@ -89,13 +94,16 @@ class _EqValidator:
 
 # ---------------------------------------------------------------------------------------------------------------------
 class EqValid_Base(_EqValidator):
-    def __init__(self, *v_args, **v_kwargs):
+    def __init__(self, *v_args, reverse: bool = None, **v_kwargs):
         # print(v_args, v_kwargs)
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)     # not working!
 
         # super().__init__(*v_args, **v_kwargs)
         self.V_ARGS = v_args
         self.V_KWARGS = v_kwargs
+
+        if reverse is not None:
+            self.REVERSE = reverse
 
 
 # =====================================================================================================================
@@ -127,6 +135,7 @@ class EqValid_VariantsStrLow(EqValid_Base):
 
 
 # =====================================================================================================================
+# FIXME: apply reverse=True in here RAISE_EXX!
 @final
 class EqValid_Raise(EqValid_Base):
     """
