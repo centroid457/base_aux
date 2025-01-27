@@ -43,6 +43,8 @@ class _EqValidator:
     OTHER_RAISED: bool = None
     OTHER_RESULT: Any | Exception = None
 
+    # todo: add reverse to use like {not EqI == other} in EqChains! raised - always is False!!!
+
     def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, **v_kwargs) -> None:
         if validator is not None:
             self.VALIDATOR = validator
