@@ -11,11 +11,6 @@ from base_aux.valid.m1_aux_valid_lg import *
 
 
 # =====================================================================================================================
-ARGS_FINAL__NOT_USED = ()     # just to show that here it is not used
-KWARGS_FINAL__NOT_USED = {}   # just to show that here it is not used
-
-
-# =====================================================================================================================
 class _EqValidator:
     """
     MAIN IDEA

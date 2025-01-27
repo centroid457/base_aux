@@ -6,6 +6,9 @@ TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
 TYPE__ARGS_FINAL = tuple[Any, ...]
 TYPE__KWARGS_FINAL = dict[str, Any]
 
+ARGS_FINAL__NOT_USED = ()     # just to show that here it is not used
+KWARGS_FINAL__NOT_USED = {}   # just to show that here it is not used
+
 
 # =====================================================================================================================
 class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for direct KwArgs
