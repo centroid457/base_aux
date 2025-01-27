@@ -47,7 +47,7 @@ class CallablesUse(Enum):
 
 
 # =====================================================================================================================
-class CallableFinish(Enum):
+class Process(Enum):
     """
     GOAL
     ----
@@ -59,9 +59,10 @@ class CallableFinish(Enum):
     """
     NONE = auto()
     STARTED = auto()
-    RAISED = auto()
     SKIPPED = auto()
     STOPPED = auto()
+    RAISED = auto()
+    FAILED = auto()
     SUCCESS = auto()
 
 

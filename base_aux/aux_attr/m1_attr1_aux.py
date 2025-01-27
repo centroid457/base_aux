@@ -256,7 +256,7 @@ class AttrAux(InitSource):
             value = self.anycase__getattr(name)
         except Exception as exx:
             if callables_use == CallablesUse.SKIP_RAISED:
-                return CallableFinish.SKIPPED
+                return Process.SKIPPED
             elif callables_use == CallablesUse.EXCEPTION:
                 return exx
             elif callables_use == CallablesUse.RAISE_AS_NONE:
@@ -314,7 +314,7 @@ class AttrAux(InitSource):
         result = {}
         for name in self.iter__not_private():
             value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
-            if value == CallableFinish.SKIPPED:
+            if value == Process.SKIPPED:
                 continue
             result.update({name: value})
 

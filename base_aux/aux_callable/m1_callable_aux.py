@@ -8,7 +8,7 @@ from base_aux.base_enums.m0_enums import *
 class CallableAux(InitSource):
     """
     """
-    FINISH: CallableFinish = CallableFinish.NONE
+    FINISH: Process = Process.NONE
 
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self._construct_with_args_kwargs(*args, **kwargs)
@@ -17,14 +17,14 @@ class CallableAux(InitSource):
         """
         unsafe (raise acceptable) get value
         """
-        self.FINISH: CallableFinish = CallableFinish.STARTED
+        self.FINISH: Process = Process.STARTED
 
         if callable(self.SOURCE):
             result = self.SOURCE(*args, **kwargs)
         else:
             result = self.SOURCE
 
-        self.FINISH: CallableFinish = CallableFinish.SUCCESS
+        self.FINISH: Process = Process.SUCCESS
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class CallableAux(InitSource):
         try:
             return self(*args, **kwargs)
         except Exception as exx:
-            self.FINISH: CallableFinish = CallableFinish.RAISED
+            self.FINISH: Process = Process.RAISED
             return exx
 
     def resolve_raise(self, *args, **kwargs) -> Any | NoReturn:
@@ -110,17 +110,17 @@ class CallableAux(InitSource):
 
     def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
-            return CallableFinish.SKIPPED  # TODO: decide using None ???
+            return Process.SKIPPED  # TODO: decide using None ???
         else:
-            self.FINISH: CallableFinish = CallableFinish.SKIPPED
+            self.FINISH: Process = Process.SKIPPED
             return self.SOURCE
 
     def resolve_skip_raised(self, *args, **kwargs) -> Any | NoReturn:
         try:
             return self.resolve_raise(*args, **kwargs)
         except:
-            self.FINISH: CallableFinish = CallableFinish.RAISED
-            return CallableFinish.SKIPPED  # TODO: decide using None ???
+            self.FINISH: Process = Process.RAISED
+            return Process.SKIPPED  # TODO: decide using None ???
 
     def resolve_bool(self, *args, **kwargs) -> bool:
         """
@@ -165,7 +165,7 @@ class CallableAux(InitSource):
                 return False
             return bool(result)
         except:
-            self.FINISH: CallableFinish = CallableFinish.RAISED
+            self.FINISH: Process = Process.RAISED
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ class CallableAux(InitSource):
             self.resolve_raise(*args, **kwargs)
             return False
         except:
-            self.FINISH: CallableFinish = CallableFinish.RAISED
+            self.FINISH: Process = Process.RAISED
             return True
 
     def check_no_raise(self, *args, **kwargs) -> bool:
