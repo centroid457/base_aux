@@ -14,7 +14,7 @@ class ValueEqValid:
     VALUE_DEFAULT: Any = NoValue
     EQ: EqValid_Base | EqValidChain | Any | NoValue = NoValue
 
-    def __init__(self, value: Any = NoValue, eq: EqValid_Base | EqValidChain = NoValue):
+    def __init__(self, value: Any = NoValue, eq: EqValid_Base | EqValidChain = NoValue) -> None:
         if eq:
             self.EQ = eq
 
@@ -29,7 +29,7 @@ class ValueEqValid:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.VALUE},eg={self.EQ})"
 
-    def __eq__(self, other) -> bool | NoReturn:
+    def __eq__(self, other) -> bool:
         if isinstance(other, ValueEqValid):
             other = other.VALUE
 
