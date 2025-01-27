@@ -135,7 +135,6 @@ class EqValid_VariantsStrLow(EqValid_Base):
 
 
 # =====================================================================================================================
-# FIXME: apply reverse=True in here RAISE_EXX!
 @final
 class EqValid_Raise(EqValid_Base):
     """

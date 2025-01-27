@@ -66,6 +66,11 @@ def test__exx_raise(other, _EXPECTED):
     ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_ExxRaised() == other).check_assert(_EXPECTED[3])
 
+    ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[1])
+    ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[2])
+    ExpectAux(EqValid_ExxRaised(reverse=True) == other).check_assert(not _EXPECTED[3])
+
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
