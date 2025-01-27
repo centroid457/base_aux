@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m2_annot5_init import *
-from base_aux.aux_values.m1_explicit import *
+from base_aux.aux_values.m0_explicit import *
 
 from base_aux.aux_types.m2_info import *
 
