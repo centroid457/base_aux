@@ -36,6 +36,9 @@ class NoValue:
     def __bool__(self):
         return False
 
+    def __str__(self):
+        return f"{self.__class__.__name__}"
+
 
 # =====================================================================================================================
 TYPE__NOVALUE = type[NoValue] | NoValue
