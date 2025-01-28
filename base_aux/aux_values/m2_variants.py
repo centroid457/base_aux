@@ -17,11 +17,17 @@ class ValueVariants:
     """
     used to keep separated VALUE and measure unit
 
+    SAME AS - ValueEqValid_Variants
+    -------------------------------
+    here is only validating and keep passed value
+    in ValueVariants - final value used from exact Variants!
+
     GOAL
     ----
     1. get first associated value
     2. validate item by variants
     """
+    # NOTE: NOTS DEPRECATE!!!
     # TODO: combine with ValueUnit - just add ACCEPTABLE(*VARIANTS) and rename UNIT just as SUFFIX!
 
     # SETTINGS -----------------------

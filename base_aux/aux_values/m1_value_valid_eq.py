@@ -86,7 +86,7 @@ class ValueEqValid_TypeBase(ValueEqValid):
 
     SAME AS - ValueEqValid but
     --------------------------
-    all args/kwargs
+    all args/kwargs passed into EQ
     """
     EQ: type[EqValid_Base]
 
@@ -102,6 +102,12 @@ class ValueEqValid_TypeBase(ValueEqValid):
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class ValueEqValid_Variants(ValueEqValid_TypeBase):
+    """
+    SAME AS - ValueVariants but
+    ---------------------------
+    here is only validating and keep passed value
+    in ValueVariants - final value used from exact Variants!
+    """
     EQ = EqValid_Variants
 
 
