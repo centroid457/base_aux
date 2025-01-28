@@ -10,6 +10,22 @@
 ********************************************************************************
 ## NEWS
 
+0.2.0 (2025/01/28 18:21:18)
+------------------------------
+- [all PRJ] BIG REF:  
+	- many renames/resorts  
+	- [CIRCULAR IMPORT] final fix - clear all __init__py and use direct imports  
+	- [InitSource] apply in most classes  
+	- [ArgsKwargs] apply+add types like TYPE__ARGS_DRAFT  
+	- [@final] apply to protect classes if InitSource nested  
+	- [xxxAux]rename objects  
+	- [EqValid/Value] big creation  
+	- [CallableAux] create  
+- [AttrAux] ref/fix/add dump/loadfix iters  
+- [Enums] extend  
+- [TextAux] ref+finish  
+- [game_nouns_5letters] start creating  
+
 0.1.9 (2024/12/12 11:20:41)
 ------------------------------
 - [ValidAux -> lambdas] move all get_result_or_raise/*  
