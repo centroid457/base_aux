@@ -124,6 +124,7 @@ class EqValid_Variants(EqValid_Base):
         else:
             return False
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_VariantsStrLow(EqValid_Base):
@@ -267,6 +268,7 @@ class EqValid_Regexp(EqValid_Base):
             return True
         else:
             return False
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final

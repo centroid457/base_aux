@@ -11,18 +11,24 @@ from base_aux.aux_eq.m3_eq_validator_chains import *
 
 # =====================================================================================================================
 class ValueEqValid:
+    """
+    GOAL
+    ----
+    universal
+    class to use validation by Eq objects for new values
+    """
     __value: Any = NoValue
     VALUE_DEFAULT: Any = NoValue
-    EQ: EqValid_Base | EqValidChain | Any | NoValue = NoValue
+    EQ: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue
 
     def __init__(
             self,
             value: Any = NoValue,
             eq: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue,
-            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,
+            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**
             eq_kwargs: TYPE__KWARGS_DRAFT = KWARGS_FINAL__BLANK,
-    ) -> None:
-        if eq:
+    ) -> None | NoReturn:
+        if eq is not NoValue:
             self.EQ = eq
 
         if TypeAux(self.EQ).check__class() and issubclass(self.EQ, EqValid_Base):
@@ -44,6 +50,9 @@ class ValueEqValid:
             other = other.VALUE
 
         return EqAux(self.VALUE).check_doubleside__bool(other)
+
+    def __call__(self) -> Any:
+        return self.VALUE
 
     @property
     def VALUE(self) -> Any:
@@ -69,22 +78,41 @@ class ValueEqValid:
 
 
 # =====================================================================================================================
-class ValueEqValid_Variants(ValueEqValid):
-    EQ: EqValid_Base | EqValidChain | Any | NoValue = EqValid_Variants
+class ValueEqValid_TypeBase(ValueEqValid):
+    """
+    GOAL
+    ----
+    base class to make a classes with specific validation
+
+    SAME AS - ValueEqValid but
+    --------------------------
+    all args/kwargs
+    """
+    EQ: type[EqValid_Base]
 
     def __init__(
             self,
-            value: Any = NoValue,
-            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,
-            eq_kwargs: TYPE__KWARGS_DRAFT = KWARGS_FINAL__BLANK,
+            value: Any,
+            *eq_args: TYPE__ARGS_DRAFT,
+            **eq_kwargs: TYPE__KWARGS_DRAFT,
     ) -> None:
-        super().__init__(value=value, eq=NoValue, *eq_args, **eq_kwargs)
+        super().__init__(value=value, eq=NoValue, eq_args=eq_args, eq_kwargs=eq_kwargs)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class ValueVariants(ValueEqValid_TypeBase):
+    EQ = EqValid_Variants
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    assert ValueEqValid_Variants(1, 1,2)
-    assert ValueEqValid_Variants(1, 2,2)
+    assert ValueVariants(1, *(1, 2))
+    try:
+        assert ValueVariants(1, *(10, 2))
+        assert False
+    except:
+        assert True
 
 
 # =====================================================================================================================
