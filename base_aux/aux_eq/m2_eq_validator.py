@@ -74,6 +74,9 @@ class _EqValidator:
         """
         return self.validate(other_draft, *other_args, **other_kwargs)
 
+    def __contains__(self, item) -> bool:
+        return self.validate(item)
+
     def validate(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
         """
         GOAL

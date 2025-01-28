@@ -23,6 +23,9 @@ def test___EqValidator(source, other, _EXPECTED):
     ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
     ExpectAux(_EqValidator(source, reverse=True) == other).check_assert(not _EXPECTED)
 
+    ExpectAux(other in _EqValidator(source)).check_assert(_EXPECTED)
+    ExpectAux(other in _EqValidator(source, reverse=True)).check_assert(not _EXPECTED)
+
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
@@ -42,9 +45,17 @@ def test___EqValidator(source, other, _EXPECTED):
 )
 def test__variants(args, other, _EXPECTED):
     ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args) == other).check_assert(_EXPECTED[1])
+
+    ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+
+
+    ExpectAux(other in EqValid_Variants(*args)).check_assert(_EXPECTED[0])
+    ExpectAux(other in EqValid_VariantsStrLow(*args)).check_assert(_EXPECTED[1])
+
+    ExpectAux(other in EqValid_Variants(*args, reverse=True)).check_assert(not _EXPECTED[0])
+    ExpectAux(other in EqValid_VariantsStrLow(*args, reverse=True)).check_assert(not _EXPECTED[1])
 
 
 # =====================================================================================================================
