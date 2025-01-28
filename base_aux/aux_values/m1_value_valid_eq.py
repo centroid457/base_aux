@@ -105,6 +105,11 @@ class ValueEqValid_Variants(ValueEqValid_TypeBase):
     EQ = EqValid_Variants
 
 
+@final
+class ValueEqValid_VariantsStrLow(ValueEqValid_TypeBase):
+    EQ = EqValid_VariantsStrLow
+
+
 # =====================================================================================================================
 if __name__ == "__main__":
     assert ValueEqValid_Variants(1, *(1, 2))
@@ -113,6 +118,15 @@ if __name__ == "__main__":
         assert False
     except:
         assert True
+
+    try:
+        assert ValueEqValid_Variants("val", *("VAL", 2))
+        assert False
+    except:
+        assert True
+
+    assert ValueEqValid_VariantsStrLow(1, *(1, 2))
+    assert ValueEqValid_VariantsStrLow("val", *("VAL", 2))
 
 
 # =====================================================================================================================
