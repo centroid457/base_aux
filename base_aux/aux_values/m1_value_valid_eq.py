@@ -101,15 +101,15 @@ class ValueEqValid_TypeBase(ValueEqValid):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class ValueVariants(ValueEqValid_TypeBase):
+class ValueEqValid_Variants(ValueEqValid_TypeBase):
     EQ = EqValid_Variants
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    assert ValueVariants(1, *(1, 2))
+    assert ValueEqValid_Variants(1, *(1, 2))
     try:
-        assert ValueVariants(1, *(10, 2))
+        assert ValueEqValid_Variants(1, *(10, 2))
         assert False
     except:
         assert True
