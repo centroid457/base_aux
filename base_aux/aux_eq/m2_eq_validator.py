@@ -127,8 +127,8 @@ class EqValid_Base(_EqValidator):
 # =====================================================================================================================
 @final
 class EqValid_Variants(EqValid_Base):
-    V_ARGS: TYPE__ARGS_FINAL
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS: TYPE__ARGS_FINAL
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result: Any, *variants: Any):
         if other_result in variants:
@@ -140,8 +140,8 @@ class EqValid_Variants(EqValid_Base):
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_VariantsStrLow(EqValid_Base):
-    V_ARGS: tuple[str, ...]
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS: tuple[str, ...]
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result: Any, *variants: Any):
         other_result = str(other_result).lower()
@@ -153,6 +153,27 @@ class EqValid_VariantsStrLow(EqValid_Base):
             return False
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Startswith(EqValid_Base):
+    # V_ARGS: TYPE__ARGS_FINAL
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
+
+    def VALIDATOR(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+        if ignorecase:
+            other_result = str(other_result).lower()
+            variants = (str(var).lower() for var in variants)
+        else:
+            other_result = str(other_result)
+            variants = (str(_) for _ in variants)
+
+        for var in variants:
+            if other_result.startswith(var):
+                return True
+
+        return False
+
+
 # =====================================================================================================================
 @final
 class EqValid_Raise(EqValid_Base):
@@ -162,8 +183,8 @@ class EqValid_Raise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
-    V_ARGS = ARGS_FINAL__NOT_USED
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS = ARGS_FINAL__NOT_USED
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
         return self.OTHER_RAISED
@@ -178,8 +199,8 @@ class EqValid_NotRaise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
-    V_ARGS = ARGS_FINAL__NOT_USED
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS = ARGS_FINAL__NOT_USED
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
         return not self.OTHER_RAISED
@@ -194,8 +215,8 @@ class EqValid_Exx(EqValid_Base):
     True - if Other object is exact Exception or Exception()
     if raised - return False!!
     """
-    V_ARGS = ARGS_FINAL__NOT_USED
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS = ARGS_FINAL__NOT_USED
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
         return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
@@ -209,8 +230,8 @@ class EqValid_ExxRaised(EqValid_Base):
     ----
     True - if Other object is exact Exception or Exception() or Raised
     """
-    V_ARGS = ARGS_FINAL__NOT_USED
-    V_KWARGS = KWARGS_FINAL__NOT_USED
+    # V_ARGS = ARGS_FINAL__NOT_USED
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
 
     def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
         return self.OTHER_RAISED or TypeAux(other_result).check__exception()
@@ -243,8 +264,8 @@ class EqValid_LeGe(EqValid_Base):
 
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
-    V_ARGS: tuple[str, ...]
-    V_KWARGS: TYPE__KWARGS_FINAL
+    # V_ARGS: tuple[str, ...]
+    # V_KWARGS: TYPE__KWARGS_FINAL
 
     BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
 

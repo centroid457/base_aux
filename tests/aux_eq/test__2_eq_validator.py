@@ -60,6 +60,25 @@ def test__variants(args, other, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
+    argnames="args, other, ic, _EXPECTED",
+    argvalues=[
+        ([*"ABC"], "A", True, True),
+        ([*"ABC"], "A", False, True),
+
+        ([*"ABC"], "a", True, True),
+        ([*"ABC"], "a", False, False),
+
+        ([*"ABC"], "f", True, False),
+        ([*"ABC"], "f", False, False),
+    ]
+)
+def test__startswith(args, other, ic, _EXPECTED):
+    ExpectAux(EqValid_Startswith(*args, ignorecase=ic) == other).check_assert(_EXPECTED)
+    ExpectAux(EqValid_Startswith(*args, reverse=True, ignorecase=ic) == other).check_assert(not _EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
         (False, (False, False, True, False)),
