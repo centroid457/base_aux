@@ -4,8 +4,7 @@ from base_aux.aux_values.m0_novalue import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__VALID_SOURCE_BOOL, TYPE__VALID_RESULT_BOOL, \
-    TYPE__VALID_RESULT_BOOL__EXX, TYPE__VALID_VALIDATOR
+from base_aux.aux_types.m0_types import *
 
 from base_aux.aux_eq.m1_eq_aux import EqAux
 
@@ -92,11 +91,11 @@ class Valid:
             skip_link: TYPE__VALID_SOURCE_BOOL= None,
             reverse_link: TYPE__VALID_SOURCE_BOOL = None,
 
-            args__value: TYPE__ARGS_FINAL = (),
-            args__validate: TYPE__ARGS_FINAL = (),
+            args__value: TYPE__ARGS_DRAFT = (),
+            args__validate: TYPE__ARGS_DRAFT = (),
 
-            kwargs__value: TYPE__KWARGS_FINAL = None,
-            kwargs__validate: TYPE__KWARGS_FINAL = None,
+            kwargs__value: TYPE__KWARGS_DRAFT = None,
+            kwargs__validate: TYPE__KWARGS_DRAFT = None,
 
             name: Optional[str] = None,
             comment: Optional[str] = None,
