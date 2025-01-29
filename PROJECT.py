@@ -62,24 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 0)
+    VERSION: tuple[int, int, int] = (0, 2, 1)
     NEWS: list[str] = [
-        [
-            "[all PRJ] BIG REF",
-
-            "many renames/resorts",
-            "[CIRCULAR IMPORT] final fix - clear all __init__py and use direct imports",
-            "[InitSource] apply in most classes",
-            "[ArgsKwargs] apply+add types like TYPE__ARGS_DRAFT",
-            "[@final] apply to protect classes if InitSource nested",
-            "[xxxAux]rename objects",
-            "[EqValid/Value] big creation",
-            "[CallableAux] create",
-        ],
-        "[AttrAux] ref/fix/add dump/loadfix iters",
-        "[Enums] extend",
-        "[TextAux] ref+finish",
-        "[game_nouns_5letters] start creating",
+        "[EqValid] add EqValid_Startswith",
     ]
 
 
