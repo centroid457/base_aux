@@ -62,9 +62,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 1)
+    VERSION: tuple[int, int, int] = (0, 2, 2)
     NEWS: list[str] = [
-        "[EqValid] add EqValid_Startswith",
+        "[EqValid] add EqValid_Endswith +repr",
     ]
 
 
