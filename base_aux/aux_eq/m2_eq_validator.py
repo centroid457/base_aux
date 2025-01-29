@@ -174,6 +174,27 @@ class EqValid_Startswith(EqValid_Base):
         return False
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Endswith(EqValid_Base):
+    # V_ARGS: TYPE__ARGS_FINAL
+    # V_KWARGS = KWARGS_FINAL__NOT_USED
+
+    def VALIDATOR(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+        if ignorecase:
+            other_result = str(other_result).lower()
+            variants = (str(var).lower() for var in variants)
+        else:
+            other_result = str(other_result)
+            variants = (str(_) for _ in variants)
+
+        for var in variants:
+            if other_result.endswith(var):
+                return True
+
+        return False
+
+
 # =====================================================================================================================
 @final
 class EqValid_Raise(EqValid_Base):
