@@ -62,19 +62,38 @@ def test__variants(args, other, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, other, ic, _EXPECTED",
     argvalues=[
-        ([*"ABC"], "A", True, True),
-        ([*"ABC"], "A", False, True),
+        ([*"ABC"], "A1", True, True),
+        ([*"ABC"], "A1", False, True),
 
-        ([*"ABC"], "a", True, True),
-        ([*"ABC"], "a", False, False),
+        ([*"ABC"], "a1", True, True),
+        ([*"ABC"], "a1", False, False),
 
-        ([*"ABC"], "f", True, False),
-        ([*"ABC"], "f", False, False),
+        ([*"ABC"], "f1", True, False),
+        ([*"ABC"], "f1", False, False),
     ]
 )
 def test__startswith(args, other, ic, _EXPECTED):
     ExpectAux(EqValid_Startswith(*args, ignorecase=ic) == other).check_assert(_EXPECTED)
     ExpectAux(EqValid_Startswith(*args, reverse=True, ignorecase=ic) == other).check_assert(not _EXPECTED)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    argnames="args, other, ic, _EXPECTED",
+    argvalues=[
+        ([*"ABC"], "1A", True, True),
+        ([*"ABC"], "1A", False, True),
+
+        ([*"ABC"], "1a", True, True),
+        ([*"ABC"], "1a", False, False),
+
+        ([*"ABC"], "1f", True, False),
+        ([*"ABC"], "1f", False, False),
+    ]
+)
+def test__endswith(args, other, ic, _EXPECTED):
+    ExpectAux(EqValid_Endswith(*args, ignorecase=ic) == other).check_assert(_EXPECTED)
+    ExpectAux(EqValid_Endswith(*args, reverse=True, ignorecase=ic) == other).check_assert(not _EXPECTED)
 
 
 # =====================================================================================================================
