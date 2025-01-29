@@ -77,6 +77,15 @@ class _EqValidator:
     def __contains__(self, item) -> bool:
         return self.validate(item)
 
+    def __iter__(self) -> Iterable[Any]:
+        """
+        NOTE
+        ----
+        not always correct!
+        best usage for EqVariants or for any object with several args (Reqexp/...)
+        """
+        yield from self.V_ARGS
+
     def validate(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
         """
         GOAL
