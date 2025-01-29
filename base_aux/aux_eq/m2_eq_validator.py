@@ -62,6 +62,14 @@ class _EqValidator:
         reverse = self.REVERSE
         return f"{self.__class__.__name__}({args=},{kwargs=},{reverse=})"
 
+    def __repr__(self):
+        """
+        GOAL
+        ----
+        used in
+        """
+        return str(self)
+
     def __eq__(self, other_draft) -> bool:
         return self.validate(other_draft)
 
