@@ -11,7 +11,7 @@ TYPE__NUMBER = int | float
 
 
 # =====================================================================================================================
-class NumberArithmTranslateToAttr(CmpInst):
+class ArithmApplyToAttr(CmpInst):
     """
     GOAL
     ----
@@ -43,29 +43,29 @@ class NumberArithmTranslateToAttr(CmpInst):
     """
 
     # SETTINGS --------------------------------------------------------------------------------------------------------
-    NUMBER_ARITHM__GETATTR_NAME: str = None     # DEFINE!!! name for ORIGINALVALUE
+    NUMBER_ARITHM__ATTR: str = None     # DEFINE!!! name for ORIGINALVALUE
     NUMBER_ARITHM__PRECISION: int | None = 6
 
     # AUX -------------------------------------------------------------------------------------------------------------
     @property
     def NUMBER_ARITHM(self) -> Union[TYPE__NUMBER, NoReturn]:
-        if not self.NUMBER_ARITHM__GETATTR_NAME:
+        if not self.NUMBER_ARITHM__ATTR:
             raise Exx__NumberArithm_NoName()
 
-        result = getattr(self, self.NUMBER_ARITHM__GETATTR_NAME)
+        result = getattr(self, self.NUMBER_ARITHM__ATTR)
         if TypeAux(result).check__callable_func_meth_inst():
             result = result()
         return result
 
     @NUMBER_ARITHM.setter
     def NUMBER_ARITHM(self, other) -> None | NoReturn:
-        if not self.NUMBER_ARITHM__GETATTR_NAME:
+        if not self.NUMBER_ARITHM__ATTR:
             raise Exx__NumberArithm_NoName()
 
         if self.NUMBER_ARITHM__PRECISION is not None:
             other = round(other, self.NUMBER_ARITHM__PRECISION)
 
-        setattr(self, self.NUMBER_ARITHM__GETATTR_NAME, other)
+        setattr(self, self.NUMBER_ARITHM__ATTR, other)
 
     # precision --------------------------------------
     @classmethod

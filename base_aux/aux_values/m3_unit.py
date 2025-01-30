@@ -5,7 +5,7 @@ from base_aux.base_exceptions import *
 from base_aux.aux_values.m0_novalue import NoValue
 
 from base_aux.aux_attr.m2_annot4_cls_keys_as_values import AnnotClsKeysAsValues
-from base_aux.classes.m3_number import NumberArithmTranslateToAttr
+from base_aux.classes.m3_number import ArithmApplyToAttr
 
 from base_aux.aux_eq.m1_eq_aux import EqAux
 
@@ -58,7 +58,7 @@ pass
 
 
 # TODO: rename to ValueUnit_Arithm
-class ValueUnit(NumberArithmTranslateToAttr):
+class ValueUnit(ArithmApplyToAttr):
     """
     GOAL
     ----
@@ -106,7 +106,7 @@ class ValueUnit(NumberArithmTranslateToAttr):
 
     """
     # NESTED ----------------------
-    NUMBER_ARITHM__GETATTR_NAME = "VALUE_PURE"
+    NUMBER_ARITHM__ATTR = "VALUE_PURE"
 
     # SETTINGS -------------------------
     SEPARATOR: str = ""     # when parsed - used parced separator, when

@@ -5,8 +5,8 @@ from base_aux.classes.m3_number import *
 
 
 # =====================================================================================================================
-class Victim(NumberArithmTranslateToAttr):
-    NUMBER_ARITHM__GETATTR_NAME = "VAL"
+class Victim(ArithmApplyToAttr):
+    NUMBER_ARITHM__ATTR = "VAL"
 
     def __init__(self, val):
         self.VAL = val
@@ -32,7 +32,7 @@ class Victim(NumberArithmTranslateToAttr):
     ]
 )
 def test__precision_str(args, _EXPECTED):
-    func_link = NumberArithmTranslateToAttr.number__get_string_no_zeros
+    func_link = ArithmApplyToAttr.number__get_string_no_zeros
     ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
@@ -59,7 +59,7 @@ def test__precision_str(args, _EXPECTED):
     ]
 )
 def test__precision_str(args, _EXPECTED):
-    func_link = NumberArithmTranslateToAttr.number__try_int_if_same
+    func_link = ArithmApplyToAttr.number__try_int_if_same
     ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
