@@ -1,7 +1,4 @@
-import pytest
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
-
-from base_aux.requirements.m3_versions import *
+from base_aux.version.m2_checker import CheckVersion_Python
 
 
 # =====================================================================================================================

@@ -1,7 +1,5 @@
-import sys
 import re
 
-from base_aux.aux_attr.m3_getattr1_prefix_1_inst import *
 from base_aux.aux_eq.m0_cmp_inst import CmpInst
 from base_aux.aux_types.m2_info import *
 
@@ -47,7 +45,7 @@ class Exx__VersionIncompatible(Exception):
 # ---------------------------------------------------------------------------------------------------------------------
 TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-TYPE__VERSION_DRAFT = Union[str, int, list[TYPE__VERSION_ELEMENT], TYPE__VERSION_ELEMENTS, Any, 'VersionBlock']
+TYPE__VERSION_BLOCK_DRAFT = Union[str, int, list[TYPE__VERSION_ELEMENT], TYPE__VERSION_ELEMENTS, Any, 'VersionBlock']
 
 
 # =====================================================================================================================
@@ -77,7 +75,7 @@ class VersionBlock(CmpInst):
     PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: TYPE__VERSION_DRAFT):
+    def __init__(self, source: TYPE__VERSION_BLOCK_DRAFT):
         self._SOURCE = source
         if not self._validate_source(source):
             raise Exx__VersionIncompatibleBlock()
@@ -89,13 +87,13 @@ class VersionBlock(CmpInst):
         self.ELEMENTS = self._parse_elements(string)
 
     @classmethod
-    def _validate_source(cls, source: TYPE__VERSION_DRAFT) -> bool:
+    def _validate_source(cls, source: TYPE__VERSION_BLOCK_DRAFT) -> bool:
         source = str(source).lower()
         match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
         return not bool(match)
 
     @classmethod
-    def _prepare_string(cls, source: TYPE__VERSION_DRAFT) -> str:
+    def _prepare_string(cls, source: TYPE__VERSION_BLOCK_DRAFT) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
@@ -297,7 +295,7 @@ class Version(CmpInst):
     def micro(self) -> VersionBlock | None:
         return self[2]
 
-    # CMP -------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other: TYPE__SOURCE_VERSION) -> int | NoReturn:
         other = self.__class__(other)
 
@@ -314,80 +312,6 @@ class Version(CmpInst):
 
         # final - longest ------------
         return int(len(self) > len(other)) or -1
-
-
-# =====================================================================================================================
-class CheckVersion(GetattrPrefixInst_RaiseIf):
-    SOURCE: Union[Any, Callable[..., Any]] = sys.version.split()[0]
-    # print(sys.version_info)   # sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
-    # return sys.version_info[:3]     # (3, 8, 10)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, source: Any | Callable | None = None):
-        if source is not None:
-            self.SOURCE = source
-
-    @property
-    def ACTUAL(self) -> Version:
-        if TypeAux(self.SOURCE).check__callable_func_meth_inst():
-            value = self.SOURCE()
-        else:
-            value = self.SOURCE
-
-        return Version(value)
-
-    # ---------------------------------------
-    def check_eq(self, target: Any):
-        return self.ACTUAL == target
-
-    def check_ne(self, target: Any):
-        return self.ACTUAL != target
-
-    # ---------------------------------------
-    def check_le(self, target: Any):
-        return self.ACTUAL <= target
-
-    def check_lt(self, target: Any):
-        return self.ACTUAL < target
-
-    # ---------------------------------------
-    def check_ge(self, target: Any):
-        return self.ACTUAL >= target
-
-    def check_gt(self, target: Any):
-        return self.ACTUAL > target
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-class CheckVersion_Python(CheckVersion):
-    """
-    check version of python interpreter.
-
-    USAGE
-    -----
-    CheckVersion_Python().raise_if_not__check_ge("2")
-    CheckVersion_Python().raise_if_not__check_ge("3.11")
-    CheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
-    """
-    SOURCE = sys.version.split()[0]
-
-    raise_if__check_eq: Callable[..., NoReturn | None]
-    raise_if_not__check_eq: Callable[..., NoReturn | None]
-
-    raise_if__check_ne: Callable[..., NoReturn | None]
-    raise_if_not__check_ne: Callable[..., NoReturn | None]
-
-    raise_if__check_le: Callable[..., NoReturn | None]
-    raise_if_not__check_le: Callable[..., NoReturn | None]
-
-    raise_if__check_lt: Callable[..., NoReturn | None]
-    raise_if_not__check_lt: Callable[..., NoReturn | None]
-
-    raise_if__check_ge: Callable[..., NoReturn | None]
-    raise_if_not__check_ge: Callable[..., NoReturn | None]
-
-    raise_if__check_gt: Callable[..., NoReturn | None]
-    raise_if_not__check_gt: Callable[..., NoReturn | None]
 
 
 # =====================================================================================================================
