@@ -31,18 +31,18 @@ class ValueVariants:
     # TODO: combine with ValueUnit - just add ACCEPTABLE(*VARIANTS) and rename UNIT just as SUFFIX!
 
     # SETTINGS -----------------------
-    CASE_INSENSITIVE: bool = True
+    IGNORECASE: bool = True
     VARIANTS: TYPE__VARIANTS = NoValue
     VALUE_DEFAULT: Any = NoValue
 
     # DATA ---------------------------
     __value: Any = NoValue
 
-    def __init__(self, value: Union[str, Any] = NoValue, variants: TYPE__VARIANTS = NoValue, case_insensitive: bool = None):
+    def __init__(self, value: Union[str, Any] = NoValue, variants: TYPE__VARIANTS = NoValue, ignorecase: bool = None):
         """
         """
-        if case_insensitive is not None:
-            self.CASE_INSENSITIVE = case_insensitive
+        if ignorecase is not None:
+            self.IGNORECASE = ignorecase
 
         self._variants_apply(variants)
 
@@ -82,7 +82,7 @@ class ValueVariants:
             return self.value_validate(other)
 
         # todo: decide is it correct using comparing by str()??? by now i think it is good enough! but maybe add it as parameter
-        if self.CASE_INSENSITIVE:
+        if self.IGNORECASE:
             return (self.VALUE == other) or (str(self.VALUE).lower() == str(other).lower())
         else:
             return (self.VALUE == other) or (str(self.VALUE) == str(other))
@@ -119,7 +119,7 @@ class ValueVariants:
             if EqAux(variant).check_doubleside__bool(value):
                 return variant
 
-            if self.CASE_INSENSITIVE:
+            if self.IGNORECASE:
                 result = str(variant).lower() == str(value).lower()
             else:
                 result = str(variant) == str(value)

@@ -42,7 +42,7 @@ class AnnotsRequired(AnnotsBase):
     #     """
     #     annots = dict()
     #     for name in self.annots_get_set(obj):
-    #         annots.update({name: self.attr_get_case_insensitive(name, obj)})
+    #         annots.update({name: self.attr_get_ignorecase(name, obj)})
     #     return annots
     #
     # def annots_get_values(self, obj: Optional[Any] = None) -> Union[Iterable[Any], NoReturn]:
@@ -50,7 +50,7 @@ class AnnotsRequired(AnnotsBase):
     #     """
     #     return self.annots_get_dict(obj).values()
     #
-    # def attr_get_case_insensitive(self, name: str, obj: Optional[Any] = None) -> Union[str, NoReturn]:
+    # def attr_get_ignorecase(self, name: str, obj: Optional[Any] = None) -> Union[str, NoReturn]:
     #     """get value for attr name without case sense.
     #     if no attr name in source - raise!
     #     """
