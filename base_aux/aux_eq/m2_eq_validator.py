@@ -149,7 +149,7 @@ class Validators:
         else:
             return False
 
-    def Startswith(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+    def Startswith(self, other_result: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
         if ignorecase:
             other_result = str(other_result).lower()
             variants = (str(var).lower() for var in variants)
@@ -163,7 +163,7 @@ class Validators:
 
         return False
 
-    def Endswith(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+    def Endswith(self, other_result: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
         if ignorecase:
             other_result = str(other_result).lower()
             variants = (str(var).lower() for var in variants)
@@ -177,17 +177,52 @@ class Validators:
 
         return False
 
-    def Raise(self, other_result: Any, *variants: Any) -> bool | NoReturn:
+    def Raise(self, other_result: Any, *variants: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with raised
+        if other is exact final Exception without raising - it would return False!
+        """
         return self.OTHER_RAISED
 
     def NotRaise(self, other_result, *v_args, **v_kwargs) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with raised
+        if other is exact final Exception without raising - it would return False!
+        """
         return not self.OTHER_RAISED
 
     def Exx(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        True - if Other object is exact Exception or Exception()
+        if raised - return False!!
+        """
         return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
 
     def ExxRaise(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        True - if Other object is exact Exception or Exception() or Raised
+        """
         return self.OTHER_RAISED or TypeAux(other_result).check__exception()
+
+    def LtGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other_result).ltgt(low, high)
+
+    def LtGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other_result).ltge(low, high)
+
+    def LeGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other_result).legt(low, high)
+
+    def LeGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux(other_result).lege(low, high)
 
     def Regexp(
             self,
@@ -250,80 +285,50 @@ class EqValid_Endswith(EqValid_Base):
 # =====================================================================================================================
 @final
 class EqValid_Raise(EqValid_Base):
-    """
-    GOAL
-    ----
-    True - if Other object called with raised
-    if other is exact final Exception without raising - it would return False!
-    """
     VALIDATOR = Validators.Raise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_NotRaise(EqValid_Base):
-    """
-    GOAL
-    ----
-    True - if Other object called with raised
-    if other is exact final Exception without raising - it would return False!
-    """
     VALIDATOR = Validators.NotRaise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Exx(EqValid_Base):
-    """
-    GOAL
-    ----
-    True - if Other object is exact Exception or Exception()
-    if raised - return False!!
-    """
     VALIDATOR = Validators.Exx
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_ExxRaise(EqValid_Base):
-    """
-    GOAL
-    ----
-    True - if Other object is exact Exception or Exception() or Raised
-    """
     VALIDATOR = Validators.ExxRaise
 
 
 # =====================================================================================================================
 @final
 class EqValid_LtGt(EqValid_Base):
-    def VALIDATOR(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).ltgt(low, high)
+    VALIDATOR = Validators.LtGt
 
 
 @final
 class EqValid_LtGe(EqValid_Base):
-    def VALIDATOR(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).ltge(low, high)
+    VALIDATOR = Validators.LtGe
 
 
 @final
 class EqValid_LeGt(EqValid_Base):
-    def VALIDATOR(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).legt(low, high)
+    VALIDATOR = Validators.LeGt
 
 
 @final
 class EqValid_LeGe(EqValid_Base):
-    def VALIDATOR(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).lege(low, high)
+    VALIDATOR = Validators.LeGe
 
 
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
-    # V_ARGS: tuple[str, ...]
-    # V_KWARGS: TYPE__KWARGS_FINAL
-
     BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
     VALIDATOR = Validators.Regexp
 
