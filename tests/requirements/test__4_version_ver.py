@@ -28,12 +28,12 @@ class Test__Version:
         argnames="args, _EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
-            (True, ""),     # Exx_VersionIncompatible
+            (True, ""),     # Exx__VersionIncompatible
             (1, "1"),
 
             ("1", "1"),
-            ("hello", ""),  # Exx_VersionIncompatible
-            ("HELLO", ""),     # Exx_VersionIncompatible
+            ("hello", ""),  # Exx__VersionIncompatible
+            ("HELLO", ""),     # Exx__VersionIncompatible
             ("11rc22", "11rc22"),
             ("11r c22", "11r c22"),
             (" 11 rc-2 2", "11 rc-2 2"),
@@ -69,21 +69,21 @@ class Test__Version:
         argnames="args, _EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
-            (True, Exx_VersionIncompatible),
+            (True, Exx__VersionIncompatible),
             (1, "1"),
 
             ("1", "1"),
-            ("hello", Exx_VersionIncompatible),
-            ("HELLO", Exx_VersionIncompatible),
+            ("hello", Exx__VersionIncompatible),
+            ("HELLO", Exx__VersionIncompatible),
             ("11rc22", "11rc22"),
             ("11r c22", "11rc22"),
-            (" 11 rc-2 2", Exx_VersionIncompatibleBlock),
+            (" 11 rc-2 2", Exx__VersionIncompatibleBlock),
 
             # zeros invaluable
             ("01rc02", "1rc2"),
 
             # not clean chars
-            ("[11:rc.22]", Exx_VersionIncompatibleBlock),
+            ("[11:rc.22]", Exx__VersionIncompatibleBlock),
 
             # iterables
             (([11, "r c---", 22], ), "11.rc.22"),
@@ -108,21 +108,21 @@ class Test__Version:
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
         argvalues=[
-            (True, Exx_VersionIncompatible),
+            (True, Exx__VersionIncompatible),
             (1, 1),
 
             ("1", 1),
-            ("hello", Exx_VersionIncompatible),
-            ("HELLO", Exx_VersionIncompatible),
+            ("hello", Exx__VersionIncompatible),
+            ("HELLO", Exx__VersionIncompatible),
             ("11rc22", 1),
             ("11r c22", 1),
-            (" 11 rc-2 2", Exx_VersionIncompatibleBlock),
+            (" 11 rc-2 2", Exx__VersionIncompatibleBlock),
 
             # zeros invaluable
             ("01rc02", 1),
 
             # not clean chars
-            ("[11:rc.22]", Exx_VersionIncompatibleBlock),
+            ("[11:rc.22]", Exx__VersionIncompatibleBlock),
 
             # iterables
             (([11, "r c---", 22],), 3),
@@ -145,7 +145,7 @@ class Test__Version:
             (("01rc02", "1rc20"), False),
 
             # not clean chars
-            (("1rc2", "[11:rc.22]"), Exx_VersionIncompatibleBlock),
+            (("1rc2", "[11:rc.22]"), Exx__VersionIncompatibleBlock),
 
             # iterables
             (("1rc2", [1, "rc", 2]), False),

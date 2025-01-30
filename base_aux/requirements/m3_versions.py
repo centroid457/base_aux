@@ -3,58 +3,54 @@ import re
 
 from base_aux.aux_attr.m3_getattr1_prefix_1_inst import *
 from base_aux.aux_eq.m0_cmp_inst import CmpInst
+from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================
-# TODO:
+def _explore():
+    # EXPLORE VARIANTS ----------------------------------------------
+    # 1=PACKAGING.version ---------
+    from packaging import version
+    ObjectInfo(version.parse(str((1,2,3)))).print()
+
+    result = version.parse("2.3.1") < version.parse("10.1.2")
+
+    ObjectInfo(version.parse("1.2.3")).print()
+    print(result)
+    print()
+
+    # 2=PKG_RESOURCES.parse_version ---------
+    from pkg_resources import parse_version         # DEPRECATED!!!
+    parse_version("1.9.a.dev") == parse_version("1.9a0dev")
+
+
+    import sys
+    print(sys.winver)
+    print(sys.version_info)
+    print(tuple(sys.version_info))
+
+    result = sys.version_info > (2, 7)
+    print(result)
 
 
 # =====================================================================================================================
-# EXPLORE VARIANTS ----------------------------------------------
-# from packaging import version
-# ObjectInfo(version.parse(str((1,2,3)))).print()
-
-# result = version.parse("2.3.1") < version.parse("10.1.2")
-
-# ObjectInfo(version.parse("1.2.3")).print()
-# print(result)
-# print()
-#
-# from pkg_resources import parse_version         # DEPRECATED!!!
-# parse_version("1.9.a.dev") == parse_version("1.9a0dev")
-#
-
-# import sys
-# print(sys.winver)
-# print(sys.version_info)
-# print(tuple(sys.version_info))
-#
-# result = sys.version_info > (2, 7)
-# print(result)
-
-
-# =====================================================================================================================
-class Exx_VersionIncompatibleBlock(Exception):
+class Exx__VersionIncompatibleBlock(Exception):
     """
     """
 
 
-class Exx_VersionIncompatible(Exception):
+class Exx__VersionIncompatible(Exception):
     """
     """
 
 
-class Exx_VersionIncompatibleCheck(Exception):
-    """
-    """
-
-
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 TYPE__VERSION_ELEMENT = Union[str, int]
 TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-TYPE__SOURCE_BLOCKS = Union[str, int, list, tuple, Any, 'VersionBlock']
+TYPE__VERSION_DRAFT = Union[str, int, list[TYPE__VERSION_ELEMENT], TYPE__VERSION_ELEMENTS, Any, 'VersionBlock']
 
 
+# =====================================================================================================================
 class VersionBlock(CmpInst):
     """
     this is exact block in version string separated by dots!!!
@@ -81,25 +77,25 @@ class VersionBlock(CmpInst):
     PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
     PATTERN_ITERATE = r"\d+|[a-z]+"
 
-    def __init__(self, source: TYPE__SOURCE_BLOCKS):
+    def __init__(self, source: TYPE__VERSION_DRAFT):
         self._SOURCE = source
         if not self._validate_source(source):
-            raise Exx_VersionIncompatibleBlock()
+            raise Exx__VersionIncompatibleBlock()
 
         string = self._prepare_string(source)
         if not self._validate_string(string):
-            raise Exx_VersionIncompatibleBlock()
+            raise Exx__VersionIncompatibleBlock()
 
         self.ELEMENTS = self._parse_elements(string)
 
     @classmethod
-    def _validate_source(cls, source: TYPE__SOURCE_BLOCKS) -> bool:
+    def _validate_source(cls, source: TYPE__VERSION_DRAFT) -> bool:
         source = str(source).lower()
         match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
         return not bool(match)
 
     @classmethod
-    def _prepare_string(cls, source: TYPE__SOURCE_BLOCKS) -> str:
+    def _prepare_string(cls, source: TYPE__VERSION_DRAFT) -> str:
         if isinstance(source, (list, tuple)):
             result = "".join([str(item) for item in source])
         else:
@@ -144,10 +140,6 @@ class VersionBlock(CmpInst):
 
     def __str__(self) -> str:
         return "".join(str(item) for item in self.ELEMENTS)
-
-    @property
-    def STRING(self) -> str:
-        return str(self)
 
     # CMP -------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other) -> int | NoReturn:
@@ -195,7 +187,7 @@ class PatternsVer:
     # VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
     # VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
     VERSION_IN_BRACKETS: list = [r"\((.*)\)", r"\[(.*)\]"]  # get first bracket!!!
-    VALIDATE_BRACKETS_NEGATIVE: list = [r"[^\[].*\]", r"\[.*[^\]]",   r"[^\(].*\)", r"\(.*[^\)]"]
+    VALID_BRACKETS: list = [r"[^\[].*\]", r"\[.*[^\]]", r"[^\(].*\)", r"\(.*[^\)]"]
 
 
 # =====================================================================================================================
@@ -217,7 +209,7 @@ class Version(CmpInst):
         string = self._prepare_string(source)
         self.BLOCKS = self._parse_blocks(string)
         if not self.check_blocks_enough() and self.RAISE:
-            raise Exx_VersionIncompatible()
+            raise Exx__VersionIncompatible()
 
     def check_blocks_enough(self, count: int = None) -> bool:
         if count is None:
@@ -245,11 +237,11 @@ class Version(CmpInst):
                 break
 
         if "," in result and "." in result:
-            raise Exx_VersionIncompatible()
+            raise Exx__VersionIncompatible()
 
-        for pattern in PatternsVer.VALIDATE_BRACKETS_NEGATIVE:
+        for pattern in PatternsVer.VALID_BRACKETS:
             if re.search(pattern, result):
-                raise Exx_VersionIncompatible()
+                raise Exx__VersionIncompatible()
 
         result = re.sub(r"\A\D+", "", result)   # ver/version
         result = re.sub(r",+", ".", result)
@@ -291,10 +283,6 @@ class Version(CmpInst):
 
     def __str__(self):
         return ".".join([str(block) for block in self.BLOCKS])
-
-    @property
-    def STRING(self) -> str:
-        return str(self)
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
