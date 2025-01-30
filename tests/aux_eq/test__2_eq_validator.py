@@ -44,17 +44,17 @@ def test___EqValidator(source, other, _EXPECTED):
     ]
 )
 def test__variants(args, other, _EXPECTED):
-    ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_VariantsDirect(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args) == other).check_assert(_EXPECTED[1])
 
-    ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_VariantsDirect(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
 
 
-    ExpectAux(other in EqValid_Variants(*args)).check_assert(_EXPECTED[0])
+    ExpectAux(other in EqValid_VariantsDirect(*args)).check_assert(_EXPECTED[0])
     ExpectAux(other in EqValid_VariantsStrLow(*args)).check_assert(_EXPECTED[1])
 
-    ExpectAux(other in EqValid_Variants(*args, reverse=True)).check_assert(not _EXPECTED[0])
+    ExpectAux(other in EqValid_VariantsDirect(*args, reverse=True)).check_assert(not _EXPECTED[0])
     ExpectAux(other in EqValid_VariantsStrLow(*args, reverse=True)).check_assert(not _EXPECTED[1])
 
 
@@ -113,12 +113,12 @@ def test__exx_raise(other, _EXPECTED):
     ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[1])
     ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_ExxRaised() == other).check_assert(_EXPECTED[3])
+    ExpectAux(EqValid_ExxRaise() == other).check_assert(_EXPECTED[3])
 
     ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[1])
     ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_ExxRaised(reverse=True) == other).check_assert(not _EXPECTED[3])
+    ExpectAux(EqValid_ExxRaise(reverse=True) == other).check_assert(not _EXPECTED[3])
 
 
 # =====================================================================================================================

@@ -108,7 +108,7 @@ class ValueEqValid_Variants(ValueEqValid_TypeBase):
     here is only validating and keep passed value
     in ValueVariants - final value used from exact Variants!
     """
-    EQ = EqValid_Variants
+    EQ = EqValid_VariantsDirect
 
 
 @final

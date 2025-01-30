@@ -45,7 +45,7 @@ class _EqValidator:
     OTHER_RAISED: bool = None
     OTHER_RESULT: Any | Exception = None
 
-    def __init__(self, validator: TYPE__VALID_VALIDATOR = None, *v_args, reverse: bool = None, **v_kwargs) -> None:
+    def __init__(self, validator: TYPE__VALID_VALIDATOR, *v_args, reverse: bool = None, **v_kwargs) -> None:
         if validator is not None:
             self.VALIDATOR = validator
 
@@ -118,40 +118,29 @@ class _EqValidator:
         return NotImplemented
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 class EqValid_Base(_EqValidator):
-    def __init__(self, *v_args, reverse: bool = None, **v_kwargs):
+    def __init__(self, *v_args, **v_kwargs):
         # print(v_args, v_kwargs)
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)     # not working!
 
-        # super().__init__(*v_args, **v_kwargs)
-        self.V_ARGS = v_args
-        self.V_KWARGS = v_kwargs
+        super().__init__(None, *v_args, **v_kwargs)
+        # self.V_ARGS = v_args
+        # self.V_KWARGS = v_kwargs
+        #
+        # if reverse is not None:
+        #     self.REVERSE = reverse
 
-        if reverse is not None:
-            self.REVERSE = reverse
 
-
-# =====================================================================================================================
-@final
-class EqValid_Variants(EqValid_Base):
-    # V_ARGS: TYPE__ARGS_FINAL
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result: Any, *variants: Any):
+# ---------------------------------------------------------------------------------------------------------------------
+class Validators:
+    def VariantsDirect(self, other_result: Any, *variants: Any) -> bool | NoReturn:
         if other_result in variants:
             return True
         else:
             return False
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_VariantsStrLow(EqValid_Base):
-    # V_ARGS: tuple[str, ...]
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result: Any, *variants: Any):
+    def VariantsStrLow(self, other_result: Any, *variants: Any) -> bool | NoReturn:
         other_result = str(other_result).lower()
         variants = (str(var).lower() for var in variants)
 
@@ -160,14 +149,7 @@ class EqValid_VariantsStrLow(EqValid_Base):
         else:
             return False
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Startswith(EqValid_Base):
-    # V_ARGS: TYPE__ARGS_FINAL
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+    def Startswith(self, other_result: Any, *variants: Any, ignorecase: bool = None):
         if ignorecase:
             other_result = str(other_result).lower()
             variants = (str(var).lower() for var in variants)
@@ -181,14 +163,7 @@ class EqValid_Startswith(EqValid_Base):
 
         return False
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Endswith(EqValid_Base):
-    # V_ARGS: TYPE__ARGS_FINAL
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result: Any, *variants: Any, ignorecase: bool = None):
+    def Endswith(self, other_result: Any, *variants: Any, ignorecase: bool = None):
         if ignorecase:
             other_result = str(other_result).lower()
             variants = (str(var).lower() for var in variants)
@@ -202,6 +177,75 @@ class EqValid_Endswith(EqValid_Base):
 
         return False
 
+    def Raise(self, other_result: Any, *variants: Any) -> bool | NoReturn:
+        return self.OTHER_RAISED
+
+    def NotRaise(self, other_result, *v_args, **v_kwargs) -> bool:
+        return not self.OTHER_RAISED
+
+    def Exx(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+        return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
+
+    def ExxRaise(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+        return self.OTHER_RAISED or TypeAux(other_result).check__exception()
+
+    def Regexp(
+            self,
+            other_result,
+            *regexps: str,
+            ignorecase: bool = True,
+            bool_collect: BoolCollect = None,
+            match_link: Callable = re.fullmatch,
+    ) -> bool | NoReturn:
+        bool_collect = bool_collect or self.BOOL_COLLECT
+
+        for pattern in regexps:
+            result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
+
+            # CUMULATE --------
+            if bool_collect == BoolCollect.ALL_TRUE:
+                if not result_i:
+                    return False
+            elif bool_collect == BoolCollect.ANY_TRUE:
+                if result_i:
+                    return True
+            elif bool_collect == BoolCollect.ALL_FALSE:
+                if result_i:
+                    return False
+            elif bool_collect == BoolCollect.ANY_FALSE:
+                if not result_i:
+                    return True
+
+        # FINAL ------------
+        if bool_collect in [BoolCollect.ALL_TRUE, BoolCollect.ALL_FALSE]:
+            return True
+        else:
+            return False
+
+
+# =====================================================================================================================
+@final
+class EqValid_VariantsDirect(EqValid_Base):
+    VALIDATOR = Validators.VariantsDirect
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_VariantsStrLow(EqValid_Base):
+    VALIDATOR = Validators.VariantsStrLow
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Startswith(EqValid_Base):
+    VALIDATOR = Validators.Startswith
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Endswith(EqValid_Base):
+    VALIDATOR = Validators.Endswith
+
 
 # =====================================================================================================================
 @final
@@ -212,11 +256,7 @@ class EqValid_Raise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
-    # V_ARGS = ARGS_FINAL__NOT_USED
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
-        return self.OTHER_RAISED
+    VALIDATOR = Validators.Raise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -228,11 +268,7 @@ class EqValid_NotRaise(EqValid_Base):
     True - if Other object called with raised
     if other is exact final Exception without raising - it would return False!
     """
-    # V_ARGS = ARGS_FINAL__NOT_USED
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool:
-        return not self.OTHER_RAISED
+    VALIDATOR = Validators.NotRaise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -244,26 +280,18 @@ class EqValid_Exx(EqValid_Base):
     True - if Other object is exact Exception or Exception()
     if raised - return False!!
     """
-    # V_ARGS = ARGS_FINAL__NOT_USED
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
-        return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
+    VALIDATOR = Validators.Exx
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ExxRaised(EqValid_Base):
+class EqValid_ExxRaise(EqValid_Base):
     """
     GOAL
     ----
     True - if Other object is exact Exception or Exception() or Raised
     """
-    # V_ARGS = ARGS_FINAL__NOT_USED
-    # V_KWARGS = KWARGS_FINAL__NOT_USED
-
-    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
-        return self.OTHER_RAISED or TypeAux(other_result).check__exception()
+    VALIDATOR = Validators.ExxRaise
 
 
 # =====================================================================================================================
@@ -297,40 +325,7 @@ class EqValid_Regexp(EqValid_Base):
     # V_KWARGS: TYPE__KWARGS_FINAL
 
     BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
-
-    def VALIDATOR(
-            self,
-            other_result,
-            *regexps: str,
-            ignorecase: bool = True,
-            bool_collect: BoolCollect = None,
-            match_link: Callable = re.fullmatch,
-    ) -> bool | NoReturn:
-        bool_collect = bool_collect or self.BOOL_COLLECT
-
-        for pattern in regexps:
-            result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
-
-            # CUMULATE --------
-            if bool_collect == BoolCollect.ALL_TRUE:
-                if not result_i:
-                    return False
-            elif bool_collect == BoolCollect.ANY_TRUE:
-                if result_i:
-                    return True
-            elif bool_collect == BoolCollect.ALL_FALSE:
-                if result_i:
-                    return False
-            elif bool_collect == BoolCollect.ANY_FALSE:
-                if not result_i:
-                    return True
-
-        # FINAL ------------
-        if bool_collect in [BoolCollect.ALL_TRUE, BoolCollect.ALL_FALSE]:
-            return True
-        else:
-            return False
-
+    VALIDATOR = Validators.Regexp
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
