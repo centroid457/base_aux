@@ -43,9 +43,9 @@ class Exx__VersionIncompatible(Exception):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-TYPE__VERSION_ELEMENT = Union[str, int]
-TYPE__VERSION_ELEMENTS = tuple[TYPE__VERSION_ELEMENT, ...]
-TYPE__VERSION_BLOCK_DRAFT = Union[str, int, list[TYPE__VERSION_ELEMENT], TYPE__VERSION_ELEMENTS, Any, 'VersionBlock']
+TYPE__VERSION_BLOCK_ELEMENT = Union[str, int]
+TYPE__VERSION_BLOCK_FINAL = tuple[TYPE__VERSION_BLOCK_ELEMENT, ...]
+TYPE__VERSION_BLOCK_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_ELEMENT],  TYPE__VERSION_BLOCK_FINAL, Any, 'VersionBlock']
 
 
 # =====================================================================================================================
@@ -68,7 +68,7 @@ class VersionBlock(CmpInst):
     1.
     """
     _SOURCE: Any
-    ELEMENTS: TYPE__VERSION_ELEMENTS
+    ELEMENTS: TYPE__VERSION_BLOCK_FINAL
 
     PATTERN_CLEAR = r"[\"' -]*"
     PATTERN_VALIDATE_SOURCE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
@@ -113,7 +113,7 @@ class VersionBlock(CmpInst):
         return bool(match)
 
     @classmethod
-    def _parse_elements(cls, string: str) -> TYPE__VERSION_ELEMENTS:
+    def _parse_elements(cls, string: str) -> TYPE__VERSION_BLOCK_FINAL:
         if not isinstance(string, str):
             return ()
 
@@ -177,8 +177,8 @@ pass    # ----------------------------------------------------------------------
 pass    # -------------------------------------------------------------------------------------------------------------
 pass    # -------------------------------------------------------------------------------------------------------------
 
-TYPE__VERSION_BLOCKS = tuple[VersionBlock, ...]
-TYPE__SOURCE_VERSION = Union[VersionBlock, tuple[VersionBlock], 'Version', Any]
+TYPE__VERSION_FINAL = tuple[VersionBlock, ...]
+TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_DRAFT,  TYPE__VERSION_FINAL, 'Version', Any]
 
 
 class PatternsVer:
@@ -194,7 +194,7 @@ class Version(CmpInst):
     :ivar _SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
     """
     _SOURCE: Any
-    BLOCKS: TYPE__VERSION_BLOCKS = ()
+    BLOCKS: TYPE__VERSION_FINAL = ()
 
     MIN_BLOCKS_COUNT: int = 1
     RAISE: bool = True
@@ -249,7 +249,7 @@ class Version(CmpInst):
         return result
 
     @staticmethod
-    def _parse_blocks(source: str) -> TYPE__VERSION_BLOCKS:
+    def _parse_blocks(source: str) -> TYPE__VERSION_FINAL:
         blocks_list__str = source.split(".")
 
         # RESULT -----------
@@ -296,7 +296,7 @@ class Version(CmpInst):
         return self[2]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __cmp__(self, other: TYPE__SOURCE_VERSION) -> int | NoReturn:
+    def __cmp__(self, other: TYPE__VERSION_DRAFT) -> int | NoReturn:
         other = self.__class__(other)
 
         # equel ----------------------
