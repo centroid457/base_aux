@@ -1,5 +1,5 @@
 from typing import *
-from typing import Union, Any, Callable, NoReturn
+import pathlib
 
 from base_aux.aux_values.m0_novalue import TYPE__NOVALUE
 
@@ -43,6 +43,11 @@ class TYPES:
 
 # ---------------------------------------------------------------------------------------------------------------------
 TYPE__ELEMENTARY = Union[*TYPES.ELEMENTARY]
+
+
+# =====================================================================================================================
+TYPE__PATH_DRAFT = Union[str, pathlib.Path]
+TYPE__PATH_FINAL = pathlib.Path
 
 
 # =====================================================================================================================

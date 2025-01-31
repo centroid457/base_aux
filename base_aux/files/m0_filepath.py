@@ -1,16 +1,38 @@
 import pathlib
 from typing import *
 
+from base_aux.aux_types.m0_types import *
 from base_aux.aux_types.m2_info import *
 from base_aux.base_resolver.m1_resolver import *
+from base_aux.base_inits.m1_source import *
 
 
 # =====================================================================================================================
-class ResolveFilePath(Resolver):
+class Resolve_DirPath(InitSource, Resolver):
     """
     GOAL
     ----
-    resolve filepath by any variant
+    resolve dirpath by draft
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Resolve_FilePath init dirpath
+    """
+    SOURCE: TYPE__PATH_DRAFT | None
+
+    def resolve(self) -> TYPE__PATH_FINAL:
+        if self.SOURCE is not None:
+            return pathlib.Path(self.SOURCE)
+        if self.SOURCE is None:
+            return pathlib.Path().cwd()
+
+
+# =====================================================================================================================
+class Resolve_FilePath(Resolver):
+    """
+    GOAL
+    ----
+    resolve filepath by draft
 
     SPECIALLY CREATED FOR
     ---------------------
@@ -20,7 +42,7 @@ class ResolveFilePath(Resolver):
     EXTLAST: str = None
     DIRPATH: pathlib.Path = None
 
-    # as properties -------
+    # PROPERTIES ------------------------------------------------------------------------------------------------------
     NAMEEXT: str
     FILEPATH: pathlib.Path
 
@@ -37,42 +59,26 @@ class ResolveFilePath(Resolver):
     def FILEPATH(self) -> pathlib.Path:
         return self.DIRPATH.joinpath(self.NAMEEXT)
 
+    # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
+            # separated -----
             name: str = None,
             extlast: str = None,
-            dirpath: str | pathlib.Path = None,
+            dirpath: TYPE__PATH_DRAFT = None,
             nameext: str = None,
 
-            filepath: str | pathlib.Path = None,
+            # full -----
+            filepath: TYPE__PATH_DRAFT = None,
     ):
         """
         NOTE
         ----
         you can use "filepath" as base/default and others (name/extlast/...) for overwrite some of them base parts
         """
-
-        if filepath is not None:
-            filepath = pathlib.Path(filepath)
-            self.DIRPATH = filepath.parent
-            self.NAME = filepath.stem
-            self.EXTLAST = filepath.suffix.rsplit(".", 1)[-1]
-
-        if dirpath is not None:
-            self.DIRPATH = pathlib.Path(dirpath)
-        if self.DIRPATH is None and dirpath is None:
-            self.DIRPATH = pathlib.Path().cwd()
-
-        if nameext is not None:
-            name_ext: list[str] = nameext.rsplit(".", 1)
-            if len(name_ext) == 2:  # DOT exists!
-                name, extlast = name_ext
-                if extlast:
-                    self.EXTLAST = extlast
-                if name:
-                    self.NAME = name
-            else:
-                self.NAME = nameext
+        self.set_filepath(filepath)
+        self.set_dirpath(dirpath or self.DIRPATH)
+        self.set_nameext(nameext)
 
         # most important! overwrite previous set!
         if name is not None:
@@ -80,8 +86,30 @@ class ResolveFilePath(Resolver):
         if extlast is not None:
             self.EXTLAST = extlast
 
+    def set_filepath(self, filepath: TYPE__PATH_DRAFT) -> None:
+        if filepath is not None:
+            filepath = pathlib.Path(filepath)
+            self.DIRPATH = filepath.parent
+            self.NAME = filepath.stem
+            self.EXTLAST = filepath.suffix.rsplit(".", 1)[-1]
+
+    def set_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
+        self.DIRPATH = Resolve_DirPath(dirpath).resolve()
+
+    def set_nameext(self, nameext: str) -> None:
+        if nameext is not None:
+            name_ext: list[str] = nameext.rsplit(".", 1)
+            if len(name_ext) == 2:  # DOT exists!
+                _name, _extlast = name_ext
+                if _extlast:
+                    self.EXTLAST = _extlast
+                if _name:
+                    self.NAME = _name
+            else:
+                self.NAME = nameext
+
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self) -> pathlib.Path:
+    def resolve(self) -> TYPE__PATH_FINAL:
         return self.FILEPATH
 
 

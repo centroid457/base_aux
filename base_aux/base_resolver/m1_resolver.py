@@ -20,11 +20,11 @@ class Resolver:
     files.filepath
     """
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self.resolve()
 
-    def resolve(self) -> Any:
-        pass
+    def resolve(self) -> Any | NoReturn:
+        return NotImplemented
 
 
 # =====================================================================================================================
