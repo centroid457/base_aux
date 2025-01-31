@@ -105,6 +105,10 @@ class ReqCheckStr_Base(metaclass=_GetattrClassmethod_Meta):
     :ivar _GETTER: function which will get the exact value to check
     :ivar _value_actual:
     """
+
+    # NOTE: HIDDEN NAMES IS IMPORTANT! separate attrs Variants from privateAux
+    pass
+
     # SETTINGS -------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
 
