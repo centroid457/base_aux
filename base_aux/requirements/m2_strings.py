@@ -276,6 +276,21 @@ class ReqCheckStr_Os(ReqCheckStr_Base):
     raise_if_not__WINDOWS: TYPE__RESULT_RAISE
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+def _examples():
+    # 1=direct сlass
+    ReqCheckStr_Os().bool_if__WINDOWS()
+    ReqCheckStr_Os().bool_if_not__WINDOWS()
+    ReqCheckStr_Os().raise_if__LINUX()
+
+    # 2=user objects
+    class ReqCheckStr_Os_MY(ReqCheckStr_Os):
+        LINUX: bool = True
+        WINDOWS: bool = False
+
+    ReqCheckStr_Os_MY()  # check requirement!
+
+
 # =====================================================================================================================
 class ReqCheckStr_Arch(ReqCheckStr_Base):
     _GETTER: Callable = platform.machine
