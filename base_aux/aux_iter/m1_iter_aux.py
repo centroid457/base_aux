@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.base_source.m1_source import InitSource
+from base_aux.base_inits.m1_source import *
 
 
 # =====================================================================================================================

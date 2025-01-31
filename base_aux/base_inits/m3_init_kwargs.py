@@ -21,18 +21,20 @@ class AttrsInitByKwArgs:
     ----
     used only acceptable items! no raise!
     """
-    def __init__(self, *args, **kwargs) -> None:
+    # TODO: resolve NoReturn! decide what to do!
+
+    def __init__(self, *args, **kwargs) -> None | NoReturn:
         self.__init_args(*args)
         self.__init_kwargs(**kwargs)
 
-    def __init_kwargs(self, **kwargs) -> None:
+    def __init_kwargs(self, **kwargs) -> None | NoReturn:
         for name, value in kwargs.items():
             try:
                 setattr(self, name, value)
             except:
                 pass
 
-    def __init_args(self, *args) -> None:
+    def __init_args(self, *args) -> None | NoReturn:
         kwargs = dict.fromkeys(args)
         self.__init_kwargs(**kwargs)
 

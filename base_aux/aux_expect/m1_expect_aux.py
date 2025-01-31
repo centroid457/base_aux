@@ -2,7 +2,7 @@ from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.base_source.m2_source_kwargs import *
+from base_aux.base_inits.m2_source_kwargs import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 
 from base_aux.aux_callable.m1_callable_aux import CallableAux

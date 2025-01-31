@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.base_source.m1_source import InitSource
+from base_aux.base_inits.m1_source import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 
 from base_aux.aux_argskwargs.m1_argskwargs import ArgsKwargs, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
@@ -8,6 +8,7 @@ from base_aux.aux_types.m0_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================
+@final
 class ArgsKwargsAux(InitSource):
     SOURCE: TYPE__ARGS_DRAFT | TYPE__KWARGS_DRAFT
 

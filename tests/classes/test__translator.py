@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
-from base_aux.aux_attr.m1_attr0_init_kwargs import *
+from base_aux.base_inits.m3_init_kwargs import *
 from base_aux.classes.m1_translator import *
 
 
