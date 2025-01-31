@@ -49,6 +49,14 @@ TYPE__VERSION_BLOCK_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_ELEMENT],  
 
 
 # =====================================================================================================================
+class PatternsBlock:
+    CLEAR = r"[\"' -]*"
+    VALIDATE_SOURCE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
+    VALIDATE_CLEANED = r"(\d|[a-z])+"
+    ITERATE = r"\d+|[a-z]+"
+
+
+# =====================================================================================================================
 class VersionBlock(CmpInst):
     """
     this is exact block in version string separated by dots!!!
@@ -70,11 +78,6 @@ class VersionBlock(CmpInst):
     _SOURCE: Any
     ELEMENTS: TYPE__VERSION_BLOCK_FINAL
 
-    PATTERN_CLEAR = r"[\"' -]*"
-    PATTERN_VALIDATE_SOURCE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
-    PATTERN_VALIDATE_CLEANED = r"(\d|[a-z])+"
-    PATTERN_ITERATE = r"\d+|[a-z]+"
-
     def __init__(self, source: TYPE__VERSION_BLOCK_DRAFT):
         self._SOURCE = source
         if not self._validate_source(source):
@@ -89,7 +92,7 @@ class VersionBlock(CmpInst):
     @classmethod
     def _validate_source(cls, source: TYPE__VERSION_BLOCK_DRAFT) -> bool:
         source = str(source).lower()
-        match = re.search(cls.PATTERN_VALIDATE_SOURCE_NEGATIVE, source)
+        match = re.search(PatternsBlock.VALIDATE_SOURCE_NEGATIVE, source)
         return not bool(match)
 
     @classmethod
@@ -100,7 +103,7 @@ class VersionBlock(CmpInst):
             result = str(source)
 
         # FINISH -------------------------------
-        result = re.sub(cls.PATTERN_CLEAR, "", result)
+        result = re.sub(PatternsBlock.CLEAR, "", result)
         result = result.lower()
         result = result.strip()
         return result
@@ -109,7 +112,7 @@ class VersionBlock(CmpInst):
     def _validate_string(cls, string: str) -> bool:
         if not isinstance(string, str):
             return False
-        match = re.fullmatch(cls.PATTERN_VALIDATE_CLEANED, string)
+        match = re.fullmatch(PatternsBlock.VALIDATE_CLEANED, string)
         return bool(match)
 
     @classmethod
@@ -118,7 +121,7 @@ class VersionBlock(CmpInst):
             return ()
 
         result_list = []
-        for element in re.findall(cls.PATTERN_ITERATE, string):
+        for element in re.findall(PatternsBlock.ITERATE, string):
             try:
                 element = int(element)
             except:
