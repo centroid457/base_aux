@@ -50,8 +50,8 @@ class Resolve_FilePath(Resolver):
             # separated -----
             name: str = None,
             extlast: str = None,
-            dirpath: TYPE__PATH_DRAFT = None,
             nameext: str = None,
+            dirpath: TYPE__PATH_DRAFT = None,
 
             # full -----
             filepath: TYPE__PATH_DRAFT = None,
