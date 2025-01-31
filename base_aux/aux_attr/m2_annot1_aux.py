@@ -1,13 +1,11 @@
-from typing import *
-
 from base_aux.base_exceptions import Exx__AnnotNotDefined
 from base_aux.aux_types.m1_type_aux import TypeAux
-from ..aux_types.m0_types import TYPES
 from base_aux.base_source.m1_source import InitSource
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from .m1_attr1_aux import AttrAux
+from ..aux_types.m0_types import TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================

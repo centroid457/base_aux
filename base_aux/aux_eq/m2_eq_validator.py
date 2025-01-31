@@ -1,10 +1,5 @@
-from typing import *
-
 import re
 
-from base_aux.aux_types.m0_primitives import *
-from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m0_types import TYPE__VALID_VALIDATOR
 from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.valid.m1_aux_valid_lg import *

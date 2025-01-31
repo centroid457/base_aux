@@ -1,10 +1,7 @@
 # FIXME: need to deprecate? no!
 
-from typing import *
-
-from base_aux.aux_types.m1_type_aux import *
-from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
+from base_aux.aux_types.m0_types import TYPE__ARGS_FINAL
 
 
 # =====================================================================================================================

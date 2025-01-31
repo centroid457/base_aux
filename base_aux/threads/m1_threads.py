@@ -1,4 +1,3 @@
-from typing import *
 import time
 
 from PyQt5.QtCore import QThread

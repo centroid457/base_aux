@@ -3,7 +3,7 @@ from typing import *
 from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.base_source.m2_source_kwargs import *
 from base_aux.aux_types.m1_type_aux import TypeAux
-from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
+from base_aux.aux_types.m0_types import TYPE__KWARGS_FINAL
 
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
 

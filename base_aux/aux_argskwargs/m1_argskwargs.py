@@ -1,16 +1,6 @@
 from typing import *
 
-# =====================================================================================================================
-TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
-
-TYPE__ARGS_FINAL = tuple[Any, ...]
-TYPE__KWARGS_FINAL = dict[str, Any]
-
-ARGS_FINAL__NOT_USED = ()     # just to show that here it is not used
-KWARGS_FINAL__NOT_USED = {}   # just to show that here it is not used
-
-ARGS_FINAL__BLANK = ()     # just to show that here it is not used
-KWARGS_FINAL__BLANK = {}   # just to show that here it is not used
+from base_aux.aux_types.m0_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================

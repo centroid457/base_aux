@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
+from base_aux.aux_types.m0_types import TYPE__KWARGS_FINAL
 from base_aux.aux_values.m2_variants import *
 
 from base_aux.buses.m1_serial1_client import *

@@ -5,7 +5,7 @@ from base_aux.base_source.m1_source import InitSource
 from base_aux.base_enums.m0_enums import *
 # from base_aux.aux_types import TypeAux
 
-from base_aux.aux_argskwargs.m1_argskwargs import TYPE__KWARGS_FINAL
+from base_aux.aux_types.m0_types import TYPE__KWARGS_FINAL
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_attr.m0_static import AttrsDump
 

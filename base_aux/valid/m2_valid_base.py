@@ -1,7 +1,6 @@
 import time
 
 from base_aux.aux_values.m0_novalue import *
-from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_types.m0_types import *
@@ -57,11 +56,11 @@ class Valid:
     NAME: str = ""      # TODO: realise access to Valid from Chains!
     COMMENT: str = ""
 
-    SKIP_LINK: TYPE__VALID_SOURCE_BOOL = None
+    SKIP_LINK: TYPE__VALID_BOOL__DRAFT = None
     VALUE_LINK: TYPE__LAMBDA_CONSTRUCTOR
     VALIDATE_LINK: TYPE__VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPE__VALID_SOURCE_BOOL = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
+    REVERSE_LINK: TYPE__VALID_BOOL__DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
     ARGS__VALUE: TYPE__ARGS_FINAL = ()
     ARGS__VALIDATE: TYPE__ARGS_FINAL = ()
@@ -70,12 +69,12 @@ class Valid:
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
-    skip_last: TYPE__VALID_RESULT_BOOL = False
+    skip_last: TYPE__VALID_BOOL__FINAL = False
     finished: bool | None = None
     value_last: TYPE__VALID_RESULT = None               # direct result value for calculating func value_link
-    validate_last: TYPE__VALID_RESULT_BOOL__EXX = True   # direct result value for calculating func validate_link === decide using only bool???
-    reverse_last: TYPE__VALID_RESULT_BOOL = None
-    validate_last_bool: TYPE__VALID_RESULT_BOOL         # represented value for validation
+    validate_last: TYPE__VALID_BOOL_EXX__FINAL = True   # direct result value for calculating func validate_link === decide using only bool???
+    reverse_last: TYPE__VALID_BOOL__FINAL = None
+    validate_last_bool: TYPE__VALID_BOOL__FINAL         # represented value for validation
     log_lines: list[str] = None
 
     # CHAINS -------------------------------------
@@ -88,8 +87,8 @@ class Valid:
             value_link: TYPE__LAMBDA_CONSTRUCTOR = NoValue,
             validate_link: Optional[TYPE__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
-            skip_link: TYPE__VALID_SOURCE_BOOL= None,
-            reverse_link: TYPE__VALID_SOURCE_BOOL = None,
+            skip_link: TYPE__VALID_BOOL__DRAFT= None,
+            reverse_link: TYPE__VALID_BOOL__DRAFT = None,
 
             args__value: TYPE__ARGS_DRAFT = (),
             args__validate: TYPE__ARGS_DRAFT = (),
