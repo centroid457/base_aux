@@ -7,7 +7,7 @@ from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.cli.m1_cli_user import CliUser
 from base_aux.aux_text.m1_text_aux import TextAux
 
-from base_aux.version.m1_version import Version
+from base_aux.versions.m1_version import Version
 
 
 # =====================================================================================================================

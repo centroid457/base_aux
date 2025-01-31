@@ -1,4 +1,4 @@
-from base_aux.version.m1_version import *
+from base_aux.versions.m1_version import *
 from base_aux.aux_expect.m1_expect_aux import *
 
 

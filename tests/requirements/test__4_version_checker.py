@@ -1,4 +1,4 @@
-from base_aux.version.m2_checker import CheckVersion_Python
+from base_aux.versions.m2_checker import CheckVersion_Python
 
 
 # =====================================================================================================================
