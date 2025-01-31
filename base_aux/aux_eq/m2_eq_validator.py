@@ -3,6 +3,7 @@ import re
 from base_aux.aux_types.m0_types import TYPE__VALID_VALIDATOR
 from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.valid.m1_aux_valid_lg import *
+from base_aux.aux_types.m0_types import *
 
 
 # =====================================================================================================================
@@ -127,8 +128,13 @@ class EqValid_Base(_EqValidator):
         #     self.REVERSE = reverse
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 class Validators:
+    """
+    GOAL
+    ----
+    collect all validators (funcs) in one place
+    """
     def VariantsDirect(self, other_result: Any, *variants: Any) -> bool | NoReturn:
         if other_result in variants:
             return True
@@ -144,6 +150,7 @@ class Validators:
         else:
             return False
 
+    # -----------------------------------------------------------------------------------------------------------------
     def Startswith(self, other_result: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
         if ignorecase:
             other_result = str(other_result).lower()
@@ -172,6 +179,19 @@ class Validators:
 
         return False
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def TRUE(self, other_result: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with no raise and no Exception in result
+        """
+        result = False
+        if self.OTHER_RAISED or TypeAux(other_result).check__exception():
+            return False
+
+        return bool(other_result)
+
     def Raise(self, other_result: Any, *variants: Any) -> bool:
         """
         GOAL
@@ -190,7 +210,7 @@ class Validators:
         """
         return not self.OTHER_RAISED
 
-    def Exx(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+    def Exx(self, other_result, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
@@ -199,7 +219,7 @@ class Validators:
         """
         return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
 
-    def ExxRaise(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+    def ExxRaise(self, other_result, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
@@ -207,6 +227,7 @@ class Validators:
         """
         return self.OTHER_RAISED or TypeAux(other_result).check__exception()
 
+    # -----------------------------------------------------------------------------------------------------------------
     def LtGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other_result).ltgt(low, high)
 
@@ -219,6 +240,7 @@ class Validators:
     def LeGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux(other_result).lege(low, high)
 
+    # -----------------------------------------------------------------------------------------------------------------
     def Regexp(
             self,
             other_result,
@@ -279,6 +301,12 @@ class EqValid_Endswith(EqValid_Base):
 
 # =====================================================================================================================
 @final
+class EqValid_True(EqValid_Base):
+    VALIDATOR = Validators.TRUE
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
 class EqValid_Raise(EqValid_Base):
     VALIDATOR = Validators.Raise
 
@@ -324,8 +352,9 @@ class EqValid_LeGe(EqValid_Base):
 
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
-    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
     VALIDATOR = Validators.Regexp
+    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final

@@ -100,25 +100,27 @@ def test__endswith(args, other, ic, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
-        (False, (False, False, True, False)),
-        (True, (False, False, True, False)),
-        (1, (False, False, True, False)),
-        (Exception, (True, False, True, True)),
-        (Exception(), (True, False, True, True)),
-        (LAMBDA_EXX, (True, False, True, True)),
-        (LAMBDA_RAISE, (False, True, False, True)),
+        (False, (False, False, False, True, False)),
+        (True, (True, False, False, True, False)),
+        (1, (True, False, False, True, False)),
+        (Exception, (False, True, False, True, True)),
+        (Exception(), (False, True, False, True, True)),
+        (LAMBDA_EXX, (False, True, False, True, True)),
+        (LAMBDA_RAISE, (False, False, True, False, True)),
     ]
 )
 def test__exx_raise(other, _EXPECTED):
-    ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_ExxRaise() == other).check_assert(_EXPECTED[3])
+    ExpectAux(EqValid_True() == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[3])
+    ExpectAux(EqValid_ExxRaise() == other).check_assert(_EXPECTED[4])
 
-    ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[1])
-    ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_ExxRaise(reverse=True) == other).check_assert(not _EXPECTED[3])
+    ExpectAux(EqValid_True(reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[1])
+    ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[2])
+    ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[3])
+    ExpectAux(EqValid_ExxRaise(reverse=True) == other).check_assert(not _EXPECTED[4])
 
 
 # =====================================================================================================================

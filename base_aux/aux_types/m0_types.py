@@ -55,7 +55,7 @@ TYPE__VALID_BOOL__DRAFT = Union[
     Any,                                # fixme: hide? does it need? for results like []/{}/()/0/"" think KEEP! it mean you must know that its expecting boolComparing in further logic!
     bool,                               # as main idea! as already final generic
     Callable[[...], bool | Any | NoReturn],   # as main idea! to get final generic
-    # TYPE__VALID_EXX,
+    TYPE__VALID_EXX,
     TYPE__NOVALUE
 ]
 TYPE__VALID_BOOL__FINAL = Union[
@@ -66,6 +66,8 @@ TYPE__VALID_BOOL_EXX__FINAL = Union[
     bool,
     TYPE__VALID_EXX,
 ]
+# TYPE__VALID_TRUE__FINAL = Union[
+
 TYPE__VALID_VALIDATOR = Union[
     Any,    # generic final instance as expecting value - direct comparison OR comparison instance like Valid!
     # Type,   # Class as validator like Exception????? fixme
