@@ -8,7 +8,7 @@ CWD = pathlib.Path().cwd()
 
 # =====================================================================================================================
 class Test_Filepath:
-    def test__1_name(self):
+    def test__1_name1_single(self):
         victim = Resolve_FilePath(name="name")
         assert victim.NAME == "name"
         assert victim.EXTLAST == ""
@@ -23,6 +23,30 @@ class Test_Filepath:
         assert victim.NAMEEXT == "name2.extlast"
         assert victim.DIRPATH == CWD
         assert victim.FILEPATH == CWD.joinpath("name2.extlast")
+
+    def test__1_name2_several(self):
+        victim = Resolve_FilePath(name="name1.name2", extlast="extlast")
+        assert victim.NAME == "name1.name2"
+        assert victim.EXTLAST == "extlast"
+        assert victim.NAMEEXT == "name1.name2.extlast"
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
+
+        # dots -----
+        victim = Resolve_FilePath(name="name1.name2..", extlast="extlast")
+        assert victim.NAME == "name1.name2.."
+        assert victim.EXTLAST == "extlast"
+        assert victim.NAMEEXT == "name1.name2...extlast"
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
+
+        # dots -----
+        victim = Resolve_FilePath(nameext="name1.name2...extlast",)
+        assert victim.NAME == "name1.name2.."
+        assert victim.EXTLAST == "extlast"
+        assert victim.NAMEEXT == "name1.name2...extlast"
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEEXT)
 
     def test__2_extlast(self):
         victim = Resolve_FilePath(extlast="extlast")
