@@ -3,12 +3,12 @@ import pathlib
 
 from base_aux.aux_types.m0_types import TYPE__PATH_DRAFT, TYPE__PATH_FINAL
 from base_aux.base_inits.m1_source import InitSource
-from base_aux.base_resolver.m1_resolver import Resolver
+from base_aux.base_resolver.m1_resolver import CallResolve
 
 
 # =====================================================================================================================
 @final
-class Resolve_DirPath(InitSource, Resolver):
+class Resolve_DirPath(InitSource, CallResolve):
     """
     GOAL
     ----

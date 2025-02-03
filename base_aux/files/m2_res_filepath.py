@@ -8,7 +8,7 @@ from base_aux.files.m1_res_dirpath import Resolve_DirPath
 
 # =====================================================================================================================
 @final
-class Resolve_FilePath(Resolver):
+class Resolve_FilePath(CallResolve):
     """
     GOAL
     ----
@@ -49,18 +49,25 @@ class Resolve_FilePath(Resolver):
     def __init__(
             self,
             # parts -----
-            name: str = None,
-            extlast: str = None,
-            nameext: str = None,
-            dirpath: TYPE__PATH_DRAFT = None,
+            name: str = None,                   # level1
+            extlast: str = None,                # level1
+
+            nameext: str = None,                # level2
+            dirpath: TYPE__PATH_DRAFT = None,   # level2
 
             # full -----
-            filepath: TYPE__PATH_DRAFT = None,
+            filepath: TYPE__PATH_DRAFT = None,  # level3
     ):
         """
         NOTE
         ----
         you can use "filepath" as base/default and others (name/extlast/...) for overwrite some of them base parts
+
+        LEVELS param (see in endLine comments)
+        --------------------------------------
+        1/ params in same level do not affect each other.
+        2/ lower level is the major for higher level and will overwrite it.
+        see tests for understanding, but it is too obvious when get the idea
         """
         self.set_filepath(filepath)
         self.set_dirpath(dirpath or self.DIRPATH)
