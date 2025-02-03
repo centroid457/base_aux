@@ -7,6 +7,7 @@ from base_aux.files.m1_res_dirpath import Resolve_DirPath
 
 
 # =====================================================================================================================
+@final
 class Resolve_FilePath(Resolver):
     """
     GOAL
@@ -47,7 +48,7 @@ class Resolve_FilePath(Resolver):
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            # separated -----
+            # parts -----
             name: str = None,
             extlast: str = None,
             nameext: str = None,
