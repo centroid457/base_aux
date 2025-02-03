@@ -15,7 +15,10 @@ class TextAux(InitSource):
     SOURCE: str
 
     def init_post(self) -> None | NoReturn:
-        self.SOURCE = str(self.SOURCE)
+        if self.SOURCE is None:
+            self.SOURCE = ""
+        else:
+            self.SOURCE = str(self.SOURCE)
 
     # EDIT ============================================================================================================
     def clear__spaces_all(self) -> str:
@@ -30,6 +33,11 @@ class TextAux(InitSource):
         return self.SOURCE
 
     def clear__spaces_double(self) -> str:
+        """
+        GOAL
+        ----
+        replace repetitive spaces by single one
+        """
         self.SOURCE = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
         return self.SOURCE
 
@@ -105,7 +113,7 @@ class TextAux(InitSource):
         self.SOURCE = re.sub(word_pat, new, self.SOURCE)
         return self.SOURCE
 
-    def sub__words(self, rules: list[tuple[str, str]]) -> str:
+    def sub__words(self, rules: Iterable[tuple[str, str]]) -> str:
         for work_pat, new in rules:
             self.sub__word(work_pat, new)
         return self.SOURCE
