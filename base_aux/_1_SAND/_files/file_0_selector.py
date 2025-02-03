@@ -11,25 +11,6 @@ import shutil
 
 
 # =====================================================================================================================
-class Dir:
-    def files_delete_older(
-            self,
-            files: list[Union[str, pathlib.Path]],
-            point: Union[None, int, float, datetime.datetime] = None
-    ) -> None:
-        # INPUT
-
-
-        # WORK
-        for filepath in files:
-            filepath = pathlib.Path(filepath)
-            if not filepath.is_file():
-                continue
-            if not point or filepath.stat().st_mtime < point:
-                filepath.unlink()
-
-
-# =====================================================================================================================
 class File(Dir):
     """
     BASE CLASS FOR WORKING WITH FILES! and selecting only one!

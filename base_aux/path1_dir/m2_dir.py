@@ -27,6 +27,7 @@ class Dir:
     def set_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
+    # -----------------------------------------------------------------------------------------------------------------
     def dirtree_create(self) -> bool:
         try:
             self.DIRPATH.mkdir(parents=True, exist_ok=True)
@@ -45,7 +46,7 @@ class Dir:
             self,
             *wmask: str,
             nested: bool = None,
-            fsobj: FsObject = FsObject.FILE,
+            fsobj: FsObject = FsObject.ALL,
             str_names_only: bool = False,
 
             # time filter -----
@@ -114,21 +115,45 @@ class Dir:
         yield from self.iter(*wmask, fsobj=FsObject.DIR, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dirs_delete_blank(
+    def delete_blank(self) -> None:
+        """
+        GOAL
+        ----
+        delete SELF directory if blank!
+        """
+        try:
+            self.DIRPATH.rmdir()
+        except:  # TODO: separate AccessPermition/FilesExists
+            pass
+
+    def delete_blank_wm(
             self,
             *wmask: str,
-            nested: bool = False
+            nested: bool = None,
     ) -> None:
+        """
+        GOAL
+        ----
+        delete INTERNAL dirs in SELF if blanks!
+        """
         # TODO: NOT WORKING!!!!! FINISH!!!! cant delete by access reason!!!
         for dirpath in self.iter_dirs(*wmask, nested=nested):
-            try:
-                dirpath.rmdir()
-            except:     # TODO: separate AccessPermition/FilesExists
-                pass
+            Dir(dirpath).delete_blank()
 
-    def delete(self, *obj: TYPE__PATH_FINAL):
-        pass
-        # if dir/// recursion
+    def delete(self, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
+        for path in paths:
+
+            if path.is_file():
+                try:
+                    path.unlink()
+                except Exception as exx:
+                    if raise_fails:
+                        raise exx
+
+            if path.is_dir():
+                self.delete(*Dir(path).iter_files(), raise_fails=raise_fails)
+                self.delete(*Dir(path).iter_dirs(), raise_fails=raise_fails)
+                Dir(path).delete_blank()
 
 
 # =====================================================================================================================
