@@ -11,7 +11,7 @@ import shutil
 
 
 # =====================================================================================================================
-class File(Dir):
+class File:
     """
     BASE CLASS FOR WORKING WITH FILES! and selecting only one!
     if you need work only with path aux_types in FileSystem (list_dir for example) without exactly opening files
