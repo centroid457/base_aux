@@ -12,28 +12,13 @@ import shutil
 
 # =====================================================================================================================
 class Dir:
-    FILEPATH: pathlib.Path
-    DIRPATH: pathlib.Path = None  # WORKING DIRECTORY like change CWD! BUT IMPORTANT! use it only for perpose if you need to find filepath in exact dirpath
-
-    # DELETE ----------------------------------------------------------------------------------------------------------
-    def files_find_and_delete_older(
-            self,
-            point: Union[None, int, float, datetime.datetime] = None,
-            **kwargs
-    ) -> None:
-        files = self.files_find_in_dirpath(**kwargs)
-        return self.files_delete_older(files=files, point=point)
-
     def files_delete_older(
             self,
             files: list[Union[str, pathlib.Path]],
             point: Union[None, int, float, datetime.datetime] = None
     ) -> None:
         # INPUT
-        if isinstance(point, (datetime.datetime)):
-            point = point.timestamp()
-        if not isinstance(point, (type(None), int, float)):
-            raise Exception
+
 
         # WORK
         for filepath in files:

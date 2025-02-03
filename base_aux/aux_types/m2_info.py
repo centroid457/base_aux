@@ -148,7 +148,7 @@ class ObjectInfo:
         self._item_clear()
 
         # WORK --------------------------------------
-        name = "log_iter(wait last touched)"
+        name = f"log_iter={self.LOG_ITER}(wait last touched)"
         self._print_line__group_separator(name)
 
         for pos, name in enumerate(dir(self.SOURCE), start=1):

@@ -47,14 +47,26 @@ class Dir:
             nested: bool = None,
             fsobj: FsObject = FsObject.FILE,
             str_names_only: bool = False,
-            dtime = None,
-            dtime_cmp: CmpType = CmpType.GE,
-    ) -> Iterator[Union[pathlib.Path, str]]:
+
+            mtime: Union[None, datetime.datetime, datetime.timedelta] = None,   # acceptable for both File/Dirs
+            mtime_cmp: CmpType = CmpType.GE,
+    ) -> Iterator[Union[pathlib.Path, str]] | NoReturn:
         """
         GOAL
         ----
-        list exact objects/names.
+        iter masked objects/names.
         """
+        USE_DELTA = None
+        if mtime is None:
+            pass
+        elif isinstance(mtime, datetime.datetime):
+            mtime = mtime.timestamp()
+        elif isinstance(mtime, datetime.timedelta):
+            USE_DELTA = True
+            pass
+        elif not isinstance(mtime, (type(None), int, float)):
+            raise TypeError(f"{mtime=}")
+
         wmask = wmask or ["*", ]
         # result = []
 
@@ -68,19 +80,28 @@ class Dir:
                         or
                         fsobj == FsObject.ALL
                 ):
-                    if dtime:
-                        pass
-                        # TODO: FINISH
-                        # TODO: FINISH
-                        # TODO: FINISH
-                        # TODO: FINISH
-                        # TODO: FINISH
+                    if mtime:
+                        mtime_i = path_obj.stat().st_mtime
+                        if USE_DELTA:
+                            mtime_i = datetime.datetime.now().timestamp() - mtime_i
 
+                        if (
+                                mtime_cmp == CmpType.LE and not mtime_i <= mtime  # OLDER
+                                or
+                                mtime_cmp == CmpType.LT and not mtime_i < mtime
+                                or
+                                mtime_cmp == CmpType.GE and not mtime_i >= mtime  # NEWER
+                                or
+                                mtime_cmp == CmpType.GT and not mtime_i > mtime
+                        ):
+                            continue
 
                     if str_names_only:
-                        yield path_obj.name
+                        result_i = path_obj.name
                     else:
-                        yield path_obj
+                        result_i = path_obj
+
+                    yield result_i
 
         # print(f"{result=}")
         # return result
@@ -104,7 +125,7 @@ class Dir:
             except:     # TODO: separate AccessPermition/FilesExists
                 pass
 
-    def delete(self, obj: TYPE__PATH_FINAL):
+    def delete(self, *obj: TYPE__PATH_FINAL):
         pass
         # if dir/// recurtion
 
