@@ -10,7 +10,7 @@ from base_aux.aux_types.m0_types import TYPE__ELEMENTARY
 
 
 # =====================================================================================================================
-@final
+# @final      # dont use final here! expect nesting for fileWork! or FIXME: nest File here!
 class TextAux(InitSource):
     SOURCE: str
 

@@ -1,7 +1,6 @@
 # TODO-1=add logdata_load_by_name_wo_extention with extention param!
 # TODO-1=add extention default? maybe NO!
 # TODO-1=add delete blank dirs in dicrpath
-# TODO-1=add delete dirtree
 
 
 # =====================================================================================================================
@@ -15,91 +14,6 @@ import shutil
 class Dir:
     FILEPATH: pathlib.Path
     DIRPATH: pathlib.Path = None  # WORKING DIRECTORY like change CWD! BUT IMPORTANT! use it only for perpose if you need to find filepath in exact dirpath
-
-    @property
-    def dirpath(self) -> pathlib.Path:  # final dirpath to file #dirpath never set!!! used only in some methods!!!
-        """
-        created only for resolving CWD or self.FILEPATH.parent
-
-        CAREFUL:
-            1. use it only forgetting parent from setted self.FILEPATH!!!!
-            if you need resolve it by passing new filepath without saving in FILEPATH use dirpath_get_active!!!!
-        :return:
-        """
-        dirpath = None
-        if self.FILEPATH:
-            dirpath = self.FILEPATH.parent
-        if not dirpath:
-            dirpath = self.DIRPATH
-        if not dirpath:
-            dirpath = pathlib.Path.cwd()
-        return dirpath
-
-    def dirpath_get_active(self, dirpath: Union[None, str, pathlib.Path] = None) -> pathlib.Path:
-        """
-        UNDER QUESTION!
-            Дефолт дирпас - актуален только если вы не знаете какой будет файл но заранее известно в какой папке!
-            После установки файла дирпас идет строго по нему!!!! А после очистки файла возвращается к дефолтному!!!
-            Если дефолтных не установлен то свд ???
-        """
-        # NOT INPUTED -------------------------------
-        if dirpath is None:
-            dirpath = self.DIRPATH
-
-        # INPUTED -------------------------------
-        return pathlib.Path(dirpath)
-
-    def dirpath_ensure(self, dirpath: Union[None, str, pathlib.Path] = None) -> bool:
-        dirpath = self.dirpath_get_active(dirpath=dirpath)
-
-        try:
-            dirpath.mkdir(parents=True, exist_ok=True)
-        except:
-            pass
-
-        if dirpath.exists():
-            return True
-        else:
-            msg = f"CANT create {dirpath=}"
-            print(msg)
-
-    # FIND ------------------------------------------------------------------------------------------------------------
-    def __find_in_dirpath(
-            self,
-            type_0files_1dirs: int,
-            dirpath: Union[str, pathlib.Path] = None,
-            return_0obj_1name: int = 0,  # TRY NOT TO USE STEMS!!!!
-            wmask: Union[None, str, list] = None,
-            nested: bool = False,
-    ) -> list[Union[str, pathlib.Path]]:
-        """
-        list all variants. Repeated items not shown! order is preserved!
-        """
-        wmask = wmask or "*"
-        wmask = UFU.sequence_make_ensured_if_not(wmask)
-
-        dirpath = self.dirpath_get_active(dirpath)
-        result = []
-
-        for mask in wmask:
-            mask = mask if not nested else f"**/{mask}"
-            for path_obj in dirpath.glob(mask):
-                if (type_0files_1dirs == 0 and path_obj.is_file()) or (type_0files_1dirs == 1 and path_obj.is_dir()):
-                    if path_obj not in result:
-                        result.append(path_obj)
-
-        # FINISH
-        if return_0obj_1name == 1:
-            result = [path_obj.name for path_obj in result]
-
-        print(f"{result=}")
-        return result
-
-    def files_find_in_dirpath(self, **kwargs):
-        return self.__find_in_dirpath(type_0files_1dirs=0, **kwargs)
-
-    def dirs_find_in_dirpath(self, **kwargs):
-        return self.__find_in_dirpath(type_0files_1dirs=1, **kwargs)
 
     # DELETE ----------------------------------------------------------------------------------------------------------
     def files_find_and_delete_older(
@@ -128,19 +42,6 @@ class Dir:
                 continue
             if not point or filepath.stat().st_mtime < point:
                 filepath.unlink()
-
-    # TODO: NOT WORKING!!!!! FINISH!!!! cant delete by access reason!!!
-    def dirs_delete_if_blank(
-            self,
-            dirpath: Union[str, pathlib.Path],
-            nested: bool = False
-    ):
-        dirs = self.dirs_find_in_dirpath(dirpath=dirpath, nested=nested)
-        for dirpath in dirs:
-            try:
-                dirpath.rmdir()
-            except:
-                pass
 
 
 # =====================================================================================================================
