@@ -1,5 +1,5 @@
 # =====================================================================================================================
-# USE COMMON TYPES
+# USE COMMON/GENERAL TYPES
 
 _std = [
 # base ----
@@ -97,6 +97,7 @@ ArithmeticError,
 # REAL VALUE = NOT AN EXCEPTION!!!
 NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
 ]
+
 
 # =====================================================================================================================
 class Exx__AnnotNotDefined(Exception):

@@ -48,6 +48,7 @@ class Dir:
             fsobj: FsObject = FsObject.FILE,
             str_names_only: bool = False,
 
+            # time filter -----
             mtime: Union[None, datetime.datetime, datetime.timedelta] = None,   # acceptable for both File/Dirs
             mtime_cmp: CmpType = CmpType.GE,
     ) -> Iterator[Union[pathlib.Path, str]] | NoReturn:
@@ -127,7 +128,7 @@ class Dir:
 
     def delete(self, *obj: TYPE__PATH_FINAL):
         pass
-        # if dir/// recurtion
+        # if dir/// recursion
 
 
 # =====================================================================================================================
