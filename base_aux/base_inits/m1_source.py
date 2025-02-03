@@ -1,5 +1,4 @@
 from typing import *
-# from base_aux.lambdas.lambdas import Lambda     # CIRCULAR IMPORT
 
 
 # =====================================================================================================================
@@ -33,7 +32,7 @@ class InitSource:
 
     @classmethod
     @property
-    def SOURCE_DEF(cls) -> Any:
+    def SOURCE_DEF(cls) -> Any | NoReturn:
         # if isinstance(cls.SOURCE, Lambda):
         if callable(cls.SOURCE):        # and cls.SOURCE_DEF__CALL_IF_CALLABLE:
             result = cls.SOURCE()
@@ -41,12 +40,12 @@ class InitSource:
             result = cls.SOURCE
         return result
 
-    def __init__(self, source: Any = None, *args, **kwargs) -> None:
+    def __init__(self, source: Any = None, *args, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
         self.init_source(source)
         self.init_post()
 
-    def init_source(self, source: Any = None) -> None:
+    def init_source(self, source: Any = None) -> None | NoReturn:
         if source is not None:
             self.SOURCE = source
         else:
