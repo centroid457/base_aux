@@ -66,7 +66,7 @@ class TextAux(InitSource):
         assert str([1,2]) == "[1, 2]"
         assert func(str([1,2])) == "[1,2]"
         """
-        return self.sub__regexps((r" ", ""))
+        return self.sub__regexp(r" ", "")
 
     def clear__spaces_double(self) -> str:
         """
@@ -77,9 +77,9 @@ class TextAux(InitSource):
         return self.sub__regexps((r" {2,}", " "))
 
     def clear__blank_lines(self) -> str:
-        self.sub__regexps((r"^\s*\n", "", re.MULTILINE))
-        self.sub__regexps((r"\n\s*$", "", re.MULTILINE))
-        self.sub__regexps((r"^\s*$", "", re.MULTILINE))  # not enough!
+        self.sub__regexp(r"^\s*\n", "", re.MULTILINE)
+        self.sub__regexp(r"\n\s*$", "", re.MULTILINE)
+        self.sub__regexp(r"^\s*$", "", re.MULTILINE)  # not enough!
         return self.SOURCE
 
     def clear__cmts(self) -> str:
@@ -88,7 +88,7 @@ class TextAux(InitSource):
         ----
         if oneline cmt - full line would be deleted!
         """
-        self.sub__regexps((r"\s*\#.*$", "", re.MULTILINE))
+        self.sub__regexp(r"\s*\#.*$", "", re.MULTILINE)
         return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -108,10 +108,8 @@ class TextAux(InitSource):
         ----
         it can strip blank lines!
             " line1 \n \n  line2 " --> " line1\nline2"
-
         """
-        self.SOURCE = re.sub(pattern=r"\s*$", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return self.SOURCE
+        return self.sub__regexp(r"\s*$", "", re.MULTILINE)
 
     def lstrip__lines(self) -> str:
         """
@@ -120,8 +118,7 @@ class TextAux(InitSource):
         less usefull as lstrip__lines
         but for the company)
         """
-        self.SOURCE = re.sub(pattern=r"^\s*", repl="", string=self.SOURCE, flags=re.MULTILINE)
-        return self.SOURCE
+        return self.sub__regexp(r"^\s*", "", re.MULTILINE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def prepare__json_loads(self) -> str:
@@ -142,7 +139,7 @@ class TextAux(InitSource):
                 as_word=True,
         )
         # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
-        return self.sub__regexps(("\'", "\""))
+        return self.sub__regexp("\'", "\"")
 
     def prepare__requirements(self) -> str:
         """
