@@ -1,4 +1,5 @@
 from typing import *
+from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
@@ -40,13 +41,13 @@ class InitSource:
             result = cls.SOURCE
         return result
 
-    def __init__(self, source: Any = None, *args, **kwargs) -> None | NoReturn:
+    def __init__(self, source: Any = NoValue, *args, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
         self.init_source(source)
         self.init_post()
 
     def init_source(self, source: Any = None) -> None | NoReturn:
-        if source is not None:
+        if source is not NoValue:
             self.SOURCE = source
         else:
             self.SOURCE = self.SOURCE_DEF

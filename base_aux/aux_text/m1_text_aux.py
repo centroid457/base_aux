@@ -15,10 +15,37 @@ class TextAux(InitSource):
     SOURCE: str
 
     def init_post(self) -> None | NoReturn:
-        if self.SOURCE is None:
+        if self.SOURCE is NoValue:
             self.SOURCE = ""
         else:
             self.SOURCE = str(self.SOURCE)
+
+    # =================================================================================================================
+    def sub__regexp(self, *rules: tuple[str, str], as_word: bool = None) -> str:
+        """
+        GOAL
+        ----
+
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        as_word - for prepare_for_json_parsing
+        WORD means syntax word!
+        """
+        for pat, new in rules:
+            if as_word:
+                pat = r"\b" + pat + r"\b"
+
+            self.SOURCE = re.sub(pat, new, self.SOURCE)
+        return self.SOURCE
+
+    def sub__word(self, *rules) -> str:
+        """
+        GOAL
+        ----
+        replace exact word(defined by pattern) in text.
+        """
+        return self.sub__regexp(*rules, as_word=True)
 
     # EDIT ============================================================================================================
     def clear__spaces_all(self) -> str:
@@ -29,8 +56,7 @@ class TextAux(InitSource):
         assert str([1,2]) == "[1, 2]"
         assert func(str([1,2])) == "[1,2]"
         """
-        self.SOURCE = re.sub(pattern=r" ", repl="", string=self.SOURCE)
-        return self.SOURCE
+        return self.sub__regexp((r" ", ""))
 
     def clear__spaces_double(self) -> str:
         """
@@ -38,8 +64,7 @@ class TextAux(InitSource):
         ----
         replace repetitive spaces by single one
         """
-        self.SOURCE = re.sub(pattern=r" {2,}", repl=" ", string=self.SOURCE)
-        return self.SOURCE
+        return self.sub__regexp((r" {2,}", " "))
 
     def clear__blank_lines(self) -> str:
         self.SOURCE = re.sub(pattern=r"^\s*\n", repl="", string=self.SOURCE, flags=re.MULTILINE)
@@ -89,36 +114,6 @@ class TextAux(InitSource):
         return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
-    def sub__regexp(self, pat: str, new: str = "") -> str:
-        """
-        GOAL
-        ----
-        just a strait method
-        """
-        self.SOURCE = re.sub(pat, new, self.SOURCE)
-        return self.SOURCE
-
-    def sub__word(self, word_pat: str, new: str = "") -> str:
-        """
-        GOAL
-        ----
-        replace exact word(defined by pattern) in text.
-        WORD means syntax word!
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        prepare_for_json_parsing
-        """
-        word_pat = r"\b" + word_pat + r"\b"
-        self.SOURCE = re.sub(word_pat, new, self.SOURCE)
-        return self.SOURCE
-
-    def sub__words(self, rules: Iterable[tuple[str, str]]) -> str:
-        for work_pat, new in rules:
-            self.sub__word(work_pat, new)
-        return self.SOURCE
-
-    # -----------------------------------------------------------------------------------------------------------------
     def prepare__json_loads(self) -> str:
         """
         GOAL
@@ -130,16 +125,14 @@ class TextAux(InitSource):
         ---------------------
         try_convert_to_object
         """
-        self.SOURCE = self.sub__words(
-            rules = [
+        self.sub__regexp(
                 (r"True", "true"),
                 (r"False", "false"),
                 (r"None", "null"),
-            ]
+                as_word=True,
         )
         # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
-        self.SOURCE = re.sub("\'", "\"", self.SOURCE)
-        return self.SOURCE
+        return self.sub__regexp(("\'", "\""))
 
     def prepare__requirements(self) -> str:
         """
