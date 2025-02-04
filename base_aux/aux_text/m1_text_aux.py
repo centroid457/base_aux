@@ -157,6 +157,9 @@ class TextAux(InitSource):
         return self.SOURCE
 
     # =================================================================================================================
+    def iter_numbers(self, float_sep: str = ".") -> Iterable[int | float]:
+        pass
+
     def parse__single_int(self) -> int | None:
         """
         GOAL
@@ -164,7 +167,7 @@ class TextAux(InitSource):
         get value from value with unit from UART
 
         :returns: None if no value/value is not single/value is not exact type
-        if need INT and parsed FLOAT
+        if need INT and parsed FLOAT??? - BAD!!!
         """
 
     def parse__single_float(self) -> float | None:
