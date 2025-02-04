@@ -109,7 +109,7 @@ class ValueUnit(ArithmApplyToAttr):
     NUMBER_ARITHM__ATTR = "VALUE_PURE"
 
     # SETTINGS -------------------------
-    SEPARATOR: str = ""     # when parsed - used parced separator, when
+    SEPARATOR: str = ""     # when parsed - used pared separator, when
 
     UNIT_MULT__DISABLE: bool | None = None
     UNIT_MULT__VARIANTS: dict[str, float | int] = UNIT_MULT__VARIANTS

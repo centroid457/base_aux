@@ -133,8 +133,8 @@ class Test__SerialServer_NoConnection:
         victim = self.Victim()
         assert victim.PARAMS["VAR"] == ""
 
-        # line_parced = CmdArgsKwargsParser("var=True")
-        # result = victim._cmd__(line_parced)
+        # line_parsed = CmdArgsKwargsParser("var=True")
+        # result = victim._cmd__(line_parsed)
         assert victim._cmd__(CmdArgsKwargsParser("var=True")) == AnswerVariants.SUCCESS
         assert victim.PARAMS["VAR"] is True
 

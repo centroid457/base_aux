@@ -10,7 +10,7 @@ from base_aux.aux_types.m0_types import TYPE__ELEMENTARY
 
 
 # =====================================================================================================================
-# @final      # dont use final here! expect nesting for fileWork! or FIXME: nest File here!
+# @final      # dont use final here! expect nesting for fileWork! or FIXME: nest File here!????
 class TextAux(InitSource):
     SOURCE: str
 
@@ -155,6 +155,23 @@ class TextAux(InitSource):
         self.clear__cmts()
         self.clear__blank_lines()
         return self.SOURCE
+
+    # =================================================================================================================
+    def parse__single_int(self) -> int | None:
+        """
+        GOAL
+        ----
+        get value from value with unit from UART
+
+        :returns: None if no value/value is not single/value is not exact type
+        if need INT and parsed FLOAT
+        """
+
+    def parse__single_float(self) -> float | None:
+        pass
+
+    def parse__single_int_float(self) -> int | float | None:
+        pass
 
     # =================================================================================================================
     def split_lines(self, skip_blanks: bool = None) -> list[str]:

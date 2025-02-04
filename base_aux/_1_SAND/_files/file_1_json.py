@@ -13,7 +13,7 @@ from dataclasses import dataclass, asdict
 
 
 # =====================================================================================================================
-class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because Json may parce LIST or even digit!
+class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because Json may parse LIST or even digit!
     """
     class for working with json data file!
     result is self.json_dict!

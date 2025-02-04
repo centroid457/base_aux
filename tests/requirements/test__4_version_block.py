@@ -118,7 +118,7 @@ class Test__VersionBlock:
         argnames="args, _EXPECTED",
         argvalues=[
 
-            # NOTE: THIS TESTS IS NOT USEFUL!!! many values is not accured in real parced string!!
+            # NOTE: THIS TESTS IS NOT USEFUL!!! many values is not accured in real parsed string!!
 
             (True, ()),
             (1, ()),
@@ -144,7 +144,7 @@ class Test__VersionBlock:
             (VersionBlock("11rc22"), ()),   # not useful
         ]
     )
-    def test__parce_elements(self, args, _EXPECTED):
+    def test__parse_elements(self, args, _EXPECTED):
         func_link = self.Victim._parse_elements
         ExpectAux(func_link, args).check_assert(_EXPECTED)
 
