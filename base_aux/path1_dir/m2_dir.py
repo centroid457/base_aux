@@ -44,7 +44,7 @@ class Dir:
     # -----------------------------------------------------------------------------------------------------------------
     def iter(
             self,
-            *wmask: str,
+            *wmask: str,        # dont
             nested: bool = None,
             fsobj: FsObject = FsObject.ALL,
             str_names_only: bool = False,

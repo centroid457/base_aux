@@ -131,7 +131,7 @@ class Test__sub:
         ]
     )
     def test__1(self, source, _EXPECTED):
-        args = ("None", "null")
+        args = (("None", "null"), )
         func_link = TextAux(source).sub__word
         ExpectAux(func_link, args).check_assert(_EXPECTED)
 

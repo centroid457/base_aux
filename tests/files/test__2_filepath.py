@@ -1,5 +1,5 @@
 import pathlib
-from base_aux.files.m2_res_filepath import Resolve_FilePath
+from base_aux.path2_file.m1_filepath import *
 
 
 # =====================================================================================================================

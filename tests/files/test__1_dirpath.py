@@ -1,5 +1,4 @@
-from base_aux.files.m2_res_filepath import *
-from base_aux.files.m1_res_dirpath import Resolve_DirPath
+from base_aux.path1_dir.m1_dirpath import *
 
 
 # =====================================================================================================================

@@ -1,7 +1,5 @@
 # TODO-1=add logdata_load_by_name_wo_extention with extention param!
 # TODO-1=add extention default? maybe NO!
-# TODO-1=add delete blank dirs in dicrpath
-
 
 # =====================================================================================================================
 from typing import *
@@ -25,17 +23,6 @@ class File:
     """
     FILEPATH_BACKUP: bool = None     # used right before dump
 
-    __filepath: pathlib.Path = None
-
-    @property
-    def FILEPATH(self) -> pathlib.Path | None:
-        return self.__filepath
-
-    @FILEPATH.setter
-    def FILEPATH(self, value) -> None:
-        self.__filepath = value
-        # todo: dirpath
-
     # =================================================================================================================
     def __init__(self, filepath: Union[None, str, pathlib.Path] = None, **kwargs):
         super().__init__(**kwargs)
@@ -45,23 +32,6 @@ class File:
 
         if filepath is not None:
             self.FILEPATH = pathlib.Path(self.FILEPATH)
-
-    def get_active__filepath(
-            self,
-            filepath: Union[None, str, pathlib.Path] = None,
-    ) -> Optional[pathlib.Path]:
-        """
-        used always get final pathlib (from instanse or specified param)
-        """
-        if filepath is None:
-            filepath = self.FILEPATH
-        else:
-            filepath = pathlib.Path(filepath)
-
-        if filepath is None:
-            msg = f"blank {filepath=}"
-            print(msg)
-        return filepath
 
     # FINISH ==========================================================================================================
     def try_find_wo_extension(self):
