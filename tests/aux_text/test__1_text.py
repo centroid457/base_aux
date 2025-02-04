@@ -11,13 +11,12 @@ class Test__sub:
         argnames="source, rule, _EXPECTED",
         argvalues=[
             # NOT ACCEPTED -------------
-            # ("None123", ("None00"), "None123"),
-            # ("None123", ("None"), "123"),
-            # ("None123", ("None", None), "123"),
-            # ("None123", ("None", "0"), "0123"),
+            ("None123", ("None00"), "None123"),
+            ("None123", ("None"), "123"),
+            ("None123", ("None", None), "123"),
+            ("None123", ("None", "0"), "0123"),
 
             ("1*3", ("\*", "2"), "123"),
-
         ]
     )
     def test__regexp(self, source, rule, _EXPECTED):
@@ -46,9 +45,8 @@ class Test__sub:
         ]
     )
     def test__words(self, source, _EXPECTED):
-        args = (("None", "null"), )
-        func_link = TextAux(source).sub__words
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        func_link = TextAux(source).sub__words(("None", "null"))
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
