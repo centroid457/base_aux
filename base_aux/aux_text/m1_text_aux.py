@@ -246,7 +246,7 @@ class TextAux(InitSource):
             return source_original
 
     # =================================================================================================================
-    def find__by_pats(self, patterns: list[str] | str) -> list[str]:
+    def find__by_pats(self, *pats: str) -> list[str]:
         """
         GOAL
         ----
@@ -257,9 +257,7 @@ class TextAux(InitSource):
         if pattern have group - return group value (as usual)
         """
         result = []
-        patterns = ArgsKwargsAux(patterns).resolve_args()
-
-        for pat in patterns:
+        for pat in pats:
             result_i = re.findall(pat, self.SOURCE)
             for value in result_i:
                 value: str
