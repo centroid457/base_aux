@@ -6,6 +6,52 @@ from base_aux.base_enums.m0_enums import *
 
 
 # =====================================================================================================================
+class Test__sub:
+    @pytest.mark.parametrize(
+        argnames="source, rule, _EXPECTED",
+        argvalues=[
+            # NOT ACCEPTED -------------
+            # ("None123", ("None00"), "None123"),
+            # ("None123", ("None"), "123"),
+            # ("None123", ("None", None), "123"),
+            # ("None123", ("None", "0"), "0123"),
+
+            ("1*3", ("\*", "2"), "123"),
+
+        ]
+    )
+    def test__regexp(self, source, rule, _EXPECTED):
+        func_link = TextAux(source).sub__regexp
+        ExpectAux(func_link, rule).check_assert(_EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            # NOT ACCEPTED -------------
+            ("None123", "None123"),
+            ("None_123", "None_123"),
+
+            # ACCEPTED -------------
+            ("null", "null"),
+            ("None", "null"),
+            ("None-123", "null-123"),
+
+            # CONTAINERS -------------
+            ("[null]", "[null]"),
+            ("[None]", "[null]"),
+            ("[None, ]", "[null, ]"),
+
+            (" None, 123", " null, 123"),
+            ("[None, null, 123]", "[null, null, 123]"),
+        ]
+    )
+    def test__words(self, source, _EXPECTED):
+        args = (("None", "null"), )
+        func_link = TextAux(source).sub__words
+        ExpectAux(func_link, args).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
 class Test__Edit:
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -105,35 +151,6 @@ class Test__Edit:
         ExpectAux(TextAux(source).strip__lines).check_assert(_EXPECTED[0])
         ExpectAux(TextAux(source).lstrip__lines).check_assert(_EXPECTED[1])
         ExpectAux(TextAux(source).rstrip__lines).check_assert(_EXPECTED[2])
-
-
-# =====================================================================================================================
-class Test__sub:
-    @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
-        argvalues=[
-            # NOT ACCEPTED -------------
-            ("None123", "None123"),
-            ("None_123", "None_123"),
-
-            # ACCEPTED -------------
-            ("null", "null"),
-            ("None", "null"),
-            ("None-123", "null-123"),
-
-            # CONTAINERS -------------
-            ("[null]", "[null]"),
-            ("[None]", "[null]"),
-            ("[None, ]", "[null, ]"),
-
-            (" None, 123", " null, 123"),
-            ("[None, null, 123]", "[null, null, 123]"),
-        ]
-    )
-    def test__1(self, source, _EXPECTED):
-        args = (("None", "null"), )
-        func_link = TextAux(source).sub__words
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
