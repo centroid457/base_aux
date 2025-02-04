@@ -9,6 +9,7 @@ from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_argskwargs.m1_argskwargs import TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
 
 from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__LAMBDA_CONSTRUCTOR
+from base_aux.aux_eq.m1_eq_aux import *
 
 
 # =====================================================================================================================
@@ -26,7 +27,7 @@ class ExpectAux(InitSourceKwArgs_Explicite):
             # args: TYPE__ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPE__KWARGS_DRAFT = None,
 
-            _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass
+            _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass/noCallable!
             _MARK: pytest.MarkDecorator | None = None,
             _COMMENT: str | None = None,
     ) -> None | NoReturn:
@@ -63,12 +64,12 @@ class ExpectAux(InitSourceKwArgs_Explicite):
             if TypeAux(_EXPECTED).check__exception():
                 assert not TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
             else:
-                assert actual_value != _EXPECTED, f"[xfail]{comment}"
+                assert EqAux(actual_value).check_doubleside__reverse(_EXPECTED), f"[xfail]{comment}"
         else:
             if TypeAux(_EXPECTED).check__exception():
                 assert TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED)
             else:
-                assert actual_value == _EXPECTED
+                assert EqAux(actual_value).check_doubleside__bool(_EXPECTED)
 
     def check_bool(self, *args, **kwargs) -> bool:
         """
@@ -83,118 +84,118 @@ class ExpectAux(InitSourceKwArgs_Explicite):
             return False
 
 
-# =====================================================================================================================
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-
-
-def _func_example(arg1: Any, arg2: Any) -> str:
-    return f"{arg1}{arg2}"
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(argnames="func_link", argvalues=[_func_example, ])
-@pytest.mark.parametrize(
-    argnames="args, kwargs, _EXPECTED, _MARK, _COMMENT",
-    argvalues=[
-        # TRIVIAL -------------
-        ((1, None), {}, "1None", None, "ok"),
-        ((1, 2), {}, "12", None, "ok"),
-
-        # LIST -----------------
-        ((1, []), {}, "1[]", None, "ok"),
-
-        # MARKS -----------------
-        ((1, 2), {}, None, mark.skip, "skip"),
-        ((1, 2), {}, None, mark.skipif(True), "skip"),
-        ((1, 2), {}, "12", mark.skipif(False), "ok"),
-        ((1, 2), {}, None, mark.xfail, "ok"),
-        # ((1, 2), {}, "12", mark.xfail, "SHOULD BE FAIL!"),
-    ]
-)
-def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED, _MARK, _COMMENT)
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(argnames="func_link", argvalues=[int, ])
-@pytest.mark.parametrize(
-    argnames="args, kwargs, _EXPECTED",
-    argvalues=[
-        (("1", ), {}, 1),
-        ("1", {}, 1),                   # ARGS - direct one value acceptable
-        (("hello", ), {}, Exception),   # EXPECT - direct exceptions
-    ]
-)
-def test__short_variant(func_link, args, kwargs, _EXPECTED):
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(argnames="func_link", argvalues=[int, ])
-@pytest.mark.parametrize(
-    argnames="args, _EXPECTED",
-    argvalues=[
-        (("1", ), 1),
-        ("1", 1),
-        ("", ValueError),
-        (("hello", ), Exception),
-    ]
-)
-def test__shortest_variant(func_link, args, _EXPECTED):
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(
-    argnames="expression",
-    argvalues=[
-        ("1rc2") == "1rc2",
-        ("1rc2") != "1rc1",
-
-        ("1.1rc2") > "1.0rc1",
-        ("1.1rc2") > "1.1rc0",
-        ("1.1rc2.0") > "1.1rc2",
-
-        # ("01.01rc02") > "1.1rc1",
-        ("01.01rc02") < "1.1rd1",
-    ]
-)
-def test__expressions(expression):
-    ExpectAux(expression).check_assert()
-
-
-# =====================================================================================================================
+# # =====================================================================================================================
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+#
+#
+# def _func_example(arg1: Any, arg2: Any) -> str:
+#     return f"{arg1}{arg2}"
+#
+#
+# # =====================================================================================================================
+# @pytest.mark.parametrize(argnames="func_link", argvalues=[_func_example, ])
+# @pytest.mark.parametrize(
+#     argnames="args, kwargs, _EXPECTED, _MARK, _COMMENT",
+#     argvalues=[
+#         # TRIVIAL -------------
+#         ((1, None), {}, "1None", None, "ok"),
+#         ((1, 2), {}, "12", None, "ok"),
+#
+#         # LIST -----------------
+#         ((1, []), {}, "1[]", None, "ok"),
+#
+#         # MARKS -----------------
+#         ((1, 2), {}, None, mark.skip, "skip"),
+#         ((1, 2), {}, None, mark.skipif(True), "skip"),
+#         ((1, 2), {}, "12", mark.skipif(False), "ok"),
+#         ((1, 2), {}, None, mark.xfail, "ok"),
+#         # ((1, 2), {}, "12", mark.xfail, "SHOULD BE FAIL!"),
+#     ]
+# )
+# def test__full_params(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):     # NOTE: all params passed by TUPLE!!!! so you cant miss any in the middle!
+#     ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED, _MARK, _COMMENT)
+#
+#
+# # =====================================================================================================================
+# @pytest.mark.parametrize(argnames="func_link", argvalues=[int, ])
+# @pytest.mark.parametrize(
+#     argnames="args, kwargs, _EXPECTED",
+#     argvalues=[
+#         (("1", ), {}, 1),
+#         ("1", {}, 1),                   # ARGS - direct one value acceptable
+#         (("hello", ), {}, Exception),   # EXPECT - direct exceptions
+#     ]
+# )
+# def test__short_variant(func_link, args, kwargs, _EXPECTED):
+#     ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+#
+#
+# # =====================================================================================================================
+# @pytest.mark.parametrize(argnames="func_link", argvalues=[int, ])
 # @pytest.mark.parametrize(
 #     argnames="args, _EXPECTED",
 #     argvalues=[
-#         ((1, 1),        (True, True, False)),
-#         ((1, 2),        (False, False, True)),
-#         ((LAMBDA_TRUE, True), (False, False, True)),
+#         (("1", ), 1),
+#         ("1", 1),
+#         ("", ValueError),
+#         (("hello", ), Exception),
 #     ]
 # )
-# def test__several_expected(args, _EXPECTED):
-#     func_link = Valid.compare_doublesided_or_exx
-#     ExpectAux(func_link, args).assert_check(_EXPECTED[0])
+# def test__shortest_variant(func_link, args, _EXPECTED):
+#     ExpectAux(func_link, args).check_assert(_EXPECTED)
 #
-#     func_link = Valid.compare_doublesided__bool
-#     ExpectAux(func_link, args).assert_check(_EXPECTED[1])
 #
-#     func_link = Valid.compare_doublesided__reverse
-#     ExpectAux(func_link, args).assert_check(_EXPECTED[2])
-
-
-# =====================================================================================================================
+# # =====================================================================================================================
+# @pytest.mark.parametrize(
+#     argnames="expression",
+#     argvalues=[
+#         ("1rc2") == "1rc2",
+#         ("1rc2") != "1rc1",
+#
+#         ("1.1rc2") > "1.0rc1",
+#         ("1.1rc2") > "1.1rc0",
+#         ("1.1rc2.0") > "1.1rc2",
+#
+#         # ("01.01rc02") > "1.1rc1",
+#         ("01.01rc02") < "1.1rd1",
+#     ]
+# )
+# def test__expressions(expression):
+#     ExpectAux(expression).check_assert()
+#
+#
+# # =====================================================================================================================
+# # @pytest.mark.parametrize(
+# #     argnames="args, _EXPECTED",
+# #     argvalues=[
+# #         ((1, 1),        (True, True, False)),
+# #         ((1, 2),        (False, False, True)),
+# #         ((LAMBDA_TRUE, True), (False, False, True)),
+# #     ]
+# # )
+# # def test__several_expected(args, _EXPECTED):
+# #     func_link = Valid.compare_doublesided_or_exx
+# #     ExpectAux(func_link, args).assert_check(_EXPECTED[0])
+# #
+# #     func_link = Valid.compare_doublesided__bool
+# #     ExpectAux(func_link, args).assert_check(_EXPECTED[1])
+# #
+# #     func_link = Valid.compare_doublesided__reverse
+# #     ExpectAux(func_link, args).assert_check(_EXPECTED[2])
+#
+#
+# # =====================================================================================================================

@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_types.m0_primitives import *
 
-from base_aux.aux_eq.m2_eq_validator import _EqValidator
+from base_aux.aux_eq.m2_eq_validator import _EqValidator    # very need!
 from base_aux.aux_eq.m2_eq_validator import *
 
 
@@ -180,6 +180,10 @@ def test__regexp(args, other, _EXPECTED):
     ExpectAux(EqValid_RegexpAnyTrue(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
     ExpectAux(EqValid_RegexpAllFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
     ExpectAux(EqValid_RegexpAnyFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
+
+
+def test__regexp_manual():
+    ExpectAux(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").check_assert()
 
 
 # =====================================================================================================================
