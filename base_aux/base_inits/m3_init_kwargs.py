@@ -33,9 +33,9 @@ class AttrsInitByKwArgs:
                 if _RAISE__:
                     raise exx
 
-    def __init_args(self, *args) -> None | NoReturn:
+    def __init_args(self, *args, _RAISE__: bool = None) -> None | NoReturn:
         kwargs = dict.fromkeys(args)
-        self.__init_kwargs(**kwargs)
+        self.__init_kwargs(**kwargs, _RAISE_=_RAISE__)
 
 
 # =====================================================================================================================
