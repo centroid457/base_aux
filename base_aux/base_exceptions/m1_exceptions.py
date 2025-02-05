@@ -32,6 +32,22 @@ ImportError,
 ImportWarning,
 ModuleNotFoundError,
 
+# PATH
+NotADirectoryError,
+IsADirectoryError,
+
+# std logic
+GeneratorExit,
+StopIteration,
+SystemExit,
+
+# arithm
+ZeroDivisionError,
+ArithmeticError,
+FloatingPointError,
+OverflowError,
+
+# OS
 WindowsError,
 IOError,
 OSError,
@@ -65,34 +81,24 @@ UnicodeDecodeError,
 UnicodeEncodeError,
 UnicodeTranslateError,
 
-ZeroDivisionError,
 UnboundLocalError,
 TabError,
-SystemExit,
 
 BrokenPipeError,
 
-StopIteration,
 StopAsyncIteration,
 RuntimeWarning,
 ResourceWarning,
 ReferenceError,
 RecursionError,
 ProcessLookupError,
-OverflowError,
 RuntimeError,
-NotADirectoryError,
-IsADirectoryError,
 InterruptedError,
 IndentationError,
-GeneratorExit,
 FutureWarning,
-FloatingPointError,
 ExceptionGroup,
 BlockingIOError,
 BaseExceptionGroup,
-
-ArithmeticError,
 
 # REAL VALUE = NOT AN EXCEPTION!!!
 NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
