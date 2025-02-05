@@ -38,7 +38,7 @@ class PatNumberSingle(Patterns):
     _cover: str = r"\D*"
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, fpoint: FPoint = None) -> None | NoReturn:
+    def __init__(self, fpoint: TYPE__FPOINT_DRAFT = None) -> None | NoReturn:
         if fpoint is None:
             pass
         elif fpoint in FPoint:

@@ -7,6 +7,7 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.base_inits.m1_source import *
 
 from base_aux.aux_types.m0_types import TYPE__ELEMENTARY
+from base_aux.base_patterns.m1_pat_nums import *
 
 
 # =====================================================================================================================
@@ -157,7 +158,7 @@ class TextAux(InitSource):
         return self.SOURCE
 
     # =================================================================================================================
-    def parse__single_number(self, fpoint: str = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
+    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -173,11 +174,22 @@ class TextAux(InitSource):
             None - value is not single
             None - value is not exact type
         """
+        if num_type == NumType.INT:
+            pat = PatNumberSingle(fpoint).INT_COVERED
+        elif num_type == NumType.FLOAT:
+            pat = PatNumberSingle(fpoint).FLOAT_COVERED
+        elif num_type == NumType.BOTH:
+            pat = PatNumberSingle(fpoint).BOTH_COVERED
+        else:
+            raise TypeError(f"{num_type=}")
+
+        match = re.fullmatch(pat, self.SOURCE)
+        return match and match[1]
 
     def parse__single_int(self) -> int | None:
         return self.parse__single_number(num_type=NumType.INT)
 
-    def parse__single_float(self, fpoint: str = ".") -> float | None:
+    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = ".") -> float | None:
         return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # =================================================================================================================
