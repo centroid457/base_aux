@@ -28,8 +28,6 @@ class Test__LineParsed:
         assert victim.CMD == ""
         assert victim.ARGS == []
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("hello")
         assert victim.SOURCE == "hello"
@@ -37,8 +35,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == []
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("HELLO")
         assert victim.SOURCE == "HELLO"
@@ -46,8 +42,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == []
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 0
 
     def test__args_kwargs(self):
         victim = self.Victim("HELLO CH")
@@ -56,8 +50,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == ["ch", ]
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 1
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("HELLO CH 1")
         assert victim.SOURCE == "HELLO CH 1"
@@ -65,8 +57,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == ["ch", "1", ]
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 2
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("HELLO CH=1")
         assert victim.SOURCE == "HELLO CH=1"
@@ -74,8 +64,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 1
 
         victim = self.Victim("HELLO CH1 CH2=2    ch3=3  ch4")
         assert victim.SOURCE == "HELLO CH1 CH2=2    ch3=3  ch4"
@@ -83,8 +71,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == ["ch1", "ch4"]
         assert victim.KWARGS == {"ch2": "2", "ch3": "3"}
-        assert victim.ARGS_count() == 2
-        assert victim.KWARGS_count() == 2
 
     def test__kwargs_spaces(self):
         victim = self.Victim("CH =  1")
@@ -93,8 +79,6 @@ class Test__LineParsed:
         assert victim.CMD == ""
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 1
 
         victim = self.Victim("hello CH =  1")
         assert victim.SOURCE == "hello CH =  1"
@@ -102,8 +86,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 1
 
         victim = self.Victim("hello CH ===  1")
         assert victim.SOURCE == "hello CH ===  1"
@@ -111,8 +93,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 1
 
     def test__kwargs_only(self):
         victim = self.Victim("CH=1")
@@ -121,8 +101,6 @@ class Test__LineParsed:
         assert victim.CMD == ""
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 1
 
         victim = self.Victim("CH=1 ch2=2")
         assert victim.SOURCE == "CH=1 ch2=2"
@@ -130,8 +108,6 @@ class Test__LineParsed:
         assert victim.CMD == ""
         assert victim.ARGS == []
         assert victim.KWARGS == {"ch": "1", "ch2": "2"}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 2
 
     def test__prefix(self):
         victim = self.Victim("HELLO CH 1", prefix_expected="HELLO")
@@ -140,8 +116,6 @@ class Test__LineParsed:
         assert victim.CMD == "ch"
         assert victim.ARGS == ["1", ]
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 1
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("HELLO CH 1", prefix_expected="HELLO CH 1")
         assert victim.SOURCE == "HELLO CH 1"
@@ -149,8 +123,6 @@ class Test__LineParsed:
         assert victim.CMD == ""
         assert victim.ARGS == []
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 0
-        assert victim.KWARGS_count() == 0
 
         victim = self.Victim("HELLO CH 1", prefix_expected="HELLO123")
         assert victim.SOURCE == "HELLO CH 1"
@@ -158,8 +130,6 @@ class Test__LineParsed:
         assert victim.CMD == "hello"
         assert victim.ARGS == ["ch", "1", ]
         assert victim.KWARGS == {}
-        assert victim.ARGS_count() == 2
-        assert victim.KWARGS_count() == 0
 
 
 # =====================================================================================================================

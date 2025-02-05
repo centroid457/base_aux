@@ -69,12 +69,5 @@ class CmdArgsKwargsParser:
                 part__key_value = part.split("=")
                 self.KWARGS.update(dict([part__key_value, ]))
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def ARGS_count(self) -> int:
-        return len(self.ARGS)
-
-    def KWARGS_count(self) -> int:
-        return len(self.KWARGS)
-
 
 # =====================================================================================================================

@@ -317,7 +317,7 @@ class SerialServer_Base(Logger, QThread):
         # ERR__ARGS_VALIDATION -----------------
         if line_parsed.ARGS and line_parsed.KWARGS:
             return self.ANSWER.ERR__ARGS_VALIDATION
-        if line_parsed.ARGS and line_parsed.ARGS_count() != 2:
+        if line_parsed.ARGS and len(line_parsed.ARGS) != 2:
             return self.ANSWER.ERR__ARGS_VALIDATION
 
         # PREPARE --------------------------------
@@ -391,7 +391,7 @@ class SerialServer_Base(Logger, QThread):
 
     def _script__(self, line_parsed: CmdArgsKwargsParser) -> TYPE__CMD_RESULT:
         # ERR__ARGS_VALIDATION --------------------------------
-        if line_parsed.ARGS_count() == 0:
+        if not line_parsed.ARGS:
             return self.ANSWER.ERR__ARGS_VALIDATION
 
         # WORK --------------------------------
