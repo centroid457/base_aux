@@ -5,8 +5,15 @@ from enum import Enum, auto
 """
 USAGE
 -----
-    if WHEN == When2.BEFORE:
-        pass
+if WHEN == When2.BEFORE:
+    pass
+    
+
+print(FPoint.COMMA)     # FPoint.COMMA
+print(FPoint("."))      # FPoint.DOT
+
+print("." in FPoint)            # True
+print(FPoint.DOT in FPoint)     # True
 """
 
 
@@ -106,6 +113,12 @@ class NumType(Enum):
     INT = auto()
     FLOAT = auto()
     BOTH = auto()
+
+
+# =====================================================================================================================
+class FPoint(Enum):
+    DOT = "."
+    COMMA = ","
 
 
 # =====================================================================================================================
