@@ -40,7 +40,7 @@ class CallableAux(InitSource):
         if callable_use == CallablesUse.DIRECT:
             return self.SOURCE
 
-        elif callable_use == CallablesUse.EXCEPTION:
+        elif callable_use == CallablesUse.EXX:
             return self.resolve_exx(*args, **kwargs)
 
         elif callable_use == CallablesUse.RAISE:

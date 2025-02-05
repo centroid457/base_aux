@@ -257,7 +257,7 @@ class AttrAux(InitSource):
         except Exception as exx:
             if callables_use == CallablesUse.SKIP_RAISED:
                 return Process.SKIPPED
-            elif callables_use == CallablesUse.EXCEPTION:
+            elif callables_use == CallablesUse.EXX:
                 return exx
             elif callables_use == CallablesUse.RAISE_AS_NONE:
                 return None
@@ -293,7 +293,7 @@ class AttrAux(InitSource):
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXCEPTION) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -324,7 +324,7 @@ class AttrAux(InitSource):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(CallablesUse.EXCEPTION)
+        return self.dump_dict(CallablesUse.EXX)
 
     def dump_dict__direct(self) -> TYPE__KWARGS_FINAL:
         return self.dump_dict(CallablesUse.DIRECT)
@@ -336,7 +336,7 @@ class AttrAux(InitSource):
         return self.dump_dict(CallablesUse.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallablesUse = CallablesUse.EXCEPTION) -> AttrsDump | NoReturn:
+    def dump_obj(self, callables_use: CallablesUse = CallablesUse.EXX) -> AttrsDump | NoReturn:
         data = self.dump_dict(callables_use)
         obj = AttrAux().load__by_dict(data)
         return obj
@@ -344,7 +344,7 @@ class AttrAux(InitSource):
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        for key, value in self.dump_dict(CallablesUse.EXCEPTION).items():
+        for key, value in self.dump_dict(CallablesUse.EXX).items():
             result += f"\n\t{key}={value}"
         else:
             result += f"\nEmpty=Empty"

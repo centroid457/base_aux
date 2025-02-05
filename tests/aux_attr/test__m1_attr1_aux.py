@@ -148,7 +148,7 @@ class Test__Dump:
         argnames="cal_use, _EXPECTED",
         argvalues=[
             (CallablesUse.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE, )),
-            (CallablesUse.EXCEPTION, (None, True, True, Exception, )),
+            (CallablesUse.EXX, (None, True, True, Exception, )),
             # (CallablesUse.RAISE, Exception),          # need special tests!
             (CallablesUse.RAISE_AS_NONE, (None, True, True, None, )),
             (CallablesUse.BOOL, (False, True, True, False, )),
