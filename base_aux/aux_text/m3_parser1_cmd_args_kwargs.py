@@ -20,8 +20,7 @@ class CmdArgsKwargsParser:
     buses.serialClient
     """
     # INITS ------------
-    SOURCE: str = None
-    PREFIX_EXPECTED: str = ""
+    SOURCE: str
 
     # RESULTS ------------
     PREFIX: str = ""
@@ -31,26 +30,26 @@ class CmdArgsKwargsParser:
     KWARGS: dict[str, str]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, source: str, prefix_expected: Optional[str] = None):
+    def __init__(self, source: str, prefix_expected: str = None):
         self.SOURCE = str(source)
-
-        prefix_expected = prefix_expected or ""
-        self.PREFIX_EXPECTED = prefix_expected.lower()
 
         self.ARGS = []
         self.KWARGS = {}
 
-        self.parse()
+        self.parse(prefix_expected=prefix_expected)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse(self) -> None:
+    def parse(self, prefix_expected: str = None) -> None:
         # SOURCE fix ---------
         source = self.SOURCE.lower()
         source = re.sub(r"\s*=+\s*", "=", source)
 
         # PREFIX -------------
-        if self.PREFIX_EXPECTED and source.startswith(self.PREFIX_EXPECTED):
-            self.PREFIX = self.PREFIX_EXPECTED
+        prefix_expected = prefix_expected or ""
+        prefix_expected = prefix_expected.lower()
+
+        if prefix_expected and source.startswith(prefix_expected):
+            self.PREFIX = prefix_expected
 
             source = source.replace(self.PREFIX, "", 1)
 
