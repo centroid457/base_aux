@@ -17,7 +17,7 @@ class Patterns:
 
 
 # =====================================================================================================================
-class PatNumber(Patterns):
+class PatNumberSingle(Patterns):
     """
     NOTE
     ----
