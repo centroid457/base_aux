@@ -14,6 +14,9 @@ print(FPoint("."))      # FPoint.DOT
 
 print("." in FPoint)            # True
 print(FPoint.DOT in FPoint)     # True
+
+print(FPoint(".") == ".")      # False
+print(FPoint(FPoint.DOT))      # FPoint.DOT     # BEST WAY to init value!
 """
 
 
