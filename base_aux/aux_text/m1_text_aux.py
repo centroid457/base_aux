@@ -174,7 +174,6 @@ class TextAux(InitSource):
             None - value is not exact type
         """
 
-
     def parse__single_int(self) -> int | None:
         return self.parse__single_number(num_type=NumType.INT)
 
