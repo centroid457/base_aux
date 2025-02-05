@@ -78,7 +78,7 @@ class FormIntExt(Enum):
 
 
 # =====================================================================================================================
-class BoolCollect(Enum):
+class BoolCumulate(Enum):
     """
     GOAL
     ----
@@ -95,14 +95,14 @@ class BoolCollect(Enum):
 
 
 # =====================================================================================================================
-class FsObject(Enum):
+class PathType(Enum):
     FILE = auto()
     DIR = auto()
     ALL = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NumObject(Enum):
+class NumType(Enum):
     INT = auto()
     FLOAT = auto()
     BOTH = auto()

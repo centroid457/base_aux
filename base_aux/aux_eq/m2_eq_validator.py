@@ -246,7 +246,7 @@ class Validators:
             other_result,
             *regexps: str,
             ignorecase: bool = True,
-            bool_collect: BoolCollect = None,
+            bool_collect: BoolCumulate = None,
             match_link: Callable = re.fullmatch,
     ) -> bool | NoReturn:
         bool_collect = bool_collect or self.BOOL_COLLECT
@@ -255,21 +255,21 @@ class Validators:
             result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
 
             # CUMULATE --------
-            if bool_collect == BoolCollect.ALL_TRUE:
+            if bool_collect == BoolCumulate.ALL_TRUE:
                 if not result_i:
                     return False
-            elif bool_collect == BoolCollect.ANY_TRUE:
+            elif bool_collect == BoolCumulate.ANY_TRUE:
                 if result_i:
                     return True
-            elif bool_collect == BoolCollect.ALL_FALSE:
+            elif bool_collect == BoolCumulate.ALL_FALSE:
                 if result_i:
                     return False
-            elif bool_collect == BoolCollect.ANY_FALSE:
+            elif bool_collect == BoolCumulate.ANY_FALSE:
                 if not result_i:
                     return True
 
         # FINAL ------------
-        if bool_collect in [BoolCollect.ALL_TRUE, BoolCollect.ALL_FALSE]:
+        if bool_collect in [BoolCumulate.ALL_TRUE, BoolCumulate.ALL_FALSE]:
             return True
         else:
             return False
@@ -353,28 +353,28 @@ class EqValid_LeGe(EqValid_Base):
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
     VALIDATOR = Validators.Regexp
-    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
+    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_TRUE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_TRUE
+    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_TRUE
 
 
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.ANY_TRUE
+    BOOL_COLLECT: BoolCumulate = BoolCumulate.ANY_TRUE
 
 
 @final
 class EqValid_RegexpAllFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.ALL_FALSE
+    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_FALSE
 
 
 @final
 class EqValid_RegexpAnyFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCollect = BoolCollect.ANY_FALSE
+    BOOL_COLLECT: BoolCumulate = BoolCumulate.ANY_FALSE
 
 
 # =====================================================================================================================

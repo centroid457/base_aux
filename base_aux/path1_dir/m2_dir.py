@@ -46,7 +46,7 @@ class Dir:
             self,
             *wmask: str,        # dont
             nested: bool = None,
-            fsobj: FsObject = FsObject.ALL,
+            fsobj: PathType = PathType.ALL,
             str_names_only: bool = False,
 
             # time filter -----
@@ -76,11 +76,11 @@ class Dir:
             mask = mask if not nested else f"**/{mask}"
             for path_obj in self.DIRPATH.glob(mask):
                 if (
-                        (fsobj == FsObject.FILE and path_obj.is_file())
+                        (fsobj == PathType.FILE and path_obj.is_file())
                         or
-                        (fsobj == FsObject.DIR and path_obj.is_dir())
+                        (fsobj == PathType.DIR and path_obj.is_dir())
                         or
-                        fsobj == FsObject.ALL
+                        fsobj == PathType.ALL
                 ):
                     if mtime:
                         mtime_i = path_obj.stat().st_mtime
@@ -109,10 +109,10 @@ class Dir:
         # return result
 
     def iter_files(self, *wmask, **kwargs) -> Iterator[Union[pathlib.Path, str]]:
-        yield from self.iter(*wmask, fsobj=FsObject.FILE, **kwargs)
+        yield from self.iter(*wmask, fsobj=PathType.FILE, **kwargs)
 
     def iter_dirs(self, *wmask, **kwargs) -> Iterator[Union[pathlib.Path, str]]:
-        yield from self.iter(*wmask, fsobj=FsObject.DIR, **kwargs)
+        yield from self.iter(*wmask, fsobj=PathType.DIR, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def delete_blank(self) -> None:
