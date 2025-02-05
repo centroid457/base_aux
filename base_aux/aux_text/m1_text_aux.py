@@ -50,6 +50,14 @@ class TextAux(InitSource):
 
         return self.SOURCE
 
+    def sub__word(self, *rule) -> str:
+        """
+        GOAL
+        ----
+        replace exact word(defined by pattern) in text.
+        """
+        return self.sub__regexp(*rule, as_word=True)
+
     def sub__words(self, *rules) -> str:
         """
         GOAL
@@ -121,41 +129,91 @@ class TextAux(InitSource):
         """
         return self.sub__regexp(r"^\s*", "", re.MULTILINE)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def prepare__json_loads(self) -> str:
+    # =================================================================================================================
+    def split_lines(self, skip_blanks: bool = None) -> list[str]:
+        lines_all = self.SOURCE.splitlines()
+        if skip_blanks:
+            result_no_blanks = []
+            for line in lines_all:
+                if line:
+                    result_no_blanks.append(line)
+            return result_no_blanks
+
+        else:
+            return lines_all
+
+    # =================================================================================================================
+    def shortcut(
+            self,
+            maxlen: int = 15,
+            where: Where3 = Where3.LAST,
+            sub: str | None = "...",
+    ) -> str:
+        """
+        MAIN IDEA-1=for SUB
+        -------------------
+        if sub is exists in result - means it was SHORTED!
+        if not exists - was not shorted!
+        """
+        sub = sub or ""
+        sub_len = len(sub)
+
+        source = self.SOURCE
+        source_len = len(source)
+
+        if source_len > maxlen:
+            if maxlen <= sub_len:
+                return sub[0:maxlen]
+
+            if where == Where3.FIRST:
+                result = sub + source[-(maxlen - sub_len):]
+            elif where == Where3.LAST:
+                result = source[0:maxlen - sub_len] + sub
+            elif where == Where3.MIDDLE:
+                len_start = maxlen // 2 - sub_len // 2
+                len_finish = maxlen - len_start - sub_len
+                result = source[0:len_start] + sub + source[-len_finish:]
+            else:
+                result = source
+            return result
+
+        return source
+
+    def shortcut_nosub(
+            self,
+            maxlen: int = 15,
+            where: Where3 = Where3.LAST,
+    ) -> str:
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
-        so it just same process as re.sub by one func for several values
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        try_convert_to_object
+        derivative-link for shortcut but no using subs!
+        so it same as common slice
         """
-        self.sub__regexps(
-                (r"True", "true"),
-                (r"False", "false"),
-                (r"None", "null"),
-                as_word=True,
-        )
-        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
-        return self.sub__regexp("\'", "\"")
+        return self.shortcut(maxlen=maxlen, where=where, sub=None)
 
-    def prepare__requirements(self) -> str:
+    # =================================================================================================================
+    def find__by_pats(self, *pats: str) -> list[str]:
         """
         GOAL
         ----
-        replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
-        so it just same process as re.sub by one func for several values
+        find all pattern values in text
 
-        SPECIALLY CREATED FOR
-        ---------------------
-        try_convert_to_object
+        NOTE
+        ----
+        if pattern have group - return group value (as usual)
         """
-        self.clear__cmts()
-        self.clear__blank_lines()
-        return self.SOURCE
+        result = []
+        for pat in pats:
+            result_i = re.findall(pat, self.SOURCE)
+            for value in result_i:
+                value: str
+                if value == "":
+                    continue
+                value = value.strip()
+                if value not in result:
+                    result.append(value)
+        return result
 
     # =================================================================================================================
     def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
@@ -192,71 +250,8 @@ class TextAux(InitSource):
     def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = ".") -> float | None:
         return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
-    # =================================================================================================================
-    def split_lines(self, skip_blanks: bool = None) -> list[str]:
-        lines_all = self.SOURCE.splitlines()
-        if skip_blanks:
-            result_no_blanks = []
-            for line in lines_all:
-                if line:
-                    result_no_blanks.append(line)
-            return result_no_blanks
-
-        else:
-            return lines_all
-
-    # =================================================================================================================
-    def make__shortcut(
-            self,
-            maxlen: int = 15,
-            where: Where3 = Where3.LAST,
-            sub: str | None = "...",
-    ) -> str:
-        """
-        MAIN IDEA-1=for SUB
-        -------------------
-        if sub is exists in result - means it was SHORTED!
-        if not exists - was not shorted!
-        """
-        sub = sub or ""
-        sub_len = len(sub)
-
-        source = self.SOURCE
-        source_len = len(source)
-
-        if source_len > maxlen:
-            if maxlen <= sub_len:
-                return sub[0:maxlen]
-
-            if where == Where3.FIRST:
-                result = sub + source[-(maxlen - sub_len):]
-            elif where == Where3.LAST:
-                result = source[0:maxlen - sub_len] + sub
-            elif where == Where3.MIDDLE:
-                len_start = maxlen // 2 - sub_len // 2
-                len_finish = maxlen - len_start - sub_len
-                result = source[0:len_start] + sub + source[-len_finish:]
-            else:
-                result = source
-            return result
-
-        return source
-
-    def make__shortcut_nosub(
-            self,
-            maxlen: int = 15,
-            where: Where3 = Where3.LAST,
-    ) -> str:
-        """
-        GOAL
-        ----
-        derivative-link for shortcut but no using subs!
-        so it same as common slice
-        """
-        return self.make__shortcut(maxlen=maxlen, where=where, sub=None)
-
     # -----------------------------------------------------------------------------------------------------------------
-    def make__object_try(self) -> TYPE__ELEMENTARY | str:
+    def parse__object(self) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
@@ -272,40 +267,25 @@ class TextAux(InitSource):
         # PREPARE SOURCE ----------
         source_original = self.SOURCE
 
+        # PREPARE__JSON_LOADS ---
+        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
+        # so it just same process as re.sub by one func for several values
+        self.sub__word(r"True", "true")
+        self.sub__word(r"False", "false")
+        self.sub__word(r"None", "null")
+        self.sub__regexp("\'", "\"")
+        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
+
         # WORK --------------------
         try:
-            result = self.prepare__json_loads()
-            result = json.loads(result)
+            result = json.loads(self.SOURCE)
             return result
         except Exception as exx:
             print(f"{exx!r}")
             return source_original
 
-    # =================================================================================================================
-    def find__by_pats(self, *pats: str) -> list[str]:
-        """
-        GOAL
-        ----
-        find all pattern values in text
-
-        NOTE
-        ----
-        if pattern have group - return group value (as usual)
-        """
-        result = []
-        for pat in pats:
-            result_i = re.findall(pat, self.SOURCE)
-            for value in result_i:
-                value: str
-                if value == "":
-                    continue
-                value = value.strip()
-                if value not in result:
-                    result.append(value)
-        return result
-
     # -----------------------------------------------------------------------------------------------------------------
-    def requirements__get_list(self) -> list[str]:
+    def parse__requirements(self) -> list[str]:
         """
         GOAL
         ----
@@ -315,7 +295,7 @@ class TextAux(InitSource):
         ---------------------
         setup.py install_requires
         """
-        self.prepare__requirements()
+        self.clear__cmts()
         self.clear__blank_lines()
         self.strip__lines()
         result = self.split_lines()

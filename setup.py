@@ -20,7 +20,7 @@ for name in pkgs_internal:
 
 with open("requirements.txt", mode="r", encoding="utf8") as f:
     requirements_text = f.read()
-    requirements_list = TextAux(requirements_text).requirements__get_list()
+    requirements_list = TextAux(requirements_text).parse__requirements()
     print(f"{requirements_list=}")
 
 

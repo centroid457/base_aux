@@ -203,7 +203,7 @@ class Test__shortcut:
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
-        func_link = TextAux(p1).make__shortcut
+        func_link = TextAux(p1).shortcut
         ExpectAux(func_link, kwargs=dict(maxlen=p2, sub=p3, where=p4)).check_assert(_EXPECTED)
 
 
@@ -235,12 +235,12 @@ class Test__try_convert_to_object:
         ]
     )
     def test__MAIN_GOAL__string_source(self, source):
-        func_link = TextAux(str(source)).make__object_try
+        func_link = TextAux(str(source)).parse__object
         ExpectAux(func_link).check_assert(source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
-        func_link = TextAux(source).make__object_try
+        func_link = TextAux(source).parse__object
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -331,8 +331,40 @@ class Test__try_convert_to_object:
     ]
 )
 def test__requirements__get_list(source, _EXPECTED):
-    func_link = TextAux(source).requirements__get_list
+    func_link = TextAux(source).parse__requirements
     ExpectAux(func_link).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+class Test__ParseNum:
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source",
+        argvalues=[
+            0,
+            1,
+            10,
+            1.0,
+            1.1,
+            -1.1,
+            "",
+            '',
+            "hello",
+            None,
+            True,
+            False,
+            [None, True, 1, -1.1, "hello", "", ''],
+            # [None, True, 1, -1.1, "hello", [], {1:1}],  #JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 37 (char 36)')=KEYS IS ONLY STRINGS
+            [None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}],
+
+            [],
+            # (),     # JSONDecodeError('Expecting value: line 1 column 1 (char 0)') - НЕСУЩЕСТВУЕТ TUPLE???
+            {},
+        ]
+    )
+    def test__MAIN_GOAL__string_source(self, source):
+        func_link = TextAux(str(source)).parse__object
+        ExpectAux(func_link).check_assert(source)
 
 
 # =====================================================================================================================

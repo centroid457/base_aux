@@ -566,7 +566,7 @@ self.last_exx_timeout=None
         print(f"{text=}")
         print("-" * 20)
 
-        result = TextAux(text).requirements__get_list()
+        result = TextAux(text).parse__requirements()
 
         return result
 
