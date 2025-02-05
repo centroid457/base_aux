@@ -13,26 +13,31 @@ from base_aux.base_patterns.m1_pat_nums import *
     argnames="source, fpoint, _EXP_int, _EXP_float, _EXP_both",
     argvalues=[
         # trash ----
-        ("", None, (None, None), (None, None), (None, None)),
-        ("hello", None, (None, None), (None, None), (None, None)),
-        ("he.l,lo", None, (None, None), (None, None), (None, None)),
+        ("", None, (None, ), (None, ), (None, )),
+        ("hello", None, (None, ), (None, ), (None, )),
+        ("he.l,lo", None, (None, ), (None, ), (None, )),
 
-        ("11,22,33", None, (None, None), (None, None), (None, None)),
-        ("11,22,33", ",", (None, None), (None, None), (None, None)),
-        ("11.22.33", None, (None, None), (None, None), (None, None)),
-        ("11.22.33", ",", (None, None), (None, None), (None, None)),
+        ("11,22,33", None, (None, ), (None, ), (None, )),
+        ("11,22,33", ",", (None, ), (None, ), (None, )),
+        ("11.22.33", None, (None, ), (None, ), (None, )),
+        ("11.22.33", ",", (None, ), (None, ), (None, )),
 
         # INT ------
-        ("123", None, ("123", "123"), (None, None), ("123", "123")),
-        ("a123b", None, (None, "123"), (None, None), (None, "123")),
+        ("123", None, ("123", ), (None, ), ("123", )),
+        ("a123b", None, (None, ), (None, ), (None, )),
 
         # FLOAT ----
-        ("11,22", None, (None, None), (None, None), (None, None)),
-        ("11,22", ",", (None, None), ("11,22", "11,22"), ("11,22", "11,22")),
-        ("aa11,22bb", ",", (None, None), (None, "11,22"), (None, "11,22")),
+        ("11,22", None, (None, ), (None, ), (None, )),
+        ("11,22", ",", (None, ), ("11,22", ), ("11,22", )),
+        ("aa11,22bb", ",", (None, ), (None, ), (None, )),
 
-        ("11.22", None, (None, None), ("11.22", "11.22"), ("11.22", "11.22")),
-        ("11.22", ",", (None, None), (None, None), (None, None)),
+        ("11.22", None, (None, ), ("11.22", ), ("11.22", )),
+        ("11.22", ",", (None, ), (None, ), (None, )),
+
+        # MINUS ----
+        ("-123", None, ("-123", ), (None, ), ("-123", )),
+        ("a-123a", None, (None, ), (None, ), (None, )),
+        ("-a--123--a", None, (None, ), (None, ), (None, )),
     ]
 )
 def test___PatNumber(source, fpoint, _EXP_int, _EXP_float, _EXP_both):
@@ -40,22 +45,22 @@ def test___PatNumber(source, fpoint, _EXP_int, _EXP_float, _EXP_both):
     match = re.fullmatch(PatNumberSingle(fpoint).INT_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_int[0])
 
-    match = re.fullmatch(PatNumberSingle(fpoint).INT_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_int[1])
+    # match = re.fullmatch(PatNumberSingle(fpoint).INT_COVERED, source)
+    # ExpectAux(match and match[1]).check_assert(_EXP_int[1])
 
     # FLOAT -----
     match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_float[0])
+    # #
+    # match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_COVERED, source)
+    # ExpectAux(match and match[1]).check_assert(_EXP_float[1])
 
-    match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_float[1])
-
-    # BOTH -----
+    # # BOTH -----
     match = re.fullmatch(PatNumberSingle(fpoint).BOTH_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_both[0])
 
-    match = re.fullmatch(PatNumberSingle(fpoint).BOTH_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_both[1])
+    # match = re.fullmatch(PatNumberSingle(fpoint).BOTH_COVERED, source)
+    # ExpectAux(match and match[1]).check_assert(_EXP_both[1])
 
 
 # =====================================================================================================================

@@ -235,7 +235,7 @@ class Test__try_convert_to_object:
         ]
     )
     def test__MAIN_GOAL__string_source(self, source):
-        func_link = TextAux(str(source)).parse__object
+        func_link = TextAux(str(source)).parse__object  # DONT DELETE STR!!!
         ExpectAux(func_link).check_assert(source)
 
     # =================================================================================================================
@@ -339,9 +339,9 @@ def test__requirements__get_list(source, _EXPECTED):
 class Test__ParseNum:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source",
+        argnames="source, _EXPECTED",
         argvalues=[
-            0,
+            (0, ),
             1,
             10,
             1.0,
@@ -362,8 +362,8 @@ class Test__ParseNum:
             {},
         ]
     )
-    def test__MAIN_GOAL__string_source(self, source):
-        func_link = TextAux(str(source)).parse__object
+    def test__num(self, source, _EXPECTED):
+        func_link = TextAux(source).parse__single_number
         ExpectAux(func_link).check_assert(source)
 
 

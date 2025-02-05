@@ -284,6 +284,12 @@ class TextAux(InitSource):
             print(f"{exx!r}")
             return source_original
 
+    def parse__json(self) -> TYPE__ELEMENTARY | str:
+        """
+        just a link
+        """
+        return self.parse__object()
+
     # -----------------------------------------------------------------------------------------------------------------
     def parse__requirements(self) -> list[str]:
         """
