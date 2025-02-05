@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.base_inits.m4_init_annots import *
+from base_aux.base_inits.m4_init_annots_by_types import *
 
 from base_aux.aux_types.m2_info import *
 

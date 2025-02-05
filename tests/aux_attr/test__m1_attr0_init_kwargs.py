@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_inits.m3_init_kwargs import AttrsInitByKwArgs
+from base_aux.base_inits.m3_init_attrs_by_kwargs import AttrsInitByKwArgs
 
 
 # =====================================================================================================================

@@ -1,9 +1,10 @@
 from typing import *
 
+from base_aux.aux_attr.m1_attr2_anycase import *
+
 
 # =====================================================================================================================
-@final
-class AttrsInitByKwArgs:
+class AttrsInitByKwArgs_Base:
     """
     GOAL
     ----
@@ -36,6 +37,21 @@ class AttrsInitByKwArgs:
     def __init_args(self, *args, _RAISE__: bool = None) -> None | NoReturn:
         kwargs = dict.fromkeys(args)
         self.__init_kwargs(**kwargs, _RAISE_=_RAISE__)
+
+
+# =====================================================================================================================
+@final
+class AttrsInitByKwArgs(AttrsInitByKwArgs_Base):
+    """
+    exact case for attrs
+    """
+
+
+@final
+class AttrsInitByKwArgsIc(AttrsInitByKwArgs_Base, AttrAnycaseGSAI):
+    """
+    ignorecase for attrs
+    """
 
 
 # =====================================================================================================================
