@@ -157,7 +157,7 @@ class TextAux(InitSource):
         return self.SOURCE
 
     # =================================================================================================================
-    def parse__single_number(self, fsep: str = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
+    def parse__single_number(self, fpoint: str = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -177,8 +177,8 @@ class TextAux(InitSource):
     def parse__single_int(self) -> int | None:
         return self.parse__single_number(num_type=NumType.INT)
 
-    def parse__single_float(self, fsep: str = ".") -> float | None:
-        return self.parse__single_number(fsep=fsep, num_type=NumType.FLOAT)
+    def parse__single_float(self, fpoint: str = ".") -> float | None:
+        return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # =================================================================================================================
     def split_lines(self, skip_blanks: bool = None) -> list[str]:

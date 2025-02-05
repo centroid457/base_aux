@@ -34,17 +34,17 @@ class PatNumberSingle(Patterns):
     BOTH_COVERED: str
 
     # aux ---------
-    _fsep: FPoint = FPoint.DOT
+    _fpoint: FPoint = FPoint.DOT
     _cover: str = r"\D*"
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, fsep: FPoint = None) -> None | NoReturn:
-        if fsep is None:
+    def __init__(self, fpoint: FPoint = None) -> None | NoReturn:
+        if fpoint is None:
             pass
-        elif fsep in FPoint:
-            self._fsep = FPoint(fsep)
+        elif fpoint in FPoint:
+            self._fpoint = FPoint(fpoint)
         else:
-            raise TypeError(f"{fsep=}")
+            raise TypeError(f"{fpoint=}")
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -55,9 +55,9 @@ class PatNumberSingle(Patterns):
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def FLOAT_EXACT(self) -> str:
-        if self._fsep == FPoint.DOT:
+        if self._fpoint == FPoint.DOT:
             return r"(\d+\.\d+)"
-        if self._fsep == FPoint.COMMA:
+        if self._fpoint == FPoint.COMMA:
             return r"(\d+\,\d+)"
 
     @property

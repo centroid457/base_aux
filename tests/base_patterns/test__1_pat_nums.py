@@ -10,7 +10,7 @@ from base_aux.base_patterns.m1_pat_nums import *
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, fsep, _EXP_int, _EXP_float, _EXP_both",
+    argnames="source, fpoint, _EXP_int, _EXP_float, _EXP_both",
     argvalues=[
         # trash ----
         ("", None, (None, None), (None, None), (None, None)),
@@ -35,26 +35,26 @@ from base_aux.base_patterns.m1_pat_nums import *
         ("11.22", ",", (None, None), (None, None), (None, None)),
     ]
 )
-def test___PatNumber(source, fsep, _EXP_int, _EXP_float, _EXP_both):
+def test___PatNumber(source, fpoint, _EXP_int, _EXP_float, _EXP_both):
     # INT -----
-    match = re.fullmatch(PatNumberSingle(fsep).INT_EXACT, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).INT_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_int[0])
 
-    match = re.fullmatch(PatNumberSingle(fsep).INT_COVERED, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).INT_COVERED, source)
     ExpectAux(match and match[1]).check_assert(_EXP_int[1])
 
     # FLOAT -----
-    match = re.fullmatch(PatNumberSingle(fsep).FLOAT_EXACT, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_float[0])
 
-    match = re.fullmatch(PatNumberSingle(fsep).FLOAT_COVERED, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_COVERED, source)
     ExpectAux(match and match[1]).check_assert(_EXP_float[1])
 
     # BOTH -----
-    match = re.fullmatch(PatNumberSingle(fsep).BOTH_EXACT, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).BOTH_EXACT, source)
     ExpectAux(match and match[1]).check_assert(_EXP_both[0])
 
-    match = re.fullmatch(PatNumberSingle(fsep).BOTH_COVERED, source)
+    match = re.fullmatch(PatNumberSingle(fpoint).BOTH_COVERED, source)
     ExpectAux(match and match[1]).check_assert(_EXP_both[1])
 
 
