@@ -158,36 +158,28 @@ class TextAux(InitSource):
 
     # =================================================================================================================
     def parse__single_number(self, fsep: str = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
-        pass
-
-    def parse__single_int(self) -> int | None:
-        """
-        GOAL
-        ----
-        get value from value with unit from UART
-
-        :returns: None if no value/value is not single/value is not exact type (float)
-        if need INT and parsed FLOAT??? - BAD!!!
-        """
-
-    def parse__single_float(self, fsep: str = ".") -> float | None:
         """
         GOAL
         ----
         parce single float value (unit available) from text.
 
-        NOTE
-        ----
-        noraise in any case!
-        if INT - NONE
-        if several numb - NONE
-
         SPECIALLY CREATED FOR
         ---------------------
         UART terminal data validation
-        """
-        pass
 
+        :returns:
+            noraise in any case!
+            None - no value
+            None - value is not single
+            None - value is not exact type
+        """
+
+
+    def parse__single_int(self) -> int | None:
+        return self.parse__single_number(num_type=NumType.INT)
+
+    def parse__single_float(self, fsep: str = ".") -> float | None:
+        return self.parse__single_number(fsep=fsep, num_type=NumType.FLOAT)
 
     # =================================================================================================================
     def split_lines(self, skip_blanks: bool = None) -> list[str]:
