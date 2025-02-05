@@ -50,7 +50,7 @@ def test__variants(args, other, _EXPECTED):
     ExpectAux(EqValid_VariantsDirect(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_VariantsStrLow(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
 
-
+    # -----
     ExpectAux(other in EqValid_VariantsDirect(*args)).check_assert(_EXPECTED[0])
     ExpectAux(other in EqValid_VariantsStrLow(*args)).check_assert(_EXPECTED[1])
 
