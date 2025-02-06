@@ -14,6 +14,9 @@ class ValidAux(InitSource):
     # FIXME: do smth! before it was all static! and source at first place!
     SOURCE: Any = None
 
+    def eq(self, other: Any) -> bool | NoReturn:
+        pass
+
     def ltgt(self, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         result = True
         # low ----------
