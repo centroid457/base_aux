@@ -62,9 +62,11 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 3)
+    VERSION: tuple[int, int, int] = (0, 2, 4)
     NEWS: list[str] = [
-        "[filepath] start creating",
+        "[text] add parse__single_num +all derivatives",
+        "[enum] add FPoint/NumType",
+        "[base_patterns] start separating +add singleNum",
     ]
 
 

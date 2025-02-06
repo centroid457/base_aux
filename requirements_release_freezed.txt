@@ -5,7 +5,7 @@ altgraph==0.17.4
 annotated-types==0.7.0
 anyio==4.6.2.post1
 attrs==24.2.0
-base_aux==0.2.2
+base_aux==0.2.3
 beautifulsoup4==4.12.3
 bs4==0.0.2
 build==1.2.2.post1

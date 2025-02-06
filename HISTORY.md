@@ -10,6 +10,12 @@
 ********************************************************************************
 ## NEWS
 
+0.2.4 (2025/02/06 15:02:40)
+------------------------------
+- [text] add parse__single_num +all derivatives  
+- [enum] add FPoint/NumType  
+- [base_patterns] start separating +add singleNum  
+
 0.2.3 (2025/02/04 16:12:37)
 ------------------------------
 - [filepath] start creating  
