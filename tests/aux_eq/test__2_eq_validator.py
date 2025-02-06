@@ -129,7 +129,7 @@ def test__exx_raise(other, _EXPECTED):
     argvalues=[
         ((1,2), False, (False, False, False, False)),
         ((1,2), Exception, (False, False, False, False)),
-        ((Exception,2), 1, (False, False, False, False)),
+        ((Exception, 2), 1, (False, False, False, False)),
 
         ((1,2), 0, (False, False, False, False)),
         ((1,2), 1, (False, False, True, True)),
@@ -138,15 +138,15 @@ def test__exx_raise(other, _EXPECTED):
     ]
 )
 def test__lg(args, other, _EXPECTED):
-    ExpectAux(EqValid_LtGt(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_LtGe(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_LeGt(*args) == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_LeGe(*args) == other).check_assert(_EXPECTED[3])
+    ExpectAux(EqValid_LtGt_Obj(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_LtGe_Obj(*args) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_LeGt_Obj(*args) == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_LeGe_Obj(*args) == other).check_assert(_EXPECTED[3])
 
-    ExpectAux(EqValid_LtGt(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_LtGe(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-    ExpectAux(EqValid_LeGt(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_LeGe(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
+    ExpectAux(EqValid_LtGt_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_LtGe_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+    ExpectAux(EqValid_LeGt_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
+    ExpectAux(EqValid_LeGe_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
 
 
 # =====================================================================================================================

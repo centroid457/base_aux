@@ -228,17 +228,30 @@ class Validators:
         return self.OTHER_RAISED or TypeAux(other_result).check__exception()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+    def LtGt_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux_Obj(other_result).ltgt(low, high)
 
-    def LtGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+    def LtGe_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux_Obj(other_result).ltge(low, high)
 
-    def LeGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+    def LeGt_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux_Obj(other_result).legt(low, high)
 
-    def LeGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+    def LeGe_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux_Obj(other_result).lege(low, high)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def LtGt_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_result).ltgt(low, high)
+
+    def LtGe_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_result).ltge(low, high)
+
+    def LeGt_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_result).legt(low, high)
+
+    def LeGe_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_result).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(
@@ -287,7 +300,7 @@ class EqValid_VariantsStrLow(EqValid_Base):
     VALIDATOR = Validators.VariantsStrLow
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 @final
 class EqValid_Startswith(EqValid_Base):
     VALIDATOR = Validators.Startswith
@@ -331,23 +344,43 @@ class EqValid_ExxRaise(EqValid_Base):
 
 # =====================================================================================================================
 @final
-class EqValid_LtGt(EqValid_Base):
-    VALIDATOR = Validators.LtGt
+class EqValid_LtGt_Obj(EqValid_Base):
+    VALIDATOR = Validators.LtGt_Obj
 
 
 @final
-class EqValid_LtGe(EqValid_Base):
-    VALIDATOR = Validators.LtGe
+class EqValid_LtGe_Obj(EqValid_Base):
+    VALIDATOR = Validators.LtGe_Obj
 
 
 @final
-class EqValid_LeGt(EqValid_Base):
-    VALIDATOR = Validators.LeGt
+class EqValid_LeGt_Obj(EqValid_Base):
+    VALIDATOR = Validators.LeGt_Obj
 
 
 @final
-class EqValid_LeGe(EqValid_Base):
-    VALIDATOR = Validators.LeGe
+class EqValid_LeGe_Obj(EqValid_Base):
+    VALIDATOR = Validators.LeGe_Obj
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_LtGt_SingleNumParced(EqValid_Base):
+    VALIDATOR = Validators.LtGt_SingleNumParced
+
+
+@final
+class EqValid_LtGe_SingleNumParced(EqValid_Base):
+    VALIDATOR = Validators.LtGe_SingleNumParced
+
+
+@final
+class EqValid_LeGt_SingleNumParced(EqValid_Base):
+    VALIDATOR = Validators.LeGt_SingleNumParced
+
+
+@final
+class EqValid_LeGe_SingleNumParced(EqValid_Base):
+    VALIDATOR = Validators.LeGe_SingleNumParced
 
 
 # =====================================================================================================================

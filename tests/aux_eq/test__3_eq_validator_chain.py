@@ -16,9 +16,9 @@ from base_aux.aux_eq.m3_eq_validator_chains import *
         ((EqValid_NotRaise(), ), 1, True),
         ((EqValid_NotRaise(), EqValid_Raise()), 1, False),
 
-        ((EqValid_NotRaise(), EqValid_LeGe(1)), 1, True),
-        ((EqValid_NotRaise(), EqValid_LeGe(100)), 1, False),
-        ((EqValid_NotRaise(), EqValid_LeGe(100, reverse=True)), 1, True),
+        ((EqValid_NotRaise(), EqValid_LeGe_Obj(1)), 1, True),
+        ((EqValid_NotRaise(), EqValid_LeGe_Obj(100)), 1, False),
+        ((EqValid_NotRaise(), EqValid_LeGe_Obj(100, reverse=True)), 1, True),
     ]
 )
 def test___EqValidator(source, other, _EXPECTED):
