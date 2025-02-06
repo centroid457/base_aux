@@ -83,15 +83,9 @@ class ValidAux_SingleNumParsed(ValidAux):
     cmp will be executed by parse single num from STR(source)
     """
     SOURCE: int | float | None = None
-    _fpoint: FPoint = FPoint.DOT
-
-    def __init__(self, source: Any = NoValue, *args, fpoint: FPoint = FPoint.DOT, **kwargs) -> None | NoReturn:
-        if fpoint:
-            self._fpoint = FPoint(fpoint)
-        super().__init__(source=source, *args, **kwargs)
 
     def init_post(self) -> None:
-        self.SOURCE = TextAux(self.SOURCE).parse__single_number(fpoint=self._fpoint)
+        self.SOURCE = TextAux(self.SOURCE).parse__single_number()
 
 
 # =====================================================================================================================

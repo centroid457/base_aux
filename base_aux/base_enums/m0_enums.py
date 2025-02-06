@@ -17,6 +17,14 @@ print(FPoint.DOT in FPoint)     # True
 
 print(FPoint(".") == ".")      # False
 print(FPoint(FPoint.DOT))      # FPoint.DOT     # BEST WAY to init value!
+
+
+MAKE A DEFAULT NONE VALUE
+-------------------------
+class FPoint(Enum):
+    DOT = "."
+    COMMA = ","
+    AUTO = None     # def! when FPoint(None)
 """
 
 
@@ -120,11 +128,17 @@ class NumType(Enum):
 
 # =====================================================================================================================
 class FPoint(Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    TextAux.parse__single_number
+    """
     DOT = "."
     COMMA = ","
+    AUTO = None     # auto is more important for SingleNum!
 
 
-TYPE__FPOINT_DRAFT = FPoint | str
+TYPE__FPOINT_DRAFT = FPoint | str | None
 
 
 # =====================================================================================================================

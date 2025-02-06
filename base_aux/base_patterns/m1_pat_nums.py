@@ -5,6 +5,7 @@ try keep all patterns for life!
 """
 from typing import *
 from base_aux.base_enums.m0_enums import *
+from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
@@ -24,7 +25,7 @@ class PatNumberSingle(Patterns):
     All patts ready to get result value by first group!
 
     *Exact - for exact/only number without any cover (suffix-prefix)!
-    *COVERED - for any trash cover!
+    *COVERED - for any trash cover! used in re.fullmatch
     """
     INT_EXACT: str = r"(-?\d+)"
     INT_COVERED: str
@@ -37,12 +38,12 @@ class PatNumberSingle(Patterns):
     BOTH_COVERED: str
 
     # aux ---------
-    _fpoint: FPoint = FPoint.DOT
+    _fpoint: FPoint = FPoint.AUTO
     _cover: tuple[str, str] = (r"\D*?", r"\D*")
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, fpoint: TYPE__FPOINT_DRAFT = None) -> None | NoReturn:
-        if fpoint is None:
+    def __init__(self, fpoint: TYPE__FPOINT_DRAFT = NoValue) -> None | NoReturn:
+        if fpoint is NoValue:
             pass
         elif fpoint in FPoint:
             self._fpoint = FPoint(fpoint)
@@ -62,6 +63,8 @@ class PatNumberSingle(Patterns):
             return r"(-?\d+\.\d+)"
         if self._fpoint == FPoint.COMMA:
             return r"(-?\d+\,\d+)"
+        if self._fpoint == FPoint.AUTO:
+            return r"(-?\d+[,.]\d+)"
 
     @property
     def FLOAT_COVERED(self) -> str:

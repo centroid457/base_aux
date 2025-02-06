@@ -216,7 +216,7 @@ class TextAux(InitSource):
         return result
 
     # =================================================================================================================
-    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.DOT, num_type: NumType = NumType.BOTH) -> int | float | None:
+    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO, num_type: NumType = NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -233,7 +233,7 @@ class TextAux(InitSource):
             None - value is not exact type
         """
         result = None
-        if fpoint is not None:
+        if fpoint is not NoValue:
             fpoint = FPoint(fpoint)
 
         # get PAT ---------
@@ -252,8 +252,7 @@ class TextAux(InitSource):
 
         # get num ---------
         if value:
-            if fpoint == FPoint.COMMA:
-                value: str = value.replace(",", ".")
+            value: str = value.replace(",", ".")
 
             if num_type == NumType.INT:
                 result = int(value)
@@ -270,7 +269,7 @@ class TextAux(InitSource):
     def parse__single_int(self) -> int | None:
         return self.parse__single_number(num_type=NumType.INT)
 
-    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.DOT) -> float | None:
+    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO) -> float | None:
         return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # -----------------------------------------------------------------------------------------------------------------

@@ -346,6 +346,7 @@ class Test__ParseNum:
             ("   000   ", None, 0),
             ("-aa001cc", None, 1),
             ("-aa001.000cc", None, 1.0),
+            ("-aa001,000cc", None, 1.0),
             ("   -aa001.200cc   ", None, 1.2),
             ("   -aa001.200cc   ", ",", None),
             ("   -aa001,200cc   ", ",", 1.2),

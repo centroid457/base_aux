@@ -28,8 +28,9 @@ from base_aux.base_patterns.m1_pat_nums import *
         ("a123b", None, (None, "123"), (None, None), (None, "123")),
 
         # FLOAT ----
-        ("11,22", None, (None, None), (None, None), (None, None)),
+        ("11,22", ".", (None, None), (None, None), (None, None)),
         ("11,22", ",", (None, None), ("11,22", "11,22"), ("11,22", "11,22")),
+        ("11,22", None, (None, None), ("11,22", "11,22"), ("11,22", "11,22")),
         ("aa11,22bb", ",", (None, None), (None, "11,22"), (None, "11,22")),
 
         ("001.200", None, (None, None), ("001.200", "001.200"), ("001.200", "001.200")),
