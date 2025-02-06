@@ -192,6 +192,8 @@ class Validators:
 
         return bool(other_result)
 
+    # TODO: add FALSE????? what to do with exx and real false?
+
     def Raise(self, other_result: Any, *variants: Any) -> bool:
         """
         GOAL

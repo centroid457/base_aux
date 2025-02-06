@@ -125,28 +125,46 @@ def test__exx_raise(other, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="args, other, _EXPECTED",
+    argnames="args, other, _EXP_obj, _EXP_sn",
     argvalues=[
-        ((1,2), False, (False, False, False, False)),
-        ((1,2), Exception, (False, False, False, False)),
-        ((Exception, 2), 1, (False, False, False, False)),
+        # fails ------
+        ((1,2), False, (False, False, False, False), (False, False, False, False)),
+        ((1,2), Exception, (False, False, False, False), (False, False, False, False)),
+        ((Exception, 2), 1, (False, False, False, False), (False, False, False, False)),
 
-        ((1,2), 0, (False, False, False, False)),
-        ((1,2), 1, (False, False, True, True)),
-        ((1,2), 2, (False, True, False, True)),
-        ((1,2), 3, (False, False, False, False)),
+        # correct cmp ------
+        ((1,2), 0, (False, False, False, False), (False, False, False, False)),
+        ((1,2), 1, (False, False, True, True), (False, False, True, True)),
+        ((1,2), 2, (False, True, False, True), (False, True, False, True)),
+        ((1,2), 3, (False, False, False, False), (False, False, False, False)),
+
+        ((1, 2), "a0c", (False, False, False, False), (False, False, False, False)),
+        ((1, 2), "a1c", (False, False, False, False), (False, False, True, True)),
+        ((1, 2), "a2c", (False, False, False, False), (False, True, False, True)),
+        ((1, 2), "a3c", (False, False, False, False), (False, False, False, False)),
     ]
 )
-def test__lg(args, other, _EXPECTED):
-    ExpectAux(EqValid_LtGt_Obj(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_LtGe_Obj(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_LeGt_Obj(*args) == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_LeGe_Obj(*args) == other).check_assert(_EXPECTED[3])
+def test__lg(args, other, _EXP_obj, _EXP_sn):
+    ExpectAux(EqValid_LtGt_Obj(*args) == other).check_assert(_EXP_obj[0])
+    ExpectAux(EqValid_LtGe_Obj(*args) == other).check_assert(_EXP_obj[1])
+    ExpectAux(EqValid_LeGt_Obj(*args) == other).check_assert(_EXP_obj[2])
+    ExpectAux(EqValid_LeGe_Obj(*args) == other).check_assert(_EXP_obj[3])
 
-    ExpectAux(EqValid_LtGt_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_LtGe_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-    ExpectAux(EqValid_LeGt_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_LeGe_Obj(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
+    ExpectAux(EqValid_LtGt_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[0])
+    ExpectAux(EqValid_LtGe_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[1])
+    ExpectAux(EqValid_LeGt_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[2])
+    ExpectAux(EqValid_LeGe_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[3])
+
+    # ------
+    ExpectAux(EqValid_LtGt_SingleNumParced(*args) == other).check_assert(_EXP_sn[0])
+    ExpectAux(EqValid_LtGe_SingleNumParced(*args) == other).check_assert(_EXP_sn[1])
+    ExpectAux(EqValid_LeGt_SingleNumParced(*args) == other).check_assert(_EXP_sn[2])
+    ExpectAux(EqValid_LeGe_SingleNumParced(*args) == other).check_assert(_EXP_sn[3])
+
+    ExpectAux(EqValid_LtGt_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[0])
+    ExpectAux(EqValid_LtGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[1])
+    ExpectAux(EqValid_LeGt_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[2])
+    ExpectAux(EqValid_LeGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[3])
 
 
 # =====================================================================================================================
