@@ -229,16 +229,16 @@ class Validators:
 
     # -----------------------------------------------------------------------------------------------------------------
     def LtGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).ltgt(low, high)
+        return ValidAux_Obj(other_result).ltgt(low, high)
 
     def LtGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).ltge(low, high)
+        return ValidAux_Obj(other_result).ltge(low, high)
 
     def LeGt(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).legt(low, high)
+        return ValidAux_Obj(other_result).legt(low, high)
 
     def LeGe(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux(other_result).lege(low, high)
+        return ValidAux_Obj(other_result).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(

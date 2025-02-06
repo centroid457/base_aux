@@ -40,7 +40,7 @@
 
 0.1.9 (2024/12/12 11:20:41)
 ------------------------------
-- [ValidAux -> lambdas] move all get_result_or_raise/*  
+- [ValidAux_Obj -> lambdas] move all get_result_or_raise/*  
 - separate others  
 - [tests] work  
 
