@@ -216,7 +216,7 @@ class TextAux(InitSource):
         return result
 
     # =================================================================================================================
-    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = ".", num_type: NumType = NumType.BOTH) -> int | float | None:
+    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.DOT, num_type: NumType = NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -232,6 +232,8 @@ class TextAux(InitSource):
             None - value is not single
             None - value is not exact type
         """
+        result = None
+
         if num_type == NumType.INT:
             pat = PatNumberSingle(fpoint).INT_COVERED
         elif num_type == NumType.FLOAT:
@@ -242,12 +244,28 @@ class TextAux(InitSource):
             raise TypeError(f"{num_type=}")
 
         match = re.fullmatch(pat, self.SOURCE)
-        return match and match[1]
+        if match:
+            # ----------------
+            value = match[1]
+            if fpoint == FPoint.COMMA:
+                value = value.replace(",", ".")
+
+            # ----------------
+            if num_type == NumType.INT:
+                result = int(value)
+            elif num_type == NumType.FLOAT:
+                result = float(value)
+            elif num_type == NumType.BOTH:
+                if "." in value:
+                    result = float(value)
+                else:
+                    result = int(value)
+        return result
 
     def parse__single_int(self) -> int | None:
         return self.parse__single_number(num_type=NumType.INT)
 
-    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = ".") -> float | None:
+    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.DOT) -> float | None:
         return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # -----------------------------------------------------------------------------------------------------------------
