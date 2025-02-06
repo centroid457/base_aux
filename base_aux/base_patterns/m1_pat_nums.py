@@ -21,7 +21,10 @@ class PatNumberSingle(Patterns):
     """
     NOTE
     ----
-    All patts ready to get value as group!
+    All patts ready to get result value by first group!
+
+    *Exact - for exact/only number without any cover (suffix-prefix)!
+    *COVERED - for any trash cover!
     """
     INT_EXACT: str = r"(-?\d+)"
     INT_COVERED: str
@@ -35,7 +38,7 @@ class PatNumberSingle(Patterns):
 
     # aux ---------
     _fpoint: FPoint = FPoint.DOT
-    _cover: tuple[str, str] = (r"\D*(?!-)", r"\D*")
+    _cover: tuple[str, str] = (r"\D*?", r"\D*")
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, fpoint: TYPE__FPOINT_DRAFT = None) -> None | NoReturn:
