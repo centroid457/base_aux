@@ -339,32 +339,22 @@ def test__requirements__get_list(source, _EXPECTED):
 class Test__ParseNum:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, fpoint, _EXPECTED",
         argvalues=[
-            (0, ),
-            1,
-            10,
-            1.0,
-            1.1,
-            -1.1,
-            "",
-            '',
-            "hello",
-            None,
-            True,
-            False,
-            [None, True, 1, -1.1, "hello", "", ''],
-            # [None, True, 1, -1.1, "hello", [], {1:1}],  #JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 37 (char 36)')=KEYS IS ONLY STRINGS
-            [None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}],
-
-            [],
-            # (),     # JSONDecodeError('Expecting value: line 1 column 1 (char 0)') - НЕСУЩЕСТВУЕТ TUPLE???
-            {},
+            (0, None, 0),
+            ("   0   ", None, 0),
+            ("   000   ", None, 0),
+            ("-aa001cc", None, 1),
+            ("-aa001.000cc", None, 1.0),
+            ("   -aa001.200cc   ", None, 1.2),
+            ("   -aa001.200cc   ", ",", None),
+            ("   -aa001,200cc   ", ",", 1.2),
+            ("   -aa--001,200cc   ", ",", -1.2),
         ]
     )
-    def test__num(self, source, _EXPECTED):
+    def test__num(self, source, fpoint, _EXPECTED):
         func_link = TextAux(source).parse__single_number
-        ExpectAux(func_link).check_assert(source)
+        ExpectAux(func_link, fpoint).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

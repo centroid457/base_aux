@@ -233,7 +233,10 @@ class TextAux(InitSource):
             None - value is not exact type
         """
         result = None
+        if fpoint is not None:
+            fpoint = FPoint(fpoint)
 
+        # get PAT ---------
         if num_type == NumType.INT:
             pat = PatNumberSingle(fpoint).INT_COVERED
         elif num_type == NumType.FLOAT:
@@ -243,14 +246,15 @@ class TextAux(InitSource):
         else:
             raise TypeError(f"{num_type=}")
 
+        # FIND STR --------
         match = re.fullmatch(pat, self.SOURCE)
-        if match:
-            # ----------------
-            value = match[1]
-            if fpoint == FPoint.COMMA:
-                value = value.replace(",", ".")
+        value: str | None = match and match[1]
 
-            # ----------------
+        # get num ---------
+        if value:
+            if fpoint == FPoint.COMMA:
+                value: str = value.replace(",", ".")
+
             if num_type == NumType.INT:
                 result = int(value)
             elif num_type == NumType.FLOAT:
@@ -260,6 +264,7 @@ class TextAux(InitSource):
                     result = float(value)
                 else:
                     result = int(value)
+        # FINISH ----------
         return result
 
     def parse__single_int(self) -> int | None:

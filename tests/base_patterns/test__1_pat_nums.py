@@ -23,6 +23,7 @@ from base_aux.base_patterns.m1_pat_nums import *
         ("11.22.33", ",", (None, None), (None, None), (None, None)),
 
         # INT ------
+        ("00100", None, ("00100", "00100"), (None, None), ("00100", "00100")),
         ("123", None, ("123", "123"), (None, None), ("123", "123")),
         ("a123b", None, (None, "123"), (None, None), (None, "123")),
 
@@ -31,6 +32,7 @@ from base_aux.base_patterns.m1_pat_nums import *
         ("11,22", ",", (None, None), ("11,22", "11,22"), ("11,22", "11,22")),
         ("aa11,22bb", ",", (None, None), (None, "11,22"), (None, "11,22")),
 
+        ("001.200", None, (None, None), ("001.200", "001.200"), ("001.200", "001.200")),
         ("11.22", None, (None, None), ("11.22", "11.22"), ("11.22", "11.22")),
         ("11.22", ",", (None, None), (None, None), (None, None)),
 
