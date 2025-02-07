@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.numbers.m1_number import *
+from base_aux.numbers.m1_arithm import *
 
 
 # =====================================================================================================================
