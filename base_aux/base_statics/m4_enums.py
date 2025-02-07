@@ -124,9 +124,14 @@ class PathType(Enum):
 # ---------------------------------------------------------------------------------------------------------------------
 class TextFormat(Enum):
     AUTO = None     # keep decide?
-    CSV = auto()
-    INI = auto()
-    JSON = auto()
+    CSV = "csv"
+    INI = "ini"
+    JSON = "json"
+
+    PY = "py"
+    BAT = "bat"
+    REQ = "requirements"
+    GITIGNORE = "gitignore"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
