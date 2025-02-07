@@ -123,7 +123,9 @@ class PathType(Enum):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class TextFormat(Enum):
+    ANY = any       # keep decide?
     AUTO = None     # keep decide?
+
     CSV = "csv"
     INI = "ini"
     JSON = "json"
@@ -132,6 +134,14 @@ class TextFormat(Enum):
     BAT = "bat"
     REQ = "requirements"
     GITIGNORE = "gitignore"
+    MD = "md"
+
+
+class RemType(Enum):
+    AUTO = None     # keep decide?
+    REM = "rem"
+    GRID = "#"
+    DSLASH = "//"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
