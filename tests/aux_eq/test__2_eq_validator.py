@@ -4,7 +4,7 @@ from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_types.m0_primitives import *
 
 from base_aux.aux_eq.m2_eq_valid1_base import _EqValidator
-from base_aux.aux_eq.m2_eq_valid2_derivatives import *
+from base_aux.aux_eq.m2_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
@@ -165,6 +165,31 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
     ExpectAux(EqValid_LtGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[1])
     ExpectAux(EqValid_LeGt_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[2])
     ExpectAux(EqValid_LeGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[3])
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="other, expect, _EXPECTED",
+    argvalues=[
+        # TRASH
+        (True, True, False),
+        (False, True, False),
+        (True, False, True),
+        (True, None, True),
+        ("", False, True),
+
+        ("123", False, False),
+        ("123", True, True),
+
+        ("123", 1, False),
+        ("123", 123, True),
+        ("123", "123", True),
+
+        ("a123a", "b123b", True),
+    ]
+)
+def test__SingleNumParced(other, expect, _EXPECTED):
+    ExpectAux(EqValid_SingleNumParced(expect) == other).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

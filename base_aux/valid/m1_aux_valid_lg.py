@@ -15,7 +15,7 @@ class ValidAux(InitSource):
     SOURCE: Any = None
 
     def eq(self, other: Any) -> bool | NoReturn:
-        pass
+        return NotImplemented
 
     def ltgt(self, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         result = True
@@ -89,6 +89,16 @@ class ValidAux_SingleNumParsed(ValidAux):
 
     def init_post(self) -> None:
         self.SOURCE = TextAux(self.SOURCE).parse__single_number()
+
+    def eq(self, other: Any | None | bool) -> bool:
+        if other is True:
+            return self.SOURCE is not None
+
+        elif other in [False, None, NoValue]:
+            return self.SOURCE is None
+
+        else:
+            return self.SOURCE == TextAux(other).parse__single_number()
 
 
 # =====================================================================================================================

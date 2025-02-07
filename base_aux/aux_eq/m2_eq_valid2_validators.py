@@ -1,10 +1,11 @@
 from typing import *
 import re
 
-from base_aux.aux_types.m0_types import TYPE__VALID_BOOL__DRAFT
-from base_aux.aux_types.m1_type_aux import TypeAux
-from base_aux.base_enums.m0_enums import BoolCumulate
-from base_aux.valid.m1_aux_valid_lg import ValidAux_Obj, ValidAux_SingleNumParsed
+from base_aux.aux_values.m0_novalue import *
+from base_aux.aux_types.m0_types import *
+from base_aux.aux_types.m1_type_aux import *
+from base_aux.base_enums.m0_enums import *
+from base_aux.valid.m1_aux_valid_lg import *
 
 
 # =====================================================================================================================
@@ -18,6 +19,10 @@ class Validators:
     SPECIALLY CREATED FOR
     ---------------------
     EqValid_Base
+
+    RULES
+    -----
+    1/ NoReturn - available for all returns as common!!! but sometimes it cant be reached (like TRUE/RAISE)
     """
     def VariantsDirect(self, other_final: Any, *variants: Any) -> bool | NoReturn:
         if other_final in variants:
@@ -138,6 +143,10 @@ class Validators:
 
     def LeGe_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
         return ValidAux_SingleNumParsed(other_final).lege(low, high)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def SingleNumParced(self, other_final, expect: Any | None | bool = True) -> bool:
+        return ValidAux_SingleNumParsed(other_final).eq(expect)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(

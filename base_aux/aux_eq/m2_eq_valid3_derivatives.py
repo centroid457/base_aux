@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_eq.m2_eq_valid0_validators import Validators
+from base_aux.aux_eq.m2_eq_valid2_validators import Validators
 from base_aux.aux_eq.m2_eq_valid1_base import EqValid_Base
 from base_aux.valid.m1_aux_valid_lg import *
 from base_aux.aux_types.m0_types import *
@@ -99,6 +99,12 @@ class EqValid_LeGt_SingleNumParced(EqValid_Base):
 @final
 class EqValid_LeGe_SingleNumParced(EqValid_Base):
     VALIDATOR = Validators.LeGe_SingleNumParced
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_SingleNumParced(EqValid_Base):
+    VALIDATOR = Validators.SingleNumParced
 
 
 # =====================================================================================================================
