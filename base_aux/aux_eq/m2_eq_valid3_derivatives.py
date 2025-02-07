@@ -107,6 +107,16 @@ class EqValid_SingleNumParced(EqValid_Base):
     VALIDATOR = Validators.SingleNumParced
 
 
+@final
+class EqValid_SingleNumParced_Int(EqValid_Base):
+    VALIDATOR = Validators.SingleNumParced_Int
+
+
+@final
+class EqValid_SingleNumParced_Float(EqValid_Base):
+    VALIDATOR = Validators.SingleNumParced_Float
+
+
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
     VALIDATOR = Validators.Regexp

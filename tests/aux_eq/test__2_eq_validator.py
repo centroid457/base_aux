@@ -172,35 +172,38 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
     argnames="other, expect, _EXPECTED",
     argvalues=[
         # TRASH ----
-        (True, True, False),
-        (False, True, False),
-        (True, False, True),
-        (True, None, True),
-        ("", False, True),
+        (True, True, (False, False, False, )),
+        (False, True, (False, False, False, )),
+        (True, False, (True, False, False, )),
+        (True, None, (True, False, False, )),
+        ("", False, (True, False, False, )),
 
         # VALUES ----
-        ("123", False, False),
-        ("123", True, True),
+        ("123", False, (False, True, False, )),
+        ("123", True, (True, True, False, )),
 
-        ("123", 1, False),
-        ("123", 123, True),
-        ("123", "123", True),
+        ("123", 1, (False, True, False, )),
+        ("123", 123, (True, True, False, )),
+        ("123", "123", (True, True, False, )),
 
-        ("a123a", "b123b", True),
-        ("a1.2.3a", "b123b", False),
-        ("a1.2.3a", "hello", True),
+        ("a123a", "b123b", (True, True, False, )),
+        ("a1.2.3a", "b123b", (False, False, False, )),
+        ("a1.2.3a", "hello", (True, False, False, )),
 
-        ("a1.00a", "b001bb", True),
+        ("a1.00a", "b001bb", (True, False, True, )),
 
-        ("a111a", int, True),
-        ("a111a", float, False),
+        ("a111a", int, (True, True, False, )),
+        ("a111a", float, (False, True, False, )),
 
-        ("a11.22a", int, False),
-        ("a11.22a", float, True),
+        ("a11.22a", int, (False, False, True, )),
+        ("a11.22a", float, (True, False, True, )),
     ]
 )
 def test__SingleNumParced(other, expect, _EXPECTED):
-    ExpectAux(EqValid_SingleNumParced(expect) == other).check_assert(_EXPECTED)
+    ExpectAux(EqValid_SingleNumParced(expect) == other).check_assert(_EXPECTED[0])
+
+    ExpectAux(EqValid_SingleNumParced_Int() == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_SingleNumParced_Float() == other).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

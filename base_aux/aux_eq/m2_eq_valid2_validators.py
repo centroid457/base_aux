@@ -148,6 +148,12 @@ class Validators:
     def SingleNumParced(self, other_final, expect: Any | None | bool | NumType = True) -> bool:
         return ValidAux_SingleNumParsed(other_final).eq(expect)
 
+    def SingleNumParced_Int(self, other_final) -> bool:
+        return ValidAux_SingleNumParsed(other_final).eq(int)
+
+    def SingleNumParced_Float(self, other_final) -> bool:
+        return ValidAux_SingleNumParsed(other_final).eq(float)
+
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(
             self,
