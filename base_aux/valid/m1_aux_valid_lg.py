@@ -90,12 +90,15 @@ class ValidAux_SingleNumParsed(ValidAux):
     def init_post(self) -> None:
         self.SOURCE = TextAux(self.SOURCE).parse__single_number()
 
-    def eq(self, other: Any | None | bool) -> bool:
+    def eq(self, other: Any | None | bool | Union[NumType | int | float]) -> bool:
         if other is True:
             return self.SOURCE is not None
 
         elif other in [False, None, NoValue]:
             return self.SOURCE is None
+
+        elif other in NumType:
+            return TextAux(self.SOURCE).parse__single_number(num_type=other) is not None
 
         else:
             return self.SOURCE == TextAux(other).parse__single_number()

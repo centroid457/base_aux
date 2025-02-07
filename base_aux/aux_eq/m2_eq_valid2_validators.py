@@ -145,7 +145,7 @@ class Validators:
         return ValidAux_SingleNumParsed(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def SingleNumParced(self, other_final, expect: Any | None | bool = True) -> bool:
+    def SingleNumParced(self, other_final, expect: Any | None | bool | NumType = True) -> bool:
         return ValidAux_SingleNumParsed(other_final).eq(expect)
 
     # -----------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+from base_aux.aux_values.m0_novalue import *
+
 
 # =====================================================================================================================
 """
@@ -75,13 +77,13 @@ class Process(Enum):
     ---------------------
     CallableAux.resolve when returns SKIPPED like object!
     """
-    NONE = auto()
+    NONE = None
     STARTED = auto()
     SKIPPED = auto()
     STOPPED = auto()
     RAISED = auto()
-    FAILED = auto()
-    SUCCESS = auto()
+    FAILED = False
+    SUCCESS = True
 
 
 # =====================================================================================================================
@@ -106,8 +108,8 @@ class BoolCumulate(Enum):
     ---------------------
     EqValid_RegexpAllTrue
     """
-    ALL_TRUE = auto()
-    ANY_TRUE = auto()
+    ALL_TRUE = all
+    ANY_TRUE = any
     ANY_FALSE = auto()
     ALL_FALSE = auto()
 
@@ -121,9 +123,9 @@ class PathType(Enum):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class NumType(Enum):
-    INT = auto()
-    FLOAT = auto()
-    BOTH = auto()
+    INT = int
+    FLOAT = float
+    BOTH = None
 
 
 # =====================================================================================================================

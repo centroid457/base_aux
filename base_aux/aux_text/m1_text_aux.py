@@ -235,6 +235,7 @@ class TextAux(InitSource):
         result = None
         if fpoint is not NoValue:
             fpoint = FPoint(fpoint)
+        num_type = NumType(num_type)
 
         # get PAT ---------
         if num_type == NumType.INT:

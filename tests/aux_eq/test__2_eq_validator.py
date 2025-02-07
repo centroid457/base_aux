@@ -191,6 +191,12 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
         ("a1.2.3a", "hello", True),
 
         ("a1.00a", "b001bb", True),
+
+        ("a111a", int, True),
+        ("a111a", float, False),
+
+        ("a11.22a", int, False),
+        ("a11.22a", float, True),
     ]
 )
 def test__SingleNumParced(other, expect, _EXPECTED):
