@@ -3,8 +3,8 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_values.m1_value_valid_eq import *
 from base_aux.aux_eq.m1_eq_aux import *
-from base_aux.aux_eq.m2_eq_validator import *
-from base_aux.aux_eq.m3_eq_validator_chains import *
+from base_aux.aux_eq.m2_eq_valid2_derivatives import *
+from base_aux.aux_eq.m3_eq_valid_chain import *
 from base_aux.aux_types.m0_primitives import *
 
 

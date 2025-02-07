@@ -1,4 +1,7 @@
-from base_aux.aux_eq.m2_eq_validator import *
+from typing import *
+
+from base_aux.aux_eq.m2_eq_valid2_derivatives import *
+from base_aux.aux_eq.m2_eq_valid1_base import EqValid_Base
 from base_aux.aux_types.m0_types import TYPE__KWARGS_FINAL
 
 
