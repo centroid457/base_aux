@@ -82,39 +82,39 @@ class EqValid_LeGe_Obj(EqValid_Base):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_LtGt_SingleNumParced(EqValid_Base):
-    VALIDATOR = Validators.LtGt_SingleNumParced
+class EqValid_LtGt_NumParsedSingle(EqValid_Base):
+    VALIDATOR = Validators.LtGt_NumParsedSingle
 
 
 @final
-class EqValid_LtGe_SingleNumParced(EqValid_Base):
-    VALIDATOR = Validators.LtGe_SingleNumParced
+class EqValid_LtGe_NumParsedSingle(EqValid_Base):
+    VALIDATOR = Validators.LtGe_NumParsedSingle
 
 
 @final
-class EqValid_LeGt_SingleNumParced(EqValid_Base):
-    VALIDATOR = Validators.LeGt_SingleNumParced
+class EqValid_LeGt_NumParsedSingle(EqValid_Base):
+    VALIDATOR = Validators.LeGt_NumParsedSingle
 
 
 @final
-class EqValid_LeGe_SingleNumParced(EqValid_Base):
-    VALIDATOR = Validators.LeGe_SingleNumParced
+class EqValid_LeGe_NumParsedSingle(EqValid_Base):
+    VALIDATOR = Validators.LeGe_NumParsedSingle
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_SingleNumParced(EqValid_Base):
-    VALIDATOR = Validators.SingleNumParced
+class EqValid_NumParsedSingle(EqValid_Base):
+    VALIDATOR = Validators.NumParsedSingle
 
 
 @final
-class EqValid_SingleNumParced_Int(EqValid_Base):
-    VALIDATOR = Validators.SingleNumParced_Int
+class EqValid_NumParsedSingle_Int(EqValid_Base):
+    VALIDATOR = Validators.NumParsedSingle_Int
 
 
 @final
-class EqValid_SingleNumParced_Float(EqValid_Base):
-    VALIDATOR = Validators.SingleNumParced_Float
+class EqValid_NumParsedSingle_Float(EqValid_Base):
+    VALIDATOR = Validators.NumParsedSingle_Float
 
 
 # =====================================================================================================================

@@ -132,27 +132,27 @@ class Validators:
         return ValidAux_Obj(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_final).ltgt(low, high)
+    def LtGt_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_NumParsedSingle(other_final).ltgt(low, high)
 
-    def LtGe_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_final).ltge(low, high)
+    def LtGe_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_NumParsedSingle(other_final).ltge(low, high)
 
-    def LeGt_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_final).legt(low, high)
+    def LeGt_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_NumParsedSingle(other_final).legt(low, high)
 
-    def LeGe_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_final).lege(low, high)
+    def LeGe_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_NumParsedSingle(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def SingleNumParced(self, other_final, expect: Any | None | bool | NumType = True) -> bool:
-        return ValidAux_SingleNumParsed(other_final).eq(expect)
+    def NumParsedSingle(self, other_final, expect: Any | None | bool | NumType = True) -> bool:
+        return ValidAux_NumParsedSingle(other_final).eq(expect)
 
-    def SingleNumParced_Int(self, other_final) -> bool:
-        return ValidAux_SingleNumParsed(other_final).eq(int)
+    def NumParsedSingle_Int(self, other_final) -> bool:
+        return ValidAux_NumParsedSingle(other_final).eq(int)
 
-    def SingleNumParced_Float(self, other_final) -> bool:
-        return ValidAux_SingleNumParsed(other_final).eq(float)
+    def NumParsedSingle_Float(self, other_final) -> bool:
+        return ValidAux_NumParsedSingle(other_final).eq(float)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(

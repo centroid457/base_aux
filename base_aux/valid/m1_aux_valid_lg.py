@@ -82,7 +82,7 @@ class ValidAux_Obj(ValidAux):
 
 # =====================================================================================================================
 @final
-class ValidAux_SingleNumParsed(ValidAux):
+class ValidAux_NumParsedSingle(ValidAux):
     """
     cmp will be executed by parse single num from STR(source)
     """

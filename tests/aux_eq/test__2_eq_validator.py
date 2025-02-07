@@ -156,15 +156,15 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
     ExpectAux(EqValid_LeGe_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[3])
 
     # ------
-    ExpectAux(EqValid_LtGt_SingleNumParced(*args) == other).check_assert(_EXP_sn[0])
-    ExpectAux(EqValid_LtGe_SingleNumParced(*args) == other).check_assert(_EXP_sn[1])
-    ExpectAux(EqValid_LeGt_SingleNumParced(*args) == other).check_assert(_EXP_sn[2])
-    ExpectAux(EqValid_LeGe_SingleNumParced(*args) == other).check_assert(_EXP_sn[3])
+    ExpectAux(EqValid_LtGt_NumParsedSingle(*args) == other).check_assert(_EXP_sn[0])
+    ExpectAux(EqValid_LtGe_NumParsedSingle(*args) == other).check_assert(_EXP_sn[1])
+    ExpectAux(EqValid_LeGt_NumParsedSingle(*args) == other).check_assert(_EXP_sn[2])
+    ExpectAux(EqValid_LeGe_NumParsedSingle(*args) == other).check_assert(_EXP_sn[3])
 
-    ExpectAux(EqValid_LtGt_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[0])
-    ExpectAux(EqValid_LtGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[1])
-    ExpectAux(EqValid_LeGt_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[2])
-    ExpectAux(EqValid_LeGe_SingleNumParced(*args, reverse=True) == other).check_assert(not _EXP_sn[3])
+    ExpectAux(EqValid_LtGt_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[0])
+    ExpectAux(EqValid_LtGe_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[1])
+    ExpectAux(EqValid_LeGt_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[2])
+    ExpectAux(EqValid_LeGe_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[3])
 
 
 # =====================================================================================================================
@@ -199,11 +199,11 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
         ("a11.22a", float, (True, False, True, )),
     ]
 )
-def test__SingleNumParced(other, expect, _EXPECTED):
-    ExpectAux(EqValid_SingleNumParced(expect) == other).check_assert(_EXPECTED[0])
+def test__NumParsedSingle(other, expect, _EXPECTED):
+    ExpectAux(EqValid_NumParsedSingle(expect) == other).check_assert(_EXPECTED[0])
 
-    ExpectAux(EqValid_SingleNumParced_Int() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_SingleNumParced_Float() == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_NumParsedSingle_Int() == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_NumParsedSingle_Float() == other).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
