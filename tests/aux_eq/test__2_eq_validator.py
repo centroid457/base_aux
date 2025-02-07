@@ -171,13 +171,14 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
 @pytest.mark.parametrize(
     argnames="other, expect, _EXPECTED",
     argvalues=[
-        # TRASH
+        # TRASH ----
         (True, True, False),
         (False, True, False),
         (True, False, True),
         (True, None, True),
         ("", False, True),
 
+        # VALUES ----
         ("123", False, False),
         ("123", True, True),
 
@@ -186,6 +187,10 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
         ("123", "123", True),
 
         ("a123a", "b123b", True),
+        ("a1.2.3a", "b123b", False),
+        ("a1.2.3a", "hello", True),
+
+        ("a1.00a", "b001bb", True),
     ]
 )
 def test__SingleNumParced(other, expect, _EXPECTED):
