@@ -2,15 +2,19 @@ from base_aux.base_exceptions.m1_exceptions import Exx__ValueNotValidated
 
 from base_aux.aux_eq.m1_eq_aux import *
 from base_aux.aux_eq.m3_eq_valid_chain import *
+from base_aux.base_resolver.m1_resolver import *
 
 
 # =====================================================================================================================
-class ValueEqValid:
+class ValueEqValid(CallResolve):
     """
     GOAL
     ----
-    universal
     class to use validation by Eq objects for new values
+
+    NOTE
+    ----
+    universal - need to pass EQ object!
     """
     __value: Any = NoValue
     VALUE_DEFAULT: Any = NoValue
@@ -46,7 +50,7 @@ class ValueEqValid:
 
         return EqAux(self.VALUE).check_doubleside__bool(other)
 
-    def __call__(self) -> Any:
+    def resolve(self) -> Any:
         return self.VALUE
 
     @property
@@ -73,7 +77,7 @@ class ValueEqValid:
 
 
 # =====================================================================================================================
-class ValueEqValid_TypeBase(ValueEqValid):
+class ValueEqValid_Exact(ValueEqValid):
     """
     GOAL
     ----
@@ -82,6 +86,10 @@ class ValueEqValid_TypeBase(ValueEqValid):
     SAME AS - ValueEqValid but
     --------------------------
     all args/kwargs passed into EQ
+
+    NOTE
+    ----
+    exact EQ! - no need to pass EQ object! already in class
     """
     EQ: type[EqValid_Base]
 
@@ -96,7 +104,7 @@ class ValueEqValid_TypeBase(ValueEqValid):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class ValueEqValid_Variants(ValueEqValid_TypeBase):
+class ValueEqValid_Variants(ValueEqValid_Exact):
     """
     SAME AS - ValueVariants but
     ---------------------------
@@ -107,7 +115,7 @@ class ValueEqValid_Variants(ValueEqValid_TypeBase):
 
 
 @final
-class ValueEqValid_VariantsStrLow(ValueEqValid_TypeBase):
+class ValueEqValid_VariantsStrLow(ValueEqValid_Exact):
     EQ = EqValid_VariantsStrLow
 
 
