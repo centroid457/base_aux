@@ -4,7 +4,7 @@ import abc
 import shutil
 from tempfile import TemporaryDirectory
 
-from base_aux.base_exceptions import *
+from base_aux.base_exceptions.m1_exceptions import *
 
 from base_aux.privates.m4_json import *
 from base_aux.privates.m0_static import *

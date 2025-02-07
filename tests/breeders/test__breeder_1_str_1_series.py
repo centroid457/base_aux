@@ -1,4 +1,4 @@
-from base_aux.base_exceptions import *
+from base_aux.base_exceptions.m1_exceptions import *
 from base_aux.breeders.m1_breeder_str1_series import *
 
 

@@ -1,4 +1,4 @@
-from base_aux.base_exceptions import *
+from base_aux.base_exceptions.m1_exceptions import *
 from base_aux.aux_attr.m2_annot2_required import *
 
 

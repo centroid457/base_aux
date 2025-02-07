@@ -1,4 +1,4 @@
-from base_aux.base_exceptions import Exx__AnnotNotDefined
+from base_aux.base_exceptions.m1_exceptions import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.base_inits.m1_source import *
 

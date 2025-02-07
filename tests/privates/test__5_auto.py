@@ -4,13 +4,12 @@ import pathlib
 import shutil
 from tempfile import TemporaryDirectory
 
-from base_aux.base_exceptions import *
+from base_aux.base_exceptions.m1_exceptions import *
 
 from base_aux.privates.m1_env import PrivateEnv
 from base_aux.privates.m3_ini import PrivateIni
 from base_aux.privates.m4_json import PrivateJson
 from base_aux.privates.m5_auto import PrivateAuto
-
 
 
 # =====================================================================================================================
