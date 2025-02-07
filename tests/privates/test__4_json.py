@@ -7,7 +7,6 @@ from tempfile import TemporaryDirectory
 from base_aux.base_exceptions.m1_exceptions import *
 
 from base_aux.privates.m4_json import *
-from base_aux.privates.m0_static import *
 
 
 # =====================================================================================================================
@@ -70,7 +69,7 @@ class Test__Json:
         self.VICTIM.FILENAME = "12345.ini"
         try:
             self.VICTIM()
-        except Exx__FileNotExists:
+        except FileNotFoundError:
             pass
         else:
             assert False

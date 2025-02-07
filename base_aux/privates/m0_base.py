@@ -3,7 +3,7 @@ import pathlib
 import abc
 
 from base_aux.aux_attr.m2_annot1_aux import *
-from .m0_static import Exx__FileNotExists, TYPE__PATH
+from base_aux.aux_types.m0_types import *
 
 
 # =====================================================================================================================
@@ -26,7 +26,7 @@ class PrivateBase(AnnotsBase, abc.ABC):
 
     SECTION: Optional[str] = None
 
-    DIRPATH: Optional[TYPE__PATH] = pathlib.Path.home()
+    DIRPATH: TYPE__PATH_FINAL = pathlib.Path.home()
     FILENAME: Optional[str] = None
 
     _text: Optional[str] = ""     # TODO: need tests!!!
@@ -37,9 +37,9 @@ class PrivateBase(AnnotsBase, abc.ABC):
             self,
             _section: Optional[str] = None,
 
-            _dirpath: TYPE__PATH = None,
+            _dirpath: TYPE__PATH_DRAFT = None,
             _filename: str = None,
-            _filepath: TYPE__PATH = None,
+            _filepath: TYPE__PATH_DRAFT = None,
 
             _text: Optional[str] = None,                # instead of file
             _dict: Optional[dict[str, Any]] = None,     # instead of file
@@ -106,9 +106,9 @@ class PrivateBase(AnnotsBase, abc.ABC):
 
     def _filepath_apply_new(
             self,
-            _dirpath: TYPE__PATH = None,
+            _dirpath: TYPE__PATH_DRAFT = None,
             _filename: str = None,
-            _filepath: TYPE__PATH = None
+            _filepath: TYPE__PATH_DRAFT = None
     ) -> bool:
         """apply new file destination
         """
@@ -121,8 +121,7 @@ class PrivateBase(AnnotsBase, abc.ABC):
 
         if self.filepath and not self.filepath.exists():
             if self._RAISE:
-                msg = f'[CRITICAL]no[{self.filepath=}]'
-                raise Exx__FileNotExists(msg)
+                raise FileNotFoundError(f'{self.filepath=}')
             else:
                 return False
 

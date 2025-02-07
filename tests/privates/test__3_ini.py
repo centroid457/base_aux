@@ -6,7 +6,6 @@ from tempfile import TemporaryDirectory
 from base_aux.base_exceptions.m1_exceptions import *
 
 from base_aux.privates.m3_ini import PrivateIni, PrivateAuthIni
-from base_aux.privates.m0_static import Exx__FileNotExists
 
 
 # =====================================================================================================================
@@ -60,7 +59,7 @@ name1=value12
 
         try:
             self.VICTIM()
-        except Exx__FileNotExists:
+        except FileNotFoundError:
             pass
         else:
             assert False

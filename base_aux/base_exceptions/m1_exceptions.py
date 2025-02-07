@@ -2,106 +2,113 @@
 # USE COMMON/GENERAL TYPES
 
 _std = [
-# base ----
-BaseException,
-Exception,
+    # base ----------------
+    BaseException,
+    Exception,
+    BaseExceptionGroup,
 
-# USER ----
-UserWarning,
-BytesWarning,
-Warning,
-DeprecationWarning,
-PendingDeprecationWarning,
+    # imports -------------
+    ImportError,
+    ImportWarning,
+    ModuleNotFoundError,
 
-AssertionError,
+    # FILE/PATH
+    FileExistsError,    # ExistsAlready
+    FileNotFoundError,  # NotExists
 
-NotImplemented,
-NotImplementedError,
+    NotADirectoryError,
+    IsADirectoryError,
 
-# std ------
-TypeError,
-NameError,
-ValueError,
-AttributeError,
+    # USER ----------------
+    UserWarning,
+    Warning,
+    DeprecationWarning,
+    PendingDeprecationWarning,
 
-SyntaxWarning,
-SyntaxError,
+    AssertionError,
 
-# imports -----
-ImportError,
-ImportWarning,
-ModuleNotFoundError,
+    NotImplemented,
+    NotImplementedError,
 
-# PATH
-NotADirectoryError,
-IsADirectoryError,
+    # VALUE ---------------
+    # type
+    TypeError,
 
-# std logic
-GeneratorExit,
-StopIteration,
-SystemExit,
+    # value
+    ValueError,
 
-# arithm
-ZeroDivisionError,
-ArithmeticError,
-FloatingPointError,
-OverflowError,
+    # syntax/format
+    SyntaxWarning,
+    SyntaxError,
+    IndentationError,
 
-# OS
-WindowsError,
-IOError,
-OSError,
-EnvironmentError,
-SystemError,
-PermissionError,
-ChildProcessError,
-MemoryError,
+    EOFError,
+    TabError,
+    BytesWarning,
 
-KeyError,
-KeyboardInterrupt,
+    EncodingWarning,
 
-FileExistsError,
-FileNotFoundError,
+    UnicodeWarning,
+    UnicodeDecodeError,
+    UnicodeEncodeError,
+    UnicodeTranslateError,
 
-ConnectionError,
-ConnectionAbortedError,
-ConnectionResetError,
-ConnectionRefusedError,
-TimeoutError,
-EOFError,
-BufferError,
+    # ACCESS ------
+    NameError,
+    AttributeError,
+    PermissionError,
+    KeyError,
+    IndexError,
 
-LookupError,
-IndexError,
+    # COLLECTION
+    GeneratorExit,
+    StopIteration,
+    StopAsyncIteration,
 
-EncodingWarning,
+    # arithm/logic
+    ZeroDivisionError,
+    ArithmeticError,
+    FloatingPointError,
+    OverflowError,
 
-UnicodeWarning,
-UnicodeDecodeError,
-UnicodeEncodeError,
-UnicodeTranslateError,
+    RecursionError,
+    BrokenPipeError,
+    InterruptedError,
 
-UnboundLocalError,
-TabError,
+    # CONNECTION
+    ConnectionError,
+    ConnectionAbortedError,
+    ConnectionResetError,
+    ConnectionRefusedError,
+    TimeoutError,
 
-BrokenPipeError,
+    # OS/OTHER
+    SystemExit,
+    WindowsError,
+    IOError,
+    OSError,
+    EnvironmentError,
+    SystemError,
+    ChildProcessError,
+    MemoryError,
+    KeyboardInterrupt,
 
-StopAsyncIteration,
-RuntimeWarning,
-ResourceWarning,
-ReferenceError,
-RecursionError,
-ProcessLookupError,
-RuntimeError,
-InterruptedError,
-IndentationError,
-FutureWarning,
-ExceptionGroup,
-BlockingIOError,
-BaseExceptionGroup,
+    BufferError,
+    LookupError,
 
-# REAL VALUE = NOT AN EXCEPTION!!!
-NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
+    UnboundLocalError,
+
+    RuntimeWarning,
+    ResourceWarning,
+    ReferenceError,
+    ProcessLookupError,
+    RuntimeError,
+    FutureWarning,
+    ExceptionGroup,
+    BlockingIOError,
+
+    # REAL VALUE = NOT AN EXCEPTION!!!
+    NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
 ]
 
 
@@ -172,6 +179,12 @@ class Exx__Valid(Exception):
 
 class Exx__ValueNotValidated(Exx__Valid):
     pass
+
+
+# =====================================================================================================================
+class Exx__SameKeys(Exception):
+    """Same keys NOT allowed!
+    """
 
 
 # =====================================================================================================================

@@ -1,7 +1,6 @@
 from typing import *
 import os
 
-from base_aux.privates.m0_static import *
 from base_aux.privates.m0_base import *
 
 
@@ -10,7 +9,7 @@ class PrivateEnv(PrivateBase):
     """
     read exact environs from Os Environment
     """
-    def get_dict(self, _prefix: Optional[str] = None) -> TYPE__PV_DICT:
+    def get_dict(self, _prefix: Optional[str] = None) -> TYPE__KWARGS_FINAL:
         """
         directly using result - mainly it is only for PRINTing and debugging! don't use result!
 
@@ -31,7 +30,7 @@ class PrivateEnv(PrivateBase):
             print(dict(os.environ)[name_lowercase])     # KeyError: 'name_lowercase'
         """
         envs_all = os.environ
-        result: TYPE__PV_DICT = {}
+        result: TYPE__KWARGS_FINAL = {}
 
         # filter ---------------
         for name, value in envs_all.items():

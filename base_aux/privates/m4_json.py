@@ -2,7 +2,6 @@ from typing import *
 import json
 
 from base_aux.privates.m0_base import *
-from base_aux.privates.m0_static import *
 from base_aux.privates.m6_derivative_base import *
 
 
@@ -10,7 +9,7 @@ from base_aux.privates.m6_derivative_base import *
 class PrivateJson(PrivateBase):
     FILENAME: str = "pv.json"
 
-    def get_dict(self) -> Union[TYPE__PV_DICT, NoReturn]:
+    def get_dict(self) -> TYPE__KWARGS_FINAL | NoReturn:
         """
         section only in first level!
         """

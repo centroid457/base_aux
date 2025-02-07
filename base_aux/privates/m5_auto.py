@@ -15,7 +15,7 @@ class PrivateAuto(PrivateJson, PrivateIni, PrivateCsv, PrivateEnv):
     and take values ONLY from FIRST ONE source with all needed values!
     It will not merge sources!
     """
-    def get_dict(self) -> Union[TYPE__PV_DICT, NoReturn]:
+    def get_dict(self) -> TYPE__KWARGS_FINAL | NoReturn:
         annots = AnnotsAux(self).get_not_defined()
         annots_lower = set(map(str.lower, annots))
 
