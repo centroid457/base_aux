@@ -21,6 +21,8 @@ class TYPES:
 
     # SINGLE ---------------------------
     NONE: type = type(None)
+    NUMBER = int | float
+
     FUNCTION: type = type(lambda: True)
     METHOD: type = type(_Cls().meth)
 

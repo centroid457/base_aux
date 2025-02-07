@@ -1,5 +1,6 @@
 from typing import *
 
+from base_aux.aux_types.m0_types import *
 from base_aux.aux_values.m0_novalue import *
 from base_aux.base_inits.m2_source_kwargs import *
 from base_aux.aux_text.m1_text_aux import *
@@ -85,7 +86,7 @@ class ValidAux_SingleNumParsed(ValidAux):
     """
     cmp will be executed by parse single num from STR(source)
     """
-    SOURCE: int | float | None = None
+    SOURCE: TYPES.NUMBER | None = None
 
     def init_post(self) -> None:
         self.SOURCE = TextAux(self.SOURCE).parse__single_number()

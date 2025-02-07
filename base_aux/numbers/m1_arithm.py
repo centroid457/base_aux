@@ -1,13 +1,10 @@
 import math
 
-from base_aux.base_exceptions import *
+from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.aux_types.m0_types import *
 from base_aux.aux_types.m2_info import *
 
 from base_aux.aux_eq.m0_cmp_inst import CmpInst
-
-
-# =====================================================================================================================
-TYPE__NUMBER = int | float
 
 
 # =====================================================================================================================
@@ -48,7 +45,7 @@ class ArithmApplyToAttr(CmpInst):
 
     # AUX -------------------------------------------------------------------------------------------------------------
     @property
-    def NUMBER_ARITHM(self) -> Union[TYPE__NUMBER, NoReturn]:
+    def NUMBER_ARITHM(self) -> Union[TYPES.NUMBER, NoReturn]:
         if not self.NUMBER_ARITHM__ATTR:
             raise Exx__NumberArithm_NoName()
 
@@ -69,7 +66,7 @@ class ArithmApplyToAttr(CmpInst):
 
     # precision --------------------------------------
     @classmethod
-    def number__fix_precision(cls, source: Any, round_n: int | None = None) -> TYPE__NUMBER:
+    def number__fix_precision(cls, source: Any, round_n: int | None = None) -> TYPES.NUMBER:
         source = float(source)
         if round_n is None:
             round_n = cls.NUMBER_ARITHM__PRECISION
