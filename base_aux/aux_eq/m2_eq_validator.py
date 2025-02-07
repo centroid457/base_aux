@@ -39,7 +39,7 @@ class _EqValidator:
     REVERSE: bool = None
 
     OTHER_RAISED: bool = None
-    OTHER_RESULT: Any | Exception = None
+    OTHER_FINAL: Any | Exception = None
 
     def __init__(self, validator: TYPE__VALID_VALIDATOR, *v_args, reverse: bool = None, **v_kwargs) -> None:
         if validator is not None:
@@ -99,18 +99,18 @@ class _EqValidator:
         # ------
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         try:
-            self.OTHER_RESULT = CallableAux(other_draft).resolve_raise(*other_args, **other_kwargs)
+            self.OTHER_FINAL = CallableAux(other_draft).resolve_raise(*other_args, **other_kwargs)
             self.OTHER_RAISED = False
         except Exception as exx:
             self.OTHER_RAISED = True
-            self.OTHER_RESULT = exx
+            self.OTHER_FINAL = exx
 
-        result = CallableAux(self.VALIDATOR).resolve_bool(self.OTHER_RESULT, *self.V_ARGS, **self.V_KWARGS)
+        result = CallableAux(self.VALIDATOR).resolve_bool(self.OTHER_FINAL, *self.V_ARGS, **self.V_KWARGS)
         if self.REVERSE:
             result = not result
         return result
 
-    def VALIDATOR(self, other_result, *v_args, **v_kwargs) -> bool | NoReturn:
+    def VALIDATOR(self, other_final, *v_args, **v_kwargs) -> bool | NoReturn:
         return NotImplemented
 
 
@@ -135,66 +135,66 @@ class Validators:
     ----
     collect all validators (funcs) in one place
     """
-    def VariantsDirect(self, other_result: Any, *variants: Any) -> bool | NoReturn:
-        if other_result in variants:
+    def VariantsDirect(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        if other_final in variants:
             return True
         else:
             return False
 
-    def VariantsStrLow(self, other_result: Any, *variants: Any) -> bool | NoReturn:
-        other_result = str(other_result).lower()
+    def VariantsStrLow(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final).lower()
         variants = (str(var).lower() for var in variants)
 
-        if other_result in variants:
+        if other_final in variants:
             return True
         else:
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Startswith(self, other_result: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
+    def Startswith(self, other_final: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
         if ignorecase:
-            other_result = str(other_result).lower()
+            other_final = str(other_final).lower()
             variants = (str(var).lower() for var in variants)
         else:
-            other_result = str(other_result)
+            other_final = str(other_final)
             variants = (str(_) for _ in variants)
 
         for var in variants:
-            if other_result.startswith(var):
+            if other_final.startswith(var):
                 return True
 
         return False
 
-    def Endswith(self, other_result: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
+    def Endswith(self, other_final: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
         if ignorecase:
-            other_result = str(other_result).lower()
+            other_final = str(other_final).lower()
             variants = (str(var).lower() for var in variants)
         else:
-            other_result = str(other_result)
+            other_final = str(other_final)
             variants = (str(_) for _ in variants)
 
         for var in variants:
-            if other_result.endswith(var):
+            if other_final.endswith(var):
                 return True
 
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def TRUE(self, other_result: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
+    def TRUE(self, other_final: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
         True - if Other object called with no raise and no Exception in result
         """
         result = False
-        if self.OTHER_RAISED or TypeAux(other_result).check__exception():
+        if self.OTHER_RAISED or TypeAux(other_final).check__exception():
             return False
 
-        return bool(other_result)
+        return bool(other_final)
 
     # TODO: add FALSE????? what to do with exx and real false?
 
-    def Raise(self, other_result: Any, *variants: Any) -> bool:
+    def Raise(self, other_final: Any, *variants: Any) -> bool:
         """
         GOAL
         ----
@@ -203,7 +203,7 @@ class Validators:
         """
         return self.OTHER_RAISED
 
-    def NotRaise(self, other_result, *v_args, **v_kwargs) -> bool:
+    def NotRaise(self, other_final, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
@@ -212,53 +212,53 @@ class Validators:
         """
         return not self.OTHER_RAISED
 
-    def Exx(self, other_result, *v_args, **v_kwargs) -> bool:
+    def Exx(self, other_final, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
         True - if Other object is exact Exception or Exception()
         if raised - return False!!
         """
-        return not self.OTHER_RAISED and TypeAux(other_result).check__exception()
+        return not self.OTHER_RAISED and TypeAux(other_final).check__exception()
 
-    def ExxRaise(self, other_result, *v_args, **v_kwargs) -> bool:
+    def ExxRaise(self, other_final, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
         True - if Other object is exact Exception or Exception() or Raised
         """
-        return self.OTHER_RAISED or TypeAux(other_result).check__exception()
+        return self.OTHER_RAISED or TypeAux(other_final).check__exception()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_result).ltgt(low, high)
+    def LtGt_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_Obj(other_final).ltgt(low, high)
 
-    def LtGe_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_result).ltge(low, high)
+    def LtGe_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_Obj(other_final).ltge(low, high)
 
-    def LeGt_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_result).legt(low, high)
+    def LeGt_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_Obj(other_final).legt(low, high)
 
-    def LeGe_Obj(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_result).lege(low, high)
+    def LeGe_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_Obj(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_result).ltgt(low, high)
+    def LtGt_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_final).ltgt(low, high)
 
-    def LtGe_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_result).ltge(low, high)
+    def LtGe_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_final).ltge(low, high)
 
-    def LeGt_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_result).legt(low, high)
+    def LeGt_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_final).legt(low, high)
 
-    def LeGe_SingleNumParced(self, other_result, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_SingleNumParsed(other_result).lege(low, high)
+    def LeGe_SingleNumParced(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
+        return ValidAux_SingleNumParsed(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(
             self,
-            other_result,
+            other_final,
             *regexps: str,
             ignorecase: bool = True,
             bool_collect: BoolCumulate = None,
@@ -267,7 +267,7 @@ class Validators:
         bool_collect = bool_collect or self.BOOL_COLLECT
 
         for pattern in regexps:
-            result_i = match_link(pattern=str(pattern), string=str(other_result), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
+            result_i = match_link(pattern=str(pattern), string=str(other_final), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
 
             # CUMULATE --------
             if bool_collect == BoolCumulate.ALL_TRUE:

@@ -15,7 +15,7 @@ class EqValidChain(EqValid_Base):
             if eq_i != other_final:
                 return False
 
-            other_final = eq_i.OTHER_RESULT
+            other_final = eq_i.OTHER_FINAL
 
         return True
 
