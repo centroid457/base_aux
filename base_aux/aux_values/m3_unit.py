@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_values.m0_novalue import NoValue
 
 from base_aux.aux_attr.m2_annot4_cls_keys_as_values import AnnotClsKeysAsValues

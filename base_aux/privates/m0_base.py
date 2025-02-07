@@ -1,9 +1,7 @@
-from typing import *
-import pathlib
 import abc
 
 from base_aux.aux_attr.m2_annot1_aux import *
-from base_aux.aux_types.m0_types import *
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================

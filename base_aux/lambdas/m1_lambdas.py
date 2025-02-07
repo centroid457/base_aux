@@ -2,7 +2,7 @@ from typing import *
 import time
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
-from base_aux.base_enums.m0_enums import When2
+from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 from base_aux.base_inits.m2_source_kwargs import InitSourceKwArgs_Implicite
 

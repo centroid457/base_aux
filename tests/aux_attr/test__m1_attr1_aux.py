@@ -1,10 +1,8 @@
-import pytest
-
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_attr.m0_static import AttrsDump
 from base_aux.aux_attr.m1_attr1_aux import AttrAux
-from base_aux.aux_types.m0_primitives import *
-from base_aux.base_enums.m0_enums import *
+from base_aux.base_statics.m3_primitives import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================

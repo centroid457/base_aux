@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_inits.m1_source import *
-from base_aux.base_enums.m0_enums import FormIntExt
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================

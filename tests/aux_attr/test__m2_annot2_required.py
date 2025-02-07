@@ -1,4 +1,4 @@
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_attr.m2_annot2_required import *
 
 
@@ -14,6 +14,7 @@ def test__raise():
         assert True
     else:
         assert False
+
 
 def test__ok():
     class Victim(AnnotsRequired):

@@ -1,6 +1,4 @@
-from typing import *
-
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_callable.m1_callable_aux import *
 

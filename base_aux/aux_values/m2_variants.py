@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.aux_values.m0_novalue import NoValue
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_eq.m1_eq_aux import EqAux
 
 

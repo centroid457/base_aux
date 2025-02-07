@@ -7,10 +7,9 @@ import time
 from threading import Thread
 
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.aux_types.m0_primitives import LAMBDA_TRUE
+from base_aux.base_statics.m3_primitives import LAMBDA_TRUE
 from base_aux.base_sleep.m1_sleep import Sleep
 
 from base_aux.pyqt.m0_static import COLOR_TUPLE_RGB

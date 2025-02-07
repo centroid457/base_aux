@@ -1,11 +1,11 @@
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.base_inits.m1_source import *
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from .m1_attr1_aux import AttrAux
-from ..aux_types.m0_types import TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================
@@ -73,7 +73,7 @@ class AnnotsAux(InitSource):
         not_defined = self.get_not_defined()
         if not_defined:
             dict_type = self.dump__dict_types()
-            msg = f"[CRITICAL]{not_defined=} in {dict_type}"
+            msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================

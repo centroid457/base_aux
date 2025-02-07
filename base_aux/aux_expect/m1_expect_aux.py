@@ -1,14 +1,9 @@
-from typing import *
 import pytest
 from pytest import mark
 
-from base_aux.base_inits.m2_source_kwargs import *
-from base_aux.aux_types.m1_type_aux import TypeAux
-
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-from base_aux.aux_argskwargs.m1_argskwargs import TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
 
-from base_aux.aux_types.m0_types import TYPE__VALID_RESULT, TYPE__LAMBDA_CONSTRUCTOR
+from base_aux.base_statics.m1_types import TYPE__VALID_RESULT, TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.aux_eq.m1_eq_aux import *
 
 

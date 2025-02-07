@@ -1,18 +1,17 @@
 from typing import *
 
+from base_aux.base_statics.m2_exceptions import *
+
 
 # =====================================================================================================================
 # TODO: need decision about flags order!!! NEED HUMAN ALWAYS except hex!!!
-pass
-
-
-# =====================================================================================================================
-class Exx_BitsNoSize(Exception):
-    pass
-
-
-class Exx_BitsOutOfRange(Exception):
-    pass
+"""
+work with bits (bitfields/flags/bites...)
+designed for common work with bitfields-like aux_types
+field_bytearray
+flags/flags manipulate
+bits/bit user/bit work/bits manipulate
+"""
 
 
 # =====================================================================================================================
@@ -27,7 +26,7 @@ class Bitfield:
 
     def __init__(self, field_size: int):
         if field_size < 1:
-            raise Exx_BitsNoSize
+            raise Exx__Incompatible(f"{field_size=}")
 
         self.field_size = field_size
         self._field_bytearray = bytearray((field_size + 7) // 8)
@@ -63,7 +62,7 @@ class Bitfield:
 
     def __getitem__(self, idx: int) -> Union[int, NoReturn]:
         if idx < -self.field_size or idx > self.field_size - 1:
-            raise Exx_BitsOutOfRange
+            raise Exx__OutOfRange
         return self._field_bytearray[idx // 8] >> (idx % 8) & 1
 
     def __setitem__(self, idx: int, value: Union[int, bool, Any]) -> Optional[NoReturn]:

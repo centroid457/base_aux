@@ -1,7 +1,5 @@
-from typing import *
-
 from base_aux.aux_callable.m1_callable_aux import *
-from base_aux.aux_types.m0_types import *
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================

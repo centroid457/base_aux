@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_types.m0_primitives import *
+from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_eq.m2_eq_valid3_derivatives import *
 

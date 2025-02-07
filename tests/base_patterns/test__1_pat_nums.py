@@ -1,11 +1,9 @@
-from typing import *
 import pytest
 import re
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_types.m0_primitives import *
 
-from base_aux.base_patterns.m1_pat_nums import *
+from base_aux.base_statics.m5_patterns1_nums import *
 
 
 # =====================================================================================================================

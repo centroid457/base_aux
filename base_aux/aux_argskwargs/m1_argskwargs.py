@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_types.m0_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================

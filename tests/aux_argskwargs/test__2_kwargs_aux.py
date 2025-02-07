@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_types.m0_primitives import *
+from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 

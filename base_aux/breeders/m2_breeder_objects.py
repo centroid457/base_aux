@@ -1,7 +1,7 @@
 from typing import *
 from enum import Enum, auto
 
-from base_aux.base_exceptions.m1_exceptions import *
+from base_aux.base_statics.m2_exceptions import *
 
 
 # =====================================================================================================================

@@ -21,7 +21,7 @@ from gui.pyqt_import_all_by_star import *
 # from stands.stand import Stand_Singleton
 # from results.results_testplan import TestplanResults_Singleton
 # =====================================================================================================================
-
+import pytest
 import re
 from utilities.processor_file import File
 

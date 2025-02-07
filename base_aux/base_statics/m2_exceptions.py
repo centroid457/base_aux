@@ -113,16 +113,38 @@ _std = [
 
 
 # =====================================================================================================================
-class Exx__AnnotNotDefined(Exception):
+class Exx__BoolBase(Exception):
+    """
+    just a solution to get correct bool() if get Exx as value
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    classes.VALID if
+    """
+    def __bool__(self):
+        return False
+
+
+# =====================================================================================================================
+class Exx__Incompatible(Exx__BoolBase):
+    pass
+
+
+class Exx__OutOfRange(Exx__BoolBase):
+    pass
+
+
+# =====================================================================================================================
+class Exx__AnnotNotDefined(Exx__BoolBase):
     """Exception in case of not defined attribute in instance
     """
 
 
-class Exx__NumberArithm_NoName(Exception):
+class Exx__NumberArithm_NoName(Exx__BoolBase):
     pass
 
 
-class Exx__GetattrPrefix(Exception):
+class Exx__GetattrPrefix(Exx__BoolBase):
     pass
 
 
@@ -130,50 +152,50 @@ class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
     pass
 
 
-class Exx__ValueNotParsed(Exception):
+class Exx__ValueNotParsed(Exx__BoolBase):
     pass
 
 
-class Exx__ValueUnitsIncompatible(Exception):
+class Exx__ValueUnitsIncompatible(Exx__BoolBase):
     pass
 
 
-class Exx__IndexOverlayed(Exception):
+class Exx__IndexOverlayed(Exx__BoolBase):
     pass
 
 
-class Exx__IndexNotSet(Exception):
+class Exx__IndexNotSet(Exx__BoolBase):
     pass
 
 
-class Exx__ItemNotExists(Exception):
+class Exx__ItemNotExists(Exx__BoolBase):
     """
     not exists INDEX (out of range) or NAME not in defined values
     """
     pass
 
 
-class Exx__StartOuterNONE_UsedInStackByRecreation(Exception):
+class Exx__StartOuterNONE_UsedInStackByRecreation(Exx__BoolBase):
     """
     in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
     """
     pass
 
 
-class Exx__BreederObjectList_GroupsNotGenerated(Exception):
+class Exx__BreederObjectList_GroupsNotGenerated(Exx__BoolBase):
     pass
 
 
-class Exx__BreederObjectList_GroupNotExists(Exception):
+class Exx__BreederObjectList_GroupNotExists(Exx__BoolBase):
     pass
 
 
-class Exx__BreederObjectList_ObjCantAccessIndex(Exception):
+class Exx__BreederObjectList_ObjCantAccessIndex(Exx__BoolBase):
     pass
 
 
 # =====================================================================================================================
-class Exx__Valid(Exception):
+class Exx__Valid(Exx__BoolBase):
     pass
 
 
@@ -182,9 +204,20 @@ class Exx__ValueNotValidated(Exx__Valid):
 
 
 # =====================================================================================================================
-class Exx__SameKeys(Exception):
+class Exx__SameKeys(Exx__BoolBase):
     """Same keys NOT allowed!
     """
+
+
+# =====================================================================================================================
+if __name__ == '__main__':
+    # REASON --------------
+    assert bool(Exception(0)) is True
+    assert bool(Exception(False)) is True
+
+    # SOLUTION --------------
+    assert bool(Exx__BoolBase(0)) is False
+    assert bool(Exx__BoolBase(False)) is False
 
 
 # =====================================================================================================================

@@ -1,8 +1,7 @@
-from typing import *
 import pytest
 
 from base_aux.aux_types.m1_type_aux import *
-from base_aux.aux_types.m0_primitives import *
+from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 

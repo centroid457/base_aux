@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_types.m0_primitives import *
+from base_aux.base_statics.m3_primitives import *
 
 from base_aux.aux_eq.m2_eq_valid1_base import _EqValidator
 from base_aux.aux_eq.m2_eq_valid3_derivatives import *

@@ -1,9 +1,8 @@
 import time
 
-from base_aux.aux_values.m0_novalue import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-from base_aux.aux_types.m0_types import *
+from base_aux.base_statics.m1_types import *
 
 from base_aux.aux_eq.m1_eq_aux import EqAux
 

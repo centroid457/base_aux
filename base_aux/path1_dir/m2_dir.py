@@ -1,13 +1,9 @@
-from typing import *
-import pathlib
 import datetime
-import shutil
 
-from base_aux.aux_types.m0_types import *
-from base_aux.aux_types.m2_info import *
+from base_aux.base_statics.m1_types import *
 from base_aux.path1_dir.m1_dirpath import Resolve_DirPath
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.base_enums.m0_enums import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================

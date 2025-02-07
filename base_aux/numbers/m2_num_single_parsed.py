@@ -1,10 +1,6 @@
-from typing import *
-
-from base_aux.base_exceptions.m1_exceptions import *
-from base_aux.aux_types.m0_types import *
+from base_aux.base_statics.m1_types import *
 
 from base_aux.base_resolver.m1_resolver import *
-from base_aux.base_inits.m1_source import *
 
 from base_aux.aux_text.m1_text_aux import *
 

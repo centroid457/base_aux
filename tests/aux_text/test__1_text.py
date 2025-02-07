@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_text.m1_text_aux import TextAux
-from base_aux.base_enums.m0_enums import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
