@@ -199,7 +199,7 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
         ("a11.22a", float, (True, False, True, )),
     ]
 )
-def test__NumParsedSingle(other, expect, _EXPECTED):
+def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
     ExpectAux(EqValid_NumParsedSingle(expect) == other).check_assert(_EXPECTED[0])
 
     ExpectAux(EqValid_NumParsedSingle_Int() == other).check_assert(_EXPECTED[1])
