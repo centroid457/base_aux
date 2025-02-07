@@ -9,6 +9,15 @@ from base_aux.base_inits.m1_source import *
 class DateTimeAux(InitSource):
     SOURCE: datetime.datetime = datetime.datetime.now
 
+    def init_post(self) -> None | NoReturn:
+        # FIXME: finish!!! int/float/td/str??? parser???
+        if isinstance(self.SOURCE, datetime.datetime):
+            return
+        elif False:
+            pass
+        else:
+            pass
+
     def get_str(self, add_ms: bool = None, pattern: str = "%Y%m%d_%H%M%S") -> str:
         """
         GOAL
@@ -50,6 +59,13 @@ class DateTimeAux(InitSource):
         """
         result = self.get_str(pattern=pattern, add_ms=add_ms)
         return result
+
+    # ---------------------------------------------------------------------------------------------------------------------
+    def __str__(self):
+        return self.get_str()
+
+    def __repr__(self):
+        return str(self)
 
 
 # =====================================================================================================================
