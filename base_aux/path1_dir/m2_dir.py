@@ -24,7 +24,7 @@ class Dir:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dirtree_create(self) -> bool:
+    def create_dirtree(self) -> bool:
         try:
             self.DIRPATH.mkdir(parents=True, exist_ok=True)
         except:
@@ -111,7 +111,7 @@ class Dir:
         yield from self.iter(*wmask, fsobj=PathType.DIR, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def delete_blank(self) -> None:
+    def delete_blank(self, raise_fails: bool = None) -> None:
         """
         GOAL
         ----
@@ -119,10 +119,11 @@ class Dir:
         """
         try:
             self.DIRPATH.rmdir()
-        except:  # TODO: separate AccessPermition/FilesExists
-            pass
+        except Exception as exx:  # TODO: separate AccessPermition/FilesExists
+            if raise_fails:
+                raise exx
 
-    def delete_blank_wm(
+    def delete_blank_items_wmask(
             self,
             *wmask: str,
             nested: bool = None,
@@ -136,20 +137,29 @@ class Dir:
         for dirpath in self.iter_dirs(*wmask, nested=nested):
             Dir(dirpath).delete_blank()
 
-    def delete(self, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
+    def delete_dirtree(self, raise_fails: bool = None) -> bool | NoReturn:
+        return self.delete_items(self.DIRPATH, raise_fails=raise_fails)
+
+    def delete_items(self, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
+        result = True
         for path in paths:
 
             if path.is_file():
                 try:
                     path.unlink()
                 except Exception as exx:
+                    result = False
                     if raise_fails:
                         raise exx
 
-            if path.is_dir():
-                self.delete(*Dir(path).iter_files(), raise_fails=raise_fails)
-                self.delete(*Dir(path).iter_dirs(), raise_fails=raise_fails)
-                Dir(path).delete_blank()
+            elif path.is_dir():
+                result &= self.delete_items(*Dir(path).iter_files(), raise_fails=raise_fails)
+                result &= self.delete_items(*Dir(path).iter_dirs(), raise_fails=raise_fails)
+                result &= Dir(path).delete_blank(raise_fails=raise_fails)
+
+            # TODO: if link
+
+        return result
 
 
 # =====================================================================================================================
