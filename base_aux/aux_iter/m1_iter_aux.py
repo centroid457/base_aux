@@ -3,7 +3,7 @@ from base_aux.base_inits.m1_source import *
 
 
 # =====================================================================================================================
-TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Iterable!!!
+TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Any! as attribute access
 
 TYPE__ITER_PATH_KEY = Union[Any, int]
 TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
