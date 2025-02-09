@@ -1,11 +1,12 @@
 import pytest
 
 from base_aux.aux_attr.m2_annot1_aux import *
-from base_aux.aux_attr.m2_annot3_iter_values import *
+from base_aux.aux_attr.m2_annot3_nest_iter_values import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim1(AnnotsBase):
+class Victim1(NestGAI_AttrAnycase):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -18,7 +19,7 @@ class Victim2(Victim1):
 
 
 # =====================================================================================================================
-class VictimIterValues(Victim2, AnnotsValuesIter):
+class VictimIterValues(Victim2, NestIter_AnnotValues):
     pass
 
 

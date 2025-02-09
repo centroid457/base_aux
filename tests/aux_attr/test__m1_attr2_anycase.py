@@ -1,11 +1,11 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_attr.m1_attr2_anycase import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim(AttrAnycaseGSAI):
+class Victim(NestGSAI_AttrAnycase):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"

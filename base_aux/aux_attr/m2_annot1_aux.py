@@ -6,6 +6,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from .m1_attr1_aux import AttrAux
 from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
@@ -130,7 +131,12 @@ class AnnotsAux(InitSource):
         ----
         iter only important user classes from mro
         """
-        yield from TypeAux(self.SOURCE).iter_mro_user(AnnotsBase)
+        yield from TypeAux(self.SOURCE).iter_mro_user(
+            NestGAI_AttrAnycase,
+            NestGSAI_AttrAnycase,
+            NestGA_AttrAnycase, NestGI_AttrAnycase,
+            NestSA_AttrAnycase, NestSI_AttrAnycase,
+        )
 
     def iter_names(self) -> Iterable[str]:
         """
@@ -222,16 +228,6 @@ class AnnotsAux(InitSource):
             annots = cls.__annotations__
             if name not in annots:
                 cls.__annotations__.update({name: Any})
-
-
-# =====================================================================================================================
-class AnnotsBase:
-    # -----------------------------------------------------------------------------------------------------------------
-    def __getattr__(self, name) -> Any | NoReturn:
-        return AttrAux(self).anycase__getattr(name)
-
-    def __getitem__(self, name) -> Any | NoReturn:
-        return AttrAux(self).anycase__getattr(name)
 
 
 # =====================================================================================================================

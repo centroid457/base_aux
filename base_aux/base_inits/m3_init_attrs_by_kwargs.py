@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_attr.m1_attr2_anycase import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
@@ -48,7 +48,7 @@ class AttrsInitByKwArgs(AttrsInitByKwArgs_Base):
 
 
 @final
-class AttrsInitByKwArgsIc(AttrsInitByKwArgs_Base, AttrAnycaseGSAI):
+class AttrsInitByKwArgsIc(AttrsInitByKwArgs_Base, NestGSAI_AttrAnycase):
     """
     ignorecase for attrs
     """

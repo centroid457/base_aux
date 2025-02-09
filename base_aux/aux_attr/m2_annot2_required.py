@@ -1,9 +1,10 @@
 from typing import *
-from .m2_annot1_aux import AnnotsBase, AnnotsAux
+from .m2_annot1_aux import AnnotsAux
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class AnnotsRequired(AnnotsBase):
+class AnnotsRequired(NestGAI_AttrAnycase):
     """Check all annotated and not defined attributes in instance have values!
     else raise!
 

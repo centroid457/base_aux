@@ -2,6 +2,7 @@ import abc
 
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.base_statics.m1_types import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
@@ -9,7 +10,7 @@ from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
-class PrivateBase(AnnotsBase, abc.ABC):
+class PrivateBase(NestGAI_AttrAnycase, abc.ABC):
     """Base class to get values from sources.
 
     :ivar SECTION: first level name in source, for ini - root section, for json - rootKey, for env - not used

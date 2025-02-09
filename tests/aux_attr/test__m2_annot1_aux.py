@@ -2,11 +2,12 @@ from typing import *
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_attr.m2_annot1_aux import AnnotsBase, AnnotsAux
+from base_aux.aux_attr.m2_annot1_aux import AnnotsAux
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim1(AnnotsBase):
+class Victim1(NestGAI_AttrAnycase):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -29,12 +30,12 @@ victim2 = Victim2()
 
 
 # =====================================================================================================================
-class VictimDirect_Ok(AnnotsBase):
+class VictimDirect_Ok(NestGAI_AttrAnycase):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class VictimDirect_Fail(AnnotsBase):
+class VictimDirect_Fail(NestGAI_AttrAnycase):
     ATTR1: int
     ATTR2: int = 2
 
@@ -53,12 +54,12 @@ class VictimNested_OkCHild(VictimDirect_Fail):
     ATTR1: int = 1
 
 # -----------------------------------------------
-class DictDirect_Ok(dict, AnnotsBase):
+class DictDirect_Ok(dict, NestGAI_AttrAnycase):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class DictDirect_Fail(dict, AnnotsBase):
+class DictDirect_Fail(dict, NestGAI_AttrAnycase):
     ATTR1: int
 
 
@@ -209,7 +210,7 @@ class Test__Cmp:
 
 # =====================================================================================================================
 def test__all_defined2():
-    class Victim11(AnnotsBase):
+    class Victim11(NestGAI_AttrAnycase):
         ATTR1: int = 1
         ATTR2: int = 2
         ATTR01 = 11

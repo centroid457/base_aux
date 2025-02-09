@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from base_aux.aux_attr.m2_annot3_iter_values import AnnotsValuesIter
+from base_aux.aux_attr.m2_annot3_nest_iter_values import NestIter_AnnotValues
 
 
 # =====================================================================================================================
@@ -61,7 +61,7 @@ class HlStyle(NamedTuple):
 
 
 # =====================================================================================================================
-class HlStyles(AnnotsValuesIter):
+class HlStyles(NestIter_AnnotValues):
     """
     NOTE
     ----

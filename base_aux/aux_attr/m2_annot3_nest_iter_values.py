@@ -1,8 +1,9 @@
-from .m2_annot1_aux import AnnotsBase, AnnotsAux
+from .m2_annot1_aux import AnnotsAux
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class AnnotsValuesIter(AnnotsBase):
+class NestIter_AnnotValues(NestGAI_AttrAnycase):
     """
     GOAL
     ----
@@ -13,7 +14,7 @@ class AnnotsValuesIter(AnnotsBase):
         class Item:
             pass
 
-        class Example(AnnotsValuesIter):
+        class Example(NestIter_AnnotValues):
             def meth(self):
                 pass
 
