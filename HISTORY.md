@@ -199,7 +199,7 @@
 
 0.0.5 (2024/11/05 10:33:43)
 ------------------------------
-- [classes] add DictCaseinsense+DictDots  
+- [classes] add DictIgnorecase+DictDots  
 - [stock] move here  
 - [all] fix almost, so tests works (need fix privates for alerts)  
 
