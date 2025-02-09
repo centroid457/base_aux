@@ -6,7 +6,7 @@ from base_aux.base_resolver.m1_resolver import *
 
 
 # =====================================================================================================================
-class ValueEqValid(CallResolve):
+class ValueEqValid(NestCall_Resolve):
     """
     GOAL
     ----

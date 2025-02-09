@@ -6,7 +6,7 @@ from base_aux.aux_text.m1_text_aux import *
 
 
 # =====================================================================================================================
-class _NumParsedSingle(InitSource, CallResolve):
+class _NumParsedSingle(Init_Source, NestCall_Resolve):
     SOURCE: TYPES.NUMBER = None
 
     _numtype: NumType = NumType.BOTH

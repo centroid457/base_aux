@@ -1,10 +1,10 @@
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m2_annot2_required import *
+from base_aux.aux_attr.m2_annot2_nest_required import *
 
 
 # =====================================================================================================================
 def test__raise():
-    class Victim(AnnotsRequired):
+    class Victim(NestInit_AnnotsRequired):
         ATTR1: int
         ATTR2: int = 2
 
@@ -17,7 +17,7 @@ def test__raise():
 
 
 def test__ok():
-    class Victim(AnnotsRequired):
+    class Victim(NestInit_AnnotsRequired):
         ATTR1: int = 1
         ATTR2: int = 2
 
@@ -32,7 +32,7 @@ def test__ok():
 
 def test__NT():
     try:
-        class Victim(AnnotsRequired, NamedTuple):
+        class Victim(NestInit_AnnotsRequired, NamedTuple):
             ATTR1: int
             ATTR2: int = 2
         assert False
@@ -48,7 +48,7 @@ def test__NT():
 #     # -----------------------------------------------------------------------------------------------------------------
 #     def test__dataclass(self):
 #         @dataclass
-#         class Cls(AnnotsRequired):
+#         class Cls(NestInit_AnnotsRequired):
 #             ATTR1: int
 #             ATTR2: int = 2
 #
@@ -67,8 +67,8 @@ def test__NT():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #
 #         # 01------------------
 #         class Cls:
@@ -81,9 +81,9 @@ def test__NT():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
 #         try:
-#             assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#             assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #         except Exx__AnnotNotDefined:
 #             pass   # its GOOD!!!
 #         else:
@@ -101,8 +101,8 @@ def test__NT():
 #             ATTR3: int = 33
 #
 #         obj = Cls2(1)
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
 #
 #     def test__PROPERTY_w_ITER_w_VALUES(self):
 #         # 1---------------------------------------------------------
@@ -118,9 +118,9 @@ def test__NT():
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#         assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert list(NestInit_AnnotsRequired().annots_get_values(obj)) == [1, ]
 #
 #         # 2---------------------------------------------------------
 #         # this will RAISE!
@@ -133,16 +133,16 @@ def test__NT():
 #                 return sum(self)
 #
 #             def __iter__(self):
-#                 yield from AnnotsRequired().annots_get_values(self)
+#                 yield from NestInit_AnnotsRequired().annots_get_values(self)
 #
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
 #
 #         try:
-#             assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#             # assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
+#             assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#             # assert list(NestInit_AnnotsRequired().annots_get_values(obj)) == [1, ]
 #         except RecursionError:
 #             pass
 #         else:
@@ -158,14 +158,14 @@ def test__NT():
 #                 return sum(self)
 #
 #             def __iter__(self):
-#                 yield from AnnotsRequired().annots_get_values(self)
+#                 yield from NestInit_AnnotsRequired().annots_get_values(self)
 #
 #         obj = Cls()
 #         obj.ATTR1 = 1
 #
-#         assert AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
-#         assert AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#         assert list(AnnotsRequired().annots_get_values(obj)) == [1, ]
+#         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
+#         assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
+#         assert list(NestInit_AnnotsRequired().annots_get_values(obj)) == [1, ]
 
 
 # =====================================================================================================================

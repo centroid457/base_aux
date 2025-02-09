@@ -9,7 +9,7 @@ from base_aux.aux_eq.m1_eq_aux import *
 
 # =====================================================================================================================
 @final
-class ExpectAux(InitSourceKwArgs_Explicite):
+class ExpectAux(Init_SourceKwArgs_Explicite):
     """
     SPECIALLY CREATED FOR
     ---------------------

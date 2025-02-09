@@ -54,7 +54,7 @@ def check_lack_words() -> None:
 
 # =====================================================================================================================
 @final
-class CharMask(AnnotsInitByTypes_NotExisted):
+class CharMask(Init_AnnotsByTypes_NotExisted):
     # HIDDEN: str
     # ATTEMPTS: list[str]
     POS_DET: list[str]
@@ -84,7 +84,7 @@ class CharMask(AnnotsInitByTypes_NotExisted):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class FilterMask(InitSourceKwArgs_Implicite):
+class FilterMask(Init_SourceKwArgs_Implicite):
     SOURCE: str
     ARGS: tuple[str]    # ATTEMPTS
 

@@ -4,7 +4,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class AnnotsRequired(NestGAI_AttrAnycase):
+class NestInit_AnnotsRequired(NestGAI_AttrAnycase):
     """Check all annotated and not defined attributes in instance have values!
     else raise!
 

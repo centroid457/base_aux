@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.aux_types.m2_info import ObjectInfo
 
-from base_aux.aux_attr.m2_annot2_required import *
+from base_aux.aux_attr.m2_annot2_nest_required import *
 from base_aux.aux_iter.m1_iter_aux import IterAux
 
 
@@ -215,22 +215,22 @@ class DictDots(DictCaseinsense):
 
 
 # =====================================================================================================================
-class DictDotsAnnotRequired(DictDots, AnnotsRequired):
+class DictDotsAnnotRequired(DictDots, NestInit_AnnotsRequired):
     """
-    its a derivative for DictDots with applying AnnotsRequired
+    its a derivative for DictDots with applying NestInit_AnnotsRequired
 
-    WHY NOT 1=just simple nesting AnnotsRequired?
+    WHY NOT 1=just simple nesting NestInit_AnnotsRequired?
     --------------------------------------------
     in this case
     first we need apply DICT inition
-    and only secondary we could check any by AnnotsRequired.
+    and only secondary we could check any by NestInit_AnnotsRequired.
     BUT DICT is a stopping/last class!!!
 
     so we cant just call init with super()
     """
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
-        # super(AnnotsRequired, self).__init__()
+        # super(NestInit_AnnotsRequired, self).__init__()
         # annot_types = self.annot__get_nested__dict_types()
         # print(f"{annot_types=}")
         self.check_all_defined_or_raise()

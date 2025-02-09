@@ -7,7 +7,7 @@ from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================
-class Victim1(AnnotsInitByTypes_All):
+class Victim1(Init_AnnotsByTypes_All):
     NONE: None
     BOOL: bool
     INT: int
@@ -57,7 +57,7 @@ def test__all(args, _EXPECTED):
 
 
 # =====================================================================================================================
-class Victim2(AnnotsInitByTypes_NotExisted):
+class Victim2(Init_AnnotsByTypes_NotExisted):
     NOTEXIST: int
     EXIST: int = 100
 

@@ -4,7 +4,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class AttrsInitByKwArgs_Base:
+class Init_AttrsByKwArgs_Base:
     """
     GOAL
     ----
@@ -41,14 +41,14 @@ class AttrsInitByKwArgs_Base:
 
 # =====================================================================================================================
 @final
-class AttrsInitByKwArgs(AttrsInitByKwArgs_Base):
+class Init_AttrsByKwArgs(Init_AttrsByKwArgs_Base):
     """
     exact case for attrs
     """
 
 
 @final
-class AttrsInitByKwArgsIc(AttrsInitByKwArgs_Base, NestGSAI_AttrAnycase):
+class Init_AttrsByKwArgsIc(Init_AttrsByKwArgs_Base, NestGSAI_AttrAnycase):
     """
     ignorecase for attrs
     """

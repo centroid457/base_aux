@@ -5,7 +5,7 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 @final
-class CallableAux(InitSource):
+class CallableAux(Init_Source):
     """
     """
     PROCESS: Process = Process.NONE

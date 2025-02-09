@@ -6,7 +6,7 @@ from base_aux.base_inits.m1_source import *
 
 # =====================================================================================================================
 @final
-class DateTimeAux(InitSource):
+class DateTimeAux(Init_Source):
     SOURCE: datetime.datetime = datetime.datetime.now
 
     def init_post(self) -> None | NoReturn:

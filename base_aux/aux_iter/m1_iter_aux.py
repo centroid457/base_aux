@@ -11,7 +11,7 @@ TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
 
 # =====================================================================================================================
 @final
-class IterAux(InitSource):
+class IterAux(Init_Source):
     """
     collect universal funcs which work with collections
 

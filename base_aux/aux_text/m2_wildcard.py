@@ -7,7 +7,7 @@ from base_aux.base_inits.m1_source import *
 
 # =====================================================================================================================
 @final
-class WildCardMask(InitSource):
+class WildCardMask(Init_Source):
     """
     GOAL
     ----

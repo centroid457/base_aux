@@ -3,11 +3,11 @@ from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 
 
 # =====================================================================================================================
-class InitSourceKwArgs_Implicite(InitSource):
+class Init_SourceKwArgs_Implicite(Init_Source):
     """
     NOTE
     ----
-    InitSourceKwArgs_Explicite is more useful!
+    Init_SourceKwArgs_Explicite is more useful!
 
     GOAL
     ----
@@ -23,9 +23,9 @@ class InitSourceKwArgs_Implicite(InitSource):
 
 
 # =====================================================================================================================
-class InitSourceKwArgs_Explicite(InitSource):
+class Init_SourceKwArgs_Explicite(Init_Source):
     """
-    MORE USEFUL THEN InitSourceKwArgs_Implicite
+    MORE USEFUL THEN Init_SourceKwArgs_Implicite
 
     GOAL
     ----

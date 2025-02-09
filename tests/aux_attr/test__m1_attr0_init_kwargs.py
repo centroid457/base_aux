@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_inits.m3_init_attrs_by_kwargs import AttrsInitByKwArgs
+from base_aux.base_inits.m3_init_attrs_by_kwargs import Init_AttrsByKwArgs
 
 
 # =====================================================================================================================
@@ -15,7 +15,7 @@ from base_aux.base_inits.m3_init_attrs_by_kwargs import AttrsInitByKwArgs
 )
 def test__get_name(kwargs, init_ok):
     try:
-        victim = AttrsInitByKwArgs(**kwargs)
+        victim = Init_AttrsByKwArgs(**kwargs)
     except:
         assert not init_ok
         return

@@ -7,7 +7,7 @@ from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
 
 # =====================================================================================================================
 @final
-class ArgsKwargsAux(InitSource):
+class ArgsKwargsAux(Init_Source):
     SOURCE: TYPE__ARGS_DRAFT | TYPE__KWARGS_DRAFT
 
     def resolve_args(self) -> TYPE__ARGS_FINAL:     # REPLACING for args__ensure_tuple

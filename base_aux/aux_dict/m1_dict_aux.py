@@ -6,7 +6,7 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 @final
-class DictAux(InitSource):
+class DictAux(Init_Source):
     """
     NOTE
     ----

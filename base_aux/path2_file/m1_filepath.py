@@ -6,7 +6,7 @@ from base_aux.path1_dir.m1_dirpath import Resolve_DirPath
 
 # =====================================================================================================================
 @final
-class Resolve_FilePath(CallResolve):
+class Resolve_FilePath(NestCall_Resolve):
     """
     GOAL
     ----

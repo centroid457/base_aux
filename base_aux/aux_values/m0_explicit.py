@@ -8,7 +8,7 @@ from base_aux.base_inits.m1_source import *
 # FIXME: deprecate???
 
 @final
-class Explicit(InitSource):
+class Explicit(Init_Source):
     """
     GOAL
     ----

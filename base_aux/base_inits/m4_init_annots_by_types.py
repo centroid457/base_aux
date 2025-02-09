@@ -4,7 +4,7 @@ from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class AnnotsInitByTypes_All:
+class Init_AnnotsByTypes_All:
     """
     GOAL
     ----
@@ -22,11 +22,11 @@ class AnnotsInitByTypes_All:
 
 
 # =====================================================================================================================
-class AnnotsInitByTypes_NotExisted:
+class Init_AnnotsByTypes_NotExisted:
     """
     GOAL
     ----
-    same as AnnotsInitByTypes_All but for only not existed values
+    same as Init_AnnotsByTypes_All but for only not existed values
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:

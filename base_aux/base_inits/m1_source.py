@@ -3,7 +3,7 @@ from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
-class InitSource:
+class Init_Source:
     """
     GOAL
     ----
@@ -21,7 +21,7 @@ class InitSource:
 
     BEST USAGE
     ----------
-        class ClsAux(InitSource):
+        class ClsAux(Init_Source):
             SOURCE = MyClass
             SOURCE = Lambda(dict)
             SOURCE = dict

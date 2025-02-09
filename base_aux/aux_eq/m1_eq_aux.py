@@ -7,7 +7,7 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 # =====================================================================================================================
 @final
-class EqAux(InitSource):
+class EqAux(Init_Source):
     # FIXME: decide about callables/KwAgs by now NOT USE IT! just direct cmp eq!
     # CALLABLES: bool = None   # NOTE: DONT use callables here in Eq!!!
     # NOTE: dont use Args/Kwargs here in EqAux! - no callables! just final objects!

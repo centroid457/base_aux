@@ -10,7 +10,7 @@ from base_aux.base_statics.m5_patterns1_nums import *
 
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork! or FIXME: nest File here!????
-class TextAux(InitSource):
+class TextAux(Init_Source):
     SOURCE: str
 
     def init_post(self) -> None | NoReturn:

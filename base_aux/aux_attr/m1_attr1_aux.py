@@ -11,7 +11,7 @@ from base_aux.aux_attr.m0_static import AttrsDump
 
 # =====================================================================================================================
 @final
-class AttrAux(InitSource):
+class AttrAux(Init_Source):
     """
     NOTICE
     ------

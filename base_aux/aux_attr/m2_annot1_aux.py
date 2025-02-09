@@ -11,7 +11,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 # =====================================================================================================================
 @final
-class AnnotsAux(InitSource):
+class AnnotsAux(Init_Source):
     """
     GOAL
     ----

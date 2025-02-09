@@ -4,7 +4,7 @@ from base_aux.aux_text.m1_text_aux import *
 
 # =====================================================================================================================
 # @final
-class ValidAux(InitSource):
+class ValidAux(Init_Source):
     """
     Try to keep all validating funcs in separated place
     """
