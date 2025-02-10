@@ -6,7 +6,7 @@ from base_aux.path2_file.m3_filetext import *
 
 # =====================================================================================================================
 text_load = "text_load"
-filepath = Resolve_FilePath(nameext="victim.txt").resolve()
+filepath = Resolve_FilePath(namefull="victim.txt").resolve()
 
 
 # =====================================================================================================================

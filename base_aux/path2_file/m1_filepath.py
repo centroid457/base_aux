@@ -22,17 +22,18 @@ class Resolve_FilePath(NestCall_Resolve):
     EXTLAST: str = ""
     DIRPATH: TYPE__PATH_FINAL = None
 
+    name_PREFIX: str = ""
+    name_SUFFIX: str = ""
+
     DOT: bool = None
 
     # PROPERTIES ------------------------------------------------------------------------------------------------------
-    NAMEEXT: str
+    NAMEFINAL: str
     FILEPATH: TYPE__PATH_FINAL
 
     @property
-    def NAMEEXT(self) -> str:
-        result = ""
-        if self.NAME:
-            result += f"{self.NAME}"
+    def NAMEFULL(self) -> str:
+        result = f"{self.name_PREFIX}{self.NAME}{self.name_SUFFIX}"
         if self.DOT:
             result += f"."
         if self.EXTLAST:
@@ -41,7 +42,7 @@ class Resolve_FilePath(NestCall_Resolve):
 
     @property
     def FILEPATH(self) -> TYPE__PATH_FINAL:
-        return self.DIRPATH.joinpath(self.NAMEEXT)
+        return self.DIRPATH.joinpath(self.NAMEFULL)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
@@ -49,8 +50,10 @@ class Resolve_FilePath(NestCall_Resolve):
             # parts -----
             name: str = None,                   # level1
             extlast: str = None,                # level1
+            prefix: str = None,                 # level1
+            suffix: str = None,                 # level1
 
-            nameext: str = None,                # level2
+            namefull: str = None,               # level2
             dirpath: TYPE__PATH_DRAFT = None,   # level2
 
             # full -----
@@ -69,9 +72,13 @@ class Resolve_FilePath(NestCall_Resolve):
         """
         self.apply_filepath(filepath)
         self.apply_dirpath(dirpath or self.DIRPATH)
-        self.apply_nameext(nameext)
+        self.apply_nameext(namefull)
 
         # most important! overwrite previous set!
+        if prefix is not None:
+            self.name_PREFIX = prefix
+        if suffix is not None:
+            self.name_SUFFIX = suffix
         if name is not None:
             self.NAME = name
         if extlast is not None:
