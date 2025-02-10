@@ -10,14 +10,11 @@ from base_aux.base_statics.m5_patterns1_nums import *
 
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork! or FIXME: nest FileAux here!????
-class TextAux(Init_Source):
-    SOURCE: str
+class TextAux:
+    TEXT: str
 
-    def init_post(self) -> None | NoReturn:
-        if self.SOURCE is NoValue:
-            self.SOURCE = ""
-        else:
-            self.SOURCE = str(self.SOURCE)
+    def __init__(self, text: Any = "", *args, **kwargs) -> None | NoReturn:
+        self.TEXT = str(text)
 
     # =================================================================================================================
     def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = None, *, as_word: bool = None) -> str:
@@ -29,8 +26,8 @@ class TextAux(Init_Source):
         if as_word:
             pat = r"\b" + pat + r"\b"
 
-        self.SOURCE = re.sub(pat, new, self.SOURCE, flags=flags)
-        return self.SOURCE
+        self.TEXT = re.sub(pat, new, self.TEXT, flags=flags)
+        return self.TEXT
 
     def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], as_word: bool = None) -> str:
         """
@@ -46,7 +43,7 @@ class TextAux(Init_Source):
         for rule in rules:
             self.sub__regexp(*rule, as_word=as_word)
 
-        return self.SOURCE
+        return self.TEXT
 
     def sub__word(self, *rule) -> str:
         """
@@ -87,7 +84,7 @@ class TextAux(Init_Source):
         self.sub__regexp(r"^\s*\n", "", re.MULTILINE)
         self.sub__regexp(r"\n\s*$", "", re.MULTILINE)
         self.sub__regexp(r"^\s*$", "", re.MULTILINE)  # not enough!
-        return self.SOURCE
+        return self.TEXT
 
     def clear__cmts(self) -> str:
         """
@@ -96,13 +93,13 @@ class TextAux(Init_Source):
         if oneline cmt - full line would be deleted!
         """
         self.sub__regexp(r"\s*\#.*$", "", re.MULTILINE)
-        return self.SOURCE
+        return self.TEXT
 
     # -----------------------------------------------------------------------------------------------------------------
     def strip__lines(self) -> str:
         self.lstrip__lines()
         self.rstrip__lines()
-        return self.SOURCE
+        return self.TEXT
 
     def rstrip__lines(self) -> str:
         """
@@ -129,7 +126,7 @@ class TextAux(Init_Source):
 
     # =================================================================================================================
     def split_lines(self, skip_blanks: bool = None) -> list[str]:
-        lines_all = self.SOURCE.splitlines()
+        lines_all = self.TEXT.splitlines()
         if skip_blanks:
             result_no_blanks = []
             for line in lines_all:
@@ -156,7 +153,7 @@ class TextAux(Init_Source):
         sub = sub or ""
         sub_len = len(sub)
 
-        source = self.SOURCE
+        source = self.TEXT
         source_len = len(source)
 
         if source_len > maxlen:
@@ -203,7 +200,7 @@ class TextAux(Init_Source):
         """
         result = []
         for pat in pats:
-            result_i = re.findall(pat, self.SOURCE)
+            result_i = re.findall(pat, self.TEXT)
             for value in result_i:
                 value: str
                 if value == "":
@@ -246,7 +243,7 @@ class TextAux(Init_Source):
             raise TypeError(f"{num_type=}")
 
         # FIND STR --------
-        match = re.fullmatch(pat, self.SOURCE)
+        match = re.fullmatch(pat, self.TEXT)
         value: str | None = match and match[1]
 
         # get num ---------
@@ -285,8 +282,8 @@ class TextAux(Init_Source):
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
-        # PREPARE SOURCE ----------
-        source_original = self.SOURCE
+        # PREPARE TEXT ----------
+        source_original = self.TEXT
 
         # PREPARE__JSON_LOADS ---
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
@@ -299,7 +296,7 @@ class TextAux(Init_Source):
 
         # WORK --------------------
         try:
-            result = json.loads(self.SOURCE)
+            result = json.loads(self.TEXT)
             return result
         except Exception as exx:
             print(f"{exx!r}")
