@@ -235,12 +235,12 @@ class Test__try_convert_to_object:
         ]
     )
     def test__MAIN_GOAL__string_source(self, source):
-        func_link = TextAux(str(source)).parse__object  # DONT DELETE STR!!!
+        func_link = TextAux(str(source)).parse__str_object  # DONT DELETE STR!!!
         ExpectAux(func_link).check_assert(source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
-        func_link = TextAux(source).parse__object
+        func_link = TextAux(source).parse__str_object
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================

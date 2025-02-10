@@ -270,7 +270,7 @@ class TextAux:
         return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__object(self) -> TYPE__ELEMENTARY | str:
+    def parse__str_object(self) -> TYPE__ELEMENTARY | str:
         """
         GOAL
         ----
@@ -303,11 +303,11 @@ class TextAux:
             print(f"{exx!r}")
             return source_original
 
-    def parse__json(self) -> TYPE__ELEMENTARY | str:
+    def parse__str_json(self) -> TYPE__ELEMENTARY | str:
         """
         just a link
         """
-        return self.parse__object()
+        return self.parse__str_object()
 
     # -----------------------------------------------------------------------------------------------------------------
     def parse__requirements(self) -> list[str]:
