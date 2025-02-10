@@ -168,7 +168,7 @@ class Test__Cmp:
         ]
     )
     def test__dict_types(self, source, _EXPECTED):
-        func_link = AnnotsAux(source).dump__dict_types
+        func_link = AnnotsAux(source).get__dict_types
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -180,7 +180,7 @@ class Test__Cmp:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = AnnotsAux(source).dump__dict_values
+        func_link = AnnotsAux(source).get__dict_values
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -237,8 +237,8 @@ class Test__SpecialObjects:
 
         assert AnnotsAux(victimNT).get_not_defined() == []
         assert AnnotsAux(victimNT).check_all_defined() == True
-        assert AnnotsAux(victimNT).dump__dict_types() == {"ATTR1": int, "ATTR2": int, }
-        assert AnnotsAux(victimNT).dump__dict_values() == {"ATTR1": 1, "ATTR2": 2, }
+        assert AnnotsAux(victimNT).get__dict_types() == {"ATTR1": int, "ATTR2": int, }
+        assert AnnotsAux(victimNT).get__dict_values() == {"ATTR1": 1, "ATTR2": 2, }
 
     @pytest.mark.skip
     def test__DataClass(self):

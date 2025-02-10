@@ -10,7 +10,7 @@ class AnnotClsKeysAsValues_Meta(type):
     if no corresponding annotation - raise!
     """
     def __getattr__(cls, item: str) -> str | NoReturn:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         if item in annots:
             return item
         else:
@@ -18,27 +18,27 @@ class AnnotClsKeysAsValues_Meta(type):
             raise AttributeError(msg)
 
     def __iter__(cls) -> Iterable[str]:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         yield from annots
 
     def __len__(cls) -> int:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         return len(annots)
 
     def __contains__(cls, item: str) -> bool:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         return item in annots
 
     def __getitem__(cls, item: int) -> str | NoReturn:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         return list(annots)[item]
 
     def __str__(cls) -> str:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         return str(tuple(annots))
 
     def __repr__(cls) -> str:
-        annots = AnnotsAux(cls).dump__dict_types()
+        annots = AnnotsAux(cls).get__dict_types()
         return f"{cls.__name__}{tuple(annots)}"
 
 

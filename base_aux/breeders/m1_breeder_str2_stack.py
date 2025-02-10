@@ -85,7 +85,7 @@ class BreederStrStack(NestGAI_AttrAnycase):
 
         # ATTRS ------------------
         attrs: list[str] = []
-        for attr in AnnotsAux(self).dump__dict_values():
+        for attr in AnnotsAux(self).get__dict_values():
             if not attr.startswith("_") and not callable(getattr(self, attr)):
                 attrs.append(attr)
 

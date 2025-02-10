@@ -50,7 +50,7 @@ class AnnotsAux(Init_Source):
         annot__check_all_defined
         """
         result = []
-        nested = self.dump__dict_types()
+        nested = self.get__dict_types()
         for key in nested:
             if not AttrAux(self.SOURCE).anycase__check_exists(key):
                 result.append(key)
@@ -73,12 +73,28 @@ class AnnotsAux(Init_Source):
         """
         not_defined = self.get_not_defined()
         if not_defined:
-            dict_type = self.dump__dict_types()
+            dict_type = self.get__dict_types()
             msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================
-    def dump__dict_types(self) -> dict[str, type[Any]]:
+    def set_values__by_dict(self, data: TYPE__KWARGS_FINAL) -> None:
+        """
+        GOAL
+        ----
+        set attrs only for annotated names
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        
+        """
+        attr_aux = AttrAux(self.SOURCE)
+        for key, value in data.items():
+            if attr_aux.anycase__check_exists(key):
+                attr_aux.anycase__setattr(key, value)
+
+    # =================================================================================================================
+    def get__dict_types(self) -> dict[str, type[Any]]:
         """
         GOAL
         ----
@@ -89,7 +105,6 @@ class AnnotsAux(Init_Source):
         keys - all attr names (defined and not)
         values - Types!!! not instances!!!
         """
-
         result = {}
         for cls in self.iter_mro():
             _result_i = dict(cls.__annotations__)
@@ -97,24 +112,24 @@ class AnnotsAux(Init_Source):
             result = _result_i
         return result
 
-    def dump__dict_values(self) -> TYPE__KWARGS_FINAL:
+    def get__dict_values(self) -> TYPE__KWARGS_FINAL:
         """
         GOAL
         ----
         get dict with only existed values! no raise if value not exists!
         """
         result = {}
-        for key in self.dump__dict_types():
+        for key in self.get__dict_types():
             if hasattr(self.SOURCE, key):
                 result.update({key: getattr(self.SOURCE, key)})
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump__pretty_str(self) -> str:
+    def get__str_pretty(self) -> str:
         """just a pretty string for debugging or research.
         """
         result = f"{self.SOURCE.__class__.__name__}(Annotations):"
-        annots = self.dump__dict_values()
+        annots = self.get__dict_values()
         if annots:
             for key, value in annots.items():
                 result += f"\n\t{key}={value}"
@@ -142,13 +157,13 @@ class AnnotsAux(Init_Source):
         """
         iter all (with not existed)
         """
-        yield from self.dump__dict_types()
+        yield from self.get__dict_types()
 
     def iter_values(self) -> Iterable[Any]:
         """
         only existed
         """
-        yield from self.dump__dict_values().values()
+        yield from self.get__dict_values().values()
 
     # =================================================================================================================
     def values__set_none__existed(self) -> None:
@@ -186,7 +201,7 @@ class AnnotsAux(Init_Source):
         ----
         delattr all annotated aux_attr!
         """
-        for name, value in self.dump__dict_types().items():
+        for name, value in self.get__dict_types().items():
             if not_existed and hasattr(self.SOURCE, name):
                 continue
 

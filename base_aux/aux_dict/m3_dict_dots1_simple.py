@@ -170,7 +170,7 @@ class DictDotsAnnotRequired(DictDots, NestInit_AnnotsRequired):
 
     def check_all_defined_or_raise(self) -> None | NoReturn:
         not_def_list = []
-        nested = AnnotsAux(self).dump__dict_types()
+        nested = AnnotsAux(self).get__dict_types()
         for key in nested:
             if key not in self:
                 not_def_list.append(key)
