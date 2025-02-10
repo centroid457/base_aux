@@ -11,10 +11,11 @@ from base_aux.base_statics.m5_patterns1_nums import *
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork! or FIXME: nest FileAux here!????
 class TextAux:
-    TEXT: str
+    TEXT: str = ""
 
     def __init__(self, text: Any = "", *args, **kwargs) -> None | NoReturn:
         self.TEXT = str(text)
+        super().__init__(*args, **kwargs)
 
     # =================================================================================================================
     def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = None, *, as_word: bool = None) -> str:

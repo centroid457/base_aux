@@ -3,6 +3,7 @@ import pathlib
 
 from base_aux.base_statics.m1_types import *
 from base_aux.path1_dir.m2_dir import *
+from base_aux.aux_text.m1_text_aux import *
 
 
 # =====================================================================================================================
@@ -10,12 +11,16 @@ class FileAux:
     """
     GOAL
     ----
-    single file work!
+    single file INTERNAL work!
+
+    textWork use by yourself with TextAux
     """
     FILEPATH: TYPE__PATH_FINAL
+    TEXT: str = ""       # keep here just for TextAux work!
 
-    def __init__(self, filepath: TYPE__PATH_DRAFT) -> None:
+    def __init__(self, filepath: TYPE__PATH_DRAFT, *args, **kwargs) -> None:
         self.FILEPATH = pathlib.Path(filepath)
+        super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def ensure_dir(self) -> None:
@@ -25,16 +30,19 @@ class FileAux:
     # READ ---------------------------------
     def read__text(self) -> Optional[str]:
         if self.FILEPATH.exists() and self.FILEPATH.is_file():
-            return self.FILEPATH.read_text(encoding="utf-8")
+            self.TEXT = self.FILEPATH.read_text(encoding="utf-8")
+            return self.TEXT
 
     def read__bytes(self) -> Optional[bytes]:
         if self.FILEPATH.exists() and self.FILEPATH.is_file():
             return self.FILEPATH.read_bytes()
 
     # WRITE ---------------------------------
-    def write__text(self, text: str) -> int:
+    def write__text(self, text: str = None) -> int:
+        if text is not None:
+            self.TEXT = str(text)
         self.ensure_dir()
-        return self.FILEPATH.write_text(data=text, encoding="utf-8")
+        return self.FILEPATH.write_text(data=self.TEXT, encoding="utf-8")
 
     def append__lines(self, *lines: str) -> int | NoReturn:
         count = 0
@@ -50,12 +58,24 @@ class FileAux:
                     if file.write(line):
                         count += 1
 
+                    self.TEXT += line
+
         return count
 
     def write__bytes(self, data: bytes) -> Optional[int]:
         if self.FILEPATH:
             self.ensure_dir()
             return self.FILEPATH.write_bytes(data=data)
+
+
+# =====================================================================================================================
+class TextFile(FileAux, TextAux):
+    """
+    GOAL
+    ----
+    same as FileAux but with TextAux methods applied inplace!
+    """
+    pass
 
 
 # =====================================================================================================================

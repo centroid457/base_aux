@@ -13,7 +13,7 @@ class DirAux:
     """
     GOAL
     ----
-    collect all meths for directory include several files work
+    collect all meths for directory include several files EXTERNAL work!
     single file work with FileAux class!
     """
     DIRPATH: TYPE__PATH_FINAL
