@@ -275,10 +275,12 @@ class TextAux:
         GOAL
         ----
         create an elementary object from text.
-        or return source
+        or return source - FIXME: decide to use
 
         NOTE
         ----
+        it is not really work with true Json! it works with String from object! and try to get Json!
+
         by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
