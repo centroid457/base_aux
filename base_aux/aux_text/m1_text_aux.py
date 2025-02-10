@@ -4,16 +4,16 @@ import re
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_inits.m1_source import *
 
-from base_aux.base_statics.m1_types import TYPE__ELEMENTARY
+from base_aux.base_statics.m1_types import *
 from base_aux.base_statics.m5_patterns1_nums import *
 
 
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork! or FIXME: nest FileAux here!????
 class TextAux:
-    TEXT: str = ""
+    TEXT: TYPE__STR_FINAL = ""
 
-    def __init__(self, text: Any = "", *args, **kwargs) -> None | NoReturn:
+    def __init__(self, text: TYPE__STR_DRAFT = "", *args, **kwargs) -> None | NoReturn:
         self.TEXT = str(text)
         super().__init__(*args, **kwargs)
 

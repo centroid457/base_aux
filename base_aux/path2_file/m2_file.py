@@ -1,7 +1,3 @@
-from typing import *
-import pathlib
-
-from base_aux.base_statics.m1_types import *
 from base_aux.path1_dir.m2_dir import *
 from base_aux.aux_text.m1_text_aux import *
 
@@ -26,6 +22,14 @@ class FileAux:
     def ensure_dir(self) -> None:
         DirAux(self.FILEPATH.parent).create_dirtree()
 
+    def delete_file(self) -> bool:
+        self.TEXT = ""
+        return DirAux.delete_items(self.FILEPATH)
+
+    def clear_file(self) -> bool:
+        self.TEXT = ""
+        return self.write__text("") == 0
+
     # READ/WRITE ======================================================================================================
     # READ ---------------------------------
     def read__text(self) -> Optional[str]:
@@ -38,13 +42,13 @@ class FileAux:
             return self.FILEPATH.read_bytes()
 
     # WRITE ---------------------------------
-    def write__text(self, text: str = None) -> int:
+    def write__text(self, text: TYPE__STR_DRAFT = None) -> int:
         if text is not None:
             self.TEXT = str(text)
         self.ensure_dir()
         return self.FILEPATH.write_text(data=self.TEXT, encoding="utf-8")
 
-    def append__lines(self, *lines: str) -> int | NoReturn:
+    def append__lines(self, *lines: TYPE__STR_DRAFT) -> int | NoReturn:
         count = 0
 
         if lines:
@@ -53,29 +57,19 @@ class FileAux:
                 # if file NOT EXISTS - it creates!!!
                 for line in lines:
                     line = str(line).strip("\n")
-                    line = f"\n{line}"
+                    if self.TEXT:
+                        line = f"\n{line}"
 
                     if file.write(line):
                         count += 1
 
                     self.TEXT += line
-
         return count
 
     def write__bytes(self, data: bytes) -> Optional[int]:
         if self.FILEPATH:
             self.ensure_dir()
             return self.FILEPATH.write_bytes(data=data)
-
-
-# =====================================================================================================================
-class TextFile(FileAux, TextAux):
-    """
-    GOAL
-    ----
-    same as FileAux but with TextAux methods applied inplace!
-    """
-    pass
 
 
 # =====================================================================================================================
