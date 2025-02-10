@@ -82,11 +82,12 @@ class AnnotsAux(Init_Source):
         """
         GOAL
         ----
-        set attrs only for annotated names
+        set attrs only for annotated names,
+        so annots used like filter
 
         SPECIALLY CREATED FOR
         ---------------------
-        
+        load into AnnotTemplate
         """
         attr_aux = AttrAux(self.SOURCE)
         for key, value in data.items():
