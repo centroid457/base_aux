@@ -21,6 +21,8 @@ class Test_TextFile:
 
         assert file.append__lines(1, 2) == 2
         assert file.TEXT == "1\n2"
+        assert file.append__lines(3, 4) == 2
+        assert file.TEXT == "1\n2\n3\n4"
         assert file.delete_file() is True
 
 
