@@ -22,7 +22,7 @@ class DirAux:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_exists(self, timeout: int = 5) -> bool:
+    def check_exists(self, timeout: int = 0) -> bool:
         """
         NOTE
         ----
@@ -32,7 +32,8 @@ class DirAux:
             if self.DIRPATH.exists():
                 return True
             time.sleep(1)
-        return False
+
+        return self.DIRPATH.exists()
 
     # -----------------------------------------------------------------------------------------------------------------
     def create_dirtree(self) -> bool:
@@ -157,7 +158,8 @@ class DirAux:
     def delete_dirtree(self, raise_fails: bool = None) -> bool | NoReturn:
         return self.delete_items(self.DIRPATH, raise_fails=raise_fails)
 
-    def delete_items(self, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
+    @classmethod
+    def delete_items(cls, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
         result = True
         for path in paths:
 
@@ -170,8 +172,8 @@ class DirAux:
                         raise exx
 
             elif path.is_dir():
-                result &= self.delete_items(*DirAux(path).iter_files(), raise_fails=raise_fails)
-                result &= self.delete_items(*DirAux(path).iter_dirs(), raise_fails=raise_fails)
+                result &= cls.delete_items(*cls(path).iter_files(), raise_fails=raise_fails)
+                result &= cls.delete_items(*cls(path).iter_dirs(), raise_fails=raise_fails)
                 result &= DirAux(path).delete_blank(raise_fails=raise_fails)
 
             # TODO: if link
