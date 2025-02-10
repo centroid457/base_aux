@@ -111,31 +111,37 @@ class Dir:
         yield from self.iter(*wmask, fsobj=PathType.DIR, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def delete_blank(self, raise_fails: bool = None) -> None:
+    def delete_blank(self, raise_fails: bool = None) -> bool | NoReturn:
         """
         GOAL
         ----
         delete SELF directory if blank!
         """
+        result = True
         try:
             self.DIRPATH.rmdir()
         except Exception as exx:  # TODO: separate AccessPermition/FilesExists
+            result = False
             if raise_fails:
                 raise exx
+        return result
 
     def delete_blank_items_wmask(
             self,
             *wmask: str,
             nested: bool = None,
-    ) -> None:
+    ) -> bool | NoReturn:
         """
         GOAL
         ----
         delete INTERNAL dirs in SELF if blanks!
         """
         # TODO: NOT WORKING!!!!! FINISH!!!! cant delete by access reason!!!
+        result = True
         for dirpath in self.iter_dirs(*wmask, nested=nested):
-            Dir(dirpath).delete_blank()
+            result &= Dir(dirpath).delete_blank()
+
+        return result
 
     def delete_dirtree(self, raise_fails: bool = None) -> bool | NoReturn:
         return self.delete_items(self.DIRPATH, raise_fails=raise_fails)
