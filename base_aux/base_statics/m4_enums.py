@@ -122,6 +122,11 @@ class PathType(Enum):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+# class AppendType(Enum):
+#     NEWLINE = auto()
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 class TextFormat(Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
@@ -171,7 +176,7 @@ class CmpType(Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    path1_dirs.Dir.iter(timestamp)
+    path1_dirs.DirAux.iter(timestamp)
     """
     LT = auto()
     LE = auto()

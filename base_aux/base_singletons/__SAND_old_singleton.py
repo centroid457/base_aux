@@ -2,23 +2,11 @@
 # STARICHENKO UNIVERSAL IMPORT
 import sys
 sys.path.append("..")  # Adds higher directory to python modules path.
-import CONSTANTS
 
 import time
 import pathlib
-import typing as tp
-
-import utilities.func_universal as UFU
-from gui.pyqt_import_all_by_star import *
-
-# from users.user_profile import UserProfile_Singleton
-# from stands.stand import Stand_Singleton
-# from results.results_testplan import TestplanResults_Singleton
-# =====================================================================================================================
-
 import copy
 import threading
-from utilities.processor_file_json import ProcessorJsonDict
 
 
 # SINGLETON ===========================================================================================================

@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from base_aux.base_statics.m1_types import *
 from base_aux.path1_dir.m1_dirpath import Resolve_DirPath
@@ -8,20 +9,30 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork!???
-class Dir:
+class DirAux:
     """
     GOAL
     ----
     collect all meths for directory include several files work
-    single file work with File class!
+    single file work with FileAux class!
     """
     DIRPATH: TYPE__PATH_FINAL
 
     def __init__(self, dirpath: TYPE__PATH_DRAFT = None) -> None:
-        self.set_dirpath(dirpath or self.DIRPATH)
-
-    def set_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_exists(self, timeout: int = 5) -> bool:
+        """
+        NOTE
+        ----
+        any object - DIR/FILE!
+        """
+        for i in range(timeout):
+            if self.DIRPATH.exists():
+                return True
+            time.sleep(1)
+        return False
 
     # -----------------------------------------------------------------------------------------------------------------
     def create_dirtree(self) -> bool:
@@ -46,7 +57,7 @@ class Dir:
             str_names_only: bool = False,
 
             # time filter -----
-            mtime: Union[None, datetime.datetime, datetime.timedelta] = None,   # acceptable for both File/Dirs
+            mtime: Union[None, datetime.datetime, datetime.timedelta] = None,   # acceptable for both FileAux/Dirs
             mtime_cmp: CmpType = CmpType.GE,
     ) -> Iterator[Union[pathlib.Path, str]] | NoReturn:
         """
@@ -139,7 +150,7 @@ class Dir:
         # TODO: NOT WORKING!!!!! FINISH!!!! cant delete by access reason!!!
         result = True
         for dirpath in self.iter_dirs(*wmask, nested=nested):
-            result &= Dir(dirpath).delete_blank()
+            result &= DirAux(dirpath).delete_blank()
 
         return result
 
@@ -159,9 +170,9 @@ class Dir:
                         raise exx
 
             elif path.is_dir():
-                result &= self.delete_items(*Dir(path).iter_files(), raise_fails=raise_fails)
-                result &= self.delete_items(*Dir(path).iter_dirs(), raise_fails=raise_fails)
-                result &= Dir(path).delete_blank(raise_fails=raise_fails)
+                result &= self.delete_items(*DirAux(path).iter_files(), raise_fails=raise_fails)
+                result &= self.delete_items(*DirAux(path).iter_dirs(), raise_fails=raise_fails)
+                result &= DirAux(path).delete_blank(raise_fails=raise_fails)
 
             # TODO: if link
 

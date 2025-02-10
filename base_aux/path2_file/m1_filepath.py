@@ -67,9 +67,9 @@ class Resolve_FilePath(NestCall_Resolve):
         2/ lower level is the major for higher level and will overwrite it.
         see tests for understanding, but it is too obvious when get the idea
         """
-        self.set_filepath(filepath)
-        self.set_dirpath(dirpath or self.DIRPATH)
-        self.set_nameext(nameext)
+        self.apply_filepath(filepath)
+        self.apply_dirpath(dirpath or self.DIRPATH)
+        self.apply_nameext(nameext)
 
         # most important! overwrite previous set!
         if name is not None:
@@ -78,7 +78,7 @@ class Resolve_FilePath(NestCall_Resolve):
             self.DOT = True
             self.EXTLAST = extlast
 
-    def set_filepath(self, filepath: TYPE__PATH_DRAFT) -> None:
+    def apply_filepath(self, filepath: TYPE__PATH_DRAFT) -> None:
         if filepath is None:
             return
 
@@ -89,10 +89,10 @@ class Resolve_FilePath(NestCall_Resolve):
 
         self.DOT = "." in filepath.name
 
-    def set_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
+    def apply_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
-    def set_nameext(self, nameext: str) -> None:
+    def apply_nameext(self, nameext: str) -> None:
         if nameext is None:
             return
 

@@ -9,7 +9,7 @@ from base_aux.base_statics.m5_patterns1_nums import *
 
 
 # =====================================================================================================================
-# @final      # dont use final here! expect nesting for fileWork! or FIXME: nest File here!????
+# @final      # dont use final here! expect nesting for fileWork! or FIXME: nest FileAux here!????
 class TextAux(Init_Source):
     SOURCE: str
 
