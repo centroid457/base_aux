@@ -103,3 +103,9 @@ KWARGS_FINAL__BLANK = {}   # just to show that here it is not used
 
 
 # =====================================================================================================================
+TYPE__DICT_ANY = dict[Any, Any]                         # just to show - dict could be any!
+TYPE__JSON_DICT = dict[str, TYPE__ELEMENTARY]           # just to show - parsed by json - dict
+TYPE__JSON_ANY = TYPE__ELEMENTARY | TYPE__JSON_DICT     # just to show - parsed by json - any object
+
+
+# =====================================================================================================================
