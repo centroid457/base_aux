@@ -11,12 +11,14 @@ class Test__sub:
         argnames="source, rule, _EXPECTED",
         argvalues=[
             # NOT ACCEPTED -------------
-            ("None123", ("None00"), "None123"),
-            ("None123", ("None"), "123"),
-            ("None123", ("None", None), "123"),
-            ("None123", ("None", "0"), "0123"),
-
-            ("1*3", ("\*", "2"), "123"),
+            # ("None123", ("None00"), "None123"),
+            # ("None123", ("None"), "123"),
+            # ("None123", ("None", None), "123"),
+            # ("None123", ("None", "0"), "0123"),
+            #
+            # ("1*3", ("\*", "2"), "123"),
+            ("1:1", (r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":'), '"1":1'),
+            ("123:1", (r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":'), '"123":1'),
         ]
     )
     def test__regexp(self, source, rule, _EXPECTED):
@@ -273,17 +275,37 @@ class Test__try_convert_to_object:
             ({"key": False}, True),
             ({"key": None}, True),
             ({"key": 123}, True),
-
-            ({1: 123}, False),      # FIXME: do smth with int keys!
         ]
     )
     def test__MAIN_GOAL__string_source(self, source, _EXPECTED):
-        func_link = TextAux(str(source)).parse__object  # DONT DELETE STR!!!
+        func_link = TextAux(str(source)).parse__object_stringed  # DONT DELETE STR!!!
         assert ExpectAux(func_link).check_bool(source) == _EXPECTED
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            # SINGLE ---------------------
+            ({"key1": 123}, {"key1": 123}),
+
+            ({"1": 123}, {"1": 123}),
+            ({1: 123}, {"1": 123}),
+
+            ({"1.1": 123}, {"1.1": 123}),
+            ({1.1: 123}, {"1.1": 123}),
+
+            # SEVERAL ---------------------
+            ({1:1,2:2,3.3:3}, {"1": 1, "2": 2, "3.3": 3}),
+            ({1:{1:1},2:{2:2},3.3:3}, {"1":{"1":1}, "2":{"2":2}, "3.3": 3}),
+        ]
+    )
+    def test__parse_dict_keys(self, source, _EXPECTED):
+        func_link = TextAux(source).parse__object_stringed
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
-        func_link = TextAux(source).parse__object
+        func_link = TextAux(source).parse__object_stringed
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================

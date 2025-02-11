@@ -323,7 +323,7 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse_dict__json(self) -> TYPE__ELEMENTARY | str:
+    def parse__json_dumped(self) -> TYPE__ELEMENTARY | str:     # NoValue ????
         """
         NOTE
         ----
@@ -344,15 +344,15 @@ class TextAux:
             print(f"{exx!r}")
             return self.TEXT
 
-    def parse__object(self) -> TYPE__ELEMENTARY | str:
-        # PREPARE__JSON_LOADS ---
+    def parse__object_stringed(self) -> TYPE__ELEMENTARY | str:
+        # PREPARE -----------------------------------------------------------------
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values
 
-        # QUOTES -----------------------------------
+        # QUOTES ------------
         self.sub__regexp("\'", "\"")
 
-        # BOOL -------------------------------------
+        # BOOL ------------
         self.sub__word(r"True", "true")
         self.sub__word(r"False", "false")
         self.sub__word(r"None", "null")
@@ -361,17 +361,18 @@ class TextAux:
         self.sub__word(r"\s*:\s*\"true\"", ":true")
         self.sub__word(r"\s*:\s*\"false\"", ":false")
 
-        # NUM KEYS -------------------------------------
-        # self.sub__word(r"\W+|\s+\d+\s*:\s*", "\"\d+\":")
-        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
-        # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
+        # NUM KEYS ------------
+        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
 
-        return self.parse_dict__json()
+        # RESULT -----------------------------------------------------------------
+        return self.parse__json_dumped()
 
     # =================================================================================================================
-    def parse_dict(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
+    def parse__dict_csv(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
         pass
 
+    def parse__dict_ini(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
+        pass
 
 
 # =====================================================================================================================
