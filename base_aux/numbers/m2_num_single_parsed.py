@@ -12,7 +12,7 @@ class _NumParsedSingle(Init_Source, NestCall_Resolve):
     _numtype: NumType = NumType.BOTH
 
     def init_post(self) -> None | NoReturn:
-        self.SOURCE = TextAux(self.SOURCE).parse__single_number(num_type=self._numtype)
+        self.SOURCE = TextAux(self.SOURCE).parse__number_single(num_type=self._numtype)
 
     def resolve(self) -> TYPES.NUMBER | None:
         return self.SOURCE

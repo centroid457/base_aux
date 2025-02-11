@@ -85,7 +85,7 @@ class ValidAux_NumParsedSingle(ValidAux):
     SOURCE: TYPES.NUMBER | None = None
 
     def init_post(self) -> None:
-        self.SOURCE = TextAux(self.SOURCE).parse__single_number()
+        self.SOURCE = TextAux(self.SOURCE).parse__number_single()
 
     def eq(self, other: Any | None | bool | Union[NumType | int | float]) -> bool:
         if other is True:
@@ -95,10 +95,10 @@ class ValidAux_NumParsedSingle(ValidAux):
             return self.SOURCE is None
 
         elif other in NumType:
-            return TextAux(self.SOURCE).parse__single_number(num_type=other) is not None
+            return TextAux(self.SOURCE).parse__number_single(num_type=other) is not None
 
         else:
-            return self.SOURCE == TextAux(other).parse__single_number()
+            return self.SOURCE == TextAux(other).parse__number_single()
 
 
 # =====================================================================================================================

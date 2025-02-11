@@ -235,12 +235,12 @@ class Test__try_convert_to_object:
         ]
     )
     def test__MAIN_GOAL__string_source(self, source):
-        func_link = TextAux(str(source)).parse__str_object  # DONT DELETE STR!!!
+        func_link = TextAux(str(source)).parse__object  # DONT DELETE STR!!!
         ExpectAux(func_link).check_assert(source)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
-        func_link = TextAux(source).parse__str_object
+        func_link = TextAux(source).parse__object
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -354,7 +354,7 @@ class Test__ParseNum:
         ]
     )
     def test__num(self, source, fpoint, _EXPECTED):
-        func_link = TextAux(source).parse__single_number
+        func_link = TextAux(source).parse__number_single
         ExpectAux(func_link, fpoint).check_assert(_EXPECTED)
 
 

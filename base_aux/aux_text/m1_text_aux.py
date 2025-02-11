@@ -212,7 +212,7 @@ class TextAux:
         return result
 
     # =================================================================================================================
-    def parse__single_number(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO, num_type: NumType = NumType.BOTH) -> int | float | None:
+    def parse__number_single(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO, num_type: NumType = NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -263,53 +263,11 @@ class TextAux:
         # FINISH ----------
         return result
 
-    def parse__single_int(self) -> int | None:
-        return self.parse__single_number(num_type=NumType.INT)
+    def parse__int_single(self) -> int | None:
+        return self.parse__number_single(num_type=NumType.INT)
 
-    def parse__single_float(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO) -> float | None:
-        return self.parse__single_number(fpoint=fpoint, num_type=NumType.FLOAT)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def parse__str_object(self) -> TYPE__ELEMENTARY | str:
-        """
-        GOAL
-        ----
-        create an elementary object from text.
-        or return source - FIXME: decide to use
-
-        NOTE
-        ----
-        it is not really work with true Json! it works with String from object! and try to get Json!
-
-        by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
-        for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
-        """
-        # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
-        # PREPARE TEXT ----------
-        source_original = self.TEXT
-
-        # PREPARE__JSON_LOADS ---
-        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
-        # so it just same process as re.sub by one func for several values
-        self.sub__word(r"True", "true")
-        self.sub__word(r"False", "false")
-        self.sub__word(r"None", "null")
-        self.sub__regexp("\'", "\"")
-        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
-
-        # WORK --------------------
-        try:
-            result = json.loads(self.TEXT)
-            return result
-        except Exception as exx:
-            print(f"{exx!r}")
-            return source_original
-
-    def parse__str_json(self) -> TYPE__ELEMENTARY | str:
-        """
-        just a link
-        """
-        return self.parse__str_object()
+    def parse__float_single(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO) -> float | None:
+        return self.parse__number_single(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # -----------------------------------------------------------------------------------------------------------------
     def parse__requirements(self) -> list[str]:
@@ -327,6 +285,41 @@ class TextAux:
         self.strip__lines()
         result = self.split_lines()
         return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def parse__json(self) -> TYPE__ELEMENTARY | str:
+        """
+        NOTE
+        ----
+        intended source is json dumped!
+
+        GOAL
+        ----
+        create an elementary object from text.
+        or return source - FIXME: decide to use
+
+        by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
+        for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
+        """
+        try:
+            result = json.loads(self.TEXT)
+            return result
+        except Exception as exx:
+            print(f"{exx!r}")
+            return self.TEXT
+
+    def parse__object(self) -> TYPE__ELEMENTARY | str:
+        # PREPARE__JSON_LOADS ---
+        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
+        # so it just same process as re.sub by one func for several values
+        self.sub__word(r"True", "true")
+        self.sub__word(r"False", "false")
+        self.sub__word(r"None", "null")
+        self.sub__regexp("\'", "\"")
+        # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
+        # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
+
+        return self.parse__json()
 
 
 # =====================================================================================================================
