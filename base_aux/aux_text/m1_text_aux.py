@@ -87,13 +87,33 @@ class TextAux:
         self.sub__regexp(r"^\s*$", "", re.MULTILINE)  # not enough!
         return self.TEXT
 
-    def clear__cmts(self) -> str:
+    def clear__cmts(self, cmt_type: CmtType = CmtType.SHARP) -> str:
         """
         NOTE
         ----
         if oneline cmt - full line would be deleted!
         """
-        self.sub__regexp(r"\s*\#.*$", "", re.MULTILINE)
+        # recursion -----------------------------
+        if cmt_type == CmtType.ALL:
+            for cmt_type in [CmtType.SHARP, CmtType.DSLASH, CmtType.REM]:
+                self.clear__cmts(cmt_type)
+
+        elif cmt_type == CmtType.AUTO:
+            raise NotImplementedError(CmtType.AUTO)
+
+        # work ----------------------------------
+        if cmt_type == CmtType.SHARP:
+            self.sub__regexp(r"^\#.*$", "", re.MULTILINE)
+            self.sub__regexp(r"\s+\#.*$", "", re.MULTILINE)
+
+        elif cmt_type == CmtType.DSLASH:
+            self.sub__regexp(r"^\/\/.*$", "", re.MULTILINE)
+            self.sub__regexp(r"\s+\/\/.*$", "", re.MULTILINE)
+
+        elif cmt_type == CmtType.REM:
+            self.sub__regexp(r"^REM +.*$", "", re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
+            self.sub__regexp(r"\s+REM +.*$", "", re.MULTILINE | re.IGNORECASE)
+
         return self.TEXT
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -280,7 +300,7 @@ class TextAux:
         ---------------------
         setup.py install_requires
         """
-        self.clear__cmts()
+        self.clear__cmts(CmtType.SHARP)
         self.clear__blank_lines()
         self.strip__lines()
         result = self.split_lines()

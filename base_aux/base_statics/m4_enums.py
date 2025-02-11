@@ -142,11 +142,13 @@ class TextFormat(Enum):
     MD = "md"
 
 
-class RemType(Enum):
+class CmtType(Enum):
     AUTO = None     # keep decide?
-    REM = "rem"
-    GRID = "#"
+    ALL = all
+
+    SHARP = "#"
     DSLASH = "//"
+    REM = "rem"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
