@@ -348,10 +348,21 @@ class TextAux:
         # PREPARE__JSON_LOADS ---
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values
+
+        # QUOTES -----------------------------------
+        self.sub__regexp("\'", "\"")
+
+        # BOOL -------------------------------------
         self.sub__word(r"True", "true")
         self.sub__word(r"False", "false")
         self.sub__word(r"None", "null")
-        self.sub__regexp("\'", "\"")
+
+        self.sub__word(r"\s*:\s*\"null\"", ":null")
+        self.sub__word(r"\s*:\s*\"true\"", ":true")
+        self.sub__word(r"\s*:\s*\"false\"", ":false")
+
+        # NUM KEYS -------------------------------------
+        # self.sub__word(r"\W+|\s+\d+\s*:\s*", "\"\d+\":")
         # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
 

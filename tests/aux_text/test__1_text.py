@@ -248,32 +248,38 @@ class Test__shortcut:
 class Test__try_convert_to_object:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source",
+        argnames="source, _EXPECTED",
         argvalues=[
-            0,
-            1,
-            10,
-            1.0,
-            1.1,
-            -1.1,
-            "",
-            '',
-            "hello",
-            None,
-            True,
-            False,
-            [None, True, 1, -1.1, "hello", "", ''],
+            (0, True),
+            (1, True),
+            (10, True),
+            (1.0, True),
+            (1.1, True),
+            (-1.1, True),
+            ("", True),
+            ('', True),
+            ("hello", True),
+            (None, True),
+            (True, True),
+            (False, True),
+            ([None, True, 1, -1.1, "hello", "", ''], True),
             # [None, True, 1, -1.1, "hello", [], {1:1}],  #JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 37 (char 36)')=KEYS IS ONLY STRINGS
-            [None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}],
+            ([None, True, 1, -1.1, "hello", [], {"1": 1, "hello": []}], True),
 
-            [],
+            ([], True),
             # (),     # JSONDecodeError('Expecting value: line 1 column 1 (char 0)') - НЕСУЩЕСТВУЕТ TUPLE???
-            {},
+            ({}, True),
+            ({"key": True}, True),
+            ({"key": False}, True),
+            ({"key": None}, True),
+            ({"key": 123}, True),
+
+            ({1: 123}, False),      # FIXME: do smth with int keys!
         ]
     )
-    def test__MAIN_GOAL__string_source(self, source):
+    def test__MAIN_GOAL__string_source(self, source, _EXPECTED):
         func_link = TextAux(str(source)).parse__object  # DONT DELETE STR!!!
-        ExpectAux(func_link).check_assert(source)
+        assert ExpectAux(func_link).check_bool(source) == _EXPECTED
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
