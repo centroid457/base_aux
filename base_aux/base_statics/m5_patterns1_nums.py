@@ -18,6 +18,23 @@ class Patterns:
 
 
 # =====================================================================================================================
+class PatCmts(Patterns):
+    """
+    GOAL
+    ----
+    patterns for parse comments
+    """
+    SHARP_LINE: str = r"^\#.*$"
+    SHARP_INLINE: str = r"\s+\#.*$"
+
+    DSLASH_LINE: str = r"^\/\/.*$"
+    DSLASH_INLINE: str = r"\s+\/\/.*$"
+
+    REM_LINE: str = r"^REM +.*$"
+    REM_INLINE: str = r"\s+REM +.*$"
+
+
+# =====================================================================================================================
 class PatNumberSingle(Patterns):
     """
     NOTE

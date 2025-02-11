@@ -118,16 +118,16 @@ class TextAux:
 
         # work ----------------------------------
         if cmt_type == CmtType.SHARP:
-            self.sub__regexp(r"^\#.*$", "", re.MULTILINE)
-            self.sub__regexp(r"\s+\#.*$", "", re.MULTILINE)
+            self.sub__regexp(PatCmts.SHARP_LINE, "", re.MULTILINE)
+            self.sub__regexp(PatCmts.SHARP_INLINE, "", re.MULTILINE)
 
         elif cmt_type == CmtType.DSLASH:
-            self.sub__regexp(r"^\/\/.*$", "", re.MULTILINE)
-            self.sub__regexp(r"\s+\/\/.*$", "", re.MULTILINE)
+            self.sub__regexp(PatCmts.DSLASH_LINE, "", re.MULTILINE)
+            self.sub__regexp(PatCmts.DSLASH_INLINE, "", re.MULTILINE)
 
         elif cmt_type == CmtType.REM:
-            self.sub__regexp(r"^REM +.*$", "", re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
-            self.sub__regexp(r"\s+REM +.*$", "", re.MULTILINE | re.IGNORECASE)
+            self.sub__regexp(PatCmts.REM_LINE, "", re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
+            self.sub__regexp(PatCmts.REM_INLINE, "", re.MULTILINE | re.IGNORECASE)
 
         return self.TEXT
 
