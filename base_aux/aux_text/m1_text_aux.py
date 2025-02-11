@@ -81,13 +81,28 @@ class TextAux:
         """
         return self.sub__regexps((r" {2,}", " "))
 
-    def clear__blank_lines(self) -> str:
-        self.sub__regexp(r"^\s*\n", "", re.MULTILINE)
-        self.sub__regexp(r"\n\s*$", "", re.MULTILINE)
-        self.sub__regexp(r"^\s*$", "", re.MULTILINE)  # not enough!
+    def clear__lines(self, *pats: str) -> str:
+        """
+        NOTE
+        ----
+        clear! NOT DELETE!!! exact lines!
+        if need - apply
+        """
+        for pat in pats:
+            pat = r"^" + pat + r"$"
+            self.sub__regexp(pat, "", re.MULTILINE)
         return self.TEXT
 
-    def clear__cmts(self, cmt_type: CmtType = CmtType.SHARP) -> str:
+    def delete__lines_blank(self) -> str:
+        # return self.clear__lines(r"\s*", )
+
+        self.sub__regexp(r"^\s*$", "", re.MULTILINE)        # not enough!
+        self.sub__regexp(r"^\s*\n+", "", re.MULTILINE)      # startwith
+        self.sub__regexp(r"\n+\s*$", "", re.MULTILINE)      # endswith
+        self.sub__regexp(r"\n+\s*\n+", "\n", re.MULTILINE)  # middle double
+        return self.TEXT
+
+    def delete__cmts(self, cmt_type: CmtType = CmtType.SHARP) -> str:
         """
         NOTE
         ----
@@ -96,7 +111,7 @@ class TextAux:
         # recursion -----------------------------
         if cmt_type == CmtType.ALL:
             for cmt_type in [CmtType.SHARP, CmtType.DSLASH, CmtType.REM]:
-                self.clear__cmts(cmt_type)
+                self.delete__cmts(cmt_type)
 
         elif cmt_type == CmtType.AUTO:
             raise NotImplementedError(CmtType.AUTO)
@@ -300,8 +315,8 @@ class TextAux:
         ---------------------
         setup.py install_requires
         """
-        self.clear__cmts(CmtType.SHARP)
-        self.clear__blank_lines()
+        self.delete__cmts(CmtType.SHARP)
+        self.delete__lines_blank()
         self.strip__lines()
         result = self.split_lines()
         return result

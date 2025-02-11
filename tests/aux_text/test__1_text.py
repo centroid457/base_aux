@@ -83,6 +83,19 @@ class Test__Edit:
         func_link = TextAux(source).clear__spaces_double
         ExpectAux(func_link).check_assert(_EXPECTED)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source, pat, _EXPECTED",
+        argvalues=[
+            (" line1 \n \n line3 ", r".*1.*", "\n \n line3 "),
+            (" line1 \n \n line3 ", r".*3.*", " line1 \n \n"),
+            # (" line1 \n \t\r\n line3 ", r"", " line1 \n line3 "),
+        ]
+    )
+    def test__lines(self, source, pat, _EXPECTED):
+        func_link = TextAux(source).clear__lines
+        ExpectAux(func_link, pat).check_assert(_EXPECTED)
+
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
@@ -103,8 +116,8 @@ class Test__Edit:
             (" line1 \n \t\r\n line3 ", " line1 \n line3 "),
         ]
     )
-    def test__blank_lines(self, source, _EXPECTED):
-        func_link = TextAux(source).clear__blank_lines
+    def test__lines_blank(self, source, _EXPECTED):
+        func_link = TextAux(source).delete__lines_blank
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -149,7 +162,7 @@ class Test__Edit:
         ]
     )
     def test__clear__cmts(self, source, cmt, _EXPECTED):
-        func_link = TextAux(source).clear__cmts
+        func_link = TextAux(source).delete__cmts
         ExpectAux(func_link, cmt).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
