@@ -24,29 +24,34 @@ class Test__sub:
         ExpectAux(func_link, rule).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
+        argnames="source, rule, _EXPECTED",
         argvalues=[
             # NOT ACCEPTED -------------
-            ("None123", "None123"),
-            ("None_123", "None_123"),
+            ("None123", ("None", "null"), "None123"),
+            ("None_123", ("None", "null"), "None_123"),
 
             # ACCEPTED -------------
-            ("null", "null"),
-            ("None", "null"),
-            ("None-123", "null-123"),
+            ("null", ("None", "null"), "null"),
+            ("None", ("None", "null"), "null"),
+            ("None-123", ("None", "null"), "null-123"),
 
             # CONTAINERS -------------
-            ("[null]", "[null]"),
-            ("[None]", "[null]"),
-            ("[None, ]", "[null, ]"),
+            ("[null]", ("None", "null"), "[null]"),
+            ("[None]", ("None", "null"), "[null]"),
+            ("[None, ]", ("None", "null"), "[null, ]"),
 
-            (" None, 123", " null, 123"),
-            ("[None, null, 123]", "[null, null, 123]"),
+            (" None, 123", ("None", "null"), " null, 123"),
+            ("[None, null, 123]", ("None", "null"), "[null, null, 123]"),
+
+            ("[None, null, 323]", (r"None.*3", "null"), "[null]"),
+
+            ("[None, null, 3 23]", (r"None.*3", "null"), "[null]"),
+            ("[None, null, 3 23]", (r"None.*?3", "null"), "[null 23]"),
         ]
     )
-    def test__words(self, source, _EXPECTED):
-        func_link = TextAux(source).sub__words(("None", "null"))
-        ExpectAux(func_link).check_assert(_EXPECTED)
+    def test__words(self, source, rule, _EXPECTED):
+        func_link = TextAux(source).sub__word
+        ExpectAux(func_link, rule).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -363,7 +368,7 @@ class Test__try_convert_to_object:
     ]
 )
 def test__requirements__get_list(source, _EXPECTED):
-    func_link = TextAux(source).parse__requirements
+    func_link = TextAux(source).parse__requirements_lines
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 

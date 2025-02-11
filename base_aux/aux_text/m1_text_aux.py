@@ -1,3 +1,4 @@
+from typing import *
 import json
 import re
 
@@ -305,7 +306,7 @@ class TextAux:
         return self.parse__number_single(fpoint=fpoint, num_type=NumType.FLOAT)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__requirements(self) -> list[str]:
+    def parse__requirements_lines(self) -> list[str]:
         """
         GOAL
         ----
@@ -322,7 +323,7 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__json(self) -> TYPE__ELEMENTARY | str:
+    def parse_dict__json(self) -> TYPE__ELEMENTARY | str:
         """
         NOTE
         ----
@@ -354,7 +355,12 @@ class TextAux:
         # FIXME: apply work with int-keys in dicts!!! its difficalt to walk and edit result dict-objects in all tree!!!!
         # FIXME: this is not work FULL and CORRECT!!!! need FIX!!!
 
-        return self.parse__json()
+        return self.parse_dict__json()
+
+    # =================================================================================================================
+    def parse_dict(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
+        pass
+
 
 
 # =====================================================================================================================

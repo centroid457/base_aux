@@ -127,6 +127,15 @@ class PathType(Enum):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+class DictTextFormat(Enum):
+    AUTO = None
+
+    CSV = "csv"
+    INI = "ini"
+    JSON = "json"
+    STR = "str"     # str(dict)
+
+
 class TextFormat(Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
