@@ -1,5 +1,6 @@
 from typing import *
 from base_aux.aux_iter.m1_iter_aux import IterAux
+from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
@@ -25,7 +26,7 @@ class DictIgnorecase(dict):
     # -----------------------------------------------------------------------------------------------------------------
     def pop(self, item: Any) -> None:
         item_original = IterAux(self).item__get_original(item)
-        if item_original is None:
+        if item_original is NoValue:
             item_original = item
 
         super().pop(item_original)
@@ -36,7 +37,7 @@ class DictIgnorecase(dict):
         if you need check real contain key - check contain)))) [assert key in self] or [getitem_original]
         """
         key_original = IterAux(self).item__get_original(item)
-        if key_original is None:
+        if key_original is NoValue:
             return None
             # key_original = item
             # msg = f"{item=}"
@@ -49,13 +50,13 @@ class DictIgnorecase(dict):
     def update(self, m, /, **kwargs) -> None:
         for item, value in m.items():
             key_original = IterAux(self).item__get_original(item)
-            if key_original is None:
+            if key_original is NoValue:
                 key_original = item
 
             super().update({key_original: value})
 
     def __contains__(self, item: Any) -> bool:
-        if IterAux(self).item__get_original(item) is not None:
+        if IterAux(self).item__get_original(item) is not NoValue:
             return True
 
     # -----------------------------------------------------------------------------------------------------------------

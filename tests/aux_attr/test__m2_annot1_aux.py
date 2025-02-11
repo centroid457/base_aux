@@ -135,20 +135,12 @@ def test__annot__raise_if_not_defined(source, _EXPECTED):
 # =====================================================================================================================
 # =====================================================================================================================
 # =====================================================================================================================
-class Test__Cmp:
+class Test__1:
     @classmethod
     def setup_class(cls):
         pass
         cls.victim1 = Victim1()
         cls.victim2 = Victim2()    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    def setup_method(self, method):
-        pass
-
-    # def teardown_method(self, method):
-    #     pass
 
     # =================================================================================================================
     def test__anycase_getattr(self):
@@ -218,6 +210,32 @@ def test__all_defined2():
     victim11 = Victim11()
     assert AnnotsAux(victim1).check_all_defined() == False
     assert AnnotsAux(victim11).check_all_defined() == True
+
+
+# =====================================================================================================================
+class VictimSet:
+    A0 = 1
+    A1: int
+    A2: int = 1
+
+
+@pytest.mark.parametrize(
+    argnames="data, _EXPECTED",
+    argvalues=[
+        (dict(), (1, Exception, 1, Exception)),
+        (dict(A0=11), (11, Exception, 1, Exception)),
+        (dict(a0=11), (11, Exception, 1, Exception)),
+
+        (dict(a0=11, a1=11, a2=11, a3=11), (11, 11, 11, Exception)),
+        (dict(A0=11, A1=11, A2=11, A3=11), (11, 11, 11, 11)),
+    ]
+)
+def test__set(data, _EXPECTED):
+    victim = VictimSet()
+
+    AnnotsAux(victim).set_values__by_dict(data)
+    for index in range(4):
+        ExpectAux(getattr, (victim, f"A{index}")).check_assert(_EXPECTED[index])
 
 
 # =====================================================================================================================

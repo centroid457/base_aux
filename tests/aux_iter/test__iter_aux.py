@@ -2,6 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_iter.m1_iter_aux import IterAux
+from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================

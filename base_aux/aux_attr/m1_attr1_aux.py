@@ -272,7 +272,7 @@ class AttrAux(Init_Source):
         return result
 
     # =================================================================================================================
-    def load__by_dict(self, other: dict[str, Any]) -> Any | AttrsDump:
+    def load__by_dict(self, other: dict[str, Any], only_existed: bool = None) -> Any | AttrsDump:
         """
         MAIN ITEA
         ----------
@@ -287,6 +287,8 @@ class AttrAux(Init_Source):
         """
         # work ----------
         for key, value in other.items():
+            if only_existed and not self.anycase__check_exists(key):
+                continue
             self.anycase__setattr(key, value)
 
         return self.SOURCE

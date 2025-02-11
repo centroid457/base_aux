@@ -37,7 +37,7 @@ class IterAux(Init_Source):
     # def init_post(self):
     #     self.PATH = []
 
-    def item__get_original(self, item: Any) -> Any | None:
+    def item__get_original(self, item: Any) -> Any | NoValue:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
 
@@ -58,6 +58,8 @@ class IterAux(Init_Source):
             if value == item or str(value).lower() == str(item).lower():
                 return value
 
+        return NoValue
+
     # -----------------------------------------------------------------------------------------------------------------
     def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None:
         """
@@ -74,14 +76,14 @@ class IterAux(Init_Source):
         # TODO: add attribute acceptable in path! and separate as Extruder?
         source = self.SOURCE
         if not path:
-            return ()
+            return None
 
         # work ----------------------------
         result = []
         for path_i in path:
             if isinstance(source, dict):
                 address_original = IterAux(source).item__get_original(path_i)
-                if not address_original:
+                if not address_original or address_original == NoValue:
                     return
                 source = source[address_original]
 
@@ -100,6 +102,10 @@ class IterAux(Init_Source):
             result.append(address_original)
 
         return tuple(result)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check__exist(self, item: Any) -> bool:
+        return self.item__get_original(item) is not NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
     def value__get(self, *path: TYPE__ITER_PATH_KEY) -> Any | NoReturn:

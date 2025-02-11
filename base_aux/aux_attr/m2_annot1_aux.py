@@ -1,12 +1,12 @@
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_types.m1_type_aux import TypeAux
+from base_aux.aux_types.m1_type_aux import *
 from base_aux.base_inits.m1_source import *
-
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from .m1_attr1_aux import AttrAux
-from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import *
 from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
+from base_aux.aux_iter.m1_iter_aux import *
 
 
 # =====================================================================================================================
@@ -78,21 +78,32 @@ class AnnotsAux(Init_Source):
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================
+    def set_value(self, name: str, value: Any = None) -> None:
+        """
+        GOAL
+        ----
+        set name/value by intended name from Annots or direct Attrs! or even not existsed!
+        without creation new annot!
+        """
+        if self.name__check_exists(name):
+            name = self.name__get_original(name)
+
+        AttrAux(self.SOURCE).anycase__setattr(name, value)
+
     def set_values__by_dict(self, data: TYPE__KWARGS_FINAL) -> None:
         """
         GOAL
         ----
-        set attrs only for annotated names,
-        so annots used like filter
+        SAME AS AttrAux.SetValues but assume names from annots!
+        # set attrs for annotated names (fixme: ???? AND STD ATTRS! - it seems OK!
+        # so annots+attrs used like filter
 
         SPECIALLY CREATED FOR
         ---------------------
         load into AnnotTemplate
         """
-        attr_aux = AttrAux(self.SOURCE)
         for key, value in data.items():
-            if attr_aux.anycase__check_exists(key):
-                attr_aux.anycase__setattr(key, value)
+            self.set_value(key, value)
 
     # =================================================================================================================
     def get__dict_types(self) -> dict[str, type[Any]]:
@@ -223,8 +234,8 @@ class AnnotsAux(Init_Source):
         if not names:
             names = self.iter_names()
 
-        for name in names:
-            for cls in self.iter_mro():
+        for cls in self.iter_mro():
+            for name in names:
                 if name in cls.__annotations__:
                     cls.__annotations__.pop(name)
 
@@ -238,12 +249,29 @@ class AnnotsAux(Init_Source):
         ----
         add names into annots!
         """
-        cls = TypeAux(self).get__class()
+        cls = TypeAux(self.SOURCE).get__class()
 
         for name in names:
             annots = cls.__annotations__
             if name not in annots:
                 cls.__annotations__.update({name: Any})
+
+    def name__get_original(self, name: str) -> str | NoValue:
+        """
+        GOAL
+        ----
+        check name exists in annots ONLY!
+        """
+        annots = self.get__dict_types()
+        return IterAux(annots).item__get_original(name)
+
+    def name__check_exists(self, name: str) -> bool:
+        """
+        GOAL
+        ----
+        check name exists in annots ONLY!
+        """
+        return self.name__get_original(name) is not NoValue
 
 
 # =====================================================================================================================
