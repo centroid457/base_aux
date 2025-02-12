@@ -1,12 +1,8 @@
-from typing import *
 import json
 import re
 
-from base_aux.base_statics.m4_enums import *
-from base_aux.base_inits.m1_source import *
-
 from base_aux.base_statics.m1_types import *
-from base_aux.base_statics.m5_patterns1_nums import *
+from base_aux.aux_text.m0_patterns import *
 
 
 # =====================================================================================================================

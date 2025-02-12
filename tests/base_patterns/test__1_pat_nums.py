@@ -3,7 +3,7 @@ import re
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
-from base_aux.base_statics.m5_patterns1_nums import *
+from base_aux.aux_text.m0_patterns import *
 
 
 # =====================================================================================================================
