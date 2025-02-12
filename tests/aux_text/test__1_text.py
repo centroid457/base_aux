@@ -131,41 +131,41 @@ class Test__Edit:
     @pytest.mark.parametrize(
         argnames="source, cmt, _EXPECTED",
         argvalues=[
-            # CmtType.SHARP -------------------------------------------------------
+            # CmtStyle.SHARP -------------------------------------------------------
             # ZERO -----
-            ("line1 ", CmtType.SHARP, "line1 "),
+            ("line1 ", CmtStyle.SHARP, "line1 "),
 
             # SEPARATED -----
-            ("#cmt #", CmtType.SHARP, ""),
-            ("##cmt #", CmtType.SHARP, ""),
+            ("#cmt #", CmtStyle.SHARP, ""),
+            ("##cmt #", CmtStyle.SHARP, ""),
 
-            ("#cmt ", CmtType.SHARP, ""),
-            ("  # cmt 1 ", CmtType.SHARP, ""),
+            ("#cmt ", CmtStyle.SHARP, ""),
+            ("  # cmt 1 ", CmtStyle.SHARP, ""),
 
             # INLINE -----
-            ("line  # cmt 1 ", CmtType.SHARP, "line"),
+            ("line  # cmt 1 ", CmtStyle.SHARP, "line"),
 
             # SEVERAL LINES ====
-            ("line1  # cmt1 \n line2 ", CmtType.SHARP, "line1\n line2 "),
-            ("line1  # cmt1 \n line2 #cmt2", CmtType.SHARP, "line1\n line2"),
-            ("line1  # cmt1 \n #cmt \n line2 #cmt2", CmtType.SHARP, "line1\n line2"),
+            ("line1  # cmt1 \n line2 ", CmtStyle.SHARP, "line1\n line2 "),
+            ("line1  # cmt1 \n line2 #cmt2", CmtStyle.SHARP, "line1\n line2"),
+            ("line1  # cmt1 \n #cmt \n line2 #cmt2", CmtStyle.SHARP, "line1\n line2"),
 
-            # CmtType.REM ---------------------------------------------------------
+            # CmtStyle.REM ---------------------------------------------------------
             # ZERO -----
-            ("line1 ", CmtType.REM, "line1 "),
+            ("line1 ", CmtStyle.REM, "line1 "),
 
             # SEPARATED -----
-            ("REM #", CmtType.REM, ""),
-            ("REM  REM #", CmtType.REM, ""),
+            ("REM #", CmtStyle.REM, ""),
+            ("REM  REM #", CmtStyle.REM, ""),
 
             # INLINE -----
-            ("line  REM 1 ", CmtType.REM, "line"),
+            ("line  REM 1 ", CmtStyle.REM, "line"),
 
             # SEVERAL LINES ====
-            ("line1  REM cmt1 \n line2 ", CmtType.REM, "line1\n line2 "),
-            ("line1  REM cmt1 \n line2 REM", CmtType.REM, "line1\n line2 REM"),
-            ("line1  REM cmt1 \n line2 REM ", CmtType.REM, "line1\n line2"),
-            ("line1  REM cmt1 \n REM \n line2 REM ", CmtType.REM, "line1\n line2"),
+            ("line1  REM cmt1 \n line2 ", CmtStyle.REM, "line1\n line2 "),
+            ("line1  REM cmt1 \n line2 REM", CmtStyle.REM, "line1\n line2 REM"),
+            ("line1  REM cmt1 \n line2 REM ", CmtStyle.REM, "line1\n line2"),
+            ("line1  REM cmt1 \n REM \n line2 REM ", CmtStyle.REM, "line1\n line2"),
         ]
     )
     def test__clear__cmts(self, source, cmt, _EXPECTED):

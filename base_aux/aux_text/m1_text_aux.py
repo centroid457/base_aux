@@ -15,22 +15,22 @@ class TextAux:
         super().__init__(*args, **kwargs)
 
     # =================================================================================================================
-    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = 0, *, cover_type: PatCoverType = PatCoverType.DIRECT) -> str:
+    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = 0, *, cover_type: PatCoverStyle = PatCoverStyle.NONE) -> str:
         if new is None:
             new = ""
 
         flags = flags or 0
 
-        if cover_type == PatCoverType.WORD:
+        if cover_type == PatCoverStyle.WORD:
             pat = r"\b" + pat + r"\b"
 
-        elif cover_type == PatCoverType.LINE:
+        elif cover_type == PatCoverStyle.LINE:
             pat = r"^" + pat + r"$"
 
         self.TEXT = re.sub(pat, new, self.TEXT, flags=flags)
         return self.TEXT
 
-    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], flags: re.RegexFlag = 0, cover_type: PatCoverType = PatCoverType.DIRECT) -> str:
+    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], flags: re.RegexFlag = 0, cover_type: PatCoverStyle = PatCoverStyle.NONE) -> str:
         """
         GOAL
         ----
@@ -52,7 +52,7 @@ class TextAux:
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexp(*rule, flags=flags, cover_type=PatCoverType.WORD)
+        return self.sub__regexp(*rule, flags=flags, cover_type=PatCoverStyle.WORD)
 
     def sub__words(self, *rules, flags: re.RegexFlag = 0) -> str:
         """
@@ -60,14 +60,14 @@ class TextAux:
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexps(*rules, flags=flags, cover_type=PatCoverType.WORD)
+        return self.sub__regexps(*rules, flags=flags, cover_type=PatCoverStyle.WORD)
 
     # -----------------------------------------------------------------------------------------------------------------
     def sub__line(self, *rule, flags: re.RegexFlag = 0) -> str:
-        return self.sub__regexp(*rule, flags=flags | re.MULTILINE, cover_type=PatCoverType.LINE)
+        return self.sub__regexp(*rule, flags=flags | re.MULTILINE, cover_type=PatCoverStyle.LINE)
 
     def sub__lines(self, *rules, flags: re.RegexFlag = 0) -> str:
-        return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverType.LINE)
+        return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverStyle.LINE)
 
     # EDIT ============================================================================================================
     def clear__spaces_all(self) -> str:
@@ -118,7 +118,7 @@ class TextAux:
         self.sub__regexp(r"\n+\s*\n+", "\n", re.MULTILINE)  # middle double
         return self.TEXT
 
-    def delete__cmts(self, cmt_type: CmtType = CmtType.SHARP) -> str:
+    def delete__cmts(self, cmt_type: CmtStyle = CmtStyle.SHARP) -> str:
         """
         GOAL
         ----
@@ -129,23 +129,23 @@ class TextAux:
         if one line cmt - full line would be deleted!
         """
         # recursion -----------------------------
-        if cmt_type == CmtType.ALL:
-            for cmt_type in [CmtType.SHARP, CmtType.DSLASH, CmtType.REM]:
+        if cmt_type == CmtStyle.ALL:
+            for cmt_type in [CmtStyle.SHARP, CmtStyle.DSLASH, CmtStyle.REM]:
                 self.delete__cmts(cmt_type)
 
-        elif cmt_type == CmtType.AUTO:
-            raise NotImplementedError(CmtType.AUTO)
+        elif cmt_type == CmtStyle.AUTO:
+            raise NotImplementedError(CmtStyle.AUTO)
 
         # work ----------------------------------
-        if cmt_type == CmtType.SHARP:
+        if cmt_type == CmtStyle.SHARP:
             self.sub__regexp(PatCmts.SHARP_LINE, "", re.MULTILINE)
             self.sub__regexp(PatCmts.SHARP_INLINE, "", re.MULTILINE)
 
-        elif cmt_type == CmtType.DSLASH:
+        elif cmt_type == CmtStyle.DSLASH:
             self.sub__regexp(PatCmts.DSLASH_LINE, "", re.MULTILINE)
             self.sub__regexp(PatCmts.DSLASH_INLINE, "", re.MULTILINE)
 
-        elif cmt_type == CmtType.REM:
+        elif cmt_type == CmtStyle.REM:
             self.sub__regexp(PatCmts.REM_LINE, "", re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
             self.sub__regexp(PatCmts.REM_INLINE, "", re.MULTILINE | re.IGNORECASE)
 
@@ -335,7 +335,7 @@ class TextAux:
         ---------------------
         setup.py install_requires
         """
-        self.delete__cmts(CmtType.SHARP)
+        self.delete__cmts(CmtStyle.SHARP)
         self.delete__lines_blank()
         self.strip__lines()
         result = self.split_lines()

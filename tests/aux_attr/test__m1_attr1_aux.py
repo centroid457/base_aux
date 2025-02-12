@@ -145,13 +145,13 @@ class Test__Dump:
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
         argvalues=[
-            (CallablesUse.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE, )),
-            (CallablesUse.EXX, (None, True, True, Exception, )),
-            # (CallablesUse.RAISE, Exception),          # need special tests!
-            (CallablesUse.RAISE_AS_NONE, (None, True, True, None, )),
-            (CallablesUse.BOOL, (False, True, True, False, )),
-            (CallablesUse.SKIP_CALLABLE, (None, True, None, None, )),
-            (CallablesUse.SKIP_RAISED, (None, True, True, None, )),
+            (CallableResolve.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
+            (CallableResolve.EXX, (None, True, True, Exception,)),
+            # (CallableResolve.RAISE, Exception),          # need special tests!
+            (CallableResolve.RAISE_AS_NONE, (None, True, True, None,)),
+            (CallableResolve.BOOL, (False, True, True, False,)),
+            (CallableResolve.SKIP_CALLABLE, (None, True, None, None,)),
+            (CallableResolve.SKIP_RAISED, (None, True, True, None,)),
         ]
     )
     def test__callable_use(self, cal_use, _EXPECTED):
@@ -163,7 +163,7 @@ class Test__Dump:
 
     def test__callable_use__special_raise(self):
         try:
-            result_dict = AttrAux(Victim).dump_dict(CallablesUse.RAISE)
+            result_dict = AttrAux(Victim).dump_dict(CallableResolve.RAISE)
             assert False
         except:
             assert True

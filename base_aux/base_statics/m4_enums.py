@@ -55,7 +55,7 @@ class Where3(Enum):
 
 
 # =====================================================================================================================
-class CallablesUse(Enum):
+class CallableResolve(Enum):
     DIRECT = auto()
     EXX = auto()
     RAISE = auto()
@@ -67,7 +67,7 @@ class CallablesUse(Enum):
 
 
 # =====================================================================================================================
-class Process(Enum):
+class ProcessState(Enum):
     """
     GOAL
     ----
@@ -136,7 +136,7 @@ class DictTextFormat(Enum):
     STR = "str"     # str(dict)
 
 
-class TextFormat(Enum):
+class TextStyle(Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -151,7 +151,12 @@ class TextFormat(Enum):
     MD = "md"
 
 
-class CmtType(Enum):
+class CmtStyle(Enum):
+    """
+    GOAL
+    ----
+    select
+    """
     AUTO = None     # keep decide?
     ALL = all
 
@@ -160,15 +165,15 @@ class CmtType(Enum):
     REM = "rem"
 
 
-class PatCoverType(Enum):
+class PatCoverStyle(Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
     TextAux.sub__regexp
     """
-    DIRECT = auto()
-    WORD = auto()
-    LINE = auto()
+    NONE = None
+    WORD = "word"
+    LINE = "line"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -181,6 +186,10 @@ class NumType(Enum):
 # =====================================================================================================================
 class FPoint(Enum):
     """
+    GOAL
+    ----
+    floating point style
+
     SPECIALLY CREATED FOR
     ---------------------
     TextAux.parse__single_number

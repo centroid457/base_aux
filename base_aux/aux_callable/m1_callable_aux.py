@@ -8,7 +8,7 @@ from base_aux.base_statics.m4_enums import *
 class CallableAux(Init_Source):
     """
     """
-    PROCESS: Process = Process.NONE
+    PROCESS: ProcessState = ProcessState.NONE
 
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self._construct_with_args_kwargs(*args, **kwargs)
@@ -17,18 +17,18 @@ class CallableAux(Init_Source):
         """
         unsafe (raise acceptable) get value
         """
-        self.PROCESS: Process = Process.STARTED
+        self.PROCESS: ProcessState = ProcessState.STARTED
 
         if callable(self.SOURCE):
             result = self.SOURCE(*args, **kwargs)
         else:
             result = self.SOURCE
 
-        self.PROCESS: Process = Process.SUCCESS
+        self.PROCESS: ProcessState = ProcessState.SUCCESS
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self, callable_use: CallablesUse = CallablesUse.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | CallablesUse | bool:
+    def resolve(self, callable_use: CallableResolve = CallableResolve.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | CallableResolve | bool:
         """
         NOTE
         ----
@@ -37,25 +37,25 @@ class CallableAux(Init_Source):
         it is not so convenient to use param callable_use!
         SO preferred using other/further direct methods!
         """
-        if callable_use == CallablesUse.DIRECT:
+        if callable_use == CallableResolve.DIRECT:
             return self.SOURCE
 
-        elif callable_use == CallablesUse.EXX:
+        elif callable_use == CallableResolve.EXX:
             return self.resolve_exx(*args, **kwargs)
 
-        elif callable_use == CallablesUse.RAISE:
+        elif callable_use == CallableResolve.RAISE:
             return self.resolve_raise(*args, **kwargs)
 
-        elif callable_use == CallablesUse.RAISE_AS_NONE:
+        elif callable_use == CallableResolve.RAISE_AS_NONE:
             return self.resolve_raise_as_none(*args, **kwargs)
 
-        elif callable_use == CallablesUse.SKIP_CALLABLE:
+        elif callable_use == CallableResolve.SKIP_CALLABLE:
             return self.resolve_skip_callables(*args, **kwargs)
 
-        elif callable_use == CallablesUse.SKIP_RAISED:
+        elif callable_use == CallableResolve.SKIP_RAISED:
             return self.resolve_skip_raised(*args, **kwargs)
 
-        elif callable_use == CallablesUse.BOOL:
+        elif callable_use == CallableResolve.BOOL:
             return self.resolve_bool(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class CallableAux(Init_Source):
         try:
             return self(*args, **kwargs)
         except Exception as exx:
-            self.PROCESS: Process = Process.RAISED
+            self.PROCESS: ProcessState = ProcessState.RAISED
             return exx
 
     def resolve_raise(self, *args, **kwargs) -> Any | NoReturn:
@@ -110,17 +110,17 @@ class CallableAux(Init_Source):
 
     def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
-            return Process.SKIPPED  # TODO: decide using None ???
+            return ProcessState.SKIPPED  # TODO: decide using None ???
         else:
-            self.PROCESS: Process = Process.SKIPPED
+            self.PROCESS: ProcessState = ProcessState.SKIPPED
             return self.SOURCE
 
     def resolve_skip_raised(self, *args, **kwargs) -> Any | NoReturn:
         try:
             return self.resolve_raise(*args, **kwargs)
         except:
-            self.PROCESS: Process = Process.RAISED
-            return Process.SKIPPED  # TODO: decide using None ???
+            self.PROCESS: ProcessState = ProcessState.RAISED
+            return ProcessState.SKIPPED  # TODO: decide using None ???
 
     def resolve_bool(self, *args, **kwargs) -> bool:
         """
@@ -165,7 +165,7 @@ class CallableAux(Init_Source):
                 return False
             return bool(result)
         except:
-            self.PROCESS: Process = Process.RAISED
+            self.PROCESS: ProcessState = ProcessState.RAISED
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ class CallableAux(Init_Source):
             self.resolve_raise(*args, **kwargs)
             return False
         except:
-            self.PROCESS: Process = Process.RAISED
+            self.PROCESS: ProcessState = ProcessState.RAISED
             return True
 
     def check_no_raise(self, *args, **kwargs) -> bool:

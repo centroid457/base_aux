@@ -233,7 +233,7 @@ class AttrAux(Init_Source):
         self.anycase__delattr(name)
 
     # =================================================================================================================
-    def getattr__callable_resolve(self, name: str, callables_use: CallablesUse = CallablesUse.DIRECT) -> Any | Callable | CallablesUse | NoReturn:
+    def getattr__callable_resolve(self, name: str, callables_use: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
         -------
@@ -252,15 +252,15 @@ class AttrAux(Init_Source):
         try:
             value = self.anycase__getattr(name)
         except Exception as exx:
-            if callables_use == CallablesUse.SKIP_RAISED:
-                return Process.SKIPPED
-            elif callables_use == CallablesUse.EXX:
+            if callables_use == CallableResolve.SKIP_RAISED:
+                return ProcessState.SKIPPED
+            elif callables_use == CallableResolve.EXX:
                 return exx
-            elif callables_use == CallablesUse.RAISE_AS_NONE:
+            elif callables_use == CallableResolve.RAISE_AS_NONE:
                 return None
-            elif callables_use == CallablesUse.RAISE:
+            elif callables_use == CallableResolve.RAISE:
                 raise exx
-            elif callables_use == CallablesUse.BOOL:
+            elif callables_use == CallableResolve.BOOL:
                 return False
             else:
                 raise exx
@@ -292,7 +292,7 @@ class AttrAux(Init_Source):
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_use: CallablesUse = CallablesUse.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_use: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -313,7 +313,7 @@ class AttrAux(Init_Source):
         result = {}
         for name in self.iter__not_private():
             value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
-            if value == Process.SKIPPED:
+            if value == ProcessState.SKIPPED:
                 continue
             result.update({name: value})
 
@@ -323,19 +323,19 @@ class AttrAux(Init_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(CallablesUse.EXX)
+        return self.dump_dict(CallableResolve.EXX)
 
     def dump_dict__direct(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(CallablesUse.DIRECT)
+        return self.dump_dict(CallableResolve.DIRECT)
 
     def dump_dict__skip_callables(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(CallablesUse.SKIP_CALLABLE)
+        return self.dump_dict(CallableResolve.SKIP_CALLABLE)
 
     def dump_dict__skip_raised(self) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(CallablesUse.RAISE)
+        return self.dump_dict(CallableResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallablesUse = CallablesUse.EXX) -> AttrsDump | NoReturn:
+    def dump_obj(self, callables_use: CallableResolve = CallableResolve.EXX) -> AttrsDump | NoReturn:
         data = self.dump_dict(callables_use)
         obj = AttrAux().load__by_dict(data)
         return obj
@@ -343,7 +343,7 @@ class AttrAux(Init_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def dump__pretty_str(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        for key, value in self.dump_dict(CallablesUse.EXX).items():
+        for key, value in self.dump_dict(CallableResolve.EXX).items():
             result += f"\n\t{key}={value}"
         else:
             result += f"\nEmpty=Empty"
