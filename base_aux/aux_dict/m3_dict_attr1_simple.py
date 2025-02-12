@@ -5,7 +5,7 @@ from base_aux.aux_attr.m2_annot2_nest_required import *
 
 
 # =====================================================================================================================
-class DictDots(DictIgnorecase):
+class DictAttr(DictIgnorecase):
     """
     dot.notation access to dictionary keys.
     RULES
@@ -130,7 +130,7 @@ class DictDots(DictIgnorecase):
     def __getitem__(self, item: Any) -> Any | NoReturn:
         result = self.get(item)         # thats wrong with NESTING! not will working with saving results!!!
         if isinstance(result, dict):
-            result = DictDots(result)
+            result = DictAttr(result)
 
         return result
 
@@ -146,9 +146,9 @@ class DictDots(DictIgnorecase):
 
 
 # =====================================================================================================================
-class DictDotsAnnotRequired(DictDots, NestInit_AnnotsRequired):
+class DictAttrAnnotRequired(DictAttr, NestInit_AnnotsRequired):
     """
-    its a derivative for DictDots with applying NestInit_AnnotsRequired
+    its a derivative for DictAttr with applying NestInit_AnnotsRequired
 
     WHY NOT 1=just simple nesting NestInit_AnnotsRequired?
     --------------------------------------------
@@ -182,7 +182,7 @@ class DictDotsAnnotRequired(DictDots, NestInit_AnnotsRequired):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    class Cls(DictDotsAnnotRequired):
+    class Cls(DictAttrAnnotRequired):
         ATTR1: str
 
     victim = Cls()

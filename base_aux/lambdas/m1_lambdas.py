@@ -164,7 +164,7 @@ class LambdaTrySuccess(LambdaBool):
 
     3. pytest assertions
 
-        class Victim(DictDotsAnnotRequired):
+        class Victim(DictAttrAnnotRequired):
             lowercase: str
 
         assert LambdaTryFail(Victim)

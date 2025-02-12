@@ -174,7 +174,7 @@
 
 0.0.15 (2024/11/12 18:04:29)
 ------------------------------
-- [DictDotsAnnotRequired] add  
+- [DictAttrAnnotRequired] add  
 - [_SAND] create and add first content  
 
 0.0.14 (2024/11/08 17:51:33)
@@ -214,7 +214,7 @@
 
 0.0.5 (2024/11/05 10:33:43)
 ------------------------------
-- [classes] add DictIgnorecase+DictDots  
+- [classes] add DictIgnorecase+DictAttr  
 - [stock] move here  
 - [all] fix almost, so tests works (need fix privates for alerts)  
 

@@ -278,7 +278,7 @@ class TypeAux(Init_Source):
             """
             created specially for
             ---------------------
-            DictDotsAnnotRequired(dict)
+            DictAttrAnnotRequired(dict)
             it is not working without it!!!
             """
             mro = ()

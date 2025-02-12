@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_dict.m3_dict_dots1_simple import *
+from base_aux.aux_dict.m3_dict_attr1_simple import *
 
 
 # =====================================================================================================================
@@ -11,7 +11,7 @@ dict_example = {
 }
 
 
-class Victim(DictDots):
+class Victim(DictAttr):
     lowercase: str
 
 

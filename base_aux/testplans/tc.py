@@ -2,7 +2,7 @@ import json
 import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from base_aux.aux_dict.m3_dict_dots1_simple import *
+from base_aux.aux_dict.m3_dict_attr1_simple import *
 from base_aux.aux_callable.m1_callable_aux import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
@@ -58,7 +58,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     _inst_inited: Optional[bool] = None
 
     INDEX: int
-    SETTINGS: DictDots = {}
+    SETTINGS: DictAttr = {}
     DEVICES__BREEDER_INST: 'DevicesBreeder'
 
     result__startup: TYPE__RESULT_W_EXX = None
@@ -127,7 +127,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         if self.DEVICES__BREEDER_CLS:
             self.DEVICES__BREEDER_INST = self.DEVICES__BREEDER_CLS(index)
 
-        self.SETTINGS = DictDots(self.settings_read())
+        self.SETTINGS = DictAttr(self.settings_read())
         self._inst_inited = True
 
     # =================================================================================================================
