@@ -169,7 +169,7 @@ class TextAux:
         it can strip blank lines!
             " line1 \n \n  line2 " --> " line1\nline2"
         """
-        return self.sub__regexp(r"\s*$", "", re.MULTILINE)
+        return self.sub__regexp(r"\s+$", "", re.MULTILINE)
 
     def lstrip__lines(self) -> str:
         """
@@ -178,7 +178,7 @@ class TextAux:
         less usefull as lstrip__lines
         but for the company)
         """
-        return self.sub__regexp(r"^\s*", "", re.MULTILINE)
+        return self.sub__regexp(r"^\s+", "", re.MULTILINE)
 
     # =================================================================================================================
     def split_lines(self, skip_blanks: bool = None) -> list[str]:

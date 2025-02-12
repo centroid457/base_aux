@@ -161,6 +161,11 @@ class CmtType(Enum):
 
 
 class PatCoverType(Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    TextAux.sub__regexp
+    """
     DIRECT = auto()
     WORD = auto()
     LINE = auto()
