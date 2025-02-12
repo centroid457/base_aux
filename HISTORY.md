@@ -10,6 +10,21 @@
 ********************************************************************************
 ## NEWS
 
+0.2.5 (2025/02/12 14:56:31)
+------------------------------
+- [EqValid] add EqValid_SingleNumParced  
+- [Nums] add NumParsedSingle  
+- [baseStatics] collect/move all in one place enums/exx/types/primitives  
+- [Init*/Nest*] apply naming Style for special classes  
+- [File/Dir] at last add and finish  
+- [File+Text] combine in one class  
+- [FilePath] add suffix/prefix  
+- [Text] fix all editors(sub_*/clear/del)  
+- [Annots] add set_values__by_dict  
+- [enums] add cmtType/...  
+- [Patts] separate in one file + move into text  
+- [TYPING] create class and collect all User typing types  
+
 0.2.4 (2025/02/06 15:02:40)
 ------------------------------
 - [text] add parse__single_num +all derivatives  

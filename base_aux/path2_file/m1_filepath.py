@@ -23,7 +23,7 @@ class Resolve_FilePath(NestCall_Resolve):
     DIRPATH: TYPING.PATH_FINAL = None
 
     name_PREFIX: str = ""
-    name_SUFFIX: str = ""
+    name_SUFFIX: str = ""   # for using in BackUps!
 
     DOT: bool = None
 

@@ -62,11 +62,20 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 4)
+    VERSION: tuple[int, int, int] = (0, 2, 5)
     NEWS: list[str] = [
-        "[text] add parse__single_num +all derivatives",
-        "[enum] add FPoint/NumType",
-        "[base_patterns] start separating +add singleNum",
+        "[EqValid] add EqValid_SingleNumParced",
+        "[Nums] add NumParsedSingle",
+        "[baseStatics] collect/move all in one place enums/exx/types/primitives",
+        "[Init*/Nest*] apply naming Style for special classes",
+        "[File/Dir] at last add and finish",
+        "[File+Text] combine in one class",
+        "[FilePath] add suffix/prefix",
+        "[Text] fix all editors(sub_*/clear/del)",
+        "[Annots] add set_values__by_dict",
+        "[enums] add cmtType/...",
+        "[Patts] separate in one file + move into text",
+        "[TYPING] create class and collect all User typing types",
     ]
 
 
