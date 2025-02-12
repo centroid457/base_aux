@@ -86,8 +86,8 @@ class Test__Edit:
             (" 1, _\n\n  \n \t  \r  ()", ' 1, _\n\n \n \t \r ()'),
         ]
     )
-    def test__spaces_double(self, source, _EXPECTED):
-        func_link = TextAux(source).clear__spaces_double
+    def test__spaces_duplicates(self, source, _EXPECTED):
+        func_link = TextAux(source).clear__space_duplicates
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------

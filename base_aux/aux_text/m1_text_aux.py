@@ -15,49 +15,59 @@ class TextAux:
         super().__init__(*args, **kwargs)
 
     # =================================================================================================================
-    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = None, *, as_word: bool = None) -> str:
+    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = 0, *, cover_type: PatCoverType = PatCoverType.DIRECT) -> str:
         if new is None:
             new = ""
 
         flags = flags or 0
 
-        if as_word:
+        if cover_type == PatCoverType.WORD:
             pat = r"\b" + pat + r"\b"
+
+        elif cover_type == PatCoverType.LINE:
+            pat = r"^" + pat + r"$"
 
         self.TEXT = re.sub(pat, new, self.TEXT, flags=flags)
         return self.TEXT
 
-    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], as_word: bool = None) -> str:
+    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], flags: re.RegexFlag = 0, cover_type: PatCoverType = PatCoverType.DIRECT) -> str:
         """
         GOAL
         ----
-
 
         SPECIALLY CREATED FOR
         ---------------------
-        as_word - for prepare_for_json_parsing
+        cover_type - for prepare_for_json_parsing
         WORD means syntax word!
         """
         for rule in rules:
-            self.sub__regexp(*rule, as_word=as_word)
+            self.sub__regexp(*rule, flags=flags, cover_type=cover_type)
 
         return self.TEXT
 
-    def sub__word(self, *rule) -> str:
+    # -----------------------------------------------------------------------------------------------------------------
+    def sub__word(self, *rule, flags: re.RegexFlag = 0) -> str:
         """
         GOAL
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexp(*rule, as_word=True)
+        return self.sub__regexp(*rule, flags=flags, cover_type=PatCoverType.WORD)
 
-    def sub__words(self, *rules) -> str:
+    def sub__words(self, *rules, flags: re.RegexFlag = 0) -> str:
         """
         GOAL
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexps(*rules, as_word=True)
+        return self.sub__regexps(*rules, flags=flags, cover_type=PatCoverType.WORD)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def sub__line(self, *rule, flags: re.RegexFlag = 0) -> str:
+        return self.sub__regexp(*rule, flags=flags | re.MULTILINE, cover_type=PatCoverType.LINE)
+
+    def sub__lines(self, *rules, flags: re.RegexFlag = 0) -> str:
+        return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverType.LINE)
 
     # EDIT ============================================================================================================
     def clear__spaces_all(self) -> str:
@@ -70,7 +80,7 @@ class TextAux:
         """
         return self.sub__regexp(r" ", "")
 
-    def clear__spaces_double(self) -> str:
+    def clear__space_duplicates(self) -> str:
         """
         GOAL
         ----
@@ -83,16 +93,25 @@ class TextAux:
         NOTE
         ----
         clear! NOT DELETE!!! exact lines!
-        if need - apply
+        if need - apply delete!
         """
         for pat in pats:
-            pat = r"^" + pat + r"$"
-            self.sub__regexp(pat, "", re.MULTILINE)
+            self.sub__line(pat, "")
         return self.TEXT
 
     def delete__lines_blank(self) -> str:
+        """
+        GOAL
+        ----
+        exact deleting blank lines!
+        """
         # return self.clear__lines(r"\s*", )
 
+        # variant1
+        # self.sub__regexp(r"^\s*\n+", "", re.MULTILINE)        # not enough!
+        # self.sub__regexp(r"^\s*\n+", "", re.MULTILINE)        # not enough!
+
+        # variant2
         self.sub__regexp(r"^\s*$", "", re.MULTILINE)        # not enough!
         self.sub__regexp(r"^\s*\n+", "", re.MULTILINE)      # startwith
         self.sub__regexp(r"\n+\s*$", "", re.MULTILINE)      # endswith
@@ -101,9 +120,13 @@ class TextAux:
 
     def delete__cmts(self, cmt_type: CmtType = CmtType.SHARP) -> str:
         """
+        GOAL
+        ----
+        exact DELETING cmts
+
         NOTE
         ----
-        if oneline cmt - full line would be deleted!
+        if one line cmt - full line would be deleted!
         """
         # recursion -----------------------------
         if cmt_type == CmtType.ALL:

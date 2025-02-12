@@ -160,6 +160,12 @@ class CmtType(Enum):
     REM = "rem"
 
 
+class PatCoverType(Enum):
+    DIRECT = auto()
+    WORD = auto()
+    LINE = auto()
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 class NumType(Enum):
     INT = int
