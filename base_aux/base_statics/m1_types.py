@@ -1,7 +1,6 @@
 from typing import *
 import pathlib
-
-from base_aux.aux_values.m0_novalue import TYPE__NOVALUE
+from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
@@ -16,9 +15,8 @@ class TYPES:
     """
     GOAL
     ----
-    collect all types variants
+    collect all types USEFUL variants
     """
-
     # SINGLE ---------------------------
     NONE: type = type(None)
     NUMBER = int | float
@@ -43,16 +41,42 @@ class TYPES:
     )
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-TYPE__ELEMENTARY = Union[*TYPES.ELEMENTARY]
+# =====================================================================================================================
+@final
+class TYPING:
+    """
+    GOAL
+    ----
+    collect all typing USER variants
+    """
+    ELEMENTARY = Union[*TYPES.ELEMENTARY]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    ARGS_FINAL = tuple[Any, ...]
+    ARGS_DRAFT = Union[Any, ARGS_FINAL, 'ArgsKwargs']           # you can use direct single value
+
+    KWARGS_FINAL = dict[str, Any]
+    KWARGS_DRAFT = Union[None, KWARGS_FINAL, 'ArgsKwargs']  # if passed NONE - no data!
+
+    # -----------------------------------------------------------------------------------------------------------------
+    PATH_FINAL = pathlib.Path
+    PATH_DRAFT = Union[str, PATH_FINAL]
+
+    STR_FINAL = str
+    STR_DRAFT = Union[STR_FINAL, Any]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values
+    DICT_STR_ANY = dict[str, Any]               # just to show - dict could be any! on values! not just an elementary1
+    DICT_STR_ELEM = dict[str, ELEMENTARY]       # just to show - parsed by json - dict
+    DICT_JSON_ANY = ELEMENTARY | DICT_STR_ELEM  # just to show - parsed by json - any object
+
+    # -----------------------------------------------------------------------------------------------------------------
 
 
-# DRAFTS ==============================================================================================================
-TYPE__PATH_DRAFT = Union[str, pathlib.Path]
-TYPE__PATH_FINAL = pathlib.Path
-
-TYPE__STR_DRAFT = Union[str, Any]
-TYPE__STR_FINAL = str
+# VALUES --------------------------------------------------------------------------------------------------------------
+ARGS_FINAL__BLANK = ()
+KWARGS_FINAL__BLANK = {}
 
 
 # VALIDS ==============================================================================================================
@@ -66,7 +90,7 @@ TYPE__VALID_BOOL__DRAFT = Union[
     bool,                               # as main idea! as already final generic
     Callable[[...], bool | Any | NoReturn],   # as main idea! to get final generic
     TYPE__VALID_EXX,
-    TYPE__NOVALUE
+    NoValue
 ]
 TYPE__VALID_BOOL__FINAL = Union[
     # this is when you need get only bool! raise - as False!
@@ -88,24 +112,7 @@ TYPE__VALID_VALIDATOR = Union[
 
 # =====================================================================================================================
 TYPE__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
-
 _TYPE__LAMBDA_BOOL = Union[Any, Callable[..., bool | NoReturn]]
-
-TYPE__ARGS_FINAL = tuple[Any, ...]
-TYPE__KWARGS_FINAL = dict[str, Any]
-
-# VALUES --------------------------------------------------------------------------------------------------------------
-ARGS_FINAL__NOT_USED = ()     # just to show that here it is not used
-KWARGS_FINAL__NOT_USED = {}   # just to show that here it is not used
-
-ARGS_FINAL__BLANK = ()     # just to show that here it is not used
-KWARGS_FINAL__BLANK = {}   # just to show that here it is not used
-
-
-# =====================================================================================================================
-TYPE__DICT_ANY = dict[Any, Any]                         # just to show - dict could be any!
-TYPE__JSON_DICT = dict[str, TYPE__ELEMENTARY]           # just to show - parsed by json - dict
-TYPE__JSON_ANY = TYPE__ELEMENTARY | TYPE__JSON_DICT     # just to show - parsed by json - any object
 
 
 # =====================================================================================================================

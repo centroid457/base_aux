@@ -90,7 +90,7 @@ class AnnotsAux(Init_Source):
 
         AttrAux(self.SOURCE).anycase__setattr(name, value)
 
-    def set_values__by_dict(self, data: TYPE__KWARGS_FINAL) -> None:
+    def set_values__by_dict(self, data: TYPING.KWARGS_FINAL) -> None:
         """
         GOAL
         ----
@@ -124,7 +124,7 @@ class AnnotsAux(Init_Source):
             result = _result_i
         return result
 
-    def get__dict_values(self) -> TYPE__KWARGS_FINAL:
+    def get__dict_values(self) -> TYPING.KWARGS_FINAL:
         """
         GOAL
         ----

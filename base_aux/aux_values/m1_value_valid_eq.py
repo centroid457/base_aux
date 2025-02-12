@@ -24,8 +24,8 @@ class ValueEqValid(NestCall_Resolve):
             self,
             value: Any = NoValue,
             eq: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue,
-            eq_args: TYPE__ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**
-            eq_kwargs: TYPE__KWARGS_DRAFT = KWARGS_FINAL__BLANK,
+            eq_args: TYPING.ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**
+            eq_kwargs: TYPING.KWARGS_DRAFT = KWARGS_FINAL__BLANK,
     ) -> None | NoReturn:
         if eq is not NoValue:
             self.EQ = eq
@@ -96,8 +96,8 @@ class ValueEqValid_Exact(ValueEqValid):
     def __init__(
             self,
             value: Any,
-            *eq_args: TYPE__ARGS_DRAFT,
-            **eq_kwargs: TYPE__KWARGS_DRAFT,
+            *eq_args: TYPING.ARGS_DRAFT,
+            **eq_kwargs: TYPING.KWARGS_DRAFT,
     ) -> None:
         super().__init__(value=value, eq=NoValue, eq_args=eq_args, eq_kwargs=eq_kwargs)
 

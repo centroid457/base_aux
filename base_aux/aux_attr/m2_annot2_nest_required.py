@@ -38,7 +38,7 @@ class NestInit_AnnotsRequired(NestGAI_AttrAnycase):
     #     # print(annots)
     #     return annots
     #
-    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[TYPE__KWARGS_FINAL, NoReturn]:
+    # def annots_get_dict(self, obj: Optional[Any] = None) -> Union[TYPING.KWARGS_FINAL, NoReturn]:
     #     """get dict of undefined annotated attributes in class but defined in instance!
     #     """
     #     annots = dict()

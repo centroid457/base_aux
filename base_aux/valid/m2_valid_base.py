@@ -3,9 +3,7 @@ import time
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.base_statics.m1_types import *
-
-from base_aux.aux_eq.m1_eq_aux import EqAux
-
+from base_aux.aux_eq.m1_eq_aux import *
 # from base_aux.lambdas.lambdas import *
 
 
@@ -61,10 +59,10 @@ class Valid:
     VALIDATE_RETRY: int = 0
     REVERSE_LINK: TYPE__VALID_BOOL__DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
-    ARGS__VALUE: TYPE__ARGS_FINAL = ()
-    ARGS__VALIDATE: TYPE__ARGS_FINAL = ()
-    KWARGS__VALUE: TYPE__KWARGS_FINAL = None
-    KWARGS__VALIDATE: TYPE__KWARGS_FINAL = None
+    ARGS__VALUE: TYPING.ARGS_FINAL = ()
+    ARGS__VALIDATE: TYPING.ARGS_FINAL = ()
+    KWARGS__VALUE: TYPING.KWARGS_FINAL = None
+    KWARGS__VALIDATE: TYPING.KWARGS_FINAL = None
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: float | None = None
@@ -89,11 +87,11 @@ class Valid:
             skip_link: TYPE__VALID_BOOL__DRAFT= None,
             reverse_link: TYPE__VALID_BOOL__DRAFT = None,
 
-            args__value: TYPE__ARGS_DRAFT = (),
-            args__validate: TYPE__ARGS_DRAFT = (),
+            args__value: TYPING.ARGS_DRAFT = (),
+            args__validate: TYPING.ARGS_DRAFT = (),
 
-            kwargs__value: TYPE__KWARGS_DRAFT = None,
-            kwargs__validate: TYPE__KWARGS_DRAFT = None,
+            kwargs__value: TYPING.KWARGS_DRAFT = None,
+            kwargs__validate: TYPING.KWARGS_DRAFT = None,
 
             name: Optional[str] = None,
             comment: Optional[str] = None,

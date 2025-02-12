@@ -9,7 +9,7 @@ class PrivateEnv(PrivateBase):
     """
     read exact environs from Os Environment
     """
-    def get_dict(self, _prefix: Optional[str] = None) -> TYPE__KWARGS_FINAL:
+    def get_dict(self, _prefix: Optional[str] = None) -> TYPING.KWARGS_FINAL:
         """
         directly using result - mainly it is only for PRINTing and debugging! don't use result!
 
@@ -30,7 +30,7 @@ class PrivateEnv(PrivateBase):
             print(dict(os.environ)[name_lowercase])     # KeyError: 'name_lowercase'
         """
         envs_all = os.environ
-        result: TYPE__KWARGS_FINAL = {}
+        result: TYPING.KWARGS_FINAL = {}
 
         # filter ---------------
         for name, value in envs_all.items():

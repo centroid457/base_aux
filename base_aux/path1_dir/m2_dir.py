@@ -16,9 +16,9 @@ class DirAux:
     collect all meths for directory include several files EXTERNAL work!
     single file work with FileAux class!
     """
-    DIRPATH: TYPE__PATH_FINAL
+    DIRPATH: TYPING.PATH_FINAL
 
-    def __init__(self, dirpath: TYPE__PATH_DRAFT = None) -> None:
+    def __init__(self, dirpath: TYPING.PATH_DRAFT = None) -> None:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ class DirAux:
         return self.delete_items(self.DIRPATH, raise_fails=raise_fails)
 
     @classmethod
-    def delete_items(cls, *paths: TYPE__PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
+    def delete_items(cls, *paths: TYPING.PATH_FINAL, raise_fails: bool = None) -> bool | NoReturn:
         result = True
         for path in paths:
 

@@ -2,9 +2,7 @@ import re
 
 from base_aux.base_inits.m1_source import *
 from base_aux.base_statics.m4_enums import *
-# from base_aux.aux_types import TypeAux
-
-from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_attr.m0_static import AttrsDump
 
@@ -327,10 +325,10 @@ class AttrAux(Init_Source):
         """
         return self.dump_dict(CallablesUse.EXX)
 
-    def dump_dict__direct(self) -> TYPE__KWARGS_FINAL:
+    def dump_dict__direct(self) -> TYPING.KWARGS_FINAL:
         return self.dump_dict(CallablesUse.DIRECT)
 
-    def dump_dict__skip_callables(self) -> TYPE__KWARGS_FINAL:
+    def dump_dict__skip_callables(self) -> TYPING.KWARGS_FINAL:
         return self.dump_dict(CallablesUse.SKIP_CALLABLE)
 
     def dump_dict__skip_raised(self) -> dict[str, Any] | NoReturn:

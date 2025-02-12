@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread
 
-from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import *
 from base_aux.aux_values.m2_variants import *
 
 from base_aux.buses.m1_serial1_client import *
@@ -116,7 +116,7 @@ class SerialServer_Base(Logger, QThread):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, params: TYPE__KWARGS_FINAL = None):
+    def __init__(self, params: TYPING.KWARGS_FINAL = None):
         # FIXME: deprecate param params??? used for tests?
         super().__init__()
 

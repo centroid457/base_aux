@@ -1,9 +1,18 @@
+from typing import *
+
+from base_aux.base_statics.m2_exceptions import *
+
+
 # =====================================================================================================================
 class NoValue:
     """
     TODO: DEPRECATE???=NO! used in valid/value
     ---------
     use direct ArgsEmpty???/ArgsKwargs()
+
+    NOTE
+    ----
+    never instantiate it! use value only as Class!
 
     GOAL
     ----
@@ -32,16 +41,15 @@ class NoValue:
         def run(self):
             return bool(self.value)
     """
+    def __init__(self) -> NoReturn:
+        raise Exx__WrongUsage(NoValue)
 
     def __bool__(self):
         return False
 
+    # todo: add classmethod! - not working!!!
     def __str__(self):
         return f"{self.__class__.__name__}"
-
-
-# =====================================================================================================================
-TYPE__NOVALUE = type[NoValue] | NoValue
 
 
 # =====================================================================================================================

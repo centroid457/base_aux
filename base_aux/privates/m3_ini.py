@@ -12,7 +12,7 @@ class PrivateIni(PrivateBase):
     """
     FILENAME: str = "pv.ini"
 
-    def get_dict(self) -> TYPE__KWARGS_FINAL | NoReturn:
+    def get_dict(self) -> TYPING.KWARGS_FINAL | NoReturn:
         ini = ConfigParser()
 
         try:

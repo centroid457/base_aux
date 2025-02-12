@@ -20,7 +20,7 @@ class Resolve_FilePath(NestCall_Resolve):
     """
     NAME: str = ""
     EXTLAST: str = ""
-    DIRPATH: TYPE__PATH_FINAL = None
+    DIRPATH: TYPING.PATH_FINAL = None
 
     name_PREFIX: str = ""
     name_SUFFIX: str = ""
@@ -29,7 +29,7 @@ class Resolve_FilePath(NestCall_Resolve):
 
     # PROPERTIES ------------------------------------------------------------------------------------------------------
     NAMEFINAL: str
-    FILEPATH: TYPE__PATH_FINAL
+    FILEPATH: TYPING.PATH_FINAL
 
     @property
     def NAMEFULL(self) -> str:
@@ -41,7 +41,7 @@ class Resolve_FilePath(NestCall_Resolve):
         return result
 
     @property
-    def FILEPATH(self) -> TYPE__PATH_FINAL:
+    def FILEPATH(self) -> TYPING.PATH_FINAL:
         return self.DIRPATH.joinpath(self.NAMEFULL)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -54,10 +54,10 @@ class Resolve_FilePath(NestCall_Resolve):
             suffix: str = None,                 # level1
 
             namefull: str = None,               # level2
-            dirpath: TYPE__PATH_DRAFT = None,   # level2
+            dirpath: TYPING.PATH_DRAFT = None,   # level2
 
             # full -----
-            filepath: TYPE__PATH_DRAFT = None,  # level3
+            filepath: TYPING.PATH_DRAFT = None,  # level3
     ):
         """
         NOTE
@@ -85,7 +85,7 @@ class Resolve_FilePath(NestCall_Resolve):
             self.DOT = True
             self.EXTLAST = extlast
 
-    def apply_filepath(self, filepath: TYPE__PATH_DRAFT) -> None:
+    def apply_filepath(self, filepath: TYPING.PATH_DRAFT) -> None:
         if filepath is None:
             return
 
@@ -96,7 +96,7 @@ class Resolve_FilePath(NestCall_Resolve):
 
         self.DOT = "." in filepath.name
 
-    def apply_dirpath(self, dirpath: TYPE__PATH_DRAFT) -> None:
+    def apply_dirpath(self, dirpath: TYPING.PATH_DRAFT) -> None:
         self.DIRPATH = Resolve_DirPath(dirpath).resolve()
 
     def apply_nameext(self, nameext: str) -> None:
@@ -118,7 +118,7 @@ class Resolve_FilePath(NestCall_Resolve):
             self.EXTLAST = ""
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self) -> TYPE__PATH_FINAL:
+    def resolve(self) -> TYPING.PATH_FINAL:
         return self.FILEPATH
 
 

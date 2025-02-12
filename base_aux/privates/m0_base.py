@@ -25,7 +25,7 @@ class PrivateBase(NestGAI_AttrAnycase, abc.ABC):
 
     SECTION: Optional[str] = None
 
-    DIRPATH: TYPE__PATH_FINAL = pathlib.Path.home()
+    DIRPATH: TYPING.PATH_FINAL = pathlib.Path.home()
     FILENAME: Optional[str] = None
 
     _text: Optional[str] = ""     # TODO: need tests!!!
@@ -36,9 +36,9 @@ class PrivateBase(NestGAI_AttrAnycase, abc.ABC):
             self,
             _section: Optional[str] = None,
 
-            _dirpath: TYPE__PATH_DRAFT = None,
+            _dirpath: TYPING.PATH_DRAFT = None,
             _filename: str = None,
-            _filepath: TYPE__PATH_DRAFT = None,
+            _filepath: TYPING.PATH_DRAFT = None,
 
             _text: Optional[str] = None,                # instead of file
             _dict: Optional[dict[str, Any]] = None,     # instead of file
@@ -105,9 +105,9 @@ class PrivateBase(NestGAI_AttrAnycase, abc.ABC):
 
     def _filepath_apply_new(
             self,
-            _dirpath: TYPE__PATH_DRAFT = None,
+            _dirpath: TYPING.PATH_DRAFT = None,
             _filename: str = None,
-            _filepath: TYPE__PATH_DRAFT = None
+            _filepath: TYPING.PATH_DRAFT = None
     ) -> bool:
         """apply new file destination
         """

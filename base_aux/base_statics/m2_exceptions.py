@@ -126,6 +126,18 @@ class Exx__BoolBase(Exception):
 
 
 # =====================================================================================================================
+class Exx__WrongUsage(Exx__BoolBase):
+    """
+    GOAL
+    ----
+    you perform incorrect usage!
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    NoValue - never instantiate it! use value only as Class!
+    """
+
+
 class Exx__Incompatible(Exx__BoolBase):
     pass
 

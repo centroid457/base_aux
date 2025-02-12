@@ -1,8 +1,7 @@
 from base_aux.base_inits.m2_source_kwargs import *
-from base_aux.aux_types.m1_type_aux import TypeAux
-from base_aux.base_statics.m1_types import TYPE__KWARGS_FINAL
-
-from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.aux_types.m1_type_aux import *
+from base_aux.base_statics.m1_types import *
+from base_aux.aux_attr.m1_attr1_aux import *
 
 
 # =====================================================================================================================
@@ -122,7 +121,7 @@ class EqAux(Init_Source):
         return self.check_doubleside__bool(other) is not True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_by_dict__direct(self, other: TYPE__KWARGS_FINAL) -> bool:
+    def check_by_dict__direct(self, other: TYPING.KWARGS_FINAL) -> bool:
         """
         GOAL
         ----

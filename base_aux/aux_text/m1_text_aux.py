@@ -8,9 +8,9 @@ from base_aux.aux_text.m0_patterns import *
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork! or FIXME: nest FileAux here!????
 class TextAux:
-    TEXT: TYPE__STR_FINAL = ""
+    TEXT: TYPING.STR_FINAL = ""
 
-    def __init__(self, text: TYPE__STR_DRAFT = "", *args, **kwargs) -> None | NoReturn:
+    def __init__(self, text: TYPING.STR_DRAFT = "", *args, **kwargs) -> None | NoReturn:
         self.TEXT = str(text)
         super().__init__(*args, **kwargs)
 
@@ -319,7 +319,7 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__json_dumped(self) -> TYPE__ELEMENTARY | str:     # NoValue ????
+    def parse__json_dumped(self) -> TYPING.ELEMENTARY | str:     # NoValue ????
         """
         NOTE
         ----
@@ -340,7 +340,7 @@ class TextAux:
             print(f"{exx!r}")
             return self.TEXT
 
-    def parse__object_stringed(self) -> TYPE__ELEMENTARY | str:
+    def parse__object_stringed(self) -> TYPING.ELEMENTARY | str:
         # PREPARE -----------------------------------------------------------------
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values
@@ -364,10 +364,10 @@ class TextAux:
         return self.parse__json_dumped()
 
     # =================================================================================================================
-    def parse__dict_csv(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
+    def parse__dict_csv(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
         pass
 
-    def parse__dict_ini(self, dict_format: DictTextFormat) -> dict[str, int|float|bool|None|str] | None:
+    def parse__dict_ini(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
         pass
 
 

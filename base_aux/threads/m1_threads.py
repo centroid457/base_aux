@@ -13,8 +13,8 @@ class ThreadItem(QThread):
 
     # TODO: nest from Init_Source???
     target: Callable
-    args: TYPE__ARGS_FINAL
-    kwargs: TYPE__KWARGS_FINAL
+    args: TYPING.ARGS_FINAL
+    kwargs: TYPING.KWARGS_FINAL
 
     result: Optional[Any] = None
     exx: Optional[Exception] = None

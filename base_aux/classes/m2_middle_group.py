@@ -1,7 +1,7 @@
 # FIXME: need to deprecate? no!
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
@@ -154,7 +154,7 @@ class ClsMiddleGroup:
             pass
     """
     MIDDLE_GROUP__NAME: None | str = None           # main cmp meth
-    MIDDLE_GROUP__CMP_ATTR: TYPE__ARGS_FINAL = None       # additional cmp parameters
+    MIDDLE_GROUP__CMP_ATTR: TYPING.ARGS_FINAL = None       # additional cmp parameters
 
     @classmethod
     def middle_group__check_equal__cls(cls, other: Any) -> bool | None:

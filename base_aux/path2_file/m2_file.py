@@ -11,10 +11,10 @@ class FileAux:
 
     textWork use by yourself with TextAux
     """
-    FILEPATH: TYPE__PATH_FINAL
+    FILEPATH: TYPING.PATH_FINAL
     TEXT: str = ""       # keep here just for TextAux work!
 
-    def __init__(self, filepath: TYPE__PATH_DRAFT, *args, **kwargs) -> None:
+    def __init__(self, filepath: TYPING.PATH_DRAFT, *args, **kwargs) -> None:
         self.FILEPATH = pathlib.Path(filepath)
         super().__init__(*args, **kwargs)
 
@@ -42,13 +42,13 @@ class FileAux:
             return self.FILEPATH.read_bytes()
 
     # WRITE ---------------------------------
-    def write__text(self, text: TYPE__STR_DRAFT = None) -> int:
+    def write__text(self, text: TYPING.STR_DRAFT = None) -> int:
         if text is not None:
             self.TEXT = str(text)
         self.ensure_dir()
         return self.FILEPATH.write_text(data=self.TEXT, encoding="utf-8")
 
-    def append__lines(self, *lines: TYPE__STR_DRAFT) -> int | NoReturn:
+    def append__lines(self, *lines: TYPING.STR_DRAFT) -> int | NoReturn:
         count = 0
 
         if lines:

@@ -1,6 +1,4 @@
-from typing import *
-
-from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
@@ -49,8 +47,8 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
     so as result the best decision is (*item.ARGS, **item.KWARGS)
     and we could use this class as simple base for Lambda for example!
     """
-    ARGS: TYPE__ARGS_FINAL = ()
-    KWARGS: TYPE__KWARGS_FINAL = {}
+    ARGS: TYPING.ARGS_FINAL = ()
+    KWARGS: TYPING.KWARGS_FINAL = {}
 
     def __init__(self, *args, **kwargs) -> None:
         self.ARGS = args
@@ -106,11 +104,6 @@ class Kwargs(ArgsKwargs):
 
     def __call__(self):
         return self.KWARGS
-
-
-# =====================================================================================================================
-TYPE__ARGS_DRAFT = Union[Any, TYPE__ARGS_FINAL, ArgsKwargs]           # you can use direct single value
-TYPE__KWARGS_DRAFT = Union[None, TYPE__KWARGS_FINAL, ArgsKwargs]  # if passed NONE - no data!
 
 
 # =====================================================================================================================

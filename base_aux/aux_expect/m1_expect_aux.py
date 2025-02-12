@@ -19,8 +19,8 @@ class ExpectAux(Init_SourceKwArgs_Explicite):
 
     def check_assert(
             self,
-            # args: TYPE__ARGS_DRAFT = (),      # DONT USE HERE!!!
-            # kwargs: TYPE__KWARGS_DRAFT = None,
+            # args: TYPING.ARGS_DRAFT = (),      # DONT USE HERE!!!
+            # kwargs: TYPING.KWARGS_DRAFT = None,
 
             _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass/noCallable!
             _MARK: pytest.MarkDecorator | None = None,

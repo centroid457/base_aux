@@ -1,16 +1,16 @@
 from base_aux.base_inits.m1_source import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 
-from base_aux.aux_argskwargs.m1_argskwargs import ArgsKwargs, TYPE__ARGS_DRAFT, TYPE__KWARGS_DRAFT
-from base_aux.base_statics.m1_types import TYPE__ARGS_FINAL, TYPE__KWARGS_FINAL
+from base_aux.aux_argskwargs.m1_argskwargs import ArgsKwargs
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
 @final
 class ArgsKwargsAux(Init_Source):
-    SOURCE: TYPE__ARGS_DRAFT | TYPE__KWARGS_DRAFT
+    SOURCE: TYPING.ARGS_DRAFT | TYPING.KWARGS_DRAFT
 
-    def resolve_args(self) -> TYPE__ARGS_FINAL:     # REPLACING for args__ensure_tuple
+    def resolve_args(self) -> TYPING.ARGS_FINAL:     # REPLACING for args__ensure_tuple
         if isinstance(self.SOURCE, ArgsKwargs):
             return self.SOURCE.ARGS
         elif TypeAux(self.SOURCE).check__elementary_collection():
@@ -18,7 +18,7 @@ class ArgsKwargsAux(Init_Source):
         else:
             return (self.SOURCE,)
 
-    def resolve_kwargs(self) -> TYPE__KWARGS_FINAL | NoReturn:
+    def resolve_kwargs(self) -> TYPING.KWARGS_FINAL | NoReturn:
         if isinstance(self.SOURCE, ArgsKwargs):
             return self.SOURCE.KWARGS
         elif not self.SOURCE:
