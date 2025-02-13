@@ -48,13 +48,31 @@ class TpHlStyles(HlStyles):
             # r'.*valid[^=]*=%s.*',
         ],
     )
+    # yellow -----
     RESULT_FALSE_NOCUM: HlStyle = HlStyle(
         FORMAT=format_make("", "", "yellow"),
         P_ITEMS=[
-            "ValidNoCum",
+            "ValidNoCum", "ValidSleep", "ValidBreak",
         ],
         P_TEMPLATES=[
             r'.*%s.*validate_last_bool=False.*',
+        ],
+    )
+    SKIPPED_LINE: HlStyle = HlStyle(
+        FORMAT=format_make("", "", "yellow"),
+        P_ITEMS=[
+        ],
+        P_TEMPLATES=[
+            r'.*skip_last=True.*',
+        ],
+    )
+    BREAK: HlStyle = HlStyle(
+        FORMAT=format_make("", "", "yellow"),
+        P_ITEMS=[
+            "ValidBreak",
+        ],
+        P_TEMPLATES=[
+            r'.*%s.*validate_last_bool=True.*',
         ],
     )
 
