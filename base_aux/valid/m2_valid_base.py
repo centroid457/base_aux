@@ -246,6 +246,9 @@ class Valid:
     # def validate(self, value_link: Any = NoValue) -> bool:
 
     def __bool__(self) -> bool:
+        if self.skip_last:
+            return True
+
         if not self.finished:
             return False
 
