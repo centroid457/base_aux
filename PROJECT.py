@@ -62,9 +62,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 7)
+    VERSION: tuple[int, int, int] = (0, 2, 8)
     NEWS: list[str] = [
-        "[ValidSleep] add skipLink",
+        "[Valid] some fix",
+        "[tp.gui] improve HL",
     ]
 
 
