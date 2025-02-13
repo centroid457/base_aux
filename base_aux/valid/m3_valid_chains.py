@@ -2,6 +2,7 @@ from typing import *
 import time
 
 from base_aux.valid.m2_valid_base import Valid
+from base_aux.valid.m2_valid_base2_derivatives import *
 from base_aux.aux_callable.m1_callable_aux import *
 
 
@@ -77,12 +78,18 @@ class ValidChains(Valid):
                 step_result = step.run()
                 self.log_lines.append(str(step))
 
-                if not step.skip_last:
-                    if step.CHAIN__CUM:
-                        self.validate_last &= step_result
-                    if step.CHAIN__CUM and step.CHAIN__FAIL_STOP and not step_result:
+                if step.skip_last:
+                    continue
+
+                if step.CHAIN__CUM:
+                    self.validate_last &= step_result
+                    if step.CHAIN__FAIL_STOP and not step_result:
                         self.log_lines.append(f"(FAIL STOP) [result={bool(self)}]{index=}/len={len(self)}")
                         break
+
+                if isinstance(step, ValidBreak) and step_result:
+                    break
+
             # ITER -----------
 
             self.finished = True

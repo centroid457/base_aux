@@ -1,7 +1,6 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-
 from base_aux.base_statics.m3_primitives import *
 
 from base_aux.valid.m3_valid_chains import *
@@ -10,20 +9,6 @@ from base_aux.valid.m2_valid_base2_derivatives import *
 
 # =====================================================================================================================
 class Test__ValidChains:
-    # @classmethod
-    # def setup_class(cls):
-    #     pass
-    #     cls.Victim = type("Victim", (ValueUnit,), {})
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
-    # def teardown_method(self, method):
-    #     pass
-
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="chains, _EXPECTED",
@@ -43,15 +28,20 @@ class Test__ValidChains:
             ([Valid(False), ], False),
             ([Valid(False, skip_link=True), ], True),
             ([Valid(False, chain__cum=False), ], True),
-
-            ([ValidNoCum(False), ], True),
-
-            ([ValidSleep(), ], True),
-            ([ValidSleep(0.1), ], True),
-            ([ValidSleep(), ], True),
         ]
     )
     def test__types_single(self, chains, _EXPECTED):
+        func_link = ValidChains(chains).run
+        ExpectAux(func_link).check_assert(_EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="chains, _EXPECTED",
+        argvalues=[
+            ([ValidNoCum(False), ], True),
+        ]
+    )
+    def test__nocum(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
         ExpectAux(func_link).check_assert(_EXPECTED)
 
@@ -76,6 +66,37 @@ class Test__ValidChains:
         ]
     )
     def test__chains(self, chains, _EXPECTED):
+        func_link = ValidChains(chains).run
+        ExpectAux(func_link).check_assert(_EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="chains, _EXPECTED",
+        argvalues=[
+            ([ValidSleep(), True], True),
+            ([ValidSleep(0.1), True], True),
+            ([ValidSleep(0.1), False], False),
+        ]
+    )
+    def test__util1_sleep(self, chains, _EXPECTED):
+        func_link = ValidChains(chains).run
+        ExpectAux(func_link).check_assert(_EXPECTED)
+
+    @pytest.mark.parametrize(
+        argnames="chains, _EXPECTED",
+        argvalues=[
+            ([False, ValidBreak(True), True], False),
+
+            ([True, ValidBreak(True), False], True),
+            ([True, ValidBreak(False), False], False),
+            ([True, ValidBreak(False), True], True),
+
+            ([ValidBreak(True), False], True),
+            ([ValidBreak(False), False], False),
+            ([ValidBreak(False), True], True),
+        ]
+    )
+    def test__util2_break(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
         ExpectAux(func_link).check_assert(_EXPECTED)
 

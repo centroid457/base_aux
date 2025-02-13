@@ -49,16 +49,33 @@ class ValidReverse(Valid):
     REVERSE_LINK = True
 
 
-# UTILS ---------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 class ValidSleep(ValidNoCum):
     """
-    just a derivative - to make a pause in chains
+    GOAL
+    ----
+    UTIL
+    just make a pause in chain
     """
-    NAME = "Sleep"
+    NAME = "ValidSleep"
     VALIDATE_LINK = None
 
     def __init__(self, secs: float = 1):
         super().__init__(value_link=time.sleep, args__value=secs)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ValidBreak(ValidNoCum):
+    """
+    GOAL
+    ----
+    UTIL
+    exit chain on some step
+
+    when True - just exit chain with last Cum chain result
+    when False - just noCum and continue process
+    """
+    NAME = "ValidBreak"
 
 
 # =====================================================================================================================
