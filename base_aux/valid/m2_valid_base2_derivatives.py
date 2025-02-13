@@ -60,8 +60,8 @@ class ValidSleep(ValidNoCum):
     NAME = "ValidSleep"
     VALIDATE_LINK = None
 
-    def __init__(self, secs: float = 1):
-        super().__init__(value_link=time.sleep, args__value=secs)
+    def __init__(self, secs: float = 1, skip_link: bool = None):
+        super().__init__(value_link=time.sleep, args__value=secs, skip_link=skip_link)
 
 
 # ---------------------------------------------------------------------------------------------------------------------

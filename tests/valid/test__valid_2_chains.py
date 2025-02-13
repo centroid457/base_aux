@@ -76,6 +76,8 @@ class Test__ValidChains:
             ([ValidSleep(), True], True),
             ([ValidSleep(0.1), True], True),
             ([ValidSleep(0.1), False], False),
+
+            ([ValidSleep(2, True), ], True),
         ]
     )
     def test__util1_sleep(self, chains, _EXPECTED):
