@@ -374,7 +374,7 @@ class TpMultyDutBase(Logger, QThread):
         return result
 
     def save__results(self) -> None:
-        name_prefix = DateTimeAux().get_str()
+        name_prefix = DateTimeAux().get_str__by_pat()
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
             result_i = {}
             for tc_cls in self.TCS__CLS:
