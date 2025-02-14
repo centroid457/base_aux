@@ -2,6 +2,7 @@ from typing import *
 import datetime
 
 from base_aux.base_inits.m1_source import *
+from base_aux.aux_attr.m1_attr1_aux import *
 
 # TODO: apply cmp eq!???
 from base_aux.numbers.m1_arithm import *
@@ -16,11 +17,12 @@ TYPE__TUPLE_DT_STYLE__FINAL = tuple[str, str, str, bool, bool]
 
 
 class DateTimeStyle_Tuples:
-    DT: TYPE__TUPLE_DT_STYLE__FINAL = ("-", " ", ":", True, False)       # default standard DateTime style for datetime.datetime.now()!
-    HUMAN: TYPE__TUPLE_DT_STYLE__FINAL = (".", " ", ":", True, False)  # same as DT but dots for data
-    FILE: TYPE__TUPLE_DT_STYLE__FINAL = ("", "_", "", False, False)  # useful for filenames
+    DT: TYPE__TUPLE_DT_STYLE__FINAL = ("-", " ", ":", True, False)      # default/standard from DateTime style for datetime.datetime.now()!
+    DOTS: TYPE__TUPLE_DT_STYLE__FINAL = (".", " ", ".", True, False)    # same as DT but dots for data
+    FILE: TYPE__TUPLE_DT_STYLE__FINAL = ("", "_", "", False, False)     # useful for filenames
 
 
+# =====================================================================================================================
 @final
 class PatDateTimeFormat:
     def __init__(self, sdate: str = None, sdatetime: str = None, stime: str = None, ms: bool = None, wd: bool = None):
@@ -30,17 +32,65 @@ class PatDateTimeFormat:
         self.ms = ms or False
         self.wd = wd or False
 
+    # -----------------------------------------------------------------------------------------------------------------
     @property
-    def D(self) -> str:                                 # 2025-02-14-Пн  20250214Пн 2025.02.14.Пн
+    def D(self) -> str:                                 # 2025-02-14 20250214 2025.02.14
         return f"%Y{self.sdate}%m{self.sdate}%d" + (f"{self.sdate}%a" if self.wd else "")
 
     @property
-    def T(self) -> str:                                 # 11:38:48.442179
+    def Dw(self) -> str:                                 # 2025-02-14-Пн 20250214Пн 2025.02.14.Пн
+        """
+        GOAL
+        ----
+        ensure weekDay
+        """
+        return f"%Y{self.sdate}%m{self.sdate}%d" + f"{self.sdate}%a"
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def T(self) -> str:                                 # 11:38:48
         return f"%H{self.stime}%M{self.stime}%S" + (".%f" if self.ms else "")
 
     @property
+    def Tm(self) -> str:                                 # 11:38:48.442179
+        """
+        GOAL
+        ----
+        ensure ms
+        """
+        return f"%H{self.stime}%M{self.stime}%S" + ".%f"
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
     def DT(self) -> str:
-        return f"{self.D}{self.sdatetime}{self.T}"      # 2025-02-14-Пн 11:38:48.442179
+        return f"{self.D}{self.sdatetime}{self.T}"      # 2025-02-14 11:38:48.442179
+
+    @property
+    def DTm(self) -> str:
+        """
+        GOAL
+        ----
+        ensure ms
+        """
+        return f"{self.D}{self.sdatetime}{self.Tm}"      # 2025-02-14 11:38:48.442179
+
+    @property
+    def DwT(self) -> str:
+        """
+        GOAL
+        ----
+        ensure weekDay
+        """
+        return f"{self.Dw}{self.sdatetime}{self.T}"      # 2025-02-14-Пн 11:38:48
+
+    @property
+    def DwTm(self) -> str:
+        """
+        GOAL
+        ----
+        ensure weekDay+ms
+        """
+        return f"{self.Dw}{self.sdatetime}{self.Tm}"      # 2025-02-14-Пн 11:38:48.442179
 
 
 # =====================================================================================================================
@@ -54,12 +104,24 @@ class DateTimeAux:
     STYLE: TYPE__TUPLE_DT_STYLE__FINAL
     PATTS: PatDateTimeFormat
 
-    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = DateTimeStyle_Tuples.HUMAN) -> None:
+    # patterns getattr -----
+    D: str
+    Dw: str
+    T: str
+    Tm: str
+
+    DT: str
+    DwT: str
+    DTm: str
+    DwTm: str
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = DateTimeStyle_Tuples.DOTS) -> None:
         self.SOURCE = source
         if self.SOURCE is None:
             self.SOURCE = datetime.datetime.now()
 
-        # FIXME: finish!!! int/float/td/str??? parser???
+        # FIXME: finish!!! int/float/td/str??? parser??? timestamp + time.time()
         if isinstance(self.SOURCE, datetime.datetime):
             pass
         else:
@@ -69,7 +131,7 @@ class DateTimeAux:
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self):
-        return self.DATETIME
+        return self.DT
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self})"
@@ -97,24 +159,19 @@ class DateTimeAux:
         """
         return self.SOURCE.strftime(pattern)
 
-    @property
-    def DATE(self) -> str:
-        return self.get_str__by_pat(pattern=self.PATTS.D)
-
-    @property
-    def TIME(self) -> str:
-        return self.get_str__by_pat(pattern=self.PATTS.T)
-
-    @property
-    def DATETIME(self) -> str:
-        return self.get_str__by_pat(pattern=self.PATTS.DT)
+    def __getattr__(self, item) -> str | NoReturn:
+        if item in AttrAux(PatDateTimeFormat).iter__not_hidden():
+            return self.get_str__by_pat(pattern=getattr(self.PATTS, item))
+        else:
+            raise AttributeError(item)
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    print(DateTimeAux().TIME)
-    print(DateTimeAux().DATE)
-    print(DateTimeAux().DATETIME)
+    print(DateTimeAux().T)
+    print(DateTimeAux().D)
+    print(DateTimeAux().DT)
+    print(DateTimeAux().DwTm)
     print(repr(DateTimeAux()))
     print(str(DateTimeAux()))
 
