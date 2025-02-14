@@ -442,6 +442,8 @@ class _Info(_TestCaseBase):
     """
     separated class for gen results/info by models!
     """
+    INFO_STR__ADD_ATTRS: Iterable[str] = []
+
     @classmethod
     def get__info__tc(cls) -> dict[str, Any]:
         """
@@ -475,7 +477,13 @@ class _Info(_TestCaseBase):
         result += f"SETTINGS=====================\n"
         if self.SETTINGS:
             for name, value in self.SETTINGS.items():
-                result += f"{name}: {value}\n"
+                result += f"{name}:{value}\n"
+
+        result += f"INFO_STR__ADD_ATTRS===========\n"
+        if self.INFO_STR__ADD_ATTRS:
+            for name in self.INFO_STR__ADD_ATTRS:
+                if hasattr(self, name):
+                    result += f"{name}:{getattr(self, name)}\n"
 
         result += f"PROGRESS=====================\n"
         result += f"timestamp_start={self.timestamp_start}\n"
