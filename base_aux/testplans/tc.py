@@ -1,5 +1,5 @@
 import json
-import time
+import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.aux_dict.m3_dict_attr1_simple import *
@@ -65,8 +65,8 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     result__teardown: TYPE__RESULT_W_EXX = None
 
     _result: TYPE__RESULT_W_EXX = None
-    _timestamp_last: Optional[float]
-    timestamp_start: Optional[float]
+    _timestamp_last: Optional[datetime.datetime]
+    timestamp_start: Optional[datetime.datetime]
     details: dict[str, Any]
     exx: Optional[Exception]
     progress: int
@@ -132,7 +132,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # =================================================================================================================
     @property
-    def timestamp_last(self) -> float | None:
+    def timestamp_last(self) -> datetime.datetime | None:
         """
         None - not even started
         float - was started!
@@ -143,10 +143,10 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
             return self._timestamp_last
 
         if self.isRunning():
-            return time.time()
+            return datetime.datetime.now()
 
     @timestamp_last.setter
-    def timestamp_last(self, value: float | None) -> None:
+    def timestamp_last(self, value: datetime.datetime | None) -> None:
         self._timestamp_last = value
 
     # =================================================================================================================
@@ -299,7 +299,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
         # PREPARE --------
         self.clear()
-        self.timestamp_start = time.time()
+        self.timestamp_start = datetime.datetime.now()
         if (
                 not hasattr(self.DEVICES__BREEDER_INST, "DUT")
                 or
@@ -357,7 +357,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     def teardown(self) -> TYPE__RESULT_W_EXX:
         self.LOGGER.debug("")
-        self.timestamp_last = time.time()
+        self.timestamp_last = datetime.datetime.now()
         self.progress = 99
 
         result = self.teardown__wrapped
