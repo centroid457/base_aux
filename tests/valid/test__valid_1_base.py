@@ -118,7 +118,7 @@ class Test__ValidTypes:
         ExpectAux(func_link).check_assert(_EXPECTED)
 
         # REVERSE ------
-        func_link =  ValidReverse(*args)
+        func_link = ValidReverse(*args)
         ExpectAux(func_link).check_assert(not _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
