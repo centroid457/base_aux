@@ -44,6 +44,9 @@ class Test_Enum:
 
             (VictimStd.A1, 1, (False, Exception)),
             (VictimStd.A1, VictimStd(1), (True, Exception)),
+
+            # DIFF --------
+            (VictimStd.A1, VictimStd.NONE, (False, Exception)),
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):
@@ -90,6 +93,9 @@ class Test_EnumEq:
 
             (VictimEq.TUPLE, (1,2), (True, Exception)),
             (VictimEq.TUPLE, VictimEq((1,2)), (True, Exception)),
+
+            # DIFF --------
+            (VictimEq.A1, VictimEq.NONE, (False, Exception)),
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):
