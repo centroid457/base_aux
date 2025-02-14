@@ -95,8 +95,39 @@ class ExpectAux(Init_SourceKwArgs_Explicite):
 # pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
 # pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
 # pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-#
-#
+
+def _example_TUPLE_ARGS():
+    """
+    use Args(otherTuple) to direct use exact tuple
+    """
+    class Test_EnumEq:
+        class VictimEq(NestEq_Enum):
+            NONE = None
+            A1 = 1
+            TUPLE = (1, 2)
+
+        @pytest.mark.parametrize(
+            argnames="source, other, _EXPECTED",
+            argvalues=[
+                # TUPLE --------
+                (VictimEq, (1,2), (False, True)),
+                (VictimEq, VictimEq((1,2)), (False, True)),
+                (VictimEq, VictimEq.TUPLE, (False, True)),
+
+                (VictimEq((1,2)), (1,2), (True, Exception)),
+                (VictimEq((1,2)), VictimEq.TUPLE, (True, Exception)),
+
+                (VictimEq.TUPLE, (1,2), (True, Exception)),
+                (VictimEq.TUPLE, VictimEq((1,2)), (True, Exception)),
+            ]
+        )
+        def test__eq_in(self, source, other, _EXPECTED):
+            ExpectAux(source == other).check_assert(_EXPECTED[0])
+
+            func_link = lambda x: x in source
+            ExpectAux(func_link, Args(other)).check_assert(_EXPECTED[1])
+
+
 # def _func_example(arg1: Any, arg2: Any) -> str:
 #     return f"{arg1}{arg2}"
 #

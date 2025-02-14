@@ -1,61 +1,40 @@
 from enum import Enum, auto
 
-from base_aux.aux_values.m0_novalue import *
+from base_aux.base_statics.m4_enum0_nest_eq import *
 
 
 # =====================================================================================================================
 """
-USAGE
------
-if WHEN == When2.BEFORE:
-    pass
-    
-
-print(FPoint.COMMA)     # FPoint.COMMA
-print(FPoint("."))      # FPoint.DOT
-
-print("." in FPoint)            # True
-print(FPoint.DOT in FPoint)     # True
-
-print(FPoint(".") == ".")      # False
-print(FPoint(FPoint.DOT))      # FPoint.DOT     # BEST WAY to init value!
-
-
-MAKE A DEFAULT NONE VALUE
--------------------------
-class FPoint(Enum):
-    DOT = "."
-    COMMA = ","
-    AUTO = None     # def! when FPoint(None)
+see _examples below and tests to understand work
 """
 
 
 # =====================================================================================================================
-class When2(Enum):
+class When2(NestEq_Enum):
     BEFORE = auto()
     AFTER = auto()
 
 
-class When3(Enum):
+class When3(NestEq_Enum):
     BEFORE = auto()
     AFTER = auto()
     MIDDLE = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Where2(Enum):
+class Where2(NestEq_Enum):
     FIRST = auto()
     LAST = auto()
 
 
-class Where3(Enum):
+class Where3(NestEq_Enum):
     FIRST = auto()
     LAST = auto()
     MIDDLE = auto()
 
 
 # =====================================================================================================================
-class CallableResolve(Enum):
+class CallableResolve(NestEq_Enum):
     DIRECT = auto()
     EXX = auto()
     RAISE = auto()
@@ -67,7 +46,7 @@ class CallableResolve(Enum):
 
 
 # =====================================================================================================================
-class ProcessState(Enum):
+class ProcessState(NestEq_Enum):
     """
     GOAL
     ----
@@ -87,7 +66,7 @@ class ProcessState(Enum):
 
 
 # =====================================================================================================================
-class FormIntExt(Enum):
+class FormIntExt(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -98,7 +77,7 @@ class FormIntExt(Enum):
 
 
 # =====================================================================================================================
-class BoolCumulate(Enum):
+class BoolCumulate(NestEq_Enum):
     """
     GOAL
     ----
@@ -115,19 +94,19 @@ class BoolCumulate(Enum):
 
 
 # =====================================================================================================================
-class PathType(Enum):
+class PathType(NestEq_Enum):
     FILE = auto()
     DIR = auto()
     ALL = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class AppendType(Enum):
+# class AppendType(NestEq_Enum):
 #     NEWLINE = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class DictTextFormat(Enum):
+class DictTextFormat(NestEq_Enum):
     AUTO = None
 
     CSV = "csv"
@@ -136,7 +115,7 @@ class DictTextFormat(Enum):
     STR = "str"     # str(dict)
 
 
-class TextStyle(Enum):
+class TextStyle(NestEq_Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -151,7 +130,7 @@ class TextStyle(Enum):
     MD = "md"
 
 
-class CmtStyle(Enum):
+class CmtStyle(NestEq_Enum):
     """
     GOAL
     ----
@@ -165,7 +144,7 @@ class CmtStyle(Enum):
     REM = "rem"
 
 
-class PatCoverStyle(Enum):
+class PatCoverStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -177,14 +156,14 @@ class PatCoverStyle(Enum):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NumType(Enum):
+class NumType(NestEq_Enum):
     INT = int
     FLOAT = float
     BOTH = None
 
 
 # =====================================================================================================================
-class FPoint(Enum):
+class FPoint(NestEq_Enum):
     """
     GOAL
     ----
@@ -203,7 +182,7 @@ TYPE__FPOINT_DRAFT = FPoint | str | None
 
 
 # =====================================================================================================================
-class CmpType(Enum):
+class CmpType(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -216,9 +195,30 @@ class CmpType(Enum):
 
 
 # =====================================================================================================================
-# class Represent(Enum):
+# class Represent(NestEq_Enum):
 #     NAME = auto()
 #     OBJECT = auto()
+
+
+# =====================================================================================================================
+def _examples() -> None:
+    WHEN = When2.BEFORE
+    if WHEN == When2.BEFORE:
+        pass
+
+    print(FPoint.COMMA)  # FPoint.COMMA
+    print(FPoint("."))  # FPoint.DOT
+
+    print("." in FPoint)  # True
+    print(FPoint.DOT in FPoint)  # True
+
+    print(FPoint(".") == ".")  # False
+    print(FPoint(FPoint.DOT))  # FPoint.DOT     # BEST WAY to init value!
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _examples()
 
 
 # =====================================================================================================================
