@@ -12,33 +12,34 @@ from base_aux.aux_eq.m0_cmp_inst import *
 
 
 # =====================================================================================================================
-TYPE__TUPLE_DT_STYLE__DRAFT = tuple[str|None, str|None, str|None, bool|None, bool|None]
-TYPE__TUPLE_DT_STYLE__FINAL = tuple[str, str, str, bool, bool]
+TYPE__TUPLE_DT_STYLE__DRAFT = tuple[str|None, str|None, str|None]
+TYPE__TUPLE_DT_STYLE__FINAL = tuple[str, str, str]
 
 
 class DateTimeStyle_Tuples:
-    DT: TYPE__TUPLE_DT_STYLE__FINAL = ("-", " ", ":", True, False)      # default/standard from DateTime style for datetime.datetime.now()!
-    DOTS: TYPE__TUPLE_DT_STYLE__FINAL = (".", " ", ".", True, False)    # same as DT but dots for data
-    FILE: TYPE__TUPLE_DT_STYLE__FINAL = ("", "_", "", False, False)     # useful for filenames
+    DT: TYPE__TUPLE_DT_STYLE__FINAL = ("-", " ", ":")       # default/standard from DateTime style for datetime.datetime.now()!
+    DOTS: TYPE__TUPLE_DT_STYLE__FINAL = (".", " ", ".")     # same as DT but dots for data
+    FILE: TYPE__TUPLE_DT_STYLE__FINAL = ("", "_", "")       # useful for filenames
 
 
 # =====================================================================================================================
 @final
 class PatDateTimeFormat:
-    def __init__(self, sdate: str = None, sdatetime: str = None, stime: str = None, ms: bool = None, wd: bool = None):
+    def __init__(self, sdate: str = None, sdatetime: str = None, stime: str = None):
+        """
+        INIT separators only like schema
+        """
         self.sdate = sdate or ""
         self.sdatetime = sdatetime or ""
         self.stime = stime or ""
-        self.ms = ms or False
-        self.wd = wd or False
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def D(self) -> str:                                 # 2025-02-14 20250214 2025.02.14
-        return f"%Y{self.sdate}%m{self.sdate}%d" + (f"{self.sdate}%a" if self.wd else "")
+        return f"%Y{self.sdate}%m{self.sdate}%d"
 
     @property
-    def Dw(self) -> str:                                 # 2025-02-14-Пн 20250214Пн 2025.02.14.Пн
+    def Dw(self) -> str:                                 # 2025-02-14-Mn 20250214Mn 2025.02.14.Mn
         """
         GOAL
         ----
@@ -49,7 +50,7 @@ class PatDateTimeFormat:
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def T(self) -> str:                                 # 11:38:48
-        return f"%H{self.stime}%M{self.stime}%S" + (".%f" if self.ms else "")
+        return f"%H{self.stime}%M{self.stime}%S"
 
     @property
     def Tm(self) -> str:                                 # 11:38:48.442179
