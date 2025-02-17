@@ -4,7 +4,7 @@ from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class Init_AnnotsByTypes_All:
+class NestInit_AnnotsByTypes_All:
     """
     GOAL
     ----
@@ -18,20 +18,20 @@ class Init_AnnotsByTypes_All:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotsAux(self).values__reinit_by_types(False)
+        AnnotsAux(self).values__reinit_by_types(not_existed=False)
 
 
 # =====================================================================================================================
-class Init_AnnotsByTypes_NotExisted:
+class NestInit_AnnotsByTypes_NotExisted:
     """
     GOAL
     ----
-    same as Init_AnnotsByTypes_All but for only not existed values
+    same as NestInit_AnnotsByTypes_All but for only not existed values
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotsAux(self).values__reinit_by_types(True)
+        AnnotsAux(self).values__reinit_by_types(not_existed=True)
 
 
 # =====================================================================================================================

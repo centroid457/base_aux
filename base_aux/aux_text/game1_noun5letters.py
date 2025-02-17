@@ -54,7 +54,7 @@ def check_lack_words() -> None:
 
 # =====================================================================================================================
 @final
-class CharMask(Init_AnnotsByTypes_NotExisted):
+class CharMask(NestInit_AnnotsByTypes_NotExisted):
     # HIDDEN: str
     # ATTEMPTS: list[str]
     POS_DET: list[str]
