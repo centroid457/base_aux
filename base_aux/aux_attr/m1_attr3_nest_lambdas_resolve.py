@@ -4,7 +4,7 @@ from base_aux.lambdas.m1_lambdas import Lambda
 
 
 # =====================================================================================================================
-class AttrsLambdasResolve:
+class NestInit_AttrsLambdasResolve:
     """
     find and call all Lambda aux_attr On class inition
     GOAL

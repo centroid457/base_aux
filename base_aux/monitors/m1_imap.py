@@ -8,7 +8,7 @@ import email
 from base_aux.lambdas.m1_lambdas import Lambda
 from base_aux.privates.m0_base import *
 from base_aux.privates.m5_auto import *
-from base_aux.aux_attr.m1_attr3_lambdas_resolve import AttrsLambdasResolve
+from base_aux.aux_attr.m1_attr3_nest_lambdas_resolve import NestInit_AttrsLambdasResolve
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m0_base import *
 
@@ -45,7 +45,7 @@ class AlertImap(AlertSelect.TELEGRAM_DEF):
 
 
 # =====================================================================================================================
-class MonitorImap(AttrsLambdasResolve, threading.Thread):
+class MonitorImap(NestInit_AttrsLambdasResolve, threading.Thread):
     """Monitor (threaded) email box for new letters. Notify if new letter appears corresponding to folder name and subject regexp.
 
     :ivar INTERVAL: monitoring interval in seconds

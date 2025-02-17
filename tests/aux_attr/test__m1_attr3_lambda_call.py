@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_attr.m1_attr3_lambdas_resolve import *
+from base_aux.aux_attr.m1_attr3_nest_lambdas_resolve import *
 from base_aux.aux_expect.m1_expect_aux import *
 
 
@@ -36,7 +36,7 @@ def test__common__define(value, _EXPECTED):
 )
 def test__special__define_and_init(value, _EXPECTED):
     # DEFINE ---------------------
-    class Victim(AttrsLambdasResolve):
+    class Victim(NestInit_AttrsLambdasResolve):
         ATTR0 = 0
         ATTR_INT = Lambda(int, value)
         ATTR_STR = Lambda(str, value)
