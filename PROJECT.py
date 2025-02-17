@@ -62,10 +62,11 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 8)
+    VERSION: tuple[int, int, int] = (0, 2, 9)
     NEWS: list[str] = [
-        "[Valid] some fix",
-        "[tp.gui] improve HL",
+        "[tc] add INFO_STR__ADD_ATTRS",
+        "[enums] add NestEq_Enum",
+        "[DateTimeAux] apply getattr from PatDateTimeFormat"
     ]
 
 
