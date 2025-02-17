@@ -4,7 +4,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Init_AttrsByKwArgs_Base:
+class NestInit_AttrsByKwArgs:
     """
     GOAL
     ----
@@ -22,36 +22,25 @@ class Init_AttrsByKwArgs_Base:
     ----
     used only acceptable items! no raise!
     """
-    def __init__(self, *args, _RAISE__: bool = None, **kwargs) -> None | NoReturn:
+    def __init__(self, *args, **kwargs) -> None | NoReturn:
         self.__init_args(*args)
-        self.__init_kwargs(**kwargs, _RAISE_=_RAISE__)
+        self.__init_kwargs(**kwargs)
 
-    def __init_kwargs(self, _RAISE__: bool = None, **kwargs) -> None | NoReturn:
+    def __init_kwargs(self, **kwargs) -> None | NoReturn:
         for name, value in kwargs.items():
             try:
                 setattr(self, name, value)
-            except Exception as exx:
-                if _RAISE__:
-                    raise exx
+            except:
+                pass
 
-    def __init_args(self, *args, _RAISE__: bool = None) -> None | NoReturn:
+    def __init_args(self, *args) -> None | NoReturn:
         kwargs = dict.fromkeys(args)
-        self.__init_kwargs(**kwargs, _RAISE_=_RAISE__)
+        self.__init_kwargs(**kwargs)
 
 
 # =====================================================================================================================
-@final
-class Init_AttrsByKwArgs(Init_AttrsByKwArgs_Base):
-    """
-    exact case for attrs
-    """
-
-
-@final
-class Init_AttrsByKwArgsIc(Init_AttrsByKwArgs_Base, NestGSAI_AttrAnycase):
-    """
-    ignorecase for attrs
-    """
+class NestInit_AttrsByKwArgsIc(NestInit_AttrsByKwArgs, NestGSAI_AttrAnycase):
+    pass
 
 
 # =====================================================================================================================
