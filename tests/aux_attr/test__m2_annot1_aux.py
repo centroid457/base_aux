@@ -220,20 +220,29 @@ class VictimSet:
 
 
 @pytest.mark.parametrize(
-    argnames="data, _EXPECTED",
+    argnames="data, only_annot, _EXPECTED",
     argvalues=[
-        (dict(), (1, Exception, 1, Exception)),
-        (dict(A0=11), (11, Exception, 1, Exception)),
-        (dict(a0=11), (11, Exception, 1, Exception)),
+        # only_annot=TRUE
+        (dict(), True, (1, Exception, 1, Exception)),
+        (dict(A0=11), True, (1, Exception, 1, Exception)),
+        (dict(a0=11), True, (1, Exception, 1, Exception)),
 
-        (dict(a0=11, a1=11, a2=11, a3=11), (11, 11, 11, Exception)),
-        (dict(A0=11, A1=11, A2=11, A3=11), (11, 11, 11, 11)),
+        (dict(a0=11, a1=11, a2=11, a3=11), True, (1, 11, 11, Exception)),
+        (dict(A0=11, A1=11, A2=11, A3=11), True, (1, 11, 11, Exception)),
+
+        # only_annot=FALSE
+        (dict(), False, (1, Exception, 1, Exception)),
+        (dict(A0=11), False, (11, Exception, 1, Exception)),
+        (dict(a0=11), False, (11, Exception, 1, Exception)),
+
+        (dict(a0=11, a1=11, a2=11, a3=11), False, (11, 11, 11, Exception)),
+        (dict(A0=11, A1=11, A2=11, A3=11), False, (11, 11, 11, 11)),
     ]
 )
-def test__set(data, _EXPECTED):
+def test__set(data, only_annot, _EXPECTED):
     victim = VictimSet()
 
-    AnnotsAux(victim).set_values__by_dict(data)
+    AnnotsAux(victim).set_values__by_dict(data, only_annot=only_annot)
     for index in range(4):
         ExpectAux(getattr, (victim, f"A{index}")).check_assert(_EXPECTED[index])
 

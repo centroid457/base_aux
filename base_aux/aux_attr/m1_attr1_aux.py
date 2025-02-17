@@ -11,9 +11,14 @@ from base_aux.aux_attr.m0_static import AttrsDump
 @final
 class AttrAux(Init_Source):
     """
-    NOTICE
-    ------
+    NOTE
+    ----
     if there are several same aux_attr in different cases - you should resolve it by yourself!
+
+    ANNOTS
+    ------
+    not used/intended here! dont mess they - it means you need to know what exact you will work with (attrs or annots)
+    and prepare classes appropriate!
     """
     SOURCE: Any = AttrsDump
 

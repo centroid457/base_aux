@@ -78,7 +78,7 @@ class AnnotsAux(Init_Source):
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================
-    def set_value(self, name: str, value: Any = None) -> None:
+    def set_value(self, name: str, value: Any = None, only_annot: bool = True) -> None:
         """
         GOAL
         ----
@@ -86,11 +86,13 @@ class AnnotsAux(Init_Source):
         without creation new annot!
         """
         if self.name__check_exists(name):
-            name = self.name__get_original(name)
+            name = self.name__get_original(name)    # replace by original
+        elif only_annot:
+            return
 
         AttrAux(self.SOURCE).anycase__setattr(name, value)
 
-    def set_values__by_dict(self, data: TYPING.KWARGS_FINAL) -> None:
+    def set_values__by_dict(self, data: TYPING.KWARGS_FINAL, only_annot: bool = True) -> None:
         """
         GOAL
         ----
@@ -103,7 +105,7 @@ class AnnotsAux(Init_Source):
         load into AnnotTemplate
         """
         for key, value in data.items():
-            self.set_value(key, value)
+            self.set_value(key, value, only_annot=only_annot)
 
     # =================================================================================================================
     def get__dict_types(self) -> dict[str, type[Any]]:
@@ -256,14 +258,17 @@ class AnnotsAux(Init_Source):
             if name not in annots:
                 cls.__annotations__.update({name: Any})
 
-    def name__get_original(self, name: str) -> str | NoValue:
+    def name__get_original(self, name: str) -> str | None:
         """
         GOAL
         ----
         check name exists in annots ONLY!
         """
         annots = self.get__dict_types()
-        return IterAux(annots).item__get_original(name)
+        name = IterAux(annots).item__get_original(name)
+        if name == NoValue:
+            name = None
+        return name
 
     def name__check_exists(self, name: str) -> bool:
         """
@@ -271,7 +276,7 @@ class AnnotsAux(Init_Source):
         ----
         check name exists in annots ONLY!
         """
-        return self.name__get_original(name) is not NoValue
+        return self.name__get_original(name) is not None
 
 
 # =====================================================================================================================
