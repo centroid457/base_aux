@@ -195,6 +195,18 @@ class CmpType(NestEq_Enum):
 
 
 # =====================================================================================================================
+class AttrsScope(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    AttrAux for separating/defining, but maybe not needed
+    """
+    ALL = None
+    EXISTED_ONLY = auto()
+    ANNOTS_ONLY = auto()
+
+
+# =====================================================================================================================
 # class Represent(NestEq_Enum):
 #     NAME = auto()
 #     OBJECT = auto()
