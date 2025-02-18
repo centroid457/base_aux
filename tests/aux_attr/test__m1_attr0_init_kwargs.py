@@ -58,6 +58,8 @@ class Victim(NestInit_AnnotsAttrsByKwArgs):
         ((333, 444), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
         ((333, 444, 1, 2, 3, 4), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
         ((11, 22, 33, 44), dict(At0=111, At1=222, An0=333, An1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+
+        ((11, 22, 33, 44), dict(AT0=111, AT1=222, AN0=333, AN1=444), EQ_ISINSTANCE_VICTIM, (Exception, 222, 333, 444)),
     ]
 )
 def test__2(args, kwargs, _EXPECTED, values):
