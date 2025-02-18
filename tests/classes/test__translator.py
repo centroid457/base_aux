@@ -23,10 +23,10 @@ class Test__1:
 
 
             # FIXME: need resolve!!!1
-            # (NestInit_AttrsByKwArgs(a1=22), False, "a11", NoValue),
-            # (NestInit_AttrsByKwArgs(a1=22), True, "a11", "a11"),
+            # (NestInit_AttrsOnlyByKwArgs(a1=22), False, "a11", NoValue),
+            # (NestInit_AttrsOnlyByKwArgs(a1=22), True, "a11", "a11"),
             #
-            # (NestInit_AttrsByKwArgs(a1=22), None, "a1", 22),
+            # (NestInit_AttrsOnlyByKwArgs(a1=22), None, "a1", 22),
         ]
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):

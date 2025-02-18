@@ -31,8 +31,9 @@ class NestInit_AttrsByKwArgs_Base:
                 AnnotsAux(self).set_value(name, value, only_annot=False)
 
     def __init_args(self, *args) -> None | NoReturn:
-        kwargs = dict.fromkeys(args)
-        self.__init_kwargs(**kwargs)
+        if args:
+            kwargs = dict.fromkeys(args)
+            self.__init_kwargs(**kwargs)
 
 
 # =====================================================================================================================
@@ -55,7 +56,7 @@ class NestInit_AttrsAnnotsByKwArgsIC(NestInit_AttrsAnnotsByKwArgs, NestGSAI_Attr
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NestInit_AttrsByKwArgs(NestInit_AttrsByKwArgs_Base):
+class NestInit_AttrsOnlyByKwArgs(NestInit_AttrsByKwArgs_Base):
     """
     NOTE
     ----
@@ -65,7 +66,7 @@ class NestInit_AttrsByKwArgs(NestInit_AttrsByKwArgs_Base):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NestInit_AnnotsByKwArgs(NestInit_AttrsByKwArgs_Base):
+class NestInit_AnnotsOnlyByKwArgs(NestInit_AttrsByKwArgs_Base):
     """
     NOTE
     ----
