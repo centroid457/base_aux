@@ -1,39 +1,12 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.base_inits.m3_nest_init_attrs_annots_by_kwargs import *
+from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 from base_aux.aux_eq.m2_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-# @pytest.mark.parametrize(
-#     argnames="args, kwargs, init_ok",
-#     argvalues=[
-#         ((), {1: 1}, False),
-#
-#         ((), dict(k1=1), True),
-#         ((), dict(k1=1, k2=2), True),
-#
-#         (("a1", "a2"), dict(k1=1, k2=2), True),
-#     ]
-# )
-# def test__0(args, kwargs, init_ok):
-#     try:
-#         victim = NestInit_AttrsOnlyByKwArgs(*args, **kwargs)
-#         assert init_ok
-#     except:
-#         assert not init_ok
-#         return
-#
-#     for key, value in kwargs.items():
-#         assert getattr(victim, key) == value
-#
-#     for arg in args:
-#         assert getattr(victim, arg) == None
-
-
-# =====================================================================================================================
-EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AttrsByKwArgs_Base)
+EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrsByKwArgs)
 @pytest.mark.parametrize(
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
@@ -46,7 +19,7 @@ EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AttrsByKwArgs_Base)
     ]
 )
 def test__1(args, kwargs, _EXPECTED):
-    func_link = lambda *_args, **_kwargs: NestInit_AttrsOnlyByKwArgs(*_args, **_kwargs)
+    func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrsByKwArgs(*_args, **_kwargs)
     ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
 
     if _EXPECTED == Exception:
@@ -57,25 +30,16 @@ def test__1(args, kwargs, _EXPECTED):
         assert getattr(victim, key) == value
 
     for arg in args:
-        assert getattr(victim, arg) == None
+        # args used only for Annots!
+        try:
+            getattr(victim, arg)
+            assert False
+        except:
+            assert True
 
 
 # =====================================================================================================================
-class VictimAttrsOnly(NestInit_AttrsOnlyByKwArgs):
-    # At0
-    At1 = None
-    An0: Any
-    An1: Any = None
-
-
-class VictimAnnotsOnly(NestInit_AnnotsOnlyByKwArgs):
-    # At0
-    At1 = None
-    An0: Any
-    An1: Any = None
-
-
-class VictimAttrsAnnots(NestInit_AttrsAnnotsByKwArgs):
+class Victim(NestInit_AnnotsAttrsByKwArgs):
     # At0
     At1 = None
     An0: Any
@@ -84,18 +48,20 @@ class VictimAttrsAnnots(NestInit_AttrsAnnotsByKwArgs):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, kwargs, Cls, _EXPECTED, values",
+    argnames="args, kwargs, _EXPECTED, values",
     argvalues=[
-        ((), {1: 1}, VictimAttrsOnly, Exception, ()),
+        ((), {1: 1}, Exception, ()),
 
-        ((), dict(At0=111), VictimAttrsOnly, EQ_ISINSTANCE_VICTIM, (111, None, Exception, None)),
-        ((), dict(At1=111), VictimAttrsOnly, EQ_ISINSTANCE_VICTIM, (Exception, 111, Exception, None)),
+        ((), dict(At0=111), EQ_ISINSTANCE_VICTIM, (111, None, Exception, None)),
+        ((), dict(At1=111), EQ_ISINSTANCE_VICTIM, (Exception, 111, Exception, None)),
 
-        (("a1", "a2"), dict(k1=1, k2=2), VictimAttrsOnly, EQ_ISINSTANCE_VICTIM, ()),
+        ((333, 444), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+        ((333, 444, 1, 2, 3, 4), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+        ((11, 22, 33, 44), dict(At0=111, At1=222, An0=333, An1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
     ]
 )
-def test__2(args, kwargs, Cls, _EXPECTED, values):
-    func_link = lambda *_args, **_kwargs: Cls(*_args, **_kwargs)
+def test__2(args, kwargs, _EXPECTED, values):
+    func_link = lambda *_args, **_kwargs: Victim(*_args, **_kwargs)
     ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
 
     if _EXPECTED == Exception:

@@ -199,7 +199,7 @@ class AttrsScope(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    NestInit_AttrsByKwArgs_Base for separating work with
+    NestInit_AnnotsAttrsByKwArgs_Base for separating work with - TODO: DEPRECATE?
     """
     ALL = None
     ATTRS_ONLY = auto()
