@@ -60,6 +60,22 @@ def test__variants(args, other, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
+    argnames="args, other, _EXPECTED",
+    argvalues=[
+        ((bool, int), True, True),
+        ((bool, int), 1, True),
+        ((bool, int), 1.0, False),
+
+        ((bool, int, None), 1, True),
+        ((1, 2), 1, False),
+    ]
+)
+def test__isinstance(args, other, _EXPECTED):
+    ExpectAux(EqValid_Isinstance(*args) == other).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
     argnames="args, other, ic, _EXPECTED",
     argvalues=[
         ([*"ABC"], "A1", True, True),

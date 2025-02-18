@@ -20,19 +20,20 @@ class Validators:
     1/ NoReturn - available for all returns as common!!! but sometimes it cant be reached (like TRUE/RAISE)
     """
     def VariantsDirect(self, other_final: Any, *variants: Any) -> bool | NoReturn:
-        if other_final in variants:
-            return True
-        else:
-            return False
+        return other_final in variants
 
     def VariantsStrLow(self, other_final: Any, *variants: Any) -> bool | NoReturn:
         other_final = str(other_final).lower()
         variants = (str(var).lower() for var in variants)
 
-        if other_final in variants:
-            return True
-        else:
-            return False
+        return other_final in variants
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def Isinstance(self, other_final: Any, *variants: type[Any]) -> bool | NoReturn:
+        for variant in variants:
+            if isinstance(other_final, variant):
+                return True
+        return False
 
     # -----------------------------------------------------------------------------------------------------------------
     def Startswith(self, other_final: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:

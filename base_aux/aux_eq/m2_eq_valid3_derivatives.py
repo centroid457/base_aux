@@ -18,6 +18,12 @@ class EqValid_VariantsStrLow(EqValid_Base):
 
 # =====================================================================================================================
 @final
+class EqValid_Isinstance(EqValid_Base):
+    VALIDATOR = Validators.Isinstance
+
+
+# =====================================================================================================================
+@final
 class EqValid_Startswith(EqValid_Base):
     VALIDATOR = Validators.Startswith
 
