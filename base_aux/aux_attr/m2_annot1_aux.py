@@ -78,7 +78,7 @@ class AnnotsAux(NestInit_Source):
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================
-    def set_value(self, name: str, value: Any = None, only_annot: bool = True) -> None:
+    def set_value(self, name: str, value: Any = None, only_annot: bool = True) -> None:   # FIXME: decide -  DONT DELETE only_annot!!! it could be used like filter?
         """
         GOAL
         ----
@@ -106,6 +106,48 @@ class AnnotsAux(NestInit_Source):
         """
         for key, value in data.items():
             self.set_value(key, value, only_annot=only_annot)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def set_values__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
+        """
+        NOTE
+        ----
+        for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!
+            class Cls(NestInit_AnnotsAttrsByKwArgs):
+                A1: Any
+                A2: Any
+                A3: Any = 1
+                A4: Any = 1
+
+        GOAL
+        ----
+        init annots/attrs by params in __init__
+
+        LOGIC
+        -----
+        args
+            - used for annots only - used as values! not names!
+            - inited first without Kwargs sense
+        kwargs
+            - used for both annots/attrs (annots are preferred)
+
+        annots are always preferred!
+
+        useful like creating simple object with exact attrs
+        """
+        self.set_values__by_args(*args)
+        self.set_values__by_kwargs(**kwargs)
+
+    def set_values__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
+        return self.set_values__by_dict(kwargs, only_annot=False)
+
+    def set_values__by_args(self, *args: Any) -> None:
+        """
+        ARGS - ARE VALUES! not names!
+
+        IF ARGS MORE then Annots - NoRaise! # FIXME: decide?
+        """
+        return self.set_values__by_kwargs(**dict(zip(self.iter_names(), args)))
 
     # =================================================================================================================
     def get__dict_types(self) -> dict[str, type[Any]]:
