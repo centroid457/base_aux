@@ -199,10 +199,10 @@ class AttrsScope(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    AttrAux for separating/defining, but maybe not needed
+    NestInit_AttrsByKwArgs_Base for separating work with
     """
     ALL = None
-    EXISTED_ONLY = auto()
+    ATTRS_ONLY = auto()
     ANNOTS_ONLY = auto()
 
 

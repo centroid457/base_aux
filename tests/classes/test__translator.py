@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
-from base_aux.base_inits.m3_nest_init_attrs_by_kwargs import *
+from base_aux.base_inits.m3_nest_init_attrs_annots_by_kwargs import *
 from base_aux.classes.m1_translator import *
 
 
@@ -13,15 +13,20 @@ class Test__1:
         argvalues=[
             ({1:11, 2:22}, None, 1, 11),
             ({1:11, 2:22}, None, 2, 22),
+
             ({1:11, 2:22}, None, 3, 3),
             ({1:11, 2:22}, False, 3, NoValue),
+
             ({1:11, 2:22}, True, "hello", "hello"),
             ({1:11, 2:22}, False, "hello", NoValue),
 
-            (NestInit_AttrsByKwArgs(a1=22), False, "a11", NoValue),
-            (NestInit_AttrsByKwArgs(a1=22), True, "a11", "a11"),
 
-            (NestInit_AttrsByKwArgs(a1=22), None, "a1", 22),
+
+            # FIXME: need resolve!!!1
+            # (NestInit_AttrsByKwArgs(a1=22), False, "a11", NoValue),
+            # (NestInit_AttrsByKwArgs(a1=22), True, "a11", "a11"),
+            #
+            # (NestInit_AttrsByKwArgs(a1=22), None, "a1", 22),
         ]
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):

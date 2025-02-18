@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.base_inits.m3_nest_init_attrs_by_kwargs import *
+from base_aux.base_inits.m3_nest_init_attrs_annots_by_kwargs import *
 
 
 # =====================================================================================================================
