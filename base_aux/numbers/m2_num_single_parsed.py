@@ -1,11 +1,11 @@
 from base_aux.base_statics.m1_types import *
 from base_aux.base_resolver.m1_resolver import *
 from base_aux.aux_text.m1_text_aux import *
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
-class _NumParsedSingle(Init_Source, NestCall_Resolve):
+class _NumParsedSingle(NestInit_Source, NestCall_Resolve):
     SOURCE: TYPES.NUMBER = None
 
     _numtype: NumType = NumType.BOTH

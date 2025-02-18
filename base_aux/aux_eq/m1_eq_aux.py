@@ -1,4 +1,4 @@
-from base_aux.base_inits.m2_source_kwargs import *
+from base_aux.base_inits.m2_nest_init_source_kwargs import *
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_attr.m1_attr1_aux import *
@@ -6,7 +6,7 @@ from base_aux.aux_attr.m1_attr1_aux import *
 
 # =====================================================================================================================
 @final
-class EqAux(Init_Source):
+class EqAux(NestInit_Source):
     # FIXME: decide about callables/KwAgs by now NOT USE IT! just direct cmp eq!
     # CALLABLES: bool = None   # NOTE: DONT use callables here in Eq!!!
     # NOTE: dont use Args/Kwargs here in EqAux! - no callables! just final objects!

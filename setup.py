@@ -56,7 +56,7 @@ setup(
   url=PROJECT.AUTHOR_HOMEPAGE,  # HOMEPAGE
   project_urls={
     # "Documentation": f"https://github.com/centroid457/{NAME}/blob/main/GUIDE.md",
-    "Init_Source": f"https://github.com/centroid457/{PROJECT.NAME_IMPORT}",
+    "NestInit_Source": f"https://github.com/centroid457/{PROJECT.NAME_IMPORT}",
   },
 
   packages=packages,

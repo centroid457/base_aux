@@ -1,12 +1,12 @@
 from typing import *
 import numpy as np
 
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
 @final
-class ArrayAux(Init_Source):
+class ArrayAux(NestInit_Source):
     SOURCE: np.ndarray
 
     def d2_get_compact_str(

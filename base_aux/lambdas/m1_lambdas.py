@@ -4,13 +4,13 @@ import time
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
-from base_aux.base_inits.m2_source_kwargs import Init_SourceKwArgs_Implicite
+from base_aux.base_inits.m2_nest_init_source_kwargs import NestInit_SourceKwArgs_Implicite
 
 from base_aux.aux_eq.m1_eq_aux import EqAux
 
 
 # =====================================================================================================================
-class Lambda(Init_SourceKwArgs_Implicite):
+class Lambda(NestInit_SourceKwArgs_Implicite):
     """
     IDEA
     ----

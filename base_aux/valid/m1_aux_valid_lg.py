@@ -1,11 +1,11 @@
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_text.m1_text_aux import *
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
 # @final
-class ValidAux(Init_Source):
+class ValidAux(NestInit_Source):
     """
     Try to keep all validating funcs in separated place
     """

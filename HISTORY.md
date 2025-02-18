@@ -67,9 +67,9 @@
 - [all PRJ] BIG REF:  
 	- many renames/resorts  
 	- [CIRCULAR IMPORT] final fix - clear all __init__py and use direct imports  
-	- [Init_Source] apply in most classes  
+	- [NestInit_Source] apply in most classes  
 	- [ArgsKwargs] apply+add types like TYPE__ARGS_DRAFT  
-	- [@final] apply to protect classes if Init_Source nested  
+	- [@final] apply to protect classes if NestInit_Source nested  
 	- [xxxAux]rename objects  
 	- [EqValid/Value] big creation  
 	- [CallableAux] create  

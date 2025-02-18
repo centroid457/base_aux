@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
@@ -11,7 +11,7 @@ TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
 
 # =====================================================================================================================
 @final
-class IterAux(Init_Source):
+class IterAux(NestInit_Source):
     """
     collect universal funcs which work with collections
 

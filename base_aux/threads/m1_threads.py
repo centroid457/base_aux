@@ -11,7 +11,7 @@ class ThreadItem(QThread):
     """Object for keeping thread data for better managing.
     """
 
-    # TODO: nest from Init_Source???
+    # TODO: nest from NestInit_Source???
     target: Callable
     args: TYPING.ARGS_FINAL
     kwargs: TYPING.KWARGS_FINAL

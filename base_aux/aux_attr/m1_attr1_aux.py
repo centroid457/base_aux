@@ -1,6 +1,6 @@
 import re
 
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
@@ -9,7 +9,7 @@ from base_aux.aux_attr.m0_static import AttrsDump
 
 # =====================================================================================================================
 @final
-class AttrAux(Init_Source):
+class AttrAux(NestInit_Source):
     """
     NOTE
     ----

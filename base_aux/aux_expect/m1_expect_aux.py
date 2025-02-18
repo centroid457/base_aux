@@ -11,7 +11,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 # =====================================================================================================================
 @final
-class ExpectAux(Init_SourceKwArgs_Explicite):
+class ExpectAux(NestInit_SourceKwArgs_Explicite):
     """
     SPECIALLY CREATED FOR
     ---------------------

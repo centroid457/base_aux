@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
@@ -8,7 +8,7 @@ from base_aux.base_inits.m1_source import *
 # FIXME: deprecate???
 
 @final
-class Explicit(Init_Source):
+class Explicit(NestInit_Source):
     """
     GOAL
     ----

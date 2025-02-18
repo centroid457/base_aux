@@ -1,10 +1,10 @@
 from base_aux.base_statics.m1_types import TYPES
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 
 
 # =====================================================================================================================
 @final
-class TypeAux(Init_Source):
+class TypeAux(NestInit_Source):
     SOURCE: type[Any] | Any
 
     # -----------------------------------------------------------------------------------------------------------------

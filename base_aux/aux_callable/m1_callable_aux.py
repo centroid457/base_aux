@@ -1,11 +1,11 @@
 from typing import *
-from base_aux.base_inits.m1_source import *
+from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
 @final
-class CallableAux(Init_Source):
+class CallableAux(NestInit_Source):
     """
     """
     PROCESS: ProcessState = ProcessState.NONE
