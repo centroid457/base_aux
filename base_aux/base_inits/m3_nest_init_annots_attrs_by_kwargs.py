@@ -76,8 +76,21 @@ def examples__NestInit():
 
 
 # =====================================================================================================================
+class _NestEq_Attrs:    # TODO: decide to use or not!
+    def __eq__(self, other: Any) -> bool:
+        for attr in AttrAux(self).iter__not_private():
+            value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
+            value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
+
+            if not EqAux(value_self).check_doubleside__bool(value_other):
+                return False
+
+        return True
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 @final
-class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs):
+class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs, _NestEq_Attrs):
     """
     GOAL
     ----
@@ -105,16 +118,6 @@ class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs):
     need rename just for Attrs*!?
     """
     # DONT ADD ANY NOT HIDDEN ATTRS!!!!
-
-    def __eq__(self, other: Any) -> bool:
-        for attr in AttrAux(self).iter__not_private():
-            value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
-            value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
-
-            if not EqAux(value_self).check_doubleside__bool(value_other):
-                return False
-
-        return True
 
 
 # ---------------------------------------------------------------------------------------------------------------------

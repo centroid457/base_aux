@@ -5,6 +5,7 @@ from base_aux.base_statics.m3_primitives import *
 
 from base_aux.aux_eq.m2_eq_valid1_base import _EqValidator
 from base_aux.aux_eq.m2_eq_valid3_derivatives import *
+from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
@@ -257,6 +258,23 @@ def test__regexp(args, other, _EXPECTED):
 
 def test__regexp_manual():
     ExpectAux(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").check_assert()
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="kwargs, other, _EXPECTED",
+    argvalues=[
+        # (dict(a1=1), True, False),
+        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=11), False),
+        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=1), True),
+        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=1, b2=2), True),
+
+        (dict(a1=1, a2=1), NestInit_AnnotsAttrsByKwArgs(a1=1), False),
+        (dict(a1=1, a2=1), NestInit_AnnotsAttrsByKwArgs(A1=1, A2=1), True),
+    ]
+)
+def test__AttrsByKwargs(kwargs, other, _EXPECTED):
+    ExpectAux(EqValid_AttrsByKwargs(**kwargs) == other).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

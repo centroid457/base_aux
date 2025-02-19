@@ -149,6 +149,12 @@ class EqValid_RegexpAnyFalse(EqValid_Regexp):
 
 
 # =====================================================================================================================
+@final
+class EqValid_AttrsByKwargs(EqValid_Base):
+    VALIDATOR = Validators.AttrsByKwargs
+
+
+# =====================================================================================================================
 if __name__ == "__main__":
     pass
 

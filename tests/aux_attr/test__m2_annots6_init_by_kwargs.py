@@ -66,8 +66,6 @@ class Test__NestInit:
                 assert True
 
 
-
-
 # =====================================================================================================================
 class Victim(NestInit_AnnotsAttrsByKwArgs):
     # At0

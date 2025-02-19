@@ -1,6 +1,10 @@
+from typing import *
+
 from base_aux.base_statics.m4_enums import *
 from base_aux.valid.m1_aux_valid_lg import *
 from base_aux.aux_types.m1_type_aux import *
+from base_aux.aux_attr.m1_attr1_aux import *
+from base_aux.aux_eq.m1_eq_aux import *
 
 
 # =====================================================================================================================
@@ -183,6 +187,22 @@ class Validators:
             return True
         else:
             return False
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def AttrsByKwargs(
+            self,
+            other_final,
+            # callable_resolve: CallableResolve = CallableResolve.EXX,
+            **kwargs: TYPING.KWARGS_FINAL
+    ) -> bool | NoReturn:
+        for key, value in kwargs.items():
+            value_expected = CallableAux(value).resolve(CallableResolve.EXX)
+            value_other = AttrAux(other_final).getattr__callable_resolve(key, CallableResolve.EXX)
+            if not EqAux(value_expected).check_doubleside__bool(value_other):
+                return False
+
+        # FINISH -----
+        return True
 
 
 # =====================================================================================================================
