@@ -110,30 +110,9 @@ class AnnotsAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def set_values__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
         """
-        NOTE
-        ----
-        for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!
-            class Cls(NestInit_AnnotsAttrsByKwArgs):
-                A1: Any
-                A2: Any
-                A3: Any = 1
-                A4: Any = 1
-
-        GOAL
-        ----
-        init annots/attrs by params in __init__
-
-        LOGIC
-        -----
-        args
-            - used for annots only - used as values! not names!
-            - inited first without Kwargs sense
-        kwargs
-            - used for both annots/attrs (annots are preferred)
-
-        annots are always preferred!
-
-        useful like creating simple object with exact attrs
+        CREATED SPECIALLY FOR
+        ---------------------
+        NestInit_AnnotsAttrsByKwArgs
         """
         self.set_values__by_args(*args)
         self.set_values__by_kwargs(**kwargs)
@@ -145,7 +124,7 @@ class AnnotsAux(NestInit_Source):
         """
         ARGS - ARE VALUES! not names!
 
-        IF ARGS MORE then Annots - NoRaise! # FIXME: decide?
+        IF ARGS MORE then Annots - NoRaise! You should lnow what you do!    # FIXME: decide?
         """
         return self.set_values__by_kwargs(**dict(zip(self.iter_names(), args)))
 

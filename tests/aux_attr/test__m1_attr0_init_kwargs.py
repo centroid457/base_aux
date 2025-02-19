@@ -52,8 +52,8 @@ class Victim(NestInit_AnnotsAttrsByKwArgs):
     argvalues=[
         ((), {1: 1}, Exception, ()),
 
-        ((), dict(At0=111), EQ_ISINSTANCE_VICTIM, (111, None, Exception, None)),
-        ((), dict(At1=111), EQ_ISINSTANCE_VICTIM, (Exception, 111, Exception, None)),
+        ((), dict(At0=111), Exception, ()),
+        ((), dict(At1=111), Exception, ()),
 
         ((333, 444), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
         ((333, 444, 1, 2, 3, 4), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
