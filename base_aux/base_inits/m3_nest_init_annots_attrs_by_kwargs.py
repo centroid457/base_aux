@@ -4,6 +4,7 @@ from base_aux.aux_attr.m1_attr1_aux import *
 from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.aux_attr.m2_annot1_aux import *
+from base_aux.aux_eq.m1_eq_aux import *
 
 
 # =====================================================================================================================
@@ -48,31 +49,8 @@ class NestInit_AnnotsAttrByKwArgsIC(NestInit_AnnotsAttrsByKwArgs, NestGSAI_AttrA
     pass
 
 
-# =====================================================================================================================
-@final
-class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs):
-    """
-    GOAL
-    ----
-    generate object with exact attrs values
-    for further comparing by Eq
-
-    SAME AS - NestInit_AnnotsAttrsByKwArgs
-    --------------------------------------
-    but
-        - used as final
-        - args useless
-
-    MAYBE
-    -----
-    need rename just for Attrs*! or use already existed
-    """
-    def __eq__(self, other) -> bool:
-        pass
-
-
-# =====================================================================================================================
-def examples_NestInit():
+# ---------------------------------------------------------------------------------------------------------------------
+def examples__NestInit():
     class Example(NestInit_AnnotsAttrsByKwArgs):
         A1: Any
         A2: Any = None
@@ -94,11 +72,66 @@ def examples_NestInit():
     assert Example(1, 1, 1).A1 == 1
     assert Example(1, 1, 1).A2 == 1
     assert Example(1, 1, 1).A3 == None
+    assert Example(1, 1, a3=1).A3 == 1
+
+
+# =====================================================================================================================
+@final
+class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs):
+    """
+    GOAL
+    ----
+    1/ generate object with exact attrs values by Kwargs like template
+    2/ for further comparing by Eq
+    3/ all callables will resolve as Exx
+
+    NOTE
+    ----
+    IgnoreCase applied!
+
+    SAME AS - NestInit_AnnotsAttrsByKwArgs
+    --------------------------------------
+    but
+        - used as final
+        - args useless
+
+    WHY NOT - just EqValid_*
+    ------------------------
+    1/ cause you will not keep simple direct object with attrs!
+    2/ EqValid_* will be created! further!
+
+    MAYBE
+    -----
+    need rename just for Attrs*!?
+    """
+    # DONT ADD ANY NOT HIDDEN ATTRS!!!!
+
+    def __eq__(self, other: Any) -> bool:
+        for attr in AttrAux(self).iter__not_private():
+            value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
+            value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
+
+            if not EqAux(value_self).check_doubleside__bool(value_other):
+                return False
+
+        return True
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+def examples__Init():
+    class Example:
+        A0: Any
+        A1: Any = 1
+
+    assert Init_AnnotsAttrsByKwArgs(a1=1) == Example()
+    assert Init_AnnotsAttrsByKwArgs(a1=11) != Example()
+
+    assert Init_AnnotsAttrsByKwArgs(a0=1) != Example()
 
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    examples_NestInit()
+    examples__Init()
 
 
 # =====================================================================================================================

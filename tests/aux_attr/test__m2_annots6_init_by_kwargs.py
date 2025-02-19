@@ -7,35 +7,65 @@ from base_aux.aux_eq.m2_eq_valid3_derivatives import *
 
 # =====================================================================================================================
 EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrsByKwArgs)
-@pytest.mark.parametrize(
-    argnames="args, kwargs, _EXPECTED",
-    argvalues=[
-        ((), {1: 1}, Exception),
 
-        ((), dict(k1=1), EQ_ISINSTANCE_VICTIM),
-        ((), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
 
-        (("a1", "a2"), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
-    ]
-)
-def test__1(args, kwargs, _EXPECTED):
-    func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrsByKwArgs(*_args, **_kwargs)
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+class Test__NestInit:
+    def test__examples(self):
+        class Example(NestInit_AnnotsAttrsByKwArgs):
+            A1: Any
+            A2: Any = None
+            A3 = None
 
-    if _EXPECTED == Exception:
-        return
-
-    victim = func_link(*args, **kwargs)
-    for key, value in kwargs.items():
-        assert getattr(victim, key) == value
-
-    for arg in args:
-        # args used only for Annots!
         try:
-            getattr(victim, arg)
+            Example()
             assert False
         except:
             assert True
+
+        assert Example(a1=1).A1 == 1
+        assert Example(1, a1=2).A1 == 2
+
+        assert Example(1).A1 == 1
+        assert Example(1).A2 == None
+        assert Example(1).A3 == None
+
+        assert Example(1, 1, 1).A1 == 1
+        assert Example(1, 1, 1).A2 == 1
+        assert Example(1, 1, 1).A3 == None
+        assert Example(1, 1, a3=1).A3 == 1
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="args, kwargs, _EXPECTED",
+        argvalues=[
+            ((), {1: 1}, Exception),
+
+            ((), dict(k1=1), EQ_ISINSTANCE_VICTIM),
+            ((), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
+
+            (("a1", "a2"), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
+        ]
+    )
+    def test__1(self, args, kwargs, _EXPECTED):
+        func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrsByKwArgs(*_args, **_kwargs)
+        ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+
+        if _EXPECTED == Exception:
+            return
+
+        victim = func_link(*args, **kwargs)
+        for key, value in kwargs.items():
+            assert getattr(victim, key) == value
+
+        for arg in args:
+            # args used only for Annots!
+            try:
+                getattr(victim, arg)
+                assert False
+            except:
+                assert True
+
+
 
 
 # =====================================================================================================================

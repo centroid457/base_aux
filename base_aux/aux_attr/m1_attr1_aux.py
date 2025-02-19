@@ -238,7 +238,7 @@ class AttrAux(NestInit_Source):
         self.anycase__delattr(name)
 
     # =================================================================================================================
-    def getattr__callable_resolve(self, name: str, callables_use: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
+    def getattr__callable_resolve(self, name: str, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
         -------
@@ -251,27 +251,27 @@ class AttrAux(NestInit_Source):
         2. cant use here cause of Circular import accused
         """
         # resolve property --------------
-        # result_property = CallableAux(getattr).resolve(callables_use, self.SOURCE, realname)
+        # result_property = CallableAux(getattr).resolve(callables_resolve, self.SOURCE, realname)
         # TypeAux
 
         try:
             value = self.anycase__getattr(name)
         except Exception as exx:
-            if callables_use == CallableResolve.SKIP_RAISED:
+            if callables_resolve == CallableResolve.SKIP_RAISED:
                 return ProcessState.SKIPPED
-            elif callables_use == CallableResolve.EXX:
+            elif callables_resolve == CallableResolve.EXX:
                 return exx
-            elif callables_use == CallableResolve.RAISE_AS_NONE:
+            elif callables_resolve == CallableResolve.RAISE_AS_NONE:
                 return None
-            elif callables_use == CallableResolve.RAISE:
+            elif callables_resolve == CallableResolve.RAISE:
                 raise exx
-            elif callables_use == CallableResolve.BOOL:
+            elif callables_resolve == CallableResolve.BOOL:
                 return False
             else:
                 raise exx
 
         # resolve callables ------------------
-        result = CallableAux(value).resolve(callables_use)
+        result = CallableAux(value).resolve(callables_resolve)
         return result
 
     # =================================================================================================================
@@ -285,7 +285,7 @@ class AttrAux(NestInit_Source):
 
         NOTE
         ----
-        1/ dont use callables_use here
+        1/ dont use callables_resolve here
         2/ dont add any TEMPLATES!!! its responsibility for DictAux! use it by yourself!!!
         """
         # work ----------
@@ -297,7 +297,7 @@ class AttrAux(NestInit_Source):
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_use: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -317,7 +317,7 @@ class AttrAux(NestInit_Source):
         """
         result = {}
         for name in self.iter__not_private():
-            value = self.getattr__callable_resolve(name=name, callables_use=callables_use)
+            value = self.getattr__callable_resolve(name=name, callables_resolve=callables_resolve)
             if value == ProcessState.SKIPPED:
                 continue
             result.update({name: value})
@@ -340,8 +340,8 @@ class AttrAux(NestInit_Source):
         return self.dump_dict(CallableResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_use: CallableResolve = CallableResolve.EXX) -> AttrsDump | NoReturn:
-        data = self.dump_dict(callables_use)
+    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrsDump | NoReturn:
+        data = self.dump_dict(callables_resolve)
         obj = AttrAux().load__by_dict(data)
         return obj
 
