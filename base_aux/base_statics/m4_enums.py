@@ -195,7 +195,7 @@ class CmpType(NestEq_Enum):
 
 
 # =====================================================================================================================
-class AttrsScope(NestEq_Enum):
+class AttrStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -204,6 +204,17 @@ class AttrsScope(NestEq_Enum):
     ALL = None
     ATTRS_ONLY = auto()
     ANNOTS_ONLY = auto()
+
+
+class AttrLevel(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    Init_AnnotsAttrsByKwArgs
+    """
+    NOT_HIDDEN = None
+    NOT_PRIVATE = auto()
+    ALL = auto()
 
 
 # =====================================================================================================================
