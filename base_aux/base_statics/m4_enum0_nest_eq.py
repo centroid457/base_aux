@@ -10,6 +10,9 @@ class NestEq_Enum(Enum):
 
     VictimEq(1) == 1    # for std object it is False
     """
+
+    # TODO: add EqLower???
+
     def __eq__(self, other) -> bool:
         result = False
         if isinstance(other, self.__class__):
