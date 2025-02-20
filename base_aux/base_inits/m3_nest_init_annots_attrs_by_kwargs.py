@@ -34,7 +34,7 @@ class NestInit_AnnotsAttrsByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly
         - if not existed in Annots and Attrs - create new!
     """
     def __init__(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
-        AnnotsAux(self).set_values__by_args_kwargs(*args, **kwargs)
+        AnnotsAux(self).set_annots_attrs__by_args_kwargs(*args, **kwargs)
         AnnotsAux(self).check_all_defined_or_raise()    # fixme: is it really need? i think yes! use default values for noRaise!
 
 

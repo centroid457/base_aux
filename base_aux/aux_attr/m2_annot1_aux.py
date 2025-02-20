@@ -108,25 +108,38 @@ class AnnotsAux(NestInit_Source):
             self.set_value(key, value, only_annot=only_annot)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def set_values__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
+    def set_annots_attrs__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
         """
         CREATED SPECIALLY FOR
         ---------------------
         NestInit_AnnotsAttrsByKwArgs
         """
-        self.set_values__by_args(*args)
-        self.set_values__by_kwargs(**kwargs)
+        self.set_annots__by_args(*args)
+        self.set_annots_attrs__by_kwargs(**kwargs)
 
-    def set_values__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
+    def set_annots_attrs__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
         return self.set_values__by_dict(kwargs, only_annot=False)
 
-    def set_values__by_args(self, *args: Any) -> None:
+    # -----------------------------------------------------------------------------------------------------------------
+    def set_annots__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
+        """
+        CREATED SPECIALLY FOR
+        ---------------------
+        NestInit_AnnotsAttrsByKwArgs
+        """
+        self.set_annots__by_args(*args)
+        self.set_annots__by_kwargs(**kwargs)
+
+    def set_annots__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
+        return self.set_values__by_dict(kwargs, only_annot=True)
+
+    def set_annots__by_args(self, *args: Any) -> None:
         """
         ARGS - ARE VALUES! not names!
 
         IF ARGS MORE then Annots - NoRaise! You should lnow what you do!    # FIXME: decide?
         """
-        return self.set_values__by_kwargs(**dict(zip(self.iter_names(), args)))
+        return self.set_annots_attrs__by_kwargs(**dict(zip(self.iter_names(), args)))
 
     # =================================================================================================================
     def get__dict_types(self) -> dict[str, type[Any]]:
