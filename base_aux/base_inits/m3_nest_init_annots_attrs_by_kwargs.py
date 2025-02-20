@@ -29,6 +29,7 @@ class NestInit_AnnotsAttrsByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly
         - if kwargs use same keys - it will overwrite by kwargs (args set first)
     KWARGS
         - used for both annots/attrs (annots see first)
+        - if not existed in Annots and Attrs - create new!
     """
     def __init__(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
         AnnotsAux(self).set_values__by_args_kwargs(*args, **kwargs)
