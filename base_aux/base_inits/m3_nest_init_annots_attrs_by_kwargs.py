@@ -1,3 +1,5 @@
+from typing import *
+
 from base_aux.aux_attr.m4_nest_eq_attrs import NestEq_Attrs
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_eq.m1_eq_aux import *
