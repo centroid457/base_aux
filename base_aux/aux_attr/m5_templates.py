@@ -5,7 +5,7 @@ from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class AttrTemplate_Static(NestInit_AnnotsAttrByKwArgsIC):
+class AttrTemplate_Static(NestInit_AnnotsAttrByKwArgsIC, NestEq_Attrs):     # TODO: decide to delete! use only dynamic!
     """
     GOAL
     ----
@@ -17,9 +17,6 @@ class AttrTemplate_Static(NestInit_AnnotsAttrByKwArgsIC):
         return AttrAux(self).anycase__check_exists(item)
 
     # -----------------------------------------------------------------------------------------------------------------
-    # def __eq__(self, other: Any) -> bool:     # TODO: add finish!
-    #     pass
-
     def __str__(self) -> str:
         result = f"{self.__class__.__name__}("
 

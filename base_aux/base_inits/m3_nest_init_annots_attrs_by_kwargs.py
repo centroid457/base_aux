@@ -1,8 +1,4 @@
-from typing import *
-
-from base_aux.aux_attr.m1_attr1_aux import *
-from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
-from base_aux.base_statics.m4_enums import *
+from base_aux.aux_attr.m4_nest_eq_attrs import NestEq_Attrs
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_eq.m1_eq_aux import *
 
@@ -76,21 +72,11 @@ def examples__NestInit():
 
 
 # =====================================================================================================================
-class _NestEq_Attrs:    # TODO: decide to use or not!
-    def __eq__(self, other: Any) -> bool:
-        for attr in AttrAux(self).iter__not_private():
-            value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
-            value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
-
-            if not EqAux(value_self).check_doubleside__bool(value_other):
-                return False
-
-        return True
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs, _NestEq_Attrs):
+class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs, NestEq_Attrs):
     """
     GOAL
     ----
