@@ -5,7 +5,7 @@ from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class AttrTemplate_Static(NestInit_AnnotsAttrByKwArgsIC, NestEq_Attrs):     # TODO: decide to delete! use only dynamic??
+class AttrTemplate_Direct(NestInit_AnnotsAttrByKwArgsIC, NestEq_Attrs):     # TODO: decide to delete! use only dynamic??
     """
     GOAL
     ----
@@ -33,7 +33,7 @@ class AttrTemplate_Static(NestInit_AnnotsAttrByKwArgsIC, NestEq_Attrs):     # TO
 
 
 # =====================================================================================================================
-class AttrTemplate_Dinamic(AttrTemplate_Static):
+class AttrTemplate_Callable(AttrTemplate_Direct):
     """
     GOAL
     ----
