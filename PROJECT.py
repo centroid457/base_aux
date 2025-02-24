@@ -36,6 +36,7 @@ class PROJECT(PROJECT_BASE):
     VERSION = Version((0, 2, 11))
     NEWS: list[str] = [
         "[PRJBase] move into share +use Version",
+        "[AttrsAux] add AttrTemplate_Direct/Callable",
     ]
 
 
