@@ -1,41 +1,12 @@
-from typing import *
-from share.release_files import release_files__update
+from base_aux.project.release_files import *
 
 
 # =====================================================================================================================
 # VERSION = (0, 0, 3)   # 1/deprecate _VERSION_TEMPLATE from PRJ object +2/place update_prj here in __main__ +3/separate finalize aux_attr
 # VERSION = (0, 0, 4)   # add AUTHOR_NICKNAME_GITHUB for badges
 # VERSION = (0, 0, 5)   # separate PROJECT_BASE #TODO: need to separate into module!
-VERSION = (0, 0, 6)     # group Ver+News just place together
-
-
-# =====================================================================================================================
-class PROJECT_BASE:
-    NAME_IMPORT: str
-    VERSION: tuple[int, int, int]
-
-    # AUTHOR ------------------------------------------------
-    AUTHOR_NAME: str = "Andrei Starichenko"
-    AUTHOR_EMAIL: str = "centroid@mail.ru"
-    AUTHOR_HOMEPAGE: str = "https://github.com/centroid457/"
-    AUTHOR_NICKNAME_GITHUB: str = "centroid457"
-
-    # AUX ----------------------------------------------------
-    CLASSIFIERS_TOPICS_ADD: list[str] = [
-        # "Topic :: Communications",
-        # "Topic :: Communications :: Email",
-    ]
-
-    # FINALIZE -----------------------------------------------
-    @classmethod
-    @property
-    def VERSION_STR(cls) -> str:
-        return ".".join(map(str, cls.VERSION))
-
-    @classmethod
-    @property
-    def NAME_INSTALL(cls) -> str:
-        return cls.NAME_IMPORT.replace("_", "-")
+# VERSION = (0, 0, 6)   # group Ver+News just place together
+VERSION = (0, 0, 7)     # move PRJBase into share +use Version
 
 
 # =====================================================================================================================
@@ -62,10 +33,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION: tuple[int, int, int] = (0, 2, 10)
+    VERSION = Version((0, 2, 11))
     NEWS: list[str] = [
-        "[Inits] add NestInit_AnnotsAttrsByKwArgs",
-        "[EqValid] add EqValid_Isinstance +EqValid_AttrsByKwargs",
+        "[PRJBase] move into share +use Version",
     ]
 
 

@@ -51,9 +51,5 @@ class PROJECT:
         "apply last pypi template",
     ]
 
-    # FINALIZE -----------------------------------------------
-    VERSION_STR: str = ".".join(map(str, VERSION))
-    NAME_INSTALL: str = NAME_IMPORT.replace("_", "-")
-
 
 # =====================================================================================================================

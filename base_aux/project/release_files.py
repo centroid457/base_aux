@@ -1,9 +1,10 @@
+from typing import *
 import pathlib
 import re
-from typing import *
 import time
 
 from base_aux.cli.m1_cli_user import *
+from base_aux.versions.m1_version import *
 
 # from PROJECT import PROJECT
 
@@ -21,12 +22,42 @@ from base_aux.cli.m1_cli_user import *
 # VERSION = (0, 0, 10)  # requirements_release_freezed extend timeout (at home i need 3-4sec!)
 # VERSION = (0, 0, 11)  # collect all modules into one pkg!
 # VERSION = (0, 0, 12)  # add bundled licenses
-VERSION = (0, 0, 13)    # bundled licenses - fix lines
+# VERSION = (0, 0, 13)  # bundled licenses - fix lines
+VERSION = (0, 0, 14)     # move PRJBase into share +use Version
 
 
 # =====================================================================================================================
 class Exx_HistorySameVersionOrNews(Exception):
     pass
+
+
+# =====================================================================================================================
+class PROJECT_BASE:
+    NAME_IMPORT: str
+    VERSION: Version
+
+    # AUTHOR ------------------------------------------------
+    AUTHOR_NAME: str = "Andrei Starichenko"
+    AUTHOR_EMAIL: str = "centroid@mail.ru"
+    AUTHOR_HOMEPAGE: str = "https://github.com/centroid457/"
+    AUTHOR_NICKNAME_GITHUB: str = "centroid457"
+
+    # AUX ----------------------------------------------------
+    CLASSIFIERS_TOPICS_ADD: list[str] = [
+        # "Topic :: Communications",
+        # "Topic :: Communications :: Email",
+    ]
+
+    # FINALIZE -----------------------------------------------
+    @classmethod
+    @property
+    def VERSION_STR(cls) -> str:
+        return str(cls.VERSION)
+
+    @classmethod
+    @property
+    def NAME_INSTALL(cls) -> str:
+        return cls.NAME_IMPORT.replace("_", "-")
 
 
 # =====================================================================================================================
