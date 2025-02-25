@@ -180,8 +180,8 @@ pass    # ----------------------------------------------------------------------
 pass    # -------------------------------------------------------------------------------------------------------------
 pass    # -------------------------------------------------------------------------------------------------------------
 
-TYPE__VERSION_FINAL = tuple[VersionBlock, ...]
-TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_DRAFT,  TYPE__VERSION_FINAL, 'Version', Any]
+TYPE__VERSION_BLOCKS_FINAL = tuple[VersionBlock, ...]
+TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_DRAFT,  TYPE__VERSION_BLOCKS_FINAL, 'Version', Any]
 
 
 class PatternsVer:
@@ -197,7 +197,7 @@ class Version(CmpInst):
     :ivar _SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
     """
     _SOURCE: Any
-    BLOCKS: TYPE__VERSION_FINAL = ()
+    BLOCKS: TYPE__VERSION_BLOCKS_FINAL = ()
 
     MIN_BLOCKS_COUNT: int = 1
     RAISE: bool = True
@@ -252,7 +252,7 @@ class Version(CmpInst):
         return result
 
     @staticmethod
-    def _parse_blocks(source: str) -> TYPE__VERSION_FINAL:
+    def _parse_blocks(source: str) -> TYPE__VERSION_BLOCKS_FINAL:
         blocks_list__str = source.split(".")
 
         # RESULT -----------
