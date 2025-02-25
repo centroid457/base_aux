@@ -2,8 +2,11 @@ from typing import *
 import re
 
 from base_aux.aux_eq.m0_cmp_inst import CmpInst
-from base_aux.aux_text.m0_patterns import PatVersionBlock
-from base_aux.base_statics.m2_exceptions import Exx__IncompatibleItem
+from base_aux.aux_text.m0_patterns import *
+from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_eq.m2_eq_valid3_derivatives import *
+from base_aux.aux_eq.m10_types import *
+from base_aux.aux_text.m1_text_aux import *
 
 
 # =====================================================================================================================
@@ -34,16 +37,31 @@ class VersionBlock(CmpInst):
     SOURCE: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT
     ELEMENTS: TYPE__VERSION_BLOCK_ELEMENTS_FINAL = ()
     RAISE: bool = True
+    # EQ_VALID: TYPE__EQ_VALID = EqValidChain(
+    #     # EqValid_RegexpAnyTrue(*PatVersionBlock.VALID),
+    #     # EqValid_RegexpAllFalse(*PatVersionBlock.VALID_REVERSE_SOURCE),
+    # )
 
-    def __init__(self, source: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT, _raise: bool = None) -> None | NoReturn:
+    def __init__(
+            self,
+            source: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,
+            # eq_valid: TYPE__EQ_VALID = None,
+            _raise: bool = None,
+    ) -> None | NoReturn:
+        # if eq_valid is not None:
+        #     self.EQ_VALID = eq_valid
+
         if _raise is not None:
             self.RAISE = _raise
 
         self.SOURCE = source
-        self._prepare()
+        if self.SOURCE is None:
+            self.SOURCE = ""
+
+        self._prepare_source()
         self._parse_elements()
 
-    def _prepare(self) -> str:
+    def _prepare_source(self) -> str:
         if isinstance(self.SOURCE, (list, tuple)):
             result = "".join([str(item) for item in self.SOURCE])
         else:
@@ -51,27 +69,12 @@ class VersionBlock(CmpInst):
 
         # FINISH -------------------------------
         result = result.lower()
-        result = re.sub(PatVersionBlock.CLEAR, "", result)
         result = result.strip()
 
         self.SOURCE = result
         return result
 
-    def _validate(self) -> bool:
-        match = re.fullmatch(PatVersionBlock.VALIDATE_NEGATIVE, self.SOURCE)
-        if match:
-            return False
-
-        match = re.fullmatch(PatVersionBlock.VALID, self.SOURCE)
-        return bool(match)
-
     def _parse_elements(self) -> TYPE__VERSION_BLOCK_ELEMENTS_FINAL | NoReturn:
-        if not self._validate():
-            if self.RAISE:
-                raise Exx__IncompatibleItem(self.SOURCE)
-            else:
-                return ()
-
         result_list = []
         for element in re.findall(PatVersionBlock.ITERATE, self.SOURCE):
             try:
@@ -79,6 +82,14 @@ class VersionBlock(CmpInst):
             except:
                 pass
             result_list.append(element)
+
+            if len(result_list) > 1:
+                if type(result_list[-1]) == type(result_list[-2]):
+                    if self.RAISE:
+                        raise Exx__Incompatible(f"{result_list[-1]=}/{result_list[-2]=}")
+                    else:
+                        result_list = ()
+                        break
 
         result = tuple(result_list)
         self.ELEMENTS = result
@@ -115,7 +126,11 @@ class VersionBlock(CmpInst):
 
     # CMP -------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other) -> int | NoReturn:
-        other = self.__class__(other, _raise=False)
+        other = self.__class__(
+            other,
+            # eq_valid=self.EQ_VALID,
+            _raise=False
+        )
 
         # equel ----------------------
         if not self and not other:

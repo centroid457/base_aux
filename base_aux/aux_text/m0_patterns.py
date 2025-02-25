@@ -19,10 +19,10 @@ class Patterns:
 
 # =====================================================================================================================
 class PatVersionBlock(Patterns):
-    CLEAR = r"[\"' -]*"
-    VALIDATE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
-    VALID = r"(\d|[a-z])+"
-    ITERATE = r"\d+|[a-z]+"
+    # CLEAR: list[str] = [r"[\"' -]*", ]
+    # VALID_REVERSE_SOURCE: list[str] = [r".*\d[^0-9a-zA-Z]+\d.*", r".*[a-zA-Z][^-0-9]+[a-zA-Z].*",]
+    # VALID: list[str] = [r"[0-9a-z]+", ]
+    ITERATE: str = r"\d+|[a-z]+"
 
 
 class PatVersion(Patterns):

@@ -19,13 +19,13 @@ class Test__Version:
             ("HELLO", ["", ()]),
             ("11rc22", ["11rc22", (VersionBlock("11rc22"), )]),
             ("11r c22", ["11r c22", (VersionBlock("11rc22"),)]),
-            (" 11 rc-2 2", ["11 rc-2 2", Exx__IncompatibleItem]),
+            (" 11 rc-2 2", ["11 rc-2 2", Exx__Incompatible]),
 
             # zeros invaluable
             ("01rc02", ["01rc02", (VersionBlock("01rc02"),)]),
 
             # not clean chars
-            ("[11:rc.22]", ["11:rc.22", Exx__IncompatibleItem]),
+            ("[11:rc.22]", ["11:rc.22", Exx__Incompatible]),
 
             # iterables
             (([11, "r c---", 22], ), ["11.r c---.22", (VersionBlock(11), VersionBlock("rc"), VersionBlock(22), )]),
@@ -64,13 +64,13 @@ class Test__Version:
             ("HELLO", Exx__Incompatible),
             ("11rc22", "11rc22"),
             ("11r c22", "11rc22"),
-            (" 11 rc-2 2", Exx__IncompatibleItem),
+            (" 11 rc-2 2", Exx__Incompatible),
 
             # zeros invaluable
             ("01rc02", "1rc2"),
 
             # not clean chars
-            ("[11:rc.22]", Exx__IncompatibleItem),
+            ("[11:rc.22]", Exx__Incompatible),
 
             # iterables
             (([11, "r c---", 22], ), "11.rc.22"),
@@ -103,13 +103,13 @@ class Test__Version:
             ("HELLO", Exx__Incompatible),
             ("11rc22", 1),
             ("11r c22", 1),
-            (" 11 rc-2 2", Exx__IncompatibleItem),
+            (" 11 rc-2 2", Exx__Incompatible),
 
             # zeros invaluable
             ("01rc02", 1),
 
             # not clean chars
-            ("[11:rc.22]", Exx__IncompatibleItem),
+            ("[11:rc.22]", Exx__Incompatible),
 
             # iterables
             (([11, "r c---", 22],), 3),
@@ -132,7 +132,7 @@ class Test__Version:
             (("01rc02", "1rc20"), False),
 
             # not clean chars
-            (("1rc2", "[11:rc.22]"), Exx__IncompatibleItem),
+            (("1rc2", "[11:rc.22]"), Exx__Incompatible),
 
             # iterables
             (("1rc2", [1, "rc", 2]), False),

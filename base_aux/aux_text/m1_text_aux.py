@@ -70,6 +70,11 @@ class TextAux:
         return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverStyle.LINE)
 
     # EDIT ============================================================================================================
+    def clear__regexps(self, *pats: str, **kwargs) -> str:
+        for pat in pats:
+            self.sub__regexp(pat=pat, new="", **kwargs)
+        return self.TEXT
+
     def clear__spaces_all(self) -> str:
         """
         GOAL
