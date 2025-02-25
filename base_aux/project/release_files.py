@@ -4,7 +4,7 @@ import re
 import time
 
 from base_aux.cli.m1_cli_user import *
-from base_aux.versions.m1_version import *
+from base_aux.versions.m2_version import *
 
 # from PROJECT import PROJECT
 

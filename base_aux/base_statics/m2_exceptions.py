@@ -142,6 +142,10 @@ class Exx__Incompatible(Exx__BoolBase):
     pass
 
 
+class Exx__IncompatibleItem(Exx__Incompatible):
+    pass
+
+
 class Exx__OutOfRange(Exx__BoolBase):
     pass
 

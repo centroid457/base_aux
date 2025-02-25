@@ -18,6 +18,26 @@ class Patterns:
 
 
 # =====================================================================================================================
+class PatVersionBlock(Patterns):
+    CLEAR = r"[\"' -]*"
+    VALIDATE_NEGATIVE = r"\d+[^0-9a-z]+\d+"
+    VALID = r"(\d|[a-z])+"
+    ITERATE = r"\d+|[a-z]+"
+
+
+class PatVersion(Patterns):
+    """
+    GOAL
+    ----
+    patterns for parse comments
+    """
+    # VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
+    # VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
+    VERSION_IN_BRACKETS: list = [r"\((.*)\)", r"\[(.*)\]"]  # get first bracket!!!
+    VALID_BRACKETS: list = [r"[^\[].*\]", r"\[.*[^\]]", r"[^\(].*\)", r"\(.*[^\)]"]
+
+
+# =====================================================================================================================
 class PatCmts(Patterns):
     """
     GOAL
