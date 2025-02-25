@@ -41,40 +41,34 @@ TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,  TYPE__VERSION_B
 # =====================================================================================================================
 class Version(CmpInst):
     """
+    NOTE
+    ----
+    VERSION - SPLIT DOTS!
+    BLOCK - SPLIT ELEMENTS!
+
     :ivar SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
     """
     SOURCE: Any
     BLOCKS: TYPE__VERSION_BLOCKS_FINAL = ()
 
-    MIN_BLOCKS_COUNT: int = 1
     RAISE: bool = True
 
-    def __init__(self, source: Any, min_blocks_count: int = None, _raise: bool = None) -> None | NoReturn:
-        if min_blocks_count is not None:
-            self.MIN_BLOCKS_COUNT = min_blocks_count
-
+    def __init__(self, source: Any, _raise: bool = None) -> None | NoReturn:
         if _raise is not None:
             self.RAISE = _raise
 
         self.SOURCE = source
 
-        self._prepare_string()
+        self._prepare_source()
         self._parse_blocks()
-        if not self.check_blocks_enough() and self.RAISE:
-            raise Exx__Incompatible(f"check_blocks_enough={self.SOURCE=}/{self.MIN_BLOCKS_COUNT=}")
-
-    def check_blocks_enough(self, count: int = None) -> bool:
-        if count is None:
-            count = self.MIN_BLOCKS_COUNT
-        return len(self.BLOCKS) >= count
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _prepare_string(self) -> str:
+    def _prepare_source(self) -> str:
         """
         ONLY PREPARE STRING FOR CORRECT SPLITTING BLOCKS - parsing blocks would inside VersionBlock
         """
         if isinstance(self.SOURCE, (list, tuple)):
-            result = ".".join([str(item) for item in self.SOURCE])
+            result = ".".join([str(block) for block in self.SOURCE])
         else:
             result = str(self.SOURCE)
 
@@ -89,6 +83,8 @@ class Version(CmpInst):
 
         if "," in result and "." in result and self.RAISE:
             raise Exx__Incompatible(result)
+        # else:
+        #     result = ""
 
         for pattern in PatVersion.VALID_BRACKETS:
             if re.search(pattern, result) and self.RAISE:
@@ -114,8 +110,11 @@ class Version(CmpInst):
             try:
                 block = VersionBlock(item)
                 result.append(block)
-            except:
-                pass
+            except Exception as exx:
+                if self.RAISE:
+                    raise Exx__Incompatible(exx)
+                else:
+                    return ()
 
         self.BLOCKS = tuple(result)
         return self.BLOCKS
@@ -151,15 +150,15 @@ class Version(CmpInst):
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def major(self) -> VersionBlock | None:
+    def MAJOR(self) -> VersionBlock | None:
         return self[0]
 
     @property
-    def minor(self) -> VersionBlock | None:
+    def MINOR(self) -> VersionBlock | None:
         return self[1]
 
     @property
-    def micro(self) -> VersionBlock | None:
+    def MICRO(self) -> VersionBlock | None:
         return self[2]
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -168,6 +167,9 @@ class Version(CmpInst):
             return 0
 
         other = self.__class__(other, _raise=self.RAISE)
+
+        if not bool(self) and not bool(other):
+            return 0
 
         # equel ----------------------
         if str(self) == str(other):

@@ -1,5 +1,6 @@
 from base_aux.versions.m2_version import *
 from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.base_statics.m2_exceptions import *
 
 
 # =====================================================================================================================
@@ -18,17 +19,17 @@ class Test__Version:
             ("hello", ["", ()]),
             ("HELLO", ["", ()]),
             ("11rc22", ["11rc22", (VersionBlock("11rc22"), )]),
-            ("11r c22", ["11r c22", (VersionBlock("11rc22"),)]),
-            (" 11 rc-2 2", ["11 rc-2 2", Exx__Incompatible]),
+            ("11r c22", ["11r c22", (), ]),
+            (" 11 rc-2 2", ["11 rc-2 2", (), ]),
 
             # zeros invaluable
             ("01rc02", ["01rc02", (VersionBlock("01rc02"),)]),
 
             # not clean chars
-            ("[11:rc.22]", ["11:rc.22", Exx__Incompatible]),
+            ("[11:rc.22]", ["11:rc.22", (), ]),
 
             # iterables
-            (([11, "r c---", 22], ), ["11.r c---.22", (VersionBlock(11), VersionBlock("rc"), VersionBlock(22), )]),
+            ([11, "r c---", 22], ["11.r c---.22", ()]),
 
             # inst
             (VersionBlock("11rc22"), ["11rc22", (VersionBlock("11rc22"), )]),
@@ -39,31 +40,31 @@ class Test__Version:
             ("ver(1.1rc2.2)ver", ["1.1rc2.2", (VersionBlock(1), VersionBlock("1rc2"), VersionBlock(2), )]),
 
             # # BLOCKS inst ---------------------
-            (([1, VersionBlock("11rc22")],), ["1.11rc22", (VersionBlock(1), VersionBlock("11rc22"), )]),
-            (([1, "hello"], ), ["1.hello", (VersionBlock(1), VersionBlock("hello"), )]),
+            ([1, VersionBlock("11rc22")], ["1.11rc22", (VersionBlock(1), VersionBlock("11rc22"), )]),
+            ([1, "hello"], ["1.hello", (VersionBlock(1), VersionBlock("hello"), )]),
         ]
     )
     def test___prepare_string(self, source, _EXPECTED):
-        func_link = lambda: Version(source)._prepare_string()
+        func_link = lambda: Version(source, _raise=False)._prepare_source()
         ExpectAux(func_link).check_assert(_EXPECTED[0])
 
         prep = func_link()
-        func_link = lambda: Version(prep)._parse_blocks()
+        func_link = lambda: Version(prep, _raise=False)._parse_blocks()
         ExpectAux(func_link).check_assert(_EXPECTED[1])
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             # ONE BLOCK ---------------------
-            (True, Exx__Incompatible),
+            (True, ""),
             (1, "1"),
 
             ("1", "1"),
-            ("hello", Exx__Incompatible),
-            ("HELLO", Exx__Incompatible),
+            ("hello", ""),
+            ("HELLO", ""),
             ("11rc22", "11rc22"),
-            ("11r c22", "11rc22"),
+            ("11r c22", Exx__Incompatible),
             (" 11 rc-2 2", Exx__Incompatible),
 
             # zeros invaluable
@@ -73,7 +74,7 @@ class Test__Version:
             ("[11:rc.22]", Exx__Incompatible),
 
             # iterables
-            (([11, "r c---", 22], ), "11.rc.22"),
+            (([11, "r c---", 22], ), Exx__Incompatible),
 
             # inst
             (VersionBlock("11rc22"), "11rc22"),
@@ -84,25 +85,25 @@ class Test__Version:
             ("ver(1.1rc2.2)ver", "1.1rc2.2"),
 
             # BLOCKS inst ---------------------
-            (([1, VersionBlock("11rc22")],), "1.11rc22"),
-            (([1, "hello"],), "1.hello"),
+            ([1, VersionBlock("11rc22")], "1.11rc22"),
+            ([1, "hello"], "1.hello"),
         ]
     )
-    def test__inst__string(self, args, _EXPECTED):
-        func_link = lambda source: str(Version(source))
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+    def test__inst__string(self, source, _EXPECTED):
+        func_link = lambda: str(Version(source))
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
-        argnames="args, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
-            (True, Exx__Incompatible),
+            (True, 0),
             (1, 1),
 
             ("1", 1),
-            ("hello", Exx__Incompatible),
-            ("HELLO", Exx__Incompatible),
+            ("hello", 0),
+            ("HELLO", 0),
             ("11rc22", 1),
-            ("11r c22", 1),
+            ("11r c22", Exx__Incompatible),
             (" 11 rc-2 2", Exx__Incompatible),
 
             # zeros invaluable
@@ -112,15 +113,15 @@ class Test__Version:
             ("[11:rc.22]", Exx__Incompatible),
 
             # iterables
-            (([11, "r c---", 22],), 3),
+            ([11, "r c---", 22], Exx__Incompatible),
 
             # inst
             (VersionBlock("11rc22"), 1),
         ]
     )
-    def test__inst__len(self, args, _EXPECTED):
-        func_link = lambda source: len(Version(source))
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+    def test__inst__len(self, source, _EXPECTED):
+        func_link = lambda: len(Version(source))
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="args, _EXPECTED",
@@ -162,7 +163,7 @@ class Test__Version:
             ("hello", False),
             ("HELLO", False),
             ("11rc22", True),
-            ("11r c22", True),
+            ("11r c22", False),
             (" 11 rc-2 2", False),
 
             # zeros invaluable
@@ -172,7 +173,7 @@ class Test__Version:
             ("[11:rc.22]", False),
 
             # iterables
-            (([11, "r c---", 22],), True),
+            (([11, "r c---", 22],), False),
 
             # inst
             (VersionBlock("11rc22"), True),
@@ -205,14 +206,14 @@ class Test__Version:
 
     # PARTS -----------------------------------------------------------------------------------------------------------
     def test__parts(self):
-        assert Version("1.2rc2.3").major == 1
+        assert Version("1.2rc2.3").MAJOR == 1
 
-        assert Version("1.2rc2.3").major == 1
-        assert Version("1.2rc2.3").minor == "2rc2"
-        assert Version("1.2rc2.3").micro == 3
+        assert Version("1.2rc2.3").MAJOR == 1
+        assert Version("1.2rc2.3").MINOR == "2rc2"
+        assert Version("1.2rc2.3").MICRO == 3
 
-        assert Version("1.2rc2.").micro is None
-        assert Version("1.2rc2.").micro is None
+        assert Version("1.2rc2.").MICRO is None
+        assert Version("1.2rc2.").MICRO is None
 
 
 # =====================================================================================================================

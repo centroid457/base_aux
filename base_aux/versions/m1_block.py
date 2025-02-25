@@ -37,19 +37,19 @@ class VersionBlock(CmpInst):
     SOURCE: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT
     ELEMENTS: TYPE__VERSION_BLOCK_ELEMENTS_FINAL = ()
     RAISE: bool = True
-    # EQ_VALID: TYPE__EQ_VALID = EqValidChain(
-    #     # EqValid_RegexpAnyTrue(*PatVersionBlock.VALID),
-    #     # EqValid_RegexpAllFalse(*PatVersionBlock.VALID_REVERSE_SOURCE),
-    # )
+    EQ_VALID: TYPE__EQ_VALID = EqValidChain(
+        # EqValid_RegexpAnyTrue(*PatVersionBlock.VALID),
+        EqValid_RegexpAllFalse(*PatVersionBlock.VALID_REVERSE),
+    )
 
     def __init__(
             self,
             source: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,
-            # eq_valid: TYPE__EQ_VALID = None,
+            eq_valid: TYPE__EQ_VALID = None,
             _raise: bool = None,
     ) -> None | NoReturn:
-        # if eq_valid is not None:
-        #     self.EQ_VALID = eq_valid
+        if eq_valid is not None:
+            self.EQ_VALID = eq_valid
 
         if _raise is not None:
             self.RAISE = _raise
@@ -75,6 +75,12 @@ class VersionBlock(CmpInst):
         return result
 
     def _parse_elements(self) -> TYPE__VERSION_BLOCK_ELEMENTS_FINAL | NoReturn:
+        if self.EQ_VALID and self.EQ_VALID != self.SOURCE:
+            if self.RAISE:
+                raise Exx__Incompatible(f"{self.SOURCE=}/{self.EQ_VALID=}")
+            else:
+                return ()
+
         result_list = []
         for element in re.findall(PatVersionBlock.ITERATE, self.SOURCE):
             try:

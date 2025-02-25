@@ -20,17 +20,12 @@ class Patterns:
 # =====================================================================================================================
 class PatVersionBlock(Patterns):
     # CLEAR: list[str] = [r"[\"' -]*", ]
-    # VALID_REVERSE_SOURCE: list[str] = [r".*\d[^0-9a-zA-Z]+\d.*", r".*[a-zA-Z][^-0-9]+[a-zA-Z].*",]
+    VALID_REVERSE: list[str] = [r".*\d[^0-9a-zA-Z]+\d.*", r".*[a-zA-Z][^0-9a-zA-Z]+[a-zA-Z].*", r".*[:].*"]
     # VALID: list[str] = [r"[0-9a-z]+", ]
     ITERATE: str = r"\d+|[a-z]+"
 
 
 class PatVersion(Patterns):
-    """
-    GOAL
-    ----
-    patterns for parse comments
-    """
     # VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
     # VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
     VERSION_IN_BRACKETS: list = [r"\((.*)\)", r"\[(.*)\]"]  # get first bracket!!!
