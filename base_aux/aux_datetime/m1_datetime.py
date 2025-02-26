@@ -179,12 +179,17 @@ class DateTimeAux(NestCmp):
 
     # -----------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other: Any) -> int | NoReturn:
+        """
+        GOAL
+        ----
+        appropriate CMP with time/date parts!
+        """
         # todo: DEPRECATE??
         other = self.__class__(other)
         source1 = self.SOURCE
         source2 = other.SOURCE
 
-        if isinstance(self.SOURCE, datetime.datetime) and isinstance(other.SOURCE, datetime.datetime):
+        if isinstance(self.SOURCE, datetime.datetime) and isinstance(other.SOURCE, datetime.datetime):  # datetime FIRST!!!
             if source1 < source2:
                 return -1
             elif source1 == source2:
@@ -192,7 +197,17 @@ class DateTimeAux(NestCmp):
             elif source1 > source2:
                 return 1
 
-        elif isinstance(self.SOURCE, datetime.date) or isinstance(other.SOURCE, datetime.date):
+        elif isinstance(self.SOURCE, datetime.time) or isinstance(other.SOURCE, datetime.time):     # time SECOND!!!
+            for attr in ["hour", "minute", "second", "microsecond"]:
+                if getattr(source1, attr) < getattr(source2, attr):
+                    return -1
+                elif getattr(source1, attr) == getattr(source2, attr):
+                    pass
+                elif getattr(source1, attr) > getattr(source2, attr):
+                    return 1
+            return 0
+
+        elif isinstance(self.SOURCE, datetime.date) or isinstance(other.SOURCE, datetime.date):     # date LAST!!! cause datetime(date)!
             for attr in ["year", "month", "day"]:
                 if getattr(source1, attr) < getattr(source2, attr):
                     return -1
@@ -202,15 +217,6 @@ class DateTimeAux(NestCmp):
                     return 1
             return 0
 
-        elif isinstance(self.SOURCE, datetime.time) or isinstance(other.SOURCE, datetime.time):
-            for attr in ["hour", "minute", "second", "microsecond"]:
-                if getattr(source1, attr) < getattr(source2, attr):
-                    return -1
-                elif getattr(source1, attr) == getattr(source2, attr):
-                    pass
-                elif getattr(source1, attr) > getattr(source2, attr):
-                    return 1
-            return 0
         else:
             raise NotImplementedError()
 
