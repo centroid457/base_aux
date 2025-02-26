@@ -1,9 +1,4 @@
-import re
-
-from base_aux.aux_eq.m0_cmp_inst import CmpInst
 from base_aux.aux_types.m2_info import *
-from base_aux.aux_text.m0_patterns import *
-from base_aux.base_statics.m2_exceptions import *
 from base_aux.versions.m1_block import *
 
 
@@ -39,7 +34,7 @@ TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,  TYPE__VERSION_B
 
 
 # =====================================================================================================================
-class Version(CmpInst):
+class Version(NestCmp):
     """
     NOTE
     ----

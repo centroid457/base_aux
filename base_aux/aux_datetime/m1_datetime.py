@@ -1,12 +1,9 @@
-from typing import *
 import datetime
 
-from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.aux_attr.m1_attr1_aux import *
 
 # TODO: apply cmp eq!???
-from base_aux.numbers.m1_arithm import *
-from base_aux.aux_eq.m0_cmp_inst import *
+from base_aux.aux_cmp_eq.m1_cmp import *
 
 # from enum import Enum, auto
 
@@ -25,18 +22,18 @@ class DateTimeStyle_Tuples:
 # =====================================================================================================================
 @final
 class PatDateTimeFormat:
-    def __init__(self, sdate: str = None, sdatetime: str = None, stime: str = None):
+    def __init__(self, sep_date: str = None, sep_datetime: str = None, sep_time: str = None):
         """
         INIT separators only like schema
         """
-        self.sdate = sdate or ""
-        self.sdatetime = sdatetime or ""
-        self.stime = stime or ""
+        self.sep_date = sep_date or ""
+        self.sep_datetime = sep_datetime or ""
+        self.sep_time = sep_time or ""
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def D(self) -> str:                                 # 2025-02-14 20250214 2025.02.14
-        return f"%Y{self.sdate}%m{self.sdate}%d"
+        return f"%Y{self.sep_date}%m{self.sep_date}%d"
 
     @property
     def Dw(self) -> str:                                 # 2025-02-14-Mn 20250214Mn 2025.02.14.Mn
@@ -45,12 +42,12 @@ class PatDateTimeFormat:
         ----
         ensure weekDay
         """
-        return f"%Y{self.sdate}%m{self.sdate}%d" + f"{self.sdate}%a"
+        return f"%Y{self.sep_date}%m{self.sep_date}%d" + f"{self.sep_date}%a"
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def T(self) -> str:                                 # 11:38:48
-        return f"%H{self.stime}%M{self.stime}%S"
+        return f"%H{self.sep_time}%M{self.sep_time}%S"
 
     @property
     def Tm(self) -> str:                                 # 11:38:48.442179
@@ -59,12 +56,12 @@ class PatDateTimeFormat:
         ----
         ensure ms
         """
-        return f"%H{self.stime}%M{self.stime}%S" + ".%f"
+        return f"%H{self.sep_time}%M{self.sep_time}%S" + ".%f"
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def DT(self) -> str:
-        return f"{self.D}{self.sdatetime}{self.T}"      # 2025-02-14 11:38:48.442179
+        return f"{self.D}{self.sep_datetime}{self.T}"      # 2025-02-14 11:38:48.442179
 
     @property
     def DTm(self) -> str:
@@ -73,7 +70,7 @@ class PatDateTimeFormat:
         ----
         ensure ms
         """
-        return f"{self.D}{self.sdatetime}{self.Tm}"      # 2025-02-14 11:38:48.442179
+        return f"{self.D}{self.sep_datetime}{self.Tm}"      # 2025-02-14 11:38:48.442179
 
     @property
     def DwT(self) -> str:
@@ -82,7 +79,7 @@ class PatDateTimeFormat:
         ----
         ensure weekDay
         """
-        return f"{self.Dw}{self.sdatetime}{self.T}"      # 2025-02-14-Пн 11:38:48
+        return f"{self.Dw}{self.sep_datetime}{self.T}"      # 2025-02-14-Пн 11:38:48
 
     @property
     def DwTm(self) -> str:
@@ -91,7 +88,7 @@ class PatDateTimeFormat:
         ----
         ensure weekDay+ms
         """
-        return f"{self.Dw}{self.sdatetime}{self.Tm}"      # 2025-02-14-Пн 11:38:48.442179
+        return f"{self.Dw}{self.sep_datetime}{self.Tm}"      # 2025-02-14-Пн 11:38:48.442179
 
 
 # =====================================================================================================================
@@ -132,7 +129,7 @@ class DateTimeAux:
         if style_tuple is not None:
             self.STYLE = style_tuple
 
-        self._PATTS = PatDateTimeFormat(*style_tuple)
+        self._PATTS = PatDateTimeFormat(*self.STYLE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self):
@@ -150,12 +147,13 @@ class DateTimeAux:
     # -----------------------------------------------------------------------------------------------------------------
     def get_str__by_pat(self, pattern: str) -> str:
         """
+        NOTE
+        ----
+        mainly used internal!
+
         GOAL
         ----
-        use for filenames like dumps/reservations/logs
-
-        SPECIALLY CREATED FOR
-        ---------------------
+        make str by pat
 
         EXAMPLES
         --------
@@ -189,12 +187,17 @@ class DateTimeAuxFILE(DateTimeAux):
 
 # =====================================================================================================================
 if __name__ == '__main__':
+    print(repr(DateTimeAux()))
+    print(str(DateTimeAux()))
+    print()
+
     print(DateTimeAux().T)
+    print(DateTimeAux().Tm)
+    print()
+
     print(DateTimeAux().D)
     print(DateTimeAux().DT)
     print(DateTimeAux().DwTm)
-    print(repr(DateTimeAux()))
-    print(str(DateTimeAux()))
 
 
 # =====================================================================================================================

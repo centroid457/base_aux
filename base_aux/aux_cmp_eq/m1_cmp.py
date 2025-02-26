@@ -2,14 +2,11 @@ from typing import *
 
 
 # =====================================================================================================================
-class CmpInst:
+class NestCmp:
     """
     GOAL
     ----
-    TEMPLATE FOR APPLYING COMPARISON WITH SELF INSTANCE
-
-    CREATED SPECIALLY FOR
-    ---------------------
+    APPLYING COMPARISON WITH SELF INSTANCE
 
     BEST USAGE
     ----------

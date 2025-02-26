@@ -1,11 +1,5 @@
-from typing import *
-import re
-
-from base_aux.aux_eq.m0_cmp_inst import CmpInst
-from base_aux.aux_text.m0_patterns import *
-from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_eq.m2_eq_valid3_derivatives import *
-from base_aux.aux_eq.m10_types import *
+from base_aux.aux_cmp_eq.m1_cmp import *
+from base_aux.aux_cmp_eq.m10_types import *
 from base_aux.aux_text.m1_text_aux import *
 
 
@@ -16,7 +10,7 @@ TYPE__VERSION_BLOCK_ELEMENTS_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_EL
 
 
 # =====================================================================================================================
-class VersionBlock(CmpInst):
+class VersionBlock(NestCmp):
     """
     this is exact block in version string separated by dots!!!
 

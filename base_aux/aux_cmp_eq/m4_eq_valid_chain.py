@@ -1,5 +1,5 @@
-from base_aux.aux_eq.m2_eq_valid3_derivatives import *
-from base_aux.aux_eq.m2_eq_valid1_base import EqValid_Base
+from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_cmp_eq.m3_eq_valid1_base import *
 from base_aux.base_statics.m1_types import *
 
 

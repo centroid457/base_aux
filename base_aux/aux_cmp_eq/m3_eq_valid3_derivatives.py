@@ -1,5 +1,5 @@
-from base_aux.aux_eq.m2_eq_valid2_validators import Validators
-from base_aux.aux_eq.m2_eq_valid1_base import EqValid_Base
+from base_aux.aux_cmp_eq.m3_eq_valid2_validators import *
+from base_aux.aux_cmp_eq.m3_eq_valid1_base import *
 from base_aux.base_statics.m1_types import *
 from base_aux.base_statics.m4_enums import *
 

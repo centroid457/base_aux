@@ -1,14 +1,13 @@
 import math
 
-from base_aux.base_statics.m2_exceptions import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_types.m2_info import *
 
-from base_aux.aux_eq.m0_cmp_inst import CmpInst
+from base_aux.aux_cmp_eq.m1_cmp import *
 
 
 # =====================================================================================================================
-class ArithmApplyToAttr(CmpInst):
+class ArithmApplyToAttr(NestCmp):
     """
     GOAL
     ----

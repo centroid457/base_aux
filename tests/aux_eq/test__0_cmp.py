@@ -1,9 +1,9 @@
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_eq.m0_cmp_inst import CmpInst
+from base_aux.aux_cmp_eq.m1_cmp import *
 
 
 # =====================================================================================================================
-class Victim(CmpInst):
+class Victim(NestCmp):
     def __init__(self, val):
         self.VAL = val
 

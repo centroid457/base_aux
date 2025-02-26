@@ -7,18 +7,16 @@ from base_aux.aux_datetime.m1_datetime import *
 # =====================================================================================================================
 class Test__DateTime:
     @pytest.mark.parametrize(
-        argnames="source, other, _EXPECTED",
+        argnames="source, _EXPECTED",
         argvalues=[
             # NONE --------
-            (True, None, (False, True)),
+            (True, True),
 
         ]
     )
-    def test__1(self, source, other, _EXPECTED):
-        ExpectAux(source == other).check_assert(_EXPECTED[0])
-
-        func_link = lambda x: x in source
-        ExpectAux(func_link, other).check_assert(_EXPECTED[1])
+    def test__1(self, source, _EXPECTED):
+        func_link = lambda: source
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

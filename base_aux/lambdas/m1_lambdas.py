@@ -6,7 +6,7 @@ from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 from base_aux.base_inits.m2_nest_init_source_kwargs import NestInit_SourceKwArgs_Implicite
 
-from base_aux.aux_eq.m1_eq_aux import EqAux
+from base_aux.aux_cmp_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================
