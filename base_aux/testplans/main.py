@@ -11,8 +11,9 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from importlib import import_module
 
 from base_aux.servers.m1_client_requests import *
-from base_aux.aux_datetime.m1_datetime import DateTimeAux
+from base_aux.aux_datetime.m1_datetime import *
 from base_aux.loggers.m1_logger import *
+
 
 # =====================================================================================================================
 from .tc import TestCaseBase
@@ -374,7 +375,7 @@ class TpMultyDutBase(Logger, QThread):
         return result
 
     def save__results(self) -> None:
-        name_prefix = DateTimeAux().get_str__by_pat()
+        name_prefix = str(DateTimeAux())
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
             result_i = {}
             for tc_cls in self.TCS__CLS:
