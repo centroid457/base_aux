@@ -1,8 +1,10 @@
 import datetime
+import time
 
 from base_aux.aux_attr.m1_attr1_aux import *
 from base_aux.aux_cmp_eq.m1_cmp import *
 from base_aux.aux_text.m1_text_aux import *
+from base_aux.base_statics.m2_exceptions import *
 
 
 # =====================================================================================================================
@@ -90,7 +92,7 @@ class PatDateTimeFormat:
 
 # =====================================================================================================================
 TYPE__DT_FINAL = datetime.datetime | datetime.date | datetime.time  # NOTE: dont use    | datetime.timedelta
-TYPE__DT_DRAFT = TYPE__DT_FINAL | str | int | float | None
+TYPE__DT_DRAFT = TYPE__DT_FINAL | str | float | None    #  | int    # NOTE: int is not acceptable!
 
 
 # =====================================================================================================================
@@ -121,46 +123,63 @@ class DateTimeAux(NestCmp):
         self._PATTS = PatDateTimeFormat(*self.STYLE)
 
     def init_source(self, source: TYPE__DT_DRAFT = None) -> None | NoReturn:
+        # FIXME: finish!!! td/str??? parser???
         if source is None:
             self.SOURCE = datetime.datetime.now()
-        else:
+        elif isinstance(source, (datetime.datetime, datetime.date, datetime.time, )):
             self.SOURCE = source
-
-        # ---------------------------------------
-        # FIXME: finish!!! int/float/td/str??? parser??? timestamp + time.time()
-        if isinstance(self.SOURCE, datetime.datetime):
-            pass
-        elif isinstance(self.SOURCE, datetime.date):
-            pass
-        elif isinstance(self.SOURCE, datetime.time):
-            pass
-        elif isinstance(self.SOURCE, datetime.timedelta):
+        elif isinstance(source, datetime.timedelta):
             # pass
-            raise NotImplementedError()
-        elif isinstance(self.SOURCE, int):
-            raise NotImplementedError()
-        elif isinstance(self.SOURCE, float):
-            raise NotImplementedError()
+            raise NotImplementedError(f"{source=}")
+        elif isinstance(source, float):     # time.time()
+            self.SOURCE = datetime.datetime.fromtimestamp(source)
+        elif isinstance(source, int):
+            raise NotImplementedError(f"{source=}")
+        elif isinstance(source, str):
+            self.SOURCE = self.parse_str(source, _raise=True)
         else:
-            raise NotImplementedError()
+            raise Exx__Incompatible(f"{source=}")
+
+    @staticmethod
+    def parse_str(source: str, _raise: bool = None) -> TYPE__DT_FINAL | None | NoReturn:
+        nums = TextAux(source).find__by_pats(r"\d+")
+        len_nums = len(nums)
+        if len_nums in [6, 7]:
+            result = datetime.datetime(*nums)
+        elif len_nums == 4:
+            result = datetime.time(*nums)
+        elif len_nums == 3:
+            if len(nums[0]) == 4:
+                result = datetime.date(*nums)
+            else:
+                result = datetime.time(*nums)
+        else:
+            _float = TextAux(source).parse__float_single()
+            if _float:
+                result = datetime.datetime.fromtimestamp(_float)
+            else:
+                result = ""
+
+        if not result and _raise:
+            raise Exx__Incompatible(f"{source=}")
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __str__(self):
+    def __str__(self) -> str:
         return self.DT
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self})"
 
     def __int__(self):
         raise NotImplementedError()
 
-    def __float__(self):
-        raise NotImplementedError()
+    def __float__(self) -> float | NoReturn:
+        return self.SOURCE.timestamp()
 
     # -----------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other: Any) -> int | NoReturn:
-        pass    # TODO: FINISH!
-
+        # todo: DEPRECATE??
         other = self.__class__(other)
         source1 = self.SOURCE
         source2 = other.SOURCE
@@ -192,6 +211,8 @@ class DateTimeAux(NestCmp):
                 elif getattr(source1, attr) > getattr(source2, attr):
                     return 1
             return 0
+        else:
+            raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
     def get_str__by_pat(self, pattern: str) -> str:
@@ -275,6 +296,10 @@ if __name__ == '__main__':
     print(inst)
     print(inst.DT)
     print(inst.DwTm)
+
+    print(time.time())  # float!
+
+    # print(datetime.date(2024, 2, 1).timestamp())
 
 
 # =====================================================================================================================
