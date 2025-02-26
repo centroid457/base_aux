@@ -123,7 +123,6 @@ class DateTimeAux(NestCmp):
         self._PATTS = PatDateTimeFormat(*self.STYLE)
 
     def init_source(self, source: TYPE__DT_DRAFT = None) -> None | NoReturn:
-        # FIXME: finish!!! td/str??? parser???
         if source is None:
             self.SOURCE = datetime.datetime.now()
         elif isinstance(source, (datetime.datetime, datetime.date, datetime.time, )):
@@ -143,13 +142,14 @@ class DateTimeAux(NestCmp):
     @staticmethod
     def parse_str(source: str, _raise: bool = None) -> TYPE__DT_FINAL | None | NoReturn:
         nums = TextAux(source).find__by_pats(r"\d+")
+        nums = list(map(int, nums))
         len_nums = len(nums)
         if len_nums in [6, 7]:
             result = datetime.datetime(*nums)
         elif len_nums == 4:
             result = datetime.time(*nums)
         elif len_nums == 3:
-            if len(nums[0]) == 4:
+            if len(str(nums[0])) == 4:
                 result = datetime.date(*nums)
             else:
                 result = datetime.time(*nums)
@@ -300,6 +300,7 @@ if __name__ == '__main__':
     print(time.time())  # float!
 
     # print(datetime.date(2024, 2, 1).timestamp())
+    print(DateTimeAux("2025.02.26 17.00.56"))
 
 
 # =====================================================================================================================
