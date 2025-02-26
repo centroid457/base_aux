@@ -26,7 +26,7 @@ class Test__VersionBlock:
             ("01rc020", ("01rc020", (1, "rc", 20), "1rc20", )),
 
             # not clean chars
-            ("[11:rc.22]", ("[11:rc.22]", (11, "rc", 22), "11rc22", )),
+            ("[11:rc.22]", ("[11:rc.22]", (), "", )),
 
             # iterables
             ([11, "r c---", 22], ("11r c---22", (), "", )),
@@ -35,7 +35,7 @@ class Test__VersionBlock:
             (VersionBlock("11rc22"), ("11rc22", (11, "rc", 22), "11rc22", )),
         ]
     )
-    def test__1(self, source, _EXPECTED):
+    def test__all(self, source, _EXPECTED):
         func_link = VersionBlock(source, _raise=False)._prepare_source
         ExpectAux(func_link).check_assert(_EXPECTED[0])
 
@@ -66,7 +66,7 @@ class Test__VersionBlock:
 
             # not clean chars
             (("1rc2", "[11:rc.22]"), False),
-            (("", "[11:rc.22]"), False),        # ??
+            (("", "[11:rc.22]"), True),
 
             # iterables
             (("1rc2", [1, "rc", 2]), True),
@@ -77,7 +77,7 @@ class Test__VersionBlock:
             (("1rc2", VersionBlock("1rc2")), True),
         ]
     )
-    def test__inst__cmp__eq(self, args, _EXPECTED):
+    def test__cmp_eq(self, args, _EXPECTED):
         func_link = lambda source1, source2: VersionBlock(source1) == source2
         ExpectAux(func_link, args).check_assert(_EXPECTED)
 
