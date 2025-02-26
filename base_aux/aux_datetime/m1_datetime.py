@@ -99,11 +99,12 @@ TYPE__DT_FINAL = datetime.datetime
 TYPE__DT_DRAFT = datetime.datetime | str | int | float | None
 
 
-@final
+# =====================================================================================================================
+# @final    # select styles
 class DateTimeAux:
     SOURCE: TYPE__DT_FINAL
-    STYLE: TYPE__TUPLE_DT_STYLE__FINAL
-    PATTS: PatDateTimeFormat
+    STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
+    _PATTS: PatDateTimeFormat
 
     # patterns getattr -----
     D: str
@@ -117,7 +118,7 @@ class DateTimeAux:
     DwTm: str
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = DateTimeStyle_Tuples.DOTS) -> None:
+    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = None) -> None:
         self.SOURCE = source
         if self.SOURCE is None:
             self.SOURCE = datetime.datetime.now()
@@ -127,8 +128,11 @@ class DateTimeAux:
             pass
         else:
             pass
-        self.STYLE = style_tuple
-        self.PATTS = PatDateTimeFormat(*style_tuple)
+
+        if style_tuple is not None:
+            self.STYLE = style_tuple
+
+        self._PATTS = PatDateTimeFormat(*style_tuple)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self):
@@ -162,9 +166,25 @@ class DateTimeAux:
 
     def __getattr__(self, item) -> str | NoReturn:
         if item in AttrAux(PatDateTimeFormat).iter__not_hidden():
-            return self.get_str__by_pat(pattern=getattr(self.PATTS, item))
+            return self.get_str__by_pat(pattern=getattr(self._PATTS, item))
         else:
             raise AttributeError(item)
+
+
+# =====================================================================================================================
+@final
+class DateTimeAuxDT(DateTimeAux):
+    STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DT
+
+
+@final
+class DateTimeAuxDOTS(DateTimeAux):
+    STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
+
+
+@final
+class DateTimeAuxFILE(DateTimeAux):
+    STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.FILE
 
 
 # =====================================================================================================================
