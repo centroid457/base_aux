@@ -1,5 +1,6 @@
 import json
 import re
+import string
 
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_text.m0_patterns import *
@@ -69,11 +70,20 @@ class TextAux:
     def sub__lines(self, *rules, flags: re.RegexFlag = 0) -> str:
         return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverStyle.LINE)
 
+    # =================================================================================================================
+    def fix__quotes_incorrect(self) -> str:
+        self.TEXT = self.TEXT.replace('”', '"')
+        self.TEXT = self.TEXT.replace('“', '"')
+        return self.TEXT
+
     # EDIT ============================================================================================================
     def clear__regexps(self, *pats: str, **kwargs) -> str:
         for pat in pats:
             self.sub__regexp(pat=pat, new="", **kwargs)
         return self.TEXT
+
+    def clear__noneprintable(self) -> str:
+        return self.clear__regexps(f"[^{string.printable}а-яА-ЯёЁ]")
 
     def clear__spaces_all(self) -> str:
         """
@@ -85,7 +95,7 @@ class TextAux:
         """
         return self.sub__regexp(r" ", "")
 
-    def clear__space_duplicates(self) -> str:
+    def delete__space_duplicates(self) -> str:
         """
         GOAL
         ----

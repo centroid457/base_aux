@@ -1740,35 +1740,6 @@ def str_replace_russian_letters(string):
         'Н': 'H'}
     return str_replace_elements_by_dict(string, russian_to_english_translate)
 
-
-def str_replace_incorrect_quotes(string):     # starichenko
-    return string.replace('”', '"').replace('“', '"')
-
-
-def str_delete_wightspaces(source):   # starichenko
-    if isinstance(source, str):
-        source = re.sub(pattern=r"\s", repl="", string=source)
-    return source
-
-
-def str_replace_blank_lines(source):   # starichenko
-    if isinstance(source, str):
-        source = re.sub(pattern=r"\n\s*\n", repl="\n", string=source)
-    return source
-
-
-def str_replace_nonprintable(source, new: tp.Optional[str] = None, keep_whitespaces: bool = None) -> str:   # starichenko
-    if isinstance(source, str):
-        new = new or ""
-        if keep_whitespaces:
-            pattern = f"[^{string.printable}а-яА-ЯёЁ]"
-        else:
-            pattern = f"[\n\t\v\f\r]|[^{string.printable}а-яА-ЯёЁ]"
-
-        source = re.sub(pattern=pattern, repl=new, string=source)
-    return source
-
-
 def str_replace_all_substr_by_exact(string, replace_symbols_list=[], symbol_replacing_to=""):
     """ Returns shorted string by replacing all symbols with one one.
     """
@@ -1804,27 +1775,6 @@ def str_replace_all_non_filesystem_name_chars(source, new_char="__"):    # stari
 
 
 # str-FIND -----------------------------------------------------------------------------------------------------------
-def str_find_int(string, pattern=None, return_first_found=True):
-    """find integers in source string.
-
-    :param return_first_found: True - return first found value, False - return all found values list
-    """
-    # todo: extend functionality to several! and float!
-    result = []
-    for item in string.split():
-        if item.isdigit():
-            value_found = int(item)
-            if return_first_found:
-                result = value_found
-                break
-            else:
-                result.append(item)
-    if result:
-        return result
-    else:
-        raise Exception('No integer found in {}'.format(string))
-
-
 def str_pattern_get_groups_count(pattern):    # starichenko
     """ return count of grouping groups in pattern!
     if group have a quantification like "()?" - it will be counted as logically exected!
@@ -1844,17 +1794,6 @@ def str_pattern_get_groups_count(pattern):    # starichenko
     result = re.compile(pattern).groups
     print(result)
     return result
-
-
-# str-CHECKS ---------------------------------------------------------------------------------------------------------
-def str_check_have_only_letters(string):     # starichenko
-    """used when need find element in xml by name and want to know does the wildMask have exact name or have path-syntax"""
-    pass
-
-
-def str_check_have_only_numbers(string):     # starichenko
-    """used when need find element in xml by name and want to know does the wildMask have exact name or have path-syntax"""
-    pass
 
 
 # str=IP -------------------------------------------------------------------------------------------------------------
