@@ -29,7 +29,6 @@ class ItemInternal(NamedTuple):
 
 
 # =====================================================================================================================
-
 @dataclass
 class ObjectState:
     """
@@ -79,6 +78,7 @@ class ObjectInfo:
 
         # GIT
         "checkout", "detach",
+
         # threads
         "run", "start", "wait", "join", "terminate", "quit", "disconnect",
 

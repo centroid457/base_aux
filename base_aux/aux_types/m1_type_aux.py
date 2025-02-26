@@ -59,6 +59,41 @@ class TypeAux(NestInit_Source):
         return isinstance(self.SOURCE, TYPES.ELEMENTARY_COLLECTION) and not isinstance(self.SOURCE, dict)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def check__module(self) -> bool:
+        """
+        GOAL
+        ----
+        check source is module
+
+        EXPLORE
+        -------
+            import sys
+
+            print(type(sys))  # <class 'module'>
+            print(type(int))  # <class 'type'>
+
+            # print(isinstance(sys, module))       # NameError: name 'module' is not defined
+
+            # import module       # ModuleNotFoundError: No module named 'module'
+            # print(isinstance(sys, module))       # NameError: name 'module' is not defined
+
+            def check_obj_is_module(source) -> bool:
+                result = str(type(source)) == "<class 'module'>"
+                print(f"{source=}/{result=}")
+                return result
+
+            for obj in [int, sys, 1]:
+                check_obj_is_module(obj)
+
+            source=<class 'int'>/result=False
+            source=<module 'sys' (built-in)>/result=True
+            source=1/result=False
+        """
+        result = str(type(self.SOURCE)) == "<class 'module'>"
+        # print(f"{self.SOURCE=}/{result=}")
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
     def check__iterable(
             self,
             dict_as_iterable: bool = True,

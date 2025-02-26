@@ -28,9 +28,6 @@ from threading import Thread
 
 # CONSTANTS ===========================================================================================================
 # VALUES --------------------------------------------------------------------------------------------------------------
-TYPE_ELEMENTARY_SINGLE_TUPLE = (str, int, float, bool, type(None), bytes, )     # starichenko
-TYPE_ELEMENTARY_CONTAINER_TUPLE = (set, list, tuple, dict, )     # starichenko
-TYPE_BUILT_IN_TUPLE = tuple(dir(globals().get("__builtins__")))
 TYPE_DATA_ALL_DICT = {
     str: ["", " ", "123", " 123 ", "123.123"],
 }
@@ -545,177 +542,6 @@ def obj_get_name(source):  # starichenko
     logging_and_print_debug(msg)
 
     return result_str
-
-
-def obj_show_attr_all(source,
-                      show_hidden=True,
-                      go_nested_max=0,
-                      go_iterables_max=1,
-                      nested_skip_names=[],
-                      miss_names=[],
-                      _debug_mod=None,
-                      _parents_list=[],
-                      _print_step_element=False
-                      ):    # starichenko
-    """
-    Show structure of object with all names of attributes and string values.
-    useful if you want to find out exact info in object or get know if it have not!!!
-
-    But in some situations standart debugger will not help!
-        Try to find methods and attributes for pyQt QApplication!!! - will not show! otherwice this method will work correct!
-
-    you can instead use STANDARD PYCHARM DEBUGGER to inspect OBJECT in convenient tree-stile!
-        1. create concrete object or its part (give a name to object)
-        2. PLACE A STOP POINT on it code
-        3. explore elements in the Tree!!!
-
-    BUT sometimes it cant show you exact nested elements!
-
-    :param show_hidden: only show/hide in log!!! in any case not recommended go inside!
-    :param go_nested_max:
-    :param go_iterables_max: if source is as iterable type - iterate items!
-    :param _print_step_element: recommended in first starts! so to find elements wich will cause stops or errors!
-
-    HOW TO USE (steps):
-        1=EXPLORER EXACT TREE ELEMENTS
-            1. use it ones to see items/values
-                print(f"request=[{request}]")
-                UFU.obj_show_attr_all(request, go_nested_max=0)
-
-            2. add showing some another variants
-                print(f"request=[{request}]")
-                UFU.obj_show_attr_all(request, go_nested_max=0)
-
-                print()
-                print(f"request.node=[{request.node}]")
-                UFU.obj_show_attr_all(request.node, go_nested_max=0)
-
-        2=AVOID STOP ATTRIBUTS
-            from PyQt5.QtWidgets import QApplication
-            TESTING_OBJ = QApplication
-            UFU.obj_show_attr_all(TESTING_OBJ)  #1=HERE WE WILL SEE UNEXPECTED STOP!
-            UFU.obj_show_attr_all(TESTING_OBJ,_print_step_element=True)  #2=HERE WE WILL SEE UNEXPECTED STOP! with last used element NAME!
-            UFU.obj_show_attr_all(TESTING_OBJ, miss_names=["aboutQt", ],_print_step_element=True)   #3=place STOP element in miss_names parameter and go to find next STOP elements!
-            UFU.obj_show_attr_all(TESTING_OBJ, miss_names=["aboutQt", "beep", "fontMetrics", "pyqtConfigure", "exec", "exec_"])     #4=final usage
-
-
-    EXAMPLE:
-        UFU.obj_show_attr_all(QApplication,miss_names=["aboutQt", "beep", "fontMetrics", "pyqtConfigure", "exec", "exec_"])
-    """
-    if not _debug_mod:
-        return
-
-    nested_level = len(_parents_list)
-
-    # START line
-    if nested_level == 0:
-        msg = f"{'/'*50} obj_show_attr_all {'/'*50}"
-        print(msg)
-    msg = f"{'/'*10} _parents_list={_parents_list} nested_level=[{nested_level}] source={source} {'/'*10}"
-    print(msg)
-
-    # 1=ELEMENTARY types -------------------------------------------------------------------------------------
-    if type_is_elementary_single(source):
-        msg = f"ELEMTARY SINGLE TYPE source=[{source}]"
-        print(msg)
-        return
-
-    # 2=ITERABLE types ---------------------------------------------------------------------------------------
-    if type_is_iterable_but_not_str(source):
-        source_len = len(source)
-        msg = f"ITERABLE TYPE len=[{source_len}] source=[{source}]!"
-        print(msg)
-        if source_len > 0 and go_iterables_max:
-            i = 0
-            for item in source:
-                if i >= go_iterables_max:
-                    break
-                i += 1
-                if type_is_elementary_single(item):
-                    msg = f"ELEMTARY SINGLE TYPE item=[{item}]"
-                    print(msg)
-                else:
-                    obj_show_attr_all(
-                        source=item, show_hidden=show_hidden,
-                        go_nested_max=go_nested_max, go_iterables_max=go_iterables_max,
-                        _parents_list=_parents_list + [str(nested_level)])
-        return
-
-    # 3=exact WORKING! attributes and methods ----------------------------------------------------------------
-    # print(f"[{dir(source)=}]")
-    for attr_str in dir(source):
-        if _print_step_element:
-            print(f"\t{attr_str=}")
-
-        if not show_hidden and attr_str.startswith("__"):
-            continue
-
-        if nested_level != 0 and attr_str == _parents_list[-1]:
-            continue
-
-        miss_danger_entries_list = [
-            "init", "new", "create", "enter",
-            "set",
-            "clone", "copy", "move",
-            "next",
-            "close", "del", "exit", "clear", "reduce"
-        ]
-
-        miss_names_special = [
-            # GIT
-            "checkout",  "detach",
-        ]
-        if miss_names:
-            miss_names_special.extend(miss_names)
-
-        # get VALUE
-        if attr_str in miss_names_special:
-            value = "***MISSED SPECIAL***"
-
-        elif value_search_by_list(source=attr_str, search_list=miss_danger_entries_list, search_type_1starts_2full_3ends_4any_5fullmatch=4):
-            value = "***MISSED DANGER***"
-
-        else:
-            try:
-                value = getattr(source, attr_str)
-            except:
-                value = "***EXCEPTION***"
-
-        # determine TYPE!
-        if type_is_elementary_single(value):
-            attr_or_meth = "attr"
-
-        elif callable(value):
-            attr_or_meth = "meth"
-            if attr_or_meth.startswith("__"):
-                value = "***MISSED HIDDEN CALLABLE DANGER***"
-            else:
-                try:
-                    value = value()
-                except:
-                    pass
-
-        else:
-            attr_or_meth = "obj"
-            if nested_level < go_nested_max and not attr_str.startswith("__") and attr_str not in nested_skip_names:
-                obj_show_attr_all(source=value, show_hidden=show_hidden, go_nested_max=go_nested_max,
-                                        go_iterables_max=go_iterables_max, _parents_list=_parents_list + [attr_str, ])
-
-            # if type_is_instance_of_any_user_class(source):
-            #     obj_show_attr_all(value)
-        if nested_level == 0:
-            parents_str = ""
-        else:
-            parents_str = "." + '.'.join(_parents_list)
-        msg = f"{attr_or_meth}=[{parents_str}.{attr_str}]".ljust(30+(10*(nested_level+1))) + f"value=[{value}]"
-        print(msg)
-
-    # FINAL LINE!
-    if nested_level == 0:
-        msg = f"{'/' * 100}"
-        print(msg)
-    return
-
 
 def obj_elements_get_dict_all(source, show_builtin=False):       # starichenko
     """get all (module/class/instance/meth/attr) element for object
@@ -1312,21 +1138,6 @@ def type_is_4_attribute(source):  # starichenko
     return not callable(source) and not type_is_1_module_link(source) and not type_is_2_class_link_or_instance(source)
 
 
-def type_is_elementary_single_or_container(source):   # starichenko
-    """ show you if type of source is not userDefined!"""
-    return isinstance(source, (*TYPE_ELEMENTARY_SINGLE_TUPLE, *TYPE_ELEMENTARY_CONTAINER_TUPLE))
-
-
-def type_is_elementary_single(source):   # starichenko
-    """ check object for Elementary type, Not collection, only separate single element
-    not iterable except str!
-
-    str/int/float/NoneType/bool - True
-    not any aux_types/otherIterabled - False
-    """
-    return isinstance(source, TYPE_ELEMENTARY_SINGLE_TUPLE)
-
-
 def type_is_intable(source, float_before=False):   # starichenko
     """
     :param float_before: use float() before int()
@@ -1796,20 +1607,6 @@ def str_split_smart(
 
 
 # str-TYPE -----------------------------------------------------------------------------------------------------------
-def str_convert_to_convenient_type(source, use_priority_type_list=[], return_only_type=False):       # starichenko
-    """AutoConvert text data (for example from text protocols like SNMP/TELNET/SERIAL) to appropriate data type.
-
-    :param use_priority_type_list: if specified try to convert in noticed priority, all other types used after,
-        first appropriate type will returned
-        but if you will use [str] first - it will absolutely appropriate!
-
-    :param return_only_type: return only type instead of converted value
-    """
-    system_priority = [dict, set, list, tuple, int, float, str]     # int use before float!
-    # todo: finish
-    pass
-
-
 def str_try_to_int(source, none_if_exception=False):
     """ Try to convert string to int and return it, otherwise returns string.
     """

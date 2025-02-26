@@ -1,4 +1,5 @@
 import pytest
+import sys
 
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.base_statics.m3_primitives import *
@@ -7,52 +8,54 @@ from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 # =====================================================================================================================
 class Test__1:
-    # =================================================================================================================
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
-            (None,      (True, True, True, False, False, )),
-            (True,      (True, True, True, True, False, )),
-            (False,     (True, True, True, True, False, )),
-            (0,         (False, True, True, True, False, )),
-            (111,       (False, True, True, True, False, )),
-            (111.222,   (False, True, True, True, False, )),
-            ("str",     (False, True, True, True, False, )),
-            (b"bytes",  (False, True, True, True, False, )),
+            (pytest,      (False, False, False, False, False, True, )),
+            (sys,      (False, False, False, False, False, True, )),
 
-            ((111, ),        (False, True, False, False, True, )),
-            ([111, ],        (False, True, False, False, True, )),
-            ({111, },        (False, True, False, False, True, )),
-            ({111: 222, },   (False, True, False, False, True, )),
+            (None,      (True, True, True, False, False, False, )),
+            (True,      (True, True, True, True, False, False, )),
+            (False,     (True, True, True, True, False, False, )),
+            (0,         (False, True, True, True, False, False, )),
+            (111,       (False, True, True, True, False, False, )),
+            (111.222,   (False, True, True, True, False, False, )),
+            ("str",     (False, True, True, True, False, False, )),
+            (b"bytes",  (False, True, True, True, False, False, )),
 
-            (int,       (False, False, False, False, False, )),
-            (int(1),    (False, True, True, True, False, )),
-            (str,       (False, False, False, False, False, )),
-            (str(1),    (False, True, True, True, False, )),
+            ((111, ),        (False, True, False, False, True, False, )),
+            ([111, ],        (False, True, False, False, True, False, )),
+            ({111, },        (False, True, False, False, True, False, )),
+            ({111: 222, },   (False, True, False, False, True, False, )),
 
-            (Exception,     (False, False, False, False, False, )),
-            (Exception(),   (False, False, False, False, False, )),
-            (ClsException,  (False, False, False, False, False, )),
-            (ClsException(), (False, False, False, False,False,  )),
+            (int,       (False, False, False, False, False, False, )),
+            (int(1),    (False, True, True, True, False, False, )),
+            (str,       (False, False, False, False, False, False, )),
+            (str(1),    (False, True, True, True, False, False, )),
 
-            (Cls,       (False, False, False, False, False, )),
-            (Cls(),     (False, False, False, False, False, )),
-            (ClsInt,    (False, False, False, False, False, )),
-            (ClsInt(),  (False, True, True, True, False, )),    # int() == 0!!!
+            (Exception,     (False, False, False, False, False, False, )),
+            (Exception(),   (False, False, False, False, False, False, )),
+            (ClsException,  (False, False, False, False, False, False, )),
+            (ClsException(), (False, False, False, False,False, False, )),
 
-            (FUNC,                      (False, False, False, False, False, )),
-            (LAMBDA,                    (False, False, False, False, False, )),
-            (ClsCallNone,               (False, False, False, False, False, )),
-            (ClsCallNone(),             (False, False, False, False, False, )),
-            (ClsCallNone()(),           (True, True, True, False, False, )),
-            (ClsCall().meth,            (False, False, False, False, False, )),
-            (ClsFullTypes.attrNone,     (True, True, True, False, False, )),
-            (ClsFullTypes().attrNone,   (True, True, True, False, False, )),
+            (Cls,       (False, False, False, False, False, False, )),
+            (Cls(),     (False, False, False, False, False, False, )),
+            (ClsInt,    (False, False, False, False, False, False, )),
+            (ClsInt(),  (False, True, True, True, False, False, )),    # int() == 0!!!
+
+            (FUNC,                      (False, False, False, False, False, False, )),
+            (LAMBDA,                    (False, False, False, False, False, False, )),
+            (ClsCallNone,               (False, False, False, False, False, False, )),
+            (ClsCallNone(),             (False, False, False, False, False, False, )),
+            (ClsCallNone()(),           (True, True, True, False, False, False, )),
+            (ClsCall().meth,            (False, False, False, False, False, False, )),
+            (ClsFullTypes.attrNone,     (True, True, True, False, False, False, )),
+            (ClsFullTypes().attrNone,   (True, True, True, False, False, False, )),
 
             *[
                 (
                     class_i,
-                    (False, False, False, False, False, )
+                    (False, False, False, False, False, False, )
                 ) for class_i in CLASSES__AS_FUNC
             ]
         ]
@@ -65,6 +68,7 @@ class Test__1:
         ExpectAux(victim.check__elementary_single).check_assert(_EXPECTED[2])
         ExpectAux(victim.check__elementary_single_not_none).check_assert(_EXPECTED[3])
         ExpectAux(victim.check__elementary_collection).check_assert(_EXPECTED[4])
+        ExpectAux(victim.check__module).check_assert(_EXPECTED[5])
 
 
 
