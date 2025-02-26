@@ -48,7 +48,6 @@ designed for ...
     ]
 
     # FINALIZE -----------------------------------------------
-    VERSION_STR: str = ".".join(map(str, VERSION))
     NAME_INSTALL: str = NAME_IMPORT.replace("_", "-")
 
 

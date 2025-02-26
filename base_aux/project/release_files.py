@@ -1,10 +1,10 @@
 from typing import *
 import pathlib
 import re
-import time
 
 from base_aux.cli.m1_cli_user import *
 from base_aux.versions.m2_version import *
+from base_aux.aux_datetime.m1_datetime import *
 
 # from PROJECT import PROJECT
 
@@ -49,11 +49,6 @@ class PROJECT_BASE:
     ]
 
     # FINALIZE -----------------------------------------------
-    @classmethod
-    @property
-    def VERSION_STR(cls) -> str:
-        return str(cls.VERSION)
-
     @classmethod
     @property
     def NAME_INSTALL(cls) -> str:
@@ -178,7 +173,7 @@ class ReleaseReadme(ReleaseFileBase):
 
         # SUMMARY ----------------------------------------------------
         lines = [
-            f"# {self.PROJECT.NAME_IMPORT} (current v{self.PROJECT.VERSION_STR}/![Ver/Pypi Latest](https://img.shields.io/pypi/v/{self.PROJECT.NAME_IMPORT}?label=pypi%20latest))",
+            f"# {self.PROJECT.NAME_IMPORT} (current v{self.PROJECT.VERSION}/![Ver/Pypi Latest](https://img.shields.io/pypi/v/{self.PROJECT.NAME_IMPORT}?label=pypi%20latest))",
 
             f"",
             f"## DESCRIPTION_SHORT",
@@ -291,8 +286,8 @@ class ReleaseHistory(ReleaseFileBase):
 
     def check_new_release__is_correct(self) -> bool:
         # ----------------------------
-        if self.LAST_NEWS.startswith(f"{self.PROJECT.VERSION_STR} ("):
-            msg = f"exists_version"
+        if self.LAST_NEWS.startswith(f"{self.PROJECT.VERSION}("):
+            msg = f"exists_version{self.PROJECT.VERSION=}"
             print(msg)
             return False
 
@@ -314,7 +309,7 @@ class ReleaseHistory(ReleaseFileBase):
         group: list[str] = [
             f"## NEWS",
             "",
-            f"{self.PROJECT.VERSION_STR} ({time.strftime('%Y/%m/%d %H:%M:%S')})",
+            f"{self.PROJECT.VERSION}({DateTimeAux()})",
             self.LINE_SEPARATOR_PART,
         ]
         news_new = self._lines_create__group(self.PROJECT.NEWS, nums=False)

@@ -26,7 +26,7 @@ with open("requirements.txt", mode="r", encoding="utf8") as f:
 
 # =====================================================================================================================
 setup(
-  version=PROJECT.VERSION_STR,
+  version=str(PROJECT.VERSION),
   description=PROJECT.DESCRIPTION_SHORT,
   keywords=PROJECT.KEYWORDS,
   classifiers=[
