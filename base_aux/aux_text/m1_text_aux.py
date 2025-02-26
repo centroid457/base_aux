@@ -267,8 +267,7 @@ class TextAux:
                 if value == "":
                     continue
                 value = value.strip()
-                if value not in result:
-                    result.append(value)
+                result.append(value)
         return result
 
     # =================================================================================================================
