@@ -87,7 +87,7 @@ class Test__Edit:
         ]
     )
     def test__spaces_duplicates(self, source, _EXPECTED):
-        func_link = TextAux(source).delete__space_duplicates
+        func_link = TextAux(source).clear__space_duplicates
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------

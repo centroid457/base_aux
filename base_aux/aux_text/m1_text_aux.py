@@ -95,7 +95,7 @@ class TextAux:
         """
         return self.sub__regexp(r" ", "")
 
-    def delete__space_duplicates(self) -> str:
+    def clear__space_duplicates(self) -> str:
         """
         GOAL
         ----
