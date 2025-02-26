@@ -33,7 +33,7 @@ class NestCmp:
     lege = lambda self, other1, other2: self >= other1 and self <= other2
 
     # CMP -------------------------------------------------------------------------------------------------------------
-    def __cmp__(self, other) -> int | NoReturn:
+    def __cmp__(self, other: Any) -> int | NoReturn:
         """
         do try to resolve Exceptions!!! sometimes it is ok to get it!!!
 
