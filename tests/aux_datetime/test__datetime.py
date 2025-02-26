@@ -48,6 +48,8 @@ class Test__DateTime:
         argvalues=[
             (True, True, operator.eq, Exception),
             ("2025.1.1 1.1.1", True, operator.eq, Exception),
+            ("2025.1.1 1.1.1", "2025.2.", operator.lt, Exception),
+
             ("2025.1.1 1.1.1", "2025.1.1 1.1.1", operator.eq, True),
             ("2025.1.1 1.1.1", "2025.1.1 2.1.1", operator.lt, True),
 

@@ -154,10 +154,9 @@ class DateTimeAux(NestCmp):
             else:
                 result = datetime.time(*nums)
         else:
-            _float = TextAux(source).parse__float_single()
-            if _float:
-                result = datetime.datetime.fromtimestamp(_float)
-            else:
+            try:
+                result = datetime.datetime.fromtimestamp(float(source))
+            except:
                 result = ""
 
         if not result and _raise:
