@@ -1,10 +1,10 @@
 import json
 import re
 import string
-from configparser import ConfigParser
 
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_text.m0_patterns import *
+from base_aux.aux_text.m4_ini import *
 
 
 # =====================================================================================================================
@@ -420,8 +420,8 @@ class TextAux:
     def parse__dict_csv(self) -> TYPING.DICT_STR_ELEM | None:
         pass
 
-    def parse__dict_ini(self) -> TYPING.DICT_STR_ELEM | None:
-        ini = ConfigParser()
+    def parse__dict_ini(self) -> TYPING.DICT_STR_STR | None:
+        ini = ConfigParserMod()
 
         try:
             ini.read_string(self.TEXT)
@@ -430,13 +430,7 @@ class TextAux:
             print(msg)
             return None
 
-        if not self.SECTION or self.SECTION == "DEFAULT" or ini.has_section(section=self.SECTION):
-            result = dict(ini[self.SECTION or "DEFAULT"])
-            return result
-        else:
-            msg = f"[CRITICAL] NO [{self.SECTION=} in {self.filepath=}]\n"
-            msg += self._text
-            print(msg)
+        return ini.to_dict()
 
 
 # =====================================================================================================================

@@ -14,6 +14,12 @@ class ConfigParserMod(configparser.ConfigParser):
     just add some dict-meths into original class
     """
     def to_dict__direct(self) -> TYPING.DICT_STR_STR:
+        """
+        NOTE
+        ----
+        it is just an ability!
+        use final MERGED and KEEP SOURCE in CORRECT struct! NoDEFAULTS or know what you do!!
+        """
         # use double places!
         result = dict(self._defaults)
         result.update({"DEFAULT": dict(self._defaults)})
@@ -30,6 +36,10 @@ class ConfigParserMod(configparser.ConfigParser):
                     result[section][def_name] = def_val
         return result
 
+    def to_dict(self) -> TYPING.DICT_STR_STR:
+        return self.to_dict__merged()
+
+    # -----------------------------------------------------------------------------------------------------------------
     def read_string(self, string: str, *args, **kwargs) -> None | NoReturn:
         """
         GOAL-mod
