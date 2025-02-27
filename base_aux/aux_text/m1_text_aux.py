@@ -71,9 +71,18 @@ class TextAux:
         return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=PatCoverStyle.LINE)
 
     # =================================================================================================================
-    def fix__quotes_incorrect(self) -> str:
+    def fix__incorrect(self) -> str:
+        self.fix__incorrect_quotes()
+        self.fix__incorrect_spaces()
+        return self.TEXT
+
+    def fix__incorrect_quotes(self) -> str:
         self.TEXT = self.TEXT.replace('”', '"')
         self.TEXT = self.TEXT.replace('“', '"')
+        return self.TEXT
+
+    def fix__incorrect_spaces(self) -> str:
+        # self.TEXT = self.TEXT.replace('“', ' ')
         return self.TEXT
 
     # EDIT ============================================================================================================
