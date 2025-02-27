@@ -33,13 +33,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 12))
+    VERSION = Version((0, 2, 13))
     NEWS: list[str] = [
-        "[Version] full ref",
-        "[DateTimeAux] full ref+finish+add cmp+parseStr",
-        "[type/Info] add check__module",
-        "[Text] add clear__noneprintable +fix quotes incorrect",
-        "[serial] del answer by ValueUnit",
+        "[serial] turn back ValueUnit",
     ]
 
 
