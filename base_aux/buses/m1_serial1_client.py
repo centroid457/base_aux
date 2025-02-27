@@ -11,7 +11,6 @@ from base_aux.loggers.m1_logger import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.aux_values.m3_unit import ValueUnit
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 
 from .m0_history import HistoryIO
@@ -102,7 +101,7 @@ class Exx_SerialPL2303IncorrectDriver(Exception):
 
 
 # =====================================================================================================================
-TYPE__RW_ANSWER_SINGLE = Union[None, str, ValueUnit]
+TYPE__RW_ANSWER_SINGLE = Union[None, str]
 TYPE__RW_ANSWER = Union[TYPE__RW_ANSWER_SINGLE, list[TYPE__RW_ANSWER_SINGLE]]
 
 
@@ -1148,12 +1147,6 @@ class SerialClient(Logger):
         data = self._data_ensure__string(data)
         self.history.add_output(data)
         self.answer_is_fail(data)
-
-        try:
-            # pass
-            data = ValueUnit(data)
-        except:
-            pass
 
         return data
 
