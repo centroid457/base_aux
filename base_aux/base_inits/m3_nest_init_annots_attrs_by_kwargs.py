@@ -6,12 +6,12 @@ from base_aux.aux_cmp_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================
-class NestInit_AnnotsAttrsByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
+class NestInit_AnnotsAttrByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
     """
     NOTE
     ----
     for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!
-        class Cls(NestInit_AnnotsAttrsByKwArgs):
+        class Cls(NestInit_AnnotsAttrByKwArgs):
             A1: Any
             A2: Any
             A3: Any = 1
@@ -39,7 +39,7 @@ class NestInit_AnnotsAttrsByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NestInit_AnnotsAttrByKwArgsIC(NestInit_AnnotsAttrsByKwArgs, NestGSAI_AttrAnycase):
+class NestInit_AnnotsAttrByKwArgsIC(NestInit_AnnotsAttrByKwArgs, NestGSAI_AttrAnycase):
     """
     SAME AS - 1=parent
     -------
@@ -50,7 +50,7 @@ class NestInit_AnnotsAttrByKwArgsIC(NestInit_AnnotsAttrsByKwArgs, NestGSAI_AttrA
 
 # ---------------------------------------------------------------------------------------------------------------------
 def examples__NestInit():
-    class Example(NestInit_AnnotsAttrsByKwArgs):
+    class Example(NestInit_AnnotsAttrByKwArgs):
         A1: Any
         A2: Any = None
         A3 = None
@@ -79,7 +79,7 @@ def examples__NestInit():
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs, NestEq_Attrs):
+class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     """
     GOAL
     ----
@@ -91,7 +91,7 @@ class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrsByKwArgs, NestEq_Attrs):
     ----
     IgnoreCase applied!
 
-    SAME AS - NestInit_AnnotsAttrsByKwArgs
+    SAME AS - NestInit_AnnotsAttrByKwArgs
     --------------------------------------
     but
         - used as final

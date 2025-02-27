@@ -112,7 +112,7 @@ class AnnotsAux(NestInit_Source):
         """
         CREATED SPECIALLY FOR
         ---------------------
-        NestInit_AnnotsAttrsByKwArgs
+        NestInit_AnnotsAttrByKwArgs
         """
         self.set_annots__by_args(*args)
         self.set_annots_attrs__by_kwargs(**kwargs)
@@ -125,7 +125,7 @@ class AnnotsAux(NestInit_Source):
         """
         CREATED SPECIALLY FOR
         ---------------------
-        NestInit_AnnotsAttrsByKwArgs
+        NestInit_AnnotsAttrByKwArgs
         """
         self.set_annots__by_args(*args)
         self.set_annots__by_kwargs(**kwargs)

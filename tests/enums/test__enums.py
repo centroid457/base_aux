@@ -4,6 +4,7 @@ from base_aux.base_statics.m4_enum0_nest_eq import NestEq_Enum
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.base_statics.m4_enums import *
+from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================
@@ -119,6 +120,19 @@ def _examples() -> None:
 
     print(FPoint(".") == ".")  # False
     print(FPoint(FPoint.DOT))  # FPoint.DOT     # BEST WAY to init value!
+
+    # ObjectInfo(VictimEq).print()
+
+    # ITERATE
+    print()
+    for i in VictimEq:
+        print(i, i.name, i.value)
+        print()
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _examples()
 
 
 # =====================================================================================================================

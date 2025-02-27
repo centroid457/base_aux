@@ -107,7 +107,7 @@ class PathType(NestEq_Enum):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class DictTextFormat(NestEq_Enum):
-    AUTO = None
+    EXTENTION = None
 
     CSV = "csv"
     INI = "ini"
@@ -122,9 +122,12 @@ class TextStyle(NestEq_Enum):
     CSV = "csv"
     INI = "ini"
     JSON = "json"
+    TXT = "txt"
 
     PY = "py"
     BAT = "bat"
+    SH = "sh"
+
     REQ = "requirements"
     GITIGNORE = "gitignore"
     MD = "md"
@@ -235,7 +238,7 @@ def _examples() -> None:
     print("." in FPoint)  # True
     print(FPoint.DOT in FPoint)  # True
 
-    print(FPoint(".") == ".")  # False
+    print(FPoint(".") == ".")  # True
     print(FPoint(FPoint.DOT))  # FPoint.DOT     # BEST WAY to init value!
 
 

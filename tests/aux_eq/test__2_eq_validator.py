@@ -266,12 +266,12 @@ def test__regexp_manual():
     argnames="kwargs, other, _EXPECTED",
     argvalues=[
         # (dict(a1=1), True, False),
-        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=11), False),
-        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=1), True),
-        (dict(a1=1), NestInit_AnnotsAttrsByKwArgs(a1=1, b2=2), True),
+        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=11), False),
+        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=1), True),
+        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=1, b2=2), True),
 
-        (dict(a1=1, a2=1), NestInit_AnnotsAttrsByKwArgs(a1=1), False),
-        (dict(a1=1, a2=1), NestInit_AnnotsAttrsByKwArgs(A1=1, A2=1), True),
+        (dict(a1=1, a2=1), NestInit_AnnotsAttrByKwArgs(a1=1), False),
+        (dict(a1=1, a2=1), NestInit_AnnotsAttrByKwArgs(A1=1, A2=1), True),
     ]
 )
 def test__AttrsByKwargs(kwargs, other, _EXPECTED):

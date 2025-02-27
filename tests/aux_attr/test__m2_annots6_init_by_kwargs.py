@@ -6,12 +6,12 @@ from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrsByKwArgs)
+EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrByKwArgs)
 
 
 class Test__NestInit:
     def test__examples(self):
-        class Example(NestInit_AnnotsAttrsByKwArgs):
+        class Example(NestInit_AnnotsAttrByKwArgs):
             A1: Any
             A2: Any = None
             A3 = None
@@ -47,7 +47,7 @@ class Test__NestInit:
         ]
     )
     def test__1(self, args, kwargs, _EXPECTED):
-        func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrsByKwArgs(*_args, **_kwargs)
+        func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrByKwArgs(*_args, **_kwargs)
         ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
 
         if _EXPECTED == Exception:
@@ -67,7 +67,7 @@ class Test__NestInit:
 
 
 # =====================================================================================================================
-class Victim(NestInit_AnnotsAttrsByKwArgs):
+class Victim(NestInit_AnnotsAttrByKwArgs):
     # At0
     At1 = None
     An0: Any

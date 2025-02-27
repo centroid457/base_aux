@@ -12,6 +12,7 @@ class NestEq_Enum(Enum):
     """
 
     # TODO: add EqLower???
+    # TODO: add Contain classmeth???
 
     def __eq__(self, other) -> bool:
         result = False
