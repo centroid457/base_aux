@@ -10,6 +10,14 @@
 ********************************************************************************
 ## NEWS
 
+0.2.12(2025.02.27 11.00.13)
+------------------------------
+- [Version] full ref  
+- [DateTimeAux] full ref+finish+add cmp+parseStr  
+- [type/Info] add check__module  
+- [Text] add clear__noneprintable +fix quotes incorrect  
+- [serial] del answer by ValueUnit  
+
 0.2.11 (2025/02/24 18:32:33)
 ------------------------------
 - [PRJBase] move into share +use Version  

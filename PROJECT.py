@@ -1,4 +1,4 @@
-from base_aux.project.release_files import *
+from base_aux.release.release_files import *
 
 
 # =====================================================================================================================
@@ -33,10 +33,13 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 11))
+    VERSION = Version((0, 2, 12))
     NEWS: list[str] = [
-        "[PRJBase] move into share +use Version",
-        "[AttrsAux] add AttrTemplate_Direct/Callable",
+        "[Version] full ref",
+        "[DateTimeAux] full ref+finish+add cmp+parseStr",
+        "[type/Info] add check__module",
+        "[Text] add clear__noneprintable +fix quotes incorrect",
+        "[serial] del answer by ValueUnit",
     ]
 
 
