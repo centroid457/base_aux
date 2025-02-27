@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_text.m4_ini import *
+from base_aux.aux_text.m4_ini import ConfigParserMod
 
 
 # =====================================================================================================================

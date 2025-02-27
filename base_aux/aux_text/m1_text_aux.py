@@ -4,7 +4,7 @@ import string
 
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_text.m0_patterns import *
-from base_aux.aux_text.m4_ini import *
+from base_aux.aux_text.m4_ini import ConfigParserMod
 
 
 # =====================================================================================================================
@@ -369,7 +369,7 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__json_dumped(self) -> TYPING.ELEMENTARY | str:     # NoValue ????
+    def parse__json_dumped(self) -> TYPING.ELEMENTARY | None:     # NoValue ????
         """
         NOTE
         ----
@@ -388,9 +388,9 @@ class TextAux:
             return result
         except Exception as exx:
             print(f"{exx!r}")
-            return self.TEXT
+            return
 
-    def parse__object_stringed(self) -> TYPING.ELEMENTARY | str:
+    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:
         # PREPARE -----------------------------------------------------------------
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values
@@ -418,7 +418,7 @@ class TextAux:
         pass
 
     def parse__dict_csv(self) -> TYPING.DICT_STR_ELEM | None:
-        pass
+        raise NotImplemented
 
     def parse__dict_ini(self) -> TYPING.DICT_STR_STR | None:
         ini = ConfigParserMod()

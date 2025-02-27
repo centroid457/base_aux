@@ -1,8 +1,6 @@
 from typing import *
 import configparser
 
-from base_aux.aux_text.m1_text_aux import *
-from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.base_statics.m1_types import *
 
 
@@ -40,34 +38,34 @@ class ConfigParserMod(configparser.ConfigParser):
         return self.to_dict__merged()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def read_string(self, string: str, *args, **kwargs) -> None | NoReturn:
+    def read_string(self, data: str, *args, **kwargs) -> None | NoReturn:
         """
         GOAL-mod
         ----
         just fix default section
         """
         try:
-            super().read_string(string, *args, **kwargs)
+            super().read_string(string=data, *args, **kwargs)
         except:
-            string = f"[DEFAULT]\n{string}"
-            super().read_string(string, *args, **kwargs)
+            data = f"[DEFAULT]\n{data}"
+            super().read_string(string=data, *args, **kwargs)
 
 
 # =====================================================================================================================
-def _explore():
-    config = ConfigParserMod()
-    config.set("DEFAULT", "name0", "000")
-    config.add_section("SEC1")
-    config.set("SEC1", "name1", "111")
-    config.set("SEC1", "name2", "222")
-    config.set("SEC1", "name3", "333")
-    print(config.to_dict__direct())
-    print(config.to_dict__merged())
+# def _explore():
+#     config = ConfigParserMod()
+#     config.set("DEFAULT", "name0", "000")
+#     config.add_section("SEC1")
+#     config.set("SEC1", "name1", "111")
+#     config.set("SEC1", "name2", "222")
+#     config.set("SEC1", "name3", "333")
+#     print(config.to_dict__direct())
+#     print(config.to_dict__merged())
 
 
 # =====================================================================================================================
-if __name__ == '__main__':
-    _explore()
+# if __name__ == '__main__':
+#     _explore()
 
 
 # =====================================================================================================================
