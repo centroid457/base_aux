@@ -59,16 +59,6 @@ class PatNumberSingle(Patterns):
     *Exact - for exact/only number without any cover (suffix-prefix)!
     *COVERED - for any trash cover! used in re.fullmatch
     """
-    INT_EXACT: str = r"(-?\d+)"
-    INT_COVERED: str
-
-    # @property ---
-    FLOAT_EXACT: str
-    FLOAT_COVERED: str
-
-    BOTH_EXACT: str
-    BOTH_COVERED: str
-
     # aux ---------
     _fpoint: FPoint = FPoint.AUTO
     _cover: tuple[str, str] = (r"\D*?", r"\D*")
@@ -83,6 +73,8 @@ class PatNumberSingle(Patterns):
             raise TypeError(f"{fpoint=}")
 
     # -----------------------------------------------------------------------------------------------------------------
+    INT_EXACT: str = r"(-?\d+)"
+
     @classmethod
     @property
     def INT_COVERED(cls) -> str:
