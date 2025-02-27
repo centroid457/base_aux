@@ -5,7 +5,7 @@ from base_aux.base_inits.m1_nest_init_source import *
 # =====================================================================================================================
 TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Any! as attribute access
 
-TYPE__ITER_PATH_KEY = Union[Any, int]
+TYPE__ITER_PATH_KEY = Union[str, int]
 TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
 
 
@@ -104,7 +104,7 @@ class IterAux(NestInit_Source):
         return tuple(result)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check__exist(self, item: Any) -> bool:
+    def value__check_exist(self, item: Any) -> bool:
         return self.item__get_original(item) is not NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
