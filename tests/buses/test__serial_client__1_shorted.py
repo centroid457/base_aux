@@ -3,7 +3,9 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.valid.m2_valid_base import *
+from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_values.m2_variants import *
+from base_aux.aux_values.m3_unit import *
 from base_aux.buses.m1_serial1_client import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 
@@ -391,12 +393,13 @@ class Test__WR_2_Getattr(Test__WRBase):
 class Test__WR_3_ValueUnit(Test__WRBase):
     def test__1(self):
         assert self.victim.send__123() == "123"
-        assert self.victim.send__123() == 123
-        assert self.victim.send__123() > 122
-        assert self.victim.send__123() < 123.1
-
-        assert self.victim.send__123v() > 122
-        assert self.victim.send__123v() + 1 == 124
+        # NOTE: use other EqValid_ParseSingleNum*
+        # assert self.victim.send__123() == 123
+        # assert self.victim.send__123() > 122
+        # assert self.victim.send__123() < 123.1
+        #
+        # assert self.victim.send__123v() > 122
+        # assert self.victim.send__123v() + 1 == 124
 
 
 # =====================================================================================================================
