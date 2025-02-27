@@ -1,3 +1,4 @@
+from typing import *
 import json
 import re
 import string
@@ -13,7 +14,8 @@ class TextAux:
     TEXT: TYPING.STR_FINAL = ""
 
     def __init__(self, text: TYPING.STR_DRAFT = "", *args, **kwargs) -> None | NoReturn:
-        self.TEXT = str(text)
+        if text is not None:
+            self.TEXT = str(text)
         super().__init__(*args, **kwargs)
 
     # =================================================================================================================
@@ -390,7 +392,7 @@ class TextAux:
             print(f"{exx!r}")
             return
 
-    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:
+    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:   # FIXME: if NONE - return TEXT???
         # PREPARE -----------------------------------------------------------------
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values

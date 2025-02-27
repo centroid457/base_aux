@@ -1,3 +1,5 @@
+from typing import *
+
 from base_aux.path1_dir.m2_dir import *
 from base_aux.aux_text.m1_text_aux import *
 
@@ -14,11 +16,20 @@ class FileAux:
     FILEPATH: TYPING.PATH_FINAL
     TEXT: str = ""       # keep here just for TextAux work!
 
-    def __init__(self, filepath: TYPING.PATH_DRAFT, *args, **kwargs) -> None:
+    def __init__(self, filepath: TYPING.PATH_DRAFT, *args, **kwargs) -> None | NoReturn:
         self.FILEPATH = pathlib.Path(filepath)
+        if self.check_exists():
+            if self.FILEPATH.is_file():
+                # self.read__text()     # NOTE: dont read here! it maybe Bytes! read only in TextFile!
+                pass
+            else:
+                raise Exx__Incompatible(f"{self.FILEPATH=}")
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def check_exists(self) -> bool:
+        return self.FILEPATH.exists()
+
     def ensure_dir(self) -> None:
         DirAux(self.FILEPATH.parent).create_dirtree()
 
