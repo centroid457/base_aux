@@ -131,7 +131,7 @@ class EqAux(NestInit_Source):
         ---------------------
         """
         for key, expected in other.items():
-            key_real = AttrAux(self.SOURCE).anycase__find(key)
+            key_real = AttrAux(self.SOURCE).anycase__name_original(key)
             if key_real is None:
                 if expected is None:
                     continue

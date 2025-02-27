@@ -140,7 +140,7 @@ class BreederStrStack(NestGAI_AttrAnycase):
                     return name
 
         msg = f"{item=}"
-        raise Exx__ItemNotExists(msg)
+        raise Exx__NotExists(msg)
 
     def __contains__(self, item: Union[int, str]) -> bool:
         """

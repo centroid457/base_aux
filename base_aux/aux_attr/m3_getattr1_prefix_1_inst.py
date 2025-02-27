@@ -41,7 +41,7 @@ class GetattrPrefixInst:
         # print("-"*10)
         # print(f"{item=}start")
         # pretend DIRECT anycase name/prefix ----------
-        item_original = AttrAux(self).anycase__find(item)
+        item_original = AttrAux(self).anycase__name_original(item)
         if item_original:
             if item_original.lower() == item.lower():
                 return getattr(self, item_original)
@@ -49,7 +49,7 @@ class GetattrPrefixInst:
         # pretend PREFIX ----------
         for prefix in self.GETATTR_PREFIXES:
             # print(f"{prefix=}start")
-            prefix_original = AttrAux(self).anycase__find(prefix)
+            prefix_original = AttrAux(self).anycase__name_original(prefix)
             if not prefix_original:
                 continue
 

@@ -49,7 +49,7 @@ class BreederStrSeries(NamedTuple):
                     return key
 
         msg = f"{item=}"
-        raise Exx__ItemNotExists(msg)
+        raise Exx__NotExists(msg)
 
     def get_dict__outer(self) -> dict[int, str] | NoReturn:
         self._raise_if_start_outer_none()
@@ -89,7 +89,7 @@ class BreederStrSeries(NamedTuple):
                 else:
                     result += 1
         else:
-            raise Exx__ItemNotExists()
+            raise Exx__NotExists()
 
     def get_listed_index__by_value(self, value: str) -> int | NoReturn:
         result = 0
@@ -100,7 +100,7 @@ class BreederStrSeries(NamedTuple):
                 else:
                     result += 1
         else:
-            raise Exx__ItemNotExists()
+            raise Exx__NotExists()
 
 
 # =====================================================================================================================

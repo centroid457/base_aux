@@ -91,7 +91,7 @@ class Victim2:
 def test__anycase__getset(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    ExpectAux(AttrAux(Victim2()).anycase__find, attr).check_assert(_EXPECTED[0])
+    ExpectAux(AttrAux(Victim2()).anycase__name_original, attr).check_assert(_EXPECTED[0])
     ExpectAux(AttrAux(Victim2()).anycase__getattr, attr).check_assert(_EXPECTED[1])
     ExpectAux(AttrAux(Victim2()).anycase__setattr, (attr, 123)).check_assert(_EXPECTED[2])
 

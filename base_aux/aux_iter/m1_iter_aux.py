@@ -1,11 +1,13 @@
 from typing import *
 from base_aux.base_inits.m1_nest_init_source import *
+from base_aux.aux_types.m1_type_aux import *
+from base_aux.aux_attr.m1_attr1_aux import *
 
 
 # =====================================================================================================================
-TYPE__ITERABLE = Union[dict, list, tuple, set, Iterable]    # FIXME: add Any! as attribute access
+TYPE__ITERABLE_ORDERED = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
 
-TYPE__ITER_PATH_KEY = Union[str, int]
+TYPE__ITER_PATH_KEY = Union[Any, int]   # Any is for dict
 TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
 
 
@@ -31,7 +33,7 @@ class IterAux(NestInit_Source):
         assert self.victim("hello1/hello2/0", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2", 0, ])
         assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
-    SOURCE: TYPE__ITERABLE = dict
+    SOURCE: TYPE__ITERABLE_ORDERED = dict
     # PATH: list[TYPE__ITER_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
     # def init_post(self):
@@ -54,14 +56,22 @@ class IterAux(NestInit_Source):
         # :return: actual item from collection
         #     None - if VALUE is unreachable/notFind
         """
-        for value in self.SOURCE:
-            if value == item or str(value).lower() == str(item).lower():
-                return value
+        if TypeAux(self.SOURCE).check__iterable_not_str():
+            values = self.SOURCE
+        else:
+            values = AttrAux(self.SOURCE).iter__not_private()
+
+        for value in values:
+            try:
+                if value == item or str(value).lower() == str(item).lower():
+                    return value
+            except:
+                pass
 
         return NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
-    def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None:
+    def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None | NoReturn:
         """
         NOTES:
         1. path used as address KEY for dicts and as INDEX for other listed data
@@ -72,8 +82,6 @@ class IterAux(NestInit_Source):
             None - if path is unreachable/incorrect
             tuple[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
         """
-
-        # TODO: add attribute acceptable in path! and separate as Extruder?
         source = self.SOURCE
         if not path:
             return None
@@ -81,24 +89,34 @@ class IterAux(NestInit_Source):
         # work ----------------------------
         result = []
         for path_i in path:
+            address_original = NoValue
+
             if isinstance(source, dict):
                 address_original = IterAux(source).item__get_original(path_i)
-                if not address_original or address_original == NoValue:
+                if address_original == NoValue:
                     return
-                source = source[address_original]
+                else:
+                    source = source[address_original]
 
             elif isinstance(source, set):
                 msg = f"{source=},inconvenient type SET"
                 raise TypeError(msg)
 
             else:
-                # elif isinstance(source, (list, tuple)) or True:
                 try:
-                    address_original = int(path_i)
-                    source = source[address_original]
+                    source = source[int(path_i)]
+                    address_original = int(path_i)  # place last!
                 except:
-                    return
+                    pass
 
+                if address_original == NoValue:
+                    address_original = AttrAux(source).anycase__name_original(str(path_i))
+                    if address_original is None:
+                        return
+                    else:
+                        source = getattr(source, address_original)
+
+            # -----------------------------
             result.append(address_original)
 
         return tuple(result)
@@ -112,7 +130,11 @@ class IterAux(NestInit_Source):
         result = self.SOURCE
         path = self.path__get_original(*path)
         for path_i in path:
-            result = result[path_i]
+            try:
+                result = result[path_i]
+            except:
+                result = AttrAux(result).anycase__getattr(path_i)     # raise
+
         return result
 
     def value__set(self, path: TYPE__ITER_PATH, value: Any) -> bool:
@@ -129,13 +151,15 @@ class IterAux(NestInit_Source):
             length = len(path)
             for pos, path_i in enumerate(path, start=1):
                 if pos == length:
-                    source[path_i] = value
+                    try:
+                        source[path_i] = value
+                    except:
+                        AttrAux(source).anycase__setattr(path_i, value)     # raise
+                    return True
                 else:
-                    source = source[path_i]
+                    source = IterAux(source).value__get(path_i)
         except:
             return False
-
-        return True
 
 
 # =====================================================================================================================

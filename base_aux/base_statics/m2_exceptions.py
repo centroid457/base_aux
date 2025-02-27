@@ -180,10 +180,7 @@ class Exx__IndexNotSet(Exx__BoolBase):
     pass
 
 
-class Exx__ItemNotExists(Exx__BoolBase):
-    """
-    not exists INDEX (out of range) or NAME not in defined values
-    """
+class Exx__NotExists(Exx__BoolBase):
     pass
 
 

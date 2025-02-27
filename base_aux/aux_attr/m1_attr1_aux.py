@@ -164,7 +164,7 @@ class AttrAux(NestInit_Source):
     pass
 
     # NAME ------------------------------------------------------------------------------------------------------------
-    def anycase__find(self, name: str) -> str | None:
+    def anycase__name_original(self, name: str) -> str | None:
         """
         get attr name in original register
         """
@@ -182,7 +182,7 @@ class AttrAux(NestInit_Source):
         return
 
     def anycase__check_exists(self, name: str) -> bool:
-        return self.anycase__find(name) is not None
+        return self.anycase__name_original(name) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
     def anycase__getattr(self, name: str) -> Any | Callable | NoReturn:
@@ -192,7 +192,7 @@ class AttrAux(NestInit_Source):
         get attr value by name in any register
         no execution/resolving! return pure value as represented in object!
         """
-        name_original = self.anycase__find(name)
+        name_original = self.anycase__name_original(name)
         if name_original is None:
             raise AttributeError(name)
 
@@ -213,7 +213,7 @@ class AttrAux(NestInit_Source):
         if name in ["", ]:
             raise AttributeError(name)
 
-        name_original = self.anycase__find(name)
+        name_original = self.anycase__name_original(name)
         if name_original is None:
             name_original = name
 
@@ -221,7 +221,7 @@ class AttrAux(NestInit_Source):
         setattr(self.SOURCE, name_original, value)
 
     def anycase__delattr(self, name: str) -> None:
-        name_original = self.anycase__find(name)
+        name_original = self.anycase__name_original(name)
         if name_original is None:
             return      # already not exists
 

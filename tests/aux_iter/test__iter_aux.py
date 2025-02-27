@@ -3,6 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_iter.m1_iter_aux import IterAux
 from base_aux.aux_values.m0_novalue import *
+from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
@@ -22,6 +23,10 @@ from base_aux.aux_values.m0_novalue import *
         ([1,], "1", 1),
         ({1,}, "1", 1),
         ({1: 11}, "1", 1),
+
+        (NestInit_AnnotsAttrsByKwArgs(arg1=1), "arg1", "arg1"),
+        (NestInit_AnnotsAttrsByKwArgs(arg1=1), "ARG1", "arg1"),
+        (NestInit_AnnotsAttrsByKwArgs(arg1=1), "hello", None),
     ]
 )
 def test__item__get_original(source, item, _EXPECTED):
@@ -62,9 +67,15 @@ def test__item__get_original(source, item, _EXPECTED):
         ({"hello": 1}, "HELLO", [("hello", ), 1]),
         ([{"hello": 1}, 123], (0, "HELLO"), [(0, "hello"), 1]),
 
+
         # TODO: decide use or not this addressing style
         # ({"hello": [1]}, "hello", (0, "hello")),
         # hello/1
+
+        (NestInit_AnnotsAttrsByKwArgs(arg1=1), "arg1", [("arg1",), 1]),
+        ([{"hello": NestInit_AnnotsAttrsByKwArgs(arg1=1)}, 123], (0, "HELLO", "arg1"), [(0, "hello", "arg1"), 1]),
+        ([{"hello": NestInit_AnnotsAttrsByKwArgs(arg1=[1,2])}, 123], (0, "HELLO", "arg1", 1), [(0, "hello", "arg1", 1), 2]),
+
     ]
 )
 def test__path__get_original__value_get(source, path, _EXPECTED):
