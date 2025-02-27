@@ -188,7 +188,7 @@ class Test__WithUnit:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="source1, obj2, _EXPECTED",
+        argnames="source, other, _EXPECTED",
         argvalues=[
             # unit -----------------------
             (1, ValueUnit(1), True),
@@ -220,16 +220,23 @@ class Test__WithUnit:
 
             # VALUENOTEXISTS ------------
             ("1", ValueUnit(NoValue), True),
-            ("1V", ValueUnit(NoValue), True),
+            ("1V", ValueUnit(NoValue), False),
             ("1V", ValueUnit(NoValue, unit="V"), True),
             ("1V", ValueUnit(NoValue, unit="A"), False),
-            ("1", ValueUnit(NoValue, unit="A"), True),
-            ("1m", ValueUnit(NoValue, unit="A"), True),
+            ("1", ValueUnit(NoValue, unit="A"), False),
+            ("1m", ValueUnit(NoValue, unit="A"), False),
             (ValueUnit(NoValue), "1", True),
+
+            ("1", ValueUnit(), True),
+            ("1V", ValueUnit(), False),
+            ("1V", ValueUnit(unit="V"), True),
+            ("1V", ValueUnit(unit="A"), False),
+            ("1", ValueUnit(unit="A"), False),
+            ("1m", ValueUnit(unit="A"), False),
         ]
     )
-    def test__cmp_2__eq(self, source1, obj2, _EXPECTED):
-        func_link = lambda: source1 == obj2
+    def test__cmp_2__eq(self, source, other, _EXPECTED):
+        func_link = lambda: source == other
         ExpectAux(func_link).check_assert(_EXPECTED)
 
 

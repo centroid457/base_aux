@@ -94,6 +94,9 @@ class TextAux:
     def clear__noneprintable(self) -> str:
         return self.clear__regexps(f"[^{string.printable}а-яА-ЯёЁ]")
 
+    def clear__punctuation(self) -> str:
+        return self.clear__regexps(f"[^{string.punctuation}]")
+
     def clear__spaces_all(self) -> str:
         """
         GOAL

@@ -11,7 +11,8 @@ from base_aux.loggers.m1_logger import Logger
 
 from serial import Serial
 from serial.tools import list_ports
-from base_aux.aux_cmp_eq.m2_eq_aux import *
+from base_aux.aux_values.m3_unit import *
+from base_aux.aux_cmp_eq.m2_eq_aux import EqAux
 
 from .m0_history import HistoryIO
 
@@ -101,7 +102,7 @@ class Exx_SerialPL2303IncorrectDriver(Exception):
 
 
 # =====================================================================================================================
-TYPE__RW_ANSWER_SINGLE = Union[None, str]
+TYPE__RW_ANSWER_SINGLE = Union[None, str, ValueUnit]
 TYPE__RW_ANSWER = Union[TYPE__RW_ANSWER_SINGLE, list[TYPE__RW_ANSWER_SINGLE]]
 
 
@@ -1068,7 +1069,7 @@ class SerialClient(Logger):
 
     # R ---------------------------------------------------------------------------------------------------------------
     # TODO: use wrapper for connect/disconnect!??? - NO!
-    def read_lines(self, _timeout: Optional[float] = None) -> Union[list[TYPE__RW_ANSWER_SINGLE], NoReturn]:
+    def read_lines(self, _timeout: Optional[float] = None) -> list[TYPE__RW_ANSWER_SINGLE] | NoReturn:
         result: list[str] = []
         while True:
             line = self.read_line(_timeout)
@@ -1080,7 +1081,7 @@ class SerialClient(Logger):
 
         return result
 
-    def read_line(self, _timeout: Optional[float] = None) -> Union[str, NoReturn]:
+    def read_line(self, _timeout: Optional[float] = None) -> Union[str, ValueUnit, NoReturn]:
         """
         read line from bus buffer,
 
@@ -1147,6 +1148,13 @@ class SerialClient(Logger):
         data = self._data_ensure__string(data)
         self.history.add_output(data)
         self.answer_is_fail(data)
+
+        # NOTE: dont delete! need to direct cmp
+        try:
+            # pass
+            data = ValueUnit_NoMulty(data)
+        except:
+            pass
 
         return data
 

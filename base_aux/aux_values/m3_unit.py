@@ -150,7 +150,7 @@ class ValueUnit(ArithmApplyToAttr):
         if self.UNIT_MULT__DISABLE:
             self.UNIT_MULT__VARIANTS = {}
 
-        self.source = source
+        self.SOURCE = source
 
         # first parse -----------------
         if source is NoValue:
@@ -262,8 +262,10 @@ class ValueUnit(ArithmApplyToAttr):
         if not isinstance(other, self.__class__):
             other = self.__class__(other)
 
-        if self.source == NoValue or other.source == NoValue:
-            if not self.UNIT_BASE or not other.UNIT_BASE or self.UNIT_BASE == other.UNIT_BASE:
+        if self.SOURCE == NoValue or other.SOURCE == NoValue:
+            if self.UNIT_BASE == other.UNIT_BASE or self.UNIT == other.UNIT:
+                return 0
+            elif not self.UNIT and not other.UNIT:
                 return 0
             else:
                 return -1   # just to show not equel!!!

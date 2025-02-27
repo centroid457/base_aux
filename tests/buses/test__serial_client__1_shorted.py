@@ -300,10 +300,10 @@ class Test__WR_1(Test__WRBase):
             ("hello", Valid(validate_link=lambda x: x.startswith("hel")), True),
             ("hello", Valid(validate_link=lambda x: x.startswith("HEL")), False),
 
-            ("1V", ValueUnit(unit="V"), True),
-            ("1", ValueUnit(unit="V"), True),
+            ("1V", ValueUnit(unit="V"), False),
+            ("1", ValueUnit(unit="V"), False),
             ("1V", ValueUnit(unit=""), True),
-            ("1A", ValueUnit(unit="V"), False),     # FIXME: dont understand!!!
+            ("1A", ValueUnit(unit="V"), False),
 
             ("3", ValueVariants(variants=[3, ]), True),
         ],
@@ -393,13 +393,13 @@ class Test__WR_2_Getattr(Test__WRBase):
 class Test__WR_3_ValueUnit(Test__WRBase):
     def test__1(self):
         assert self.victim.send__123() == "123"
-        # NOTE: use other EqValid_ParseSingleNum*
-        # assert self.victim.send__123() == 123
-        # assert self.victim.send__123() > 122
-        # assert self.victim.send__123() < 123.1
-        #
-        # assert self.victim.send__123v() > 122
-        # assert self.victim.send__123v() + 1 == 124
+        # NOTE: use other EqValid_ParseSingleNum* - NO!!!
+        assert self.victim.send__123() == 123
+        assert self.victim.send__123() > 122
+        assert self.victim.send__123() < 123.1
+
+        assert self.victim.send__123v() > 122
+        assert self.victim.send__123v() + 1 == 124
 
 
 # =====================================================================================================================
