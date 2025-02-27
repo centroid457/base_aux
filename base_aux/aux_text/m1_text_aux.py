@@ -1,6 +1,7 @@
 import json
 import re
 import string
+from configparser import ConfigParser
 
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_text.m0_patterns import *
@@ -350,7 +351,7 @@ class TextAux:
     def parse__float_single(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO) -> float | None:
         return self.parse__number_single(fpoint=fpoint, num_type=NumType.FLOAT)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     def parse__requirements_lines(self) -> list[str]:
         """
         GOAL
@@ -413,11 +414,29 @@ class TextAux:
         return self.parse__json_dumped()
 
     # =================================================================================================================
-    def parse__dict_csv(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
+    def parse__dict(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
         pass
 
-    def parse__dict_ini(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
+    def parse__dict_csv(self) -> TYPING.DICT_STR_ELEM | None:
         pass
+
+    def parse__dict_ini(self) -> TYPING.DICT_STR_ELEM | None:
+        ini = ConfigParser()
+
+        try:
+            ini.read_string(self.TEXT)
+        except Exception as exx:
+            msg = f"[CRITICAL] incorrect file!{exx!r}"
+            print(msg)
+            return None
+
+        if not self.SECTION or self.SECTION == "DEFAULT" or ini.has_section(section=self.SECTION):
+            result = dict(ini[self.SECTION or "DEFAULT"])
+            return result
+        else:
+            msg = f"[CRITICAL] NO [{self.SECTION=} in {self.filepath=}]\n"
+            msg += self._text
+            print(msg)
 
 
 # =====================================================================================================================
