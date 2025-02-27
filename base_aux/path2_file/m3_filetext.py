@@ -20,6 +20,8 @@ class TextFile(FileAux, TextAux):
             text: TYPING.STR_DRAFT = None,
             # *args, **kwargs
     ) -> None | NoReturn:
+        # super().__init__(*args, **kwargs)     # NOTE: dont use here!??? because init is overWriten here!
+
         self.FILEPATH = pathlib.Path(filepath)
         if self.check_exists():
             if self.FILEPATH.is_file():
@@ -29,8 +31,6 @@ class TextFile(FileAux, TextAux):
 
         if text is not None:
             self.TEXT = str(text)
-
-        # super().__init__(*args, **kwargs)     # NOTE: dont use here!
 
 
 # =====================================================================================================================

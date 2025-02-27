@@ -371,27 +371,6 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__json_dumped(self) -> TYPING.ELEMENTARY | None:     # NoValue ????
-        """
-        NOTE
-        ----
-        intended source is json dumped!
-
-        GOAL
-        ----
-        create an elementary object from text.
-        or return source - FIXME: decide to use
-
-        by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
-        for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
-        """
-        try:
-            result = json.loads(self.TEXT)
-            return result
-        except Exception as exx:
-            print(f"{exx!r}")
-            return
-
     def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:   # FIXME: if NONE - return TEXT???
         # PREPARE -----------------------------------------------------------------
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
@@ -413,7 +392,7 @@ class TextAux:
         self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
 
         # RESULT -----------------------------------------------------------------
-        return self.parse__json_dumped()
+        return self.parse__dict_json()
 
     # =================================================================================================================
     def parse__dict(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
@@ -430,9 +409,30 @@ class TextAux:
         except Exception as exx:
             msg = f"[CRITICAL] incorrect file!{exx!r}"
             print(msg)
-            return None
+            return
 
         return ini.to_dict()
+
+    def parse__dict_json(self) -> TYPING.DICT_STR_ELEM | TYPING.ELEMENTARY | None:     # NoValue ????
+        """
+        NOTE
+        ----
+        intended source is json dumped!
+
+        GOAL
+        ----
+        create an elementary object from text.
+        or return source - FIXME: decide to use - think NO!!!
+
+        by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
+        for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
+        """
+        try:
+            result = json.loads(self.TEXT)
+            return result
+        except Exception as exx:
+            print(f"{exx!r}")
+            return
 
 
 # =====================================================================================================================
