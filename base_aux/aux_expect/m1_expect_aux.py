@@ -106,7 +106,7 @@ def _example_TUPLE_ARGS():
     use Args(otherTuple) to direct use exact tuple
     """
     class Test_EnumEq:
-        class VictimEq(NestEq_Enum):
+        class VictimEq(NestEqIc_Enum):
             NONE = None
             A1 = 1
             TUPLE = (1, 2)
