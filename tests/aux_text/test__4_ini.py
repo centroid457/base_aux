@@ -10,13 +10,22 @@ class Test__Ini:
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
+            (None, (None, None)),
+            ("", (None, None)),
+            ("1", Exception),
+            (INI_EXAMPLES.INT_KEY__TEXT, (INI_EXAMPLES.INT_KEY__DICT_DIRECT, INI_EXAMPLES.INT_KEY__DICT_DIRECT)),
             (INI_EXAMPLES.NOT_MESHED__TEXT, (INI_EXAMPLES.NOT_MESHED__DICT_DIRECT, INI_EXAMPLES.NOT_MESHED__DICT_MERGED)),
             (INI_EXAMPLES.MESHED__TEXT, (INI_EXAMPLES.MESHED__DICT_DIRECT, INI_EXAMPLES.MESHED__DICT_MERGED)),
         ]
     )
     def test__to_dict(self, source, _EXPECTED):
         obj = ConfigParserMod()
-        obj.read_string(source)
+
+        try:
+            obj.read_string(source)
+        except Exception as exx:
+            ExpectAux(exx).check_assert(_EXPECTED)
+            return
 
         ExpectAux(obj.to_dict__direct).check_assert(_EXPECTED[0])
         ExpectAux(obj.to_dict__merged).check_assert(_EXPECTED[1])

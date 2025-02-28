@@ -11,7 +11,7 @@ class ConfigParserMod(configparser.ConfigParser):
     ----
     just add some dict-meths into original class
     """
-    def to_dict__direct(self) -> TYPING.DICT_STR_STR:
+    def to_dict__direct(self) -> TYPING.DICT_STR_STR | None:
         """
         NOTE
         ----
@@ -20,10 +20,13 @@ class ConfigParserMod(configparser.ConfigParser):
         """
         # use double places!
         result = dict(self._defaults)
-        result.update({"DEFAULT": dict(self._defaults)})
+        if result:
+            result.update({"DEFAULT": dict(self._defaults)})
 
         # sections
         result.update(dict(self._sections))
+        if not result:
+            return
         return result
 
     def to_dict__merged(self) -> TYPING.DICT_STR_STR:

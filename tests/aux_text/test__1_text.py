@@ -3,6 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_statics.m4_enums import *
+from base_aux.aux_text.m0_text_examples import *
 
 
 # =====================================================================================================================
@@ -402,7 +403,6 @@ def test__requirements__get_list(source, _EXPECTED):
 
 # =====================================================================================================================
 class Test__ParseNum:
-    # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="source, fpoint, _EXPECTED",
         argvalues=[
@@ -421,6 +421,26 @@ class Test__ParseNum:
     def test__num(self, source, fpoint, _EXPECTED):
         func_link = TextAux(source).parse__number_single
         ExpectAux(func_link, fpoint).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+class Test__ParseDict:
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (None, None),
+            (0, None),
+            (1, None),
+            ("", None),
+            ("1", None),
+            (INI_EXAMPLES.INT_KEY__TEXT, INI_EXAMPLES.INT_KEY__DICT_MERGED),
+            (INI_EXAMPLES.MESHED__TEXT, INI_EXAMPLES.MESHED__DICT_MERGED),
+            (INI_EXAMPLES.NOT_MESHED__TEXT, INI_EXAMPLES.NOT_MESHED__DICT_MERGED),
+        ]
+    )
+    def test__ini(self, source, _EXPECTED):
+        ExpectAux(TextAux(source).parse__dict_ini).check_assert(_EXPECTED)
+        ExpectAux(TextAux(source).parse__dict).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

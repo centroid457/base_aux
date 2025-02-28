@@ -25,8 +25,8 @@ class DictTextFileLoader(TextFile, NestCall_Resolve):
     def __init__(
             self,
             target: type | Any = None,
-            style: DictTextFormat = None,
             keypath: Iterable[str, int] = None,     # path to direct
+            style: DictTextFormat = None,
             *args, **kwargs
     ) -> None | NoReturn:
         super().__init__(*args, **kwargs)
