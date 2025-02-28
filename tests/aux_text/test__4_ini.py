@@ -2,51 +2,7 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_text.m4_ini import ConfigParserMod
-
-
-# =====================================================================================================================
-NOT_MESHED__TEXT = """
-a0=00
-[S1]
-a1=11
-"""
-NOT_MESHED__DICT_DIRECT = {
-    "a0": "00",
-    "DEFAULT": {
-        "a0": "00",
-    },
-    "S1": {
-        "a1": "11",
-    },
-}
-NOT_MESHED__DICT_MERGED = {
-    "a0": "00",
-    "DEFAULT": {
-        "a0": "00",
-    },
-    "S1": {
-        "a0": "00",
-        "a1": "11",
-    },
-}
-
-
-MESHED__TEXT = """
-a0=00
-[S1]
-a0=11
-a1=11
-"""
-MESHED__DICT_DIRECT = MESHED__DICT_MERGED = {
-    "a0": "00",
-    "DEFAULT": {
-        "a0": "00",
-    },
-    "S1": {
-        "a0": "11",
-        "a1": "11",
-    },
-}
+from base_aux.aux_text.m0_text_examples import *
 
 
 # =====================================================================================================================
@@ -54,8 +10,8 @@ class Test__Ini:
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
-            (NOT_MESHED__TEXT, (NOT_MESHED__DICT_DIRECT, NOT_MESHED__DICT_MERGED)),
-            (MESHED__TEXT, (MESHED__DICT_DIRECT, MESHED__DICT_MERGED)),
+            (INI_EXAMPLES.NOT_MESHED__TEXT, (INI_EXAMPLES.NOT_MESHED__DICT_DIRECT, INI_EXAMPLES.NOT_MESHED__DICT_MERGED)),
+            (INI_EXAMPLES.MESHED__TEXT, (INI_EXAMPLES.MESHED__DICT_DIRECT, INI_EXAMPLES.MESHED__DICT_MERGED)),
         ]
     )
     def test__to_dict(self, source, _EXPECTED):
