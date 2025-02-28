@@ -24,14 +24,25 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
         ({1,}, "1", 1),
         ({1: 11}, "1", 1),
 
-        (NestInit_AnnotsAttrByKwArgs(arg1=1), "arg1", "arg1"),
+        (Init_AnnotsAttrByKwArgs(arg1=1), "arg1", "arg1"),
         (NestInit_AnnotsAttrByKwArgs(arg1=1), "ARG1", "arg1"),
         (NestInit_AnnotsAttrByKwArgs(arg1=1), "hello", None),
     ]
 )
 def test__item__get_original(source, item, _EXPECTED):
-    func_link = IterAux(source).item__get_original
+    victim = IterAux(source)
+    func_link = victim.item__get_original
     ExpectAux(func_link, item).check_assert(_EXPECTED)
+
+
+def test__item__get_original_2():
+    source = Init_AnnotsAttrByKwArgs(arg1=1)
+    assert source.arg1 == 1
+    assert source.ARG1 == 1
+
+    # victim = IterAux(source)
+    # func_link = victim.item__get_original
+    # ExpectAux(func_link, item).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

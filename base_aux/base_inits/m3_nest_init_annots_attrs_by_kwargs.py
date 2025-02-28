@@ -2,11 +2,12 @@ from typing import *
 
 from base_aux.aux_attr.m4_nest_eq_attrs import NestEq_Attrs
 from base_aux.aux_attr.m2_annot1_aux import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================
-class NestInit_AnnotsAttrByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
+class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
     """
     NOTE
     ----
@@ -76,7 +77,7 @@ def examples__NestInit():
 
 # =====================================================================================================================
 @final
-class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
+class Init_AnnotsAttrByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     """
     GOAL
     ----
@@ -117,10 +118,10 @@ def examples__Init():
         A0: Any
         A1: Any = 1
 
-    assert Init_AnnotsAttrsByKwArgs(a1=1) == Example()
-    assert Init_AnnotsAttrsByKwArgs(a1=11) != Example()
+    assert Init_AnnotsAttrByKwArgs(a1=1) == Example()
+    assert Init_AnnotsAttrByKwArgs(a1=11) != Example()
 
-    assert Init_AnnotsAttrsByKwArgs(a0=1) != Example()
+    assert Init_AnnotsAttrByKwArgs(a0=1) != Example()
 
 
 # =====================================================================================================================

@@ -19,7 +19,7 @@ class AttrsDictTextFileLoader(TextFile, NestCall_Resolve):
     main usage is final key values!
     used for get settings from file into NestInit_AnnotsAttrByKwArgsIc
     """
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = NestInit_AnnotsAttrByKwArgs
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
     STYLE: Any = DictTextFormat.AUTO
     KEYPATH: Iterable[str | int]
 

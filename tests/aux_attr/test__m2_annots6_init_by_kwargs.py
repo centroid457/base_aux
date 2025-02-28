@@ -12,7 +12,7 @@ EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrByKwArgs)
 class Test__NestInit:
     def test__notNested(self):
         try:
-            Init_AnnotsAttrsByKwArgs()
+            Init_AnnotsAttrByKwArgs()
             # Init_AnnotsAttrsByKwArgsIc()
             NestInit_AnnotsAttrByKwArgs()
             # NestInit_AnnotsAttrByKwArgsIc()
@@ -20,10 +20,10 @@ class Test__NestInit:
         except:
             assert False
 
-        assert Init_AnnotsAttrsByKwArgs(a1=1).a1 == 1
+        assert Init_AnnotsAttrByKwArgs(a1=1).a1 == 1
         assert NestInit_AnnotsAttrByKwArgs(a1=1).a1 == 1
         try:
-            assert Init_AnnotsAttrsByKwArgs(a1=1).A1 == 1
+            assert Init_AnnotsAttrByKwArgs(a1=1).A1 == 1
             assert False
         except:
             assert True
@@ -114,7 +114,7 @@ class Victim(NestInit_AnnotsAttrByKwArgs):
         ((333, 444, 1, 2, 3, 4), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
         ((11, 22, 33, 44), dict(At0=111, At1=222, An0=333, An1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
 
-        ((11, 22, 33, 44), dict(AT0=111, AT1=222, AN0=333, AN1=444), EQ_ISINSTANCE_VICTIM, (Exception, 222, 333, 444)),
+        ((11, 22, 33, 44), dict(AT0=111, AT1=222, AN0=333, AN1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
     ]
 )
 def test__2(args, kwargs, _EXPECTED, values):

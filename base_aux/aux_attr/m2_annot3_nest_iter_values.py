@@ -3,7 +3,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class NestIter_AnnotValues(NestGAI_AttrAnycase):
+class NestIter_AnnotValues(NestGAI_AttrIC):
     """
     GOAL
     ----

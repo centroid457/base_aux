@@ -7,7 +7,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim1(NestGAI_AttrAnycase):
+class Victim1(NestGAI_AttrIC):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -30,12 +30,12 @@ victim2 = Victim2()
 
 
 # =====================================================================================================================
-class VictimDirect_Ok(NestGAI_AttrAnycase):
+class VictimDirect_Ok(NestGAI_AttrIC):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class VictimDirect_Fail(NestGAI_AttrAnycase):
+class VictimDirect_Fail(NestGAI_AttrIC):
     ATTR1: int
     ATTR2: int = 2
 
@@ -54,12 +54,12 @@ class VictimNested_OkCHild(VictimDirect_Fail):
     ATTR1: int = 1
 
 # -----------------------------------------------
-class DictDirect_Ok(dict, NestGAI_AttrAnycase):
+class DictDirect_Ok(dict, NestGAI_AttrIC):
     ATTR1: int = 1
     ATTR2: int = 2
 
 
-class DictDirect_Fail(dict, NestGAI_AttrAnycase):
+class DictDirect_Fail(dict, NestGAI_AttrIC):
     ATTR1: int
 
 
@@ -202,7 +202,7 @@ class Test__1:
 
 # =====================================================================================================================
 def test__all_defined2():
-    class Victim11(NestGAI_AttrAnycase):
+    class Victim11(NestGAI_AttrIC):
         ATTR1: int = 1
         ATTR2: int = 2
         ATTR01 = 11

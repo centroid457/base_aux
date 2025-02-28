@@ -214,7 +214,7 @@ class AttrLevel(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    Init_AnnotsAttrsByKwArgs
+    Init_AnnotsAttrByKwArgs
     """
     NOT_HIDDEN = None
     NOT_PRIVATE = auto()

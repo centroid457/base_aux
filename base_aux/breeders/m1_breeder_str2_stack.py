@@ -6,7 +6,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class BreederStrStack(NestGAI_AttrAnycase):
+class BreederStrStack(NestGAI_AttrIC):
     """
     CREATED SPECIALLY FOR
     ---------------------

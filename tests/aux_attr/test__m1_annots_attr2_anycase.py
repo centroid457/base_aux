@@ -5,7 +5,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim(NestGAI_AttrAnycase):
+class Victim(NestGAI_AttrIC):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"

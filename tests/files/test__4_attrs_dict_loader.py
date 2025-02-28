@@ -14,6 +14,7 @@ def test__File():
     data_attrs = AttrsDictTextFileLoader(text=INI_EXAMPLES.MESHED__TEXT, keypath=("s1")).resolve()
     print(data_attrs)
     assert data_attrs.a0 == "11"
+    assert data_attrs.A0 == "11"
 
 
 # =====================================================================================================================

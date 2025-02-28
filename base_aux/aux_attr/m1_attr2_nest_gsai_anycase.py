@@ -3,25 +3,25 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 
 # =====================================================================================================================
-class NestGA_AttrAnycase:
+class NestGA_AttrIC:
     def __getattr__(self, name) -> Any | NoReturn:
         return AttrAux(self).anycase__getattr(name)
 
 
 # class NestSA_AttrAnycase:
-#     # TODO: DEPRECATE!!! max depth recursion
+#     # TODO: DEPRECATE!!! max depth recursion ====================== IF NEED SET ANYCASE - USE DIRECT AnnotAux(obj).set*
 #     def __setattr__(self, name, value) -> None | NoReturn:
 #         return AttrAux(self).anycase__setattr(name, value)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class NestGSA_AttrAnycase(NestGA_AttrAnycase, NestSA_AttrAnycase):
+# class NestGSA_AttrAnycase(NestGA_AttrIC, NestSA_AttrAnycase):
 #     # TODO: DEPRECATE!!! max depth recursion
 #     pass
 
 
 # =====================================================================================================================
-class NestGI_AttrAnycase:
+class NestGI_AttrIC:
     def __getitem__(self, name) -> Any | NoReturn:
         return AttrAux(self).anycase__getitem(name)
 
@@ -33,13 +33,13 @@ class NestGI_AttrAnycase:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class NestGSI_AttrAnycase(NestGI_AttrAnycase, NestSI_AttrAnycase):
+# class NestGSI_AttrAnycase(NestGI_AttrIC, NestSI_AttrAnycase):
 #     # TODO: DEPRECATE!!! max depth recursion
 #     pass
 
 
 # =====================================================================================================================
-class NestGAI_AttrAnycase(NestGA_AttrAnycase, NestGI_AttrAnycase):
+class NestGAI_AttrIC(NestGA_AttrIC, NestGI_AttrIC):
     pass
 
 

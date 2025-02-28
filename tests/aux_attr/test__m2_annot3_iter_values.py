@@ -6,7 +6,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim1(NestGAI_AttrAnycase):
+class Victim1(NestGAI_AttrIC):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11

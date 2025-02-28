@@ -10,7 +10,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class PrivateBase(NestGAI_AttrAnycase, abc.ABC):
+class PrivateBase(NestGAI_AttrIC, abc.ABC):
     """Base class to get values from sources.
 
     :ivar SECTION: first level name in source, for ini - root section, for json - rootKey, for env - not used

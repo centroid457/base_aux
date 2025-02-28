@@ -56,7 +56,8 @@ class IterAux(NestInit_Source):
         # :return: actual item from collection
         #     None - if VALUE is unreachable/notFind
         """
-        if TypeAux(self.SOURCE).check__iterable_not_str():
+        # if TypeAux(self.SOURCE).check__iterable_not_str():
+        if isinstance(self.SOURCE, (list, tuple, dict, set)):
             values = self.SOURCE
         else:
             values = AttrAux(self.SOURCE).iter__not_private()
@@ -99,22 +100,21 @@ class IterAux(NestInit_Source):
                     source = source[address_original]
 
             elif isinstance(source, set):
-                msg = f"{source=},inconvenient type SET"
-                raise TypeError(msg)
+                raise TypeError(f"{source=}")
 
-            else:
+            elif isinstance(source, (list, tuple)):
                 try:
                     source = source[int(path_i)]
                     address_original = int(path_i)  # place last!
                 except:
-                    pass
+                    return
 
-                if address_original == NoValue:
-                    address_original = AttrAux(source).anycase__name_original(str(path_i))
-                    if address_original is None:
-                        return
-                    else:
-                        source = getattr(source, address_original)
+            else:
+                address_original = AttrAux(source).anycase__name_original(str(path_i))
+                if address_original is None:
+                    return
+                else:
+                    source = getattr(source, address_original)
 
             # -----------------------------
             result.append(address_original)

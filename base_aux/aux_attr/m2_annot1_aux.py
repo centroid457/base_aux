@@ -194,9 +194,9 @@ class AnnotsAux(NestInit_Source):
         iter only important user classes from mro
         """
         yield from TypeAux(self.SOURCE).iter_mro_user(
-            # NestGAI_AttrAnycase,
+            # NestGAI_AttrIC,
             # NestGSAI_AttrAnycase,
-            # NestGA_AttrAnycase, NestGI_AttrAnycase,
+            # NestGA_AttrIC, NestGI_AttrIC,
             # NestSA_AttrAnycase, NestSI_AttrAnycase,
         )
 
