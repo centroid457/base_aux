@@ -13,7 +13,7 @@ class FileAux:
 
     textWork use by yourself with TextAux
     """
-    FILEPATH: TYPING.PATH_FINAL
+    FILEPATH: TYPING.PATH_FINAL = None
     TEXT: str = ""       # keep here just for TextAux work!
 
     def __init__(self, filepath: TYPING.PATH_DRAFT, *args, **kwargs) -> None | NoReturn:
@@ -28,7 +28,7 @@ class FileAux:
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_exists(self) -> bool:
-        return self.FILEPATH.exists()
+        return self.FILEPATH and self.FILEPATH.exists()
 
     def ensure_dir(self) -> None:
         DirAux(self.FILEPATH.parent).create_dirtree()

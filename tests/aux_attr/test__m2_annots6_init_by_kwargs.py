@@ -10,7 +10,34 @@ EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrByKwArgs)
 
 
 class Test__NestInit:
-    def test__examples(self):
+    def test__notNested(self):
+        try:
+            Init_AnnotsAttrsByKwArgs()
+            # Init_AnnotsAttrsByKwArgsIc()
+            NestInit_AnnotsAttrByKwArgs()
+            # NestInit_AnnotsAttrByKwArgsIc()
+            assert True
+        except:
+            assert False
+
+        assert Init_AnnotsAttrsByKwArgs(a1=1).a1 == 1
+        assert NestInit_AnnotsAttrByKwArgs(a1=1).a1 == 1
+        try:
+            assert Init_AnnotsAttrsByKwArgs(a1=1).A1 == 1
+            assert False
+        except:
+            assert True
+
+        try:
+            assert NestInit_AnnotsAttrByKwArgs(a1=1).A1 == 1
+            assert False
+        except:
+            assert True
+
+        # assert Init_AnnotsAttrsByKwArgsIc(a1=1).a1 == 1
+        # assert Init_AnnotsAttrsByKwArgsIc(a1=1).A1 == 1
+
+    def test__Nested(self):
         class Example(NestInit_AnnotsAttrByKwArgs):
             A1: Any
             A2: Any = None

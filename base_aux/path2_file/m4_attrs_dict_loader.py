@@ -11,25 +11,27 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
-class DictTextFileLoader(TextFile, NestCall_Resolve):
+class AttrsDictTextFileLoader(TextFile, NestCall_Resolve):
     """
     GOAL
     ----
-    same as FileAux but with TextAux methods applied inplace!
+    load attrs as parsed dict
+    main usage is final key values!
+    used for get settings from file into NestInit_AnnotsAttrByKwArgsIc
     """
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = NestInit_AnnotsAttrByKwArgsIC
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = NestInit_AnnotsAttrByKwArgs
     STYLE: Any = DictTextFormat.AUTO
-    KEYPATH: Iterable[str, int]
+    KEYPATH: Iterable[str | int]
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             target: type | Any = None,
-            keypath: Iterable[str, int] = None,     # path to direct
+            keypath: Iterable[str | int] = None,     # path to exact dict
             style: DictTextFormat = None,
-            *args, **kwargs
+            **kwargs,
     ) -> None | NoReturn:
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
 
         self.init_style(style)
 
@@ -65,6 +67,7 @@ class DictTextFileLoader(TextFile, NestCall_Resolve):
         # load args -------
         if TypeAux(self.TARGET).check__class() and issubclass(self.TARGET, NestInit_AnnotsAttrByKwArgs):
             # used for check Annots all inited!
+
             result = self.TARGET(**data)
         else:
             AnnotsAux(self.TARGET).set_annots_attrs__by_args_kwargs(**data)

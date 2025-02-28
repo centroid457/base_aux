@@ -5,7 +5,7 @@ from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class AttrTemplate_Direct(NestInit_AnnotsAttrByKwArgsIC, NestEq_Attrs):     # TODO: decide to delete! use only dynamic??
+class AttrTemplate_Direct(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):     # TODO: decide to delete! use only dynamic??
     """
     GOAL
     ----

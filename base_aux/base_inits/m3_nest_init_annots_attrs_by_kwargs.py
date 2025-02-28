@@ -39,13 +39,13 @@ class NestInit_AnnotsAttrByKwArgs:     # NOTE: dont create AnnotsOnly/AttrsOnly!
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NestInit_AnnotsAttrByKwArgsIC(NestInit_AnnotsAttrByKwArgs, NestGSAI_AttrAnycase):
-    """
-    SAME AS - 1=parent
-    -------
-    but attrs access will be IgnoreCased
-    """
-    pass
+# class NestInit_AnnotsAttrByKwArgsIc(NestInit_AnnotsAttrByKwArgs, NestGSAI_AttrAnycase):   # IC - IS NOT WORKING!!!
+#     """
+#     SAME AS - 1=parent
+#     -------
+#     but attrs access will be IgnoreCased
+#     """
+#     pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -75,9 +75,6 @@ def examples__NestInit():
 
 
 # =====================================================================================================================
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 @final
 class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     """
@@ -107,6 +104,11 @@ class Init_AnnotsAttrsByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     need rename just for Attrs*!?
     """
     # DONT ADD ANY NOT HIDDEN ATTRS!!!!
+
+
+# @final
+# class Init_AnnotsAttrsByKwArgsIc(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
+#     pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------

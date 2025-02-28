@@ -14,7 +14,7 @@ class NestEq_Attrs:
     cmp second - resolveExx!!!
     """
     def __eq__(self, other: Any) -> bool:
-        # if isinstance() NestInit_AnnotsAttrByKwArgsIC == NestInit_AnnotsAttrByKwArgsIC:
+        # if isinstance() NestInit_AnnotsAttrByKwArgs == NestInit_AnnotsAttrByKwArgs:
         #     # check by names
 
         for attr in AttrAux(self).iter__not_private():

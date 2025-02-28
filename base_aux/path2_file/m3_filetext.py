@@ -22,7 +22,8 @@ class TextFile(FileAux, TextAux):
     ) -> None | NoReturn:
         # super().__init__(*args, **kwargs)     # NOTE: dont use here!??? because init is overWriten here!
 
-        self.FILEPATH = pathlib.Path(filepath)
+        if filepath:
+            self.FILEPATH = pathlib.Path(filepath)
         if self.check_exists():
             if self.FILEPATH.is_file():
                 self.read__text()
@@ -31,6 +32,8 @@ class TextFile(FileAux, TextAux):
 
         if text is not None:
             self.TEXT = str(text)
+        # else:
+        #     self.TEXT
 
 
 # =====================================================================================================================
