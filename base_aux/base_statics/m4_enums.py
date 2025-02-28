@@ -10,31 +10,31 @@ see _examples below and tests to understand work
 
 
 # =====================================================================================================================
-class When2(NestEqIc_Enum):
+class When2(NestEq_Enum):
     BEFORE = auto()
     AFTER = auto()
 
 
-class When3(NestEqIc_Enum):
+class When3(NestEq_Enum):
     BEFORE = auto()
     AFTER = auto()
     MIDDLE = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Where2(NestEqIc_Enum):
+class Where2(NestEq_Enum):
     FIRST = auto()
     LAST = auto()
 
 
-class Where3(NestEqIc_Enum):
+class Where3(NestEq_Enum):
     FIRST = auto()
     LAST = auto()
     MIDDLE = auto()
 
 
 # =====================================================================================================================
-class CallableResolve(NestEqIc_Enum):
+class CallableResolve(NestEq_Enum):
     DIRECT = auto()
     EXX = auto()
     RAISE = auto()
@@ -46,7 +46,7 @@ class CallableResolve(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-class ProcessState(NestEqIc_Enum):
+class ProcessState(NestEq_Enum):
     """
     GOAL
     ----
@@ -66,7 +66,7 @@ class ProcessState(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-class FormIntExt(NestEqIc_Enum):
+class FormIntExt(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -77,7 +77,7 @@ class FormIntExt(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-class BoolCumulate(NestEqIc_Enum):
+class BoolCumulate(NestEq_Enum):
     """
     GOAL
     ----
@@ -94,19 +94,19 @@ class BoolCumulate(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-class PathType(NestEqIc_Enum):
+class PathType(NestEq_Enum):
     FILE = auto()
     DIR = auto()
     ALL = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class AppendType(NestEqIc_Enum):
+# class AppendType(NestEq_Enum):
 #     NEWLINE = auto()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class DictTextFormat(NestEqIc_Enum):
+class DictTextFormat(NestEq_Enum):
     AUTO = None     # by trying all variants
     EXTENTION = 0
 
@@ -116,7 +116,7 @@ class DictTextFormat(NestEqIc_Enum):
     STR = "str"     # str(dict)
 
 
-class TextStyle(NestEqIc_Enum):
+class TextStyle(NestEq_Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -134,7 +134,7 @@ class TextStyle(NestEqIc_Enum):
     MD = "md"
 
 
-class CmtStyle(NestEqIc_Enum):
+class CmtStyle(NestEq_Enum):
     """
     GOAL
     ----
@@ -148,7 +148,7 @@ class CmtStyle(NestEqIc_Enum):
     REM = "rem"
 
 
-class PatCoverStyle(NestEqIc_Enum):
+class PatCoverStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -160,14 +160,14 @@ class PatCoverStyle(NestEqIc_Enum):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class NumType(NestEqIc_Enum):
+class NumType(NestEq_Enum):
     INT = int
     FLOAT = float
     BOTH = None
 
 
 # =====================================================================================================================
-class FPoint(NestEqIc_Enum):
+class FPoint(NestEq_Enum):
     """
     GOAL
     ----
@@ -186,7 +186,7 @@ TYPE__FPOINT_DRAFT = FPoint | str | None
 
 
 # =====================================================================================================================
-class CmpType(NestEqIc_Enum):
+class CmpType(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -199,7 +199,7 @@ class CmpType(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-class AttrStyle(NestEqIc_Enum):
+class AttrStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -210,7 +210,7 @@ class AttrStyle(NestEqIc_Enum):
     ANNOTS_ONLY = auto()
 
 
-class AttrLevel(NestEqIc_Enum):
+class AttrLevel(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -222,7 +222,7 @@ class AttrLevel(NestEqIc_Enum):
 
 
 # =====================================================================================================================
-# class Represent(NestEqIc_EnumNestEqIc_Enum):
+# class Represent(NestEq_EnumNestEqIc_Enum):
 #     NAME = auto()
 #     OBJECT = auto()
 

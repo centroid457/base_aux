@@ -1,6 +1,6 @@
 import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.base_statics.m4_enum0_nest_eq import NestEqIc_Enum
+from base_aux.base_statics.m4_enum0_nest_eq import NestEq_Enum
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.base_statics.m4_enums import *
@@ -13,7 +13,7 @@ class VictimStd(Enum):
     A1 = 1
 
 
-class VictimEq(NestEqIc_Enum):
+class VictimEq(NestEq_Enum):
     NONE = None
     A1 = 1
     TUPLE = (1, 2)
@@ -102,7 +102,7 @@ class Test_EnumEq:
             (VictimEq, "STR_LOWER", (False, False)),
 
             (VictimEq("str_lower"), "str_lower", (True, Exception)),
-            (VictimEq("str_lower"), "STR_LOWER", (True, Exception)),
+            (VictimEq("str_lower"), "STR_LOWER", (False, Exception)),
 
             # DIFF --------
             (VictimEq.A1, VictimEq.NONE, (False, Exception)),

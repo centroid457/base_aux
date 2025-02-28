@@ -371,49 +371,7 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:   # FIXME: if NONE - return TEXT???
-        # PREPARE -----------------------------------------------------------------
-        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
-        # so it just same process as re.sub by one func for several values
-
-        # QUOTES ------------
-        self.sub__regexp("\'", "\"")
-
-        # BOOL ------------
-        self.sub__word(r"True", "true")
-        self.sub__word(r"False", "false")
-        self.sub__word(r"None", "null")
-
-        self.sub__word(r"\s*:\s*\"null\"", ":null")
-        self.sub__word(r"\s*:\s*\"true\"", ":true")
-        self.sub__word(r"\s*:\s*\"false\"", ":false")
-
-        # NUM KEYS ------------
-        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
-
-        # RESULT -----------------------------------------------------------------
-        return self.parse__dict_json()
-
-    # =================================================================================================================
-    def parse__dict(self, dict_format: DictTextFormat) -> TYPING.DICT_STR_ELEM | None:
-        pass
-
-    def parse__dict_csv(self) -> TYPING.DICT_STR_ELEM | None:
-        raise NotImplemented
-
-    def parse__dict_ini(self) -> TYPING.DICT_STR_STR | None:
-        ini = ConfigParserMod()
-
-        try:
-            ini.read_string(self.TEXT)
-        except Exception as exx:
-            msg = f"[CRITICAL] incorrect file!{exx!r}"
-            print(msg)
-            return
-
-        return ini.to_dict()
-
-    def parse__dict_json(self) -> TYPING.DICT_STR_ELEM | TYPING.ELEMENTARY | None:     # NoValue ????
+    def parse__json(self) -> TYPING.DICT_STR_ELEM | TYPING.ELEMENTARY | None:  # NoValue ????
         """
         NOTE
         ----
@@ -433,6 +391,77 @@ class TextAux:
         except Exception as exx:
             print(f"{exx!r}")
             return
+
+    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:   # FIXME: if NONE - return TEXT???
+        # PREPARE -----------------------------------------------------------------
+        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
+        # so it just same process as re.sub by one func for several values
+
+        # JSON-QUOTES ------------
+        self.sub__regexp("\'", "\"")
+
+        # JSON-BOOL ------------
+        self.sub__word(r"True", "true")
+        self.sub__word(r"False", "false")
+        self.sub__word(r"None", "null")
+
+        # JSON-dict VALUES ------------
+        self.sub__word(r"\s*:\s*\"null\"", ":null")
+        self.sub__word(r"\s*:\s*\"true\"", ":true")
+        self.sub__word(r"\s*:\s*\"false\"", ":false")
+
+        # NUM KEYS ------------
+        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
+
+        # RESULT -----------------------------------------------------------------
+        return self.parse__json()
+
+    # =================================================================================================================
+    def parse__dict(self, style: DictTextFormat = DictTextFormat.AUTO) -> TYPING.DICT_STR_ELEM | None:
+        if style == DictTextFormat.AUTO:
+            return self.parse__dict_auto()
+
+        elif style == DictTextFormat.JSON:
+            return self.parse__dict_json()
+
+        elif style == DictTextFormat.INI:
+            return self.parse__dict_ini()
+
+        elif style == DictTextFormat.CSV:
+            return self.parse__dict_csv()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def parse__dict_auto(self) -> TYPING.DICT_STR_ELEM | TYPING.DICT_STR_STR | None:
+        for style in [DictTextFormat.JSON, DictTextFormat.INI, DictTextFormat.CSV]:     # order is important!
+            result = self.parse__dict(style)
+            if result:
+                return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def parse__dict_json(self) -> TYPING.DICT_STR_ELEM | None:     # NoValue ????
+        """
+        SAME AS parse__json BUT
+        -----------------------
+        if result is not dict - return None!
+        """
+        result = self.parse__json()
+        if isinstance(result, dict):
+            return result
+
+    def parse__dict_ini(self) -> TYPING.DICT_STR_STR | None:
+        ini = ConfigParserMod()
+
+        try:
+            ini.read_string(self.TEXT)
+            return ini.to_dict()
+        except Exception as exx:
+            msg = f"[CRITICAL] incorrect file!{exx!r}"
+            print(msg)
+            return
+
+    def parse__dict_csv(self) -> TYPING.DICT_STR_STR | None:
+        return
+        # raise NotImplemented
 
 
 # =====================================================================================================================
