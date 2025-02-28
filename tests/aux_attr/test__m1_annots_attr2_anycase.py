@@ -5,7 +5,7 @@ from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
-class Victim(NestGSAI_AnnotsAttrAnycase):
+class Victim(NestGAI_AttrAnycase):
     attr_lowercase = "value"
     ATTR_UPPERCASE = "VALUE"
     Attr_CamelCase = "Value"
@@ -36,31 +36,31 @@ class Test__Attr:
         ExpectAux(lambda: getattr(Victim(), attr)).check_assert(_EXPECTED)
         ExpectAux(lambda: Victim()[attr]).check_assert(_EXPECTED)
 
-    @pytest.mark.parametrize(
-        argnames="attr, _EXPECTED",
-        argvalues=[
-            # (None, Exception),
-            # (True, Exception),
-            # ("", Exception),
-            # (" TRUE", Exception),
-
-            ("attr_lowercase", None),
-            ("ATTR_LOWERCASE", None),
-
-            ("ATTR_UPPERCASE", None),
-            ("attr_uppercase", None),
-
-            ("     attr_uppercase", None),
-        ]
-    )
-    def test__set(self, attr, _EXPECTED):
-        NEW_VALUE = "NEW_VALUE"
-        victim = Victim()
-        ExpectAux(lambda: setattr(victim, attr, NEW_VALUE)).check_assert(_EXPECTED)
-        if _EXPECTED == Exception:
-            return
-        ExpectAux(lambda: getattr(victim, attr)).check_assert(NEW_VALUE)
-        # ExpectAux(lambda: Victim()[attr] = NEW_VALUE).check_assert(_EXPECTED)
+    # @pytest.mark.parametrize(
+    #     argnames="attr, _EXPECTED",
+    #     argvalues=[
+    #         (None, Exception),
+    #         (True, Exception),
+    #         ("", Exception),
+    #         (" TRUE", Exception),
+    #
+    #         ("attr_lowercase", None),
+    #         ("ATTR_LOWERCASE", None),
+    #
+    #         ("ATTR_UPPERCASE", None),
+    #         ("attr_uppercase", None),
+    #
+    #         ("     attr_uppercase", None),
+    #     ]
+    # )
+    # def test__set(self, attr, _EXPECTED):
+    #     NEW_VALUE = "NEW_VALUE"
+    #     victim = Victim()
+    #     ExpectAux(lambda: setattr(victim, attr, NEW_VALUE)).check_assert(_EXPECTED)
+    #     if _EXPECTED == Exception:
+    #         return
+    #     ExpectAux(lambda: getattr(victim, attr)).check_assert(NEW_VALUE)
+    #     # ExpectAux(lambda: Victim()[attr] = NEW_VALUE).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

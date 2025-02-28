@@ -1,12 +1,11 @@
 from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.base_inits.m1_nest_init_source import *
-from base_aux.aux_argskwargs.m1_argskwargs import *
-
-from .m1_attr1_aux import AttrAux
 from base_aux.base_statics.m1_types import *
-from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
+
+from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.aux_iter.m1_iter_aux import *
+from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 
 
 # =====================================================================================================================
@@ -195,10 +194,10 @@ class AnnotsAux(NestInit_Source):
         iter only important user classes from mro
         """
         yield from TypeAux(self.SOURCE).iter_mro_user(
-            NestGAI_AttrAnycase,
-            NestGSAI_AttrAnycase,
-            NestGA_AttrAnycase, NestGI_AttrAnycase,
-            NestSA_AttrAnycase, NestSI_AttrAnycase,
+            # NestGAI_AttrAnycase,
+            # NestGSAI_AttrAnycase,
+            # NestGA_AttrAnycase, NestGI_AttrAnycase,
+            # NestSA_AttrAnycase, NestSI_AttrAnycase,
         )
 
     def iter_names(self) -> Iterable[str]:
