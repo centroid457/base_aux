@@ -17,10 +17,12 @@ class VictimEq(NestEq_Enum):
     NONE = None
     A1 = 1
     TUPLE = (1, 2)
+    STR_LOWER = "str_lower"
+    STR_UPPER = "STR_UPPER"
 
 
 # =====================================================================================================================
-class Test_Enum:
+class Test_EnumStd:
     @pytest.mark.parametrize(
         argnames="source, other, _EXPECTED",
         argvalues=[
@@ -95,12 +97,20 @@ class Test_EnumEq:
             (VictimEq.TUPLE, (1,2), (True, Exception)),
             (VictimEq.TUPLE, VictimEq((1,2)), (True, Exception)),
 
+            # STR --------
+            (VictimEq, "str_lower", (False, True)),
+            (VictimEq, "STR_LOWER", (False, False)),
+
+            (VictimEq("str_lower"), "str_lower", (True, Exception)),
+            (VictimEq("str_lower"), "STR_LOWER", (True, Exception)),
+
             # DIFF --------
             (VictimEq.A1, VictimEq.NONE, (False, Exception)),
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):
-        ExpectAux(source == other).check_assert(_EXPECTED[0])
+        funk_link = lambda: source == other
+        ExpectAux(funk_link).check_assert(_EXPECTED[0])
 
         func_link = lambda x: x in source
         ExpectAux(func_link, Args(other)).check_assert(_EXPECTED[1])

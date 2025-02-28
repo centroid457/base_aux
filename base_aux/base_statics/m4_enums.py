@@ -107,7 +107,8 @@ class PathType(NestEq_Enum):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class DictTextFormat(NestEq_Enum):
-    EXTENTION = None
+    AUTO = None     # by trying all variants
+    EXTENTION = 0
 
     CSV = "csv"
     INI = "ini"

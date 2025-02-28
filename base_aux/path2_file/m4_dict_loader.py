@@ -18,14 +18,14 @@ class DictTextFileLoader(TextFile, NestCall_Resolve):
     same as FileAux but with TextAux methods applied inplace!
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = NestInit_AnnotsAttrByKwArgsIC
-    STYLE: Any = None
+    STYLE: Any = DictTextFormat.AUTO
     KEYPATH: Iterable[str, int]
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             target: type | Any = None,
-            style: DictTextFormat = DictTextFormat.EXTENTION,
+            style: DictTextFormat = None,
             keypath: Iterable[str, int] = None,     # path to direct
             *args, **kwargs
     ) -> None | NoReturn:
@@ -48,7 +48,7 @@ class DictTextFileLoader(TextFile, NestCall_Resolve):
                     self.STYLE = item
                     break
 
-        if self.STYLE == None:
+        if self.STYLE is None:
             pass
 
     # -----------------------------------------------------------------------------------------------------------------

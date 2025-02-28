@@ -2,35 +2,40 @@ from enum import Enum
 
 
 # =====================================================================================================================
-class NestEq_Enum(Enum):
+class NestEqIc_Enum(Enum):
     """
+    NOTE
+    ----
+    work IC only on Eq! not working with Contains and Init!!! need edit Metaclass!
+
     GOAL
     ----
     add user friendly cmp objects with final values
 
     VictimEq(1) == 1    # for std object it is False
     """
-
-    # TODO: add EqLower???
-    # TODO: add Contain classmeth???
+    # TODO: add Contain classmeth???  cant understand! need metaclass!
 
     def __eq__(self, other) -> bool:
-        result = False
         if isinstance(other, self.__class__):
-            return self.value == other.value
+            return self.value == other.value        # or str(self.value).lower() == str(other.value).lower()    # NO!!!
 
-        if other in self.__class__:
-            result = True
-        try:
-            if other in self:
-                result = True
-        except:
-            pass
-
-        if result:
-            return other == self.value or self == self.__class__(other)
         else:
-            return False
+            for enum_i in self.__class__:
+                if str(enum_i.value).lower() == str(other).lower():
+                    return True
+        return False
+
+    # @classmethod
+    # def __contains__(cls, other) -> bool:
+    #     if isinstance(other, cls):
+    #         other = other.value
+    #
+    #     for enum_i in cls:
+    #         if enum_i.value == other or str(enum_i.value).lower() == str(other).lower():
+    #             return True
+    #     else:
+    #         return False
 
 
 # =====================================================================================================================
