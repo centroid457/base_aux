@@ -54,15 +54,8 @@ class DictTextFileLoader(TextFile, NestCall_Resolve):
     # -----------------------------------------------------------------------------------------------------------------
     def resolve(self) -> NestInit_AnnotsAttrByKwArgs | Any | NoReturn:
         # get dict -------
-        data = {}
-
-        if self.STYLE == DictTextFormat.INI:
-            data = self.parse__dict_ini()
-
-        elif self.STYLE == DictTextFormat.JSON:
-            data = self.parse__dict_json()
-
-        else:
+        data = self.parse__dict(self.STYLE)
+        if data is None:
             raise Exx__Incompatible(f"{self.STYLE=}/{self.TEXT=}")
 
         # load keypath ---

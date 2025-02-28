@@ -430,6 +430,9 @@ class TextAux:
         elif style == DictTextFormat.CSV:
             return self.parse__dict_csv()
 
+        else:
+            raise NotImplementedError(f"{style=}")
+
     # -----------------------------------------------------------------------------------------------------------------
     def parse__dict_auto(self) -> TYPING.DICT_STR_ELEM | TYPING.DICT_STR_STR | None:
         for style in [DictTextFormat.JSON, DictTextFormat.INI, DictTextFormat.CSV]:     # order is important!
