@@ -207,7 +207,7 @@ class AttrAux(NestInit_Source):
         NoReturn - in case of not accepted names when setattr
         """
         if not isinstance(name, str):
-            raise AttributeError(name)
+            raise TypeError(name)
 
         name = name.strip()
         if name in ["", ]:
