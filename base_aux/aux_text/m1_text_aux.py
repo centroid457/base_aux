@@ -88,6 +88,32 @@ class TextAux:
         # self.TEXT = self.TEXT.replace('“', ' ')
         return self.TEXT
 
+    def fix__json(self) -> str:
+        # PREPARE -----------------------------------------------------------------
+        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
+        # so it just same process as re.sub by one func for several values
+
+        # JSON-COMMAS ------------
+        self.sub__regexp(r',\s*(?=\})', '')
+
+        # JSON-QUOTES ------------
+        self.sub__regexp("\'", "\"")
+
+        # JSON-BOOL ------------
+        self.sub__word(r"True", "true")
+        self.sub__word(r"False", "false")
+        self.sub__word(r"None", "null")
+
+        # JSON-dict VALUES ------------
+        self.sub__word(r"\s*:\s*\"null\"", ":null")
+        self.sub__word(r"\s*:\s*\"true\"", ":true")
+        self.sub__word(r"\s*:\s*\"false\"", ":false")
+
+        # NUM KEYS ------------
+        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
+
+        return self.TEXT
+
     # EDIT ============================================================================================================
     def clear__regexps(self, *pats: str, **kwargs) -> str:
         for pat in pats:
@@ -371,11 +397,11 @@ class TextAux:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def parse__json(self) -> TYPING.DICT_STR_ELEM | TYPING.ELEMENTARY | None:  # NoValue ????
+    def parse__json(self) -> TYPING.DICT_STR_ELEM | TYPING.ELEMENTARY | NoValue:  # NoValue ???? yes to separate from None as parsed object
         """
         NOTE
         ----
-        intended source is json dumped!
+        intended source is json dumped! or stringed!
 
         GOAL
         ----
@@ -385,35 +411,15 @@ class TextAux:
         by now it works correct only with single elementary values like INT/FLOAT/BOOL/NONE
         for collections it may work but may not work correctly!!! so use it by your own risk and conscious choice!!
         """
+        self.fix__json()
         try:
             result = json.loads(self.TEXT)
             return result
         except Exception as exx:
             print(f"{exx!r}")
-            return
+            return NoValue
 
-    def parse__object_stringed(self) -> TYPING.ELEMENTARY | None:   # FIXME: if NONE - return TEXT???
-        # PREPARE -----------------------------------------------------------------
-        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
-        # so it just same process as re.sub by one func for several values
-
-        # JSON-QUOTES ------------
-        self.sub__regexp("\'", "\"")
-
-        # JSON-BOOL ------------
-        self.sub__word(r"True", "true")
-        self.sub__word(r"False", "false")
-        self.sub__word(r"None", "null")
-
-        # JSON-dict VALUES ------------
-        self.sub__word(r"\s*:\s*\"null\"", ":null")
-        self.sub__word(r"\s*:\s*\"true\"", ":true")
-        self.sub__word(r"\s*:\s*\"false\"", ":false")
-
-        # NUM KEYS ------------
-        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
-
-        # RESULT -----------------------------------------------------------------
+    def parse__object_stringed(self) -> TYPING.JSON_ANY | NoValue:
         return self.parse__json()
 
     # =================================================================================================================

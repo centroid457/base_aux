@@ -19,25 +19,25 @@ class Test__Ini:
         ]
     )
     def test__to_dict(self, source, _EXPECTED):
-        obj = ConfigParserMod()
+        victim = ConfigParserMod()
 
         try:
-            obj.read_string(source)
+            victim.read_string(source)
         except Exception as exx:
             ExpectAux(exx).check_assert(_EXPECTED)
             return
 
-        ExpectAux(obj.to_dict__direct).check_assert(_EXPECTED[0])
-        ExpectAux(obj.to_dict__merged).check_assert(_EXPECTED[1])
+        ExpectAux(victim.to_dict__direct).check_assert(_EXPECTED[0])
+        ExpectAux(victim.to_dict__merged).check_assert(_EXPECTED[1])
 
 
 def _explore():
-    config = ConfigParserMod()
-    config.set("DEFAULT", "n0", "000")
-    config.add_section("SEC1")
-    config.set("SEC1", "n1", "111")
-    result = config.to_dict__direct()
-    print(config.to_dict__merged())
+    victim = ConfigParserMod()
+    victim.set("DEFAULT", "n0", "000")
+    victim.add_section("SEC1")
+    victim.set("SEC1", "n1", "111")
+    result = victim.to_dict__direct()
+    print(victim.to_dict__merged())
 
 
 # =====================================================================================================================

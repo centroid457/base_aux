@@ -86,9 +86,9 @@ class TYPING:
     # -----------------------------------------------------------------------------------------------------------------
     DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values
     DICT_STR_ANY = dict[str, Any]               # just to show - dict could be any! on values! not just an elementary1
-    DICT_STR_ELEM = dict[str, ELEMENTARY]       # just to show - parsed by json - dict
-    DICT_STR_STR = dict[str, str]               # just to show - parsed by ini!
-    DICT_JSON_ANY = ELEMENTARY | DICT_STR_ELEM  # just to show - parsed by json - any object
+    DICT_STR_ELEM = DICT_JSON_ANY = dict[str, ELEMENTARY]       # just to show - parsed by json - dict
+    DICT_STR_STR = DICT_INI = dict[str, str]               # just to show - parsed by ini!
+    JSON_ANY = ELEMENTARY | DICT_STR_ELEM  # just to show - parsed by json - any object
 
     # -----------------------------------------------------------------------------------------------------------------
 
