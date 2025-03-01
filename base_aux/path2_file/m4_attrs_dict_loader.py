@@ -1,3 +1,4 @@
+import pathlib
 from typing import *
 
 from base_aux.path2_file.m3_filetext import *
@@ -11,7 +12,7 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
-class AttrsDictTextFileLoader(TextFile, NestCall_Resolve):
+class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     """
     GOAL
     ----
@@ -21,15 +22,19 @@ class AttrsDictTextFileLoader(TextFile, NestCall_Resolve):
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
     STYLE: Any = DictTextFormat.AUTO
-    KEYPATH: Iterable[str | int]
+    KEYPATH: Iterable[str | int] = ()
+
+    FILEPATH: pathlib.Path
+    TEXT: str
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             target: type | Any = None,
-            keypath: Iterable[str | int] = None,     # path to exact dict
+            keypath: Iterable[str | int] = None,     # path to exact dict in dict
             style: DictTextFormat = None,
-            **kwargs,
+
+            **kwargs,       # init File/Text
     ) -> None | NoReturn:
         super().__init__(**kwargs)
 
@@ -38,7 +43,8 @@ class AttrsDictTextFileLoader(TextFile, NestCall_Resolve):
         if target is not None:
             self.TARGET = target
 
-        self.KEYPATH = keypath or ()
+        if keypath is not None:
+            self.KEYPATH = keypath
 
     def init_style(self, style: DictTextFormat) -> None:
         if style is not None:
