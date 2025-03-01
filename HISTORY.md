@@ -250,7 +250,7 @@
 
 0.0.6 (2024/11/06 15:56:06)
 ------------------------------
-- [classes] add Lambda+NestInit_AttrsLambdasResolve  
+- [classes] add Lambda+NestInit_AttrsLambdaResolve  
 - [classes.Valid] change REVERSE_LINK from simple static  
 
 0.0.5 (2024/11/05 10:33:43)

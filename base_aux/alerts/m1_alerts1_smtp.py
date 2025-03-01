@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from base_aux.lambdas.m1_lambdas import Lambda
 from base_aux.privates.m6_derivative_base import *
 from base_aux.privates.m5_auto import *
-from base_aux.aux_attr.m1_attr3_nest_lambdas_resolve import NestInit_AttrsLambdasResolve
+from base_aux.aux_attr.m1_attr3_nest_lambdas_resolve import NestInit_AttrsLambdaResolve
 
 
 # =====================================================================================================================
@@ -38,7 +38,7 @@ class SmtpServers:
 
 
 # =====================================================================================================================
-class AlertSmtp(NestInit_AttrsLambdasResolve, AlertBase):
+class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
     """SMTP realisation for sending msg (email).
     """
     # SETTINGS ------------------------------------

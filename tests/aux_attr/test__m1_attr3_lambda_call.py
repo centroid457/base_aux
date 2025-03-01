@@ -36,7 +36,7 @@ def test__common__define(value, _EXPECTED):
 )
 def test__special__define_and_init(value, _EXPECTED):
     # DEFINE ---------------------
-    class Victim(NestInit_AttrsLambdasResolve):
+    class Victim(NestInit_AttrsLambdaResolve):
         ATTR0 = 0
         ATTR_INT = Lambda(int, value)
         ATTR_STR = Lambda(str, value)

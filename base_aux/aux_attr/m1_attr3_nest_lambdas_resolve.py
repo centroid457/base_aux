@@ -1,10 +1,11 @@
 from typing import *
 
 from base_aux.lambdas.m1_lambdas import Lambda
+from base_aux.base_resolver.m1_resolver import *
 
 
 # =====================================================================================================================
-class NestInit_AttrsLambdasResolve:
+class NestInit_AttrsLambdaResolve:
     """
     find and call all Lambda aux_attr On class inition
     GOAL
@@ -30,7 +31,7 @@ class NestInit_AttrsLambdasResolve:
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         for attr in dir(self):
             value = getattr(self, attr)
-            if isinstance(value, Lambda):
+            if isinstance(value, (Lambda, NestCall_Resolve)):
                 setattr(self, attr, value())
 
         super().__init__(*args, **kwargs)

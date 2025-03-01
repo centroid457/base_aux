@@ -18,7 +18,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
 
     GOAL
     ----
-    1. (MAIN) delay probable raising on direct func execution (used with NestInit_AttrsLambdasResolve)
+    1. (MAIN) delay probable raising on direct func execution (used with NestInit_AttrsLambdaResolve)
     like creating aux_types on Cls attributes
         class Cls:
             ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
@@ -42,13 +42,13 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
 
     SPECIALLY CREATED FOR
     ---------------------
-    Item for using with NestInit_AttrsLambdasResolve
+    Item for using with NestInit_AttrsLambdaResolve
 
     WHY NOT 1=simple LAMBDA?
     ------------------------
     extremely good point!
     but
-    1. in case of at least NestInit_AttrsLambdasResolve you cant distinguish method or callable attribute!
+    1. in case of at least NestInit_AttrsLambdaResolve you cant distinguish method or callable attribute!
     so you explicitly define attributes/aux_types for later constructions
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 
