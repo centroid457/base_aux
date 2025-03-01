@@ -17,6 +17,9 @@ class NestEq_Attrs:
         # if isinstance() NestInit_AnnotsAttrByKwArgs == NestInit_AnnotsAttrByKwArgs:
         #     # check by names
 
+        if other is None:
+            return False
+
         for attr in AttrAux(self).iter__not_private():
             # 1=cmp direct --------
             value_self_direct = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.DIRECT)
