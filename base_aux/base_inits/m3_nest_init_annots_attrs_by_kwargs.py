@@ -105,6 +105,21 @@ class Init_AnnotsAttrByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     need rename just for Attrs*!?
     """
     # DONT ADD ANY NOT HIDDEN ATTRS!!!!
+    def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
+        result = ""
+        for attr_name in AttrAux(self).iter__not_private():
+            if result:
+                result += ","
+            elif not result:
+                result += f"{self.__class__.__name__}("
+            value = getattr(self, attr_name)
+            result += f"{attr_name}={value}"
+
+        result += ")"
+        return result
+
+    def __repr__(self):       # it can used only in FINAL!!! dont use in Nest*!!!
+        return str(self)
 
 
 # @final
