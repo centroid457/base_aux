@@ -154,6 +154,39 @@ class EqValid_AttrsByKwargs(EqValid_Base):
     VALIDATOR = Validators.AttrsByKwargs
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# @final
+# class EqValid_AttrsByObj(EqValid_Base):
+#     VALIDATOR = Validators.AttrsByObj
+#     ATTR_LEVEL: AttrLevel = AttrLevel.NOT_PRIVATE
+
+
+@final
+class EqValid_AttrsByObjNotPrivate(EqValid_Base):
+    VALIDATOR = Validators.AttrsByObj
+    ATTR_LEVEL: AttrLevel = AttrLevel.NOT_PRIVATE
+
+
+@final
+class EqValid_AttrsByObjNotHidden(EqValid_Base):
+    VALIDATOR = Validators.AttrsByObj
+    ATTR_LEVEL: AttrLevel = AttrLevel.NOT_HIDDEN
+
+
+def _explore():
+    class Cls:
+        o = 1
+        _h = 1
+        __p = 1
+
+    source = Cls()
+    other = Cls()
+    ev = EqValid_AttrsByObjNotPrivate(source)
+    print(f"{ev=}")
+    print(f"{ev == other}")
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_AnnotsAllExists(EqValid_Base):
     VALIDATOR = Validators.AnnotsAllExists
@@ -161,7 +194,7 @@ class EqValid_AnnotsAllExists(EqValid_Base):
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    pass
+    _explore()
 
 
 # =====================================================================================================================

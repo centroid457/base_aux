@@ -263,19 +263,43 @@ def test__regexp_manual():
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="kwargs, other, _EXPECTED",
+    argnames="source, other, _EXPECTED",
     argvalues=[
         # (dict(a1=1), True, False),
-        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=11), False),
-        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=1), True),
-        (dict(a1=1), NestInit_AnnotsAttrByKwArgs(a1=1, b2=2), True),
+        (dict(a1=1), dict(a1=11), False),
+        (dict(a1=1), dict(a1=1), True),
+        (dict(a1=1), dict(a1=1, b2=2), True),
 
-        (dict(a1=1, a2=1), NestInit_AnnotsAttrByKwArgs(a1=1), False),
-        (dict(a1=1, a2=1), NestInit_AnnotsAttrByKwArgs(A1=1, A2=1), True),
+        (dict(a1=1, a2=1), dict(a1=1), False),
+        (dict(a1=1, a2=1), dict(A1=1, A2=1), True),
     ]
 )
-def test__AttrsByKwargs(kwargs, other, _EXPECTED):
-    ExpectAux(EqValid_AttrsByKwargs(**kwargs) == other).check_assert(_EXPECTED)
+def test__AttrsByKwargs(source, other, _EXPECTED):
+    ExpectAux(EqValid_AttrsByKwargs(**source) == NestInit_AnnotsAttrByKwArgs(**other)).check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="source, other, _EXPECTED",
+    argvalues=[
+        # OBVIOUS ------
+        (dict(a1=1), dict(a1=11), (False, False)),
+        (dict(a1=1), dict(a1=1), (True, True)),
+        (dict(a1=1), dict(a1=1, b2=2), (True, True)),
+
+        (dict(a1=1, a2=1), dict(a1=1), (False, False)),
+        (dict(a1=1, a2=1), dict(A1=1, A2=1), (True, True)),
+
+        # MESHED LEVELS ------
+        (dict(a1=1, _a2=2), dict(a1=1), (False, True)),
+    ]
+)
+def test__AttrsByObj(source, other, _EXPECTED):
+    ExpectAux(
+        EqValid_AttrsByObjNotPrivate(NestInit_AnnotsAttrByKwArgs(**source)) == NestInit_AnnotsAttrByKwArgs(**other)
+    ).check_assert(_EXPECTED[0])
+    ExpectAux(
+        EqValid_AttrsByObjNotHidden(NestInit_AnnotsAttrByKwArgs(**source)) == NestInit_AnnotsAttrByKwArgs(**other)
+    ).check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

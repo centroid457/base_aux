@@ -205,6 +205,38 @@ class Validators:
         # FINISH -----
         return True
 
+    def AttrsByObj(
+            self,
+            other_final,
+            # callable_resolve: CallableResolve = CallableResolve.EXX,
+            source: Any,
+            # attr_level: AttrLevel = AttrLevel.NOT_PRIVATE,
+    ) -> bool | NoReturn:
+        for key in AttrAux(source).iter__attrs(self.ATTR_LEVEL):
+            value_expected = AttrAux(source).getattr__callable_resolve(key, CallableResolve.EXX)
+            value_other = AttrAux(other_final).getattr__callable_resolve(key, CallableResolve.EXX)
+            if not EqAux(value_expected).check_doubleside__bool(value_other):
+                return False
+
+        # FINISH -----
+        return True
+
+    # NOTE: INAPPROPRIATE!!!!
+    # def AttrsByObjNotPrivate(
+    #         self,
+    #         other_final,
+    #         # callable_resolve: CallableResolve = CallableResolve.EXX,
+    #         source: Any,
+    # ) -> bool | NoReturn:
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=AttrLevel.NOT_PRIVATE)
+    # def AttrsByObjNotHidden(
+    #         self,
+    #         other_final,
+    #         # callable_resolve: CallableResolve = CallableResolve.EXX,
+    #         source: Any,
+    # ) -> bool | NoReturn:
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=AttrLevel.NOT_HIDDEN)
+
     # -----------------------------------------------------------------------------------------------------------------
     def AnnotsAllExists(
             self,
