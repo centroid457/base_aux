@@ -222,6 +222,8 @@ class AttrLevel(NestEq_Enum):
     NOT_PRIVATE = auto()
     ALL = auto()
 
+    PRIVATE = auto()    # usually not used! just in case!
+
 
 # =====================================================================================================================
 # class Represent(NestEq_EnumNestEqIc_Enum):

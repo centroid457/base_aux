@@ -115,17 +115,34 @@ class AttrAux(NestInit_Source):
             yield name
 
     # -----------------------------------------------------------------------------------------------------------------
+    def iter__attrs(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[str]:
+        for name in self.iter__external_not_builtin():
+            if attr_level == AttrLevel.NOT_PRIVATE:
+                if not name.startswith("__"):
+                    yield name
+
+            elif attr_level == AttrLevel.NOT_HIDDEN:
+                if not name.startswith("_"):
+                    yield name
+
+            elif attr_level == AttrLevel.PRIVATE:
+                if name.startswith("__"):
+                    yield name
+
+            elif attr_level == AttrLevel.ALL:
+                yield name
+
+            else:
+                raise Exx__Incompatible(f"{attr_level=}")
+
     def iter__not_hidden(self) -> Iterable[str]:
         """
         NOTE
         ----
         hidden names are more simple to detect then private!
         cause of private methods(!) changes to "_<ClsName><__MethName>"
-
         """
-        for name in self.iter__external_not_builtin():
-            if not name.startswith("_"):
-                yield name
+        return self.iter__attrs(AttrLevel.NOT_HIDDEN)
 
     def iter__not_private(self) -> Iterable[str]:
         """
@@ -133,9 +150,7 @@ class AttrAux(NestInit_Source):
         ----
         BEST WAY TO USE EXACTLY iter__not_private
         """
-        for name in self.iter__external_not_builtin():
-            if not name.startswith("__"):
-                yield name
+        return self.iter__attrs(AttrLevel.NOT_PRIVATE)
 
     def iter__private(self) -> Iterable[str]:
         """
@@ -153,9 +168,8 @@ class AttrAux(NestInit_Source):
         ---------
         keep list of iters
         """
-        for name in self.iter__external_not_builtin():
-            if name.startswith("__"):
-                yield name
+        return self.iter__attrs(AttrLevel.PRIVATE)
+
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
