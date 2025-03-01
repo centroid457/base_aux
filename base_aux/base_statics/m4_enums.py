@@ -126,6 +126,7 @@ class TextStyle(NestEq_Enum):
     TXT = "txt"
 
     PY = "py"
+    C = "c"
     BAT = "bat"
     SH = "sh"
 
