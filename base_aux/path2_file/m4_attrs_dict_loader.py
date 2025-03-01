@@ -21,8 +21,8 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     used for get settings from file into NestInit_AnnotsAttrByKwArgsIc
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
-    STYLE: Any = DictTextFormat.AUTO
-    KEYPATH: Iterable[str | int] = ()
+    STYLE: DictTextFormat = DictTextFormat.AUTO
+    KEYPATH: list[str | int] = ()
 
     FILEPATH: pathlib.Path
     TEXT: str
@@ -31,7 +31,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     def __init__(
             self,
             target: type | Any = None,
-            keypath: Iterable[str | int] = None,     # path to exact dict in dict
+            keypath: list[str | int] = None,     # path to exact dict in dict
             style: DictTextFormat = None,
 
             **kwargs,       # init File/Text
@@ -68,7 +68,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
 
         # load keypath ---
         if self.KEYPATH:
-            data = IterAux(data).value__get(self.KEYPATH)
+            data = IterAux(data).value__get(*self.KEYPATH)
 
         # load args -------
         if TypeAux(self.TARGET).check__class() and issubclass(self.TARGET, NestInit_AnnotsAttrByKwArgs):
@@ -80,6 +80,43 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
             result = self.TARGET
 
         return result
+
+
+# =====================================================================================================================
+class PvLoaderIni(AttrsLoader_DictTextFile):
+    """
+    GOAL
+    ----
+
+    NOTE
+    ----
+    redefine only TARGET-kit/KEYPATH in __init
+    """
+    STYLE = DictTextFormat.INI
+    FILEPATH = pathlib.Path.home().joinpath("pv.ini")
+
+    # INIT -------
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
+    KEYPATH: list[str | int]
+
+
+class PvLoaderJson(AttrsLoader_DictTextFile):
+    STYLE = DictTextFormat.JSON
+    FILEPATH = pathlib.Path.home().joinpath("pv.json")
+
+    # INIT -------
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
+    KEYPATH: list[str | int]
+
+
+# -----------------------------------------------------------------------------------------------------------------
+def _explore():
+    pass
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _explore()
 
 
 # =====================================================================================================================
