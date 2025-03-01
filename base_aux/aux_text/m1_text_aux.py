@@ -210,7 +210,7 @@ class TextAux:
             self.clear__regexps(PatCmts.REM_INLINE, flags=re.MULTILINE | re.IGNORECASE)
 
         elif cmt_type == CmtStyle.C:
-            self.clear__regexps(PatCmts.C_MLINE, flags=re.MULTILINE)
+            self.clear__regexps(PatCmts.C_MLINE)
 
         return self.TEXT
 

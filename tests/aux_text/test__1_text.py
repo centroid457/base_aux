@@ -167,6 +167,10 @@ class Test__Edit:
             ("line1  REM cmt1 \n line2 REM", CmtStyle.REM, "line1\n line2 REM"),
             ("line1  REM cmt1 \n line2 REM ", CmtStyle.REM, "line1\n line2"),
             ("line1  REM cmt1 \n REM \n line2 REM ", CmtStyle.REM, "line1\n line2"),
+
+            # CmtStyle.C ---------------------------------------------------------
+            ("line1  /*cmt*/  \n /*cmt*/  \n line2 /*cmt*/  ", CmtStyle.C, "line1\n line2"),
+            ("line1  /*cmt*/  \n /*\ncmt*/  \n line2 /*cmt*/  ", CmtStyle.C, "line1\n line2"),
         ]
     )
     def test__clear__cmts(self, source, cmt, _EXPECTED):
