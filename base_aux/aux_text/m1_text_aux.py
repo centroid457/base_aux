@@ -93,8 +93,11 @@ class TextAux:
         # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
         # so it just same process as re.sub by one func for several values
 
+        # JSON-cmts my special ------------
+        self.delete__cmts_c()
+
         # JSON-COMMAS ------------
-        self.sub__regexp(r',\s*(?=\})', '')
+        self.clear__regexps(r',\s*(?=\})')
 
         # JSON-QUOTES ------------
         self.sub__regexp("\'", "\"")
@@ -174,6 +177,7 @@ class TextAux:
         self.sub__regexp(r"\n+\s*\n+", "\n", re.MULTILINE)  # middle double
         return self.TEXT
 
+    # =================================================================================================================
     def delete__cmts(self, cmt_type: CmtStyle = CmtStyle.SHARP) -> str:
         """
         GOAL
@@ -186,7 +190,7 @@ class TextAux:
         """
         # recursion -----------------------------
         if cmt_type == CmtStyle.ALL:
-            for cmt_type in [CmtStyle.SHARP, CmtStyle.DSLASH, CmtStyle.REM]:
+            for cmt_type in [CmtStyle.SHARP, CmtStyle.DSLASH, CmtStyle.REM, CmtStyle.C]:
                 self.delete__cmts(cmt_type)
 
         elif cmt_type == CmtStyle.AUTO:
@@ -194,20 +198,35 @@ class TextAux:
 
         # work ----------------------------------
         if cmt_type == CmtStyle.SHARP:
-            self.sub__regexp(PatCmts.SHARP_LINE, "", re.MULTILINE)
-            self.sub__regexp(PatCmts.SHARP_INLINE, "", re.MULTILINE)
+            self.clear__regexps(PatCmts.SHARP_LINE, flags=re.MULTILINE)
+            self.clear__regexps(PatCmts.SHARP_INLINE, flags=re.MULTILINE)
 
         elif cmt_type == CmtStyle.DSLASH:
-            self.sub__regexp(PatCmts.DSLASH_LINE, "", re.MULTILINE)
-            self.sub__regexp(PatCmts.DSLASH_INLINE, "", re.MULTILINE)
+            self.clear__regexps(PatCmts.DSLASH_LINE, flags=re.MULTILINE)
+            self.clear__regexps(PatCmts.DSLASH_INLINE, flags=re.MULTILINE)
 
         elif cmt_type == CmtStyle.REM:
-            self.sub__regexp(PatCmts.REM_LINE, "", re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
-            self.sub__regexp(PatCmts.REM_INLINE, "", re.MULTILINE | re.IGNORECASE)
+            self.clear__regexps(PatCmts.REM_LINE, flags=re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
+            self.clear__regexps(PatCmts.REM_INLINE, flags=re.MULTILINE | re.IGNORECASE)
+
+        elif cmt_type == CmtStyle.C:
+            self.clear__regexps(PatCmts.C_MLINE, flags=re.MULTILINE)
 
         return self.TEXT
 
-    # -----------------------------------------------------------------------------------------------------------------
+    def delete__cmts_sharp(self) -> str:
+        return self.delete__cmts(CmtStyle.SHARP)
+
+    def delete__cmts_dslash(self) -> str:
+        return self.delete__cmts(CmtStyle.DSLASH)
+
+    def delete__cmts_rem(self) -> str:
+        return self.delete__cmts(CmtStyle.REM)
+
+    def delete__cmts_c(self) -> str:
+        return self.delete__cmts(CmtStyle.C)
+
+    # =================================================================================================================
     def strip__lines(self) -> str:
         self.lstrip__lines()
         self.rstrip__lines()

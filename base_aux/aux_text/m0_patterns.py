@@ -48,6 +48,8 @@ class PatCmts(Patterns):
     REM_LINE: str = r"^REM +.*$"
     REM_INLINE: str = r"\s+REM +.*$"
 
+    C_MLINE: str = r"\s*\/\*.*?\*\/ *"
+
 
 # =====================================================================================================================
 class PatNumberSingle(Patterns):

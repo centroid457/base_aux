@@ -146,6 +146,7 @@ class CmtStyle(NestEq_Enum):
     SHARP = "#"
     DSLASH = "//"
     REM = "rem"
+    C = "c"     # /*...*/
 
 
 class PatCoverStyle(NestEq_Enum):
