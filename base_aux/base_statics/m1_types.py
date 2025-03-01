@@ -91,6 +91,9 @@ class TYPING:
     JSON_ANY = ELEMENTARY | DICT_STR_ELEM  # just to show - parsed by json - any object
 
     # -----------------------------------------------------------------------------------------------------------------
+    ORDERED_ITERABLE = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
+    ITERPATH_KEY = Union[Any, int]   # Any is for dict
+    ITERPATH = tuple[ITERPATH_KEY, ...]
 
 
 # VALUES --------------------------------------------------------------------------------------------------------------

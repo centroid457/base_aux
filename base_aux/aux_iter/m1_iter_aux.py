@@ -2,13 +2,7 @@ from typing import *
 from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_attr.m1_attr1_aux import *
-
-
-# =====================================================================================================================
-TYPE__ITERABLE_ORDERED = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
-
-TYPE__ITER_PATH_KEY = Union[Any, int]   # Any is for dict
-TYPE__ITER_PATH = tuple[TYPE__ITER_PATH_KEY, ...]
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
@@ -33,8 +27,8 @@ class IterAux(NestInit_Source):
         assert self.victim("hello1/hello2/0", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2", 0, ])
         assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
-    SOURCE: TYPE__ITERABLE_ORDERED = dict
-    # PATH: list[TYPE__ITER_PATH_KEY]   # todo: get back!!! to work with source! or make new class!
+    SOURCE: TYPING.ORDERED_ITERABLE = dict
+    # PATH: list[TYPING.ITERPATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
     # def init_post(self):
     #     self.PATH = []
@@ -72,7 +66,7 @@ class IterAux(NestInit_Source):
         return NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
-    def path__get_original(self, *path: TYPE__ITER_PATH_KEY) -> TYPE__ITER_PATH | None | NoReturn:
+    def path__get_original(self, *path: TYPING.ITERPATH_KEY) -> TYPING.ITERPATH | None | NoReturn:
         """
         NOTES:
         1. path used as address KEY for dicts and as INDEX for other listed data
@@ -126,7 +120,7 @@ class IterAux(NestInit_Source):
         return self.item__get_original(item) is not NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
-    def value__get(self, *path: TYPE__ITER_PATH_KEY) -> Any | NoReturn:
+    def value__get(self, *path: TYPING.ITERPATH_KEY) -> Any | NoReturn:
         result = self.SOURCE
         path = self.path__get_original(*path)
         for path_i in path:
@@ -137,7 +131,7 @@ class IterAux(NestInit_Source):
 
         return result
 
-    def value__set(self, path: TYPE__ITER_PATH, value: Any) -> bool:
+    def value__set(self, path: TYPING.ITERPATH, value: Any) -> bool:
         """
         GOAL
         ----
