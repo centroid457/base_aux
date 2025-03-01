@@ -5,6 +5,7 @@ from base_aux.valid.m1_aux_valid_lg import *
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_attr.m1_attr1_aux import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
+from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
@@ -203,6 +204,14 @@ class Validators:
 
         # FINISH -----
         return True
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def AnnotsAllExists(
+            self,
+            other_final,
+            **kwargs: TYPING.KWARGS_FINAL
+    ) -> bool | NoReturn:
+        return AnnotsAux(self).check_all_defined()
 
 
 # =====================================================================================================================

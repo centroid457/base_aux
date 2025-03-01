@@ -154,6 +154,11 @@ class EqValid_AttrsByKwargs(EqValid_Base):
     VALIDATOR = Validators.AttrsByKwargs
 
 
+@final
+class EqValid_AnnotsAllExists(EqValid_Base):
+    VALIDATOR = Validators.AnnotsAllExists
+
+
 # =====================================================================================================================
 if __name__ == "__main__":
     pass
