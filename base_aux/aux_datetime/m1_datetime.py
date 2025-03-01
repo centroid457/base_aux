@@ -141,7 +141,7 @@ class DateTimeAux(NestCmp):
 
     @staticmethod
     def parse_str(source: str, _raise: bool = None) -> TYPE__DT_FINAL | None | NoReturn:
-        nums = TextAux(source).find__by_pats(r"\d+")
+        nums = TextAux(source).findall(r"\d+")
         nums = list(map(int, nums))
         len_nums = len(nums)
         if len_nums in [6, 7]:

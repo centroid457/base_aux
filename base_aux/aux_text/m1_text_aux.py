@@ -319,7 +319,7 @@ class TextAux:
         return self.shortcut(maxlen=maxlen, where=where, sub=None)
 
     # =================================================================================================================
-    def find__by_pats(self, *pats: str, flags: int = 0) -> list[str]:
+    def findall(self, *pats: str, flags: int = 0) -> list[str]:
         """
         GOAL
         ----
@@ -340,7 +340,7 @@ class TextAux:
                 result.append(value)
         return result
 
-    def search__group(self, pat: str, flags: int = 0) -> str | None:
+    def search__group(self, *pats: str, flags: int = 0) -> str | None:
         """
         GOAL
         ----
@@ -348,11 +348,15 @@ class TextAux:
         if pat without group - just return found value
         None - not found!
         """
-        match = re.search(pat, self.TEXT, flags=flags)
-        try:
-            return match and match[1]
-        except:
-            return match[0]
+        for pat in pats:
+            match = re.search(pat, self.TEXT, flags=flags)
+            if match:
+                try:
+                    return match[1]     # group defined in pat
+                except:
+                    return match[0]     # group NOT defined in pat
+
+        return
 
     # =================================================================================================================
     def parse__number_single(self, fpoint: TYPE__FPOINT_DRAFT = FPoint.AUTO, num_type: NumType = NumType.BOTH) -> int | float | None:

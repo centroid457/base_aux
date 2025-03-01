@@ -207,7 +207,7 @@ class Test__find:
         ]
     )
     def test__1(self, source, patts, _EXPECTED):
-        func_link = TextAux(source).find__by_pats
+        func_link = TextAux(source).findall
         ExpectAux(func_link, patts).check_assert(_EXPECTED)
 
 
