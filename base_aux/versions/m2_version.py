@@ -44,11 +44,15 @@ class Version(NestCmp):
     :ivar SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
     """
     SOURCE: Any
+    PREPARSE: str = None
     BLOCKS: TYPE__VERSION_BLOCKS_FINAL = ()
 
     RAISE: bool = True
 
-    def __init__(self, source: Any, _raise: bool = None) -> None | NoReturn:
+    def __init__(self, source: Any, preparse: str = None, _raise: bool = None) -> None | NoReturn:
+        if preparse is not None:
+            self.PREPARSE = preparse
+
         if _raise is not None:
             self.RAISE = _raise
 
@@ -68,6 +72,12 @@ class Version(NestCmp):
             result = str(self.SOURCE)
 
         result = result.lower()
+
+        # PREPARSE -----
+        if self.PREPARSE:
+            new = TextAux(result).search__group(self.PREPARSE)
+            if new:
+                result = new
 
         # CUT ---------
         for pattern in PatVersion.VERSION_IN_BRACKETS:

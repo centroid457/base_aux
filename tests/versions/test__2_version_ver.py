@@ -88,6 +88,9 @@ class Test__Version:
             (("1.1rc2.2", Version("1.1rc2.2")), True),
             (("1.1rc2.2", "01.01rc02.02"), True),
             (("1.1rc2.2", (1, "1rc2", 2)), True),
+
+            (("1.1rc2.2", Version("1.1rc2.2finish")), False),
+            (("1.1rc2.2", Version("1.1rc2.2finish", preparse=r"(.*)finish")), True),
         ]
     )
     def test__eq(self, args, _EXPECTED):
