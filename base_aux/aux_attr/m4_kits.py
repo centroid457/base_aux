@@ -29,6 +29,7 @@ class Nest_AttrKit(
 
     NOTE
     ----
+    !/ DONT USE DIRECTLY! use AttrKit_Blank instead! direct usage acceptable only for isinstance checking!
     1/ used in final CHILDs
     2/ basically used for static values like parsed from ini/json files
 
