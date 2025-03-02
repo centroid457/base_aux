@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.breeders.m1_breeder_str1_series import *
-from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
+from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 
 
 # =====================================================================================================================

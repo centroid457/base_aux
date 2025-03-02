@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.lambdas.m1_lambdas import Lambda
-from base_aux.aux_attr.m1_attr3_nest_lambdas_resolve import NestInit_AttrsLambdaResolve
+from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
 from base_aux.privates.m5_auto import *
 from .m0_base import *
 

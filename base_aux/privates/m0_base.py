@@ -2,7 +2,7 @@ import abc
 
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.base_statics.m1_types import *
-from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
+from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 
 
 # =====================================================================================================================

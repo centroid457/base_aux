@@ -1,6 +1,6 @@
 from typing import *
 from .m2_annot1_aux import AnnotsAux
-from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
+from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 
 
 # =====================================================================================================================
