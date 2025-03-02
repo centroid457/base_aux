@@ -2,6 +2,7 @@ from typing import *
 
 from base_aux.lambdas.m1_lambdas import Lambda
 from base_aux.base_resolver.m1_resolver import *
+from base_aux.aux_attr.m1_attr1_aux import *
 
 
 # =====================================================================================================================
@@ -29,10 +30,10 @@ class NestInit_AttrsLambdaResolve:
     """
 
     def __init__(self, *args, **kwargs) -> None | NoReturn:
-        for attr in dir(self):
-            value = getattr(self, attr)
+        for name in AttrAux(self).iter__not_private():
+            value = getattr(self, name)
             if isinstance(value, (Lambda, NestCall_Resolve)):
-                setattr(self, attr, value())
+                setattr(self, name, value())
 
         super().__init__(*args, **kwargs)
 
