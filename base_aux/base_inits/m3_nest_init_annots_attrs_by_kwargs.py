@@ -1,7 +1,3 @@
-from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import *
-from base_aux.aux_attr.m1_attr2_nest4_str import *
-from base_aux.aux_attr.m1_attr2_nest5_contains import *
-from base_aux.aux_attr.m1_attr2_nest6_len import *
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
@@ -77,57 +73,8 @@ def examples__NestInit():
 
 
 # =====================================================================================================================
-@final
-class Init_AnnotsAttrByKwArgs(NestStR_Attrs, NestEq_Attrs, NestContains_AttrIC, NestLen_AttrNotPrivate, NestInit_AnnotsAttrByKwArgs):
-    """
-    GOAL
-    ----
-    1/ generate object with exact attrs values by Kwargs like template
-    2/ for further comparing by Eq
-    3/ all callables will resolve as Exx
-
-    NOTE
-    ----
-    IgnoreCase applied!
-
-    SAME AS - NestInit_AnnotsAttrByKwArgs
-    --------------------------------------
-    but
-        - used as final
-        - args useless
-
-    WHY NOT - just EqValid_*
-    ------------------------
-    1/ cause you will not keep simple direct object with attrs!
-    2/ EqValid_* will be created! further!
-
-    MAYBE
-    -----
-    need rename just for Attrs*!?
-    """
-    # DONT ADD ANY NOT HIDDEN ATTRS!!!!
-
-
-# @final
-# class Init_AnnotsAttrsByKwArgsIc(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
-#     pass
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-def examples__Init():
-    class Example:
-        A0: Any
-        A1: Any = 1
-
-    assert Init_AnnotsAttrByKwArgs(a1=1) == Example()
-    assert Init_AnnotsAttrByKwArgs(a1=11) != Example()
-
-    assert Init_AnnotsAttrByKwArgs(a0=1) != Example()
-
-
-# =====================================================================================================================
 if __name__ == '__main__':
-    examples__Init()
+    pass
 
 
 # =====================================================================================================================

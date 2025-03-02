@@ -6,7 +6,7 @@ from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
-class NestEq_Attrs:
+class NestEq_AttrsNotPrivate:
     """
     GOAL
     ----
@@ -24,21 +24,24 @@ class NestEq_Attrs:
         if other is None:
             return False
 
-        for attr in AttrAux(self).iter__not_private():
-            # 1=cmp direct --------
-            value_self_direct = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.DIRECT)
-            value_other_direct = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.DIRECT)
-            if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
-                continue
+        try:
+            for attr in AttrAux(self).iter__not_private():
+                # 1=cmp direct --------
+                value_self_direct = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.DIRECT)
+                value_other_direct = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.DIRECT)
+                if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
+                    continue
 
-            # 2=cmp callables --------      # TODO: use CallableResolve.SKIPCALLABLES ???
-            value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
-            value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
+                # 2=cmp callables --------      # TODO: use CallableResolve.SKIPCALLABLES ???
+                value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
+                value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
 
-            if not EqAux(value_self).check_doubleside__bool(value_other):
-                return False
+                if not EqAux(value_self).check_doubleside__bool(value_other):
+                    return False
 
-        return True
+            return True
+        except:
+            return False
 
 
 # =====================================================================================================================

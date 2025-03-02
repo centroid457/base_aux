@@ -1,6 +1,6 @@
 from base_aux.path2_file.m4_attrs_dict_loader import *
 from base_aux.aux_text.m0_text_examples import *
-from base_aux.privates.m1_privates import PvLoaderIni, PvLoaderJson, PvLoaderEnv
+from base_aux.privates.m1_privates import *
 
 
 # =====================================================================================================================
@@ -9,7 +9,7 @@ def test__File():
     print(data_attrs)
     assert data_attrs.a0 == "00"
 
-    data_attrs = AttrsLoader_DictTextFile(text=INI_EXAMPLES.MESHED__TEXT, keypath=["s1", ]).resolve()
+    data_attrs = AttrsLoader_DictTextFile(text=INI_EXAMPLES.MESHED__TEXT, keypath=("s1", )).resolve()
     print(data_attrs)
     assert data_attrs.a0 == "11"
     assert data_attrs.A0 == "11"

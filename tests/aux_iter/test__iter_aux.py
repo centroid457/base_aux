@@ -1,8 +1,7 @@
 import pytest
 
+from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_iter.m1_iter_aux import IterAux
-from base_aux.aux_values.m0_novalue import *
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
 
@@ -24,7 +23,7 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
         ({1,}, "1", 1),
         ({1: 11}, "1", 1),
 
-        (Init_AnnotsAttrByKwArgs(arg1=1), "arg1", "arg1"),
+        (AttrKit_Blank(arg1=1), "arg1", "arg1"),
         (NestInit_AnnotsAttrByKwArgs(arg1=1), "ARG1", "arg1"),
         (NestInit_AnnotsAttrByKwArgs(arg1=1), "hello", None),
     ]
@@ -36,7 +35,7 @@ def test__item__get_original(source, item, _EXPECTED):
 
 
 def test__item__get_original_2():
-    source = Init_AnnotsAttrByKwArgs(arg1=1)
+    source = AttrKit_Blank(arg1=1)
     assert source.arg1 == 1
     assert source.ARG1 == 1
 

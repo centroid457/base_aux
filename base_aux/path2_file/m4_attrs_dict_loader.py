@@ -1,7 +1,6 @@
+from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.path2_file.m3_filetext import *
-
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
-from base_aux.privates.m1_privates import _explore
 
 
 # =====================================================================================================================
@@ -13,7 +12,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     main usage is final key values!
     used for get settings from file into NestInit_AnnotsAttrByKwArgsIc
     """
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = AttrKit_Blank
     STYLE: DictTextFormat = DictTextFormat.AUTO
     KEYPATH: tuple[str | int, ...] = ()
 
@@ -75,10 +74,9 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
         return result
 
 
-
 # =====================================================================================================================
 if __name__ == "__main__":
-    _explore()
+    pass
 
 
 # =====================================================================================================================

@@ -6,7 +6,8 @@ import re
 from base_aux.aux_attr.m2_annot1_aux import AnnotsAux
 from base_aux.aux_types.m1_type_aux import TypeAux
 
-from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs, Init_AnnotsAttrByKwArgs
+from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
+from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.base_resolver.m1_resolver import NestCall_Resolve
 from base_aux.base_statics.m4_enums import DictTextFormat
 from base_aux.path2_file.m4_attrs_dict_loader import AttrsLoader_DictTextFile
@@ -43,7 +44,7 @@ class PvLoaderJson(AttrsLoader_DictTextFile):
 # =====================================================================================================================
 class PvLoaderEnv(NestCall_Resolve):
     # INIT -------
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = AttrKit_Blank
     PATTS: tuple[str, ...] = ()
 
     def __init__(
@@ -67,8 +68,8 @@ class PvLoaderEnv(NestCall_Resolve):
 
         # filter ---
         if self.PATTS:
-            filterd_out = filter(lambda name: not any([re.search(pat, name, flags=re.IGNORECASE) for pat in self.PATTS]), list(data))
-            for out_i in filterd_out:
+            filtered_out = filter(lambda name: not any([re.search(pat, name, flags=re.IGNORECASE) for pat in self.PATTS]), list(data))
+            for out_i in filtered_out:
                 data.pop(out_i)
 
         # load args -------

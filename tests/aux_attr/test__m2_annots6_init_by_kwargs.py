@@ -1,5 +1,6 @@
 import pytest
 
+from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
@@ -12,7 +13,7 @@ EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrByKwArgs)
 class Test__NestInit:
     def test__notNested(self):
         try:
-            Init_AnnotsAttrByKwArgs()
+            AttrKit_Blank()
             # Init_AnnotsAttrsByKwArgsIc()
             NestInit_AnnotsAttrByKwArgs()
             # NestInit_AnnotsAttrByKwArgsIc()
@@ -20,10 +21,10 @@ class Test__NestInit:
         except:
             assert False
 
-        assert Init_AnnotsAttrByKwArgs(a1=1).a1 == 1
+        assert AttrKit_Blank(a1=1).a1 == 1
         assert NestInit_AnnotsAttrByKwArgs(a1=1).a1 == 1
         try:
-            assert Init_AnnotsAttrByKwArgs(a1=1).A1 == 1
+            assert AttrKit_Blank(a1=1).A1 == 1
             assert False
         except:
             assert True
