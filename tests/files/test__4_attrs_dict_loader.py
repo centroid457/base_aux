@@ -55,10 +55,11 @@ class Test__PV:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__ini(self):
-        assert PvLoaderIni(keypath=["auth", ], filepath=self.VICTIM_INI).resolve() == PvLoaderIni(keypath=["AUTH", ], filepath=self.VICTIM_INI).resolve()
-        assert PvLoaderIni(keypath=["auth", ], filepath=self.VICTIM_INI).resolve() != None
-
         pv = PvLoaderIni(keypath=["auth", ], filepath=self.VICTIM_INI).resolve()
+
+        assert pv == PvLoaderIni(keypath=["AUTH", ], filepath=self.VICTIM_INI).resolve()
+        assert pv != None
+
         assert pv.name == "name1"
         assert pv.NAME == "name1"
 
@@ -67,10 +68,11 @@ class Test__PV:
         # print(str(pv_ini))
 
     def test__json(self):
-        assert PvLoaderJson(keypath=["auth", ], filepath=self.VICTIM_JSON).resolve() == PvLoaderJson(keypath=["AUTH", ], filepath=self.VICTIM_JSON).resolve()
-        assert PvLoaderJson(keypath=["auth", ], filepath=self.VICTIM_JSON).resolve() != None
-
         pv = PvLoaderJson(keypath=["auth", ], filepath=self.VICTIM_JSON).resolve()
+
+        assert pv == PvLoaderJson(keypath=["AUTH", ], filepath=self.VICTIM_JSON).resolve()
+        assert pv != None
+
         assert pv.name == "name1"
         assert pv.NAME == "name1"
 
