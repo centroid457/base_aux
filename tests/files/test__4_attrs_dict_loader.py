@@ -1,8 +1,6 @@
-import pathlib
-from base_aux.path2_file.m1_filepath import *
-from base_aux.path2_file.m2_file import *
 from base_aux.path2_file.m4_attrs_dict_loader import *
 from base_aux.aux_text.m0_text_examples import *
+from base_aux.privates.m1_privates import PvLoaderIni, PvLoaderJson, PvLoaderEnv
 
 
 # =====================================================================================================================
