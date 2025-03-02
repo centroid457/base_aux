@@ -1,4 +1,7 @@
+from typing import *
+
 from base_aux.base_statics.m1_types import *
+from base_aux.base_resolver.m1_resolver import *
 
 
 # =====================================================================================================================
@@ -63,7 +66,7 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class Args(ArgsKwargs):
+class Args(ArgsKwargs, NestCall_Resolve):
     """
     just a derivative to clearly show only Args is important
     """
@@ -76,10 +79,14 @@ class Args(ArgsKwargs):
     def __iter__(self):
         yield from self.ARGS
 
-    def __call__(self):
+    def __contains__(self, item):
+        return item in self.ARGS
+
+    def resolve(self):
         return self.ARGS
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @final
 class Kwargs(dict):
     """
