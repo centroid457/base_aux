@@ -8,6 +8,10 @@ from base_aux.base_statics.m4_enums import *
 # =====================================================================================================================
 class NestEq_Attrs:
     """
+    GOAL
+    ----
+    mainly used for cmp bare attr-kits with no callables!
+
     LOGIC
     -----
     cmp first - direct callables
@@ -27,7 +31,7 @@ class NestEq_Attrs:
             if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                 continue
 
-            # 2=cmp callables --------
+            # 2=cmp callables --------      # TODO: use CallableResolve.SKIPCALLABLES ???
             value_self = AttrAux(self).getattr__callable_resolve(attr, CallableResolve.EXX)
             value_other = AttrAux(other).getattr__callable_resolve(attr, CallableResolve.EXX)
 
