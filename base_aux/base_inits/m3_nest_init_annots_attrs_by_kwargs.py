@@ -1,6 +1,5 @@
-from typing import *
-
-from base_aux.aux_attr.m4_nest_eq_attrs import NestEq_Attrs
+from base_aux.aux_attr.m4_nest1_eq_attrs import NestEq_Attrs
+from base_aux.aux_attr.m4_nest2_str import *
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_attr.m1_attr2_nest_gsai_anycase import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
@@ -77,7 +76,7 @@ def examples__NestInit():
 
 # =====================================================================================================================
 @final
-class Init_AnnotsAttrByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
+class Init_AnnotsAttrByKwArgs(NestStR_Attrs, NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     """
     GOAL
     ----
@@ -105,21 +104,6 @@ class Init_AnnotsAttrByKwArgs(NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
     need rename just for Attrs*!?
     """
     # DONT ADD ANY NOT HIDDEN ATTRS!!!!
-    def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
-        result = ""
-        for attr_name in AttrAux(self).iter__not_private():
-            if result:
-                result += ","
-            elif not result:
-                result += f"{self.__class__.__name__}("
-            value = getattr(self, attr_name)
-            result += f"{attr_name}={value}"
-
-        result += ")"
-        return result
-
-    def __repr__(self):       # it can used only in FINAL!!! dont use in Nest*!!!
-        return str(self)
 
 
 # @final
