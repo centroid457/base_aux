@@ -86,18 +86,27 @@ class Test__PvEnv:
 
     @classmethod
     def setup_class(cls):
-        os.environ[cls.NAME_Exists] = cls.VALUE
+        pass
+        # os.environ[cls.NAME_Exists] = cls.VALUE
 
     @classmethod
     def teardown_class(cls):
-        for name in [cls.NAME_Exists, cls.NAME_NotExists]:
+        pass
+        # for name in [cls.NAME_Exists, cls.NAME_NotExists]:
+        #     try:
+        #         del os.environ[name]
+        #     except:
+        #         pass
+
+    def setup_method(self, method):
+        os.environ[self.NAME_Exists] = self.VALUE
+
+    def teardown_method(self):
+        for name in [self.NAME_Exists, self.NAME_NotExists]:
             try:
                 del os.environ[name]
             except:
                 pass
-
-    # def setup_method(self, method):
-    #     pass
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__Exists(self):
@@ -121,6 +130,12 @@ class Test__PvEnv:
             return
         else:
             assert False
+
+    def test__len(self):
+        assert len(PvLoaderEnv().resolve()) > 2
+        assert len(PvLoaderEnv(patts=(r"pv.*", )).resolve()) == 1
+        assert len(PvLoaderEnv(patts=(r"p1.*", )).resolve()) == 0
+        assert len(PvLoaderEnv(patts=(r"p1.*", r"pv.*", )).resolve()) == 1
 
 
 # =====================================================================================================================

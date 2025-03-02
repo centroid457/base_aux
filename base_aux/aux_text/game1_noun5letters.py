@@ -86,7 +86,7 @@ class CharMask(NestInit_AnnotsByTypes_NotExisted):
 # ---------------------------------------------------------------------------------------------------------------------
 class FilterMask(NestInit_SourceKwArgs_Implicite):
     SOURCE: str
-    ARGS: tuple[str]    # ATTEMPTS
+    ARGS: tuple[str, ...]    # ATTEMPTS
 
     CHARMASK: CharMask
 
