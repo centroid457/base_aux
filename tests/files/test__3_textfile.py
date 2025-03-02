@@ -6,31 +6,46 @@ from base_aux.path2_file.m3_filetext import *
 
 # =====================================================================================================================
 text_load = "text_load"
-filepath = Resolve_FilePath(namefull="victim.txt").resolve()
+FILEPATH = Resolve_FilePath(namefull="victim.txt").resolve()
 
 
 # =====================================================================================================================
-def test__File():
-    file = FileAux(filepath=filepath)
-    assert file.clear_file() is True
-    assert file.read__text() == ""
-    assert file.TEXT == ""
-    assert file.write__text(text_load) == 9
-    assert file.TEXT == text_load
-    assert file.delete_file() is True
+class Test__textFile:
+    def setup_class(cls):
+        pass
 
-    assert file.append__lines(1, 2) == 2
-    assert file.TEXT == "1\n2"
-    assert file.append__lines(3, 4) == 2
-    assert file.TEXT == "1\n2\n3\n4"
-    assert file.delete_file() is True
+    @classmethod
+    def teardown_class(cls):
+        pass
 
+    def setup_method(self, method):
+        pass
 
-def test__textFile():
-    file = TextFile(filepath=filepath, text=123)
-    assert file.write__text() == 3
-    assert file.TEXT == "123"
-    assert file.delete_file() is True
+    def teardown_method(self, method):
+        FileAux(filepath=FILEPATH).delete_file()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def test__File(self):
+        self.victim = FileAux(filepath=FILEPATH)
+
+        assert self.victim.clear_file() is True
+        assert self.victim.read__text() == ""
+        assert self.victim.TEXT == ""
+        assert self.victim.write__text(text_load) == 9
+        assert self.victim.TEXT == text_load
+        assert self.victim.delete_file() is True
+
+        assert self.victim.append__lines(1, 2) == True
+        assert self.victim.TEXT == "1\n2"
+        assert self.victim.append__lines(3, 4) == True
+        assert self.victim.TEXT == "1\n2\n3\n4"
+        assert self.victim.delete_file() is True
+
+    def test__textFile(self):
+        self.victim = TextFile(filepath=FILEPATH, text=123)
+        assert self.victim.write__text() == 3
+        assert self.victim.TEXT == "123"
+        assert self.victim.delete_file() is True
 
 
 # =====================================================================================================================

@@ -43,39 +43,46 @@ class FileAux:
 
     # READ/WRITE ======================================================================================================
     # READ ---------------------------------
-    def read__text(self) -> Optional[str]:
-        if self.FILEPATH.exists() and self.FILEPATH.is_file():
-            self.TEXT = self.FILEPATH.read_text(encoding="utf-8")
-            return self.TEXT
+    def read__text(self) -> Optional[str] | NoReturn:
+        if self.FILEPATH.exists():
+            if self.FILEPATH.is_file():
+                self.TEXT = self.FILEPATH.read_text(encoding="utf-8")
+                return self.TEXT
+            else:
+                raise Exx__Incompatible(f"{self.FILEPATH=}")
 
     def read__bytes(self) -> Optional[bytes]:
         if self.FILEPATH.exists() and self.FILEPATH.is_file():
             return self.FILEPATH.read_bytes()
 
     # WRITE ---------------------------------
-    def write__text(self, text: TYPING.STR_DRAFT = None) -> int:
-        if text is not None:
-            self.TEXT = str(text)
+    def write__text(self, _text: TYPING.STR_DRAFT = None) -> int:
+        if _text is not None:
+            self.TEXT = str(_text)
         self.ensure_dir()
-        return self.FILEPATH.write_text(data=self.TEXT, encoding="utf-8")
+        return self.FILEPATH.write_text(data=self.TEXT or "", encoding="utf-8")
 
-    def append__lines(self, *lines: TYPING.STR_DRAFT) -> int | NoReturn:
-        count = 0
+    def append__text(self, text: TYPING.STR_DRAFT, new_line: bool = False) -> int | NoReturn:
+        data = str(text)
 
-        if lines:
+        if data:
             self.ensure_dir()
-            with open(file=self.FILEPATH, encoding="UTF-8", mode="a") as file:
+
+            if self.TEXT and new_line:
+                data = f"\n{data}"
+
+            with open(file=self.FILEPATH, encoding="UTF-8", mode="a") as file:  # use exact append for large files!!!
                 # if file NOT EXISTS - it creates!!!
-                for line in lines:
-                    line = str(line).strip("\n")
-                    if self.TEXT:
-                        line = f"\n{line}"
+                result = file.write(data)
+                if result:
+                    self.TEXT += data
+                return result
+        else:
+            return True
 
-                    if file.write(line):
-                        count += 1
-
-                    self.TEXT += line
-        return count
+    def append__lines(self, *lines: TYPING.STR_DRAFT) -> bool | NoReturn:
+        data = "\n".join(map(str, lines))
+        return bool(self.append__text(data, new_line=True))
 
     def write__bytes(self, data: bytes) -> Optional[int]:
         if self.FILEPATH:
