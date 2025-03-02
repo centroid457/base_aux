@@ -1,5 +1,6 @@
-from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import NestEq_Attrs
+from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import *
 from base_aux.aux_attr.m1_attr2_nest4_str import *
+from base_aux.aux_attr.m1_attr2_nest5_contains import *
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
@@ -76,7 +77,7 @@ def examples__NestInit():
 
 # =====================================================================================================================
 @final
-class Init_AnnotsAttrByKwArgs(NestStR_Attrs, NestInit_AnnotsAttrByKwArgs, NestEq_Attrs):
+class Init_AnnotsAttrByKwArgs(NestStR_Attrs, NestEq_Attrs, NestContains_AttrIC, NestInit_AnnotsAttrByKwArgs):
     """
     GOAL
     ----

@@ -106,7 +106,9 @@ class Test__PvEnv:
         assert self.victim[self.NAME_Exists.lower()] == self.VALUE
         assert self.victim[self.NAME_Exists.upper()] == self.VALUE
 
-        assert getattr(self.victim, self.NAME_Exists) == self.VALUE
+        assert self.NAME_Exists.lower() in self.victim
+        assert self.NAME_Exists.upper() in self.victim
+
         assert getattr(self.victim, self.NAME_Exists.lower()) == self.VALUE
         assert getattr(self.victim, self.NAME_Exists.upper()) == self.VALUE
 
