@@ -81,29 +81,27 @@ class Args(ArgsKwargs):
 
 
 @final
-class Kwargs(ArgsKwargs):
+class Kwargs(dict):
     """
-    just a derivative to clearly show only KwArgs is important
-
     NOTE
     ----
-    for combine clear kwargs use direct DICT(key1=1, ...)
+    for combine clear kwargs use direct DICT(key1=1, ...) instead!
 
     WHY NOT - 1: DIRECT DICT(key1=1, ...)
     -------------------------------------
     you are write! use it!
     """
-    def __bool__(self) -> bool:
-        if self.KWARGS:
-            return True
-        else:
-            return False
-
-    def __iter__(self):
-        yield from self.KWARGS
-
-    def __call__(self):
-        return self.KWARGS
+    # def __bool__(self) -> bool:
+    #     if self.KWARGS:
+    #         return True
+    #     else:
+    #         return False
+    #
+    # def __iter__(self):
+    #     yield from self.KWARGS
+    #
+    # def __call__(self):
+    #     return self.KWARGS
 
 
 # =====================================================================================================================
