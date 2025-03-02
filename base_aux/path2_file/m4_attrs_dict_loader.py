@@ -1,5 +1,6 @@
-import pathlib
 from typing import *
+import pathlib
+import os
 
 from base_aux.path2_file.m3_filetext import *
 
@@ -22,7 +23,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
     STYLE: DictTextFormat = DictTextFormat.AUTO
-    KEYPATH: list[str | int] = ()
+    KEYPATH: tuple[str | int] = ()
 
     FILEPATH: pathlib.Path
     TEXT: str
@@ -31,7 +32,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     def __init__(
             self,
             target: type | Any = None,
-            keypath: list[str | int] = None,     # path to exact dict in dict
+            keypath: tuple[str | int] = None,     # path to exact dict in dict
             style: DictTextFormat = None,
 
             **kwargs,       # init File/Text
@@ -97,7 +98,7 @@ class PvLoaderIni(AttrsLoader_DictTextFile):
 
     # INIT -------
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
-    KEYPATH: list[str | int]
+    KEYPATH: tuple[str | int]
 
 
 class PvLoaderJson(AttrsLoader_DictTextFile):
@@ -106,10 +107,53 @@ class PvLoaderJson(AttrsLoader_DictTextFile):
 
     # INIT -------
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
-    KEYPATH: list[str | int]
+    KEYPATH: tuple[str | int]
 
 
-# -----------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
+class PvLoaderEnv(NestCall_Resolve):
+    # INIT -------
+    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = Init_AnnotsAttrByKwArgs
+    PATTS: tuple[str] = ()
+
+    def __init__(
+            self,
+            target: type | Any = None,
+            patts: tuple[str] = None,
+            **kwargs,
+    ) -> None | NoReturn:
+        super().__init__(**kwargs)
+
+        if target is not None:
+            self.TARGET = target
+
+        if patts is not None:
+            self.PATTS = patts
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def resolve(self) -> NestInit_AnnotsAttrByKwArgs | Any | NoReturn:
+        # get dict -------
+        data = dict(os.environ)     # just a copy!
+
+        # filter ---
+        if self.PATTS:
+            filterd_out = filter(lambda name: not any([re.search(pat, name) for pat in self.PATTS]), data)
+            for out_i in filterd_out:
+                data.pop(out_i)
+
+        # load args -------
+        if TypeAux(self.TARGET).check__class() and issubclass(self.TARGET, NestInit_AnnotsAttrByKwArgs):
+            # used for check Annots all inited!
+
+            result = self.TARGET(**data)
+        else:
+            AnnotsAux(self.TARGET).set_annots_attrs__by_args_kwargs(**data)
+            result = self.TARGET
+
+        return result
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 def _explore():
     pass
 

@@ -33,7 +33,7 @@ EXAMPLE_PV_JSON = """
 """
 
 
-class Test__PV:
+class Test__PvFiles:
     VICTIM_INI = pathlib.Path.home().joinpath("test_pv.ini")
     VICTIM_JSON = pathlib.Path.home().joinpath("test_pv.json")
     @classmethod
@@ -75,6 +75,50 @@ class Test__PV:
 
         assert pv.name == "name1"
         assert pv.NAME == "name1"
+
+
+# =====================================================================================================================
+class Test__PvEnv:
+    VALUE: str = "VALUE"
+
+    NAME_Exists: str = "pv_Exists"
+    NAME_NotExists: str = "pv_NotExists"
+
+    @classmethod
+    def setup_class(cls):
+        os.environ[cls.NAME_Exists] = cls.VALUE
+
+    @classmethod
+    def teardown_class(cls):
+        for name in [cls.NAME_Exists, cls.NAME_NotExists]:
+            try:
+                del os.environ[name]
+            except:
+                pass
+
+    # def setup_method(self, method):
+    #     pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def test__Exists(self):
+        self.victim = PvLoaderEnv().resolve()
+
+        assert self.victim[self.NAME_Exists.lower()] == self.VALUE
+        assert self.victim[self.NAME_Exists.upper()] == self.VALUE
+
+        assert getattr(self.victim, self.NAME_Exists) == self.VALUE
+        assert getattr(self.victim, self.NAME_Exists.lower()) == self.VALUE
+        assert getattr(self.victim, self.NAME_Exists.upper()) == self.VALUE
+
+    def test__notExists(self):
+        self.victim = PvLoaderEnv().resolve()
+
+        try:
+            self.victim[self.NAME_NotExists]
+        except AttributeError:
+            return
+        else:
+            assert False
 
 
 # =====================================================================================================================
