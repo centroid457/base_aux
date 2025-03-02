@@ -90,7 +90,7 @@ def test__item__get_original_2():
     ]
 )
 def test__path__get_original__value_get(source, path, _EXPECTED):
-    func_link = IterAux(source).path__get_original
+    func_link = IterAux(source).keypath__get_original
     ExpectAux(func_link, path).check_assert(_EXPECTED[0])
 
     func_link = IterAux(source).value__get

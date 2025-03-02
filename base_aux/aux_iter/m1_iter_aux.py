@@ -33,6 +33,7 @@ class IterAux(NestInit_Source):
     # def init_post(self):
     #     self.PATH = []
 
+    # -----------------------------------------------------------------------------------------------------------------
     def item__get_original(self, item: Any) -> Any | NoValue:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
@@ -66,72 +67,72 @@ class IterAux(NestInit_Source):
         return NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
-    def path__get_original(self, *path: TYPING.ITERPATH_KEY) -> TYPING.ITERPATH | None | NoReturn:
+    def item__check_exist(self, item: Any) -> bool:
+        return self.item__get_original(item) is not NoValue
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def keypath__get_original(self, *keypath: TYPING.ITERPATH_KEY) -> TYPING.ITERPATH | None | NoReturn:
         """
         NOTES:
-        1. path used as address KEY for dicts and as INDEX for other listed data
+        1. keypath used as address KEY for dicts and as INDEX for other listed data
         2. separator is only simple SLASH '/'!
 
-        :param path:
+        :param keypath:
         :return:
-            None - if path is unreachable/incorrect
-            tuple[Any] - reachable path which could be used to get VALUE from data by chain data[i1][i2][i3]
+            None - if keypath is unreachable/incorrect
+            tuple[Any] - reachable keypath which could be used to get VALUE from data by chain data[i1][i2][i3]
         """
         source = self.SOURCE
-        if not path:
-            return None
+        if not keypath:
+            return ()   # ROOT is OK!
 
         # work ----------------------------
         result = []
-        for path_i in path:
-            address_original = NoValue
+        for key_i in keypath:
+            key_original = NoValue
 
             if isinstance(source, dict):
-                address_original = IterAux(source).item__get_original(path_i)
-                if address_original == NoValue:
+                key_original = IterAux(source).item__get_original(key_i)
+                if key_original == NoValue:
                     return
                 else:
-                    source = source[address_original]
+                    source = source[key_original]
 
             elif isinstance(source, set):
                 raise TypeError(f"{source=}")
 
             elif isinstance(source, (list, tuple)):
                 try:
-                    source = source[int(path_i)]
-                    address_original = int(path_i)  # place last!
+                    source = source[int(key_i)]
+                    key_original = int(key_i)  # place last!
                 except:
                     return
 
             else:
-                address_original = AttrAux(source).anycase__name_original(str(path_i))
-                if address_original is None:
+                key_original = AttrAux(source).anycase__name_original(str(key_i))
+                if key_original is None:
                     return
                 else:
-                    source = getattr(source, address_original)
+                    source = getattr(source, key_original)
 
             # -----------------------------
-            result.append(address_original)
+            result.append(key_original)
 
         return tuple(result)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def value__check_exist(self, item: Any) -> bool:
-        return self.item__get_original(item) is not NoValue
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def value__get(self, *path: TYPING.ITERPATH_KEY) -> Any | NoReturn:
+    def value__get(self, *keypath: TYPING.ITERPATH_KEY) -> Any | NoReturn:
         result = self.SOURCE
-        path = self.path__get_original(*path)
-        for path_i in path:
+        keypath = self.keypath__get_original(*keypath)
+        for key_i in keypath:
             try:
-                result = result[path_i]
+                result = result[key_i]
             except:
-                result = AttrAux(result).anycase__getattr(path_i)     # raise
+                result = AttrAux(result).anycase__getattr(key_i)     # raise
 
         return result
 
-    def value__set(self, path: TYPING.ITERPATH, value: Any) -> bool:
+    def value__set(self, keypath: TYPING.ITERPATH, value: Any) -> bool:
         """
         GOAL
         ----
@@ -140,18 +141,18 @@ class IterAux(NestInit_Source):
         source = self.SOURCE
 
         # work ----------------------------
-        path = self.path__get_original(*path)
+        keypath = self.keypath__get_original(*keypath)
         try:
-            length = len(path)
-            for pos, path_i in enumerate(path, start=1):
+            length = len(keypath)
+            for pos, key_i in enumerate(keypath, start=1):
                 if pos == length:
                     try:
-                        source[path_i] = value
+                        source[key_i] = value
                     except:
-                        AttrAux(source).anycase__setattr(path_i, value)     # raise
+                        AttrAux(source).anycase__setattr(key_i, value)     # raise
                     return True
                 else:
-                    source = IterAux(source).value__get(path_i)
+                    source = IterAux(source).value__get(key_i)
         except:
             return False
 

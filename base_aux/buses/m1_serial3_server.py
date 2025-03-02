@@ -328,7 +328,7 @@ class SerialServer_Base(Logger, QThread):
 
         # VALIDATE = check AVAILABLE TO CHANGE = exists all and not callable --------------
         for path, value_new in KWARGS.items():
-            path_name__original = IterAux(self.PARAMS).path__get_original(path)
+            path_name__original = IterAux(self.PARAMS).keypath__get_original(path)
             if not path_name__original:
                 return self.ANSWER.ERR__NAME_CMD_OR_PARAM
 
