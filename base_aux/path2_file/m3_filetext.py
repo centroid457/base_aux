@@ -24,16 +24,14 @@ class TextFile(FileAux, TextAux):
 
         if filepath is not None:
             self.FILEPATH = pathlib.Path(filepath)
-        if self.check_exists():
-            if self.FILEPATH.is_file():
-                self.read__text()
-            else:
-                raise Exx__Incompatible(f"{self.FILEPATH=}")
+        if self.check_exists() and not self.FILEPATH.is_file():
+            raise Exx__Incompatible(f"{self.FILEPATH=}")
 
         if text is not None:
             self.TEXT = str(text)
-        # else:
-        #     self.TEXT
+        else:
+            if self.check_exists():
+                self.read__text()
 
 
 # =====================================================================================================================
