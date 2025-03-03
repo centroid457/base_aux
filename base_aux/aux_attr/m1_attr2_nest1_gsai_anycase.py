@@ -9,9 +9,14 @@ class NestGA_AttrIC:
 
 
 # class NestSA_AttrAnycase:
-#     # TODO: DEPRECATE!!! max depth recursion ====================== IF NEED SET ANYCASE - USE DIRECT AnnotAux(obj).set*
+#     # TODO: DEPRECATE!!! RecursionError ======================
+#           IF NEED SET ANYCASE - USE DIRECT AnnotAux(obj).set*
+#           if apply this variant - you can solve recursion BIT it will never create not exists attr!!! - bad news!!!
 #     def __setattr__(self, name, value) -> None | NoReturn:
-#         return AttrAux(self).anycase__setattr(name, value)
+#         if AttrAux(self).anycase__check_exists(name):
+#             return AttrAux(self).anycase__setattr(name, value)
+#         else:
+#             raise AttributeError(f"{name=}")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -27,14 +32,14 @@ class NestGI_AttrIC:
 
 
 # class NestSI_AttrAnycase:
-#     # TODO: DEPRECATE!!! max depth recursion
+#     # TODO: DEPRECATE!!! RecursionError ======================
 #     def __setitem__(self, name, value) -> None | NoReturn:
 #         return AttrAux(self).anycase__setitem(name, value)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class NestGSI_AttrAnycase(NestGI_AttrIC, NestSI_AttrAnycase):
-#     # TODO: DEPRECATE!!! max depth recursion
+#     # TODO: DEPRECATE!!! RecursionError ======================
 #     pass
 
 
@@ -45,8 +50,8 @@ class NestGAI_AttrIC(NestGA_AttrIC, NestGI_AttrIC):
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class NestGSAI_AttrAnycase(NestGSA_AttrAnycase, NestGSI_AttrAnycase):
-#     # TODO: DEPRECATE!!! max depth recursion
+#     # TODO: DEPRECATE!!! RecursionError ======================
 #     pass
 #
 #
-# # =====================================================================================================================
+# =====================================================================================================================
