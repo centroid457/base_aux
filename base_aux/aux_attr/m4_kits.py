@@ -74,7 +74,7 @@ class AttrKit_Blank(Nest_AttrKit):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AttrKit_NamePwd(Nest_AttrKit):
+class AttrKit_AuthNamePwd(Nest_AttrKit):
     NAME: str
     PWD: str
 
@@ -84,6 +84,13 @@ class AttrKit_AuthTgBot(Nest_AttrKit):
     LINK_ID: str = None     # @mybot20230913
     NAME: str = None        # MyBotPublicName
     TOKEN: str
+
+
+@final
+class AttrKit_AuthServer(Nest_AttrKit):
+    NAME: str
+    PWD: str
+    SERVER: str
 
 
 # =====================================================================================================================

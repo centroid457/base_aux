@@ -22,12 +22,16 @@ class PvLoaderIni(AttrsLoader_DictTextFile):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class PvLoaderIni_NamePwd(PvLoaderIni):
-    TARGET = AttrKit_NamePwd
+class PvLoaderIni_AuthNamePwd(PvLoaderIni):
+    TARGET = AttrKit_AuthNamePwd
 
 
 class PvLoaderIni_AuthTgBot(PvLoaderIni):
     TARGET = AttrKit_AuthTgBot
+
+
+class PvLoaderIni_AuthServer(PvLoaderIni):
+    TARGET = AttrKit_AuthServer
 
 
 # =====================================================================================================================
@@ -41,12 +45,16 @@ class PvLoaderJson(AttrsLoader_DictTextFile):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class PvLoaderJson_NamePwd(PvLoaderJson):
-    TARGET = AttrKit_NamePwd
+class PvLoaderJson_AuthNamePwd(PvLoaderJson):
+    TARGET = AttrKit_AuthNamePwd
 
 
 class PvLoaderJson_AuthTgBot(PvLoaderJson):
     TARGET = AttrKit_AuthTgBot
+
+
+class PvLoaderJson_AuthServer(PvLoaderJson):
+    TARGET = AttrKit_AuthServer
 
 
 # =====================================================================================================================

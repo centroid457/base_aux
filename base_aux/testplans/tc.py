@@ -19,11 +19,6 @@ class _TestCaseBase0(Logger):
     pass
 
 
-# class Settings(PrivateJson):
-#     value1: int = 0
-#     value2: int
-
-
 # =====================================================================================================================
 class Signals(SignalsTemplate):
     signal__tc_state_changed = pyqtSignal(_TestCaseBase0)

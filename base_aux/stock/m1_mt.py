@@ -15,7 +15,8 @@ from base_aux.stock.m0_symbols import *
 from base_aux.stock.m2_time_series import *
 from base_aux.stock.m3_indicators import *
 
-from base_aux.privates.m5_auto import *
+from base_aux.privates.m1_privates import *
+from base_aux.aux_attr.m4_kits import *
 from base_aux.alerts.m0_base import *
 
 
@@ -44,14 +45,8 @@ class Exx__Mt5SymbolName(Exception):
 
 
 # =====================================================================================================================
-class PrivateMT5(PrivateAuthAuto):
-    SECTION = "AUTH_MT5_DEF"
-    SERVER: str
-
-
-# =====================================================================================================================
 class MT5:
-    MT5_AUTH: PrivateMT5 = PrivateMT5()
+    MT5_AUTH = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
 
     SYMBOL: Type__Symbol = "BRX3"
     TF: int = mt5.TIMEFRAME_M10
@@ -90,7 +85,7 @@ class MT5:
 
     # CONNECT ---------------------------------------------------------------------------------------------------------
     def mt5_connect(self) -> Optional[NoReturn]:
-        result = mt5.initialize(login=int(self.MT5_AUTH.USER), password=self.MT5_AUTH.PWD, server=self.MT5_AUTH.SERVER)
+        result = mt5.initialize(login=int(self.MT5_AUTH.NAME), password=self.MT5_AUTH.PWD, server=self.MT5_AUTH.SERVER)
         msg = f"[{result}]initialize[{mt5.last_error()=}]"
         print(msg)
         if not result:

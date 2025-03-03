@@ -5,7 +5,7 @@ import re
 import imaplib
 import email
 
-from base_aux.lambdas.m1_lambdas import Lambda
+from base_aux.aux_attr.m4_kits import *
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
 from base_aux.alerts.m2_select import *
@@ -66,7 +66,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
     INTERVAL: int = 1 * 1 * 10
 
     SERVER: ImapAddress = ImapServers.MAIL_RU
-    AUTH: PrivateBase = Lambda(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
+    AUTH: AttrKit_AuthNamePwd = PvLoaderIni(target=AttrKit_AuthNamePwd, keypath=("AUTH_EMAIL_DEF",))
     FOLDER: Optional[str] = None
     SUBJECT_REGEXP: Optional[str] = None
     # MARK_AS_READ: bool = True

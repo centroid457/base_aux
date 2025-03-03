@@ -21,7 +21,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     1. (MAIN) delay probable raising on direct func execution (used with NestInit_AttrsLambdaResolve)
     like creating aux_types on Cls attributes
         class Cls:
-            ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123)
+            ATTR = PrivateValues(123)   # -> Lambda(PrivateValues, 123) - IT IS OLD!!!! but could be used as example!
 
     2. (not serious) replace simple lambda!
     by using lambda you should define args/kwargs any time! and im sick of it!

@@ -1,21 +1,12 @@
-from .m0_base import *
-
 from typing import *
-
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from base_aux.lambdas.m1_lambdas import Lambda
-from base_aux.privates.m6_derivative_base import *
-from base_aux.privates.m5_auto import *
+from base_aux.alerts.m0_base import *
+from base_aux.privates.m1_privates import *
+from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
-
-
-# =====================================================================================================================
-# TODO: cant solve not to use always connecting - tried many variants!
-# make decision - use only one ability to send - only by instantiating!
-# always will connecting! but always in threads! so dont mind!
 
 
 # =====================================================================================================================
@@ -43,7 +34,7 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
     """
     # SETTINGS ------------------------------------
     SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: PrivateAuth = Lambda(PrivateAuthAuto, _section="AUTH_EMAIL_DEF")
+    AUTH: AttrKit_AuthNamePwd = PvLoaderIni_AuthNamePwd(keypath=("AUTH_EMAIL_DEF",))
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------
@@ -54,7 +45,7 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
         return True
 
     def _login_unsafe(self) -> Union[bool, NoReturn]:
-        response = self._conn.login(self.AUTH.USER, self.AUTH.PWD)
+        response = self._conn.login(self.AUTH.NAME, self.AUTH.PWD)
         print(response)
         print("=" * 100)
         return response and response[0] in [235, 503]
@@ -65,14 +56,14 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
 
     def _msg_compose(self) -> MIMEMultipart:
         msg = MIMEMultipart()
-        msg["From"] = self.AUTH.USER
-        msg["To"] = self.RECIPIENT_SPECIAL or self.AUTH.USER
+        msg["From"] = self.AUTH.NAME
+        msg["To"] = self.RECIPIENT_SPECIAL or self.AUTH.NAME
         msg['Subject'] = self.SUBJECT
         msg.attach(MIMEText(self.body, _subtype=self._subtype))
         return msg
 
     def _recipient_self_get(self) -> str:
-        return self.AUTH.USER
+        return self.AUTH.NAME
 
 
 # =====================================================================================================================

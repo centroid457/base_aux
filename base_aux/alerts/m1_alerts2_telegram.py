@@ -2,15 +2,13 @@ from typing import *
 
 from base_aux.lambdas.m1_lambdas import Lambda
 from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
-from base_aux.privates.m5_auto import *
+from base_aux.privates.m1_privates import *
+from base_aux.aux_attr.m4_kits import *
 from .m0_base import *
 
 
 # =====================================================================================================================
-class RecipientTgID(PrivateAuto):
-    """Object to get telegram RecipientId
-    """
-    SECTION = "TG_ID"
+class RecipientTgID(Nest_AttrKit):
     MyTgID: str
 
 
@@ -19,7 +17,8 @@ class AlertTelegram(NestInit_AttrsLambdaResolve, AlertBase):
     """realisation for sending Telegram msg
     """
     # SETTINGS ------------------------------------
-    SERVER_TG: PrivateTgBotAddressAuto = Lambda(PrivateTgBotAddressAuto, _section="TGBOT_DEF")
+    SERVER_TG: AttrKit_AuthNamePwd = PvLoaderIni_AuthTgBot(keypath=("TGBOT_DEF",))
+    RecipientTgID: AttrKit_AuthNamePwd = PvLoaderIni(target=RecipientTgID, keypath=("TG_ID",))
 
     # AUX -----------------------------------------
     _conn: telebot.TeleBot
@@ -37,7 +36,7 @@ class AlertTelegram(NestInit_AttrsLambdaResolve, AlertBase):
         return msg
 
     def _recipient_self_get(self) -> str:
-        return RecipientTgID().MyTgID
+        return self.RecipientTgID.MyTgID
 
 
 # =====================================================================================================================

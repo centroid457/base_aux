@@ -30,11 +30,12 @@ class AlertSmtpMOD(AlertSmtp):
 # =========================================================================================
 #### 2. change authorisation data (see `privates` for details)
 from base_aux.alerts import *
-from base_aux.privates.m5_auto import *
+from base_aux.privates.m1_privates import *
 
 
 class AlertSmtpMOD(AlertSmtp):
-    AUTH: PrivateAuto = PrivateAuto(_section="AUTH_EMAIL_MOD")
+    AUTH: AttrKit_AuthNamePwd = PvLoaderIni(target=AttrKit_AuthNamePwd, keypath=("AUTH_EMAIL_MOD",))
+
 
 # =========================================================================================
 #### 3. change other settings (see source for other not mentioned)
