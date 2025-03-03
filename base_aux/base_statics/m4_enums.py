@@ -1,5 +1,3 @@
-from enum import Enum, auto
-
 from base_aux.base_statics.m4_enum0_nest_eq import *
 
 
@@ -11,38 +9,38 @@ see _examples below and tests to understand work
 
 # =====================================================================================================================
 class When2(NestEq_Enum):
-    BEFORE = auto()
-    AFTER = auto()
+    BEFORE = 1
+    AFTER = 2
 
 
 class When3(NestEq_Enum):
-    BEFORE = auto()
-    AFTER = auto()
-    MIDDLE = auto()
+    BEFORE = 1
+    AFTER = 2
+    MIDDLE = 3
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class Where2(NestEq_Enum):
-    FIRST = auto()
-    LAST = auto()
+    FIRST = 1
+    LAST = 2
 
 
 class Where3(NestEq_Enum):
-    FIRST = auto()
-    LAST = auto()
-    MIDDLE = auto()
+    FIRST = 1
+    LAST = 2
+    MIDDLE = 3
 
 
 # =====================================================================================================================
 class CallableResolve(NestEq_Enum):
-    DIRECT = auto()
-    EXX = auto()
-    RAISE = auto()
-    RAISE_AS_NONE = auto()
-    BOOL = auto()
+    DIRECT = 1
+    EXX = 2
+    RAISE = 3
+    RAISE_AS_NONE = 4
+    BOOL = 5
 
-    SKIP_CALLABLE = auto()
-    SKIP_RAISED = auto()
+    SKIP_CALLABLE = 6
+    SKIP_RAISED = 7
 
 
 # =====================================================================================================================
@@ -57,10 +55,10 @@ class ProcessState(NestEq_Enum):
     CallableAux.resolve when returns SKIPPED like object!
     """
     NONE = None
-    STARTED = auto()
-    SKIPPED = auto()
-    STOPPED = auto()
-    RAISED = auto()
+    STARTED = 1
+    SKIPPED = 2
+    STOPPED = 3
+    RAISED = 4
     FAILED = False
     SUCCESS = True
 
@@ -72,8 +70,8 @@ class FormIntExt(NestEq_Enum):
     ---------------------
     AttrAux show internal external names for PRIVATES
     """
-    INTERNAL = auto()
-    EXTERNAL = auto()
+    INTERNAL = 1
+    EXTERNAL = 2
 
 
 # =====================================================================================================================
@@ -89,20 +87,20 @@ class BoolCumulate(NestEq_Enum):
     """
     ALL_TRUE = all
     ANY_TRUE = any
-    ANY_FALSE = auto()
-    ALL_FALSE = auto()
+    ANY_FALSE = 1
+    ALL_FALSE = 2
 
 
 # =====================================================================================================================
 class PathType(NestEq_Enum):
-    FILE = auto()
-    DIR = auto()
-    ALL = auto()
+    FILE = 1
+    DIR = 2
+    ALL = 3
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class AppendType(NestEq_Enum):
-#     NEWLINE = auto()
+#     NEWLINE = 1
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -194,10 +192,10 @@ class CmpType(NestEq_Enum):
     ---------------------
     path1_dirs.DirAux.iter(timestamp)
     """
-    LT = auto()
-    LE = auto()
-    GT = auto()
-    GE = auto()
+    LT = 1
+    LE = 2
+    GT = 3
+    GE = 4
 
 
 # =====================================================================================================================
@@ -208,8 +206,8 @@ class AttrStyle(NestEq_Enum):
     NestInit_AnnotsAttrsByKwArgs_Base for separating work with - TODO: DEPRECATE?
     """
     ALL = None
-    ATTRS_ONLY = auto()
-    ANNOTS_ONLY = auto()
+    ATTRS_ONLY = 1
+    ANNOTS_ONLY = 2
 
 
 class AttrLevel(NestEq_Enum):
@@ -219,16 +217,16 @@ class AttrLevel(NestEq_Enum):
     AttrKit_Blank
     """
     NOT_HIDDEN = None
-    NOT_PRIVATE = auto()
-    ALL = auto()
+    NOT_PRIVATE = 1
+    ALL = 2
 
-    PRIVATE = auto()    # usually not used! just in case!
+    PRIVATE = 3    # usually not used! just in case!
 
 
 # =====================================================================================================================
 # class Represent(NestEq_EnumNestEqIc_Enum):
-#     NAME = auto()
-#     OBJECT = auto()
+#     NAME = 1
+#     OBJECT = 2
 
 
 # =====================================================================================================================

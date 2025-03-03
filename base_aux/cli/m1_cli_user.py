@@ -1,3 +1,15 @@
+"""
+    Designed to send commands into OS terminal
+
+    "send commands into OS terminal",
+    "check if cli commands are accessible (special utilities is installed)",
+    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
+    "use batch timeout for list",
+    "till_first_true",
+    "counter/counter_in_list",
+
+"""
+
 from typing import *
 import subprocess
 import time

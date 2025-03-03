@@ -2586,8 +2586,8 @@ def test__pytest_research__param(request, p1, p2):   # starichenko
 
     print(f"ТЕСТКЕЙС ПЕРЕМЕННЫЕ ИНДЕКС ИЗ ПАРАМЕТРИЗАЦИИ=[{request.node.callspec.indices}]")    # {'p1': 0, 'p2': 0} - начинается с НУЛЯ!!!
 
-    print(f"ТЕСТКЕЙС ФАЙЛ=[{request.fspath}]")  # [C:\!_HPN277SR\!!!_GD_additional\dwdm_test_system\utilities\test_func_universal.py]
-    print(f"ТЕСТКЕЙС ФАЙЛ=[{request.node.fspath}]")     # [C:\!_HPN277SR\!!!_GD_additional\dwdm_test_system\utilities\test_func_universal.py]
+    print(f"ТЕСТКЕЙС ФАЙЛ=[{request.fspath}]")  # [C:\!_HPN277SR\!!!_GD_additional\dwdm_test_system\utilities\_test_func_universal.py]
+    print(f"ТЕСТКЕЙС ФАЙЛ=[{request.node.fspath}]")     # [C:\!_HPN277SR\!!!_GD_additional\dwdm_test_system\utilities\_test_func_universal.py]
     print(f"ТЕСТКЕЙС ИМЯ ОТЧЕТНОЕ=[{request.node.name}]")   # [test__pytest_research__param[1-1]]
     print(f"ТЕСТКЕЙС ИМЯ ФУНКЦИИ=[{request.node.originalname}]")    # [test__pytest_research__param]
 

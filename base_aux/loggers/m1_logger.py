@@ -31,8 +31,13 @@ def _example_zero():
 # =====================================================================================================================
 class Logger:
     """
-    NOTES:
-        DONT use directly root as secondary loggers - use it only as first or it would be applyed automatically!
+    GOAL
+    ----
+    keep all mostly used meth in hidden class
+
+    NOTE
+    ----
+    DONT use directly root as secondary loggers - use it only as first or it would be applyed automatically!
     """
 
     # SETTINGS ---------------------------------------
