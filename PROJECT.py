@@ -33,9 +33,31 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 13))
+    VERSION = Version((0, 2, 14))
     NEWS: list[str] = [
-        "[serial] turn back ValueUnit",
+        "[ini] add ConfigParserMod",
+        "[AttrKit] add",
+        [
+            "[Text]",
+                "add parse__dict_ini",
+                "fix__json/parse__json",
+                "add delete__cmts_c",
+                "add search__group - need fix",
+         ],
+        "[TextFile] add DictTextFileLoader",
+        "[NestInit_AttrsLambdasResolve] use with Resolvers",
+        ["[Nest*_Attrs]",
+            "separate all for Attrs Contains/Eq/Len/StR",
+            "[NestSAI_AttrAnycase] deprecate all Setattrs* cause recursion exx",
+
+         ],
+        ["[EqValid]",
+            "add EqValid_AnnotsAllExists",
+            "add EqValid_AttrsByObjNotPrivate*",
+         ],
+        "[PV] deprecate old and add new PvLoaderIni/json/env",
+        "[Kwargs] ref to simple dict nesting",
+
     ]
 
 
