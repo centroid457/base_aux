@@ -62,7 +62,7 @@ class Nest_AttrKit(
 
 
 # =====================================================================================================================
-@final
+@final      # TODO: decide not use final and use nesting any kit, by collecting attrs???
 class AttrKit_Blank(Nest_AttrKit):
     """
     GOAL
@@ -74,7 +74,7 @@ class AttrKit_Blank(Nest_AttrKit):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AttrKit_AuthNamePwd(Nest_AttrKit):
+class AttrKit_NamePwd(Nest_AttrKit):
     NAME: str
     PWD: str
 
