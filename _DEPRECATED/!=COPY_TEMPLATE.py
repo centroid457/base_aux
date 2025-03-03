@@ -24,7 +24,7 @@ def remove_readonly(func, path, _):
 for dirpath in [".git", ".idea"]:
     shutil.rmtree(path_new.joinpath(dirpath), onerror=remove_readonly)
 
-for filepath in [pathlib.Path(__file__).name, ]:
+for filepath in [pathlib.Path(__file__).name, ]:         #DEL THIS FILE!
     path_new.joinpath(filepath).unlink(missing_ok=True)
 
 
