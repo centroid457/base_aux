@@ -8,12 +8,14 @@ class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create Annot
     """
     NOTE
     ----
-    for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!
+    1. for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!
         class Cls(NestInit_AnnotsAttrByKwArgs):
             A1: Any
             A2: Any
             A3: Any = 1
             A4: Any = 1
+
+    2. mutable values are acceptable!!!
 
     GOAL
     ----
@@ -32,6 +34,7 @@ class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create Annot
         - if not existed in Annots and Attrs - create new!
     """
     def __init__(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
+        AttrAux(self).values__reinit_mutable()  # keep on first step!!! reinit only classvalues!
         AnnotsAux(self).set_annots_attrs__by_args_kwargs(*args, **kwargs)
         AnnotsAux(self).check_all_defined_or_raise()    # fixme: is it really need? i think yes! use default values for noRaise!
 
@@ -44,32 +47,6 @@ class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create Annot
 #     but attrs access will be IgnoreCased
 #     """
 #     pass
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-def examples__NestInit():
-    class Example(NestInit_AnnotsAttrByKwArgs):
-        A1: Any
-        A2: Any = None
-        A3 = None
-
-    try:
-        Example()
-        assert False
-    except:
-        assert True
-
-    assert Example(a1=1).A1 == 1
-    assert Example(1, a1=2).A1 == 2
-
-    assert Example(1).A1 == 1
-    assert Example(1).A2 == None
-    assert Example(1).A3 == None
-
-    assert Example(1, 1, 1).A1 == 1
-    assert Example(1, 1, 1).A2 == 1
-    assert Example(1, 1, 1).A3 == None
-    assert Example(1, 1, a3=1).A3 == 1
 
 
 # =====================================================================================================================

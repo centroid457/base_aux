@@ -289,6 +289,31 @@ class AttrAux(NestInit_Source):
         return result
 
     # =================================================================================================================
+    def values__reinit_mutable(self) -> None:
+        """
+        GOAL
+        ----
+        reinit default mutable values from class dicts/lists on instantiation.
+        usually intended blank values.
+
+        REASON
+        ------
+        for dataclasses you should use field(dict) but i think it is complicated (but of cause more clear)
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        Nest_AttrKit
+        """
+        for attr in self.iter__not_private():
+            value = getattr(self.SOURCE, attr)
+            if isinstance(value, dict):
+                setattr(self.SOURCE, attr, dict(value))
+            elif isinstance(value, list):
+                setattr(self.SOURCE, attr, list(value))
+            elif isinstance(value, set):
+                setattr(self.SOURCE, attr, set(value))
+
+    # =================================================================================================================
     def load__by_dict(self, other: dict[str, Any], only_existed: bool = None) -> Any | AttrsDump:
         """
         MAIN ITEA
