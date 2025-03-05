@@ -25,6 +25,31 @@ class AttrAux(NestInit_Source):
     SOURCE: Any
 
     # =================================================================================================================
+    def reinit__mutable_values(self) -> None:
+        """
+        GOAL
+        ----
+        reinit default mutable values from class dicts/lists on instantiation.
+        usually intended blank values.
+
+        REASON
+        ------
+        for dataclasses you should use field(dict) but i think it is complicated (but of cause more clear)
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        Nest_AttrKit
+        """
+        for attr in self.iter__attrs_not_private():
+            value = getattr(self.SOURCE, attr)
+            if isinstance(value, dict):
+                setattr(self.SOURCE, attr, dict(value))
+            elif isinstance(value, list):
+                setattr(self.SOURCE, attr, list(value))
+            elif isinstance(value, set):
+                setattr(self.SOURCE, attr, set(value))
+
+    # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
@@ -272,32 +297,7 @@ class AttrAux(NestInit_Source):
         return result
 
     # =================================================================================================================
-    def values__reinit_mutable(self) -> None:
-        """
-        GOAL
-        ----
-        reinit default mutable values from class dicts/lists on instantiation.
-        usually intended blank values.
-
-        REASON
-        ------
-        for dataclasses you should use field(dict) but i think it is complicated (but of cause more clear)
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        Nest_AttrKit
-        """
-        for attr in self.iter__attrs_not_private():
-            value = getattr(self.SOURCE, attr)
-            if isinstance(value, dict):
-                setattr(self.SOURCE, attr, dict(value))
-            elif isinstance(value, list):
-                setattr(self.SOURCE, attr, list(value))
-            elif isinstance(value, set):
-                setattr(self.SOURCE, attr, set(value))
-
-    # =================================================================================================================
-    def load__by_kwargs(self, **kwargs: dict[str, Any]) -> None:
+    def sai__by_args_kwargs(self, *args: Any, **kwargs: dict[str, Any]) -> Any | NoReturn:
         """
         MAIN ITEA
         ----------
@@ -305,9 +305,21 @@ class AttrAux(NestInit_Source):
         but you can use any types for your own!
         expected you know what you do and do exactly ready to use final values/not callables in otherObj!
         """
-        # work ----------
+        self.sai__by_args(*args)
+        self.sai__by_kwargs(**kwargs)
+
+        return self.SOURCE
+
+    def sai__by_args(self, *args: Any) -> Any | NoReturn:
+        if args:
+            raise AttributeError(f"args acceptable only for Annots! {args=}")
+
+        return self.SOURCE
+
+    def sai__by_kwargs(self, **kwargs: dict[str, Any]) -> Any | NoReturn:
         for name, value in kwargs.items():
             self.sai_ic(name, value)
+        return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
     def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
@@ -355,7 +367,7 @@ class AttrAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrDump | NoReturn:
         data = self.dump_dict(callables_resolve)
-        obj = AttrAux(AttrDump()).load__by_kwargs(**data)
+        obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
         return obj
 
     # -----------------------------------------------------------------------------------------------------------------

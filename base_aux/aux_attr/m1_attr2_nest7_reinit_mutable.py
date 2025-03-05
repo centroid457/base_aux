@@ -15,7 +15,7 @@ class NestInit_Mutable:
     use simple copy past method!
     """
     def __init__(self, *args, **kwargs) -> None:
-        AttrAux(self).values__reinit_mutable()  # keep on first step!!! reinit only classvalues!
+        AttrAux(self).reinit__mutable_values()  # keep on first step!!! reinit only classvalues!
         super().__init__(*args, **kwargs)
 
 

@@ -126,30 +126,6 @@ class AnnotAttrAux(AttrAux):
     def list_annots(self) -> list[str]:
         return list(self.dump_dict__annot_types())
 
-    def name_ic__get_original(self, name_index: str | int) -> str | None:
-        # 1=annots ---------
-        name_annot = IterAux(self.list_annots()).item__get_original(name_index)
-        if name_annot not in [NoValue, None]:
-            return name_annot
-
-        # 2=attrs ---------
-        return super().name_ic__get_original(name_index)
-
-    def name_annot__get_by_index(self, index: int | str) -> str | None:
-        """
-        GOAL
-        ----
-        get name for annotated attr by index
-        """
-        try:
-            return self.list_annots()[int(index)]
-        except:
-            return
-
-    # INDEX ===========================================================================================================
-    def index_annot__check_available(self, index: int | str) -> bool:
-        return len(self.list_annots()) > int(index)
-
     # =================================================================================================================
     def set_annots_attrs__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
         """

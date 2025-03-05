@@ -99,7 +99,7 @@ def test__anycase__getset(attr, _EXPECTED):
 # =====================================================================================================================
 def test__load():
     victim = AttrDump()
-    AttrAux(victim).load__by_kwargs(**dict(attr=1))
+    AttrAux(victim).sai__by_args_kwargs(**dict(attr=1))
     assert victim.attr == 1
 
     class Victim:
@@ -109,10 +109,10 @@ def test__load():
     assert not hasattr(victim, "attr")
     assert not hasattr(victim, "ATTR")
 
-    AttrAux(victim).load__by_kwargs(**dict(attr=1))
+    AttrAux(victim).sai__by_args_kwargs(**dict(attr=1))
     assert victim.attr == 1
 
-    AttrAux(victim).load__by_kwargs(**dict(ATTR=2))
+    AttrAux(victim).sai__by_args_kwargs(**dict(ATTR=2))
     assert victim.attr == 2
 
     assert not hasattr(victim, "ATTR")
