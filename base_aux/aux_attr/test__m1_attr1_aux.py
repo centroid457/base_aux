@@ -1,8 +1,8 @@
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_attr.m1_attr1_aux import *
 from base_aux.base_statics.m3_primitives import *
 from base_aux.base_statics.m4_enums import *
+from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
@@ -98,7 +98,7 @@ def test__anycase__getset(attr, _EXPECTED):
 
 # =====================================================================================================================
 def test__load():
-    victim = AttrKit_Blank()
+    victim = AttrDump()
     AttrAux(victim).load__by_kwargs(**dict(attr=1))
     assert victim.attr == 1
 

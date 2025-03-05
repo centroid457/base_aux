@@ -5,9 +5,7 @@ from base_aux.aux_attr.m1_attr2_nest4_str import *
 from base_aux.aux_attr.m1_attr2_nest5_contains import *
 from base_aux.aux_attr.m1_attr2_nest6_len import *
 
-from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 from base_aux.aux_attr.m2_annot1_aux import *
-from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import *
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
 
 

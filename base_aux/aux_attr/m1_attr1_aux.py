@@ -5,7 +5,7 @@ from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-from base_aux.aux_attr.m4_kits import *
+from base_aux.aux_attr.m0_static import *
 
 
 # =====================================================================================================================
@@ -217,9 +217,12 @@ class AttrAux(NestInit_Source):
 
         NoReturn - in case of not accepted names when setattr
         """
-        name_original = self.name_ic__get_original(name_index)
+        name_original: str = self.name_ic__get_original(name_index)
         if name_original is None:
             name_original = name_index
+
+        if not name_original:
+            raise IndexError(f"{name_index=}/{self=}")
 
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
@@ -327,7 +330,7 @@ class AttrAux(NestInit_Source):
         """
         result = {}
         for name in self.iter__attrs_not_private():
-            value = self.gai_ic__callable_resolve(name=name, callables_resolve=callables_resolve)
+            value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
             if value == ProcessState.SKIPPED:
                 continue
             result.update({name: value})
@@ -350,9 +353,9 @@ class AttrAux(NestInit_Source):
         return self.dump_dict(CallableResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrKit_Blank | NoReturn:
+    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrDump | NoReturn:
         data = self.dump_dict(callables_resolve)
-        obj = AttrKit_Blank(**data)
+        obj = AttrAux(AttrDump()).load__by_kwargs(**data)
         return obj
 
     # -----------------------------------------------------------------------------------------------------------------
