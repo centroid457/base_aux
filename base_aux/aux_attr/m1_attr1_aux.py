@@ -86,7 +86,7 @@ class AttrAux(NestInit_Source):
                     return name_external
 
     # ITER ------------------------------------------------------------------------------------------------------------
-    def iter__external_not_builtin(self) -> Iterable[str]:
+    def iter__attrs_external_not_builtin(self) -> Iterable[str]:
         """
         NOTE
         ----
@@ -118,7 +118,7 @@ class AttrAux(NestInit_Source):
 
     # -----------------------------------------------------------------------------------------------------------------
     def iter__attrs(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[str]:
-        for name in self.iter__external_not_builtin():
+        for name in self.iter__attrs_external_not_builtin():
             if attr_level == AttrLevel.NOT_PRIVATE:
                 if not name.startswith("__"):
                     yield name
@@ -137,7 +137,7 @@ class AttrAux(NestInit_Source):
             else:
                 raise Exx__Incompatible(f"{attr_level=}")
 
-    def iter__not_hidden(self) -> Iterable[str]:
+    def iter__attrs_not_hidden(self) -> Iterable[str]:
         """
         NOTE
         ----
@@ -146,7 +146,7 @@ class AttrAux(NestInit_Source):
         """
         return self.iter__attrs(AttrLevel.NOT_HIDDEN)
 
-    def iter__not_private(self) -> Iterable[str]:
+    def iter__attrs_not_private(self) -> Iterable[str]:
         """
         NOTE
         ----
@@ -154,7 +154,7 @@ class AttrAux(NestInit_Source):
         """
         return self.iter__attrs(AttrLevel.NOT_PRIVATE)
 
-    def iter__private(self) -> Iterable[str]:
+    def iter__attrs_private(self) -> Iterable[str]:
         """
         BUILTIN - NOT INCLUDED!
 
@@ -172,7 +172,6 @@ class AttrAux(NestInit_Source):
         """
         return self.iter__attrs(AttrLevel.PRIVATE)
 
-
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
 
@@ -180,81 +179,60 @@ class AttrAux(NestInit_Source):
     pass
 
     # NAME ------------------------------------------------------------------------------------------------------------
-    def name_ic__get_original(self, name: str) -> str | None:
+    def name_ic__get_original(self, name_index: str | int) -> str | None:
         """
-        get attr name in original register
+        get attr name_index in original register
         """
-        if not isinstance(name, str):
+        name_index = str(name_index).strip()
+        if not name_index:
             return
 
-        name = str(name).strip()
-        if not name:
-            return
-
-        for name_original in self.iter__external_not_builtin():
-            if name_original.lower() == name.lower():
+        for name_original in self.iter__attrs_external_not_builtin():
+            if name_original.lower() == name_index.lower():
                 return name_original
 
         return
 
-    def name_ic__check_exists(self, name: str) -> bool:
-        return self.name_ic__get_original(name) is not None
+    def name_ic__check_exists(self, name_index: str | int) -> bool:
+        return self.name_ic__get_original(name_index) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
-    def getattr_ic(self, name: str) -> Any | Callable | NoReturn:
+    def gai_ic(self, name_index: str | int) -> Any | Callable | NoReturn:
         """
         GOAL
         ----
-        get attr value by name in any register
+        get attr value by name_index in any register
         no execution/resolving! return pure value as represented in object!
         """
-        name_original = self.name_ic__get_original(name)
+        name_original = self.name_ic__get_original(name_index)
         if name_original is None:
-            raise AttributeError(name)
+            raise IndexError(f"{name_index=}/{self=}")
 
-        value = getattr(self.SOURCE, name_original)
-        return value
+        return getattr(self.SOURCE, name_original)
 
-    def setattr_ic(self, name: str, value: Any) -> None | NoReturn:
+    def sai_ic(self, name_index: str | int, value: Any) -> None | NoReturn:
         """
-        get attr value by name in any register
+        get attr value by name_index in any register
         no execution! return pure value as represented in object!
 
         NoReturn - in case of not accepted names when setattr
         """
-        if not isinstance(name, str):
-            raise TypeError(name)
-
-        name = name.strip()
-        if name in ["", ]:
-            raise AttributeError(name)
-
-        name_original = self.name_ic__get_original(name)
+        name_original = self.name_ic__get_original(name_index)
         if name_original is None:
-            name_original = name
+            name_original = name_index
 
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
 
-    def delattr_ic(self, name: str) -> None:
-        name_original = self.name_ic__get_original(name)
+    def dai_ic(self, name_index: str | int) -> None:
+        name_original = self.name_ic__get_original(name_index)
         if name_original is None:
             return      # already not exists
 
         delattr(self.SOURCE, name_original)
 
-    # ITEM ------------------------------------------------------------------------------------------------------------
-    def getitem_ic(self, name: str) -> Any | Callable | NoReturn:
-        return self.getattr_ic(name)
-
-    def setitem_ic(self, name: str, value: Any) -> None | NoReturn:
-        self.setattr_ic(name, value)
-
-    def delitem_ic(self, name: str) -> None:
-        self.delattr_ic(name)
-
     # =================================================================================================================
-    def getattr_ic__callable_resolve(self, name: str, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: str | int, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
         -------
@@ -271,7 +249,7 @@ class AttrAux(NestInit_Source):
         # TypeAux
 
         try:
-            value = self.getattr_ic(name)
+            value = self.gai_ic(name_index)
         except Exception as exx:
             if callables_resolve == CallableResolve.SKIP_RAISED:
                 return ProcessState.SKIPPED
@@ -306,7 +284,7 @@ class AttrAux(NestInit_Source):
         ---------------------
         Nest_AttrKit
         """
-        for attr in self.iter__not_private():
+        for attr in self.iter__attrs_not_private():
             value = getattr(self.SOURCE, attr)
             if isinstance(value, dict):
                 setattr(self.SOURCE, attr, dict(value))
@@ -325,8 +303,8 @@ class AttrAux(NestInit_Source):
         expected you know what you do and do exactly ready to use final values/not callables in otherObj!
         """
         # work ----------
-        for key, value in kwargs.items():
-            self.setattr_ic(key, value)
+        for name, value in kwargs.items():
+            self.sai_ic(name, value)
 
     # DUMP ------------------------------------------------------------------------------------------------------------
     def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
@@ -348,8 +326,8 @@ class AttrAux(NestInit_Source):
         using any object as rules for Translator
         """
         result = {}
-        for name in self.iter__not_private():
-            value = self.getattr_ic__callable_resolve(name=name, callables_resolve=callables_resolve)
+        for name in self.iter__attrs_not_private():
+            value = self.gai_ic__callable_resolve(name=name, callables_resolve=callables_resolve)
             if value == ProcessState.SKIPPED:
                 continue
             result.update({name: value})
@@ -374,7 +352,7 @@ class AttrAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrKit_Blank | NoReturn:
         data = self.dump_dict(callables_resolve)
-        obj = AttrAux(AttrKit_Blank()).load__by_kwargs(**data)
+        obj = AttrKit_Blank(**data)
         return obj
 
     # -----------------------------------------------------------------------------------------------------------------

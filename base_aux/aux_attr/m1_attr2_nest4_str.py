@@ -16,7 +16,7 @@ class NestStR_AttrsNotPrivate:
     """
     def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
         result = ""
-        for attr_name in AttrAux(self).iter__not_private():
+        for attr_name in AttrAux(self).iter__attrs_not_private():
             if result:
                 result += ","
             elif not result:
@@ -44,7 +44,7 @@ class NestStR_AttrsNotHidden:
     """
     def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
         result = ""
-        for attr_name in AttrAux(self).iter__not_hidden():
+        for attr_name in AttrAux(self).iter__attrs_not_hidden():
             if result:
                 result += ","
             elif not result:

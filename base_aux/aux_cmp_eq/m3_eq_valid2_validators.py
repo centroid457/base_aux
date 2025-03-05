@@ -198,7 +198,7 @@ class Validators:
     ) -> bool | NoReturn:
         for key, value in kwargs.items():
             value_expected = CallableAux(value).resolve(CallableResolve.EXX)
-            value_other = AttrAux(other_final).getattr_ic__callable_resolve(key, CallableResolve.EXX)
+            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, CallableResolve.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -213,8 +213,8 @@ class Validators:
             # attr_level: AttrLevel = AttrLevel.NOT_PRIVATE,
     ) -> bool | NoReturn:
         for key in AttrAux(source).iter__attrs(self.ATTR_LEVEL):
-            value_expected = AttrAux(source).getattr_ic__callable_resolve(key, CallableResolve.EXX)
-            value_other = AttrAux(other_final).getattr_ic__callable_resolve(key, CallableResolve.EXX)
+            value_expected = AttrAux(source).gai_ic__callable_resolve(key, CallableResolve.EXX)
+            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, CallableResolve.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -243,7 +243,7 @@ class Validators:
             other_final,
             **kwargs: TYPING.KWARGS_FINAL
     ) -> bool | NoReturn:
-        return AnnotAttrAux(other_final).check_all_defined()
+        return AnnotAttrAux(other_final).annots__check_all_defined()
 
 
 # =====================================================================================================================

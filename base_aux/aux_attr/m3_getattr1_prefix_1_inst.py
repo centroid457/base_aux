@@ -62,7 +62,7 @@ class GetattrPrefixInst:
             # prefix ----------
             if item.lower().startswith(prefix.lower()):
                 item_name = item[len(prefix):]
-                item_value = AttrAux(self).getattr_ic(item_name)
+                item_value = AttrAux(self).gai_ic(item_name)
 
                 return lambda *meth_args, **meth_kwargs: CallableAux(prefix_meth).resolve_raise(
                     *[CallableAux(item_value).resolve_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],

@@ -57,10 +57,10 @@ class VictimNested_New(Victim):
     ]
 )
 def test__iter(source, _EXPECTED):
-    ExpectAux(set(AttrAux(source).iter__external_not_builtin())).check_assert(_EXPECTED[0])
-    ExpectAux(set(AttrAux(source).iter__not_hidden())).check_assert(_EXPECTED[1])
-    ExpectAux(set(AttrAux(source).iter__not_private())).check_assert(_EXPECTED[2])
-    ExpectAux(set(AttrAux(source).iter__private())).check_assert(_EXPECTED[3])
+    ExpectAux(set(AttrAux(source).iter__attrs_external_not_builtin())).check_assert(_EXPECTED[0])
+    ExpectAux(set(AttrAux(source).iter__attrs_not_hidden())).check_assert(_EXPECTED[1])
+    ExpectAux(set(AttrAux(source).iter__attrs_not_private())).check_assert(_EXPECTED[2])
+    ExpectAux(set(AttrAux(source).iter__attrs_private())).check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================
@@ -92,8 +92,8 @@ def test__anycase__getset(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
     ExpectAux(AttrAux(Victim2()).name_ic__get_original, attr).check_assert(_EXPECTED[0])
-    ExpectAux(AttrAux(Victim2()).getattr_ic, attr).check_assert(_EXPECTED[1])
-    ExpectAux(AttrAux(Victim2()).setattr_ic, (attr, 123)).check_assert(_EXPECTED[2])
+    ExpectAux(AttrAux(Victim2()).gai_ic, attr).check_assert(_EXPECTED[1])
+    ExpectAux(AttrAux(Victim2()).sai_ic, (attr, 123)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

@@ -81,7 +81,7 @@ class DictDirect_Fail(dict, NestGAI_AttrIC):
     ]
 )
 def test__annot__get_not_defined(source, _EXPECTED):
-    func_link = AnnotAttrAux(source).get_not_defined
+    func_link = AnnotAttrAux(source).annots__get_not_defined
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -103,7 +103,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
     ]
 )
 def test__annot__check_all_defined(source, _EXPECTED):
-    func_link = AnnotAttrAux(source).check_all_defined
+    func_link = AnnotAttrAux(source).annots__check_all_defined
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -125,7 +125,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
     ]
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
-    func_link = AnnotAttrAux(source).check_all_defined_or_raise
+    func_link = AnnotAttrAux(source).annots__check_all_defined_or_raise
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -160,7 +160,7 @@ class Test__1:
         ]
     )
     def test__dict_types(self, source, _EXPECTED):
-        func_link = AnnotAttrAux(source).annot_only__dict_types
+        func_link = AnnotAttrAux(source).dump_dict__annot_types
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -172,7 +172,7 @@ class Test__1:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = AnnotAttrAux(source).annot_only__dict_values
+        func_link = AnnotAttrAux(source).dump_dict
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -184,7 +184,7 @@ class Test__1:
         ]
     )
     def test__iter_values(self, source, _EXPECTED):
-        func_link = list(AnnotAttrAux(source).iter_values())
+        func_link = list(AnnotAttrAux(source).iter__annot_values())
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -196,7 +196,7 @@ class Test__1:
         ]
     )
     def test__all_defined(self, source, _EXPECTED):
-        func_link = AnnotAttrAux(source).check_all_defined
+        func_link = AnnotAttrAux(source).annots__check_all_defined
         ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -208,8 +208,8 @@ def test__all_defined2():
         ATTR01 = 11
 
     victim11 = Victim11()
-    assert AnnotAttrAux(victim1).check_all_defined() == False
-    assert AnnotAttrAux(victim11).check_all_defined() == True
+    assert AnnotAttrAux(victim1).annots__check_all_defined() == False
+    assert AnnotAttrAux(victim11).annots__check_all_defined() == True
 
 
 # =====================================================================================================================
@@ -262,10 +262,10 @@ class Test__SpecialObjects:
 
         victimNT = Victim(1)
 
-        assert AnnotAttrAux(victimNT).get_not_defined() == []
-        assert AnnotAttrAux(victimNT).check_all_defined() == True
-        assert AnnotAttrAux(victimNT).annot_only__dict_types() == {"ATTR1": int, "ATTR2": int, }
-        assert AnnotAttrAux(victimNT).annot_only__dict_values() == {"ATTR1": 1, "ATTR2": 2, }
+        assert AnnotAttrAux(victimNT).annots__get_not_defined() == []
+        assert AnnotAttrAux(victimNT).annots__check_all_defined() == True
+        assert AnnotAttrAux(victimNT).dump_dict__annot_types() == {"ATTR1": int, "ATTR2": int, }
+        assert AnnotAttrAux(victimNT).dump_dict() == {"ATTR1": 1, "ATTR2": 2, }
 
     @pytest.mark.skip
     def test__DataClass(self):

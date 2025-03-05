@@ -16,7 +16,7 @@ class PrivateAuto(PrivateJson, PrivateIni, PrivateCsv, PrivateEnv):
     It will not merge sources!
     """
     def get_dict(self) -> TYPING.KWARGS_FINAL | NoReturn:
-        annots = AnnotsAux(self).get_not_defined()
+        annots = AnnotsAux(self).annots__get_not_defined()
         annots_lower = set(map(str.lower, annots))
 
         for cls in [PrivateAuto, PrivateJson, PrivateIni, PrivateCsv, PrivateEnv]:
