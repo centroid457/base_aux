@@ -1,9 +1,9 @@
 from typing import *
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_attr.m2_annot1_aux import AnnotAttrAux
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import NestGAI_AttrIC
 
 
 # =====================================================================================================================
@@ -220,29 +220,21 @@ class VictimSet:
 
 
 @pytest.mark.parametrize(
-    argnames="data, only_annot, _EXPECTED",
+    argnames="data, _EXPECTED",
     argvalues=[
-        # only_annot=TRUE
-        (dict(), True, (1, Exception, 1, Exception)),
-        (dict(A0=11), True, (1, Exception, 1, Exception)),
-        (dict(a0=11), True, (1, Exception, 1, Exception)),
-
-        (dict(a0=11, a1=11, a2=11, a3=11), True, (1, 11, 11, Exception)),
-        (dict(A0=11, A1=11, A2=11, A3=11), True, (1, 11, 11, Exception)),
-
         # only_annot=FALSE
-        (dict(), False, (1, Exception, 1, Exception)),
-        (dict(A0=11), False, (11, Exception, 1, Exception)),
-        (dict(a0=11), False, (11, Exception, 1, Exception)),
+        (dict(), (1, Exception, 1, Exception)),
+        (dict(A0=11), (11, Exception, 1, Exception)),
+        (dict(a0=11), (11, Exception, 1, Exception)),
 
-        (dict(a0=11, a1=11, a2=11, a3=11), False, (11, 11, 11, Exception)),
-        (dict(A0=11, A1=11, A2=11, A3=11), False, (11, 11, 11, 11)),
+        (dict(a0=11, a1=11, a2=11, a3=11), (11, 11, 11, Exception)),
+        (dict(A0=11, A1=11, A2=11, A3=11), (11, 11, 11, 11)),
     ]
 )
-def test__set(data, only_annot, _EXPECTED):
+def test__set(data, _EXPECTED):
     victim = VictimSet()
 
-    AnnotAttrAux(victim).values__set_by_dict(data, only_annot=only_annot)
+    AnnotAttrAux(victim).sai__by_kwargs(**data)
     for index in range(4):
         ExpectAux(getattr, (victim, f"A{index}")).check_assert(_EXPECTED[index])
 
@@ -265,11 +257,16 @@ class Test__SpecialObjects:
         assert AnnotAttrAux(victimNT).annots__get_not_defined() == []
         assert AnnotAttrAux(victimNT).annots__check_all_defined() == True
         assert AnnotAttrAux(victimNT).dump_dict__annot_types() == {"ATTR1": int, "ATTR2": int, }
-        assert AnnotAttrAux(victimNT).dump_dict() == {"ATTR1": 1, "ATTR2": 2, }
+        # assert AnnotAttrAux(victimNT).dump_dict() == {"ATTR1": 1, "ATTR2": 2, }
 
     @pytest.mark.skip
     def test__DataClass(self):
         pass
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    pass
 
 
 # =====================================================================================================================

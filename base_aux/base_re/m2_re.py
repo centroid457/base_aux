@@ -13,7 +13,7 @@ class Re:
     apply same methods as in RУ module, but
     work with attempts
     """
-    ATTEMTS: Iterable[str | ]
+    # ATTEMTS: Iterable[str | ]
 
 
 # =====================================================================================================================

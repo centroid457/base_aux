@@ -40,6 +40,13 @@ class AnnotAttrAux(AttrAux):
         # atr4:<class 'int'>
     """
     # =================================================================================================================
+    def name_ic__get_original(self, name_index: str | int) -> str | None:
+        try:
+            return self.list_annots()[int(name_index)]
+        except:
+            return super().name_ic__get_original(name_index)
+
+    # =================================================================================================================
     def annots__get_not_defined(self) -> list[str]:
         """
         GOAL
@@ -127,68 +134,7 @@ class AnnotAttrAux(AttrAux):
         return list(self.dump_dict__annot_types())
 
     # =================================================================================================================
-    def set_annots_attrs__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
-        """
-        CREATED SPECIALLY FOR
-        ---------------------
-        NestInit_AnnotsAttrByKwArgs
-        """
-        self.set_annots_only__by_args(*args)
-        self.set_annots_attrs__by_kwargs(**kwargs)
-
-    def set_annots_only__by_args(self, *args: Any) -> None | NoReturn:
-        """
-        ARGS - ARE VALUES! not names!
-
-        IF ARGS MORE then Annots - NoRaise! You should lnow what you do!    # FIXME: decide?
-        """
-        if len(args) > len(self.list_annots()):
-            raise IndexError(f"{args=}/{self=}")
-        return self.set_annots_attrs__by_kwargs(**dict(zip(self.iter__annot_names(), args)))
-
-    def set_annots_attrs__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
-        return self.values__set_by_dict(kwargs)
-
-    # =================================================================================================================
-    def annots_attr__set_by_name(self, name: str, value: Any = None) -> None:
-        """
-        GOAL
-        ----
-        set name/value by intended name from Annots or direct Attrs! or even not existsed!
-        without creation new annot!
-        """
-        if self.name_ic__check_exists(name):
-            name = self.name_ic__get_original(name)
-
-        self.sai_ic(name, value)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def values__set_by_dict(self, data: TYPING.KWARGS_FINAL) -> None:
-        """
-        GOAL
-        ----
-        SAME AS AttrAux.SetValues but assume names from annots!
-        # set attrs for annotated names (fixme: ???? AND STD ATTRS! - it seems OK!
-        # so annots+attrs used like filter
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        load into AnnotTemplate
-        """
-        for key, value in data.items():
-            self.annots_attr__set_by_name(key, value)
-
-    def values__set_none__existed(self) -> None:
-        """
-        GOAL
-        ----
-        set None for all annotated aux_attr! only existed!
-        """
-        for name in self.iter__annot_names():
-            if hasattr(self.SOURCE, name):
-                setattr(self.SOURCE, name, None)
-
-    def values__set_none__all(self) -> None:
+    def reinit__annots_by_None(self) -> None:
         """
         GOAL
         ----
@@ -197,18 +143,7 @@ class AnnotAttrAux(AttrAux):
         for name in self.iter__annot_names():
             setattr(self.SOURCE, name, None)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def values__delete(self) -> None:
-        """
-        GOAL
-        ----
-        delattr all annotated aux_attr!
-        """
-        for name in self.iter__annot_names():
-            if hasattr(self.SOURCE, name):
-                delattr(self.SOURCE, name)
-
-    def values__reinit_by_types(self, not_existed: bool = None) -> None:
+    def reinit__annots_by_types(self, not_existed: bool = None) -> None:
         """
         GOAL
         ----

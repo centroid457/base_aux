@@ -18,7 +18,7 @@ class NestInit_AnnotsByTypes_All:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotAttrAux(self).values__reinit_by_types(not_existed=False)
+        AnnotAttrAux(self).reinit__annots_by_types(not_existed=False)
 
 
 # =====================================================================================================================
@@ -31,7 +31,7 @@ class NestInit_AnnotsByTypes_NotExisted:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotAttrAux(self).values__reinit_by_types(not_existed=True)
+        AnnotAttrAux(self).reinit__annots_by_types(not_existed=True)
 
 
 # =====================================================================================================================

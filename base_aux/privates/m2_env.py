@@ -45,7 +45,7 @@ class PvLoaderEnv(NestCall_Resolve):
 
             result = self.TARGET(**data)
         else:
-            AnnotAttrAux(self.TARGET).set_annots_attrs__by_args_kwargs(**data)
+            AnnotAttrAux(self.TARGET).sai__by_args_kwargs(**data)
             result = self.TARGET
 
         return result
