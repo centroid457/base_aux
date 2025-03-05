@@ -46,6 +46,12 @@ class AnnotAttrAux(AttrAux):
         except:
             return super().name_ic__get_original(name_index)
 
+    def sai__by_args(self, *args: Any) -> Any | NoReturn:
+        for index, value in enumerate(args):
+            self.sai_ic(index, value)
+
+        return self.SOURCE
+
     # =================================================================================================================
     def annots__get_not_defined(self) -> list[str]:
         """

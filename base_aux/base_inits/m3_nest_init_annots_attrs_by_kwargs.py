@@ -34,7 +34,7 @@ class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create Annot
         - if not existed in Annots and Attrs - create new!
     """
     def __init__(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
-        AttrAux(self).reinit__mutable_values()  # keep on first step!!! reinit only classvalues!
+        AnnotAttrAux(self).reinit__mutable_values()  # keep on first step!!! reinit only defaults from classvalues!
         AnnotAttrAux(self).sai__by_args_kwargs(*args, **kwargs)
         AnnotAttrAux(self).annots__check_all_defined_or_raise()    # fixme: is it really need? i think yes! use default values for noRaise!
 
