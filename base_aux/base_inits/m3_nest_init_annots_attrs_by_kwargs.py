@@ -1,10 +1,10 @@
 from base_aux.aux_attr.m2_annot1_aux import *
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================
-class NestInit_AnnotsAttrByKwArgs(NestGAI_AttrIC):     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
+class NestInit_AnnotsAttrByKwArgs(NestGAI_AnnotAttrIC):     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
     """
     NOTE
     ----

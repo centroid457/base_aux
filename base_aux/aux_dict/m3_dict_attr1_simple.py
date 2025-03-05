@@ -1,7 +1,7 @@
 from base_aux.aux_dict.m2_ignorecase import DictIgnorecase
 from base_aux.aux_types.m2_info import ObjectInfo
 
-from base_aux.aux_attr.m2_annot2_nest1_init_required import *
+from base_aux.aux_attr.m2_annot2_nest2_init_required import *
 
 
 # =====================================================================================================================

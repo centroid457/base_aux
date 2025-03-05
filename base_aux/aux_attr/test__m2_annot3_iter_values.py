@@ -2,11 +2,11 @@ import pytest
 
 from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_attr.m2_annot2_nest3_iter_values import *
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 
 
 # =====================================================================================================================
-class Victim1(NestGAI_AttrIC):
+class Victim1(NestIter_AnnotValues):
     ATTR1: int
     ATTR2: int = 2
     ATTR01 = 11
@@ -19,12 +19,9 @@ class Victim2(Victim1):
 
 
 # =====================================================================================================================
-class VictimIterValues(Victim2, NestIter_AnnotValues):
-    pass
-
-
 def test__nested_iter():
-    assert list(VictimIterValues()) == [2, 4]
+    assert list([*Victim1()]) == [2, ]
+    assert list([*Victim2()]) == [2, 4]
 
 
 # =====================================================================================================================

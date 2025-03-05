@@ -1,10 +1,10 @@
 from typing import *
 from .m2_annot1_aux import AnnotAttrAux
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 
 
 # =====================================================================================================================
-class NestInit_AnnotsRequired(NestGAI_AttrIC):
+class NestInit_AnnotsRequired(NestGAI_AnnotAttrIC):
     """Check all annotated and not defined attributes in instance have values!
     else raise!
 

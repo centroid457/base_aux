@@ -1,11 +1,11 @@
 from typing import *
-from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.aux_attr.m2_annot1_aux import *
 
 
 # =====================================================================================================================
-class NestGA_AttrIC:
+class NestGA_AnnotAttrIC:
     def __getattr__(self, name: str) -> Any | NoReturn:
-        return AttrAux(self).gai_ic(name)
+        return AnnotAttrAux(self).gai_ic(name)
 
 
 # class NestSA_AttrAnycase:
@@ -20,15 +20,15 @@ class NestGA_AttrIC:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class NestGSA_AttrAnycase(NestGA_AttrIC, NestSA_AttrAnycase):
+# class NestGSA_AttrAnycase(NestGA_AnnotAttrIC, NestSA_AttrAnycase):
 #     # TODO: DEPRECATE!!! max depth recursion
 #     pass
 
 
 # =====================================================================================================================
-class NestGI_AttrIC:
-    def __getitem__(self, name: str) -> Any | NoReturn:
-        return AttrAux(self).gai_ic(name)
+class NestGI_AnnotAttrIC:
+    def __getitem__(self, name: str | int) -> Any | NoReturn:
+        return AnnotAttrAux(self).gai_ic(name)
 
 
 # class NestSI_AttrAnycase:
@@ -38,13 +38,13 @@ class NestGI_AttrIC:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# class NestGSI_AttrAnycase(NestGI_AttrIC, NestSI_AttrAnycase):
+# class NestGSI_AttrAnycase(NestGI_AnnotAttrIC, NestSI_AttrAnycase):
 #     # TODO: DEPRECATE!!! RecursionError ======================
 #     pass
 
 
 # =====================================================================================================================
-class NestGAI_AttrIC(NestGA_AttrIC, NestGI_AttrIC):
+class NestGAI_AnnotAttrIC(NestGA_AnnotAttrIC, NestGI_AnnotAttrIC):
     pass
 
 

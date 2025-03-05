@@ -1,9 +1,9 @@
 from .m2_annot1_aux import AnnotAttrAux
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 
 
 # =====================================================================================================================
-class NestIter_AnnotValues(NestGAI_AttrIC):
+class NestIter_AnnotValues(NestGAI_AnnotAttrIC):
     """
     GOAL
     ----

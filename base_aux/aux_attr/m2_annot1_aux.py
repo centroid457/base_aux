@@ -117,9 +117,9 @@ class AnnotAttrAux(AttrAux):
         iter only important user classes from mro
         """
         yield from TypeAux(self.SOURCE).iter_mro_user(
-            # NestGAI_AttrIC,
+            # NestGAI_AnnotAttrIC,
             # NestGSAI_AttrAnycase,
-            # NestGA_AttrIC, NestGI_AttrIC,
+            # NestGA_AnnotAttrIC, NestGI_AnnotAttrIC,
             # NestSA_AttrAnycase, NestSI_AttrAnycase,
         )
 
@@ -133,7 +133,11 @@ class AnnotAttrAux(AttrAux):
         """
         only existed
         """
-        yield from self.dump_dict().values()
+        for name in self.list_annots():
+            try:
+                yield self.gai_ic(name)
+            except:
+                pass
 
     # =================================================================================================================
     def list_annots(self) -> list[str]:
