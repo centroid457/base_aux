@@ -2,10 +2,7 @@
 # DONOT apply PrivateBase nesting!
 
 
-# TODO: apply as separated AttrDump object
 # =====================================================================================================================
-
-
 class PrivateAuth:
     """Typical structure for AUTH
 

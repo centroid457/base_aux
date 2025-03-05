@@ -1,9 +1,9 @@
 from typing import *
 
-from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import NestEq_AttrsNotPrivate
-from base_aux.aux_attr.m1_attr2_nest4_str import NestStR_Attrs
-from base_aux.aux_attr.m1_attr2_nest5_contains import NestContains_AttrIC
-from base_aux.aux_attr.m1_attr2_nest6_len import NestLen_AttrNotPrivate
+from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import *
+from base_aux.aux_attr.m1_attr2_nest4_str import *
+from base_aux.aux_attr.m1_attr2_nest5_contains import *
+from base_aux.aux_attr.m1_attr2_nest6_len import *
 
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 from base_aux.aux_attr.m2_annot1_aux import *
@@ -15,10 +15,10 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_Ann
 class Nest_AttrKit(
     NestInit_AnnotsAttrByKwArgs,    # GAI+Required
 
-    NestEq_AttrsNotPrivate,
-    NestStR_Attrs,
+    NestEq_AttrsNotHidden,
+    NestStR_AttrsNotHidden,
+    NestLen_AttrNotHidden,
     NestContains_AttrIC,
-    NestLen_AttrNotPrivate
 ):     # TODO: decide to delete! use only dynamic?? - NO! keep it!!!
     """
     GOAL
@@ -59,6 +59,22 @@ class Nest_AttrKit(
         1/ cause you will not keep simple direct object with attrs!
         2/ EqValid_* will be created! further!
     """
+    def _redefine_nones(self, *args, **kwargs) -> None:
+        """
+        GOAL
+        ----
+        after created instance you can reapply defaults
+        so if values keep None and you vant ro reinit it - just pass nes values!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        Re when you want to pass attempts by Rexp-patterns (with some nones) and define default values later in future methods
+        """
+        for index, value in enumerate(args):
+            pass
+
+        for name, value in kwargs.items():
+            pass
 
 
 # =====================================================================================================================

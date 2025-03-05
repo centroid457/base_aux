@@ -4,8 +4,8 @@ from base_aux.aux_attr.m1_attr1_aux import AttrAux
 
 # =====================================================================================================================
 class NestGA_AttrIC:
-    def __getattr__(self, name) -> Any | NoReturn:
-        return AttrAux(self).anycase__getattr(name)
+    def __getattr__(self, name: str) -> Any | NoReturn:
+        return AttrAux(self).getattr_ic(name)
 
 
 # class NestSA_AttrAnycase:
@@ -27,8 +27,8 @@ class NestGA_AttrIC:
 
 # =====================================================================================================================
 class NestGI_AttrIC:
-    def __getitem__(self, name) -> Any | NoReturn:
-        return AttrAux(self).anycase__getitem(name)
+    def __getitem__(self, name: str) -> Any | NoReturn:
+        return AttrAux(self).getitem_ic(name)
 
 
 # class NestSI_AttrAnycase:

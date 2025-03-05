@@ -12,8 +12,12 @@ class RExp(Nest_AttrKit):
     simple pattern with all expected params
     """
     PAT: str
-    FLAGS: int = 0
+    FLAGS: int | None = None
     SUB: str = None     # used only for sub/del methods!
+
+
+# =====================================================================================================================
+TYPING__ATTEMTS = Iterable[str | RExp]
 
 
 # =====================================================================================================================

@@ -1,4 +1,4 @@
-from .m2_annot1_aux import AnnotsAux
+from .m2_annot1_aux import AnnotAttrAux
 from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 
 
@@ -39,7 +39,7 @@ class NestIter_AnnotValues(NestGAI_AttrIC):
     """
 
     def __iter__(self):
-        yield from AnnotsAux(self).iter_values()
+        yield from AnnotAttrAux(self).iter_values()
 
 
 # =====================================================================================================================

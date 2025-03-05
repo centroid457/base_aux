@@ -2,7 +2,7 @@ import os
 import re
 from typing import Any, NoReturn
 
-from base_aux.aux_attr.m2_annot1_aux import AnnotsAux
+from base_aux.aux_attr.m2_annot1_aux import AnnotAttrAux
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
@@ -45,7 +45,7 @@ class PvLoaderEnv(NestCall_Resolve):
 
             result = self.TARGET(**data)
         else:
-            AnnotsAux(self.TARGET).set_annots_attrs__by_args_kwargs(**data)
+            AnnotAttrAux(self.TARGET).set_annots_attrs__by_args_kwargs(**data)
             result = self.TARGET
 
         return result

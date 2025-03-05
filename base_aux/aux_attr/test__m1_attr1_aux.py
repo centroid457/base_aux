@@ -1,6 +1,6 @@
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_attr.m0_dump import AttrsDump
-from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.aux_attr.m4_kits import *
+from base_aux.aux_attr.m1_attr1_aux import *
 from base_aux.base_statics.m3_primitives import *
 from base_aux.base_statics.m4_enums import *
 
@@ -91,16 +91,16 @@ class Victim2:
 def test__anycase__getset(attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    ExpectAux(AttrAux(Victim2()).anycase__name_original, attr).check_assert(_EXPECTED[0])
-    ExpectAux(AttrAux(Victim2()).anycase__getattr, attr).check_assert(_EXPECTED[1])
-    ExpectAux(AttrAux(Victim2()).anycase__setattr, (attr, 123)).check_assert(_EXPECTED[2])
+    ExpectAux(AttrAux(Victim2()).name_ic__get_original, attr).check_assert(_EXPECTED[0])
+    ExpectAux(AttrAux(Victim2()).getattr_ic, attr).check_assert(_EXPECTED[1])
+    ExpectAux(AttrAux(Victim2()).setattr_ic, (attr, 123)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
 def test__load():
-    other = AttrAux().load__by_dict(dict(attr=1))
-    assert isinstance(other, AttrsDump)
-    assert other.attr == 1
+    victim = AttrKit_Blank()
+    AttrAux(victim).load__by_kwargs(**dict(attr=1))
+    assert victim.attr == 1
 
     class Victim:
         pass
@@ -109,14 +109,11 @@ def test__load():
     assert not hasattr(victim, "attr")
     assert not hasattr(victim, "ATTR")
 
-    other = AttrAux(victim).load__by_dict(dict(attr=1))
-    assert isinstance(other, Victim)
-    assert other == victim
-    assert other.attr == 1
+    AttrAux(victim).load__by_kwargs(**dict(attr=1))
+    assert victim.attr == 1
 
-    other = AttrAux(victim).load__by_dict(dict(ATTR=2))
-    assert other == victim
-    assert other.attr == 2
+    AttrAux(victim).load__by_kwargs(**dict(ATTR=2))
+    assert victim.attr == 2
 
     assert not hasattr(victim, "ATTR")
 

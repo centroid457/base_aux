@@ -1,5 +1,5 @@
 from typing import *
-from .m2_annot1_aux import AnnotsAux
+from .m2_annot1_aux import AnnotAttrAux
 from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
 
 
@@ -16,7 +16,7 @@ class NestInit_AnnotsRequired(NestGAI_AttrIC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        AnnotsAux(self).check_all_defined_or_raise()  # check only after superInit!
+        AnnotAttrAux(self).check_all_defined_or_raise()  # check only after superInit!
 
     # TODO: deside is it really need NamedTuple and dataclasses??? seems its not need!!! - NEED!!! realise later!!!
 

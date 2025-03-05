@@ -1,26 +1,32 @@
+from typing import *
 import re
 
 from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
-from base_aux.aux_attr.m0_dump import AttrsDump
+from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
-@final
+# @final    # NOTE: use nesting in Annots!
 class AttrAux(NestInit_Source):
     """
     NOTE
     ----
-    if there are several same aux_attr in different cases - you should resolve it by yourself!
+    1. if there are several same aux_attr in different cases - you should resolve it by yourself!
+    2. if want consider annot attrs in process - use AnnotAttrAux instead!
 
     ANNOTS
     ------
-    not used/intended here! dont mess they - it means you need to know what exact you will work with (attrs or annots)
+    not used/intended here! dont mess they - it means you need to know what exact you will work with (attrs or annotAttrs)
     and prepare classes appropriate!
     """
-    SOURCE: Any = AttrsDump
+    SOURCE: Any
+
+    # =================================================================================================================
+    # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
+    #     return self.anycase__check_exists(item)
 
     # =================================================================================================================
     def get_name__private_external(self, dirname: str) -> str | None:
@@ -78,10 +84,6 @@ class AttrAux(NestInit_Source):
                 if dirname.startswith(f"_{cls.__name__}__"):
                     name_external = dirname.replace(f"_{cls.__name__}", "")
                     return name_external
-
-    # =================================================================================================================
-    # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
-    #     return self.anycase__check_exists(item)
 
     # ITER ------------------------------------------------------------------------------------------------------------
     def iter__external_not_builtin(self) -> Iterable[str]:
@@ -178,7 +180,7 @@ class AttrAux(NestInit_Source):
     pass
 
     # NAME ------------------------------------------------------------------------------------------------------------
-    def anycase__name_original(self, name: str) -> str | None:
+    def name_ic__get_original(self, name: str) -> str | None:
         """
         get attr name in original register
         """
@@ -195,25 +197,25 @@ class AttrAux(NestInit_Source):
 
         return
 
-    def anycase__check_exists(self, name: str) -> bool:
-        return self.anycase__name_original(name) is not None
+    def name_ic__check_exists(self, name: str) -> bool:
+        return self.name_ic__get_original(name) is not None
 
     # ATTR ------------------------------------------------------------------------------------------------------------
-    def anycase__getattr(self, name: str) -> Any | Callable | NoReturn:
+    def getattr_ic(self, name: str) -> Any | Callable | NoReturn:
         """
         GOAL
         ----
         get attr value by name in any register
         no execution/resolving! return pure value as represented in object!
         """
-        name_original = self.anycase__name_original(name)
+        name_original = self.name_ic__get_original(name)
         if name_original is None:
             raise AttributeError(name)
 
         value = getattr(self.SOURCE, name_original)
         return value
 
-    def anycase__setattr(self, name: str, value: Any) -> None | NoReturn:
+    def setattr_ic(self, name: str, value: Any) -> None | NoReturn:
         """
         get attr value by name in any register
         no execution! return pure value as represented in object!
@@ -227,32 +229,32 @@ class AttrAux(NestInit_Source):
         if name in ["", ]:
             raise AttributeError(name)
 
-        name_original = self.anycase__name_original(name)
+        name_original = self.name_ic__get_original(name)
         if name_original is None:
             name_original = name
 
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
 
-    def anycase__delattr(self, name: str) -> None:
-        name_original = self.anycase__name_original(name)
+    def delattr_ic(self, name: str) -> None:
+        name_original = self.name_ic__get_original(name)
         if name_original is None:
             return      # already not exists
 
         delattr(self.SOURCE, name_original)
 
     # ITEM ------------------------------------------------------------------------------------------------------------
-    def anycase__getitem(self, name: str) -> Any | Callable | NoReturn:
-        return self.anycase__getattr(name)
+    def getitem_ic(self, name: str) -> Any | Callable | NoReturn:
+        return self.getattr_ic(name)
 
-    def anycase__setitem(self, name: str, value: Any) -> None | NoReturn:
-        self.anycase__setattr(name, value)
+    def setitem_ic(self, name: str, value: Any) -> None | NoReturn:
+        self.setattr_ic(name, value)
 
-    def anycase__delitem(self, name: str) -> None:
-        self.anycase__delattr(name)
+    def delitem_ic(self, name: str) -> None:
+        self.delattr_ic(name)
 
     # =================================================================================================================
-    def getattr__callable_resolve(self, name: str, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
+    def getattr_ic__callable_resolve(self, name: str, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
         -------
@@ -269,7 +271,7 @@ class AttrAux(NestInit_Source):
         # TypeAux
 
         try:
-            value = self.anycase__getattr(name)
+            value = self.getattr_ic(name)
         except Exception as exx:
             if callables_resolve == CallableResolve.SKIP_RAISED:
                 return ProcessState.SKIPPED
@@ -314,26 +316,17 @@ class AttrAux(NestInit_Source):
                 setattr(self.SOURCE, attr, set(value))
 
     # =================================================================================================================
-    def load__by_dict(self, other: dict[str, Any], only_existed: bool = None) -> Any | AttrsDump:
+    def load__by_kwargs(self, **kwargs: dict[str, Any]) -> None:
         """
         MAIN ITEA
         ----------
         LOAD MEANS basically setup final values for final not callables values!
         but you can use any types for your own!
         expected you know what you do and do exactly ready to use final values/not callables in otherObj!
-
-        NOTE
-        ----
-        1/ dont use callables_resolve here
-        2/ dont add any TEMPLATES!!! its responsibility for DictAux! use it by yourself!!!
         """
         # work ----------
-        for key, value in other.items():
-            if only_existed and not self.anycase__check_exists(key):
-                continue
-            self.anycase__setattr(key, value)
-
-        return self.SOURCE
+        for key, value in kwargs.items():
+            self.setattr_ic(key, value)
 
     # DUMP ------------------------------------------------------------------------------------------------------------
     def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
@@ -356,7 +349,7 @@ class AttrAux(NestInit_Source):
         """
         result = {}
         for name in self.iter__not_private():
-            value = self.getattr__callable_resolve(name=name, callables_resolve=callables_resolve)
+            value = self.getattr_ic__callable_resolve(name=name, callables_resolve=callables_resolve)
             if value == ProcessState.SKIPPED:
                 continue
             result.update({name: value})
@@ -379,13 +372,13 @@ class AttrAux(NestInit_Source):
         return self.dump_dict(CallableResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrsDump | NoReturn:
+    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrKit_Blank | NoReturn:
         data = self.dump_dict(callables_resolve)
-        obj = AttrAux().load__by_dict(data)
+        obj = AttrAux(AttrKit_Blank()).load__by_kwargs(**data)
         return obj
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump__pretty_str(self) -> str:
+    def dump_str__pretty(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
         for key, value in self.dump_dict(CallableResolve.EXX).items():
             result += f"\n\t{key}={value}"

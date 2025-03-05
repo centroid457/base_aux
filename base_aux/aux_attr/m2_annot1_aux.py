@@ -1,16 +1,18 @@
-from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_types.m1_type_aux import *
-from base_aux.base_inits.m1_nest_init_source import *
-from base_aux.base_statics.m1_types import *
+from typing import *
 
-from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.base_statics.m2_exceptions import *
+from base_aux.base_statics.m1_types import *
 from base_aux.aux_iter.m1_iter_aux import *
-from base_aux.aux_attr.m1_attr2_nest1_gsai_anycase import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.aux_types.m1_type_aux import *
+
+from base_aux.base_inits.m1_nest_init_source import *
+from base_aux.aux_attr.m1_attr1_aux import *
 
 
 # =====================================================================================================================
 @final
-class AnnotsAux(NestInit_Source):
+class AnnotAttrAux(AttrAux):
     """
     GOAL
     ----
@@ -20,7 +22,7 @@ class AnnotsAux(NestInit_Source):
 
     RULES
     -----
-    4. nesting available with correct order!
+    1. nesting available with correct order!
         class ClsFirst(BreederStrStack):
             atr1: int
             atr3: int = None
@@ -49,9 +51,9 @@ class AnnotsAux(NestInit_Source):
         annot__check_all_defined
         """
         result = []
-        nested = self.get__dict_types()
+        nested = self.annot_only__dict_types()
         for key in nested:
-            if not AttrAux(self.SOURCE).anycase__check_exists(key):
+            if not AttrAux(self.SOURCE).name_ic__check_exists(key):
                 result.append(key)
         return result
 
@@ -72,76 +74,12 @@ class AnnotsAux(NestInit_Source):
         """
         not_defined = self.get_not_defined()
         if not_defined:
-            dict_type = self.get__dict_types()
+            dict_type = self.annot_only__dict_types()
             msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
             raise Exx__AnnotNotDefined(msg)
 
     # =================================================================================================================
-    def set_value(self, name: str, value: Any = None, only_annot: bool = True) -> None:   # FIXME: decide -  DONT DELETE only_annot!!! it could be used like filter?
-        """
-        GOAL
-        ----
-        set name/value by intended name from Annots or direct Attrs! or even not existsed!
-        without creation new annot!
-        """
-        if self.name__check_exists(name):
-            name = self.name__get_original(name)    # replace by original
-        elif only_annot:
-            return
-
-        AttrAux(self.SOURCE).anycase__setattr(name, value)
-
-    def set_values__by_dict(self, data: TYPING.KWARGS_FINAL, only_annot: bool = True) -> None:
-        """
-        GOAL
-        ----
-        SAME AS AttrAux.SetValues but assume names from annots!
-        # set attrs for annotated names (fixme: ???? AND STD ATTRS! - it seems OK!
-        # so annots+attrs used like filter
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        load into AnnotTemplate
-        """
-        for key, value in data.items():
-            self.set_value(key, value, only_annot=only_annot)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def set_annots_attrs__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
-        """
-        CREATED SPECIALLY FOR
-        ---------------------
-        NestInit_AnnotsAttrByKwArgs
-        """
-        self.set_annots__by_args(*args)
-        self.set_annots_attrs__by_kwargs(**kwargs)
-
-    def set_annots_attrs__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
-        return self.set_values__by_dict(kwargs, only_annot=False)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def set_annots__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None:
-        """
-        CREATED SPECIALLY FOR
-        ---------------------
-        NestInit_AnnotsAttrByKwArgs
-        """
-        self.set_annots__by_args(*args)
-        self.set_annots__by_kwargs(**kwargs)
-
-    def set_annots__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
-        return self.set_values__by_dict(kwargs, only_annot=True)
-
-    def set_annots__by_args(self, *args: Any) -> None:
-        """
-        ARGS - ARE VALUES! not names!
-
-        IF ARGS MORE then Annots - NoRaise! You should lnow what you do!    # FIXME: decide?
-        """
-        return self.set_annots_attrs__by_kwargs(**dict(zip(self.iter_names(), args)))
-
-    # =================================================================================================================
-    def get__dict_types(self) -> dict[str, type[Any]]:
+    def annot_only__dict_types(self) -> dict[str, type[Any]]:
         """
         GOAL
         ----
@@ -159,24 +97,24 @@ class AnnotsAux(NestInit_Source):
             result = _result_i
         return result
 
-    def get__dict_values(self) -> TYPING.KWARGS_FINAL:
+    def annot_only__dict_values(self) -> TYPING.KWARGS_FINAL:
         """
         GOAL
         ----
         get dict with only existed values! no raise if value not exists!
         """
         result = {}
-        for key in self.get__dict_types():
+        for key in self.annot_only__dict_types():
             if hasattr(self.SOURCE, key):
                 result.update({key: getattr(self.SOURCE, key)})
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get__str_pretty(self) -> str:
+    def annot_only__str_pretty(self) -> str:
         """just a pretty string for debugging or research.
         """
         result = f"{self.SOURCE.__class__.__name__}(Annotations):"
-        annots = self.get__dict_values()
+        annots = self.annot_only__dict_values()
         if annots:
             for key, value in annots.items():
                 result += f"\n\t{key}={value}"
@@ -204,15 +142,107 @@ class AnnotsAux(NestInit_Source):
         """
         iter all (with not existed)
         """
-        yield from self.get__dict_types()
+        yield from self.annot_only__dict_types()
 
     def iter_values(self) -> Iterable[Any]:
         """
         only existed
         """
-        yield from self.get__dict_values().values()
+        yield from self.annot_only__dict_values().values()
 
     # =================================================================================================================
+    def set_annots_only__by_args(self, *args: Any) -> None | NoReturn:
+        """
+        ARGS - ARE VALUES! not names!
+
+        IF ARGS MORE then Annots - NoRaise! You should lnow what you do!    # FIXME: decide?
+        """
+        if len(args) > len(self.list_annots()):
+            raise IndexError(f"{args=}/{self=}")
+        return self.set_annots_attrs__by_kwargs(**dict(zip(self.iter_names(), args)))
+
+    def set_annots_attrs__by_args_kwargs(self, *args: Any, **kwargs: TYPING.KWARGS_FINAL) -> None | NoReturn:
+        """
+        CREATED SPECIALLY FOR
+        ---------------------
+        NestInit_AnnotsAttrByKwArgs
+        """
+        self.set_annots_only__by_args(*args)
+        self.set_annots_attrs__by_kwargs(**kwargs)
+
+    def set_annots_attrs__by_kwargs(self, **kwargs: TYPING.KWARGS_FINAL) -> None:
+        return self.values__set_by_dict(kwargs)
+
+    # =================================================================================================================
+    def getitem(self, item: str | int) -> Any | NoReturn:
+        try:
+            index = int(item)
+            return self.value_annot__get_by_index(index)
+        except:
+            name = str(item)
+            return self.value_attr__get_by_name(name)
+
+    def setitem(self, item: str | int, value: Any) -> None | NoReturn:
+        try:
+            index = int(item)
+            return self.annot__set_by_index(index, value)
+        except:
+            name = str(item)
+            return self.annots_attr__set_by_name(name, value)
+
+    # =================================================================================================================
+    def value_annot__get_by_index(self, index: int | str) -> Any | NoReturn:
+        name = self.name__get_by_index(index)
+        if name:
+            return self.value_attr__get_by_name(name)
+        else:
+            raise IndexError(f"{index=}/{self=}")
+
+    def value_attr__get_by_name(self, name: str) -> Any | NoReturn:
+        return AttrAux(self.SOURCE).getattr_ic(name)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def annots_attr__set_by_name(self, name: str, value: Any = None) -> None:
+        """
+        GOAL
+        ----
+        set name/value by intended name from Annots or direct Attrs! or even not existsed!
+        without creation new annot!
+        """
+        if self.name__check_exists(name):
+            name = self.name__get_original(name)
+
+        AttrAux(self.SOURCE).setattr_ic(name, value)
+
+    def annot__set_by_index(self, index: int | str, value: Any = None) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        set value for existed annot
+        """
+        name = self.name__get_by_index(index)
+        if name:
+            self.annots_attr__set_by_name(name, value)
+            return True
+        else:
+            raise IndexError(f"{index=}/{self=}")
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def values__set_by_dict(self, data: TYPING.KWARGS_FINAL) -> None:
+        """
+        GOAL
+        ----
+        SAME AS AttrAux.SetValues but assume names from annots!
+        # set attrs for annotated names (fixme: ???? AND STD ATTRS! - it seems OK!
+        # so annots+attrs used like filter
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        load into AnnotTemplate
+        """
+        for key, value in data.items():
+            self.annots_attr__set_by_name(key, value)
+
     def values__set_none__existed(self) -> None:
         """
         GOAL
@@ -232,6 +262,7 @@ class AnnotsAux(NestInit_Source):
         for name in self.iter_names():
             setattr(self.SOURCE, name, None)
 
+    # -----------------------------------------------------------------------------------------------------------------
     def values__delete(self) -> None:
         """
         GOAL
@@ -248,14 +279,20 @@ class AnnotsAux(NestInit_Source):
         ----
         delattr all annotated aux_attr!
         """
-        for name, value in self.get__dict_types().items():
+        for name, value in self.annot_only__dict_types().items():
             if not_existed and hasattr(self.SOURCE, name):
                 continue
 
             value = TypeAux(value).type__init_value__default()
             setattr(self.SOURCE, name, value)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
+    def list_annots(self) -> list[str]:
+        return list(self.annot_only__dict_types())
+
+    def index_check_available(self, index: int | str) -> bool:
+        return len(self.list_annots()) > index
+
     def names__delete(self, *names: str) -> None:
         """
         ATTENTION
@@ -297,11 +334,22 @@ class AnnotsAux(NestInit_Source):
         ----
         check name exists in annots ONLY!
         """
-        annots = self.get__dict_types()
+        annots = self.annot_only__dict_types()
         name = IterAux(annots).item__get_original(name)
         if name == NoValue:
             name = None
         return name
+
+    def name__get_by_index(self, index: int | str) -> str | None:
+        """
+        GOAL
+        ----
+        get name for annotated attr by index
+        """
+        try:
+            return self.list_annots()[int(index)]
+        except:
+            return
 
     def name__check_exists(self, name: str) -> bool:
         """

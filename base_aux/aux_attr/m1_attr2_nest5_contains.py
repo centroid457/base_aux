@@ -15,7 +15,7 @@ class NestContains_AttrIC:
     dont use in Nest* classes - it can used only in FINALs!!! cause it can have same or meaning is not appropriate!
     """
     def __contains__(self, item):
-        return AttrAux(self).anycase__check_exists(item)
+        return AttrAux(self).name_ic__check_exists(item)
 
 
 # =====================================================================================================================

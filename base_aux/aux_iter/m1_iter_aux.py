@@ -109,7 +109,7 @@ class IterAux(NestInit_Source):
                     return
 
             else:
-                key_original = AttrAux(source).anycase__name_original(str(key_i))
+                key_original = AttrAux(source).name_ic__get_original(str(key_i))
                 if key_original is None:
                     return
                 else:
@@ -128,7 +128,7 @@ class IterAux(NestInit_Source):
             try:
                 result = result[key_i]
             except:
-                result = AttrAux(result).anycase__getattr(key_i)     # raise
+                result = AttrAux(result).getattr_ic(key_i)     # raise
 
         return result
 
@@ -149,7 +149,7 @@ class IterAux(NestInit_Source):
                     try:
                         source[key_i] = value
                     except:
-                        AttrAux(source).anycase__setattr(key_i, value)     # raise
+                        AttrAux(source).setattr_ic(key_i, value)     # raise
                     return True
                 else:
                     source = IterAux(source).value__get(key_i)

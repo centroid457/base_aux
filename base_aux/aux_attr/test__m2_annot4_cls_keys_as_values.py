@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_attr.m2_annot4_cls_keys_as_values import *
+from base_aux.aux_attr.m2_annot3_cls_keys_as_values import *
 
 
 # =====================================================================================================================

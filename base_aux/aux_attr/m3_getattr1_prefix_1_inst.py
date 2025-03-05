@@ -41,7 +41,7 @@ class GetattrPrefixInst:
         # print("-"*10)
         # print(f"{item=}start")
         # pretend DIRECT anycase name/prefix ----------
-        item_original = AttrAux(self).anycase__name_original(item)
+        item_original = AttrAux(self).name_ic__get_original(item)
         if item_original:
             if item_original.lower() == item.lower():
                 return getattr(self, item_original)
@@ -49,7 +49,7 @@ class GetattrPrefixInst:
         # pretend PREFIX ----------
         for prefix in self.GETATTR_PREFIXES:
             # print(f"{prefix=}start")
-            prefix_original = AttrAux(self).anycase__name_original(prefix)
+            prefix_original = AttrAux(self).name_ic__get_original(prefix)
             if not prefix_original:
                 continue
 
@@ -62,7 +62,7 @@ class GetattrPrefixInst:
             # prefix ----------
             if item.lower().startswith(prefix.lower()):
                 item_name = item[len(prefix):]
-                item_value = AttrAux(self).anycase__getattr(item_name)
+                item_value = AttrAux(self).getattr_ic(item_name)
 
                 return lambda *meth_args, **meth_kwargs: CallableAux(prefix_meth).resolve_raise(
                     *[CallableAux(item_value).resolve_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],

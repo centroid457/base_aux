@@ -81,8 +81,8 @@ def test__not_existed(args, _EXPECTED):
 # =====================================================================================================================
 
 if __name__ == "__main__":
-    # print(AnnotsAux(victim).dump__dict_types())
-    # print(AnnotsAux(victim).dump__dict_values())
+    # print(AnnotAttrAux(victim).dump__dict_types())
+    # print(AnnotAttrAux(victim).dump__dict_values())
 
     ObjectInfo(victim1.__annotations__["UNION_BOOL_INT"]).print()
 

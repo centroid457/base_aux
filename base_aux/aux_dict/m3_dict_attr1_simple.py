@@ -1,7 +1,7 @@
 from base_aux.aux_dict.m2_ignorecase import DictIgnorecase
 from base_aux.aux_types.m2_info import ObjectInfo
 
-from base_aux.aux_attr.m2_annot2_nest_required import *
+from base_aux.aux_attr.m2_annot2_nest1_init_required import *
 
 
 # =====================================================================================================================
@@ -170,7 +170,7 @@ class DictAttrAnnotRequired(DictAttr, NestInit_AnnotsRequired):
 
     def check_all_defined_or_raise(self) -> None | NoReturn:
         not_def_list = []
-        nested = AnnotsAux(self).get__dict_types()
+        nested = AnnotAttrAux(self).annot_only__dict_types()
         for key in nested:
             if key not in self:
                 not_def_list.append(key)
