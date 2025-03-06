@@ -1,9 +1,18 @@
-from typing import *
+from typing import final
 
 
 # =====================================================================================================================
-def check_name__buildin(name: str) -> bool:
-    return name.startswith("__") and name.endswith("__") and len(name) > 4
+@final
+class AttrDump:
+    """
+    GOAL
+    ----
+    just use static bare class for dumping any set of attrs!
+
+    WHY NOT - AttrsKit
+    ------------------
+    cause sometimes it makes circular recursion exx!
+    """
 
 
 # =====================================================================================================================
