@@ -18,7 +18,7 @@ def test__values():
     except:
         assert True
 
-    assert Example(a1=1).A1 == 1
+    assert Example(a1=1).a1 == 1
     assert Example(1, a1=2).A1 == 2
 
     assert Example(1).A1 == 1

@@ -42,9 +42,11 @@ class AnnotAttrAux(AttrAux):
     # =================================================================================================================
     def name_ic__get_original(self, name_index: str | int) -> str | None:
         try:
-            return self.list_annots()[int(name_index)]
+            index = int(name_index)
         except:
             return super().name_ic__get_original(name_index)
+
+        return self.list_annots()[index]
 
     def sai__by_args(self, *args: Any) -> Any | NoReturn:
         for index, value in enumerate(args):

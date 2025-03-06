@@ -212,7 +212,7 @@ class Validators:
             source: Any,
             # attr_level: AttrLevel = AttrLevel.NOT_PRIVATE,
     ) -> bool | NoReturn:
-        for key in AttrAux(source).iter__attrs(self.ATTR_LEVEL):
+        for key in AttrAux(source).iter__names(self.ATTR_LEVEL):
             value_expected = AttrAux(source).gai_ic__callable_resolve(key, CallableResolve.EXX)
             value_other = AttrAux(other_final).gai_ic__callable_resolve(key, CallableResolve.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):

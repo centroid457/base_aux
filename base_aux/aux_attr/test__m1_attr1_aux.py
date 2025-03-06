@@ -64,9 +64,9 @@ class VictimNested_New(Victim):
 )
 def test__iter(source, _EXPECTED):
     ExpectAux(set(AttrAux(source).iter__attrs_external_not_builtin())).check_assert(_EXPECTED[0])
-    ExpectAux(set(AttrAux(source).iter__attrs_not_hidden())).check_assert(_EXPECTED[1])
-    ExpectAux(set(AttrAux(source).iter__attrs_not_private())).check_assert(_EXPECTED[2])
-    ExpectAux(set(AttrAux(source).iter__attrs_private())).check_assert(_EXPECTED[3])
+    ExpectAux(set(AttrAux(source).iter__names_not_hidden())).check_assert(_EXPECTED[1])
+    ExpectAux(set(AttrAux(source).iter__names_not_private())).check_assert(_EXPECTED[2])
+    ExpectAux(set(AttrAux(source).iter__names_private())).check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================

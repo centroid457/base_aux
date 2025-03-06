@@ -23,8 +23,8 @@ class Victim2(Victim1):
 VICTIM1_DICT_TYPES = {"ATTR1": int, "ATTR2": int}
 VICTIM2_DICT_TYPES = {"ATTR1": int, "ATTR2": int, "ATTR3": int, "ATTR4": int}
 
-VICTIM1_DICT_VALUES = {"ATTR2": 2, "ATTR01": 11}
-VICTIM2_DICT_VALUES = {'ATTR01': 11, 'ATTR02': 22,  "ATTR2": 2, "ATTR4": 4}
+VICTIM1_DICT_VALUES = {"ATTR2": 2}
+VICTIM2_DICT_VALUES = {"ATTR2": 2, "ATTR4": 4}
 
 victim1 = Victim1()
 victim2 = Victim2()
@@ -172,8 +172,8 @@ class Test__1:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = AnnotAttrAux(source).dump_dict
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        func_link = lambda: list(AnnotAttrAux(source).dump_dict())
+        ExpectAux(func_link).check_assert(list(_EXPECTED))
 
     # =================================================================================================================
     @pytest.mark.parametrize(

@@ -40,8 +40,12 @@ class AttrAux(NestInit_Source):
         ---------------------
         Nest_AttrKit
         """
-        for attr in self.iter__attrs_not_private():
-            value = getattr(self.SOURCE, attr)
+        for attr in self.iter__names_not_private():
+            try:
+                value = getattr(self.SOURCE, attr)
+            except:
+                continue
+
             if isinstance(value, dict):
                 setattr(self.SOURCE, attr, dict(value))
             elif isinstance(value, list):
@@ -141,9 +145,17 @@ class AttrAux(NestInit_Source):
             # print(f"{name=}")
             yield name
 
+    def iter__annot_names(self) -> Iterable[str]:
+        raise NotImplementedError(f"used in AnnotAux")
+
     # -----------------------------------------------------------------------------------------------------------------
-    def iter__attrs(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[str]:
-        for name in self.iter__attrs_external_not_builtin():
+    def iter__names(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[str]:
+        names_scope = []
+        if self.__class__ == AttrAux:
+            names_scope = self.iter__attrs_external_not_builtin()
+        else:
+            names_scope = self.iter__annot_names()
+        for name in names_scope:
             if attr_level == AttrLevel.NOT_PRIVATE:
                 if not name.startswith("__"):
                     yield name
@@ -162,24 +174,24 @@ class AttrAux(NestInit_Source):
             else:
                 raise Exx__Incompatible(f"{attr_level=}")
 
-    def iter__attrs_not_hidden(self) -> Iterable[str]:
+    def iter__names_not_hidden(self) -> Iterable[str]:
         """
         NOTE
         ----
         hidden names are more simple to detect then private!
         cause of private methods(!) changes to "_<ClsName><__MethName>"
         """
-        return self.iter__attrs(AttrLevel.NOT_HIDDEN)
+        return self.iter__names(AttrLevel.NOT_HIDDEN)
 
-    def iter__attrs_not_private(self) -> Iterable[str]:
+    def iter__names_not_private(self) -> Iterable[str]:
         """
         NOTE
         ----
         BEST WAY TO USE EXACTLY iter__not_private
         """
-        return self.iter__attrs(AttrLevel.NOT_PRIVATE)
+        return self.iter__names(AttrLevel.NOT_PRIVATE)
 
-    def iter__attrs_private(self) -> Iterable[str]:
+    def iter__names_private(self) -> Iterable[str]:
         """
         BUILTIN - NOT INCLUDED!
 
@@ -195,7 +207,7 @@ class AttrAux(NestInit_Source):
         ---------
         keep list of iters
         """
-        return self.iter__attrs(AttrLevel.PRIVATE)
+        return self.iter__names(AttrLevel.PRIVATE)
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
@@ -345,7 +357,7 @@ class AttrAux(NestInit_Source):
         using any object as rules for Translator
         """
         result = {}
-        for name in self.iter__attrs_not_private():
+        for name in self.iter__names_not_private():
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
             if value is ProcessState.SKIPPED:
                 continue

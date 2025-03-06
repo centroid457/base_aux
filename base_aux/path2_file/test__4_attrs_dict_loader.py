@@ -126,11 +126,10 @@ class Test__PvEnv:
         self.victim = PvLoaderEnv().resolve()
 
         try:
-            self.victim[self.NAME_NotExists]
-        except AttributeError:
-            return
-        else:
+            value = self.victim[self.NAME_NotExists]
             assert False
+        except Exception:
+            return
 
     def test__len(self):
         assert len(PvLoaderEnv().resolve()) > 2

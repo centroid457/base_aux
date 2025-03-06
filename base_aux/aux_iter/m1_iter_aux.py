@@ -55,7 +55,7 @@ class IterAux(NestInit_Source):
         if isinstance(self.SOURCE, (list, tuple, dict, set)):
             values = self.SOURCE
         else:
-            values = AttrAux(self.SOURCE).iter__attrs_not_private()
+            values = AttrAux(self.SOURCE).iter__names_not_private()
 
         for value in values:
             try:

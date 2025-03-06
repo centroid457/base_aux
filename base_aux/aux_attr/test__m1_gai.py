@@ -34,7 +34,7 @@ class Test__Attr:
             (" TRUE", Exception),
             ("NOT_EXISTS", Exception),
 
-            ("__name__", Exception),
+            ("__name__", "Victim"),
 
             ("attr_lowercase", "value"),
             ("ATTR_LOWERCASE", "value"),
@@ -106,7 +106,7 @@ class Test__Annot:
             (" TRUE", Exception),
             ("NOT_EXISTS", Exception),
 
-            ("__name__", Exception),
+            ("__name__", "Victim"),
 
             ("attr_lowercase", "value"),
             ("ATTR_LOWERCASE", "value"),

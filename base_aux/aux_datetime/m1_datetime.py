@@ -238,7 +238,7 @@ class DateTimeAux(NestCmp):
         return self.SOURCE.strftime(pattern)
 
     def __getattr__(self, item: str) -> str | NoReturn:
-        if item in AttrAux(PatDateTimeFormat).iter__attrs_not_hidden():
+        if item in AttrAux(PatDateTimeFormat).iter__names_not_hidden():
             if isinstance(self.SOURCE, datetime.datetime):
                 pass
             elif isinstance(self.SOURCE, datetime.date):

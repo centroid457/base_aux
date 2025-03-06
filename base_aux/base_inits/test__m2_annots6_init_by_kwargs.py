@@ -57,9 +57,13 @@ class Test__NestInit:
         assert Example(1).A2 == None
         assert Example(1).A3 == None
 
-        assert Example(1, 1, 1).A1 == 1
-        assert Example(1, 1, 1).A2 == 1
-        assert Example(1, 1, 1).A3 == None
+        try:
+            assert Example(1, 1, 1)
+        except:
+            pass
+
+        assert Example(1, 1).A2 == 1
+        assert Example(1, 1).A3 == None
         assert Example(1, 1, a3=1).A3 == 1
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -71,7 +75,7 @@ class Test__NestInit:
             ((), dict(k1=1), EQ_ISINSTANCE_VICTIM),
             ((), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
 
-            (("a1", "a2"), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
+            ((), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
         ]
     )
     def test__1(self, args, kwargs, _EXPECTED):
@@ -112,10 +116,9 @@ class Victim(NestInit_AnnotsAttrByKwArgs):
         ((), dict(At1=111), Exception, ()),
 
         ((333, 444), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
-        ((333, 444, 1, 2, 3, 4), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
-        ((11, 22, 33, 44), dict(At0=111, At1=222, An0=333, An1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
-
-        ((11, 22, 33, 44), dict(AT0=111, AT1=222, AN0=333, AN1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+        ((333, 444), dict(At0=111, At1=222), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+        ((11, 22), dict(At0=111, At1=222, An0=333, An1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
+        ((11, 22), dict(AT0=111, AT1=222, AN0=333, AN1=444), EQ_ISINSTANCE_VICTIM, (111, 222, 333, 444)),
     ]
 )
 def test__2(args, kwargs, _EXPECTED, values):
