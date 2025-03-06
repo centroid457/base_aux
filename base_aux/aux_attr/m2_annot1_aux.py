@@ -46,7 +46,7 @@ class AnnotAttrAux(AttrAux):
         except:
             return super().name_ic__get_original(name_index)
 
-        return self.list_annots()[index]
+        return self.list_annots()[index]    # dont place in try sentence
 
     def sai__by_args(self, *args: Any) -> Any | NoReturn:
         for index, value in enumerate(args):
@@ -141,7 +141,7 @@ class AnnotAttrAux(AttrAux):
             except:
                 pass
 
-    # =================================================================================================================
+    # -----------------------------------------------------------------------------------------------------------------
     def list_annots(self) -> list[str]:
         return list(self.dump_dict__annot_types())
 
@@ -153,7 +153,7 @@ class AnnotAttrAux(AttrAux):
         set None for all annotated aux_attr! even not existed!
         """
         for name in self.iter__annot_names():
-            setattr(self.SOURCE, name, None)
+            self.sai_ic(name, None)
 
     def reinit__annots_by_types(self, not_existed: bool = None) -> None:
         """
@@ -166,7 +166,7 @@ class AnnotAttrAux(AttrAux):
                 continue
 
             value = TypeAux(value).type__init_value__default()
-            setattr(self.SOURCE, name, value)
+            self.sai_ic(name, value)
 
 
 # =====================================================================================================================

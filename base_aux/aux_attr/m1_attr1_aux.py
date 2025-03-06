@@ -244,7 +244,9 @@ class AttrAux(NestInit_Source):
         name_original = self.name_ic__get_original(name_index)
 
         if name_index == "__name__":        # this is a crutch! костыль!!!!
-            return self.SOURCE.__class__.__name__
+            result = "ATTRS"
+            result = self.SOURCE.__class__.__name__
+            return result
 
         if name_original is None:
             raise IndexError(f"{name_index=}/{self=}")
@@ -329,7 +331,6 @@ class AttrAux(NestInit_Source):
     def sai__by_args(self, *args: Any) -> Any | NoReturn:
         if args:
             raise AttributeError(f"args acceptable only for Annots! {args=}")
-
         return self.SOURCE
 
     def sai__by_kwargs(self, **kwargs: dict[str, Any]) -> Any | NoReturn:
@@ -338,11 +339,30 @@ class AttrAux(NestInit_Source):
         return self.SOURCE
 
     # DUMP ------------------------------------------------------------------------------------------------------------
+    def name__check_have_value(self, name_index_draft: str) -> bool:
+        """
+        GOAL
+        ----
+        check attr really existed!
+        separate exx on getattr (like for property) and name-not-existed.
+        used only due to annots!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        dump_dict - because in there if not value exists - logic is differ from base logic! (here we need to pass!)
+        """
+        name_final = self.name_ic__get_original(name_index_draft)
+        if name_final:
+            return hasattr(self.SOURCE, name_final)
+        else:
+            return False
+
     def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
         BUMPS MEANS basically save final values for all (even any dynamic/callables) values! or only not callables!
+        SKIP NOT EXISTED ANNOTS!!!
 
         NOTE
         ----
@@ -358,6 +378,10 @@ class AttrAux(NestInit_Source):
         """
         result = {}
         for name in self.iter__names_not_private():
+            # skip is attr not exist
+            if not self.name__check_have_value(name):
+                continue
+
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
             if value is ProcessState.SKIPPED:
                 continue

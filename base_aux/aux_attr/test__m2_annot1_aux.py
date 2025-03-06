@@ -136,11 +136,11 @@ def test__annot__raise_if_not_defined(source, _EXPECTED):
 # =====================================================================================================================
 # =====================================================================================================================
 class Test__1:
-    @classmethod
-    def setup_class(cls):
-        pass
-        cls.victim1 = Victim1()
-        cls.victim2 = Victim2()    # @classmethod
+    # @classmethod
+    # def setup_class(cls):
+    #     pass
+    #     cls.victim1 = Victim1()
+    #     cls.victim2 = Victim2()    # @classmethod
 
     # =================================================================================================================
     # def test__anycase_getattr(self):
@@ -172,8 +172,8 @@ class Test__1:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = lambda: list(AnnotAttrAux(source).dump_dict())
-        ExpectAux(func_link).check_assert(list(_EXPECTED))
+        func_link = AnnotAttrAux(source).dump_dict
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
