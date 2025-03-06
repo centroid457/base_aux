@@ -101,8 +101,8 @@ def test__annot__get_not_defined(source, _EXPECTED):
         (VictimNested_OkParent(), True),
         (VictimNested_OkCHild(), True),
 
-        # (DictDirect_Ok(), True),
-        # (DictDirect_Fail(), False),
+        (DictDirect_Ok(), True),
+        (DictDirect_Fail(), False),
     ]
 )
 def test__annot__check_all_defined(source, _EXPECTED):
@@ -123,8 +123,8 @@ def test__annot__check_all_defined(source, _EXPECTED):
         (VictimNested_OkParent(), None),
         (VictimNested_OkCHild(), None),
 
-        # (DictDirect_Ok(), None),
-        # (DictDirect_Fail(), Exception),
+        (DictDirect_Ok(), None),
+        (DictDirect_Fail(), Exception),
     ]
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
