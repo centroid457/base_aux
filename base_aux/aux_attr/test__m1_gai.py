@@ -123,3 +123,13 @@ class Test__Annot:
 
 
 # =====================================================================================================================
+def test__cls_name():
+    assert NestGAI_AnnotAttrIC().__class__.__name__ == f"NestGAI_AnnotAttrIC"
+
+    class Victim(NestGAI_AnnotAttrIC):
+        A1: int = 1
+
+    assert Victim().__class__.__name__ == f"Victim"
+
+
+# =====================================================================================================================

@@ -232,7 +232,7 @@ class AttrLevel(NestEq_Enum):
 # =====================================================================================================================
 def _examples() -> None:
     WHEN = When2.BEFORE
-    if WHEN == When2.BEFORE:
+    if WHEN is When2.BEFORE:
         pass
 
     print(FPoint.COMMA)  # FPoint.COMMA

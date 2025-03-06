@@ -207,10 +207,10 @@ class LambdaSleep(Lambda):
         if sec is None:
             sec = self.SEC
 
-        if self.WHEN == When2.BEFORE:
+        if self.WHEN is When2.BEFORE:
             time.sleep(sec)
         result = self.construct(*args, **kwargs)
-        if self.WHEN == When2.AFTER:
+        if self.WHEN is When2.AFTER:
             time.sleep(sec)
         return result
 

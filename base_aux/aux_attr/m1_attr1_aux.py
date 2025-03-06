@@ -230,6 +230,10 @@ class AttrAux(NestInit_Source):
         no execution/resolving! return pure value as represented in object!
         """
         name_original = self.name_ic__get_original(name_index)
+
+        if name_index == "__name__":        # this is a crutch! костыль!!!!
+            return self.SOURCE.__class__.__name__
+
         if name_original is None:
             raise IndexError(f"{name_index=}/{self=}")
 
@@ -343,7 +347,7 @@ class AttrAux(NestInit_Source):
         result = {}
         for name in self.iter__attrs_not_private():
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
-            if value == ProcessState.SKIPPED:
+            if value is ProcessState.SKIPPED:
                 continue
             result.update({name: value})
 

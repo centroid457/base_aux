@@ -291,11 +291,11 @@ class TextAux:
             if maxlen <= sub_len:
                 return sub[0:maxlen]
 
-            if where == Where3.FIRST:
+            if where is Where3.FIRST:
                 result = sub + source[-(maxlen - sub_len):]
-            elif where == Where3.LAST:
+            elif where is Where3.LAST:
                 result = source[0:maxlen - sub_len] + sub
-            elif where == Where3.MIDDLE:
+            elif where is Where3.MIDDLE:
                 len_start = maxlen // 2 - sub_len // 2
                 len_finish = maxlen - len_start - sub_len
                 result = source[0:len_start] + sub + source[-len_finish:]

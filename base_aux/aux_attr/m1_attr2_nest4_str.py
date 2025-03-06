@@ -20,7 +20,8 @@ class NestStR_AttrsNotPrivate:
             if result:
                 result += ","
             elif not result:
-                result += f"{self.__class__.__name__}("
+                # result += f"{self.__class__.__name__}("
+                result += f"ATTRS("
             value = getattr(self, attr_name)
             result += f"{attr_name}={value}"
 
@@ -48,12 +49,28 @@ class NestStR_AttrsNotHidden:
             if result:
                 result += ","
             elif not result:
-                result += f"{self.__class__.__name__}("
+                # result += f"{self.__class__.__name__}("
+                result += f"ATTRS("
             value = getattr(self, attr_name)
             result += f"{attr_name}={value}"
 
         result += ")"
         return result
+
+
+# =====================================================================================================================
+def _examples() -> None:
+    class Victim(NestStR_AttrsNotPrivate):
+        A0: int
+        A1: int = 1
+
+    victim = Victim()
+    print(victim)
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _examples()
 
 
 # =====================================================================================================================

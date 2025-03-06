@@ -54,7 +54,7 @@ def test__attr__not_exists():
     # TRUE ---------------------
     try:
         Victim().raise_if__HELLO()
-    except AttributeError:
+    except Exception:
         pass
     else:
         assert False

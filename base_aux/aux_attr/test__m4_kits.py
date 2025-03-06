@@ -60,3 +60,13 @@ def test__eq():
 
 
 # =====================================================================================================================
+def test__cls_name():
+    assert NestInit_AnnotsAttrByKwArgs().__class__.__name__ == f"NestInit_AnnotsAttrByKwArgs"
+
+    class Victim(NestInit_AnnotsAttrByKwArgs):
+        A1: Any = None
+
+    assert Victim().__class__.__name__ == f"Victim"
+
+
+# =====================================================================================================================
