@@ -114,16 +114,16 @@ def test__annot__check_all_defined(source, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
-        (VictimDirect_Ok(), None),
+        (VictimDirect_Ok(), True),
         (VictimDirect_Fail(), Exception),
 
         (VictimNested_FailParent(), Exception),
         (VictimNested_FailChild(), Exception),
 
-        (VictimNested_OkParent(), None),
-        (VictimNested_OkCHild(), None),
+        (VictimNested_OkParent(), True),
+        (VictimNested_OkCHild(), True),
 
-        (DictDirect_Ok(), None),
+        (DictDirect_Ok(), True),
         (DictDirect_Fail(), Exception),
     ]
 )
