@@ -9,7 +9,7 @@ class RExp(Nest_AttrKit):
     """
     GOAL
     ----
-    simple pattern with all expected params
+    simple pattern with all expected params for batch usage
 
     RULES
     -----
