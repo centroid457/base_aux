@@ -1,4 +1,3 @@
-from base_aux.aux_attr.m2_annot1_aux import *
 from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 

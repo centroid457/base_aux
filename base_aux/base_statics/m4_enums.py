@@ -205,9 +205,8 @@ class AttrStyle(NestEq_Enum):
     ---------------------
     NestInit_AnnotsAttrsByKwArgs_Base for separating work with - TODO: DEPRECATE?
     """
-    ALL = None
-    ATTRS_ONLY = 1
-    ANNOTS_ONLY = 2
+    ATTRS_EXISTED = None
+    ANNOTS_ONLY = 1
 
 
 class AttrLevel(NestEq_Enum):

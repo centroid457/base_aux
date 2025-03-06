@@ -1,3 +1,4 @@
+from typing import *
 import re
 
 from base_aux.aux_attr.m4_dump import AttrDump
@@ -25,10 +26,16 @@ class AttrAux(NestInit_Source):
     uses names intended in annots
     """
     SOURCE: Any
+    _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
 
     # =================================================================================================================
     def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
-        yield from self.iter__attrs_external_not_builtin()
+        if self._ATTRS_STYLE == AttrStyle.ATTRS_EXISTED:
+            yield from self.iter__attrs_external_not_builtin()
+        elif self._ATTRS_STYLE == AttrStyle.ANNOTS_ONLY:
+            yield from self.iter__annot_names()
+        else:
+            raise Exx__Incompatible(self._ATTRS_STYLE)
 
     # =================================================================================================================
     def reinit__mutable_values(self) -> None:
@@ -549,6 +556,38 @@ class AttrAux(NestInit_Source):
             result += f"\nEmpty=Empty"
 
         return result
+
+
+# =====================================================================================================================
+@final
+class AnnotAttrAux(AttrAux):
+    """
+    GOAL
+    ----
+    work with all __annotations__
+        from all nested classes
+        in correct order
+
+    RULES
+    -----
+    1. nesting available with correct order!
+        class ClsFirst(BreederStrStack):
+            atr1: int
+            atr3: int = None
+
+        class ClsLast(BreederStrStack):
+            atr2: int = None
+            atr4: int
+
+        for key, value in ClsLast.annotations__get_nested().items():
+            print(f"{key}:{value}")
+
+        # atr1:<class 'int'>
+        # atr3:<class 'int'>
+        # atr2:<class 'int'>
+        # atr4:<class 'int'>
+    """
+    _ATTRS_STYLE: AttrStyle = AttrStyle.ANNOTS_ONLY
 
 
 # =====================================================================================================================

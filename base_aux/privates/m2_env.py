@@ -2,7 +2,7 @@ import os
 import re
 from typing import Any, NoReturn
 
-from base_aux.aux_attr.m2_annot1_aux import AnnotAttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs

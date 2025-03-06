@@ -2,7 +2,7 @@ from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_callable.m1_callable_aux import *
 
-from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

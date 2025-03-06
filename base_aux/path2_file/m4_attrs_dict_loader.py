@@ -1,4 +1,6 @@
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
+from base_aux.aux_attr.test__m1_attr3_lambda_call import *
+from base_aux.aux_iter.m1_iter_aux import *
 from base_aux.path2_file.m3_filetext import *
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 
@@ -68,7 +70,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
 
             result = self.TARGET(**data)
         else:
-            AnnotsAux(self.TARGET).sai__by_args_kwargs(**data)
+            AnnotAttrAux(self.TARGET).sai__by_args_kwargs(**data)
             result = self.TARGET
 
         return result

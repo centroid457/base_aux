@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.aux_types.m1_type_aux import *
-from base_aux.aux_attr.m1_attr1_aux import *
+from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.base_statics.m1_types import *
 
 

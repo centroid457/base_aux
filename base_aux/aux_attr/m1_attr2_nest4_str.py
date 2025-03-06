@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_attr.m1_attr1_aux import AttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
 
 
 # =====================================================================================================================

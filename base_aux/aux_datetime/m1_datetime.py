@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from base_aux.aux_attr.m1_attr1_aux import *
+from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_cmp_eq.m1_cmp import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_statics.m2_exceptions import *

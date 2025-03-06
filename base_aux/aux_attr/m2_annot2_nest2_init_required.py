@@ -1,5 +1,3 @@
-from typing import *
-from .m2_annot1_aux import AnnotAttrAux
 from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
 
 

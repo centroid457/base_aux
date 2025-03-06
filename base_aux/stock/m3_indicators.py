@@ -1,8 +1,7 @@
-from typing import *
 from enum import Enum, auto
 from dataclasses import dataclass
 
-from base_aux.aux_attr.m2_annot1_aux import *
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
 
 
 # =====================================================================================================================
