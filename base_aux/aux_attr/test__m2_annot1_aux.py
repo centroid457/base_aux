@@ -67,6 +67,9 @@ class DictDirect_Fail(dict, NestGAI_AnnotAttrIC):
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
+        (Victim1(), ["ATTR1", ]),
+        (Victim2(), ["ATTR1", "ATTR3"]),
+
         (VictimDirect_Ok(), []),
         (VictimDirect_Fail(), ["ATTR1", ]),
 

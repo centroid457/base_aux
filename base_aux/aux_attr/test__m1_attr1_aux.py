@@ -79,7 +79,7 @@ class Victim2:
 @pytest.mark.parametrize(
     argnames="attr, _EXPECTED",
     argvalues=[
-        (1, (None, False, Exception, Exception, )),
+        (1, (Exception, Exception, Exception, Exception, )),
         (None, (None, False, Exception, Exception, )),
         (True, (None, False, Exception, Exception, )),
         ("", (None, False, Exception, Exception, )),

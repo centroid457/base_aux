@@ -6,6 +6,12 @@ from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_attr.m0_static import *
+from base_aux.aux_types.m1_type_aux import *
+
+
+# =====================================================================================================================
+TYPING__NAME_FINAL = str
+TYPING__NAME_DRAFT = str | int | Any
 
 
 # =====================================================================================================================
@@ -15,14 +21,16 @@ class AttrAux(NestInit_Source):
     NOTE
     ----
     1. if there are several same aux_attr in different cases - you should resolve it by yourself!
-    2. if want consider annot attrs in process - use AnnotAttrAux instead!
 
     ANNOTS
     ------
-    not used/intended here! dont mess they - it means you need to know what exact you will work with (attrs or annotAttrs)
-    and prepare classes appropriate!
+    uses names intended in annots
     """
     SOURCE: Any
+
+    # =================================================================================================================
+    def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
+        yield from self.iter__attrs_external_not_builtin()
 
     # =================================================================================================================
     def reinit__mutable_values(self) -> None:
@@ -58,7 +66,7 @@ class AttrAux(NestInit_Source):
     #     return self.anycase__check_exists(item)
 
     # =================================================================================================================
-    def get_name__private_external(self, dirname: str) -> str | None:
+    def get_name__private_external(self, dirname: str) -> TYPING__NAME_FINAL | None:
         """
         typically BUILTIN - NOT INCLUDED!
 
@@ -114,8 +122,30 @@ class AttrAux(NestInit_Source):
                     name_external = dirname.replace(f"_{cls.__name__}", "")
                     return name_external
 
+    def reinit__annots_by_None(self) -> None:
+        """
+        GOAL
+        ----
+        set None for all annotated aux_attr! even not existed!
+        """
+        for name in self.iter__annot_names():
+            self.sai_ic(name, None)
+
+    def reinit__annots_by_types(self, not_existed: bool = None) -> None:
+        """
+        GOAL
+        ----
+        delattr all annotated aux_attr!
+        """
+        for name, value in self.dump_dict__annot_types().items():
+            if not_existed and hasattr(self.SOURCE, name):
+                continue
+
+            value = TypeAux(value).type__init_value__default()
+            self.sai_ic(name, value)
+
     # ITER ------------------------------------------------------------------------------------------------------------
-    def iter__attrs_external_not_builtin(self) -> Iterable[str]:
+    def iter__attrs_external_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
         ----
@@ -145,17 +175,10 @@ class AttrAux(NestInit_Source):
             # print(f"{name=}")
             yield name
 
-    def iter__annot_names(self) -> Iterable[str]:
-        raise NotImplementedError(f"used in AnnotAux")
-
     # -----------------------------------------------------------------------------------------------------------------
-    def iter__names(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[str]:
-        names_scope = []
-        if self.__class__ == AttrAux:
-            names_scope = self.iter__attrs_external_not_builtin()
-        else:
-            names_scope = self.iter__annot_names()
-        for name in names_scope:
+    def iter__names(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+        # -------------------------------------------------
+        for name in self.ITER_NAMES_SOURCE():
             if attr_level == AttrLevel.NOT_PRIVATE:
                 if not name.startswith("__"):
                     yield name
@@ -174,7 +197,7 @@ class AttrAux(NestInit_Source):
             else:
                 raise Exx__Incompatible(f"{attr_level=}")
 
-    def iter__names_not_hidden(self) -> Iterable[str]:
+    def iter__names_not_hidden(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
         ----
@@ -183,7 +206,7 @@ class AttrAux(NestInit_Source):
         """
         return self.iter__names(AttrLevel.NOT_HIDDEN)
 
-    def iter__names_not_private(self) -> Iterable[str]:
+    def iter__names_not_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
         ----
@@ -191,7 +214,7 @@ class AttrAux(NestInit_Source):
         """
         return self.iter__names(AttrLevel.NOT_PRIVATE)
 
-    def iter__names_private(self) -> Iterable[str]:
+    def iter__names_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         BUILTIN - NOT INCLUDED!
 
@@ -215,12 +238,60 @@ class AttrAux(NestInit_Source):
     # =================================================================================================================
     pass
 
-    # NAME ------------------------------------------------------------------------------------------------------------
-    def name_ic__get_original(self, name_index: str | int) -> str | None:
+    # =================================================================================================================
+    def _iter_mro(self) -> Iterable[type]:
+        """
+        GOAL
+        ----
+        iter only important user classes from mro
+        """
+        yield from TypeAux(self.SOURCE).iter_mro_user(
+            # NestGAI_AnnotAttrIC,
+            # NestGSAI_AttrAnycase,
+            # NestGA_AnnotAttrIC, NestGI_AnnotAttrIC,
+            # NestSA_AttrAnycase, NestSI_AttrAnycase,
+        )
+
+    def iter__annot_names(self) -> Iterable[TYPING__NAME_FINAL]:
+        """
+        iter all (with not existed)
+        """
+        yield from self.dump_dict__annot_types()
+
+    def iter__annot_values(self) -> Iterable[Any]:
+        """
+        only existed
+        """
+        for name in self.list_annots():
+            try:
+                yield self.gai_ic(name)
+            except:
+                pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def list_annots(self) -> list[TYPING__NAME_FINAL]:
+        return list(self.dump_dict__annot_types())
+
+    # =================================================================================================================
+    def name_ic__get_original(self, name_index: TYPING__NAME_DRAFT) -> TYPING__NAME_FINAL | None:
         """
         get attr name_index in original register
         """
+        name_index = str(name_index)
+
+        # name as index for annots -------
+        index = None
+        try:
+            index = int(name_index)
+        except:
+            pass
+
+        if index is not None:
+            return self.list_annots()[index]  # dont place in try sentence
+
+        # name as str for annots/attrs ------
         name_index = str(name_index).strip()
+
         if not name_index:
             return
 
@@ -230,11 +301,29 @@ class AttrAux(NestInit_Source):
 
         return
 
-    def name_ic__check_exists(self, name_index: str | int) -> bool:
+    def name_ic__check_exists(self, name_index: TYPING__NAME_DRAFT) -> bool:
         return self.name_ic__get_original(name_index) is not None
 
+    def name__check_have_value(self, name_index: TYPING__NAME_DRAFT) -> bool:
+        """
+        GOAL
+        ----
+        check attr really existed!
+        separate exx on getattr (like for property) and name-not-existed.
+        used only due to annots!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        dump_dict - because in there if not value exists - logic is differ from base logic! (here we need to pass!)
+        """
+        name_final = self.name_ic__get_original(name_index)
+        if name_final:
+            return hasattr(self.SOURCE, name_final)
+        else:
+            return False
+
     # ATTR ------------------------------------------------------------------------------------------------------------
-    def gai_ic(self, name_index: str | int) -> Any | Callable | NoReturn:
+    def gai_ic(self, name_index: TYPING__NAME_DRAFT) -> Any | Callable | NoReturn:
         """
         GOAL
         ----
@@ -253,7 +342,7 @@ class AttrAux(NestInit_Source):
 
         return getattr(self.SOURCE, name_original)
 
-    def sai_ic(self, name_index: str | int, value: Any) -> None | NoReturn:
+    def sai_ic(self, name_index: TYPING__NAME_DRAFT, value: Any) -> None | NoReturn:
         """
         get attr value by name_index in any register
         no execution! return pure value as represented in object!
@@ -270,7 +359,7 @@ class AttrAux(NestInit_Source):
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
 
-    def dai_ic(self, name_index: str | int) -> None:
+    def dai_ic(self, name_index: TYPING__NAME_DRAFT) -> None:
         name_original = self.name_ic__get_original(name_index)
         if name_original is None:
             return      # already not exists
@@ -278,7 +367,7 @@ class AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # =================================================================================================================
-    def gai_ic__callable_resolve(self, name_index: str | int, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
         -------
@@ -329,34 +418,77 @@ class AttrAux(NestInit_Source):
         return self.SOURCE
 
     def sai__by_args(self, *args: Any) -> Any | NoReturn:
-        if args:
-            raise AttributeError(f"args acceptable only for Annots! {args=}")
+        for index, value in enumerate(args):
+            self.sai_ic(index, value)
+
         return self.SOURCE
 
     def sai__by_kwargs(self, **kwargs: dict[str, Any]) -> Any | NoReturn:
         for name, value in kwargs.items():
             self.sai_ic(name, value)
+
         return self.SOURCE
 
-    # DUMP ------------------------------------------------------------------------------------------------------------
-    def name__check_have_value(self, name_index_draft: str) -> bool:
+    # =================================================================================================================
+    def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
         """
         GOAL
         ----
-        check attr really existed!
-        separate exx on getattr (like for property) and name-not-existed.
-        used only due to annots!
+        return list of not defined annotations
 
         SPECIALLY CREATED FOR
         ---------------------
-        dump_dict - because in there if not value exists - logic is differ from base logic! (here we need to pass!)
+        annot__check_all_defined
         """
-        name_final = self.name_ic__get_original(name_index_draft)
-        if name_final:
-            return hasattr(self.SOURCE, name_final)
-        else:
-            return False
+        result = []
+        nested = self.dump_dict__annot_types()
+        for key in nested:
+            if not self.name_ic__check_exists(key):
+                result.append(key)
+        return result
 
+    def annots__check_all_defined(self) -> bool:
+        """
+        GOAL
+        ----
+        check if all annotated aux_attr have value!
+        """
+        return not self.annots__get_not_defined()
+
+    def annots__check_all_defined_or_raise(self) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        check if all annotated aux_attr have value!
+        """
+        not_defined = self.annots__get_not_defined()
+        if not_defined:
+            dict_type = self.dump_dict__annot_types()
+            msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
+            raise Exx__AnnotNotDefined(msg)
+
+        return True
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def dump_dict__annot_types(self) -> dict[str, type[Any]]:
+        """
+        GOAL
+        ----
+        get all annotations in correct order (nesting available)!
+
+        RETURN
+        ------
+        keys - all attr names (defined and not)
+        values - Types!!! not instances!!!
+        """
+        result = {}
+        for cls in self._iter_mro():
+            _result_i = dict(cls.__annotations__)
+            _result_i.update(result)
+            result = _result_i
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
     def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
