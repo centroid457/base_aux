@@ -13,7 +13,14 @@ class Re:
     apply same methods as in RУ module, but
     work with attempts
     """
-    # ATTEMTS: Iterable[str | ]
+    ATTEMPTS: TYPING__REXPS_FINAL
+
+    def __init__(self, *attempts: TYPING__REXP_DRAFT, flags: int = None) -> None:
+        result = []
+        for attempt in attempts:
+            pass
+
+        self.ATTEMPTS = result
 
 
 # =====================================================================================================================

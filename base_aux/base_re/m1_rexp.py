@@ -1,5 +1,4 @@
 from typing import *
-import re
 
 from base_aux.aux_attr.m4_kits import *
 
@@ -21,7 +20,8 @@ class RExp(Nest_AttrKit):
 
 
 # =====================================================================================================================
-TYPING__REXP_ATTEMTS = Iterable[str | RExp]
+TYPING__REXP_DRAFT = str | RExp
+TYPING__REXPS_FINAL = Iterable[RExp]
 
 
 # =====================================================================================================================
