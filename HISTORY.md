@@ -10,6 +10,14 @@
 ********************************************************************************
 ## NEWS
 
+0.2.15(2025.03.06 14.57.16)
+------------------------------
+- [TESTS] move all near source code  
+- [AnnotAttrAux] BIG REF:  
+	- make nested Annots from Attrs +use same meth in both  
+	- rename sai_*/gai_  
+	- add values__reinit_mutable +NestInit_Mutable  
+
 0.2.14(2025.03.03 16.16.50)
 ------------------------------
 - [ini] add ConfigParserMod  
