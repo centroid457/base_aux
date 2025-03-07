@@ -14,7 +14,7 @@ TYPING__RE_RESULT__ALL = TYPING__RE_RESULT__ONE | list[TYPING__RE_RESULT__ONE]
 
 
 # =====================================================================================================================
-class ReAttempts:
+class Base_ReAttempts:
     """
     GOAL
     ----
@@ -128,6 +128,7 @@ class ReAttempts:
 
             result = re.sub(rexp.PAT, new, other, flags)
             if result != other:
+                other = result
                 if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
                     break
 
@@ -151,6 +152,16 @@ class ReAttempts:
 
         return result
 
+
+# =====================================================================================================================
+@final
+class ReAttemptsAll(Base_ReAttempts):
+    ATTEMPTS_USAGE = AttemptsUsage.ALL
+
+
+@final
+class ReAttemptsFirst(Base_ReAttempts):
+    ATTEMPTS_USAGE = AttemptsUsage.FIRST
 
 
 # =====================================================================================================================

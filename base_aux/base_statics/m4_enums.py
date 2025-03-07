@@ -164,7 +164,7 @@ class AttemptsUsage(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    ReAttempts/RExp
+    Base_ReAttempts/RExp
     """
     FIRST = None
     ALL = all
