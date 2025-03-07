@@ -132,18 +132,22 @@ def test__valuse_set():
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, variants, _EXPECTED",
     argvalues=[
-        ((1, ), 1),
-        ((None, 1, ), 1),
-        ((0, 1, ), 0),
-        ((None, 0, 1, ), 0),
-        ((None, LAMBDA_NONE, ), LAMBDA_NONE),
+        ((1, ), (), [1, 1]),
+        ((1, ), (1, ), [1, None]),
+        ((None, 1, ), (1, ), [1, None]),
+        ((0, 1, ), (0, ), [0, 1]),
+        ((None, 0, 1, ), (0, ), [0, None]),
+        ((None, LAMBDA_NONE, ), (0, ), [LAMBDA_NONE, None, ]),
     ]
 )
-def test__get_first_is_not_none(source, _EXPECTED):
+def test__get_first_is_not_none(source, variants, _EXPECTED):
     func_link = IterAux(source).get_first_is_not_none
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    ExpectAux(func_link).check_assert(_EXPECTED[0])
+
+    func_link = lambda: IterAux(source).get_first_is_not(*variants)
+    ExpectAux(func_link).check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

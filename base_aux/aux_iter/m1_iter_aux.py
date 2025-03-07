@@ -157,7 +157,7 @@ class IterAux(NestInit_Source):
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get_first_is_not_none(self) -> Any | None:
+    def get_first_is_not(self, *variants: Any) -> Any | None:
         """
         GOAL
         ----
@@ -169,8 +169,16 @@ class IterAux(NestInit_Source):
         Re to get flags
         """
         for item in self.SOURCE:
-            if item is not None:    # CMP ONLY BY IS_NOT_NONE!!! dont use '==' cause of __EQ__!
+            if not variants:
                 return item
+
+            if any([item is variant for variant in variants]):    # CMP ONLY BY IS_NOT_NONE!!! dont use '==' cause of __EQ__!
+                continue
+            else:
+                return item
+
+    def get_first_is_not_none(self) -> Any | None:
+        return self.get_first_is_not(None)
 
 
 # =====================================================================================================================
