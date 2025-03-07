@@ -4,11 +4,12 @@ from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-@pytest.mark.skip
+# @pytest.mark.skip
 class Test__Shorted_validateModel_InfinitRW:
     """
     VALIDATE ADAPTERS fro DECODУ ERRORS
     """
+    Victim: type[SerialClient_FirstFree_Shorted] = SerialClient_FirstFree_Shorted
     victim: SerialClient_FirstFree_Shorted
 
     # @classmethod
@@ -37,20 +38,9 @@ class Test__Shorted_validateModel_InfinitRW:
         write as result in SerialClient docstring
         """
         # PREPARE ------------------------
-        self.victim = SerialClient_FirstFree_Shorted()
-        # self.victim.REWRITEIF_READFAILDECODE = 5
-        if not self.victim.connect():
-            msg = f"[ERROR] not found PORT shorted by Rx+Tx"
-            print(msg)
-            raise Exception(msg)
-
-        # START WORKING ------------------
-        index = 0
-        while True:
-            index += 1
-            load = f"step{index}"
-            print(load)
-            assert self.victim.write_read__last(load) == load
+        self.Victim.BAUDRATE = 115200
+        self.victim = self.Victim()
+        self.victim.test__shorted()
 
     @pytest.mark.skip
     def test__real_device(self):    # TODO: fix it!!!
@@ -78,6 +68,11 @@ class Test__Shorted_validateModel_InfinitRW:
             load = f"step{index}"
             print(load)
             assert self.victim.address__validate() is True
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    Test__Shorted_validateModel_InfinitRW().test__shorted()
 
 
 # =====================================================================================================================

@@ -1141,7 +1141,7 @@ class SerialClient(Logger):
         else:
             msg = f"[WARN]BLANK read_line={data}"
 
-        self.LOGGER.info(f"[{self._SERIAL.port}]{msg}")
+        self.LOGGER.info(f"[{self._SERIAL.port}.{self._SERIAL.baudrate}]{msg}")
 
         data = self._bytes_edition__apply(data)
         data = self._data_eol__clear(data)
@@ -1386,6 +1386,21 @@ class SerialClient(Logger):
         history = self.write_read(cmds)
         history.print_io()
         return history
+
+    # =================================================================================================================
+    def test__shorted(self):
+        if not self.connect():
+            msg = f"[ERROR] not found PORT shorted by Rx+Tx"
+            print(msg)
+            raise Exception(msg)
+
+        # START WORKING ------------------
+        index = 0
+        while True:
+            index += 1
+            load = f"step{index}"
+            print(load)
+            assert self.write_read__last(load) == load
 
     # =================================================================================================================
     def __getattr__(self, item: str) -> Callable[..., Union[str, NoReturn]]:
