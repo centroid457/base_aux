@@ -166,7 +166,7 @@ class IterAux(NestInit_Source):
 
         SPECIALY CREATED FOR
         --------------------
-        Re to get flags
+        ReAttempts to get flags
         """
         for item in self.SOURCE:
             if not variants:

@@ -66,7 +66,7 @@ class Nest_AttrKit(
 
         SPECIALLY CREATED FOR
         ---------------------
-        Re when you want to pass attempts by Rexp-patterns (with some nones) and define default values later in future methods
+        ReAttempts when you want to pass attempts by Rexp-patterns (with some nones) and define default values later in future methods
         """
         for index, value in enumerate(args):
             pass
