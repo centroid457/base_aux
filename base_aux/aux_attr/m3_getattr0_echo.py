@@ -2,7 +2,7 @@ from typing import *
 
 
 # =====================================================================================================================
-class GetattrClsEcho_Meta(type):
+class Meta_GaClsEcho(type):
     """
     GOAL
     ----
@@ -10,7 +10,7 @@ class GetattrClsEcho_Meta(type):
 
     CREATED SPECIALLY FOR
     ---------------------
-    here is GetattrClsEcho
+    here is NestGaCls_Echo
     """
     def __getattr__(cls, item: str) -> str:
         """if no exists attr/meth
@@ -21,7 +21,7 @@ class GetattrClsEcho_Meta(type):
 
 
 # =====================================================================================================================
-class GetattrClsEcho(metaclass=GetattrClsEcho_Meta):
+class NestGaCls_Echo(metaclass=Meta_GaClsEcho):
     """
     GOAL
     ----
@@ -42,18 +42,18 @@ class GetattrClsEcho(metaclass=GetattrClsEcho_Meta):
 
     BEST USAGE
     ----------
-    assert GetattrClsEcho.hello == "hello"
-    assert GetattrClsEcho.hello_world == "hello_world"
-    print(GetattrClsEcho.Hello)   # "Hello"
+    assert NestGaCls_Echo.hello == "hello"
+    assert NestGaCls_Echo.hello_world == "hello_world"
+    print(NestGaCls_Echo.Hello)   # "Hello"
     """
     _UNDERSCORE_AS_SPACE: bool | None = None
 
 
-class GetattrClsEchoSpace(GetattrClsEcho):
+class NestGaCls_EchoSpace(NestGaCls_Echo):
     """
     GOAL
     ----
-    SAME AS: base parent class GetattrClsEcho! see all there!
+    SAME AS: base parent class NestGaCls_Echo! see all there!
     DIFFERENCE: just replaced all UNDERSCORE-signs by Space!
     """
     _UNDERSCORE_AS_SPACE = True

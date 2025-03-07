@@ -11,13 +11,13 @@ from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
 
 
 # =====================================================================================================================
-class GetattrPrefixInst:
+class NestGa_Prefix:
     """
     this is just a Base!
 
     EXAMPLES
     --------
-    see GetattrPrefixInst_RaiseIf with tests
+    see NestGa_Prefix_RaiseIf with tests
     """
     GETATTR_PREFIXES: list[str] = []
 
@@ -74,7 +74,7 @@ class GetattrPrefixInst:
 
 
 # =====================================================================================================================
-class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
+class NestGa_Prefix_RaiseIf(NestGa_Prefix):
     """
     RULES
     -----
@@ -93,7 +93,7 @@ class GetattrPrefixInst_RaiseIf(GetattrPrefixInst):
 
 # =====================================================================================================================
 def _example():
-    class GetattrPrefixInst_RaiseIf_data(GetattrPrefixInst_RaiseIf):
+    class GetattrPrefixInst_RaiseIf_data(NestGa_Prefix_RaiseIf):
         ATTR0 = 0
         ATTR1 = 1
 

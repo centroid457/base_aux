@@ -2,7 +2,7 @@ from typing import *
 
 
 # =====================================================================================================================
-class GetattrPrefixCls_MetaTemplate(type):
+class Meta_GaClsPrefix_Example(type):
     """
     NOTE
     ----

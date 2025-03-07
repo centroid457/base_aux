@@ -4,7 +4,7 @@ from .m1_annot_attr1_aux import AnnotAttrAux
 
 
 # =====================================================================================================================
-class AnnotClsKeysAsValues_Meta(type):
+class Meta_AnnotClsKeysAsValues(type):
     """
     return from class just name of annotation as string value.
     if no corresponding annotation - raise!
@@ -43,7 +43,7 @@ class AnnotClsKeysAsValues_Meta(type):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class AnnotClsKeysAsValues(metaclass=AnnotClsKeysAsValues_Meta):
+class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
     """
     used as simple string data container, same as OneWordStringsList with access to values by dot.
     ATTEMPT to get rid of bare data like list[str] ot tuple[str]!

@@ -2,11 +2,11 @@ from typing import *
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst
+from base_aux.aux_attr.m3_getattr1_prefix_1_inst import NestGa_Prefix
 
 
 # =====================================================================================================================
-class Victim(GetattrPrefixInst):
+class Victim(NestGa_Prefix):
     GETATTR_PREFIXES = ["bool__", ]
     TRUE = True
     NONE = None

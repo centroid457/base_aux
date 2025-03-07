@@ -4,11 +4,11 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst_RaiseIf
+from base_aux.aux_attr.m3_getattr1_prefix_1_inst import NestGa_Prefix_RaiseIf
 
 
 # =====================================================================================================================
-class Victim(GetattrPrefixInst_RaiseIf):
+class Victim(NestGa_Prefix_RaiseIf):
     TRUE = True
     FALSE = False
     NONE = None

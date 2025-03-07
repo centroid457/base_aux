@@ -1,13 +1,13 @@
 import sys
 from typing import Union, Any, Callable, NoReturn
 
-from base_aux.aux_attr.m3_getattr1_prefix_1_inst import GetattrPrefixInst_RaiseIf
+from base_aux.aux_attr.m3_getattr1_prefix_1_inst import NestGa_Prefix_RaiseIf
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.versions.m2_version import Version
 
 
 # =====================================================================================================================
-class CheckVersion(GetattrPrefixInst_RaiseIf):
+class CheckVersion(NestGa_Prefix_RaiseIf):
     SOURCE: Union[Any, Callable[..., Any]] = sys.version.split()[0]
     # print(sys.version_info)   # sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
     # return sys.version_info[:3]     # (3, 8, 10)

@@ -98,7 +98,7 @@ class CallableAux(NestInit_Source):
 
         CREATED SPECIALLY FOR
         ---------------------
-        GetattrPrefixInst
+        NestGa_Prefix
         """
         return self(*args, **kwargs)
 

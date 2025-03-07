@@ -288,7 +288,7 @@ class AttrAux(NestInit_Source):
                 mro = self.SOURCE.__class__.__mro__
                 # print(f"{mro=}")
 
-            # fixme: cant solve problem for GetattrPrefixInst_RaiseIf! in case of _GETATTR__PREFIXES!!!
+            # fixme: cant solve problem for NestGa_Prefix_RaiseIf! in case of _GETATTR__PREFIXES!!!
             for cls in mro:
                 if dirname.startswith(f"_{cls.__name__}__"):
                     name_external = dirname.replace(f"_{cls.__name__}", "")
