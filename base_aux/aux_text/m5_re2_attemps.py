@@ -1,8 +1,4 @@
-from typing import *
-import re
-
-from base_aux.aux_attr.m4_kits import *
-from base_aux.base_re.m1_rexp import *
+from base_aux.aux_text.m5_re1_rexp import *
 from base_aux.aux_iter.m1_iter_aux import *
 from base_aux.base_statics.m2_exceptions import *
 
