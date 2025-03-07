@@ -156,5 +156,21 @@ class IterAux(NestInit_Source):
         except:
             return False
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def get_first_is_not_none(self) -> Any | None:
+        """
+        GOAL
+        ----
+        from iterable get first is not None value!
+        typically get value from params active/sub_default/default
+
+        SPECIALY CREATED FOR
+        --------------------
+        Re to get flags
+        """
+        for item in self.SOURCE:
+            if item is not None:    # CMP ONLY BY IS_NOT_NONE!!! dont use '==' cause of __EQ__!
+                return item
+
 
 # =====================================================================================================================

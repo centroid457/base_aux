@@ -4,6 +4,7 @@ from base_aux.aux_iter.m1_iter_aux import *
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
+from base_aux.base_statics.m3_primitives import *
 
 
 # =====================================================================================================================
@@ -127,6 +128,22 @@ def test__valuse_set():
     data = [0,{"hello": [0,1,2,]},2,]
     assert IterAux(data).value__set((1, "hello", 1), 11) is True
     assert data == [0,{"hello": [0,11,2,]},2,]
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        ((1, ), 1),
+        ((None, 1, ), 1),
+        ((0, 1, ), 0),
+        ((None, 0, 1, ), 0),
+        ((None, LAMBDA_NONE, ), LAMBDA_NONE),
+    ]
+)
+def test__get_first_is_not_none(source, _EXPECTED):
+    func_link = IterAux(source).get_first_is_not_none
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
