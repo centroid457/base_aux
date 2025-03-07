@@ -44,7 +44,8 @@ class Base_ReAttempts:
         self.ATTEMPTS = result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _result__get_from_match(self, match: re.Match) -> TYPING__RE_RESULT__ONE:
+    @staticmethod
+    def _result__get_from_match(match: re.Match) -> TYPING__RE_RESULT__ONE:
         """
         NOTE
         ----
@@ -74,7 +75,7 @@ class Base_ReAttempts:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
 
             match = re.match(rexp.PAT, other, flags)
             if match:
@@ -89,7 +90,7 @@ class Base_ReAttempts:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
 
             match = re.fullmatch(rexp.PAT, other, flags)
             if match:
@@ -104,7 +105,7 @@ class Base_ReAttempts:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
 
             match = re.search(rexp.PAT, other, flags)
             if match:
@@ -119,7 +120,7 @@ class Base_ReAttempts:
         result = None
         other = str(other)
         for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
             new = IterAux([rexp.SUB, new, ""]).get_first_is_not_none()
 
             result = re.sub(rexp.PAT, new, other, flags)
@@ -137,7 +138,7 @@ class Base_ReAttempts:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
 
             result_i = re.findall(rexp.PAT, other, flags)
             if result_i:
@@ -151,13 +152,13 @@ class Base_ReAttempts:
 
 # =====================================================================================================================
 @final
-class ReAttemptsAll(Base_ReAttempts):
-    ATTEMPTS_USAGE = AttemptsUsage.ALL
+class ReAttemptsFirst(Base_ReAttempts):
+    ATTEMPTS_USAGE = AttemptsUsage.FIRST
 
 
 @final
-class ReAttemptsFirst(Base_ReAttempts):
-    ATTEMPTS_USAGE = AttemptsUsage.FIRST
+class ReAttemptsAll(Base_ReAttempts):
+    ATTEMPTS_USAGE = AttemptsUsage.ALL
 
 
 # =====================================================================================================================

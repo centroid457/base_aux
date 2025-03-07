@@ -5,36 +5,32 @@ from base_aux.aux_text.m5_re2_attemps import *
 
 
 # =====================================================================================================================
-class Test__sub:
+@pytest.mark.parametrize(
+    argnames="source, pat, _EXPECTED",
+    argvalues=[
+        ("abc123", r"hello", Exception),
+        ("abc123", r"\d+", "123"),
+        ("abc123", r"\d(\d)\d", "2"),
+        ("abc123", r"\d(\d)(\d)", ("2", "3")),
+    ]
+)
+def test__result_get_from_match(source, pat, _EXPECTED):
+    match = re.search(pat, source)
+    func_link = Base_ReAttempts._result__get_from_match
+    ExpectAux(func_link, match).check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+class Test__re:
     @pytest.mark.parametrize(
-        argnames="source, rule, _EXPECTED",
+        argnames="source, attempts, _EXPECTED",
         argvalues=[
-            # NOT ACCEPTED -------------
-            ("None123", ("None", "null"), "None123"),
-            ("None_123", ("None", "null"), "None_123"),
-
-            # ACCEPTED -------------
-            ("null", ("None", "null"), "null"),
-            ("None", ("None", "null"), "null"),
-            ("None-123", ("None", "null"), "null-123"),
-
-            # CONTAINERS -------------
-            ("[null]", ("None", "null"), "[null]"),
-            ("[None]", ("None", "null"), "[null]"),
-            ("[None, ]", ("None", "null"), "[null, ]"),
-
-            (" None, 123", ("None", "null"), " null, 123"),
-            ("[None, null, 123]", ("None", "null"), "[null, null, 123]"),
-
-            ("[None, null, 323]", (r"None.*3", "null"), "[null]"),
-
-            ("[None, null, 3 23]", (r"None.*3", "null"), "[null]"),
-            ("[None, null, 3 23]", (r"None.*?3", "null"), "[null 23]"),
+            ("abc123", (r"\d+", r"\D+"), "abc"),
         ]
     )
-    def _test__1(self, source, rule, _EXPECTED):
-        func_link = ReAttemptsFirst(source).search
-        ExpectAux(func_link, rule).check_assert(_EXPECTED)
+    def test__match(self, source, attempts, _EXPECTED):
+        func_link = ReAttemptsFirst(*attempts).match
+        ExpectAux(func_link, source).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
