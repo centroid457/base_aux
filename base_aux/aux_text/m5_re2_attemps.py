@@ -19,7 +19,9 @@ class Base_ReAttempts:
 
     NOTE
     ----
-    ATTEMPTS_USAGE - useful not in all methods - tis obvious.
+    ATTEMPTS_USAGE - expecting work with priority
+    if FIRST - return result for first match function in attempt order
+    if ALL - return list of results for all matched attempts
     """
     ATTEMPTS: TYPING__REXPS_FINAL
     FLAGS_DEF: int = None
