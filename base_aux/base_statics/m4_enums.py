@@ -148,6 +148,7 @@ class CmtStyle(NestEq_Enum):
     C = "c"     # /*...*/
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 class PatCoverStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
@@ -157,6 +158,16 @@ class PatCoverStyle(NestEq_Enum):
     NONE = None
     WORD = "word"
     LINE = "line"
+
+
+class AttemptsUsage(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    Re/RExp
+    """
+    FISRT = None
+    ALL = all
 
 
 # ---------------------------------------------------------------------------------------------------------------------
