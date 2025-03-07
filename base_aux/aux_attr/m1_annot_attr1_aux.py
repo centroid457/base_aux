@@ -23,7 +23,13 @@ class AttrAux(NestInit_Source):
 
     ANNOTS
     ------
-    uses names intended in annots
+    names intended in annots
+
+    DIFFERENCE from AnnotAux
+    ------------------------
+    1/ iter names
+        - dump dict
+        - cmp eq by dumped dict
     """
     SOURCE: Any
     _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
@@ -37,119 +43,12 @@ class AttrAux(NestInit_Source):
         else:
             raise Exx__Incompatible(self._ATTRS_STYLE)
 
-    # =================================================================================================================
-    def reinit__mutable_values(self) -> None:
-        """
-        GOAL
-        ----
-        reinit default mutable values from class dicts/lists on instantiation.
-        usually intended blank values.
+    # -----------------------------------------------------------------------------------------------------------------
+    pass
 
-        REASON
-        ------
-        for dataclasses you should use field(dict) but i think it is complicated (but of cause more clear)
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        Nest_AttrKit
-        """
-        for attr in self.iter__names_not_private():
-            try:
-                value = getattr(self.SOURCE, attr)
-            except:
-                continue
-
-            if isinstance(value, dict):
-                setattr(self.SOURCE, attr, dict(value))
-            elif isinstance(value, list):
-                setattr(self.SOURCE, attr, list(value))
-            elif isinstance(value, set):
-                setattr(self.SOURCE, attr, set(value))
-
-    # =================================================================================================================
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
-    # =================================================================================================================
-    def get_name__private_external(self, dirname: str) -> TYPING__NAME_FINAL | None:
-        """
-        typically BUILTIN - NOT INCLUDED!
-
-        NOTE
-        ----
-        BEST WAY TO USE EXACTLY iter__not_private
-
-        GOAL
-        ----
-        using name (from dir(obj)) return user-friendly name! external name!
-
-        REASON
-        ------
-        here in example - "__hello" will never appear directly!!!
-        class Cls:
-            ATTR1 = 1
-            def __hello(self, *args) -> None:
-                kwargs = dict.fromkeys(args)
-                self.__init_kwargs(**kwargs)
-
-        name='_Cls__hello' hasattr(self.SOURCE, name)=True
-        name='__class__' hasattr(self.SOURCE, name)=True
-        name='__delattr__' hasattr(self.SOURCE, name)=True
-        name='__dict__' hasattr(self.SOURCE, name)=True
-        name='__dir__' hasattr(self.SOURCE, name)=True
-        name='__doc__' hasattr(self.SOURCE, name)=True
-        ///
-        name='ATTR1' hasattr(self.SOURCE, name)=True
-        """
-        # filter not hidden -------
-        if not dirname.startswith("_"):
-            return
-
-        # filter private builtin -------
-        if dirname.startswith("__"):
-            return
-
-        # parse private user -------
-        if re.fullmatch(r"_.+__.+", dirname):
-            # print(f"{dirname=}")
-            # print(f"{self.SOURCE=}")
-            try:
-                # print(11)
-                mro = self.SOURCE.__mro__
-            except:
-                # print(111)
-                mro = self.SOURCE.__class__.__mro__
-                # print(f"{mro=}")
-
-            # fixme: cant solve problem for GetattrPrefixInst_RaiseIf! in case of _GETATTR__PREFIXES!!!
-            for cls in mro:
-                if dirname.startswith(f"_{cls.__name__}__"):
-                    name_external = dirname.replace(f"_{cls.__name__}", "")
-                    return name_external
-
-    def reinit__annots_by_None(self) -> None:
-        """
-        GOAL
-        ----
-        set None for all annotated aux_attr! even not existed!
-        """
-        for name in self.iter__annot_names():
-            self.sai_ic(name, None)
-
-    def reinit__annots_by_types(self, not_existed: bool = None) -> None:
-        """
-        GOAL
-        ----
-        delattr all annotated aux_attr!
-        """
-        for name, value in self.dump_dict__annot_types().items():
-            if not_existed and hasattr(self.SOURCE, name):
-                continue
-
-            value = TypeAux(value).type__init_value__default()
-            self.sai_ic(name, value)
-
-    # ITER ------------------------------------------------------------------------------------------------------------
     def iter__attrs_external_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
@@ -240,10 +139,7 @@ class AttrAux(NestInit_Source):
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
 
-    # =================================================================================================================
-    pass
-
-    # =================================================================================================================
+    # -----------------------------------------------------------------------------------------------------------------
     def _iter_mro(self) -> Iterable[type]:
         """
         GOAL
@@ -267,17 +163,125 @@ class AttrAux(NestInit_Source):
         """
         only existed
         """
-        for name in self.list_annots():
+        for name in self.list__annots():
             try:
                 yield self.gai_ic(name)
             except:
                 pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def list_annots(self) -> list[TYPING__NAME_FINAL]:
+    def list__annots(self) -> list[TYPING__NAME_FINAL]:
         return list(self.dump_dict__annot_types())
 
     # =================================================================================================================
+    def reinit__mutable_values(self) -> None:
+        """
+        GOAL
+        ----
+        reinit default mutable values from class dicts/lists on instantiation.
+        usually intended blank values.
+
+        REASON
+        ------
+        for dataclasses you should use field(dict) but i think it is complicated (but of cause more clear)
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        Nest_AttrKit
+        """
+        for attr in self.iter__names_not_private():
+            try:
+                value = getattr(self.SOURCE, attr)
+            except:
+                continue
+
+            if isinstance(value, dict):
+                setattr(self.SOURCE, attr, dict(value))
+            elif isinstance(value, list):
+                setattr(self.SOURCE, attr, list(value))
+            elif isinstance(value, set):
+                setattr(self.SOURCE, attr, set(value))
+
+    def reinit__annots_by_None(self) -> None:
+        """
+        GOAL
+        ----
+        set None for all annotated aux_attr! even not existed!
+        """
+        for name in self.iter__annot_names():
+            self.sai_ic(name, None)
+
+    def reinit__annots_by_types(self, not_existed: bool = None) -> None:
+        """
+        GOAL
+        ----
+        delattr all annotated aux_attr!
+        """
+        for name, value in self.dump_dict__annot_types().items():
+            if not_existed and hasattr(self.SOURCE, name):
+                continue
+
+            value = TypeAux(value).type__init_value__default()
+            self.sai_ic(name, value)
+
+    # =================================================================================================================
+    def get_name__private_external(self, dirname: str) -> TYPING__NAME_FINAL | None:
+        """
+        typically BUILTIN - NOT INCLUDED!
+
+        NOTE
+        ----
+        BEST WAY TO USE EXACTLY iter__not_private
+
+        GOAL
+        ----
+        using name (from dir(obj)) return user-friendly name! external name!
+
+        REASON
+        ------
+        here in example - "__hello" will never appear directly!!!
+        class Cls:
+            ATTR1 = 1
+            def __hello(self, *args) -> None:
+                kwargs = dict.fromkeys(args)
+                self.__init_kwargs(**kwargs)
+
+        name='_Cls__hello' hasattr(self.SOURCE, name)=True
+        name='__class__' hasattr(self.SOURCE, name)=True
+        name='__delattr__' hasattr(self.SOURCE, name)=True
+        name='__dict__' hasattr(self.SOURCE, name)=True
+        name='__dir__' hasattr(self.SOURCE, name)=True
+        name='__doc__' hasattr(self.SOURCE, name)=True
+        ///
+        name='ATTR1' hasattr(self.SOURCE, name)=True
+        """
+        # filter not hidden -------
+        if not dirname.startswith("_"):
+            return
+
+        # filter private builtin -------
+        if dirname.startswith("__"):
+            return
+
+        # parse private user -------
+        if re.fullmatch(r"_.+__.+", dirname):
+            # print(f"{dirname=}")
+            # print(f"{self.SOURCE=}")
+            try:
+                # print(11)
+                mro = self.SOURCE.__mro__
+            except:
+                # print(111)
+                mro = self.SOURCE.__class__.__mro__
+                # print(f"{mro=}")
+
+            # fixme: cant solve problem for GetattrPrefixInst_RaiseIf! in case of _GETATTR__PREFIXES!!!
+            for cls in mro:
+                if dirname.startswith(f"_{cls.__name__}__"):
+                    name_external = dirname.replace(f"_{cls.__name__}", "")
+                    return name_external
+
+    # -----------------------------------------------------------------------------------------------------------------
     def name_ic__get_original(self, name_index: TYPING__NAME_DRAFT) -> TYPING__NAME_FINAL | None:
         """
         get attr name_index in original register
@@ -292,7 +296,7 @@ class AttrAux(NestInit_Source):
             pass
 
         if index is not None:
-            return self.list_annots()[index]  # dont place in try sentence
+            return self.list__annots()[index]  # dont place in try sentence
 
         # name as str for annots/attrs ------
         name_index = str(name_index).strip()
@@ -327,7 +331,47 @@ class AttrAux(NestInit_Source):
         else:
             return False
 
-    # ATTR ------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
+        """
+        GOAL
+        ----
+        return list of not defined annotations
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        annot__check_all_defined
+        """
+        result = []
+        nested = self.dump_dict__annot_types()
+        for key in nested:
+            if not self.name_ic__check_exists(key):
+                result.append(key)
+        return result
+
+    def annots__check_all_defined(self) -> bool:
+        """
+        GOAL
+        ----
+        check if all annotated aux_attr have value!
+        """
+        return not self.annots__get_not_defined()
+
+    def annots__check_all_defined_or_raise(self) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        check if all annotated aux_attr have value!
+        """
+        not_defined = self.annots__get_not_defined()
+        if not_defined:
+            dict_type = self.dump_dict__annot_types()
+            msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
+            raise Exx__AnnotNotDefined(msg)
+
+        return True
+
+    # =================================================================================================================
     def gai_ic(self, name_index: TYPING__NAME_DRAFT) -> Any | Callable | NoReturn:
         """
         GOAL
@@ -371,7 +415,7 @@ class AttrAux(NestInit_Source):
 
         delattr(self.SOURCE, name_original)
 
-    # =================================================================================================================
+    # -----------------------------------------------------------------------------------------------------------------
     def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
         """
         SAME AS
@@ -408,7 +452,7 @@ class AttrAux(NestInit_Source):
         result = CallableAux(value).resolve(callables_resolve)
         return result
 
-    # =================================================================================================================
+    # -----------------------------------------------------------------------------------------------------------------
     def sai__by_args_kwargs(self, *args: Any, **kwargs: dict[str, Any]) -> Any | NoReturn:
         """
         MAIN ITEA
@@ -435,46 +479,6 @@ class AttrAux(NestInit_Source):
         return self.SOURCE
 
     # =================================================================================================================
-    def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
-        """
-        GOAL
-        ----
-        return list of not defined annotations
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        annot__check_all_defined
-        """
-        result = []
-        nested = self.dump_dict__annot_types()
-        for key in nested:
-            if not self.name_ic__check_exists(key):
-                result.append(key)
-        return result
-
-    def annots__check_all_defined(self) -> bool:
-        """
-        GOAL
-        ----
-        check if all annotated aux_attr have value!
-        """
-        return not self.annots__get_not_defined()
-
-    def annots__check_all_defined_or_raise(self) -> bool | NoReturn:
-        """
-        GOAL
-        ----
-        check if all annotated aux_attr have value!
-        """
-        not_defined = self.annots__get_not_defined()
-        if not_defined:
-            dict_type = self.dump_dict__annot_types()
-            msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
-            raise Exx__AnnotNotDefined(msg)
-
-        return True
-
-    # -----------------------------------------------------------------------------------------------------------------
     def dump_dict__annot_types(self) -> dict[str, type[Any]]:
         """
         GOAL
