@@ -166,7 +166,7 @@ class AttemptsUsage(NestEq_Enum):
     ---------------------
     ReAttempts/RExp
     """
-    FISRT = None
+    FIRST = None
     ALL = all
 
 

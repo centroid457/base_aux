@@ -8,8 +8,9 @@ from base_aux.base_statics.m2_exceptions import *
 
 
 # =====================================================================================================================
-TYPING__RE_RESULT__ONE = str | tuple[str, ...] | None
-TYPING__RE_RESULT__ALL = TYPING__RE_RESULT__ONE | list[TYPING__RE_RESULT__ONE] | None
+TYPING__OTHER_DRAFT = str | Any
+TYPING__RE_RESULT__ONE = str | tuple[str, ...]
+TYPING__RE_RESULT__ALL = TYPING__RE_RESULT__ONE | list[TYPING__RE_RESULT__ONE]
 
 
 # =====================================================================================================================
@@ -46,6 +47,7 @@ class ReAttempts:
 
         self.ATTEMPTS = result
 
+    # -----------------------------------------------------------------------------------------------------------------
     def _result__get_from_match(self, match: re.Match) -> TYPING__RE_RESULT__ONE:
         """
         NOTE
@@ -71,22 +73,84 @@ class ReAttempts:
         else:
             return match.group()
 
-    def search(self, other: Any) -> TYPING__RE_RESULT__ALL:
+    # -----------------------------------------------------------------------------------------------------------------
+    def match(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
         other = str(other)
+        result = []
+        for rexp in self.ATTEMPTS:
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
 
+            match = re.match(rexp.PAT, other, flags)
+            if match:
+                result_i = self._result__get_from_match(match)
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    return result_i
+                else:
+                    result.append(result_i)
+        return result
+
+    def fullmatch(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
+        other = str(other)
+        result = []
+        for rexp in self.ATTEMPTS:
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+
+            match = re.fullmatch(rexp.PAT, other, flags)
+            if match:
+                result_i = self._result__get_from_match(match)
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    return result_i
+                else:
+                    result.append(result_i)
+        return result
+
+    def search(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL | None:
+        other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
             flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
 
             match = re.search(rexp.PAT, other, flags)
             if match:
-                return self._result__get_from_match(match)
+                result_i = self._result__get_from_match(match)
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    return result_i
+                else:
+                    result.append(result_i)
+        return result
 
-    def sub(self):
-        pass
+    def sub(self, other: TYPING__OTHER_DRAFT, new: str = None) -> str:
+        result = None
+        other = str(other)
+        for rexp in self.ATTEMPTS:
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+            new = IterAux([rexp.SUB, new, ""]).get_first_is_not_none()
 
-    def delete(self):
-        pass
+            result = re.sub(rexp.PAT, new, other, flags)
+            if result != other:
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    break
+
+        return result
+
+    def delete(self, other: TYPING__OTHER_DRAFT) -> str:
+        return self.sub(other)
+
+    def findall(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
+        other = str(other)
+        result = []
+        for rexp in self.ATTEMPTS:
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF]).get_first_is_not_none()
+
+            result_i = re.findall(rexp.PAT, other, flags)
+            if result_i:
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    return result_i
+                else:
+                    result.append(*result_i)
+
+        return result
+
 
 
 # =====================================================================================================================
