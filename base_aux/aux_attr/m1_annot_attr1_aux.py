@@ -30,6 +30,9 @@ class AttrAux(NestInit_Source):
     1/ iter names
         - dump dict
         - cmp eq by dumped dict
+    2/ AnnotAux is not listing methods! list only annots!
+
+    FIXME: add skip methods??? seems it need!
     """
     SOURCE: Any
     _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
@@ -72,12 +75,22 @@ class AttrAux(NestInit_Source):
             # filter private external ----------
             name_private_ext = self.get_name__private_external(name)
             if name_private_ext:
-                yield name_private_ext
-                continue
+                name = name_private_ext
+
+            # if self.name__check_is_method(name):    # FIXME: DONT SUE HERE!!! or resolve what to do!!!
+            #     continue
 
             # direct user attr ----------
             # print(f"{name=}")
             yield name
+
+    def name__check_is_method(self, name_original: str) -> bool:
+        try:
+            value = getattr(self.SOURCE, name_original)
+        except:
+            return False
+
+        return TypeAux(value).check__callable_meth()
 
     # -----------------------------------------------------------------------------------------------------------------
     def iter__names(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
