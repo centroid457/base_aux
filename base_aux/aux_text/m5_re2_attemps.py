@@ -19,7 +19,7 @@ class Base_ReAttempts:
 
     NOTE
     ----
-    ATTEMPTS_USAGE - expecting work with priority
+    ATTEMPTS_USAGE
     if FIRST - return result for first match function in attempt order
     if ALL - return list of results for all matched attempts
     """
@@ -51,13 +51,13 @@ class Base_ReAttempts:
         """
         NOTE
         ----
-        this is the main idea for whole this class!
+        this is one of the the main idea for whole this class!
 
         GOAL
         ----
         get result from match object
         1. if no groups - return matching string
-        2. if one group - return exact group value
+        2. if one group - return exact the group value
         3. if several groups - return tuple of groups
         """
         if not isinstance(match, re.Match):
@@ -73,7 +73,11 @@ class Base_ReAttempts:
             return match.group()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def match(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
+    pass
+
+    # return None only for FIRST! if ALL - retrun always LIST!
+
+    def match(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL | None:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
@@ -86,9 +90,14 @@ class Base_ReAttempts:
                     return result_i
                 else:
                     result.append(result_i)
-        return result
 
-    def fullmatch(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
+        # finish
+        if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+            return None
+        else:
+            return result
+
+    def fullmatch(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL | None:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
@@ -101,7 +110,11 @@ class Base_ReAttempts:
                     return result_i
                 else:
                     result.append(result_i)
-        return result
+        # finish
+        if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+            return None
+        else:
+            return result
 
     def search(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL | None:
         other = str(other)
@@ -116,27 +129,14 @@ class Base_ReAttempts:
                     return result_i
                 else:
                     result.append(result_i)
-        return result
+        # finish
+        if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+            return None
+        else:
+            return result
 
-    def sub(self, other: TYPING__OTHER_DRAFT, new: str = None) -> str:
-        result = None
-        other = str(other)
-        for rexp in self.ATTEMPTS:
-            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
-            new = IterAux([rexp.SUB, new, ""]).get_first_is_not_none()
-
-            result = re.sub(rexp.PAT, new, other, flags)
-            if result != other:
-                other = result
-                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
-                    break
-
-        return result
-
-    def delete(self, other: TYPING__OTHER_DRAFT) -> str:
-        return self.sub(other)
-
-    def findall(self, other: TYPING__OTHER_DRAFT) -> TYPING__RE_RESULT__ALL:
+    # -----------------------------------------------------------------------------------------------------------------
+    def findall(self, other: TYPING__OTHER_DRAFT) -> list[TYPING__RE_RESULT__ONE]:
         other = str(other)
         result = []
         for rexp in self.ATTEMPTS:
@@ -147,9 +147,29 @@ class Base_ReAttempts:
                 if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
                     return result_i
                 else:
-                    result.append(*result_i)
+                    result.extend(result_i)
 
         return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def sub(self, other: TYPING__OTHER_DRAFT, new: str = None) -> str:
+        other = str(other)
+        result = other
+        for rexp in self.ATTEMPTS:
+            flags = IterAux([rexp.FLAGS, self.FLAGS_DEF, 0]).get_first_is_not_none()
+            new = IterAux([rexp.SUB, new, ""]).get_first_is_not_none()
+            count = IterAux([rexp.SCOUNT, 0]).get_first_is_not_none()
+
+            result = re.sub(rexp.PAT, new, other, count, flags)
+            if result != other:
+                other = result
+                if self.ATTEMPTS_USAGE == AttemptsUsage.FIRST:
+                    break
+
+        return result
+
+    def delete(self, other: TYPING__OTHER_DRAFT) -> str:
+        return self.sub(other)
 
 
 # =====================================================================================================================

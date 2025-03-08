@@ -17,6 +17,7 @@ class RExp(Nest_AttrKit):
     PAT: str
     FLAGS: int | None = None
     SUB: str = None     # used only for sub/del methods!
+    SCOUNT: int = 0     # used only for sub/del methods!
 
 
 # =====================================================================================================================
