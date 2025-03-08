@@ -30,7 +30,7 @@ class Test__Shorted_validateModel_InfinitRW:
             self.victim.disconnect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    # @pytest.mark.skip
+    @pytest.mark.skip
     def test__shorted(self):
         """
         connect shorted port and start this code!
