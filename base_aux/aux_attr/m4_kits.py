@@ -16,7 +16,7 @@ class Nest_AttrKit(
     NestEq_AttrsNotHidden,
     NestStR_AttrsNotHidden,
     NestLen_AttrNotHidden,
-    NestContains_AttrIC,
+    NestContains_AttrIcNotHidden,
 ):     # TODO: decide to delete! use only dynamic?? - NO! keep it!!!
     """
     GOAL
