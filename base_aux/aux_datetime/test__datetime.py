@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
@@ -72,6 +74,36 @@ class Test__DateTime:
     def test__cmp(self, source, other, cmp_func, _EXPECTED):
         func_link = lambda: cmp_func(DateTimeAux(source), other)
         ExpectAux(func_link).check_assert(_EXPECTED)
+
+    def test__cmp_ms(self):
+        victim1 = DateTimeAux()
+        victim2 = DateTimeAux()
+        assert victim1 == victim2
+        assert victim1.DTm == victim2.DTm
+
+        victim1 = DateTimeAux()
+        time.sleep(0.1)
+        victim2 = DateTimeAux()
+        print(victim1.DTm)
+        print(victim2.DTm)
+        # assert str(victim1) == str(victim2)
+        assert victim1.DTm != victim2.DTm
+        assert victim1 != victim2
+
+    def test__update_on_str(self):
+        victim = DateTimeAux(update_on_str=True, def_str_format="DTm")
+
+        for sleep in [0, 0.1]:
+            str1 = str(victim)
+            if sleep:
+                time.sleep(sleep)
+            str2 = str(victim)
+            print(str1)
+            print(str2)
+            if sleep:
+                assert str1 != str2
+            else:
+                assert str1 == str2
 
 
 # =====================================================================================================================

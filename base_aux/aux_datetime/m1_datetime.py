@@ -100,6 +100,8 @@ TYPE__DT_DRAFT = TYPE__DT_FINAL | str | float | None    #  | int    # NOTE: int 
 class DateTimeAux(NestCmp):
     SOURCE: TYPE__DT_FINAL = None
     STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
+    UPDATE_ON_STR: bool = None
+    DEF_STR_FORMAT: str = "DT"
     _PATTS: PatDateTimeFormat
 
     # patterns getattr -----
@@ -114,11 +116,15 @@ class DateTimeAux(NestCmp):
     DwTm: str
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = None) -> None | NoReturn:
+    def __init__(self, source: TYPE__DT_DRAFT = None, style_tuple: TYPE__TUPLE_DT_STYLE__DRAFT = None, update_on_str: bool = None, def_str_format: str = None) -> None | NoReturn:
         self.init_source(source)
 
         if style_tuple is not None:
             self.STYLE = style_tuple
+        if update_on_str is not None:
+            self.UPDATE_ON_STR = update_on_str
+        if def_str_format is not None:
+            self.DEF_STR_FORMAT = def_str_format
 
         self._PATTS = PatDateTimeFormat(*self.STYLE)
 
@@ -136,6 +142,8 @@ class DateTimeAux(NestCmp):
             raise NotImplementedError(f"{source=}")
         elif isinstance(source, str):
             self.SOURCE = self.parse_str(source, _raise=True)
+        elif isinstance(source, self.__class__):
+            self.SOURCE = source.SOURCE
         else:
             raise Exx__Incompatible(f"{source=}")
 
@@ -165,7 +173,9 @@ class DateTimeAux(NestCmp):
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
-        return self.DT
+        if self.UPDATE_ON_STR:
+            self.SOURCE = datetime.datetime.now()
+        return getattr(self, self.DEF_STR_FORMAT)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self})"
