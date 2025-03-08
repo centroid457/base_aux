@@ -5,6 +5,7 @@ from base_aux.aux_iter.m1_iter_aux import *
 from base_aux.aux_attr.m1_attr2_nest8_iter_name_value import *
 from base_aux.base_statics.m2_exceptions import *
 from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
+from base_aux.aux_datetime.m1_datetime import *
 
 
 # =====================================================================================================================
@@ -26,7 +27,7 @@ class Base_MsgLinesNamed:
     _sep1: str = _sep
     BODY: str
     _sep2: str = _sep
-    TS: str
+    TS: TimeStampRenewStr = TimeStampRenewStr()
 
     def __init__(self, text: str):
         pass

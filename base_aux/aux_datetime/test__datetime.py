@@ -91,7 +91,7 @@ class Test__DateTime:
         assert victim1 != victim2
 
     def test__update_on_str(self):
-        victim = DateTimeAux(update_on_str=True, def_str_format="DTm")
+        victim = DateTimeAux(update_on_str=True, def_str_pattern="DTm")
 
         for sleep in [0, 0.1]:
             str1 = str(victim)
