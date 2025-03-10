@@ -242,6 +242,12 @@ def test__set(data, _EXPECTED):
 
 
 # =====================================================================================================================
+# def test__annots_append():
+#     victim = AnnotAttrAux().annots__append(astr=str, aint=1)
+#     assert victim.aint == 1
+
+
+# =====================================================================================================================
 class Test__SpecialObjects:
     def test__NamedTuple(self):
         class Victim(NamedTuple):

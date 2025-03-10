@@ -46,7 +46,7 @@ class NestInit_Source:
         self.init_source(source)
         self.init_post()
 
-    def init_source(self, source: Any = None) -> None | NoReturn:
+    def init_source(self, source: Any = NoValue) -> None | NoReturn:
         if source is not NoValue:
             self.SOURCE = source
         else:

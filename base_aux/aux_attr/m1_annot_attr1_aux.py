@@ -6,6 +6,7 @@ from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
 from base_aux.aux_types.m1_type_aux import *
+# from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 
 
 # =====================================================================================================================
@@ -34,7 +35,8 @@ class AttrAux(NestInit_Source):
 
     FIXME: add skip methods??? seems it need!
     """
-    SOURCE: Any
+    # SOURCE: Any
+    SOURCE: Any = AttrDump
     _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
 
     # =================================================================================================================
@@ -345,6 +347,39 @@ class AttrAux(NestInit_Source):
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
+    # def annots__append(self, **kwargs: type | Any) -> Any | AttrDump:   # FIXME: not working! tests not passed!  AttributeError: 'AttrDump' object has no attribute '__annotations__'
+    #     """
+    #     GOAL
+    #     ----
+    #     add new annot in last position
+    #
+    #     BEST USAGE
+    #     ----------
+    #     create NEW OBJECT
+    #
+    #     SPECIALLY CREATED FOR
+    #     ---------------------
+    #     FormatedLine
+    #     """
+    #     annots: dict[str, type] = self.SOURCE.__annotations__   # AttributeError: 'AttrDump' object has no attribute '__annotations__'
+    #     for key, value in kwargs.items():
+    #         if value is None:
+    #             value_type = Any
+    #         elif not TypeAux(value).check__class():
+    #             value_type = type(value)
+    #         else:
+    #             value_type = value
+    #
+    #         # set type
+    #         if key.lower() not in [key_orig.lower() for key_orig in annots]:
+    #             annots.update({key: value_type})
+    #
+    #         # set value
+    #         if value != value_type:
+    #             self.sai_ic(key, value)
+    #
+    #     return self.SOURCE
+
     def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
         """
         GOAL
