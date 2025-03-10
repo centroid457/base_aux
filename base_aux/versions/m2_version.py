@@ -1,5 +1,6 @@
 from base_aux.aux_types.m2_info import *
 from base_aux.versions.m1_block import *
+from base_aux.aux_text.m6_nest_repr_clsname_str import *
 
 
 # =====================================================================================================================
@@ -34,7 +35,7 @@ TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,  TYPE__VERSION_B
 
 
 # =====================================================================================================================
-class Version(NestCmp):
+class Version(NestCmp, NestRepr__ClsName_SelfStr):
     """
     NOTE
     ----
@@ -125,9 +126,6 @@ class Version(NestCmp):
         return self.BLOCKS
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self})"
-
     def __str__(self):
         return ".".join([str(block) for block in self.BLOCKS])
 

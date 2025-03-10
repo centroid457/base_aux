@@ -1,6 +1,7 @@
 from base_aux.aux_cmp_eq.m1_cmp import *
 from base_aux.aux_cmp_eq.m10_types import *
 from base_aux.aux_text.m1_text_aux import *
+from base_aux.aux_text.m6_nest_repr_clsname_str import *
 
 
 # =====================================================================================================================
@@ -10,7 +11,7 @@ TYPE__VERSION_BLOCK_ELEMENTS_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_EL
 
 
 # =====================================================================================================================
-class VersionBlock(NestCmp):
+class VersionBlock(NestCmp, NestRepr__ClsName_SelfStr):
     """
     this is exact block in version string separated by dots!!!
 
@@ -96,9 +97,6 @@ class VersionBlock(NestCmp):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self})"
-
     def __str__(self) -> str:
         return "".join(str(item) for item in self)
 

@@ -5,6 +5,7 @@ from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_cmp_eq.m1_cmp import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_text.m6_nest_repr_clsname_str import *
 
 
 # =====================================================================================================================
@@ -97,7 +98,7 @@ TYPE__DT_DRAFT = TYPE__DT_FINAL | str | float | None    #  | int    # NOTE: int 
 
 # =====================================================================================================================
 # @final    # select styles
-class DateTimeAux(NestCmp):
+class DateTimeAux(NestCmp, NestRepr__ClsName_SelfStr):
     SOURCE: TYPE__DT_FINAL = None
     STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
     UPDATE_ON_STR: bool = None
@@ -176,9 +177,6 @@ class DateTimeAux(NestCmp):
         if self.UPDATE_ON_STR:
             self.SOURCE = datetime.datetime.now()
         return getattr(self, self.DEF_STR_PATTERN)
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self})"
 
     def __int__(self):
         raise NotImplementedError()
