@@ -242,9 +242,37 @@ def test__set(data, _EXPECTED):
 
 
 # =====================================================================================================================
-# def test__annots_append():
-#     victim = AnnotAttrAux().annots__append(astr=str, aint=1)
-#     assert victim.aint == 1
+def test__annots_ensure():
+    victim = AttrDump()
+    try:
+        victim.__annotations__
+        assert False
+    except:
+        pass
+
+    try:
+        victim.__annotations__
+        assert False
+    except:
+        pass
+
+    AnnotAttrAux(victim).annots__ensure()
+    assert victim.__annotations__ == {}
+
+
+def test__annots_append():
+    victim = AnnotAttrAux().annots__append(astr=str, aint=1)
+    assert victim.aint == 1
+
+    try:
+        victim.astr
+        assert False
+    except:
+        pass
+
+    AnnotAttrAux(victim).annots__append(astr="hello")
+    assert victim.aint == 1
+    assert victim.astr == "hello"
 
 
 # =====================================================================================================================

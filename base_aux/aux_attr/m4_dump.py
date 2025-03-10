@@ -17,58 +17,32 @@ class AttrDump:
 
 # =====================================================================================================================
 if __name__ == "__main__":
+    # OK
     class Cls:
-        ATTR: int = 1
+        pass
 
-
-    print(Cls.__annotations__)
+    print(Cls.__annotations__)      # class first - ok! like touch!
     print(Cls().__annotations__)
-    print(Cls().__class__.__annotations__)
     print()
 
-
+    # FAIL
     class Cls:
-        ATTR = 1
+        pass
 
-
+    # print(Cls().__annotations__)    # inst first - exx
     print(Cls.__annotations__)
-    print(Cls().__annotations__)
-    print(Cls().__class__.__annotations__)
     print()
-
 
     class Cls:
         pass
 
-
-    print(Cls.__annotations__)
-    print(Cls().__annotations__)
-    print(Cls().__class__.__annotations__)
-    print()
-
-
-    @final
-    class Cls:
+    victim = Cls()
+    try:
+        print(victim.__annotations__)
+        assert False
+    except:
         pass
-
-
-    print(Cls.__annotations__)
-    print(Cls().__annotations__)
-    print(Cls().__class__.__annotations__)
-    print()
-
-
-    @final
-    class Cls:
-        """
-        hello
-        """
-
-
-    print(Cls.__annotations__)
-    print(Cls().__annotations__)
-    print(Cls().__class__.__annotations__)
-    print()
-
+    victim.__class__.__annotations__
+    print(victim.__annotations__)
 
 # =====================================================================================================================

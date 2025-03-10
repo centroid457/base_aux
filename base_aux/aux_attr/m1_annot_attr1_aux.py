@@ -347,38 +347,66 @@ class AttrAux(NestInit_Source):
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    # def annots__append(self, **kwargs: type | Any) -> Any | AttrDump:   # FIXME: not working! tests not passed!  AttributeError: 'AttrDump' object has no attribute '__annotations__'
-    #     """
-    #     GOAL
-    #     ----
-    #     add new annot in last position
-    #
-    #     BEST USAGE
-    #     ----------
-    #     create NEW OBJECT
-    #
-    #     SPECIALLY CREATED FOR
-    #     ---------------------
-    #     FormatedLine
-    #     """
-    #     annots: dict[str, type] = self.SOURCE.__annotations__   # AttributeError: 'AttrDump' object has no attribute '__annotations__'
-    #     for key, value in kwargs.items():
-    #         if value is None:
-    #             value_type = Any
-    #         elif not TypeAux(value).check__class():
-    #             value_type = type(value)
-    #         else:
-    #             value_type = value
-    #
-    #         # set type
-    #         if key.lower() not in [key_orig.lower() for key_orig in annots]:
-    #             annots.update({key: value_type})
-    #
-    #         # set value
-    #         if value != value_type:
-    #             self.sai_ic(key, value)
-    #
-    #     return self.SOURCE
+    def annots__ensure(self) -> None:
+        """
+        GOAL
+        ----
+        unsure access to __annotations__ if it was not created on class!
+
+        REASON
+        ------
+        if class have not any annotations and you will access them over instance - raise!
+        but if you will first access annotations over class - no raise!
+
+            AttributeError: 'AttrDump' object has no attribute '__annotations__'
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        annots__append
+        """
+        try:
+            self.SOURCE.__class__.__annotations__
+        except:
+            pass
+
+        try:
+            self.SOURCE.__annotations__
+        except:
+            pass
+
+    def annots__append(self, **kwargs: type | Any) -> Any | AttrDump:
+        """
+        GOAL
+        ----
+        add new annot in last position
+
+        BEST USAGE
+        ----------
+        create NEW OBJECT
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        FormatedLine
+        """
+        self.annots__ensure()
+        annots: dict[str, type] = self.SOURCE.__annotations__
+        for key, value in kwargs.items():
+            if value is None:
+                value_type = Any
+            elif not TypeAux(value).check__class():
+                value_type = type(value)
+            else:
+                value_type = value
+
+            # set type
+            if key.lower() not in [key_orig.lower() for key_orig in annots]:
+                annots.update({key: value_type})
+
+            # set value
+            if value != value_type:
+                self.sai_ic(key, value)
+
+        return self.SOURCE
 
     def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
         """
