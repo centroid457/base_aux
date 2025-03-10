@@ -1,5 +1,7 @@
 from typing import *
+
 from base_aux.aux_values.m0_novalue import *
+# from base_aux.aux_types.m1_type_aux import *      # RECURSION EXX
 
 
 # =====================================================================================================================
@@ -34,11 +36,21 @@ class NestInit_Source:
     @classmethod
     @property
     def SOURCE_DEF(cls) -> Any | NoReturn:
+        result = cls.SOURCE
+
+        # create independent type class
+        # specially created for making indepandent __annotations__
+
+        try:
+            is_class = issubclass(cls.SOURCE, object)
+            result = type(result.__name__, (result, ), {})
+        except:
+            pass
+
         # if isinstance(cls.SOURCE, Lambda):
-        if callable(cls.SOURCE):        # and cls.SOURCE_DEF__CALL_IF_CALLABLE:
-            result = cls.SOURCE()
-        else:
-            result = cls.SOURCE
+        if callable(result):        # and cls.SOURCE_DEF__CALL_IF_CALLABLE:
+            result = result()
+
         return result
 
     def __init__(self, source: Any = NoValue, *args, **kwargs) -> None | NoReturn:

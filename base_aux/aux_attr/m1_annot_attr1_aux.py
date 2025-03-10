@@ -36,7 +36,7 @@ class AttrAux(NestInit_Source):
     FIXME: add skip methods??? seems it need!
     """
     # SOURCE: Any
-    SOURCE: Any
+    SOURCE: Any = AttrDump
     _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
 
     # =================================================================================================================
@@ -374,8 +374,7 @@ class AttrAux(NestInit_Source):
         except:
             pass
 
-    @classmethod
-    def annots__make_object(cls, **kwargs: type | Any) -> "AnnotsDumpIndepandant":
+    def annots__append(self, **kwargs: type | Any) -> AttrDump | Any:
         """
         GOAL
         ----
@@ -389,13 +388,8 @@ class AttrAux(NestInit_Source):
         ---------------------
         FormatedLine
         """
-        class AnnotsDumpIndepandant:
-            pass
-
-        result = AnnotsDumpIndepandant()
-        cls(result).annots__ensure()
-
-        annots: dict[str, type] = result.__annotations__
+        self.annots__ensure()
+        annots: dict[str, type] = self.SOURCE.__annotations__
         for key, value in kwargs.items():
             if value is None:
                 value_type = Any
@@ -405,13 +399,14 @@ class AttrAux(NestInit_Source):
                 value_type = value
 
             # set type
-            annots.update({key: value_type})
+            if key.lower() not in [key_orig.lower() for key_orig in annots]:
+                annots.update({key: value_type})
 
             # set value
             if value != value_type:
-                cls(result).sai_ic(key, value)
+                self.sai_ic(key, value)
 
-        return result
+        return self.SOURCE
 
     def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
         """

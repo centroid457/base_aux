@@ -48,7 +48,7 @@ class FormatedLine(NestCall_Other):
                 key = f"_{index}"
             result_dict.update({key: None})
 
-        self.VALUES = AnnotAttrAux.annots__make_object(**result_dict)
+        self.VALUES = AnnotAttrAux.annots__append(**result_dict)
 
     # -----------------------------------------------------------------------------------------------------------------
     def init__values_args_kwargs(self, *args, **kwargs) -> bool:

@@ -261,16 +261,18 @@ def test__annots_ensure():
 
 
 def test__annots_append():
-    victim1 = AnnotAttrAux.annots__make_object(astr=str, aint=1)
-    assert victim1.aint == 1
+    # ---------------------------------------------------------
+    victim = AnnotAttrAux().annots__append(astr=str, aint=1)
+    assert victim.aint == 1
 
     try:
-        victim1.astr
+        victim.astr
         assert False
     except:
         pass
 
-    victim2 = AnnotAttrAux.annots__make_object(astr="hello")
+    # ---------------------------------------------------------
+    victim2 = AnnotAttrAux().annots__append(astr="hello")
     try:
         victim2.aint
         assert False
@@ -278,7 +280,14 @@ def test__annots_append():
         pass
     assert victim2.astr == "hello"
 
-    assert victim1.__annotations__ != victim2.__annotations__
+    assert victim.__annotations__ != victim2.__annotations__
+
+    # ---------------------------------------------------------
+    victim3 = AnnotAttrAux(victim).annots__append(astr="hello")
+    assert victim3.aint == 1
+    assert victim3.astr == "hello"
+
+    assert victim.__annotations__ == victim3.__annotations__
 
 
 # =====================================================================================================================
