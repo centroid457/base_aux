@@ -19,11 +19,28 @@ class NestCall_Resolve:
     ---------------------
     files.filepath
     """
-
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self.resolve()
 
     def resolve(self) -> Any | NoReturn:
+        return NotImplemented
+
+
+# =====================================================================================================================
+class NestCall_Other:
+    """
+    GOAL
+    ----
+    apply otehr object as data
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    text formatted
+    """
+    def __call__(self, other: Any, *args, **kwargs) -> Any | NoReturn:
+        return self.other(other, *args, **kwargs)
+
+    def other(self, other: Any, *args, **kwargs) -> Any | NoReturn:
         return NotImplemented
 
 

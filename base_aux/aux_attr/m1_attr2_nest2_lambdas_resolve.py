@@ -1,7 +1,5 @@
-from typing import *
-
 from base_aux.lambdas.m1_lambdas import Lambda
-from base_aux.base_resolver.m1_resolver import *
+from base_aux.aux_callable.m2_nest_calls import *
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 
