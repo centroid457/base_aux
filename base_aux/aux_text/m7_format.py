@@ -20,7 +20,8 @@ class PatFormat:
     FIND_GROUPS: str = r"\{([_a-zA-Z][_a-zA-Z01-9]*)?([^{}]*)\}"   # (key, formatter)
 
 
-class FormatedLine(NestCall_Other, NestRepr__ClsName_SelfStr):
+# =====================================================================================================================
+class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
     """
     GOAL
     ----
@@ -112,7 +113,7 @@ class FormatedLine(NestCall_Other, NestRepr__ClsName_SelfStr):
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    victim = FormatedLine("{}", 1)
+    victim = TextFormated("{}", 1)
     assert victim.VALUES._0 == 1
 
     print("{}".format(1))
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     assert str(victim) == "1"
 
 
-    victim = FormatedLine("hello {name}={value}", 1, name="name", value="value")
+    victim = TextFormated("hello {name}={value}", 1, name="name", value="value")
     # assert victim.VALUES._1 == 1
     assert victim.VALUES.name == "name"
     print(str(victim))
