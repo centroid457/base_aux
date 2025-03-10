@@ -2,8 +2,17 @@ from typing import final
 
 
 # =====================================================================================================================
+class Base_AttrDump:
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    make obj with independent __annotations__
+    """
+    pass
+
+
 @final
-class AttrDump:
+class AttrDump(Base_AttrDump):
     """
     GOAL
     ----
@@ -44,5 +53,9 @@ if __name__ == "__main__":
         pass
     victim.__class__.__annotations__
     print(victim.__annotations__)
+
+    victim.__class__.__annotations__.update(attr=1)
+    assert victim.__annotations__ != victim.__class__.__annotations__
+
 
 # =====================================================================================================================

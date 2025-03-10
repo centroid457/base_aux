@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.aux_attr.m4_dump import AttrDump
+from base_aux.aux_attr.m4_dump import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable_aux import CallableAux
@@ -36,7 +36,7 @@ class AttrAux(NestInit_Source):
     FIXME: add skip methods??? seems it need!
     """
     # SOURCE: Any
-    SOURCE: Any = AttrDump
+    SOURCE: Any
     _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
 
     # =================================================================================================================
@@ -374,7 +374,8 @@ class AttrAux(NestInit_Source):
         except:
             pass
 
-    def annots__append(self, **kwargs: type | Any) -> Any | AttrDump:
+    @classmethod
+    def annots__make_object(cls, **kwargs: type | Any) -> "AnnotsDumpIndepandant":
         """
         GOAL
         ----
@@ -388,8 +389,13 @@ class AttrAux(NestInit_Source):
         ---------------------
         FormatedLine
         """
-        self.annots__ensure()
-        annots: dict[str, type] = self.SOURCE.__annotations__
+        class AnnotsDumpIndepandant:
+            pass
+
+        result = AnnotsDumpIndepandant()
+        cls(result).annots__ensure()
+
+        annots: dict[str, type] = result.__annotations__
         for key, value in kwargs.items():
             if value is None:
                 value_type = Any
@@ -399,14 +405,13 @@ class AttrAux(NestInit_Source):
                 value_type = value
 
             # set type
-            if key.lower() not in [key_orig.lower() for key_orig in annots]:
-                annots.update({key: value_type})
+            annots.update({key: value_type})
 
             # set value
             if value != value_type:
-                self.sai_ic(key, value)
+                cls(result).sai_ic(key, value)
 
-        return self.SOURCE
+        return result
 
     def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
         """
