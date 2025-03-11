@@ -1,5 +1,6 @@
 from typing import *
 import re
+import pytest
 
 from base_aux.base_inits.m1_nest_init_source import *
 from base_aux.aux_callable.m2_nest_calls import *
@@ -12,6 +13,7 @@ from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
 from base_aux.aux_datetime.m1_datetime import *
 from base_aux.aux_attr.m4_dump import AttrDump
 from base_aux.aux_attr.m4_kits import *
+from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_text.m6_nest_repr_clsname_str import *
 
 
@@ -59,8 +61,8 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
         self.VALUES = AnnotAttrAux().annots__append(**result_dict)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def sai__values_args_kwargs(self, *args, **kwargs) -> bool:
-        return AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
+    def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
+        AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
 
     # def __getattr__(self, item: str): # NOTE: DONT USE ANY GSAI HERE!!!
     #     return self[item]
@@ -121,7 +123,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
         """
         GOAL
         ----
-        parse result string back (get values)
+        reverse - parse result string back (get values)
         """
         static_data = re.split(PatFormat.SPLIT_STATIC__IN_PAT, self.PAT_FORMAT)
         pat_values_fullmatch = r""
@@ -153,6 +155,19 @@ class Test_Formatted:
         assert str(victim) == "1"
 
     def test__kwargs(self):
+        # kwargs preferred ---------------------------------
+        victim = TextFormatted("hello {name}={value}", *(1, 2))
+        # assert victim.VALUES._1 == 1
+        assert victim.VALUES.name == 1
+        print(str(victim))
+        assert str(victim) == "hello 1=2"
+
+        victim.VALUES.name = "name"
+        assert victim.VALUES.name == "name"
+        print(str(victim))
+        assert str(victim) == "hello name=2"
+
+        # kwargs preferred ---------------------------------
         victim = TextFormatted("hello {name}={value}", "arg1", name="name", value=1)
         # assert victim.VALUES._1 == 1
         assert victim.VALUES.name == "name"
@@ -164,8 +179,9 @@ class Test_Formatted:
         print(str(victim))
         assert str(victim) == "hello name2=1"
 
-        # ---------------------------------
+        # args ---------------------------------
         victim = TextFormatted("hello {name}={value}", "arg1", value=1)
+        # assert victim.VALUES._0 == "arg1"
         # assert victim.VALUES._1 == 1
         assert victim.VALUES.name == "arg1"
         print(str(victim))
@@ -189,6 +205,19 @@ class Test_Formatted:
             assert False
         except:
             pass
+    @pytest.mark.parametrize(
+        argnames="pat_format,args,kwargs,_EXPECTED",
+        argvalues=[
+            ("hello {name}={value}", (), {}, "hello ="),
+            ("hello {name}={value}", (), dict(name=1), "hello 1="),
+            ("hello {name}={value}", (), dict(name=1, value=2), "hello 1=2"),
+            ("hello {name}={value}", (11, 22), dict(name=1, value=2), "hello 1=2"),
+            ("hello {name}={value}", (11, 22), dict(), "hello 11=22"),
+        ]
+    )
+    def test__str(self, pat_format, args, kwargs, _EXPECTED):
+        func_link = lambda: str(TextFormatted(pat_format, *args, **kwargs))
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
