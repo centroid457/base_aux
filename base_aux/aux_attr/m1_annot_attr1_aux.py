@@ -483,6 +483,7 @@ class AttrAux(NestInit_Source):
 
         # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
+        pass
 
     def dai_ic(self, name_index: TYPING__NAME_DRAFT) -> None:
         name_original = self.name_ic__get_original(name_index)

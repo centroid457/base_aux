@@ -15,6 +15,7 @@ from base_aux.aux_attr.m4_dump import AttrDump
 from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_text.m6_nest_repr_clsname_str import *
+from base_aux.versions.m2_version import *
 
 
 # =====================================================================================================================
@@ -49,8 +50,10 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
 
         self.init__keys()
         self.sai__values_args_kwargs(*args, **kwargs)
+        self.init__types()
 
-    def init__keys(self):
+    # -----------------------------------------------------------------------------------------------------------------
+    def init__keys(self) -> None:
         result_dict = {}
         for index, pat_group in enumerate(ReAttemptsAll(PatFormat.FIND_NAMES__IN_PAT).findall(self.PAT_FORMAT)):
             key, formatting = pat_group
@@ -60,39 +63,43 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
 
         self.VALUES = AnnotAttrAux().annots__append(**result_dict)
 
-    # -----------------------------------------------------------------------------------------------------------------
     def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
         AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
+        pass
+        # self.apply_types_on_values()
 
+    def init__types(self) -> None:
+        annots_dict = self.VALUES.__annotations__
+        values_dict = AnnotAttrAux(self.VALUES).dump_dict()
+        for name, type_i in annots_dict.items():
+            if (type_i == Any) and (name in values_dict) and (values_dict[name] is not None):
+                annots_dict[name] = type(values_dict[name])
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def apply_types_on_values(self) -> None:
+        annots_dict = self.VALUES.__annotations__
+        values_dict = AnnotAttrAux(self.VALUES).dump_dict()
+        for name, type_i in annots_dict.items():
+            if (type_i != Any) and (name in values_dict) and (values_dict[name] is not None):
+                value_result = type_i(values_dict[name])
+
+                AnnotAttrAux(self.VALUES).sai__by_args_kwargs(**{name: value_result})
+
+    # -----------------------------------------------------------------------------------------------------------------
     # def __getattr__(self, item: str): # NOTE: DONT USE ANY GSAI HERE!!!
     #     return self[item]
-    #
-    # def __getitem__(self, item: str | int):
-    #     if isinstance(item, str):
-    #         for key in self.VALUES:
-    #             if key.lower() == item.lower():
-    #                 return self.VALUES[key]
-    #     elif isinstance(item, int):
-    #         key = list(self.VALUES)[item]
-    #         return self.VALUES[key]
-    #
-    #     raise AttributeError(item)
-    #
+
+    # def __getitem__(self, item: str | int) -> Any | NoReturn:
+    #     return IterAux(self.VALUES).value__get(item)
+
     # def __setattr__(self, item: str, value: Any):
     #     self[item] = value
-    #
-    # def __setitem__(self, item: str | int, value: Any):
-    #     if isinstance(item, str):
-    #         for key in self.VALUES:
-    #             if key.lower() == item.lower():
-    #                 self.VALUES[key] = value
-    #                 return
-    #     elif isinstance(item, int):
-    #         key = list(self.VALUES)[item]
-    #         self.VALUES[key] = value
-    #         return
-    #
-    #     raise AttributeError(item)
+
+    # def __setitem__(self, item: str | int, value: Any) -> None | NoReturn:
+    #     value_type = IterAux(self.VALUES.__annotations__).value__get(item)
+    #     if value_type != Any and value_type is not None:
+    #         value = value_type(value)
+    #     IterAux(self.VALUES).value__set([item, ], value)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
@@ -137,6 +144,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
         if values_match:
             values = values_match.groups()
             self.sai__values_args_kwargs(*values)
+            self.apply_types_on_values()
         else:
             raise Exx__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
 
@@ -195,9 +203,10 @@ class Test_Formatted:
         print(str(victim))
         assert str(victim) == "hello arg1=1"
 
-        victim("hello name_other=222")
+        victim.other("hello name_other=222")
+        print(str(victim))
         assert victim.VALUES.name == "name_other"
-        assert victim.VALUES.value == "222"
+        assert victim.VALUES.value == 222
 
         # EXX --------
         try:
@@ -205,6 +214,8 @@ class Test_Formatted:
             assert False
         except:
             pass
+
+    # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="pat_format,args,kwargs,_EXPECTED",
         argvalues=[
@@ -213,11 +224,35 @@ class Test_Formatted:
             ("hello {name}={value}", (), dict(name=1, value=2), "hello 1=2"),
             ("hello {name}={value}", (11, 22), dict(name=1, value=2), "hello 1=2"),
             ("hello {name}={value}", (11, 22), dict(), "hello 11=22"),
+            ("hello {name}={value}", (11, 22), dict(value=Version("1.2.3")), "hello 11=1.2.3"),
         ]
     )
     def test__str(self, pat_format, args, kwargs, _EXPECTED):
         func_link = lambda: str(TextFormatted(pat_format, *args, **kwargs))
         ExpectAux(func_link).check_assert(_EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="pat_format,args,kwargs,_EXPECTED",
+        argvalues=[
+            ("hello{name}", (), dict(name=1), [int, 1]),
+            ("hello{name}", (), dict(name="1"), [str, "1"]),
+            ("hello{name}", (), dict(name=Version("1.2.3")), [Version, Version("1.2.3")]),
+        ]
+    )
+    def test__type_name(self, pat_format, args, kwargs, _EXPECTED):
+        victim = TextFormatted(pat_format, *args, **kwargs)
+        func_link = lambda: victim.VALUES.__annotations__["name"]
+        ExpectAux(func_link).check_assert(_EXPECTED[0])
+
+        func_link = lambda: getattr(victim.VALUES, "name")
+        ExpectAux(func_link).check_assert(_EXPECTED[1])
+
+        victim.VALUES.name = str(kwargs["name"])
+        func_link = lambda: victim.VALUES.name
+        ExpectAux(func_link).check_assert(_EXPECTED[1])
+
+        ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
 
 
 # =====================================================================================================================
