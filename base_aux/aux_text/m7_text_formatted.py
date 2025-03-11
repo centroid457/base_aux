@@ -17,11 +17,17 @@ from base_aux.aux_text.m6_nest_repr_clsname_str import *
 
 # =====================================================================================================================
 class PatFormat:
-    FIND_GROUPS: str = r"\{([_a-zA-Z][_a-zA-Z01-9]*)?([^{}]*)\}"   # (key, formatter)
+    FIND_NAMES__IN_PAT: str = r"\{([_a-zA-Z]\w*)?([^{}]*)\}"   # (key, key_formatter)  dont use indexes!
+
+    @classmethod
+    @property
+    def SPLIT_STATIC__IN_PAT(cls) -> str:
+        result = r"(?:" + re.sub(r"\((.*?)\)", r"(?:\1)", cls.FIND_NAMES__IN_PAT) + r")"
+        return result
 
 
 # =====================================================================================================================
-class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
+class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     """
     GOAL
     ----
@@ -40,11 +46,11 @@ class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
         self.PAT_FORMAT = pat_format
 
         self.init__keys()
-        self.init__values_args_kwargs(*args, **kwargs)
+        self.sai__values_args_kwargs(*args, **kwargs)
 
     def init__keys(self):
         result_dict = {}
-        for index, pat_group in enumerate(ReAttemptsAll(PatFormat.FIND_GROUPS).findall(self.PAT_FORMAT)):
+        for index, pat_group in enumerate(ReAttemptsAll(PatFormat.FIND_NAMES__IN_PAT).findall(self.PAT_FORMAT)):
             key, formatting = pat_group
             if not key:
                 key = f"_{index}"
@@ -53,7 +59,7 @@ class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
         self.VALUES = AnnotAttrAux().annots__append(**result_dict)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def init__values_args_kwargs(self, *args, **kwargs) -> bool:
+    def sai__values_args_kwargs(self, *args, **kwargs) -> bool:
         return AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
 
     # def __getattr__(self, item: str): # NOTE: DONT USE ANY GSAI HERE!!!
@@ -92,7 +98,7 @@ class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
         values = AnnotAttrAux(self.VALUES).dump_dict()
         group_index = 0
         while True:
-            match = re.search(PatFormat.FIND_GROUPS, result)
+            match = re.search(PatFormat.FIND_NAMES__IN_PAT, result)
             if not match:
                 break
 
@@ -105,32 +111,89 @@ class TextFormated(NestCall_Other, NestRepr__ClsName_SelfStr):
             value_formatter = "{" + formatter + "}"
             value_formatted = value_formatter.format(value)
 
-            result = re.sub(PatFormat.FIND_GROUPS, value_formatted, result, count=1)
+            result = re.sub(PatFormat.FIND_NAMES__IN_PAT, value_formatted, result, count=1)
 
             group_index += 1
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def other(self, other: str) -> Any | NoReturn:
+        """
+        GOAL
+        ----
+        parse result string back (get values)
+        """
+        static_data = re.split(PatFormat.SPLIT_STATIC__IN_PAT, self.PAT_FORMAT)
+        pat_values_fullmatch = r""
+        for static_i in static_data:
+            if pat_values_fullmatch:
+                pat_values_fullmatch += r"(.*)"
+
+            pat_values_fullmatch += re.escape(static_i)
+
+        values_match = re.fullmatch(pat_values_fullmatch, other)
+        if values_match:
+            values = values_match.groups()
+            self.sai__values_args_kwargs(*values)
+        else:
+            raise Exx__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
+
+
+# =====================================================================================================================
+class Test_Formatted:
+    def test__pat_groups(self):
+        assert PatFormat.SPLIT_STATIC__IN_PAT == r"(?:\{(?:[_a-zA-Z]\w*)?(?:[^{}]*)\})"
+
+    def test__simple(self):
+        victim = TextFormatted("{}", 1)
+        assert victim.VALUES._0 == 1
+
+        print("{}".format(1))
+        print(str(victim))
+        assert str(victim) == "1"
+
+    def test__kwargs(self):
+        victim = TextFormatted("hello {name}={value}", "arg1", name="name", value=1)
+        # assert victim.VALUES._1 == 1
+        assert victim.VALUES.name == "name"
+        print(str(victim))
+        assert str(victim) == "hello name=1"
+
+        victim.VALUES.name = "name2"
+        assert victim.VALUES.name == "name2"
+        print(str(victim))
+        assert str(victim) == "hello name2=1"
+
+        # ---------------------------------
+        victim = TextFormatted("hello {name}={value}", "arg1", value=1)
+        # assert victim.VALUES._1 == 1
+        assert victim.VALUES.name == "arg1"
+        print(str(victim))
+        assert str(victim) == "hello arg1=1"
+
+    def test__other(self):
+        # OK --------
+        victim = TextFormatted("hello {name}={value}", "arg1", value=1)
+        # assert victim.VALUES._1 == 1
+        assert victim.VALUES.name == "arg1"
+        print(str(victim))
+        assert str(victim) == "hello arg1=1"
+
+        victim("hello name_other=222")
+        assert victim.VALUES.name == "name_other"
+        assert victim.VALUES.value == "222"
+
+        # EXX --------
+        try:
+            victim("hello  name_other=222")
+            assert False
+        except:
+            pass
+
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    victim = TextFormated("{}", 1)
-    assert victim.VALUES._0 == 1
-
-    print("{}".format(1))
-    print(str(victim))
-    assert str(victim) == "1"
-
-
-    victim = TextFormated("hello {name}={value}", 1, name="name", value="value")
-    # assert victim.VALUES._1 == 1
-    assert victim.VALUES.name == "name"
-    print(str(victim))
-    assert str(victim) == "hello name=value"
-
-    victim.VALUES.name = "name2"
-    assert victim.VALUES.name == "name2"
-    print(str(victim))
-    assert str(victim) == "hello name2=value"
+    pass
 
 
 # =====================================================================================================================

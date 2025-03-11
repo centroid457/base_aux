@@ -386,7 +386,7 @@ class AttrAux(NestInit_Source):
 
         SPECIALLY CREATED FOR
         ---------------------
-        TextFormated
+        TextFormatted
         """
         self.annots__ensure()
         annots: dict[str, type] = self.SOURCE.__annotations__
