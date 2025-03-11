@@ -10,6 +10,20 @@
 ********************************************************************************
 ## NEWS
 
+0.2.16(2025.03.11 13.04.35)
+------------------------------
+- [TextFormated] create  
+- [ReAttempts] create  
+- [Attrs+Annots]:  
+	- combine two classes finally in one  
+	- add annots_ensure +annots__append  
+	- separate NestRepr__ClsName_SelfStr  
+- [IterAux] add get_first_is_not_none  
+- [DateTime] add UPDATE_ON_STR+DEF_STR_FORMAT  
+- [Nest*]:  
+	- add NestCall_Other  
+	- add NestStR_AttrsPattern  
+
 0.2.15(2025.03.06 14.57.16)
 ------------------------------
 - [TESTS] move all near source code  
