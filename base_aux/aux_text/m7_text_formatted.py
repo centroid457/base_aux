@@ -44,8 +44,13 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     # PAT_RE: str = r""       # RE PATTERN
     VALUES: AttrDump        # values set
 
+    RAISE_TYPES: bool = False   # todo: decide to deprecate!
+
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, pat_format: str, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, pat_format: str, *args: Any, raise_types: bool = None, **kwargs: Any) -> None:
+        if raise_types is not None:
+            self.RAISE_TYPES = raise_types
+
         self.PAT_FORMAT = pat_format
 
         self.init__keys()
@@ -65,8 +70,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
 
     def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
         AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
-        pass
-        # self.apply_types_on_values()
+        self.apply_types_on_values()
 
     def init__types(self) -> None:
         annots_dict = self.VALUES.__annotations__
@@ -76,33 +80,36 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
                 annots_dict[name] = type(values_dict[name])
 
     # -----------------------------------------------------------------------------------------------------------------
-    def apply_types_on_values(self) -> None:
+    def apply_types_on_values(self) -> None | NoReturn:
         annots_dict = self.VALUES.__annotations__
         values_dict = AnnotAttrAux(self.VALUES).dump_dict()
         for name, type_i in annots_dict.items():
             if (type_i != Any) and (name in values_dict) and (values_dict[name] is not None):
-                value_result = type_i(values_dict[name])
+                value = values_dict[name]
+                try:
+                    value = type_i(value)
+                except Exception as exx:
+                    if self.RAISE_TYPES:
+                        raise exx
 
-                AnnotAttrAux(self.VALUES).sai__by_args_kwargs(**{name: value_result})
+                AnnotAttrAux(self.VALUES).sai__by_args_kwargs(**{name: value})
 
     # -----------------------------------------------------------------------------------------------------------------
     # def __getattr__(self, item: str): # NOTE: DONT USE ANY GSAI HERE!!!
     #     return self[item]
 
-    # def __getitem__(self, item: str | int) -> Any | NoReturn:
-    #     return IterAux(self.VALUES).value__get(item)
+    def __getitem__(self, item: str | int) -> Any | NoReturn:
+        return IterAux(self.VALUES).value__get(item)
 
     # def __setattr__(self, item: str, value: Any):
     #     self[item] = value
 
-    # def __setitem__(self, item: str | int, value: Any) -> None | NoReturn:
-    #     value_type = IterAux(self.VALUES.__annotations__).value__get(item)
-    #     if value_type != Any and value_type is not None:
-    #         value = value_type(value)
-    #     IterAux(self.VALUES).value__set([item, ], value)
+    def __setitem__(self, item: str | int, value: Any) -> None | NoReturn:
+        self.sai__values_args_kwargs(**{item: value})
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
+        self.apply_types_on_values()
         result = str(self.PAT_FORMAT)
         values = AnnotAttrAux(self.VALUES).dump_dict()
         group_index = 0
@@ -118,9 +125,12 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
             if value is None:
                 value=""
             value_formatter = "{" + formatter + "}"
-            value_formatted = value_formatter.format(value)
+            try:
+                value = value_formatter.format(value)
+            except:
+                pass
 
-            result = re.sub(PatFormat.FIND_NAMES__IN_PAT, value_formatted, result, count=1)
+            result = re.sub(PatFormat.FIND_NAMES__IN_PAT, value, result, count=1)
 
             group_index += 1
         return result
@@ -144,7 +154,6 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
         if values_match:
             values = values_match.groups()
             self.sai__values_args_kwargs(*values)
-            self.apply_types_on_values()
         else:
             raise Exx__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
 
@@ -240,7 +249,7 @@ class Test_Formatted:
             ("hello{name}", (), dict(name=Version("1.2.3")), [Version, Version("1.2.3")]),
         ]
     )
-    def test__type_name(self, pat_format, args, kwargs, _EXPECTED):
+    def test__type_apply(self, pat_format, args, kwargs, _EXPECTED):
         victim = TextFormatted(pat_format, *args, **kwargs)
         func_link = lambda: victim.VALUES.__annotations__["name"]
         ExpectAux(func_link).check_assert(_EXPECTED[0])
@@ -248,11 +257,46 @@ class Test_Formatted:
         func_link = lambda: getattr(victim.VALUES, "name")
         ExpectAux(func_link).check_assert(_EXPECTED[1])
 
-        victim.VALUES.name = str(kwargs["name"])
-        func_link = lambda: victim.VALUES.name
-        ExpectAux(func_link).check_assert(_EXPECTED[1])
-
         ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="pat_format,args,kwargs,new,_EXPECTED",
+        argvalues=[
+            ("hello{name}", (), dict(name=1), 1, [True, int, 1]),
+            ("hello{name}", (), dict(name=1), "1", [True, int, 1]),
+            ("hello{name}", (), dict(name=1), "text", [Exception, int, 1]),
+            ("hello{name}", (), dict(name="1"), "text", [True, str, "text"]),
+            ("hello{name}", (), dict(name="1"), "1", [True, str, "1"]),
+            ("hello{name}", (), dict(name="1"), 1, [True, str, "1"]),
+            ("hello{name}", (), dict(name=Version("1.2.3")), "1.2.3", [True, Version, Version("1.2.3")]),
+        ]
+    )
+    def test__value_set(self, pat_format, args, new, kwargs, _EXPECTED):
+        victim = TextFormatted(pat_format, *args, raise_types=True, **kwargs)
+
+        # INCORRECT ------------------------------------
+        # victim.VALUES.name = str(kwargs["name"])
+        # func_link = lambda: victim.VALUES.name
+        # ExpectAux(func_link).check_assert(_EXPECTED[1])
+        #
+        # ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
+
+        # CORRECT ------------------------------------
+        try:
+            victim["name"] = new
+            ExpectAux(True).check_assert(_EXPECTED[0])
+        except:
+            ExpectAux(Exception).check_assert(_EXPECTED[0])
+            victim = TextFormatted(pat_format, *args, raise_types=False, **kwargs)
+            victim["name"] = new    # NoRaise here!
+            return
+            pass
+
+        ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[1])
+
+        func_link = lambda: victim.VALUES.name
+        ExpectAux(func_link).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
