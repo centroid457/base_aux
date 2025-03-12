@@ -4,7 +4,6 @@ from email.mime.multipart import MIMEMultipart
 from base_aux.alerts.m0_base import *
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 
 
 # =====================================================================================================================
@@ -17,7 +16,7 @@ class SmtpServers:
 
 
 # =====================================================================================================================
-class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
+class AlertSmtp(Base_Alert):
     """
     GOAL
     ----
@@ -78,3 +77,6 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
 if __name__ == "__main__":
     victim = AlertSmtp("hello")
     victim.result_wait()
+
+
+# =====================================================================================================================

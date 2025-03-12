@@ -12,8 +12,8 @@ from base_aux.aux_callable.m1_callable_aux import *
 @pytest.mark.skipif(CallableAux(AlertSmtp.CONN_AUTH).check_raise(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="cls", argvalues=[
-        AlertSmtp,
-        # AlertTelegram,
+        # AlertSmtp,
+        AlertTelegram,
     ])
     def test__send_single(self, cls):
         victim = cls("single")

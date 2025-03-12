@@ -7,6 +7,7 @@ import smtplib
 import telebot
 
 from base_aux.aux_text.m7_text_formatted import *
+from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 
 
 # =====================================================================================================================
@@ -48,7 +49,7 @@ class Interface_Alert:
 
 
 # =====================================================================================================================
-class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simple!
+class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simple!
     """
     GOAL
     ----
