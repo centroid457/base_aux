@@ -39,6 +39,10 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     SPECIALLY CREATED FOR
     ---------------------
     part for Alert messages
+
+    NOTE
+    ----
+    1/ formatters is not tested and could not working!
     """
     PAT_FORMAT: str = ""    # FORMAT PATTERN
     VALUES: AttrDump        # values set
@@ -255,6 +259,10 @@ class Test_Formatted:
             ("hello {name}={value}", (11, 22), dict(name=1, value=2), "hello 1=2"),
             ("hello {name}={value}", (11, 22), dict(), "hello 11=22"),
             ("hello {name}={value}", (11, 22), dict(value=Version("1.2.3")), "hello 11=1.2.3"),
+
+            ("hello\n\n{name}\n{value}", (11, 22), dict(), "hello\n\n11\n22"),
+
+            ("hello {name}={value:3}", (), dict(name=1, value=2), "hello 1=  2"),
         ]
     )
     def test__str(self, pat_format, args, kwargs, _EXPECTED):
