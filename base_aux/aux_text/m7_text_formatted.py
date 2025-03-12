@@ -41,7 +41,6 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     part for Alert messages
     """
     PAT_FORMAT: str = ""    # FORMAT PATTERN
-    # PAT_RE: str = r""       # RE PATTERN
     VALUES: AttrDump        # values set
 
     RAISE_TYPES: bool = False   # todo: decide to deprecate!
@@ -70,7 +69,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
 
     def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
         AnnotAttrAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
-        self.apply_types_on_values()
+        self.types__apply_on_values()
 
     def init__types(self) -> None:
         annots_dict = self.VALUES.__annotations__
@@ -80,7 +79,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
                 annots_dict[name] = type(values_dict[name])
 
     # -----------------------------------------------------------------------------------------------------------------
-    def apply_types_on_values(self) -> None | NoReturn:
+    def types__apply_on_values(self) -> None | NoReturn:
         annots_dict = self.VALUES.__annotations__
         values_dict = AnnotAttrAux(self.VALUES).dump_dict()
         for name, type_i in annots_dict.items():
@@ -93,6 +92,14 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
                         raise exx
 
                 AnnotAttrAux(self.VALUES).sai__by_args_kwargs(**{name: value})
+
+    def types__check_on_values(self) -> bool:
+        """
+        GOAL
+        ----
+        if you want to validate actual values
+        """
+        raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
     # def __getattr__(self, item: str): # NOTE: DONT USE ANY GSAI HERE!!!
@@ -109,7 +116,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
-        self.apply_types_on_values()
+        self.types__apply_on_values()
         result = str(self.PAT_FORMAT)
         values = AnnotAttrAux(self.VALUES).dump_dict()
         group_index = 0
@@ -123,7 +130,21 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
             name_orig = IterAux(values).item__get_original(name)
             value = values[name_orig]
             if value is None:
-                value=""
+                value = ""
+
+            # apply type formatter ------
+            try:
+                formatter_type = formatter[-1]
+                if formatter_type in ["s", ]:
+                    value = str(value)
+                elif formatter_type in ["d", "n"]:
+                    value = int(value)
+                elif formatter_type in ["f", "F"]:
+                    value = float(value)
+            except:
+                pass
+
+            # apply formatter -----------
             value_formatter = "{" + formatter + "}"
             try:
                 value = value_formatter.format(value)
