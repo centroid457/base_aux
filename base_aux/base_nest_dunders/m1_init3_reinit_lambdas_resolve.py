@@ -29,7 +29,7 @@ class NestInit_AttrsLambdaResolve:
 
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         for name in AttrAux(self).iter__names_not_private():
-            value = getattr(self, name)
+            value = getattr(self.__class__, name)
             if isinstance(value, (Lambda, NestCall_Resolve)):
                 setattr(self, name, value())
 

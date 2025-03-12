@@ -111,15 +111,6 @@ class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNM
             self.start()
 
     # =================================================================================================================
-    @classmethod
-    @property
-    def NAME(cls) -> str:
-        """name for AlertClass.
-        Accustom ourselves to name you classes recognisable without adding new one redundant attributes.
-        """
-        return cls.__name__
-
-    # =================================================================================================================
     def start(self, *args):
         """this is just add ability to collect started threads in class
         """
@@ -130,6 +121,7 @@ class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNM
         """del thread object from collection.
         called then thread finished.
         """
+        print(f"_thread_finished")
         self.__class__._threads_active.discard(self)
 
     @classmethod

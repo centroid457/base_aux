@@ -33,10 +33,13 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
     # AUX -----------------------------------------
     _conn:  smtplib.SMTP_SSL
     _subtype: str = "plain"
+    SUBJECT: str = None
 
-    def __init__(self, *args, _subtype: str = None, **kwargs):
+    def __init__(self, *args, _subtype: str = None, subject: str = None, **kwargs):
         if _subtype is not None:
             self._subtype = _subtype
+        if subject is not None:
+            self.SUBJECT = subject
 
         super().__init__(*args, **kwargs)
 
@@ -58,7 +61,7 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
         msg = MIMEMultipart()
         msg["From"] = self.CONN_AUTH.NAME
         msg["To"] = self.RECIPIENT
-        msg['Subject'] = self.NAME
+        msg['Subject'] = self.SUBJECT or self.__class__.__name__
 
         try:
             _subtype = self.body["_subtype"]
@@ -72,3 +75,6 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
 
 
 # =====================================================================================================================
+if __name__ == "__main__":
+    victim = AlertSmtp("hello")
+    victim.result_wait()
