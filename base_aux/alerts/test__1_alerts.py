@@ -8,7 +8,7 @@ from base_aux.aux_callable.m1_callable_aux import *
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.skipif(CallableAux(AlertSmtp.CONN_AUTH).check_raise(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="cls", argvalues=[

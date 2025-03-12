@@ -165,22 +165,22 @@ class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNM
         """
         result = None
         if not self._conn__check_exists():
-            print(f"TRY _connect {self.__class__.__name__}")
+            print(f"[connect] TRY {self.__class__.__name__}")
             try:
                 if self._connect_unsafe():
-                    print("[READY] connect")
+                    print("[connect] SUCCESS")
 
             except Exception as exx:
-                print(f"[CRITICAL] CONNECT [{exx!r}]")
+                print(f"[connect] ERROR [{exx!r}]")
                 self._conn__clear()
 
         if self._conn__check_exists():
             try:
                 result = self._login_unsafe()
                 if result:
-                    print("[READY] login")
+                    print("[login] SUCCESS")
             except Exception as exx:
-                print(f"[CRITICAL] LOGIN [{exx!r}]")
+                print(f"[LOGIN] ERROR [{exx!r}]")
                 self._conn__clear()
 
         print("="*100)
@@ -200,7 +200,7 @@ class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNM
         while not self._conn__check_exists() and counter <= self.RECONNECT_LIMIT:
             counter += 1
             if not self._connect():
-                print(f"[WARNING]try [{counter=}]")
+                print(f"RECONNECT_PAUSE[{counter=}]")
                 print("=" * 100)
                 print()
                 time.sleep(self.RECONNECT_PAUSE)
@@ -213,10 +213,11 @@ class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNM
             try:
                 result = self._send_unsafe()
                 if result:
-                    print("[READY] send")
+                    print("[send] SUCCESS")
                     self._result = True
             except Exception as exx:
-                msg = f"[CRITICAL]unexpected [{exx!r}]"
+                msg = f"[send] ERROR [{exx!r}]"
+                # [send] ERROR [SMTPDataError(451, b'Ratelimit exceeded for mailbox centroid@mail.ru. Try again later.')]
                 print(msg)
                 self._conn__clear()
 
