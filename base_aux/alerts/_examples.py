@@ -3,6 +3,7 @@
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m1_alerts1_smtp import *
 from base_aux.alerts.m1_alerts2_telegram import *
+from base_aux.aux_attr.m4_kits import AttrKit_AddrPort
 
 
 class AlertADX(AlertSelect.TELEGRAM_DEF):
@@ -17,48 +18,41 @@ AlertADX.threads_wait_all()
 # =========================================================================================
 ### AlertSmtp
 #### 1. add new server if not exists
-from base_aux.alerts import *
 
 
 class SmtpServersMOD(SmtpServers):
-    EXAMPLE_RU: SmtpAddress = SmtpAddress("smtp.EXAMPLE.ru", 123)
+    EXAMPLE_RU: AttrKit_AddrPort = AttrKit_AddrPort("smtp.EXAMPLE.ru", 123)
 
 
 class AlertSmtpMOD(AlertSmtp):
-    SERVER_SMTP: SmtpAddress = SmtpServersMOD.EXAMPLE_RU  # or direct =SmtpAddress("smtp.EXAMPLE.ru", 123)
+    CONN_ADDRESS: AttrKit_AddrPort = SmtpServersMOD.EXAMPLE_RU  # or direct =AttrKit_AddrPort("smtp.EXAMPLE.ru", 123)
 
 # =========================================================================================
 #### 2. change authorisation data (see `privates` for details)
-from base_aux.alerts import *
 from base_aux.privates.m1_privates import *
 
 
 class AlertSmtpMOD(AlertSmtp):
-    AUTH: AttrKit_AuthNamePwd = PvLoaderIni(target=AttrKit_AuthNamePwd, keypath=("AUTH_EMAIL_MOD",))
+    CONN_AUTH: AttrKit_AuthNamePwd = PvLoaderIni(target=AttrKit_AuthNamePwd, keypath=("AUTH_EMAIL_MOD",))
 
 
 # =========================================================================================
 #### 3. change other settings (see source for other not mentioned)
-from base_aux.alerts import *
 
 
 class AlertSmtpMOD(AlertSmtp):
     RECONNECT_PAUSE: int = 60
     RECONNECT_LIMIT: int = 10
-
     TIMEOUT_RATELIMIT: int = 600
-
-    RECIPIENT_SPECIAL: str = "my_address_2@mail.ru"
+    RECIPIENT: str = "my_address_2@mail.ru"
 
 # =========================================================================================
 #### 4. send
 # if no mods
-from base_aux.alerts import *
 
 AlertSmtp(_subj_name="Hello", body="World!")
 
 # with mods
-from base_aux.alerts import *
 
 
 class AlertSmtpMOD(AlertSmtp):
@@ -69,7 +63,6 @@ AlertSmtpMOD(_subj_name="Hello", body="World!")
 
 # =========================================================================================
 #### 5. using in class with saving alert object
-from base_aux.alerts import *
 
 class AlertSmtpMOD(AlertSmtp):
     pass    # changed
@@ -98,7 +91,6 @@ monitor.ALERT("Hello")
 }
 
 # =========================================================================================
-from base_aux.alerts import *
 
 class MyMonitor:
     ALERT = AlertTelegram

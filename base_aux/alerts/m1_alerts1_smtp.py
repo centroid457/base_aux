@@ -8,42 +8,44 @@ from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_
 
 
 # =====================================================================================================================
-class SmtpAddress(NamedTuple):
-    """class for keeping connection parameters/settings for exact smtp server
-
-    :ivar ADDR: smtp server address like "smtp.mail.ru"
-    :ivar PORT: smtp server port like 465
-    """
-    ADDR: str
-    PORT: int
-
-
 class SmtpServers:
     """well known servers addresses.
 
     Here we must collect servers like MilRu/GmailCom, and not to create it in any new project.
     """
-    MAIL_RU: SmtpAddress = SmtpAddress("smtp.mail.ru", 465)
+    MAIL_RU: AttrKit_AddrPort = AttrKit_AddrPort("smtp.mail.ru", 465)
 
 
 # =====================================================================================================================
-class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
-    """SMTP realisation for sending msg (email).
+class AlertSmtp(NestInit_AttrsLambdaResolve, Base_Alert):
+    """
+    GOAL
+    ----
+    SMTP realisation for sending msg (email).
+
+    :param _subtype: reuse new _subtype instead of default
     """
     # SETTINGS ------------------------------------
-    SERVER_SMTP: SmtpAddress = SmtpServers.MAIL_RU
-    AUTH: AttrKit_AuthNamePwd = PvLoaderIni_AuthNamePwd(keypath=("AUTH_EMAIL_DEF",))
+    CONN_ADDRESS: AttrKit_AddrPort = SmtpServers.MAIL_RU
+    CONN_AUTH: AttrKit_AuthNamePwd = PvLoaderIni_AuthNamePwd(keypath=("AUTH_EMAIL_DEF",))
     TIMEOUT_SEND = 5
 
     # AUX -----------------------------------------
     _conn:  smtplib.SMTP_SSL
+    _subtype: str = "plain"
+
+    def __init__(self, *args, _subtype: str = None, **kwargs):
+        if _subtype is not None:
+            self._subtype = _subtype
+
+        super().__init__(*args, **kwargs)
 
     def _connect_unsafe(self) -> Union[bool, NoReturn]:
-        self._conn = smtplib.SMTP_SSL(self.SERVER_SMTP.ADDR, self.SERVER_SMTP.PORT, timeout=self.TIMEOUT_SEND)
+        self._conn = smtplib.SMTP_SSL(self.CONN_ADDRESS.ADDR, self.CONN_ADDRESS.PORT, timeout=self.TIMEOUT_SEND)
         return True
 
     def _login_unsafe(self) -> Union[bool, NoReturn]:
-        response = self._conn.login(self.AUTH.NAME, self.AUTH.PWD)
+        response = self._conn.login(self.CONN_AUTH.NAME, self.CONN_AUTH.PWD)
         print(response)
         print("=" * 100)
         return response and response[0] in [235, 503]
@@ -54,14 +56,19 @@ class AlertSmtp(NestInit_AttrsLambdaResolve, AlertBase):
 
     def _msg_compose(self) -> MIMEMultipart:
         msg = MIMEMultipart()
-        msg["From"] = self.AUTH.NAME
-        msg["To"] = self.RECIPIENT_SPECIAL or self.AUTH.NAME
-        msg['Subject'] = self.SUBJECT
-        msg.attach(MIMEText(self.body, _subtype=self._subtype))
+        msg["From"] = self.CONN_AUTH.NAME
+        msg["To"] = self.RECIPIENT
+        msg['Subject'] = self.NAME
+
+        try:
+            _subtype = self.body["_subtype"]
+        except:
+            _subtype = self._subtype
+        msg.attach(MIMEText(self.body, _subtype=_subtype))
         return msg
 
-    def _recipient_self_get(self) -> str:
-        return self.AUTH.NAME
+    def _recipient_get(self) -> str:
+        return self.CONN_AUTH.NAME
 
 
 # =====================================================================================================================

@@ -68,7 +68,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
     SUBJECT_REGEXP: Optional[str] = None
     # MARK_AS_READ: bool = True
 
-    ALERT: type[AlertBase] = AlertImap
+    ALERT: type[Base_Alert] = AlertImap
     _conn: Optional[imaplib.IMAP4_SSL] = None
     stop_flag: Optional[bool] = None
     step_counter: int = 0

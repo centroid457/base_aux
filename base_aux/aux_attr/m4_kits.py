@@ -105,6 +105,16 @@ class AttrKit_AuthServer(Nest_AttrKit):
     SERVER: str
 
 
+class AttrKit_AddrPort(Nest_AttrKit):
+    """class for keeping connection parameters/settings for exact smtp server
+
+    :ivar ADDR: smtp server address like "smtp.mail.ru"
+    :ivar PORT: smtp server port like 465
+    """
+    ADDR: str
+    PORT: int
+
+
 # =====================================================================================================================
 if __name__ == '__main__':
     pass

@@ -25,7 +25,7 @@ class MonitorBase(MT5, abc.ABC, threading.Thread):
         new bar get + calculatings started and not yet finished
     :ivar LOAD_HISTORY_BARS: apply calculations on exact history bars
     """
-    ALERT: type[AlertBase] = None
+    ALERT: type[Base_Alert] = None
     counter: int = 0
     state_calculating: bool = None
     LOAD_HISTORY_BARS: int = 10
@@ -79,7 +79,7 @@ class ThreadManagerADX(ThreadsManager):
 
 class MonitorADX(MonitorBase):
     TF = 1
-    ALERT: type[AlertBase] = AlertTradeADX
+    ALERT: type[Base_Alert] = AlertTradeADX
 
     # LOCAL --------------------------
     ADX_FAST: tuple[int, int] = (6, 2)
@@ -239,7 +239,7 @@ class ThreadManager_MapDrawer_Shift(ThreadsManager):
 
 
 class IndicatorMapDrawer_Simple(MT5, abc.ABC, threading.Thread):
-    ALERT: type[AlertBase] = Alert_MapDrawer
+    ALERT: type[Base_Alert] = Alert_MapDrawer
     INDICATOR: type[IndicatorParamsBase] = IndicatorParams_RSI
     INDICATOR_SETTINGS: Iterable[int] = (5, )
 

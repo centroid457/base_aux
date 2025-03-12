@@ -76,7 +76,7 @@ class MonitorUrlTag(threading.Thread):
     INTERVAL: int = 1 * 60 * 60
     TAG_CHAINS: list[TagAddressChain] = []
     TAG_GET_ATTR: Optional[str] = None
-    ALERT: type[AlertBase] = Alert_MonitorUrlTag
+    ALERT: type[Base_Alert] = Alert_MonitorUrlTag
 
     DIRPATH: pathlib.Path = pathlib.Path("USERDATA")
     CSV_DELIMITER: str = ";"

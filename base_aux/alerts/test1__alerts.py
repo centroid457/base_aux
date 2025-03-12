@@ -8,7 +8,7 @@ from base_aux.aux_callable.m1_callable_aux import *
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
 
-@pytest.mark.skipif(CallableAux(AlertSmtp.AUTH).check_raise(), reason="no file")
+@pytest.mark.skipif(CallableAux(AlertSmtp.CONN_AUTH).check_raise(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="victim", argvalues=[
         AlertSmtp,
@@ -30,7 +30,10 @@ class Test__1:
         for thread in threads:
             assert thread._result is True
 
-    @pytest.mark.parametrize(argnames="victim", argvalues=[AlertSmtp, AlertTelegram])
+    @pytest.mark.parametrize(argnames="victim", argvalues=[
+        AlertSmtp,
+        AlertTelegram,
+    ])
     @pytest.mark.parametrize(argnames="_subj_name, body, _subtype", argvalues=[
         (None, "zero", None),
         ("", "plain123", "plain123"),

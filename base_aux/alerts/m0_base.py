@@ -6,9 +6,11 @@ from PyQt5.QtCore import QThread
 import smtplib
 import telebot
 
+from base_aux.aux_text.m7_text_formatted import *
+
 
 # =====================================================================================================================
-class _AlertInterface:
+class Interface_Alert:
     """Interface for Alerts
 
     RULES:
@@ -17,6 +19,8 @@ class _AlertInterface:
     - Dont use Try sentences inside - it will be applied in upper logic!
     - Decide inside if it was success or not, and return conclusion True/False only.
     """
+    BODY: Any
+
     def _connect_unsafe(self) -> Union[bool, NoReturn]:
         """establish connection to source
         """
@@ -35,39 +39,30 @@ class _AlertInterface:
     def _msg_compose(self) -> Union[str, 'MIMEMultipart']:
         """generate msg from existed data in attributes (passed before on init)
         """
-        pass
+        return str(self.BODY)
 
-    def _recipient_self_get(self) -> str:
+    def _recipient_get(self) -> str:
         """RECIPIENT SelfSending, get from obvious class aux_types!
         """
         pass
 
 
 # =====================================================================================================================
-class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simle!
-    """Base class for Alert aux_types.
+class Base_Alert(Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simple!
+    """
+    GOAL
+    ----
+    alert msg sender
 
-    FEATURE:
-    - send msg,
+    NOTE
+    ----
     - threading
         - daemons
         - collect all active threads
         - wait all spawned threads finished
 
-    :ivar SUBJECT_PREFIX: default prefix for subject
-    :ivar SUBJECT_NAME: default name for subject
-    :ivar body: actual msg body for alert
-    :ivar _subtype: it used to change subtype only in smtp (http)
-
-    :ivar BODY_TIMESTAMP_USE: append timestamp into the body
-    :ivar TIMESTAMP: initiation timestamp for created instance
-
     :ivar RECONNECT_LIMIT: how many times it will try to reconnect, after - just close object
     :ivar RECONNECT_PAUSE: pause between reconnecting in seconds
-
-    :ivar RECIPIENT_SPECIAL: recipient for sending msg
-        None - if selfSending!
-
     :ivar _conn: actual connection object
     :ivar _result: result for alert state
         None - in process,
@@ -77,69 +72,45 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
     :ivar _threads_active: spawned (only active) threads
     """
     # SETTINGS ------------------------------------
-    SUBJECT_PREFIX: Optional[str] = "[ALERT]"
-    SUBJECT_NAME: Optional[str] = None
-    body: Union[None, str, dict] = None
-    _subtype: Optional[str] = "plain"
-
-    BODY_TIMESTAMP_USE: bool = True
-    TIMESTAMP: str = None
+    CONN_ADDRESS: Any
+    CONN_AUTH: AttrKit_AuthNamePwd
 
     TIMEOUT_SEND: float = 1.2
-
     RECONNECT_LIMIT: int = 10
     RECONNECT_PAUSE: int = 60
     # TIMEOUT_RATELIMIT: int = 600    # when EXX 451, b'Ratelimit exceeded
 
-    RECIPIENT_SPECIAL: Optional[Any] = None
+    RECIPIENT: Any = None
+    body: str | TextFormatted | Any = None
 
     # AUX -----------------------------------------
     _conn: Union[None, smtplib.SMTP_SSL, telebot.TeleBot] = None
     _result: Optional[bool] = None
 
-    _threads_active: set['AlertBase'] = set()
+    _threads_active: set[Self] = set()
 
     # =================================================================================================================
-    def __init__(self, body: Optional[Any] = None, _subj_name: Optional[str] = None, _subtype: Optional[str] = None):
-        """Send msg
-
-        :param body: define msg body
-            None - just for research! (maybe deprecated!)
-        :param _subj_name: reuse new subject name instead of default
-        :param _subtype: reuse new _subtype instead of default
+    def __init__(self, body: Any = None, recipient: Any = None):
+        """
+        GOAL
+        ----
+        Send msg on init
         """
         super().__init__()
-        self.TIMESTAMP = time.strftime("%Y.%m.%d %H:%M:%S")
-
         # self._mutex: threading.Lock = threading.Lock()
-        self.SUBJECT_NAME = _subj_name or self.SUBJECT_NAME
-        self._subtype = _subtype or self._subtype
+
+        if recipient is not None:
+            self.RECIPIENT = recipient
+        if self.RECIPIENT is None:
+            self.RECIPIENT = self._recipient_get()
 
         # BODY ---------------
         if body is not None:
             body = str(body)
-            if self.BODY_TIMESTAMP_USE:
-                body += f"\n{self.TIMESTAMP}"
             self.body = body
-
             self.start()
 
     # =================================================================================================================
-    @property
-    def RECIPIENT(self) -> str:
-        """RECIPIENT actual/final
-        """
-        pass
-        return self.RECIPIENT_SPECIAL or self._recipient_self_get()
-
-    @property
-    def SUBJECT(self) -> str:
-        """final msg subject, composed with name and prefix.
-        """
-        if self.SUBJECT_NAME is None:
-            self.SUBJECT_NAME = self.NAME
-        return self.SUBJECT_PREFIX + self.SUBJECT_NAME
-
     @classmethod
     @property
     def NAME(cls) -> str:
@@ -231,6 +202,8 @@ class AlertBase(_AlertInterface, QThread):     # REM: DONT ADD SINGLETON!!! SNMP
     def run(self) -> None:
         """main logic which manage started thread
         """
+        self._result = None
+
         counter = 0
         while not self._conn__check_exists() and counter <= self.RECONNECT_LIMIT:
             counter += 1
