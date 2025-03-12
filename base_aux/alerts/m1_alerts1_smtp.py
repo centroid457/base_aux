@@ -1,12 +1,10 @@
-from typing import *
-import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from base_aux.alerts.m0_base import *
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
+from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 
 
 # =====================================================================================================================

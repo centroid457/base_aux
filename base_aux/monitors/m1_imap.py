@@ -1,13 +1,10 @@
-from typing import *
 import threading
-import re
 
 import imaplib
 import email
 
-from base_aux.aux_attr.m4_kits import *
 from base_aux.privates.m1_privates import *
-from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import NestInit_AttrsLambdaResolve
+from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m0_base import *
 

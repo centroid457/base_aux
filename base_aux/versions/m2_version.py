@@ -1,6 +1,6 @@
 from base_aux.aux_types.m2_info import *
 from base_aux.versions.m1_block import *
-from base_aux.aux_text.m6_nest_repr_clsname_str import *
+from base_aux.base_nest_dunders.m2_repr_clsname_str import *
 
 
 # =====================================================================================================================

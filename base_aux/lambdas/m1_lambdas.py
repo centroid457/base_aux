@@ -4,7 +4,7 @@ import time
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
-from base_aux.base_inits.m2_nest_init_source_kwargs import NestInit_SourceKwArgs_Implicite
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_SourceKwArgs_Implicite
 
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 

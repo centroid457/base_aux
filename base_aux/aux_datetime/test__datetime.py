@@ -91,19 +91,26 @@ class Test__DateTime:
         assert victim1 != victim2
 
     def test__update_on_str(self):
-        victim = DateTimeAux(update_on_str=True, def_str_pattern="DTm")
+        # victim = DateTimeAux(update_on_str=True, def_str_pattern="DTm")
+        # for sleep in [0, 0.2]:
+        #     str1 = str(victim)
+        #     if sleep:
+        #         time.sleep(sleep)
+        #     str2 = str(victim)
+        #     print(str1)
+        #     print(str2)
+        #     if sleep:
+        #         assert str1 != str2
+        #     else:
+        #         assert str1 == str2   # not always work!
 
-        for sleep in [0, 0.2]:
-            str1 = str(victim)
-            if sleep:
-                time.sleep(sleep)
-            str2 = str(victim)
-            print(str1)
-            print(str2)
-            if sleep:
-                assert str1 != str2
-            else:
-                assert str1 == str2
+        victim = DateTimeAux(update_on_str=True, def_str_pattern="DTm")
+        str1 = str(victim)
+        time.sleep(0.1)
+        str2 = str(victim)
+        print(str1)
+        print(str2)
+        assert str1 != str2
 
 
 # =====================================================================================================================

@@ -1,12 +1,10 @@
-from typing import *
-
-from base_aux.aux_attr.m1_attr2_nest3_eq_attrs import *
-from base_aux.aux_attr.m1_attr2_nest4_str import *
-from base_aux.aux_attr.m1_attr2_nest5_contains import *
-from base_aux.aux_attr.m1_attr2_nest6_len import *
+from base_aux.base_nest_dunders.m6_eq_attrs import *
+from base_aux.base_nest_dunders.m2_str_attrs import *
+from base_aux.base_nest_dunders.m8_contains_attrs import *
+from base_aux.base_nest_dunders.m8_len_attrs import *
 
 from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
 
 
 # =====================================================================================================================

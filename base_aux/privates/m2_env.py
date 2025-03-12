@@ -5,8 +5,8 @@ from typing import Any, NoReturn
 from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.aux_types.m1_type_aux import TypeAux
-from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
-from base_aux.aux_callable.m2_nest_calls import NestCall_Resolve
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
+from base_aux.base_nest_dunders.m3_calls import NestCall_Resolve
 
 
 class PvLoaderEnv(NestCall_Resolve):

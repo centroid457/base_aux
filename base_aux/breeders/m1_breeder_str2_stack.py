@@ -1,5 +1,5 @@
 from base_aux.breeders.m1_breeder_str1_series import *
-from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import *
+from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 
 # =====================================================================================================================

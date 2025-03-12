@@ -1,6 +1,4 @@
-import pytest
-
-from base_aux.aux_attr.m1_attr2_nest2_lambdas_resolve import *
+from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import *
 from base_aux.aux_expect.m1_expect_aux import *
 
 

@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_attr.m2_annot2_nest1_gsai_ic import NestGAI_AnnotAttrIC
+from base_aux.base_nest_dunders.m4_gsai_ic__annots import NestGAI_AnnotAttrIC
 from base_aux.aux_attr.m4_kits import *
 
 

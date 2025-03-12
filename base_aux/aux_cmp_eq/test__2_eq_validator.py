@@ -6,7 +6,7 @@ from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_cmp_eq.m3_eq_valid1_base import _EqValidator
 
 from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
-from base_aux.base_inits.m3_nest_init_annots_attrs_by_kwargs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
