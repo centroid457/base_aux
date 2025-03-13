@@ -3,6 +3,8 @@ from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
 from base_aux.alerts.m0_base import *
 
+import telebot
+
 
 # =====================================================================================================================
 class RecipientTgID(Nest_AttrKit):

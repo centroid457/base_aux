@@ -3,9 +3,6 @@ import time
 
 from PyQt5.QtCore import QThread
 
-import smtplib
-import telebot
-
 from base_aux.aux_text.m7_text_formatted import *
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 
@@ -85,10 +82,14 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     body: str | TextFormatted | Any = None
 
     # AUX -----------------------------------------
-    _conn: Union[None, smtplib.SMTP_SSL, telebot.TeleBot] = None
+    _conn: Any = None
     _result: Optional[bool] = None
 
     _threads_active: set[Self] = set()
+
+    # FIXME:
+    #  1=separate init with AUTH and send with BODY!!!
+    #  2=use stack for BODYs with one connection! singleton/multiton?
 
     # =================================================================================================================
     def __init__(self, body: Any = None, recipient: Any = None):
