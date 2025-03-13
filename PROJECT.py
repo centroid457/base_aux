@@ -33,9 +33,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 19))
+    VERSION = Version((0, 2, 19, 1))
     NEWS: list[str] = [
-        "[BreederObjectList] add LIST__ALL_GENERATED",
+        "[gui.BTN_devs_detect__clicked] link to resolve_addresses__cls",
     ]
 
 
