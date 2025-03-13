@@ -132,8 +132,22 @@ class TpMultyDutBase(Logger, QThread):
         self.tcs__reinit()
         self.slots_connect()
 
+        self.init_post()
+
+        # FINAL FREEZE ----------------
         if self.START__GUI_AND_API:
             self.start__gui_and_api()
+
+    def init_post(self) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        additional user init method
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        serial devises resolve addresses
+        """
 
     def start__gui_and_api(self) -> None:
         if self.API_SERVER__START:
