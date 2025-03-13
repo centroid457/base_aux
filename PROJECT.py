@@ -33,9 +33,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 18))
+    VERSION = Version((0, 2, 19))
     NEWS: list[str] = [
-        "[TP] zero add init_post",
+        "[BreederObjectList] add LIST__ALL_GENERATED",
     ]
 
 
