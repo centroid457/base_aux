@@ -33,22 +33,11 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 16))
+    VERSION = Version((0, 2, 17))
     NEWS: list[str] = [
-        "[TextFormated] create",
-        "[ReAttempts] create",
-        ["[Attrs+Annots]",
-            "combine two classes finally in one",
-            "add annots_ensure +annots__append",
-            "separate NestRepr__ClsName_SelfStr",
-        ],
-        "[IterAux] add get_first_is_not_none",
-        "[DateTime] add UPDATE_ON_STR+DEF_STR_FORMAT",
-
-        ["[Nest*]",
-            "add NestCall_Other",
-            "add NestStR_AttrsPattern",
-         ],
+        "[TextFormated] ref",
+        "[Alerts] start ref",
+        "[serial] add addresses_dump__answers",
     ]
 
 

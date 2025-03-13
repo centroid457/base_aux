@@ -87,7 +87,18 @@ class DevicesBreeder(BreederObjectList):
     @classmethod
     def resolve_addresses__cls(cls) -> None:
         pass
-        # for SerialClient
+
+        class Dev(SerialClient):
+            pass
+            BAUDRATE = 115200
+            EOL__SEND = b"\n"
+
+        for i in range(3):
+            result = Dev.addresses_dump__answers("*:get name", "*:get addr")
+            for port, responses in result.items():
+                print(port, responses)
+
+        # TODO: FINISH!!!
 
     # DEBUG PURPOSE ---------------------------------------------------------------------------------------------------
     @classmethod
