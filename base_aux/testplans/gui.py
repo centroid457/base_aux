@@ -318,7 +318,8 @@ class TpGuiBase(Gui):
         self.DATA.DEVICES__BREEDER_CLS.group_call__("address_forget")
         self.DATA.DEVICES__BREEDER_CLS.CLS_LIST__DUT.ADDRESSES__SYSTEM.clear()
         self.TM._data_reread()
-        self.DATA.DEVICES__BREEDER_CLS.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
+        # self.DATA.DEVICES__BREEDER_CLS.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
+        self.DATA.DEVICES__BREEDER_CLS.resolve_addresses__cls()    # MOVE TO THREAD??? no! not so need!
         self.TM._data_reread()
         self.DATA.signal__devs_detected.emit()
 
