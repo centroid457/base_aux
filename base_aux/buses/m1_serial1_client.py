@@ -14,7 +14,7 @@ from serial.tools import list_ports
 from base_aux.aux_values.m3_unit import *
 from base_aux.aux_cmp_eq.m2_eq_aux import EqAux
 
-from .m0_history import HistoryIO
+from base_aux.buses.m0_history import HistoryIO
 
 
 # =====================================================================================================================
@@ -161,9 +161,9 @@ class SerialClient(Logger):
     # need NONE NOT 0!!! if wait always!!
     BAUDRATE: int = 9600  # 115200
 
-    REWRITEIF_READNOANSWER: int = 5
-    REWRITEIF_READFAILDECODE: int = 5
-    REWRITEIF_NOVALID: int = 5
+    REWRITEIF_READNOANSWER: int = 1
+    REWRITEIF_READFAILDECODE: int = 1
+    REWRITEIF_NOVALID: int = 0
 
     CMDS_DUMP: list[str] = []  # ["IDN", "ADR", "REV", "VIN", ]
     RAISE_CONNECT: bool = True
@@ -211,16 +211,18 @@ class SerialClient(Logger):
     pass
     pass
 
-    def __init__(self, **kwargs):
+    def __init__(self, baudrate: int = None, timeout__read: int = None, eol__send: bytes = None, **kwargs):
         super().__init__(**kwargs)
-        self._SERIAL = Serial()
-        self.history = HistoryIO()
 
-        # apply settings
-        # self._SERIAL.interCharTimeout = 0.8
-        self._SERIAL.baudrate = self.BAUDRATE
-        self._SERIAL.timeout = self.TIMEOUT__READ
-        # self._SERIAL.write_timeout = self._TIMEOUT__WRITE
+        if baudrate is not None:
+            self.BAUDRATE = baudrate
+        if timeout__read is not None:
+            self.TIMEOUT__READ = timeout__read
+        if eol__send is not None:
+            self.EOL__SEND = eol__send
+
+        self.history = HistoryIO()
+        self.init_serial()
 
         # self.addresses_system__detect()   # DONT USE in init!!!
         # self.addresses_shorted__detect()   # DONT USE in init!!!
@@ -229,6 +231,20 @@ class SerialClient(Logger):
     def __del__(self):
         self._address__release()
         self.disconnect()
+
+    def init_serial(self):
+        """
+        GOAL
+        ----
+        init exact connection  object
+        """
+        self._SERIAL = Serial()
+
+        # apply settings
+        # self._SERIAL.interCharTimeout = 0.8
+        self._SERIAL.baudrate = self.BAUDRATE
+        self._SERIAL.timeout = self.TIMEOUT__READ
+        # self._SERIAL.write_timeout = self._TIMEOUT__WRITE
 
     def cmd_prefix__set(self) -> None:
         """
@@ -902,6 +918,56 @@ class SerialClient(Logger):
     def addresses_free__count(cls) -> int:
         return len(cls.ADDRESSES__FREE)
 
+    # =================================================================================================================
+    @classmethod
+    def addresses_dump__answers(cls, *cmds: str | Any) -> dict[str, dict[str, str]]:
+        """
+        GOAL
+        ----
+        get several answers from all ports
+        for further decisions
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        quick detecting devices on testplans
+
+        NOTE
+        ----
+        basically used common requests
+        """
+        result = {}
+        for address in cls.ADDRESSES__FREE:
+            result.update({address: {}})
+
+            obj = cls()
+            obj.baudrate = cls.BAUDRATE
+            obj.timeout = cls.TIMEOUT__READ
+            obj.REWRITEIF_READNOANSWER = 0
+            obj.REWRITEIF_READFAILDECODE = 1
+            obj.REWRITEIF_NOVALID = 0
+
+            try:
+                obj.connect(address)
+            except:
+                continue
+
+            for cmd in cmds:
+                cmd = str(cmd)
+                try:
+                    result_i = obj.write_read__last(cmd)
+                except:
+                    result_i = None
+
+                result[address].update({cmd: result_i})
+
+            try:
+                obj._address__release()
+                obj.disconnect()
+            except:
+                pass
+
+        return result
+
     # RW ==============================================================================================================
     pass
     pass
@@ -1473,6 +1539,32 @@ class SerialClient(Logger):
             self.write_read(self.CMD__RESET)
             self._buffers_clear__read(sleep_after)
         pass
+
+
+# =====================================================================================================================
+def _explore():
+    class Dev(SerialClient):
+        pass
+        BAUDRATE = 115200
+        EOL__SEND = b"\n"
+
+    for i in range(3):
+        result = Dev.addresses_dump__answers("*:get name", "*:get addr")
+        for port, responses in result.items():
+            print(port, responses)
+        print()
+
+    """
+COM11 {'*:get name': 'PTB', '*:get addr': 1''/str(1)}
+COM4 {'*:get name': '*:get name', '*:get addr': '*:get addr'}
+COM3 {'*:get name': 'ATC', '*:get addr': 3''/str(3)}
+    """
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _explore()
+    pass
 
 
 # =====================================================================================================================

@@ -3,6 +3,7 @@ import uuid
 
 from base_aux.testplans import *
 from base_aux.breeders.m2_breeder_objects import *
+from base_aux.buses.m1_serial1_client import *
 
 from .tc import TestCaseBase
 from .models import *
@@ -81,6 +82,12 @@ class DevicesBreeder(BreederObjectList):
     @classmethod
     def disconnect__cls(cls) -> None:
         cls.group_call__("disconnect")
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def resolve_addresses__cls(cls) -> None:
+        pass
+        # for SerialClient
 
     # DEBUG PURPOSE ---------------------------------------------------------------------------------------------------
     @classmethod
