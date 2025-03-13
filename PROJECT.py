@@ -33,11 +33,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 17))
+    VERSION = Version((0, 2, 18))
     NEWS: list[str] = [
-        "[TextFormated] ref",
-        "[Alerts] start ref",
-        "[serial] add addresses_dump__answers",
+        "[TP] zero add init_post",
     ]
 
 
