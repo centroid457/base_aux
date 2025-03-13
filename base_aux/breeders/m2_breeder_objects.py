@@ -43,6 +43,7 @@ class BreederObjectList:
     COUNT: int = 1
 
     # usage EXAMPLES ------------------------------------------------------
+    LIST__ALL_GENERATED: list[Any]
     # CLS_LIST__DUT: type[DutBase] = DutBase
     # LIST__DUT: list[DutBase]
     # DUT: DutBase
@@ -128,6 +129,20 @@ class BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
+    @property
+    def LIST__ALL_GENERATED(cls) -> list[Any]:
+        result = []
+        for group in cls.groups__get_names():
+            insts = cls.group_get__insts(group)
+            if not insts:
+                continue
+            if not isinstance(insts, (list, set, tuple)):
+                insts = [insts, ]
+            result.extend(insts)
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
     def groups__get_names(cls) -> set[str]:
         result = set()
         for attr_name in dir(cls):
@@ -152,35 +167,35 @@ class BreederObjectList:
 
     # GROUP -----------------------------------------------------------------------------------------------------------
     @classmethod
-    def group_get__type(cls, name: str) -> BreederObjectList_GroupType:
-        if f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{name}" in dir(cls):
+    def group_get__type(cls, group: str) -> BreederObjectList_GroupType:
+        if f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}" in dir(cls):
             return BreederObjectList_GroupType.SINGLE
 
-        if f"{cls._STARTSWITH__DEFINE__CLS_LIST}{name}" in dir(cls):
+        if f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}" in dir(cls):
             return BreederObjectList_GroupType.LIST
 
         return BreederObjectList_GroupType.NOT_EXISTS
 
     @classmethod
-    def group_check__exists(cls, name: str) -> bool:
-        return cls.group_get__type(name) != BreederObjectList_GroupType.NOT_EXISTS
+    def group_check__exists(cls, group: str) -> bool:
+        return cls.group_get__type(group) != BreederObjectList_GroupType.NOT_EXISTS
 
     @classmethod
-    def group_get__cls(cls, name: str) -> Any | None:
-        group_type = cls.group_get__type(name)
+    def group_get__cls(cls, group: str) -> type[Any] | None:
+        group_type = cls.group_get__type(group)
 
         if group_type == BreederObjectList_GroupType.SINGLE:
-            attr = f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{name}"
+            attr = f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}"
             return getattr(cls, attr)
 
         if group_type == BreederObjectList_GroupType.LIST:
-            attr = f"{cls._STARTSWITH__DEFINE__CLS_LIST}{name}"
+            attr = f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}"
             return getattr(cls, attr)
 
     @classmethod
-    def group_get__insts(cls, name: str) -> Union[None, Any, list[Any]]:
-        if cls.group_check__exists(name) and cls.__groups__are_generated:
-            group_cls = cls.group_get__cls(name)
+    def group_get__insts(cls, group: str) -> Union[None, Any, list[Any]]:
+        if cls.group_check__exists(group) and cls.__groups__are_generated:
+            group_cls = cls.group_get__cls(group)
             result = getattr(group_cls, cls._STARTSWITH__ACCESS__OBJECT_LIST__IN_SOURCE)
             return result
 

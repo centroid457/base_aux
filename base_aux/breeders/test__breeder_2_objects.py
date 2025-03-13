@@ -420,7 +420,11 @@ class Test__BreederObjectList:
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
+        assert Victim.LIST__ALL_GENERATED == []
+
         Victim.generate__objects()
+        assert len(Victim.LIST__ALL_GENERATED) == 3
+
         victim_single_old = Victim.ITEM_SINGLE
         victim_list0_old = Victim(0).ITEM_LIST
         assert len(Victim.LIST__ITEM_LIST) == 2
