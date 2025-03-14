@@ -153,10 +153,10 @@ class Test__BreederObjectList:
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.group_get__type("ITEM_SINGLE") is BreederObjectList_GroupType.SINGLE
-        assert Victim.group_get__type("ITEM_LIST") is BreederObjectList_GroupType.LIST
-        assert Victim.group_get__type("COUNT") is BreederObjectList_GroupType.NOT_EXISTS
-        assert Victim.group_get__type("NOT_EXISTS") is BreederObjectList_GroupType.NOT_EXISTS
+        assert Victim.group_get__format("ITEM_SINGLE") is Enum_Multiplicity.SINGLE
+        assert Victim.group_get__format("ITEM_LIST") is Enum_Multiplicity.MULTY
+        assert Victim.group_get__format("COUNT") is Enum_Multiplicity.NOT_EXISTS
+        assert Victim.group_get__format("NOT_EXISTS") is Enum_Multiplicity.NOT_EXISTS
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_check__exists(self):

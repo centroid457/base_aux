@@ -37,13 +37,13 @@ class AttrAux(NestInit_Source):
     """
     # SOURCE: Any
     SOURCE: Any = AttrDump
-    _ATTRS_STYLE: AttrStyle = AttrStyle.ATTRS_EXISTED
+    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
 
     # =================================================================================================================
     def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
-        if self._ATTRS_STYLE == AttrStyle.ATTRS_EXISTED:
+        if self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ATTRS_EXISTED:
             yield from self.iter__attrs_external_not_builtin()
-        elif self._ATTRS_STYLE == AttrStyle.ANNOTS_ONLY:
+        elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
             raise Exx__Incompatible(self._ATTRS_STYLE)
@@ -95,22 +95,22 @@ class AttrAux(NestInit_Source):
         return TypeAux(value).check__callable_meth()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def iter__names(self, attr_level: AttrLevel = AttrLevel.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names(self, attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
         # -------------------------------------------------
         for name in self.ITER_NAMES_SOURCE():
-            if attr_level == AttrLevel.NOT_PRIVATE:
+            if attr_level == Enum_AttrScope.NOT_PRIVATE:
                 if not name.startswith("__"):
                     yield name
 
-            elif attr_level == AttrLevel.NOT_HIDDEN:
+            elif attr_level == Enum_AttrScope.NOT_HIDDEN:
                 if not name.startswith("_"):
                     yield name
 
-            elif attr_level == AttrLevel.PRIVATE:
+            elif attr_level == Enum_AttrScope.PRIVATE:
                 if name.startswith("__"):
                     yield name
 
-            elif attr_level == AttrLevel.ALL:
+            elif attr_level == Enum_AttrScope.ALL:
                 yield name
 
             else:
@@ -123,7 +123,7 @@ class AttrAux(NestInit_Source):
         hidden names are more simple to detect then private!
         cause of private methods(!) changes to "_<ClsName><__MethName>"
         """
-        return self.iter__names(AttrLevel.NOT_HIDDEN)
+        return self.iter__names(Enum_AttrScope.NOT_HIDDEN)
 
     def iter__names_not_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
@@ -131,7 +131,7 @@ class AttrAux(NestInit_Source):
         ----
         BEST WAY TO USE EXACTLY iter__not_private
         """
-        return self.iter__names(AttrLevel.NOT_PRIVATE)
+        return self.iter__names(Enum_AttrScope.NOT_PRIVATE)
 
     def iter__names_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
@@ -149,7 +149,7 @@ class AttrAux(NestInit_Source):
         ---------
         keep list of iters
         """
-        return self.iter__names(AttrLevel.PRIVATE)
+        return self.iter__names(Enum_AttrScope.PRIVATE)
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
@@ -493,7 +493,7 @@ class AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: CallableResolve = CallableResolve.DIRECT) -> Any | Callable | CallableResolve | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: Enum_CallResolve = Enum_CallResolve.DIRECT) -> Any | Callable | Enum_CallResolve | NoReturn:
         """
         SAME AS
         -------
@@ -512,15 +512,15 @@ class AttrAux(NestInit_Source):
         try:
             value = self.gai_ic(name_index)
         except Exception as exx:
-            if callables_resolve == CallableResolve.SKIP_RAISED:
-                return ProcessState.SKIPPED
-            elif callables_resolve == CallableResolve.EXX:
+            if callables_resolve == Enum_CallResolve.SKIP_RAISED:
+                return Enum_ProcessState.SKIPPED
+            elif callables_resolve == Enum_CallResolve.EXX:
                 return exx
-            elif callables_resolve == CallableResolve.RAISE_AS_NONE:
+            elif callables_resolve == Enum_CallResolve.RAISE_AS_NONE:
                 return None
-            elif callables_resolve == CallableResolve.RAISE:
+            elif callables_resolve == Enum_CallResolve.RAISE:
                 raise exx
-            elif callables_resolve == CallableResolve.BOOL:
+            elif callables_resolve == Enum_CallResolve.BOOL:
                 return False
             else:
                 raise exx
@@ -575,7 +575,7 @@ class AttrAux(NestInit_Source):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(self, callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -601,7 +601,7 @@ class AttrAux(NestInit_Source):
                 continue
 
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
-            if value is ProcessState.SKIPPED:
+            if value is Enum_ProcessState.SKIPPED:
                 continue
             result.update({name: value})
 
@@ -611,19 +611,19 @@ class AttrAux(NestInit_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(CallableResolve.EXX)
+        return self.dump_dict(Enum_CallResolve.EXX)
 
     def dump_dict__direct(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(CallableResolve.DIRECT)
+        return self.dump_dict(Enum_CallResolve.DIRECT)
 
     def dump_dict__skip_callables(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(CallableResolve.SKIP_CALLABLE)
+        return self.dump_dict(Enum_CallResolve.SKIP_CALLABLE)
 
     def dump_dict__skip_raised(self) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(CallableResolve.RAISE)
+        return self.dump_dict(Enum_CallResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_resolve: CallableResolve = CallableResolve.EXX) -> AttrDump | NoReturn:
+    def dump_obj(self, callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX) -> AttrDump | NoReturn:
         data = self.dump_dict(callables_resolve)
         obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
         return obj
@@ -631,7 +631,7 @@ class AttrAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def dump_str__pretty(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        for key, value in self.dump_dict(CallableResolve.EXX).items():
+        for key, value in self.dump_dict(Enum_CallResolve.EXX).items():
             result += f"\n\t{key}={value}"
         else:
             result += f"\nEmpty=Empty"
@@ -668,7 +668,7 @@ class AnnotAttrAux(AttrAux):
         # atr2:<class 'int'>
         # atr4:<class 'int'>
     """
-    _ATTRS_STYLE: AttrStyle = AttrStyle.ANNOTS_ONLY
+    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
 
 
 # =====================================================================================================================

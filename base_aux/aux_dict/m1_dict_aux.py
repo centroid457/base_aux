@@ -15,13 +15,13 @@ class DictAux(NestInit_Source):
     SOURCE: dict[Any, Any] = dict
 
     # -----------------------------------------------------------------------------------------------------------------
-    def clear_values(self, form: FormIntExt = FormIntExt.EXTERNAL) -> dict[Any, None]:
+    def clear_values(self, form: Enum_FormIntExt = Enum_FormIntExt.EXTERNAL) -> dict[Any, None]:
         keys = list(self.SOURCE)
         new_dict = dict.fromkeys(keys)
-        if form == FormIntExt.EXTERNAL:
+        if form == Enum_FormIntExt.EXTERNAL:
             return new_dict
 
-        if form == FormIntExt.INTERNAL:
+        if form == Enum_FormIntExt.INTERNAL:
             self.SOURCE.clear()
             self.SOURCE.update(new_dict)
             return self.SOURCE
@@ -34,7 +34,7 @@ class DictAux(NestInit_Source):
             except:
                 pass
 
-    def keys_rename__by_func(self, func: Callable[[Any], Any], form: FormIntExt = FormIntExt.EXTERNAL) -> dict[Any, Any]:
+    def keys_rename__by_func(self, func: Callable[[Any], Any], form: Enum_FormIntExt = Enum_FormIntExt.EXTERNAL) -> dict[Any, Any]:
         """
         GOAL
         ----
@@ -42,9 +42,9 @@ class DictAux(NestInit_Source):
         raise on func - delete key from origin! applied like filter
         """
         result = {}
-        if form == FormIntExt.EXTERNAL:
+        if form == Enum_FormIntExt.EXTERNAL:
             result = {}
-        elif form == FormIntExt.INTERNAL:
+        elif form == Enum_FormIntExt.INTERNAL:
             result = self.SOURCE
 
         # -----------------------

@@ -140,7 +140,7 @@ class Validators:
         return ValidAux_NumParsedSingle(other_final).lege(low, high)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def NumParsedSingle(self, other_final, expect: Any | None | bool | NumType = True) -> bool:
+    def NumParsedSingle(self, other_final, expect: Any | None | bool | Enum_NumType = True) -> bool:
         return ValidAux_NumParsedSingle(other_final).eq(expect)
 
     def NumParsedSingle_Int(self, other_final) -> bool:
@@ -155,7 +155,7 @@ class Validators:
             other_final,
             *regexps: str,
             ignorecase: bool = True,
-            bool_collect: BoolCumulate = None,
+            bool_collect: Enum_BoolCumulate = None,
             match_link: Callable = re.fullmatch,
     ) -> bool | NoReturn:
         bool_collect = bool_collect or self.BOOL_COLLECT
@@ -164,21 +164,21 @@ class Validators:
             result_i = match_link(pattern=str(pattern), string=str(other_final), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
 
             # CUMULATE --------
-            if bool_collect == BoolCumulate.ALL_TRUE:
+            if bool_collect == Enum_BoolCumulate.ALL_TRUE:
                 if not result_i:
                     return False
-            elif bool_collect == BoolCumulate.ANY_TRUE:
+            elif bool_collect == Enum_BoolCumulate.ANY_TRUE:
                 if result_i:
                     return True
-            elif bool_collect == BoolCumulate.ALL_FALSE:
+            elif bool_collect == Enum_BoolCumulate.ALL_FALSE:
                 if result_i:
                     return False
-            elif bool_collect == BoolCumulate.ANY_FALSE:
+            elif bool_collect == Enum_BoolCumulate.ANY_FALSE:
                 if not result_i:
                     return True
 
         # FINAL ------------
-        if bool_collect in [BoolCumulate.ALL_TRUE, BoolCumulate.ALL_FALSE]:
+        if bool_collect in [Enum_BoolCumulate.ALL_TRUE, Enum_BoolCumulate.ALL_FALSE]:
             return True
         else:
             return False
@@ -187,12 +187,12 @@ class Validators:
     def AttrsByKwargs(
             self,
             other_final,
-            # callable_resolve: CallableResolve = CallableResolve.EXX,
+            # callable_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
             **kwargs: TYPING.KWARGS_FINAL
     ) -> bool | NoReturn:
         for key, value in kwargs.items():
-            value_expected = CallableAux(value).resolve(CallableResolve.EXX)
-            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, CallableResolve.EXX)
+            value_expected = CallableAux(value).resolve(Enum_CallResolve.EXX)
+            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, Enum_CallResolve.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -202,13 +202,13 @@ class Validators:
     def AttrsByObj(
             self,
             other_final,
-            # callable_resolve: CallableResolve = CallableResolve.EXX,
+            # callable_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
             source: Any,
-            # attr_level: AttrLevel = AttrLevel.NOT_PRIVATE,
+            # attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE,
     ) -> bool | NoReturn:
         for key in AttrAux(source).iter__names(self.ATTR_LEVEL):
-            value_expected = AttrAux(source).gai_ic__callable_resolve(key, CallableResolve.EXX)
-            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, CallableResolve.EXX)
+            value_expected = AttrAux(source).gai_ic__callable_resolve(key, Enum_CallResolve.EXX)
+            value_other = AttrAux(other_final).gai_ic__callable_resolve(key, Enum_CallResolve.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -219,17 +219,17 @@ class Validators:
     # def AttrsByObjNotPrivate(
     #         self,
     #         other_final,
-    #         # callable_resolve: CallableResolve = CallableResolve.EXX,
+    #         # callable_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
     #         source: Any,
     # ) -> bool | NoReturn:
-    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=AttrLevel.NOT_PRIVATE)
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=Enum_AttrScope.NOT_PRIVATE)
     # def AttrsByObjNotHidden(
     #         self,
     #         other_final,
-    #         # callable_resolve: CallableResolve = CallableResolve.EXX,
+    #         # callable_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
     #         source: Any,
     # ) -> bool | NoReturn:
-    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=AttrLevel.NOT_HIDDEN)
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=Enum_AttrScope.NOT_HIDDEN)
 
     # -----------------------------------------------------------------------------------------------------------------
     def AnnotsAllExists(

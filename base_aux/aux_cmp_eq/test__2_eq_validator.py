@@ -241,10 +241,10 @@ def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
     ]
 )
 def test__regexp(args, other, _EXPECTED):
-    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCumulate.ALL_TRUE) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCumulate.ANY_TRUE) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCumulate.ALL_FALSE) == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_Regexp(*args, bool_collect=BoolCumulate.ANY_FALSE) == other).check_assert(_EXPECTED[3])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ALL_TRUE) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ANY_TRUE) == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ALL_FALSE) == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ANY_FALSE) == other).check_assert(_EXPECTED[3])
 
     ExpectAux(EqValid_RegexpAllTrue(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_RegexpAnyTrue(*args) == other).check_assert(_EXPECTED[1])

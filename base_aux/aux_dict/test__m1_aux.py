@@ -48,13 +48,13 @@ def test__collapse_key():
 def test__clear_values():
     VICTIM = VICTIM_DEF.copy()
 
-    victim = DictAux(VICTIM).clear_values(FormIntExt.EXTERNAL)
+    victim = DictAux(VICTIM).clear_values(Enum_FormIntExt.EXTERNAL)
     assert victim != VICTIM
     assert victim == dict.fromkeys(VICTIM)
     assert victim[4] == None
     assert VICTIM[4] == 4
 
-    victim = DictAux(VICTIM).clear_values(FormIntExt.INTERNAL)
+    victim = DictAux(VICTIM).clear_values(Enum_FormIntExt.INTERNAL)
     assert victim == VICTIM
     assert victim == dict.fromkeys(VICTIM)
     assert victim[4] == None
@@ -78,28 +78,28 @@ def test__keys_del():
 def test__keys_rename__by_func():
     VICTIM = VICTIM_DEF.copy()
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAux(VICTIM).keys_rename__by_func(LAMBDA_ECHO, form=FormIntExt.EXTERNAL)
+    victim = DictAux(VICTIM).keys_rename__by_func(LAMBDA_ECHO, form=Enum_FormIntExt.EXTERNAL)
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
     assert list(victim) == [*range(1, 5), *DICT_LU]
 
     # ================================
     VICTIM = VICTIM_DEF.copy()
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAux(VICTIM).keys_rename__by_func(str.lower, form=FormIntExt.EXTERNAL)
+    victim = DictAux(VICTIM).keys_rename__by_func(str.lower, form=Enum_FormIntExt.EXTERNAL)
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
     assert list(victim) == ["lower", "upper"]
 
     # --------------------------------
     VICTIM = VICTIM_DEF.copy()
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAux(VICTIM).keys_rename__by_func(str.upper, form=FormIntExt.EXTERNAL)
+    victim = DictAux(VICTIM).keys_rename__by_func(str.upper, form=Enum_FormIntExt.EXTERNAL)
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
     assert list(victim) == ["LOWER", "UPPER"]
 
     # ================================
     VICTIM = VICTIM_DEF.copy()
     assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAux(VICTIM).keys_rename__by_func(str.lower, form=FormIntExt.INTERNAL)
+    victim = DictAux(VICTIM).keys_rename__by_func(str.lower, form=Enum_FormIntExt.INTERNAL)
     assert list(VICTIM) == ["lower", "upper"]
     assert list(victim) == ["lower", "upper"]
 

@@ -8,7 +8,7 @@ from base_aux.base_statics.m4_enums import *
 class CallableAux(NestInit_Source):
     """
     """
-    PROCESS: ProcessState = ProcessState.NONE
+    PROCESS: Enum_ProcessState = Enum_ProcessState.NONE
 
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self._construct_with_args_kwargs(*args, **kwargs)
@@ -17,18 +17,18 @@ class CallableAux(NestInit_Source):
         """
         unsafe (raise acceptable) get value
         """
-        self.PROCESS: ProcessState = ProcessState.STARTED
+        self.PROCESS: Enum_ProcessState = Enum_ProcessState.STARTED
 
         if callable(self.SOURCE):
             result = self.SOURCE(*args, **kwargs)
         else:
             result = self.SOURCE
 
-        self.PROCESS: ProcessState = ProcessState.SUCCESS
+        self.PROCESS: Enum_ProcessState = Enum_ProcessState.SUCCESS
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self, callable_use: CallableResolve = CallableResolve.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | CallableResolve | bool:
+    def resolve(self, callable_use: Enum_CallResolve = Enum_CallResolve.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | Enum_CallResolve | bool:
         """
         NOTE
         ----
@@ -37,25 +37,25 @@ class CallableAux(NestInit_Source):
         it is not so convenient to use param callable_use!
         SO preferred using other/further direct methods!
         """
-        if callable_use == CallableResolve.DIRECT:
+        if callable_use == Enum_CallResolve.DIRECT:
             return self.SOURCE
 
-        elif callable_use == CallableResolve.EXX:
+        elif callable_use == Enum_CallResolve.EXX:
             return self.resolve_exx(*args, **kwargs)
 
-        elif callable_use == CallableResolve.RAISE:
+        elif callable_use == Enum_CallResolve.RAISE:
             return self.resolve_raise(*args, **kwargs)
 
-        elif callable_use == CallableResolve.RAISE_AS_NONE:
+        elif callable_use == Enum_CallResolve.RAISE_AS_NONE:
             return self.resolve_raise_as_none(*args, **kwargs)
 
-        elif callable_use == CallableResolve.SKIP_CALLABLE:
+        elif callable_use == Enum_CallResolve.SKIP_CALLABLE:
             return self.resolve_skip_callables(*args, **kwargs)
 
-        elif callable_use == CallableResolve.SKIP_RAISED:
+        elif callable_use == Enum_CallResolve.SKIP_RAISED:
             return self.resolve_skip_raised(*args, **kwargs)
 
-        elif callable_use == CallableResolve.BOOL:
+        elif callable_use == Enum_CallResolve.BOOL:
             return self.resolve_bool(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class CallableAux(NestInit_Source):
         try:
             return self(*args, **kwargs)
         except Exception as exx:
-            self.PROCESS: ProcessState = ProcessState.RAISED
+            self.PROCESS: Enum_ProcessState = Enum_ProcessState.RAISED
             return exx
 
     def resolve_raise(self, *args, **kwargs) -> Any | NoReturn:
@@ -110,17 +110,17 @@ class CallableAux(NestInit_Source):
 
     def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
-            return ProcessState.SKIPPED  # TODO: decide using None ???
+            return Enum_ProcessState.SKIPPED  # TODO: decide using None ???
         else:
-            self.PROCESS: ProcessState = ProcessState.SKIPPED
+            self.PROCESS: Enum_ProcessState = Enum_ProcessState.SKIPPED
             return self.SOURCE
 
     def resolve_skip_raised(self, *args, **kwargs) -> Any | NoReturn:
         try:
             return self.resolve_raise(*args, **kwargs)
         except:
-            self.PROCESS: ProcessState = ProcessState.RAISED
-            return ProcessState.SKIPPED  # TODO: decide using None ???
+            self.PROCESS: Enum_ProcessState = Enum_ProcessState.RAISED
+            return Enum_ProcessState.SKIPPED  # TODO: decide using None ???
 
     def resolve_bool(self, *args, **kwargs) -> bool:
         """
@@ -165,7 +165,7 @@ class CallableAux(NestInit_Source):
                 return False
             return bool(result)
         except:
-            self.PROCESS: ProcessState = ProcessState.RAISED
+            self.PROCESS: Enum_ProcessState = Enum_ProcessState.RAISED
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ class CallableAux(NestInit_Source):
             self.resolve_raise(*args, **kwargs)
             return False
         except:
-            self.PROCESS: ProcessState = ProcessState.RAISED
+            self.PROCESS: Enum_ProcessState = Enum_ProcessState.RAISED
             return True
 
     def check_no_raise(self, *args, **kwargs) -> bool:

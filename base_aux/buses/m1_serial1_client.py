@@ -113,13 +113,14 @@ class Type__WrReturn(Enum):
 
 
 class Type__AddressAutoAcceptVariant(Enum):
+    NOT_FOUND = auto()
     FIRST_FREE = auto()
     FIRST_FREE__SHORTED = auto()
     FIRST_FREE__PAIRED = auto()
     FIRST_FREE__ANSWER_VALID = auto()
 
 
-TYPE__ADDRESS = Union[None, Type__AddressAutoAcceptVariant, str]
+TYPING__ADDRESS = Union[None, Type__AddressAutoAcceptVariant, str]
 
 
 # =====================================================================================================================
@@ -155,7 +156,7 @@ class SerialClient(Logger):
     LOG_ENABLE = True
 
     # SETTINGS ------------------------------------------------
-    _ADDRESS: TYPE__ADDRESS = None
+    _ADDRESS: TYPING__ADDRESS = None
 
     TIMEOUT__READ: float = 0.3  # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
     # need NONE NOT 0!!! if wait always!!
@@ -291,7 +292,7 @@ class SerialClient(Logger):
 
     def connect(
             self,
-            address: TYPE__ADDRESS | None = None,
+            address: TYPING__ADDRESS | None = None,
             _raise: bool | None = None,
             _touch_connection: bool | None = None
             # no final connection! specially keep ability to connect without Emu on cls main perpose (search ports)!
@@ -308,6 +309,9 @@ class SerialClient(Logger):
             address = self.ADDRESS
 
         if address in Type__AddressAutoAcceptVariant:
+            if address == Type__AddressAutoAcceptVariant.NOT_FOUND: # not
+                return False
+
             if not self.address__resolve(address):
                 exx = Exx_SerialAddress_NotApplyed()
                 need_open = False
@@ -419,11 +423,11 @@ class SerialClient(Logger):
     pass
 
     @property
-    def ADDRESS(self) -> TYPE__ADDRESS:
+    def ADDRESS(self) -> TYPING__ADDRESS:
         return self._ADDRESS
 
     @ADDRESS.setter
-    def ADDRESS(self, value: TYPE__ADDRESS) -> None:
+    def ADDRESS(self, value: TYPING__ADDRESS) -> None:
         if value == self.ADDRESS:
             return
 
@@ -443,7 +447,7 @@ class SerialClient(Logger):
         return result
 
     # OCCUPATION ------------------------------------------------------------------------------------------------------
-    def _address__occupy(self, address: TYPE__ADDRESS | None = None) -> None:
+    def _address__occupy(self, address: TYPING__ADDRESS | None = None) -> None:
         """
         USAGE
         -----
@@ -511,7 +515,7 @@ class SerialClient(Logger):
         # elif isinstance(self, SerialClient_FirstFree_AnswerValid):
         #     self.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
 
-    def address__resolve(self, address: TYPE__ADDRESS | None = None) -> bool:
+    def address__resolve(self, address: TYPING__ADDRESS | None = None) -> bool:
         """
         GOAL
         ----
@@ -546,12 +550,12 @@ class SerialClient(Logger):
             self.ADDRESS = address
         return result
 
-    def address_check__resolved(self, address: TYPE__ADDRESS | None = None) -> bool:
+    def address_check__resolved(self, address: TYPING__ADDRESS | None = None) -> bool:
         if address is None:
             address = self.ADDRESS
         return isinstance(address, str)
 
-    def address_check__occupied(self, address: TYPE__ADDRESS | None = None) -> bool:
+    def address_check__occupied(self, address: TYPING__ADDRESS | None = None) -> bool:
         if not self.address_check__resolved(address):
             return False
 

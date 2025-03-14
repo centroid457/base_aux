@@ -8,31 +8,31 @@ see _examples below and tests to understand work
 
 
 # =====================================================================================================================
-class When2(NestEq_Enum):
+class Enum_When2(NestEq_Enum):
     BEFORE = 1
     AFTER = 2
 
 
-class When3(NestEq_Enum):
+class Enum_When3(NestEq_Enum):
     BEFORE = 1
     AFTER = 2
     MIDDLE = 3
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Where2(NestEq_Enum):
+class Enum_Where2(NestEq_Enum):
     FIRST = 1
     LAST = 2
 
 
-class Where3(NestEq_Enum):
+class Enum_Where3(NestEq_Enum):
     FIRST = 1
     LAST = 2
     MIDDLE = 3
 
 
 # =====================================================================================================================
-class CallableResolve(NestEq_Enum):
+class Enum_CallResolve(NestEq_Enum):
     DIRECT = 1
     EXX = 2
     RAISE = 3
@@ -44,7 +44,7 @@ class CallableResolve(NestEq_Enum):
 
 
 # =====================================================================================================================
-class ProcessState(NestEq_Enum):
+class Enum_ProcessState(NestEq_Enum):
     """
     GOAL
     ----
@@ -64,18 +64,7 @@ class ProcessState(NestEq_Enum):
 
 
 # =====================================================================================================================
-class FormIntExt(NestEq_Enum):
-    """
-    SPECIALLY CREATED FOR
-    ---------------------
-    AttrAux show internal external names for PRIVATES
-    """
-    INTERNAL = 1
-    EXTERNAL = 2
-
-
-# =====================================================================================================================
-class BoolCumulate(NestEq_Enum):
+class Enum_BoolCumulate(NestEq_Enum):
     """
     GOAL
     ----
@@ -91,20 +80,34 @@ class BoolCumulate(NestEq_Enum):
     ALL_FALSE = 2
 
 
-# =====================================================================================================================
-class PathType(NestEq_Enum):
+class Enum_Multiplicity(Enum):
+    NOT_EXISTS = None
+    SINGLE = 1
+    MULTY = 2
+
+
+class Enum_PathType(NestEq_Enum):
     FILE = 1
     DIR = 2
     ALL = 3
 
 
-# ---------------------------------------------------------------------------------------------------------------------
 # class AppendType(NestEq_Enum):
 #     NEWLINE = 1
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-class DictTextFormat(NestEq_Enum):
+class Enum_AttemptsUsage(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    Base_ReAttempts/RExp
+    """
+    FIRST = None
+    ALL = all
+
+
+# =====================================================================================================================
+class Enum_DictTextFormat(NestEq_Enum):
     AUTO = None     # by trying all variants
     EXTENTION = 0
 
@@ -114,7 +117,7 @@ class DictTextFormat(NestEq_Enum):
     STR = "str"     # str(dict)
 
 
-class TextStyle(NestEq_Enum):
+class Enum_TextStyle(NestEq_Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -133,7 +136,7 @@ class TextStyle(NestEq_Enum):
     MD = "md"
 
 
-class CmtStyle(NestEq_Enum):
+class Enum_CmtStyle(NestEq_Enum):
     """
     GOAL
     ----
@@ -148,8 +151,7 @@ class CmtStyle(NestEq_Enum):
     C = "c"     # /*...*/
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-class PatCoverStyle(NestEq_Enum):
+class Enum_PatCoverStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -160,25 +162,14 @@ class PatCoverStyle(NestEq_Enum):
     LINE = "line"
 
 
-class AttemptsUsage(NestEq_Enum):
-    """
-    SPECIALLY CREATED FOR
-    ---------------------
-    Base_ReAttempts/RExp
-    """
-    FIRST = None
-    ALL = all
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-class NumType(NestEq_Enum):
+# =====================================================================================================================
+class Enum_NumType(NestEq_Enum):
     INT = int
     FLOAT = float
     BOTH = None
 
 
-# =====================================================================================================================
-class FPoint(NestEq_Enum):
+class Enum_NumFPoint(NestEq_Enum):
     """
     GOAL
     ----
@@ -193,11 +184,11 @@ class FPoint(NestEq_Enum):
     AUTO = None     # auto is more important for SingleNum!
 
 
-TYPE__FPOINT_DRAFT = FPoint | str | None
+TYPING__FPOINT_DRAFT = Enum_NumFPoint | str | None
 
 
 # =====================================================================================================================
-class CmpType(NestEq_Enum):
+class Enum_CmpType(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -210,7 +201,17 @@ class CmpType(NestEq_Enum):
 
 
 # =====================================================================================================================
-class AttrStyle(NestEq_Enum):
+class Enum_FormIntExt(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    AttrAux show internal external names for PRIVATES
+    """
+    INTERNAL = 1
+    EXTERNAL = 2
+
+
+class Enum_AttrAnnotsOrExisted(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -220,7 +221,7 @@ class AttrStyle(NestEq_Enum):
     ANNOTS_ONLY = 1
 
 
-class AttrLevel(NestEq_Enum):
+class Enum_AttrScope(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -241,18 +242,18 @@ class AttrLevel(NestEq_Enum):
 
 # =====================================================================================================================
 def _examples() -> None:
-    WHEN = When2.BEFORE
-    if WHEN is When2.BEFORE:
+    WHEN = Enum_When2.BEFORE
+    if WHEN is Enum_When2.BEFORE:
         pass
 
-    print(FPoint.COMMA)  # FPoint.COMMA
-    print(FPoint("."))  # FPoint.DOT
+    print(Enum_NumFPoint.COMMA)  # Enum_NumFPoint.COMMA
+    print(Enum_NumFPoint("."))  # Enum_NumFPoint.DOT
 
-    print("." in FPoint)  # True
-    print(FPoint.DOT in FPoint)  # True
+    print("." in Enum_NumFPoint)  # True
+    print(Enum_NumFPoint.DOT in Enum_NumFPoint)  # True
 
-    print(FPoint(".") == ".")  # True
-    print(FPoint(FPoint.DOT))  # FPoint.DOT     # BEST WAY to init value!
+    print(Enum_NumFPoint(".") == ".")  # True
+    print(Enum_NumFPoint(Enum_NumFPoint.DOT))  # Enum_NumFPoint.DOT     # BEST WAY to init value!
 
 
 # =====================================================================================================================

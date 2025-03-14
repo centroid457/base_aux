@@ -88,14 +88,14 @@ class ValidAux_NumParsedSingle(ValidAux):
     def init_post(self) -> None:
         self.SOURCE = TextAux(self.SOURCE).parse__number_single()
 
-    def eq(self, other: Any | None | bool | Union[NumType | int | float]) -> bool:
+    def eq(self, other: Any | None | bool | Union[Enum_NumType | int | float]) -> bool:
         if other is True:
             return self.SOURCE is not None
 
         elif other in [False, None, NoValue]:
             return self.SOURCE is None
 
-        elif other in NumType:
+        elif other in Enum_NumType:
             return TextAux(self.SOURCE).parse__number_single(num_type=other) is not None
 
         else:

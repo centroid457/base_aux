@@ -1,5 +1,5 @@
 from base_aux.aux_attr.m4_kits import *
-from base_aux.base_statics.m4_enums import DictTextFormat
+from base_aux.base_statics.m4_enums import Enum_DictTextFormat
 from base_aux.path2_file.m4_attrs_dict_loader import AttrsLoader_DictTextFile
 
 
@@ -13,7 +13,7 @@ class PvLoaderIni(AttrsLoader_DictTextFile):
     ----
     redefine only TARGET-kit/KEYPATH in __init
     """
-    STYLE = DictTextFormat.INI
+    STYLE = Enum_DictTextFormat.INI
     FILEPATH = pathlib.Path.home().joinpath("pv.ini")
 
     # INIT -------
@@ -36,7 +36,7 @@ class PvLoaderIni_AuthServer(PvLoaderIni):
 
 # =====================================================================================================================
 class PvLoaderJson(AttrsLoader_DictTextFile):
-    STYLE = DictTextFormat.JSON
+    STYLE = Enum_DictTextFormat.JSON
     FILEPATH = pathlib.Path.home().joinpath("pv.json")
 
     # INIT -------

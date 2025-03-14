@@ -195,7 +195,7 @@ class LambdaSleep(Lambda):
     """
     just delay construction
     """
-    WHEN: When2 = When2.BEFORE
+    WHEN: Enum_When2 = Enum_When2.BEFORE
     SEC: float = 1
 
     def __init__(self, sec: float = None, *args, **kwargs) -> None:
@@ -207,10 +207,10 @@ class LambdaSleep(Lambda):
         if sec is None:
             sec = self.SEC
 
-        if self.WHEN is When2.BEFORE:
+        if self.WHEN is Enum_When2.BEFORE:
             time.sleep(sec)
         result = self.construct(*args, **kwargs)
-        if self.WHEN is When2.AFTER:
+        if self.WHEN is Enum_When2.AFTER:
             time.sleep(sec)
         return result
 
@@ -222,7 +222,7 @@ class LambdaSleepAfter(LambdaSleep):
     ---------------------
     UART/ATC tests for RST command
     """
-    WHEN: When2 = When2.AFTER
+    WHEN: Enum_When2 = Enum_When2.AFTER
 
 
 # =====================================================================================================================

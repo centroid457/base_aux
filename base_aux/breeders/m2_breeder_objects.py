@@ -2,22 +2,16 @@ from typing import *
 from enum import Enum, auto
 
 from base_aux.base_statics.m2_exceptions import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
-TYPE__BREED_RESULT__ITEM = Union[Any, Exception]
-TYPE__BREED_RESULT__GROUP = Union[
-    TYPE__BREED_RESULT__ITEM,        # SINGLE variant
-    list[TYPE__BREED_RESULT__ITEM]   # LIST variant
+TYPING__BREED_RESULT__ITEM = Union[Any, Exception]
+TYPING__BREED_RESULT__GROUP = Union[
+    TYPING__BREED_RESULT__ITEM,        # SINGLE variant
+    list[TYPING__BREED_RESULT__ITEM]   # LIST variant
 ]
-TYPE__BREED_RESULT__GROUPS = dict[str, TYPE__BREED_RESULT__GROUP]
-
-
-# =====================================================================================================================
-class BreederObjectList_GroupType(Enum):
-    SINGLE = auto()
-    LIST = auto()
-    NOT_EXISTS = auto()
+TYPING__BREED_RESULT__GROUPS = dict[str, TYPING__BREED_RESULT__GROUP]
 
 
 # =====================================================================================================================
@@ -59,7 +53,7 @@ class BreederObjectList:
     # access ----------
     _STARTSWITH__ACCESS__OBJECT_LIST__IN_BREEDER: str = "LIST__"
     _STARTSWITH__ACCESS__OBJECT_LIST__IN_SOURCE: str = "INSTS"
-    _STARTSWITH__ACCESS__BREEDER_IN__SOURCE: str = "BREEDER"    # SINGLE:type[Breeder] // LIST:Breeder
+    _STARTSWITH__ACCESS__BREEDER_IN__SOURCE: str = "BREEDER"    # SINGLE:type[Breeder] // MULTY:Breeder
 
     # AUX --------
     __groups__are_generated: bool = False
@@ -167,28 +161,28 @@ class BreederObjectList:
 
     # GROUP -----------------------------------------------------------------------------------------------------------
     @classmethod
-    def group_get__type(cls, group: str) -> BreederObjectList_GroupType:
+    def group_get__format(cls, group: str) -> Enum_Multiplicity:
         if f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}" in dir(cls):
-            return BreederObjectList_GroupType.SINGLE
+            return Enum_Multiplicity.SINGLE
 
         if f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}" in dir(cls):
-            return BreederObjectList_GroupType.LIST
+            return Enum_Multiplicity.MULTY
 
-        return BreederObjectList_GroupType.NOT_EXISTS
+        return Enum_Multiplicity.NOT_EXISTS
 
     @classmethod
     def group_check__exists(cls, group: str) -> bool:
-        return cls.group_get__type(group) != BreederObjectList_GroupType.NOT_EXISTS
+        return cls.group_get__format(group) != Enum_Multiplicity.NOT_EXISTS
 
     @classmethod
     def group_get__cls(cls, group: str) -> type[Any] | None:
-        group_type = cls.group_get__type(group)
+        group_type = cls.group_get__format(group)
 
-        if group_type == BreederObjectList_GroupType.SINGLE:
+        if group_type == Enum_Multiplicity.SINGLE:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}"
             return getattr(cls, attr)
 
-        if group_type == BreederObjectList_GroupType.LIST:
+        if group_type == Enum_Multiplicity.MULTY:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}"
             return getattr(cls, attr)
 
@@ -200,7 +194,7 @@ class BreederObjectList:
             return result
 
     @classmethod
-    def group_call__(cls, meth: str, group: str | None = None, args: list | None = None, kwargs: dict | None = None) -> Union[NoReturn, TYPE__BREED_RESULT__GROUP, TYPE__BREED_RESULT__GROUPS]:
+    def group_call__(cls, meth: str, group: str | None = None, args: list | None = None, kwargs: dict | None = None) -> Union[NoReturn, TYPING__BREED_RESULT__GROUP, TYPING__BREED_RESULT__GROUPS]:
         """
         call one method on exact group (every object in group) or all groups (every object in all groups).
         created specially for call connect/disconnect for devices in TP.
@@ -257,7 +251,7 @@ class BreederObjectList:
     def __getattr__(self, item: str) -> Union[None, Any, NoReturn]:
         """
         :param item:
-        :return: existed OBJECT from LIST or SINGLE!!!
+        :return: existed OBJECT from MULTY or SINGLE!!!
         """
         if self.INDEX is None:
             return

@@ -118,18 +118,18 @@ class Test_EnumEq:
 
 # =====================================================================================================================
 def _examples() -> None:
-    WHEN = When2.BEFORE
-    if WHEN is When2.BEFORE:
+    WHEN = Enum_When2.BEFORE
+    if WHEN is Enum_When2.BEFORE:
         pass
 
-    print(FPoint.COMMA)  # FPoint.COMMA
-    print(FPoint("."))  # FPoint.DOT
+    print(Enum_NumFPoint.COMMA)  # Enum_NumFPoint.COMMA
+    print(Enum_NumFPoint("."))  # Enum_NumFPoint.DOT
 
-    print("." in FPoint)  # True
-    print(FPoint.DOT in FPoint)  # True
+    print("." in Enum_NumFPoint)  # True
+    print(Enum_NumFPoint.DOT in Enum_NumFPoint)  # True
 
-    print(FPoint(".") == ".")  # False
-    print(FPoint(FPoint.DOT))  # FPoint.DOT     # BEST WAY to init value!
+    print(Enum_NumFPoint(".") == ".")  # False
+    print(Enum_NumFPoint(Enum_NumFPoint.DOT))  # Enum_NumFPoint.DOT     # BEST WAY to init value!
 
     # ObjectInfo(VictimEq).print()
 

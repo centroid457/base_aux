@@ -124,28 +124,28 @@ class EqValid_NumParsedSingle_Float(EqValid_Base):
 # =====================================================================================================================
 class EqValid_Regexp(EqValid_Base):
     VALIDATOR = Validators.Regexp
-    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_TRUE
+    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_TRUE
+    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
 
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
-    BOOL_COLLECT: BoolCumulate = BoolCumulate.ANY_TRUE
+    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
 
 
 @final
 class EqValid_RegexpAllFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCumulate = BoolCumulate.ALL_FALSE
+    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_FALSE
 
 
 @final
 class EqValid_RegexpAnyFalse(EqValid_Regexp):
-    BOOL_COLLECT: BoolCumulate = BoolCumulate.ANY_FALSE
+    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ANY_FALSE
 
 
 # =====================================================================================================================
@@ -158,19 +158,19 @@ class EqValid_AttrsByKwargs(EqValid_Base):
 # @final
 # class EqValid_AttrsByObj(EqValid_Base):
 #     VALIDATOR = Validators.AttrsByObj
-#     ATTR_LEVEL: AttrLevel = AttrLevel.NOT_PRIVATE
+#     ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE
 
 
 @final
 class EqValid_AttrsByObjNotPrivate(EqValid_Base):
     VALIDATOR = Validators.AttrsByObj
-    ATTR_LEVEL: AttrLevel = AttrLevel.NOT_PRIVATE
+    ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE
 
 
 @final
 class EqValid_AttrsByObjNotHidden(EqValid_Base):
     VALIDATOR = Validators.AttrsByObj
-    ATTR_LEVEL: AttrLevel = AttrLevel.NOT_HIDDEN
+    ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_HIDDEN
 
 
 def _explore():

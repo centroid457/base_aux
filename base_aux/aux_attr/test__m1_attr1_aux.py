@@ -149,13 +149,13 @@ class Test__Dump:
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
         argvalues=[
-            (CallableResolve.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
-            (CallableResolve.EXX, (None, True, True, Exception,)),
-            # (CallableResolve.RAISE, Exception),          # need special tests!
-            (CallableResolve.RAISE_AS_NONE, (None, True, True, None,)),
-            (CallableResolve.BOOL, (False, True, True, False,)),
-            (CallableResolve.SKIP_CALLABLE, (None, True, None, None,)),
-            (CallableResolve.SKIP_RAISED, (None, True, True, None,)),
+            (Enum_CallResolve.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
+            (Enum_CallResolve.EXX, (None, True, True, Exception,)),
+            # (Enum_CallResolve.RAISE, Exception),          # need special tests!
+            (Enum_CallResolve.RAISE_AS_NONE, (None, True, True, None,)),
+            (Enum_CallResolve.BOOL, (False, True, True, False,)),
+            (Enum_CallResolve.SKIP_CALLABLE, (None, True, None, None,)),
+            (Enum_CallResolve.SKIP_RAISED, (None, True, True, None,)),
         ]
     )
     def test__callable_use(self, cal_use, _EXPECTED):
@@ -167,7 +167,7 @@ class Test__Dump:
 
     def test__callable_use__special_raise(self):
         try:
-            result_dict = AttrAux(Victim).dump_dict(CallableResolve.RAISE)
+            result_dict = AttrAux(Victim).dump_dict(Enum_CallResolve.RAISE)
             assert False
         except:
             assert True

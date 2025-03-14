@@ -132,45 +132,45 @@ class Test__Edit:
     @pytest.mark.parametrize(
         argnames="source, cmt, _EXPECTED",
         argvalues=[
-            # CmtStyle.SHARP -------------------------------------------------------
+            # Enum_CmtStyle.SHARP -------------------------------------------------------
             # ZERO -----
-            ("line1 ", CmtStyle.SHARP, "line1 "),
+            ("line1 ", Enum_CmtStyle.SHARP, "line1 "),
 
             # SEPARATED -----
-            ("#cmt #", CmtStyle.SHARP, ""),
-            ("##cmt #", CmtStyle.SHARP, ""),
+            ("#cmt #", Enum_CmtStyle.SHARP, ""),
+            ("##cmt #", Enum_CmtStyle.SHARP, ""),
 
-            ("#cmt ", CmtStyle.SHARP, ""),
-            ("  # cmt 1 ", CmtStyle.SHARP, ""),
+            ("#cmt ", Enum_CmtStyle.SHARP, ""),
+            ("  # cmt 1 ", Enum_CmtStyle.SHARP, ""),
 
             # INLINE -----
-            ("line  # cmt 1 ", CmtStyle.SHARP, "line"),
+            ("line  # cmt 1 ", Enum_CmtStyle.SHARP, "line"),
 
             # SEVERAL LINES ====
-            ("line1  # cmt1 \n line2 ", CmtStyle.SHARP, "line1\n line2 "),
-            ("line1  # cmt1 \n line2 #cmt2", CmtStyle.SHARP, "line1\n line2"),
-            ("line1  # cmt1 \n #cmt \n line2 #cmt2", CmtStyle.SHARP, "line1\n line2"),
+            ("line1  # cmt1 \n line2 ", Enum_CmtStyle.SHARP, "line1\n line2 "),
+            ("line1  # cmt1 \n line2 #cmt2", Enum_CmtStyle.SHARP, "line1\n line2"),
+            ("line1  # cmt1 \n #cmt \n line2 #cmt2", Enum_CmtStyle.SHARP, "line1\n line2"),
 
-            # CmtStyle.REM ---------------------------------------------------------
+            # Enum_CmtStyle.REM ---------------------------------------------------------
             # ZERO -----
-            ("line1 ", CmtStyle.REM, "line1 "),
+            ("line1 ", Enum_CmtStyle.REM, "line1 "),
 
             # SEPARATED -----
-            ("REM #", CmtStyle.REM, ""),
-            ("REM  REM #", CmtStyle.REM, ""),
+            ("REM #", Enum_CmtStyle.REM, ""),
+            ("REM  REM #", Enum_CmtStyle.REM, ""),
 
             # INLINE -----
-            ("line  REM 1 ", CmtStyle.REM, "line"),
+            ("line  REM 1 ", Enum_CmtStyle.REM, "line"),
 
             # SEVERAL LINES ====
-            ("line1  REM cmt1 \n line2 ", CmtStyle.REM, "line1\n line2 "),
-            ("line1  REM cmt1 \n line2 REM", CmtStyle.REM, "line1\n line2 REM"),
-            ("line1  REM cmt1 \n line2 REM ", CmtStyle.REM, "line1\n line2"),
-            ("line1  REM cmt1 \n REM \n line2 REM ", CmtStyle.REM, "line1\n line2"),
+            ("line1  REM cmt1 \n line2 ", Enum_CmtStyle.REM, "line1\n line2 "),
+            ("line1  REM cmt1 \n line2 REM", Enum_CmtStyle.REM, "line1\n line2 REM"),
+            ("line1  REM cmt1 \n line2 REM ", Enum_CmtStyle.REM, "line1\n line2"),
+            ("line1  REM cmt1 \n REM \n line2 REM ", Enum_CmtStyle.REM, "line1\n line2"),
 
-            # CmtStyle.C ---------------------------------------------------------
-            ("line1  /*cmt*/  \n /*cmt*/  \n line2 /*cmt*/  ", CmtStyle.C, "line1\n line2"),
-            ("line1  /*cmt*/  \n /*\ncmt*/  \n line2 /*cmt*/  ", CmtStyle.C, "line1\n line2"),
+            # Enum_CmtStyle.C ---------------------------------------------------------
+            ("line1  /*cmt*/  \n /*cmt*/  \n line2 /*cmt*/  ", Enum_CmtStyle.C, "line1\n line2"),
+            ("line1  /*cmt*/  \n /*\ncmt*/  \n line2 /*cmt*/  ", Enum_CmtStyle.C, "line1\n line2"),
         ]
     )
     def test__clear__cmts(self, source, cmt, _EXPECTED):
@@ -216,34 +216,34 @@ class Test__shortcut:
     @pytest.mark.parametrize(
         argnames="p1,p2,p3,p4,_EXPECTED",
         argvalues=[
-            (None, 5, "...", Where3.LAST, ""),  # DOES NOTY METTER!
-            ("", 5, "...", Where3.LAST, ""),
-            ("123456", 3, "...", Where3.LAST, "..."),
+            (None, 5, "...", Enum_Where3.LAST, ""),  # DOES NOTY METTER!
+            ("", 5, "...", Enum_Where3.LAST, ""),
+            ("123456", 3, "...", Enum_Where3.LAST, "..."),
 
-            ("123", 3, "#", Where3.LAST, "123"),
+            ("123", 3, "#", Enum_Where3.LAST, "123"),
 
-            ("1223", 3, "#", Where3.FIRST, "#23"),
-            ("1223", 3, "#", Where3.MIDDLE, "1#3"),
-            ("1223", 3, "#", Where3.LAST, "12#"),
+            ("1223", 3, "#", Enum_Where3.FIRST, "#23"),
+            ("1223", 3, "#", Enum_Where3.MIDDLE, "1#3"),
+            ("1223", 3, "#", Enum_Where3.LAST, "12#"),
 
-            ("1223", 3, "##", Where3.FIRST, "##3"),
-            ("1223", 3, "##", Where3.MIDDLE, "##3"),
-            ("1223", 3, "##", Where3.LAST, "1##"),
+            ("1223", 3, "##", Enum_Where3.FIRST, "##3"),
+            ("1223", 3, "##", Enum_Where3.MIDDLE, "##3"),
+            ("1223", 3, "##", Enum_Where3.LAST, "1##"),
 
-            ("1223", 3, "###", Where3.FIRST, "###"),
-            ("1223", 3, "###", Where3.MIDDLE, "###"),
-            ("1223", 3, "###", Where3.LAST, "###"),
+            ("1223", 3, "###", Enum_Where3.FIRST, "###"),
+            ("1223", 3, "###", Enum_Where3.MIDDLE, "###"),
+            ("1223", 3, "###", Enum_Where3.LAST, "###"),
 
-            ("1223", 1, "###", Where3.FIRST, "#"),
-            ("1223", 1, "###", Where3.MIDDLE, "#"),
-            ("1223", 1, "###", Where3.LAST, "#"),
+            ("1223", 1, "###", Enum_Where3.FIRST, "#"),
+            ("1223", 1, "###", Enum_Where3.MIDDLE, "#"),
+            ("1223", 1, "###", Enum_Where3.LAST, "#"),
 
             #
-            ("123", 1, "##", Where3.FIRST, "#"),
-            ("123", 2, "##", Where3.FIRST, "##"),
-            ("123", 3, "##", Where3.FIRST, "123"),
-            ("123", 4, "##", Where3.FIRST, "123"),
-            ("123", 5, "##", Where3.FIRST, "123"),
+            ("123", 1, "##", Enum_Where3.FIRST, "#"),
+            ("123", 2, "##", Enum_Where3.FIRST, "##"),
+            ("123", 3, "##", Enum_Where3.FIRST, "123"),
+            ("123", 4, "##", Enum_Where3.FIRST, "123"),
+            ("123", 5, "##", Enum_Where3.FIRST, "123"),
         ]
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
