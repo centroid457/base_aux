@@ -98,7 +98,7 @@ name1=ini1
             name200: str
         try:
             Victim(_section="SEC0000")
-        except Exx__NotExists:
+        except Exx__NotExistsNotFoundNotCreated:
             pass
         else:
             assert False

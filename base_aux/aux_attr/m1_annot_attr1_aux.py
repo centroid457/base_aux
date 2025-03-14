@@ -443,7 +443,7 @@ class AttrAux(NestInit_Source):
         if not_defined:
             dict_type = self.dump_dict__annot_types()
             msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
-            raise Exx__NotExists(msg)
+            raise Exx__NotExistsNotFoundNotCreated(msg)
 
         return True
 

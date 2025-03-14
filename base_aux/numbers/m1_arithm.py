@@ -46,7 +46,7 @@ class ArithmApplyToAttr(NestCmp):
     @property
     def NUMBER_ARITHM(self) -> Union[TYPES.NUMBER, NoReturn]:
         if not self.NUMBER_ARITHM__ATTR:
-            raise Exx__NotExists()
+            raise Exx__NotExistsNotFoundNotCreated()
 
         result = getattr(self, self.NUMBER_ARITHM__ATTR)
         if TypeAux(result).check__callable_func_meth_inst():
@@ -56,7 +56,7 @@ class ArithmApplyToAttr(NestCmp):
     @NUMBER_ARITHM.setter
     def NUMBER_ARITHM(self, other) -> None | NoReturn:
         if not self.NUMBER_ARITHM__ATTR:
-            raise Exx__NotExists()
+            raise Exx__NotExistsNotFoundNotCreated()
 
         if self.NUMBER_ARITHM__PRECISION is not None:
             other = round(other, self.NUMBER_ARITHM__PRECISION)

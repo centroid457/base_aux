@@ -6,16 +6,9 @@ from base_aux.base_nest_dunders.m3_bool import *
 
 _std = [
     # base ----------------
-    BaseException,
-    Exception,
-    BaseExceptionGroup,
-
     AssertionError,
 
     # FILE/PATH
-    FileExistsError,    # ExistsAlready
-    FileNotFoundError,  # NotExists
-
     NotADirectoryError,
     IsADirectoryError,
 
@@ -31,19 +24,11 @@ _std = [
     NotImplementedError,
 
     # VALUE ---------------
-    # type
-    TypeError,
-
-    # value
-    ValueError,
+    TypeError,      # type
+    ValueError,     # value
 
     # ACCESS ------
     PermissionError,
-
-    NameError,
-    AttributeError,
-    KeyError,
-    IndexError,
 
     # COLLECTION
     GeneratorExit,
@@ -91,7 +76,13 @@ _std = [
 
 
 # =====================================================================================================================
-class Base_Exx(NestBool_False, Exception):
+class Base_Exx(
+    NestBool_False,
+
+    BaseException,
+    Exception,
+    BaseExceptionGroup,
+):
     """
     GOAL
     ----
@@ -159,6 +150,30 @@ class Exx__SyntaxFormat(
     pass
 
 
+class Exx__Addressing(
+    Base_Exx,
+
+    NameError,
+    AttributeError,
+    KeyError,
+    IndexError,
+):
+    pass
+
+
+class Exx__NotExistsNotFoundNotCreated(
+    Base_Exx,
+
+    FileExistsError,    # ExistsAlready
+    FileNotFoundError,  # NotExists
+):
+    """
+    any exception intended Exists/NotExists any object
+    dont mess with ADDRESSING!
+    """
+    pass
+
+
 # =====================================================================================================================
 class Exx__WrongUsage(Base_Exx):
     """
@@ -176,10 +191,6 @@ class Exx__Incompatible(Base_Exx):
     pass
 
 
-class Exx__OutOfRange(Base_Exx):
-    pass
-
-
 class Exx__Overlayed(Base_Exx):
     """
     GOAL
@@ -187,10 +198,6 @@ class Exx__Overlayed(Base_Exx):
     ENY OVERLAY ITEMS/ADDRESSES
     index
     """
-    pass
-
-
-class Exx__NotExists(Base_Exx):
     pass
 
 

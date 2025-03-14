@@ -62,7 +62,7 @@ class Bitfield:
 
     def __getitem__(self, idx: int) -> Union[int, NoReturn]:
         if idx < -self.field_size or idx > self.field_size - 1:
-            raise Exx__OutOfRange
+            raise Exx__Addressing
         return self._field_bytearray[idx // 8] >> (idx % 8) & 1
 
     def __setitem__(self, idx: int, value: Union[int, bool, Any]) -> Optional[NoReturn]:

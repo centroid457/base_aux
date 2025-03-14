@@ -63,10 +63,10 @@ class NestInit_AnnotsRequired(NestGAI_AnnotAttrIC):
     #         return getattr(obj, attrs_similar[0])
     #     elif len(attrs_similar) == 0:
     #         msg = f"[CRITICAL]no[{name=}] in any cases [{attrs_all=}]"
-    #         raise Exx__NotExists(msg)
+    #         raise Exx__NotExistsNotFoundNotCreated(msg)
     #     else:
     #         msg = f"[CRITICAL]exists several similar [{attrs_similar=}]"
-    #         raise Exx__NotExists(msg)
+    #         raise Exx__NotExistsNotFoundNotCreated(msg)
 
 
 # =====================================================================================================================

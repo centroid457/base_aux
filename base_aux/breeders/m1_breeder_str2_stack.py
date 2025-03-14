@@ -137,7 +137,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
                     return name
 
         msg = f"{item=}"
-        raise Exx__NotExists(msg)
+        raise Exx__NotExistsNotFoundNotCreated(msg)
 
     def __contains__(self, item: Union[int, str]) -> bool:
         """
@@ -159,7 +159,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
 
             if index - index_prev != 1:
                 msg = f"index [{index-1}]"
-                raise Exx__NotExists(msg)
+                raise Exx__NotExistsNotFoundNotCreated(msg)
             index_prev = index
 
 
