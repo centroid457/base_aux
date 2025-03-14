@@ -79,9 +79,9 @@ _std = [
 class Base_Exx(
     NestBool_False,
 
-    BaseException,
     Exception,
-    BaseExceptionGroup,
+    # BaseException,
+    # BaseExceptionGroup,
 ):
     """
     GOAL
@@ -100,12 +100,12 @@ class Base_Exx(
 class Exx__EncodeDecode(
     Base_Exx,
 
-    BytesWarning,
-    EncodingWarning,
-    UnicodeWarning,
-    UnicodeDecodeError,
-    UnicodeEncodeError,
-    UnicodeTranslateError,
+    # BytesWarning,
+    # EncodingWarning,
+    # UnicodeWarning,
+    # UnicodeDecodeError,
+    # UnicodeEncodeError,
+    # UnicodeTranslateError,
 ):
     """
     GOAL
@@ -118,11 +118,11 @@ class Exx__EncodeDecode(
 class Exx__Connection(
     Base_Exx,
 
-    ConnectionError,
-    ConnectionAbortedError,
-    ConnectionResetError,
-    ConnectionRefusedError,
-    TimeoutError,
+    # ConnectionError,
+    # ConnectionAbortedError,
+    # ConnectionResetError,
+    # ConnectionRefusedError,
+    # TimeoutError,
 ):
     pass
 
@@ -130,9 +130,9 @@ class Exx__Connection(
 class Exx__Imports(
     Base_Exx,
 
-    ImportError,
-    ImportWarning,
-    ModuleNotFoundError,
+    # ImportError,
+    # ImportWarning,
+    # ModuleNotFoundError,
 ):
     pass
 
@@ -140,12 +140,12 @@ class Exx__Imports(
 class Exx__SyntaxFormat(
     Base_Exx,
 
-    SyntaxWarning,
-    SyntaxError,
-    IndentationError,
-
-    EOFError,
-    TabError,
+    # SyntaxWarning,
+    # SyntaxError,
+    # IndentationError,
+    #
+    # EOFError,
+    # TabError,
 ):
     pass
 
@@ -153,10 +153,10 @@ class Exx__SyntaxFormat(
 class Exx__Addressing(
     Base_Exx,
 
-    NameError,
-    AttributeError,
-    KeyError,
-    IndexError,
+    # NameError,
+    # AttributeError,
+    # KeyError,
+    # IndexError,
 ):
     pass
 
@@ -164,8 +164,8 @@ class Exx__Addressing(
 class Exx__NotExistsNotFoundNotCreated(
     Base_Exx,
 
-    FileExistsError,    # ExistsAlready
-    FileNotFoundError,  # NotExists
+    # FileExistsError,    # ExistsAlready
+    # FileNotFoundError,  # NotExists
 ):
     """
     any exception intended Exists/NotExists any object
