@@ -12,11 +12,6 @@ _std = [
 
     AssertionError,
 
-    # imports -------------
-    ImportError,
-    ImportWarning,
-    ModuleNotFoundError,
-
     # FILE/PATH
     FileExistsError,    # ExistsAlready
     FileNotFoundError,  # NotExists
@@ -42,21 +37,6 @@ _std = [
     # value
     ValueError,
 
-    # syntax/format
-    SyntaxWarning,
-    SyntaxError,
-    IndentationError,
-
-    EOFError,
-    TabError,
-    BytesWarning,
-
-    EncodingWarning,
-    UnicodeWarning,
-    UnicodeDecodeError,
-    UnicodeEncodeError,
-    UnicodeTranslateError,
-
     # ACCESS ------
     PermissionError,
 
@@ -79,13 +59,6 @@ _std = [
     RecursionError,
     BrokenPipeError,
 
-    # CONNECTION
-    ConnectionError,
-    ConnectionAbortedError,
-    ConnectionResetError,
-    ConnectionRefusedError,
-    TimeoutError,
-
     # OS/OTHER
     SystemExit,
     WindowsError,
@@ -102,6 +75,7 @@ _std = [
 
     UnboundLocalError,
 
+    # PROCESS
     RuntimeWarning,
     ResourceWarning,
     ReferenceError,
@@ -128,6 +102,60 @@ class Base_Exx(NestBool_False, Exception):
     ---------------------
     classes.VALID if
     """
+    pass
+
+
+# =====================================================================================================================
+class Exx__EncodeDecode(
+    Base_Exx,
+
+    BytesWarning,
+    EncodingWarning,
+    UnicodeWarning,
+    UnicodeDecodeError,
+    UnicodeEncodeError,
+    UnicodeTranslateError,
+):
+    """
+    GOAL
+    ----
+    collect all EncodeDecode Errors
+    """
+    pass
+
+
+class Exx__Connection(
+    Base_Exx,
+
+    ConnectionError,
+    ConnectionAbortedError,
+    ConnectionResetError,
+    ConnectionRefusedError,
+    TimeoutError,
+):
+    pass
+
+
+class Exx__Imports(
+    Base_Exx,
+
+    ImportError,
+    ImportWarning,
+    ModuleNotFoundError,
+):
+    pass
+
+
+class Exx__SyntaxFormat(
+    Base_Exx,
+
+    SyntaxWarning,
+    SyntaxError,
+    IndentationError,
+
+    EOFError,
+    TabError,
+):
     pass
 
 
@@ -172,10 +200,6 @@ class Exx__GetattrPrefix(Base_Exx):
 
 
 class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
-    pass
-
-
-class Exx__ValueNotParsed(Base_Exx):
     pass
 
 

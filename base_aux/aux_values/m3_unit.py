@@ -211,7 +211,7 @@ class ValueUnit(ArithmApplyToAttr):
                 self.SEPARATOR = match[2] or ""
                 self.UNIT = match[3] or ""
             else:
-                raise Exx__ValueNotParsed()
+                raise Exx__NotExists()
 
             # UNIT_MULT ------------------
             if not self.UNIT_MULT__DISABLE:
