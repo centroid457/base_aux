@@ -92,7 +92,6 @@ class TpMultyDutBase(Logger, QThread):
     # ]
 
     __tc_active: Optional[type[TestCaseBase]] = None
-    tc_prev: Optional[type[TestCaseBase]] = None
     progress: int = 0   # todo: use as property? by getting from TCS???
 
     # =================================================================================================================
@@ -102,8 +101,6 @@ class TpMultyDutBase(Logger, QThread):
 
     @tc_active.setter
     def tc_active(self, value: type[TestCaseBase] | None) -> None:
-        if self.__tc_active and not self.__tc_active.SKIP:
-            self.tc_prev = self.__tc_active
         self.__tc_active = value
 
     def tp__check_active(self) -> bool:
@@ -255,7 +252,6 @@ class TpMultyDutBase(Logger, QThread):
         """
         Overwrite with super! super first!
         """
-        self.tc_prev = None
         self.progress = 1
         self.DEVICES__BREEDER_CLS.group_call__("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
         return True
@@ -266,9 +262,6 @@ class TpMultyDutBase(Logger, QThread):
         """
         if self.tc_active and not self.tc_active.finished:
             self.tc_active.terminate__cls()
-        if self.tc_prev and not self.tc_prev.finished:
-            self.tc_prev.teardown__cls()
-            self.tc_prev = None
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
@@ -314,18 +307,37 @@ class TpMultyDutBase(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
+                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TCS__CLS))
+
                 if self._TC_RUN_SINGLE:
-                    if self.tc_active:
-                        self.tc_active.run__cls(single=True)
+                    if not self.tc_active:
+                        if tcs_to_execute:
+                            self.tc_active = tcs_to_execute[0]
+                        else:
+                            self.tc_active = self.TCS__CLS[0]
+
+                    self.tc_active.run__cls()
+
                 else:
-                    for self.tc_active in filter(lambda x: not x.SKIP, self.TCS__CLS):  # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
-                        tc_executed__result = self.tc_active.run__cls(cls_prev=self.tc_prev)
+                    # MULTY
+                    for index, self.tc_active in enumerate(tcs_to_execute):     # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
+                        if index == 0:
+                            tc_prev = None
+                        else:
+                            tc_prev = tcs_to_execute[index - 1]
+
+                        if index == len(tcs_to_execute) - 1:
+                            tc_next = None
+                        else:
+                            tc_next = tcs_to_execute[index + 1]
+
+                        tc_executed__result = self.tc_active.run__cls(cls_prev=tc_prev, cls_next=tc_next)
                         if tc_executed__result is False:
                             break
-            # if self.tc_prev:
-            #     self.tc_prev.teardown__cls()
-            if self.tc_active and self.tc_active.finished__cls is not None:
-                self.tc_active.teardown__cls()
+
+            # EXIT/STOP LAST TC
+            # if self.tc_active and self.tc_active.finished__cls is not None:
+            #     self.tc_active.teardown__cls()
             # FINISH TP CYCLE ---------------------------------------------------
             self.tp__teardown()
             self.LOGGER.debug("TP FINISH")

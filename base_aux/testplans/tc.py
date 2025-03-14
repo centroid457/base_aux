@@ -217,12 +217,11 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # =================================================================================================================
     @classmethod
-    def run__cls(cls, cls_prev: type[Self] | None = None, single: bool | None = None) -> None | bool:
+    def run__cls(cls, cls_prev: type[Self] | None = None, cls_next: type[Self] | None = None) -> None | bool:
         """run TC on batch duts(??? may be INDEXES???)
         prefered using in thread on upper level!
 
         :param cls_prev: use for apply group in sequence
-        :param single: if start TC as direct ONE (usually by button)
         :return:
             NONE - if SKIP for any reason
             True - need continue TP
@@ -233,35 +232,17 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
         print(f"run__cls=START={cls.NAME=}={'=' * 50}")
 
-        # GROUP cmp ----------------------------------------------
-        if not single and (cls_prev is not None and cls.middle_group__check_equal__cls(cls_prev)):
-            cls_prev__equel = True
-        else:
-            cls_prev__equel = False
-
         # SKIP ---------------------------------------------------
-        if cls.SKIP:
-            print(f"run__cls=SKIP={cls.NAME=}={'=' * 50}")
-            return
-        if cls_prev__equel and not bool(cls_prev.result__startup_cls):
-            return
+        # if cls.SKIP:
+        #     print(f"run__cls=SKIP={cls.NAME=}={'=' * 50}")
+        #     return
 
         cls.clear__cls()
 
-        # STARTUP/TERDOWN ----------------------------------------
-        if cls_prev__equel:
+        # STARTUP ----------------------------------------
+        if cls_prev and cls.middle_group__check_equal__cls(cls_prev):
             cls.result__startup_cls = cls_prev.result__startup_cls
         else:
-            if not single and cls_prev:  # and not cls_prev.SKIP:
-                cls_prev.teardown__cls()
-                if (
-                        cls_prev.result__startup_cls is not None
-                        and
-                        bool(cls_prev.result__startup_cls)
-                        and
-                        not bool(cls_prev.result__teardown_cls)
-                ):  # FIXME: seems need to compare as direct True/Bool
-                    return False
             cls.result__startup_cls = cls.startup__cls()
 
         # WORK ---------------------------------------------------
@@ -283,11 +264,18 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
                     print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inPARALLEL")
                     tc_inst.wait()
 
+        # TERDOWN ----------------------------------------
+        if cls_next and cls.middle_group__check_equal__cls(cls_next):
+            pass
+        else:
+            cls.result__teardown_cls = cls.teardown__cls()
+
         # FINISH -------------------------------------------------
-        if single or not cls.result__startup_cls:
-            cls.teardown__cls()
         print(f"[TC]FINISH={cls.NAME=}={'=' * 50}")
-        return True
+        if cls.result__startup_cls and cls.result__teardown_cls is False:
+            return False
+        else:
+            return True
 
     def run(self) -> None:
         self.LOGGER.debug("run")
