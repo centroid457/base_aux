@@ -143,10 +143,10 @@ class Validators:
     def NumParsedSingle(self, other_final, expect: Any | None | bool | Enum_NumType = True) -> bool:
         return ValidAux_NumParsedSingle(other_final).eq(expect)
 
-    def NumParsedSingle_Int(self, other_final) -> bool:
+    def NumParsedSingle_TypeInt(self, other_final) -> bool:
         return ValidAux_NumParsedSingle(other_final).eq(int)
 
-    def NumParsedSingle_Float(self, other_final) -> bool:
+    def NumParsedSingle_TypeFloat(self, other_final) -> bool:
         return ValidAux_NumParsedSingle(other_final).eq(float)
 
     # -----------------------------------------------------------------------------------------------------------------

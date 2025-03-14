@@ -112,13 +112,13 @@ class EqValid_NumParsedSingle(EqValid_Base):
 
 
 @final
-class EqValid_NumParsedSingle_Int(EqValid_Base):
-    VALIDATOR = Validators.NumParsedSingle_Int
+class EqValid_NumParsedSingle_TypeInt(EqValid_Base):
+    VALIDATOR = Validators.NumParsedSingle_TypeInt
 
 
 @final
-class EqValid_NumParsedSingle_Float(EqValid_Base):
-    VALIDATOR = Validators.NumParsedSingle_Float
+class EqValid_NumParsedSingle_TypeFloat(EqValid_Base):
+    VALIDATOR = Validators.NumParsedSingle_TypeFloat
 
 
 # =====================================================================================================================

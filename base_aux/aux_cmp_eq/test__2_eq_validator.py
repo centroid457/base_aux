@@ -219,9 +219,8 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
 )
 def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
     ExpectAux(EqValid_NumParsedSingle(expect) == other).check_assert(_EXPECTED[0])
-
-    ExpectAux(EqValid_NumParsedSingle_Int() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_NumParsedSingle_Float() == other).check_assert(_EXPECTED[2])
+    ExpectAux(EqValid_NumParsedSingle_TypeInt() == other).check_assert(_EXPECTED[1])
+    ExpectAux(EqValid_NumParsedSingle_TypeFloat() == other).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
