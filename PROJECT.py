@@ -33,9 +33,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 20))    # dont use over 3 items!!!
+    VERSION = Version((0, 2, 21))    # dont use over 3 items - pypi is not used them!!!
     NEWS: list[str] = [
-        "zero fix ver!",
+        "[Enum_*] zero rename all",
+        "[Nest] separate NestBool_False/True",
     ]
 
 
