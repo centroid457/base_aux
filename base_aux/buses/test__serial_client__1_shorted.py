@@ -80,7 +80,7 @@ class Test__AddressResolved(Test__ShortedBase):
         assert self.victim.connect() is False
         assert self.victim.address_check__resolved() is False
 
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        self.victim.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         assert self.victim.address_check__resolved() is False
         assert self.victim.connect() is True
         assert self.victim.address_check__resolved() is True
@@ -88,18 +88,18 @@ class Test__AddressResolved(Test__ShortedBase):
     # -----------------------------------------------------------------------------------------------------------------
     def test__address_forget(self):
         self.victim = self.Victim()
-        assert self.victim.ADDRESS == Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        assert self.victim.ADDRESS == Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         assert self.victim.address_check__resolved() is False
         assert self.victim.connect() is True
         assert self.victim.address_check__resolved() is True
-        assert self.victim.ADDRESS != Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        assert self.victim.ADDRESS != Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
 
         self.victim.address_forget()
-        assert self.victim.ADDRESS == Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        assert self.victim.ADDRESS == Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         assert self.victim.address_check__resolved() is False
         assert self.victim.connect() is True
         assert self.victim.address_check__resolved() is True
-        assert self.victim.ADDRESS != Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        assert self.victim.ADDRESS != Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__ADDRESSES(self):
@@ -151,7 +151,7 @@ class Test__Connect2(Test__ShortedBase):
         self.victim.ADDRESS = None
         assert not self.victim.connect(_raise=False)
 
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE
+        self.victim.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE
         assert self.victim.connect(_raise=False)
 
         assert isinstance(self.victim.ADDRESS, str)
@@ -162,7 +162,7 @@ class Test__Connect2(Test__ShortedBase):
         self.victim.ADDRESS = None
         assert not self.victim.connect(_raise=False)
 
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        self.victim.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         assert self.victim.connect(_raise=False)
         assert self.victim.addresses_shorted__count() > 0
 
@@ -172,13 +172,13 @@ class Test__Connect2(Test__ShortedBase):
         self.victim.ADDRESS = None
         assert not self.victim.connect(_raise=False)
 
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
+        self.victim.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
         assert self.victim.connect(_raise=False)
 
         # ==============
         self.victim.disconnect()
         class Victim(SerialClient):
-            _ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
+            _ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
             def address__validate(self) -> Union[bool, NoReturn]:
                 raise Exception()
 
@@ -216,7 +216,7 @@ class Test__Connect2(Test__ShortedBase):
         assert self.victim.connect(_raise=False) is False
         assert self.victim.connect__only_if_address_resolved() is None
 
-        self.victim.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        self.victim.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         assert self.victim.connect__only_if_address_resolved() is None
         assert self.victim.connect() is True
         assert self.victim.connect__only_if_address_resolved() is True

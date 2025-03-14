@@ -106,13 +106,13 @@ TYPE__RW_ANSWER_SINGLE = Union[None, str, ValueUnit]
 TYPE__RW_ANSWER = Union[TYPE__RW_ANSWER_SINGLE, list[TYPE__RW_ANSWER_SINGLE]]
 
 
-class Type__WrReturn(Enum):
+class Enum__WrReturn(Enum):
     ALL_OUTPUT = auto()
     HISTORY_IO = auto()
     DICT = auto()
 
 
-class Type__AddressAutoAcceptVariant(Enum):
+class Enum__AddressAutoAcceptVariant(Enum):
     NOT_FOUND = auto()
     FIRST_FREE = auto()
     FIRST_FREE__SHORTED = auto()
@@ -120,7 +120,7 @@ class Type__AddressAutoAcceptVariant(Enum):
     FIRST_FREE__ANSWER_VALID = auto()
 
 
-TYPING__ADDRESS = Union[None, Type__AddressAutoAcceptVariant, str]
+TYPING__ADDRESS = Union[None, Enum__AddressAutoAcceptVariant, str]
 
 
 # =====================================================================================================================
@@ -308,8 +308,8 @@ class SerialClient(Logger):
         if address is None:
             address = self.ADDRESS
 
-        if address in Type__AddressAutoAcceptVariant:
-            if address == Type__AddressAutoAcceptVariant.NOT_FOUND: # not
+        if address in Enum__AddressAutoAcceptVariant:
+            if address == Enum__AddressAutoAcceptVariant.NOT_FOUND: # not
                 return False
 
             if not self.address__resolve(address):
@@ -507,19 +507,19 @@ class SerialClient(Logger):
         # CAREFUL ---- here we will get curriculum import!
         # from . import SerialClient_FirstFree, SerialClient_FirstFree_Shorted, SerialClient_FirstFree_Paired, SerialClient_FirstFree_AnswerValid
         # if isinstance(self, SerialClient_FirstFree):
-        #     self.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE
+        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE
         # elif isinstance(self, SerialClient_FirstFree_Shorted):
-        #     self.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
+        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
         # elif isinstance(self, SerialClient_FirstFree_Paired):
-        #     self.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__PAIRED
+        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__PAIRED
         # elif isinstance(self, SerialClient_FirstFree_AnswerValid):
-        #     self.ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
+        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
 
     def address__resolve(self, address: TYPING__ADDRESS | None = None) -> bool:
         """
         GOAL
         ----
-        resolve address passed as Type__AddressAutoAcceptVariant
+        resolve address passed as Enum__AddressAutoAcceptVariant
         could be call separately! before connect!
 
         SPECIALLY CREATED FOR
@@ -534,14 +534,14 @@ class SerialClient(Logger):
             address = self.ADDRESS
 
         # RESOLVE ---------------------------------
-        if address in Type__AddressAutoAcceptVariant:
-            if address == Type__AddressAutoAcceptVariant.FIRST_FREE:
+        if address in Enum__AddressAutoAcceptVariant:
+            if address == Enum__AddressAutoAcceptVariant.FIRST_FREE:
                 address = self.address_get__first_free()
-            elif address == Type__AddressAutoAcceptVariant.FIRST_FREE__SHORTED:
+            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED:
                 address = self.address_get__first_free__shorted()
-            elif address == Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID:
+            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID:
                 address = self.address_get__first_free__valid()
-            elif address == Type__AddressAutoAcceptVariant.FIRST_FREE__PAIRED:
+            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__PAIRED:
                 address = self.address_get__first_free__paired()
 
         # APPLY -----------------------------------

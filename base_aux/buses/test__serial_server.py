@@ -278,7 +278,7 @@ class Test_SerialServer_WithConnection:
         server.connect()
 
         class Victim(SerialClient):
-            _ADDRESS = Type__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
+            _ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
 
             def address__validate(self) -> bool | None | NoReturn:
                 return server.HELLO_MSG[0] in self.write_read("hello").list_output()

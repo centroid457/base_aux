@@ -100,7 +100,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
             if isinstance(index, int):
                 if index in result:
                     msg = f"{index=} from {result=}"
-                    raise Exx__IndexOverlayed(msg)
+                    raise Exx__Overlayed(msg)
                 result.update({index: attr})
                 index_last = index
 
@@ -116,7 +116,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
                 for key, value in result_sub_dict.items():
                     if key in result:
                         msg = f"{key=} from {result_sub_dict=}"
-                        raise Exx__IndexOverlayed(msg)
+                        raise Exx__Overlayed(msg)
                     result.update({key: value})
                     index_last = key
 
@@ -159,7 +159,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
 
             if index - index_prev != 1:
                 msg = f"index [{index-1}]"
-                raise Exx__IndexNotSet(msg)
+                raise Exx__NotExists(msg)
             index_prev = index
 
 

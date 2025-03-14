@@ -1,3 +1,6 @@
+from base_aux.base_nest_dunders.m3_bool import *
+
+
 # =====================================================================================================================
 # USE COMMON/GENERAL TYPES
 
@@ -6,6 +9,8 @@ _std = [
     BaseException,
     Exception,
     BaseExceptionGroup,
+
+    AssertionError,
 
     # imports -------------
     ImportError,
@@ -25,7 +30,7 @@ _std = [
     DeprecationWarning,
     PendingDeprecationWarning,
 
-    AssertionError,
+    InterruptedError,
 
     NotImplemented,
     NotImplementedError,
@@ -47,16 +52,16 @@ _std = [
     BytesWarning,
 
     EncodingWarning,
-
     UnicodeWarning,
     UnicodeDecodeError,
     UnicodeEncodeError,
     UnicodeTranslateError,
 
     # ACCESS ------
+    PermissionError,
+
     NameError,
     AttributeError,
-    PermissionError,
     KeyError,
     IndexError,
 
@@ -73,7 +78,6 @@ _std = [
 
     RecursionError,
     BrokenPipeError,
-    InterruptedError,
 
     # CONNECTION
     ConnectionError,
@@ -113,20 +117,22 @@ _std = [
 
 
 # =====================================================================================================================
-class Exx__BoolBase(Exception):
+class Base_Exx(NestBool_False, Exception):
     """
-    just a solution to get correct bool() if get Exx as value
+    GOAL
+    ----
+    just a solution to collect all dunder methods intended for Exceptions in one place
+     - get correct bool() if get Exx as value
 
     SPECIALLY CREATED FOR
     ---------------------
     classes.VALID if
     """
-    def __bool__(self):
-        return False
+    pass
 
 
 # =====================================================================================================================
-class Exx__WrongUsage(Exx__BoolBase):
+class Exx__WrongUsage(Base_Exx):
     """
     GOAL
     ----
@@ -138,25 +144,30 @@ class Exx__WrongUsage(Exx__BoolBase):
     """
 
 
-class Exx__Incompatible(Exx__BoolBase):
+class Exx__Incompatible(Base_Exx):
     pass
 
 
-class Exx__OutOfRange(Exx__BoolBase):
+class Exx__OutOfRange(Base_Exx):
+    pass
+
+
+class Exx__Overlayed(Base_Exx):
+    """
+    GOAL
+    ----
+    ENY OVERLAY ITEMS/ADDRESSES
+    index
+    """
+    pass
+
+
+class Exx__NotExists(Base_Exx):
     pass
 
 
 # =====================================================================================================================
-class Exx__AnnotNotDefined(Exx__BoolBase):
-    """Exception in case of not defined attribute in instance
-    """
-
-
-class Exx__NumberArithm_NoName(Exx__BoolBase):
-    pass
-
-
-class Exx__GetattrPrefix(Exx__BoolBase):
+class Exx__GetattrPrefix(Base_Exx):
     pass
 
 
@@ -164,58 +175,32 @@ class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
     pass
 
 
-class Exx__ValueNotParsed(Exx__BoolBase):
+class Exx__ValueNotParsed(Base_Exx):
     pass
 
 
-class Exx__ValueUnitsIncompatible(Exx__BoolBase):
-    pass
-
-
-class Exx__IndexOverlayed(Exx__BoolBase):
-    pass
-
-
-class Exx__IndexNotSet(Exx__BoolBase):
-    pass
-
-
-class Exx__NotExists(Exx__BoolBase):
-    pass
-
-
-class Exx__StartOuterNONE_UsedInStackByRecreation(Exx__BoolBase):
+class Exx__StartOuterNONE_UsedInStackByRecreation(Base_Exx):
     """
     in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
     """
     pass
 
 
-class Exx__BreederObjectList_GroupsNotGenerated(Exx__BoolBase):
+class Exx__BreederObjectList_GroupsNotGenerated(Base_Exx):
     pass
 
 
-class Exx__BreederObjectList_GroupNotExists(Exx__BoolBase):
-    pass
-
-
-class Exx__BreederObjectList_ObjCantAccessIndex(Exx__BoolBase):
+class Exx__BreederObjectList_GroupNotExists(Base_Exx):
     pass
 
 
 # =====================================================================================================================
-class Exx__Valid(Exx__BoolBase):
+class Exx__Valid(Base_Exx):
     pass
 
 
 class Exx__ValueNotValidated(Exx__Valid):
     pass
-
-
-# =====================================================================================================================
-class Exx__SameKeys(Exx__BoolBase):
-    """Same keys NOT allowed!
-    """
 
 
 # =====================================================================================================================
@@ -225,8 +210,8 @@ if __name__ == '__main__':
     assert bool(Exception(False)) is True
 
     # SOLUTION --------------
-    assert bool(Exx__BoolBase(0)) is False
-    assert bool(Exx__BoolBase(False)) is False
+    assert bool(Base_Exx(0)) is False
+    assert bool(Base_Exx(False)) is False
 
 
 # =====================================================================================================================

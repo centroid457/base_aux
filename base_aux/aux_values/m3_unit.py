@@ -273,7 +273,7 @@ class ValueUnit(ArithmApplyToAttr):
         # cmp units -----------
         if self.UNIT_BASE and other.UNIT_BASE and self.UNIT_BASE != other.UNIT_BASE:
             msg = f"{self!r}/{other!r}"
-            raise Exx__ValueUnitsIncompatible(msg)
+            raise Exx__Incompatible(msg)
 
         # cmp -----------
         if self.VALUE_PURE == other.VALUE_PURE:

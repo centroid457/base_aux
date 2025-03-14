@@ -10,7 +10,7 @@ def test__raise():
 
     try:
         Victim()
-    except Exx__AnnotNotDefined:
+    except Exx__NotExists:
         assert True
     else:
         assert False
@@ -24,7 +24,7 @@ def test__ok():
     try:
         Victim()
         assert True
-    except Exx__AnnotNotDefined:
+    except Exx__NotExists:
         assert False
     except:
         assert False
@@ -84,7 +84,7 @@ def test__NT():
 #         assert NestInit_AnnotsRequired().annots_get_set(obj) == {"ATTR1", }
 #         try:
 #             assert NestInit_AnnotsRequired().annots_get_dict(obj) == {"ATTR1": 1, }
-#         except Exx__AnnotNotDefined:
+#         except Exx__NotExists:
 #             pass   # its GOOD!!!
 #         else:
 #             assert False
