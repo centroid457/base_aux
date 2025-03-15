@@ -1,7 +1,7 @@
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.alerts.m0_base import *
+from base_aux.alerts.m1_alert0_base import *
 
 import telebot
 
@@ -33,8 +33,12 @@ class AlertTelegram(Base_Alert):
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    victim = AlertTelegram("hello")
-    victim.result_wait()
+    victim = AlertTelegram()
+    victim.send_msg("hello")
+    victim.send_msg("hello2")
+    victim.wait()
+    victim.send_msg("hello3")
+    victim.wait()
 
 
 # =====================================================================================================================

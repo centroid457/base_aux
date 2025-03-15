@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from base_aux.alerts.m2_select import *
-from base_aux.alerts.m0_base import *
+from base_aux.alerts.m1_alert0_base import *
 
 
 # =====================================================================================================================

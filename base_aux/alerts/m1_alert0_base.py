@@ -61,8 +61,8 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     alert msg sender
     """
     # SETTINGS ------------------------------------
-    CONN_ADDRESS: Any
-    CONN_AUTH: AttrKit_AuthNamePwd
+    CONN_ADDRESS: Any = None
+    CONN_AUTH: AttrKit_AuthNamePwd = None
     RECIPIENT: Any = None
 
     TIMEOUT_SEND: float = 1.2
@@ -90,8 +90,6 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
         ----
         Send msg on init
         """
-        super().__init__()
-
         # params --------------
         if conn_address is not None:
             self.CONN_ADDRESS = conn_address
@@ -104,6 +102,8 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
             self.RECIPIENT = self._recipient_get()
 
         self.MSGS_UNSENT = deque()
+
+        super().__init__()
 
         # START ---------------
         self.start()

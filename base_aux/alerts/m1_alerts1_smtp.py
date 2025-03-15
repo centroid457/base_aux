@@ -3,7 +3,7 @@ from email.mime.multipart import MIMEMultipart
 
 import smtplib
 
-from base_aux.alerts.m0_base import *
+from base_aux.alerts.m1_alert0_base import *
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
 

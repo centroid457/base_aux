@@ -17,7 +17,7 @@ from base_aux.stock.m3_indicators import *
 
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.alerts.m0_base import *
+from base_aux.alerts.m1_alert0_base import *
 
 
 # =====================================================================================================================
