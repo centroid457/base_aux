@@ -27,8 +27,6 @@ class Test_mt5:
         victim1 = self.VICTIM()
         result = mt5.last_error()
         assert result == (1, 'Success')
-        assert result[0] == 1
-        assert result[1] == "Success"
 
         victim2 = self.VICTIM()
         result = mt5.last_error()
@@ -42,7 +40,7 @@ class Test_mt5:
         try:
             victim = self.VICTIM()
         except Exception as exx:
-            assert isinstance(exx, Exx__Mt5SymbolName)
+            assert isinstance(exx, Exx__NotExistsNotFoundNotCreated)
         else:
             assert False
 
@@ -122,7 +120,7 @@ elem=723/<class 'numpy.uint64'>
         result = victim._indicator_get_by_obj(IndicatorParams_ADX(2, 1), return_tail=2)
         print(f"[{result=}]")
         print(f"[{type(result)=}]")
-        assert isinstance(result, (Type__PdSeries))
+        assert isinstance(result, (TYPING__PD_SERIES))
 
     def test__indicator_get__WMA(self):
         victim = MT5()

@@ -1,4 +1,5 @@
 import sys
+import abc
 
 import pandas as pd
 import MetaTrader5 as mt5
@@ -196,10 +197,10 @@ class MonitorADX(MonitorBase):
     def results_length_get(self, length: int):
         return self.RESULTS[length - 1][self.TF_SHIFTED_MAX - length: self.TF_SHIFTED_MAX]
 
-    def check__state_pulse__tf_shifted(self, adx_fast: Type__PdSeries, adx_slow: Type__PdSeries) -> bool:
+    def check__state_pulse__tf_shifted(self, adx_fast: TYPING__PD_SERIES, adx_slow: TYPING__PD_SERIES) -> bool:
         return np.max(adx_fast) >= self.THRESH_ADX_FAST_FULL and np.max(adx_slow) >= self.THRESH_ADX_SLOW_FULL
 
-    def check__state_pulse__tf_shifted_edge(self, adx_fast: Type__PdSeries, adx_slow: Type__PdSeries) -> bool:
+    def check__state_pulse__tf_shifted_edge(self, adx_fast: TYPING__PD_SERIES, adx_slow: TYPING__PD_SERIES) -> bool:
         if np.max(adx_fast) >= self.THRESH_ADX_FAST_FULL:
             if np.max(adx_slow.head(len(adx_slow) - 1)) < self.THRESH_ADX_SLOW_FULL <= adx_slow.iloc[len(adx_slow) - 1]:
                 return True
