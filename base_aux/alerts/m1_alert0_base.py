@@ -2,7 +2,7 @@ from typing import *
 import time
 from collections import deque
 
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QTimer
 
 from base_aux.aux_text.m7_text_formatted import *
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
@@ -61,10 +61,11 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     alert msg sender
     """
     # SETTINGS ------------------------------------
-    CONN_ADDRESS: Any = None
+    CONN_ADDRESS: AttrKit_Blank = None
     CONN_AUTH: AttrKit_AuthNamePwd = None
     RECIPIENT: Any = None
 
+    TIMER_TIMEOUT:  int = 60
     TIMEOUT_SEND: float = 1.2
     RECONNECT_LIMIT: int = 3
     RECONNECT_PAUSE: int = 60
@@ -78,13 +79,15 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     result_login: bool | None = None
     result_sent_all: bool | None = None
 
+    timer: QTimer
+
     @property
     def MSG_ACTIVE(self) -> str | TextFormatted | Any | None:
         if len(self.MSGS_UNSENT) > 0:
             return self.MSGS_UNSENT[0]
 
     # =================================================================================================================
-    def __init__(self, conn_address: Any = None, conn_auth: AttrKit_AuthNamePwd = None, recipient: Any = None):
+    def __init__(self, conn_address: AttrKit_Blank = None, conn_auth: AttrKit_AuthNamePwd = None, recipient: Any = None):
         """
         GOAL
         ----
@@ -104,9 +107,16 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
         self.MSGS_UNSENT = deque()
 
         super().__init__()
+        self.init_timer()
 
         # START ---------------
         self.start()
+
+    def init_timer(self) -> None:
+        self.timer = QTimer()
+        self.timer.setInterval(self.TIMER_TIMEOUT * 1000)
+        self.timer.timeout.connect(self.start)
+        self.timer.start()
 
     # =================================================================================================================
     def send_msg(self, body):
@@ -178,6 +188,10 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
 
     # =================================================================================================================
     def run(self) -> None:
+        print()
+        print()
+        print()
+        print(f"RUN START")
         self.result_sent_all = None
 
         while self.MSG_ACTIVE is not None:
@@ -200,13 +214,10 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
                 print(msg)
                 break
 
-        print()
-        print()
-        print()
-
         self.result_sent_all = self.MSG_ACTIVE is None
         print(f"{self.result_sent_all=}")
         self._disconnect()
+        print(f"RUN FINISH")
 
 
 # =====================================================================================================================
