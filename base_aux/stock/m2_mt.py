@@ -13,7 +13,7 @@ import numpy as np
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import *
 from base_aux.base_statics.m2_exceptions import *
 from base_aux.stock.m0_symbols import *
-from base_aux.stock.m2_time_series import *
+from base_aux.stock.m1_time_series import *
 from base_aux.stock.m3_indicators import *
 
 from base_aux.privates.m1_privates import *
@@ -26,6 +26,7 @@ from base_aux.alerts.m1_alert0_base import *
 
 
 # =====================================================================================================================
+TYPING__SYMBOL_FINAL = mt5.SymbolInfo
 TYPING__SYMBOL_DRAFT = Union[str, mt5.SymbolInfo]
 TYPING__TF = int
 TYPING__PD_SERIES = pd.core.series.Series
@@ -34,11 +35,11 @@ TYPING__INDICATOR_VALUES = Union[None, float, TYPING__PD_SERIES]
 
 # =====================================================================================================================
 class MT5(NestInit_AttrsLambdaResolve):
-    MT5_AUTH = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
+    CONN_AUTH = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
 
-    SYMBOL: TYPING__SYMBOL_DRAFT = "Нефть Brent"
+    SYMBOL: TYPING__SYMBOL_FINAL = Symbols.BRENT_UNIVERSAL
     TF: TYPING__TF = mt5.TIMEFRAME_M10
-    __MT5_SYMBOLS_AVAILABLE: list[mt5.SymbolInfo] = None
+    __SYMBOLS_AVAILABLE: list[mt5.SymbolInfo] = None
 
     BAR_LAST: np.ndarray = None
     """
@@ -63,35 +64,34 @@ class MT5(NestInit_AttrsLambdaResolve):
             self,
             tf: TYPING__TF = None,
             symbol: TYPING__SYMBOL_DRAFT = None
-    ):
+    ) -> None | NoReturn:
         super().__init__()
 
         self.TF = tf or self.TF
         self.SYMBOL = symbol or self.SYMBOL
 
         self.mt5_connect()
-        self._SYMBOL_init(exx_if_none=False)
+        self._SYMBOL_init()
 
     def __del__(self):
         mt5.shutdown()
 
     # CONNECT ---------------------------------------------------------------------------------------------------------
     def mt5_connect(self) -> None | NoReturn:
-        result = mt5.initialize(login=int(self.MT5_AUTH.NAME), password=self.MT5_AUTH.PWD, server=self.MT5_AUTH.SERVER)
+        result = mt5.initialize(login=int(self.CONN_AUTH.NAME), password=self.CONN_AUTH.PWD, server=self.CONN_AUTH.SERVER)
         msg = f"[{result}]initialize[{mt5.last_error()=}]"
         print(msg)
         if not result:
             msg += f"SMTIMES PWD DROPPED_DOWN/CORRUPTED in MT5!!! - you should simply update it in MT5"
-            msg += f"\n{self.MT5_AUTH}"
-
+            msg += f"\n{self.CONN_AUTH}"
             print(msg)
             raise ConnectionError(msg)
 
     # SYMBOL ==========================================================================================================
-    def _SYMBOL_init(self, exx_if_none: bool = True) -> None | NoReturn:
-        self.SYMBOL = self.SYMBOL__get_active(exx_if_none=exx_if_none)
+    def _SYMBOL_init(self) -> None | NoReturn:
+        self.SYMBOL = self.SYMBOL__get_active()
 
-    def SYMBOL__get_active(self, _symbol: TYPING__SYMBOL_DRAFT = None, exx_if_none: bool = True) -> Union[mt5.SymbolInfo, NoReturn]:
+    def SYMBOL__get_active(self, _symbol: TYPING__SYMBOL_DRAFT = None) -> Union[mt5.SymbolInfo, NoReturn]:
         _symbol = _symbol or self.SYMBOL
         if isinstance(_symbol, str):
             _symbol = mt5.symbol_info(_symbol)
@@ -102,26 +102,25 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         if not isinstance(_symbol, mt5.SymbolInfo):
             msg = f"incorrect {_symbol=}"
-            if exx_if_none:
-                raise Exx__NotExistsNotFoundNotCreated(msg)
+            raise Exx__NotExistsNotFoundNotCreated(msg)
 
         return _symbol
 
-    def TF__get_active(self, _tf: TYPING__TF = None):
+    def TF__get_active(self, _tf: TYPING__TF = None) -> TYPING__TF:
         return _tf or self.TF
 
     # AVAILABLE -------------------------------------------------------------------------------------------------------
     @classmethod
     @property
-    def MT5_SYMBOLS_AVAILABLE(cls) -> list[mt5.SymbolInfo]:
+    def SYMBOLS_AVAILABLE(cls) -> list[mt5.SymbolInfo]:
         """
         too much time to get all items! dont use it without special needs!
         """
-        if not cls.__MT5_SYMBOLS_AVAILABLE:
-            cls.__MT5_SYMBOLS_AVAILABLE = mt5.symbols_get()
-        return cls.__MT5_SYMBOLS_AVAILABLE
+        if not cls.__SYMBOLS_AVAILABLE:
+            cls.__SYMBOLS_AVAILABLE = mt5.symbols_get()
+        return cls.__SYMBOLS_AVAILABLE
 
-    def _mt5_symbols_available__find(
+    def symbols_available__by_mask(
             self,
             mask: str = "",
             only_rus: bool = False
@@ -129,10 +128,10 @@ class MT5(NestInit_AttrsLambdaResolve):
         # count=12976 ALL!!!!
         # count=275 rus!!!!
         count = 0
-        result: list[mt5.SymbolInfo] = []
+        result = []
 
         if not mask:
-            symbols = self.MT5_SYMBOLS_AVAILABLE
+            symbols = self.SYMBOLS_AVAILABLE
         else:
             symbols = mt5.symbols_get(mask)
 
@@ -295,7 +294,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             return
 
         print("*"*100)
-        key = "INSTRUMENTS"
+        key = "ACTIVES"
         print(f"{key:30}={symbols}")
         print("*"*100)
         for key in items[0]:
@@ -312,11 +311,8 @@ class MT5(NestInit_AttrsLambdaResolve):
         VolumePrice as priceMean * Volume
         +save result into self.symbols_volume_price for threading usage!
 
-        value will be differ from official becouse of i get mean price!
+        value will be differ from official because i get mean price!
         https://www.moex.com/ru/marketdata/?g=4#/mode=groups&group=4&collection=3&boardgroup=57&data_type=current&category=main
-
-        :param _symbol:
-        :return:
         """
         _devider = _devider or 1000 * 1000
         bar = self.bars_get__count(_symbol=_symbol, _tf=mt5.TIMEFRAME_D1)
@@ -340,7 +336,90 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         :param limit_min:
         :param limit_max:
-        :return:
+
+{
+    "GAZP": 18552,
+    "SBER": 16418,
+    "LQDT": 14222,
+    "TCSG": 10671,
+    "VTBR": 4788,
+    "FIVE": 4602,
+    "LKOH": 4085,
+    "NVTK": 4052,
+    "GMKN": 3677,
+    "PLZL": 3272,
+    "AFKS": 2283,
+    "ROSN": 2160,
+    "TATN": 2115,
+    "AFLT": 2069,
+    "SELG": 1995,
+    "MGNT": 1944,
+    "MOEX": 1790,
+    "OZON": 1661,
+    "SMLT": 1563,
+    "WUSH": 1341,
+    "RUAL": 1313,
+    "SBERP": 1304,
+    "CHMF": 1266,
+    "MTLR": 1199,
+    "RNFT": 1162,
+    "SNGS": 1143,
+    "NLMK": 1092,
+    "PIKK": 1079,
+    "IRKT": 975,
+    "MAGN": 970,
+    "TRNFP": 936,
+    "SPBE": 889,
+    "UPRO": 882,
+    "VKCO": 862,
+    "ALRS": 788,
+    "SNGSP": 788,
+    "MTSS": 772,
+    "RTKM": 746,
+    "GRNT": 745,
+    "ENPG": 704,
+    "FLOT": 703,
+    "SGZH": 697,
+    "SIBN": 695,
+    "UWGN": 639,
+    "AGRO": 589,
+    "TRUR": 565,
+    "BELU": 557,
+    "TATNP": 554,
+    "PHOR": 503,
+    "TMOS": 497,
+    "IRAO": 485,
+    "TGLD": 450,
+    "SFIN": 445,
+    "TRMK": 399,
+    "EQMX": 388,
+    "DASB": 333,
+    "MVID": 330,
+    "BSPB": 307,
+    "MTLRP": 274,
+    "GTRK": 268,
+    "POSI": 263,
+    "UNAC": 247,
+    "HYDR": 235,
+    "RENI": 224,
+    "AKME": 204,
+    "GLTR": 186,
+    "RASP": 183,
+    "BANEP": 178,
+    "FESH": 177,
+    "FEES": 158,
+    "VSMO": 153,
+    "HHRU": 144,
+    "AQUA": 125,
+    "ISKJ": 122,
+    "RBCM": 122,
+    "TGKN": 121,
+    "SVAV": 118,
+    "KMAZ": 111,
+    "SBMX": 109,
+    "MDMG": 107,
+    "CBOM": 104
+}
         """
         _devider = _devider or 1000 * 1000
         limit_min = limit_min if limit_min is not None else 100 * 1000 * 1000 / _devider
@@ -374,20 +453,24 @@ class MT5(NestInit_AttrsLambdaResolve):
     # BAR -------------------------------------------------------------------------------------------------------------
     def bar_new__wait(self, sleep: int = 10) -> None:
         # TODO: use BarTime to resolve LOST!!!
-        counter = 0
+        count = 0
         while not self.bar_last__update():
-            counter += 1
-            self.bar__lost = True
-            msg = f"[WARN]bar lost [{counter=}]"
-            print(msg)
+            count += 1
+            if False:
+                self.bar__lost = True
+                msg = f"[WARN]bar lost [{count=}]"
+                print(msg)
+            print(f"bar_new__wait {count=}")
             time.sleep(sleep)
         self.bar__lost = False
 
-    def bar_last__update(self) -> Optional[True]:
+    def bar_last__update(self) -> bool:
         bar_new = self.bars_get__count(count=1)
         if not self.BAR_LAST or bar_new != self.BAR_LAST:
             self.BAR_LAST = bar_new
             return True
+        else:
+            return False
 
     def tick_last__update(self, _symbol: TYPING__SYMBOL_DRAFT = None, wait_tick_load: bool = True) -> bool:
         """

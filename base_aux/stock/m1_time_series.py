@@ -2,28 +2,35 @@ from typing import *
 import numpy as np
 import pandas as pd
 
-
-# =====================================================================================================================
-class Exx_TimeSeries(Exception):
-    pass
+from base_aux.base_statics.m2_exceptions import *
 
 
 # =====================================================================================================================
 class HistoryShifted_Shrink:
-    SOURCE: np.array = None
-    SHIFT: int = None
+    """
+    GOAL
+    ----
+    remake TS to shifted TF
+    """
+    SOURCE: np.array
+    SHIFT: int
 
     def __init__(self, source: np.array, shift: int = 1):
         self.SOURCE = source
         self.SHIFT = shift
 
         if shift < 1:
-            msg = f"incorrect {shift=}"
-            raise Exx_TimeSeries(msg)
+            raise Exx__WrongUsage(f"{shift=}")
 
     # FIELDS ----------------------------------------------------------------------------------------------------------
     def _get_fields(self) -> dict[str, Any]:
         """
+        GOAL
+        ----
+        just as help info!
+
+        ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
+
         {
             'time': (dtype('int64'), 0),
             'open': (dtype('float64'), 8),
@@ -35,7 +42,6 @@ class HistoryShifted_Shrink:
             'real_volume': (dtype('uint64'), 52)
         }
         """
-        # ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
         return self.SOURCE.dtype.fields
 
     # SHRINK ----------------------------------------------------------------------------------------------------------
@@ -82,7 +88,7 @@ class HistoryShifted_Shrink:
 # =====================================================================================================================
 class HistoryShifted_Simple:
     """History manager when important only one column in calculations!
-    such as RSI/WMA tipically use only close values from timeSeries!
+    such as RSI/WMA typically use only close values from timeSeries!
     """
     SOURCE: np.array = None
     COLUMN: str = "close"
@@ -94,8 +100,7 @@ class HistoryShifted_Simple:
         self.SHIFT = shift
 
         if shift < 1:
-            msg = f"incorrect {shift=}"
-            raise Exx_TimeSeries(msg)
+            raise Exx__WrongUsage(f"{shift=}")
 
 
 # =====================================================================================================================

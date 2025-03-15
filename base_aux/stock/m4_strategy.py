@@ -8,7 +8,7 @@ from base_aux.aux_arrays.m1_arrays_aux import *
 from base_aux.alerts.m2_select import *
 from base_aux.threads.m1_threads import *
 
-from base_aux.stock.m1_mt import *
+from base_aux.stock.m2_mt import *
 
 
 # =====================================================================================================================

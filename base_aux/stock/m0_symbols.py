@@ -3,6 +3,8 @@ class Symbols:
     # FINAM COMMON AVAILABLE
     # see https://docs.comon.ru/general-information/schedule-and-financial-instruments/
 
+    BRENT_UNIVERSAL: str = "Нефть Brent"
+
     SYMBOLS__SORTED_TRADED_VOLUME_CURRENCY: set[str] = {
         # from SYMBOLS__RUS_FINAM!!!!
         # + https://www.moex.com/ru/marketdata/?g=4#/mode=groups&group=4&collection=3&boardgroup=57&data_type=current&category=main
