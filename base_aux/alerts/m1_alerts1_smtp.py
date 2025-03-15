@@ -65,10 +65,10 @@ class AlertSmtp(Base_Alert):
         msg['Subject'] = self.SUBJECT or self.__class__.__name__
 
         try:
-            _subtype = self.body["_subtype"]
+            _subtype = self.MSG_ACTIVE["_subtype"]
         except:
             _subtype = self._subtype
-        msg.attach(MIMEText(self.body, _subtype=_subtype))
+        msg.attach(MIMEText(self.MSG_ACTIVE, _subtype=_subtype))
         return msg
 
     def _recipient_get(self) -> str:
@@ -77,8 +77,12 @@ class AlertSmtp(Base_Alert):
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    victim = AlertSmtp("hello")
-    victim.result_wait()
+    victim = AlertSmtp()
+    victim.send_msg("hello")
+    victim.send_msg("hello2")
+    victim.wait()
+    victim.send_msg("hello3")
+    victim.wait()
 
 
 # =====================================================================================================================

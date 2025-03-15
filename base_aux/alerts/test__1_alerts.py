@@ -39,7 +39,7 @@ class Test__1:
         AlertSmtp,
         # AlertTelegram,
     ])
-    @pytest.mark.parametrize(argnames="subject, body, _subtype", argvalues=[
+    @pytest.mark.parametrize(argnames="subject, MSGS_UNSENT, _subtype", argvalues=[
         (None, "zero", None),
         ("", "plain123", "plain123"),
         ("plain", "plain", "plain"),

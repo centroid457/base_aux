@@ -1,5 +1,6 @@
 from typing import *
 import time
+from collections import deque
 
 from PyQt5.QtCore import QThread
 
@@ -17,9 +18,16 @@ class Interface_Alert:
     - Dont use Try sentences inside - it will be applied in upper logic!
     - Decide inside if it was success or not, and return conclusion True/False only.
     """
-    BODY: Any
+    MSGS_UNSENT: deque[str | TextFormatted | Any]
+    MSG_ACTIVE: Any
 
     def _connect_unsafe(self) -> Union[bool, NoReturn]:
+        """establish connection to source
+        """
+        # self._conn = None
+        return True
+
+    def _disconnect_unsafe(self) -> Union[bool, NoReturn]:
         """establish connection to source
         """
         return True
@@ -37,7 +45,7 @@ class Interface_Alert:
     def _msg_compose(self) -> Union[str, 'MIMEMultipart']:
         """generate msg from existed data in attributes (passed before on init)
         """
-        return str(self.BODY)
+        return str(self.MSG_ACTIVE)
 
     def _recipient_get(self) -> str:
         """RECIPIENT SelfSending, get from obvious class aux_types!
@@ -51,186 +59,154 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     GOAL
     ----
     alert msg sender
-
-    NOTE
-    ----
-    - threading
-        - daemons
-        - collect all active threads
-        - wait all spawned threads finished
-
-    :ivar RECONNECT_LIMIT: how many times it will try to reconnect, after - just close object
-    :ivar RECONNECT_PAUSE: pause between reconnecting in seconds
-    :ivar _conn: actual connection object
-    :ivar _result: result for alert state
-        None - in process,
-        False - finished UnSuccess,
-        True - finished success!
-
-    :ivar _threads_active: spawned (only active) threads
     """
     # SETTINGS ------------------------------------
     CONN_ADDRESS: Any
     CONN_AUTH: AttrKit_AuthNamePwd
+    RECIPIENT: Any = None
 
     TIMEOUT_SEND: float = 1.2
-    RECONNECT_LIMIT: int = 10
+    RECONNECT_LIMIT: int = 3
     RECONNECT_PAUSE: int = 60
     # TIMEOUT_RATELIMIT: int = 600    # when EXX 451, b'Ratelimit exceeded
 
-    RECIPIENT: Any = None
-    body: str | TextFormatted | Any = None
+    MSGS_UNSENT: deque[str | TextFormatted | Any]
 
     # AUX -----------------------------------------
     _conn: Any = None
-    _result: Optional[bool] = None
+    result_connect: bool | None = None
+    result_login: bool | None = None
+    result_sent_all: bool | None = None
 
-    _threads_active: set[Self] = set()
-
-    # FIXME:
-    #  1=separate init with AUTH and send with BODY!!!
-    #  2=use stack for BODYs with one connection! singleton/multiton?
+    @property
+    def MSG_ACTIVE(self) -> str | TextFormatted | Any | None:
+        if len(self.MSGS_UNSENT) > 0:
+            return self.MSGS_UNSENT[0]
 
     # =================================================================================================================
-    def __init__(self, body: Any = None, recipient: Any = None):
+    def __init__(self, conn_address: Any = None, conn_auth: AttrKit_AuthNamePwd = None, recipient: Any = None):
         """
         GOAL
         ----
         Send msg on init
         """
         super().__init__()
-        # self._mutex: threading.Lock = threading.Lock()
+
+        # params --------------
+        if conn_address is not None:
+            self.CONN_ADDRESS = conn_address
+        if conn_auth is not None:
+            self.CONN_AUTH = conn_auth
 
         if recipient is not None:
             self.RECIPIENT = recipient
         if self.RECIPIENT is None:
             self.RECIPIENT = self._recipient_get()
 
-        # BODY ---------------
-        if body is not None:
-            body = str(body)
-            self.body = body
-            self.start()
+        self.MSGS_UNSENT = deque()
+
+        # START ---------------
+        self.start()
 
     # =================================================================================================================
-    def start(self, *args):
-        """this is just add ability to collect started threads in class
-        """
-        self.__class__._threads_active.add(self)
-        super().start()
+    def send_msg(self, body):
+        self.MSGS_UNSENT.append(body)
+        self.start()
 
-    def _thread_finished(self):
-        """del thread object from collection.
-        called then thread finished.
-        """
-        print(f"_thread_finished")
-        self.__class__._threads_active.discard(self)
-
-    @classmethod
-    def threads_wait_all(cls):
-        """wait while all spawned active threads will finished.
-        """
-        try:
-            time.sleep(1)
-            while cls._threads_active:
-                list(cls._threads_active)[0].wait()
-        except:
-            pass
-
-    def result_wait(self) -> Optional[bool]:
-        """wait for finish thread and get succession result.
-        Created for tests mainly! but you can use!
-        """
-        self.wait()
-        return self._result
+    def start(self, **kwargs):
+        if not self.isRunning():
+            super().start()
 
     # =================================================================================================================
-    def _conn__check_exists(self) -> bool:
-        """check if connection object exists
-        """
-        return self._conn is not None
-
-    def _conn__disconnect(self) -> None:
-        """disconnect connection object
-        """
-        if self._conn:
-            self._conn.quit()
-        self._conn__clear()
-
-    def _conn__clear(self) -> None:
-        """del connection object
-        """
-        self._conn = None
-
     def _connect(self) -> Optional[bool]:
         """create connection object
         """
-        result = None
-        if not self._conn__check_exists():
-            print(f"[connect] TRY {self.__class__.__name__}")
-            try:
-                if self._connect_unsafe():
-                    print("[connect] SUCCESS")
+        while True:
+            counter = 0
+            self.ready_to_send = None
+            while counter <= self.RECONNECT_LIMIT:
+                counter += 1
 
-            except Exception as exx:
-                print(f"[connect] ERROR [{exx!r}]")
-                self._conn__clear()
+                if not self.result_connect:
+                    print(f"[connect] TRY {self.__class__.__name__}")
+                    try:
+                        self.result_connect = self._connect_unsafe()
+                        if self.result_connect:
+                            print("[connect] SUCCESS")
+                    except Exception as exx:
+                        print(f"[connect] ERROR [{exx!r}]")
 
-        if self._conn__check_exists():
-            try:
-                result = self._login_unsafe()
-                if result:
-                    print("[login] SUCCESS")
-            except Exception as exx:
-                print(f"[LOGIN] ERROR [{exx!r}]")
-                self._conn__clear()
+                if self.result_connect and not self.result_login:
+                    try:
+                        self.result_login = self._login_unsafe()
+                        if self.result_login:
+                            print("[login] SUCCESS")
+                    except Exception as exx:
+                        print(f"[LOGIN] ERROR [{exx!r}]")
 
-        print("="*100)
-        print("="*100)
-        print("="*100)
-        print()
+                print("=" * 100)
+                print("=" * 100)
+                print("=" * 100)
+                print()
 
-        return result
+                self.ready_to_send = self.result_connect and self.result_login
+                if self.ready_to_send:
+                    break
+                else:
+                    time.sleep(self.RECONNECT_PAUSE)
 
-    # =================================================================================================================
-    def run(self) -> None:
-        """main logic which manage started thread
-        """
-        self._result = None
-
-        counter = 0
-        while not self._conn__check_exists() and counter <= self.RECONNECT_LIMIT:
-            counter += 1
-            if not self._connect():
+            # -------------------------------------------
+            if self.ready_to_send:
+                break
+            else:
                 print(f"RECONNECT_PAUSE[{counter=}]")
                 print("=" * 100)
                 print()
-                time.sleep(self.RECONNECT_PAUSE)
+                time.sleep(10)
+                continue
 
-        print("[Try send", "-" * 80)
-        print(self._msg_compose())
-        print("Try send]", "-" * 80)
+        return self.ready_to_send
 
-        if self._conn__check_exists():
+    def _disconnect(self):
+        self.result_connect = None
+        self.result_login = None
+
+        try:
+            self._disconnect_unsafe()
+        except:
+            pass
+
+    # =================================================================================================================
+    def run(self) -> None:
+        self.result_sent_all = None
+
+        while self.MSG_ACTIVE is not None:
+            if not self._connect():
+                break
+
+            MSG = self._msg_compose()
+            print("[Try send", "-" * 80)
+            print(MSG)
+            print("Try send]", "-" * 80)
+
             try:
-                result = self._send_unsafe()
-                if result:
+                sent_result = self._send_unsafe()
+                if sent_result:
+                    self.MSGS_UNSENT.popleft()
                     print("[send] SUCCESS")
-                    self._result = True
             except Exception as exx:
-                msg = f"[send] ERROR [{exx!r}]"
+                msg = f"[sent] ERROR [{exx!r}]"
                 # [send] ERROR [SMTPDataError(451, b'Ratelimit exceeded for mailbox centroid@mail.ru. Try again later.')]
                 print(msg)
-                self._conn__clear()
+                break
 
         print()
         print()
         print()
 
-        if self._result is None:
-            self._result = False
-
-        self._thread_finished()
+        self.result_sent_all = self.MSG_ACTIVE is None
+        print(f"{self.result_sent_all=}")
+        self._disconnect()
 
 
 # =====================================================================================================================
