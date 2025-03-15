@@ -154,15 +154,13 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
                     except Exception as exx:
                         print(f"[LOGIN] ERROR [{exx!r}]")
 
-                print("=" * 100)
-                print("=" * 100)
-                print("=" * 100)
-                print()
-
                 self.ready_to_send = self.result_connect and self.result_login
                 if self.ready_to_send:
                     break
                 else:
+                    print("=" * 100)
+                    print("=" * 100)
+                    print("=" * 100)
                     time.sleep(self.RECONNECT_PAUSE)
 
             # -------------------------------------------
