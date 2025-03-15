@@ -16,7 +16,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = AttrKit_Blank
     STYLE: Enum_DictTextFormat = Enum_DictTextFormat.AUTO
-    KEYPATH: tuple[str | int, ...] = ()
+    KEYPATH: tuple[str | int, ...]
 
     FILEPATH: pathlib.Path
     TEXT: str
@@ -39,6 +39,8 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
 
         if keypath is not None:
             self.KEYPATH = keypath
+        else:
+            self.KEYPATH = tuple()
 
     def init_style(self, style: Enum_DictTextFormat) -> None:
         if style is not None:

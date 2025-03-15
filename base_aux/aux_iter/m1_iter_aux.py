@@ -124,8 +124,11 @@ class IterAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def value__get(self, *keypath: TYPING.ITERPATH_KEY) -> Any | NoReturn:
         result = self.SOURCE
-        keypath = self.keypath__get_original(*keypath)
-        for key_i in keypath:
+        keypath_orig = self.keypath__get_original(*keypath)
+        if keypath_orig is None:
+            print(f"{self.SOURCE=}/{keypath=}/{keypath_orig=}")
+            raise Exx__NotExistsNotFoundNotCreated(f"{keypath=} in {self.SOURCE=}")
+        for key_i in keypath_orig:
             try:
                 result = result[key_i]
             except:
