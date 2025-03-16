@@ -1,16 +1,34 @@
 from typing import *
 import numpy as np
-import pandas as pd
 
-from base_aux.base_statics.m2_exceptions import *
 from base_aux.base_nest_dunders.m1_init1_source import *
+from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_types.m2_info import *
+
+
+# =====================================================================================================================
+DATA_EXAMPLE_LIST = [
+    (1741993200, 70.54, 70.54, 70.49, 70.51, 163, 1, 254),
+    (1741993800, 70.52, 70.55, 70.52, 70.54,  56, 1,  82),
+    (1741994400, 70.54, 70.56, 70.52, 70.55, 176, 1, 201),
+    (1741995000, 70.54, 70.56, 70.54, 70.56, 137, 1, 162),
+    (1741995600, 70.56, 70.57, 70.5 , 70.51, 146, 1, 172),
+    (1741996200, 70.51, 70.59, 70.51, 70.59, 222, 1, 361),
+    (1741996800, 70.6 , 70.61, 70.58, 70.61,  16, 1,  35),
+    (1741998000, 70.59, 70.59, 70.59, 70.59,   4, 3,   4),
+    (1741998600, 70.61, 70.62, 70.61, 70.62,   7, 3,   7),
+    (1741999200, 70.62, 70.62, 70.62, 70.62,  10, 3,  10),
+]
+
+TYPING__TS_FINAL = np.ndarray
+TYPING__TS_DRAFT = np.ndarray | list[tuple[Any, ...]]
 
 
 # =====================================================================================================================
 class TimeSeriesAux(NestInit_Source):
-    SOURCE: np.array    # todo: add zero data!
+    SOURCE: TYPING__TS_FINAL    # todo: add zero data!
 
-    DTYPE_DICT: dict = dict(    # template for making dtype
+    DTYPE_DICT: dict[str, str | type] = dict(    # template for making dtype
         time='<i8',
         open='<f8',
         high='<f8',
@@ -20,7 +38,12 @@ class TimeSeriesAux(NestInit_Source):
         spread='<i4',
         real_volume='<u8',
     )
-    DTYPE_ITEMS: dict.items = list(DTYPE_DICT.items())  # used to create data on Air
+    DTYPE_ITEMS: list[tuple[str, str | type]] = list(DTYPE_DICT.items())  # used to create data on Air
+
+    def init_post(self) -> None | NoReturn:
+        if isinstance(self.SOURCE, (list, tuple)):
+            self.SOURCE = np.array(self.SOURCE, dtype=self.DTYPE_ITEMS)
+        # if self.SOURCE.size
 
     # FIELDS ----------------------------------------------------------------------------------------------------------
     def get_fields(self) -> dict[str, Any]:
@@ -81,7 +104,7 @@ class TimeSeriesAux(NestInit_Source):
         result = self._windows_shrink(windows)
         return result
 
-    def shrink_simple(self, divider: int, column: Optional[str] = None) -> np.array:
+    def shrink_simple(self, divider: int, column: str = None) -> np.array:
         """
         DIFFERENCE - from shrink
         ----------
@@ -90,7 +113,11 @@ class TimeSeriesAux(NestInit_Source):
         when important only one column in calculations!
         such as RSI/WMA typically use only close values from timeSeries!
         """
-        pass
+        result = self.SOURCE
+        if column:
+            result = result[column]
+        result = result[::divider]
+        return result
 
     # ------------------------------------------------------------------------------------------------------
     def _windows_get(self, divider: int) -> np.array:
@@ -123,6 +150,48 @@ class TimeSeriesAux(NestInit_Source):
         void_new["real_volume"] = window["real_volume"].sum()
 
         return void_new
+
+
+# =====================================================================================================================
+def _explore_init():
+    try:
+        obj = TimeSeriesAux()
+        assert False
+    except:
+        pass
+
+    obj = TimeSeriesAux(DATA_EXAMPLE_LIST)
+    # print(obj.SOURCE)
+    # ObjectInfo(obj.SOURCE).print()
+    assert obj.SOURCE.ndim == 1
+
+    print(obj.SOURCE["close"])
+    assert obj.SOURCE["close"] is not None
+    assert obj.SOURCE["close"].ndim == 1
+
+    try:
+        obj = TimeSeriesAux(DATA_EXAMPLE_LIST[0])
+        assert False
+        print(obj.SOURCE)
+    except:
+        pass
+
+
+def _explore_split():
+    obj = TimeSeriesAux(DATA_EXAMPLE_LIST)
+    print(obj.SOURCE.shape)
+    assert obj.SOURCE.size == len(DATA_EXAMPLE_LIST)
+
+
+    # ObjectInfo(obj.SOURCE).print()
+
+    # obj2 = np.split(obj.SOURCE, 2)
+    # ObjectInfo(obj2).print()
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _explore_split()
 
 
 # =====================================================================================================================

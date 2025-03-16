@@ -1,23 +1,14 @@
-from typing import *
-
-import time
-import datetime as dt
-import re
-import json
 import threading
 
 import MetaTrader5 as mt5
 import pandas as pd
 import numpy as np
 
-from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import *
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_np.m2_time_series import TimeSeriesAux
 from base_aux.stock.m0_symbols import *
-from base_aux.stock.m1_time_series import *
-from base_aux.stock.m3_indicators import *
+from base_aux.stock.m2_indicators import *
 
 from base_aux.privates.m1_privates import *
-from base_aux.aux_attr.m4_kits import *
 from base_aux.alerts.m1_alert0_base import *
 from base_aux.aux_types.m2_info import *
 
@@ -647,13 +638,13 @@ class MT5(NestInit_AttrsLambdaResolve):
 # =====================================================================================================================
 def _explore():
     obj = MT5()
-    bar1 = obj.bars__get(1)
+    bar1 = obj.bars__get(10)
     print(bar1)
     ObjectInfo(bar1).print()
-    print(bar1.dtype)
-    print(bar1.dtype.fields)
-    print()
-    print()
+    # print(bar1.dtype)
+    # print(bar1.dtype.fields)
+    # print()
+    # print()
 
     # bars2 = obj.bars__get(2)
     # print(bars2)

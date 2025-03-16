@@ -12,14 +12,14 @@ class NpAux(NestInit_Source):
     def d2_get_compact_str(
         self,
         values_translater: dict[Any, Any] = None,
-        separate_rows: int = None,
-        wrap: Optional[bool] = None,
-        use_rows_num: Optional[bool] = None
+        separate_rows_blocks: int = None,
+        wrap: bool = None,
+        use_rows_num: bool = None
     ) -> str:
         """
 
         :param values_translater: dictionary to change exact elements
-        :param separate_rows: add blank line on step
+        :param separate_rows_blocks: add blank line on step
         :param wrap: add additional strings before and after data
         :param use_rows_num: add row num in
         """
@@ -42,7 +42,7 @@ class NpAux(NestInit_Source):
 
         for row in self.SOURCE:
             row_pos += 1
-            if separate_rows and row_pos > 1 and (row_pos - 1) % separate_rows == 0:
+            if separate_rows_blocks and row_pos > 1 and (row_pos - 1) % separate_rows_blocks == 0:
                 result += f"\n"
 
             if use_rows_num:

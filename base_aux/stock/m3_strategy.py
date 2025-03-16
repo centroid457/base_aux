@@ -7,7 +7,7 @@ from base_aux.aux_np.m1_np import *
 from base_aux.alerts.m2_select import *
 from base_aux.threads.m1_threads import *
 
-from base_aux.stock.m2_mt import *
+from base_aux.stock.m1_mt import *
 
 
 # =====================================================================================================================
@@ -133,7 +133,7 @@ class MonitorADX(MonitorBase):
     def print__array_interpreted(self) -> None:
         text = NpAux(self.RESULTS).d2_get_compact_str(
             values_translater=self.ARRAY_INTERPRETER,
-            separate_rows=20,
+            separate_rows_blocks=20,
             wrap=True,
             use_rows_num=True
         )
