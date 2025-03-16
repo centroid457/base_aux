@@ -48,7 +48,7 @@ class MonitorBase(MT5, threading.Thread):
             print(msg)
 
             self.run_strategy_cycle_one()
-            self.ALERT.threads_wait_all()
+            self.ALERT.wait()
 
             self.state_calculating = False
 

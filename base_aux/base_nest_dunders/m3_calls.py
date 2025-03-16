@@ -2,6 +2,24 @@ from typing import *
 
 
 # =====================================================================================================================
+class NestCall_MethodName:
+    """
+    GOAL
+    ----
+    separate specially as base with not exact method name
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Base_Alert
+    """
+    _CALL__METHOD_NAME: str
+
+    def __call__(self, *args, **kwargs) -> Any | NoReturn:
+        method = getattr(self, self._CALL__METHOD_NAME)
+        return method(*args, **kwargs)
+
+
+# =====================================================================================================================
 class NestCall_Resolve:
     """
     GOAL
@@ -31,7 +49,7 @@ class NestCall_Other:
     """
     GOAL
     ----
-    apply otehr object as data
+    apply other object as data
 
     SPECIALLY CREATED FOR
     ---------------------

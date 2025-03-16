@@ -4,6 +4,7 @@ from collections import deque
 
 from PyQt5.QtCore import QThread, QTimer
 
+from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_text.m7_text_formatted import *
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
 
@@ -54,7 +55,7 @@ class Interface_Alert:
 
 
 # =====================================================================================================================
-class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simple!
+class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, NestCall_MethodName, QThread):     # REM: DONT ADD SINGLETON!!! SNMP WILL NOT WORK!!! and calling logic will be not simple!
     """
     GOAL
     ----
@@ -74,6 +75,8 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, QThread):     # R
     MSGS_UNSENT: deque[str | TextFormatted | Any]
 
     # AUX -----------------------------------------
+    _CALL__METHOD_NAME = "send_msg"
+
     _conn: Any = None
     result_connect: bool | None = None
     result_login: bool | None = None
