@@ -37,19 +37,17 @@ TYPING__INDICATOR_VALUES = Union[None, float, TYPING__PD_SERIES]
 # =====================================================================================================================
 class MT5(NestInit_AttrsLambdaResolve):
     CONN_AUTH = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
-
     SYMBOL: TYPING__SYMBOL_FINAL = Symbols.BRENT_UNIVERSAL
     TF: TYPING__TF = mt5.TIMEFRAME_M10
     __SYMBOLS_AVAILABLE: list[mt5.SymbolInfo] = None
 
-    BAR_LAST: np.ndarray = None
+    # BAR_LAST: np.ndarray = None
     """
     time
     (1675118400, 85.41, 85.43, 85.21, 85.21, 225, 1, 1065)
-
     bar["time"] --> 1675118400
     """
-    TICK_LAST: mt5.Tick = None
+    # TICK_LAST: mt5.Tick = None
     """
     self.BAR_LAST_TICK=Tick(time=1675468684, bid=83.45, ask=83.51, last=83.5, volume=6, time_msc=1675468684950, flags=30, volume_real=6.0)
     type(self.BAR_LAST_TICK)=<class 'Tick'>
@@ -68,7 +66,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         self.TF = tf or self.TF
         self.SYMBOL = symbol or self.SYMBOL
 
-        # self.mt5_connect()
+        self.mt5_connect()
 
     def __del__(self):
         mt5.shutdown()
@@ -324,7 +322,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         # print(f"{volume_price=}")
 
         result = round(volume_price[0]/_devider)
-        self._symbols_volume_price.update({_symbol: result})    # dont delete! collect in threads!
+        self._symbols__volume_price.update({_symbol: result})    # dont delete! collect in threads!
         return result
 
     def _symbols__get_volume_price__sorted(self, limit_min=None, limit_max=None, _symbols: Optional[list[str]] = None, _devider: Optional[int] = None) -> dict[str, float]:
@@ -447,22 +445,18 @@ class MT5(NestInit_AttrsLambdaResolve):
         return self._symbols__volume_price
 
     # BAR HISTORY =====================================================================================================
-    pass
-
-    # BAR -------------------------------------------------------------------------------------------------------------
     def bars__get(
             self,
             count: int = 1,
-            tf_split: int = None,
-            shrink: bool = None,
+            tf_multiply: int = None,
             _start: int = None,
             _symbol: TYPING__SYMBOL_DRAFT = None,
             _tf: TYPING__TF = None
     ) -> Union[np.ndarray]:
         """get history bars
-        :param tf_split: correct count of bars in case of using split tf
+        :param tf_multiply: correct count of bars in case of using increasing tf
 
-        :_start: 0 is actual not finished!
+        :_start: 0 is actual and not finished!
         ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
             [(1695763800, 93.83, 93.88, 93.78, 93.88, 172, 1, 723)]
             elem=1695763800/<class 'numpy.int64'>
@@ -487,12 +481,12 @@ class MT5(NestInit_AttrsLambdaResolve):
         """
         _symbol = self.SYMBOL__get_active(_symbol)
         _tf = self.TF__get_active(_tf)
-        tf_split = tf_split or 1
+        tf_multiply = tf_multiply or 1
 
         if _start is None:
             _start = 1
 
-        bars = mt5.copy_rates_from_pos(_symbol.name, _tf, _start, count * tf_split)
+        bars = mt5.copy_rates_from_pos(_symbol.name, _tf, _start, count * tf_multiply)
         # if not bars:
         #     print(f"{_symbol=}/{bars=}")
         #     return
@@ -500,8 +494,8 @@ class MT5(NestInit_AttrsLambdaResolve):
         # for bar in bars:
         #     print(f"{type(bar)}={bar}")     # <class 'numpy.void'>=(1671753600, 137.49, 138.26, 136.81, 137.94, 53823, 0, 2283422)
 
-        if tf_split > 1 and shrink:
-            bars = TimeSeriesAux(bars).shrink(tf_split)
+        if tf_multiply > 1:
+            bars = TimeSeriesAux(bars).shrink(tf_multiply)
 
         # if count == 1:
         #     # bars = [(1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
@@ -513,66 +507,60 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         return bars
 
-    def bar_new__wait(self, sleep: int = 10) -> None:
-        # TODO: use BarTime to resolve LOST!!!
+    def bar_new__wait(self, old: np.ndarray, sleep: int = 10) -> None:
         count = 0
-        while not self.bar_last__update():
+        new = None
+        while not new or old == new:
             count += 1
-            if False:
-                self.bar__lost = True
-                msg = f"[WARN]bar lost [{count=}]"
-                print(msg)
+            try:
+                new = self.bars__get()[0]
+                break
+            except:
+                pass
+
             print(f"bar_new__wait {count=}")
             time.sleep(sleep)
-        self.bar__lost = False
 
-    def bar_last__update(self) -> bool:
-        bar_new = self.bars__get(count=1)
-        if not self.BAR_LAST or bar_new != self.BAR_LAST:
-            self.BAR_LAST = bar_new
-            return True
-        else:
-            return False
-
-    def tick_last__update(self, _symbol: TYPING__SYMBOL_DRAFT = None, wait_tick_load: bool = True) -> bool:
-        """
-
-        SYMBOL_NAME have to be in terminal! otherwise error
-            [False]tick_last__update()=mt5.last_error()=(-4, 'Terminal: Not found')
-        """
-        _symbol = self.SYMBOL__get_active(_symbol)
-        result = False
-        while True:
-            tick = mt5.symbol_info_tick(self.SYMBOL)
-            result = tick != self.TICK_LAST
-            if result:
-                break
-
-            if not wait_tick_load:
-                break
-            time.sleep(1)
-
-        if result:
-            print(f"update[{self.TICK_LAST=}]{_symbol}/{mt5.last_error()=}")
-            # Tick(time=1665770358, bid=62.437, ask=63.312, last=0.0, volume=0, time_msc=1665770358179, flags=6, volume_real=0.0)
-            self.TICK_LAST = tick
-        return result
-
+    # -----------------------------------------------------------------------------------------------------------------
+    # def tick_last__update(self, _symbol: TYPING__SYMBOL_DRAFT = None, wait_tick_load: bool = True) -> bool:
+    #     """
+    #
+    #     SYMBOL_NAME have to be in terminal! otherwise error
+    #         [False]tick_last__update()=mt5.last_error()=(-4, 'Terminal: Not found')
+    #     """
+    #     _symbol = self.SYMBOL__get_active(_symbol)
+    #     result = False
+    #     while True:
+    #         tick = mt5.symbol_info_tick(self.SYMBOL)
+    #         result = tick != self.TICK_LAST
+    #         if result:
+    #             break
+    #
+    #         if not wait_tick_load:
+    #             break
+    #         time.sleep(1)
+    #
+    #     if result:
+    #         print(f"update[{self.TICK_LAST=}]{_symbol}/{mt5.last_error()=}")
+    #         # Tick(time=1665770358, bid=62.437, ask=63.312, last=0.0, volume=0, time_msc=1665770358179, flags=6, volume_real=0.0)
+    #         self.TICK_LAST = tick
+    #     return result
+    #
     # HISTORY ---------------------------------------------------------------------------------------------------------
-    def bars__check_actual(
-            self,
-            _symbol: TYPING__SYMBOL_DRAFT = None,
-            _tf: TYPING__TF = None
-    ) -> bool:
-        _symbol = self.SYMBOL__get_active(_symbol)
-        _tf_td = dt.timedelta(minutes=self.TF__get_active(_tf))
-
-        result = False
-        last = self.TICK_LAST
-        if last:
-            last_dt = dt.datetime.fromtimestamp(last.time)
-            result = (last_dt + _tf_td) >= dt.datetime.today()
-        return result
+    # def bars__check_actual(
+    #         self,
+    #         _symbol: TYPING__SYMBOL_DRAFT = None,
+    #         _tf: TYPING__TF = None
+    # ) -> bool:
+    #     _symbol = self.SYMBOL__get_active(_symbol)
+    #     _tf_td = dt.timedelta(minutes=self.TF__get_active(_tf))
+    #
+    #     result = False
+    #     last = self.TICK_LAST
+    #     if last:
+    #         last_dt = dt.datetime.fromtimestamp(last.time)
+    #         result = (last_dt + _tf_td) >= dt.datetime.today()
+    #     return result
 
     # INDICATOR =======================================================================================================
     def _indicator_get_by_obj(
@@ -590,11 +578,11 @@ class MT5(NestInit_AttrsLambdaResolve):
         # GET -----------------------------
         bars_np = _bars or self.bars__get(
             count=indicator_params.bars_expected__get(),
-            tf_split=tf_split,
-            shrink=indicator_params.NAME == IndicatorName.ADX,
+            tf_multiply=tf_split,
+            # shrink=indicator_params.NAME == IndicatorName.ADX,
             _start=_add_history + 1,
             _symbol=_symbol,
-            _tf=_tf
+            _tf=_tf,
         )
 
         # DF -----------------------------
@@ -659,7 +647,6 @@ class MT5(NestInit_AttrsLambdaResolve):
 # =====================================================================================================================
 def _explore():
     obj = MT5()
-    obj.mt5_connect()
     bar1 = obj.bars__get(1)
     print(bar1)
     ObjectInfo(bar1).print()

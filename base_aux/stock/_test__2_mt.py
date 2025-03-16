@@ -18,8 +18,8 @@ class Test_mt5:
     # def teardown_class(cls):
     #     pass
     #
-    # def setup_method(self, method):
-    #     # self.VICTIM = type("VICTIM", (888888888888,), {})
+    def setup_method(self, method):
+        self.VICTIM.SYMBOL = "Нефть Brent"
 
     # CONNECT ---------------------------------------------------------------------------------------------------------
     def test__mt5_connect(self):
@@ -49,10 +49,11 @@ class Test_mt5:
         victim = self.VICTIM()
         result = victim._symbol__get_volume_price(_symbol="SBER")
         print(result)
+        assert result
 
     def test__symbols_get_sorted_volume_price(self):
         victim = self.VICTIM()
-        victim._symbols__get_volume_price__sorted()
+        assert victim._symbols__get_volume_price__sorted()
 
     # HISTORY ---------------------------------------------------------------------------------------------------------
     def test__bars_np(self):
@@ -101,13 +102,13 @@ elem=723/<class 'numpy.uint64'>
 
     def test__steps(self):
         victim = MT5()
-        assert victim.bars__get(1, tf_split=1).shape == (1,)
-        assert victim.bars__get(1, tf_split=2).shape == (1,)
-        assert victim.bars__get(1, tf_split=3).shape == (1,)
+        assert victim.bars__get(1, tf_multiply=1).shape == (1,)
+        assert victim.bars__get(1, tf_multiply=2).shape == (1,)
+        assert victim.bars__get(1, tf_multiply=3).shape == (1,)
 
-        assert victim.bars__get(2, tf_split=1).shape == (2,)
-        assert victim.bars__get(2, tf_split=2).shape == (2,)
-        assert victim.bars__get(2, tf_split=3).shape == (2,)
+        assert victim.bars__get(2, tf_multiply=1).shape == (2,)
+        assert victim.bars__get(2, tf_multiply=2).shape == (2,)
+        assert victim.bars__get(2, tf_multiply=3).shape == (2,)
 
     # INDICATORS ------------------------------------------------------------------------------------------------------
     def test__indicator_get__TYPE(self):
