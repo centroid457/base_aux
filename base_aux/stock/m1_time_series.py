@@ -8,7 +8,19 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 
 # =====================================================================================================================
 class TimeSeriesAux(NestInit_Source):
-    SOURCE: np.array
+    SOURCE: np.array    # todo: add zero data!
+
+    DTYPE_DICT: dict = dict(    # template for making dtype
+        time='<i8',
+        open='<f8',
+        high='<f8',
+        low='<f8',
+        close='<f8',
+        tick_volume='<u8',
+        spread='<i4',
+        real_volume='<u8',
+    )
+    DTYPE_ITEMS: dict.items = list(DTYPE_DICT.items())  # used to create data on Air
 
     # FIELDS ----------------------------------------------------------------------------------------------------------
     def get_fields(self) -> dict[str, Any]:
@@ -19,18 +31,32 @@ class TimeSeriesAux(NestInit_Source):
 
         results
         -------
-        ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
+        DTYPE
+            [('time', '<i8'), ('open', '<f8'), ('high', '<f8'), ('low', '<f8'), ('close', '<f8'), ('tick_volume', '<u8'), ('spread', '<i4'), ('real_volume', '<u8')]
+            [
+                ('time', '<i8'),
+                ('open', '<f8'),
+                ('high', '<f8'),
+                ('low', '<f8'),
+                ('close', '<f8'),
+                ('tick_volume', '<u8'),
+                ('spread', '<i4'),
+                ('real_volume', '<u8')
+            ]
 
-        {
-            'time': (dtype('int64'), 0),
-            'open': (dtype('float64'), 8),
-            'high': (dtype('float64'), 16),
-            'low': (dtype('float64'), 24),
-            'close': (dtype('float64'), 32),
-            'tick_volume': (dtype('uint64'), 40),
-            'spread': (dtype('int32'), 48),
-            'real_volume': (dtype('uint64'), 52)
-        }
+        FIELDS
+            ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
+
+            {
+                'time': (dtype('int64'), 0),
+                'open': (dtype('float64'), 8),
+                'high': (dtype('float64'), 16),
+                'low': (dtype('float64'), 24),
+                'close': (dtype('float64'), 32),
+                'tick_volume': (dtype('uint64'), 40),
+                'spread': (dtype('int32'), 48),
+                'real_volume': (dtype('uint64'), 52)
+            }
         """
         return self.SOURCE.dtype.fields
 

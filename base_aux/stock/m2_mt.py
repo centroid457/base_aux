@@ -650,13 +650,14 @@ def _explore():
     bar1 = obj.bars__get(1)
     print(bar1)
     ObjectInfo(bar1).print()
-    print()
+    print(bar1.dtype)
+    print(bar1.dtype.fields)
     print()
     print()
 
-    bars2 = obj.bars__get(2)
-    print(bars2)
-    ObjectInfo(bars2).print()
+    # bars2 = obj.bars__get(2)
+    # print(bars2)
+    # ObjectInfo(bars2).print()
 
 
 # =====================================================================================================================

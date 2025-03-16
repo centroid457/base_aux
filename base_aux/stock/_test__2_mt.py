@@ -110,7 +110,22 @@ elem=723/<class 'numpy.uint64'>
         assert victim.bars__get(2, tf_multiply=2).shape == (2,)
         assert victim.bars__get(2, tf_multiply=3).shape == (2,)
 
-    # INDICATORS ------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
+class Test__INDICATORS:
+    VICTIM: Union[MT5, MT5] = type("VICTIM", (MT5,), {})
+
+    # @classmethod
+    # def setup_class(cls):
+    #     pass
+    #
+    # @classmethod
+    # def teardown_class(cls):
+    #     pass
+    #
+    def setup_method(self, method):
+        self.VICTIM.SYMBOL = "Нефть Brent"
+
+    # CONNECT ---------------------------------------------------------------------------------------------------------
     def test__indicator_get__TYPE(self):
         victim = MT5()
         result = victim._indicator_get_by_obj(IndicatorParams_ADX(2, 1), return_tail=1)
