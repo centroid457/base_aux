@@ -6,26 +6,24 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 
 # =====================================================================================================================
 @final
-class ArrayAux(NestInit_Source):
+class NpAux(NestInit_Source):
     SOURCE: np.ndarray
 
     def d2_get_compact_str(
         self,
-        interpreter: Optional[dict[Any, Any]] = None,
-        separate_rows: Optional[int] = None,
+        values_translater: dict[Any, Any] = None,
+        separate_rows: int = None,
         wrap: Optional[bool] = None,
         use_rows_num: Optional[bool] = None
     ) -> str:
         """
 
-        :param array:
-        :param interpreter: dictionary to change some elements
+        :param values_translater: dictionary to change exact elements
         :param separate_rows: add blank line on step
         :param wrap: add additional strings before and after data
         :param use_rows_num: add row num in
-        :return:
         """
-        interpreter = interpreter or {}
+        values_translater = values_translater or {}
         count_rows = len(self.SOURCE)
         count_columns = len(self.SOURCE[0])
         row_pos = 0
@@ -50,7 +48,7 @@ class ArrayAux(NestInit_Source):
             if use_rows_num:
                 result += "{:{width}}".format(str(row_pos), width=tab_row_nums)
             for value in row:
-                replaced = interpreter.get(value)
+                replaced = values_translater.get(value)
                 if replaced is not None:
                     value = replaced
                 result += f"{value}"

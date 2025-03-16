@@ -1,10 +1,9 @@
 import sys
-import abc
 
 import pandas as pd
 import MetaTrader5 as mt5
 
-from base_aux.aux_arrays.m1_arrays_aux import *
+from base_aux.aux_np.m1_np import *
 from base_aux.alerts.m2_select import *
 from base_aux.threads.m1_threads import *
 
@@ -17,7 +16,7 @@ np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 
 # =====================================================================================================================
-class MonitorBase(MT5, abc.ABC, threading.Thread):
+class MonitorBase(MT5, threading.Thread):
     """Base monitor class.
 
     :ivar ALERT: Alert class used instantiating send msg
@@ -58,7 +57,6 @@ class MonitorBase(MT5, abc.ABC, threading.Thread):
             else:
                 self.LOAD_HISTORY_BARS -= 1
 
-    @abc.abstractmethod
     def run_strategy_cycle_one(self):
         """Execute one full cycle
         """
@@ -133,8 +131,8 @@ class MonitorADX(MonitorBase):
             self.state_full_column_1_10 = False
 
     def print__array_interpreted(self) -> None:
-        text = ArrayAux(self.RESULTS).d2_get_compact_str(
-            interpreter=self.ARRAY_INTERPRETER,
+        text = NpAux(self.RESULTS).d2_get_compact_str(
+            values_translater=self.ARRAY_INTERPRETER,
             separate_rows=20,
             wrap=True,
             use_rows_num=True
@@ -239,7 +237,7 @@ class ThreadManager_MapDrawer_Shift(ThreadsManager):
     pass
 
 
-class IndicatorMapDrawer_Simple(MT5, abc.ABC, threading.Thread):
+class IndicatorMapDrawer_Simple(MT5, threading.Thread):
     ALERT: type[Base_Alert] = Alert_MapDrawer
     INDICATOR: type[IndicatorParamsBase] = IndicatorParams_RSI
     INDICATOR_SETTINGS: Iterable[int] = (5, )
