@@ -281,7 +281,7 @@ class IndicatorMapDrawer_Simple(MT5, abc.ABC, threading.Thread):
         count_need = self.INDICATOR(*self.INDICATOR_SETTINGS).bars_expected__get() + self.MAP_LENGTH
 
         # get history
-        history = self.bars_get__count(count=count_need, tf_split=tf_split)
+        history = self.bars__get(count=count_need, tf_split=tf_split)
 
         # add results
         for shift in range(tf_split):

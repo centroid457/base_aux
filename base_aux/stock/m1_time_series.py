@@ -3,32 +3,22 @@ import numpy as np
 import pandas as pd
 
 from base_aux.base_statics.m2_exceptions import *
+from base_aux.base_nest_dunders.m1_init1_source import *
 
 
 # =====================================================================================================================
-class HistoryShifted_Shrink:
-    """
-    GOAL
-    ----
-    remake TS to shifted TF
-    """
+class TimeSeriesAux(NestInit_Source):
     SOURCE: np.array
-    SHIFT: int
-
-    def __init__(self, source: np.array, shift: int = 1):
-        self.SOURCE = source
-        self.SHIFT = shift
-
-        if shift < 1:
-            raise Exx__WrongUsage(f"{shift=}")
 
     # FIELDS ----------------------------------------------------------------------------------------------------------
-    def _get_fields(self) -> dict[str, Any]:
+    def get_fields(self) -> dict[str, Any]:
         """
         GOAL
         ----
         just as help info!
 
+        results
+        -------
         ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
 
         {
@@ -45,17 +35,41 @@ class HistoryShifted_Shrink:
         return self.SOURCE.dtype.fields
 
     # SHRINK ----------------------------------------------------------------------------------------------------------
-    def shrink(self) -> np.array:
-        if self.SHIFT == 1:
+    def shrink(self, divider: int) -> np.array:
+        """
+        GOAL
+        ----
+        full remake TS to less TF then actual
+        for example - you have 100history lines from tf=1m
+        so you can get
+            50lines for tf=2m
+            10lines for tf=10m
+        and it will be actual TS for TF! you dont need wait for finishing exact TF
+        """
+        if divider == 1:
             return self.SOURCE
-        windows = self._windows_get()
+        elif divider < 1:
+            raise Exx__WrongUsage(f"{divider=}")
+
+        windows = self._windows_get(divider)
         result = self._windows_shrink(windows)
         return result
 
+    def shrink_simple(self, divider: int, column: Optional[str] = None) -> np.array:
+        """
+        DIFFERENCE - from shrink
+        ----------
+        just drop other data! without calculations
+
+        when important only one column in calculations!
+        such as RSI/WMA typically use only close values from timeSeries!
+        """
+        pass
+
     # ------------------------------------------------------------------------------------------------------
-    def _windows_get(self) -> np.array:
-        bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=self.SHIFT)
-        bars_windows_stepped = bars_windows[::self.SHIFT]
+    def _windows_get(self, divider: int) -> np.array:
+        bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=divider)
+        bars_windows_stepped = bars_windows[::divider]
         return bars_windows_stepped
 
     def _windows_shrink(self, windows: np.array) -> np.array:
@@ -83,24 +97,6 @@ class HistoryShifted_Shrink:
         void_new["real_volume"] = window["real_volume"].sum()
 
         return void_new
-
-
-# =====================================================================================================================
-class HistoryShifted_Simple:
-    """History manager when important only one column in calculations!
-    such as RSI/WMA typically use only close values from timeSeries!
-    """
-    SOURCE: np.array = None
-    COLUMN: str = "close"
-    SHIFT: int = None
-
-    def __init__(self, source: np.array, shift: int = 1, column: Optional[str] = None):
-        self.SOURCE = source
-        self.COLUMN = column
-        self.SHIFT = shift
-
-        if shift < 1:
-            raise Exx__WrongUsage(f"{shift=}")
 
 
 # =====================================================================================================================

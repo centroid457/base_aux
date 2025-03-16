@@ -19,6 +19,7 @@ from base_aux.stock.m3_indicators import *
 from base_aux.privates.m1_privates import *
 from base_aux.aux_attr.m4_kits import *
 from base_aux.alerts.m1_alert0_base import *
+from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================
@@ -54,10 +55,7 @@ class MT5(NestInit_AttrsLambdaResolve):
     type(self.BAR_LAST_TICK)=<class 'Tick'>
     """
 
-    bar__lost: bool = None        # DONT SET! used only in STRATEGY!!!
-    tick__lost: bool = None
-
-    _symbols_volume_price: dict[str, float] = {}     # used as
+    _symbols__volume_price: dict[str, float] = {}     # collect in threads! dont delete!
 
     # =================================================================================================================
     def __init__(
@@ -70,8 +68,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         self.TF = tf or self.TF
         self.SYMBOL = symbol or self.SYMBOL
 
-        self.mt5_connect()
-        self._SYMBOL_init()
+        # self.mt5_connect()
 
     def __del__(self):
         mt5.shutdown()
@@ -86,6 +83,8 @@ class MT5(NestInit_AttrsLambdaResolve):
             msg += f"\n{self.CONN_AUTH}"
             print(msg)
             raise ConnectionError(msg)
+
+        self._SYMBOL_init()
 
     # SYMBOL ==========================================================================================================
     def _SYMBOL_init(self) -> None | NoReturn:
@@ -133,7 +132,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         if not mask:
             symbols = self.SYMBOLS_AVAILABLE
         else:
-            symbols = mt5.symbols_get(mask)
+            symbols = list(filter(lambda x: x.name.startswith(mask), self.SYMBOLS_AVAILABLE))
 
         print("*"*100)
         for item in symbols:
@@ -306,7 +305,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         print("*"*100)
 
     # VOLUME_PRICE -----------------------------------------------------
-    def _symbol_volume_price_get__last_day_finished(self, _symbol: TYPING__SYMBOL_DRAFT = None, _devider: Optional[int] = None) -> float:
+    def _symbol__get_volume_price(self, _symbol: TYPING__SYMBOL_DRAFT = None, _devider: Optional[int] = None) -> float:
         """
         VolumePrice as priceMean * Volume
         +save result into self.symbols_volume_price for threading usage!
@@ -315,7 +314,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         https://www.moex.com/ru/marketdata/?g=4#/mode=groups&group=4&collection=3&boardgroup=57&data_type=current&category=main
         """
         _devider = _devider or 1000 * 1000
-        bar = self.bars_get__count(_symbol=_symbol, _tf=mt5.TIMEFRAME_D1)
+        bar = self.bars__get(_symbol=_symbol, _tf=mt5.TIMEFRAME_D1)
         # print(f"{bar['real_volume']=}")
 
         item = mt5.symbol_info(_symbol)
@@ -325,10 +324,10 @@ class MT5(NestInit_AttrsLambdaResolve):
         # print(f"{volume_price=}")
 
         result = round(volume_price[0]/_devider)
-        self._symbols_volume_price.update({_symbol: result})
+        self._symbols_volume_price.update({_symbol: result})    # dont delete! collect in threads!
         return result
 
-    def _symbols_get_sorted_volume_price(self, limit_min=None, limit_max=None, _symbols: Optional[list[str]] = None, _devider: Optional[int] = None) -> dict[str, float]:
+    def _symbols__get_volume_price__sorted(self, limit_min=None, limit_max=None, _symbols: Optional[list[str]] = None, _devider: Optional[int] = None) -> dict[str, float]:
         """
 
         (400 * 1000 * 1000)
@@ -427,30 +426,93 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         # LOAD ---------------------------------------------------
         for symbol in _symbols:
-            threading.Thread(target=self._symbol_volume_price_get__last_day_finished, kwargs={"_symbol": symbol, "_devider": _devider}).start()
+            threading.Thread(target=self._symbol__get_volume_price, kwargs=dict(_symbol=symbol, _devider=_devider)).start()
 
         while threading.active_count() > 1:
             time.sleep(1)
 
         # FILTER ---------------------------------------------------
-        for symbol, value in dict(self._symbols_volume_price).items():
+        for symbol, value in dict(self._symbols__volume_price).items():
             if limit_max and limit_max < value:
-                self._symbols_volume_price.pop(symbol)
+                self._symbols__volume_price.pop(symbol)
             if limit_min > value:
-                self._symbols_volume_price.pop(symbol)
+                self._symbols__volume_price.pop(symbol)
 
         # SORT -----------------------------------------------------
-        self._symbols_volume_price = dict(sorted(self._symbols_volume_price.items(), key=lambda x: x[1], reverse=True))
+        self._symbols__volume_price = dict(sorted(self._symbols__volume_price.items(), key=lambda x: x[1], reverse=True))
 
         # PRINT ----------------------------------------------------
-        result_pretty = json.dumps(self._symbols_volume_price, indent=4)
+        result_pretty = json.dumps(self._symbols__volume_price, indent=4)
         print(result_pretty)
-        return self._symbols_volume_price
+        return self._symbols__volume_price
 
     # BAR HISTORY =====================================================================================================
     pass
 
     # BAR -------------------------------------------------------------------------------------------------------------
+    def bars__get(
+            self,
+            count: int = 1,
+            tf_split: int = None,
+            shrink: bool = None,
+            _start: int = None,
+            _symbol: TYPING__SYMBOL_DRAFT = None,
+            _tf: TYPING__TF = None
+    ) -> Union[np.ndarray]:
+        """get history bars
+        :param tf_split: correct count of bars in case of using split tf
+
+        :_start: 0 is actual not finished!
+        ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
+            [(1695763800, 93.83, 93.88, 93.78, 93.88, 172, 1, 723)]
+            elem=1695763800/<class 'numpy.int64'>
+            elem=93.83/<class 'numpy.float64'>
+            elem=93.88/<class 'numpy.float64'>
+            elem=93.78/<class 'numpy.float64'>
+            elem=93.88/<class 'numpy.float64'>
+            elem=172/<class 'numpy.uint64'>
+            elem=1/<class 'numpy.intc'>
+            elem=723/<class 'numpy.uint64'>
+
+        returns
+            1 bars
+                [(1741999200, 70.62, 70.62, 70.62, 70.62, 10, 3, 10)]
+                ndim                	int         :1
+                size                	int         :1
+            2 bars
+                [(1741998600, 70.61, 70.62, 70.61, 70.62,  7, 3,  7)
+                 (1741999200, 70.62, 70.62, 70.62, 70.62, 10, 3, 10)]
+                ndim                	int         :1
+                size                	int         :2
+        """
+        _symbol = self.SYMBOL__get_active(_symbol)
+        _tf = self.TF__get_active(_tf)
+        tf_split = tf_split or 1
+
+        if _start is None:
+            _start = 1
+
+        bars = mt5.copy_rates_from_pos(_symbol.name, _tf, _start, count * tf_split)
+        # if not bars:
+        #     print(f"{_symbol=}/{bars=}")
+        #     return
+
+        # for bar in bars:
+        #     print(f"{type(bar)}={bar}")     # <class 'numpy.void'>=(1671753600, 137.49, 138.26, 136.81, 137.94, 53823, 0, 2283422)
+
+        if tf_split > 1 and shrink:
+            bars = TimeSeriesAux(bars).shrink(tf_split)
+
+        # if count == 1:
+        #     # bars = [(1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
+        #     return bars[0]  # numpy.void
+        # else:
+        #     # bars = [(1695728400, 92.16, 92.32, 92.1, 92.31, 578, 1, 2764)
+        #     #         (1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
+        #     return bars     # numpy.ndarray
+
+        return bars
+
     def bar_new__wait(self, sleep: int = 10) -> None:
         # TODO: use BarTime to resolve LOST!!!
         count = 0
@@ -465,7 +527,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         self.bar__lost = False
 
     def bar_last__update(self) -> bool:
-        bar_new = self.bars_get__count(count=1)
+        bar_new = self.bars__get(count=1)
         if not self.BAR_LAST or bar_new != self.BAR_LAST:
             self.BAR_LAST = bar_new
             return True
@@ -512,60 +574,6 @@ class MT5(NestInit_AttrsLambdaResolve):
             result = (last_dt + _tf_td) >= dt.datetime.today()
         return result
 
-    def bars_get__count(
-            self,
-            count: int = 1,
-            tf_split: Optional[int] = None,
-            shrink: Optional[bool] = None,
-            _start: Optional[int] = None,
-            _symbol: TYPING__SYMBOL_DRAFT = None,
-            _tf: TYPING__TF = None
-    ) -> Union[np.ndarray]:
-        """get history bars
-
-        :param count: get exact count of bars
-        :param tf_split: correct count of bars in case of using split tf
-        :param shrink: True - if you need in results full correct split bars (for ADX you need new close/open)
-            Otherwise, dont use it! for RSI you need only close, which will be accessed directly by steps
-
-        :_start: 0 is actual not finished!
-        ['time', 'open', 'high', 'low', 'close', 'tick_volume', 'spread', 'real_volume']
-            [(1695763800, 93.83, 93.88, 93.78, 93.88, 172, 1, 723)]
-            elem=1695763800/<class 'numpy.int64'>
-            elem=93.83/<class 'numpy.float64'>
-            elem=93.88/<class 'numpy.float64'>
-            elem=93.78/<class 'numpy.float64'>
-            elem=93.88/<class 'numpy.float64'>
-            elem=172/<class 'numpy.uint64'>
-            elem=1/<class 'numpy.intc'>
-            elem=723/<class 'numpy.uint64'>
-        """
-        _symbol = self.SYMBOL__get_active(_symbol)
-        _tf = self.TF__get_active(_tf)
-        tf_split = tf_split or 1
-        _start = _start or 1
-
-        bars = mt5.copy_rates_from_pos(_symbol.name, _tf, _start, count * tf_split)
-        # if not bars:
-        #     print(f"{_symbol=}/{bars=}")
-        #     return
-
-        # for bar in bars:
-        #     print(f"{type(bar)}={bar}")     # <class 'numpy.void'>=(1671753600, 137.49, 138.26, 136.81, 137.94, 53823, 0, 2283422)
-
-        if tf_split > 1 and shrink:
-            bars = HistoryShifted_Shrink(bars, tf_split).shrink()
-
-        # if count == 1:
-        #     # bars = [(1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
-        #     return bars[0]  # numpy.void
-        # else:
-        #     # bars = [(1695728400, 92.16, 92.32, 92.1, 92.31, 578, 1, 2764)
-        #     #         (1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
-        #     return bars     # numpy.ndarray
-
-        return bars
-
     # INDICATOR =======================================================================================================
     def _indicator_get_by_obj(
             self,
@@ -580,7 +588,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             _symbol: TYPING__SYMBOL_DRAFT = None,
     ) -> TYPING__INDICATOR_VALUES:
         # GET -----------------------------
-        bars_np = _bars or self.bars_get__count(
+        bars_np = _bars or self.bars__get(
             count=indicator_params.bars_expected__get(),
             tf_split=tf_split,
             shrink=indicator_params.NAME == IndicatorName.ADX,
@@ -646,6 +654,27 @@ class MT5(NestInit_AttrsLambdaResolve):
 
     def indicator_MACD(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
         return self._indicator_get_by_obj(IndicatorParams_MACD(*args), **kwargs)
+
+
+# =====================================================================================================================
+def _explore():
+    obj = MT5()
+    obj.mt5_connect()
+    bar1 = obj.bars__get(1)
+    print(bar1)
+    ObjectInfo(bar1).print()
+    print()
+    print()
+    print()
+
+    bars2 = obj.bars__get(2)
+    print(bars2)
+    ObjectInfo(bars2).print()
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _explore()
 
 
 # =====================================================================================================================

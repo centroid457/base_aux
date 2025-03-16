@@ -47,18 +47,18 @@ class Test_mt5:
     # SORTED ---------------------------------------------------------------------------------------------------------
     def test__symbol_volume_price_get__last_day_finished(self):
         victim = self.VICTIM()
-        result = victim._symbol_volume_price_get__last_day_finished(_symbol="SBER")
+        result = victim._symbol__get_volume_price(_symbol="SBER")
         print(result)
 
     def test__symbols_get_sorted_volume_price(self):
         victim = self.VICTIM()
-        victim._symbols_get_sorted_volume_price()
+        victim._symbols__get_volume_price__sorted()
 
     # HISTORY ---------------------------------------------------------------------------------------------------------
     def test__bars_np(self):
         victim = MT5()
 
-        bars1 = victim.bars_get__count()
+        bars1 = victim.bars__get()
         print(bars1)            # [(1695763200, 93.89, 93.91, 93.75, 93.84, 527, 1, 2116)]
         assert bars1.shape == (1, )
         assert isinstance(bars1, np.ndarray)
@@ -93,7 +93,7 @@ elem=723/<class 'numpy.uint64'>
             """
             assert isinstance(elem, (np.int64, np.float64, np.uint64, np.intc, ))
 
-        bars2 = victim.bars_get__count(2)
+        bars2 = victim.bars__get(2)
         print(bars2)
         assert bars2.shape == (2, )
         assert isinstance(bars2, np.ndarray)
@@ -101,13 +101,13 @@ elem=723/<class 'numpy.uint64'>
 
     def test__steps(self):
         victim = MT5()
-        assert victim.bars_get__count(1, tf_split=1).shape == (1,)
-        assert victim.bars_get__count(1, tf_split=2).shape == (1,)
-        assert victim.bars_get__count(1, tf_split=3).shape == (1,)
+        assert victim.bars__get(1, tf_split=1).shape == (1,)
+        assert victim.bars__get(1, tf_split=2).shape == (1,)
+        assert victim.bars__get(1, tf_split=3).shape == (1,)
 
-        assert victim.bars_get__count(2, tf_split=1).shape == (2,)
-        assert victim.bars_get__count(2, tf_split=2).shape == (2,)
-        assert victim.bars_get__count(2, tf_split=3).shape == (2,)
+        assert victim.bars__get(2, tf_split=1).shape == (2,)
+        assert victim.bars__get(2, tf_split=2).shape == (2,)
+        assert victim.bars__get(2, tf_split=3).shape == (2,)
 
     # INDICATORS ------------------------------------------------------------------------------------------------------
     def test__indicator_get__TYPE(self):
