@@ -40,12 +40,13 @@ class TimeSeriesAux(NestInit_Source):
     )
     DTYPE_ITEMS: list[tuple[str, str | type]] = list(DTYPE_DICT.items())  # used to create data on Air
 
+    # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None | NoReturn:
         if isinstance(self.SOURCE, (list, tuple)):
             self.SOURCE = np.array(self.SOURCE, dtype=self.DTYPE_ITEMS)
         # if self.SOURCE.size
 
-    # FIELDS ----------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
     def get_fields(self) -> dict[str, Any]:
         """
         GOAL
@@ -82,6 +83,28 @@ class TimeSeriesAux(NestInit_Source):
             }
         """
         return self.SOURCE.dtype.fields
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def split_groups(self, group_len: int) -> TYPING__TS_FINAL:
+        """
+        GOAL
+        ----
+        split array to arrays with exact elements count
+        NOT INLINE! and dont do it!
+        """
+        # if self.SOURCE.ndim != 1:
+        #     raise Exx__Incompatible
+        new_shape = []
+        shape = self.SOURCE.shape
+        a = np.arange(5)
+        print(a)
+        print(np.array_split(a, 2))
+        print(a)
+        # TODO: FINISH!
+
+
+
+
 
     # SHRINK ----------------------------------------------------------------------------------------------------------
     def shrink(self, divider: int) -> np.array:
@@ -120,7 +143,7 @@ class TimeSeriesAux(NestInit_Source):
         return result
 
     # ------------------------------------------------------------------------------------------------------
-    def _windows_get(self, divider: int) -> np.array:
+    def _windows_get(self, divider: int) -> np.ndarray:
         bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=divider)
         bars_windows_stepped = bars_windows[::divider]
         return bars_windows_stepped
@@ -137,7 +160,7 @@ class TimeSeriesAux(NestInit_Source):
                 result = np.array([void_new])
         return result
 
-    def _window_shrink(self, window: np.array) -> np.void:
+    def _window_shrink(self, window: np.ndarray) -> np.void:
         void_new = window[0].copy()
 
         void_new["time"] = window["time"].max()
@@ -153,6 +176,15 @@ class TimeSeriesAux(NestInit_Source):
 
 
 # =====================================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+
+
 def _explore_init():
     try:
         obj = TimeSeriesAux()
