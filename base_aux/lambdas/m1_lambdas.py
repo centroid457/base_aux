@@ -52,36 +52,60 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     so you explicitly define attributes/aux_types for later constructions
     and in some point it can be more clear REPLACE LAMBDA by this solvation!!!
 
-    2.
-
-    PARAMS
-    ======
-    :ivar SOURCE: any class or function
+    WHY NOT 2=CallableAux
+    ------------------------
+    here is not intended using indirect result like Exception! so NO CallingResolve!
     """
-    SOURCE: Union[Callable, Any]
+    SOURCE: Union[Callable, Any, type]
+
+    RESULT: Any = None
+    EXX: Optional[Exception] = None
 
     # UNIVERSAL =======================================================================================================
-    def construct(self, *args, **kwargs) -> Any | NoReturn:
+    def construct(self, *args, **kwargs) -> None:
         """
         unsafe (raise acceptable) get value
         """
-        args = args or self.ARGS
-        kwargs = kwargs or self.KWARGS
-        if callable(self.SOURCE):  # callable accept all variants! TypeAux.check__callable_func_meth_inst_cls!
-            return self.SOURCE(*args, **kwargs)
-        else:
-            return self.SOURCE
+        self.RESULT = None
+        self.EXX = None
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def __bool__(self) -> bool | NoReturn:
-        return bool(self(*self.ARGS, **self.KWARGS))
+        args = args or self.ARGS
+        kwargs = {**self.KWARGS, **kwargs}
+
+        try:
+            if callable(self.SOURCE):  # callable accept all variants! TypeAux.check__callable_func_meth_inst_cls!
+                self.RESULT = self.SOURCE(*args, **kwargs)
+            else:
+                self.RESULT = self.SOURCE
+        except Exception as exx:
+            self.EXX = exx
 
     # OVERWRITE! ======================================================================================================
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        return self.construct(*args, **kwargs)
+        self.construct(*args, **kwargs)
+
+        if self.EXX is not None:
+            raise self.EXX
+        else:
+            return self.RESULT
 
     def __eq__(self, other) -> bool | NoReturn:
         return EqAux(self()).check_doubleside__bool(other)
+
+    # =================================================================================================================
+    def check_raise(self, *args, **kwargs) -> bool:
+        self.construct(*args, **kwargs)
+        if self.EXX is not None:
+            return True
+        else:
+            return False
+
+    def check_no_raise(self, *args, **kwargs) -> bool:
+        return not self.check_raise(*args, **kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __bool__(self) -> bool | NoReturn:
+        return bool(self())
 
 
 # =====================================================================================================================
@@ -111,41 +135,26 @@ class LambdaBool(Lambda):
     ======
     :ivar BOOL_REVERSE: just for LambdaBoolReversed, no need to init
     """
-
-    BOOL_REVERSE: bool = False
-
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
-        result = bool(self.construct(*args, **kwargs))
-        if self.BOOL_REVERSE:
-            result = not result
-        return result
+        self.construct(*args, **kwargs)
 
-    def get_reverse(self, *args, **kwargs) -> bool | NoReturn:
-        """
-        if raise - raise
-
-        try not to use in LambdaBoolReversed
-        """
-        return not self(*args, **kwargs)
-
-    def get_bool_only(self, *args, **kwargs) -> bool:
-        """
-        if raise - return False, else get result
-        """
-        try:
-            return self(*args, **kwargs)
-        except Exception as exx:
-            return False
-
-    def get_bool_only__reverse(self, *args, **kwargs) -> bool:
-        return not self.get_bool_only(*args, **kwargs)
+        if self.EXX is not None:
+            raise self.EXX
+        else:
+            return bool(self.RESULT)
 
 
 class LambdaBoolReversed(LambdaBool):
     """
     just a reversed LambdaBool
     """
-    BOOL_REVERSE: bool = True
+    def __call__(self, *args, **kwargs) -> bool | NoReturn:
+        self.construct(*args, **kwargs)
+
+        if self.EXX is not None:
+            raise self.EXX
+        else:
+            return not bool(self.RESULT)
 
 
 # =====================================================================================================================
@@ -179,15 +188,22 @@ class LambdaTrySuccess(LambdaBool):
         so here raise is acceptable in getattr(source, name) in case of PROPERTY_RAISE
     """
     def __call__(self, *args, **kwargs) -> bool:
-        try:
-            self.construct(*args, **kwargs)
-            return not self.BOOL_REVERSE
-        except:
-            return bool(self.BOOL_REVERSE)
+        self.construct(*args, **kwargs)
+
+        if self.EXX is not None:
+            return False
+        else:
+            return True
 
 
 class LambdaTryFail(LambdaTrySuccess):
-    BOOL_REVERSE: bool = True
+    def __call__(self, *args, **kwargs) -> bool:
+        self.construct(*args, **kwargs)
+
+        if self.EXX is not None:
+            return True
+        else:
+            return False
 
 
 # =====================================================================================================================
@@ -209,10 +225,16 @@ class LambdaSleep(Lambda):
 
         if self.WHEN is Enum_When2.BEFORE:
             time.sleep(sec)
-        result = self.construct(*args, **kwargs)
+
+        self.construct(*args, **kwargs)
+
         if self.WHEN is Enum_When2.AFTER:
             time.sleep(sec)
-        return result
+
+        if self.EXX is not None:
+            raise self.EXX
+        else:
+            return self.RESULT
 
 
 # ---------------------------------------------------------------------------------------------------------------------
