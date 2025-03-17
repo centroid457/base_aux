@@ -58,14 +58,18 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     """
     SOURCE: Union[Callable, Any, type]
 
+    PROCESS_ACTIVE: Enum_ProcessActive = Enum_ProcessActive.NONE
     RESULT: Any = None
     EXX: Optional[Exception] = None
 
     # UNIVERSAL =======================================================================================================
     def construct(self, *args, **kwargs) -> None:
-        """
-        unsafe (raise acceptable) get value
-        """
+        # ONLY ONE EXECUTION on instance!!! dont use locks! -------------
+        if self.PROCESS_ACTIVE == Enum_ProcessActive.STARTED:
+            return
+        self.PROCESS_ACTIVE = Enum_ProcessActive.STARTED
+
+        # WORK ----------------------------------------------------------
         self.RESULT = None
         self.EXX = None
 
@@ -80,6 +84,16 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
         except Exception as exx:
             self.EXX = exx
 
+        self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
+
+    def run(self) -> None:
+        """
+        GOAL
+        ----
+        thread purpose
+        """
+        self.construct()
+
     # OVERWRITE! ======================================================================================================
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         self.construct(*args, **kwargs)
@@ -93,8 +107,9 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
         return EqAux(self()).check_doubleside__bool(other)
 
     # =================================================================================================================
-    def check_raise(self, *args, **kwargs) -> bool:
+    def check_raise(self, *args, **kwargs) -> bool:     # TODO: decide what to do with different kwArgs in several starts/runs
         self.construct(*args, **kwargs)
+        self.wait_finished()
         if self.EXX is not None:
             return True
         else:
@@ -102,6 +117,16 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
 
     def check_no_raise(self, *args, **kwargs) -> bool:
         return not self.check_raise(*args, **kwargs)
+
+    def wait_finished(self, sleep: float = 1) -> None:
+        if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:
+            self.run()
+
+        count = 1
+        while self.PROCESS_ACTIVE != Enum_ProcessActive.FINISHED:
+            print(f"wait_finished {count=}")
+            count += 1
+            time.sleep(sleep)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __bool__(self) -> bool | NoReturn:

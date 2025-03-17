@@ -7,7 +7,7 @@ from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
-class ThreadItem(NestInit_SourceKwArgs_Explicite, QThread):
+class ThreadItem(NestInit_SourceKwArgs_Explicite, QThread):     # TODO+FIXME: deprecate! use direct Lambda as thread!!!
     """Object for keeping thread data for better managing.
     """
     SOURCE: Callable

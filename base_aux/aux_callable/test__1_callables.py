@@ -12,20 +12,20 @@ from base_aux.base_statics.m4_enums import *
     argnames="source, args, _EXPECTED",
     argvalues=[
         (Exception, (), (False, True,
-                         Exception, Exception, Exception, False, Enum_ProcessState.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
+                         Exception, Exception, Exception, False, Enum_ProcessResult.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
         (Exception(), (), (False, True,
                 Exception, Exception, Exception, False, Exception, Exception)),
         (LAMBDA_EXX, (), (False, True,
-                          Exception, Exception, Exception, False, Enum_ProcessState.SKIPPED, Exception)),
+                          Exception, Exception, Exception, False, Enum_ProcessResult.SKIPPED, Exception)),
         (LAMBDA_RAISE, (), (True, False,
-                            Exception, None, Exception, False, Enum_ProcessState.SKIPPED, Enum_ProcessState.SKIPPED)),
+                            Exception, None, Exception, False, Enum_ProcessResult.SKIPPED, Enum_ProcessResult.SKIPPED)),
 
         (LAMBDA_TRUE, (), (False, True,
-                           True, True, True, True, Enum_ProcessState.SKIPPED, True)),
+                           True, True, True, True, Enum_ProcessResult.SKIPPED, True)),
         (LAMBDA_FALSE, (), (False, True,
-                            False, False, False, False, Enum_ProcessState.SKIPPED, False)),
+                            False, False, False, False, Enum_ProcessResult.SKIPPED, False)),
         (LAMBDA_NONE, (), (False, True,
-                           None, None, None, False, Enum_ProcessState.SKIPPED, None)),
+                           None, None, None, False, Enum_ProcessResult.SKIPPED, None)),
 
         (True, (), (False, True,
                 True, True, True, True, True, True)),
@@ -35,11 +35,11 @@ from base_aux.base_statics.m4_enums import *
                 None, None, None, False, None, None)),
 
         (INST_CALL_TRUE, (), (False, True,
-                              True, True, True, True, Enum_ProcessState.SKIPPED, True)),
+                              True, True, True, True, Enum_ProcessResult.SKIPPED, True)),
         (INST_CALL_FALSE, (), (False, True,
-                               False, False, False, False, Enum_ProcessState.SKIPPED, False)),
+                               False, False, False, False, Enum_ProcessResult.SKIPPED, False)),
         (INST_CALL_RAISE, (), (True, False,
-                               Exception, None, Exception, False, Enum_ProcessState.SKIPPED, Enum_ProcessState.SKIPPED)),
+                               Exception, None, Exception, False, Enum_ProcessResult.SKIPPED, Enum_ProcessResult.SKIPPED)),
 
         (INST_BOOL_TRUE, (),  (False, True,
                 INST_BOOL_TRUE, INST_BOOL_TRUE, INST_BOOL_TRUE, True, INST_BOOL_TRUE, INST_BOOL_TRUE)),
@@ -54,7 +54,7 @@ from base_aux.base_statics.m4_enums import *
         ([], (), (False, True,
                 [], [], [], False, [], [])),
         (LAMBDA_LIST_DIRECT, (), (False, True,
-                                  [], [], [], False, Enum_ProcessState.SKIPPED, [])),
+                                  [], [], [], False, Enum_ProcessResult.SKIPPED, [])),
 
         ([None, ], (), (False, True,
                 [None, ], [None, ], [None, ], True, [None, ], [None, ])),
