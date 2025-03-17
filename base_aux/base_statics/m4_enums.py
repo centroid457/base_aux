@@ -44,7 +44,7 @@ class Enum_CallResolve(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_ProcessState(NestEq_Enum):
+class Enum_ProcessResult(NestEq_Enum):
     """
     GOAL
     ----
@@ -55,12 +55,17 @@ class Enum_ProcessState(NestEq_Enum):
     CallableAux.resolve when returns SKIPPED like object!
     """
     NONE = None
-    STARTED = 1
-    SKIPPED = 2
-    STOPPED = 3
-    RAISED = 4
+    SKIPPED = 1
+    STOPPED = 2
+    RAISED = 3
     FAILED = False
     SUCCESS = True
+
+
+class Enum_ProcessActive(NestEq_Enum):
+    NONE = None
+    STARTED = True
+    FINISHED = False
 
 
 # =====================================================================================================================
