@@ -12,6 +12,7 @@ ThreadItem keeps result/exx/is_alive attributes!
 use wait_all/terminate_all()
 """
 # =====================================================================================================================
+from typing import *
 import time
 
 from base_aux.base_singletons.m1_singleton import *

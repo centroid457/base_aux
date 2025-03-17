@@ -3,7 +3,7 @@ from typing import *
 from PyQt5.QtCore import QThread
 
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
-from base_aux.base_statics.m1_types import TYPING
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
