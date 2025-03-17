@@ -1,6 +1,4 @@
-import pytest
-
-from base_aux.lambdas.m1_lambdas import *
+from base_aux.aux_callable.m2_lambdas import *
 from base_aux.aux_dict.m3_dict_attr1_simple import *
 
 
