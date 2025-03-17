@@ -1,100 +1,22 @@
-import time
+"""
+manage spawned threads
 
-from PyQt5.QtCore import QThread
+Designed to working with spawned threads
+
+NOTE: maybe you dont need use it if you need only one class method - use direct QThread
+
+use different managers for different funcs/methods if needed
+use just one decorator to spawn threads from func / methods
+keep all spawned threads in list by ThreadItem aux_types
+ThreadItem keeps result/exx/is_alive attributes!
+use wait_all/terminate_all()
+"""
+# =====================================================================================================================
+import time
 
 from base_aux.base_singletons.m1_singleton import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-
-
-# =====================================================================================================================
-class ThreadItem(QThread):
-    """Object for keeping thread data for better managing.
-    """
-
-    # TODO: nest from NestInit_Source???
-    target: Callable
-    args: TYPING.ARGS_FINAL
-    kwargs: TYPING.KWARGS_FINAL
-
-    result: Optional[Any] = None
-    exx: Optional[Exception] = None
-
-    def __init__(self, target: Callable, args: Union[tuple, Any, ] = None, kwargs=None, *_args, **_kwargs):
-        super().__init__(*_args, **_kwargs)
-
-        if args and not isinstance(args, (tuple, list, )):
-            args = (args, )
-
-        self.target = target
-        self.args = args or ()
-        self.kwargs = kwargs or {}
-
-    def run(self):
-        try:
-            self.result = self.target(*self.args, **self.kwargs)
-        except Exception as exx:
-            msg = f"{exx!r}"
-            print(msg)
-            self.exx = exx
-
-    def SLOTS_EXAMPLES(self):
-        """DON'T START! just for explore!
-        """
-        # checkers --------------------
-        self.started
-        self.isRunning()
-
-        self.finished
-        self.isFinished()
-
-        self.destroyed
-        self.signalsBlocked()
-
-        # settings -------------------
-        self.setTerminationEnabled()
-
-        # NESTING --------------------
-        self.currentThread()
-        self.currentThreadId()
-        self.thread()
-        self.children()
-        self.parent()
-
-        # info --------------------
-        self.priority()
-        self.loopLevel()
-        self.stackSize()
-        self.idealThreadCount()
-
-        self.setPriority()
-        self.setProperty()
-        self.setObjectName()
-
-        self.tr()
-
-        self.dumpObjectInfo()
-        self.dumpObjectTree()
-
-        # CONTROL --------------------
-        self.run()
-        self.start()
-        self.startTimer()
-
-        self.sleep(100)
-        self.msleep(100)
-        self.usleep(100)
-
-        self.wait()
-
-        self.killTimer()
-
-        self.disconnect()
-        self.deleteLater()
-        self.terminate()
-        self.quit()
-        self.exit(100)
-
-        # WTF --------------------
+from base_aux.threads.m1_item import ThreadItem
 
 
 # =====================================================================================================================
@@ -119,7 +41,7 @@ class ThreadsManager(SingletonCallMeta):
         def func(*args, **kwargs):
             pass
 
-    :ivar _PARAM__NOTHREAD: parameter for passing in decorated function which can run target without thread
+    :ivar _PARAM__NOTHREAD: parameter for passing in decorated function which can run SOURCE without thread
 
     :param args: NAME for manager instance
     :param thread_items: ThreadItem instances,
@@ -150,17 +72,17 @@ class ThreadsManager(SingletonCallMeta):
 
         always collect aux_types threads in result object! even if nothread! so you can get results from group!
 
-        :param _func: decorated target
+        :param _func: decorated SOURCE
         """
         def _wrapper__spawn_thread(*args, **kwargs) -> Optional[Any]:
-            """actual wrapper which spawn thread from decorated target.
+            """actual wrapper which spawn thread from decorated SOURCE.
 
-            :param args: args passed into target/method,
-            :param kwargs: kwargs passed into target/method,
+            :param args: args passed into SOURCE/method,
+            :param kwargs: kwargs passed into SOURCE/method,
             """
             nothread = self._PARAM__NOTHREAD in kwargs and kwargs.pop(self._PARAM__NOTHREAD)
 
-            thread_item = ThreadItem(target=_func, args=args, kwargs=kwargs)
+            thread_item = ThreadItem(source=_func, args=args, kwargs=kwargs)
             self.THREADS.append(thread_item)
             thread_item.start()
 

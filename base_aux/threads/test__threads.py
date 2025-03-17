@@ -1,8 +1,4 @@
-import time
-from typing import *
-import pytest
-
-from base_aux.threads.m1_threads import *
+from base_aux.threads.m2_threads import *
 
 
 # =====================================================================================================================
@@ -17,7 +13,7 @@ class Test__ThreadItem:
         def target():
             time.sleep(0.2)
 
-        victim = ThreadItem(target=target)
+        victim = ThreadItem(target)
         victim.start()
         victim.wait()
         victim.start()
