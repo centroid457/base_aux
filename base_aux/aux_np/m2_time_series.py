@@ -7,7 +7,7 @@ from base_aux.aux_types.m2_info import *
 
 
 # =====================================================================================================================
-DATA_EXAMPLE_LIST = [
+TS_EXAMPLE_LIST = [
     (1741993200, 70.54, 70.54, 70.49, 70.51, 163, 1, 254),
     (1741993800, 70.52, 70.55, 70.52, 70.54,  56, 1,  82),
     (1741994400, 70.54, 70.56, 70.52, 70.55, 176, 1, 201),
@@ -44,7 +44,7 @@ class TimeSeriesAux(NestInit_Source):
     def init_post(self) -> None | NoReturn:
         if isinstance(self.SOURCE, (list, tuple)):
             self.SOURCE = np.array(self.SOURCE, dtype=self.DTYPE_ITEMS)
-        # if self.SOURCE.size
+        # TODO: make copy
 
     # -----------------------------------------------------------------------------------------------------------------
     def get_fields(self) -> dict[str, Any]:
@@ -192,7 +192,7 @@ def _explore_init():
     except:
         pass
 
-    obj = TimeSeriesAux(DATA_EXAMPLE_LIST)
+    obj = TimeSeriesAux(TS_EXAMPLE_LIST)
     # print(obj.SOURCE)
     # ObjectInfo(obj.SOURCE).print()
     assert obj.SOURCE.ndim == 1
@@ -202,7 +202,7 @@ def _explore_init():
     assert obj.SOURCE["close"].ndim == 1
 
     try:
-        obj = TimeSeriesAux(DATA_EXAMPLE_LIST[0])
+        obj = TimeSeriesAux(TS_EXAMPLE_LIST[0])
         assert False
         print(obj.SOURCE)
     except:
@@ -210,9 +210,9 @@ def _explore_init():
 
 
 def _explore_split():
-    obj = TimeSeriesAux(DATA_EXAMPLE_LIST)
+    obj = TimeSeriesAux(TS_EXAMPLE_LIST)
     print(obj.SOURCE.shape)
-    assert obj.SOURCE.size == len(DATA_EXAMPLE_LIST)
+    assert obj.SOURCE.size == len(TS_EXAMPLE_LIST)
 
 
     # ObjectInfo(obj.SOURCE).print()
