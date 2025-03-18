@@ -46,7 +46,7 @@ _std = [
 
     # OS/OTHER
     SystemExit,
-    WindowsError,
+    # WindowsError,     # NOTE: NOT EXISTS IN LINUX!!! dont use in any variation!!!
     IOError,
     OSError,
     EnvironmentError,
