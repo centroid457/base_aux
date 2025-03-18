@@ -13,6 +13,7 @@ from serial import Serial
 from serial.tools import list_ports
 from base_aux.aux_values.m3_unit import *
 from base_aux.aux_cmp_eq.m2_eq_aux import EqAux
+from base_aux.aux_callable.m3_lambda_list import *
 
 from base_aux.buses.m0_history import HistoryIO
 
@@ -939,9 +940,11 @@ class SerialClient(Logger):
         ----
         basically used common requests
         """
-        result = {}
+        cmds = [*map(str, cmds)]
+
+        # THREADS ---------
+        threads = {}
         for address in cls.ADDRESSES__FREE:
-            result.update({address: {}})
 
             obj = cls()
             obj.baudrate = cls.BAUDRATE
@@ -950,25 +953,24 @@ class SerialClient(Logger):
             obj.REWRITEIF_READFAILDECODE = 1
             obj.REWRITEIF_NOVALID = 0
 
-            try:
-                obj.connect(address)
-            except:
-                continue
+            lambda_list = LambdaList([
+                Lambda(obj.connect, address, _touch_connection=True),
+                *[Lambda(obj.write_read__last, cmd) for cmd in cmds],
+                obj._address__release,
+                obj.disconnect,
+                ],
+            )
+            threads.update({address: lambda_list})
+            lambda_list.start()
 
-            for cmd in cmds:
-                cmd = str(cmd)
-                try:
-                    result_i = obj.write_read__last(cmd)
-                except:
-                    result_i = None
-
-                result[address].update({cmd: result_i})
-
-            try:
-                obj._address__release()
-                obj.disconnect()
-            except:
-                pass
+        # RESULTS ---------
+        result = {}
+        for port, thread in threads.items():
+            thread.wait()
+            result.update({port: {}})
+            for obj in thread.LAMBDAS:
+                if obj.ARGS and obj.ARGS[0] in cmds:
+                    result[port].update({obj.ARGS[0]: obj.RESULT})
 
         return result
 
