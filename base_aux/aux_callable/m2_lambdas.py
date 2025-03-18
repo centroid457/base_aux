@@ -85,6 +85,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
             print(f"{exx!r}")
             self.EXX = exx
 
+        # FIN ----------------------------------------------------------
         self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
 
     def run(self) -> None:
