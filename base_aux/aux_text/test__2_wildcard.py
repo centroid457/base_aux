@@ -11,18 +11,18 @@ from base_aux.aux_text.m2_wildcard import *
     argnames="source, _EXPECTED",
     argvalues=[
         # single ----
-        ("", ""),
-        ("*", ".*"),
-        ("?", ".{0,1}"),
-        (".", "\."),
+        ("", r""),
+        ("*", r".*"),
+        ("?", r".{0,1}"),
+        (".", r"\."),
 
         # brackets ----
-        ("[]", "\[\]"),
-        ("()", "\(\)"),
-        ("{}", "\{\}"),
+        ("[]", r"\[\]"),
+        ("()", r"\(\)"),
+        ("{}", r"\{\}"),
 
         # multy ----
-        ("[*ell?]", "\[.*ell.{0,1}\]"),
+        ("[*ell?]", r"\[.*ell.{0,1}\]"),
     ]
 )
 def test__regexp(source, _EXPECTED):
@@ -35,10 +35,10 @@ def test__regexp(source, _EXPECTED):
     argnames="wmask, _EXPECTED_pat, other, _EXPECTED_other",
     argvalues=[
         # multy ----
-        ("[*ell?]", "\[.*ell.{0,1}\]", "[ell]", True),
-        ("[*ell?]", "\[.*ell.{0,1}\]", "[hello]", True),
-        ("[*ell?]", "\[.*ell.{0,1}\]", "[123hello]", True),
-        ("[*ell?]", "\[.*ell.{0,1}\]", "[123hello123]", False),
+        ("[*ell?]", r"\[.*ell.{0,1}\]", "[ell]", True),
+        ("[*ell?]", r"\[.*ell.{0,1}\]", "[hello]", True),
+        ("[*ell?]", r"\[.*ell.{0,1}\]", "[123hello]", True),
+        ("[*ell?]", r"\[.*ell.{0,1}\]", "[123hello123]", False),
     ]
 )
 def test__fullmatch(wmask, _EXPECTED_pat, other, _EXPECTED_other):

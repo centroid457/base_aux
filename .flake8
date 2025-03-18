@@ -1,0 +1,13 @@
+[flake8]
+exclude =
+	# base_aux,
+
+	_*,
+    #_DEPRECATED,
+    #base_aux/_0_EXAMPLES,
+    #base_aux/_1_SAND,
+	
+	.git,
+    __pycache__,
+    build,
+    dist
