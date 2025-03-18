@@ -57,11 +57,12 @@ class ThreadsManager(SingletonCallMeta):
         super().__init__(*args, **kwargs)
         self.THREADS = []
 
+    @classmethod
     @property
-    def NAME(self) -> str:
-        """classname for manager
+    def NAME(cls) -> str:
+        """class name for manager
         """
-        return self.__class__.__name__
+        return cls.__name__
 
     @property
     def count(self) -> int:
@@ -83,13 +84,13 @@ class ThreadsManager(SingletonCallMeta):
             """
             nothread = self._PARAM__NOTHREAD in kwargs and kwargs.pop(self._PARAM__NOTHREAD)
 
-            thread_item = ThreadItem(source=_func, args=args, kwargs=kwargs)
+            thread_item = ThreadItem(_func, *args, **kwargs)
             self.THREADS.append(thread_item)
             thread_item.start()
 
             if nothread:
                 thread_item.wait()
-                return thread_item.result
+                return thread_item.RESULT
 
         return _wrapper__spawn_thread
 
@@ -126,10 +127,10 @@ class ThreadsManager(SingletonCallMeta):
         """
         for thread in self.THREADS:
             if func_validate is not None:
-                if not func_validate(thread.result):
+                if not func_validate(thread.RESULT):
                     return False
             else:
-                if thread.result != value:
+                if thread.RESULT != value:
                     return False
         return True
 

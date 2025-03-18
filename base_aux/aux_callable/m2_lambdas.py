@@ -82,6 +82,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
             else:
                 self.RESULT = self.SOURCE
         except Exception as exx:
+            print(f"{exx!r}")
             self.EXX = exx
 
         self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED

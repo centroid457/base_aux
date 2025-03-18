@@ -4,27 +4,13 @@ from PyQt5.QtCore import QThread
 
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.base_statics.m1_types import *
+from base_aux.aux_callable.m2_lambdas import *
 
 
 # =====================================================================================================================
-class ThreadItem(NestInit_SourceKwArgs_Explicite, QThread):     # TODO+FIXME: deprecate! use direct Lambda as thread!!!
+class ThreadItem(Lambda, QThread):     # TODO+FIXME: deprecate! use direct Lambda as thread!!!
     """Object for keeping thread data for better managing.
     """
-    SOURCE: Callable
-    ARGS: TYPING.ARGS_FINAL
-    KWARGS: TYPING.KWARGS_FINAL
-
-    result: Optional[Any] = None
-    exx: Optional[Exception] = None
-
-    def run(self):
-        try:
-            self.result = self.SOURCE(*self.ARGS, **self.KWARGS)
-        except Exception as exx:
-            msg = f"{exx!r}"
-            print(msg)
-            self.exx = exx
-
     def SLOTS_EXAMPLES(self):
         """DON'T START! just for explore!
         """
