@@ -10,6 +10,16 @@
 ********************************************************************************
 ## NEWS
 
+0.2.22(2025.03.18 18.51.30)
+------------------------------
+- [alerts] ref to use deque+fix tlgrm +add Qtimer  
+- [mt] ref TimeSeries +move into nympyAux  
+- [nest] add NestCall_MethodName  
+- [lambda] ref to keep Result/Exx in object  
+- [Lambda] add Lambdalist +nest in threadItem  
+- [flake8] add exclude Deprecated+hidden dirs  
+- [serial] ref addresses_dump__answers quick threading   
+
 0.2.21(2025.03.14 16.12.23)
 ------------------------------
 - [Enum_*] zero rename all  

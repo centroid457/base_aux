@@ -33,10 +33,15 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 21))    # dont use over 3 items - pypi is not used them!!!
+    VERSION = Version((0, 2, 22))
     NEWS: list[str] = [
-        "[Enum_*] zero rename all",
-        "[Nest] separate NestBool_False/True",
+        "[alerts] ref to use deque+fix tlgrm +add Qtimer",
+        "[mt] ref TimeSeries +move into nympyAux",
+        "[nest] add NestCall_MethodName",
+        "[lambda] ref to keep Result/Exx in object",
+        "[Lambda] add Lambdalist +nest in threadItem",
+        "[flake8] add exclude Deprecated+hidden dirs",
+        "[serial] ref addresses_dump__answers quick threading "
     ]
 
 
