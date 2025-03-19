@@ -23,23 +23,6 @@ from .api import TpApi_FastApi
 
 
 # =====================================================================================================================
-class Exx__TcsPathNotExists(Exception):
-    pass
-
-
-class Exx__TcItemNotFound(Exception):
-    pass
-
-
-class Exx__TcItemType(Exception):
-    pass
-
-
-class Exx__TcSettingsIncorrect(Exception):
-    pass
-
-
-# =====================================================================================================================
 class TpMultyDutBase(Logger, QThread):
     signal__tp_start = pyqtSignal()
     signal__tp_stop = pyqtSignal()
@@ -122,7 +105,7 @@ class TpMultyDutBase(Logger, QThread):
         if not self.DIRPATH_TCS.exists():
             msg = f"[ERROR] not found path {self.DIRPATH_TCS.name=}"
             print(msg)
-            raise Exx__TcsPathNotExists(msg)
+            raise Exx__NotExistsNotFoundNotCreated(msg)
 
         self.DEVICES__BREEDER_CLS.generate__objects()
 
@@ -211,7 +194,7 @@ class TpMultyDutBase(Logger, QThread):
                     continue
                 if not tc_cls:
                     msg = f"[ERROR] file not found[{item=}] in /{self.DIRPATH_TCS}/"
-                    raise Exx__TcItemNotFound(msg)
+                    raise Exx__NotExistsNotFoundNotCreated(msg)
                 tc_cls.NAME = item
             elif isinstance(type(item), type) and issubclass(item, TestCaseBase):
                 tc_cls = item
@@ -219,7 +202,7 @@ class TpMultyDutBase(Logger, QThread):
                 # raise Exception(msg)
             else:
                 msg = f"[ERROR] type is inconvenient [{item=}]"
-                raise Exx__TcItemType(msg)
+                raise Exx__Incompatible(msg)
 
             tc_cls.SKIP = not using
             result.update({tc_cls: using})
