@@ -8,7 +8,7 @@ class TestCase(TestCaseBase):
     DESCRIPTION = "ptb"
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
         # return True
         result_chain = ValidChains(
             [
@@ -19,7 +19,7 @@ class TestCase(TestCaseBase):
         )
         return result_chain
 
-    def startup__wrapped(self) -> TYPING__RESULT_W_NORETURN:
+    def startup__wrapped(self) -> TYPE__RESULT_W_NORETURN:
         result = ValidChains(
             [
                 Valid(value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved, name="DUT.connect__only_if_address_resolved"),
@@ -27,7 +27,7 @@ class TestCase(TestCaseBase):
         )
         return result
 
-    def run__wrapped(self) -> TYPING__RESULT_W_NORETURN:
+    def run__wrapped(self) -> TYPE__RESULT_W_NORETURN:
         # time.sleep(0.1)
         result = ValidChains(
             [

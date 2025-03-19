@@ -1,11 +1,10 @@
-from base_aux.testplans.tc import *
-from base_aux.valid import *
+from base_aux.valid.m3_valid_chains import *
 
 
 # =====================================================================================================================
-class TestCase(TestCaseBase):
-    ASYNC = True
-    DESCRIPTION = "LAST"
+TYPE__RESULT_BASE = Union[bool, Valid, ValidChains] | None
+TYPE__RESULT_W_NORETURN = Union[TYPE__RESULT_BASE, NoReturn]
+TYPE__RESULT_W_EXX = Union[TYPE__RESULT_BASE, type[Exception]]
 
 
 # =====================================================================================================================
