@@ -164,7 +164,7 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.STARTUP_CLS:
                 if row_is_summary:
                     return
-                group_name = tc_cls.MIDDLE_GROUP__NAME or ""
+                group_name = tc_cls.MIDDLE_GROUP__NAME or ""    # TODO: DEPRECATE/DELETE GROUPS! use tc.__EQ1
                 if tc_cls.result__startup_cls is None:
                     return group_name
                 elif bool(tc_cls.result__startup_cls) is True:
