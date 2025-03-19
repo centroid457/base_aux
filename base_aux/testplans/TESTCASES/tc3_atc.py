@@ -12,7 +12,7 @@ class TestCase(TcGroup_ATC220220, TestCaseBase):
     DESCRIPTION = "atc"
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         return True
         result_chain = ValidChains(
             [
@@ -23,7 +23,7 @@ class TestCase(TcGroup_ATC220220, TestCaseBase):
         )
         return result_chain
 
-    def run__wrapped(self) -> TYPE__RESULT_W_NORETURN:
+    def run__wrapped(self) -> TYPING__RESULT_W_NORETURN:
         return True
         time.sleep(0.1)
         result_chain = ValidChains(

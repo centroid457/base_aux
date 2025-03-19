@@ -12,7 +12,7 @@ class TestCase(TcGroup_ATC220220, tc1_direct.TestCase):
     DESCRIPTION = "reverse1"
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         result_chain = ValidChains(
             [
                 Valid(value_link=True, name="TRUE"),

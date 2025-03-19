@@ -1,6 +1,6 @@
 from base_aux.classes.m2_middle_group import *
 
-from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
+from .tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
 
 
 # =====================================================================================================================
@@ -12,11 +12,11 @@ class TcGroup_Base(ClsMiddleGroup):
     MIDDLE_GROUP__CMP_ATTR = None
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         return True
 
     @classmethod
-    def teardown__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         return True
 
     # @classmethod
