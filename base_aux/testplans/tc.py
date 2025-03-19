@@ -1,17 +1,16 @@
 import json
-import datetime
-from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.aux_dict.m3_dict_attr1_simple import *
-from base_aux.aux_callable.m1_callable import *
 from base_aux.valid.m2_valid_base import *
+from base_aux.valid.m3_valid_chains import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
-from base_aux.base_statics.m4_enums import *
 
-from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
-from .models import *
-from .tc_groups import *
+
+# =====================================================================================================================
+TYPING__RESULT_BASE = Union[bool, Valid, ValidChains] | None
+TYPING__RESULT_W_NORETURN = Union[TYPING__RESULT_BASE, NoReturn]
+TYPING__RESULT_W_EXX = Union[TYPING__RESULT_BASE, type[Exception]]
 
 
 # =====================================================================================================================
@@ -26,7 +25,7 @@ class Signals(SignalsTemplate):
 
 
 # =====================================================================================================================
-class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
+class _TestCaseBase(_TestCaseBase0, QThread):
     LOG_ENABLE = False
     LOG_USE_FILE = False
 
@@ -47,8 +46,8 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
 
-    result__startup_cls: TYPE__RESULT_BASE = None
-    result__teardown_cls: TYPE__RESULT_BASE = None
+    result__startup_cls: TYPING__RESULT_BASE = None
+    result__teardown_cls: TYPING__RESULT_BASE = None
 
     # INSTANCE ------------------------------------
     _inst_inited: Optional[bool] = None
@@ -57,10 +56,10 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     SETTINGS: DictAttr = {}
     DEVICES__BREEDER_INST: 'DevicesBreeder'
 
-    result__startup: TYPE__RESULT_W_EXX = None
-    result__teardown: TYPE__RESULT_W_EXX = None
+    result__startup: TYPING__RESULT_W_EXX = None
+    result__teardown: TYPING__RESULT_W_EXX = None
 
-    _result: TYPE__RESULT_W_EXX = None
+    _result: TYPING__RESULT_W_EXX = None
     _timestamp_last: Optional[datetime.datetime]
     timestamp_start: Optional[datetime.datetime]
     details: dict[str, Any]
@@ -190,11 +189,11 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # RESULT ----------------------------------------------------------------------------------------------------------
     @property
-    def result(self) -> TYPE__RESULT_W_EXX:
+    def result(self) -> TYPING__RESULT_W_EXX:
         return self._result
 
     @result.setter
-    def result(self, value: TYPE__RESULT_W_EXX) -> None:
+    def result(self, value: TYPING__RESULT_W_EXX) -> None:
         self._result = value
         self.signals.signal__tc_state_changed.emit(self)
 
@@ -313,7 +312,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
 
     # STARTUP/TEARDOWN ------------------------------------------------------------------------------------------------
     @classmethod
-    def startup__cls(cls) -> TYPE__RESULT_W_EXX:
+    def startup__cls(cls) -> TYPING__RESULT_W_EXX:
         """before batch work
         """
         print(f"startup__cls")
@@ -328,7 +327,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         cls.result__startup_cls = result
         return result
 
-    def startup(self) -> TYPE__RESULT_W_EXX:
+    def startup(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
         self.progress = 1
 
@@ -339,7 +338,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         self.result__startup = result
         return result
 
-    def teardown(self) -> TYPE__RESULT_W_EXX:
+    def teardown(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
         self.timestamp_last = datetime.datetime.now()
         self.progress = 99
@@ -354,7 +353,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         return result
 
     @classmethod
-    def teardown__cls(cls) -> TYPE__RESULT_W_EXX:
+    def teardown__cls(cls) -> TYPING__RESULT_W_EXX:
         print(f"run__cls=teardown__cls")
 
         if not cls.finished__cls or cls.result__teardown_cls is None:
@@ -403,20 +402,20 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     pass
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         return True
 
-    def startup__wrapped(self) -> TYPE__RESULT_W_NORETURN:
+    def startup__wrapped(self) -> TYPING__RESULT_W_NORETURN:
         return True
 
-    def run__wrapped(self) -> TYPE__RESULT_W_NORETURN:
+    def run__wrapped(self) -> TYPING__RESULT_W_NORETURN:
         return True
 
-    def teardown__wrapped(self) -> TYPE__RESULT_W_NORETURN:
+    def teardown__wrapped(self) -> TYPING__RESULT_W_NORETURN:
         return True
 
     @classmethod
-    def teardown__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         print("HELLO")
         return True
 

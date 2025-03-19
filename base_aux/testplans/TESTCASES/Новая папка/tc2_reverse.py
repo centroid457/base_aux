@@ -1,18 +1,16 @@
-from base_aux.testplans.tc import *
-from base_aux.valid.m2_valid_base2_derivatives import *
 from base_aux.valid.m3_valid_chains import *
+from base_aux.testplans.tc import *
 
 from . import tc1_direct
-from .tc0_groups import *
 
 
 # =====================================================================================================================
-class TestCase(TcGroup_ATC220220, tc1_direct.TestCase):
+class TestCase(tc1_direct.TestCase):
     ASYNC = True
     DESCRIPTION = "reverse1"
 
     @classmethod
-    def startup__cls__wrapped(cls) -> TYPE__RESULT_W_NORETURN:
+    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
         result_chain = ValidChains(
             [
                 Valid(value_link=True, name="TRUE"),
