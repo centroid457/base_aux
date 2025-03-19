@@ -1,13 +1,14 @@
 from typing import *
-import time
+import datetime
 
 from base_aux.valid.m2_valid_base import Valid
 from base_aux.valid.m2_valid_base2_derivatives import *
 from base_aux.aux_callable.m1_callable import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
-TYPE__CHAINS = list[Union[Valid, 'ValidChains', Any]]      # all Any will be converted to Valid!
+TYPING__CHAINS = list[Union[Valid, 'ValidChains', Any]]      # all Any will be converted to Valid!
 
 
 # =====================================================================================================================
@@ -42,9 +43,9 @@ class ValidChains(Valid):
     WHY NOT: 2?
     -----------
     """
-    _CHAINS: TYPE__CHAINS
+    _CHAINS: TYPING__CHAINS
 
-    def __init__(self, chains: TYPE__CHAINS, **kwargs):
+    def __init__(self, chains: TYPING__CHAINS, **kwargs):
         super().__init__(value_link=None, **kwargs)
         self._CHAINS = chains
 
@@ -56,14 +57,14 @@ class ValidChains(Valid):
 
     def run(self) -> bool:
         self.clear()
-        self.timestamp_last = time.time()
+        self.timestamp_last = datetime.datetime.now()
 
         # SKIP ---------------------
         self.skip_last = CallableAux(self.SKIP_LINK).resolve_bool()
 
         if not self.skip_last:
             # WORK =======================
-            self.finished = False
+            self.STATE_ACTIVE = Enum_ProcessStateActive.STARTED
             self.log_lines.append(f"(START) len={len(self)}/timestamp={self.timestamp_last}")
 
             # init self.validate_last if None -----------
@@ -90,9 +91,8 @@ class ValidChains(Valid):
                 if isinstance(step, ValidBreak) and step_result:
                     break
 
-            # ITER -----------
-
-            self.finished = True
+            # -----------------
+            self.STATE_ACTIVE = Enum_ProcessStateActive.FINISHED
             self.log_lines.append(f"(FINISH) [result={bool(self)}]/len={len(self)}")    # need after finish! to keep correct result
             # ============================
 

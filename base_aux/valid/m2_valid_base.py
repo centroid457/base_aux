@@ -1,10 +1,9 @@
-import time
+import datetime
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_callable.m1_callable import CallableAux
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
-# from base_aux.lambdas.lambdas import *
 
 
 # =====================================================================================================================
@@ -66,9 +65,9 @@ class Valid:
     KWARGS__VALIDATE: TYPING.KWARGS_FINAL = None
 
     # RESULT ACTUAL ------------------------------
-    timestamp_last: float | None = None
+    timestamp_last: datetime.datetime | None = None
     skip_last: TYPE__VALID_BOOL__FINAL = False
-    finished: bool | None = None
+    STATE_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
     value_last: TYPE__VALID_RESULT = None               # direct result value for calculating func value_link
     validate_last: TYPE__VALID_BOOL_EXX__FINAL = True   # direct result value for calculating func validate_link === decide using only bool???
     reverse_last: TYPE__VALID_BOOL__FINAL = None
@@ -148,13 +147,13 @@ class Valid:
     def clear(self):
         self.timestamp_last = None
         self.skip_last = False
-        self.finished = None
+        self.STATE_ACTIVE = Enum_ProcessStateActive.NONE
         self.value_last = None
         self.validate_last = True
         self.log_lines = []
 
     def check__active(self) -> bool:
-        return self.finished is False
+        return self.STATE_ACTIVE == Enum_ProcessStateActive.STARTED
 
     @property
     def validate_last_bool(self) -> bool:
@@ -172,16 +171,16 @@ class Valid:
         :return: if not finished - None
             if finished - validate_last_bool
         """
-        if self.finished is None:
-            return None
-        else:
+        if self.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
             return self.validate_last_bool
+        else:
+            return None
 
     def run__if_not_finished(self) -> bool:
-        if not self.finished:
-            return self.run()
-        else:
+        if self.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
             return bool(self)
+        else:
+            return self.run()
 
     def __call__(self, *args, **kwargs) -> bool:
         return self.run(*args, **kwargs)
@@ -198,7 +197,6 @@ class Valid:
             value_link = self.VALUE_LINK
 
         self.clear()
-        self.timestamp_last = time.time()
 
         # SKIP ---------------------
         self.skip_last = CallableAux(self.SKIP_LINK).resolve_bool()
@@ -206,11 +204,11 @@ class Valid:
         if not self.skip_last:
             retry_count = 0
             # WORK =======================
-            self.finished = False
+            self.STATE_ACTIVE = Enum_ProcessStateActive.STARTED
 
             while True:
                 self.clear()
-                self.timestamp_last = time.time()
+                self.timestamp_last = datetime.datetime.now()
 
                 # VALUE ---------------------
                 self.value_last = CallableAux(value_link).resolve_exx(*self.ARGS__VALUE, **self.KWARGS__VALUE)
@@ -237,7 +235,7 @@ class Valid:
             if self.REVERSE_LINK:
                 self.reverse_last = CallableAux(self.REVERSE_LINK).resolve_bool()
 
-            self.finished = True
+            self.STATE_ACTIVE = Enum_ProcessStateActive.FINISHED
             # ============================
 
         # FINISH final ---------------------
@@ -249,7 +247,7 @@ class Valid:
         if self.skip_last:
             return True
 
-        if not self.finished:
+        if self.STATE_ACTIVE != Enum_ProcessStateActive.FINISHED:
             return False
 
         if self.reverse_last:
@@ -277,7 +275,7 @@ class Valid:
         #     "{0.__class__.__name__}(validate_last_bool={0.validate_last_bool},validate_last={0.validate_last},\n"
         #     "...VALUE_LINK={0.VALUE_LINK},ARGS__VALUE={0.ARGS__VALUE},KWARGS__VALUE={0.KWARGS__VALUE},value_last={0.value_last},\n"
         #     "...VALIDATE_LINK={0.VALIDATE_LINK},ARGS__VALIDATE={0.ARGS__VALIDATE},KWARGS__VALIDATE={0.KWARGS__VALIDATE},\n"
-        #     "...skip_last={0.skip_last},NAME={0.NAME},finished={0.finished},timestamp_last={0.timestamp_last})"
+        #     "...skip_last={0.skip_last},NAME={0.NAME},STATE_ACTIVE={0.STATE_ACTIVE},timestamp_last={0.timestamp_last})"
         # )
         # result_str = STR_PATTERN.format(self)
 
@@ -313,7 +311,7 @@ class Valid:
         result_str += f",\n"
 
         # finish ----
-        result_str += self.get_logstr_attr("finished", prefix="...")
+        result_str += self.get_logstr_attr("STATE_ACTIVE", prefix="...")
         result_str += self.get_logstr_attr("timestamp_last", prefix=",")
 
         # log ----------------

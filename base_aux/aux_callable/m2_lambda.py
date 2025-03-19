@@ -55,16 +55,16 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     """
     SOURCE: Union[Callable, Any, type]
 
-    PROCESS_ACTIVE: Enum_ProcessActive = Enum_ProcessActive.NONE
+    PROCESS_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
     RESULT: Any = None
     EXX: Optional[Exception] = None
 
     # UNIVERSAL =======================================================================================================
     def run(self, *args, **kwargs) -> None:
         # ONLY ONE EXECUTION on instance!!! dont use locks! -------------
-        if self.PROCESS_ACTIVE == Enum_ProcessActive.STARTED:
+        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.STARTED:
             return
-        self.PROCESS_ACTIVE = Enum_ProcessActive.STARTED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.STARTED
 
         # WORK ----------------------------------------------------------
         self.RESULT = None
@@ -83,7 +83,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
             self.EXX = exx
 
         # FIN ----------------------------------------------------------
-        self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.FINISHED
 
     # OVERWRITE! ======================================================================================================
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
@@ -110,11 +110,11 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
         return not self.check_raise(*args, **kwargs)
 
     def wait_finished(self, sleep: float = 1) -> None:
-        if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:
+        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.NONE:
             self.run()
 
         count = 1
-        while self.PROCESS_ACTIVE != Enum_ProcessActive.FINISHED:
+        while self.PROCESS_ACTIVE != Enum_ProcessStateActive.FINISHED:
             print(f"wait_finished {count=}")
             count += 1
             time.sleep(sleep)

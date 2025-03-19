@@ -62,10 +62,32 @@ class Enum_ProcessResult(NestEq_Enum):
     SUCCESS = True
 
 
-class Enum_ProcessActive(NestEq_Enum):
+class Enum_ProcessStateActive(NestEq_Enum):
+    """
+    NAME
+    ----
+    STATE_ACTIVE
+    """
     NONE = None
     STARTED = True
     FINISHED = False
+
+
+class Enum_ProcessStateResult(NestEq_Enum):
+    """
+    GOAL
+    ----
+    use processActive+Result in one value
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    1/ VALID
+    2/ tc.startup_cls/teardown_cls
+    """
+    NONE = None
+    STARTED = 0
+    FINISHED_FAIL = False
+    FINISHED_SUCCESS = True
 
 
 # =====================================================================================================================

@@ -17,7 +17,7 @@ class LambdaListThread(QThread):
     results will kept in objects
     """
     LAMBDAS: TYPING__LAMBDA_LIST__FINAL
-    PROCESS_ACTIVE: Enum_ProcessActive = Enum_ProcessActive.NONE
+    PROCESS_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
     def __init__(self, lambdas: TYPING__LAMBDA_LIST__DRAFT, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -30,9 +30,9 @@ class LambdaListThread(QThread):
 
     def run(self) -> None:
         # ONLY ONE EXECUTION on instance!!! dont use locks! -------------
-        if self.PROCESS_ACTIVE == Enum_ProcessActive.STARTED:
+        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.STARTED:
             return
-        self.PROCESS_ACTIVE = Enum_ProcessActive.STARTED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.STARTED
 
         # FIN ----------------------------------------------------------
         for item in self.LAMBDAS:
@@ -42,7 +42,7 @@ class LambdaListThread(QThread):
                 item.run()
 
         self.wait_finished__all()
-        self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.FINISHED
 
     # OVERWRITE! ======================================================================================================
     def __call__(self, *args, **kwargs) -> TYPING__LAMBDA_LIST__FINAL:
@@ -64,18 +64,18 @@ class LambdaListThread(QThread):
         return not self.check_raise__any()
 
     def wait_finished__all(self, sleep: float = 1) -> None:
-        if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:
+        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.NONE:
             self.run()
 
         for item in self.LAMBDAS:
             item.wait_finished(sleep)
 
     def wait_finished(self, sleep: float = 1) -> None:
-        if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:
+        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.NONE:
             self.run()
 
         count = 1
-        while self.PROCESS_ACTIVE != Enum_ProcessActive.FINISHED:
+        while self.PROCESS_ACTIVE != Enum_ProcessStateActive.FINISHED:
             print(f"wait_finished {count=}")
             count += 1
             time.sleep(sleep)

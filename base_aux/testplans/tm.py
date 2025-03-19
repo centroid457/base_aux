@@ -183,7 +183,7 @@ class TpTableModel(TableModelTemplate):
                         if tc_inst.result.check__active():
                             return TcResultMsg.WAIT
 
-                        elif tc_inst.result.finished:
+                        elif tc_inst.result.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
                             if bool(tc_inst.result):
                                 return TcResultMsg.PASS
                             else:
@@ -204,9 +204,9 @@ class TpTableModel(TableModelTemplate):
                 if tc_cls.result__teardown_cls is None:
                     return
                 if bool(tc_cls.result__teardown_cls) is True:
-                    return '+'
+                    return TcResultMsg.PASS
                 if bool(tc_cls.result__teardown_cls) is False:
-                    return '-'
+                    return TcResultMsg.FAIL
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.ToolTipRole:

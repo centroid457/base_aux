@@ -8,7 +8,7 @@ from base_aux.base_statics.m4_enums import *
 class CallableAux(NestInit_Source):
     """
     """
-    PROCESS_ACTIVE: Enum_ProcessActive = Enum_ProcessActive.NONE
+    PROCESS_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self._construct_with_args_kwargs(*args, **kwargs)
@@ -17,14 +17,14 @@ class CallableAux(NestInit_Source):
         """
         unsafe (raise acceptable) get value
         """
-        self.PROCESS_ACTIVE = Enum_ProcessActive.STARTED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.STARTED
 
         if callable(self.SOURCE):
             result = self.SOURCE(*args, **kwargs)
         else:
             result = self.SOURCE
 
-        self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
+        self.PROCESS_ACTIVE = Enum_ProcessStateActive.FINISHED
         return result
 
     # -----------------------------------------------------------------------------------------------------------------

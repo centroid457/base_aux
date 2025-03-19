@@ -7,6 +7,7 @@ from base_aux.aux_callable.m1_callable import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
+from base_aux.base_statics.m4_enums import *
 
 from .tc_types import TYPE__RESULT_BASE, TYPE__RESULT_W_NORETURN, TYPE__RESULT_W_EXX
 from .models import *
