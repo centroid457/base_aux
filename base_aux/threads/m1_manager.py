@@ -7,8 +7,8 @@ NOTE: maybe you dont need use it if you need only one class method - use direct 
 
 use different managers for different funcs/methods if needed
 use just one decorator to spawn threads from func / methods
-keep all spawned threads in list by ThreadItem aux_types
-ThreadItem keeps result/exx/is_alive attributes!
+keep all spawned threads in list by LambdaThread aux_types
+LambdaThread keeps result/exx/is_alive attributes!
 use wait_all/terminate_all()
 """
 # =====================================================================================================================
@@ -17,7 +17,7 @@ import time
 
 from base_aux.base_singletons.m1_singleton import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.threads.m1_item import ThreadItem
+from base_aux.aux_callable.m2_lambda import LambdaThread
 
 
 # =====================================================================================================================
@@ -45,11 +45,11 @@ class ThreadsManager(SingletonCallMeta):
     :ivar _PARAM__NOTHREAD: parameter for passing in decorated function which can run SOURCE without thread
 
     :param args: NAME for manager instance
-    :param thread_items: ThreadItem instances,
+    :param thread_items: LambdaThread instances,
     :param MUTEX: mutex for safe collecting threads in this manager, creates in init
     :param counter: counter for collected threads in this manager
     """
-    THREADS: list[ThreadItem]
+    THREADS: list[LambdaThread]
 
     _PARAM__NOTHREAD: str = "nothread"
 
@@ -84,7 +84,7 @@ class ThreadsManager(SingletonCallMeta):
             """
             nothread = self._PARAM__NOTHREAD in kwargs and kwargs.pop(self._PARAM__NOTHREAD)
 
-            thread_item = ThreadItem(_func, *args, **kwargs)
+            thread_item = LambdaThread(_func, *args, **kwargs)
             self.THREADS.append(thread_item)
             thread_item.start()
 

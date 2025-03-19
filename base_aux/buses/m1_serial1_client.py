@@ -953,7 +953,7 @@ class SerialClient(Logger):
             obj.REWRITEIF_READFAILDECODE = 1
             obj.REWRITEIF_NOVALID = 0
 
-            lambda_list = LambdaList([
+            lambda_list = LambdaListThread([
                 Lambda(obj.connect, address, _touch_connection=True),
                 *[Lambda(obj.write_read__last, cmd) for cmd in cmds],
                 obj._address__release,

@@ -1,14 +1,13 @@
-from typing import *
 import time
 
-from base_aux.threads.m1_item import *
+from base_aux.aux_callable.m2_lambda import LambdaThread
 
 
 # =====================================================================================================================
 class Test__ThreadItem:
     # -----------------------------------------------------------------------------------------------------------------
     def setup_method(self, method):
-        # self.victim = ThreadItem()
+        # self.victim = LambdaThread()
         pass
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -16,7 +15,7 @@ class Test__ThreadItem:
         def target():
             time.sleep(0.2)
 
-        victim = ThreadItem(target)
+        victim = LambdaThread(target)
         victim.start()
         victim.wait()
         victim.start()

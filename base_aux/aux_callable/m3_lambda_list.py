@@ -2,7 +2,7 @@ from typing import *
 
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_callable.m2_lambdas import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -11,7 +11,7 @@ TYPING__LAMBDA_LIST__FINAL = list[Lambda]
 
 
 # =====================================================================================================================
-class LambdaList(QThread):
+class LambdaListThread(QThread):
     """
     GOAL
     ----
@@ -24,10 +24,10 @@ class LambdaList(QThread):
     def __init__(self, lambdas: TYPING__LAMBDA_LIST__DRAFT, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         result = []
-        for obj in lambdas:
-            if not isinstance(obj, Lambda):
-                obj = Lambda(obj)
-            result.append(obj)
+        for item in lambdas:
+            if not isinstance(item, Lambda):
+                item = Lambda(item)
+            result.append(item)
         self.LAMBDAS = result
 
     def run(self) -> None:
@@ -37,13 +37,17 @@ class LambdaList(QThread):
         self.PROCESS_ACTIVE = Enum_ProcessActive.STARTED
 
         # FIN ----------------------------------------------------------
-        for obj in self.LAMBDAS:
-            obj.run()
+        for item in self.LAMBDAS:
+            if isinstance(item, LambdaThread):
+                item.start()
+            else:
+                item.run()
 
+        self.wait_finished__all()
         self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
 
     # OVERWRITE! ======================================================================================================
-    def __call__(self, *args, **kwargs) -> TYPING__LAMBDA_LIST__FINAL | NoReturn:
+    def __call__(self, *args, **kwargs) -> TYPING__LAMBDA_LIST__FINAL:
         self.run()
         return self.LAMBDAS
 
@@ -52,14 +56,21 @@ class LambdaList(QThread):
         self.run()
         self.wait_finished()
 
-        for obj in self.LAMBDAS:
-            if obj.EXX is not None:
+        for item in self.LAMBDAS:
+            if item.EXX is not None:
                 return True
             else:
                 return False
 
     def check_no_raise__any(self) -> bool:
         return not self.check_raise__any()
+
+    def wait_finished__all(self, sleep: float = 1) -> None:
+        if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:
+            self.run()
+
+        for item in self.LAMBDAS:
+            item.wait_finished(sleep)
 
     def wait_finished(self, sleep: float = 1) -> None:
         if self.PROCESS_ACTIVE == Enum_ProcessActive.NONE:

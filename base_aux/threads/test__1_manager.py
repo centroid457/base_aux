@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.threads.m2_manager import ThreadsManager
+from base_aux.threads.m1_manager import ThreadsManager
 
 
 # =====================================================================================================================

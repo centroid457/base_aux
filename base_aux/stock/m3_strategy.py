@@ -5,7 +5,7 @@ import MetaTrader5 as mt5
 
 from base_aux.aux_np.m1_np import *
 from base_aux.alerts.m2_select import *
-from base_aux.threads.m2_manager import *
+from base_aux.threads.m1_manager import *
 
 from base_aux.stock.m1_mt import *
 

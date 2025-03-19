@@ -1,6 +1,8 @@
 from typing import *
 import time
 
+from PyQt5.QtCore import QThread
+
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
@@ -63,7 +65,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     EXX: Optional[Exception] = None
 
     # UNIVERSAL =======================================================================================================
-    def construct(self, *args, **kwargs) -> None:
+    def run(self, *args, **kwargs) -> None:
         # ONLY ONE EXECUTION on instance!!! dont use locks! -------------
         if self.PROCESS_ACTIVE == Enum_ProcessActive.STARTED:
             return
@@ -88,17 +90,9 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
         # FIN ----------------------------------------------------------
         self.PROCESS_ACTIVE = Enum_ProcessActive.FINISHED
 
-    def run(self) -> None:
-        """
-        GOAL
-        ----
-        thread purpose
-        """
-        self.construct()
-
     # OVERWRITE! ======================================================================================================
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.EXX is not None:
             raise self.EXX
@@ -110,7 +104,7 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
 
     # =================================================================================================================
     def check_raise(self, *args, **kwargs) -> bool:     # TODO: decide what to do with different kwArgs in several starts/runs
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
         self.wait_finished()
         if self.EXX is not None:
             return True
@@ -133,6 +127,77 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
     # -----------------------------------------------------------------------------------------------------------------
     def __bool__(self) -> bool | NoReturn:
         return bool(self())
+
+
+# =====================================================================================================================
+class LambdaThread(Lambda, QThread):
+    """
+    NOTE
+    ----
+    same as Lambda but just add nesting QThread!
+
+    GOAL
+    ----
+    Object for keeping thread data for better managing.
+    """
+    def __SLOTS_EXAMPLES(self):
+        """DON'T START! just for explore!
+        """
+        # checkers --------------------
+        self.started
+        self.isRunning()
+
+        self.finished
+        self.isFinished()
+
+        self.destroyed
+        self.signalsBlocked()
+
+        # settings -------------------
+        self.setTerminationEnabled()
+
+        # NESTING --------------------
+        self.currentThread()
+        self.currentThreadId()
+        self.thread()
+        self.children()
+        self.parent()
+
+        # info --------------------
+        self.priority()
+        self.loopLevel()
+        self.stackSize()
+        self.idealThreadCount()
+
+        self.setPriority()
+        self.setProperty()
+        self.setObjectName()
+
+        self.tr()
+
+        self.dumpObjectInfo()
+        self.dumpObjectTree()
+
+        # CONTROL --------------------
+        self.run()
+        self.start()
+        self.startTimer()
+
+        self.sleep(100)
+        self.msleep(100)
+        self.usleep(100)
+
+        self.wait()
+
+        self.killTimer()
+
+        self.disconnect()
+        self.deleteLater()
+        self.terminate()
+        self.quit()
+        self.exit(100)
+
+        # WTF --------------------
 
 
 # =====================================================================================================================
@@ -163,7 +228,7 @@ class LambdaBool(Lambda):
     :ivar BOOL_REVERSE: just for LambdaBoolReversed, no need to init
     """
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.EXX is not None:
             raise self.EXX
@@ -176,7 +241,7 @@ class LambdaBoolReversed(LambdaBool):
     just a reversed LambdaBool
     """
     def __call__(self, *args, **kwargs) -> bool | NoReturn:
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.EXX is not None:
             raise self.EXX
@@ -215,7 +280,7 @@ class LambdaTrySuccess(LambdaBool):
         so here raise is acceptable in getattr(source, name) in case of PROPERTY_RAISE
     """
     def __call__(self, *args, **kwargs) -> bool:
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.EXX is not None:
             return False
@@ -225,7 +290,7 @@ class LambdaTrySuccess(LambdaBool):
 
 class LambdaTryFail(LambdaTrySuccess):
     def __call__(self, *args, **kwargs) -> bool:
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.EXX is not None:
             return True
@@ -253,7 +318,7 @@ class LambdaSleep(Lambda):
         if self.WHEN is Enum_When2.BEFORE:
             time.sleep(sec)
 
-        self.construct(*args, **kwargs)
+        self.run(*args, **kwargs)
 
         if self.WHEN is Enum_When2.AFTER:
             time.sleep(sec)

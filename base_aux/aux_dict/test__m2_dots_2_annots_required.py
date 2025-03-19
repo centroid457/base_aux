@@ -1,4 +1,4 @@
-from base_aux.aux_callable.m2_lambdas import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_dict.m3_dict_attr1_simple import *
 
 
