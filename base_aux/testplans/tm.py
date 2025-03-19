@@ -165,11 +165,13 @@ class TpTableModel(TableModelTemplate):
                 if row_is_summary:
                     return
                 group_name = tc_cls.MIDDLE_GROUP__NAME or ""    # TODO: DEPRECATE/DELETE GROUPS! use tc.__EQ1
+                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                    return TcResultMsg.WAIT
                 if tc_cls.result__startup_cls is None:
                     return group_name
-                elif bool(tc_cls.result__startup_cls) is True:
+                if bool(tc_cls.result__startup_cls) is True:
                     return f'+{group_name}'
-                elif bool(tc_cls.result__startup_cls) is False:
+                if bool(tc_cls.result__startup_cls) is False:
                     return f'-{group_name}'
 
             # DUTS -------------------
@@ -201,6 +203,8 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.TEARDOWN_CLS:
                 if row_is_summary:
                     return
+                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                    return TcResultMsg.WAIT
                 if tc_cls.result__teardown_cls is None:
                     return
                 if bool(tc_cls.result__teardown_cls) is True:
@@ -277,11 +281,13 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.STARTUP_CLS:
                 if row_is_summary:
                     return
+                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                    return QColor("#FFFF50")
                 if tc_cls.result__startup_cls is None:
                     return
-                elif bool(tc_cls.result__startup_cls) is True:
+                if bool(tc_cls.result__startup_cls) is True:
                     return QColor("#50FF50")
-                elif bool(tc_cls.result__startup_cls) is False:
+                if bool(tc_cls.result__startup_cls) is False:
                     return QColor("#FF5050")
 
             # DUTS -------------------
@@ -313,6 +319,8 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.TEARDOWN_CLS:
                 if row_is_summary:
                     return
+                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                    return QColor("#FFFF50")
                 if tc_cls.result__teardown_cls is None:
                     return
                 elif bool(tc_cls.result__teardown_cls) is True:

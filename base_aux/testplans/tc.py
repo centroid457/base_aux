@@ -47,7 +47,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
 
-    result__startup_cls: TYPING__RESULT_BASE = None
+    result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE = None
 
     # INSTANCE ------------------------------------
@@ -317,7 +317,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         """before batch work
         """
         print(f"startup__cls")
-        cls.result__startup_cls = result
+        cls.result__startup_cls = Enum_ProcessStateActive.STARTED
 
         cls.finished__cls = False
         # cls.clear__cls()
@@ -360,6 +360,8 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         print(f"run__cls=teardown__cls")
 
         if not cls.finished__cls or cls.result__teardown_cls is None:
+            cls.result__teardown_cls = Enum_ProcessStateActive.STARTED
+
             result = cls.teardown__cls__wrapped
             result = CallableAux(result).resolve_exx()
             if isinstance(result, Valid):
