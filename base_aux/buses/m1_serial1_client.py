@@ -1554,11 +1554,15 @@ def _explore():
         BAUDRATE = 115200
         EOL__SEND = b"\n"
 
-    for i in range(3):
-        result = Dev.addresses_dump__answers("*:get name", "*:get addr")
-        for port, responses in result.items():
-            print(port, responses)
-        print()
+    result = Dev.addresses_dump__answers("*:get name", "*:get addr")
+
+    print(f"="*100)
+    print(f"="*100)
+    print(f"="*100)
+
+    for port, responses in result.items():
+        print(port, responses)
+    print()
 
     """
 COM11 {'*:get name': 'PTB', '*:get addr': 1''/str(1)}
