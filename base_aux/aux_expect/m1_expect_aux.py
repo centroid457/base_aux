@@ -1,7 +1,7 @@
 import pytest
 from pytest import mark
 
-from base_aux.aux_callable.m1_callable_aux import CallableAux
+from base_aux.aux_callable.m1_callable import CallableAux
 
 from base_aux.base_statics.m1_types import TYPE__VALID_RESULT, TYPE__LAMBDA_CONSTRUCTOR
 from base_aux.aux_cmp_eq.m2_eq_aux import *

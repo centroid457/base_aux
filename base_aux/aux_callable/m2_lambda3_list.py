@@ -1,9 +1,7 @@
-from typing import *
-
 from PyQt5.QtCore import QThread
 
 from base_aux.aux_callable.m2_lambda import *
-
+from base_aux.aux_callable.m2_lambda2_thread import LambdaThread
 
 # =====================================================================================================================
 TYPING__LAMBDA_LIST__DRAFT = list[Lambda | Callable | type | Any]

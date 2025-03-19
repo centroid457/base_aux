@@ -3,7 +3,7 @@ import pytest
 from base_aux.monitors.m1_imap import *
 from base_aux.monitors.m2_url_tag2__derivatives import *
 from base_aux.alerts.m1_alerts1_smtp import *
-from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.aux_callable.m1_callable import *
 
 
 # =====================================================================================================================

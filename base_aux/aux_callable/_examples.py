@@ -1,4 +1,4 @@
-from base_aux.threads.m1_manager import *
+from base_aux.aux_callable.m3_thread_collector import *
 import time
 
 
@@ -8,12 +8,12 @@ time_start = time.time()
 
 
 # define victim ------------------
-class ThreadManager1(ThreadsManager):
+class ThreadDeCollector1(ThreadsDeCollector):
     pass
 
 
 class Cls:
-    @ThreadManager1().decorator__to_thread
+    @ThreadDeCollector1().decorator__to_thread
     def func1(self, num):
         time.sleep(1)
         return num * 1000
@@ -23,11 +23,11 @@ class Cls:
 for i in range(count):
     assert Cls().func1(i) is None
 
-assert ThreadManager1().count == count
-ThreadManager1().wait_all()
-assert {item.result for item in ThreadManager1().THREADS} == {num * 1000 for num in range(count)}
+assert ThreadDeCollector1().count == count
+ThreadDeCollector1().wait_all()
+assert {item.RESULT for item in ThreadDeCollector1().THREADS} == {num * 1000 for num in range(count)}
 
-ThreadManager1().clear()
+ThreadDeCollector1().clear()
 
 # spawn ------------------
 for i in range(count):

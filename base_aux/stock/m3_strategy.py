@@ -1,11 +1,8 @@
 import sys
 
-import pandas as pd
-import MetaTrader5 as mt5
-
 from base_aux.aux_np.m1_np import *
 from base_aux.alerts.m2_select import *
-from base_aux.threads.m1_manager import *
+from base_aux.aux_callable.m3_thread_collector import *
 
 from base_aux.stock.m1_mt import *
 
@@ -70,7 +67,7 @@ class AlertTradeADX(AlertSelect.TELEGRAM_DEF):
     pass
 
 
-class ThreadManagerADX(ThreadsManager):
+class ThreadDeCollectorADX(ThreadsDeCollector):
     """Manager which create new group of threads
     """
     pass
@@ -109,7 +106,7 @@ class MonitorADX(MonitorBase):
     def run_strategy_cycle_one(self):
         for tf_shifted in range(1, self.TF_SHIFTED_MAX + 1):
             self.calculate__tf_shifted(tf_shifted)
-        ThreadManagerADX().wait_all()
+        ThreadDeCollectorADX().wait_all()
         self.adx_full_pulse_1_10_check()
         self.print__array_interpreted()
         # self.ALERT("tf_shifted checked")
@@ -144,7 +141,7 @@ class MonitorADX(MonitorBase):
         print()
         return
 
-    @ThreadManagerADX().decorator__to_thread
+    @ThreadDeCollectorADX().decorator__to_thread
     def calculate__tf_shifted(self, tf_shifted: int) -> None:
         tf_shifted_index = tf_shifted - 1
         # DATA ----------------------------------------
@@ -225,13 +222,13 @@ class Alert_MapDrawer(AlertSelect.TELEGRAM_DEF):
     pass
 
 
-class ThreadManager_MapDrawer_Tf(ThreadsManager):
+class ThreadDeCollector_MapDrawer_Tf(ThreadsDeCollector):
     """Manager which create new group of threads
     """
     pass
 
 
-class ThreadManager_MapDrawer_Shift(ThreadsManager):
+class ThreadDeCollector_MapDrawer_Shift(ThreadsDeCollector):
     """Manager which create new group of threads
     """
     pass
@@ -269,9 +266,9 @@ class IndicatorMapDrawer_Simple(MT5, threading.Thread):
         # TODO: MOVE INTO MT5!!! in indicator!
         for tf_assembled in range(1, self.MAP_HEIGHT + 1):
             self.calculate_tf(tf_assembled)
-        ThreadManager_MapDrawer_Tf().wait_all()
+        ThreadDeCollector_MapDrawer_Tf().wait_all()
 
-    @ThreadManager_MapDrawer_Tf().decorator__to_thread
+    @ThreadDeCollector_MapDrawer_Tf().decorator__to_thread
     def calculate_tf(self, tf_split: int):
         """calculates all steps for exact TF - its just one row in MAP!
         """
@@ -284,10 +281,10 @@ class IndicatorMapDrawer_Simple(MT5, threading.Thread):
         # add results
         for shift in range(tf_split):
             self.calculate_shift(shift, tf_split, history)
-        ThreadManager_MapDrawer_Shift().wait_all()
+        ThreadDeCollector_MapDrawer_Shift().wait_all()
 
         # results = collect
-        threads_sorted = sorted(ThreadManager_MapDrawer_Shift().THREAD_ITEMS, key=lambda x: x.args[0])
+        threads_sorted = sorted(ThreadDeCollector_MapDrawer_Shift().THREAD_ITEMS, key=lambda x: x.args[0])
         results: np.ndarray = np.array([thread.result for thread in threads_sorted])
 
         # results = flat
@@ -296,7 +293,7 @@ class IndicatorMapDrawer_Simple(MT5, threading.Thread):
         # save row to MAP
         self.MAP[tf_split - 1] = result
 
-    @ThreadManager_MapDrawer_Shift().decorator__to_thread
+    @ThreadDeCollector_MapDrawer_Shift().decorator__to_thread
     def calculate_shift(self, shift: int, tf_split: int, history: np.ndarray) -> np.ndarray:
         history = history[shift::tf_split]
         result = self._indicator_get_by_obj(self.INDICATOR(*self.INDICATOR_SETTINGS), _bars=history, return_tail=self.MAP_LENGTH//tf_split)

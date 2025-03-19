@@ -1,12 +1,7 @@
-from typing import *
 import time
 
-from PyQt5.QtCore import QThread
-
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
-from base_aux.base_statics.m4_enums import *
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_SourceKwArgs_Implicite
 
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 
@@ -130,74 +125,6 @@ class Lambda(NestInit_SourceKwArgs_Implicite):
 
 
 # =====================================================================================================================
-class LambdaThread(Lambda, QThread):
-    """
-    NOTE
-    ----
-    same as Lambda but just add nesting QThread!
-
-    GOAL
-    ----
-    Object for keeping thread data for better managing.
-    """
-    def __SLOTS_EXAMPLES(self):
-        """DON'T START! just for explore!
-        """
-        # checkers --------------------
-        self.started
-        self.isRunning()
-
-        self.finished
-        self.isFinished()
-
-        self.destroyed
-        self.signalsBlocked()
-
-        # settings -------------------
-        self.setTerminationEnabled()
-
-        # NESTING --------------------
-        self.currentThread()
-        self.currentThreadId()
-        self.thread()
-        self.children()
-        self.parent()
-
-        # info --------------------
-        self.priority()
-        self.loopLevel()
-        self.stackSize()
-        self.idealThreadCount()
-
-        self.setPriority()
-        self.setProperty()
-        self.setObjectName()
-
-        self.tr()
-
-        self.dumpObjectInfo()
-        self.dumpObjectTree()
-
-        # CONTROL --------------------
-        self.run()
-        self.start()
-        self.startTimer()
-
-        self.sleep(100)
-        self.msleep(100)
-        self.usleep(100)
-
-        self.wait()
-
-        self.killTimer()
-
-        self.disconnect()
-        self.deleteLater()
-        self.terminate()
-        self.quit()
-        self.exit(100)
-
-        # WTF --------------------
 
 
 # =====================================================================================================================

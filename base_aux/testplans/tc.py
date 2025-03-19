@@ -3,7 +3,7 @@ import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.aux_dict.m3_dict_attr1_simple import *
-from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.aux_callable.m1_callable import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *

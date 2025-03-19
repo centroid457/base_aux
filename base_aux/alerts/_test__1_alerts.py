@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.alerts.m1_alerts1_smtp import *
 from base_aux.alerts.m1_alerts2_telegram import *
-from base_aux.aux_callable.m1_callable_aux import *
+from base_aux.aux_callable.m1_callable import *
 
 
 # =====================================================================================================================

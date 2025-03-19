@@ -4,7 +4,7 @@ import re
 from base_aux.aux_attr.m4_dump import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
-from base_aux.aux_callable.m1_callable_aux import CallableAux
+from base_aux.aux_callable.m1_callable import CallableAux
 from base_aux.aux_types.m1_type_aux import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 

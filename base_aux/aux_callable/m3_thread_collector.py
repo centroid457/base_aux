@@ -1,57 +1,56 @@
-"""
-manage spawned threads
-
-Designed to working with spawned threads
-
-NOTE: maybe you dont need use it if you need only one class method - use direct QThread
-
-use different managers for different funcs/methods if needed
-use just one decorator to spawn threads from func / methods
-keep all spawned threads in list by LambdaThread aux_types
-LambdaThread keeps result/exx/is_alive attributes!
-use wait_all/terminate_all()
-"""
-# =====================================================================================================================
 from typing import *
 import time
 
 from base_aux.base_singletons.m1_singleton import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.aux_callable.m2_lambda import LambdaThread
+from base_aux.aux_callable.m2_lambda2_thread import LambdaThread
 
 
 # =====================================================================================================================
-class ThreadsManager(SingletonCallMeta):
-    """Manager for spawning threads and keep its instances with additional data.
+class ThreadsDeCollector(SingletonCallMeta):
+    """
+    TODO: DEPRECATE??? use clearly direct other methods/objects!
+
+    NOTE
+    ----
+    1/ maybe you dont need use it if you need only one class method - use direct QThread
+
+    GOAL
+    ----
+    Manager for spawning threads and keep its instances with additional data (result/exx).
     Singleton! do you dont need saving instances!
 
     USAGE
     -----
+    use different managers for different funcs/methods if needed
+    use just one decorator to spawn threads from func / methods
+    keep all spawned threads in list by LambdaThread aux_types
+
     1. BEST PRACTICE
     Not recommended using it directly, use as simple nested:
-        class ThreadsManager1(ThreadsManager):
+        class ThreadsManager1(ThreadsDeCollector):
             pass
 
-        @ThreadsManager1.decorator__to_thread
+        @ThreadsManager1().decorator__to_thread
         def func(*args, **kwargs):
             pass
 
     2. Direct usage
-    But if you need only one manager - do use directly.
-        @ThreadsManager.decorator__to_thread
+    But if you need only one manager - do use directly without nesting.
+        @ThreadsDeCollector().decorator__to_thread
         def func(*args, **kwargs):
             pass
-
-    :ivar _PARAM__NOTHREAD: parameter for passing in decorated function which can run SOURCE without thread
 
     :param args: NAME for manager instance
     :param thread_items: LambdaThread instances,
     :param MUTEX: mutex for safe collecting threads in this manager, creates in init
     :param counter: counter for collected threads in this manager
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    stock strategies/monitors
     """
     THREADS: list[LambdaThread]
-
-    _PARAM__NOTHREAD: str = "nothread"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -76,14 +75,12 @@ class ThreadsManager(SingletonCallMeta):
 
         :param _func: decorated SOURCE
         """
-        def _wrapper__spawn_thread(*args, **kwargs) -> Optional[Any]:
+        def _wrapper__spawn_thread(*args, nothread: bool = None, **kwargs) -> Optional[Any]:
             """actual wrapper which spawn thread from decorated SOURCE.
 
             :param args: args passed into SOURCE/method,
             :param kwargs: kwargs passed into SOURCE/method,
             """
-            nothread = self._PARAM__NOTHREAD in kwargs and kwargs.pop(self._PARAM__NOTHREAD)
-
             thread_item = LambdaThread(_func, *args, **kwargs)
             self.THREADS.append(thread_item)
             thread_item.start()
