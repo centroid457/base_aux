@@ -23,7 +23,7 @@ class _TestCaseBase0(Logger):
 
 # =====================================================================================================================
 class Enum_TcGroup_Base(NestEq_Enum):
-    G0 = "g0"
+    NONE = None
 
 
 # =====================================================================================================================
@@ -82,7 +82,7 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
         ----
         REDEFINE TO USE AS CMP VALUE
         """
-        return Enum_TcGroup_Base.G0
+        return Enum_TcGroup_Base.NONE
 
     # =================================================================================================================
     @classmethod

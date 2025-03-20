@@ -140,7 +140,7 @@ class TpGuiBase(Gui):
 
     def main_window__finalise(self):
         super().main_window__finalise()
-        self.BTN_extended_mode__toggled(True)
+        self.BTN_extended_mode.setChecked(True)
 
     # WINDOW ==========================================================================================================
     def wgt_create(self):
