@@ -248,7 +248,7 @@ class TypeAux(NestInit_Source):
     def check__instance_not_elementary(self) -> bool:
         return self.check__instance() and not self.check__elementary()
 
-    def check__nested__by_cls_or_inst(self, parent: Any) -> bool | None:
+    def check__nested__by_cls_or_inst(self, parent: Any | type[Any]) -> bool | None:
         """
         any of both variant (Instance/Class) comparing with TARGET of both variant (Instance/Class)
 
@@ -283,7 +283,7 @@ class TypeAux(NestInit_Source):
         # return False
 
     # =================================================================================================================
-    def get__class(self) -> type:
+    def get__class(self) -> type[Any]:
         """
         GOAL
         ----

@@ -113,4 +113,27 @@ def test__correct_usage():
     assert not VictimEq1()._eq_cls__check(VictimEq2)
 
 
+def test__staticmethod():
+    class VictimEqBase(Nest_EqCls):
+        ATTR1: Any
+        ATTR2: Any
+        @classmethod
+        @property
+        def _EQ_CLS__VALUE(cls) -> Any:
+            return cls.ATTR1 + cls.ATTR2
+
+    class VictimEq1(VictimEqBase):
+        ATTR1 = 1
+        ATTR2 = 2
+
+    class VictimEq2(VictimEqBase):
+        ATTR1 = 2
+        ATTR2 = 1
+
+    assert Nest_EqCls._eq_classes__check(VictimEq1, VictimEq2)
+    assert Nest_EqCls._eq_classes__check(VictimEq1, VictimEq2())
+    assert Nest_EqCls._eq_classes__check(VictimEq1(), VictimEq2())
+    assert Nest_EqCls._eq_classes__check(VictimEq1(), VictimEq2)
+
+
 # =====================================================================================================================

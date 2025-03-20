@@ -3,6 +3,7 @@ from typing import *
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_cmp_eq.m2_eq_aux import *
 from base_aux.base_statics.m4_enums import *
+from base_aux.aux_types.m1_type_aux import *
 
 
 # =====================================================================================================================
@@ -49,13 +50,11 @@ class Nest_EqCls:
     ---------------------
     TC cmp classes instead of MiddleGroup!
     """
-
     @classmethod
     def _eq_cls__check(cls, other: Any | type[Any]) -> bool:
         """
         show how to cmp clss
         """
-        # TODO: doublesided! to use all variants|
         try:
             checkable = issubclass(other, Nest_EqCls)   # keep first!!!
         except:
@@ -75,6 +74,23 @@ class Nest_EqCls:
         REDEFINE TO USE AS CMP VALUE
         """
         return cls.__name__     # just as example and for zero comparing
+
+    @staticmethod
+    def _eq_classes__check(obj1: Any | type[Any], obj2: Any | type[Any]) -> bool:
+        """
+        eqCmp classes as function
+        """
+        cls1 = TypeAux(obj1).get__class()
+        cls2 = TypeAux(obj2).get__class()
+
+        if TypeAux(cls1).check__nested__by_cls_or_inst(Nest_EqCls):
+            # cls1: Nest_EqCls
+            return cls1._eq_cls__check(cls2)
+        elif TypeAux(cls2).check__nested__by_cls_or_inst(Nest_EqCls):
+            # cls1: Nest_EqCls
+            return cls2._eq_cls__check(cls1)
+        else:
+            return cls1 == cls2 or cls2 == cls1
 
 
 # =====================================================================================================================
