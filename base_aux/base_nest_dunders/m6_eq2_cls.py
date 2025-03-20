@@ -54,7 +54,6 @@ class Nest_EqCls:
     def _eq_cls__check(cls, other: Any | type[Any]) -> bool:
         """
         show how to cmp clss
-        dont need cmp with only
         """
         # TODO: doublesided! to use all variants|
         try:
@@ -63,7 +62,9 @@ class Nest_EqCls:
             checkable = issubclass(other, Nest_EqCls)
 
         if checkable:
-            return cls._EQ_CLS__VALUE == other._EQ_CLS__VALUE
+            return EqAux(cls._EQ_CLS__VALUE).check_doubleside__bool(other._EQ_CLS__VALUE)
+        else:
+            return False
 
     @classmethod
     @property
