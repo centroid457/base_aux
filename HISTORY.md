@@ -10,6 +10,11 @@
 ********************************************************************************
 ## NEWS
 
+0.2.24(2025.03.20 17.03.41)
+------------------------------
+- [TP.gui.tm] add YellowColor on Startup/Teardown Cls  
+- [Nest] create Nest_EqCls and apply in TC instead of middleGroup!  
+
 0.2.23(2025.03.19 13.49.54)
 ------------------------------
 - [lambdas/Threads] move all into callables +some ref  

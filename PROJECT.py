@@ -33,9 +33,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 23))
+    VERSION = Version((0, 2, 24))
     NEWS: list[str] = [
-        "[lambdas/Threads] move all into callables +some ref",
+        "[TP.gui.tm] add YellowColor on Startup/Teardown Cls",
+        "[Nest] create Nest_EqCls and apply in TC instead of middleGroup!",
     ]
 
 
