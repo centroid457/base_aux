@@ -164,7 +164,11 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.STARTUP_CLS:
                 if row_is_summary:
                     return
-                group_name = tc_cls._EQ_CLS__VALUE.name or ""
+                try:
+                    group_name = tc_cls._EQ_CLS__VALUE.name or ""
+                except:
+                    group_name = tc_cls._EQ_CLS__VALUE or ""
+
                 if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
                     return TcResultMsg.WAIT
                 if tc_cls.result__startup_cls is None:
