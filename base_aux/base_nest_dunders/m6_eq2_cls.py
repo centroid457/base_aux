@@ -78,8 +78,33 @@ class Nest_EqCls:
 
 
 # =====================================================================================================================
+def _best_usage():
+    # with enums!
+    from enum import Enum
+
+    class ClsGroup(Enum):
+        G1 = 1
+        G2 = 2
+
+    class Victim(Nest_EqCls):
+        ATTR1 = 0
+        @classmethod
+        @property
+        def _EQ_CLS__VALUE(cls) -> ClsGroup:
+            """
+            GOAL
+            ----
+            REDEFINE TO USE AS CMP VALUE
+            """
+            if cls.ATTR1 == 1:
+                return ClsGroup.G1
+            else:
+                return ClsGroup.G2
+
+
+# =====================================================================================================================
 if __name__ == "__main__":
-    _explore()
+    _best_usage()
 
 
 # =====================================================================================================================
