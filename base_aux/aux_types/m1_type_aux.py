@@ -254,6 +254,12 @@ class TypeAux(NestInit_Source):
 
         specially created for pytest_aux for comparing with Exception!
         """
+        # CMP OBJ!!!! cls_inst
+        # try:
+        #     checkable = issubclass(other, Nest_EqCls)   # keep first!!!
+        # except:
+        #     checkable = isinstance(other, Nest_EqCls)
+
         source_cls = self.get__class()
         parent_cls = TypeAux(parent).get__class()
         return issubclass(source_cls, parent_cls)

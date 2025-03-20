@@ -57,9 +57,9 @@ class Nest_EqCls:
         """
         # TODO: doublesided! to use all variants|
         try:
-            checkable = isinstance(other, Nest_EqCls)
+            checkable = issubclass(other, Nest_EqCls)   # keep first!!!
         except:
-            checkable = issubclass(other, Nest_EqCls)
+            checkable = isinstance(other, Nest_EqCls)
 
         if checkable:
             return EqAux(cls._EQ_CLS__VALUE).check_doubleside__bool(other._EQ_CLS__VALUE)

@@ -154,7 +154,7 @@ class CallableAux(NestInit_Source):
         try:
             result = self.resolve_raise(*args, **kwargs)
             try:
-                is_exx = issubclass(result, Exception)
+                is_exx = issubclass(result, Exception)  # keep first
             except:
                 is_exx = isinstance(result, Exception)
 
