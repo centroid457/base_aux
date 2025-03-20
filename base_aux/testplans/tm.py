@@ -164,7 +164,7 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.STARTUP_CLS:
                 if row_is_summary:
                     return
-                group_name = tc_cls.MIDDLE_GROUP__NAME or ""    # TODO: DEPRECATE/DELETE GROUPS! use tc.__EQ1
+                group_name = tc_cls._EQ_CLS__VALUE.name or ""
                 if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
                     return TcResultMsg.WAIT
                 if tc_cls.result__startup_cls is None:

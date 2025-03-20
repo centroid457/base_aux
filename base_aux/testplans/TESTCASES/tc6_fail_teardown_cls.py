@@ -1,12 +1,18 @@
 from typing import *
 from base_aux.testplans.main import TestCaseBase
 from base_aux.testplans.tc_types import *
+from .tc0_groups import *
 
 
 # =====================================================================================================================
 class TestCase(TestCaseBase):
     ASYNC = True
     DESCRIPTION = "fail TeardownCls"
+
+    @classmethod
+    @property
+    def _EQ_CLS__VALUE(cls) -> Enum_TcGroup:
+        return Enum_TcGroup.G1
 
     # RUN -------------------------------------------------------------------------------------------------------------
     @classmethod

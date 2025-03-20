@@ -273,6 +273,11 @@ def _examples() -> None:
     if WHEN is Enum_When2.BEFORE:
         pass
 
+    print(Enum_NumFPoint.COMMA.name)
+    print(Enum_NumFPoint.COMMA.value)
+    print()
+    print()
+
     print(Enum_NumFPoint.COMMA)  # Enum_NumFPoint.COMMA
     print(Enum_NumFPoint("."))  # Enum_NumFPoint.DOT
 

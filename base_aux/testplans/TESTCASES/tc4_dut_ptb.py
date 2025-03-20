@@ -1,5 +1,6 @@
 from base_aux.testplans.tc import *
 from base_aux.valid.m3_valid_chains import *
+from .tc0_groups import *
 
 
 # =====================================================================================================================

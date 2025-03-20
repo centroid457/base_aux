@@ -2,12 +2,11 @@ import time
 
 from base_aux.testplans.tc import *
 from base_aux.valid.m2_valid_base2_derivatives import *
-
 from .tc0_groups import *
 
 
 # =====================================================================================================================
-class TestCase(TcGroup_ATC220220, TestCaseBase):
+class TestCase(TestCaseBase):
     ASYNC = True
     DESCRIPTION = "atc"
 

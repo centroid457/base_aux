@@ -1,19 +1,15 @@
-from base_aux.testplans.tc import *
-from base_aux.valid.m2_valid_base2_derivatives import *
-from base_aux.valid.m3_valid_chains import *
+from typing import *
+
+from base_aux.base_statics.m4_enums import NestEq_Enum
+from base_aux.testplans.tc import Enum_TcGroup_Base
 
 
 # =====================================================================================================================
-class TcGroup_ATC220220(TcGroup_Base):
-    MIDDLE_GROUP__NAME = "ATC230220"
+class Enum_TcGroup(NestEq_Enum):
+    G1 = "g1"
+    G2 = "g2"
+    G3 = "g3"
+    G4 = "g4"
 
-    # HERE ARE PLACE CLSMETHs
-    @classmethod
-    def startup__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
-        return True
-
-    @classmethod
-    def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
-        return True
 
 # =====================================================================================================================

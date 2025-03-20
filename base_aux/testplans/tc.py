@@ -11,7 +11,8 @@ from base_aux.base_statics.m4_enums import *
 
 from .tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
 from .models import *
-from .tc_groups import *
+from base_aux.base_nest_dunders.m6_eq2_cls import *
+from base_aux.base_statics.m4_enums import NestEq_Enum
 
 
 # =====================================================================================================================
@@ -21,12 +22,17 @@ class _TestCaseBase0(Logger):
 
 
 # =====================================================================================================================
+class Enum_TcGroup_Base(NestEq_Enum):
+    G0 = "g0"
+
+
+# =====================================================================================================================
 class Signals(SignalsTemplate):
     signal__tc_state_changed = pyqtSignal(_TestCaseBase0)
 
 
 # =====================================================================================================================
-class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
+class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
     LOG_ENABLE = False
     LOG_USE_FILE = False
 
@@ -66,6 +72,17 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
     details: dict[str, Any]
     exx: Optional[Exception]
     progress: int
+
+    # =================================================================================================================
+    @classmethod
+    @property
+    def _EQ_CLS__VALUE(cls) -> Enum:
+        """
+        GOAL
+        ----
+        REDEFINE TO USE AS CMP VALUE
+        """
+        return Enum_TcGroup_Base.G0
 
     # =================================================================================================================
     @classmethod
@@ -241,7 +258,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
         cls.clear__cls()
 
         # STARTUP ----------------------------------------
-        if cls_prev and cls.middle_group__check_equal__cls(cls_prev):
+        if cls_prev and Nest_EqCls._eq_classes__check(cls, cls_prev):
             cls.result__startup_cls = cls_prev.result__startup_cls
         else:
             cls.result__startup_cls = cls.startup__cls()
@@ -266,7 +283,7 @@ class _TestCaseBase(TcGroup_Base, _TestCaseBase0, QThread):
                     tc_inst.wait()
 
         # TERDOWN ----------------------------------------
-        if cls_next and cls.middle_group__check_equal__cls(cls_next):
+        if cls_next and Nest_EqCls._eq_classes__check(cls, cls_next):
             pass
         else:
             cls.result__teardown_cls = cls.teardown__cls()
@@ -457,7 +474,7 @@ class _Info(_TestCaseBase):
         result += f"tc_skip_dut={self.skip_tc_dut}\n"
 
         result += f"TC_NAME={self.NAME}\n"
-        result += f"TC_GROUP={self.MIDDLE_GROUP__NAME}\n"
+        result += f"TC_GROUP={self._EQ_CLS__VALUE}\n"
         result += f"TC_DESCRIPTION={self.DESCRIPTION}\n"
         result += f"TC_ASYNC={self.ASYNC}\n"
         result += f"TC_SKIP={self.SKIP}\n"

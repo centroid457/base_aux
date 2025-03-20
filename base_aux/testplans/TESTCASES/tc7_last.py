@@ -1,5 +1,4 @@
 from base_aux.testplans.main import TestCaseBase
-
 from base_aux.valid import *
 
 
