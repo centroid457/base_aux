@@ -48,7 +48,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     DEVICES__BREEDER_CLS: type['DevicesBreeder'] = None
 
     # AUXILIARY -----------------------------------
-    finished__cls: bool | None = None
+    STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
     signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
@@ -193,7 +193,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     @classmethod
     def clear__cls(cls):
-        cls.finished__cls = None
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
         cls.result__startup_cls = None
         cls.result__teardown_cls = None
         for tc in cls.TCS__LIST:
@@ -334,9 +334,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         """before batch work
         """
         print(f"startup__cls")
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
         cls.result__startup_cls = Enum_ProcessStateActive.STARTED
-
-        cls.finished__cls = False
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
@@ -376,7 +375,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def teardown__cls(cls) -> TYPING__RESULT_W_EXX:
         print(f"run__cls=teardown__cls")
 
-        if not cls.finished__cls or cls.result__teardown_cls is None:
+        if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
             cls.result__teardown_cls = Enum_ProcessStateActive.STARTED
 
             result = cls.teardown__cls__wrapped
@@ -391,7 +390,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         else:
             result = cls.result__teardown_cls
 
-        cls.finished__cls = True
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.FINISHED
         return result
 
     # =================================================================================================================
