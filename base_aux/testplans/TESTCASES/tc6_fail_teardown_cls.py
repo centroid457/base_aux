@@ -1,11 +1,11 @@
 from typing import *
-from base_aux.testplans.main import TestCaseBase
+from base_aux.testplans.main import Base_TestCase
 from base_aux.testplans.tc_types import *
 from .tc0_groups import *
 
 
 # =====================================================================================================================
-class TestCase(TestCaseBase):
+class TestCase(Base_TestCase):
     ASYNC = True
     DESCRIPTION = "fail TeardownCls"
 

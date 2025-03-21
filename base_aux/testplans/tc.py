@@ -16,7 +16,7 @@ from base_aux.base_statics.m4_enums import NestEq_Enum
 
 
 # =====================================================================================================================
-class _TestCaseBase0(Logger):
+class _Base0_TestCase(Logger):
     # just to use in Signals before defining exact
     pass
 
@@ -28,11 +28,11 @@ class Enum_TcGroup_Base(NestEq_Enum):
 
 # =====================================================================================================================
 class Signals(SignalsTemplate):
-    signal__tc_state_changed = pyqtSignal(_TestCaseBase0)
+    signal__tc_state_changed = pyqtSignal(_Base0_TestCase)
 
 
 # =====================================================================================================================
-class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
+class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     LOG_ENABLE = False
     LOG_USE_FILE = False
 
@@ -54,7 +54,7 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
 
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
-    result__teardown_cls: TYPING__RESULT_BASE = None
+    result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
     # INSTANCE ------------------------------------
     _inst_inited: Optional[bool] = None
@@ -101,7 +101,7 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
     @property
     def TCS__LIST(cls) -> list[Self]:
         try:
-            result = list(_TestCaseBase._INSTS_DICT_CLS[cls].values())
+            result = list(_Base1_TestCase._INSTS_DICT_CLS[cls].values())
         except:
             result = []
         return result
@@ -111,13 +111,13 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
         """
         use singletons for every class!
         """
-        if not hasattr(_TestCaseBase, "_INSTS_DICT_CLS"):
-            setattr(_TestCaseBase, "_INSTS_DICT_CLS", {})
+        if not hasattr(_Base1_TestCase, "_INSTS_DICT_CLS"):
+            setattr(_Base1_TestCase, "_INSTS_DICT_CLS", {})
 
-        if cls not in _TestCaseBase._INSTS_DICT_CLS:
-            _TestCaseBase._INSTS_DICT_CLS.update({cls: {}})
+        if cls not in _Base1_TestCase._INSTS_DICT_CLS:
+            _Base1_TestCase._INSTS_DICT_CLS.update({cls: {}})
 
-        INSTS_DICT = _TestCaseBase._INSTS_DICT_CLS[cls]
+        INSTS_DICT = _Base1_TestCase._INSTS_DICT_CLS[cls]
 
         try:
             INST = INSTS_DICT[index]
@@ -125,7 +125,7 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
             INST = super().__new__(cls)
             INSTS_DICT[index] = INST
 
-        print(f"{cls.__name__}.__NEW__={index=}/{args=}/{kwargs=}//groups={len(_TestCaseBase._INSTS_DICT_CLS)}/group={len(INSTS_DICT)}")
+        print(f"{cls.__name__}.__NEW__={index=}/{args=}/{kwargs=}//groups={len(_Base1_TestCase._INSTS_DICT_CLS)}/group={len(INSTS_DICT)}")
         return INST
 
     def __init__(self, index: int):
@@ -443,7 +443,7 @@ class _TestCaseBase(Nest_EqCls, _TestCaseBase0, QThread):
 
 
 # =====================================================================================================================
-class _Info(_TestCaseBase):
+class _Info(_Base1_TestCase):
     """
     separated class for gen results/info by models!
     """
@@ -549,7 +549,7 @@ class _Info(_TestCaseBase):
         return results
 
 
-class TestCaseBase(_Info):
+class Base_TestCase(_Info):
     """
     """
 

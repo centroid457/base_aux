@@ -6,7 +6,7 @@ from .tc0_groups import *
 
 
 # =====================================================================================================================
-class TestCase(TestCaseBase):
+class TestCase(Base_TestCase):
     ASYNC = True
     DESCRIPTION = "atc"
 

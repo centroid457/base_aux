@@ -16,7 +16,7 @@ from base_aux.loggers.m1_logger import *
 
 
 # =====================================================================================================================
-from .tc import TestCaseBase
+from .tc import Base_TestCase
 from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, DevicesBreeder_Example
 from .gui import TpGuiBase
 from .api import TpApi_FastApi
@@ -62,7 +62,7 @@ class TpMultyDutBase(Logger, QThread):
     DEVICES__BREEDER_CLS: type[DevicesBreeder_WithDut] = DevicesBreeder_Example
 
     # AUX -----------------------------------------------------------
-    TCS__CLS: dict[Union[str, type[TestCaseBase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
+    TCS__CLS: dict[Union[str, type[Base_TestCase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
     #     Tc2: True
@@ -74,16 +74,16 @@ class TpMultyDutBase(Logger, QThread):
     #     Dev2
     # ]
 
-    __tc_active: Optional[type[TestCaseBase]] = None
+    __tc_active: Optional[type[Base_TestCase]] = None
     progress: int = 0   # todo: use as property? by getting from TCS???
 
     # =================================================================================================================
     @property
-    def tc_active(self) -> type[TestCaseBase] | None:
+    def tc_active(self) -> type[Base_TestCase] | None:
         return self.__tc_active
 
     @tc_active.setter
-    def tc_active(self, value: type[TestCaseBase] | None) -> None:
+    def tc_active(self, value: type[Base_TestCase] | None) -> None:
         self.__tc_active = value
 
     def tp__check_active(self) -> bool:
@@ -154,7 +154,7 @@ class TpMultyDutBase(Logger, QThread):
         self.signal__tp_stop.connect(self.terminate)
         self._signal__tp_reset_duts_sn.connect(self.DEVICES__BREEDER_CLS._debug__duts__reset_sn)
 
-        TestCaseBase.signals.signal__tc_state_changed.connect(self.post__tc_results)
+        Base_TestCase.signals.signal__tc_state_changed.connect(self.post__tc_results)
 
     # =================================================================================================================
     def tcs__reinit(self) -> None:
@@ -196,7 +196,7 @@ class TpMultyDutBase(Logger, QThread):
                     msg = f"[ERROR] file not found[{item=}] in /{self.DIRPATH_TCS}/"
                     raise Exx__NotExistsNotFoundNotCreated(msg)
                 tc_cls.NAME = item
-            elif isinstance(type(item), type) and issubclass(item, TestCaseBase):
+            elif isinstance(type(item), type) and issubclass(item, Base_TestCase):
                 tc_cls = item
                 # msg = f"[ERROR] DONT USE IT!"
                 # raise Exception(msg)
@@ -340,7 +340,7 @@ class TpMultyDutBase(Logger, QThread):
             "STAND_NAME": self.STAND_NAME,
             "STAND_DESCRIPTION": self.STAND_DESCRIPTION,
             "STAND_SN": self.STAND_SN,
-            "STAND_SETTINGS": TestCaseBase.settings_read(files=self.SETTINGS_BASE_FILEPATH),
+            "STAND_SETTINGS": Base_TestCase.settings_read(files=self.SETTINGS_BASE_FILEPATH),
         }
         return result
 
@@ -390,7 +390,7 @@ class TpMultyDutBase(Logger, QThread):
             for tc_cls in self.TCS__CLS:
                 tc_inst = None
                 try:
-                    tc_inst: TestCaseBase = tc_cls.TCS__LIST[index]
+                    tc_inst: Base_TestCase = tc_cls.TCS__LIST[index]
                     tc_inst_result = tc_inst.get__results(add_info_dut=False, add_info_tc=False)["tc_result"]
                 except:
                     tc_inst_result = None
@@ -410,7 +410,7 @@ class TpMultyDutBase(Logger, QThread):
             filepath.write_text(data=data_text, encoding='utf-8')
 
     # -----------------------------------------------------------------------------------------------------------------
-    def post__tc_results(self, tc_inst: TestCaseBase) -> None:
+    def post__tc_results(self, tc_inst: Base_TestCase) -> None:
         # CHECK ------------------------------------------
         if not self.api_client or tc_inst.result is None:
             return
@@ -432,7 +432,7 @@ class TpMultyDutBase(Logger, QThread):
 class TpInsideApi_Runner(TpApi_FastApi):
     """
     REASON:
-    in windows TestCaseBase works fine by any variance GUI__START/API_SERVER__START
+    in windows Base_TestCase works fine by any variance GUI__START/API_SERVER__START
     in Linux it is not good maybe cause of nesting theme=Thread+Async+Threads
 
     so this is the attempt to execute correctly TP in Linux by deactivating GUI and using theme=Async+Threads

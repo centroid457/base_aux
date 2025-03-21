@@ -21,7 +21,7 @@ class Test__TC:
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = TestCaseBase
+        cls.Victim = Base_TestCase
 
     # @classmethod
     # def teardown_class(cls):

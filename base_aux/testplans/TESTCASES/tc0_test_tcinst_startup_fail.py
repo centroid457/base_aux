@@ -5,7 +5,7 @@ from .tc0_groups import *
 
 
 # =====================================================================================================================
-class TestCase(TestCaseBase):
+class TestCase(Base_TestCase):
     ASYNC = True
     DESCRIPTION = "test TC_inst startup fail"
 

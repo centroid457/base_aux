@@ -5,7 +5,7 @@ from base_aux.testplans import *
 from base_aux.breeders.m2_breeder_objects import *
 from base_aux.buses.m1_serial1_client import *
 
-from .tc import TestCaseBase
+from .tc import Base_TestCase
 from .models import *
 
 
