@@ -17,11 +17,17 @@ class Nest_AttrKit(
     NestContains_AttrIcNotHidden,
 ):     # TODO: decide to delete! use only dynamic?? - NO! keep it!!!
     """
+    SAME AS - 1=ATTRS
+    -----------------
+    https://www.attrs.org/en/stable/examples.html
+    yes! but more simple! and not so complicated! clear one way logic!
+
     GOAL
     ----
     just show that child is a kit
     1/ attrs need to init by args/kwargs
     2/ all annotated - must set!
+    3/ IgnoreCase applied!
 
     NOTE
     ----
@@ -31,7 +37,7 @@ class Nest_AttrKit(
 
     SPECIALLY CREATED FOR
     ---------------------
-
+    create special final kits like AttrKit_AuthNamePwd
 
     OLD docstr
     =======================
@@ -40,20 +46,6 @@ class Nest_AttrKit(
         1/ generate object with exact attrs values by Kwargs like template
         2/ for further comparing by Eq
         3/ all callables will resolve as Exx
-
-        NOTE
-        ----
-        IgnoreCase applied!
-
-        SAME AS - NestInit_AnnotsAttrByKwArgs
-        --------------------------------------
-        but
-            - args useless - if no annots
-
-        WHY NOT - just EqValid_*
-        ------------------------
-        1/ cause you will not keep simple direct object with attrs!
-        2/ EqValid_* will be created! further!
     """
     def _redefine_nones(self, *args, **kwargs) -> None:
         """
@@ -66,6 +58,7 @@ class Nest_AttrKit(
         ---------------------
         Base_ReAttempts when you want to pass attempts by Rexp-patterns (with some nones) and define default values later in future methods
         """
+        # TODO: finish!
         for index, value in enumerate(args):
             pass
 
