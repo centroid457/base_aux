@@ -11,6 +11,7 @@ class WildCardMask(NestInit_Source):
     """
     GOAL
     ----
+    shell-style wildcards
     just transform WcMask to regexp
 
     SPECIALLY CREATED FOR

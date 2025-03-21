@@ -11,5 +11,5 @@ rem ====================================
 echo off
 cls
 
-pytest base_aux
+pytest
 pause
