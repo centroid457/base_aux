@@ -59,17 +59,17 @@ class Meta_GetattrClassmethod(type):
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF.lower(), "")
-            return lambda: cls.check(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
+            return lambda: cls.check_raise(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
         elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF_NOT.lower(), "")
-            return lambda: cls.check(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
+            return lambda: cls.check_raise(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
 
         elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF.lower(), "")
-            return lambda: not cls.check(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
+            return lambda: not cls.check_raise(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
         elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF_NOT.lower(), "")
-            return lambda: not cls.check(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
+            return lambda: not cls.check_raise(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
 
         else:
             msg = f"[ERROR] META:'{cls.__name__}' CLASS has no attribute '{item}'"
@@ -167,9 +167,6 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         if _check_fullmatch is not None:
             self._CHECK_FULLMATCH = _check_fullmatch
 
-        # WORK -------------------------------------------
-        self.check()
-
     def __getattr__(self, item):
         """
         apply access to not exists methods from instance! in metaclass we have only access as classmethods!
@@ -195,13 +192,20 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def check(
+    def check_no_raise(cls, *args, **kwargs) -> bool:
+        try:
+            return cls.check_raise(*args, **kwargs)
+        except:
+            return False
+
+    @classmethod
+    def check_raise(
             cls,
             values: TYPE__VALUES | None = None,
             _raise: Optional[bool] = None,
             _reverse: Optional[bool] = None,    # special for bool_if_not__* like methods
             _meet_true: bool | None = None,
-    ) -> Union[bool, NoReturn, None]:
+    ) -> Union[bool, None] | NoReturn:
         # SETTINGS -------------------------------------------------------
         if _raise is None:
             _raise = cls._RAISE
@@ -310,7 +314,7 @@ def _examples():
         LINUX: bool = True
         WINDOWS: bool = False
 
-    ReqCheckStr_Os_MY()  # check requirement!
+    ReqCheckStr_Os_MY().check_raise()
 
 
 # =====================================================================================================================
