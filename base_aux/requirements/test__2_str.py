@@ -149,7 +149,7 @@ class Test__Instance:
 
         victim = Victim()
 
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
         assert victim._value_actual == "true"
 
         # -----------------------
@@ -160,16 +160,16 @@ class Test__Instance:
 
         victim = Victim()
 
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
         assert victim._value_actual == "true"
 
     @pytest.mark.skip
     def test__inits(self):
-        assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=True).check_raise() is False
-        assert self.Victim(_getter=lambda: "hello", _raise=False, _meet_true=False).check_raise() is True
+        assert self.Victim(_getter=lambda: "hello", _meet_true=True).check__w_raise() is False
+        assert self.Victim(_getter=lambda: "hello", _meet_true=False).check__w_raise() is True
 
-        assert self.Victim(_getter=lambda: "hello", _raise=False).check_raise("HELLO") is True
-        assert self.Victim(_getter=lambda: "hello", _raise=False).bool_if__HELLO() is True
+        assert self.Victim(_getter=lambda: "hello").check__w_raise("HELLO") is True
+        assert self.Victim(_getter=lambda: "hello").bool_if__HELLO() is True
 
         assert self.Victim.bool_if__HELLO() is True
 
@@ -179,7 +179,7 @@ class Test__Instance:
         self.Victim.hello = True
         victim = self.Victim()
 
-        assert victim.check_raise() is True
+        assert victim.check__w_raise() is True
 
     def test__req_met_true__several_variants(self):
         self.Victim._GETTER = lambda: "Hello"
@@ -188,13 +188,13 @@ class Test__Instance:
         self.Victim.hello2 = False
         victim = self.Victim()
 
-        assert victim.check_raise() is True
+        assert victim.check__w_raise() is True
 
     def test__req_met_false(self):
         self.Victim._GETTER = lambda: "Hello"
         self.Victim.hello = False
         try:
-            victim = self.Victim().check_raise()
+            victim = self.Victim().check__w_raise()
             assert False
         except Exx__Requirement:
             assert True
@@ -206,7 +206,7 @@ class Test__Instance:
         self.Victim._RAISE = True
         self.Victim.hello = False
         try:
-            victim = self.Victim().check_raise()
+            victim = self.Victim().check__w_raise()
             assert False
         except Exx__Requirement:
             assert True
@@ -214,7 +214,7 @@ class Test__Instance:
         # _RAISE = False
         self.Victim._RAISE = False
         victim = self.Victim()
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
 
     def test__set_part(self):
         self.Victim._RAISE = False
@@ -226,29 +226,28 @@ class Test__Instance:
 
         victim = self.Victim()
         # victim.hello
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
 
         # _CHECK_FULLMATCH = False
         self.Victim._CHECK_FULLMATCH = False
-        assert victim.check_raise() is True
+        assert victim.check__wo_raise() is True
 
     def test__set_meet_true(self):
         class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "Hello"
-            _RAISE = False
             _MEET_TRUE = True
 
             HELLO = True
 
         victim = Victim()
-        assert victim.check_raise() is True
+        assert victim.check__wo_raise() is True
 
         Victim.HELLO = False
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
 
         Victim._RAISE = True
         try:
-            victim.check_raise()
+            victim.check__w_raise()
             assert False
         except:
             assert True
@@ -257,10 +256,10 @@ class Test__Instance:
         Victim._RAISE = False
         Victim._MEET_TRUE = False
         Victim.HELLO = True
-        assert victim.check_raise() is True
+        assert victim.check__wo_raise() is True
 
         Victim.HELLO = False
-        assert victim.check_raise() is False
+        assert victim.check__wo_raise() is False
 
     # PARAMS ----------------------------------------------------------------------------------------------------------
     # def test__param_values(cls):
@@ -282,15 +281,15 @@ class Test__Instance:
         self.Victim._GETTER = lambda: "Hello"
         victim = self.Victim()
 
-        assert victim.check_raise("hellO999") is False
-        assert victim.check_raise("hellO") is True
-        assert victim.check_raise(["hellO", ]) is True
-        assert victim.check_raise(["hellO", "hellO999"]) is True
+        assert victim.check__wo_raise("hellO999") is False
+        assert victim.check__wo_raise("hellO") is True
+        assert victim.check__wo_raise(["hellO", ]) is True
+        assert victim.check__wo_raise(["hellO", "hellO999"]) is True
 
-        assert victim.check_raise("hellO999", _reverse=True) is True
-        assert victim.check_raise("hellO", _reverse=True) is False
-        assert victim.check_raise(["hellO", ], _reverse=True) is False
-        assert victim.check_raise(["hellO", "hellO999"], _reverse=True) is False
+        assert victim.check__wo_raise("hellO999", _reverse=True) is True
+        assert victim.check__wo_raise("hellO", _reverse=True) is False
+        assert victim.check__wo_raise(["hellO", ], _reverse=True) is False
+        assert victim.check__wo_raise(["hellO", "hellO999"], _reverse=True) is False
 
         # getattr -------
         assert victim.bool_if__HELLO() is True

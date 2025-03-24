@@ -49,17 +49,17 @@ class Meta_GetattrClassmethod(type):
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF.lower(), "")
-            return lambda: cls().check_no_raise(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
+            return lambda: cls().check__wo_raise(values=attr_name, _reverse=False, _meet_true=False)
         elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF_NOT.lower(), "")
-            return lambda: cls().check_no_raise(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
+            return lambda: cls().check__wo_raise(values=attr_name, _reverse=True, _meet_true=False)
 
         elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF.lower(), "")
-            return lambda: not cls().check_raise(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
+            return lambda: not cls().check__w_raise(values=attr_name, _reverse=True, _meet_true=False) or None
         elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF_NOT.lower(), "")
-            return lambda: not cls().check_raise(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
+            return lambda: not cls().check__w_raise(values=attr_name, _reverse=False, _meet_true=False) or None
 
         else:
             msg = f"[ERROR] META:'{cls.__name__}' CLASS has no attribute '{item}'"
@@ -124,38 +124,35 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     # TODO: del _meet_true
     # TODO: reuse validator with callableAuxResolve instead of _check_fullmatch
 
-    @classmethod
-    @property
-    def ANY_TRUE(self) -> bool:
-        pass
-
-    @classmethod
-    @property
-    def ANY_FALSE(self) -> bool:
-        pass
-
-    @classmethod
-    @property
-    def ALL_TRUE(self) -> bool:
-        pass
-
-    @classmethod
-    @property
-    def ALL_FALSE(self) -> bool:
-        pass
+    # @classmethod
+    # @property
+    # def ANY_TRUE(self) -> bool:
+    #     pass
+    #
+    # @classmethod
+    # @property
+    # def ANY_FALSE(self) -> bool:
+    #     pass
+    #
+    # @classmethod
+    # @property
+    # def ALL_TRUE(self) -> bool:
+    #     pass
+    #
+    # @classmethod
+    # @property
+    # def ALL_FALSE(self) -> bool:
+    #     pass
 
     def __init__(
             self,
             _getter: Callable[..., str] = None,
-            _raise: Optional[bool] = None,
             _meet_true: Optional[bool] = None,
             _check_fullmatch: Optional[bool] = None
     ):
         # INIT SETTINGS ----------------------------------
         if _getter is not None:
             self._GETTER = _getter
-        if _raise is not None:
-            self._RAISE = _raise
         if _meet_true is not None:
             self._MEET_TRUE = _meet_true
         if _check_fullmatch is not None:
@@ -186,25 +183,20 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def check_no_raise(cls, *args, **kwargs) -> bool:
+    def check__wo_raise(cls, *args, **kwargs) -> TYPING.RESULT__BOOL_NONE:
         try:
-            return cls.check_raise(*args, **kwargs)
+            return cls.check__w_raise(*args, **kwargs)
         except:
             return False
 
     @classmethod
-    def check_raise(
+    def check__w_raise(
             cls,
             values: TYPE__VALUES | None = None,
-            _raise: Optional[bool] = None,
             _reverse: Optional[bool] = None,    # special for bool_if_not__* like methods
             _meet_true: bool | None = None,
-    ) -> Union[bool, None] | NoReturn:
+    ) -> TYPING.RESULT__BOOL_RAISE_NONE:
         # SETTINGS -------------------------------------------------------
-        if _raise is None:
-            _raise = cls._RAISE
-        _reverse = _reverse or False
-
         if _meet_true is None:
             _meet_true = cls._MEET_TRUE
 
@@ -260,20 +252,14 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         if _meet_true is True and result is None:
             msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={values}]"
             print(msg)
-            if _raise:
-                raise Exx__Requirement(msg)
-            else:
-                return False
+            raise Exx__Requirement(msg)
 
         if result in (True, None):
             return result
         else:
             msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={values}]"
             print(msg)
-            if _raise:
-                raise Exx__Requirement(msg)
-            else:
-                return False
+            raise Exx__Requirement(msg)
 
 
 # =====================================================================================================================
@@ -312,7 +298,7 @@ def _examples():
         LINUX: bool = True
         WINDOWS: bool = False
 
-    assert not ReqCheckStr_Os_MY().check_no_raise()
+    assert not ReqCheckStr_Os_MY().check__wo_raise()
 
 
 # =====================================================================================================================
