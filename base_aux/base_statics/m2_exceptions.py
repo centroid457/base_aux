@@ -191,6 +191,14 @@ class Exx__Incompatible(Base_Exx):
     pass
 
 
+class Exx__Requirement(Exception):
+    """
+    GOAL
+    ----
+    Any requirement!
+    """
+
+
 class Exx__Overlayed(Base_Exx):
     """
     GOAL

@@ -5,19 +5,11 @@ from base_aux.aux_types.m1_type_aux import *
 from base_aux.base_statics.m2_exceptions import *
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_callable.m1_callable import *
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
 TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]
-
-TYPE__RESULT_BOOL = Callable[..., bool]
-TYPE__RESULT_RAISE = Callable[..., Optional[NoReturn]]
-
-
-# =====================================================================================================================
-class Exx_Requirement(Exception):
-    """Some of the requirements are not match
-    """
 
 
 # =====================================================================================================================
@@ -46,8 +38,6 @@ class Meta_GetattrClassmethod(type):
         from requirements import ReqCheckStr_Os
         ReqCheckStr_Os.raise_if_not__LINUX
     """
-    # TODO: move into classes!!! checkers/others
-
     # dont change markers! use exists!
     _MARKER__BOOL_IF: str = "bool_if__"
     _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
@@ -59,17 +49,17 @@ class Meta_GetattrClassmethod(type):
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF.lower(), "")
-            return lambda: cls.check_raise(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
+            return lambda: cls().check_no_raise(values=attr_name, _raise=False, _reverse=False, _meet_true=False)
         elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF_NOT.lower(), "")
-            return lambda: cls.check_raise(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
+            return lambda: cls().check_no_raise(values=attr_name, _raise=False, _reverse=True, _meet_true=False)
 
         elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF.lower(), "")
-            return lambda: not cls.check_raise(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
+            return lambda: not cls().check_raise(values=attr_name, _raise=True, _reverse=True, _meet_true=False) or None
         elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF_NOT.lower(), "")
-            return lambda: not cls.check_raise(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
+            return lambda: not cls().check_raise(values=attr_name, _raise=True, _reverse=False, _meet_true=False) or None
 
         else:
             msg = f"[ERROR] META:'{cls.__name__}' CLASS has no attribute '{item}'"
@@ -123,9 +113,13 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     # temporary ------------------------------------------
     _value_actual: Optional[str]
 
+    # TODO: use instance! no classmethods! + check on instantiating!?? +del meta??  ---NO!!!!
+    # NOTES:
+    #   classmethods = keep all!!! for class!
+    #   instantiating use for CHECK_RAISE/NORASE!!!
+
     # TODO: add values as dict??? - it would be direct great!
     # TODO: use setter as source
-    # TODO: use instance! no classmethods! + check on instantiating!?? +del meta
     # TODO: add properties ANY/ALL_True/False
     # TODO: del _meet_true
     # TODO: reuse validator with callableAuxResolve instead of _check_fullmatch
@@ -159,7 +153,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     ):
         # INIT SETTINGS ----------------------------------
         if _getter is not None:
-            self.__class__._GETTER = _getter
+            self._GETTER = _getter
         if _raise is not None:
             self._RAISE = _raise
         if _meet_true is not None:
@@ -267,7 +261,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
             msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={values}]"
             print(msg)
             if _raise:
-                raise Exx_Requirement(msg)
+                raise Exx__Requirement(msg)
             else:
                 return False
 
@@ -277,7 +271,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
             msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={values}]"
             print(msg)
             if _raise:
-                raise Exx_Requirement(msg)
+                raise Exx__Requirement(msg)
             else:
                 return False
 
@@ -291,30 +285,34 @@ class ReqCheckStr_Os(Base_ReqCheckStr):
     WINDOWS: bool
 
     # DERIVATIVES --------
-    bool_if__LINUX: TYPE__RESULT_BOOL
-    bool_if__WINDOWS: TYPE__RESULT_BOOL
-    bool_if_not__LINUX: TYPE__RESULT_BOOL
-    bool_if_not__WINDOWS: TYPE__RESULT_BOOL
+    bool_if__LINUX: TYPING.CALLABLE__BOOL_NONE
+    bool_if__WINDOWS: TYPING.CALLABLE__BOOL_NONE
+    bool_if_not__LINUX: TYPING.CALLABLE__BOOL_NONE
+    bool_if_not__WINDOWS: TYPING.CALLABLE__BOOL_NONE
 
-    raise_if__LINUX: TYPE__RESULT_RAISE
-    raise_if__WINDOWS: TYPE__RESULT_RAISE
-    raise_if_not__LINUX: TYPE__RESULT_RAISE
-    raise_if_not__WINDOWS: TYPE__RESULT_RAISE
+    raise_if__LINUX: TYPING.CALLABLE__RAISE_NONE
+    raise_if__WINDOWS: TYPING.CALLABLE__RAISE_NONE
+    raise_if_not__LINUX: TYPING.CALLABLE__RAISE_NONE
+    raise_if_not__WINDOWS: TYPING.CALLABLE__RAISE_NONE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 def _examples():
     # 1=direct сlass
-    ReqCheckStr_Os().bool_if__WINDOWS()
-    ReqCheckStr_Os().bool_if_not__WINDOWS()
-    ReqCheckStr_Os().raise_if__LINUX()
+    assert ReqCheckStr_Os.bool_if__WINDOWS()
+    assert not ReqCheckStr_Os.bool_if_not__WINDOWS()
+    try:
+        ReqCheckStr_Os.raise_if__LINUX()
+        assert False
+    except:
+        pass
 
     # 2=user object - best way!
     class ReqCheckStr_Os_MY(ReqCheckStr_Os):
         LINUX: bool = True
         WINDOWS: bool = False
 
-    ReqCheckStr_Os_MY().check_raise()
+    assert not ReqCheckStr_Os_MY().check_no_raise()
 
 
 # =====================================================================================================================
@@ -327,7 +325,12 @@ class ReqCheckStr_Arch(Base_ReqCheckStr):
     AARCH64: bool    # raspberry=ARM!
 
     # DERIVATIVES --------
-    raise_if_not__AARCH64: TYPE__RESULT_RAISE
+    raise_if_not__AARCH64: TYPING.CALLABLE__RAISE_NONE
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    _examples()
 
 
 # =====================================================================================================================

@@ -95,6 +95,26 @@ class TYPING:
     ITERPATH_KEY = Union[Any, int]   # Any is for dict
     ITERPATH = tuple[ITERPATH_KEY, ...]
 
+    # -----------------------------------------------------------------------------------------------------------------
+    RESULT__NONE = None
+    RESULT__BOOL = bool
+
+    RESULT__BOOL_NONE = bool | None
+    RESULT__BOOL_RAISE = bool | NoReturn
+    RESULT__RAISE_NONE = NoReturn | None
+
+    RESULT__BOOL_RAISE_NONE = bool | NoReturn | None
+
+    # -----------------------------------------------------------------------------------------------------------------
+    CALLABLE__NONE = Callable[..., None]
+    CALLABLE__BOOL = Callable[..., bool]
+
+    CALLABLE__BOOL_NONE = Callable[..., bool | None]
+    CALLABLE__BOOL_RAISE = Callable[..., bool | NoReturn]
+    CALLABLE__RAISE_NONE = Callable[..., NoReturn | None]    # not expecting any bool! intended/inportant only raising as inappropriate position!
+
+    CALLABLE__BOOL_RAISE_NONE = Callable[..., bool | NoReturn | None]
+
 
 # VALUES --------------------------------------------------------------------------------------------------------------
 ARGS_FINAL__BLANK = ()

@@ -18,11 +18,11 @@ class Test__Cls:
             NONE = None
             NOT_EXIST: Any
 
-            bool_if__TRUE: TYPE__RESULT_BOOL
-            bool_if_not__TRUE: TYPE__RESULT_BOOL
+            bool_if__TRUE: TYPING.CALLABLE__BOOL_NONE
+            bool_if_not__TRUE: TYPING.CALLABLE__BOOL_NONE
             # ...
-            raise_if__TRUE: TYPE__RESULT_RAISE
-            raise_if_not__TRUE: TYPE__RESULT_RAISE
+            raise_if__TRUE: TYPING.CALLABLE__RAISE_NONE
+            raise_if_not__TRUE: TYPING.CALLABLE__RAISE_NONE
             # ...
 
         cls.Victim = Victim
@@ -103,11 +103,11 @@ class Test__Instance:
             NONE = None
             NOT_EXIST: Any
 
-            bool_if__TRUE: TYPE__RESULT_BOOL
-            bool_if_not__TRUE: TYPE__RESULT_BOOL
+            bool_if__TRUE: TYPING.CALLABLE__BOOL_NONE
+            bool_if_not__TRUE: TYPING.CALLABLE__BOOL_NONE
             # ...
-            raise_if__TRUE: TYPE__RESULT_RAISE
-            raise_if_not__TRUE: TYPE__RESULT_RAISE
+            raise_if__TRUE: TYPING.CALLABLE__RAISE_NONE
+            raise_if_not__TRUE: TYPING.CALLABLE__RAISE_NONE
             # ...
 
         cls.Victim = Victim
@@ -196,7 +196,7 @@ class Test__Instance:
         try:
             victim = self.Victim().check_raise()
             assert False
-        except Exx_Requirement:
+        except Exx__Requirement:
             assert True
 
     # SETTINGS ATTRIBUTES ---------------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ class Test__Instance:
         try:
             victim = self.Victim().check_raise()
             assert False
-        except Exx_Requirement:
+        except Exx__Requirement:
             assert True
 
         # _RAISE = False
