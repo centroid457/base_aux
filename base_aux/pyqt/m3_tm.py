@@ -1,13 +1,10 @@
-from typing import *
-
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 
 from base_aux.breeders.m1_breeder_str2_stack import *
 from base_aux.breeders.m1_breeder_str1_series import *
 from .m0_base import Data_
-from base_aux.classes.m1_translator import Translator
+from base_aux.translator.m1_translator import Translator
 
 
 # =====================================================================================================================

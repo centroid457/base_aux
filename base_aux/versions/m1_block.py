@@ -1,5 +1,5 @@
 from base_aux.aux_cmp_eq.m1_cmp import *
-from base_aux.aux_cmp_eq.m10_types import *
+from base_aux.aux_cmp_eq.m0_types import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
 

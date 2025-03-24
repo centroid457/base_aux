@@ -1,18 +1,18 @@
 from typing import *
 import time
 
-from base_aux.aux_callable.m3_thread_collector import ThreadsDeCollector
+from base_aux.aux_callable.m3_thread_collector import ThreadsDecorCollector
 
 
 # =====================================================================================================================
 class Test__Manager:
-    # VICTIM: type[ThreadsDeCollector] = type("VICTIM", (ThreadsDeCollector,), {})
+    # VICTIM: type[ThreadsDecorCollector] = type("VICTIM", (ThreadsDecorCollector,), {})
 
     def test__singleton(self):
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
-        class ThreadDeCollector2(ThreadsDeCollector):
+        class ThreadDeCollector2(ThreadsDecorCollector):
             pass
 
         inst1 = ThreadDeCollector1()
@@ -27,10 +27,10 @@ class Test__Manager:
         time_start = time.time()
 
         # define victim ------------------
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
-        class ThreadDeCollector2(ThreadsDeCollector):
+        class ThreadDeCollector2(ThreadsDecorCollector):
             pass
 
         assert ThreadDeCollector1() != ThreadDeCollector2()
@@ -81,7 +81,7 @@ class Test__Manager:
         time_start = time.time()
 
         # define victim ------------------
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
         class Cls:
@@ -110,7 +110,7 @@ class Test__Manager:
 
     def test__check_results_all(self):
         # define victim ------------------
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
         @ThreadDeCollector1().decorator__to_thread
@@ -165,7 +165,7 @@ class Test__Manager:
 
     def test__PARAM__NOTHREAD(self):
         # define victim ------------------
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
         @ThreadDeCollector1().decorator__to_thread
@@ -181,7 +181,7 @@ class Test__Manager:
         assert ThreadDeCollector1().count == 2
 
     def test__AS_FUNC(self):
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
         def func1(value):
@@ -196,7 +196,7 @@ class Test__Manager:
         assert ThreadDeCollector1().count == 2
 
     def _test__twice_execute_7777(self):    # not expected???
-        class ThreadDeCollector1(ThreadsDeCollector):
+        class ThreadDeCollector1(ThreadsDecorCollector):
             pass
 
         @ThreadDeCollector1().decorator__to_thread

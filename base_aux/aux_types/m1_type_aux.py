@@ -288,10 +288,6 @@ class TypeAux(NestInit_Source):
         GOAL
         ----
         get class from any object
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        classes.ClsMiddleGroup
         """
         if self.check__class():
             return self.SOURCE

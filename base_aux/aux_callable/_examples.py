@@ -8,7 +8,7 @@ time_start = time.time()
 
 
 # define victim ------------------
-class ThreadDeCollector1(ThreadsDeCollector):
+class ThreadDeCollector1(ThreadsDecorCollector):
     pass
 
 

@@ -9,7 +9,7 @@ class Translator:
     """
     SPECIALLY CREATED FOR
     ---------------------
-     translate breeder_stack values into russian
+    translate breeder_stack values into russian
     """
     RETURN_SOURCE_IF_NOT_FOUND: bool = True
 

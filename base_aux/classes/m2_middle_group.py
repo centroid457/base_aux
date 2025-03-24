@@ -1,4 +1,3 @@
-# FIXME: need to deprecate? no!
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.base_statics.m1_types import *
@@ -7,6 +6,8 @@ from base_aux.base_statics.m1_types import *
 # =====================================================================================================================
 class ClsMiddleGroup:
     """
+    # FIXME: need to deprecate? no! YES? use EqCls
+
     NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only aux_attr!
     ------------------------
     1. comparing direct methods on aux_types will not work!!!

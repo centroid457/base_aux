@@ -7,7 +7,7 @@ from base_aux.aux_callable.m2_lambda2_thread import LambdaThread
 
 
 # =====================================================================================================================
-class ThreadsDeCollector(SingletonCallMeta):
+class ThreadsDecorCollector(SingletonCallMeta):
     """
     TODO: DEPRECATE??? use clearly direct other methods/objects!
 
@@ -28,7 +28,7 @@ class ThreadsDeCollector(SingletonCallMeta):
 
     1. BEST PRACTICE
     Not recommended using it directly, use as simple nested:
-        class ThreadsManager1(ThreadsDeCollector):
+        class ThreadsManager1(ThreadsDecorCollector):
             pass
 
         @ThreadsManager1().decorator__to_thread
@@ -37,7 +37,7 @@ class ThreadsDeCollector(SingletonCallMeta):
 
     2. Direct usage
     But if you need only one manager - do use directly without nesting.
-        @ThreadsDeCollector().decorator__to_thread
+        @ThreadsDecorCollector().decorator__to_thread
         def func(*args, **kwargs):
             pass
 

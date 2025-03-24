@@ -67,7 +67,7 @@ class AlertTradeADX(AlertSelect.TELEGRAM_DEF):
     pass
 
 
-class ThreadDeCollectorADX(ThreadsDeCollector):
+class ThreadDeCollectorADX(ThreadsDecorCollector):
     """Manager which create new group of threads
     """
     pass
@@ -222,13 +222,13 @@ class Alert_MapDrawer(AlertSelect.TELEGRAM_DEF):
     pass
 
 
-class ThreadDeCollector_MapDrawer_Tf(ThreadsDeCollector):
+class ThreadDeCollector_MapDrawer_Tf(ThreadsDecorCollector):
     """Manager which create new group of threads
     """
     pass
 
 
-class ThreadDeCollector_MapDrawer_Shift(ThreadsDeCollector):
+class ThreadDeCollector_MapDrawer_Shift(ThreadsDecorCollector):
     """Manager which create new group of threads
     """
     pass

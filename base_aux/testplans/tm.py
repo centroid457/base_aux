@@ -1,10 +1,5 @@
-from typing import *
-
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-
 from base_aux.valid.m2_valid_base import *
-from base_aux.classes.m1_translator import Translator
+from base_aux.translator.m1_translator import Translator
 from base_aux.pyqt.m3_tm import TableModelTemplate
 from base_aux.breeders.m1_breeder_str2_stack import *
 from base_aux.breeders.m1_breeder_str1_series import *
