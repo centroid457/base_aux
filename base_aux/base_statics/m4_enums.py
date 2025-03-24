@@ -175,7 +175,8 @@ class Enum_CmtStyle(NestEq_Enum):
     SHARP = "#"
     DSLASH = "//"
     REM = "rem"
-    C = "c"     # /*...*/
+    C = "c"             # /*...*/
+    SEMICOLON = ";"     # for INI files
 
 
 class Enum_PatCoverStyle(NestEq_Enum):
@@ -273,6 +274,28 @@ class Enum_AttrScope(NestEq_Enum):
     ALL = 2
 
     PRIVATE = 3    # usually not used! just in case!
+
+
+# =====================================================================================================================
+class Enum_Os(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    ReqCheckStr_Os
+    """
+    LINUX = "linux"
+    WINDOWS = "windows"
+
+
+class Enum_MachineArch(NestEq_Enum):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    ReqCheckStr_Os
+    """
+    PC = "amd64"        # standard PC
+    WSL = "x86_64"      # wsl standard
+    ARM = "aarch64"     # raspberry=ARM!
 
 
 # =====================================================================================================================
