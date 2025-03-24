@@ -14,7 +14,10 @@ TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]
 
 # =====================================================================================================================
 class Meta_GetattrClassmethod(type):
-    """ability to apply classmethod for __getattr__
+    """
+    GOAL
+    ----
+    ability to apply classmethod for __getattr__
 
     WHY USE IT
     ==========
@@ -102,16 +105,18 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     # NOTE: HIDDEN NAMES IS IMPORTANT! separate attrs Variants from privateAux
     pass
 
-    # SETTINGS -------------------------------------
+    # SETTINGS -------------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
 
-    # AUX ---------------------------------------
+    # AUX ------------------------------------------------
     _RAISE: bool = True
     _MEET_TRUE: bool = True     # DONT DELETE!!! used like selector!
     _CHECK_FULLMATCH: bool = True
 
     # temporary ------------------------------------------
     _value_actual: Optional[str]
+
+    # TODO: separate ATTRS in KIT and
 
     # TODO: use instance! no classmethods! + check on instantiating!?? +del meta??  ---NO!!!!
     # NOTES:
