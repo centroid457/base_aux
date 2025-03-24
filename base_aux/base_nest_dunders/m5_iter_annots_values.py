@@ -38,7 +38,7 @@ class NestIter_AnnotValues(NestGAI_AnnotAttrIC):
     """
 
     def __iter__(self):
-        yield from AnnotAttrAux(self).iter__annot_values()
+        yield from AnnotsAllAux(self).iter__annot_values()
 
 
 # =====================================================================================================================

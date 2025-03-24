@@ -26,7 +26,7 @@ class NestIter_AnnotNameValueNotPrivate:
     MsgStruct
     """
     def __iter__(self) -> tuple[str, Any]:
-        for name in AnnotAttrAux(self).iter__names_not_private():
+        for name in AnnotsAllAux(self).iter__names_not_private():
             value = getattr(self, name)
             yield name, value
 
@@ -34,7 +34,7 @@ class NestIter_AnnotNameValueNotPrivate:
 # ---------------------------------------------------------------------------------------------------------------------
 class NestIter_AnnotNameValueNotHidden:
     def __iter__(self) -> tuple[str, Any]:
-        for name in AnnotAttrAux(self).iter__names_not_hidden():
+        for name in AnnotsAllAux(self).iter__names_not_hidden():
             value = getattr(self, name)
             yield name, value
 

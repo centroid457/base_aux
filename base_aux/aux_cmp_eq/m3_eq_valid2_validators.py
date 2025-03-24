@@ -237,7 +237,7 @@ class Validators:
             other_final,
             **kwargs: TYPING.KWARGS_FINAL
     ) -> bool | NoReturn:
-        return AnnotAttrAux(other_final).annots__check_all_defined()
+        return AnnotsAllAux(other_final).annots__check_all_defined()
 
 
 # =====================================================================================================================

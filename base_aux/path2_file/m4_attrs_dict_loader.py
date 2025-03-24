@@ -72,7 +72,7 @@ class AttrsLoader_DictTextFile(TextFile, NestCall_Resolve):
 
             result = self.TARGET(**data)
         else:
-            AnnotAttrAux(self.TARGET).sai__by_args_kwargs(**data)
+            AnnotsAllAux(self.TARGET).sai__by_args_kwargs(**data)
             result = self.TARGET
 
         return result

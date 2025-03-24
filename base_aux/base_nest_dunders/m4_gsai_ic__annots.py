@@ -1,12 +1,12 @@
 from typing import *
 
-from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotsAllAux
 
 
 # =====================================================================================================================
 class NestGA_AnnotAttrIC:
     def __getattr__(self, name: str) -> Any | NoReturn:
-        return AnnotAttrAux(self).gai_ic(name)
+        return AnnotsAllAux(self).gai_ic(name)
 
 
 # class NestSA_AttrAnycase:
@@ -29,7 +29,7 @@ class NestGA_AnnotAttrIC:
 # =====================================================================================================================
 class NestGI_AnnotAttrIC:
     def __getitem__(self, name: str | int) -> Any | NoReturn:
-        return AnnotAttrAux(self).gai_ic(name)
+        return AnnotsAllAux(self).gai_ic(name)
 
 
 # class NestSI_AttrAnycase:

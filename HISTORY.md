@@ -73,7 +73,7 @@
 0.2.15(2025.03.06 14.57.16)
 ------------------------------
 - [TESTS] move all near source code  
-- [AnnotAttrAux] BIG REF:  
+- [AnnotsAllAux] BIG REF:  
 	- make nested Annots from Attrs +use same meth in both  
 	- rename sai_*/gai_  
 	- add values__reinit_mutable +NestInit_Mutable  

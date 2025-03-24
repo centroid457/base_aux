@@ -38,6 +38,7 @@ class AttrAux(NestInit_Source):
     # SOURCE: Any
     SOURCE: Any = AttrDump
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
+    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
 
     # =================================================================================================================
     def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
@@ -568,10 +569,17 @@ class AttrAux(NestInit_Source):
         values - Types!!! not instances!!!
         """
         result = {}
-        for cls in self._iter_mro():
-            _result_i = dict(cls.__annotations__)
-            _result_i.update(result)
-            result = _result_i
+        if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED:
+            for cls in self._iter_mro():
+                _result_i = dict(cls.__annotations__)
+                _result_i.update(result)
+                result = _result_i
+        elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
+            result = dict(self.__annotations__)
+
+        else:
+            raise Exx__Incompatible(f"{self._ANNOTS_DEPTH=}")
+
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -641,7 +649,7 @@ class AttrAux(NestInit_Source):
 
 # =====================================================================================================================
 @final
-class AnnotAttrAux(AttrAux):
+class AnnotsAllAux(AttrAux):
     """
     GOAL
     ----
@@ -669,6 +677,19 @@ class AnnotAttrAux(AttrAux):
         # atr4:<class 'int'>
     """
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
+    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+
+
+# =====================================================================================================================
+@final
+class AnnotsLastAux(AttrAux):
+    """
+    GOAL
+    ----
+    separate last/all nesting parents annotations
+    """
+    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
+    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.LAST_CHILD
 
 
 # =====================================================================================================================

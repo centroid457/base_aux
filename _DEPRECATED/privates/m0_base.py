@@ -71,7 +71,7 @@ class PrivateBase(NestGAI_AnnotAttrIC, abc.ABC):
             self._RAISE = _raise
 
         if self._RAISE:
-            AnnotAttrAux(self).annots__check_all_defined_or_raise()
+            AnnotsAllAux(self).annots__check_all_defined_or_raise()
 
     def __str__(self):
         """return pretty string

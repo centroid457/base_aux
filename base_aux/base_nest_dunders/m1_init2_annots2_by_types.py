@@ -1,4 +1,4 @@
-from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotsAllAux
 
 
 # =====================================================================================================================
@@ -16,7 +16,7 @@ class NestInit_AnnotsByTypes_All:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotAttrAux(self).reinit__annots_by_types(not_existed=False)
+        AnnotsAllAux(self).reinit__annots_by_types(not_existed=False)
 
 
 # =====================================================================================================================
@@ -29,7 +29,7 @@ class NestInit_AnnotsByTypes_NotExisted:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        AnnotAttrAux(self).reinit__annots_by_types(not_existed=True)
+        AnnotsAllAux(self).reinit__annots_by_types(not_existed=True)
 
 
 # =====================================================================================================================

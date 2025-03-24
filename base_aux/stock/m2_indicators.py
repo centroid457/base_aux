@@ -1,7 +1,7 @@
 from enum import Enum, auto
 from dataclasses import dataclass
 
-from base_aux.aux_attr.m1_annot_attr1_aux import AnnotAttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotsAllAux
 
 
 # =====================================================================================================================
@@ -26,7 +26,7 @@ class IndicatorParamsBase:
         return self.COLUMN_NAME__TEMPLATE % self.params_dict__get()
 
     def params_dict__get(self):
-        return AnnotAttrAux(self).dump_dict()
+        return AnnotsAllAux(self).dump_dict()
 
     def bars_expected__get(self) -> int:
         """

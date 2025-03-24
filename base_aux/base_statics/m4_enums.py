@@ -248,6 +248,20 @@ class Enum_AttrAnnotsOrExisted(NestEq_Enum):
     ANNOTS_ONLY = 1
 
 
+class Enum_AnnotsDepthAllOrLast(NestEq_Enum):
+    """
+    GOAL
+    ----
+    need to separate work with last/allNested annots!
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Base_ReqCheckStr
+    """
+    ALL_NESTED = None
+    LAST_CHILD = 1
+
+
 class Enum_AttrScope(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
