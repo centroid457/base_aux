@@ -6,12 +6,12 @@ from base_aux.requirements.m2_strings import *
 
 # =====================================================================================================================
 class Test__Cls:
-    Victim: type[ReqCheckStr_Base]
+    Victim: type[Base_ReqCheckStr]
     @classmethod
     def setup_class(cls):
         pass
 
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "true"
             TRUE = True
             FALSE = False
@@ -91,12 +91,12 @@ class Test__Cls:
 
 # =====================================================================================================================
 class Test__Instance:
-    Victim: type[ReqCheckStr_Base]
+    Victim: type[Base_ReqCheckStr]
     @classmethod
     def setup_class(cls):
         pass
 
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "true"
             TRUE = True
             FALSE = False
@@ -125,7 +125,7 @@ class Test__Instance:
 
     # TRIVIAL CASES ---------------------------------------------------------------------------------------------------
     def test__no_getter(self):
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = None
             _RAISE = False
 
@@ -137,14 +137,14 @@ class Test__Instance:
             assert False
 
         # -----------------------
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "true"
             _RAISE = False
 
         victim = Victim()
 
     def test__no_reqs(self):
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "true"
             _RAISE = False
 
@@ -154,7 +154,7 @@ class Test__Instance:
         assert victim._value_actual == "true"
 
         # -----------------------
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "true"
             _RAISE = False
             FALSE = False
@@ -236,7 +236,7 @@ class Test__Instance:
         assert victim.check() is True
 
     def test__set_meet_true(self):
-        class Victim(ReqCheckStr_Base):
+        class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "Hello"
             _RAISE = False
             _MEET_TRUE = True

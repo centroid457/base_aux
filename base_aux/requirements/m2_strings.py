@@ -2,6 +2,9 @@ from typing import *
 import platform
 
 from base_aux.aux_types.m1_type_aux import *
+from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_attr.m1_annot_attr1_aux import *
+from base_aux.aux_callable.m1_callable import *
 
 
 # =====================================================================================================================
@@ -12,11 +15,6 @@ TYPE__RESULT_RAISE = Callable[..., Optional[NoReturn]]
 
 
 # =====================================================================================================================
-class Exx_RequirementCantGetActualValue(Exception):
-    """
-    """
-
-
 class Exx_Requirement(Exception):
     """Some of the requirements are not match
     """
@@ -79,8 +77,13 @@ class Meta_GetattrClassmethod(type):
 
 
 # =====================================================================================================================
-class ReqCheckStr_Base(metaclass=Meta_GetattrClassmethod):
-    """Base class for check exact requirement by string value
+class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
+    """
+    RULES
+    -----
+    all check variants keep in not hidden annots
+
+    Base class for check exact requirement by string value
 
     NOTE
     ----
@@ -114,13 +117,38 @@ class ReqCheckStr_Base(metaclass=Meta_GetattrClassmethod):
 
     # AUX ---------------------------------------
     _RAISE: bool = True
-    _MEET_TRUE: bool = True
+    _MEET_TRUE: bool = True     # DONT DELETE!!! used like selector!
     _CHECK_FULLMATCH: bool = True
 
     # temporary ------------------------------------------
     _value_actual: Optional[str]
 
     # TODO: add values as dict??? - it would be direct great!
+    # TODO: use setter as source
+    # TODO: use instance! no classmethods! + check on instantiating!?? +del meta
+    # TODO: add properties ANY/ALL_True/False
+    # TODO: del _meet_true
+    # TODO: reuse validator with callableAuxResolve instead of _check_fullmatch
+
+    @classmethod
+    @property
+    def ANY_TRUE(self) -> bool:
+        pass
+
+    @classmethod
+    @property
+    def ANY_FALSE(self) -> bool:
+        pass
+
+    @classmethod
+    @property
+    def ALL_TRUE(self) -> bool:
+        pass
+
+    @classmethod
+    @property
+    def ALL_FALSE(self) -> bool:
+        pass
 
     def __init__(
             self,
@@ -160,19 +188,9 @@ class ReqCheckStr_Base(metaclass=Meta_GetattrClassmethod):
         return values
 
     @classmethod
-    def _value_actual__get(cls) -> Union[str, NoReturn]:
-        if not cls._GETTER:
-            msg = f"[ERROR] incomplete settings [{cls._GETTER=}]"
-            raise Exx_RequirementCantGetActualValue(msg)
-
-        if TypeAux(cls._GETTER).check__callable_func_meth_inst():
-            try:
-                cls._value_actual = str(cls._GETTER()).lower()
-            except Exception as exx:
-                raise Exx_RequirementCantGetActualValue(repr(exx))
-        else:
-            cls._value_actual = str(cls._GETTER).lower()
-
+    def _value_actual__get(cls) -> str | NoReturn:
+        cls._value_actual = CallableAux(cls._GETTER).resolve_raise()
+        cls._value_actual = str(cls._value_actual).lower()
         return cls._value_actual
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -261,7 +279,7 @@ class ReqCheckStr_Base(metaclass=Meta_GetattrClassmethod):
 
 
 # =====================================================================================================================
-class ReqCheckStr_Os(ReqCheckStr_Base):
+class ReqCheckStr_Os(Base_ReqCheckStr):
     _GETTER: Callable = platform.system
     _MEET_TRUE: bool = False        # need to use class as checker
 
@@ -287,7 +305,7 @@ def _examples():
     ReqCheckStr_Os().bool_if_not__WINDOWS()
     ReqCheckStr_Os().raise_if__LINUX()
 
-    # 2=user objects
+    # 2=user object - best way!
     class ReqCheckStr_Os_MY(ReqCheckStr_Os):
         LINUX: bool = True
         WINDOWS: bool = False
@@ -296,7 +314,7 @@ def _examples():
 
 
 # =====================================================================================================================
-class ReqCheckStr_Arch(ReqCheckStr_Base):
+class ReqCheckStr_Arch(Base_ReqCheckStr):
     _GETTER: Callable = platform.machine
     _MEET_TRUE: bool = False
 
