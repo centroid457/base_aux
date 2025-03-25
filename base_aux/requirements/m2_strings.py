@@ -76,6 +76,11 @@ class Meta_GetattrClassmethod(type):
 # =====================================================================================================================
 class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     """
+    IDEA
+    ----
+    1/ annots names - used as params
+    2/ annots values - used as acceptance (True/False)
+
     RULES
     -----
     all check variants keep in not hidden annots
@@ -96,7 +101,6 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     SETTINGS
     --------
-    :ivar _RAISE: raise in case of unacceptance
     :ivar _MEET_TRUE: you can use requirement class for check only false variant
     :ivar _GETTER: function which will get the exact value to check
     :ivar _value_actual:
@@ -107,11 +111,10 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     # SETTINGS -------------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
-    _VALIDATOR: Callable[[type, Any, Any], bool | NoReturn] = lambda source, var: str(source).lower() == str(var).lower()
+    _VALIDATOR: Callable[[Any, Any], bool | NoReturn] = lambda source, var: str(source).lower() == str(var).lower()
 
     # AUX ------------------------------------------------
-    _RAISE: bool = True
-    _MEET_TRUE: bool = True     # DONT DELETE!!! used like selector!
+    _MEET_TRUE: bool = True     # DONT DELETE!!! used like selector! used as validator
 
     # temporary ------------------------------------------
     _value_actual: Optional[str]
