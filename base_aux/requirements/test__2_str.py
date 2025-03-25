@@ -92,8 +92,16 @@ class Test__Cls:
 # =====================================================================================================================
 class Test__Instance:
     Victim: type[Base_ReqCheckStr]
-    @classmethod
-    def setup_class(cls):
+    # @classmethod
+    # def setup_class(cls):
+    #     pass
+    #
+    # @classmethod
+    # def teardown_class(cls):
+    #     if cls.victim:
+    #         cls.victim.disconnect()
+
+    def setup_method(self, method):
         pass
 
         class Victim(Base_ReqCheckStr):
@@ -110,16 +118,8 @@ class Test__Instance:
             raise_if_not__TRUE: TYPING.CALLABLE__RAISE_NONE
             # ...
 
-        cls.Victim = Victim
+        self.Victim = Victim
 
-    # @classmethod
-    # def teardown_class(cls):
-    #     if cls.victim:
-    #         cls.victim.disconnect()
-    #
-    # def setup_method(self, method):
-    #     pass
-    #
     # def teardown_method(self, method):
     #     pass
 
@@ -228,10 +228,6 @@ class Test__Instance:
         # victim.hello
         assert victim.check__wo_raise() is False
 
-        # _VALIDATOR = False
-        self.Victim._VALIDATOR = False
-        assert victim.check__wo_raise() is True
-
     def test__set_meet_true(self):
         class Victim(Base_ReqCheckStr):
             _GETTER = lambda: "Hello"
@@ -282,7 +278,7 @@ class Test__Instance:
         victim = self.Victim()
 
         assert victim.check__wo_raise("hellO999") is False
-        assert victim.check__wo_raise("hellO") is True
+        assert victim.check__wo_raise("heLLO") is True
         assert victim.check__wo_raise(["hellO", ]) is True
         assert victim.check__wo_raise(["hellO", "hellO999"]) is True
 

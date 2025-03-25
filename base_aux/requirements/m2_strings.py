@@ -56,17 +56,17 @@ class Meta_GetattrClassmethod(type):
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF.lower(), "")
-            return lambda: cls().check__wo_raise(values=attr_name, _reverse=False, _meet_true=False)
+            return lambda: cls().check__wo_raise(value_acceptance=attr_name, _reverse=False, _meet_true=False)
         elif item.lower().startswith(cls._MARKER__BOOL_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__BOOL_IF_NOT.lower(), "")
-            return lambda: cls().check__wo_raise(values=attr_name, _reverse=True, _meet_true=False)
+            return lambda: cls().check__wo_raise(value_acceptance=attr_name, _reverse=True, _meet_true=False)
 
         elif item.lower().startswith(cls._MARKER__RAISE_IF.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF.lower(), "")
-            return lambda: not cls().check__w_raise(values=attr_name, _reverse=True, _meet_true=False) or None
+            return lambda: not cls().check__w_raise(value_acceptance=attr_name, _reverse=True, _meet_true=False) or None
         elif item.lower().startswith(cls._MARKER__RAISE_IF_NOT.lower()):
             attr_name = item.lower().replace(cls._MARKER__RAISE_IF_NOT.lower(), "")
-            return lambda: not cls().check__w_raise(values=attr_name, _reverse=False, _meet_true=False) or None
+            return lambda: not cls().check__w_raise(value_acceptance=attr_name, _reverse=False, _meet_true=False) or None
 
         else:
             msg = f"[ERROR] META:'{cls.__name__}' CLASS has no attribute '{item}'"
@@ -107,7 +107,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     # SETTINGS -------------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
-    _VALIDATOR: Callable[[type, Any, Any], bool | NoReturn] = lambda _cls, source, var: str(source).lower() == str(var).lower()
+    _VALIDATOR: Callable[[type, Any, Any], bool | NoReturn] = lambda source, var: str(source).lower() == str(var).lower()
 
     # AUX ------------------------------------------------
     _RAISE: bool = True
@@ -191,7 +191,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     def check__wo_raise(cls, *args, **kwargs) -> TYPING.RESULT__BOOL_NONE:
         try:
             return cls.check__w_raise(*args, **kwargs)
-        except:
+        except Exception as exx:
+            print(f"{exx!r}")
             return False
 
     @classmethod
