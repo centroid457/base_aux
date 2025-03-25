@@ -220,16 +220,16 @@ class Test__Instance:
         self.Victim._RAISE = False
         self.Victim._GETTER = lambda: "Hello"
 
-        # _CHECK_FULLMATCH = True
-        self.Victim._CHECK_FULLMATCH = True
+        # _VALIDATOR = True
+        self.Victim._VALIDATOR = True
         self.Victim.hell = True
 
         victim = self.Victim()
         # victim.hello
         assert victim.check__wo_raise() is False
 
-        # _CHECK_FULLMATCH = False
-        self.Victim._CHECK_FULLMATCH = False
+        # _VALIDATOR = False
+        self.Victim._VALIDATOR = False
         assert victim.check__wo_raise() is True
 
     def test__set_meet_true(self):

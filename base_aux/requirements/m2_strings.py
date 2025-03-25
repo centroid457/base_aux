@@ -44,10 +44,14 @@ class Meta_GetattrClassmethod(type):
     # dont change markers! use exists!
     _MARKER__BOOL_IF: str = "bool_if__"
     _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
+
     _MARKER__RAISE_IF: str = "raise_if__"
     _MARKER__RAISE_IF_NOT: str = "raise_if_not__"
 
-    def __getattr__(cls, item: str):
+    check__wo_raise: Callable
+    check__w_raise: Callable
+
+    def __getattr__(cls, item: str) -> bool | None | NoReturn:
         """if no exists attr/meth
         """
         if item.lower().startswith(cls._MARKER__BOOL_IF.lower()):
@@ -92,12 +96,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     SETTINGS
     --------
-    :ivar _RAISE: raise in case of inacceptance
+    :ivar _RAISE: raise in case of unacceptance
     :ivar _MEET_TRUE: you can use requirement class for check only false variant
-    :ivar _CHECK_FULLMATCH:
-        True - if need fullmatch (but always case-insensitive)
-        False - if partial match by finding mentioned values in _value_actual
-
     :ivar _GETTER: function which will get the exact value to check
     :ivar _value_actual:
     """
@@ -107,11 +107,11 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     # SETTINGS -------------------------------------------
     _GETTER: Union[Callable[..., Union[str, Any]], Any] = None
+    _VALIDATOR: Callable[[type, Any, Any], bool | NoReturn] = lambda _cls, source, var: str(source).lower() == str(var).lower()
 
     # AUX ------------------------------------------------
     _RAISE: bool = True
     _MEET_TRUE: bool = True     # DONT DELETE!!! used like selector!
-    _CHECK_FULLMATCH: bool = True
 
     # temporary ------------------------------------------
     _value_actual: Optional[str]
@@ -127,7 +127,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     # TODO: use setter as source
     # TODO: add properties ANY/ALL_True/False
     # TODO: del _meet_true
-    # TODO: reuse validator with callableAuxResolve instead of _check_fullmatch
+    # TODO: reuse validator with callableAuxResolve instead of _validator
 
     # @classmethod
     # @property
@@ -153,15 +153,15 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
             self,
             _getter: Callable[..., str] = None,
             _meet_true: Optional[bool] = None,
-            _check_fullmatch: Optional[bool] = None
+            _validator: Callable[[Any, Any], bool | NoReturn] = None
     ):
         # INIT SETTINGS ----------------------------------
         if _getter is not None:
             self._GETTER = _getter
         if _meet_true is not None:
             self._MEET_TRUE = _meet_true
-        if _check_fullmatch is not None:
-            self._CHECK_FULLMATCH = _check_fullmatch
+        if _validator is not None:
+            self._VALIDATOR = _validator
 
     def __getattr__(self, item):
         """
@@ -173,12 +173,12 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     @classmethod
     def values_acceptance__get(cls) -> dict[str, bool | None]:
         """get settings from class"""
-        values = {}
+        result = {}
         for attr in dir(cls):
             attr_value = getattr(cls, attr)
             if not attr.startswith("_") and not callable(attr_value) and isinstance(attr_value, (bool, type(None))):
-                values.update({attr: attr_value})
-        return values
+                result.update({attr: attr_value})
+        return result
 
     @classmethod
     def _value_actual__get(cls) -> str | NoReturn:
@@ -197,7 +197,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     @classmethod
     def check__w_raise(
             cls,
-            values: TYPE__VALUES | None = None,
+            value_acceptance: TYPE__VALUES | None = None,
             _reverse: Optional[bool] = None,    # special for bool_if_not__* like methods
             _meet_true: bool | None = None,
     ) -> TYPING.RESULT__BOOL_RAISE_NONE:
@@ -207,22 +207,22 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
         # VALUES ---------------------------------------------------------
         # use values-1=from class settings -----------
-        if values is None:
-            values = cls.values_acceptance__get()
+        if value_acceptance is None:
+            value_acceptance = cls.values_acceptance__get()
 
         # use values-2=as exact one -----------
-        if isinstance(values, str):
-            values = {values: True}
+        if isinstance(value_acceptance, str):
+            value_acceptance = {value_acceptance: True}
 
         # use values-3=as exact several -----------
-        if isinstance(values, list):
-            values = dict.fromkeys(values, True)
+        if isinstance(value_acceptance, list):
+            value_acceptance = dict.fromkeys(value_acceptance, True)
 
         # REVERSE ---------------------------------------------------
         if _reverse:
-            for value, acceptance in values.items():
+            for value, acceptance in value_acceptance.items():
                 if acceptance in (True, False):
-                    values[value] = not acceptance
+                    value_acceptance[value] = not acceptance
 
         # VALUE ACTUAL ---------------------------------------------------
         _value_actual = cls._value_actual__get()
@@ -230,12 +230,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         # WORK -----------------------------------------------------------
         match = None
         _acceptance = None
-        for value, _acceptance in values.items():
-            match = (
-                (cls._CHECK_FULLMATCH and value.lower() == _value_actual.lower())
-                or
-                (not cls._CHECK_FULLMATCH and value.lower() in _value_actual.lower())
-            )
+        for value, _acceptance in value_acceptance.items():
+            match = cls._VALIDATOR(_value_actual, value)
             if match:
                 break
 
@@ -255,14 +251,14 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
         # FINAL --------------
         if _meet_true is True and result is None:
-            msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={values}]"
+            msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
             print(msg)
             raise Exx__Requirement(msg)
 
         if result in (True, None):
             return result
         else:
-            msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={values}]"
+            msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
             print(msg)
             raise Exx__Requirement(msg)
 

@@ -24,7 +24,7 @@ class Test_Os:
 
         victim = self.Victim()
         assert victim._value_actual__get() in ["windows", "linux"]
-        assert victim.check__w_raise() is True
+        assert victim.check__wo_raise() is True
 
 
 # =====================================================================================================================
