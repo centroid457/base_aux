@@ -76,10 +76,17 @@ class Meta_GetattrClassmethod(type):
 # =====================================================================================================================
 class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     """
+    GOAL
+    ----
+    check requirements with self exclusive
+
     IDEA
     ----
-    1/ annots names - used as params
-    2/ annots values - used as acceptance (True/False)
+    1/ annots names - used as str params for validating
+    2/ annots values - used as acceptance (True/False/None)
+    3/ expecting find first match (originally obly one) and decide what to do with it
+        - if False value in cls - Raise
+        - if True value in cls - assumed correct check/requirements met!
 
     RULES
     -----
@@ -174,7 +181,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         return Meta_GetattrClassmethod.__getattr__(self.__class__, item)
 
     @classmethod
-    def values_acceptance__get(cls) -> dict[str, bool | None]:
+    def _values_acceptance__get_from_cls(cls) -> dict[str, bool | None]:
         """get settings from class"""
         result = {}
         for attr in dir(cls):
@@ -202,8 +209,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     def check__w_raise(
             cls,
             value_acceptance: TYPE__VALUES | None = None,
-            _reverse: Optional[bool] = None,    # special for bool_if_not__* like methods
-            _meet_true: bool | None = None,
+            _reverse: bool = None,    # special for bool_if_not__* like methods
+            _meet_true: bool = None,
     ) -> TYPING.RESULT__BOOL_RAISE_NONE:
         # SETTINGS -------------------------------------------------------
         if _meet_true is None:
@@ -212,17 +219,17 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         # VALUES ---------------------------------------------------------
         # use values-1=from class settings -----------
         if value_acceptance is None:
-            value_acceptance = cls.values_acceptance__get()
+            value_acceptance = cls._values_acceptance__get_from_cls()
 
         # use values-2=as exact one -----------
         if isinstance(value_acceptance, str):
             value_acceptance = {value_acceptance: True}
 
         # use values-3=as exact several -----------
-        if isinstance(value_acceptance, list):
+        if isinstance(value_acceptance, (list, tuple)):
             value_acceptance = dict.fromkeys(value_acceptance, True)
 
-        # REVERSE ---------------------------------------------------
+        # REVERSE apply --------------------------------------------------
         if _reverse:
             for value, acceptance in value_acceptance.items():
                 if acceptance in (True, False):
