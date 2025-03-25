@@ -386,22 +386,28 @@ class TpMultyDutBase(Logger, QThread):
     def save__results(self) -> None:
         name_prefix = str(DateTimeAux())
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
-            result_i = {}
+            result_i_short = {}
+            result_i_full = {}
             for tc_cls in self.TCS__CLS:
                 tc_inst = None
                 try:
                     tc_inst: Base_TestCase = tc_cls.TCS__LIST[index]
-                    tc_inst_result = tc_inst.get__results(add_info_dut=False, add_info_tc=False)["tc_result"]
-                except:
-                    tc_inst_result = None
 
-                result_i.update({tc_cls.DESCRIPTION: tc_inst_result})
+                    tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
+                    tc_inst_result_short = tc_inst_result_full["tc_result"]
+                except:
+                    tc_inst_result_short = None
+                    tc_inst_result_full = None
+
+                result_i_short.update({tc_cls.DESCRIPTION: tc_inst_result_short})
+                result_i_full.update({tc_cls.DESCRIPTION: tc_inst_result_full})
 
             dut_info = tc_inst.DEVICES__BREEDER_INST.DUT.get__info__dev()
             result_dut = {
                 "STAND": self.get__info__stand(),
                 "DUT": dut_info,
-                "RESULTS": result_i,
+                "RESULTS_SHORT": result_i_short,
+                "RESULTS_FULL": result_i_full,
             }
             data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
 

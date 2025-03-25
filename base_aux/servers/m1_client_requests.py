@@ -206,7 +206,7 @@ class Client_RequestsStack(Logger, QThread):
         if self.check_success():
             self.LOGGER.info(f"[STACK] is empty")
         else:
-            self.LOGGER.warn(f"[STACK] is stopped [at len={len(self.stack)}] by some errors [exx={self.request_active.EXX=}]")
+            self.LOGGER.warning(f"[STACK] is stopped [at len={len(self.stack)}] by some errors [exx={self.request_active.EXX=}]")
 
     def send(self, **kwargs) -> None:
         """

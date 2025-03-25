@@ -528,14 +528,14 @@ class _Info(_Base1_TestCase):
             **info_dut,
 
             # RESULTS
-            "timestamp_start": self.timestamp_start,
+            "timestamp_start": self.timestamp_start and str(self.timestamp_start),
             "tc_active": self.isRunning(),
             "tc_progress": self.progress,
             "tc_result_startup": bool(self.result__startup),
             "tc_result": None if self.result is None else bool(self.result),
             "tc_details": self.details,
             "result__teardown": bool(self.result__teardown),
-            "timestamp_last": self.timestamp_last,
+            "timestamp_last": self.timestamp_last and str(self.timestamp_last),
             "log": self.get__results_pretty(),
         }
         return result
