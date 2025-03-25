@@ -25,51 +25,48 @@ from base_aux.base_statics.m3_primitives import *
 
 
 # =====================================================================================================================
-class ValidAttrSource:
-    _GETTER: Callable[..., Any] | Any = LambdaBool(LAMBDA_TRUE)
+class ValidAttr:
     _VALIDATOR: Lambda = LambdaBool(LAMBDA_TRUE)
     # A1: Lambda | ArgsKwargs | Any | Callable
     # A2: Lambda | ArgsKwargs | Any
 
-    def __init__(self, validator = None, getter=None):
+    def __init__(self, validator = None):
         if validator is not None:
             self._VALIDATOR = validator
 
+    def check(self, value: Callable[..., Any] | Any) -> AttrKit_Blank:
+        value = CallableAux(value).resolve_exx()
 
-# =====================================================================================================================
-class ValidAttrAux(NestInit_Source):
-    SOURCE: ValidAttrSource
-
-    def check(self, value) -> AttrKit_Blank:
         result = {}
 
-        for name in AttrAux(self.SOURCE).iter__names_not_hidden():
-            value = getattr(self.SOURCE, name)
+        for name in AnnotsLastAux(self).iter__names_not_hidden():
+            attr_value = getattr(self, name)
 
             try:
-                if isinstance(value, Lambda):
-                    value = value()
-                elif isinstance(value, ArgsKwargs):
-                    value = self.SOURCE._VALIDATOR.run(*ArgsKwargs.ARGS, **ArgsKwargs.KWARGS)
-                else:
-                    value = self.SOURCE._VALIDATOR.run(value)
+                if isinstance(attr_value, Lambda):
+                    result_validate = attr_value(value)
+                elif isinstance(attr_value, ArgsKwargs):
+                    result_validate = self._VALIDATOR.run(value, *ArgsKwargs.ARGS, **ArgsKwargs.KWARGS)
+                else:   # Any
+                    result_validate = attr_value == value
             except Exception as exx:
-                value = exx
+                result_validate = exx
 
-            result.update({name: value})
+            result.update({name: result_validate})
         return AttrKit_Blank(**result)
 
 
 # =====================================================================================================================
 def _examples():
-    class VictimSource(ValidAttrSource):
-        _VALIDATOR: Lambda = Lambda(lambda: True)
-        A1: Lambda | ArgsKwargs | Any = 123
-        A2: Lambda | ArgsKwargs | Any = ArgsKwargs(123)
-        A3: Lambda | ArgsKwargs | Any = Lambda(bool, 123)
+    class Victim(ValidAttr):
+        _VALIDATOR: Lambda = Lambda(lambda param: param == 111)
+        A1: Lambda | ArgsKwargs | Any = 111
+        A2: Lambda | ArgsKwargs | Any = 222
+        # A2: Lambda | ArgsKwargs | Any = ArgsKwargs(111)
+        # A3: Lambda | ArgsKwargs | Any = Lambda(True)
 
-
-    victim = ValidAttrAux(ValidAttrSource)
+    victim = Victim()
+    assert victim.check(111)
 
 
 # =====================================================================================================================
