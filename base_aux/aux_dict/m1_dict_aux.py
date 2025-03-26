@@ -25,9 +25,50 @@ class Base_DictAux(NestInit_Source):
             self.SOURCE = copy.deepcopy(self.SOURCE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def clear_values(self) -> TYPING.DICT_ANY_NONE:
+    def values_clear(self) -> TYPING.DICT_ANY_NONE:
         for key in self.SOURCE:
             self.SOURCE[key] = None
+        return self.SOURCE
+
+    def values_change__by_func(self, func: Callable[[Any], Any], walk: bool = None) -> TYPING.DICT_ANY_ANY:
+        """
+        NOTE
+        ----
+        1/ func work with final/elementary value (not collection) - userClass or Elementary Inst
+        2/ func make sure without NoReturn!!!
+        3/ FILTERS - use inside func!!! and change values inline!
+
+        GOAL
+        ----
+        change values by func
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        json prepare_serialisation - in part of make all values Elementary
+        """
+        # -----------------------
+        for key, value in self.SOURCE.items():
+            if isinstance(value, TYPES.ELEMENTARY_COLLECTION):
+                if walk:
+                    if isinstance(value, dict):
+                        value = DictAuxInline(value).values_change__by_func(func, walk=walk)
+
+                    elif isinstance(value, (list, tuple, set)):   # , tuple, set - too complicated!
+                        result = []
+                        for item in value:
+                            if isinstance(item, dict):
+                                item = DictAuxInline(item).values_change__by_func(func, walk=walk)
+                            else:
+                                item = func(item)    # NOTE: make sure no NoReturn!!!
+                            result.append(item)
+                        value = result
+                else:
+                    continue
+            else:
+                value = func(value)     # NOTE: make sure no NoReturn!!!
+
+            self.SOURCE[key] = value
+
         return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -40,24 +81,28 @@ class Base_DictAux(NestInit_Source):
 
         return self.SOURCE
 
-    def keys_rename__by_func(self, func: Callable[[Any], Any], walk: bool = None) -> TYPING.DICT_ANY_ANY:
+    def keys_change__by_func(self, func: Callable[[Any], Any], walk: bool = None) -> TYPING.DICT_ANY_ANY:
         """
         GOAL
         ----
         useful to rename keys by func like str.LOWER/upper
         raise on func - delete key from origin! applied like filter ---NO! keep original value!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        json prepare_serialisation - in part of make all keys STR!
         """
         # -----------------------
         for key, value in dict(self.SOURCE).items():
             # value -------
             if walk:
                 if isinstance(value, dict):
-                    value = DictAuxInline(value).keys_rename__by_func(func, walk=walk)
+                    value = DictAuxInline(value).keys_change__by_func(func, walk=walk)
 
                 elif isinstance(value, (list, tuple, set)):
                     for item in value:
                         if isinstance(item, dict):
-                            item = DictAuxInline(item).keys_rename__by_func(func, walk=walk)
+                            item = DictAuxInline(item).keys_change__by_func(func, walk=walk)
 
             # name -------
             try:
@@ -70,7 +115,7 @@ class Base_DictAux(NestInit_Source):
         return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
-    def collapse_key(self, key: Any) -> TYPING.DICT_ANY_ANY:
+    def key_collapse(self, key: Any) -> TYPING.DICT_ANY_ANY:
         """
         GOAL
         ----

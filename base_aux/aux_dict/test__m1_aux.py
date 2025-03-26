@@ -24,7 +24,7 @@ def test__collapse_key():
     VICTIM = VICTIM_DEF.copy()
 
     victim = DictAuxInline(VICTIM)
-    victim = victim.collapse_key(4)
+    victim = victim.key_collapse(4)
     assert victim == VICTIM
     assert victim[1] == {1: 1, 2: 2, 3: 3}
     assert victim[2] == {1: 1, 2: 2}
@@ -32,7 +32,7 @@ def test__collapse_key():
     assert victim[4] == 4
 
     victim = DictAuxInline(VICTIM)
-    victim = victim.collapse_key(3)
+    victim = victim.key_collapse(3)
     assert victim == VICTIM
     assert victim[1] == 3
     assert victim[2] == {1: 1, 2: 2}
@@ -40,7 +40,7 @@ def test__collapse_key():
     assert victim[4] == 4
 
     victim = DictAuxInline(VICTIM)
-    victim = victim.collapse_key(2)
+    victim = victim.key_collapse(2)
     assert victim == VICTIM
     assert victim[1] == 3
     assert victim[2] == 2
@@ -51,13 +51,13 @@ def test__collapse_key():
 def test__clear_values():
     VICTIM = VICTIM_DEF.copy()
 
-    victim = DictAuxCopy(VICTIM).clear_values()
+    victim = DictAuxCopy(VICTIM).values_clear()
     assert victim != VICTIM
     assert victim == dict.fromkeys(VICTIM)
     assert victim[4] == None
     assert VICTIM[4] == 4
 
-    victim = DictAuxInline(VICTIM).clear_values()
+    victim = DictAuxInline(VICTIM).values_clear()
     assert victim == VICTIM
     assert victim == dict.fromkeys(VICTIM)
     assert victim[4] == None
@@ -78,50 +78,58 @@ def test__keys_del():
     assert key not in VICTIM
 
 
-def test__keys_rename__by_func():
-    VICTIM = VICTIM_DEF.copy()
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAuxCopy(VICTIM).keys_rename__by_func(LAMBDA_ECHO)
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    assert list(victim) == [*range(1, 5), *DICT_LU]
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, func, walk, _EXPECTED, post_eq",
+    argvalues=[
+        # WO internal Raise ============
+        # wo collections ----
+        ({1:1, 2:{11:11}}, str, False, {"1":1, "2":{11:11}}, [False, True]),
+        ({1:1, 2:{11:11}}, str, True, {"1":1, "2":{"11":11}}, [False, True]),
+        ({1:1, 2:{11:{111: 222}}}, str, True, {"1":1, "2":{"11":{"111":222}}}, [False, True]),
+        ({1:1, 2:{11:[111, {1111:2222}]}}, str, True, {"1":1, "2": {"11": [111, {"1111": 2222}]}}, [False, True]),
 
-    # ================================
-    VICTIM = VICTIM_DEF.copy()
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAuxCopy(VICTIM).keys_rename__by_func(str.lower)
-    assert VICTIM != victim
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    assert list(victim) == [*range(1, 5), "lower", "upper"]
+        # with collections ----
+        ({1: 1, 2: [{11: 11}, [22], 33]}, str, False, {"1": 1, "2": [{11: 11}, [22], 33]}, [False, True]),
+        ({1: 1, 2: [{11: 11}, [22], 33]}, str, True, {"1": 1, "2": [{"11": 11}, [22], 33]}, [False, True]),
 
-    # --------------------------------
-    VICTIM = VICTIM_DEF.copy()
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAuxCopy(VICTIM).keys_rename__by_func(str.upper)
-    assert VICTIM != victim
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    assert list(victim) == [*range(1, 5), "LOWER", "UPPER"]
+        # WITH internal Raise ============
+        # wo collections ----
+        ({1: 1, 2: {11: 11}}, str.lower, False, {1: 1, 2: {11: 11}}, [True, True]),
+        ({1: 1, "KUP1": {"KUP2": "VUP"}}, str.lower, False, {1: 1, "kup1": {"KUP2": "VUP"}}, [False, True]),
+        ({1: 1, "KUP1": {"KUP2": "VUP"}}, str.lower, True, {1: 1, "kup1": {"kup2": "VUP"}}, [False, True]),
 
-    # ================================
-    VICTIM = VICTIM_DEF.copy()
-    assert list(VICTIM) == [*range(1, 5), *DICT_LU]
-    victim = DictAuxInline(VICTIM).keys_rename__by_func(str.lower)
-    assert VICTIM == victim
-    assert list(VICTIM) == [*range(1, 5), "lower", "upper"]
-    assert list(victim) == [*range(1, 5), "lower", "upper"]
+        # with collections ----
+        ({1: 1, "KUP1": [{"KUP2": "VUP2"}, [22], "VUP3"]}, str.lower, False, {1: 1, "kup1": [{"KUP2": "VUP2"}, [22], "VUP3"]}, [False, True]),
+        ({1: 1, "KUP1": [{"KUP2": "VUP2"}, [22], "VUP3"]}, str.lower, True, {1: 1, "kup1": [{"kup2": "VUP2"}, [22], "VUP3"]}, [False, True]),
+    ]
+)
+def test__keys_change__by_func__walk(source, func, walk, _EXPECTED, post_eq):
+    # COPY
+    func_link = DictAuxCopy(source).keys_change__by_func
+    ExpectAux(func_link, (func, walk)).check_assert(_EXPECTED)
+    assert (source == _EXPECTED) == post_eq[0]
+
+    # INLINE
+    func_link = DictAuxInline(source).keys_change__by_func
+    ExpectAux(func_link, (func, walk)).check_assert(_EXPECTED)
+    assert source == _EXPECTED     #) == post_eq[1]      # HERE IS ALWAYS TRUE!!!!
 
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="source, func, walk, _EXPECTED",
     argvalues=[
+
+        # FIXME: FINISH!!!
         ({1:1, 2:{11:11}}, str, False, {"1":1, "2":{11:11}}),
         ({1:1, 2:{11:11}}, str, True, {"1":1, "2":{"11":11}}),
         ({1:1, 2:{11:{111: 222}}}, str, True, {"1":1, "2":{"11":{"111":222}}}),
         ({1:1, 2:{11:[111, {1111:2222}]}}, str, True, {"1":1, "2": {"11": [111, {"1111": 2222}]}}),
     ]
 )
-def test__keys_rename__by_func__walk(source, func, walk, _EXPECTED):
-    func_link = DictAuxCopy(source).keys_rename__by_func
+def test__values_change__by_func__walk(source, func, walk, _EXPECTED):
+    func_link = DictAuxCopy(source).values_change__by_func
     ExpectAux(func_link, (func, walk)).check_assert(_EXPECTED)
     assert source != _EXPECTED      # check original is not changed
 
