@@ -107,4 +107,21 @@ def test__keys_rename__by_func():
     assert list(victim) == [*range(1, 5), "lower", "upper"]
 
 
+def test__keys_rename__by_func__walk():
+    VICTIM = {1:1, 2:{11:11}}
+    DictAuxInline(VICTIM).keys_rename__by_func(str)
+    assert VICTIM == {"1":1, "2":{11:11}}
+
+    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
+    assert VICTIM == {"1":1, "2":{"11":11}}
+
+    VICTIM = {1:1, 2:{11:{111: 222}}}
+    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
+    assert VICTIM == {"1":1, "2":{"11":{"111":222}}}
+
+    VICTIM = {1:1, 2:{11:[111, {1111:2222}]}}
+    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
+    assert VICTIM == {"1":1, "2": {"11": [111, {"1111": 2222}]}}
+
+
 # =====================================================================================================================

@@ -45,15 +45,26 @@ class Base_DictAux(NestInit_Source):
         GOAL
         ----
         useful to rename keys by func like str.LOWER/upper
-        raise on func - delete key from origin! applied like filter
+        raise on func - delete key from origin! applied like filter ---NO! keep original value!
         """
-        # TODO: add WALK! +add walk any collection - set/list/tuple!
         # -----------------------
         for key, value in dict(self.SOURCE).items():
+            # value -------
+            if walk:
+                if isinstance(value, dict):
+                    value = DictAuxInline(value).keys_rename__by_func(func, walk=walk)
+
+                # TODO: FINISH!!!
+                elif isinstance(value, (list, tuple, set)):
+                    for item in value:
+                        if isinstance(item, dict):
+                            item = DictAuxInline(item).keys_rename__by_func(func, walk=walk)
+
+            # name -------
             try:
                 key_new = func(key)
                 self.keys_del(key)
-                self.SOURCE.update({key_new: value})
+                self.SOURCE[key_new] = value
             except:
                 pass
 
@@ -113,6 +124,10 @@ class Base_DictAux(NestInit_Source):
     # -----------------------------------------------------------------------------------------------------------------
     def prepare_serialisation(self) -> TYPING.DICT_STR_ELEM:
         """
+        NOTE
+        ----
+        work not in source! return copy with ready to direct serialisation keys/values
+
         GOAL
         ----
         make ready for serialisation
@@ -121,8 +136,15 @@ class Base_DictAux(NestInit_Source):
         """
         result = {}
         # TODO: FINISH
+        result = {}
+        for key, value in self.SOURCE.items():
+            if isinstance(value, dict):
+                value = DictAuxCopy(value).prepare_serialisation()
 
-        # for key
+            if isinstance(value, (list)):
+                value = DictAuxCopy(value).prepare_serialisation()
+
+            result[key] = value
 
         return result
 
