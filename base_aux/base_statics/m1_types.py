@@ -84,6 +84,7 @@ class TYPING:
     STR_DRAFT = Union[STR_FINAL, Any]
 
     # -----------------------------------------------------------------------------------------------------------------
+    DICT_ANY_NONE = dict[Any, None]             # just to show - dict with None values after clearing!
     DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values
     DICT_STR_ANY = dict[str, Any]               # just to show - dict could be any! on values! not just an elementary1
     DICT_STR_ELEM = DICT_JSON_ANY = dict[str, ELEMENTARY]       # just to show - parsed by json - dict

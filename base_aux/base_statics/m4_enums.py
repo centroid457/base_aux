@@ -44,6 +44,21 @@ class Enum_CallResolve(NestEq_Enum):
 
 
 # =====================================================================================================================
+class Enum_SourceOrigOrCopy(NestEq_Enum):
+    """
+    GOAL
+    ----
+    define where work process in original source or copy
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    DictAuxInline/Deepcopy
+    """
+    ORIGINAL = True
+    COPY = False
+
+
+# =====================================================================================================================
 class Enum_ProcessResult(NestEq_Enum):
     """
     GOAL

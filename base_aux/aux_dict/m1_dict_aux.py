@@ -1,66 +1,66 @@
 from typing import *
+import copy
 
 from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_statics.m4_enums import *
+from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
-@final
-class DictAux(NestInit_Source):
+# @final
+class Base_DictAux(NestInit_Source):
     """
-    NOTE
+    GOAL
     ----
-    decide where to work - source or copy????
+    collect all methods in one class
     """
-    SOURCE: dict[Any, Any] = dict
+    SOURCE: TYPING.DICT_ANY_ANY = dict
+    SOURCE_INLINE_DEEPCOPY: Enum_SourceOrigOrCopy = Enum_SourceOrigOrCopy.COPY
 
     # -----------------------------------------------------------------------------------------------------------------
-    def clear_values(self, form: Enum_FormIntExt = Enum_FormIntExt.EXTERNAL) -> dict[Any, None]:
-        keys = list(self.SOURCE)
-        new_dict = dict.fromkeys(keys)
-        if form == Enum_FormIntExt.EXTERNAL:
-            return new_dict
-
-        if form == Enum_FormIntExt.INTERNAL:
-            self.SOURCE.clear()
-            self.SOURCE.update(new_dict)
-            return self.SOURCE
+    def init_post(self) -> None | NoReturn:
+        if self.SOURCE_INLINE_DEEPCOPY == Enum_SourceOrigOrCopy.ORIGINAL:
+            pass
+        if self.SOURCE_INLINE_DEEPCOPY == Enum_SourceOrigOrCopy.COPY:
+            self.SOURCE = copy.deepcopy(self.SOURCE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def keys_del(self, *keys: Any) -> None:
+    def clear_values(self) -> TYPING.DICT_ANY_NONE:
+        for key in self.SOURCE:
+            self.SOURCE[key] = None
+        return self.SOURCE
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def keys_del(self, *keys: Any) -> TYPING.DICT_ANY_ANY:
         for key in keys:
             try:
                 self.SOURCE.pop(key)
             except:
                 pass
 
-    def keys_rename__by_func(self, func: Callable[[Any], Any], form: Enum_FormIntExt = Enum_FormIntExt.EXTERNAL) -> dict[Any, Any]:
+        return self.SOURCE
+
+    def keys_rename__by_func(self, func: Callable[[Any], Any], walk: bool = None) -> TYPING.DICT_ANY_ANY:
         """
         GOAL
         ----
         useful to rename keys by func like str.LOWER/upper
         raise on func - delete key from origin! applied like filter
         """
-        result = {}
-        if form == Enum_FormIntExt.EXTERNAL:
-            result = {}
-        elif form == Enum_FormIntExt.INTERNAL:
-            result = self.SOURCE
-
+        # TODO: add WALK! +add walk any collection - set/list/tuple!
         # -----------------------
-        for key in list(self.SOURCE):
-            value = self.SOURCE.get(key)
-            DictAux(result).keys_del(key)
+        for key, value in dict(self.SOURCE).items():
             try:
                 key_new = func(key)
-                result.update({key_new: value})
+                self.keys_del(key)
+                self.SOURCE.update({key_new: value})
             except:
                 pass
 
-        return result
+        return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
-    def collapse_key(self, key: Any) -> dict[Any, Any]:
+    def collapse_key(self, key: Any) -> TYPING.DICT_ANY_ANY:
         """
         GOAL
         ----
@@ -104,21 +104,38 @@ class DictAux(NestInit_Source):
             }
 
         """
-        result = {}
         for root_key, root_value in self.SOURCE.items():
             if isinstance(root_value, dict) and key in root_value:
-                root_value = root_value.get(key)
+                self.SOURCE[root_key] = root_value.get(key)
 
-            result[root_key] = root_value
-
-        return result
+        return self.SOURCE
 
     # -----------------------------------------------------------------------------------------------------------------
-    def prepare_serialisation(self) -> dict:
+    def prepare_serialisation(self) -> TYPING.DICT_STR_ELEM:
+        """
+        GOAL
+        ----
+        make ready for serialisation
+        1/ fix keys - str
+        2/ fix values - elementary
+        """
         result = {}
         # TODO: FINISH
 
+        # for key
+
         return result
+
+
+# =====================================================================================================================
+@final
+class DictAuxInline(Base_DictAux):
+    SOURCE_INLINE_DEEPCOPY = Enum_SourceOrigOrCopy.ORIGINAL
+
+
+@final
+class DictAuxCopy(Base_DictAux):
+    SOURCE_INLINE_DEEPCOPY = Enum_SourceOrigOrCopy.COPY
 
 
 # =====================================================================================================================
