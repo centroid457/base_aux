@@ -1,6 +1,9 @@
+import pytest
+
 from base_aux.aux_dict.m1_dict_aux import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m3_primitives import LAMBDA_ECHO
+from base_aux.aux_expect.m1_expect_aux import *
 
 
 # =====================================================================================================================
@@ -107,21 +110,20 @@ def test__keys_rename__by_func():
     assert list(victim) == [*range(1, 5), "lower", "upper"]
 
 
-def test__keys_rename__by_func__walk():
-    VICTIM = {1:1, 2:{11:11}}
-    DictAuxInline(VICTIM).keys_rename__by_func(str)
-    assert VICTIM == {"1":1, "2":{11:11}}
-
-    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
-    assert VICTIM == {"1":1, "2":{"11":11}}
-
-    VICTIM = {1:1, 2:{11:{111: 222}}}
-    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
-    assert VICTIM == {"1":1, "2":{"11":{"111":222}}}
-
-    VICTIM = {1:1, 2:{11:[111, {1111:2222}]}}
-    DictAuxInline(VICTIM).keys_rename__by_func(str, walk=True)
-    assert VICTIM == {"1":1, "2": {"11": [111, {"1111": 2222}]}}
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, func, walk, _EXPECTED",
+    argvalues=[
+        ({1:1, 2:{11:11}}, str, False, {"1":1, "2":{11:11}}),
+        ({1:1, 2:{11:11}}, str, True, {"1":1, "2":{"11":11}}),
+        ({1:1, 2:{11:{111: 222}}}, str, True, {"1":1, "2":{"11":{"111":222}}}),
+        ({1:1, 2:{11:[111, {1111:2222}]}}, str, True, {"1":1, "2": {"11": [111, {"1111": 2222}]}}),
+    ]
+)
+def test__keys_rename__by_func__walk(source, func, walk, _EXPECTED):
+    func_link = DictAuxCopy(source).keys_rename__by_func
+    ExpectAux(func_link, (func, walk)).check_assert(_EXPECTED)
+    assert source != _EXPECTED      # check original is not changed
 
 
 # =====================================================================================================================

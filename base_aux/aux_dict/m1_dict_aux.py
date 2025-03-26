@@ -54,7 +54,6 @@ class Base_DictAux(NestInit_Source):
                 if isinstance(value, dict):
                     value = DictAuxInline(value).keys_rename__by_func(func, walk=walk)
 
-                # TODO: FINISH!!!
                 elif isinstance(value, (list, tuple, set)):
                     for item in value:
                         if isinstance(item, dict):
