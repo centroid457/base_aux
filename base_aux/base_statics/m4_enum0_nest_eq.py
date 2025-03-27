@@ -35,19 +35,26 @@ class NestEq_Enum(Enum):
     #     return False
 
     def __eq__(self, other) -> bool:
-        result = False
+        # OBVIOUS -----------
         if isinstance(other, self.__class__):
             return self.value == other.value
 
-        if other in self.__class__:
-            result = True
+        # CMP AVAILABLE -----
+        cmp_available = False
+
         try:
-            if other in self:
-                result = True
+            if other in self.__class__:
+                cmp_available = True
         except:
             pass
 
-        if result:
+        try:
+            if other in self:
+                cmp_available = True
+        except:
+            pass
+
+        if cmp_available:
             return other == self.value or self == self.__class__(other)
         else:
             return False

@@ -256,9 +256,10 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         #     return
 
         cls.clear__cls()
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
 
         # STARTUP ----------------------------------------
-        if cls_prev and Nest_EqCls._eq_classes__check(cls, cls_prev):
+        if cls_prev is not None and Nest_EqCls._eq_classes__check(cls, cls_prev):
             cls.result__startup_cls = cls_prev.result__startup_cls
         else:
             cls.result__startup_cls = cls.startup__cls()
@@ -283,10 +284,10 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                     tc_inst.wait()
 
         # TERDOWN ----------------------------------------
-        if cls_next and Nest_EqCls._eq_classes__check(cls, cls_next):
-            pass
-        else:
+        if cls_next is None or not Nest_EqCls._eq_classes__check(cls, cls_next):
             cls.result__teardown_cls = cls.teardown__cls()
+        else:
+            pass
 
         # FINISH -------------------------------------------------
         print(f"[TC]FINISH={cls.NAME=}={'=' * 50}")
@@ -334,7 +335,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         """before batch work
         """
         print(f"startup__cls")
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
         cls.result__startup_cls = Enum_ProcessStateActive.STARTED
         # cls.clear__cls()
 
@@ -376,22 +376,25 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         print(f"run__cls=teardown__cls")
 
         if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
+            print(f"run__cls=teardown__cls=1")
+
             cls.result__teardown_cls = Enum_ProcessStateActive.STARTED
 
-            result = cls.teardown__cls__wrapped
-            result = CallableAux(result).resolve_exx()
-            if isinstance(result, Valid):
-                result.run__if_not_finished()
-            cls.result__teardown_cls = result
+            cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve_exx()
+            if isinstance(cls.result__teardown_cls, Valid):
+                cls.result__teardown_cls.run__if_not_finished()
 
-            if not result:
+            if not bool(cls.result__teardown_cls):
                 print(f"[FAIL]{cls.result__teardown_cls=}//{cls.NAME}")
 
         else:
-            result = cls.result__teardown_cls
+            print(f"run__cls=teardown__cls=2")
 
+            pass
+
+        print(f"run__cls=teardown__cls=3")
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.FINISHED
-        return result
+        return cls.result__teardown_cls
 
     # =================================================================================================================
     @classmethod

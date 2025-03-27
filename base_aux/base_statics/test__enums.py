@@ -104,8 +104,13 @@ class Test_EnumEq:
             (VictimEq("str_lower"), "str_lower", (True, Exception)),
             (VictimEq("str_lower"), "STR_LOWER", (False, Exception)),
 
-            # DIFF --------
+            # DIFF values = same cls--------
             (VictimEq.A1, VictimEq.NONE, (False, Exception)),
+
+            # DIFF clss --------
+            (VictimEq.NONE, VictimStd.NONE, (False, Exception)),
+            (VictimEq, VictimStd, (False, False)),
+            (VictimStd, VictimEq, (False, False)),
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):

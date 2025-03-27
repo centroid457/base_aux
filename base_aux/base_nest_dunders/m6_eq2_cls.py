@@ -75,13 +75,13 @@ class Nest_EqCls:
         """
         return cls.__name__     # just as example and for zero comparing
 
-    @staticmethod
-    def _eq_classes__check(obj1: Any | type[Any], obj2: Any | type[Any]) -> bool:
+    @classmethod
+    def _eq_classes__check(cls, obj1: Any | type[Any], obj2: Any | type[Any]) -> bool:
         """
         eqCmp classes as function
         """
-        cls1 = TypeAux(obj1).get__class()
-        cls2 = TypeAux(obj2).get__class()
+        cls1: Self = TypeAux(obj1).get__class()
+        cls2: Self = TypeAux(obj2).get__class()
 
         if TypeAux(cls1).check__nested__by_cls_or_inst(Nest_EqCls):
             # cls1: Nest_EqCls
