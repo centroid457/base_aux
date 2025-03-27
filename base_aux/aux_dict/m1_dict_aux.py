@@ -58,6 +58,10 @@ class Base_DictAux(NestInit_Source):
                         for item in value:
                             if isinstance(item, dict):
                                 item = DictAuxInline(item).values_change__by_func(func, walk=walk)
+                                # elif isinstance(item, (list, tuple, set)):
+                                #     pass
+                                #     raise NotImplementedError(f"cant use containers in containers {item}")
+                                #     TODO: FINISH - INCOMPLETED!!! simply patched
                             else:
                                 item = func(item)    # NOTE: make sure no NoReturn!!!
                             result.append(item)
