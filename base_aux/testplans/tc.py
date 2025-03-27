@@ -377,9 +377,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
             print(f"run__cls=teardown__cls=1")
-
             cls.result__teardown_cls = Enum_ProcessStateActive.STARTED
-
             cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve_exx()
             if isinstance(cls.result__teardown_cls, Valid):
                 cls.result__teardown_cls.run__if_not_finished()
@@ -493,6 +491,7 @@ class _Info(_Base1_TestCase):
                     result += f"{name}:{getattr(self, name)}\n"
 
         result += f"PROGRESS=====================\n"
+        result += f"STATE_ACTIVE__CLS={self.__class__.STATE_ACTIVE__CLS}\n"
         result += f"timestamp_start={self.timestamp_start}\n"
         result += f"timestamp_last={self.timestamp_last}\n"
         result += f"progress={self.progress}\n"
