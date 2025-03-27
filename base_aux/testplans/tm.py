@@ -103,9 +103,9 @@ class TpTableModel(TableModelTemplate):
             # print(f"{col=}/{row=}/{result_i=}")
             if result_i == TcResultMsg.PASS:
                 continue
-            elif result_i == TcResultMsg.FAIL:
+            if result_i == TcResultMsg.FAIL:
                 return False
-            elif result_i == TcResultMsg.WAIT:
+            if result_i == TcResultMsg.WAIT:
                 return
             else:
                 return
@@ -164,10 +164,12 @@ class TpTableModel(TableModelTemplate):
                 except:
                     group_name = tc_cls._EQ_CLS__VALUE or ""
 
-                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
-                    return TcResultMsg.WAIT
                 if tc_cls.result__startup_cls is None:
                     return group_name
+                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                    return TcResultMsg.WAIT
+                if isinstance(tc_cls.result__startup_cls, Valid) and tc_cls.result__startup_cls.check__active():
+                    return TcResultMsg.WAIT
                 if bool(tc_cls.result__startup_cls) is True:
                     return f'+{group_name}'
                 if bool(tc_cls.result__startup_cls) is False:
@@ -202,10 +204,12 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.TEARDOWN_CLS:
                 if row_is_summary:
                     return
-                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
-                    return TcResultMsg.WAIT
                 if tc_cls.result__teardown_cls is None:
                     return
+                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                    return TcResultMsg.WAIT
+                if isinstance(tc_cls.result__teardown_cls, Valid) and tc_cls.result__teardown_cls.check__active():
+                    return TcResultMsg.WAIT
                 if bool(tc_cls.result__teardown_cls) is True:
                     return TcResultMsg.PASS
                 if bool(tc_cls.result__teardown_cls) is False:
@@ -217,7 +221,7 @@ class TpTableModel(TableModelTemplate):
                 if row_is_summary:
                     return "Результаты суммарные по всем тесткейсам\nдля каждого устройства"
                 return f"{tc_cls.DESCRIPTION}"
-            elif col in self.HEADERS.DUTS:
+            if col in self.HEADERS.DUTS:
                 if row_is_summary:
                     # return
                     return str(self.get_summary_results__str(col))
@@ -280,10 +284,12 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.STARTUP_CLS:
                 if row_is_summary:
                     return
-                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
-                    return QColor("#FFFF50")
                 if tc_cls.result__startup_cls is None:
                     return
+                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                    return QColor("#FFFF50")
+                if isinstance(tc_cls.result__startup_cls, Valid) and tc_cls.result__startup_cls.check__active():
+                    return QColor("#FFFF50")
                 if bool(tc_cls.result__startup_cls) is True:
                     return QColor("#50FF50")
                 if bool(tc_cls.result__startup_cls) is False:
@@ -301,13 +307,13 @@ class TpTableModel(TableModelTemplate):
                         return
                 if tc_inst.skip_tc_dut or dut.SKIP or not dut.DEV_FOUND:
                     return QColor('#e2e2e2')
-                elif tc_inst.result__startup is not None and not bool(tc_inst.result__startup):
+                if tc_inst.result__startup is not None and not bool(tc_inst.result__startup):
                     return QColor("#FFa0a0")
-                elif tc_inst.isRunning():
+                if tc_inst.isRunning():
                     return QColor("#FFFF50")
-                elif bool(tc_inst.result) is True:
+                if bool(tc_inst.result) is True:
                     return QColor("#00FF00")
-                elif bool(tc_inst.result) is False:
+                if bool(tc_inst.result) is False:
                     if tc_inst.result is None:
                         return
                     else:
@@ -318,13 +324,15 @@ class TpTableModel(TableModelTemplate):
             if col == self.HEADERS.TEARDOWN_CLS:
                 if row_is_summary:
                     return
-                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
-                    return QColor("#FFFF50")
                 if tc_cls.result__teardown_cls is None:
                     return
-                elif bool(tc_cls.result__teardown_cls) is True:
+                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                    return QColor("#FFFF50")
+                if isinstance(tc_cls.result__teardown_cls, Valid) and tc_cls.result__teardown_cls.check__active():
+                    return QColor("#FFFF50")
+                if bool(tc_cls.result__teardown_cls) is True:
                     return QColor("#50FF50")
-                elif bool(tc_cls.result__teardown_cls) is False:
+                if bool(tc_cls.result__teardown_cls) is False:
                     return QColor("#FF5050")
 
         # -------------------------------------------------------------------------------------------------------------
