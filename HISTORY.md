@@ -10,6 +10,14 @@
 ********************************************************************************
 ## NEWS
 
+0.2.25(2025.03.27 13.31.43)
+------------------------------
+- [pytest]:  
+	- add ini/settings file in root  
+	- hide logs for caught Raises (like in Try sent)  
+- [Annots] add AnnotsLastAux =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast  
+- [DictAux] separate to Base/DictAuxInline/Copy +add walk in keys_rename__by_func  
+
 0.2.24(2025.03.20 17.03.41)
 ------------------------------
 - [TP.gui.tm] add YellowColor on Startup/Teardown Cls  

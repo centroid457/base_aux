@@ -33,10 +33,14 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 2, 24))
+    VERSION = Version((0, 2, 25))
     NEWS: list[str] = [
-        "[TP.gui.tm] add YellowColor on Startup/Teardown Cls",
-        "[Nest] create Nest_EqCls and apply in TC instead of middleGroup!",
+        ["[pytest]",
+            "add ini/settings file in root",
+            "hide logs for caught Raises (like in Try sent)",
+         ],
+        "[Annots] add AnnotsLastAux =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast",
+        "[DictAux] separate to Base/DictAuxInline/Copy +add walk in keys_rename__by_func",
     ]
 
 
