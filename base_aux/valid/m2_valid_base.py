@@ -312,7 +312,8 @@ class Valid:
 
         # finish ----
         result_str += self.get_logstr_attr("STATE_ACTIVE", prefix="...")
-        result_str += self.get_logstr_attr("timestamp_last", prefix=",")
+        result_str += f",\n"
+        result_str += self.get_logstr_attr("timestamp_last", prefix="...")
 
         # log ----------------
         for index, line in enumerate(self.log_lines):
