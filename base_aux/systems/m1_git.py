@@ -1,4 +1,3 @@
-import pathlib
 import datetime
 
 from base_aux.aux_text.m1_text_aux import TextAux
@@ -91,14 +90,16 @@ class Git(DirAux):
         else:
             return False
 
-    def check_status(self) -> bool:
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def DIRTY(self) -> bool | None:
         """
         GOAL
         ----
-        check if you work in validated repo! no changes from last commit
+        check have uncommited changes!
         """
-        # TODO: FINISH!
-        pass
+        if self.check_detected():
+            return self.REPO.is_dirty()
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
@@ -185,11 +186,12 @@ class Git(DirAux):
         git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
         if self.check_detected():
+            dirty = "!DIRTY!" if self.DIRTY else ""
             branch = TextAux(self.BRANCH).shortcut(15)
             summary = TextAux(self.SUMMARY).shortcut(15)
             dt = TextAux(self.DATETIME).shortcut_nosub(19)
 
-            result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
+            result = f"{dirty}{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
         else:
             result = f"вероятно GIT не установлен"
