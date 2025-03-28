@@ -91,15 +91,34 @@ class Git(DirAux):
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
+    def check__status(self) -> bool:
+        """
+        GOAL
+        ----
+        check REPO exists + no untracked files + state is not DIRTY (no uncommited changes in indexed files)
+        """
+        return self.DIRTY is False and not self.UNTRACKED_FILES
+
     @property
     def DIRTY(self) -> bool | None:
         """
         GOAL
         ----
         check have uncommited changes!
+        ONLY CHANGES IN INDEXED FILES!!!
         """
         if self.check_detected():
             return self.REPO.is_dirty()
+
+    @property
+    def UNTRACKED_FILES(self) -> list[str] | None:
+        """
+        GOAL
+        ----
+        return list NOT INDEXED files!
+        """
+        if self.check_detected():
+            return self.REPO.untracked_files
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
@@ -187,11 +206,12 @@ class Git(DirAux):
         """
         if self.check_detected():
             dirty = "!DIRTY!" if self.DIRTY else ""
+            untrachked = "!UNTR!" if self.UNTRACKED_FILES else ""
             branch = TextAux(self.BRANCH).shortcut(15)
             summary = TextAux(self.SUMMARY).shortcut(15)
             dt = TextAux(self.DATETIME).shortcut_nosub(19)
 
-            result = f"{dirty}{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
+            result = f"{dirty}{untrachked}{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
         else:
             result = f"вероятно GIT не установлен"
@@ -203,8 +223,10 @@ class Git(DirAux):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    from base_aux.aux_types import *
-    ObjectInfo(Git().REPO).print()
+    victim = Git()
+    print()
+    print(victim.git_mark__get())
+    # ObjectInfo(victim.REPO).print()
 
 
 # =====================================================================================================================
