@@ -1,50 +1,90 @@
 import pathlib
 import datetime
+
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.aux_types.m2_info import ObjectInfo
+from base_aux.path1_dir.m2_dir import *
 
 
 try:
     import git  # GITPYTHON # need try statement! if not installed git.exe raise Exx even if module was setup!!!
 except:
-    msg = f"[ERROR] git - is not setup in OS"
-    print(msg)
+    print(f"[git.ERROR] is not setup in OS")
 
 
 # =====================================================================================================================
-class Git:
+class Git(DirAux):
     """
     GOAL
     ----
     get last commit short info instead of hard-version
-    """
-    # settings -------------
-    PATH: pathlib.Path | str = None
 
-    # aux -------------
-    REPO: git.Repo = None   # real object/only existed
+    NOTE
+    ----
+    noraise
+    """
+    DIRPATH: TYPING.PATH_FINAL
+    REPO: git.Repo = None                   # real object/only existed
+    ROOT: TYPING.PATH_FINAL | None = None
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, path: pathlib.Path | str = None):
-        if path:
-            self.PATH = pathlib.Path(path)
-        else:
-            self.PATH = pathlib.Path.cwd()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
+        self._root_find()
+
+    def _root_find(self) -> TYPING.PATH_FINAL | None:
+        """
+        GOAL
+        ----
+        detect/find exact root from passed Path (go parent recursively)
+        """
+        if not self.check_installed():
+            return
+
+        while True:
+            try:
+                self.REPO = git.Repo(self.DIRPATH)
+                self.ROOT = self.DIRPATH
+                print(f"[git.INFO] root detected {self.ROOT=}")
+                return self.ROOT
+            except git.InvalidGitRepositoryError:
+                print(f"[git.WARN] root wrong {self.DIRPATH=}")
+                parent = self.DIRPATH.parent
+                if parent == self.DIRPATH:
+                    return
+                else:
+                    self.DIRPATH = parent
+                    continue
+            except Exception as exx:
+                print(f"[git.WARN] unexpected {exx!r}")
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_installed(self) -> bool:
+        """
+        GOAL
+        ----
+        show that git is installed!
+
+        NOTE
+        ----
+        need separate NOT check_ready(repo NOT created/wrong Path) and git not installed
+        """
         try:
-            self.REPO = git.Repo("../..")   # FIXME: need auto find ROOT!!!
-            self.REPO = git.Repo(self.PATH)
+            import git
+            return True
         except Exception as exx:
-            print(f"git.Repo={exx!r}")
-            print(f"возможно GIT не установлен")
+            print(f"[git.WARN] setup git! {exx!r}")
+            return False
 
-    def check_ready(self) -> bool:
+    def check_detected(self) -> bool:
         """
         GOAL
         ----
         check if all ready to work
         - git setup
-        - repo created
+        - root found
+        - repo obj created
         """
         if self.REPO:
             return True
@@ -57,6 +97,7 @@ class Git:
         ----
         check if you work in validated repo! no changes from last commit
         """
+        # TODO: FINISH!
         pass
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -67,7 +108,7 @@ class Git:
         -------
         ndrei Starichenko
         """
-        if self.REPO:
+        if self.check_detected():
             return self.REPO.head.object.committer
 
     @property
@@ -77,7 +118,7 @@ class Git:
         -------
         main
         """
-        if self.REPO:
+        if self.check_detected():
             try:
                 result = self.REPO.active_branch.name
             except Exception as exx:
@@ -95,7 +136,7 @@ class Git:
         -------
         [Text] add shortcut_nosub
         """
-        if self.REPO:
+        if self.check_detected():
             return self.REPO.commit().summary
 
     @property
@@ -103,25 +144,27 @@ class Git:
         """
         NOTE
         ----
-        more useful work with 8 chars! that's enough!
+        see other more useful work with 8 chars! that's enough!
 
         EXAMPLE
         -------
         9fddeb5a9bed20895d56dd9871a69fd9dee5fbf7
         """
-        if self.REPO:
+        if self.check_detected():
             return self.REPO.head.object.hexsha
 
     @property
     def HEXSHA8(self) -> str | None:
         """
-        derivative for main HEXSHA cut by 8 chars
+        GOAL
+        ----
+        just a short variant for main HEXSHA (cut by last 8 chars)
 
         EXAMPLE
         -------
         9fddeb5a
         """
-        if self.REPO:
+        if self.check_detected():
             return self.HEXSHA[:8]
 
     @property
@@ -131,17 +174,17 @@ class Git:
         -------
         2024-12-05 11:30:17+03:00
         """
-        if self.REPO:
+        if self.check_detected():
             return self.REPO.head.object.committed_datetime
 
     # -----------------------------------------------------------------------------------------------------------------
-    def info_string(self) -> str:
+    def git_mark__get(self) -> str:
         """
         EXAMPLE
         -------
         git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
-        if self.REPO:
+        if self.check_detected():
             branch = TextAux(self.BRANCH).shortcut(15)
             summary = TextAux(self.SUMMARY).shortcut(15)
             dt = TextAux(self.DATETIME).shortcut_nosub(19)
@@ -149,7 +192,7 @@ class Git:
             result = f"{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
         else:
-            result = f"возможно GIT не установлен"
+            result = f"вероятно GIT не установлен"
 
         git_mark = f"[git_mark//{result}]"
         print(f"{git_mark=}")
@@ -159,7 +202,7 @@ class Git:
 # =====================================================================================================================
 if __name__ == '__main__':
     from base_aux.aux_types import *
-    ObjectInfo(Git()).print()
+    ObjectInfo(Git().REPO).print()
 
 
 # =====================================================================================================================
