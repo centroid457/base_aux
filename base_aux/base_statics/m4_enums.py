@@ -59,6 +59,21 @@ class Enum_SourceOrigOrCopy(NestEq_Enum):
 
 
 # =====================================================================================================================
+class Enum_IgnoreCase(NestEq_Enum):
+    """
+    GOAL
+    ----
+    replace many bool params about case sensing
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Meta_ClsGaAnnotNamesAsValuesIc
+    """
+    IGNORECASE = True
+    CASESENSE = False
+
+
+# =====================================================================================================================
 class Enum_ProcessResult(NestEq_Enum):
     """
     GOAL
