@@ -91,8 +91,11 @@ class Resolve_FilePath(NestCall_Resolve):
 
         filepath = pathlib.Path(filepath)
         self.DIRPATH = filepath.parent
-        self.NAME = filepath.stem
-        self.EXTLAST = filepath.suffix.rsplit(".", 1)[-1]
+        self.NAME = filepath.name.rsplit(".", 1)[0]     # STEM - is incorrect for noNames! ".txt" -> stem=".txt"!!!
+        try:
+            self.EXTLAST = filepath.name.rsplit(".", 1)[1]
+        except:
+            self.EXTLAST = ""
 
         self.DOT = "." in filepath.name
 

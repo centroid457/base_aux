@@ -126,6 +126,27 @@ class Test_Filepath:
         assert victim.FILEPATH == CWD.joinpath("path2", "name.extlast")
 
     def test__5_filepath(self):
+        victim = Resolve_FilePath(filepath=CWD.joinpath("name"))
+        assert victim.NAME == "name"
+        assert victim.EXTLAST == ""
+        assert victim.NAMEFULL == "name"
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEFULL)
+
+        victim = Resolve_FilePath(filepath=CWD.joinpath("name."))
+        assert victim.NAME == "name"
+        assert victim.EXTLAST == ""
+        assert victim.NAMEFULL == "name."
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEFULL)
+
+        victim = Resolve_FilePath(filepath=CWD.joinpath(".extlast"))
+        assert victim.NAME == ""
+        assert victim.EXTLAST == "extlast"
+        assert victim.NAMEFULL == ".extlast"
+        assert victim.DIRPATH == CWD
+        assert victim.FILEPATH == CWD.joinpath(victim.NAMEFULL)
+
         victim = Resolve_FilePath(filepath=CWD.joinpath("name.extlast"))
         assert victim.NAME == "name"
         assert victim.EXTLAST == "extlast"
