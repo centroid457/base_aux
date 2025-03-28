@@ -35,7 +35,7 @@ class IterAux(NestInit_Source):
     #     self.PATH = []
 
     # -----------------------------------------------------------------------------------------------------------------
-    def item__get_original(self, item: Any) -> Any | NoValue:
+    def item__get_original(self, item: Any, _raise: bool = None) -> Any | NoValue:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
 
@@ -64,6 +64,9 @@ class IterAux(NestInit_Source):
                     return value
             except:
                 pass
+
+        if _raise:
+            raise AttributeError(f"{item=}")
 
         return NoValue
 
