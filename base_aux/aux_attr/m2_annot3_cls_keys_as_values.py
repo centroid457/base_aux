@@ -1,22 +1,48 @@
 from typing import *
 
-from .m1_annot_attr1_aux import AnnotsAllAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AnnotsAllAux
+from base_aux.aux_iter.m1_iter_aux import *
+from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
-class Meta_AnnotClsKeysAsValues(type):
+class Meta_ClsGaAnnotNamesAsValuesIc(type):
     """
     return from class just name of annotation as string value.
     if no corresponding annotation - raise!
     """
-    def __getattr__(cls, item: str) -> str | NoReturn:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
-        if item in annots:
-            return item
-        else:
-            msg = f"[ERROR] META:'{cls.__name__}' CLASS has no annotation for '{item=}'"
-            raise AttributeError(msg)
+    _IC = Enum_IgnoreCase.IGNORECASE    # NOTE: DONT USE ANOTATIONS!!!! _IC: Enum_IgnoreCase
 
+    # IC DEPENDENT ---------------------------------------
+    def __getattr__(cls, item: str) -> str | NoReturn:
+        return cls[item]
+
+    def __getitem__(cls, item: int | str | Any) -> str | NoReturn:
+        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        try:
+            item = int(item)
+        except:
+            item = str(item)
+
+        if isinstance(item, int):
+            return list(annots)[item]
+        else:
+            if cls._IC == Enum_IgnoreCase.IGNORECASE:
+                return IterAux(annots).item__get_original(item, _raise=True)
+            if item in annots:
+                return item
+            else:
+                msg = f"[ERROR] META:'{cls.__name__}' CLASS has no annotation for '{item=}'"
+                raise AttributeError(msg)
+
+    def __contains__(cls, item: str) -> bool:
+        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        if cls._IC == Enum_IgnoreCase.IGNORECASE:
+            return IterAux(annots).item__check_exist(item)
+        else:
+            return item in annots
+
+    # IC independent ---------------------------------------
     def __iter__(cls) -> Iterable[str]:
         annots = AnnotsAllAux(cls).dump_dict__annot_types()
         yield from annots
@@ -25,25 +51,24 @@ class Meta_AnnotClsKeysAsValues(type):
         annots = AnnotsAllAux(cls).dump_dict__annot_types()
         return len(annots)
 
-    def __contains__(cls, item: str) -> bool:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
-        return item in annots
-
-    def __getitem__(cls, item: int) -> str | NoReturn:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
-        return list(annots)[item]
-
     def __str__(cls) -> str:
         annots = AnnotsAllAux(cls).dump_dict__annot_types()
         return str(tuple(annots))
 
     def __repr__(cls) -> str:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
-        return f"{cls.__name__}{tuple(annots)}"
+        return f"{cls.__name__}{cls}"
+
+
+class Meta_ClsGaAnnotNamesAsValuesCs(Meta_ClsGaAnnotNamesAsValuesIc):
+    """
+    return from class just name of annotation as string value.
+    if no corresponding annotation - raise!
+    """
+    _IC = Enum_IgnoreCase.CASESENSE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
+class NestGaCls_AnnotNamesAsValuesIc(metaclass=Meta_ClsGaAnnotNamesAsValuesIc):
     """
     used as simple string data container, same as OneWordStringsList with access to values by dot.
     ATTEMPT to get rid of bare data like list[str] ot tuple[str]!
@@ -58,7 +83,7 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
             OFF = "OFF"
 
     just replace it for
-        class States(AnnotClsKeysAsValues):
+        class States(NestGaCls_AnnotNamesAsValuesIc):
             ON: str
             OFF: str
 
@@ -69,7 +94,7 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
     USAGE
     -----
     1. USE ANNOTATED ATTRIBUTES!
-        class MyValues(AnnotClsKeysAsValues):
+        class MyValues(NestGaCls_AnnotNamesAsValuesIc):
             VALUE1: str
             VALUE2: str
 
@@ -79,7 +104,7 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
         print(MyValues.VALUE3)  # AttributeError(...)
 
     2. DONT SET VALUES! it would break the main idea! (but maybe you want it).
-        class MyValues(AnnotClsKeysAsValues):
+        class MyValues(NestGaCls_AnnotNamesAsValuesIc):
             VALUE1: str
             VALUE2: str = 123
 
@@ -87,7 +112,7 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
         print(MyValues.VALUE2)  # 123
 
     3. ANNOTATING TYPE IS NOT IMPORTANT! cause of no values exists!
-        class MyValues(AnnotClsKeysAsValues):
+        class MyValues(NestGaCls_AnnotNamesAsValuesIc):
             VALUE1: Any
             VALUE2: Any
 
@@ -95,7 +120,7 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
         print(MyValues.VALUE2)  # "VALUE2"
 
     4. CANT USE INSTANCES!
-        class MyValues(AnnotClsKeysAsValues):
+        class MyValues(NestGaCls_AnnotNamesAsValuesIc):
             VALUE1: str
             VALUE2: str
 
@@ -119,6 +144,10 @@ class AnnotClsKeysAsValues(metaclass=Meta_AnnotClsKeysAsValues):
     all we want - access by '*.attribute' to the value,
     so minimum we need is using annotations, that's enough for IDE checker and return string values!
     """
+    pass
+
+
+class NestGaCls_AnnotNamesAsValuesCs(metaclass=Meta_ClsGaAnnotNamesAsValuesCs):
     pass
 
 
