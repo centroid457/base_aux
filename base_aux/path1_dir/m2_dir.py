@@ -9,7 +9,7 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 # @final      # dont use final here! expect nesting for fileWork!???
-class DirAux:
+class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
     """
     GOAL
     ----
