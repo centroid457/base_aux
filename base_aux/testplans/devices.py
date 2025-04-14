@@ -120,7 +120,7 @@ class DevicesBreeder_WithDut(DevicesBreeder):
 
 
 # =====================================================================================================================
-class DevicesBreeder_Example(DevicesBreeder_WithDut):
+class _DevicesBreeder_Example(DevicesBreeder_WithDut):
     """
     JUST an example DUT+some other single dev
     """

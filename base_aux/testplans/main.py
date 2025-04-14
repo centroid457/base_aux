@@ -17,7 +17,7 @@ from base_aux.loggers.m1_logger import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, DevicesBreeder_Example
+from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, _DevicesBreeder_Example
 from .gui import TpGuiBase
 from .api import TpApi_FastApi
 
@@ -59,7 +59,7 @@ class TpMultyDutBase(Logger, QThread):
     SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
     SETTINGS_BASE_FILEPATH: Path
 
-    DEVICES__BREEDER_CLS: type[DevicesBreeder_WithDut] = DevicesBreeder_Example
+    DEVICES__BREEDER_CLS: type[DevicesBreeder_WithDut] = _DevicesBreeder_Example
 
     # AUX -----------------------------------------------------------
     TCS__CLS: dict[Union[str, type[Base_TestCase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
