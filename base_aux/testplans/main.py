@@ -53,7 +53,7 @@ class TpMultyDutBase(Logger, QThread):
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
     # DIRPATH_TPS: Union[str, Path] = "TESTPLANS"
-    DIRPATH_TCS: Union[str, Path] = "TESTCASES"
+    DIRPATH_TCS: Union[str, Path] = "TESTPLANS"
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
     # DIRPATH_DEVS: Union[str, Path] = "DEVICES__BREEDER_INST"
     SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
@@ -180,11 +180,11 @@ class TpMultyDutBase(Logger, QThread):
     def _tcs__apply_classes(self) -> None:
         result = {}
         for item, using in self.TCS__CLS.items():
-            # print(dir(TESTCASES))
+            # print(dir(TESTPLANS))
             print(f"touch {self.DIRPATH_TCS} {item=}")
             if isinstance(item, str):   # filename
-                # tc_cls = import_module(item, "TESTCASES").TestCase    # not working!
-                # tc_cls = getattr(TESTCASES, item).TestCase      # not working
+                # tc_cls = import_module(item, "TESTPLANS").TestCase    # not working!
+                # tc_cls = getattr(TESTPLANS, item).TestCase      # not working
                 tc_cls = None
                 try:
                     tc_cls = import_module(f"{self.DIRPATH_TCS.name}.{item}").TestCase
