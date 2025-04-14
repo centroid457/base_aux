@@ -52,8 +52,7 @@ class TpMultyDutBase(Logger, QThread):
 
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
-    # DIRPATH_TPS: Union[str, Path] = "TESTPLANS"
-    DIRPATH_TCS: Union[str, Path] = "TESTPLANS"
+    DIRPATH_TCS: Union[str, Path] = "TESTPLANS/TCS_PSU800"
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
     # DIRPATH_DEVS: Union[str, Path] = "DEVICES__BREEDER_INST"
     SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
@@ -93,7 +92,6 @@ class TpMultyDutBase(Logger, QThread):
     # =================================================================================================================
     def __init__(self):
         super().__init__()
-        # self.DIRPATH_TPS: Path = Path(self.DIRPATH_TPS)
         self.DIRPATH_TCS: Path = Path(self.DIRPATH_TCS)
         # self.DIRPATH_DEVS: Path = Path(self.DIRPATH_DEVS)
         self.SETTINGS_BASE_FILEPATH = self.DIRPATH_TCS.joinpath(self.SETTINGS_BASE_NAME)

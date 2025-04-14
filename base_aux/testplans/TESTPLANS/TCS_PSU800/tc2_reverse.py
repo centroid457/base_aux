@@ -1,9 +1,7 @@
 from base_aux.testplans.tc import *
-from base_aux.valid.m2_valid_base2_derivatives import *
 from base_aux.valid.m3_valid_chains import *
 
 from . import tc1_direct
-from .tc0_groups import *
 
 
 # =====================================================================================================================
