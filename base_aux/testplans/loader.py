@@ -37,6 +37,7 @@ class ModuleAux:
         # print(getattr(self.PKG, self.MOD))  # AttributeError: module 'TESTPLANS' has no attribute 'TCS_PSU800'
 
         # from self.PKG import self.MOD
+        # self.PKG.TCS_PSU800
 
     def list__tps(self) -> list[type]:
         pass
