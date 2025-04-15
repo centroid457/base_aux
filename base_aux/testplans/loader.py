@@ -1,19 +1,54 @@
+import sys
+
+from typing import *
 from pathlib import Path
-from base_aux.breeders.m2_breeder_objects import BreederObjectList
-from base_aux.testplans.tc import Base_TestCase
+from importlib import import_module
+
+# from base_aux.base_nest_dunders.m1_init1_source import NestInit_Source
+from base_aux.aux_types.m2_info import ObjectInfo
+from base_aux.path1_dir.m2_dir import *
 
 
 # =====================================================================================================================
-class Loader:
-    DIR_TPS: Path = "TESTPLANS"
-    DIR_TCS: Path = None
-    LOADER: Path = None
+class ModuleAux:
+    ROOT: str = ""
+    PKG: str | Any = "TESTPLANS"
+    MOD: str = "TCS_PSU800"
+    FILE: Path = None
 
-    def load__devices(self) -> BreederObjectList:
+    def __init__(self, pkg: str | Any = None, root = None) -> None:
+        if root is not None:
+            self.ROOT = root
+
+        if pkg is not None:
+            self.PKG = pkg
+
+        if isinstance(self.PKG, str):
+            try:
+                self.PKG = import_module(f"{self.ROOT}{self.PKG}", self.MOD)
+                ObjectInfo(self.PKG).print()
+            except Exception as exx:
+                print(f"{exx!r}")
+
+        # ----------------
+        print(dir(self.PKG))
+        print(self.PKG.__name__)
+
+        # print(getattr(self.PKG, self.MOD))  # AttributeError: module 'TESTPLANS' has no attribute 'TCS_PSU800'
+
+        # from self.PKG import self.MOD
+
+    def list__tps(self) -> list[type]:
         pass
 
-    def load__tcs(self) -> list[type[Base_TestCase]]:
-        pass
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    # ModuleAux(sys)
+    # ModuleAux("sys")
+    ModuleAux()
+
+    # print([*DirAux("../testplans/TESTPLANS").iter_dirs()])
 
 
 # =====================================================================================================================
