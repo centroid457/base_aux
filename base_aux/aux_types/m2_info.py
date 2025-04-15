@@ -126,6 +126,9 @@ class ObjectInfo:
         "extend", "extendleft",
         "add", "insert",
         "reverse", "rotate", "sort",
+
+        # SYS
+        "breakpointhook",  #
     ]
 
     # AUX --------------------------------------------------
@@ -144,9 +147,8 @@ class ObjectInfo:
 
             names__use_only_parts: Union[None, str, list[str]] = None,
             names__skip_full: Union[None, str, list[str]] = None,
-            names__skip_parts: Union[None, str, list[str]] = None,
+            names__skip_parts: str | list[str] = None,
     ):
-
         # SETTINGS -----------------------------------------------------------
         # RAPAMS -----------------------
         if max_line_len is not None:
@@ -170,7 +172,7 @@ class ObjectInfo:
         if names__skip_parts:
             if isinstance(names__skip_parts, str):
                 names__skip_full = [names__skip_parts, ]
-            self.NAMES__SKIP_PARTS.extend(names__skip_parts)
+            self.NAMES__SKIP_PARTS = [*self.NAMES__SKIP_PARTS, *names__skip_parts]
 
         # WORK -----------------------------------------------------------
         self._item_clear()
