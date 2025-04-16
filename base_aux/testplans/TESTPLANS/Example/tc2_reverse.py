@@ -1,5 +1,6 @@
-from base_aux.testplans.tc import *
-from base_aux.valid.m3_valid_chains import *
+from base_aux.testplans.tc import TYPING__RESULT_W_NORETURN
+from base_aux.valid.m3_valid_chains import ValidChains, Valid
+import time
 
 from . import tc1_direct
 

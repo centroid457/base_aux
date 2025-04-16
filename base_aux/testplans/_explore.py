@@ -1,7 +1,7 @@
 from base_aux.testplans.main import  *
 from base_aux.servers.m1_client_requests import *
 
-from base_aux.testplans.DEVICES.load__example import DevicesBreeder__Example
+from base_aux.testplans.TESTPLANS.DEVICES import DevicesBreeder__Example
 
 
 # =====================================================================================================================
