@@ -1,4 +1,6 @@
 from typing import *
+import time
+
 from base_aux.buses.m1_serial2_client_derivatives import *
 
 
@@ -8,6 +10,7 @@ class Device(SerialClient_FirstFree_AnswerValid):
     RAISE_CONNECT = False
     BAUDRATE = 115200
     PREFIX = "ATC:03:"
+    NAME = "ATC"
     EOL__SEND = b"\n"
 
     REWRITEIF_READNOANSWER = 0
@@ -15,22 +18,29 @@ class Device(SerialClient_FirstFree_AnswerValid):
 
     def address__validate(self) -> bool:
         for _ in range(2):
-            if self.write_read__last_validate("get name", "ATC", prefix=self.PREFIX):
+            if self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX):
                 return True
+
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    pass
-
     # emu = Atc_Emulator()
     # emu.start()
     # emu.wait()
 
     dev = Device()
+    print(f"=======before {dev.ADDRESS=}")
+    print(f"{dev.addresses_system__detect()=}")
     print(f"{dev.connect()=}")
-    # print(f"{dev.addresses_system__detect()=}")
-    print(f"{dev.ADDRESS=}")
-    #
+    print(f"{dev.addresses_system__detect()=}")
+    print(f"=======after {dev.ADDRESS=}")
+
+    print(f'{dev.SET(V12="ON")=}')
+    print(f'{dev.SET(VIN=230)=}')
+    print(f'{dev.SET(VOUT=220)=}')
+    time.sleep(0.3)
+    print(f'{dev.reset()=}')
+
     # print(f"{dev.address__validate()=}")
     # print(f"{dev.address__validate()=}")
     # print(f"{dev.address__validate()=}")
@@ -41,7 +51,7 @@ if __name__ == "__main__":
     # print(f"{dev.write_read_line_last('get name')=}")
     # print(f"{dev.write_read_line_last('get name')=}")
     # print(f"{dev.disconnect()=}")
-    # print(f"{dev.ADDRESS=}")
+    print(f"{dev.ADDRESS=}")
 
 
 # =====================================================================================================================

@@ -1,6 +1,7 @@
 from typing import *
 from base_aux.testplans.devices import DutBase
 from base_aux.buses.m1_serial2_client_derivatives import *
+from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
@@ -15,21 +16,16 @@ class Device(SerialClient_FirstFree_AnswerValid, DutBase):
 
     # MODEL INFO --------------------------------
     __sn_start: str = "SN"
-    NAME: str = "PSU"
-    DESCRIPTION: str = "Power Supply Unit"
+    NAME: str = "PTB"
+    DESCRIPTION: str = "PTB for PSU"
 
     @property
     def SN(self) -> str:
-        return f"{self.__sn_start}_{self.INDEX+1}"
-
-    @SN.setter
-    def SN(self, value: Any) -> None:
-        self.__sn_start = str(value).upper()
+        return f"SN_{self.INDEX}"
     # MODEL INFO --------------------------------
 
     @property
     def DEV_FOUND(self) -> bool:
-        return True
         return self.address_check__resolved()
 
     @property
@@ -37,20 +33,20 @@ class Device(SerialClient_FirstFree_AnswerValid, DutBase):
         return f"PTB:{self.INDEX+1:02d}:"
 
     def address__validate(self) -> bool:
-        return True
         result = (
-                self.write_read__last_validate("get name", f"PTB", prefix="*:")
+                self.write_read__last_validate("get name", self.NAME, prefix="*:")
                 and
-                self.write_read__last_validate("get addr", [f"{self.INDEX+1}", f"0{self.INDEX+1}"], prefix="*:")
+                self.write_read__last_validate("get addr", EqValid_NumParsedSingle(self.INDEX+1), prefix="*:")
                 # and
                 # self.write_read__last_validate("get prsnt", "0")
         )
         return result
 
     def connect__validate(self) -> bool:
-        return True
         result = (
-                self.write_read__last_validate("get prsnt", "0")
+            self.address_check__resolved()  # fixme: is it really need here???
+            and
+            self.write_read__last_validate("get prsnt", "1")
         )
         return result
 
@@ -63,21 +59,43 @@ class Device(SerialClient_FirstFree_AnswerValid, DutBase):
     def VALUE(self) -> bool:
         return self.INDEX % 2 == 0
 
-    def connect(self):
+
+# =====================================================================================================================
+class DeviceDummy(SerialClient_FirstFree_AnswerValid, DutBase):
+    @property
+    def DEV_FOUND(self) -> bool:
         return True
+
+    def address__validate(self) -> bool:
+        return True
+
+    def connect__validate(self) -> bool:
+        return True
+
+    def connect(self) -> bool:
+        return True
+
+    def __init__(self, index: int, **kwargs):
+        if index is not None:
+            self.INDEX = index
+        super().__init__(**kwargs)
 
 
 # =====================================================================================================================
-if __name__ == "__main__":
+def _explore():
     pass
 
     # emu = Ptb_Emulator()
     # emu.start()
     # emu.wait()
 
-    dev = Device(1)
+    dev = Device(0)
     print(f"{dev.connect()=}")
     print(f"{dev.ADDRESS=}")
+    print(f"{dev.address_check__resolved()=}")
+
+    if not dev.address_check__resolved():
+        return
 
     # dev.write_read__last("get sn")
     # dev.write_read__last("get fru")
@@ -86,7 +104,11 @@ if __name__ == "__main__":
     # dev.write_read__last("test gnd")
     # dev.write_read__last("test")
     # dev.write_read__last("get status")
-    dev.write_read__last("get vin")
+    # dev.write_read__last("get vin")
+
+
+if __name__ == "__main__":
+    _explore()
 
 
 # =====================================================================================================================

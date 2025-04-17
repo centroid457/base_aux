@@ -250,7 +250,6 @@ class TpGuiBase(Gui):
         self.TV.resizeColumnsToContents()
         self.TV.resizeRowsToContents()
 
-
     # SLOTS ===========================================================================================================
     def slots_connect(self):
         self.CHB_tp_run_infinit.stateChanged.connect(self.CB_tp_run_infinit__changed)
