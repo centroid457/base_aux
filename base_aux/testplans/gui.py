@@ -145,7 +145,8 @@ class TpGuiBase(Gui):
     # WINDOW ==========================================================================================================
     def wgt_create(self):
         self.BTN_create()
-        self.CB_create()
+        self.CHB_create()
+        self.CBB_create()
         self.TV_create()
         self.PTE_create()
         self.HL_create()
@@ -154,10 +155,13 @@ class TpGuiBase(Gui):
         layout_control = QVBoxLayout()
         layout_control.setAlignment(ALIGNMENT.T)
 
+        layout_control.addWidget(QLabel("Выбор тестплана:"))
+        layout_control.addWidget(self.CBB)
+        layout_control.addSpacing(20)
         layout_control.addWidget(self.BTN_devs_detect)
         layout_control.addWidget(self.BTN_start)
-        layout_control.addWidget(self.CB_tp_run_infinit)
-        layout_control.addWidget(self.CB_tc_run_single)
+        layout_control.addWidget(self.CHB_tp_run_infinit)
+        layout_control.addWidget(self.CHB_tc_run_single)
         layout_control.addWidget(self.BTN_save)
         layout_control.addStretch()
 
@@ -192,13 +196,17 @@ class TpGuiBase(Gui):
         self.BTN_extended_mode = QPushButton("Расширенный режим")
         self.BTN_extended_mode.setCheckable(True)
 
-    def CB_create(self) -> None:
-        self.CB_tp_run_infinit = QCheckBox("бесконечный цикл тестирования")
-        self.CB_tc_run_single = QCheckBox("запускать только выбранный тесткейс")
+    def CHB_create(self) -> None:
+        self.CHB_tp_run_infinit = QCheckBox("бесконечный цикл тестирования")
+        self.CHB_tc_run_single = QCheckBox("запускать только выбранный тесткейс")
 
         # SETTINGS -------------------------
-        # self.CB_tp_run_infinit.setText("CB_text")
-        # self.CB_tp_run_infinit.setText("CB_text")
+        # self.CHB_tp_run_infinit.setText("CB_text")
+        # self.CHB_tp_run_infinit.setText("CB_text")
+
+    def CBB_create(self) -> None:
+        self.CBB = QComboBox()
+        # self.CBB
 
     def PTE_create(self) -> None:
         self.PTE = QPlainTextEdit()
@@ -245,8 +253,8 @@ class TpGuiBase(Gui):
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
-        self.CB_tp_run_infinit.stateChanged.connect(self.CB_tp_run_infinit__changed)
-        self.CB_tc_run_single.stateChanged.connect(self.CB_tc_run_single__changed)
+        self.CHB_tp_run_infinit.stateChanged.connect(self.CB_tp_run_infinit__changed)
+        self.CHB_tc_run_single.stateChanged.connect(self.CB_tc_run_single__changed)
 
         self.BTN_start.toggled.connect(self.BTN_start__toggled)
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)

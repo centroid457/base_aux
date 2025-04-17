@@ -61,7 +61,7 @@ class WgtColorChange(QWidget):
 class WgtColored:
     BTN: QPushButton = type("BTN", (QPushButton, WgtColorChange), {})
     LE: QPushButton = type("LE", (QLineEdit, WgtColorChange), {})
-    CB: QPushButton = type("CB", (QComboBox, WgtColorChange), {})
+    CB: QPushButton = type("CHB", (QComboBox, WgtColorChange), {})
     LBL: QPushButton = type("LBL", (QLabel, WgtColorChange), {})
 
 

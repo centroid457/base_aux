@@ -77,7 +77,8 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
     LAYOUT_MAIN: QLayout = None
 
     BTN: Optional[QPushButton] = None
-    CB: Optional[QCheckBox] = None
+    CHB: Optional[QCheckBox] = None
+    CBB: Optional[QComboBox] = None
     TV: Optional[QTableView] = None
     TM: Optional[QAbstractTableModel] = None
     PTE: Optional[QPlainTextEdit] = None
@@ -209,7 +210,8 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
 
     def wgt_create(self) -> None:
         self.BTN_create()
-        self.CB_create()
+        self.CHB_create()
+        self.CBB_create()
         self.TV_create()
         self.PTE_create()
         self.HL_create()
@@ -255,7 +257,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         layout_v.setAlignment(ALIGNMENT.T)
 
         layout_v.addLayout(layout_grid)
-        layout_v.addWidget(self.CB)
+        layout_v.addWidget(self.CHB)
         layout_v.addWidget(self.BTN)
         # layout_v.addLayout(layout_h)
         layout_v.addWidget(self.PTE)
@@ -382,14 +384,17 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
         # self.BTN.setCheckable(True)
         pass
 
-    def CB_create(self) -> None:
-        self.CB = QCheckBox("CB_text")
+    def CBB_create(self) -> None:
+        pass
+
+    def CHB_create(self) -> None:
+        self.CHB = QCheckBox("CHB_text")
 
         # SETTINGS -------------------------
-        # self.CB.setText("CB_text")
-        self.CB.setText("CB_text")
-        self.CB.setTristate()
-        # ObjectInfo(self.CB).print()
+        # self.CHB.setText("CHB_text")
+        self.CHB.setText("CHB_text")
+        self.CHB.setTristate()
+        # ObjectInfo(self.CHB).print()
         """
 ==========================================================================================
 ----------OBJECTINFO.PRINT--------------------------------------------------------------------------
@@ -919,8 +924,8 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
             else:
                 self.BTN.clicked.connect(self.BTN__toggled)
 
-        if self.CB:
-            self.CB.stateChanged.connect(self.CB__changed)
+        if self.CHB:
+            self.CHB.stateChanged.connect(self.CHB__changed)
 
         if self.TV:
             self.TV.selectionModel().selectionChanged.connect(self.TV_selectionChanged)
@@ -929,14 +934,14 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
     def BTN__toggled(self, state: Optional[bool] = None) -> None:
         print(f"BTN__toggled {state=}")
 
-    def CB__changed(self, state: Optional[int] = None) -> None:
+    def CHB__changed(self, state: Optional[int] = None) -> None:
         """
         :param state:
             0 - unchecked
             1 - halfCHecked (only if isTristate)
             2 - checked (even if not isTristate)
         """
-        print(f"CB__changed {state=}")
+        print(f"CHB__changed {state=}")
 
     def TV_selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
         # print("selectionChanged")
