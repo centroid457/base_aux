@@ -4,10 +4,10 @@ from base_aux.testplans.devices import DevicesBreeder_WithDut
 
 
 # =====================================================================================================================
-class Base_TpInput:
+class Base_TpItem:
     NAME: str
     DEV_BREEDER: DevicesBreeder_WithDut
-    TCS_CLS: dict[str, type]
+    TCS_CLS: dict[type, bool]
 
 
 # =====================================================================================================================

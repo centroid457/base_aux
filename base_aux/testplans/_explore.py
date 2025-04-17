@@ -1,7 +1,9 @@
-from base_aux.testplans.main import  *
+from base_aux.testplans.tp_manager import  *
 from base_aux.servers.m1_client_requests import *
 
-from base_aux.testplans.TESTPLANS.DEVICES import DevicesBreeder__Example
+from base_aux.testplans.tp_item import Base_TpItem
+
+from TESTPLANS.load1__example import Tp_Example
 
 
 # =====================================================================================================================
@@ -24,12 +26,12 @@ class Client_RequestsStack_Tp(Client_RequestsStack):
 
 
 # =====================================================================================================================
-class Tp__Example(TpMultyDutBase):
+class TpManager__Example(TpManager):
     LOG_ENABLE = True
     api_client: Client_RequestsStack = Client_RequestsStack_Tp()  # FIXME: need fix post__results!!!!
     # api_client: Client_RequestsStack = None
 
-    DEVICES__BREEDER_CLS = DevicesBreeder__Example
+    TP_ITEM = Tp_Example
     API_SERVER__CLS = TpApi_FastApi
 
     GUI__START = True
@@ -38,12 +40,12 @@ class Tp__Example(TpMultyDutBase):
 
 # =====================================================================================================================
 class TpInsideApi_Runner__example(TpInsideApi_Runner):
-    TP_CLS = Tp__Example
+    TP_CLS = TpManager__Example
 
 
 # =====================================================================================================================
 def run_direct():
-    Tp__Example()
+    TpManager__Example()
 
 
 def run_over_api():

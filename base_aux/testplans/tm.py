@@ -15,7 +15,7 @@ class TcResultMsg:
 
 # =====================================================================================================================
 class TpTableModel(TableModelTemplate):
-    DATA: "TpMultyDutBase"
+    DATA: "TpManager"
     HEADERS: "Headers"
     HTRANSLATOR: Translator
 
@@ -45,7 +45,7 @@ class TpTableModel(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TCS__CLS) + 1  # [+1]for finalResults
+        return len(self.DATA.TCS_CLS) + 1  # [+1]for finalResults
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -66,7 +66,7 @@ class TpTableModel(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TCS__CLS)[row]
+            tc_cls = list(self.DATA.TCS_CLS)[row]
         except:
             tc_cls = None
 
@@ -126,7 +126,7 @@ class TpTableModel(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TCS__CLS)[row]
+            tc_cls = list(self.DATA.TCS_CLS)[row]
         except:
             tc_cls = None
 
@@ -382,7 +382,7 @@ class TpTableModel(TableModelTemplate):
         col = index.column()
 
         try:
-            tc_cls = list(self.DATA.TCS__CLS)[row]
+            tc_cls = list(self.DATA.TCS_CLS)[row]
         except:
             tc_cls = None
 

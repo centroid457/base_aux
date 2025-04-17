@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.testplans.main import *
+from base_aux.testplans.tp_manager import *
 
 
 # =====================================================================================================================
@@ -10,7 +10,7 @@ class Test__Tp:
     def setup_class(cls):
         pass
 
-        class Victim(TpMultyDutBase):
+        class Victim(TpManager):
             pass
 
         cls.Victim = Victim

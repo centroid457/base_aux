@@ -132,7 +132,7 @@ class TpGuiBase(Gui):
     DIALOGS = DialogsSetTp
 
     # NEW -------------------------------------------
-    DATA: "TpMultyDutBase"
+    DATA: "TpManager"
 
     def __init__(self, data):
         self.TITLE = f"[Тестплан]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
@@ -370,7 +370,7 @@ class TpGuiBase(Gui):
         col = index.column()
 
         try:
-            tc_cls = list(self.DATA.TCS__CLS)[row]
+            tc_cls = list(self.DATA.TCS_CLS)[row]
         except:
             tc_cls = None
 

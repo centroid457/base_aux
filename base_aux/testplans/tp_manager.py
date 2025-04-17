@@ -17,13 +17,14 @@ from base_aux.loggers.m1_logger import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import DutBase, DeviceBase, DevicesBreeder_WithDut, _DevicesBreeder_Example
+from .devices import DutBase, DeviceBase, DevicesBreeder, _DevicesBreeder_Example
 from .gui import TpGuiBase
 from .api import TpApi_FastApi
+from .tp_item import Base_TpItem
 
 
 # =====================================================================================================================
-class TpMultyDutBase(Logger, QThread):
+class TpManager(Logger, QThread):
     signal__tp_start = pyqtSignal()
     signal__tp_stop = pyqtSignal()
     signal__tp_finished = pyqtSignal()
@@ -52,16 +53,12 @@ class TpMultyDutBase(Logger, QThread):
 
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
-    DIRPATH_TCS: Union[str, Path] = "TESTPLANS/TCS_PSU800"
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
-    # DIRPATH_DEVS: Union[str, Path] = "DEVICES__BREEDER_INST"
-    SETTINGS_BASE_NAME: Union[str, Path] = "SETTINGS_BASE.json"
-    SETTINGS_BASE_FILEPATH: Path
-
-    DEVICES__BREEDER_CLS: type[DevicesBreeder_WithDut] = _DevicesBreeder_Example
 
     # AUX -----------------------------------------------------------
-    TCS__CLS: dict[Union[str, type[Base_TestCase]], Optional[bool]] = {}     # todo: RENAME TO clss!!!
+    TP_ITEM: Base_TpItem
+    DEVICES__BREEDER_CLS: type[DevicesBreeder]
+    TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
     #     Tc2: True
@@ -92,22 +89,13 @@ class TpMultyDutBase(Logger, QThread):
     # =================================================================================================================
     def __init__(self):
         super().__init__()
-        self.DIRPATH_TCS: Path = Path(self.DIRPATH_TCS)
-        # self.DIRPATH_DEVS: Path = Path(self.DIRPATH_DEVS)
-        self.SETTINGS_BASE_FILEPATH = self.DIRPATH_TCS.joinpath(self.SETTINGS_BASE_NAME)
 
+        # results --------
         self.DIRPATH_RESULTS = pathlib.Path(self.DIRPATH_RESULTS)
         if not self.DIRPATH_RESULTS.exists():
             self.DIRPATH_RESULTS.mkdir(parents=True, exist_ok=True)
 
-        if not self.DIRPATH_TCS.exists():
-            msg = f"[ERROR] not found path {self.DIRPATH_TCS.name=}"
-            print(msg)
-            raise Exx__NotExistsNotFoundNotCreated(msg)
-
-        self.DEVICES__BREEDER_CLS.generate__objects()
-
-        self.tcs__reinit()
+        self.tp_item__init()
         self.slots_connect()
 
         self.init_post()
@@ -116,7 +104,7 @@ class TpMultyDutBase(Logger, QThread):
         if self.START__GUI_AND_API:
             self.start__gui_and_api()
 
-    def init_post(self) -> None | NoReturn:
+    def init_post(self) -> None | NoReturn:     # DO NOT DELETE
         """
         GOAL
         ----
@@ -155,77 +143,22 @@ class TpMultyDutBase(Logger, QThread):
         Base_TestCase.signals.signal__tc_state_changed.connect(self.post__tc_results)
 
     # =================================================================================================================
-    def tcs__reinit(self) -> None:
-        if not self.TCS__CLS:
-            self._tcs__load()
-        self._tcs__apply_classes()
-        self._tcs__apply_settings()
-        self._tcs__apply_devices()
+    def tp_item__init(self, item: Base_TpItem = None) -> None:
+        if item is not None:
+            self.TP_ITEM = item
 
-    def _tcs__load(self) -> None:
-        """
-        for tests just overwrite
-        :return:
-        """
-        self._tcs__load_from_files()
+        self.TCS_CLS = self.TP_ITEM.TCS_CLS
+        self.DEVICES__BREEDER_CLS = self.TP_ITEM.DEV_BREEDER
 
-    def _tcs__load_from_files(self) -> None:
-        self.TCS__CLS = {}
-        for file in self.DIRPATH_TCS.glob("*.py"):
-            if not file.stem.startswith("__"):
-                self.TCS__CLS.update({file.stem: True})
+        self.DEVICES__BREEDER_CLS.generate__objects()
 
-    def _tcs__apply_classes(self) -> None:
-        result = {}
-        for item, using in self.TCS__CLS.items():
-            # print(dir(TESTPLANS))
-            print(f"touch {self.DIRPATH_TCS} {item=}")
-            if isinstance(item, str):   # filename
-                # tc_cls = import_module(item, "TESTPLANS").TestCase    # not working!
-                # tc_cls = getattr(TESTPLANS, item).TestCase      # not working
-                tc_cls = None
-                try:
-                    tc_cls = import_module(f"{self.DIRPATH_TCS.name}.{item}").TestCase
-                except Exception as exx:
-                    msg = f"[WARN] no 'TestCase' class in file [{self.DIRPATH_TCS}/{item}] {exx=}"
-                    print(msg)
-                    continue
-                if not tc_cls:
-                    msg = f"[ERROR] file not found[{item=}] in /{self.DIRPATH_TCS}/"
-                    raise Exx__NotExistsNotFoundNotCreated(msg)
-                tc_cls.NAME = item
-            elif isinstance(type(item), type) and issubclass(item, Base_TestCase):
-                tc_cls = item
-                # msg = f"[ERROR] DONT USE IT!"
-                # raise Exception(msg)
-            else:
-                msg = f"[ERROR] type is inconvenient [{item=}]"
-                raise Exx__Incompatible(msg)
-
+        for tc_cls, using in self.TCS_CLS.items():
             tc_cls.SKIP = not using
-            result.update({tc_cls: using})
-
-        self.TCS__CLS = result
-
-    def _tcs__apply_settings(self) -> None:
-        for tc_cls in self.TCS__CLS:
-            tc_cls.SETTINGS_FILES = [self.SETTINGS_BASE_FILEPATH, ]
-
-            settings_tc_filepath = self.DIRPATH_TCS.joinpath(f"{tc_cls.NAME}.json")
-            if settings_tc_filepath.exists():
-                tc_cls.SETTINGS_FILES.append(settings_tc_filepath)
-            else:
-                print(f"{settings_tc_filepath=} NOT_EXISTS")
-                pass
-
-        # print(f"{tc_cls.SETTINGS=}")
-
-    def _tcs__apply_devices(self) -> None:
-        for tc in self.TCS__CLS:
-            tc.devices__apply(self.DEVICES__BREEDER_CLS)
+            tc_cls.devices__apply(self.DEVICES__BREEDER_CLS)
+            tc_cls.clear__cls()
 
     def tcs_clear(self) -> None:
-        for tc_cls in self.TCS__CLS:
+        for tc_cls in self.TCS_CLS:
             tc_cls.clear__cls()
 
     # =================================================================================================================
@@ -288,14 +221,14 @@ class TpMultyDutBase(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
-                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TCS__CLS))
+                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TCS_CLS))
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
                         if tcs_to_execute:
                             self.tc_active = tcs_to_execute[0]
                         else:
-                            self.tc_active = self.TCS__CLS[0]
+                            self.tc_active = self.TCS_CLS[0]
 
                     self.tc_active.run__cls()
 
@@ -338,7 +271,6 @@ class TpMultyDutBase(Logger, QThread):
             "STAND_NAME": self.STAND_NAME,
             "STAND_DESCRIPTION": self.STAND_DESCRIPTION,
             "STAND_SN": self.STAND_SN,
-            "STAND_SETTINGS": Base_TestCase.settings_read(files=self.SETTINGS_BASE_FILEPATH),
         }
         return result
 
@@ -347,7 +279,7 @@ class TpMultyDutBase(Logger, QThread):
         get info/structure about stand/TP
         """
         TP_TCS = []
-        for tc in self.TCS__CLS:
+        for tc in self.TCS_CLS:
             TP_TCS.append(tc.get__info__tc())
 
         result = {
@@ -372,7 +304,7 @@ class TpMultyDutBase(Logger, QThread):
         get all results for stand/TP
         """
         TCS_RESULTS = {}
-        for tc_cls in self.TCS__CLS:
+        for tc_cls in self.TCS_CLS:
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
@@ -386,7 +318,7 @@ class TpMultyDutBase(Logger, QThread):
         for index in range(self.DEVICES__BREEDER_CLS.COUNT):
             result_i_short = {}
             result_i_full = {}
-            for tc_cls in self.TCS__CLS:
+            for tc_cls in self.TCS_CLS:
                 tc_inst = None
                 try:
                     tc_inst: Base_TestCase = tc_cls.TCS__LIST[index]
@@ -443,7 +375,7 @@ class TpInsideApi_Runner(TpApi_FastApi):
 
     UNFORTUNATELY: ITS NOT WORKING WAY for linux!!!
     """
-    TP_CLS: type[TpMultyDutBase] = TpMultyDutBase
+    TP_CLS: type[TpManager] = TpManager
 
     def __init__(self, *args, **kwargs):
 

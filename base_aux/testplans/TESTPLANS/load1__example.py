@@ -1,11 +1,9 @@
-from typing import *
-
-from base import Base_TpInput
+from base_aux.testplans.tp_item import Base_TpItem
 from base_aux.testplans.devices import DevicesBreeder_WithDut
 
-from DEVICES import atc, ptb
+from .DEVICES import atc, ptb
 
-from Example import (
+from .Example import (
     tc1_direct,
     tc2_reverse,
 )
@@ -19,12 +17,12 @@ class DevicesBreeder__Example(DevicesBreeder_WithDut):
 
 
 # =====================================================================================================================
-class Tp_Example(Base_TpInput):
+class Tp_Example(Base_TpItem):
     NAME = "Example"
-    DEVS = DevicesBreeder__Example
+    DEV_BREEDER = DevicesBreeder__Example
     TCS_CLS = {
-        tc1_direct.TestCase,
-        tc2_reverse.TestCase,
+        tc1_direct.TestCase: True,
+        tc2_reverse.TestCase: True,
     }
 
 
