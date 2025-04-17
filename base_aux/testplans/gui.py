@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from base_aux.testplans.tc import *
+from base_aux.testplans.tp_item import Base_TpItem
 
 from base_aux.pyqt.m0_static import *
 from base_aux.pyqt.m0_base1_hl import *
@@ -121,7 +122,25 @@ DETAILS=====================
 
 
 # =====================================================================================================================
-class TpGuiBase(Gui):
+class ListModel_Tp(QAbstractListModel):
+    TP_ITEMS: list[Base_TpItem]
+
+    def __init__(self, tp_items: list[Base_TpItem] = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.TP_ITEMS = tp_items or []
+        self.TP_ITEMS = [*self.TP_ITEMS, ]
+
+    def rowCount(self, parent=None, *args, **kwargs):
+        return len(self.TP_ITEMS)
+
+    def data(self, index, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole:
+            tp_item = self.TP_ITEMS[index.row()]
+            return tp_item.NAME
+
+
+# =====================================================================================================================
+class Base_TpGui(Gui):
     # OVERWRITTEN -----------------------------------
     START = False
 
@@ -206,7 +225,7 @@ class TpGuiBase(Gui):
 
     def CBB_create(self) -> None:
         self.CBB = QComboBox()
-        # self.CBB
+        self.CBB.setModel(ListModel_Tp(self.DATA.TP_ITEMS()))
 
     def PTE_create(self) -> None:
         self.PTE = QPlainTextEdit()
@@ -252,8 +271,8 @@ class TpGuiBase(Gui):
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
-        self.CHB_tp_run_infinit.stateChanged.connect(self.CB_tp_run_infinit__changed)
-        self.CHB_tc_run_single.stateChanged.connect(self.CB_tc_run_single__changed)
+        self.CHB_tp_run_infinit.stateChanged.connect(self.CHB_tp_run_infinit__changed)
+        self.CHB_tc_run_single.stateChanged.connect(self.CHB_tc_run_single__changed)
 
         self.BTN_start.toggled.connect(self.BTN_start__toggled)
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)
@@ -276,7 +295,7 @@ class TpGuiBase(Gui):
         self.TV.horizontalHeader().sectionClicked.connect(self.TV_hh_sectionClicked)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def CB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:
+    def CHB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:
         """
         :param state:
             0 - unchecked
@@ -285,7 +304,7 @@ class TpGuiBase(Gui):
         """
         self.DATA.TP_RUN_INFINIT = bool(state)
 
-    def CB_tc_run_single__changed(self, state: Optional[int] = None) -> None:
+    def CHB_tc_run_single__changed(self, state: Optional[int] = None) -> None:
         """
         :param state:
             0 - unchecked

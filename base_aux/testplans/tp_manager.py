@@ -18,7 +18,7 @@ from base_aux.loggers.m1_logger import *
 # =====================================================================================================================
 from .tc import Base_TestCase
 from .devices import DutBase, DeviceBase, DevicesBreeder, _DevicesBreeder_Example
-from .gui import TpGuiBase
+from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem
 
@@ -49,13 +49,14 @@ class TpManager(Logger, QThread):
     api_server: TpApi_FastApi
 
     GUI__START: bool = True
-    GUI__CLS: type[TpGuiBase] = TpGuiBase
+    GUI__CLS: type[Base_TpGui] = Base_TpGui
 
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
     # AUX -----------------------------------------------------------
+    TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
     DEVICES__BREEDER_CLS: type[DevicesBreeder]
     TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
