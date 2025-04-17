@@ -18,7 +18,7 @@ class DevicesBreeder__Example(DevicesBreeder_WithDut):
 
 # =====================================================================================================================
 class Tp_Example(Base_TpItem):
-    NAME = "Example"
+    NAME = "Tp_Example"
     DEV_BREEDER = DevicesBreeder__Example
     TCS_CLS = {
         tc1_direct.TestCase: True,

@@ -3,7 +3,7 @@ from base_aux.servers.m1_client_requests import *
 
 from base_aux.testplans.tp_item import Base_TpItem
 
-from TESTPLANS.load1__example import Tp_Example
+from TESTPLANS.items import TpItems
 
 
 # =====================================================================================================================
@@ -31,7 +31,7 @@ class TpManager__Example(TpManager):
     api_client: Client_RequestsStack = Client_RequestsStack_Tp()  # FIXME: need fix post__results!!!!
     # api_client: Client_RequestsStack = None
 
-    TP_ITEM = Tp_Example
+    TP_ITEM = TpItems.TP_EXAMPLE
     API_SERVER__CLS = TpApi_FastApi
 
     GUI__START = True
