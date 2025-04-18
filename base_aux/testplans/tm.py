@@ -22,8 +22,11 @@ class TpTableModel(TableModelTemplate):
     # AUX -------------------------------------------
     open__settings: Optional[bool] = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data: "TpManager" = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if data is not None:
+            self.DATA = data
 
         class Headers(BreederStrStack):
             TESTCASE: int = 0
@@ -136,8 +139,12 @@ class TpTableModel(TableModelTemplate):
         tc_inst = None
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
-            dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[index]
-            tc_inst = tc_cls.TCS__LIST[index]
+            try:
+                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[index]
+                print(f"{tc_cls.TCS__LIST=}/{index=}")
+                tc_inst = tc_cls.TCS__LIST[index]
+            except:
+                return
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:

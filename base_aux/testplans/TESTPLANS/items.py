@@ -7,6 +7,7 @@ from .DEVICES import atc, ptb, breeders
 from .Example import (
     tc1_direct,
     tc2_reverse,
+    tc3_atc,
 )
 
 
@@ -27,6 +28,7 @@ class Tp_Psu800(Base_TpItem):
     TCS_CLS = {
         tc1_direct.TestCase: True,
         tc2_reverse.TestCase: True,
+        tc3_atc.TestCase: True,
     }
 
 

@@ -250,6 +250,7 @@ class Base_TpGui(Gui):
 
     def TV_create(self):
         # TODO: move examples to pyqtTemplate!
+
         self.TM = TpTableModel(self.DATA)
 
         self.TV = QTableView()
@@ -271,6 +272,8 @@ class Base_TpGui(Gui):
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
+        self.CBB.activated[int].connect(self.CBB__changed)
+
         self.CHB_tp_run_infinit.stateChanged.connect(self.CHB_tp_run_infinit__changed)
         self.CHB_tc_run_single.stateChanged.connect(self.CHB_tc_run_single__changed)
 
@@ -295,6 +298,13 @@ class Base_TpGui(Gui):
         self.TV.horizontalHeader().sectionClicked.connect(self.TV_hh_sectionClicked)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def CBB__changed(self, index: Optional[int] = 0) -> None:
+        tp_item = self.CBB.model().TP_ITEMS[index or 0]
+
+        self.DATA.tp_item__init(tp_item)
+        self.TV_create()
+        self.TM._data_reread()
+
     def CHB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:
         """
         :param state:

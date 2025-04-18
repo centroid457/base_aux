@@ -1,14 +1,9 @@
-# =====================================================================================================================
-"""
-THIS IS THE REAL TESTPLAN!!!
-"""
 from typing import *
 import time
 import json
 from pathlib import Path
 
 from PyQt5.QtCore import QThread, pyqtSignal
-from importlib import import_module
 
 from base_aux.servers.m1_client_requests import *
 from base_aux.aux_datetime.m1_datetime import *
@@ -151,12 +146,12 @@ class TpManager(Logger, QThread):
         self.TCS_CLS = self.TP_ITEM.TCS_CLS
         self.DEVICES__BREEDER_CLS = self.TP_ITEM.DEV_BREEDER
 
-        self.DEVICES__BREEDER_CLS.generate__objects()
+        # self.DEVICES__BREEDER_CLS.generate__objects()
 
         for tc_cls, using in self.TCS_CLS.items():
             tc_cls.SKIP = not using
-            tc_cls.devices__apply(self.DEVICES__BREEDER_CLS)
             tc_cls.clear__cls()
+            tc_cls.devices__apply(self.DEVICES__BREEDER_CLS)
 
     def tcs_clear(self) -> None:
         for tc_cls in self.TCS_CLS:

@@ -45,8 +45,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # STOP_IF_FALSE_RESULT: Optional[bool] = None     # NOT USED NOW! MAYBE NOT IMPORTANT!!!
     SETTINGS_FILES: Union[None, pathlib.Path, list[pathlib.Path]] = None
 
-    DEVICES__BREEDER_CLS: type['DevicesBreeder'] = None
-
     # AUXILIARY -----------------------------------
     STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
@@ -56,12 +54,14 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
+    DEVICES__BREEDER_CLS: type['DevicesBreeder'] = None
+    DEVICES__BREEDER_INST: 'DevicesBreeder'
+
     # INSTANCE ------------------------------------
     _inst_inited: Optional[bool] = None
 
     INDEX: int
     SETTINGS: DictAttr = {}
-    DEVICES__BREEDER_INST: 'DevicesBreeder'
 
     result__startup: TYPING__RESULT_W_EXX = None
     result__teardown: TYPING__RESULT_W_EXX = None
@@ -89,13 +89,12 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def devices__apply(cls, devices_cls: type['DevicesBreeder'] = None) -> None:
         if devices_cls is not None:
             cls.DEVICES__BREEDER_CLS = devices_cls
-            cls.TCS__LIST.clear()
+        cls.TCS__LIST.clear()
 
         if cls.DEVICES__BREEDER_CLS:
             cls.DEVICES__BREEDER_CLS.generate__objects()
-            if not cls.TCS__LIST:
-                for index in range(cls.DEVICES__BREEDER_CLS.COUNT):
-                    tc_inst = cls(index=index)
+            for index in range(cls.DEVICES__BREEDER_CLS.COUNT):
+                tc_inst = cls(index=index)
 
     @classmethod
     @property
@@ -140,7 +139,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         if self.DEVICES__BREEDER_CLS:
             self.DEVICES__BREEDER_INST = self.DEVICES__BREEDER_CLS(index)
 
-        self.SETTINGS = DictAttr(self.settings_read())
         self._inst_inited = True
 
     # =================================================================================================================
@@ -163,22 +161,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self._timestamp_last = value
 
     # =================================================================================================================
-    @classmethod
-    def settings_read(cls, files: Union[None, pathlib.Path, list[pathlib.Path]] = None) -> dict:
-        result = {}
-
-        _settings_files = files or cls.SETTINGS_FILES
-        if _settings_files:
-            if isinstance(_settings_files, pathlib.Path):
-                _settings_files = [_settings_files, ]
-
-            if isinstance(_settings_files, (list, tuple)):
-                for file in _settings_files:
-                    if file.exists():
-                        file_data = json.loads(file.read_text())
-                        result.update(file_data)
-        return result
-
     def clear(self) -> None:
         self.result__startup = None
         self.result__teardown = None
@@ -459,7 +441,6 @@ class _Info(_Base1_TestCase):
             "TC_DESCRIPTION": cls.DESCRIPTION,
             "TC_ASYNC": cls.ASYNC,
             "TC_SKIP": cls.SKIP,
-            "TC_SETTINGS": cls.settings_read(),
         }
         return result
 
