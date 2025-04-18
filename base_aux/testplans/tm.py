@@ -24,7 +24,14 @@ class TpTableModel(TableModelTemplate):
 
     def __init__(self, data: "TpManager" = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.reinit(data)
 
+    def reinit(self, data: "TpManager" = None) -> None:
+        """
+        GOAL
+        ----
+        separate inition!
+        """
         if data is not None:
             self.DATA = data
 
@@ -141,7 +148,7 @@ class TpTableModel(TableModelTemplate):
             index = col - self.HEADERS.DUTS.START_OUTER
             try:
                 dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[index]
-                print(f"{tc_cls.TCS__LIST=}/{index=}")
+                # print(f"{tc_cls.TCS__LIST=}/{index=}")
                 tc_inst = tc_cls.TCS__LIST[index]
             except:
                 return

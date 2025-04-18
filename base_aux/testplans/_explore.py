@@ -32,7 +32,7 @@ class TpManager__Example(TpManager):
     # api_client: Client_RequestsStack = None
 
     TP_ITEMS = TpItems
-    TP_ITEM = TpItems.TP_EXAMPLE
+    TP_ITEM = TpItems.TP_PSU800
     API_SERVER__CLS = TpApi_FastApi
 
     GUI__START = True

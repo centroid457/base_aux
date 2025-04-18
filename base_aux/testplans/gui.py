@@ -153,7 +153,7 @@ class Base_TpGui(Gui):
     # NEW -------------------------------------------
     DATA: "TpManager"
 
-    def __init__(self, data):
+    def __init__(self, data: "TpManager"):
         self.TITLE = f"[Тестплан]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
         super().__init__(data)
 
@@ -226,6 +226,7 @@ class Base_TpGui(Gui):
     def CBB_create(self) -> None:
         self.CBB = QComboBox()
         self.CBB.setModel(ListModel_Tp(self.DATA.TP_ITEMS()))
+        # self.CBB.setDisabled(True)
 
     def PTE_create(self) -> None:
         self.PTE = QPlainTextEdit()
@@ -302,7 +303,8 @@ class Base_TpGui(Gui):
         tp_item = self.CBB.model().TP_ITEMS[index or 0]
 
         self.DATA.tp_item__init(tp_item)
-        self.TV_create()
+        # self.TV_create()
+        self.TM.reinit(self.DATA)
         self.TM._data_reread()
 
     def CHB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:

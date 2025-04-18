@@ -26,8 +26,8 @@ class Tp_Psu800(Base_TpItem):
     NAME = "Tp_Example2"
     DEV_BREEDER = breeders.DevicesBreeder__Psu800
     TCS_CLS = {
-        tc1_direct.TestCase: True,
         tc2_reverse.TestCase: True,
+        tc1_direct.TestCase: True,
         tc3_atc.TestCase: True,
     }
 
