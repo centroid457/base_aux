@@ -9,7 +9,7 @@ from enum import Enum, auto
 
 from base_aux.loggers.m1_logger import Logger
 
-from serial import Serial
+from serial import Serial, PortNotOpenError
 from serial.tools import list_ports
 from base_aux.aux_values.m3_unit import *
 from base_aux.aux_cmp_eq.m2_eq_aux import EqAux
@@ -1231,6 +1231,8 @@ class SerialClient(Logger):
         return data
 
     # W ---------------------------------------------------------------------------------------------------------------
+    _COUNT_OPEN_EXCEPTIONS: int = 0
+
     def _write(
             self,
             data: Union[AnyStr, list[AnyStr]],
@@ -1246,6 +1248,8 @@ class SerialClient(Logger):
 
         args/kwargs - used only for single line!!!
         """
+        print(f"{self._COUNT_OPEN_EXCEPTIONS=}")
+
         args = args or []
         kwargs = kwargs or {}
 
@@ -1274,6 +1278,16 @@ class SerialClient(Logger):
         except Exception as exx:
             msg = f"[FAIL]write={data}/{exx!r}"
             self.LOGGER.warning(f"[{self._SERIAL.port}]{msg}")
+
+            if isinstance(exx, PortNotOpenError):
+                self._COUNT_OPEN_EXCEPTIONS += 1
+                try:
+                    self._SERIAL.open()
+                    # self.connect()
+                except:
+                    pass
+                # raise exx   # here need reconnection!
+
             return False
 
         if data_length > 0:

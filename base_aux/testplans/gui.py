@@ -160,6 +160,7 @@ class Base_TpGui(Gui):
     def main_window__finalise(self):
         super().main_window__finalise()
         self.BTN_extended_mode.setChecked(True)
+        self.CBB.setCurrentText(self.DATA.TP_ITEM.NAME)
 
     # WINDOW ==========================================================================================================
     def wgt_create(self):
