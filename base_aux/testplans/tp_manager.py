@@ -150,7 +150,7 @@ class TpManager(Logger, QThread):
 
         for tc_cls, using in self.TCS_CLS.items():
             tc_cls.SKIP = not using
-            tc_cls.clear__cls()
+            # tc_cls.clear__cls()   # let them use last states
             tc_cls.devices__apply(self.DEVICES__BREEDER_CLS)
 
     def tcs_clear(self) -> None:

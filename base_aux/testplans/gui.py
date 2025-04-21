@@ -185,6 +185,7 @@ class Base_TpGui(Gui):
         layout_control.addStretch()
 
         layout_control.addWidget(self.BTN_settings)
+        layout_control.addWidget(self.BTN_tm_update)
         layout_control.addWidget(self.BTN_clear_all)
         layout_control.addWidget(self.BTN_reset_all)
         layout_control.addWidget(self.BTN_extended_mode)
@@ -209,6 +210,7 @@ class Base_TpGui(Gui):
         self.BTN_settings.setCheckable(True)
 
         self.BTN_save = QPushButton("Сохранить результаты")
+        self.BTN_tm_update = QPushButton("Обновить таблицу")
         self.BTN_clear_all = QPushButton("Очистить все результаты")
         self.BTN_reset_all = QPushButton("Отключить все устройства")
 
@@ -282,6 +284,7 @@ class Base_TpGui(Gui):
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)
         self.BTN_devs_detect.clicked.connect(self.BTN_devs_detect__clicked)
         self.BTN_save.clicked.connect(self.BTN_save__clicked)
+        self.BTN_tm_update.clicked.connect(self.TM._data_reread)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
         self.BTN_reset_all.clicked.connect(self.BTN_reset_all__clicked)
         self.BTN_extended_mode.toggled.connect(self.BTN_extended_mode__toggled)
