@@ -14,7 +14,7 @@ class TcResultMsg:
 
 
 # =====================================================================================================================
-class TpTableModel(TableModelTemplate):
+class TableModel_Tps(TableModelTemplate):
     DATA: "TpManager"
     HEADERS: "Headers"
     HTRANSLATOR: Translator

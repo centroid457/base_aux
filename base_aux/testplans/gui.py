@@ -12,7 +12,7 @@ from base_aux.pyqt.m0_base1_hl import *
 from base_aux.pyqt.m4_gui import *
 from base_aux.pyqt.m2_mods import *
 
-from .tm import TpTableModel
+from .tm__tcs import TableModel_Tps
 from .dialog import DialogsSetTp
 
 
@@ -256,9 +256,11 @@ class Base_TpGui(Gui):
         self.PTE.setFont(QFont("Calibri (Body)", 7))
 
     def TV_create(self):
-        # TODO: move examples to pyqtTemplate!
+        self.TV_TCS__create()
+        self.TV_DEV__create()
 
-        self.TM_TCS = TpTableModel(self.DATA)
+    def TV_TCS__create(self):
+        self.TM_TCS = TableModel_Tps(self.DATA)
 
         self.TV_TCS = QTableView()
         self.TV_TCS.setModel(self.TM_TCS)
@@ -276,6 +278,26 @@ class Base_TpGui(Gui):
 
         self.TV_TCS.resizeColumnsToContents()
         self.TV_TCS.resizeRowsToContents()
+
+    def TV_DEV__create(self):
+        self.TM_DEV = TableModel_Tps(self.DATA)
+
+        self.TV_DEV = QTableView()
+        self.TV_DEV.setModel(self.TM_DEV)
+        self.TV_DEV.setSelectionMode(QTableView.SingleSelection)
+
+        hh: QHeaderView = self.TV_DEV.horizontalHeader()
+        # hh.setSectionHidden(self.TM_DEV.ADDITIONAL_COLUMNS - 1, True)
+        hh.setSectionsClickable(False)
+        # hh.setStretchLastSection(True)
+        hh.setSectionResizeMode(QHeaderView.ResizeToContents)  # autoresize width!
+
+        # hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # for index of column set stretch size
+        # hh.setMinimumSize(0, QHeaderView.ResizeMode.Stretch)
+        hh.setMinimumWidth(1000)  # dont understand it is not work at least with ResizeToContents
+
+        self.TV_DEV.resizeColumnsToContents()
+        self.TV_DEV.resizeRowsToContents()
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
