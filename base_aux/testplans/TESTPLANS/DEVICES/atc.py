@@ -32,8 +32,10 @@ if __name__ == "__main__":
     print(f"=======before {dev.ADDRESS=}")
     print(f"{dev.addresses_system__detect()=}")
     print(f"{dev.connect()=}")
+    print(f"{dev.connect__only_if_address_resolved()=}")
     print(f"{dev.addresses_system__detect()=}")
     print(f"=======after {dev.ADDRESS=}")
+    exit()
 
     print(f'{dev.SET(V12="ON")=}')
     print(f'{dev.SET(VIN=230)=}')

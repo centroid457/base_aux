@@ -175,17 +175,23 @@ class Base_TpGui(Gui):
         layout_control.addWidget(QLabel("Выбор тестплана:"))
         layout_control.addWidget(self.CBB)
         layout_control.addSpacing(20)
-        layout_control.addWidget(self.BTN_devs_detect)
+
+        layout_control.addWidget(QLabel("Тестирование:"))
         layout_control.addWidget(self.BTN_start)
         layout_control.addWidget(self.CHB_tp_run_infinit)
         layout_control.addWidget(self.CHB_tc_run_single)
         layout_control.addWidget(self.BTN_save)
+        layout_control.addSpacing(20)
+
+        layout_control.addWidget(QLabel("Устройства:"))
+        layout_control.addWidget(self.BTN_devs_detect)
+        layout_control.addWidget(self.BTN_reset_all)
         layout_control.addStretch()
 
+        layout_control.addWidget(QLabel("Дополнительно:"))
         layout_control.addWidget(self.BTN_settings)
         layout_control.addWidget(self.BTN_tm_update)
         layout_control.addWidget(self.BTN_clear_all)
-        layout_control.addWidget(self.BTN_reset_all)
         layout_control.addWidget(self.BTN_extended_mode)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
@@ -199,12 +205,12 @@ class Base_TpGui(Gui):
 
     # WGTS ============================================================================================================
     def BTN_create(self) -> None:
-        self.BTN_devs_detect = QPushButton("определить устройства")
+        self.BTN_devs_detect = QPushButton("Определить устройства")
 
         self.BTN_start = QPushButton_Checkable(["ТЕСТИРОВАНИЕ запустить", "ТЕСТИРОВАНИЕ остановить"])
         self.BTN_start.setCheckable(True)
 
-        self.BTN_settings = QPushButton("настройки")
+        self.BTN_settings = QPushButton("Настройки отобразить")
         self.BTN_settings.setCheckable(True)
 
         self.BTN_save = QPushButton("Сохранить результаты")
