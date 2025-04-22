@@ -144,7 +144,7 @@ class Base_TpGui(Gui):
     # OVERWRITTEN -----------------------------------
     START = False
 
-    TITLE = "[TestPlan] Title"
+    TITLE = "TestPlan"
     SIZE = (1500, 800)
 
     HL_STYLES = TpHlStyles()
@@ -152,10 +152,6 @@ class Base_TpGui(Gui):
 
     # NEW -------------------------------------------
     DATA: "TpManager"
-
-    def __init__(self, data: "TpManager"):
-        self.TITLE = f"[Тестплан]{data.STAND_NAME}/{data.STAND_DESCRIPTION[:20]}"
-        super().__init__(data)
 
     def main_window__finalise(self):
         super().main_window__finalise()
@@ -306,9 +302,8 @@ class Base_TpGui(Gui):
     # -----------------------------------------------------------------------------------------------------------------
     def CBB__changed(self, index: Optional[int] = 0) -> None:
         tp_item = self.CBB.model().TP_ITEMS[index or 0]
-
         self.DATA.tp_item__init(tp_item)
-        # self.TV_create()
+
         self.TM.reinit(self.DATA)
         self.TM._data_reread()
 
