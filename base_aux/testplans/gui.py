@@ -197,7 +197,7 @@ class Base_TpGui(Gui):
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         self.LAYOUT_MAIN = QHBoxLayout()
         self.LAYOUT_MAIN.addLayout(layout_control)
-        self.LAYOUT_MAIN.addWidget(self.TV)
+        self.LAYOUT_MAIN.addWidget(self.TV_TCS)
         self.LAYOUT_MAIN.addWidget(self.PTE)
 
         # CENTRAL -----------------------------------------------------------------------------------------------------
@@ -258,14 +258,14 @@ class Base_TpGui(Gui):
     def TV_create(self):
         # TODO: move examples to pyqtTemplate!
 
-        self.TM = TpTableModel(self.DATA)
+        self.TM_TCS = TpTableModel(self.DATA)
 
-        self.TV = QTableView()
-        self.TV.setModel(self.TM)
-        self.TV.setSelectionMode(QTableView.SingleSelection)
+        self.TV_TCS = QTableView()
+        self.TV_TCS.setModel(self.TM_TCS)
+        self.TV_TCS.setSelectionMode(QTableView.SingleSelection)
 
-        hh: QHeaderView = self.TV.horizontalHeader()
-        # hh.setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, True)
+        hh: QHeaderView = self.TV_TCS.horizontalHeader()
+        # hh.setSectionHidden(self.TM_TCS.ADDITIONAL_COLUMNS - 1, True)
         hh.setSectionsClickable(False)
         # hh.setStretchLastSection(True)
         hh.setSectionResizeMode(QHeaderView.ResizeToContents)   # autoresize width!
@@ -274,8 +274,8 @@ class Base_TpGui(Gui):
         # hh.setMinimumSize(0, QHeaderView.ResizeMode.Stretch)
         hh.setMinimumWidth(1000)    # dont understand it is not work at least with ResizeToContents
 
-        self.TV.resizeColumnsToContents()
-        self.TV.resizeRowsToContents()
+        self.TV_TCS.resizeColumnsToContents()
+        self.TV_TCS.resizeRowsToContents()
 
     # SLOTS ===========================================================================================================
     def slots_connect(self):
@@ -288,33 +288,33 @@ class Base_TpGui(Gui):
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)
         self.BTN_devs_detect.clicked.connect(self.BTN_devs_detect__clicked)
         self.BTN_save.clicked.connect(self.BTN_save__clicked)
-        self.BTN_tm_update.clicked.connect(self.TM._data_reread)
+        self.BTN_tm_update.clicked.connect(self.TM_TCS._data_reread)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
         self.BTN_reset_all.clicked.connect(self.BTN_reset_all__clicked)
         self.BTN_extended_mode.toggled.connect(self.BTN_extended_mode__toggled)
 
         # self.DATA.signal__tp_finished.connect(self.BTN_reset_all__clicked)
         self.DATA.signal__tp_finished.connect(lambda: self.BTN_start.setChecked(False))
-        self.DATA.signal__tp_finished.connect(self.TM._data_reread)
+        self.DATA.signal__tp_finished.connect(self.TM_TCS._data_reread)
 
         self.DATA.signal__devs_detected.connect(self.DIALOGS.finished__devs_detection)
         self.DATA.signal__tp_finished.connect(self.DIALOGS.finished__tp)
 
-        Base_TestCase.signals.signal__tc_state_changed.connect(lambda _: self.TM._data_reread())
+        Base_TestCase.signals.signal__tc_state_changed.connect(lambda _: self.TM_TCS._data_reread())
 
-        self.TV.selectionModel().selectionChanged.connect(self.TV_selectionChanged)
-        self.TV.horizontalHeader().sectionClicked.connect(self.TV_hh_sectionClicked)
+        self.TV_TCS.selectionModel().selectionChanged.connect(self.TV_selectionChanged)
+        self.TV_TCS.horizontalHeader().sectionClicked.connect(self.TV_hh_sectionClicked)
 
     # -----------------------------------------------------------------------------------------------------------------
     def CBB__changed(self, index: Optional[int] = 0) -> None:
         tp_item = self.CBB.model().TP_ITEMS[index or 0]
         self.DATA.tp_item__init(tp_item)
 
-        self.TM.reinit(self.DATA)
-        self.TM._data_reread()
+        self.TM_TCS.reinit(self.DATA)
+        self.TM_TCS._data_reread()
 
-        self.TV.resizeColumnsToContents()
-        self.TV.resizeRowsToContents()
+        self.TV_TCS.resizeColumnsToContents()
+        self.TV_TCS.resizeRowsToContents()
 
     def CHB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:
         """
@@ -339,7 +339,7 @@ class Base_TpGui(Gui):
             if not self.DATA.isRunning():
                 self.DATA.tc_active = None
 
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
 
     def BTN_start__toggled(self, state: Optional[bool] = None) -> None:
         # print(f"btn {state=}")
@@ -352,22 +352,22 @@ class Base_TpGui(Gui):
             # if not self.DATA.isFinished():
             self.DATA.terminate()
 
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
 
     def BTN_settings__toggled(self, state: Optional[bool] = None) -> None:
         # print(f"BTN_select_tc_on_duts__toggled {state=}")
-        # self.TV.horizontalHeader().setSectionHidden(self.TM.ADDITIONAL_COLUMNS - 1, not state)
-        self.TV.horizontalHeader().setSectionsClickable(state)
-        self.TM.open__settings = state
-        self.TM._data_reread()
+        # self.TV_TCS.horizontalHeader().setSectionHidden(self.TM_TCS.ADDITIONAL_COLUMNS - 1, not state)
+        self.TV_TCS.horizontalHeader().setSectionsClickable(state)
+        self.TM_TCS.open__settings = state
+        self.TM_TCS._data_reread()
 
     def BTN_devs_detect__clicked(self) -> None:
         self.DATA.DEVICES__BREEDER_CLS.group_call__("address_forget")
         self.DATA.DEVICES__BREEDER_CLS.CLS_LIST__DUT.ADDRESSES__SYSTEM.clear()
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
         # self.DATA.DEVICES__BREEDER_CLS.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
         self.DATA.DEVICES__BREEDER_CLS.resolve_addresses__cls()    # MOVE TO THREAD??? no! not so need!
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
         self.DATA.signal__devs_detected.emit()
 
     def BTN_save__clicked(self) -> None:
@@ -379,28 +379,28 @@ class Base_TpGui(Gui):
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
 
     def BTN_extended_mode__toggled(self, state: Optional[bool] = None) -> None:
         self.PTE.setHidden(not state)
 
-        hh: QHeaderView = self.TV.horizontalHeader()
-        hh.setSectionHidden(self.TM.HEADERS.SKIP, not state)
-        hh.setSectionHidden(self.TM.HEADERS.ASYNC, not state)
-        hh.setSectionHidden(self.TM.HEADERS.STARTUP_CLS, not state)
-        hh.setSectionHidden(self.TM.HEADERS.TEARDOWN_CLS, not state)
+        hh: QHeaderView = self.TV_TCS.horizontalHeader()
+        hh.setSectionHidden(self.TM_TCS.HEADERS.SKIP, not state)
+        hh.setSectionHidden(self.TM_TCS.HEADERS.ASYNC, not state)
+        hh.setSectionHidden(self.TM_TCS.HEADERS.STARTUP_CLS, not state)
+        hh.setSectionHidden(self.TM_TCS.HEADERS.TEARDOWN_CLS, not state)
 
     def TV_hh_sectionClicked(self, index: int) -> None:
-        if index == self.TM.HEADERS.STARTUP_CLS:
+        if index == self.TM_TCS.HEADERS.STARTUP_CLS:
             pass
 
-        if index == self.TM.HEADERS.TEARDOWN_CLS:
+        if index == self.TM_TCS.HEADERS.TEARDOWN_CLS:
             pass
 
-        if index in self.TM.HEADERS.DUTS:
-            dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[self.TM.HEADERS.DUTS.get_listed_index__by_outer(index)]
+        if index in self.TM_TCS.HEADERS.DUTS:
+            dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
             dut.SKIP_reverse()
-            self.TM._data_reread()
+            self.TM_TCS._data_reread()
 
     def TV_selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
         # print("selectionChanged")
@@ -426,22 +426,22 @@ class Base_TpGui(Gui):
         if self.DATA._TC_RUN_SINGLE and not row_is_summary:
             self.DATA.tc_active = tc_cls
 
-        if col == self.TM.HEADERS.STARTUP_CLS:
+        if col == self.TM_TCS.HEADERS.STARTUP_CLS:
             if not row_is_summary:
                 self.PTE.setPlainText(str(tc_cls.result__startup_cls))
 
-        if col in self.TM.HEADERS.DUTS:
+        if col in self.TM_TCS.HEADERS.DUTS:
             if row_is_summary:
                 pass    # TODO: add summary_result
             else:
-                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[col - self.TM.HEADERS.DUTS.START_OUTER]
+                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[col - self.TM_TCS.HEADERS.DUTS.START_OUTER]
                 self.PTE.setPlainText(tc_cls.TCS__LIST[dut.INDEX].get__results_pretty())
 
-        if col == self.TM.HEADERS.TEARDOWN_CLS:
+        if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
             if not row_is_summary:
                 self.PTE.setPlainText(str(tc_cls.result__teardown_cls))
 
-        self.TM._data_reread()
+        self.TM_TCS._data_reread()
 
 
 # =====================================================================================================================
