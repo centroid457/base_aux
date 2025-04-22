@@ -123,7 +123,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             INST = super().__new__(cls)
             INSTS_DICT[index] = INST
 
-        print(f"{cls.__name__}.__NEW__={index=}/{args=}/{kwargs=}//groups={len(_Base1_TestCase._INSTS_DICT_CLS)}/group={len(INSTS_DICT)}")
+        # print(f"{cls.__name__}.__NEW__={index=}/{args=}/{kwargs=}//groups={len(_Base1_TestCase._INSTS_DICT_CLS)}/group={len(INSTS_DICT)}")
         return INST
 
     def __init__(self, index: int):

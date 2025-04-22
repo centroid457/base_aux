@@ -160,6 +160,7 @@ class Base_TpGui(Gui):
     def main_window__finalise(self):
         super().main_window__finalise()
         self.BTN_extended_mode.setChecked(True)
+
         self.CBB.setCurrentText(self.DATA.TP_ITEM.NAME)
 
     # WINDOW ==========================================================================================================
@@ -310,6 +311,9 @@ class Base_TpGui(Gui):
         # self.TV_create()
         self.TM.reinit(self.DATA)
         self.TM._data_reread()
+
+        self.TV.resizeColumnsToContents()
+        self.TV.resizeRowsToContents()
 
     def CHB_tp_run_infinit__changed(self, state: Optional[int] = None) -> None:
         """
