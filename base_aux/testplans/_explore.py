@@ -1,8 +1,6 @@
 from base_aux.testplans.tp_manager import  *
 from base_aux.servers.m1_client_requests import *
 
-from base_aux.testplans.tp_item import Base_TpItem
-
 from TESTPLANS.items import TpItems
 
 
