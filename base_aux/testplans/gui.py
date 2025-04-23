@@ -13,6 +13,7 @@ from base_aux.pyqt.m4_gui import *
 from base_aux.pyqt.m2_mods import *
 
 from .tm__tcs import TableModel_Tps
+from .tm__devs import TableModel_Devs
 from .dialog import DialogsSetTp
 
 
@@ -280,7 +281,7 @@ class Base_TpGui(Gui):
         self.TV_TCS.resizeRowsToContents()
 
     def TV_DEV__create(self):
-        self.TM_DEV = TableModel_Tps(self.DATA)
+        self.TM_DEV = TableModel_Devs(self.DATA)
 
         self.TV_DEV = QTableView()
         self.TV_DEV.setModel(self.TM_DEV)
