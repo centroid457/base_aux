@@ -416,6 +416,8 @@ class Base_TpGui(Gui):
         self.TM_TCS._data_reread()
         self.DATA.signal__devs_detected.emit()
 
+        self.TM_DEV._data_reread()
+
     def BTN_save__clicked(self) -> None:
         self.DATA.save__results()
         self.DIALOGS.finished__save()
@@ -519,7 +521,6 @@ class Base_TpGui(Gui):
             dev_inst = self.DATA.TP_ITEM.DEV_BREEDER.group_get__insts(dev_group_name)
 
         text = AnnotsAllAux(dev_inst).dump_str__pretty()
-
         self.PTE.setPlainText(text)
 
         self.TM_DEV._data_reread()

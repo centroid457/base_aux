@@ -7,13 +7,6 @@ from base_aux.pyqt.m0_static import *
 
 
 # =====================================================================================================================
-class TcResultMsg:
-    PASS: str = "Успех"
-    FAIL: str = "Ошибка"
-    WAIT: str = "..."
-
-
-# =====================================================================================================================
 class TableModel_Devs(TableModelTemplate):
     DATA: "TpManager"
     HEADERS: "Headers"
@@ -121,10 +114,10 @@ class TableModel_Devs(TableModelTemplate):
                 # return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
                 return f"{dev_group_name}"
             if col in self.HEADERS.DEVICE:
-                if dev_inst:
-                    return dev_inst.INDEX
+                if dev_inst and isinstance(dev_inst.ADDRESS, str):
+                    return dev_inst.ADDRESS
                 else:
-                    return
+                    return "-"
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.TextAlignmentRole:
