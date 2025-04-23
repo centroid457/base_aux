@@ -186,6 +186,7 @@ class Base_TpGui(Gui):
 
         layout__control.addWidget(QLabel("Устройства:"))
         layout__control.addWidget(self.BTN_devs_detect)
+        layout__control.addWidget(self.BTN_tv_devs_show)
         layout__control.addWidget(self.BTN_reset_all)
         layout__control.addStretch()
 
@@ -214,6 +215,7 @@ class Base_TpGui(Gui):
     # WGTS ============================================================================================================
     def BTN_create(self) -> None:
         self.BTN_devs_detect = QPushButton("Определить устройства")
+        self.BTN_tv_devs_show = QPushButton_Checkable(["ОТОБРАЗИТЬ панель устройств", "СКРЫТЬ панель устройств"])
 
         self.BTN_start = QPushButton_Checkable(["ТЕСТИРОВАНИЕ запустить", "ТЕСТИРОВАНИЕ остановить"])
         self.BTN_start.setCheckable(True)
@@ -317,6 +319,7 @@ class Base_TpGui(Gui):
         self.BTN_start.toggled.connect(self.BTN_start__toggled)
         self.BTN_settings.toggled.connect(self.BTN_settings__toggled)
         self.BTN_devs_detect.clicked.connect(self.BTN_devs_detect__clicked)
+        self.BTN_tv_devs_show.toggled.connect(self.BTN_tv_devs_show__toggled)
         self.BTN_save.clicked.connect(self.BTN_save__clicked)
         self.BTN_tm_update.clicked.connect(self.TM_TCS._data_reread)
         self.BTN_clear_all.clicked.connect(self.BTN_clear_all__clicked)
@@ -396,6 +399,9 @@ class Base_TpGui(Gui):
         self.TM_TCS.open__settings = state
         self.TM_TCS._data_reread()
 
+    def BTN_tv_devs_show__toggled(self, state) -> None:
+        self.TV_DEV.setHidden(not state)
+
     def BTN_devs_detect__clicked(self) -> None:
         self.DATA.DEVICES__BREEDER_CLS.group_call__("address_forget")
         self.DATA.DEVICES__BREEDER_CLS.CLS_LIST__DUT.ADDRESSES__SYSTEM.clear()
@@ -418,7 +424,7 @@ class Base_TpGui(Gui):
 
     def BTN_extended_mode__toggled(self, state: Optional[bool] = None) -> None:
         self.PTE.setHidden(not state)
-        self.TV_DEV.setHidden(not state)
+        self.BTN_tv_devs_show.setChecked(state)
 
         hh: QHeaderView = self.TV_TCS.horizontalHeader()
         hh.setSectionHidden(self.TM_TCS.HEADERS.SKIP, not state)
