@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import *
 from base_aux.testplans.tc import *
 from base_aux.testplans.tp_item import Base_TpItem
 
+from base_aux.aux_attr.m1_annot_attr1_aux import *
+
 from base_aux.pyqt.m0_static import *
 from base_aux.pyqt.m0_base1_hl import *
 from base_aux.pyqt.m4_gui import *
@@ -335,8 +337,10 @@ class Base_TpGui(Gui):
 
         Base_TestCase.signals.signal__tc_state_changed.connect(lambda _: self.TM_TCS._data_reread())
 
-        self.TV_TCS.selectionModel().selectionChanged.connect(self.TV_selectionChanged)
-        self.TV_TCS.horizontalHeader().sectionClicked.connect(self.TV_hh_sectionClicked)
+        self.TV_TCS.selectionModel().selectionChanged.connect(self.TV_TCS__selectionChanged)
+        self.TV_TCS.horizontalHeader().sectionClicked.connect(self.TV_TCS__hh_sectionClicked)
+
+        self.TV_DEV.selectionModel().selectionChanged.connect(self.TV_DEV__selectionChanged)
 
     # -----------------------------------------------------------------------------------------------------------------
     def CBB__changed(self, index: Optional[int] = 0) -> None:
@@ -396,6 +400,7 @@ class Base_TpGui(Gui):
         # print(f"BTN_select_tc_on_duts__toggled {state=}")
         # self.TV_TCS.horizontalHeader().setSectionHidden(self.TM_TCS.ADDITIONAL_COLUMNS - 1, not state)
         self.TV_TCS.horizontalHeader().setSectionsClickable(state)
+
         self.TM_TCS.open__settings = state
         self.TM_TCS._data_reread()
 
@@ -432,7 +437,8 @@ class Base_TpGui(Gui):
         hh.setSectionHidden(self.TM_TCS.HEADERS.STARTUP_CLS, not state)
         hh.setSectionHidden(self.TM_TCS.HEADERS.TEARDOWN_CLS, not state)
 
-    def TV_hh_sectionClicked(self, index: int) -> None:
+    # -----------------------------------------------------------------------------------------------------------------
+    def TV_TCS__hh_sectionClicked(self, index: int) -> None:
         if index == self.TM_TCS.HEADERS.STARTUP_CLS:
             pass
 
@@ -444,7 +450,7 @@ class Base_TpGui(Gui):
             dut.SKIP_reverse()
             self.TM_TCS._data_reread()
 
-    def TV_selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
+    def TV_TCS__selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
         # print("selectionChanged")
         # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
         # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
@@ -484,6 +490,39 @@ class Base_TpGui(Gui):
                 self.PTE.setPlainText(str(tc_cls.result__teardown_cls))
 
         self.TM_TCS._data_reread()
+
+    def TV_DEV__selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
+        # print("selectionChanged")
+        # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
+        # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
+
+        if not first:
+            # when item with noFlag IsSelectable
+            return
+
+        index: QModelIndex = first.indexes()[0]
+
+        row = index.row()
+        col = index.column()
+
+        try:
+            # print(f"{self.DATA.DEVICES__BREEDER_CLS.groups__get_names()=}")
+            dev_group_name = self.DATA.DEVICES__BREEDER_CLS.groups__get_names()[row]
+            dev_group_cls = self.DATA.DEVICES__BREEDER_CLS.group_get__cls(dev_group_name)
+        except:
+            return
+
+        index = col - self.TM_DEV.HEADERS.DEVICE.START_OUTER
+        try:
+            dev_inst = self.DATA.TP_ITEM.DEV_BREEDER.group_get__insts(dev_group_name)[index]
+        except:
+            dev_inst = self.DATA.TP_ITEM.DEV_BREEDER.group_get__insts(dev_group_name)
+
+        text = AnnotsAllAux(dev_inst).dump_str__pretty()
+
+        self.PTE.setPlainText(text)
+
+        self.TM_DEV._data_reread()
 
 
 # =====================================================================================================================

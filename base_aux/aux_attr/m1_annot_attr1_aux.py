@@ -76,7 +76,11 @@ class AttrAux(NestInit_Source):
                 continue
 
             # filter private external ----------
-            name_private_ext = self.get_name__private_external(name)
+            try:
+                name_private_ext = self.get_name__private_external(name)
+            except:
+                continue
+
             if name_private_ext:
                 name = name_private_ext
 

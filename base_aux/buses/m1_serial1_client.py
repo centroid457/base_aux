@@ -1285,7 +1285,7 @@ class SerialClient(Logger):
                     self._SERIAL.open()
                     # self.connect()
                 except:
-                    pass
+                    raise exx
                 # raise exx   # here need reconnection!
 
             return False
