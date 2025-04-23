@@ -644,7 +644,7 @@ class AttrAux(NestInit_Source):
     def dump_str__pretty(self) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
         for key, value in self.dump_dict(Enum_CallResolve.EXX).items():
-            result += f"\n\t{key}={value}"
+            result += f"\n    {key}={value}"
         else:
             result += f"\nEmpty=Empty"
 
