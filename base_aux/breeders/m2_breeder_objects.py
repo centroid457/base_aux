@@ -137,15 +137,15 @@ class BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
-    def groups__get_names(cls) -> set[str]:
-        result = set()
+    def groups__get_names(cls) -> list[str]:    # use LIST! not SET!
+        result = []
         for attr_name in dir(cls):
             if attr_name.startswith(cls._STARTSWITH__DEFINE__CLS_LIST):
                 group_name = attr_name.removeprefix(cls._STARTSWITH__DEFINE__CLS_LIST)
-                result.update([group_name, ])
+                result.append(group_name)
             if attr_name.startswith(cls._STARTSWITH__DEFINE__CLS_SINGLE):
                 group_name = attr_name.removeprefix(cls._STARTSWITH__DEFINE__CLS_SINGLE)
-                result.update([group_name, ])
+                result.append(group_name)
 
         return result
 

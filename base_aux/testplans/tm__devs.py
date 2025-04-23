@@ -37,7 +37,7 @@ class TableModel_Devs(TableModelTemplate):
 
         class Headers(BreederStrStack):
             NAME: int = 0
-            DEVICE: BreederStrSeries = BreederStrSeries(0, self.DATA.DEVICES__BREEDER_CLS.COUNT)
+            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.DEVICES__BREEDER_CLS.COUNT)
 
         class HTRus:
             NAME: str = "Имя"
@@ -46,7 +46,7 @@ class TableModel_Devs(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.DEV_BREEDER.groups__get_names()) + 1  # [+1]for finalResults
+        return len(self.DATA.TP_ITEM.DEV_BREEDER.groups__get_names())
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -102,23 +102,29 @@ class TableModel_Devs(TableModelTemplate):
         dev_inst: Any | None = None
 
         try:
-            dev_group_name = self.DATA.DEV_BREEDER.groups__get_names()[row]
-            dev_group_cls = self.DATA.DEV_BREEDER.group_get__cls(dev_group_name)
+            # print(f"{self.DATA.DEVICES__BREEDER_CLS.groups__get_names()=}")
+            dev_group_name = self.DATA.DEVICES__BREEDER_CLS.groups__get_names()[row]
+            dev_group_cls = self.DATA.DEVICES__BREEDER_CLS.group_get__cls(dev_group_name)
         except:
             pass
 
         if dev_group_name and col in self.HEADERS.DEVICE:
             index = col - self.HEADERS.DEVICE.START_OUTER
-            dev_inst = self.DATA.DEV_BREEDER.group_get__insts(dev_group_name)[index]
-
+            try:
+                dev_inst = self.DATA.TP_ITEM.DEV_BREEDER.group_get__insts(dev_group_name)[index]
+            except:
+                dev_inst = self.DATA.TP_ITEM.DEV_BREEDER.group_get__insts(dev_group_name)
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:
             if col == self.HEADERS.NAME:
                 # return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
-                return f"{dev_inst.NAME}"
+                return f"{dev_group_name}"
             if col in self.HEADERS.DEVICE:
-                return dev_inst.INDEX
+                if dev_inst:
+                    return dev_inst.INDEX
+                else:
+                    return
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.TextAlignmentRole:
@@ -154,10 +160,12 @@ class TableModel_Devs(TableModelTemplate):
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.BackgroundColorRole:
             if col in self.HEADERS.DEVICE:
-                if isinstance(dev_inst.ADDRESS, str):
-                    return QColor('#50FF50')
-                else:
-                    return QColor('#FF5050')
+                if dev_inst:
+
+                    if isinstance(dev_inst.ADDRESS, str):
+                        return QColor('#50FF50')
+                    else:
+                        return QColor('#FF5050')
 
 
 # =====================================================================================================================

@@ -170,35 +170,42 @@ class Base_TpGui(Gui):
         self.HL_create()
 
         # LAYOUT_CONTROL ----------------------------------------------------------------------------------------------
-        layout_control = QVBoxLayout()
-        layout_control.setAlignment(ALIGNMENT.T)
+        layout__control = QVBoxLayout()
+        layout__control.setAlignment(ALIGNMENT.T)
 
-        layout_control.addWidget(QLabel("Выбор тестплана:"))
-        layout_control.addWidget(self.CBB)
-        layout_control.addSpacing(20)
+        layout__control.addWidget(QLabel("Выбор тестплана:"))
+        layout__control.addWidget(self.CBB)
+        layout__control.addSpacing(20)
 
-        layout_control.addWidget(QLabel("Тестирование:"))
-        layout_control.addWidget(self.BTN_start)
-        layout_control.addWidget(self.CHB_tp_run_infinit)
-        layout_control.addWidget(self.CHB_tc_run_single)
-        layout_control.addWidget(self.BTN_save)
-        layout_control.addSpacing(20)
+        layout__control.addWidget(QLabel("Тестирование:"))
+        layout__control.addWidget(self.BTN_start)
+        layout__control.addWidget(self.CHB_tp_run_infinit)
+        layout__control.addWidget(self.CHB_tc_run_single)
+        layout__control.addWidget(self.BTN_save)
+        layout__control.addSpacing(20)
 
-        layout_control.addWidget(QLabel("Устройства:"))
-        layout_control.addWidget(self.BTN_devs_detect)
-        layout_control.addWidget(self.BTN_reset_all)
-        layout_control.addStretch()
+        layout__control.addWidget(QLabel("Устройства:"))
+        layout__control.addWidget(self.BTN_devs_detect)
+        layout__control.addWidget(self.BTN_reset_all)
+        layout__control.addStretch()
 
-        layout_control.addWidget(QLabel("Дополнительно:"))
-        layout_control.addWidget(self.BTN_settings)
-        layout_control.addWidget(self.BTN_tm_update)
-        layout_control.addWidget(self.BTN_clear_all)
-        layout_control.addWidget(self.BTN_extended_mode)
+        layout__control.addWidget(QLabel("Дополнительно:"))
+        layout__control.addWidget(self.BTN_settings)
+        layout__control.addWidget(self.BTN_tm_update)
+        layout__control.addWidget(self.BTN_clear_all)
+        layout__control.addWidget(self.BTN_extended_mode)
+
+        # LAYOUT_TV -------------------------------------------------------------------------------------------------
+        layout__tv = QVBoxLayout()
+        layout__tv.setAlignment(ALIGNMENT.T)
+
+        layout__tv.addWidget(self.TV_TCS)
+        layout__tv.addWidget(self.TV_DEV)
 
         # LAYOUT_MAIN -------------------------------------------------------------------------------------------------
         self.LAYOUT_MAIN = QHBoxLayout()
-        self.LAYOUT_MAIN.addLayout(layout_control)
-        self.LAYOUT_MAIN.addWidget(self.TV_TCS)
+        self.LAYOUT_MAIN.addLayout(layout__control)
+        self.LAYOUT_MAIN.addLayout(layout__tv)
         self.LAYOUT_MAIN.addWidget(self.PTE)
 
         # CENTRAL -----------------------------------------------------------------------------------------------------
@@ -333,9 +340,14 @@ class Base_TpGui(Gui):
         tp_item = self.CBB.model().TP_ITEMS[index or 0]
         self.DATA.tp_item__init(tp_item)
 
+        # ------------------------------
         self.TM_TCS.reinit(self.DATA)
         self.TM_TCS._data_reread()
 
+        self.TM_DEV.reinit(self.DATA)
+        self.TM_DEV._data_reread()
+
+        # adjust ------------------------------
         self.TV_TCS.resizeColumnsToContents()
         self.TV_TCS.resizeRowsToContents()
 
@@ -406,6 +418,7 @@ class Base_TpGui(Gui):
 
     def BTN_extended_mode__toggled(self, state: Optional[bool] = None) -> None:
         self.PTE.setHidden(not state)
+        self.TV_DEV.setHidden(not state)
 
         hh: QHeaderView = self.TV_TCS.horizontalHeader()
         hh.setSectionHidden(self.TM_TCS.HEADERS.SKIP, not state)
