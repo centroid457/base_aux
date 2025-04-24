@@ -4,7 +4,7 @@ from .tc0__base import *
 
 
 # =====================================================================================================================
-class TestCase(TestCaseBase_Psu):
+class TestCase(Base_TcPsu):
     ATC_VOUT: int | None = 0
     PTB_SET_EXTON: bool = True
     PTB_SET_HVON: bool = False

@@ -4,7 +4,7 @@ from .tc0__test_params import *
 
 
 # =====================================================================================================================
-class TestCase(TestParams_Base):
+class TestCase(Base_TcParams):
     ATC_VOUT: int = 150
     PTB_SET_EXTON: bool = False
     PTB_SET_HVON: bool = True
