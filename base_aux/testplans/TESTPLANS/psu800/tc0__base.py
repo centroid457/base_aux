@@ -17,7 +17,7 @@ from base_aux.aux_values.m1_value_valid_eq import *
 
 
 # =====================================================================================================================
-class AtcVout(Base_TestCase):
+class _Base_TcAtcVout(Base_TestCase):
     # SETTINGS -------------------------------
     ATC_VOUT: int | None = None
 
@@ -109,7 +109,7 @@ class AtcVout(Base_TestCase):
 
 
 # =====================================================================================================================
-class TestCaseBase_Psu(AtcVout, Base_TestCase):
+class Base_TcPsu(_Base_TcAtcVout):
     ATC_VOUT: int | None = 0
     PTB_SET_EXTON: bool = False
     PTB_SET_HVON: bool = False
@@ -266,6 +266,14 @@ class TestCaseBase_Psu(AtcVout, Base_TestCase):
                 Valid(
                     value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved,
                     name="DUT.connect__only_if_address_resolved",
+                ),
+
+                # LED ----------------------------------------------------
+                ValidNoCum(
+                    value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                    kwargs__value={"LED2": "BLINK"},
+                    validate_link="OK",
+                    name="SET",
                 ),
 
                 # PTB_SET_EXTON ----------------------------------------------------
