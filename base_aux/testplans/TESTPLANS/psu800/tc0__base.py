@@ -252,6 +252,8 @@ class Base_TcAtcPtb(_Base_TcAtc):
     def startup__wrapped(self) -> TYPING__RESULT_W_EXX:
         result_chain = ValidChains(
             [
+                # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
+
                 Valid(
                     value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved,
                     name="DUT.connect__only_if_address_resolved",
@@ -318,7 +320,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
     def teardown__wrapped(self) -> TYPING__RESULT_W_EXX:
         result_chain = ValidChains(
             chains=[
-                ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
+                # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
 
                 Valid(
                     value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved,
@@ -329,6 +331,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                     validate_link=lambda value: value is None,
                     name="RESET",
                 ),
+
             ]
         )
         return result_chain

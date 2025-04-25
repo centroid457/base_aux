@@ -43,7 +43,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     skip_tc_dut: Optional[bool] = None
     ASYNC: Optional[bool] = True
     # STOP_IF_FALSE_RESULT: Optional[bool] = None     # NOT USED NOW! MAYBE NOT IMPORTANT!!!
-    SETTINGS_FILES: Union[None, pathlib.Path, list[pathlib.Path]] = None
 
     # AUXILIARY -----------------------------------
     STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
