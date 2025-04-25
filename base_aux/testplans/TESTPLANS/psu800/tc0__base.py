@@ -17,7 +17,7 @@ from base_aux.aux_values.m1_value_valid_eq import *
 
 
 # =====================================================================================================================
-class _Base_TcAtcVout(Base_TestCase):
+class _Base_TcAtc(Base_TestCase):
     # SETTINGS -------------------------------
     ATC_VOUT: int | None = None
 
@@ -109,7 +109,7 @@ class _Base_TcAtcVout(Base_TestCase):
 
 
 # =====================================================================================================================
-class Base_TcPsu(_Base_TcAtcVout):
+class Base_TcAtcPtb(_Base_TcAtc):
     ATC_VOUT: int | None = 0
     PTB_SET_EXTON: bool = False
     PTB_SET_HVON: bool = False
@@ -118,7 +118,7 @@ class Base_TcPsu(_Base_TcAtcVout):
     ASYNC = True
     INFO_STR__ADD_ATTRS = ["ATC_VOUT", "PTB_SET_EXTON", "PTB_SET_HVON", "PTB_SET_PSON"]
 
-    _DESCRIPTION = "___BASE___"
+    _DESCRIPTION = "[base] for testing params in different states"
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -242,20 +242,9 @@ class Base_TcPsu(_Base_TcAtcVout):
 
     # -----------------------------------------------------------------------------------------------------------------
     def run__wrapped(self) -> TYPING__RESULT_W_EXX:
+        # BY DEFAULT PARAMS WOULD CHECK!!!
         result_chain = ValidChains(
-            chains=[
-                # ValidFailContinue(
-                #     value_link=self.DEVICES__BREEDER_INST.DUT.GET,
-                #     args__value="VINOK",
-                #     validate_link=1,
-                # ),
-                # ValidFailContinue(
-                #     value_link=self.DEVICES__BREEDER_INST.DUT.GET,
-                #     args__value="VIN",
-                #     validate_link=Valid.lege,
-                #     args__validate=(0, 0.1),
-                # ),
-            ]
+            chains=self.steps__check_params()
         )
         return result_chain
 
