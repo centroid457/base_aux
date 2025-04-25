@@ -194,6 +194,19 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def result(self, value: TYPING__RESULT_W_EXX) -> None:
         self._result = value
         self.signals.signal__tc_state_changed.emit(self)
+        if isinstance(value, Exception):
+            self.DEVICES__BREEDER_INST.DUT.final_result: bool = False
+
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
+        # FIXME: FINISH!!!
 
     # # ---------------------------------------------------------
     # @classmethod
