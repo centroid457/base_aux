@@ -82,7 +82,11 @@ class TpHlStyles(HlStyles):
 
 
 PTE_RESULTS_EXAMPLE = """
+ПРИМЕРНЫЙ ТЕКСТ ДЛЯ ПРОВЕРКИ
+
+
 ПРОВЕРКА выделения текста результатов
+
 Valid=None    #без явного bool значения
 Result=True   #явное True
 Valid=True    #явное True
