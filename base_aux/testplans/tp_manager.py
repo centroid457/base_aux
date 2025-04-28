@@ -8,6 +8,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from base_aux.servers.m1_client_requests import *
 from base_aux.aux_datetime.m1_datetime import *
 from base_aux.loggers.m1_logger import *
+from base_aux.path2_file.m4_attrs_file_loader import *
 
 
 # =====================================================================================================================
@@ -105,6 +106,11 @@ class TpManager(Logger, QThread):
         self.slots_connect()
 
         self.STAND = StandInfo()
+
+        try:
+            self.STAND = AttrsFileLoader(target=self.STAND, keypath=("STAND", ), filepath="STAND.ini").resolve()
+        except:
+            pass
 
         self.init_post()
 
