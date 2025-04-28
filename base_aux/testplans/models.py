@@ -8,9 +8,9 @@ TYPES__DICT = dict[str, Union[None, str, bool, int, float, dict, list]]
 
 # =====================================================================================================================
 class ModelStandInfo(BaseModel):
-    STAND_NAME: str           # "StandPSU"
-    STAND_DESCRIPTION: str    # "test PSU for QCD"
-    STAND_SN: str
+    # STAND_NAME: str           # "StandPSU"
+    # STAND_DESCRIPTION: str    # "test PSU for QCD"
+    # STAND_SN: str
     STAND_SETTINGS: TYPES__DICT = {}     # main settings for all TCS
 
 

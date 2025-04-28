@@ -19,6 +19,18 @@ from .tp_item import Base_TpItem
 
 
 # =====================================================================================================================
+class StandInfo:
+    """
+    GOAL
+    ----
+    separate info about real ArmStand from TpInfo
+    """
+    NAME: str = "[DEF] STAND NAME"
+    DESCRIPTION: str = "[DEF] STAND DESCRIPTION"
+    SN: str = "[DEF] STAND SN"
+
+
+# =====================================================================================================================
 class TpManager(Logger, QThread):
     signal__tp_start = pyqtSignal()
     signal__tp_stop = pyqtSignal()
@@ -35,10 +47,6 @@ class TpManager(Logger, QThread):
 
     START__GUI_AND_API: bool = True
 
-    STAND_NAME: Optional[str] = "stand_id__1"
-    STAND_DESCRIPTION: Optional[str] = "stand_description"
-    STAND_SN: Optional[str] = "StandSn"
-
     API_SERVER__START: bool = True
     API_SERVER__CLS: type[TpApi_FastApi] = TpApi_FastApi
     api_server: TpApi_FastApi
@@ -51,6 +59,8 @@ class TpManager(Logger, QThread):
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
     # AUX -----------------------------------------------------------
+    STAND: StandInfo
+
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
     DEVICES__BREEDER_CLS: type[DevicesBreeder]
@@ -93,6 +103,8 @@ class TpManager(Logger, QThread):
 
         self.tp_item__init()
         self.slots_connect()
+
+        self.STAND = StandInfo()
 
         self.init_post()
 
@@ -263,10 +275,11 @@ class TpManager(Logger, QThread):
 
     # =================================================================================================================
     def get__info__stand(self) -> dict[str, Any]:
+        # TODO: add into file! to separate real ARM/Stand!!!
         result = {
-            "STAND_NAME": self.STAND_NAME,
-            "STAND_DESCRIPTION": self.STAND_DESCRIPTION,
-            "STAND_SN": self.STAND_SN,
+            "STAND.NAME": self.STAND.NAME,
+            "STAND.DESCRIPTION": self.STAND.DESCRIPTION,
+            "STAND.SN": self.STAND.SN,
         }
         return result
 
