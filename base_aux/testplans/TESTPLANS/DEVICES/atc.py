@@ -1,20 +1,23 @@
 from typing import *
 import time
 
+from base_aux.testplans.devices import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(SerialClient_FirstFree_AnswerValid):
+class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
     PREFIX = "ATC:03:"
-    NAME = "ATC"
     EOL__SEND = b"\n"
 
     REWRITEIF_READNOANSWER = 0
     REWRITEIF_NOVALID = 0
+
+    NAME = "ATC"
+    DESCRIPTION: str = "ATC for PSU"
 
     def address__validate(self) -> bool:
         for _ in range(2):

@@ -1,11 +1,11 @@
 from typing import *
-from base_aux.testplans.devices import Base_Dut
+from base_aux.testplans.devices import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-class Device(SerialClient_FirstFree_AnswerValid, Base_Dut):
+class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
@@ -16,6 +16,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Dut):
 
     # MODEL INFO --------------------------------
     __sn_start: str = "SN"
+
     NAME: str = "PTB"
     DESCRIPTION: str = "PTB for PSU"
 
@@ -61,7 +62,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Dut):
 
 
 # =====================================================================================================================
-class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Dut):
+class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):
     @property
     def DEV_FOUND(self) -> bool:
         return True

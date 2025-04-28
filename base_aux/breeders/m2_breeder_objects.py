@@ -38,9 +38,9 @@ class BreederObjectList:
 
     # usage EXAMPLES ------------------------------------------------------
     LIST__ALL_GENERATED: list[Any]
-    # CLS_LIST__DUT: type[Base_Dut] = Base_Dut
-    # LIST__DUT: list[Base_Dut]
-    # DUT: Base_Dut
+    # CLS_LIST__DUT: type[Base_Device] = Base_Device
+    # LIST__DUT: list[Base_Device]
+    # DUT: Base_Device
 
     # CLS_SINGLE__ATC: Callable[..., Base_Device]
     # ATC: Base_Device

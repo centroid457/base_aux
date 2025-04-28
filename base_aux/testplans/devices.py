@@ -11,16 +11,28 @@ from .models import *
 
 # =====================================================================================================================
 class Base_Device:
-    # AUX -----------------------------------
-    conn: Any = None
-    INDEX: int = None
-
-    # AUX -----------------------------------
+    # AUX -------------------------------------------------------------------------------------------------------------
     NAME: str = None
     DESCRIPTION: str = None
+    INDEX: int = None
+
+    # PROPERTIES ------------------------------------------------------------------------------------------------------
     SN: str = None
+    FW: str = None
+    MODEL: str = None
+
     DEV_FOUND: bool | None = None
 
+    # DUT -------------------------------------------------------------------------------------------------------------
+    SKIP: Optional[bool] = None
+
+    def SKIP_reverse(self) -> None:
+        """
+        this is only for testing purpose
+        """
+        self.SKIP = not bool(self.SKIP)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, index: int = None, **kwargs):
         """
         :param index: None is only for SINGLE!
@@ -29,21 +41,14 @@ class Base_Device:
             self.INDEX = index
         super().__init__(**kwargs)
 
-    # CONNECT ---------------------------------
+    # CONNECT ---------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
-        if self.conn:
-            try:
-                return self.conn.connect()
-            except:
-                return False
         return True
 
     def disconnect(self) -> None:
-        try:
-            return self.conn.disconnect()
-        except:
-            pass
+        pass
 
+    # INFO ------------------------------------------------------------------------------------------------------------
     def get__info__dev(self) -> dict[str, Any]:
         result = {
             "DUT_INDEX": self.INDEX,
@@ -54,19 +59,9 @@ class Base_Device:
         }
         return result
 
-
-# =====================================================================================================================
-class Base_Dut(Base_Device):
-    SKIP: Optional[bool] = None
-
-    def SKIP_reverse(self) -> None:
-        """
-        this is only for testing purpose
-        """
-        self.SKIP = not bool(self.SKIP)
-
+    # -----------------------------------------------------------------------------------------------------------------
     def _debug__reset_sn(self) -> None:
-        """this is only for testing middleware"""
+        """this is only for testing middleware - reset DUT!!!"""
         self.SN = uuid.uuid4().hex
 
 
@@ -112,11 +107,11 @@ class DevicesBreeder_WithDut(DevicesBreeder):
     READY TO USE WITH DUT
     """
     # DEFINITIONS ---------------
-    CLS_LIST__DUT: type[Base_Dut] = Base_Dut
+    CLS_LIST__DUT: type[Base_Device] = Base_Device
 
     # JUST SHOW NAMES -----------
-    LIST__DUT: list[Base_Dut]
-    DUT: Base_Dut
+    LIST__DUT: list[Base_Device]
+    DUT: Base_Device
 
 
 # =====================================================================================================================
