@@ -38,12 +38,12 @@ class BreederObjectList:
 
     # usage EXAMPLES ------------------------------------------------------
     LIST__ALL_GENERATED: list[Any]
-    # CLS_LIST__DUT: type[DutBase] = DutBase
-    # LIST__DUT: list[DutBase]
-    # DUT: DutBase
+    # CLS_LIST__DUT: type[Base_Dut] = Base_Dut
+    # LIST__DUT: list[Base_Dut]
+    # DUT: Base_Dut
 
-    # CLS_SINGLE__ATC: Callable[..., DeviceBase]
-    # ATC: DeviceBase
+    # CLS_SINGLE__ATC: Callable[..., Base_Device]
+    # ATC: Base_Device
 
     # AUX ----------------------------------------------------------
     # definitions -----

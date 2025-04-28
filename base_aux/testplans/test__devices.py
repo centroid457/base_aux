@@ -8,7 +8,7 @@ class Test__DeviceBase:
     @classmethod
     def setup_class(cls):
         pass
-        cls.Victim = type("Victim", (DeviceBase,), {})
+        cls.Victim = type("Victim", (Base_Device,), {})
 
     # @classmethod
     # def teardown_class(cls):
@@ -80,7 +80,7 @@ class Test__DevicesBreeder_WithDut:
     # -----------------------------------------------------------------------------------------------------------------
     def test__CLS_SINGLE__CLS(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_SINGLE__ATC = DeviceBase
+        self.Victim.CLS_SINGLE__ATC = Base_Device
         self.Victim.generate__objects()
 
         assert hasattr(self.Victim, "LIST__DUT") is True
@@ -97,7 +97,7 @@ class Test__DevicesBreeder_WithDut:
 
     def test__CLS_SINGLE__INSTANCE(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_SINGLE__ATC = DeviceBase
+        self.Victim.CLS_SINGLE__ATC = Base_Device
         self.Victim.generate__objects()
 
         victim = self.Victim(1)
@@ -123,7 +123,7 @@ class Test__DevicesBreeder_WithDut:
     # -----------------------------------------------------------------------------------------------------------------
     def test__CLS_LIST__CLS(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTS = DeviceBase
+        self.Victim.CLS_LIST__PTS = Base_Device
         self.Victim.generate__objects()
 
         assert hasattr(self.Victim, "LIST__DUT") is True
@@ -138,7 +138,7 @@ class Test__DevicesBreeder_WithDut:
 
     def test__CLS_LIST__INSTANCE(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTS = DeviceBase
+        self.Victim.CLS_LIST__PTS = Base_Device
         self.Victim.generate__objects()
 
         victim = self.Victim(1)

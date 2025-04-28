@@ -13,7 +13,7 @@ from base_aux.path2_file.m4_fileattrs import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import DutBase, DeviceBase, DevicesBreeder, _DevicesBreeder_Example
+from .devices import Base_Dut, Base_Device, DevicesBreeder, _DevicesBreeder_Example
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem
@@ -71,7 +71,7 @@ class TpManager(Logger, QThread):
     #     Tc2: True
     # }
 
-    # DEVICES__BREEDER_INST: list[Union[str, type[DeviceBase]]]    # settings
+    # DEVICES__BREEDER_INST: list[Union[str, type[Base_Device]]]    # settings
     # [
     #     Dev1,
     #     Dev2

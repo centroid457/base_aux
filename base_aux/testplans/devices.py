@@ -10,7 +10,7 @@ from .models import *
 
 
 # =====================================================================================================================
-class DeviceBase:
+class Base_Device:
     # AUX -----------------------------------
     conn: Any = None
     INDEX: int = None
@@ -56,7 +56,7 @@ class DeviceBase:
 
 
 # =====================================================================================================================
-class DutBase(DeviceBase):
+class Base_Dut(Base_Device):
     SKIP: Optional[bool] = None
 
     def SKIP_reverse(self) -> None:
@@ -112,11 +112,11 @@ class DevicesBreeder_WithDut(DevicesBreeder):
     READY TO USE WITH DUT
     """
     # DEFINITIONS ---------------
-    CLS_LIST__DUT: type[DutBase] = DutBase
+    CLS_LIST__DUT: type[Base_Dut] = Base_Dut
 
     # JUST SHOW NAMES -----------
-    LIST__DUT: list[DutBase]
-    DUT: DutBase
+    LIST__DUT: list[Base_Dut]
+    DUT: Base_Dut
 
 
 # =====================================================================================================================
@@ -126,10 +126,10 @@ class _DevicesBreeder_Example(DevicesBreeder_WithDut):
     """
     # DEFINITIONS ---------------
     COUNT: int = 2
-    CLS_SINGLE__ATC: type[DeviceBase] = DeviceBase
+    CLS_SINGLE__ATC: type[Base_Device] = Base_Device
 
     # JUST SHOW NAMES -----------
-    ATC: DeviceBase
+    ATC: Base_Device
 
 
 # =====================================================================================================================
