@@ -6,7 +6,7 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
-class AttrsFileLoader(TextFile, NestCall_Resolve):
+class FileAttrs_Loader(TextFile, NestCall_Resolve):
     """
     GOAL
     ----

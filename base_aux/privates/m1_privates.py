@@ -1,10 +1,10 @@
 from base_aux.aux_attr.m4_kits import *
 from base_aux.base_statics.m4_enums import Enum_DictTextFormat
-from base_aux.path2_file.m4_attrs_file_loader import AttrsFileLoader
+from base_aux.path2_file.m4_fileattrs import FileAttrs_Loader
 
 
 # =====================================================================================================================
-class PvLoaderIni(AttrsFileLoader):
+class PvLoaderIni(FileAttrs_Loader):
     """
     GOAL
     ----
@@ -35,7 +35,7 @@ class PvLoaderIni_AuthServer(PvLoaderIni):
 
 
 # =====================================================================================================================
-class PvLoaderJson(AttrsFileLoader):
+class PvLoaderJson(FileAttrs_Loader):
     STYLE = Enum_DictTextFormat.JSON
     FILEPATH = pathlib.Path.home().joinpath("pv.json")
 

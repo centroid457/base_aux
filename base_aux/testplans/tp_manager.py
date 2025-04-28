@@ -8,7 +8,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from base_aux.servers.m1_client_requests import *
 from base_aux.aux_datetime.m1_datetime import *
 from base_aux.loggers.m1_logger import *
-from base_aux.path2_file.m4_attrs_file_loader import *
+from base_aux.path2_file.m4_fileattrs import *
 
 
 # =====================================================================================================================
@@ -108,7 +108,7 @@ class TpManager(Logger, QThread):
         self.STAND = StandInfo()
 
         try:
-            self.STAND = AttrsFileLoader(target=self.STAND, keypath=("STAND", ), filepath="STAND.ini").resolve()
+            self.STAND = FileAttrs_Loader(target=self.STAND, keypath=("STAND",), filepath="STAND.ini").resolve()
         except:
             pass
 

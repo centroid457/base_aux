@@ -1,6 +1,6 @@
 import os
 
-from base_aux.path2_file.m4_attrs_file_loader import *
+from base_aux.path2_file.m4_fileattrs import *
 from base_aux.aux_text.m0_text_examples import *
 from base_aux.privates.m1_privates import *
 from base_aux.privates.m2_env import PvLoaderEnv
@@ -8,11 +8,11 @@ from base_aux.privates.m2_env import PvLoaderEnv
 
 # =====================================================================================================================
 def test__File():
-    data_attrs = AttrsFileLoader(text=INI_EXAMPLES.NOT_MESHED__TEXT).resolve()
+    data_attrs = FileAttrs_Loader(text=INI_EXAMPLES.NOT_MESHED__TEXT).resolve()
     print(data_attrs)
     assert data_attrs.a0 == "00"
 
-    data_attrs = AttrsFileLoader(text=INI_EXAMPLES.MESHED__TEXT, keypath=("s1",)).resolve()
+    data_attrs = FileAttrs_Loader(text=INI_EXAMPLES.MESHED__TEXT, keypath=("s1",)).resolve()
     print(data_attrs)
     assert data_attrs.a0 == "11"
     assert data_attrs.A0 == "11"
