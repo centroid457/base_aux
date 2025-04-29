@@ -26,17 +26,6 @@ class Base_Device:
     # INFO -------------------------------
     def load__INFO(self) -> None:
         pass
-        try:
-            if not self.SN:
-                self.SN = self.write_read__last("get SN")
-
-            if not self.FW:
-                self.FW = self.write_read__last("get FW")
-
-            if not self.MODEL:
-                self.MODEL = self.write_read__last("get MODEL")
-        except:
-            pass
 
     # DUT -------------------------------------------------------------------------------------------------------------
     SKIP: Optional[bool] = None

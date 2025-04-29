@@ -347,7 +347,12 @@ class TpManager(Logger, QThread):
                 result_i_short.update({tc_cls.DESCRIPTION: tc_inst_result_short})
                 result_i_full.update({tc_cls.DESCRIPTION: tc_inst_result_full})
 
-            dut_info = tc_inst.DEVICES__BREEDER_INST.DUT.get__info__dev()
+            DUT = tc_inst.DEVICES__BREEDER_INST.DUT
+
+            if not DUT.DEV_FOUND or not DUT.DUT_FW:
+                continue
+
+            dut_info = DUT.get__info__dev()
             result_dut = {
                 "STAND": self.get__info__stand(),
                 "DUT": dut_info,
