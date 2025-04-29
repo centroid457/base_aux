@@ -19,84 +19,29 @@ class Base_Device:
     # PROPERTIES ------------------------------------------------------------------------------------------------------
     DEV_FOUND: bool | None = None
 
-    __sn: str = None
-    __fw: str = None
-    __model: str = None
+    SN: str = None
+    FW: str = None
+    MODEL: str = None
 
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-    # TODO: LOAD INFO!!! ON CONNECTION/DETECTION!!!
-
-    def get__SN(self) -> str:  # OVERWRITE!
+    def load__INFO(self) -> None:   # OVERWRITE!
         pass
 
-    def get__FW(self) -> str:  # OVERWRITE!
-        pass
-
-    def get__MODEL(self) -> str:  # OVERWRITE!
-        pass
-
-    @property
-    def SN(self) -> str:
-        if not self.__sn:
-            self.__sn = self.get__SN()
-        return self.__sn
-
-    @property
-    def FW(self) -> str:
-        if not self.__fw:
-            self.__fw = self.get__FW()
-        return self.__fw
-
-    @property
-    def MODEL(self) -> str:
-        if not self.__model:
-            self.__model = self.get__MODEL()
-        return self.__model
+        # self.SN =
+        # self.FW =
+        # self.MODEL =
 
     # DUT -------------------------------------------------------------------------------------------------------------
     SKIP: Optional[bool] = None
+
+    DUT_SN: str = None
+    DUT_FW: str = None
+    DUT_MODEL: str = None
 
     def SKIP_reverse(self) -> None:
         """
         this is only for testing purpose
         """
         self.SKIP = not bool(self.SKIP)
-
-    __dut_sn: str = None
-    __dut_fw: str = None
-    __dut_model: str = None
-
-    def get__DUT_SN(self) -> str:  # OVERWRITE!
-        pass
-
-    def get__DUT_FW(self) -> str:  # OVERWRITE!
-        pass
-
-    def get__DUT_MODEL(self) -> str:  # OVERWRITE!
-        pass
-
-    @property
-    def DUT_SN(self) -> str:
-        if not self.__dut_sn:
-            self.__dut_sn = self.get__DUT_SN()
-        return self.__dut_sn
-
-    @property
-    def DUT_FW(self) -> str:
-        if not self.__dut_fw:
-            self.__dut_fw = self.get__DUT_FW()
-        return self.__dut_fw
-
-    @property
-    def DUT_MODEL(self) -> str:
-        if not self.__dut_model:
-            self.__dut_model = self.get__DUT_MODEL()
-        return self.__dut_model
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, index: int = None, **kwargs):
@@ -119,13 +64,13 @@ class Base_Device:
         result = {
             "DEV_FOUND": self.DEV_FOUND,
             "INDEX": self.INDEX,
+            "SKIP": self.SKIP,
 
             "NAME": self.NAME or self.__class__.__name__,
             "DESCRIPTION": self.DESCRIPTION or self.__class__.__name__,
             "SN": self.SN or "",
             "FW": self.FW or "",
             "MODEL": self.MODEL or "",
-            "SKIP": self.SKIP,
         }
         return result
 

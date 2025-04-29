@@ -20,19 +20,22 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     NAME: str = "PTB"
     DESCRIPTION: str = "PTB for PSU"
 
-    @property
-    def SN(self) -> str:
-        return f"SN_{self.INDEX}"
+    # @property
+    # def DUT_SN(self) -> str:      # TODO: USE DIRECT FINDING!!!???
+    #     return f"SN_{self.INDEX}"
 
     # MODEL INFO --------------------------------
-    def get__SN(self) -> str:  # OVERWRITE!
+    def load__INFO(self) -> None:
         pass
 
-    def get__FW(self) -> str:  # OVERWRITE!
-        pass
+        if not self.SN:
+            self.SN = self.write_read__last("get SN")
 
-    def get__MODEL(self) -> str:  # OVERWRITE!
-        pass
+        if not self.FW:
+            self.FW = self.write_read__last("get FW")
+
+        if not self.MODEL:
+            self.MODEL = self.write_read__last("get MODEL")
 
     # DETECT --------------------------------
     @property
@@ -51,6 +54,9 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
                 # and
                 # self.write_read__last_validate("get prsnt", "0")
         )
+        if result:
+            self.load__INFO()
+
         return result
 
     def connect__validate(self) -> bool:
