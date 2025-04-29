@@ -23,12 +23,20 @@ class Base_Device:
     FW: str = None
     MODEL: str = None
 
-    def load__INFO(self) -> None:   # OVERWRITE!
+    # INFO -------------------------------
+    def load__INFO(self) -> None:
         pass
+        try:
+            if not self.SN:
+                self.SN = self.write_read__last("get SN")
 
-        # self.SN =
-        # self.FW =
-        # self.MODEL =
+            if not self.FW:
+                self.FW = self.write_read__last("get FW")
+
+            if not self.MODEL:
+                self.MODEL = self.write_read__last("get MODEL")
+        except:
+            pass
 
     # DUT -------------------------------------------------------------------------------------------------------------
     SKIP: Optional[bool] = None

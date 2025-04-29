@@ -19,8 +19,8 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     NAME = "ATC"
     DESCRIPTION: str = "ATC for PSU"
 
-    def address__validate(self) -> bool:
-        return  self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX)
+    # def address__validate(self) -> bool:  # NO NEED!
+    #     return  self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX)
 
     def __init__(self, index: int = None, **kwargs):    # FIXME: decide to delete this!!!
         """
@@ -29,6 +29,15 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
         if index is not None:
             self.INDEX = index
         super().__init__(**kwargs)
+
+    def connect__validate(self) -> bool:
+        result = (
+            self.address_check__resolved()  # fixme: is it really need here???
+        )
+        if result:
+            self.load__INFO()
+
+        return result
 
 
 # =====================================================================================================================

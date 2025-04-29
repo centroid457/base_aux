@@ -14,9 +14,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     REWRITEIF_READNOANSWER = 0
     REWRITEIF_NOVALID = 0
 
-    # MODEL INFO --------------------------------
-    __sn_start: str = "SN"
-
+    # INFO --------------------------------
     NAME: str = "PTB"
     DESCRIPTION: str = "PTB for PSU"
 
@@ -32,19 +30,6 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
             self.INDEX = index
         super().__init__(**kwargs)
 
-    # MODEL INFO --------------------------------
-    def load__INFO(self) -> None:
-        pass
-
-        if not self.SN:
-            self.SN = self.write_read__last("get SN")
-
-        if not self.FW:
-            self.FW = self.write_read__last("get FW")
-
-        if not self.MODEL:
-            self.MODEL = self.write_read__last("get MODEL")
-
     # DETECT --------------------------------
     @property
     def DEV_FOUND(self) -> bool:
@@ -54,18 +39,18 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     def PREFIX(self) -> str:
         return f"PTB:{self.INDEX+1:02d}:"
 
-    def address__validate(self) -> bool:
-        result = (
-                self.write_read__last_validate("get name", self.NAME, prefix="*:")
-                and
-                self.write_read__last_validate("get addr", EqValid_NumParsedSingle(self.INDEX+1), prefix="*:")
-                # and
-                # self.write_read__last_validate("get prsnt", "0")
-        )
-        if result:
-            self.load__INFO()
-
-        return result
+    # def address__validate(self) -> bool:  # NO NEED! only for manual!
+    #     result = (
+    #             self.write_read__last_validate("get name", self.NAME, prefix="*:")
+    #             and
+    #             self.write_read__last_validate("get addr", EqValid_NumParsedSingle(self.INDEX+1), prefix="*:")
+    #             # and
+    #             # self.write_read__last_validate("get prsnt", "0")
+    #     )
+    #     if result:
+    #         self.load__INFO()
+    #
+    #     return result
 
     def connect__validate(self) -> bool:
         result = (
@@ -73,6 +58,9 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
             and
             self.write_read__last_validate("get prsnt", "1")
         )
+        if result:
+            self.load__INFO()
+
         return result
 
     @property
