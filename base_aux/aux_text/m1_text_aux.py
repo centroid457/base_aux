@@ -509,5 +509,17 @@ class TextAux:
         return
         # raise NotImplemented
 
+    # =================================================================================================================
+    def pretty__json(self) -> str | None:
+        """
+        GOAL
+        ----
+        make json-text pretty
+        """
+        data_dict = self.parse__dict_json()
+        if data_dict:
+            self.TEXT = json.dumps(data_dict, indent=4, ensure_ascii=False)
+            return self.TEXT
+
 
 # =====================================================================================================================
