@@ -15,11 +15,11 @@ class ModelStandInfo(BaseModel):
 
 
 class ModelDeviceInfo(BaseModel):
-    DUT_INDEX: int          # device position in stand
+    INDEX: int          # device position in stand
 
-    DUT_NAME: str           # "PSU"
-    DUT_DESCRIPTION: str    # "Power Supply Unit"
-    DUT_SN: str
+    NAME: str           # "PSU"
+    DESCRIPTION: str    # "Power Supply Unit"
+    SN: str
 
 
 class ModelTcInfo(BaseModel):

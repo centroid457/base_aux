@@ -23,8 +23,18 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     @property
     def SN(self) -> str:
         return f"SN_{self.INDEX}"
-    # MODEL INFO --------------------------------
 
+    # MODEL INFO --------------------------------
+    def get__SN(self) -> str:  # OVERWRITE!
+        pass
+
+    def get__FW(self) -> str:  # OVERWRITE!
+        pass
+
+    def get__MODEL(self) -> str:  # OVERWRITE!
+        pass
+
+    # DETECT --------------------------------
     @property
     def DEV_FOUND(self) -> bool:
         return self.address_check__resolved()
@@ -51,11 +61,6 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
         )
         return result
 
-    def __init__(self, index: int, **kwargs):
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
-
     @property
     def VALUE(self) -> bool:
         return self.INDEX % 2 == 0
@@ -73,13 +78,8 @@ class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):
     def connect__validate(self) -> bool:
         return True
 
-    def connect(self) -> bool:
+    def connect(self, *args, **kwargs) -> bool:
         return True
-
-    def __init__(self, index: int, **kwargs):
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
 
 
 # =====================================================================================================================

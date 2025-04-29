@@ -460,9 +460,9 @@ class _Info(_Base1_TestCase):
         # FIXME: GET FROM INFO_GET????
         result = ""
 
-        result += f"DUT_INDEX={self.INDEX}\n"
-        result += f"DUT_SN={self.DEVICES__BREEDER_INST.DUT.SN}\n"
-        result += f"DUT_ADDRESS={self.DEVICES__BREEDER_INST.DUT.ADDRESS}\n"
+        result += f"INDEX={self.INDEX}\n"
+        result += f"SN={self.DEVICES__BREEDER_INST.DUT.SN}\n"
+        result += f"ADDRESS={self.DEVICES__BREEDER_INST.DUT.ADDRESS}\n"
         result += f"tc_skip_dut={self.skip_tc_dut}\n"
 
         result += f"TC_NAME={self.NAME}\n"

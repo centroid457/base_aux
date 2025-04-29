@@ -20,9 +20,7 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     DESCRIPTION: str = "ATC for PSU"
 
     def address__validate(self) -> bool:
-        for _ in range(2):
-            if self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX):
-                return True
+        return  self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX)
 
 
 # =====================================================================================================================
