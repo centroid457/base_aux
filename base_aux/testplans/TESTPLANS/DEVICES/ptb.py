@@ -5,7 +5,7 @@ from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
+class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
@@ -23,6 +23,14 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     # @property
     # def DUT_SN(self) -> str:      # TODO: USE DIRECT FINDING!!!???
     #     return f"SN_{self.INDEX}"
+
+    def __init__(self, index: int = None, **kwargs):    # FIXME: decide to delete this!!!
+        """
+        :param index: None is only for SINGLE!
+        """
+        if index is not None:
+            self.INDEX = index
+        super().__init__(**kwargs)
 
     # MODEL INFO --------------------------------
     def load__INFO(self) -> None:

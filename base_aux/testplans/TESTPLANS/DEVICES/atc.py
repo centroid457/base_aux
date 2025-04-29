@@ -6,7 +6,7 @@ from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
+class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
@@ -21,6 +21,14 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
 
     def address__validate(self) -> bool:
         return  self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX)
+
+    def __init__(self, index: int = None, **kwargs):    # FIXME: decide to delete this!!!
+        """
+        :param index: None is only for SINGLE!
+        """
+        if index is not None:
+            self.INDEX = index
+        super().__init__(**kwargs)
 
 
 # =====================================================================================================================
