@@ -470,6 +470,8 @@ class Base_TpGui(Gui):
         row = index.row()
         col = index.column()
 
+        dut_index = col - self.TM_TCS.HEADERS.DUTS.START_OUTER
+
         try:
             tc_cls = list(self.DATA.TCS_CLS)[row]
         except:
@@ -488,8 +490,9 @@ class Base_TpGui(Gui):
             if row_is_summary:
                 pass    # TODO: add summary_result
             else:
-                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[col - self.TM_TCS.HEADERS.DUTS.START_OUTER]
-                self.PTE.setPlainText(tc_cls.TCS__LIST[dut.INDEX].get__results_pretty())
+
+                dut = self.DATA.DEVICES__BREEDER_CLS.LIST__DUT[dut_index]
+                self.PTE.setPlainText(tc_cls.TCS__LIST[dut_index].get__results_pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
             if not row_is_summary:

@@ -26,6 +26,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
         """
         :param index: None is only for SINGLE!
         """
+        print(11111111)
         if index is not None:
             self.INDEX = index
         super().__init__(**kwargs)
@@ -55,23 +56,12 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     def load__INFO(self) -> None:
         if not self.SN:
             self.SN = self.write_read__last("get SN")
+            self.FW = self.write_read__last("get FW")
+            self.MODEL = self.write_read__last("get MODEL")
 
-            # ------------------------------------------------
-            if not self.FW:
-                self.FW = self.write_read__last("get FW")
-
-            if not self.MODEL:
-                self.MODEL = self.write_read__last("get MODEL")
-
-            # ------------------------------------------------
-            if not self.DUT_SN:
-                self.DUT_SN = self.write_read__last("get PSSN")
-
-            if not self.DUT_FW:
-                self.DUT_FW = self.write_read__last("get PSFW")
-
-            if not self.DUT_MODEL:
-                self.DUT_MODEL = self.write_read__last("get PSMODEL")
+            self.DUT_SN = self.write_read__last("get PSSN")
+            self.DUT_FW = self.write_read__last("get PSFW")
+            self.DUT_MODEL = self.write_read__last("get PSMODEL")
 
     def connect__validate(self) -> bool:
         result = (
@@ -83,10 +73,6 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
             self.load__INFO()
 
         return result
-
-    @property
-    def VALUE(self) -> bool:
-        return self.INDEX % 2 == 0
 
 
 # =====================================================================================================================

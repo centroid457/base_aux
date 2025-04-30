@@ -68,6 +68,10 @@ class Base_Device:
             "SN": self.SN or "",
             "FW": self.FW or "",
             "MODEL": self.MODEL or "",
+
+            "DUT_SN": self.DUT_SN or "",
+            "DUT_FW": self.DUT_FW or "",
+            "DUT_MODEL": self.DUT_MODEL or "",
         }
         return result
 
