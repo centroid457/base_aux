@@ -113,7 +113,7 @@ class TextAux:
         self.sub__word(r"\s*:\s*\"false\"", ":false")
 
         # NUM KEYS ------------
-        self.sub__regexp(r"\b(\d+\.?\d*)\b\s*:\s*", r'"\1":')
+        self.sub__regexp(r"(?<=[{,])\s*(\d+(?:\.\d+)?)\s*:\s*", r'"\1":')
 
         return self.TEXT
 
