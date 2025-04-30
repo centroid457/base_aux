@@ -88,7 +88,7 @@ class Test__DevicesBreeder_WithDut:
 
         assert self.Victim.group_check__exists("DUT") is True
         assert self.Victim.group_check__exists("ATC") is True
-        assert self.Victim.group_check__exists("PTS") is False
+        assert self.Victim.group_check__exists("PTB") is False
 
         # DISCONNECT
         self.Victim.disconnect__cls()
@@ -104,7 +104,7 @@ class Test__DevicesBreeder_WithDut:
 
         assert victim.DUT == victim.LIST__DUT[1]
         try:
-            victim.PTS
+            victim.PTB
             assert False
         except:
             pass
@@ -118,33 +118,33 @@ class Test__DevicesBreeder_WithDut:
 
         assert victim.group_check__exists("DUT") is True
         assert victim.group_check__exists("ATC") is True
-        assert victim.group_check__exists("PTS") is False
+        assert victim.group_check__exists("PTB") is False
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__CLS_LIST__CLS(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTS = Base_Device
+        self.Victim.CLS_LIST__PTB = Base_Device
         self.Victim.generate__objects()
 
         assert hasattr(self.Victim, "LIST__DUT") is True
-        assert hasattr(self.Victim, "LIST__PTS") is True
+        assert hasattr(self.Victim, "LIST__PTB") is True
 
         assert len(self.Victim.LIST__DUT) == 2
-        assert len(self.Victim.LIST__PTS) == 2
+        assert len(self.Victim.LIST__PTB) == 2
 
         assert self.Victim.group_check__exists("DUT") is True
         assert self.Victim.group_check__exists("ATC") is False
-        assert self.Victim.group_check__exists("PTS") is True
+        assert self.Victim.group_check__exists("PTB") is True
 
     def test__CLS_LIST__INSTANCE(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTS = Base_Device
+        self.Victim.CLS_LIST__PTB = Base_Device
         self.Victim.generate__objects()
 
         victim = self.Victim(1)
 
         assert victim.DUT == victim.LIST__DUT[1]
-        assert victim.PTS == victim.LIST__PTS[1]
+        assert victim.PTB == victim.LIST__PTB[1]
         try:
             victim.ATC
             assert False
@@ -152,14 +152,14 @@ class Test__DevicesBreeder_WithDut:
             pass
 
         assert hasattr(victim, "LIST__DUT") is True
-        assert hasattr(victim, "LIST__PTS") is True
+        assert hasattr(victim, "LIST__PTB") is True
 
         assert len(victim.LIST__DUT) == 2
-        assert len(victim.LIST__PTS) == 2
+        assert len(victim.LIST__PTB) == 2
 
         assert victim.group_check__exists("DUT") is True
         assert victim.group_check__exists("ATC") is False
-        assert victim.group_check__exists("PTS") is True
+        assert victim.group_check__exists("PTB") is True
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__double_init(self):

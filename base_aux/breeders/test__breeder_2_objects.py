@@ -91,25 +91,25 @@ class Test__BreederObjectList:
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.groups__get_names() == set()
+        assert Victim.groups__get_names() == list()
 
         class Victim(self.Victim):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.groups__get_names() == {"ITEM_LIST"}
+        assert Victim.groups__get_names() == ["ITEM_LIST", ]
 
         class Victim(self.Victim):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.groups__get_names() == {"ITEM_SINGLE"}
+        assert Victim.groups__get_names() == ["ITEM_SINGLE", ]
 
         class Victim(self.Victim):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.groups__get_names() == {"ITEM_SINGLE", "ITEM_LIST"}
+        assert Victim.groups__get_names() == ["ITEM_LIST", "ITEM_SINGLE"]
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__groups_count__generated(self):

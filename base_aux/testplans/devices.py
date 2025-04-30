@@ -92,7 +92,10 @@ class DevicesBreeder(BreederObjectList):
 
     @classmethod
     def disconnect__cls(cls) -> None:
-        cls.group_call__("disconnect")
+        try:
+            cls.group_call__("disconnect")
+        except:
+            pass
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
