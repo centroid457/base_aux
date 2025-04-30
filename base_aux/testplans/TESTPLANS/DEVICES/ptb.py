@@ -56,21 +56,22 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
         if not self.SN:
             self.SN = self.write_read__last("get SN")
 
-        if not self.FW:
-            self.FW = self.write_read__last("get FW")
+            # ------------------------------------------------
+            if not self.FW:
+                self.FW = self.write_read__last("get FW")
 
-        if not self.MODEL:
-            self.MODEL = self.write_read__last("get MODEL")
+            if not self.MODEL:
+                self.MODEL = self.write_read__last("get MODEL")
 
-        # ------------------------------------------------
-        if not self.DUT_SN:
-            self.DUT_SN = self.write_read__last("get PSSN")
+            # ------------------------------------------------
+            if not self.DUT_SN:
+                self.DUT_SN = self.write_read__last("get PSSN")
 
-        if not self.DUT_FW:
-            self.DUT_FW = self.write_read__last("get PSFW")
+            if not self.DUT_FW:
+                self.DUT_FW = self.write_read__last("get PSFW")
 
-        if not self.DUT_MODEL:
-            self.DUT_MODEL = self.write_read__last("get PSMODEL")
+            if not self.DUT_MODEL:
+                self.DUT_MODEL = self.write_read__last("get PSMODEL")
 
     def connect__validate(self) -> bool:
         result = (

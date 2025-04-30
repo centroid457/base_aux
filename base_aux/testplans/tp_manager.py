@@ -350,8 +350,8 @@ class TpManager(Logger, QThread):
 
             DUT = tc_inst.DEVICES__BREEDER_INST.DUT
 
-            # if not DUT.DEV_FOUND or not DUT.DUT_FW:
-            #     continue
+            if not DUT.DEV_FOUND or not DUT.DUT_FW:
+                continue
 
             dut_info = DUT.get__info__dev()
             result_dut = {

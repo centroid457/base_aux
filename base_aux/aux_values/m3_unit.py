@@ -244,7 +244,7 @@ class ValueUnit(ArithmApplyToAttr):
         """
         used as help
         """
-        return f"{self.VALUE}'{self.UNIT}'/str({self})"
+        return str(self)
 
     # CMP -------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other) -> int | NoReturn:
