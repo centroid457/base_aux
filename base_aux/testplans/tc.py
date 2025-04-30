@@ -88,7 +88,10 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def devices__apply(cls, devices_cls: type['DevicesBreeder'] = None) -> None:
         if devices_cls is not None:
             cls.DEVICES__BREEDER_CLS = devices_cls
-        cls.TCS__LIST.clear()
+        try:
+            _Base1_TestCase._INSTS_DICT_CLS[cls].clear()
+        except:
+            pass
 
         if cls.DEVICES__BREEDER_CLS:
             for index in range(cls.DEVICES__BREEDER_CLS.COUNT):
@@ -241,7 +244,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # if not cls.DEVICES__BREEDER_CLS.LIST__DUT:
         #     return
 
-        print(f"run__cls=START={cls.NAME=}={'=' * 50}")
+        print(f"run__cls=START={cls.NAME=}{cls.DESCRIPTION=}={'=' * 50}")
 
         # SKIP ---------------------------------------------------
         # if cls.SKIP:

@@ -165,7 +165,7 @@ class TpManager(Logger, QThread):
         self.TCS_CLS = self.TP_ITEM.TCS_CLS
         self.DEVICES__BREEDER_CLS = self.TP_ITEM.DEV_BREEDER
 
-        self.DEVICES__BREEDER_CLS.generate__objects()
+        self.DEVICES__BREEDER_CLS.generate__objects(True)
 
         for tc_cls, using in self.TCS_CLS.items():
             tc_cls.SKIP = not using

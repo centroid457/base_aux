@@ -114,7 +114,7 @@ class TableModel_Devs(TableModelTemplate):
                 # return f"{tc_cls.NAME}\n{tc_cls.DESCRIPTION}"
                 return f"{dev_group_name}"
             if col in self.HEADERS.DEVICE:
-                if dev_inst and isinstance(dev_inst.ADDRESS, str):
+                if dev_inst and dev_inst.DEV_FOUND:
                     return dev_inst.ADDRESS
                 else:
                     return "-"
@@ -154,8 +154,7 @@ class TableModel_Devs(TableModelTemplate):
         if role == Qt.BackgroundColorRole:
             if col in self.HEADERS.DEVICE:
                 if dev_inst:
-
-                    if isinstance(dev_inst.ADDRESS, str):
+                    if dev_inst.DEV_FOUND:
                         return QColor('#50FF50')
                     else:
                         return QColor('#FF5050')

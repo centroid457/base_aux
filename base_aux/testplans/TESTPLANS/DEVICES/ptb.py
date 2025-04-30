@@ -26,7 +26,6 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
         """
         :param index: None is only for SINGLE!
         """
-        print(11111111)
         if index is not None:
             self.INDEX = index
         super().__init__(**kwargs)

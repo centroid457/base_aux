@@ -49,6 +49,11 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
 
         return result
 
+    # DETECT --------------------------------
+    @property
+    def DEV_FOUND(self) -> bool:
+        return self.address_check__resolved()
+
 
 # =====================================================================================================================
 if __name__ == "__main__":
