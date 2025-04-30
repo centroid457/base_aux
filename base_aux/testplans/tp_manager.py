@@ -9,6 +9,7 @@ from base_aux.servers.m1_client_requests import *
 from base_aux.aux_datetime.m1_datetime import *
 from base_aux.loggers.m1_logger import *
 from base_aux.path2_file.m4_fileattrs import *
+from base_aux.path2_file.m3_filetext import *
 
 
 # =====================================================================================================================
@@ -349,8 +350,8 @@ class TpManager(Logger, QThread):
 
             DUT = tc_inst.DEVICES__BREEDER_INST.DUT
 
-            if not DUT.DEV_FOUND or not DUT.DUT_FW:
-                continue
+            # if not DUT.DEV_FOUND or not DUT.DUT_FW:
+            #     continue
 
             dut_info = DUT.get__info__dev()
             result_dut = {
@@ -359,11 +360,15 @@ class TpManager(Logger, QThread):
                 "RESULTS_SHORT": result_i_short,
                 "RESULTS_FULL": result_i_full,
             }
-            data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
+
+            # data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
 
             filename = f"{name_prefix}[{index}].json"
             filepath = pathlib.Path(self.DIRPATH_RESULTS, filename)
-            filepath.write_text(data=data_text, encoding='utf-8')
+
+            tfile = TextFile(text=str(result_dut), filepath=filepath)
+            tfile.pretty__json()
+            tfile.write__text()
 
     # -----------------------------------------------------------------------------------------------------------------
     def post__tc_results(self, tc_inst: Base_TestCase) -> None:
