@@ -530,7 +530,7 @@ class _Info(_Base1_TestCase):
             "tc_details": self.details,
             "result__teardown": bool(self.result__teardown),
             "timestamp_last": self.timestamp_last and str(self.timestamp_last),
-            "log": self.get__results_pretty(),
+            "log": self.get__results_pretty().replace("\"", "").replace("\'", ""),
         }
         return result
 
