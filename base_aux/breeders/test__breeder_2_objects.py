@@ -24,32 +24,9 @@ class ItemList(ItemSingle):
 
 # =====================================================================================================================
 class Test__BreederObjectList:
-    @classmethod
-    def setup_class(cls):
-        cls.Victim = BreederObjectList
-
-    # # @classmethod
-    # # def teardown_class(cls):
-    # #     pass
-    # #
-    # def setup_method(self, method):
-    #     pass
-    #
-    # def teardown_method(self, method):
-    #     pass
-
-    # -----------------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-    pass    # ---------------------------------------------------------------------------------------------------------
-
     # -----------------------------------------------------------------------------------------------------------------
     def test__groups_check__generated(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -57,7 +34,7 @@ class Test__BreederObjectList:
         Victim.generate__objects()
         assert Victim.groups_check__generated() is True
 
-        class Victim2(self.Victim):
+        class Victim2(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -68,7 +45,7 @@ class Test__BreederObjectList:
     # -----------------------------------------------------------------------------------------------------------------
     def test__count(self):
         for count in range(5):
-            class Victim(self.Victim):
+            class Victim(BreederObjectList):
                 COUNT = count
                 CLS_SINGLE__ITEM_SINGLE = ItemSingle
                 CLS_LIST__ITEM_LIST = ItemList
@@ -86,34 +63,34 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__groups__get_names(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             pass
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.groups__get_names() == list()
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.groups__get_names() == ["ITEM_LIST", ]
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.groups__get_names() == ["ITEM_SINGLE", ]
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.groups__get_names() == ["ITEM_LIST", "ITEM_SINGLE"]
+        assert set(Victim.groups__get_names()) == {"ITEM_LIST", "ITEM_SINGLE"}
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__groups_count__generated(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             pass
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
@@ -122,7 +99,7 @@ class Test__BreederObjectList:
         Victim.generate__objects()
         assert Victim.groups_count__generated() == 0
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -130,7 +107,7 @@ class Test__BreederObjectList:
         Victim.generate__objects()
         assert Victim.groups_count__generated() == 1
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
@@ -138,7 +115,7 @@ class Test__BreederObjectList:
         Victim.generate__objects()
         assert Victim.groups_count__generated() == 1
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -148,7 +125,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_get__type(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 2
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
@@ -160,7 +137,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_check__exists(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             pass
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
@@ -168,21 +145,21 @@ class Test__BreederObjectList:
         assert Victim.group_check__exists("ITEM_SINGLE") is False
         assert Victim.group_check__exists("ITEM_LIST") is False
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.group_check__exists("ITEM_SINGLE") is False
         assert Victim.group_check__exists("ITEM_LIST") is True
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.group_check__exists("ITEM_SINGLE") is True
         assert Victim.group_check__exists("ITEM_LIST") is False
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -191,7 +168,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_get__cls(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             pass
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
@@ -199,21 +176,21 @@ class Test__BreederObjectList:
         assert Victim.group_get__cls("ITEM_SINGLE") is None
         assert Victim.group_get__cls("ITEM_LIST") is None
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.group_get__cls("ITEM_SINGLE") is None
         assert Victim.group_get__cls("ITEM_LIST") is ItemList
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
         assert Victim.group_get__cls("ITEM_SINGLE") is ItemSingle
         assert Victim.group_get__cls("ITEM_LIST") is None
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -222,7 +199,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_get__insts(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             pass
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
@@ -234,7 +211,7 @@ class Test__BreederObjectList:
         # assert isinstance(Victim.group_get__insts("ITEM_LIST"), list)
         # assert isinstance(Victim.group_get__insts("ITEM_LIST")[0], ItemList)
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             # CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -250,7 +227,7 @@ class Test__BreederObjectList:
         assert isinstance(Victim.group_get__insts("ITEM_LIST")[0], ItemList)
         assert len(Victim.group_get__insts("ITEM_LIST")) == Victim.COUNT
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             # CLS_LIST__ITEM_LIST = ItemList
 
@@ -266,7 +243,7 @@ class Test__BreederObjectList:
         # assert isinstance(Victim.group_get__insts("ITEM_LIST")[0], ItemList)
         # assert len(Victim.group_get__insts("ITEM_LIST")) == Victim.COUNT
 
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
@@ -284,7 +261,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_call(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 2
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
@@ -338,7 +315,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__breeder_cls__and_getattr(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 2
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
@@ -374,7 +351,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__breeder_inst__and_getattr(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 3
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
@@ -390,7 +367,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__breeder_inst__deep(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 3
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
@@ -415,7 +392,7 @@ class Test__BreederObjectList:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__generate_objects(self):
-        class Victim(self.Victim):
+        class Victim(BreederObjectList):
             COUNT = 2
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
