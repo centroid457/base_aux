@@ -209,6 +209,10 @@ class Exx__Overlayed(Base_Exx):
     pass
 
 
+class Exx__NotReady(Base_Exx):
+    pass
+
+
 # =====================================================================================================================
 class Exx__GetattrPrefix(Base_Exx):
     pass
@@ -222,14 +226,6 @@ class Exx__StartOuterNONE_UsedInStackByRecreation(Base_Exx):
     """
     in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
     """
-    pass
-
-
-class Exx__BreederObjectList_GroupsNotGenerated(Base_Exx):
-    pass
-
-
-class Exx__BreederObjectList_GroupNotExists(Base_Exx):
     pass
 
 

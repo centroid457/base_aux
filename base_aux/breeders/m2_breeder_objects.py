@@ -56,7 +56,7 @@ class BreederObjectList:
     _STARTSWITH__ACCESS__BREEDER_IN__SOURCE: str = "BREEDER"    # SINGLE:type[Breeder] // MULTY:Breeder
 
     # AUX --------
-    __groups__are_generated: bool = False
+    _groups__are_generated: bool = False
 
     # instance ---
     INDEX: int | None = None    # index used only in OBJECT INSTANCE
@@ -65,13 +65,18 @@ class BreederObjectList:
         """
         init only when you need to do access to exact items!
         """
+        if index > self.__class__.COUNT - 1:
+            msg = f"[ERR]{self.__class__.COUNT=}/{index=}"
+            print(msg)
+            raise Exx__Addressing(msg)
+
         self.INDEX = index      # need first!
         super().__init__(*args, **kwargs)
-        # self.generate__objects()
+        self.generate__objects()
 
     @classmethod
     def groups_check__generated(cls) -> bool | None:
-        return cls.__groups__are_generated
+        return cls._groups__are_generated
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -79,9 +84,9 @@ class BreederObjectList:
         """exact and only one method to Gen all aux_types - dont forget to call it!
         """
         if force:
-            cls.__groups__are_generated = False
+            cls._groups__are_generated = False
 
-        if cls.__groups__are_generated:
+        if cls.groups_check__generated():
             return
 
         # WORK --------------------------------------
@@ -119,7 +124,7 @@ class BreederObjectList:
                 setattr(obj_cls, cls._STARTSWITH__ACCESS__OBJECT_LIST__IN_SOURCE, obj_instance)
                 setattr(obj_cls, cls._STARTSWITH__ACCESS__BREEDER_IN__SOURCE, cls)
 
-        cls.__groups__are_generated = True
+        cls._groups__are_generated = True
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod
@@ -156,7 +161,7 @@ class BreederObjectList:
         work only after called generate__objects(),
         so if you wasnot call generate__objects it will return None!
         """
-        if cls.__groups__are_generated:
+        if cls.groups_check__generated():
             return len(cls.groups__get_names())
 
     # GROUP -----------------------------------------------------------------------------------------------------------
@@ -177,18 +182,20 @@ class BreederObjectList:
     @classmethod
     def group_get__cls(cls, group: str) -> type[Any] | None:
         group_type = cls.group_get__format(group)
+        attr = None
 
         if group_type == Enum_Multiplicity.SINGLE:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}"
-            return getattr(cls, attr)
 
-        if group_type == Enum_Multiplicity.MULTY:
+        elif group_type == Enum_Multiplicity.MULTY:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}"
+
+        if attr:
             return getattr(cls, attr)
 
     @classmethod
     def group_get__insts(cls, group: str) -> Union[None, Any, list[Any]]:
-        if cls.group_check__exists(group) and cls.__groups__are_generated:
+        if cls.group_check__exists(group) and cls.groups_check__generated():
             group_cls = cls.group_get__cls(group)
             result = getattr(group_cls, cls._STARTSWITH__ACCESS__OBJECT_LIST__IN_SOURCE)
             return result
@@ -207,8 +214,10 @@ class BreederObjectList:
         :return:
             RAISE only if passed group and group is not exists! or groups are not generated
         """
-        if not cls.__groups__are_generated:
-            raise Exx__BreederObjectList_GroupsNotGenerated()
+        if not cls.groups_check__generated():
+            msg = "[ERR]group_call__ groups NOT GENERATED"
+            print(msg)
+            raise Exx__NotReady(msg)
 
         args = args or ()
         kwargs = kwargs or {}
@@ -222,7 +231,7 @@ class BreederObjectList:
 
         # if group is not exists ---------------------------------------------
         if not cls.group_check__exists(group):
-            raise Exx__BreederObjectList_GroupNotExists(group)
+            raise Exx__NotExistsNotFoundNotCreated(group)
 
         # EXACT ONE GROUP ----------------------------------------------------
         group_objs = cls.group_get__insts(group)
@@ -268,7 +277,7 @@ class BreederObjectList:
         # FINAL not found -----------------------------
         msg = f"{item=}/{self.INDEX=}"
         print(msg)
-        raise Exx__BreederObjectList_GroupNotExists(msg)
+        raise Exx__NotExistsNotFoundNotCreated(msg)
 
 
 # =====================================================================================================================

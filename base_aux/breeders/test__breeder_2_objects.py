@@ -357,7 +357,7 @@ class Test__BreederObjectList:
             CLS_LIST__ITEM_LIST = ItemList
 
         Victim.generate__objects()
-        assert Victim.ITEM_SINGLE is ItemSingle.INSTS is Victim(0).ITEM_SINGLE is Victim(1).ITEM_SINGLE is Victim(3).ITEM_SINGLE
+        assert Victim.ITEM_SINGLE is ItemSingle.INSTS is Victim(0).ITEM_SINGLE is Victim(1).ITEM_SINGLE
 
         for index in range(Victim.COUNT):
             assert Victim(index).ITEM_SINGLE is Victim.ITEM_SINGLE is Victim.ITEM_SINGLE.INSTS
