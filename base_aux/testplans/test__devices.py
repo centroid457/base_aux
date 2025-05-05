@@ -98,7 +98,9 @@ class Test__DevicesBreeder_WithDut:
     def test__CLS_SINGLE__INSTANCE(self):
         self.Victim.COUNT = 2
         self.Victim.CLS_SINGLE__ATC = Base_Device
-        self.Victim.generate__objects()
+        assert not self.Victim.groups_check__generated()
+        self.Victim.generate__objects(True)
+        assert self.Victim.groups_check__generated()
 
         victim = self.Victim(1)    # FIXME: IS IN BROKEN?????
 

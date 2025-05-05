@@ -82,7 +82,7 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class DevicesBreeder(BreederObjectList):
+class DevicesBreeder(BreederObj):
     def __del__(self):
         self.disconnect__cls()
 

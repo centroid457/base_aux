@@ -52,7 +52,7 @@
 
 0.2.19(2025.03.13 17.59.09)
 ------------------------------
-- [BreederObjectList] add LIST__ALL_GENERATED  
+- [BreederObj] add LIST__ALL_GENERATED  
 
 0.2.18(2025.03.13 17.05.02)
 ------------------------------

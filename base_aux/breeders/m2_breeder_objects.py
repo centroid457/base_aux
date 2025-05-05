@@ -15,7 +15,7 @@ TYPING__BREED_RESULT__GROUPS = dict[str, TYPING__BREED_RESULT__GROUP]
 
 
 # =====================================================================================================================
-class BreederObjectList:
+class BreederObj:
     """
     class which keep all aux_types in one place!
     useful for multyObject systems.
@@ -29,9 +29,9 @@ class BreederObjectList:
     - init all and check correctness for all
 
     AFTER GENERATING OBJECTS - ACCESS TO OBJECTS LIST USED OVER THE CLASS!!!
-        OBJS_CLS = BreederObjectList
+        OBJS_CLS = BreederObj
         OBJS = OBJS_CLS()
-        devs = OBJS_CLS.LIST__DEV
+        devs1 = OBJS_CLS.LIST__DEV1
     """
     # SETTINGS ----------------------
     COUNT: int = 1
@@ -94,7 +94,10 @@ class BreederObjectList:
             # LIST --------------------------------------
             if attr_name.startswith(cls._STARTSWITH__DEFINE__CLS_LIST):
                 group_name = attr_name.removeprefix(cls._STARTSWITH__DEFINE__CLS_LIST)
-                obj_cls = getattr(cls, attr_name)
+                try:
+                    obj_cls = getattr(cls, attr_name)
+                except:
+                    continue
 
                 obj_list__name = f"{cls._STARTSWITH__ACCESS__OBJECT_LIST__IN_BREEDER}{group_name}"
                 obj_list__value = []
@@ -105,7 +108,6 @@ class BreederObjectList:
                     except Exception as exx:
                         obj_instance = exx
                     obj_list__value.append(obj_instance)
-
 
                 # apply GROUP to class -------
                 setattr(cls, obj_list__name, obj_list__value)
