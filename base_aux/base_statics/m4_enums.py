@@ -8,6 +8,17 @@ see _examples below and tests to understand work
 
 
 # =====================================================================================================================
+class Enum_SingleMultiple(NestEq_Enum):
+    SINGLE = 1
+    MULTIPLE = 2
+
+
+class Enum_StaticCallable(NestEq_Enum):
+    STATIC = 1
+    CALLABLE = 2
+
+
+# =====================================================================================================================
 class Enum_When2(NestEq_Enum):
     BEFORE = 1
     AFTER = 2
