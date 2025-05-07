@@ -168,28 +168,28 @@ class BreederObj:
 
     # GROUP -----------------------------------------------------------------------------------------------------------
     @classmethod
-    def group_get__format(cls, group: str) -> Enum_Multiplicity:
+    def group_get__format(cls, group: str) -> Enum_SingleMultiple:
         if f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}" in dir(cls):
-            return Enum_Multiplicity.SINGLE
+            return Enum_SingleMultiple.SINGLE
 
         if f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}" in dir(cls):
-            return Enum_Multiplicity.MULTY
+            return Enum_SingleMultiple.MULTIPLE
 
-        return Enum_Multiplicity.NOT_EXISTS
+        return Enum_SingleMultiple.NOT_EXISTS
 
     @classmethod
     def group_check__exists(cls, group: str) -> bool:
-        return cls.group_get__format(group) != Enum_Multiplicity.NOT_EXISTS
+        return cls.group_get__format(group) != Enum_SingleMultiple.NOT_EXISTS
 
     @classmethod
     def group_get__cls(cls, group: str) -> type[Any] | None:
         group_type = cls.group_get__format(group)
         attr = None
 
-        if group_type == Enum_Multiplicity.SINGLE:
+        if group_type == Enum_SingleMultiple.SINGLE:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_SINGLE}{group}"
 
-        elif group_type == Enum_Multiplicity.MULTY:
+        elif group_type == Enum_SingleMultiple.MULTIPLE:
             attr = f"{cls._STARTSWITH__DEFINE__CLS_LIST}{group}"
 
         if attr:

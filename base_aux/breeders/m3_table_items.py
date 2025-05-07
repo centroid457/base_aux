@@ -9,6 +9,15 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 
 
 # =====================================================================================================================
+TYPING__BREED_RESULT__ITEM = Union[Any, Exception]
+TYPING__BREED_RESULT__GROUP = Union[
+    TYPING__BREED_RESULT__ITEM,        # SINGLE variant
+    list[TYPING__BREED_RESULT__ITEM]   # LIST variant
+]
+TYPING__BREED_RESULT__GROUPS = dict[str, TYPING__BREED_RESULT__GROUP]
+
+
+# =====================================================================================================================
 class Base_GenItems(NestInit_Source):
     """
     GOAL
@@ -25,12 +34,12 @@ class Base_GenItems(NestInit_Source):
     CALLABILITY: Enum_StaticCallable = Enum_StaticCallable.CALLABLE
 
     def generate_items(self, count: int) -> Any | list[Any] | NoReturn:
-        if self.MULTYPLICITY == Enum_Multiplicity.SINGLE:
+        if self.MULTYPLICITY == Enum_SingleMultiple.SINGLE:
             if self.CALLABILITY == Enum_StaticCallable.CALLABLE:
                 return self.SOURCE()
             else:
                 return self.SOURCE
-        elif self.MULTYPLICITY == Enum_Multiplicity.MULTY:
+        elif self.MULTYPLICITY == Enum_SingleMultiple.MULTIPLE:
             result = []
             for index in range(count):
                 if self.CALLABILITY == Enum_StaticCallable.CALLABLE:
@@ -40,6 +49,10 @@ class Base_GenItems(NestInit_Source):
 
                 result.append(item)
             return result
+        else:
+            msg = f"{self.MULTYPLICITY=}"
+            print(msg)
+            raise Exx__WrongUsage(msg)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -91,15 +104,17 @@ class TableItems:
         self._check_length()
 
     def __contains__(self, item: str) -> bool:
-        return item in list(self._iter_group_names())
+        return item in self.group_names()
 
-    def _iter_group_names(self) -> Iterable[str]:
+    def group_names(self) -> list[str]:
+        result = []
         for name in AnnotsAllAux(self).iter__names_not_hidden():
             if name != "COUNT":
-                yield name
+                result.append(name)
+        return result
 
     def _check_length(self) -> None | NoReturn:
-        groups = list(self._iter_group_names())
+        groups = self.group_names()
         for group in groups:
             group_items = getattr(self, group)
             if isinstance(group_items, list):
@@ -109,12 +124,65 @@ class TableItems:
                     raise Exx__WrongUsage(msg)
 
     def _generate_groups(self) -> None | NoReturn:
-        for group in self._iter_group_names():
-            fabric: Base_GenItems | list[Any] | Any = getattr(self.__class__, group)
+        for group in self.group_names():
+            fabric: Base_GenItems | list[Any] | Any = getattr(self, group)
             if isinstance(fabric, Base_GenItems):
                 setattr(self, group, fabric.generate_items(self.COUNT))
             else:
                 setattr(self, group, fabric)
+
+    def group_get__insts(self, group: str) -> Any | list[Any] | NoReturn:
+        return getattr(self, group)
+
+    def group_call__(self, meth: str, group: str | None = None, args: list | None = None, kwargs: dict | None = None) -> Union[NoReturn, TYPING__BREED_RESULT__GROUP, TYPING__BREED_RESULT__GROUPS]:
+        """
+        call one method on exact group (every object in group) or all groups (every object in all groups).
+        created specially for call connect/disconnect for devices in TP.
+
+        :param meth:
+        :param group:
+
+        :param args:
+        :param kwargs:
+        :return:
+            RAISE only if passed group and group is not exists! or groups are not generated
+        """
+        args = args or ()
+        kwargs = kwargs or {}
+
+        # ALL GROUPS -------------------------------------------------
+        if group is None:
+            results = {}
+            for group_name in self.group_names():
+                results.update({group_name: self.group_call__(meth, group_name, args, kwargs)})
+            return results
+
+        # if group is not exists ---------------------------------------------
+        if group not in self.group_names():
+            raise Exx__NotExistsNotFoundNotCreated(group)
+
+        # ONE GROUP ----------------------------------------------------
+        group_objs = self.group_get__insts(group)
+
+        if isinstance(group_objs, list):    # LIST
+            results = []
+            for obj in group_objs:
+                try:
+                    obj_meth = getattr(obj, meth)
+                    obj_result = obj_meth(*args, **kwargs)
+                except Exception as exx:
+                    obj_result = exx
+                results.append(obj_result)
+        else:           # SINGLE
+            obj = group_objs
+            try:
+                obj_meth = getattr(obj, meth)
+                obj_result = obj_meth(*args, **kwargs)
+            except Exception as exx:
+                obj_result = exx
+            results = obj_result
+
+        return results
 
 
 # =====================================================================================================================
@@ -124,7 +192,7 @@ class TableItemsIndex:
     ----
     replace/ref breederObject!
     """
-    ITEMS: TableItems = TableItems(3)   # access for all lists!
+    ITEMS: TableItems = TableItems()   # access for all lists!
     INDEX: int
 
     def __init__(self, index: int) -> None | NoReturn:
@@ -140,27 +208,6 @@ class TableItemsIndex:
             return group_items[self.INDEX]
         else:
             return group_items      # as final SINGLE value!
-
-
-# =====================================================================================================================
-def test__example():
-    class Example__TableItems(TableItems):
-        COUNT = 2
-        ATC1 = "atc1"
-        ATC2 = GenItems_SingleCallable(lambda: "atc2")
-
-        PTB1 = ["ptb0", "ptb1"]
-        PTB2 = GenItems_MultyCallable(lambda index: f"ptb{index}")
-
-
-    class Example__TableItemsIndex(TableItemsIndex):
-        ITEMS = Example__TableItems()
-
-
-    assert Example__TableItemsIndex(0).ATC1 == Example__TableItems.ATC1
-    assert Example__TableItemsIndex(0).ATC1 == Example__TableItemsIndex(0).ITEMS.ATC1
-    assert Example__TableItemsIndex(1).ATC1 == Example__TableItems.ATC1
-    assert Example__TableItemsIndex(1).ATC1 == Example__TableItemsIndex(1).ITEMS.ATC1
 
 
 # =====================================================================================================================

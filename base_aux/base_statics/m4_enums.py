@@ -9,6 +9,7 @@ see _examples below and tests to understand work
 
 # =====================================================================================================================
 class Enum_SingleMultiple(NestEq_Enum):
+    NOT_EXISTS = None
     SINGLE = 1
     MULTIPLE = 2
 
@@ -146,12 +147,6 @@ class Enum_BoolCumulate(NestEq_Enum):
     ANY_TRUE = any
     ANY_FALSE = 1
     ALL_FALSE = 2
-
-
-class Enum_Multiplicity(Enum):
-    NOT_EXISTS = None
-    SINGLE = 1
-    MULTY = 2
 
 
 class Enum_PathType(NestEq_Enum):

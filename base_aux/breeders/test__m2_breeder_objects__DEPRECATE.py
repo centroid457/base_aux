@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.breeders.m2_breeder_objects import *
+from base_aux.breeders.m2_breeder_objects___DEPRECATE import *
 
 
 # =====================================================================================================================
@@ -130,10 +130,10 @@ class Test__BreederObjectList:
             CLS_SINGLE__ITEM_SINGLE = ItemSingle
             CLS_LIST__ITEM_LIST = ItemList
 
-        assert Victim.group_get__format("ITEM_SINGLE") is Enum_Multiplicity.SINGLE
-        assert Victim.group_get__format("ITEM_LIST") is Enum_Multiplicity.MULTY
-        assert Victim.group_get__format("COUNT") is Enum_Multiplicity.NOT_EXISTS
-        assert Victim.group_get__format("NOT_EXISTS") is Enum_Multiplicity.NOT_EXISTS
+        assert Victim.group_get__format("ITEM_SINGLE") is Enum_SingleMultiple.SINGLE
+        assert Victim.group_get__format("ITEM_LIST") is Enum_SingleMultiple.MULTIPLE
+        assert Victim.group_get__format("COUNT") is Enum_SingleMultiple.NOT_EXISTS
+        assert Victim.group_get__format("NOT_EXISTS") is Enum_SingleMultiple.NOT_EXISTS
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__group_check__exists(self):
