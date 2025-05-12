@@ -2,8 +2,10 @@ from typing import *
 import uuid
 
 from base_aux.testplans import *
-from base_aux.breeders.m2_breeder_objects___DEPRECATE import *
 from base_aux.buses.m1_serial1_client import *
+
+from base_aux.breeders.m2_breeder_objects___DEPRECATE import *
+from base_aux.breeders.m3_table_items import *
 
 from .tc import Base_TestCase
 from .models import *

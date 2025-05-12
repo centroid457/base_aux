@@ -27,7 +27,7 @@ class Base_GenItems(NestInit_Source):
 
     SPECIALLY CREATED FOR
     ---------------------
-    as part for TableItems (one list)
+    as part for TableItems_Groups (one list)
     """
     SOURCE: type[Any] | Callable[..., Any] | Any
     MULTYPLICITY: Enum_SingleMultiple = Enum_SingleMultiple.MULTIPLE
@@ -82,7 +82,9 @@ class GenItems_MultyCallable(Base_GenItems):
 
 
 # =====================================================================================================================
-class TableItems:
+# TODO: need use special instance/class(NestInit_Source) in group!
+
+class TableItems_Groups:
     """
     GOAL
     ----
@@ -91,9 +93,12 @@ class TableItems:
 
     SPECIALLY CREATED FOR
     ---------------------
-    ITEMS in TableItemsIndex as access for all lists
+    ITEMS in TableItems_Index as access for all lists
     """
     COUNT: int = 1
+
+    # GROUPS ---------------------------------------------------
+    # ALL GROUPS WILL be REPLACED BY LIST or FINAL INSTANCE!!! on inition!!!
     # SINGLE1: Base_GenItems | Any = ItemSingle("single")
     # MULTY1: Base_GenItems | list[Any] = [i * 10 for i in range(3)]
 
@@ -103,6 +108,7 @@ class TableItems:
         self._generate_groups()
         self._check_length()
 
+    # ----------------------------------------------------------
     def __contains__(self, item: str) -> bool:
         return item in self.group_names()
 
@@ -186,13 +192,13 @@ class TableItems:
 
 
 # =====================================================================================================================
-class TableItemsIndex:
+class TableItems_Index:
     """
     GOAL
     ----
     replace/ref breederObject!
     """
-    ITEMS: TableItems = TableItems()   # access for all lists!
+    ITEMS: TableItems_Groups = TableItems_Groups()   # access for all lists!
     INDEX: int
 
     def __init__(self, index: int) -> None | NoReturn:
@@ -208,6 +214,8 @@ class TableItemsIndex:
             return group_items[self.INDEX]
         else:
             return group_items      # as final SINGLE value!
+
+    # def group_call__(self):   # DONT ADD HERE!!! use over GROUPS only!!!
 
 
 # =====================================================================================================================

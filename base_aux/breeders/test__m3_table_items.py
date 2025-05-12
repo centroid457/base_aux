@@ -26,17 +26,17 @@ class ItemList(ItemSingle):
 # =====================================================================================================================
 class Test_Single:
     def setup_method(self, method):
-        class VictimItems(TableItems):
+        class VictimItemsGroups(TableItems_Groups):
             COUNT = 2
 
             ATC_STATIC: Any = "ATC_STATIC"
             ATC_FUNC: Any = GenItems_SingleCallable(lambda: "ATC_FUNC")
             ATC_CLS: Any = GenItems_SingleCallable(ItemSingle)
 
-        class VictimIndex(TableItemsIndex):
-            ITEMS = VictimItems()
+        class VictimIndex(TableItems_Index):
+            ITEMS = VictimItemsGroups()
 
-        self.VictimItems = VictimItems
+        self.VictimItems = VictimItemsGroups
         self.VictimIndex = VictimIndex
 
     def test__0(self):
@@ -70,17 +70,17 @@ class Test_Single:
 # =====================================================================================================================
 class Test_Multy:
     def setup_method(self, method):
-        class VictimItems(TableItems):
+        class VictimItemsGroups(TableItems_Groups):
             COUNT = 2
 
             PTB_LIST: Any = ["ptb0", "ptb1"]
             PTB_FUNC: Any = GenItems_MultyCallable(lambda index: f"ptb{index}")
             PTB_CLS: Any = GenItems_MultyCallable(ItemList)
 
-        class VictimIndex(TableItemsIndex):
-            ITEMS = VictimItems()
+        class VictimIndex(TableItems_Index):
+            ITEMS = VictimItemsGroups()
 
-        self.VictimItems = VictimItems
+        self.VictimItems = VictimItemsGroups
         self.VictimIndex = VictimIndex
 
     def test__0(self):
