@@ -63,7 +63,7 @@ class ArgsKwargs:       # fixme: decide to separate+FINAL!!! so used only for di
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@final
+# @final        # DONT USE final! need
 class Args(ArgsKwargs, NestCall_Resolve):
     """
     just a derivative to clearly show only Args is important

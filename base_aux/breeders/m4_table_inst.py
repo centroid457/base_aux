@@ -6,14 +6,15 @@ from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.base_nest_dunders.m1_init1_source import *
+from base_aux.aux_argskwargs.m1_argskwargs import *
 
 
 # =====================================================================================================================
-TYPING__INST_OR_INST_LIST = Union[Any, list[Any]]
+TYPING__INST_OR_INST_LIST = Union[Any, tuple[Any, ...]]
 
 
 # =====================================================================================================================
-class TableInstLine(NestInit_Source):
+class TableInstLine:
     """
     GOAL
     ----
@@ -22,8 +23,8 @@ class TableInstLine(NestInit_Source):
     keep LIST[Any] or Single Any instance in Source.
     GI-access to elements.
     RETURN
-        if SOURCE is list - return source[index]
-        otherwise - SOURCE
+        if INSTS is list - return source[index]
+        otherwise - INSTS
 
     SPECIALLY CREATED FOR
     ---------------------
@@ -31,7 +32,21 @@ class TableInstLine(NestInit_Source):
     most important is wotk with already generated Elements!
     """
     # DONT multiply single instance into list!
-    SOURCE: TYPING__INST_OR_INST_LIST
+    INSTS: TYPING__INST_OR_INST_LIST
+
+    def __init__(self, *insts) -> None:
+        self.INSTS = insts
+
+    def __iter__(self):
+        """
+        GOAL
+        ----
+        iter all instances in line
+        """
+        yield from self.INSTS
+
+    def __contains__(self, item):
+        return item in self.INSTS
 
     def __getitem__(self, index: int) -> Any | NoReturn:
         """
@@ -39,21 +54,18 @@ class TableInstLine(NestInit_Source):
         ----
         access to exact instance by index
         """
-        if isinstance(self.SOURCE, list):
-            return self.SOURCE[index]
+        if len(self.INSTS) == 1:
+            return self.INSTS[0]
         else:
-            return self.SOURCE
+            return self.INSTS[index]
 
-    def __iter__(self) -> Iterable[Any]:
+    def __len__(self):
         """
         GOAL
         ----
-        iter all instances in line
+        return number of line instances
         """
-        if isinstance(self.SOURCE, list):
-            yield from self.SOURCE
-        else:
-            return self.SOURCE      # IF SINGLE instance line!
+        return len(self.INSTS)
 
     def __call__(self, meth: str, *args, **kwargs) -> list[Any | Exception]:
         """
@@ -72,25 +84,12 @@ class TableInstLine(NestInit_Source):
 
         return results
 
-    def __len__(self):
-        """
-        GOAL
-        ----
-        return number of line instances
-        """
-        return self.COUNT or 1
-
     @property
     def COUNT(self) -> int | None:
         """
-        GOAL
-        ----
-        return number of MultyInstance line or None for single instance (noMulty)
+        preferred using direct LEN???
         """
-        if isinstance(self.SOURCE, list):
-            return len(self.SOURCE)
-        else:
-            return None     # IF SINGLE instance line!
+        return len(self.INSTS)
 
 
 # =====================================================================================================================
