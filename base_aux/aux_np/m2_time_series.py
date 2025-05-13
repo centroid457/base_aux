@@ -160,7 +160,7 @@ class TimeSeriesAux(NestInit_Source):
                 result = np.array([void_new])
         return result
 
-    def _window_shrink(self, window: np.ndarray) -> np.void:
+    def _window_shrink(self, window: np.ndarray) -> np.void | np.ndarray:   # np.void - is acually! np.ndarray - just for IDE typeChecking!
         void_new = window[0].copy()
 
         void_new["time"] = window["time"].max()
