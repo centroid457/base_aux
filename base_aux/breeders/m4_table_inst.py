@@ -10,7 +10,7 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 
 # =====================================================================================================================
-class TableInstLine:
+class TableLine:
     """
     GOAL
     ----
@@ -93,13 +93,58 @@ class TableInstLine:
 
 
 # =====================================================================================================================
-class TableInst(NestInit_Source):
+class TableLines:
+    """
+    GOAL
+    ----
+    just as object keeping sets for all lines
+
+
+    USAGE
+    =====
+    two ways to define object
+    -------------------------
+        1=by direct set cls attrs
+        2=by init kwargs
+
+    create/use Instance
+    -------------------
+    """
+    def __init__(self, **lines: TableLine) -> None | NoReturn:
+        for name, value in lines.items():
+            if isinstance(value, TableLine):
+                setattr(self, name, value)
+            else:
+                msg = f"{value=} is not TableLine type"
+                raise Exx__WrongUsage(msg)
+
+    def items(self) -> Iterable[tuple[str, TableLine]]:
+        for name in dir(self):
+            value = getattr(self, name)
+            if isinstance(value, TableLine):
+                yield name, value
+
+    def names(self) -> list[str]:
+        result = []
+        for name, value in self.items():
+            result.append(name)
+        return result
+
+    def values(self) -> list[TableLine]:
+        result = []
+        for name, value in self.items():
+            result.append(value)
+        return result
+
+
+# =====================================================================================================================
+class TableColumns(NestInit_Source):
     """
     GOAL
     ----
     collect all tableLines (objects) in one object
     """
-    SOURCE: dict[str, TableInstLine]
+    SOURCE: dict[str, TableLine]
 
     def init_post(self) -> None | NoReturn:
         self._check_length()
