@@ -1,11 +1,6 @@
 from typing import *
-from enum import Enum, auto
 
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m1_annot_attr1_aux import *
-
-from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 
@@ -99,7 +94,6 @@ class TableLines:
     ----
     just as object keeping sets for all lines
 
-
     USAGE
     =====
     two ways to define object
@@ -131,6 +125,16 @@ class TableLines:
 
         self.COUNT_COLUMNS = COUNT_COLUMNS
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def __contains__(self, item: str) -> bool:
+        """
+        GOAL
+        ----
+        check just name line exist in lines
+        """
+        return item in self.names()
+
+    # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
         for name in dir(self):
             value = getattr(self, name)
@@ -149,115 +153,41 @@ class TableLines:
             result.append(value)
         return result
 
-
-
-
-
-
-
-
-
-
-
-
-
-# =====================================================================================================================
-class TableColumns:
-    """
-    GOAL
-    ----
-    collect all tableLines (objects) in one object
-    """
-
-    # ----------------------------------------------------------
-    def __contains__(self, item: str) -> bool:
+    # -----------------------------------------------------------------------------------------------------------------
+    def __call__(self, meth: str, *args, **kwargs) -> dict[str, list[Any | Exception]]:
         """
         GOAL
         ----
-        check just name exist in table
+        call method on all lines
         """
-        return item in self.SOURCE
-
-
-    def line__insts(self, name: str) -> TYPING__INST_OR_INST_LIST | NoReturn:
-        return getattr(self, name).SOURCE
-
-    def line_call__(self, meth: str, name: str | None = None, args: list | None = None, kwargs: dict | None = None) -> Union[NoReturn, TYPING__BREED_RESULT__GROUP, TYPING__BREED_RESULT__GROUPS]:
-        """
-        call one method on exact group (every object in group) or all groups (every object in all groups).
-        created specially for call connect/disconnect for devices in TP.
-
-        :param meth:
-        :param group:
-
-        :param args:
-        :param kwargs:
-        :return:
-            RAISE only if passed group and group is not exists! or groups are not generated
-        """
-        args = args or ()
-        kwargs = kwargs or {}
-
-        # ALL GROUPS -------------------------------------------------
-        if name is None:
-            results = {}
-            for group_name in self.lines_names():
-                results.update({group_name: self.line_call__(meth, group_name, args, kwargs)})
-            return results
-
-        # if group is not exists ---------------------------------------------
-        if group not in self.lines_names():
-            raise Exx__NotExistsNotFoundNotCreated(group)
-
-        # ONE GROUP ----------------------------------------------------
-        group_objs = self.group_get__insts(group)
-
-        if isinstance(group_objs, list):    # LIST
-            results = []
-            for obj in group_objs:
-                try:
-                    obj_meth = getattr(obj, meth)
-                    obj_result = obj_meth(*args, **kwargs)
-                except Exception as exx:
-                    obj_result = exx
-                results.append(obj_result)
-        else:           # SINGLE
-            obj = group_objs
-            try:
-                obj_meth = getattr(obj, meth)
-                obj_result = obj_meth(*args, **kwargs)
-            except Exception as exx:
-                obj_result = exx
-            results = obj_result
+        results = {}
+        for name, line in self.items():
+            results.update({name: line(meth, *args, **kwargs)})
 
         return results
 
 
 # =====================================================================================================================
-class TableItems_Index:
+class TableColumn:
     """
     GOAL
     ----
     replace/ref breederObject!
+    access to exact instance in line by simple name (implying index)
     """
-    ITEMS: TableItems_Groups = TableItems_Groups()   # access for all lists!
+    LINES: TableLines = TableLines()   # access for all lines!
     INDEX: int
 
     def __init__(self, index: int) -> None | NoReturn:
-        if index + 1 > self.ITEMS.COUNT:
-            msg = f"{index=}/{self.ITEMS.COUNT=}"
+        if index + 1 > self.LINES.COUNT_COLUMNS:
+            msg = f"{index=}/{self.LINES.COUNT_COLUMNS=}"
             raise Exx__Addressing(msg)
 
         self.INDEX = index
 
     def __getattr__(self, item: str) -> Any | NoReturn:
-        group_items = getattr(self.ITEMS, item)
-        if isinstance(group_items, list):
-            return group_items[self.INDEX]
-        else:
-            return group_items      # as final SINGLE value!
-
-    # def group_call__(self):   # DONT ADD HERE!!! use over GROUPS only!!!
+        line: TableLine = getattr(self.LINES, item)
+        return line[self.INDEX]
 
 
 # =====================================================================================================================
