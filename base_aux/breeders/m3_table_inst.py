@@ -104,10 +104,31 @@ class TableLines:
     create/use Instance
     -------------------
     """
-    COUNT_COLUMNS: int  # set on init!
+    _count_columns: int = 1
 
     def __init__(self, **lines: TableLine) -> None | NoReturn:
-        COUNT_COLUMNS = 1
+        self._init_new_lines(**lines)
+        self._init_count_columns()
+        self._check_same_counts()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def COUNT_COLUMNS(self) -> int:
+        return self._count_columns
+
+    @COUNT_COLUMNS.setter
+    def COUNT_COLUMNS(self, new: int) -> None | NoReturn:
+        if new == 1:
+            return
+
+        if self._count_columns == 1:
+            self._count_columns = new
+        elif self._count_columns != new:
+            msg = f"{new=}/{self.COUNT_COLUMNS=}"
+            raise Exx__WrongUsage(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def _init_new_lines(self, **lines: TableLine) -> None:
         for name, value in lines.items():
             if isinstance(value, TableLine):
                 setattr(self, name, value)
@@ -115,15 +136,15 @@ class TableLines:
                 msg = f"{value=} is not TableLine type"
                 raise Exx__WrongUsage(msg)
 
-            if COUNT_COLUMNS == 1 and value.COUNT > COUNT_COLUMNS:
-                COUNT_COLUMNS = value.COUNT
+    def _init_count_columns(self) -> None | NoReturn:
+        for name, line in self.items():
+            self.COUNT_COLUMNS = line.COUNT
 
-            if value.COUNT > COUNT_COLUMNS:
-                msg = f"[ERR] incorrect length {name=}/{value.COUNT=}/{COUNT_COLUMNS=}"
-                print(msg)
+    def _check_same_counts(self) -> None | NoReturn:
+        for name, line in self.items():
+            if line.COUNT not in [self.COUNT_COLUMNS, 1]:
+                msg = f"{name=}/{line.COUNT=}/{self.COUNT_COLUMNS=}"
                 raise Exx__WrongUsage(msg)
-
-        self.COUNT_COLUMNS = COUNT_COLUMNS
 
     # -----------------------------------------------------------------------------------------------------------------
     def __contains__(self, item: str) -> bool:
@@ -137,6 +158,9 @@ class TableLines:
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
         for name in dir(self):
+            print(f"items={name=}")
+            if name.startswith("_"):
+                continue
             value = getattr(self, name)
             if isinstance(value, TableLine):
                 yield name, value
@@ -175,7 +199,7 @@ class TableColumn:
     replace/ref breederObject!
     access to exact instance in line by simple name (implying index)
     """
-    LINES: TableLines = TableLines()   # access for all lines!
+    LINES: TableLines   # = TableLines()   # access for all lines!
     INDEX: int
 
     def __init__(self, index: int) -> None | NoReturn:
