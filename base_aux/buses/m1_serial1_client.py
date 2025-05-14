@@ -795,7 +795,6 @@ class SerialClient(Logger):
             result.append(obj.device)
             if Exx_SerialPL2303IncorrectDriver.MARKER in str(obj):
                 msg = f'[WARN] incorrect driver [{Exx_SerialPL2303IncorrectDriver.MARKER}]'
-                print(msg)
                 raise Exx_SerialPL2303IncorrectDriver(msg)
         return result
 

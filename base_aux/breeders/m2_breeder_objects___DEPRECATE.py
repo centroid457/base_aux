@@ -67,7 +67,6 @@ class BreederObj:
         """
         if index > self.__class__.COUNT - 1:
             msg = f"[ERR]{self.__class__.COUNT=}/{index=}"
-            print(msg)
             raise Exx__Addressing(msg)
 
         self.INDEX = index      # need first!
@@ -218,7 +217,6 @@ class BreederObj:
         """
         if not cls.groups_check__generated():
             msg = "[ERR]group_call__ groups NOT GENERATED"
-            print(msg)
             raise Exx__NotReady(msg)
 
         args = args or ()
@@ -278,7 +276,6 @@ class BreederObj:
 
         # FINAL not found -----------------------------
         msg = f"{item=}/{self.INDEX=}"
-        print(msg)
         raise Exx__NotExistsNotFoundNotCreated(msg)
 
 

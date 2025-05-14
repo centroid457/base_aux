@@ -96,18 +96,15 @@ class ServerAiohttpBase(QThread):
         except PermissionError as exx:
             # PermissionError(13, "error while attempting to bind on address ('127.0.0.1', 80): permission denied"
             msg = f"[ERROR] need linux rights for accessing ports under 1024 (execute [sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.11]) or use appropriate port {exx!r}"
-            print(msg)
             raise Exx__LinuxPermition(msg)
 
         except OSError as exx:
             # OSError(10048, "error while attempting to bind on address ('0.0.0.0', 80)
             msg = f"[ERROR]started same server address/port {exx!r}"
-            print(msg)
             raise Exx__AiohttpServerStartSameAddress(msg)
 
         except Exception as exx:
             msg = f"[ERROR] other error {exx!r}"
-            print(msg)
             raise Exx__AiohttpServerOtherError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
 
     def start(self, *args):
