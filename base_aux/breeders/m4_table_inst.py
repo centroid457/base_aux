@@ -110,13 +110,26 @@ class TableLines:
     create/use Instance
     -------------------
     """
+    COUNT_COLUMNS: int  # set on init!
+
     def __init__(self, **lines: TableLine) -> None | NoReturn:
+        COUNT_COLUMNS = 1
         for name, value in lines.items():
             if isinstance(value, TableLine):
                 setattr(self, name, value)
             else:
                 msg = f"{value=} is not TableLine type"
                 raise Exx__WrongUsage(msg)
+
+            if COUNT_COLUMNS == 1 and value.COUNT > COUNT_COLUMNS:
+                COUNT_COLUMNS = value.COUNT
+
+            if value.COUNT > COUNT_COLUMNS:
+                msg = f"[ERR] incorrect length {name=}/{value.COUNT=}/{COUNT_COLUMNS=}"
+                print(msg)
+                raise Exx__WrongUsage(msg)
+
+        self.COUNT_COLUMNS = COUNT_COLUMNS
 
     def items(self) -> Iterable[tuple[str, TableLine]]:
         for name in dir(self):
@@ -137,17 +150,24 @@ class TableLines:
         return result
 
 
+
+
+
+
+
+
+
+
+
+
+
 # =====================================================================================================================
-class TableColumns(NestInit_Source):
+class TableColumns:
     """
     GOAL
     ----
     collect all tableLines (objects) in one object
     """
-    SOURCE: dict[str, TableLine]
-
-    def init_post(self) -> None | NoReturn:
-        self._check_length()
 
     # ----------------------------------------------------------
     def __contains__(self, item: str) -> bool:
@@ -158,22 +178,6 @@ class TableColumns(NestInit_Source):
         """
         return item in self.SOURCE
 
-    def lines_names(self) -> list[str]:
-        return list(self.SOURCE)
-
-    def _check_length(self) -> None | NoReturn:
-        count_found_first: int | None = None
-
-        for name, line in self.SOURCE.items():
-            if line.COUNT is None:
-                continue
-            else:
-                if count_found_first is None:
-                    count_found_first = line.COUNT
-                if count_found_first != line.COUNT:
-                    msg = f"[ERR] incorrect length {name=}/{line.COUNT=}/{count_found_first=}"
-                    print(msg)
-                    raise Exx__WrongUsage(msg)
 
     def line__insts(self, name: str) -> TYPING__INST_OR_INST_LIST | NoReturn:
         return getattr(self, name).SOURCE
