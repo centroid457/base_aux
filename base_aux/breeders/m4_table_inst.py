@@ -10,31 +10,29 @@ from base_aux.aux_argskwargs.m1_argskwargs import *
 
 
 # =====================================================================================================================
-TYPING__INST_OR_INST_LIST = Union[Any, tuple[Any, ...]]
-
-
-# =====================================================================================================================
 class TableInstLine:
     """
     GOAL
     ----
     smth like a group with several or one instances
 
-    keep LIST[Any] or Single Any instance in Source.
     GI-access to elements.
-    RETURN
-        if INSTS is list - return source[index]
-        otherwise - INSTS
+        RETURN
+            if INSTS multy - return source[index]
+            otherwise - INSTS[0]
 
     SPECIALLY CREATED FOR
     ---------------------
     simplifying work with Breeder like object!
-    most important is wotk with already generated Elements!
+    (most important difference is working with already generated Elements!)
     """
-    # DONT multiply single instance into list!
-    INSTS: TYPING__INST_OR_INST_LIST
+    INSTS: tuple[Any, ...]
 
-    def __init__(self, *insts) -> None:
+    def __init__(self, *insts: Any) -> None:
+        """
+        if one instance for all Columns - use one instance
+        if used several instances - use exact count - each inst for each Columns
+        """
         self.INSTS = insts
 
     def __iter__(self):
@@ -45,7 +43,7 @@ class TableInstLine:
         """
         yield from self.INSTS
 
-    def __contains__(self, item):
+    def __contains__(self, item) -> bool:
         return item in self.INSTS
 
     def __getitem__(self, index: int) -> Any | NoReturn:
@@ -64,6 +62,8 @@ class TableInstLine:
         GOAL
         ----
         return number of line instances
+
+        if one instance for all Columns - return 1
         """
         return len(self.INSTS)
 
@@ -74,13 +74,13 @@ class TableInstLine:
         call method on all instances
         """
         results = []
-        for inst in self:
+        for inst in self.INSTS:
             try:
                 inst_meth = getattr(inst, meth)
                 ints_result = inst_meth(*args, **kwargs)
+                results.append(ints_result)
             except Exception as exx:
-                ints_result = exx
-            results.append(ints_result)
+                results.append(exx)
 
         return results
 
