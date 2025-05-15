@@ -23,6 +23,11 @@ Value11 = Value(11)
 Value22 = Value(22)
 Value33 = Value(33)
 
+TL_11: TableLine = TableLine(11)
+TL_22: TableLine = TableLine(22)
+TL_11_22: TableLine = TableLine(11, 22)
+TL_11_22_33: TableLine = TableLine(11, 22, 33)
+
 
 # =====================================================================================================================
 class Test__TableLine:
@@ -30,9 +35,9 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, _EXPECTED",
         argvalues=[
-            (TableLine(11), 1),
-            (TableLine(11, 22), 2),
-            (TableLine(11, 22, 33), 3),
+            (TL_11, 1),
+            (TL_11_22, 2),
+            (TL_11_22_33, 3),
         ]
     )
     def test__count(self, tline, _EXPECTED):
@@ -43,18 +48,18 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, index, _EXPECTED",
         argvalues=[
-            (TableLine(11), 0, 11),
-            (TableLine(11), 1, 11),
-            (TableLine(11), 2, 11),
+            (TL_11, 0, 11),
+            (TL_11, 1, 11),
+            (TL_11, 2, 11),
 
-            (TableLine(11, 22), 0, 11),
-            (TableLine(11, 22), 1, 22),
-            (TableLine(11, 22), 2, Exception),
+            (TL_11_22, 0, 11),
+            (TL_11_22, 1, 22),
+            (TL_11_22, 2, Exception),
 
-            (TableLine(11, 22, 33), 0, 11),
-            (TableLine(11, 22, 33), 1, 22),
-            (TableLine(11, 22, 33), 2, 33),
-            (TableLine(11, 22, 33), 3, Exception),
+            (TL_11_22_33, 0, 11),
+            (TL_11_22_33, 1, 22),
+            (TL_11_22_33, 2, 33),
+            (TL_11_22_33, 3, Exception),
         ]
     )
     def test__gi_in(self, tline, index, _EXPECTED):
@@ -68,7 +73,7 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, meth, args, index, _EXPECTED",
         argvalues=[
-            (TableLine(11), "echo", (), 0, Exception),
+            (TL_11, "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 1, None),
             (TableLine(11, Value11), "echo", (111,), 1, 111),
@@ -82,16 +87,16 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="obj1, obj2, _EXPECTED",
         argvalues=[
-            (TableLine(11), 11, False),
+            (TL_11, 11, False),
 
-            (TableLine(11), TableLine(11), True),
-            (TableLine(11), TableLine(22), False),
+            (TL_11, TL_11, True),
+            (TL_11, TL_22, False),
 
-            (TableLine(11), TableLine(11, 11), False),
+            (TL_11, TableLine(11, 11), False),
             (TableLine(11, 11), TableLine(11, 11), True),
-            (TableLine(11, 11), TableLine(11), False),
+            (TableLine(11, 11), TL_11, False),
 
-            (TableLine(11), TableLine(11, Value11), False),
+            (TL_11, TableLine(11, Value11), False),
         ]
     )
     def test__eq(self, obj1, obj2, _EXPECTED):
@@ -101,23 +106,23 @@ class Test__TableLine:
 
 # =====================================================================================================================
 class TLS_1_1(TableLines):
-    SINGLE = TableLine(11)
+    SINGLE = TL_11
 
 
 class TLS_1_3(TableLines):
-    MULTY = TableLine(11, 22, 33)
+    MULTY = TL_11_22_33
 
 
 class TLS_3_3(TableLines):
-    SINGLE = TableLine(11)
-    MULTY = TableLine(11, 22, 33)
-    SINGLE2 = TableLine(11)
+    SINGLE = TL_11
+    MULTY = TL_11_22_33
+    SINGLE2 = TL_22
 
 
 class TLS_Exx(TableLines):
-    SINGLE = TableLine(11)
-    MULTY = TableLine(11, 22, 33)
-    MULTY2 = TableLine(11, 22, 33, 44)
+    SINGLE = TL_11
+    MULTY = TL_11_22_33
+    MULTY2 = TL_11_22
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -135,6 +140,7 @@ class Test__TableLines:
         func_link = lambda s: isinstance(s(), TableLines)
         ExpectAux(func_link, source).check_assert(_EXPECTED)
 
+    # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
@@ -155,52 +161,43 @@ class Test__TableLines:
         assert victim.COUNT_COLUMNS == _EXPECTED[1]
         assert victim.size() == _EXPECTED
 
-    @pytest.mark.parametrize(
-        argnames="source, _EXPECTED",
-        argvalues=[
-            (TLS_1_1, {"SINGLE", }),
-            (TLS_1_3, {"MULTY", }),
-            (TLS_3_3, {"SINGLE", "MULTY", "SINGLE2"}),
-        ]
-    )
-    def test__names(self, source, _EXPECTED):
-        func_link = lambda s: s().names()
-        ExpectAux(func_link, source).check_assert(_EXPECTED)
-
-
-
-
-
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
-        argnames="tline, index, _EXPECTED",
+        argnames="source, names, values",
         argvalues=[
-            (TableLine(11), 0, 11),
-            (TableLine(11), 1, 11),
-            (TableLine(11), 2, 11),
-
-            (TableLine(11, 22), 0, 11),
-            (TableLine(11, 22), 1, 22),
-            (TableLine(11, 22), 2, Exception),
-
-            (TableLine(11, 22, 33), 0, 11),
-            (TableLine(11, 22, 33), 1, 22),
-            (TableLine(11, 22, 33), 2, 33),
-            (TableLine(11, 22, 33), 3, Exception),
+            (TLS_1_1, ["SINGLE", ], [TL_11, ]),
+            (TLS_1_3, ["MULTY", ], [TL_11_22_33, ]),
+            (TLS_3_3, ["MULTY", "SINGLE", "SINGLE2"], [TL_11_22_33, TL_11, TL_22, ]),
         ]
     )
-    def test__gi_in(self, tline, index, _EXPECTED):
-        func_link = lambda i: tline[i]
-        ExpectAux(func_link, index).check_assert(_EXPECTED)
+    def test__names_values_items(self, source, names, values):
+        func_link = lambda s: s().names()
+        ExpectAux(func_link, source).check_assert(names)
 
-        if _EXPECTED is not Exception:
-            assert _EXPECTED in tline
+        func_link = lambda s: s().values()
+        ExpectAux(func_link, source).check_assert(values)
+
+        func_link = lambda s: [*s().items()]
+        ExpectAux(func_link, source).check_assert([*zip(names, values)])
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="tline, meth, args, index, _EXPECTED",
         argvalues=[
-            (TableLine(11), "echo", (), 0, Exception),
+            (TL_11, "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 1, None),
             (TableLine(11, Value11), "echo", (111,), 1, 111),

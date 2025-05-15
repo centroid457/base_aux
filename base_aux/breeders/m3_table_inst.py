@@ -198,16 +198,16 @@ class TableLines:
             if isinstance(value, TableLine):
                 yield name, value
 
-    def names(self) -> set[str]:
-        result = set()
+    def names(self) -> list[str]:   # DONT USE SET!!!
+        result = []
         for name, value in self.items():
-            result.update([name, ])
+            result.append(name)
         return result
 
-    def values(self) -> set[TableLine]:
-        result = set()
+    def values(self) -> list[TableLine]:
+        result = []
         for name, value in self.items():
-            result.update([value, ])
+            result.append(value)
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
