@@ -5,6 +5,11 @@ from base_aux.breeders.m3_table_inst import *
 
 
 # =====================================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+
+
 class Value:
     VALUE: Any
 
@@ -115,6 +120,11 @@ class Test__TableLine:
 
 
 # =====================================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+
+
 class TLS_1_1(TableLines):
     SINGLE = TL_11
 
@@ -143,12 +153,76 @@ class Test__TableLines:
             (TLS_1_1, True),
             (TLS_1_3, True),
             (TLS_3_3, True),
-            (TLS_Exx, Exception),
+            (TLS_Exx, False),
         ]
     )
-    def test__init_correct(self, source, _EXPECTED):
-        func_link = lambda s: isinstance(s(), TableLines)
-        ExpectAux(func_link, source).check_assert(_EXPECTED)
+    def test__init_correct__attrs(self, source, _EXPECTED):
+        try:
+            source()
+        except:
+            assert not _EXPECTED
+        else:
+            assert _EXPECTED
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (dict(
+                SINGLE = TL_11
+            ), True),
+            (dict(
+                MULTY = TL_11_22_33
+            ), True),
+            (dict(
+                SINGLE = TL_11,
+                MULTY = TL_11_22_33,
+                SINGLE2 = TL_22,
+            ), True),
+            (dict(
+                SINGLE=TL_11,
+                MULTY = TL_11_22_33,
+                MULTY2 = TL_11_22,
+            ), False),
+        ]
+    )
+    def test__init_correct__kwargs(self, source, _EXPECTED):
+        try:
+            TableLines(**source)
+        except:
+            assert not _EXPECTED
+        else:
+            assert _EXPECTED
+
+    @pytest.mark.parametrize(
+        argnames="cls, kwargs, _EXPECTED",
+        argvalues=[
+            (TLS_1_1, dict(
+                SINGLE = TL_11
+            ), True),
+            (TLS_1_3, dict(
+                MULTY = TL_11_22_33
+            ), True),
+            (TLS_3_3, dict(
+                SINGLE = TL_11,
+                MULTY = TL_11_22_33,
+                SINGLE2 = TL_22,
+            ), True),
+            (TLS_Exx, dict(
+                # MULTY=TL_11_22,
+            ), False),
+            (TLS_Exx, dict(
+                MULTY = TL_11_22,
+            ), True),
+        ]
+    )
+    def test__init_overload__kwargs(self, cls, kwargs, _EXPECTED):
+        try:
+            cls(**kwargs)
+        except:
+            assert not _EXPECTED
+        else:
+            assert _EXPECTED
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -209,6 +283,13 @@ class Test__TableLines:
         r_TL_11_V99 = results["TL_11_V99"]
         assert isinstance(r_TL_11_V99[0], Exception)
         assert r_TL_11_V99[1] == 99
+
+
+# =====================================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+pass    # =============================================================================================================
+
 
 
 # =====================================================================================================================
