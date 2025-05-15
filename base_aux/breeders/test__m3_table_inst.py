@@ -191,18 +191,24 @@ class Test__TableLines:
         ExpectAux(func_link, source).check_assert([*zip(names, values)])
 
     # -----------------------------------------------------------------------------------------------------------------
-    @pytest.mark.parametrize(
-        argnames="tline, meth, args, index, _EXPECTED",
-        argvalues=[
-            (TL_11, "echo", (), 0, Exception),
-            (TableLine(11, Value11), "echo", (), 0, Exception),
-            (TableLine(11, Value11), "echo", (), 1, None),
-            (TableLine(11, Value11), "echo", (111,), 1, 111),
-        ]
-    )
-    def test__call(self, tline, meth, args, index, _EXPECTED):
-        func_link = lambda m, a: tline(m, *a)[index]
-        ExpectAux(func_link, (meth, args)).check_assert(_EXPECTED)
+    def test__call(self):
+        class Victim(TableLines):
+            TL_11 = TableLine(11)
+            TL_V88 = TableLine(Value(88))
+            TL_11_V99 = TableLine(11, Value(99))
+
+        victim = Victim()
+        results = victim("return_value")
+
+        r_TL_11 = results["TL_11"]
+        assert isinstance(r_TL_11[0], Exception)
+
+        r_TL_V88 = results["TL_V88"]
+        assert r_TL_V88[0] == 88
+
+        r_TL_11_V99 = results["TL_11_V99"]
+        assert isinstance(r_TL_11_V99[0], Exception)
+        assert r_TL_11_V99[1] == 99
 
 
 # =====================================================================================================================
