@@ -14,7 +14,7 @@ from base_aux.path2_file.m3_filetext import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import Base_Device, Base_Device, DevicesBreeder, _DevicesBreeder_Example
+from .devices import Base_Device, Base_Device, DevicesBreeder
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem

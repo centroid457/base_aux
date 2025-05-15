@@ -136,16 +136,3 @@ class DevicesBreeder_WithDut(DevicesBreeder):
 
 
 # =====================================================================================================================
-class _DevicesBreeder_Example(DevicesBreeder_WithDut):
-    """
-    JUST an example DUT+some other single dev
-    """
-    # DEFINITIONS ---------------
-    COUNT: int = 2
-    CLS_SINGLE__ATC: type[Base_Device] = Base_Device
-
-    # JUST SHOW NAMES -----------
-    ATC: Base_Device
-
-
-# =====================================================================================================================
