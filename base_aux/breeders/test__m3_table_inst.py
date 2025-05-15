@@ -23,6 +23,7 @@ Value11 = Value(11)
 Value22 = Value(22)
 Value33 = Value(33)
 
+TL_None: TableLine = TableLine()
 TL_11: TableLine = TableLine(11)
 TL_22: TableLine = TableLine(22)
 TL_11_22: TableLine = TableLine(11, 22)
@@ -35,6 +36,7 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, _EXPECTED",
         argvalues=[
+            (TL_None, 0),
             (TL_11, 1),
             (TL_11_22, 2),
             (TL_11_22_33, 3),
@@ -48,6 +50,8 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, index, _EXPECTED",
         argvalues=[
+            (TL_None, 0, Exception),
+
             (TL_11, 0, 11),
             (TL_11, 1, 11),
             (TL_11, 2, 11),
@@ -73,6 +77,8 @@ class Test__TableLine:
     @pytest.mark.parametrize(
         argnames="tline, meth, args, index, _EXPECTED",
         argvalues=[
+            (TL_None, "echo", (), 0, Exception),
+
             (TL_11, "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 0, Exception),
             (TableLine(11, Value11), "echo", (), 1, None),
@@ -88,6 +94,10 @@ class Test__TableLine:
         argnames="obj1, obj2, _EXPECTED",
         argvalues=[
             (TL_11, 11, False),
+            (TL_None, 11, False),
+
+            (TL_None, TL_None, True),
+            (TL_None, TL_11, False),
 
             (TL_11, TL_11, True),
             (TL_11, TL_22, False),
@@ -179,19 +189,6 @@ class Test__TableLines:
 
         func_link = lambda s: [*s().items()]
         ExpectAux(func_link, source).check_assert([*zip(names, values)])
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
