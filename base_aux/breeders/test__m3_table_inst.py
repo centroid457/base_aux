@@ -75,13 +75,15 @@ class Test__TableLine:
 
 # =====================================================================================================================
 class Test__TableLines:
-    def test__init__count(self):
+    def test__init__count__size(self):
         # ------------
-        # class Victim(TableLines):
-        #     SINGLE = TableLine(11)
-        #
-        # victim = Victim()
-        # assert victim.COUNT_COLUMNS == 1
+        class Victim(TableLines):
+            SINGLE = TableLine(11)
+
+        victim = Victim()
+        assert victim.COUNT_COLUMNS == 1
+        assert len(victim) == 1
+        assert victim.size() == (1, 1)
 
         # ------------
         class Victim(TableLines):
@@ -89,14 +91,19 @@ class Test__TableLines:
 
         victim = Victim()
         assert victim.COUNT_COLUMNS == 3
+        assert len(victim) == 1
+        assert victim.size() == (1, 3)
 
         # ------------
         class Victim(TableLines):
             SINGLE = TableLine(11)
             MULTY = TableLine(11, 22, 33)
+            SINGLE2 = TableLine(11)
 
         victim = Victim()
         assert victim.COUNT_COLUMNS == 3
+        assert len(victim) == 3
+        assert victim.size() == (3, 3)
 
         # ------------
         class Victim(TableLines):
@@ -111,6 +118,20 @@ class Test__TableLines:
             pass
 
     # -----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @pytest.mark.parametrize(
         argnames="tline, _EXPECTED",
         argvalues=[
@@ -121,32 +142,6 @@ class Test__TableLines:
     )
     def test__count(self, tline, _EXPECTED):
         ExpectAux(len(tline)).check_assert(_EXPECTED)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

@@ -112,22 +112,6 @@ class TableLines:
         self._check_same_counts()
 
     # -----------------------------------------------------------------------------------------------------------------
-    @property
-    def COUNT_COLUMNS(self) -> int:
-        return self._count_columns
-
-    @COUNT_COLUMNS.setter
-    def COUNT_COLUMNS(self, new: int) -> None | NoReturn:
-        if new == 1:
-            return
-
-        if self._count_columns == 1:
-            self._count_columns = new
-        elif self._count_columns != new:
-            msg = f"{new=}/{self.COUNT_COLUMNS=}"
-            raise Exx__WrongUsage(msg)
-
-    # -----------------------------------------------------------------------------------------------------------------
     def _init_new_lines(self, **lines: TableLine) -> None:
         for name, value in lines.items():
             if isinstance(value, TableLine):
@@ -145,6 +129,33 @@ class TableLines:
             if line.COUNT not in [self.COUNT_COLUMNS, 1]:
                 msg = f"{name=}/{line.COUNT=}/{self.COUNT_COLUMNS=}"
                 raise Exx__WrongUsage(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __len__(self):
+        """
+        GOAL
+        ----
+        return count
+        """
+        return len(self.names())
+
+    @property
+    def COUNT_COLUMNS(self) -> int:
+        return self._count_columns
+
+    @COUNT_COLUMNS.setter
+    def COUNT_COLUMNS(self, new: int) -> None | NoReturn:
+        if new == 1:
+            return
+
+        if self._count_columns == 1:
+            self._count_columns = new
+        elif self._count_columns != new:
+            msg = f"{new=}/{self.COUNT_COLUMNS=}"
+            raise Exx__WrongUsage(msg)
+
+    def size(self) -> tuple[int, int]:
+        return len(self), self.COUNT_COLUMNS
 
     # -----------------------------------------------------------------------------------------------------------------
     def __contains__(self, item: str) -> bool:
