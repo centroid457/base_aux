@@ -69,8 +69,28 @@ class Test__TableLine:
         ]
     )
     def test__call(self, tline, meth, args, index, _EXPECTED):
-        func_link = lambda m, a: tline(m, *a)[index]
-        ExpectAux(func_link, (meth, args)).check_assert(_EXPECTED)
+        func_link = lambda: tline(meth, *args)[index]
+        ExpectAux(func_link).check_assert(_EXPECTED)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="obj1, obj2, _EXPECTED",
+        argvalues=[
+            (TableLine(11), 11, False),
+
+            (TableLine(11), TableLine(11), True),
+            (TableLine(11), TableLine(22), False),
+
+            (TableLine(11), TableLine(11, 11), False),
+            (TableLine(11, 11), TableLine(11, 11), True),
+            (TableLine(11, 11), TableLine(11), False),
+
+            (TableLine(11), TableLine(11, Value(11)), False),
+        ]
+    )
+    def test__eq(self, obj1, obj2, _EXPECTED):
+        func_link = lambda: obj1 == obj2
+        ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

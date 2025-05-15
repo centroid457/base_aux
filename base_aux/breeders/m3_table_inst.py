@@ -86,6 +86,28 @@ class TableLine:
         """
         return len(self.INSTS)
 
+    def __eq__(self, other: Any | Self) -> bool:    # DECIDE: delete? it is not needed???
+        """
+        CREATED SPECIALLY FOR
+        ---------------------
+        just testing perpose! not a real tip!
+        """
+        if isinstance(other, TableLine):
+            if self.COUNT == other.COUNT:
+                for inst1, inst2 in zip(self.INSTS, other.INSTS):
+                    if inst1 != inst2:
+                        return False
+                return True
+            else:
+                return False
+        else:
+            # VAR-1=BAD! not clear and DIFFICALT!
+            # what if (INSTS-Single and Other-Multy) or ViceVersa
+            # return other == self.INSTS
+
+            # VAR-2=best way
+            return False
+
 
 # =====================================================================================================================
 class TableLines:
