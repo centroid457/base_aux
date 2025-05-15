@@ -191,23 +191,23 @@ class TableLines:
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
         for name in dir(self):
-            print(f"items={name=}")
+            # print(f"items={name=}")
             if name.startswith("_"):
                 continue
             value = getattr(self, name)
             if isinstance(value, TableLine):
                 yield name, value
 
-    def names(self) -> list[str]:
-        result = []
+    def names(self) -> set[str]:
+        result = set()
         for name, value in self.items():
-            result.append(name)
+            result.update([name, ])
         return result
 
-    def values(self) -> list[TableLine]:
-        result = []
+    def values(self) -> set[TableLine]:
+        result = set()
         for name, value in self.items():
-            result.append(value)
+            result.update([value, ])
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
