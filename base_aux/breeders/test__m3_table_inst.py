@@ -156,7 +156,7 @@ class Test__TableLines:
             (TLS_Exx, False),
         ]
     )
-    def test__init_correct__attrs(self, source, _EXPECTED):
+    def test__init_noRaise__attrs(self, source, _EXPECTED):
         try:
             source()
         except:
@@ -186,7 +186,7 @@ class Test__TableLines:
             ), False),
         ]
     )
-    def test__init_correct__kwargs(self, source, _EXPECTED):
+    def test__init_noRaise__kwargs(self, source, _EXPECTED):
         try:
             TableLines(**source)
         except:
@@ -216,7 +216,7 @@ class Test__TableLines:
             ), True),
         ]
     )
-    def test__init_overload__kwargs(self, cls, kwargs, _EXPECTED):
+    def test__init_noRaise__kwargs_overload(self, cls, kwargs, _EXPECTED):
         try:
             cls(**kwargs)
         except:
@@ -290,6 +290,60 @@ pass    # ======================================================================
 pass    # =============================================================================================================
 pass    # =============================================================================================================
 
+
+class Test__TableColumns:
+    @pytest.mark.parametrize(
+        argnames="tls, index, _EXPECTED",
+        argvalues=[
+            (TLS_1_1(), 0, True),
+            (TLS_1_1(), 1, False),
+            (TLS_1_1(), -1, True),
+
+            # (TLS_1_3(), 0, True),
+
+            (TLS_3_3(), 0, True),
+            (TLS_3_3(), 1, True),
+            (TLS_3_3(), 2, True),
+            (TLS_3_3(), 3, False),
+            (TLS_3_3(), -1, True),
+        ]
+    )
+    def test__init_noRaise(self, tls, index, _EXPECTED):
+        try:
+            victim = TableColumn(lines=tls, index=index)
+            assert victim.LINES == tls
+        except:
+            assert not _EXPECTED
+        else:
+            assert _EXPECTED
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="tls, index, name, _EXPECTED",
+        argvalues=[
+            (TLS_1_1(), 0, "SINGLE", 11),
+            (TLS_1_1(), -1, "SINGLE", 11),
+            (TLS_1_1(), 0, "MULTY", Exception),
+
+            # (TLS_1_3(), 0, True),
+
+            (TLS_3_3(), 0, "SINGLE", 11),
+            (TLS_3_3(), 1, "SINGLE", 11),
+            (TLS_3_3(), 2, "SINGLE", 11),
+
+            (TLS_3_3(), 0, "SINGLE2", 22),
+            (TLS_3_3(), 1, "SINGLE2", 22),
+            (TLS_3_3(), 2, "SINGLE2", 22),
+
+            (TLS_3_3(), 0, "MULTY", 11),
+            (TLS_3_3(), 1, "MULTY", 22),
+            (TLS_3_3(), 2, "MULTY", 33),
+            (TLS_3_3(), -1, "MULTY", 33),
+        ]
+    )
+    def test__item_access(self, tls, index, name, _EXPECTED):
+        victim = TableColumn(lines=tls, index=index)
+        ExpectAux(getattr, (victim, name)).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

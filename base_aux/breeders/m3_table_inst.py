@@ -235,7 +235,14 @@ class TableColumn:
     LINES: TableLines   # = TableLines()   # access for all lines!
     INDEX: int
 
-    def __init__(self, index: int) -> None | NoReturn:
+    def __init__(self, index: int, lines: TableLines = None) -> None | NoReturn:
+        if lines is not None:
+            self.LINES = lines
+
+        if not isinstance(self.LINES, TableLines):
+            msg = f"{self.LINES=} is non type(TableLines)"
+            raise Exx__WrongUsage(msg)
+
         if index + 1 > self.LINES.COUNT_COLUMNS:
             msg = f"{index=}/{self.LINES.COUNT_COLUMNS=}"
             raise Exx__Addressing(msg)
