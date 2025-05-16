@@ -36,7 +36,7 @@ TL_11_22_33: TableLine = TableLine(11, 22, 33)
 
 
 # =====================================================================================================================
-class Test__TableLine:
+class Test__1_TableLine:
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
         argnames="tline, _EXPECTED",
@@ -146,7 +146,7 @@ class TLS_Exx(TableLines):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Test__TableLines:
+class Test__2_TableLines:
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
         argvalues=[
@@ -247,6 +247,19 @@ class Test__TableLines:
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (TLS_1_1, [11, ]),
+            (TLS_1_3, [11, 22, 33]),
+            (TLS_3_3, [11, 22, 33, 11, 22]),
+        ]
+    )
+    def test__iter_lines_insts(self, source, _EXPECTED):
+        func_link = lambda s: [*s().iter_lines_insts()] == _EXPECTED
+        ExpectAux(func_link, source).check_assert()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
         argnames="source, names, values",
         argvalues=[
             (TLS_1_1, ["SINGLE", ], [TL_11, ]),
@@ -291,7 +304,7 @@ pass    # ======================================================================
 pass    # =============================================================================================================
 
 
-class Test__TableColumns:
+class Test__3_TableColumn:
     @pytest.mark.parametrize(
         argnames="tls, index, _EXPECTED",
         argvalues=[

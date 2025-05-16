@@ -1,3 +1,12 @@
+"""
+IDEAS
+-----
+TableLine - work with all insts in one group
+TableLines - work with all insts in all groups
+TableColumn - work with all insts in one column (useful for instances like TestCase)
+"""
+
+# =====================================================================================================================
 from typing import *
 
 from base_aux.base_statics.m2_exceptions import *
@@ -30,7 +39,7 @@ class TableLine:
         """
         self.INSTS = insts
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[Any]:
         """
         GOAL
         ----
@@ -52,7 +61,7 @@ class TableLine:
         else:
             return self.INSTS[index]
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         GOAL
         ----
@@ -80,7 +89,7 @@ class TableLine:
         return results
 
     @property
-    def COUNT(self) -> int | None:
+    def COUNT(self) -> int:
         """
         preferred using direct LEN???
         """
@@ -134,7 +143,7 @@ class TableLines:
         self._check_same_counts()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _init_new_lines(self, **lines: TableLine) -> None:
+    def _init_new_lines(self, **lines: TableLine) -> None | NoReturn:
         for name, value in lines.items():
             if isinstance(value, TableLine):
                 setattr(self, name, value)
@@ -142,7 +151,7 @@ class TableLines:
                 msg = f"{value=} is not TableLine type"
                 raise Exx__WrongUsage(msg)
 
-    def _init_count_columns(self) -> None | NoReturn:
+    def _init_count_columns(self) -> None:
         for name, line in self.items():
             self.COUNT_COLUMNS = line.COUNT
 
@@ -153,7 +162,7 @@ class TableLines:
                 raise Exx__WrongUsage(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __len__(self):
+    def __len__(self) -> int:
         """
         GOAL
         ----
@@ -190,6 +199,11 @@ class TableLines:
 
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
+        """
+        NOTE/CAREFUL!
+        ----
+        iterate in DIR ORDER!!! not as defined!
+        """
         for name in dir(self):
             # print(f"items={name=}")
             if name.startswith("_"):
@@ -205,10 +219,19 @@ class TableLines:
         return result
 
     def values(self) -> list[TableLine]:
+        """
+        NOTE
+        ----
+        lineInstances (TableLine())! not internal Line instances(TableLine().INSTS)!
+        """
         result = []
         for name, value in self.items():
             result.append(value)
         return result
+
+    def iter_lines_insts(self) -> Iterable[Any]:
+        for line in self.values():
+            yield from line
 
     # -----------------------------------------------------------------------------------------------------------------
     def __call__(self, meth: str, *args, **kwargs) -> dict[str, list[Any | Exception]]:
