@@ -125,21 +125,21 @@ pass    # ======================================================================
 pass    # =============================================================================================================
 
 
-class TLS_1_1(TableLines):
-    SINGLE: TableLines = TL_11
+class TLS_1_1(TableKit):
+    SINGLE: TableKit = TL_11
 
 
-class TLS_1_3(TableLines):
+class TLS_1_3(TableKit):
     MULTY = TL_11_22_33
 
 
-class TLS_3_3(TableLines):
+class TLS_3_3(TableKit):
     SINGLE = TL_11
     MULTY = TL_11_22_33
     SINGLE2 = TL_22
 
 
-class TLS_Exx(TableLines):
+class TLS_Exx(TableKit):
     SINGLE = TL_11
     MULTY = TL_11_22_33
     MULTY2 = TL_11_22
@@ -188,7 +188,7 @@ class Test__2_TableLines:
     )
     def test__init_noRaise__kwargs(self, source, _EXPECTED):
         try:
-            TableLines(**source)
+            TableKit(**source)
         except:
             assert not _EXPECTED
         else:
@@ -299,7 +299,7 @@ class Test__2_TableLines:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__call(self):
-        class Victim(TableLines):
+        class Victim(TableKit):
             TL_11 = TableLine(11)
             TL_V88 = TableLine(Value(88))
             TL_11_V99 = TableLine(11, Value(99))

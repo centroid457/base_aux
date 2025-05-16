@@ -2,7 +2,7 @@
 IDEAS
 -----
 TableLine - work with all insts in one group
-TableLines - work with all insts in all groups
+TableKit - work with all insts in all groups
 TableColumn - work with all insts in one column (useful for instances like TestCase)
 """
 
@@ -119,7 +119,7 @@ class TableLine:
 
 
 # =====================================================================================================================
-class TableLines:
+class TableKit:     # todo: add AttrsKit nesting???
     """
     GOAL
     ----
@@ -272,15 +272,15 @@ class TableColumn:
     replace/ref breederObject!
     access to exact instance in line by simple name (implying index)
     """
-    LINES: TableLines   # = TableLines()   # access for all lines!
+    LINES: TableKit   # = TableKit()   # access for all lines!
     INDEX: int
 
-    def __init__(self, index: int, lines: TableLines = None) -> None | NoReturn:
+    def __init__(self, index: int, lines: TableKit = None) -> None | NoReturn:
         if lines is not None:
             self.LINES = lines
 
-        if not isinstance(self.LINES, TableLines):
-            msg = f"{self.LINES=} is non type(TableLines)"
+        if not isinstance(self.LINES, TableKit):
+            msg = f"{self.LINES=} is non type(TableKit)"
             raise Exx__WrongUsage(msg)
 
         if index + 1 > self.LINES.COUNT_COLUMNS:

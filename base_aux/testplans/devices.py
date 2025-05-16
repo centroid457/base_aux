@@ -77,7 +77,7 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class DevicesLines(TableLines):
+class DevicesKit(TableKit):
     def __del__(self):
         self.disconnect()
 

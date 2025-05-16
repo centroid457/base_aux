@@ -44,7 +44,7 @@ class Test__DevicesLines:
 
     def setup_method(self, method):
         pass
-        self.Victim: DevicesLines = type("Victim", (DevicesLines,), {})
+        self.Victim: DevicesKit = type("Victim", (DevicesKit,), {})
 
     def teardown_method(self, method):
         pass

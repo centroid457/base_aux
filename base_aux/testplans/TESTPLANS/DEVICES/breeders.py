@@ -4,13 +4,13 @@ from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
-class DevicesLines__AtcPtbDummy(DevicesLines):
+class DevicesLines__AtcPtbDummy(DevicesKit):
     ATC = TableLine(atc.Device())
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(2)])
 
 
 # =====================================================================================================================
-class DevicesLines__Psu800(DevicesLines):
+class DevicesLines__Psu800(DevicesKit):
     ATC = TableLine(atc.Device())
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(10)])
 

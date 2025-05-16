@@ -14,7 +14,7 @@ from base_aux.path2_file.m3_filetext import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import Base_Device, Base_Device, DevicesLines
+from .devices import Base_Device, Base_Device, DevicesKit
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem
@@ -65,7 +65,7 @@ class TpManager(Logger, QThread):
 
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
-    DEV_LINES: DevicesLines
+    DEV_LINES: DevicesKit
     TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,

@@ -53,8 +53,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
-    DEV_LINES: 'DevicesLines' = None
-    DEVICES__BREEDER_INST: 'DevicesLines'
+    DEV_LINES: 'DevicesKit' = None
+    DEVICES__BREEDER_INST: 'DevicesKit'
 
     # INSTANCE ------------------------------------
     _inst_inited: Optional[bool] = None
@@ -85,7 +85,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # =================================================================================================================
     @classmethod
-    def devices__apply(cls, devices_lines: 'DevicesLines' = None) -> None:
+    def devices__apply(cls, devices_lines: 'DevicesKit' = None) -> None:
         if devices_lines is not None:
             cls.DEV_LINES = devices_lines
         try:
