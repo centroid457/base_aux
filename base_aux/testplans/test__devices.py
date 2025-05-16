@@ -44,7 +44,7 @@ class Test__DevicesBreeder_WithDut:
 
     def setup_method(self, method):
         pass
-        self.Victim: type[DevicesBreeder_WithDut] = type("Victim", (DevicesBreeder_WithDut,), {})
+        self.Victim: type[DevicesLines_WithDut] = type("Victim", (DevicesLines_WithDut,), {})
 
     def teardown_method(self, method):
         pass
@@ -91,7 +91,7 @@ class Test__DevicesBreeder_WithDut:
         assert self.Victim.group_check__exists("PTB") is False
 
         # DISCONNECT
-        self.Victim.disconnect__cls()
+        self.Victim.disconnect()
 
         self.Victim.generate__objects()
 

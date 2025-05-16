@@ -4,7 +4,7 @@ from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
-class DevicesBreeder_Example(DevicesBreeder_WithDut):
+class DevicesBreeder_Example(DevicesLines_WithDut):
     """
     JUST an example DUT+some other single dev
     """

@@ -4,8 +4,7 @@ import uuid
 from base_aux.testplans import *
 from base_aux.buses.m1_serial1_client import *
 
-from base_aux.breeders.m2_breeder_objects___DEPRECATE import *
-from base_aux.breeders.m3_table_items import *
+from base_aux.breeders.m3_table_inst import *
 
 from .tc import Base_TestCase
 from .models import *
@@ -84,24 +83,18 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class DevicesBreeder(BreederObj):
+class DevicesLines(TableLines):
     def __del__(self):
-        self.disconnect__cls()
+        self.disconnect()
 
-    @classmethod
-    def connect__cls(cls) -> None:
-        cls.group_call__("connect")
+    def connect(self) -> None:
+        self("connect")
 
-    @classmethod
-    def disconnect__cls(cls) -> None:
-        try:
-            cls.group_call__("disconnect")
-        except:
-            pass
+    def disconnect(self) -> None:
+        self("disconnect")
 
     # -----------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def resolve_addresses__cls(cls) -> None:
+    def resolve_addresses(self) -> None:
         pass
         #
         # class Dev(SerialClient):
@@ -116,14 +109,9 @@ class DevicesBreeder(BreederObj):
         #
         # # TODO: FINISH!!!
 
-    # DEBUG PURPOSE ---------------------------------------------------------------------------------------------------
-    @classmethod
-    def _debug__duts__reset_sn(cls) -> None:
-        cls.group_call__("_debug__reset_sn", "DUT")
-
 
 # =====================================================================================================================
-class DevicesBreeder_WithDut(DevicesBreeder):
+class DevicesLines_WithDut(DevicesLines):
     """
     READY TO USE WITH DUT
     """

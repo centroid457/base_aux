@@ -14,7 +14,7 @@ from base_aux.path2_file.m3_filetext import *
 
 # =====================================================================================================================
 from .tc import Base_TestCase
-from .devices import Base_Device, Base_Device, DevicesBreeder
+from .devices import Base_Device, Base_Device, DevicesLines
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem
@@ -65,7 +65,7 @@ class TpManager(Logger, QThread):
 
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
-    DEVICES__BREEDER_CLS: type[DevicesBreeder]
+    DEVICES__BREEDER_CLS: type[DevicesLines]
     TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
@@ -153,7 +153,6 @@ class TpManager(Logger, QThread):
     def slots_connect(self) -> None:
         self.signal__tp_start.connect(self.start)
         self.signal__tp_stop.connect(self.terminate)
-        self._signal__tp_reset_duts_sn.connect(self.DEVICES__BREEDER_CLS._debug__duts__reset_sn)
 
         Base_TestCase.signals.signal__tc_state_changed.connect(self.post__tc_results)
 
@@ -198,7 +197,7 @@ class TpManager(Logger, QThread):
             progress = 100
         self.progress = progress
 
-        self.DEVICES__BREEDER_CLS.disconnect__cls()
+        self.DEVICES__BREEDER_CLS.disconnect()
 
         # self.signal__tp_finished.emit()   # dont place here!!!
 
