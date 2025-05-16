@@ -61,6 +61,23 @@ class TableLine:
         else:
             return self.INSTS[index]
 
+    # def __getattr__(self, item: str) -> Self | NoReturn:    # NOTE: DONT USE IT!!! CANT compose result with called value
+    #     """
+    #     GOAL
+    #     ----
+    #     used as calling methods on all INSTS
+    #     """
+    #     result = []
+    #     for inst in self.INSTS:
+    #         try:
+    #             result_i = getattr(inst, item)
+    #         except Exception as exx:
+    #             result_i = exx
+    #
+    #         result.append(result_i)
+    #
+    #     return TableLine(*result)
+
     def __len__(self) -> int:
         """
         GOAL
@@ -71,7 +88,7 @@ class TableLine:
         """
         return len(self.INSTS)
 
-    def __call__(self, meth: str, *args, **kwargs) -> list[Any | Exception]:
+    def __call__(self, meth: str, *args, **kwargs) -> list[Any | Exception]:        # TODO: APPLY TableLine as result
         """
         GOAL
         ----
