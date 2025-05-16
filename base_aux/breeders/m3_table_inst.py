@@ -144,6 +144,8 @@ class TableLines:
 
     # -----------------------------------------------------------------------------------------------------------------
     def _init_new_lines(self, **lines: TableLine) -> None | NoReturn:
+        # TODO: add/extend in annotations???? - not really need!
+
         for name, value in lines.items():
             if isinstance(value, TableLine):
                 setattr(self, name, value)
@@ -197,19 +199,19 @@ class TableLines:
         """
         return item in self.names()
 
-    def __getitem__(self, item: str) -> TableLine:
+    def __getitem__(self, item: str) -> TableLine | NoReturn:
         """
         GOAL
         ----
         access to LINE over str name!
+        just as additional ability! - but its is really need in GUI tableModel
         """
-
-
-
-
-
-
-
+        result = getattr(self, item)
+        if isinstance(result, TableLine):
+            return result
+        else:
+            msg = f"no TableLine item in LINES [{item=}]"
+            raise Exx__Addressing(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
@@ -218,6 +220,7 @@ class TableLines:
         ----
         iterate in DIR ORDER!!! not as defined!
         """
+        # TODO: apply Annotated aatrs only???   - not really need!
         for name in dir(self):
             # print(f"items={name=}")
             if name.startswith("_"):

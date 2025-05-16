@@ -126,7 +126,7 @@ pass    # ======================================================================
 
 
 class TLS_1_1(TableLines):
-    SINGLE = TL_11
+    SINGLE: TableLines = TL_11
 
 
 class TLS_1_3(TableLines):
@@ -276,6 +276,26 @@ class Test__2_TableLines:
 
         func_link = lambda s: [*s().items()]
         ExpectAux(func_link, source).check_assert([*zip(names, values)])
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="source, name, _EXPECTED",
+        argvalues=[
+            (TLS_1_1, 0, Exception),
+            (TLS_1_1, "hello", Exception),
+            (TLS_1_1, "SINGLE", TL_11),
+            (TLS_1_3, "MULTY", TL_11_22_33),
+
+            (TLS_3_3, 1, Exception),
+            (TLS_3_3, "hello", Exception),
+            (TLS_3_3, "MULTY", TL_11_22_33),
+            (TLS_3_3, "SINGLE", TL_11),
+            (TLS_3_3, "SINGLE2", TL_22),
+        ]
+    )
+    def test__gi(self, source, name, _EXPECTED):
+        func_link = lambda s: s()[name]
+        ExpectAux(func_link, source).check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__call(self):
