@@ -29,7 +29,7 @@ class Test__Tp:
     @pytest.mark.skip
     def test__1(self):
         victim = self.Victim()
-        assert not victim.DEVICES__BREEDER_CLS
+        assert not victim.DEV_LINES
         assert not victim.DEVICES__BY_INDEX
         assert not victim.INDEX
         assert not victim.TCS__INST

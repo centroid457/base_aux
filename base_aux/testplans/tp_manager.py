@@ -65,7 +65,7 @@ class TpManager(Logger, QThread):
 
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
-    DEVICES__BREEDER_CLS: type[DevicesLines]
+    DEV_LINES: DevicesLines
     TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
@@ -162,14 +162,12 @@ class TpManager(Logger, QThread):
             self.TP_ITEM = item
 
         self.TCS_CLS = self.TP_ITEM.TCS_CLS
-        self.DEVICES__BREEDER_CLS = self.TP_ITEM.DEV_BREEDER
-
-        self.DEVICES__BREEDER_CLS.generate__objects(True)
+        self.DEV_LINES = self.TP_ITEM.DEV_LINES
 
         for tc_cls, using in self.TCS_CLS.items():
             tc_cls.SKIP = not using
             # tc_cls.clear__cls()   # let them use last states
-            tc_cls.devices__apply(self.DEVICES__BREEDER_CLS)
+            tc_cls.devices__apply(self.DEV_LINES)
 
     def tcs_clear(self) -> None:
         for tc_cls in self.TCS_CLS:
@@ -181,7 +179,7 @@ class TpManager(Logger, QThread):
         Overwrite with super! super first!
         """
         self.progress = 1
-        self.DEVICES__BREEDER_CLS.group_call__("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
+        self.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
         return True
 
     def tp__teardown(self, progress: int = 100) -> None:
@@ -197,7 +195,7 @@ class TpManager(Logger, QThread):
             progress = 100
         self.progress = progress
 
-        self.DEVICES__BREEDER_CLS.disconnect()
+        self.DEV_LINES.disconnect()
 
         # self.signal__tp_finished.emit()   # dont place here!!!
 
@@ -330,7 +328,7 @@ class TpManager(Logger, QThread):
 
     def save__results(self) -> None:
         name_prefix = str(DateTimeAux())
-        for index in range(self.DEVICES__BREEDER_CLS.COUNT):
+        for index in range(self.DEV_LINES.COUNT):
             result_i_short = {}
             result_i_full = {}
             for tc_cls in self.TCS_CLS:

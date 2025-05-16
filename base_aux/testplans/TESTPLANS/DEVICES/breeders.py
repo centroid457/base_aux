@@ -1,22 +1,18 @@
 from . import atc, ptb
 from base_aux.buses.m1_serial1_client import SerialClient, Enum__AddressAutoAcceptVariant
-from base_aux.testplans.devices import DevicesLines_WithDut
+from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
-class DevicesBreeder__AtcPtbDummy(DevicesLines_WithDut):
-    COUNT = 2     # setup later???
-    CLS_SINGLE__ATC = atc.Device
-    CLS_LIST__DUT = ptb.DeviceDummy
-    # CLS_LIST__DUT = dut.Device
+class DevicesLines__AtcPtbDummy(DevicesLines):
+    ATC = TableLine(atc.Device())
+    DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(2)])
 
 
 # =====================================================================================================================
-class DevicesBreeder__Psu800(DevicesLines_WithDut):
-    COUNT = 10
-    CLS_SINGLE__ATC = atc.Device
-    CLS_LIST__DUT = ptb.Device
-    # CLS_LIST__PTB = ptb.Device
+class DevicesLines__Psu800(DevicesLines):
+    ATC = TableLine(atc.Device())
+    DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(10)])
 
     def resolve_addresses(self) -> None:
         pass
@@ -39,12 +35,12 @@ class DevicesBreeder__Psu800(DevicesLines_WithDut):
             else:
                 continue
 
-            match = list(filter(filter_link,  self.LIST__ALL_GENERATED))
+            match = list(filter(filter_link,  self.iter_lines_insts()))
             dev_found = match and list(match)[0]
             if dev_found:
                 dev_found.ADDRESS = port
 
-        for dev in self.LIST__ALL_GENERATED:
+        for dev in self.iter_lines_insts():
             if not isinstance(dev.ADDRESS, str):
                 dev.ADDRESS = Enum__AddressAutoAcceptVariant.NOT_FOUND
 

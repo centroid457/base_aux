@@ -1,12 +1,12 @@
 from typing import *
 
-from base_aux.testplans.devices import DevicesLines_WithDut
+from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
 class Base_TpItem:
     NAME: str
-    DEV_BREEDER: DevicesLines_WithDut
+    DEV_LINES: DevicesLines
     TCS_CLS: dict[type, bool]
 
 

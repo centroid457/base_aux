@@ -33,7 +33,7 @@ class Test__DeviceBase:
 
 
 # =====================================================================================================================
-class Test__DevicesBreeder_WithDut:
+class Test__DevicesLines:
     @classmethod
     def setup_class(cls):
         pass
@@ -44,7 +44,7 @@ class Test__DevicesBreeder_WithDut:
 
     def setup_method(self, method):
         pass
-        self.Victim: type[DevicesLines_WithDut] = type("Victim", (DevicesLines_WithDut,), {})
+        self.Victim: DevicesLines = type("Victim", (DevicesLines,), {})
 
     def teardown_method(self, method):
         pass

@@ -30,7 +30,7 @@ class TableModel_Devs(TableModelTemplate):
 
         class Headers(BreederStrStack):
             NAME: int = 0
-            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.DEVICES__BREEDER_CLS.COUNT)
+            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.DEV_LINES.COUNT)
 
         class HTRus:
             NAME: str = "Имя"
@@ -60,10 +60,8 @@ class TableModel_Devs(TableModelTemplate):
     #     row = index.row()
     #
     #     dev_group_name: str | None = None
-    #     dev_group_cls: type | None = None
     #     try:
     #         dev_group_name = self.DATA.DEV_BREEDER.groups__get_names()[row]
-    #         dev_group_cls = self.DATA.DEV_BREEDER.group_get__cls(dev_group_name)
     #     except:
     #         pass
     #
@@ -91,13 +89,11 @@ class TableModel_Devs(TableModelTemplate):
         row = index.row()
 
         dev_group_name: str | None = None
-        dev_group_cls: type | None = None
         dev_inst: Any | None = None
 
         try:
-            # print(f"{self.DATA.DEVICES__BREEDER_CLS.groups__get_names()=}")
-            dev_group_name = self.DATA.DEVICES__BREEDER_CLS.groups__get_names()[row]
-            dev_group_cls = self.DATA.DEVICES__BREEDER_CLS.group_get__cls(dev_group_name)
+            # print(f"{self.DATA.DEV_LINES.groups__get_names()=}")
+            dev_group_name = self.DATA.DEV_LINES.groups__get_names()[row]
         except:
             pass
 

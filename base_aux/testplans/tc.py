@@ -53,7 +53,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
-    DEVICES__BREEDER_CLS: type['DevicesLines'] = None
+    DEV_LINES: 'DevicesLines' = None
     DEVICES__BREEDER_INST: 'DevicesLines'
 
     # INSTANCE ------------------------------------
@@ -85,16 +85,16 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # =================================================================================================================
     @classmethod
-    def devices__apply(cls, devices_cls: type['DevicesLines'] = None) -> None:
-        if devices_cls is not None:
-            cls.DEVICES__BREEDER_CLS = devices_cls
+    def devices__apply(cls, devices_lines: 'DevicesLines' = None) -> None:
+        if devices_lines is not None:
+            cls.DEV_LINES = devices_lines
         try:
             _Base1_TestCase._INSTS_DICT_CLS[cls].clear()
         except:
             pass
 
-        if cls.DEVICES__BREEDER_CLS:
-            for index in range(cls.DEVICES__BREEDER_CLS.COUNT):
+        if cls.DEV_LINES:
+            for index in range(cls.DEV_LINES.COUNT):
                 tc_inst = cls(index=index)
 
     @classmethod
@@ -137,8 +137,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.clear()
         super().__init__()
 
-        if self.DEVICES__BREEDER_CLS:
-            self.DEVICES__BREEDER_INST = self.DEVICES__BREEDER_CLS(index)
+        if self.DEV_LINES:
+            self.DEVICES__BREEDER_INST = self.DEV_LINES(index) # FIXME!!!
 
         self._inst_inited = True
 
@@ -241,7 +241,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             True - need continue TP
             False - cant continue! need stop TP
         """
-        # if not cls.DEVICES__BREEDER_CLS.LIST__DUT:
+        # if not cls.DEV_LINES.LIST__DUT:
         #     return
 
         print(f"run__cls=START={cls.NAME=}{cls.DESCRIPTION=}={'=' * 50}")

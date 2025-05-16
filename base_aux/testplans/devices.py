@@ -6,7 +6,6 @@ from base_aux.buses.m1_serial1_client import *
 
 from base_aux.breeders.m3_table_inst import *
 
-from .tc import Base_TestCase
 from .models import *
 
 
@@ -76,11 +75,6 @@ class Base_Device:
         }
         return result
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def _debug__reset_sn(self) -> None:
-        """this is only for testing middleware - reset DUT!!!"""
-        self.__sn = uuid.uuid4().hex
-
 
 # =====================================================================================================================
 class DevicesLines(TableLines):
@@ -95,32 +89,12 @@ class DevicesLines(TableLines):
 
     # -----------------------------------------------------------------------------------------------------------------
     def resolve_addresses(self) -> None:
+        """
+        GOAL
+        ----
+        find all devices on Uart ports
+        """
         pass
-        #
-        # class Dev(SerialClient):
-        #     pass
-        #     BAUDRATE = 115200
-        #     EOL__SEND = b"\n"
-        #
-        # for i in range(3):
-        #     result = Dev.addresses_dump__answers("*:get name", "*:get addr")
-        #     for port, responses in result.items():
-        #         print(port, responses)
-        #
-        # # TODO: FINISH!!!
-
-
-# =====================================================================================================================
-class DevicesLines_WithDut(DevicesLines):
-    """
-    READY TO USE WITH DUT
-    """
-    # DEFINITIONS ---------------
-    CLS_LIST__DUT: type[Base_Device] = Base_Device
-
-    # JUST SHOW NAMES -----------
-    LIST__DUT: list[Base_Device]
-    DUT: Base_Device
 
 
 # =====================================================================================================================

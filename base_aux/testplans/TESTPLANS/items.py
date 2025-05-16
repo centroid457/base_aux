@@ -37,7 +37,7 @@ from .psu800 import (
 # =====================================================================================================================
 class Tp_Example(Base_TpItem):
     NAME = "пример с пустыми устройствами"
-    DEV_BREEDER = breeders.DevicesBreeder__AtcPtbDummy
+    DEV_LINES = breeders.DevicesLines__AtcPtbDummy()
     TCS_CLS = {
         tc1_direct.TestCase: True,
         tc2_reverse.TestCase: True,
@@ -47,7 +47,7 @@ class Tp_Example(Base_TpItem):
 # =====================================================================================================================
 class Tp_Example2(Base_TpItem):
     NAME = "пример с реальными устройствами"
-    DEV_BREEDER = breeders.DevicesBreeder__Psu800
+    DEV_LINES = breeders.DevicesLines__Psu800()
     TCS_CLS = {
         tc1_direct.TestCase: True,
         tc2_reverse.TestCase: True,
@@ -58,7 +58,7 @@ class Tp_Example2(Base_TpItem):
 # =====================================================================================================================
 class Tp_Psu800(Base_TpItem):
     NAME = "ОТК БП800"
-    DEV_BREEDER = breeders.DevicesBreeder__Psu800
+    DEV_LINES = breeders.DevicesLines__Psu800()
     TCS_CLS = {
         tc1_none_1_exist_psu.TestCase: True,
         tc1_none_2_test_gnd.TestCase: True,

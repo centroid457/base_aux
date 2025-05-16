@@ -4,16 +4,8 @@ from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
-class DevicesBreeder_Example(DevicesLines_WithDut):
-    """
-    JUST an example DUT+some other single dev
-    """
-    # DEFINITIONS ---------------
-    COUNT: int = 2
-    CLS_SINGLE__ATC: type[Base_Device] = Base_Device
-
-    # JUST SHOW NAMES -----------
-    ATC: Base_Device
+class DevicesLines_Example(DevicesLines):
+    ATC: TableLine = TableLine(Base_Device)
 
 
 # =====================================================================================================================
@@ -37,7 +29,7 @@ class Test__TC:
     def test__cls(self):
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST == []
-        assert self.Victim.DEVICES__BREEDER_CLS is None
+        assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
         assert self.Victim.result__teardown_cls is None
@@ -58,7 +50,7 @@ class Test__TC:
 
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST == []
-        assert self.Victim.DEVICES__BREEDER_CLS is None
+        assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
         assert self.Victim.result__teardown_cls is None
@@ -74,12 +66,12 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__example(self):
-        self.Victim.DEVICES__BREEDER_CLS = DevicesBreeder_Example
+        self.Victim.DEV_LINES = DevicesLines_Example
         self.Victim.devices__apply()
 
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST != []
-        assert self.Victim.DEVICES__BREEDER_CLS is not None
+        assert self.Victim.DEV_LINES is not None
 
         assert self.Victim.result__startup_cls is None
         assert self.Victim.result__teardown_cls is None
@@ -96,12 +88,12 @@ class Test__TC:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__inst(self):
-        self.Victim.DEVICES__BREEDER_CLS = DevicesBreeder_Example
+        self.Victim.DEV_LINES = DevicesLines_Example
         self.Victim.devices__apply()
 
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST != []
-        assert len(self.Victim.TCS__LIST) == self.Victim.DEVICES__BREEDER_CLS.COUNT
+        assert len(self.Victim.TCS__LIST) == self.Victim.DEV_LINES.COUNT
 
         assert self.Victim(0) is self.Victim.TCS__LIST[0]
 

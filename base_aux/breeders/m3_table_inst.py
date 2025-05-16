@@ -197,6 +197,20 @@ class TableLines:
         """
         return item in self.names()
 
+    def __getitem__(self, item: str) -> TableLine:
+        """
+        GOAL
+        ----
+        access to LINE over str name!
+        """
+
+
+
+
+
+
+
+
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
         """
