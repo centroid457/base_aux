@@ -13,7 +13,7 @@ class TestCase(Base_TestCase):
         # return True
         result_chain = ValidChains(
             [
-                Valid(value_link=hasattr(cls, "DEV_LINES"), name="hasattr DEVICES__CLS"),
+                Valid(value_link=hasattr(cls, "DEV_LINES"), name="hasattr DEV_LINES"),
                 Valid(value_link=hasattr(cls.DEV_LINES, "ATC"), name="hasattr ATC"),
                 Valid(value_link=cls.DEV_LINES.ATC.connect, name="ATC.connect()"),
             ],
