@@ -515,17 +515,16 @@ class Base_TpGui(Gui):
         col = index.column()
 
         try:
-            # print(f"{self.DATA.DEV_LINES.groups__get_names()=}")
-            dev_group_name = self.DATA.DEV_LINES.groups__get_names()[row]
-            dev_group_cls = self.DATA.DEV_LINES.group_get__cls(dev_group_name)
+            # print(f"{self.DATA.DEV_LINES.names()()=}")
+            dev_group_name = self.DATA.DEV_LINES.names()[row]
         except:
             return
 
         index = col - self.TM_DEV.HEADERS.DEVICE.START_OUTER
         try:
-            dev_inst = self.DATA.TP_ITEM.DEV_LINES.group_get__insts(dev_group_name)[index]
+            dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name][index]
         except:
-            dev_inst = self.DATA.TP_ITEM.DEV_LINES.group_get__insts(dev_group_name)
+            dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name]
 
         text = AnnotsAllAux(dev_inst).dump_str__pretty()
         self.PTE.setPlainText(text)

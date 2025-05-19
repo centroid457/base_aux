@@ -39,7 +39,7 @@ class TableModel_Devs(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TP_ITEM.DEV_LINES.groups__get_names())
+        return len(self.DATA.TP_ITEM.DEV_LINES)
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -61,7 +61,7 @@ class TableModel_Devs(TableModelTemplate):
     #
     #     dev_group_name: str | None = None
     #     try:
-    #         dev_group_name = self.DATA.DEV_LINES.groups__get_names()[row]
+    #         dev_group_name = self.DATA.DEV_LINES.names()[row]
     #     except:
     #         pass
     #
@@ -92,17 +92,17 @@ class TableModel_Devs(TableModelTemplate):
         dev_inst: Any | None = None
 
         try:
-            # print(f"{self.DATA.DEV_LINES.groups__get_names()=}")
-            dev_group_name = self.DATA.DEV_LINES.groups__get_names()[row]
+            # print(f"{self.DATA.DEV_LINES.names()=}")
+            dev_group_name = self.DATA.DEV_LINES.names()[row]
         except:
             pass
 
         if dev_group_name and col in self.HEADERS.DEVICE:
             index = col - self.HEADERS.DEVICE.START_OUTER
             try:
-                dev_inst = self.DATA.TP_ITEM.DEV_LINES.group_get__insts(dev_group_name)[index]
+                dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name][index]
             except:
-                dev_inst = self.DATA.TP_ITEM.DEV_LINES.group_get__insts(dev_group_name)
+                dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name]
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:
