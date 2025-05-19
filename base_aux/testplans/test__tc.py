@@ -29,7 +29,7 @@ class Test__TC:
     # -----------------------------------------------------------------------------------------------------------------
     def test__cls(self):
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS__LIST == []
+        assert self.Victim.TCS_LINE == []
         assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
@@ -47,10 +47,10 @@ class Test__TC:
 
     def test__cls__devices_apply__NONE(self):
         self.Victim.devices__apply()
-        assert self.Victim.TCS__LIST == []
+        assert self.Victim.TCS_LINE == []
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS__LIST == []
+        assert self.Victim.TCS_LINE == []
         assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
@@ -71,7 +71,7 @@ class Test__TC:
         self.Victim.devices__apply()
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS__LIST != []
+        assert self.Victim.TCS_LINE != []
         assert self.Victim.DEV_LINES is not None
 
         assert self.Victim.result__startup_cls is None
@@ -92,10 +92,10 @@ class Test__TC:
         self.Victim.DEV_LINES = Victim_DevicesLines()
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS__LIST != []
-        assert len(self.Victim.TCS__LIST) == self.Victim.DEV_LINES.COUNT_COLUMNS
+        assert self.Victim.TCS_LINE != []
+        assert len(self.Victim.TCS_LINE) == self.Victim.DEV_LINES.COUNT_COLUMNS
 
-        assert self.Victim(0) is self.Victim.TCS__LIST[0]
+        assert self.Victim(0) is self.Victim.TCS_LINE[0]
 
 
 

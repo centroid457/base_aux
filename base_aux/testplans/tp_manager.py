@@ -336,7 +336,7 @@ class TpManager(Logger, QThread):
             for tc_cls in self.TCS_CLS:
                 tc_inst = None
                 try:
-                    tc_inst: Base_TestCase = tc_cls.TCS__LIST[index]
+                    tc_inst: Base_TestCase = tc_cls.TCS_LINE[index]
 
                     tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
                     tc_inst_result_short = tc_inst_result_full["tc_result"]

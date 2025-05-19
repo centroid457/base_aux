@@ -19,7 +19,11 @@ from base_aux.testplans.models import *
 
 # =====================================================================================================================
 class _Base0_TestCase(Logger):
-    # just to use in Signals before defining exact
+    """
+    GOAL (SEPARATING)
+    ----
+    just to use in Signals before defining exact
+    """
     pass
 
 
@@ -50,12 +54,12 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # AUXILIARY -----------------------------------
     STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
-    _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
-
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
     DEV_LINES: TableKit = None
+    DEV_COLUMN: TableColumn
+    TCS_LINE: TableLine = None
 
     # INSTANCE ------------------------------------
     INDEX: int
@@ -92,52 +96,20 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def devices__apply(cls, dev_lines: TableKit = None) -> None:
         if dev_lines is not None:
             cls.DEV_LINES = dev_lines
-        try:
-            _Base1_TestCase._INSTS_DICT_CLS[cls].clear()    # FIXME: ref!!!
-        except:
-            pass
-
         if cls.DEV_LINES:
-            for index in range(cls.DEV_LINES.COUNT_COLUMNS):       # FIXME: ref!!!
-                tc_inst = cls(index=index)
-
-    @classmethod
-    @property
-    def TCS__LIST(cls) -> list[Self]:
-        try:
-            result = list(_Base1_TestCase._INSTS_DICT_CLS[cls].values())
-        except:
-            result = []
-        return result
+            tcs_list = []
+            for index in range(cls.DEV_LINES.COUNT_COLUMNS):
+                tc_i = cls(index=index)
+                tcs_list.append(tc_i)
+            cls.TCS_LINE = TableLine(*tcs_list)
 
     # =================================================================================================================
-    def __new__(cls, index: int, *args, **kwargs):
-        """
-        use singletons for every class!
-        """
-        if not hasattr(_Base1_TestCase, "_INSTS_DICT_CLS"):
-            setattr(_Base1_TestCase, "_INSTS_DICT_CLS", {})
-
-        if cls not in _Base1_TestCase._INSTS_DICT_CLS:
-            _Base1_TestCase._INSTS_DICT_CLS.update({cls: {}})
-
-        INSTS_DICT = _Base1_TestCase._INSTS_DICT_CLS[cls]
-
-        try:
-            INST = INSTS_DICT[index]
-        except:
-            INST = super().__new__(cls)
-            INSTS_DICT[index] = INST
-
-        # print(f"{cls.__name__}.__NEW__={index=}/{args=}/{kwargs=}//groups={len(_Base1_TestCase._INSTS_DICT_CLS)}/group={len(INSTS_DICT)}")
-        return INST
-
     def __init__(self, index: int):
         self.INDEX = index
         self.clear()
         super().__init__()
 
-        self.devices__apply(self.DEV_LINES)
+        # self.devices__apply(self.DEV_LINES)     # NOTE: dont use in INIT! use manually!!! in TP!
 
     # =================================================================================================================
     @property
@@ -176,7 +148,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
         cls.result__startup_cls = None
         cls.result__teardown_cls = None
-        for tc in cls.TCS__LIST:
+        for tc in cls.TCS_LINE:
             tc.clear()
 
     # @classmethod
@@ -260,7 +232,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # WORK ---------------------------------------------------
         if cls.result__startup_cls:
             # BATCH --------------------------
-            for tc_inst in cls.TCS__LIST:
+            for tc_inst in cls.TCS_LINE:
                 if tc_inst.skip_tc_dut:
                     continue
 
@@ -272,7 +244,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
             # WAIT --------------------------
             if cls.ASYNC:
-                for tc_inst in cls.TCS__LIST:
+                for tc_inst in cls.TCS_LINE:
                     print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inPARALLEL")
                     tc_inst.wait()
 
@@ -390,7 +362,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @classmethod
     def terminate__cls(cls) -> None:
-        for tc_inst in cls.TCS__LIST:
+        for tc_inst in cls.TCS_LINE:
             try:
                 if tc_inst.isRunning() and not tc_inst.isFinished():
                     tc_inst.terminate()
@@ -537,7 +509,7 @@ class _Info(_Base1_TestCase):
     @classmethod
     def get__results__all(cls) -> dict[int, dict[str, Any]]:
         results = {}
-        for tc_inst in cls.TCS__LIST:
+        for tc_inst in cls.TCS_LINE:
             results.update({tc_inst.INDEX: tc_inst.get__results()})
         return results
 

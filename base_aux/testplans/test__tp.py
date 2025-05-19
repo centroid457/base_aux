@@ -31,7 +31,6 @@ class Test__Tp:
         victim = self.Victim()
         assert not victim.DEV_LINES
         assert not victim.INDEX
-        assert not victim.TCS__INST
 
         assert not victim.result
         assert not victim.details
