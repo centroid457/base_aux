@@ -1,10 +1,11 @@
 import pytest
 
 from base_aux.testplans.devices import *
+from base_aux.testplans.tc import *
 
 
 # =====================================================================================================================
-class DevicesLines_Example(DeviceKit):
+class Victim_DevicesLines(DeviceKit):
     ATC: TableLine = TableLine(Base_Device)
 
 
@@ -66,7 +67,7 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__example(self):
-        self.Victim.DEV_LINES = DevicesLines_Example
+        self.Victim.DEV_LINES = Victim_DevicesLines()
         self.Victim.devices__apply()
 
         # EXISTS IN CLS --------------
@@ -88,8 +89,7 @@ class Test__TC:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__inst(self):
-        self.Victim.DEV_LINES = DevicesLines_Example
-        self.Victim.devices__apply()
+        self.Victim.DEV_LINES = Victim_DevicesLines()
 
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST != []

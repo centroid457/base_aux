@@ -37,6 +37,7 @@ class Signals(SignalsTemplate):
 class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     LOG_ENABLE = False
     LOG_USE_FILE = False
+    signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
 
     # SETTINGS ------------------------------------
     NAME: str = ""      # set auto!
@@ -49,7 +50,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # AUXILIARY -----------------------------------
     STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
 
-    signals: Signals = Signals()  # FIXME: need signal ON BASE CLASS! need only one SlotConnection! need Singleton?
     _INSTS_DICT_CLS: dict[type[Any], dict[Any, Any]]
 
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
@@ -74,7 +74,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @property
     def DEV_COLUMN(self) -> TableColumn:
-        return TableColumn(index=self.INDEX, lines=self.DEV_LINES)  # FIXME: use multyton!
+        return TableColumn(index=self.INDEX, lines=self.__class__.DEV_LINES)  # FIXME: use multyton!
 
     # =================================================================================================================
     @classmethod
@@ -136,6 +136,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.INDEX = index
         self.clear()
         super().__init__()
+
+        self.devices__apply(self.DEV_LINES)
 
     # =================================================================================================================
     @property
