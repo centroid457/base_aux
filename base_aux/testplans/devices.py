@@ -1,5 +1,4 @@
 from typing import *
-import uuid
 
 from base_aux.testplans import *
 from base_aux.buses.m1_serial1_client import *
@@ -77,7 +76,7 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class DevicesKit(TableKit):
+class DeviceKit(TableKit):
     def __del__(self):
         self.disconnect()
 
@@ -95,6 +94,16 @@ class DevicesKit(TableKit):
         find all devices on Uart ports
         """
         pass
+
+
+# =====================================================================================================================
+class DeviceColumn(TableColumn):
+    """
+    GOAL
+    ----
+    just an example
+    """
+    LINES = DeviceKit()
 
 
 # =====================================================================================================================

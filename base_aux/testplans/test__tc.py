@@ -4,7 +4,7 @@ from base_aux.testplans.devices import *
 
 
 # =====================================================================================================================
-class DevicesLines_Example(DevicesKit):
+class DevicesLines_Example(DeviceKit):
     ATC: TableLine = TableLine(Base_Device)
 
 

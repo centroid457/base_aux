@@ -1,16 +1,16 @@
-from . import atc, ptb
 from base_aux.buses.m1_serial1_client import SerialClient, Enum__AddressAutoAcceptVariant
 from base_aux.testplans.devices import *
+from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
 
 
 # =====================================================================================================================
-class DevicesLines__AtcPtbDummy(DevicesKit):
+class DeviceLines__AtcPtbDummy(DeviceKit):
     ATC = TableLine(atc.Device())
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(2)])
 
 
 # =====================================================================================================================
-class DevicesLines__Psu800(DevicesKit):
+class DeviceLines__Psu800(DeviceKit):
     ATC = TableLine(atc.Device())
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(10)])
 
@@ -45,6 +45,11 @@ class DevicesLines__Psu800(DevicesKit):
                 dev.ADDRESS = Enum__AddressAutoAcceptVariant.NOT_FOUND
 
         pass
+
+
+# =====================================================================================================================
+if __name__ == '__main__':
+    DeviceLines__Psu800().resolve_addresses()
 
 
 # =====================================================================================================================

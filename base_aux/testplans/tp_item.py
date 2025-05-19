@@ -6,7 +6,7 @@ from base_aux.testplans.devices import *
 # =====================================================================================================================
 class Base_TpItem:
     NAME: str
-    DEV_LINES: DevicesKit
+    DEV_LINES: DeviceKit
     TCS_CLS: dict[type, bool]
 
 

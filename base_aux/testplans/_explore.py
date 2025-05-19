@@ -26,12 +26,13 @@ class Client_RequestsStack_Tp(Client_RequestsStack):
 # =====================================================================================================================
 class TpManager__Example(TpManager):
     LOG_ENABLE = True
-    api_client: Client_RequestsStack = Client_RequestsStack_Tp()  # FIXME: need fix post__results!!!!
-    # api_client: Client_RequestsStack = None
 
     TP_ITEMS = TpItems
     TP_ITEM = TpItems.TP_PSU800
+
     API_SERVER__CLS = TpApi_FastApi
+    api_client: Client_RequestsStack = Client_RequestsStack_Tp()  # FIXME: need fix post__results!!!!
+    # api_client: Client_RequestsStack = None
 
     GUI__START = True
     API_SERVER__START = True
