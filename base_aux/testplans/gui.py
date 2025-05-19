@@ -404,7 +404,6 @@ class Base_TpGui(Gui):
         # print(f"BTN_select_tc_on_duts__toggled {state=}")
         # self.TV_TCS.horizontalHeader().setSectionHidden(self.TM_TCS.ADDITIONAL_COLUMNS - 1, not state)
         self.TV_TCS.horizontalHeader().setSectionsClickable(state)
-
         self.TM_TCS.open__settings = state
         self.TM_TCS._data_reread()
 
@@ -413,7 +412,7 @@ class Base_TpGui(Gui):
 
     def BTN_devs_detect__clicked(self) -> None:
         self.DATA.DEV_LINES("address_forget")
-        self.DATA.DEV_COLUMN.DUT.ADDRESSES__SYSTEM.clear()
+        self.DATA.DEV_LINES.DUT[0].ADDRESSES__SYSTEM.clear()
         self.TM_TCS._data_reread()
         # self.DATA.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
         self.DATA.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
