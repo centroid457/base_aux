@@ -40,7 +40,7 @@ class TableModel_Tps(TableModelTemplate):
             SKIP: None = None
             ASYNC: None = None
             STARTUP_CLS: None = None
-            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.DEV_LINES.COUNT)
+            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.DEV_LINES.COUNT_COLUMNS)
             TEARDOWN_CLS: None = None
             # FIXME: need resolve COUNT over DevicesIndexed!!!
 

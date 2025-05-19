@@ -12,9 +12,9 @@ from base_aux.path2_file.m4_fileattrs import *
 from base_aux.path2_file.m3_filetext import *
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 from .tc import Base_TestCase
-from .devices import Base_Device, Base_Device, DeviceKit
+from .devices import Base_Device, DeviceKit
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
 from .tp_item import Base_TpItem
@@ -61,18 +61,20 @@ class TpManager(Logger, QThread):
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
     # AUX -----------------------------------------------------------
-    STAND: StandInfo
+    STAND: StandInfo     # todo: decide to delete! using from TP_ITEM!
 
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
+
     DEV_LINES: DeviceKit
+
     TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
     # {
     #     Tc1: True,
     #     Tc2: True
     # }
 
-    # DEVICES__BREEDER_INST: list[Union[str, type[Base_Device]]]    # settings
+    # DEV_COLUMN: list[Union[str, type[Base_Device]]]    # settings
     # [
     #     Dev1,
     #     Dev2
@@ -328,7 +330,7 @@ class TpManager(Logger, QThread):
 
     def save__results(self) -> None:
         name_prefix = str(DateTimeAux())
-        for index in range(self.DEV_LINES.COUNT):
+        for index in range(self.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
             result_i_full = {}
             for tc_cls in self.TCS_CLS:
@@ -345,7 +347,7 @@ class TpManager(Logger, QThread):
                 result_i_short.update({tc_cls.DESCRIPTION: tc_inst_result_short})
                 result_i_full.update({tc_cls.DESCRIPTION: tc_inst_result_full})
 
-            DUT = tc_inst.DEVICES__BREEDER_INST.DUT
+            DUT = tc_inst.DEV_COLUMN.DUT
 
             if not DUT.DEV_FOUND or not DUT.DUT_FW:
                 continue

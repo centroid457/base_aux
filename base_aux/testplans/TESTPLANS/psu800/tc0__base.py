@@ -175,13 +175,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
         """
         result = [
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="VINOK",
                     validate_link=1 if self.expect__psu_may_start__hv() else 0,
                     name="GET",
                 ),
                 ValidFailContinue(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="PWOK",
                     validate_link=1 if self.expect__psu_started_hv__ok() else 0,
                     name="GET",
@@ -189,7 +189,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
 
                 # HV ----
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="VIN",
                     validate_link=EqValid_LeGe_NumParsedSingle(
                         *((210, 230)
@@ -202,7 +202,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
 
                 # LV ----
                 ValidFailContinue(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12S",
                     validate_link=EqValid_LeGe_NumParsedSingle(
                         *((11, 13)
@@ -213,7 +213,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12M",
                     validate_link=EqValid_LeGe_NumParsedSingle(
                         *((11, 13)
@@ -226,13 +226,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
 
                 # currents ----
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IIN",
                     validate_link=EqValid_LeGe_NumParsedSingle(0, 0.1).validate,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IOUT",
                     validate_link=EqValid_LeGe_NumParsedSingle(0, 0.1).validate,
                     name="GET+valid diapason",
@@ -255,13 +255,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
 
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved,
+                    value_link=self.DEV_COLUMN.DUT.connect__only_if_address_resolved,
                     name="DUT.connect__only_if_address_resolved",
                 ),
 
                 # LED ----------------------------------------------------
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                    value_link=self.DEV_COLUMN.DUT.SET,
                     kwargs__value={"LED2": "BLINK"},
                     validate_link="OK",
                     name="SET",
@@ -270,7 +270,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # PTB_SET_EXTON ----------------------------------------------------
                 Valid(
                     skip_link=not self.PTB_SET_EXTON,
-                    value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                    value_link=self.DEV_COLUMN.DUT.SET,
                     kwargs__value={"EXT12": "ON"},
                     validate_link="OK",
                     name="SET",
@@ -279,7 +279,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
 
                 # HV0 --------------------------------------------------------------
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="HV0",
                     validate_link=1 if self.ATC_VOUT else 0,
                     name="GET",
@@ -288,7 +288,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # PTB_SET_HVON
                 Valid(
                     skip_link=not self.PTB_SET_HVON or self.PTB_SET_EXTON,
-                    value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                    value_link=self.DEV_COLUMN.DUT.SET,
                     kwargs__value={"HV": "ON"},
                     validate_link="OK",
                     name="SET",
@@ -297,7 +297,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
 
                 # HV1 -----------
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="HV1",
                     validate_link=1 if self.expect__psu_started_hv__ok() else 0,
                     name="GET",
@@ -306,7 +306,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # PTB_SET_PSON ------------------------------------------------------
                 Valid(
                     skip_link=not self.PTB_SET_PSON,
-                    value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                    value_link=self.DEV_COLUMN.DUT.SET,
                     kwargs__value={"PSON": "ON", "__timeout": 10},
                     validate_link="OK" if self.expect__psu_may_start__hv_or_ext() else "ERR",
                     name="ON",
@@ -323,11 +323,11 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
 
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved,
+                    value_link=self.DEV_COLUMN.DUT.connect__only_if_address_resolved,
                     name="DUT.connect__only_if_address_resolved",
                 ),
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.reset,
+                    value_link=self.DEV_COLUMN.DUT.reset,
                     validate_link=lambda value: value is None,
                     name="RESET",
                 ),

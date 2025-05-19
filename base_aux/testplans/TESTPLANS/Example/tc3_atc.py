@@ -27,8 +27,8 @@ class TestCase(Base_TestCase):
         time.sleep(0.1)
         result_chain = ValidChains(
             [
-                Valid(value_link=self.DEVICES__BREEDER_INST.DUT.VALUE, name="DUT.VALUE"),
-                Valid(value_link=self.DEVICES__BREEDER_INST.ATC.address__validate),
+                Valid(value_link=self.DEV_COLUMN.DUT.VALUE, name="DUT.VALUE"),
+                Valid(value_link=self.DEV_COLUMN.ATC.address__validate),
             ],
         )
         return result_chain

@@ -1,5 +1,5 @@
-import json
 import datetime
+
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.aux_dict.m3_dict_attr1_simple import *
@@ -9,10 +9,12 @@ from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
 from base_aux.base_statics.m4_enums import *
 
-from .tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
-from .models import *
+from base_aux.breeders.m3_table_inst import *
 from base_aux.base_nest_dunders.m6_eq2_cls import *
 from base_aux.base_statics.m4_enums import NestEq_Enum
+
+from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
+from base_aux.testplans.models import *
 
 
 # =====================================================================================================================
@@ -53,12 +55,9 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
-    DEV_LINES: 'DeviceKit' = None
-    DEVICES__BREEDER_INST: 'DeviceKit'
+    DEV_LINES: TableKit = None
 
     # INSTANCE ------------------------------------
-    _inst_inited: Optional[bool] = None
-
     INDEX: int
     SETTINGS: DictAttr = {}
 
@@ -73,6 +72,11 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     progress: int
 
     # =================================================================================================================
+    @property
+    def DEV_COLUMN(self) -> TableColumn:
+        return TableColumn(index=self.INDEX, lines=self.DEV_LINES)  # FIXME: use multyton!
+
+    # =================================================================================================================
     @classmethod
     @property
     def _EQ_CLS__VALUE(cls) -> Enum:
@@ -85,16 +89,16 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # =================================================================================================================
     @classmethod
-    def devices__apply(cls, devices_lines: 'DeviceKit' = None) -> None:
-        if devices_lines is not None:
-            cls.DEV_LINES = devices_lines
+    def devices__apply(cls, dev_lines: TableKit = None) -> None:
+        if dev_lines is not None:
+            cls.DEV_LINES = dev_lines
         try:
-            _Base1_TestCase._INSTS_DICT_CLS[cls].clear()
+            _Base1_TestCase._INSTS_DICT_CLS[cls].clear()    # FIXME: ref!!!
         except:
             pass
 
         if cls.DEV_LINES:
-            for index in range(cls.DEV_LINES.COUNT):
+            for index in range(cls.DEV_LINES.COUNT_COLUMNS):       # FIXME: ref!!!
                 tc_inst = cls(index=index)
 
     @classmethod
@@ -129,18 +133,9 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         return INST
 
     def __init__(self, index: int):
-        if self._inst_inited:
-            return
-
-        # NEW INSTANCE -----------------------------
         self.INDEX = index
         self.clear()
         super().__init__()
-
-        if self.DEV_LINES:
-            self.DEVICES__BREEDER_INST = self.DEV_LINES(index) # FIXME!!!
-
-        self._inst_inited = True
 
     # =================================================================================================================
     @property
@@ -198,7 +193,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self._result = value
         self.signals.signal__tc_state_changed.emit(self)
         if isinstance(value, Exception):
-            self.DEVICES__BREEDER_INST.DUT.final_result: bool = False
+            self.DEV_COLUMN.DUT.final_result: bool = False
 
         # FIXME: FINISH!!!
         # FIXME: FINISH!!!
@@ -299,13 +294,13 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.clear()
         self.timestamp_start = datetime.datetime.now()
         if (
-                not hasattr(self.DEVICES__BREEDER_INST, "DUT")
+                not hasattr(self.DEV_COLUMN, "DUT")
                 or
-                self.DEVICES__BREEDER_INST.DUT.SKIP
+                self.DEV_COLUMN.DUT.SKIP
                 or
-                not self.DEVICES__BREEDER_INST.DUT.DEV_FOUND
+                not self.DEV_COLUMN.DUT.DEV_FOUND
                 or
-                not self.DEVICES__BREEDER_INST.DUT.connect()
+                not self.DEV_COLUMN.DUT.connect()
         ):
             return
 
@@ -464,8 +459,8 @@ class _Info(_Base1_TestCase):
         result = ""
 
         result += f"INDEX={self.INDEX}\n"
-        result += f"SN={self.DEVICES__BREEDER_INST.DUT.SN}\n"
-        result += f"ADDRESS={self.DEVICES__BREEDER_INST.DUT.ADDRESS}\n"
+        result += f"SN={self.DEV_COLUMN.DUT.SN}\n"
+        result += f"ADDRESS={self.DEV_COLUMN.DUT.ADDRESS}\n"
         result += f"tc_skip_dut={self.skip_tc_dut}\n"
 
         result += f"TC_NAME={self.NAME}\n"
@@ -512,7 +507,7 @@ class _Info(_Base1_TestCase):
         info_dut = {}
         try:
             if add_info_dut:
-                info_dut = self.DEVICES__BREEDER_INST.DUT.get__info__dev()
+                info_dut = self.DEV_COLUMN.DUT.get__info__dev()
         except:
             pass
 

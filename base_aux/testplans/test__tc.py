@@ -37,7 +37,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEVICES__BREEDER_INST")
+        assert not hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -58,7 +58,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEVICES__BREEDER_INST")
+        assert not hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -79,7 +79,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEVICES__BREEDER_INST")
+        assert not hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -93,7 +93,7 @@ class Test__TC:
 
         # EXISTS IN CLS --------------
         assert self.Victim.TCS__LIST != []
-        assert len(self.Victim.TCS__LIST) == self.Victim.DEV_LINES.COUNT
+        assert len(self.Victim.TCS__LIST) == self.Victim.DEV_LINES.COUNT_COLUMNS
 
         assert self.Victim(0) is self.Victim.TCS__LIST[0]
 

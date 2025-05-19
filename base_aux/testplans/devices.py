@@ -97,8 +97,12 @@ class DeviceKit(TableKit):
 
 
 # =====================================================================================================================
-class DeviceColumn(TableColumn):
+class _DeviceColumn_Example(TableColumn):
     """
+    NOTE
+    ----
+    use direct dinamic creation TableColumn(index, TLines)!
+
     GOAL
     ----
     just an example

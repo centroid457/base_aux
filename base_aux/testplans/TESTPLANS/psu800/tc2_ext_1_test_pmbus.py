@@ -17,7 +17,7 @@ class TestCase(Base_TcAtcPtb):
         result_chain = ValidChains(
             chains=[
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.TEST,
+                    value_link=self.DEV_COLUMN.DUT.TEST,
                     args__value="PMBUS",
                     kwargs__value={"__timeout": 10},
                     validate_link="PASS",

@@ -17,7 +17,7 @@ class TestCase(Base_TcAtcPtb):
         result_chain = ValidChains(
             chains=[
                 Valid(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.TEST,
+                    value_link=self.DEV_COLUMN.DUT.TEST,
                     args__value="GND",
                     kwargs__value={"__timeout": 10},
                     validate_link="PASS",

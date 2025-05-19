@@ -18,7 +18,7 @@ class TestCase(Base_TestCase):
 
     def run__wrapped(self):
         time.sleep(0.1)
-        self.details_update({"detail_value": self.DEVICES__BREEDER_INST.DUT.VALUE})
+        self.details_update({"detail_value": self.DEV_COLUMN.DUT.VALUE})
         result_chain = ValidChains(
             [
                 Valid(value_link=True, name="TRUE"),

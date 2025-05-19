@@ -16,42 +16,42 @@ class TestCase(Base_TcAtcPtb):
     def _gen_chains(self, load: int) -> list[Valid]:
         return [
             ValidFailStop(
-                value_link=self.DEVICES__BREEDER_INST.DUT.SET,
+                value_link=self.DEV_COLUMN.DUT.SET,
                 kwargs__value={"LOAD": load},
                 validate_link="OK",
                 name="SET",
             ),
             ValidSleep(1),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="VINOK",
                 validate_link=1,
             ),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="PWOK",
                 validate_link=1,
             ),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="V12S",
                 validate_link=EqValid_LeGe_NumParsedSingle(11, 13).validate,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="V12M",
                 validate_link=EqValid_LeGe_NumParsedSingle(11, 13).validate,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="IOUT",
                 validate_link=EqValid_LeGe_NumParsedSingle(load / 12 / 2, None).validate,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
-                value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="IIN",
                 validate_link=EqValid_LeGe_NumParsedSingle(load / 12 / 2, None).validate,
                 name="GET+valid diapason",

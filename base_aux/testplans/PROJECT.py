@@ -44,7 +44,7 @@ FEATURES = [
     ["[SKIP]",
         "tc", "tc on dut", "dut"
      ],
-    ["[DEVICES__BREEDER_INST]",
+    ["[DEV_COLUMN]",
         "keep all in one instance",
         "use variants: single device for all duts or list for pairing each dut",
      ],

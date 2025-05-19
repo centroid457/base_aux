@@ -23,7 +23,7 @@ class TestCase(Base_TestCase):
     def startup__wrapped(self) -> TYPING__RESULT_W_NORETURN:
         result = ValidChains(
             [
-                Valid(value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved, name="DUT.connect__only_if_address_resolved"),
+                Valid(value_link=self.DEV_COLUMN.DUT.connect__only_if_address_resolved, name="DUT.connect__only_if_address_resolved"),
             ],
         )
         return result
@@ -32,7 +32,7 @@ class TestCase(Base_TestCase):
         # time.sleep(0.1)
         result = ValidChains(
             [
-                Valid(value_link=self.DEVICES__BREEDER_INST.DUT.connect__only_if_address_resolved, name="DUT.connect__only_if_address_resolved"),
+                Valid(value_link=self.DEV_COLUMN.DUT.connect__only_if_address_resolved, name="DUT.connect__only_if_address_resolved"),
             ],
         )
         return result

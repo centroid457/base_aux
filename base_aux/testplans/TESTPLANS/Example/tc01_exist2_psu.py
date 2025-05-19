@@ -14,7 +14,7 @@ class TestCase(Base_TestCase):
         result = ValidChains([
             time.sleep(1),
             Valid(
-                value_link=self.DEVICES__BREEDER_INST.DUT.connect,
+                value_link=self.DEV_COLUMN.DUT.connect,
                 # args__value="get PRSNT",
             ),
         ])

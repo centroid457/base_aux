@@ -17,13 +17,13 @@ class TestCase(Base_TcAtcPtb):
         result_chain = ValidChains(
             chains=[
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12S",
                     validate_link=EqValid_LeGe_NumParsedSingle(11, 13).validate,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.TEST,
+                    value_link=self.DEV_COLUMN.DUT.TEST,
                     args__value="LD12S",
                     kwargs__value={"__timeout": 20},
                     validate_link="PASS",
@@ -31,7 +31,7 @@ class TestCase(Base_TcAtcPtb):
                 ),
                 ValidSleep(1),
                 ValidNoCum(
-                    value_link=self.DEVICES__BREEDER_INST.DUT.GET,
+                    value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12S",
                     validate_link=EqValid_LeGe_NumParsedSingle(11, 13).validate,
                     name="GET+valid diapason",
