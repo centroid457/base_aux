@@ -3,11 +3,9 @@ import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.aux_dict.m3_dict_attr1_simple import *
-from base_aux.aux_callable.m1_callable import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
-from base_aux.base_statics.m4_enums import *
 
 from base_aux.breeders.m3_table_inst import *
 from base_aux.base_nest_dunders.m6_eq2_cls import *
@@ -78,7 +76,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @property
     def DEV_COLUMN(self) -> TableColumn:
-        return TableColumn(index=self.INDEX, lines=self.__class__.DEV_LINES)  # FIXME: use multyton!
+        return TableColumn(index=self.INDEX, lines=self.__class__.DEV_LINES)  # FIXME: use multiton!
 
     # =================================================================================================================
     @classmethod
@@ -96,6 +94,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def devices__apply(cls, dev_lines: TableKit = None) -> None:
         if dev_lines is not None:
             cls.DEV_LINES = dev_lines
+
         if cls.DEV_LINES:
             tcs_list = []
             for index in range(cls.DEV_LINES.COUNT_COLUMNS):

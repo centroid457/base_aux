@@ -12,7 +12,7 @@ class DeviceLines__AtcPtbDummy(DeviceKit):
 # =====================================================================================================================
 class DeviceLines__Psu800(DeviceKit):
     ATC = TableLine(atc.Device())
-    DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(10)])
+    DUT = TableLine(*[ptb.Device(index) for index in range(10)])
 
     def resolve_addresses(self) -> None:
         class Dev(SerialClient):
