@@ -75,7 +75,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
 
 
 # =====================================================================================================================
-class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):
+class DeviceDummy(Base_Device, SerialClient_FirstFree_AnswerValid):
     @property
     def DEV_FOUND(self) -> bool:
         return True

@@ -15,10 +15,7 @@ class DeviceLines__Psu800(DeviceKit):
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(10)])
 
     def resolve_addresses(self) -> None:
-        pass
-
         class Dev(SerialClient):
-            pass
             BAUDRATE = 115200
             EOL__SEND = b"\n"
 
