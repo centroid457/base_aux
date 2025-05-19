@@ -412,8 +412,8 @@ class Base_TpGui(Gui):
         self.TV_DEV.setHidden(not state)
 
     def BTN_devs_detect__clicked(self) -> None:
-        self.DATA.DEV_LINES.group_call__("address_forget")
-        self.DATA.DEV_LINES.CLS_LIST__DUT.ADDRESSES__SYSTEM.clear()
+        self.DATA.DEV_LINES("address_forget")
+        self.DATA.DEV_COLUMN.DUT.ADDRESSES__SYSTEM.clear()
         self.TM_TCS._data_reread()
         # self.DATA.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
         self.DATA.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
@@ -452,7 +452,7 @@ class Base_TpGui(Gui):
             pass
 
         if index in self.TM_TCS.HEADERS.DUTS:
-            dut = self.DATA.DEV_LINES.LIST__DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
+            dut = self.DATA.DEV_LINES.DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
             dut.SKIP_reverse()
             self.TM_TCS._data_reread()
 
@@ -491,7 +491,7 @@ class Base_TpGui(Gui):
                 pass    # TODO: add summary_result
             else:
 
-                dut = self.DATA.DEV_LINES.LIST__DUT[dut_index]
+                dut = self.DATA.DEV_LINES.DUT[dut_index]
                 self.PTE.setPlainText(tc_cls.TCS__LIST[dut_index].get__results_pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:

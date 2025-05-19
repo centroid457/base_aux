@@ -30,7 +30,6 @@ class Test__Tp:
     def test__1(self):
         victim = self.Victim()
         assert not victim.DEV_LINES
-        assert not victim.DEVICES__BY_INDEX
         assert not victim.INDEX
         assert not victim.TCS__INST
 

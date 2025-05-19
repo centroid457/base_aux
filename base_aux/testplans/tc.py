@@ -236,7 +236,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             True - need continue TP
             False - cant continue! need stop TP
         """
-        # if not cls.DEV_LINES.LIST__DUT:
+        # if not cls.DEV_LINES.DUT:
         #     return
 
         print(f"run__cls=START={cls.NAME=}{cls.DESCRIPTION=}={'=' * 50}")

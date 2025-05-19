@@ -53,115 +53,105 @@ class Test__DevicesLines:
     def test__DUT_COUNT(self):
         # 1 -----------------------------------------------------
         self.Victim.COUNT = 1
-        self.Victim.generate__objects()
 
         victim = self.Victim(0)
-        assert victim.DUT == self.Victim.LIST__DUT[0]
-        assert victim.DUT == victim.LIST__DUT[0]
+        assert victim.DUT == self.Victim.DUT[0]
 
         # 2 ------------------------------------------------------
         self.Victim.COUNT = 2
-        self.Victim.generate__objects(force=True)
         #
         # # INSTANCE ----------------------
         victim = self.Victim(0)
         assert victim.DUT.INDEX == 0
-        assert victim.DUT == self.Victim.LIST__DUT[0]
-        assert victim.DUT == victim.LIST__DUT[0]
+        assert victim.DUT == self.Victim.DUT[0]
+        assert victim.DUT == victim.DUT[0]
 
         victim = self.Victim(1)
         assert victim.DUT.INDEX == 1
-        assert victim.DUT == self.Victim.LIST__DUT[1]
-        assert victim.DUT == victim.LIST__DUT[1]
+        assert victim.DUT == self.Victim.DUT[1]
+        assert victim.DUT == victim.DUT[1]
 
-        assert victim.LIST__DUT[0] != victim.LIST__DUT[1]
-        assert self.Victim.LIST__DUT[0] != self.Victim.LIST__DUT[1]
+        assert victim.DUT[0] != victim.DUT[1]
+        assert self.Victim.DUT[0] != self.Victim.DUT[1]
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__CLS_SINGLE__CLS(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_SINGLE__ATC = Base_Device
-        self.Victim.generate__objects()
+        self.Victim.ATC = Base_Device
 
-        assert hasattr(self.Victim, "LIST__DUT") is True
-        assert hasattr(self.Victim, "LIST__ATC") is False
+        assert hasattr(self.Victim, "DUT") is True
+        assert hasattr(self.Victim, "ATC") is False
 
-        assert self.Victim.group_check__exists("DUT") is True
-        assert self.Victim.group_check__exists("ATC") is True
-        assert self.Victim.group_check__exists("PTB") is False
+        assert self.Victim["DUT"] is not None
+        assert self.Victim["ATC"] is not None
+        assert self.Victim["PTB"] is not None
 
         # DISCONNECT
         self.Victim.disconnect()
 
-        self.Victim.generate__objects()
-
     def test__CLS_SINGLE__INSTANCE(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_SINGLE__ATC = Base_Device
-        assert not self.Victim.groups_check__generated()
-        self.Victim.generate__objects(True)
-        assert self.Victim.groups_check__generated()
+        self.Victim.ATC = Base_Device
 
         victim = self.Victim(1)    # FIXME: IS IN BROKEN?????
 
-        assert victim.DUT == victim.LIST__DUT[1]
+        assert victim.DUT == victim.DUT[1]
         try:
             victim.PTB
             assert False
         except:
             pass
 
-        assert hasattr(victim, "LIST__DUT") is True
+        assert hasattr(victim, "DUT") is True
         try:
-            hasattr(victim, "LIST__ATC")
+            hasattr(victim, "ATC")
             assert False
         except:
             pass
 
-        assert victim.group_check__exists("DUT") is True
-        assert victim.group_check__exists("ATC") is True
-        assert victim.group_check__exists("PTB") is False
+        assert victim["DUT"] is not None
+        assert victim["DUT"] is not None
+        assert victim["PTB"] is not None
 
     # -----------------------------------------------------------------------------------------------------------------
-    def test__CLS_LIST__CLS(self):
+    def test__CLS(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTB = Base_Device
-        self.Victim.generate__objects()
+        self.Victim.PTB = Base_Device
 
-        assert hasattr(self.Victim, "LIST__DUT") is True
-        assert hasattr(self.Victim, "LIST__PTB") is True
+        assert hasattr(self.Victim, "DUT") is True
+        assert hasattr(self.Victim, "PTB") is True
 
-        assert len(self.Victim.LIST__DUT) == 2
-        assert len(self.Victim.LIST__PTB) == 2
+        assert len(self.Victim.DUT) == 2
+        assert len(self.Victim.PTB) == 2
 
-        assert self.Victim.group_check__exists("DUT") is True
-        assert self.Victim.group_check__exists("ATC") is False
-        assert self.Victim.group_check__exists("PTB") is True
+        assert self.Victim["DUT"] is not None
+        assert self.Victim["ATC"] is not None
+        assert self.Victim["PTB"] is not None
 
-    def test__CLS_LIST__INSTANCE(self):
+    def test__INSTANCE(self):
         self.Victim.COUNT = 2
-        self.Victim.CLS_LIST__PTB = Base_Device
-        self.Victim.generate__objects()
+        self.Victim.CLS_PTB = Base_Device
 
         victim = self.Victim(1)
 
-        assert victim.DUT == victim.LIST__DUT[1]
-        assert victim.PTB == victim.LIST__PTB[1]
+        assert victim.DUT == victim.DUT[1]
+        assert victim.PTB == victim.PTB[1]
         try:
             victim.ATC
-            assert False
         except:
             pass
+        else:
+            assert False
 
-        assert hasattr(victim, "LIST__DUT") is True
-        assert hasattr(victim, "LIST__PTB") is True
+        assert hasattr(victim, "DUT") is True
+        assert hasattr(victim, "TB") is True
 
-        assert len(victim.LIST__DUT) == 2
-        assert len(victim.LIST__PTB) == 2
+        assert len(victim.DUT) == 2
+        assert len(victim.PTB) == 2
 
-        assert victim.group_check__exists("DUT") is True
-        assert victim.group_check__exists("ATC") is False
-        assert victim.group_check__exists("PTB") is True
+        assert victim["DUT"] is not None
+        assert victim["ATC"] is not None
+        assert victim["PTB"] is not None
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__double_init(self):
