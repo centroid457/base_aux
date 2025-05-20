@@ -54,8 +54,17 @@ class TableLine:
         GOAL
         ----
         iter all instances in line
+
+        NOTE-IMPORTANT
+        --------------
+        if instance IS (not EQ!) previous instance - skip!
+        it NEED for applying several ATC for some groups (3 ATC for 12 PTB, so there are 1 ATC for 4 PTB)
         """
-        yield from self.INSTS
+        inst_prev = None
+        for inst in self.INSTS:
+            if inst is not inst_prev:
+                inst_prev = inst
+                yield inst
 
     def __contains__(self, item) -> bool:
         return item in self.INSTS
@@ -98,20 +107,26 @@ class TableLine:
         """
         return len(self.INSTS)
 
-    def __call__(self, meth: str, *args, **kwargs) -> list[Any | Exception]:        # TODO: APPLY TableLine as result
+    def __call__(self, meth: str, *args, **kwargs) -> list[Any | Exception]:        # TODO: APPLY TableLine as result???
         """
         GOAL
         ----
         call method on all instances
         """
         results = []
+        inst_prev = None
         for inst in self.INSTS:
-            try:
-                inst_meth = getattr(inst, meth)
-                ints_result = inst_meth(*args, **kwargs)
-                results.append(ints_result)
-            except Exception as exx:
-                results.append(exx)
+            if inst is not inst_prev:
+                inst_prev = inst
+                try:
+                    inst_meth = getattr(inst, meth)
+                    ints_result = inst_meth(*args, **kwargs)
+                except Exception as exx:
+                    ints_result = exx
+            else:
+                ints_result = results[-1]
+
+            results.append(ints_result)
 
         return results
 

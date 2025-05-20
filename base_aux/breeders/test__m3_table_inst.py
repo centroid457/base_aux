@@ -118,6 +118,19 @@ class Test__1_TableLine:
         func_link = lambda: obj1 == obj2
         ExpectAux(func_link).check_assert(_EXPECTED)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize(
+        argnames="insts, _EXPECTED",
+        argvalues=[
+            ([Value11, Value11], [Value11, ]),
+            ([Value11, Value11, Value22], [Value11, Value22]),
+            ([Value11, Value22, Value11], [Value11, Value22, Value11]),
+        ]
+    )
+    def test__iter(self, insts, _EXPECTED):
+        func_link = lambda: [*TableLine(*insts)]
+        ExpectAux(func_link).check_assert(_EXPECTED)
+
 
 # =====================================================================================================================
 pass    # =============================================================================================================
