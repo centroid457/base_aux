@@ -464,7 +464,11 @@ class Base_TpGui(Gui):
             # when item with noFlag IsSelectable
             return
 
-        index: QModelIndex = first.indexes()[0]
+        try:
+            index: QModelIndex = first.indexes()[0]
+        except IndexError:
+            # this happens when press any Arrow on Keyboard!
+            return
 
         row = index.row()
         col = index.column()
@@ -508,7 +512,11 @@ class Base_TpGui(Gui):
             # when item with noFlag IsSelectable
             return
 
-        index: QModelIndex = first.indexes()[0]
+        try:
+            index: QModelIndex = first.indexes()[0]
+        except IndexError:
+            # this happens when press any Arrow on Keyboard!
+            return
 
         row = index.row()
         col = index.column()
