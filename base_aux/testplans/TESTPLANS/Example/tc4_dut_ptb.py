@@ -15,7 +15,7 @@ class TestCase(Base_TestCase):
             [
                 Valid(value_link=hasattr(cls, "DEV_LINES"), name="hasattr DEV_LINES"),
                 Valid(value_link=hasattr(cls.DEV_LINES, "ATC"), name="hasattr ATC"),
-                Valid(value_link=cls.DEV_LINES.ATC.connect, name="ATC.connect()"),
+                Valid(value_link=cls.DEV_LINES.ATC[0].connect, name="ATC.connect()"),
             ],
         )
         return result_chain
