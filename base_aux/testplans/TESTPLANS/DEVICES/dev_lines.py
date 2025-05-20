@@ -5,7 +5,7 @@ from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
 
 # =====================================================================================================================
 class DeviceLines__AtcPtbDummy(DeviceKit):
-    ATC = TableLine(atc.Device())
+    ATC = TableLine(atc.DeviceDummy())
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(2)])
 
 

@@ -6,7 +6,7 @@ from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
+class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
@@ -49,6 +49,22 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     @property
     def DEV_FOUND(self) -> bool:
         return self.address_check__resolved()
+
+
+# =====================================================================================================================
+class DeviceDummy(Base_Device, SerialClient_FirstFree_AnswerValid):
+    @property
+    def DEV_FOUND(self) -> bool:
+        return True
+
+    def address__validate(self) -> bool:
+        return True
+
+    def connect__validate(self) -> bool:
+        return True
+
+    def connect(self, *args, **kwargs) -> bool:
+        return True
 
 
 # =====================================================================================================================
