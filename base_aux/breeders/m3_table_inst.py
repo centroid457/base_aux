@@ -1,9 +1,19 @@
 """
 IDEAS
 -----
-TableLine - work with all insts in one group
-TableKit - work with all insts in all groups
-TableColumn - work with all insts in one column (useful for instances like TestCase)
+TableLine
+    - work with all insts in one group
+    - unnamed collection
+TableKit
+    - work with all insts in all groups
+    - named collection (dict-like)
+TableColumn
+    - work with all insts in one column (useful for instances like TestCase)
+
+USAGE
+-----
+1. creating Table
+2. using like simple collections (iterable/gi)
 """
 
 # =====================================================================================================================
