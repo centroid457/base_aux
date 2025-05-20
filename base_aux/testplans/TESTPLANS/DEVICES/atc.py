@@ -33,11 +33,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):
     def load__INFO(self) -> None:
         if not self.SN:
             self.SN = self.write_read__last("get SN")
-
-        if not self.FW:
             self.FW = self.write_read__last("get FW")
-
-        if not self.MODEL:
             self.MODEL = self.write_read__last("get MODEL")
 
     def connect__validate(self) -> bool:

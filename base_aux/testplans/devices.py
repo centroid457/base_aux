@@ -24,6 +24,16 @@ class Base_Device:
 
     # INFO -------------------------------
     def load__INFO(self) -> None:
+        """
+        GOAL
+        ----
+        load all important attrs in object.
+        for further identification.
+
+        WHERE
+        -----
+        useful in connect_validate
+        """
         pass
 
     # DUT -------------------------------------------------------------------------------------------------------------
