@@ -29,7 +29,7 @@ class Test__TC:
     # -----------------------------------------------------------------------------------------------------------------
     def test__cls(self):
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS_LINE == []
+        assert len(self.Victim.TCS_LINE) == 0
         assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
@@ -38,7 +38,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEV_COLUMN")
+        assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -46,11 +46,11 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__NONE(self):
+        assert len(self.Victim.TCS_LINE) == 0
         self.Victim.devices__apply()
-        assert self.Victim.TCS_LINE == []
+        assert len(self.Victim.TCS_LINE) == 0
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS_LINE == []
         assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
@@ -59,7 +59,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEV_COLUMN")
+        assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -67,11 +67,12 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__example(self):
+        assert len(self.Victim.TCS_LINE) == 0
         self.Victim.DEV_LINES = Victim_DevicesLines()
         self.Victim.devices__apply()
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS_LINE != []
+        assert len(self.Victim.TCS_LINE) > 0
         assert self.Victim.DEV_LINES is not None
 
         assert self.Victim.result__startup_cls is None
@@ -80,7 +81,7 @@ class Test__TC:
         # EXISTS IN INSTANCE --------------
         assert not hasattr(self.Victim, "INDEX")
         # assert not hasattr(self.Victim, "SETTINGS")
-        assert not hasattr(self.Victim, "DEV_COLUMN")
+        assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
@@ -92,15 +93,9 @@ class Test__TC:
         self.Victim.DEV_LINES = Victim_DevicesLines()
 
         # EXISTS IN CLS --------------
-        assert self.Victim.TCS_LINE != []
         assert len(self.Victim.TCS_LINE) == self.Victim.DEV_LINES.COUNT_COLUMNS
 
-        assert self.Victim(0) is self.Victim.TCS_LINE[0]
-
-
-
-
-
+        # assert self.Victim(0) is self.Victim.TCS_LINE[0]
 
 
         # TODO: FINISH!

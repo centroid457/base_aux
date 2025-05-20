@@ -57,7 +57,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     DEV_LINES: TableKit = None
     DEV_COLUMN: TableColumn
-    TCS_LINE: TableLine = None
+    TCS_LINE: TableLine = TableLine()
 
     # INSTANCE ------------------------------------
     INDEX: int
@@ -201,9 +201,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     @classmethod
     def run__cls(cls, cls_prev: type[Self] | None = None, cls_next: type[Self] | None = None) -> None | bool:
         """run TC on batch duts(??? may be INDEXES???)
-        prefered using in thread on upper level!
+        preferred using in thread on upper level!
 
-        :param cls_prev: use for apply group in sequence
         :return:
             NONE - if SKIP for any reason
             True - need continue TP
