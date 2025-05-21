@@ -21,18 +21,6 @@ from .tp_item import Base_TpItem
 
 
 # =====================================================================================================================
-class StandInfo:
-    """
-    GOAL
-    ----
-    separate info about real ArmStand from TpInfo
-    """
-    NAME: str = "[DEF] STAND NAME"
-    DESCRIPTION: str = "[DEF] STAND DESCRIPTION"
-    SN: str = "[DEF] STAND SN"
-
-
-# =====================================================================================================================
 class TpManager(Logger, QThread):
     signal__tp_start = pyqtSignal()
     signal__tp_stop = pyqtSignal()
@@ -61,8 +49,6 @@ class TpManager(Logger, QThread):
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
     # AUX -----------------------------------------------------------
-    STAND: StandInfo     # todo: decide to delete! using from TP_ITEM!
-
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
 
@@ -107,14 +93,6 @@ class TpManager(Logger, QThread):
 
         self.tp_item__init()
         self.slots_connect()
-
-        self.STAND = StandInfo()
-
-        try:
-            self.STAND = FileAttrs_Loader(target=self.STAND, keypath=("STAND",), filepath="STAND.ini").resolve()
-        except:
-            pass
-
         self.init_post()
 
         # FINAL FREEZE ----------------
@@ -283,9 +261,9 @@ class TpManager(Logger, QThread):
     def get__info__stand(self) -> dict[str, Any]:
         # TODO: add into file! to separate real ARM/Stand!!!
         result = {
-            "STAND.NAME": self.STAND.NAME,
-            "STAND.DESCRIPTION": self.STAND.DESCRIPTION,
-            "STAND.SN": self.STAND.SN,
+            "STAND.NAME": self.TP_ITEM.STAND.NAME,
+            "STAND.DESCRIPTION": self.TP_ITEM.STAND.DESCRIPTION,
+            "STAND.SN": self.TP_ITEM.STAND.SN,
         }
         return result
 

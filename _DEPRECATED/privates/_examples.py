@@ -1,8 +1,8 @@
 # ===================================================================
-from base_aux.privates.m1_env import *
-from base_aux.privates.m3_ini import *
-from base_aux.privates.m4_json import *
-from base_aux.privates.m5_auto import *
+from .m1_env import *
+from .m3_ini import *
+from .m4_json import *
+from .m5_auto import *
 import pathlib
 
 
