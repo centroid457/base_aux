@@ -6,7 +6,7 @@ from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
+class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
@@ -52,7 +52,7 @@ class Device(Base_Device, SerialClient_FirstFree_AnswerValid):
 
 
 # =====================================================================================================================
-class DeviceDummy(Base_Device, SerialClient_FirstFree_AnswerValid):
+class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
     @property
     def DEV_FOUND(self) -> bool:
         return True
