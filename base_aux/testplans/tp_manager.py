@@ -130,7 +130,6 @@ class TpManager(Logger, QThread):
         for tc_cls, using in self.TP_ITEM.TCS_CLS.items():
             tc_cls.SKIP = not using
             # tc_cls.clear__cls()   # let them use last states
-            tc_cls.devices__apply(self.TP_ITEM.DEV_LINES)
 
     def tcs_clear(self) -> None:
         for tc_cls in self.TP_ITEM.TCS_CLS:
@@ -297,7 +296,7 @@ class TpManager(Logger, QThread):
             for tc_cls in self.TP_ITEM.TCS_CLS:
                 tc_inst = None
                 try:
-                    tc_inst: Base_TestCase = tc_cls.TCS_LINE[index]
+                    tc_inst: Base_TestCase = tc_cls.TCS_INSTS[index]
 
                     tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
                     tc_inst_result_short = tc_inst_result_full["tc_result"]

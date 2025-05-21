@@ -36,59 +36,59 @@ from .psu800 import (
 
 # =====================================================================================================================
 class Tp_Example(Base_TpItem):
-    NAME = "пример с пустыми устройствами"
+    NAME = "[пример] с пустыми устройствами"
     DEV_LINES = dev_lines.DeviceLines__AtcPtbDummy()
-    TCS_CLS = {
-        tc1_direct.TestCase: True,
-        tc2_reverse.TestCase: True,
-    }
+    TCS_CLS = TableLine(
+        tc1_direct.TestCase,
+        tc2_reverse.TestCase,
+    )
 
 
 # =====================================================================================================================
 class Tp_Example2(Base_TpItem):
-    NAME = "пример с реальными устройствами"
+    NAME = "[пример] с реальными устройствами"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
-    TCS_CLS = {
-        tc1_direct.TestCase: True,
-        tc2_reverse.TestCase: True,
-        tc3_atc.TestCase: True,
-    }
+    TCS_CLS = TableLine(
+        tc1_direct.TestCase,
+        tc2_reverse.TestCase,
+        tc3_atc.TestCase,
+    )
 
 
 # =====================================================================================================================
 class Tp_Psu800(Base_TpItem):
-    NAME = "ОТК БП800"
+    NAME = "[ОТК] БП800"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
-    TCS_CLS = {
-        tc1_none_1_exist_psu.TestCase: True,
-        tc1_none_2_test_gnd.TestCase: True,
-        tc1_none_3_off.TestCase: True,
-        tc1_none_4_on.TestCase: True,
+    TCS_CLS = TableLine(
+        tc1_none_1_exist_psu.TestCase,
+        tc1_none_2_test_gnd.TestCase,
+        tc1_none_3_off.TestCase,
+        tc1_none_4_on.TestCase,
 
-        tc2_ext_1_test_pmbus.TestCase: True,
-        tc2_ext_2_off.TestCase: True,
-        tc2_ext_3_on.TestCase: True,
+        tc2_ext_1_test_pmbus.TestCase,
+        tc2_ext_2_off.TestCase,
+        tc2_ext_3_on.TestCase,
 
-        tc3_hv_1_off.TestCase: True,
-        tc3_hv_2_on.TestCase: True,
+        tc3_hv_1_off.TestCase,
+        tc3_hv_2_on.TestCase,
 
-        tc4_hv_1_test_SC12S.TestCase: True,
-        tc4_hv_2_test_SC12M.TestCase: True,
-        tc4_hv_3_test_LD12S.TestCase: True,
-        tc4_hv_4_test_LOAD.TestCase: True,
+        tc4_hv_1_test_SC12S.TestCase,
+        tc4_hv_2_test_SC12M.TestCase,
+        tc4_hv_3_test_LD12S.TestCase,
+        tc4_hv_4_test_LOAD.TestCase,
 
-        tc8_hv1_150_off.TestCase: True,
-        tc8_hv2_160_on.TestCase: True,
-        tc8_hv3_250_on.TestCase: True,
-        tc8_hv4_260_off.TestCase: True,
-    }
+        tc8_hv1_150_off.TestCase,
+        tc8_hv2_160_on.TestCase,
+        tc8_hv3_250_on.TestCase,
+        tc8_hv4_260_off.TestCase,
+    )
 
 
 # =====================================================================================================================
 class TpItems(NestIter_AnnotValues):
-    TP_EXAMPLE: type[Base_TpItem] = Tp_Example
-    TP_EXAMPLE2: type[Base_TpItem] = Tp_Example2
-    TP_PSU800: type[Base_TpItem] = Tp_Psu800
+    TP_EXAMPLE: Base_TpItem = Tp_Example()
+    TP_EXAMPLE2: Base_TpItem = Tp_Example2()
+    TP_PSU800: Base_TpItem = Tp_Psu800()
 
 
 # =====================================================================================================================

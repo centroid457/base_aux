@@ -148,8 +148,8 @@ class TableModel_Tps(TableModelTemplate):
             index = col - self.HEADERS.DUTS.START_OUTER
             try:
                 dut = self.DATA.DEV_LINES.DUT[index]
-                # print(f"{tc_cls.TCS_LINE=}/{index=}")
-                tc_inst = tc_cls.TCS_LINE[index]
+                # print(f"{tc_cls.TCS_INSTS=}/{index=}")
+                tc_inst = tc_cls.TCS_INSTS[index]
             except:
                 return
 
