@@ -55,7 +55,7 @@ class TableModel_Tps(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TCS_CLS) + 1  # [+1]for finalResults
+        return len(self.DATA.TP_ITEM.TCS_CLS) + 1  # [+1]for finalResults
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -76,7 +76,7 @@ class TableModel_Tps(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TCS_CLS)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCS_CLS)[row]
         except:
             tc_cls = None
 
@@ -136,7 +136,7 @@ class TableModel_Tps(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TCS_CLS)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCS_CLS)[row]
         except:
             tc_cls = None
 
@@ -396,7 +396,7 @@ class TableModel_Tps(TableModelTemplate):
         col = index.column()
 
         try:
-            tc_cls = list(self.DATA.TCS_CLS)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCS_CLS)[row]
         except:
             tc_cls = None
 

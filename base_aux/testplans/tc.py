@@ -93,11 +93,11 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     @classmethod
     def devices__apply(cls, dev_lines: TableKit = None) -> None:
         if dev_lines is not None:
-            cls.DEV_LINES = dev_lines
+            cls.TP_ITEM.DEV_LINES = dev_lines
 
-        if cls.DEV_LINES:
+        if cls.TP_ITEM.DEV_LINES:
             tcs_list = []
-            for index in range(cls.DEV_LINES.COUNT_COLUMNS):
+            for index in range(cls.TP_ITEM.DEV_LINES.COUNT_COLUMNS):
                 tc_i = cls(index=index)
                 tcs_list.append(tc_i)
             cls.TCS_LINE = TableLine(*tcs_list)
@@ -108,7 +108,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.clear()
         super().__init__()
 
-        # self.devices__apply(self.DEV_LINES)     # NOTE: dont use in INIT! use manually!!! in TP!
+        # self.devices__apply(self.TP_ITEM.DEV_LINES)     # NOTE: dont use in INIT! use manually!!! in TP!
 
     # =================================================================================================================
     @property
@@ -208,7 +208,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             True - need continue TP
             False - cant continue! need stop TP
         """
-        # if not cls.DEV_LINES.DUT:
+        # if not cls.TP_ITEM.DEV_LINES.DUT:
         #     return
 
         print(f"run__cls=START={cls.NAME=}{cls.DESCRIPTION=}={'=' * 50}")

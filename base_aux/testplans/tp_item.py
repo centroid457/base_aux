@@ -5,20 +5,11 @@ from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
-class StandInfo(Nest_AttrKit):
-    """
-    GOAL
-    ----
-    separate info about real ArmStand from TpInfo
-    """
+class Base_TpItem:
     NAME: str = "[DEF] STAND NAME"
     DESCRIPTION: str = "[DEF] STAND DESCRIPTION"
     SN: str = "[DEF] STAND SN"
 
-
-# =====================================================================================================================
-class Base_TpItem:
-    STAND: StandInfo = StandInfo()
     DEV_LINES: DeviceKit
     TCS_CLS: dict[type, bool]   # TODO: use TableLine??? - NO! KEEP DICT! with value like USING! so we can use one
 

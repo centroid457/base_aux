@@ -143,7 +143,7 @@ class ListModel_Tp(QAbstractListModel):
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
             tp_item = self.TP_ITEMS[index.row()]
-            return tp_item.STAND.NAME
+            return tp_item.NAME
 
 
 # =====================================================================================================================
@@ -164,7 +164,7 @@ class Base_TpGui(Gui):
         super().main_window__finalise()
         self.BTN_extended_mode.setChecked(True)
 
-        self.CBB.setCurrentText(self.DATA.TP_ITEM.STAND.NAME)
+        self.CBB.setCurrentText(self.DATA.TP_ITEM.NAME)
 
     # WINDOW ==========================================================================================================
     def wgt_create(self):
@@ -476,7 +476,7 @@ class Base_TpGui(Gui):
         dut_index = col - self.TM_TCS.HEADERS.DUTS.START_OUTER
 
         try:
-            tc_cls = list(self.DATA.TCS_CLS)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCS_CLS)[row]
         except:
             tc_cls = None
 

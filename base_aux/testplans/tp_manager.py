@@ -52,20 +52,6 @@ class TpManager(Logger, QThread):
     TP_ITEMS: 'TpItems'
     TP_ITEM: Base_TpItem
 
-    DEV_LINES: DeviceKit
-
-    TCS_CLS: dict[type[Base_TestCase], bool]     # todo: RENAME TO clss!!!
-    # {
-    #     Tc1: True,
-    #     Tc2: True
-    # }
-
-    # DEV_COLUMN: list[Union[str, type[Base_Device]]]    # settings
-    # [
-    #     Dev1,
-    #     Dev2
-    # ]
-
     __tc_active: Optional[type[Base_TestCase]] = None
     progress: int = 0   # todo: use as property? by getting from TCS???
 
@@ -141,16 +127,13 @@ class TpManager(Logger, QThread):
         if item is not None:
             self.TP_ITEM = item
 
-        self.TCS_CLS = self.TP_ITEM.TCS_CLS
-        self.DEV_LINES = self.TP_ITEM.DEV_LINES
-
-        for tc_cls, using in self.TCS_CLS.items():
+        for tc_cls, using in self.TP_ITEM.TCS_CLS.items():
             tc_cls.SKIP = not using
             # tc_cls.clear__cls()   # let them use last states
-            tc_cls.devices__apply(self.DEV_LINES)
+            tc_cls.devices__apply(self.TP_ITEM.DEV_LINES)
 
     def tcs_clear(self) -> None:
-        for tc_cls in self.TCS_CLS:
+        for tc_cls in self.TP_ITEM.TCS_CLS:
             tc_cls.clear__cls()
 
     # =================================================================================================================
@@ -159,7 +142,7 @@ class TpManager(Logger, QThread):
         Overwrite with super! super first!
         """
         self.progress = 1
-        self.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
+        self.TP_ITEM.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
         return True
 
     def tp__teardown(self, progress: int = 100) -> None:
@@ -175,7 +158,7 @@ class TpManager(Logger, QThread):
             progress = 100
         self.progress = progress
 
-        self.DEV_LINES.disconnect()
+        self.TP_ITEM.DEV_LINES.disconnect()
 
         # self.signal__tp_finished.emit()   # dont place here!!!
 
@@ -213,14 +196,14 @@ class TpManager(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
-                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TCS_CLS))
+                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCS_CLS))
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
                         if tcs_to_execute:
                             self.tc_active = tcs_to_execute[0]
                         else:
-                            self.tc_active = self.TCS_CLS[0]
+                            self.tc_active = self.TP_ITEM.TCS_CLS[0]
 
                     self.tc_active.run__cls()
 
@@ -261,9 +244,9 @@ class TpManager(Logger, QThread):
     def get__info__stand(self) -> dict[str, Any]:
         # TODO: add into file! to separate real ARM/Stand!!!
         result = {
-            "STAND.NAME": self.TP_ITEM.STAND.NAME,
-            "STAND.DESCRIPTION": self.TP_ITEM.STAND.DESCRIPTION,
-            "STAND.SN": self.TP_ITEM.STAND.SN,
+            "STAND.NAME": self.TP_ITEM.NAME,
+            "STAND.DESCRIPTION": self.TP_ITEM.DESCRIPTION,
+            "STAND.SN": self.TP_ITEM.SN,
         }
         return result
 
@@ -272,7 +255,7 @@ class TpManager(Logger, QThread):
         get info/structure about stand/TP
         """
         TP_TCS = []
-        for tc in self.TCS_CLS:
+        for tc in self.TP_ITEM.TCS_CLS:
             TP_TCS.append(tc.get__info__tc())
 
         result = {
@@ -297,7 +280,7 @@ class TpManager(Logger, QThread):
         get all results for stand/TP
         """
         TCS_RESULTS = {}
-        for tc_cls in self.TCS_CLS:
+        for tc_cls in self.TP_ITEM.TCS_CLS:
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
@@ -308,10 +291,10 @@ class TpManager(Logger, QThread):
 
     def save__results(self) -> None:
         name_prefix = str(DateTimeAux())
-        for index in range(self.DEV_LINES.COUNT_COLUMNS):
+        for index in range(self.TP_ITEM.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
             result_i_full = {}
-            for tc_cls in self.TCS_CLS:
+            for tc_cls in self.TP_ITEM.TCS_CLS:
                 tc_inst = None
                 try:
                     tc_inst: Base_TestCase = tc_cls.TCS_LINE[index]
