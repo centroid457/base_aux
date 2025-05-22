@@ -314,7 +314,7 @@ class TableColumn:
     replace/ref breederObject!
     access to exact instance in line by simple name (implying index)
     """
-    LINES: TableKit   # = TableKit()   # access for all lines!
+    LINES: TableKit = TableKit()   # access for all lines!
     INDEX: int
 
     def __init__(self, index: int, lines: TableKit = None) -> None | NoReturn:
@@ -338,6 +338,9 @@ class TableColumn:
         get index from exact line by name
 
         """
+        # if not hasattr(self, "LINES"):
+        #     raise Exception("hello")
+
         line: TableLine = getattr(self.LINES, item)
         return line[self.INDEX]
 
