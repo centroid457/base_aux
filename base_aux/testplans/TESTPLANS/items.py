@@ -38,7 +38,7 @@ from .psu800 import (
 class Tp_Example(Base_TpItem):
     NAME = "[пример] с пустыми устройствами"
     DEV_LINES = dev_lines.DeviceLines__AtcPtbDummy()
-    TCS_CLS = TableLine(
+    TCSs_LINE = TableLine(
         tc1_direct.TestCase,
         tc2_reverse.TestCase,
     )
@@ -48,7 +48,7 @@ class Tp_Example(Base_TpItem):
 class Tp_Example2(Base_TpItem):
     NAME = "[пример] с реальными устройствами"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
-    TCS_CLS = TableLine(
+    TCSs_LINE = TableLine(
         tc1_direct.TestCase,
         tc2_reverse.TestCase,
         tc3_atc.TestCase,
@@ -59,7 +59,7 @@ class Tp_Example2(Base_TpItem):
 class Tp_Psu800(Base_TpItem):
     NAME = "[ОТК] БП800"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
-    TCS_CLS = TableLine(
+    TCSs_LINE = TableLine(
         tc1_none_1_exist_psu.TestCase,
         tc1_none_2_test_gnd.TestCase,
         tc1_none_3_off.TestCase,

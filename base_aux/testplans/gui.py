@@ -476,7 +476,7 @@ class Base_TpGui(Gui):
         dut_index = col - self.TM_TCS.HEADERS.DUTS.START_OUTER
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCS_CLS)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCSs_LINE)[row]
         except:
             tc_cls = None
 
@@ -495,7 +495,7 @@ class Base_TpGui(Gui):
             else:
 
                 dut = self.DATA.TP_ITEM.DEV_LINES.DUT[dut_index]
-                self.PTE.setPlainText(tc_cls.TCS_INSTS[dut_index].get__results_pretty())
+                self.PTE.setPlainText(tc_cls.TCSi_LINE[dut_index].get__results_pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
             if not row_is_summary:

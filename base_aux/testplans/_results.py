@@ -18,8 +18,7 @@ class TpResults:
 
     @classmethod
     def set__tcs(cls, tcs):
-        for tc in tcs:
-            cls.TCS_CLS.update({tc: []})
+        pass
 
     def clear(self, cls=None):
         pass

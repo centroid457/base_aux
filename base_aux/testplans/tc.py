@@ -56,7 +56,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
     DEV_LINES: TableKit = None
-    TCS_INSTS: TableLine = TableLine()
+    TCSi_LINE: TableLine = TableLine()
 
     # INSTANCE ------------------------------------
     INDEX: int
@@ -131,7 +131,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
         cls.result__startup_cls = None
         cls.result__teardown_cls = None
-        for tc in cls.TCS_INSTS:
+        for tc in cls.TCSi_LINE:
             tc.clear()
 
     # @classmethod
@@ -214,7 +214,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # WORK ---------------------------------------------------
         if cls.result__startup_cls:
             # BATCH --------------------------
-            for tc_inst in cls.TCS_INSTS:
+            for tc_inst in cls.TCSi_LINE:
                 if tc_inst.skip_tc_dut:
                     continue
 
@@ -226,7 +226,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
             # WAIT --------------------------
             if cls.ASYNC:
-                for tc_inst in cls.TCS_INSTS:
+                for tc_inst in cls.TCSi_LINE:
                     print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inPARALLEL")
                     tc_inst.wait()
 
@@ -344,7 +344,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @classmethod
     def terminate__cls(cls) -> None:
-        for tc_inst in cls.TCS_INSTS:
+        for tc_inst in cls.TCSi_LINE:
             try:
                 if tc_inst.isRunning() and not tc_inst.isFinished():
                     tc_inst.terminate()
@@ -491,7 +491,7 @@ class _Info(_Base1_TestCase):
     @classmethod
     def get__results__all(cls) -> dict[int, dict[str, Any]]:
         results = {}
-        for tc_inst in cls.TCS_INSTS:
+        for tc_inst in cls.TCSi_LINE:
             results.update({tc_inst.INDEX: tc_inst.get__results()})
         return results
 

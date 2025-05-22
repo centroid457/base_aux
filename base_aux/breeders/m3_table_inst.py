@@ -332,6 +332,12 @@ class TableColumn:
         self.INDEX = index
 
     def __getattr__(self, item: str) -> Any | NoReturn:
+        """
+        GOAL
+        ----
+        get index from exact line by name
+
+        """
         line: TableLine = getattr(self.LINES, item)
         return line[self.INDEX]
 

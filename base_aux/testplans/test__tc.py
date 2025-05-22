@@ -29,7 +29,7 @@ class Test__TC:
     # -----------------------------------------------------------------------------------------------------------------
     def test__cls(self):
         # EXISTS IN CLS --------------
-        assert len(self.Victim.TCS_INSTS) == 0
+        assert len(self.Victim.TCSi_LINE) == 0
         assert self.Victim.DEV_LINES is None
 
         assert self.Victim.result__startup_cls is None
@@ -46,7 +46,7 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__NONE(self):
-        assert len(self.Victim.TCS_INSTS) == 0
+        assert len(self.Victim.TCSi_LINE) == 0
 
         # EXISTS IN CLS --------------
         assert self.Victim.DEV_LINES is None
@@ -65,7 +65,7 @@ class Test__TC:
         assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__example(self):
-        assert len(self.Victim.TCS_INSTS) == 0
+        assert len(self.Victim.TCSi_LINE) == 0
         self.Victim.DEV_LINES = Victim_DevicesLines()
 
         # EXISTS IN CLS --------------
@@ -89,9 +89,9 @@ class Test__TC:
         self.Victim.DEV_LINES = Victim_DevicesLines()
 
         # EXISTS IN CLS --------------
-        assert len(self.Victim.TCS_INSTS) == self.Victim.DEV_LINES.COUNT_COLUMNS
+        assert len(self.Victim.TCSi_LINE) == self.Victim.DEV_LINES.COUNT_COLUMNS
 
-        # assert self.Victim(0) is self.Victim.TCS_INSTS[0]
+        # assert self.Victim(0) is self.Victim.TCSi_LINE[0]
 
 
         # TODO: FINISH!
