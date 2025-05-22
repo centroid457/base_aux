@@ -77,7 +77,6 @@ class TpManager(Logger, QThread):
         if not self.DIRPATH_RESULTS.exists():
             self.DIRPATH_RESULTS.mkdir(parents=True, exist_ok=True)
 
-        self.tp_item__init()
         self.slots_connect()
         self.init_post()
 
@@ -123,13 +122,10 @@ class TpManager(Logger, QThread):
         Base_TestCase.signals.signal__tc_state_changed.connect(self.post__tc_results)
 
     # =================================================================================================================
-    def tp_item__init(self, item: Base_TpItem = None) -> None:
+    @classmethod
+    def tp_item__init(cls, item: Base_TpItem = None) -> None:
         if item is not None:
-            self.TP_ITEM = item
-
-        for tc_cls, using in self.TP_ITEM.TCS_CLS.items():
-            tc_cls.SKIP = not using
-            # tc_cls.clear__cls()   # let them use last states
+            cls.TP_ITEM = item
 
     def tcs_clear(self) -> None:
         for tc_cls in self.TP_ITEM.TCS_CLS:

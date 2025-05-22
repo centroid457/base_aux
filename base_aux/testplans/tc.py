@@ -75,7 +75,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @property
     def DEV_COLUMN(self) -> TableColumn:
-        return TableColumn(index=self.INDEX, lines=self.__class__.DEV_LINES)  # FIXME: use multiton!
+        return TableColumn(index=self.INDEX, lines=self.__class__.DEV_LINES)    # FIXME: use multiton!???
 
     # =================================================================================================================
     @classmethod

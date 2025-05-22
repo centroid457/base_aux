@@ -411,11 +411,11 @@ class Base_TpGui(Gui):
         self.TV_DEV.setHidden(not state)
 
     def BTN_devs_detect__clicked(self) -> None:
-        self.DATA.DEV_LINES("address_forget")
-        self.DATA.DEV_LINES.DUT[0].ADDRESSES__SYSTEM.clear()
+        self.DATA.TP_ITEM.DEV_LINES("address_forget")
+        self.DATA.TP_ITEM.DEV_LINES.DUT[0].ADDRESSES__SYSTEM.clear()
         self.TM_TCS._data_reread()
-        # self.DATA.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
-        self.DATA.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
+        # self.DATA.TP_ITEM.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
+        self.DATA.TP_ITEM.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
         self.TM_TCS._data_reread()
         self.DATA.signal__devs_detected.emit()
 
@@ -426,7 +426,7 @@ class Base_TpGui(Gui):
         self.DIALOGS.finished__save()
 
     def BTN_reset_all__clicked(self) -> None:
-        self.DATA.DEV_LINES.group_call__("reset")
+        self.DATA.TP_ITEM.DEV_LINES.group_call__("reset")
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
@@ -451,7 +451,7 @@ class Base_TpGui(Gui):
             pass
 
         if index in self.TM_TCS.HEADERS.DUTS:
-            dut = self.DATA.DEV_LINES.DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
+            dut = self.DATA.TP_ITEM.DEV_LINES.DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
             dut.SKIP_reverse()
             self.TM_TCS._data_reread()
 
@@ -494,7 +494,7 @@ class Base_TpGui(Gui):
                 pass    # TODO: add summary_result
             else:
 
-                dut = self.DATA.DEV_LINES.DUT[dut_index]
+                dut = self.DATA.TP_ITEM.DEV_LINES.DUT[dut_index]
                 self.PTE.setPlainText(tc_cls.TCS_INSTS[dut_index].get__results_pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
@@ -522,8 +522,8 @@ class Base_TpGui(Gui):
         col = index.column()
 
         try:
-            # print(f"{self.DATA.DEV_LINES.names()()=}")
-            dev_group_name = self.DATA.DEV_LINES.names()[row]
+            # print(f"{self.DATA.TP_ITEM.DEV_LINES.names()()=}")
+            dev_group_name = self.DATA.TP_ITEM.DEV_LINES.names()[row]
         except:
             return
 

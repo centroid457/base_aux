@@ -40,7 +40,7 @@ class TableModel_Tps(TableModelTemplate):
             SKIP: None = None
             ASYNC: None = None
             STARTUP_CLS: None = None
-            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.DEV_LINES.COUNT_COLUMNS)
+            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.TP_ITEM.DEV_LINES.COUNT_COLUMNS)
             TEARDOWN_CLS: None = None
             # FIXME: need resolve COUNT over DevicesIndexed!!!
 
@@ -147,7 +147,7 @@ class TableModel_Tps(TableModelTemplate):
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
             try:
-                dut = self.DATA.DEV_LINES.DUT[index]
+                dut = self.DATA.TP_ITEM.DEV_LINES.DUT[index]
                 # print(f"{tc_cls.TCS_INSTS=}/{index=}")
                 tc_inst = tc_cls.TCS_INSTS[index]
             except:
@@ -406,7 +406,7 @@ class TableModel_Tps(TableModelTemplate):
         tc_inst = None
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
-            dut = self.DATA.DEV_LINES.DUT[index]
+            dut = self.DATA.TP_ITEM.DEV_LINES.DUT[index]
             tc_inst = tc_cls(index=index)
 
         # -------------------------------------------------------------------------------------------------------------

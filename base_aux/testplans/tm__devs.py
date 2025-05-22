@@ -30,7 +30,7 @@ class TableModel_Devs(TableModelTemplate):
 
         class Headers(BreederStrStack):
             NAME: int = 0
-            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.DEV_LINES.COUNT_COLUMNS)
+            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.TP_ITEM.DEV_LINES.COUNT_COLUMNS)
 
         class HTRus:
             NAME: str = "Имя"
@@ -61,7 +61,7 @@ class TableModel_Devs(TableModelTemplate):
     #
     #     dev_group_name: str | None = None
     #     try:
-    #         dev_group_name = self.DATA.DEV_LINES.names()[row]
+    #         dev_group_name = self.DATA.TP_ITEM.DEV_LINESS.names()[row]
     #     except:
     #         pass
     #
@@ -92,8 +92,8 @@ class TableModel_Devs(TableModelTemplate):
         dev_inst: Any | None = None
 
         try:
-            # print(f"{self.DATA.DEV_LINES.names()=}")
-            dev_group_name = self.DATA.DEV_LINES.names()[row]
+            # print(f"{self.DATA.TP_ITEM.DEV_LINES.names()=}")
+            dev_group_name = self.DATA.TP_ITEM.DEV_LINES.names()[row]
         except:
             pass
 
