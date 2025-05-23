@@ -59,6 +59,10 @@ class TableLine:
         --------------
         if instance IS (not EQ!) previous instance - skip!
         it NEED for applying several ATC for some groups (3 ATC for 12 PTB, so there are 1 ATC for 4 PTB)
+
+        SO as result
+            self.INSTS != [*self]
+            len(self.INSTS) == len(self) >= [*self]
         """
         inst_prev = None
         for inst in self.INSTS:
@@ -289,6 +293,11 @@ class TableKit:     # todo: add AttrsKit nesting???
         return result
 
     def iter_lines_insts(self) -> Iterable[Any]:
+        """
+        GOAL
+        ----
+        iter ALL instances from all LINES!
+        """
         for line in self.values():
             yield from line
 

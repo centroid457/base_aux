@@ -13,6 +13,7 @@ from base_aux.base_statics.m4_enums import NestEq_Enum
 
 from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
 from base_aux.testplans.models import *
+from base_aux.testplans.tp_item import *
 
 
 # =====================================================================================================================
@@ -55,6 +56,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
+    TP_ITEM: Base_TpItem
     TCSi_LINE: TableLine = TableLine()
 
     # INSTANCE ------------------------------------
