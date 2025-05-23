@@ -128,7 +128,7 @@ class TpManager(Logger, QThread):
             cls.TP_ITEM = item
 
     def tcs_clear(self) -> None:
-        for tc_cls in self.TP_ITEM.TCSs_LINE:
+        for tc_cls in self.TP_ITEM.TCSc_LINE:
             tc_cls.clear__cls()
 
     # =================================================================================================================
@@ -191,14 +191,14 @@ class TpManager(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
-                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSs_LINE))
+                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
                         if tcs_to_execute:
                             self.tc_active = tcs_to_execute[0]
                         else:
-                            self.tc_active = self.TP_ITEM.TCSs_LINE[0]
+                            self.tc_active = self.TP_ITEM.TCSc_LINE[0]
 
                     self.tc_active.run__cls()
 
@@ -250,7 +250,7 @@ class TpManager(Logger, QThread):
         get info/structure about stand/TP
         """
         TP_TCS = []
-        for tc in self.TP_ITEM.TCSs_LINE:
+        for tc in self.TP_ITEM.TCSc_LINE:
             TP_TCS.append(tc.get__info__tc())
 
         result = {
@@ -275,7 +275,7 @@ class TpManager(Logger, QThread):
         get all results for stand/TP
         """
         TCS_RESULTS = {}
-        for tc_cls in self.TP_ITEM.TCSs_LINE:
+        for tc_cls in self.TP_ITEM.TCSc_LINE:
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
@@ -289,7 +289,7 @@ class TpManager(Logger, QThread):
         for index in range(self.TP_ITEM.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
             result_i_full = {}
-            for tc_cls in self.TP_ITEM.TCSs_LINE:
+            for tc_cls in self.TP_ITEM.TCSc_LINE:
                 tc_inst = None
                 try:
                     tc_inst: Base_TestCase = tc_cls.TCSi_LINE[index]

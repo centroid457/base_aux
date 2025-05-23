@@ -476,7 +476,7 @@ class Base_TpGui(Gui):
         dut_index = col - self.TM_TCS.HEADERS.DUTS.START_OUTER
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCSs_LINE)[row]
+            tc_cls = list(self.DATA.TP_ITEM.TCSc_LINE)[row]
         except:
             tc_cls = None
 

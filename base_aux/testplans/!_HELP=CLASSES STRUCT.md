@@ -38,14 +38,14 @@ TP_ITEM - full set for one exact TP (final instances)
 	SN      # mean Sn of stand (SN intended get from UART fo main/root device)
 
 	DEV_LINES: TableKit     # all devices need in TP
-	TCSs_LINE: Tableline    # TC classes in TP
+	TCSc_LINE: Tableline    # TC classes in TP (iterable)
 
 
 TC
 --
 	TP_ITEM: TP_ITEM     - access to all none indexed instances
 	TP_ITEM.DEV_LINES
-	TP_ITEM.TCSs_LINE
+	TP_ITEM.TCSc_LINE
 
 	DEV_COLUMN: TableColumn  # access to exact device by name from lists by same Index
 	TCSi_LINE: Tableline   # access to all instances of self-class
