@@ -115,6 +115,14 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self._timestamp_last = value
 
     # =================================================================================================================
+    @classmethod
+    def clear__cls(cls):
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
+        cls.result__startup_cls = None
+        cls.result__teardown_cls = None
+        for tc in cls.TCSi_LINE:
+            tc.clear()
+
     def clear(self) -> None:
         self.result__startup = None
         self.result__teardown = None
@@ -126,14 +134,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.details = {}
         self.exx = None
         self.progress = 0
-
-    @classmethod
-    def clear__cls(cls):
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
-        cls.result__startup_cls = None
-        cls.result__teardown_cls = None
-        for tc in cls.TCSi_LINE:
-            tc.clear()
 
     # @classmethod
     # @property
@@ -245,6 +245,11 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             return True
 
     def run(self) -> None:
+        """
+        GOAL
+        ----
+        start execution INSTANCE (in thread)
+        """
         self.LOGGER.debug("run")
 
         # PREPARE --------
@@ -277,7 +282,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.LOGGER.debug("run-teardown")
         self.teardown()
 
-    # STARTUP/TEARDOWN ------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     @classmethod
     def startup__cls(cls) -> TYPING__RESULT_W_EXX:
         """before batch work
@@ -354,6 +359,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         cls.teardown__cls()
 
+    # -----------------------------------------------------------------------------------------------------------------
     def terminate(self) -> None:
         self.LOGGER.debug("")
 
@@ -386,7 +392,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     @classmethod
     def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
-        print("HELLO")
+        # print("HELLO")
         return True
 
 
@@ -416,8 +422,8 @@ class _Info(_Base1_TestCase):
         result = ""
 
         result += f"INDEX={self.INDEX}\n"
-        result += f"SN={self.DEV_COLUMN.DUT.SN}\n"
-        result += f"ADDRESS={self.DEV_COLUMN.DUT.ADDRESS}\n"
+        result += f"DUT_SN={self.DEV_COLUMN.DUT.SN}\n"
+        result += f"DUT_ADDRESS={self.DEV_COLUMN.DUT.ADDRESS}\n"
         result += f"tc_skip_dut={self.skip_tc_dut}\n"
 
         result += f"TC_NAME={self.NAME}\n"
@@ -446,9 +452,7 @@ class _Info(_Base1_TestCase):
 
         result += "-"*60 + "\n"
         result += f"result__startup={self.result__startup}\n"
-        result += "-"*60 + "\n"
         result += f"result={self.result}\n"
-        result += "-"*60 + "\n"
         result += f"result__teardown={self.result__teardown}\n"
         result += "-"*60 + "\n"
 
@@ -458,6 +462,14 @@ class _Info(_Base1_TestCase):
         return result
 
     # =================================================================================================================
+    @classmethod
+    def get__results__all(cls) -> dict[int, dict[str, Any]]:
+        results = {}
+        for tc_inst in cls.TCSi_LINE:
+            results.update({tc_inst.INDEX: tc_inst.get__results()})
+        return results
+
+    # -----------------------------------------------------------------------------------------------------------------
     def get__results(self, add_info_dut: bool = True, add_info_tc: bool = True) -> dict[str, Any]:
         self.LOGGER.debug("")
 
@@ -489,14 +501,8 @@ class _Info(_Base1_TestCase):
         }
         return result
 
-    @classmethod
-    def get__results__all(cls) -> dict[int, dict[str, Any]]:
-        results = {}
-        for tc_inst in cls.TCSi_LINE:
-            results.update({tc_inst.INDEX: tc_inst.get__results()})
-        return results
 
-
+# =====================================================================================================================
 class Base_TestCase(_Info):
     """
     """
