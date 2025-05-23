@@ -25,6 +25,15 @@ DEV_COLUMN
 EXACT classes
 =============
 
+TP_MANAGER
+----------
+    TP_ITEMS
+    TP_ITEM
+
+    tc_active
+    progress
+
+
 TP_ITEMS - collection of all existed TP
 --------
 	n1: TP_ITEM
@@ -40,6 +49,11 @@ TP_ITEM - full set for one exact TP (final instances)
 	DEV_LINES: TableKit     # all devices need in TP
 	TCSc_LINE: Tableline    # TC classes in TP (iterable)
 
+        get_info__stand ?
+        get_info__tp    ?
+    
+        RESULTS ???
+    
 
 TC
 --
@@ -49,3 +63,10 @@ TC
 
 	DEV_COLUMN: TableColumn  # access to exact device by name from lists by same Index
 	TCSi_LINE: Tableline   # access to all instances of self-class
+
+
+RESULTS -???
+-------
+    ===move into TP_ITEM OR TCSi_LINE----??? 
+    =====collect in TP_ITEM/TCс-----??
+

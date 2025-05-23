@@ -236,7 +236,14 @@ class TpManager(Logger, QThread):
         self.signal__tp_finished.emit()
 
     # =================================================================================================================
-    def get__info__stand(self) -> dict[str, Any]:
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into TP_ITEM???
+    def get_info__stand(self) -> dict[str, Any]:
         # TODO: add into file! to separate real ARM/Stand!!!
         result = {
             "STAND.NAME": self.TP_ITEM.NAME,
@@ -245,16 +252,16 @@ class TpManager(Logger, QThread):
         }
         return result
 
-    def get__info__tp(self) -> dict[str, Any]:
+    def get_info__tp(self) -> dict[str, Any]:
         """
         get info/structure about stand/TP
         """
         TP_TCS = []
-        for tc in self.TP_ITEM.TCSc_LINE:
-            TP_TCS.append(tc.get__info__tc())
+        for tc_cls in self.TP_ITEM.TCSc_LINE:
+            TP_TCS.append(tc_cls.get__info__tc())
 
         result = {
-            **self.get__info__stand(),
+            **self.get_info__stand(),
 
             "TESTCASES": TP_TCS,
             # "TP_DUTS": [],      # TODO: decide how to use
@@ -279,7 +286,7 @@ class TpManager(Logger, QThread):
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
-            "STAND" : self.get__info__stand(),
+            "STAND" : self.get_info__stand(),
             "TCS": TCS_RESULTS,
         }
         return result
@@ -310,7 +317,7 @@ class TpManager(Logger, QThread):
 
             dut_info = DUT.get__info__dev()
             result_dut = {
-                "STAND": self.get__info__stand(),
+                "STAND": self.get_info__stand(),
                 "DUT": dut_info,
                 "RESULTS_SHORT": result_i_short,
                 "RESULTS_FULL": result_i_full,
@@ -326,6 +333,11 @@ class TpManager(Logger, QThread):
             tfile.write__text()
 
     # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # FIXME: REF!!!
     def post__tc_results(self, tc_inst: Base_TestCase) -> None:
         # CHECK ------------------------------------------
         if not self.api_client or tc_inst.result is None:
@@ -338,7 +350,7 @@ class TpManager(Logger, QThread):
             tc_results = {}
 
         body = {
-            **self.get__info__stand(),
+            **self.get_info__stand(),
             **tc_results,
         }
         self.api_client.send(body=body)
