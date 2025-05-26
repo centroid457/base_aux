@@ -39,7 +39,6 @@ class ModelTcResult(BaseModel):
     tc_timestamp: float | None = None
 
     tc_active: bool = False
-    tc_progress: int = 0
     tc_result: bool | None = None
     tc_details: TYPES__DICT = {
         # CONTENT IS NOT SPECIFIED!

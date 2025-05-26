@@ -142,7 +142,7 @@ class TpManager(Logger, QThread):
         """
         Overwrite with super! super last!
         """
-        if self.tc_active and not self.tc_active.finished:      # FIXME: use as CLASS value!
+        if self.tc_active and self.tc_active.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
             self.tc_active.terminate__cls()
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
@@ -189,27 +189,31 @@ class TpManager(Logger, QThread):
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
-                        if tcs_to_execute:
+                        try:
                             self.tc_active = tcs_to_execute[0]
-                        else:
+                        except:
                             self.tc_active = self.TP_ITEM.TCSc_LINE[0]
 
                     self.tc_active.run__cls()
 
                 else:
                     # MULTY
-                    for index, self.tc_active in enumerate(tcs_to_execute):     # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
-                        if index == 0:
-                            tc_prev = None
-                        else:
-                            tc_prev = tcs_to_execute[index - 1]
+                    for index, tc_new in enumerate(tcs_to_execute):     # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
+                        if tc_new.SKIP:
+                            continue
 
-                        if index == len(tcs_to_execute) - 1:
-                            tc_next = None
-                        else:
+                        # SWITCH/ROLL ---------
+                        tc_prev = self.tc_active
+                        self.tc_active = tc_new
+
+                        # ----------
+                        try:
                             tc_next = tcs_to_execute[index + 1]
+                        except:
+                            tc_next = None
 
                         tc_executed__result = self.tc_active.run__cls(cls_prev=tc_prev, cls_next=tc_next)
+
                         if tc_executed__result is False:
                             break
 
