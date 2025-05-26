@@ -35,7 +35,6 @@ class Test__Tp:
         assert not victim.result
         assert not victim.details
         assert not victim.exx
-        assert victim.progress == 0
 
         # TODO: FINISH!
         # TODO: FINISH!

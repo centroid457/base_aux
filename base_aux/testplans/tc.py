@@ -71,7 +71,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     timestamp_start: Optional[datetime.datetime]
     details: dict[str, Any]
     exx: Optional[Exception]
-    progress: int
 
     # =================================================================================================================
     @property
@@ -102,7 +101,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         None - not even started
         float - was started!
             stable - finished
-            UnStable - in progress (active thread)
+            UnStable - in active thread
         """
         if self._timestamp_last:
             return self._timestamp_last
@@ -133,7 +132,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         self.details = {}
         self.exx = None
-        self.progress = 0
 
     # @classmethod
     # @property
@@ -301,7 +299,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     def startup(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
-        self.progress = 1
 
         result = self.startup__wrapped
         result = CallableAux(result).resolve_exx()
@@ -313,14 +310,12 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def teardown(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
         self.timestamp_last = datetime.datetime.now()
-        self.progress = 99
 
         result = self.teardown__wrapped
         result = CallableAux(result).resolve_exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
 
-        self.progress = 100
         self.result__teardown = result
         return result
 
@@ -362,12 +357,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # -----------------------------------------------------------------------------------------------------------------
     def terminate(self) -> None:
         self.LOGGER.debug("")
-
         super().terminate()
-
-        progress = self.progress
-        self.teardown()
-        self.progress = progress
+        self.teardown()     # TODO: check order!!! place upper!
 
     # REDEFINE ========================================================================================================
     pass
@@ -447,7 +438,6 @@ class _Info(_Base1_TestCase):
         result += f"STATE_ACTIVE__CLS={self.__class__.STATE_ACTIVE__CLS}\n"
         result += f"timestamp_start={self.timestamp_start}\n"
         result += f"timestamp_last={self.timestamp_last}\n"
-        result += f"progress={self.progress}\n"
         result += f"exx={self.exx}\n"
 
         result += "-"*60 + "\n"
@@ -491,7 +481,6 @@ class _Info(_Base1_TestCase):
             # RESULTS
             "timestamp_start": self.timestamp_start and str(self.timestamp_start),
             "tc_active": self.isRunning(),
-            "tc_progress": self.progress,
             "tc_result_startup": bool(self.result__startup),
             "tc_result": None if self.result is None else bool(self.result),
             "tc_details": self.details,

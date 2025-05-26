@@ -43,7 +43,6 @@ class Test__TC:
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
-        assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__NONE(self):
         assert len(self.Victim.TCSi_LINE) == 0
@@ -62,7 +61,6 @@ class Test__TC:
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
-        assert not hasattr(self.Victim, "progress")
 
     def test__cls__devices_apply__example(self):
         assert len(self.Victim.TCSi_LINE) == 0
@@ -82,7 +80,6 @@ class Test__TC:
         assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
-        assert not hasattr(self.Victim, "progress")
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__inst(self):

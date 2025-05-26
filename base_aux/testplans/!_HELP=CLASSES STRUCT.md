@@ -31,7 +31,6 @@ TP_MANAGER
     TP_ITEM
 
     tc_active
-    progress
 
 
 TP_ITEMS - collection of all existed TP

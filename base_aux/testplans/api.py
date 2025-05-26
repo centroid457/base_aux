@@ -14,11 +14,7 @@ from .models import *
 class TpApi_Aiohttp(ServerAiohttpBase):
     async def response_get_html__(self, request) -> web.Response:
         # --------------------------
-        progress = 0
-        if self.data and self.data.progress is not None:
-            progress = self.data.progress
-        # --------------------------
-        html_block = f"[PROGRESS = {progress}%]<br /><br />" + self.html_block__api_index()
+        html_block = self.html_block__api_index()
 
         # RESPONSE --------------------------------------------------
         page_name = "API_INDEX"

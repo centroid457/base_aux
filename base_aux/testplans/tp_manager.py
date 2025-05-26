@@ -53,7 +53,6 @@ class TpManager(Logger, QThread):
     TP_ITEM: Base_TpItem
 
     __tc_active: Optional[type[Base_TestCase]] = None
-    progress: int = 0   # todo: use as property? by getting from TCS???
 
     # =================================================================================================================
     @property
@@ -65,7 +64,7 @@ class TpManager(Logger, QThread):
         self.__tc_active = value
 
     def tp__check_active(self) -> bool:
-        result = self.tc_active is not None and self.progress not in [0, 100]
+        result = self.tc_active is not None and self.tc_active.STATE_ACTIVE__CLS != Enum_ProcessStateActive.STARTED
         return result
 
     # =================================================================================================================
@@ -136,22 +135,17 @@ class TpManager(Logger, QThread):
         """
         Overwrite with super! super first!
         """
-        self.progress = 1
         self.TP_ITEM.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
         return True
 
-    def tp__teardown(self, progress: int = 100) -> None:
+    def tp__teardown(self) -> None:
         """
         Overwrite with super! super last!
         """
-        if self.tc_active and not self.tc_active.finished:
+        if self.tc_active and not self.tc_active.finished:      # FIXME: use as CLASS value!
             self.tc_active.terminate__cls()
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
-
-        if progress is None:
-            progress = 100
-        self.progress = progress
 
         self.TP_ITEM.DEV_LINES.disconnect()
 
@@ -174,7 +168,7 @@ class TpManager(Logger, QThread):
             self.tc_active.terminate__cls()
 
         # finish ----------------------------
-        self.tp__teardown(0)
+        self.tp__teardown()
         if need_msg:
             self.signal__tp_finished.emit()
 
@@ -243,6 +237,7 @@ class TpManager(Logger, QThread):
     pass    # TODO: MOVE all into TP_ITEM???
     pass    # TODO: MOVE all into TP_ITEM???
     pass    # TODO: MOVE all into TP_ITEM???
+
     def get_info__stand(self) -> dict[str, Any]:
         # TODO: add into file! to separate real ARM/Stand!!!
         result = {
