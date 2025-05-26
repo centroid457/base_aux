@@ -426,7 +426,7 @@ class Base_TpGui(Gui):
         self.DIALOGS.finished__save()
 
     def BTN_reset_all__clicked(self) -> None:
-        self.DATA.TP_ITEM.DEV_LINES.group_call__("reset")
+        self.DATA.TP_ITEM.DEV_LINES("reset")
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()

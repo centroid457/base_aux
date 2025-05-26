@@ -147,7 +147,7 @@ class TpManager(Logger, QThread):
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
-        self.TP_ITEM.DEV_LINES.disconnect()
+        self.TP_ITEM.DEV_LINES("disconnect")
 
         # self.signal__tp_finished.emit()   # dont place here!!!
 

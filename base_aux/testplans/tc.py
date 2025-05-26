@@ -204,6 +204,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         cls.clear__cls()
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
 
+        # FIXME: teardown not call!!!
+
         # TERDOWN PREV ----------------------------------------
         if cls_prev and not Nest_EqCls._eq_classes__check(cls, cls_prev):
             cls_prev.result__teardown_cls = cls_prev.teardown__cls()
@@ -236,6 +238,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                     tc_inst.wait()
 
         # FINISH -------------------------------------------------
+        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.FINISHED
         print(f"[TC]FINISH={cls.NAME=}={'=' * 50}")
         return True
 
@@ -322,7 +325,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
             print(f"run__cls=teardown__cls=1")
-            cls.result__teardown_cls = Enum_ProcessStateActive.STARTED
             cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve_exx()
             if isinstance(cls.result__teardown_cls, Valid):
                 cls.result__teardown_cls.run__if_not_finished()
@@ -332,7 +334,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         else:
             print(f"run__cls=teardown__cls=2")
-
             pass
 
         print(f"run__cls=teardown__cls=3")
