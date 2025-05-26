@@ -383,7 +383,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     @classmethod
     def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_NORETURN:
-        # print("HELLO")
         return True
 
 
