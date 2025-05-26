@@ -185,12 +185,13 @@ class TpManager(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
-                tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))
+                # tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))
+                tcs_to_execute = self.TP_ITEM.TCSc_LINE
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
                         try:
-                            self.tc_active = tcs_to_execute[0]
+                            self.tc_active = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))[0]
                         except:
                             self.tc_active = self.TP_ITEM.TCSc_LINE[0]
 
@@ -198,7 +199,7 @@ class TpManager(Logger, QThread):
 
                 else:
                     # MULTY
-                    for index, tc_new in enumerate(tcs_to_execute):     # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
+                    for tc_new in tcs_to_execute:     # TODO: place cls_prev into TcBaseCls!!! and clear on finish???
                         if tc_new.SKIP:
                             continue
 
@@ -206,13 +207,7 @@ class TpManager(Logger, QThread):
                         tc_prev = self.tc_active
                         self.tc_active = tc_new
 
-                        # ----------
-                        try:
-                            tc_next = tcs_to_execute[index + 1]
-                        except:
-                            tc_next = None
-
-                        tc_executed__result = self.tc_active.run__cls(cls_prev=tc_prev, cls_next=tc_next)
+                        tc_executed__result = self.tc_active.run__cls(cls_prev=tc_prev)
 
                         if tc_executed__result is False:
                             break

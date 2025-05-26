@@ -182,7 +182,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # =================================================================================================================
     @classmethod
-    def run__cls(cls, cls_prev: type[Self] | None = None, cls_next: type[Self] | None = None) -> None | bool:
+    def run__cls(cls, cls_prev: type[Self] | None = None) -> None | bool:
         """run TC on batch duts(??? may be INDEXES???)
         preferred using in thread on upper level!
 
@@ -194,7 +194,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # if not cls.TP_ITEM.DEV_LINES.DUT:
         #     return
 
-        print(f"run__cls=START={cls.NAME=}{cls.DESCRIPTION=}={'=' * 50}")
+        print(f"run__cls=START={cls.NAME=}/{cls.DESCRIPTION=}{'=' * 50}")
 
         # SKIP ---------------------------------------------------
         # if cls.SKIP:
@@ -204,10 +204,16 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         cls.clear__cls()
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
 
+        # TERDOWN PREV ----------------------------------------
+        if cls_prev and not Nest_EqCls._eq_classes__check(cls, cls_prev):
+            cls_prev.result__teardown_cls = cls_prev.teardown__cls()
+            if cls_prev.result__startup_cls and cls_prev.result__teardown_cls is False:
+                return False
+
         # STARTUP ----------------------------------------
         if cls_prev is not None and Nest_EqCls._eq_classes__check(cls, cls_prev):
             cls.result__startup_cls = cls_prev.result__startup_cls
-        else:
+        elif not Nest_EqCls._eq_classes__check(cls, cls_prev):
             cls.result__startup_cls = cls.startup__cls()
 
         # WORK ---------------------------------------------------
@@ -220,7 +226,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                 print(f"run__cls=tc_inst.start({tc_inst.INDEX=})")
                 tc_inst.start()
                 if not cls.ASYNC:
-                    print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inONEBYONE")
+                    print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inONEbyONE")
                     tc_inst.wait()
 
             # WAIT --------------------------
@@ -229,18 +235,9 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                     print(f"run__cls=tc_inst.wait({tc_inst.INDEX=})inPARALLEL")
                     tc_inst.wait()
 
-        # TERDOWN ----------------------------------------
-        if cls_next is None or not Nest_EqCls._eq_classes__check(cls, cls_next):
-            cls.result__teardown_cls = cls.teardown__cls()
-        else:
-            pass
-
         # FINISH -------------------------------------------------
         print(f"[TC]FINISH={cls.NAME=}={'=' * 50}")
-        if cls.result__startup_cls and cls.result__teardown_cls is False:
-            return False
-        else:
-            return True
+        return True
 
     def run(self) -> None:
         """
