@@ -1,7 +1,7 @@
 from base_aux.testplans.tp_manager import *
 from base_aux.servers.m1_client_requests import *
 
-from TESTPLANS.items import TpItems
+from TESTPLANS.stands import Stands
 
 
 # =====================================================================================================================
@@ -27,8 +27,8 @@ class Client_RequestsStack_Tp(Client_RequestsStack):
 class TpManager__Example(TpManager):
     LOG_ENABLE = True
 
-    TP_ITEMS = TpItems
-    TP_ITEM = TpItems.TP_PSU800
+    STANDS = Stands
+    STAND = Stands.TP_PSU800
 
     API_SERVER__CLS = TpApi_FastApi
     api_client: Client_RequestsStack = Client_RequestsStack_Tp()  # FIXME: need fix post__results!!!!

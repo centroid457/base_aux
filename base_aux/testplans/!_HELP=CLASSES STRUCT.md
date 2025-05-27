@@ -27,19 +27,19 @@ EXACT classes
 
 TP_MANAGER
 ----------
-    TP_ITEMS
-    TP_ITEM
+    STANDS
+    STAND
 
     tc_active
 
 
-TP_ITEMS - collection of all existed TP
+STANDS - collection of all existed TP
 --------
-	n1: TP_ITEM
-	n2: TP_ITEM
+	n1: STAND
+	n2: STAND
 
 
-TP_ITEM - full set for one exact TP (final instances)
+STAND - full set for one exact TP (final instances)
 -------
 	NAME
 	DESCRIPTION
@@ -56,9 +56,9 @@ TP_ITEM - full set for one exact TP (final instances)
 
 TC
 --
-	TP_ITEM: TP_ITEM     - access to all none indexed instances
-	TP_ITEM.DEV_LINES
-	TP_ITEM.TCSc_LINE
+	STAND: STAND     - access to all none indexed instances
+	STAND.DEV_LINES
+	STAND.TCSc_LINE
 
 	DEV_COLUMN: TableColumn  # access to exact device by name from lists by same Index
 	TCSi_LINE: Tableline   # access to all instances of self-class
@@ -66,6 +66,6 @@ TC
 
 RESULTS -???
 -------
-    ===move into TP_ITEM OR TCSi_LINE----??? 
-    =====collect in TP_ITEM/TCс-----??
+    ===move into STAND OR TCSi_LINE----??? 
+    =====collect in STAND/TCс-----??
 

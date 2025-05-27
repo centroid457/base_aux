@@ -13,7 +13,7 @@ from base_aux.base_statics.m4_enums import NestEq_Enum
 
 from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
 from base_aux.testplans.models import *
-from base_aux.testplans.tp_item import *
+from base_aux.testplans.stand import *
 
 
 # =====================================================================================================================
@@ -56,7 +56,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
     result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
 
-    TP_ITEM: Base_TpItem
+    STAND: Base_Stand
     TCSi_LINE: TableLine = TableLine()
 
     # INSTANCE ------------------------------------
@@ -75,7 +75,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @property
     def DEV_COLUMN(self) -> TableColumn:
-        return TableColumn(index=self.INDEX, lines=self.TP_ITEM.DEV_LINES)    # FIXME: use multiton!???
+        return TableColumn(index=self.INDEX, lines=self.STAND.DEV_LINES)    # FIXME: use multiton!???
 
     # =================================================================================================================
     @classmethod
@@ -191,7 +191,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             True - need continue TP
             False - cant continue! need stop TP
         """
-        # if not cls.TP_ITEM.DEV_LINES.DUT:
+        # if not cls.STAND.DEV_LINES.DUT:
         #     return
 
         print(f"run__cls=START={cls.NAME=}/{cls.DESCRIPTION=}{'=' * 50}")

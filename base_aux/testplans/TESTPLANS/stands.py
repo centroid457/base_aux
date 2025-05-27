@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.testplans.tp_item import *
+from base_aux.testplans.stand import *
 from base_aux.base_nest_dunders.m5_iter_annots_values import NestIter_AnnotValues
 
 from .DEVICES import dev_lines
@@ -35,7 +35,7 @@ from .psu800 import (
 
 
 # =====================================================================================================================
-class Tp_Example(Base_TpItem):
+class Tp_Example(Base_Stand):
     NAME = "[пример] с пустыми устройствами"
     DEV_LINES = dev_lines.DeviceLines__AtcPtbDummy()
     TCSc_LINE = TableLine(
@@ -45,7 +45,7 @@ class Tp_Example(Base_TpItem):
 
 
 # =====================================================================================================================
-class Tp_Example2(Base_TpItem):
+class Tp_Example2(Base_Stand):
     NAME = "[пример] с реальными устройствами"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
     TCSc_LINE = TableLine(
@@ -56,7 +56,7 @@ class Tp_Example2(Base_TpItem):
 
 
 # =====================================================================================================================
-class Tp_Psu800(Base_TpItem):
+class Tp_Psu800(Base_Stand):
     NAME = "[ОТК] БП800"
     DEV_LINES = dev_lines.DeviceLines__Psu800()
     TCSc_LINE = TableLine(
@@ -85,10 +85,10 @@ class Tp_Psu800(Base_TpItem):
 
 
 # =====================================================================================================================
-class TpItems(NestIter_AnnotValues):
-    TP_EXAMPLE: Base_TpItem = Tp_Example()
-    TP_EXAMPLE2: Base_TpItem = Tp_Example2()
-    TP_PSU800: Base_TpItem = Tp_Psu800()
+class Stands(NestIter_AnnotValues):
+    TP_EXAMPLE: Base_Stand = Tp_Example()
+    TP_EXAMPLE2: Base_Stand = Tp_Example2()
+    TP_PSU800: Base_Stand = Tp_Psu800()
 
 
 # =====================================================================================================================

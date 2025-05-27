@@ -17,7 +17,7 @@ from .tc import Base_TestCase
 from .devices import Base_Device, DeviceKit
 from .gui import Base_TpGui
 from .api import TpApi_FastApi
-from .tp_item import Base_TpItem
+from .stand import Base_Stand
 
 
 # =====================================================================================================================
@@ -49,8 +49,8 @@ class TpManager(Logger, QThread):
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
     # AUX -----------------------------------------------------------
-    TP_ITEMS: 'TpItems'
-    TP_ITEM: Base_TpItem
+    STANDS: 'Stands'
+    STAND: Base_Stand
 
     __tc_active: Optional[type[Base_TestCase]] = None
 
@@ -122,12 +122,12 @@ class TpManager(Logger, QThread):
 
     # =================================================================================================================
     @classmethod
-    def tp_item__init(cls, item: Base_TpItem = None) -> None:
+    def tp_item__init(cls, item: Base_Stand = None) -> None:
         if item is not None:
-            cls.TP_ITEM = item
+            cls.STAND = item
 
     def tcs_clear(self) -> None:
-        for tc_cls in self.TP_ITEM.TCSc_LINE:
+        for tc_cls in self.STAND.TCSc_LINE:
             tc_cls.clear__cls()
 
     # =================================================================================================================
@@ -135,7 +135,7 @@ class TpManager(Logger, QThread):
         """
         Overwrite with super! super first!
         """
-        self.TP_ITEM.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
+        self.STAND.DEV_LINES("connect__only_if_address_resolved")  #, group="DUT")   # dont connect all here! only in exact TC!!!!????
         return True
 
     def tp__teardown(self) -> None:
@@ -147,7 +147,7 @@ class TpManager(Logger, QThread):
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
-        self.TP_ITEM.DEV_LINES("disconnect")
+        self.STAND.DEV_LINES("disconnect")
 
         # self.signal__tp_finished.emit()   # dont place here!!!
 
@@ -185,15 +185,15 @@ class TpManager(Logger, QThread):
             cycle_count += 1
 
             if self.tp__startup():
-                # tcs_to_execute = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))
-                tcs_to_execute = self.TP_ITEM.TCSc_LINE
+                # tcs_to_execute = list(filter(lambda x: not x.SKIP, self.STAND.TCSc_LINE))
+                tcs_to_execute = self.STAND.TCSc_LINE
 
                 if self._TC_RUN_SINGLE:
                     if not self.tc_active:
                         try:
-                            self.tc_active = list(filter(lambda x: not x.SKIP, self.TP_ITEM.TCSc_LINE))[0]
+                            self.tc_active = list(filter(lambda x: not x.SKIP, self.STAND.TCSc_LINE))[0]
                         except:
-                            self.tc_active = self.TP_ITEM.TCSc_LINE[0]
+                            self.tc_active = self.STAND.TCSc_LINE[0]
 
                     self.tc_active.run__cls()
 
@@ -229,20 +229,20 @@ class TpManager(Logger, QThread):
         self.signal__tp_finished.emit()
 
     # =================================================================================================================
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
-    pass    # TODO: MOVE all into TP_ITEM???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
+    pass    # TODO: MOVE all into STAND???
 
     def get_info__stand(self) -> dict[str, Any]:
         # TODO: add into file! to separate real ARM/Stand!!!
         result = {
-            "STAND.NAME": self.TP_ITEM.NAME,
-            "STAND.DESCRIPTION": self.TP_ITEM.DESCRIPTION,
-            "STAND.SN": self.TP_ITEM.SN,
+            "STAND.NAME": self.STAND.NAME,
+            "STAND.DESCRIPTION": self.STAND.DESCRIPTION,
+            "STAND.SN": self.STAND.SN,
         }
         return result
 
@@ -251,7 +251,7 @@ class TpManager(Logger, QThread):
         get info/structure about stand/TP
         """
         TP_TCS = []
-        for tc_cls in self.TP_ITEM.TCSc_LINE:
+        for tc_cls in self.STAND.TCSc_LINE:
             TP_TCS.append(tc_cls.get__info__tc())
 
         result = {
@@ -276,7 +276,7 @@ class TpManager(Logger, QThread):
         get all results for stand/TP
         """
         TCS_RESULTS = {}
-        for tc_cls in self.TP_ITEM.TCSc_LINE:
+        for tc_cls in self.STAND.TCSc_LINE:
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
@@ -287,10 +287,10 @@ class TpManager(Logger, QThread):
 
     def save__results(self) -> None:
         name_prefix = str(DateTimeAux())
-        for index in range(self.TP_ITEM.DEV_LINES.COUNT_COLUMNS):
+        for index in range(self.STAND.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
             result_i_full = {}
-            for tc_cls in self.TP_ITEM.TCSc_LINE:
+            for tc_cls in self.STAND.TCSc_LINE:
                 tc_inst = None
                 try:
                     tc_inst: Base_TestCase = tc_cls.TCSi_LINE[index]

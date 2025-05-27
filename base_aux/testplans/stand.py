@@ -5,7 +5,7 @@ from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
-class Base_TpItem:
+class Base_Stand:
     NAME: str = "[DEF] STAND NAME"
     DESCRIPTION: str = "[DEF] STAND DESCRIPTION"
     SN: str = "[DEF] STAND SN"
@@ -18,8 +18,8 @@ class Base_TpItem:
     def __init__(self) -> None:
         # PREPARE CLSs ========================================
         for tc_cls in self.TCSc_LINE:
-            # init TP_ITEM -----------------------------------
-            tc_cls.TP_ITEM = self
+            # init STAND -----------------------------------
+            tc_cls.STAND = self
 
             # gen INSTS -----------------------------------
             tcs_insts = []

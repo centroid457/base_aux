@@ -15,10 +15,10 @@ class TestCase(Base_TestCase):
         return True
         result_chain = ValidChains(
             [
-                Valid(value_link=hasattr(cls, "TP_ITEM"), name="hasattr DEV_LINES"),
-                Valid(value_link=hasattr(cls.TP_ITEM, "DEV_LINES"), name="hasattr DEV_LINES"),
-                Valid(value_link=hasattr(cls.TP_ITEM.DEV_LINES, "ATC"), name="hasattr ATC"),
-                Valid(value_link=cls.TP_ITEM.DEV_LINES.ATC[0].connect, name="ATC.connect()"),
+                Valid(value_link=hasattr(cls, "STAND"), name="hasattr DEV_LINES"),
+                Valid(value_link=hasattr(cls.STAND, "DEV_LINES"), name="hasattr DEV_LINES"),
+                Valid(value_link=hasattr(cls.STAND.DEV_LINES, "ATC"), name="hasattr ATC"),
+                Valid(value_link=cls.STAND.DEV_LINES.ATC[0].connect, name="ATC.connect()"),
             ],
         )
         return result_chain

@@ -40,7 +40,7 @@ class TableModel_Tps(TableModelTemplate):
             SKIP: None = None
             ASYNC: None = None
             STARTUP_CLS: None = None
-            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.TP_ITEM.DEV_LINES.COUNT_COLUMNS)
+            DUTS: BreederStrSeries = BreederStrSeries(None, self.DATA.STAND.DEV_LINES.COUNT_COLUMNS)
             TEARDOWN_CLS: None = None
             # FIXME: need resolve COUNT over DevicesIndexed!!!
 
@@ -55,7 +55,7 @@ class TableModel_Tps(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TP_ITEM.TCSc_LINE) + 1  # [+1]for finalResults
+        return len(self.DATA.STAND.TCSc_LINE) + 1  # [+1]for finalResults
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -76,7 +76,7 @@ class TableModel_Tps(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCSc_LINE)[row]
+            tc_cls = list(self.DATA.STAND.TCSc_LINE)[row]
         except:
             tc_cls = None
 
@@ -136,7 +136,7 @@ class TableModel_Tps(TableModelTemplate):
         row = index.row()
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCSc_LINE)[row]
+            tc_cls = list(self.DATA.STAND.TCSc_LINE)[row]
         except:
             tc_cls = None
 
@@ -147,7 +147,7 @@ class TableModel_Tps(TableModelTemplate):
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
             try:
-                dut = self.DATA.TP_ITEM.DEV_LINES.DUT[index]
+                dut = self.DATA.STAND.DEV_LINES.DUT[index]
                 # print(f"{tc_cls.TCSi_LINE=}/{index=}")
                 tc_inst = tc_cls.TCSi_LINE[index]
             except:
@@ -396,7 +396,7 @@ class TableModel_Tps(TableModelTemplate):
         col = index.column()
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCSc_LINE)[row]
+            tc_cls = list(self.DATA.STAND.TCSc_LINE)[row]
         except:
             tc_cls = None
 
@@ -406,7 +406,7 @@ class TableModel_Tps(TableModelTemplate):
         tc_inst = None
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
-            dut = self.DATA.TP_ITEM.DEV_LINES.DUT[index]
+            dut = self.DATA.STAND.DEV_LINES.DUT[index]
             tc_inst = tc_cls(index=index)
 
         # -------------------------------------------------------------------------------------------------------------

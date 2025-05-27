@@ -30,7 +30,7 @@ class TableModel_Devs(TableModelTemplate):
 
         class Headers(BreederStrStack):
             NAME: int = 0
-            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.TP_ITEM.DEV_LINES.COUNT_COLUMNS)
+            DEVICE: BreederStrSeries = BreederStrSeries(None, self.DATA.STAND.DEV_LINES.COUNT_COLUMNS)
 
         class HTRus:
             NAME: str = "Имя"
@@ -39,7 +39,7 @@ class TableModel_Devs(TableModelTemplate):
         self.HTRANSLATOR = Translator(HTRus)
 
     def rowCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
-        return len(self.DATA.TP_ITEM.DEV_LINES)
+        return len(self.DATA.STAND.DEV_LINES)
 
     def columnCount(self, parent: QModelIndex = None, *args, **kwargs) -> int:
         return self.HEADERS.count()
@@ -61,7 +61,7 @@ class TableModel_Devs(TableModelTemplate):
     #
     #     dev_group_name: str | None = None
     #     try:
-    #         dev_group_name = self.DATA.TP_ITEM.DEV_LINESS.names()[row]
+    #         dev_group_name = self.DATA.STAND.DEV_LINESS.names()[row]
     #     except:
     #         pass
     #
@@ -92,17 +92,17 @@ class TableModel_Devs(TableModelTemplate):
         dev_inst: Any | None = None
 
         try:
-            # print(f"{self.DATA.TP_ITEM.DEV_LINES.names()=}")
-            dev_group_name = self.DATA.TP_ITEM.DEV_LINES.names()[row]
+            # print(f"{self.DATA.STAND.DEV_LINES.names()=}")
+            dev_group_name = self.DATA.STAND.DEV_LINES.names()[row]
         except:
             pass
 
         if dev_group_name and col in self.HEADERS.DEVICE:
             index = col - self.HEADERS.DEVICE.START_OUTER
             try:
-                dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name][index]
+                dev_inst = self.DATA.STAND.DEV_LINES[dev_group_name][index]
             except:
-                dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name]
+                dev_inst = self.DATA.STAND.DEV_LINES[dev_group_name]
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.DisplayRole:

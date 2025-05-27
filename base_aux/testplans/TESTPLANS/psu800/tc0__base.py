@@ -39,48 +39,48 @@ class _Base_TcAtc(Base_TestCase):
             chains=[
                 ValidBreak(not cls.ATC_VOUT),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].connect__only_if_address_resolved,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].connect__only_if_address_resolved,
                     name="ATC.connect__only_if_address_resolved",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].GET,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].GET,
                     args__value="VSNS1",
                     validate_link=1,
                     name="GET",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].GET,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].GET,
                     args__value="VSNS2",
                     validate_link=1,
                     name="GET",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].SET,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].SET,
                     kwargs__value={"VINPIN": 230, "__timeout": 10},
                     validate_link="OK",
                     name="SET",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].SET,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].SET,
                     kwargs__value={"VOUTPIN": cls.ATC_VOUT, "__timeout": 10},
                     validate_link="OK",
                     name="SET",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].SET,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].SET,
                     kwargs__value={"PWR": "ON"},
                     validate_link="OK",
                     name="SET",
                 ),
                 ValidSleep(0.5),
                 # Valid(
-                #     value_link=cls.TP_ITEM.DEV_LINES.ATC[0].GET,
+                #     value_link=cls.STAND.DEV_LINES.ATC[0].GET,
                 #     args__value="VOUT",
                 #     validate_link=lambda source: ValidAux.lege(source, cls.ATC_VOUT * 0.9, cls.ATC_VOUT * 1.1),
                 #     name="GET+lege",
                 # ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0]._buffers_clear__read,
+                    value_link=cls.STAND.DEV_LINES.ATC[0]._buffers_clear__read,
                     validate_link=lambda value: value is None,
                     name="_buffers_clear__read",
                 ),
@@ -95,11 +95,11 @@ class _Base_TcAtc(Base_TestCase):
             chains=[
                 ValidBreak(not cls.ATC_VOUT),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].connect__only_if_address_resolved,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].connect__only_if_address_resolved,
                     name="ATC.connect__only_if_address_resolved",
                 ),
                 Valid(
-                    value_link=cls.TP_ITEM.DEV_LINES.ATC[0].reset,
+                    value_link=cls.STAND.DEV_LINES.ATC[0].reset,
                     validate_link=lambda value: value is None,
                     name="RESET",
                 ),

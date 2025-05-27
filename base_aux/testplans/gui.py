@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from base_aux.testplans.tc import *
-from base_aux.testplans.tp_item import Base_TpItem
+from base_aux.testplans.stand import Base_Stand
 
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 
@@ -130,19 +130,19 @@ DETAILS=====================
 
 # =====================================================================================================================
 class ListModel_Tp(QAbstractListModel):
-    TP_ITEMS: list[Base_TpItem]
+    STANDS: Iterable[Base_Stand]
 
-    def __init__(self, tp_items: list[Base_TpItem] = None, *args, **kwargs):
+    def __init__(self, tp_items: list[Base_Stand] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.TP_ITEMS = tp_items or []
-        self.TP_ITEMS = [*self.TP_ITEMS, ]
+        self.STANDS = tp_items or []
+        self.STANDS = [*self.STANDS, ]
 
     def rowCount(self, parent=None, *args, **kwargs):
-        return len(self.TP_ITEMS)
+        return len(self.STANDS)
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
-            tp_item = self.TP_ITEMS[index.row()]
+            tp_item = self.STANDS[index.row()]
             return tp_item.NAME
 
 
@@ -164,7 +164,7 @@ class Base_TpGui(Gui):
         super().main_window__finalise()
         self.BTN_extended_mode.setChecked(True)
 
-        self.CBB.setCurrentText(self.DATA.TP_ITEM.NAME)
+        self.CBB.setCurrentText(self.DATA.STAND.NAME)
 
     # WINDOW ==========================================================================================================
     def wgt_create(self):
@@ -247,7 +247,7 @@ class Base_TpGui(Gui):
 
     def CBB_create(self) -> None:
         self.CBB = QComboBox()
-        self.CBB.setModel(ListModel_Tp(self.DATA.TP_ITEMS()))
+        self.CBB.setModel(ListModel_Tp(self.DATA.STANDS()))
         # self.CBB.setDisabled(True)
 
     def PTE_create(self) -> None:
@@ -348,7 +348,7 @@ class Base_TpGui(Gui):
 
     # -----------------------------------------------------------------------------------------------------------------
     def CBB__changed(self, index: Optional[int] = 0) -> None:
-        tp_item = self.CBB.model().TP_ITEMS[index or 0]
+        tp_item = self.CBB.model().STANDS[index or 0]
         self.DATA.tp_item__init(tp_item)
 
         # ------------------------------
@@ -411,11 +411,11 @@ class Base_TpGui(Gui):
         self.TV_DEV.setHidden(not state)
 
     def BTN_devs_detect__clicked(self) -> None:
-        self.DATA.TP_ITEM.DEV_LINES("address_forget")
-        self.DATA.TP_ITEM.DEV_LINES.DUT[0].ADDRESSES__SYSTEM.clear()
+        self.DATA.STAND.DEV_LINES("address_forget")
+        self.DATA.STAND.DEV_LINES.DUT[0].ADDRESSES__SYSTEM.clear()
         self.TM_TCS._data_reread()
-        # self.DATA.TP_ITEM.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
-        self.DATA.TP_ITEM.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
+        # self.DATA.STAND.DEV_LINES.group_call__("address__resolve")    # MOVE TO THREAD??? no! not so need!
+        self.DATA.STAND.DEV_LINES.resolve_addresses()    # MOVE TO THREAD??? no! not so need!
         self.TM_TCS._data_reread()
         self.DATA.signal__devs_detected.emit()
 
@@ -426,7 +426,7 @@ class Base_TpGui(Gui):
         self.DIALOGS.finished__save()
 
     def BTN_reset_all__clicked(self) -> None:
-        self.DATA.TP_ITEM.DEV_LINES("reset")
+        self.DATA.STAND.DEV_LINES("reset")
 
     def BTN_clear_all__clicked(self) -> None:
         self.DATA.tcs_clear()
@@ -451,7 +451,7 @@ class Base_TpGui(Gui):
             pass
 
         if index in self.TM_TCS.HEADERS.DUTS:
-            dut = self.DATA.TP_ITEM.DEV_LINES.DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
+            dut = self.DATA.STAND.DEV_LINES.DUT[self.TM_TCS.HEADERS.DUTS.get_listed_index__by_outer(index)]
             dut.SKIP_reverse()
             self.TM_TCS._data_reread()
 
@@ -476,7 +476,7 @@ class Base_TpGui(Gui):
         dut_index = col - self.TM_TCS.HEADERS.DUTS.START_OUTER
 
         try:
-            tc_cls = list(self.DATA.TP_ITEM.TCSc_LINE)[row]
+            tc_cls = list(self.DATA.STAND.TCSc_LINE)[row]
         except:
             tc_cls = None
 
@@ -494,7 +494,7 @@ class Base_TpGui(Gui):
                 pass    # TODO: add summary_result
             else:
 
-                dut = self.DATA.TP_ITEM.DEV_LINES.DUT[dut_index]
+                dut = self.DATA.STAND.DEV_LINES.DUT[dut_index]
                 self.PTE.setPlainText(tc_cls.TCSi_LINE[dut_index].get__results_pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
@@ -522,16 +522,16 @@ class Base_TpGui(Gui):
         col = index.column()
 
         try:
-            # print(f"{self.DATA.TP_ITEM.DEV_LINES.names()()=}")
-            dev_group_name = self.DATA.TP_ITEM.DEV_LINES.names()[row]
+            # print(f"{self.DATA.STAND.DEV_LINES.names()()=}")
+            dev_group_name = self.DATA.STAND.DEV_LINES.names()[row]
         except:
             return
 
         index = col - self.TM_DEV.HEADERS.DEVICE.START_OUTER
         try:
-            dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name][index]
+            dev_inst = self.DATA.STAND.DEV_LINES[dev_group_name][index]
         except:
-            dev_inst = self.DATA.TP_ITEM.DEV_LINES[dev_group_name]
+            dev_inst = self.DATA.STAND.DEV_LINES[dev_group_name]
 
         text = AnnotsAllAux(dev_inst).dump_str__pretty()
         self.PTE.setPlainText(text)
