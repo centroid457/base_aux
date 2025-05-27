@@ -323,7 +323,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def teardown__cls(cls) -> TYPING__RESULT_W_EXX:
         print(f"run__cls=teardown__cls")
 
-        if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
+        if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED or cls.result__teardown_cls is None:
             print(f"run__cls=teardown__cls=1")
             cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve_exx()
             if isinstance(cls.result__teardown_cls, Valid):

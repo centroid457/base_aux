@@ -142,7 +142,7 @@ class TpManager(Logger, QThread):
         """
         Overwrite with super! super last!
         """
-        if self.tc_active and self.tc_active.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED:
+        if self.tc_active and (self.tc_active.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED or self.tc_active.result__teardown_cls is None):
             self.tc_active.terminate__cls()
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
