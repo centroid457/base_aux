@@ -31,7 +31,7 @@ class TpManager(Logger, QThread):
 
     # SETTINGS ------------------------------------------------------
     TP_RUN_INFINIT: bool | None = None     # True - when run() started - dont stop!
-    TP_RUN_INFINIT__TIMEOUT: int = 1
+    TP_RUN_INFINIT__TIMEOUT: int = 3
 
     _TC_RUN_SINGLE: bool | None = None
 
@@ -64,7 +64,7 @@ class TpManager(Logger, QThread):
         self.__tc_active = value
 
     def tp__check_active(self) -> bool:
-        result = self.tc_active is not None and self.tc_active.STATE_ACTIVE__CLS != Enum_ProcessStateActive.STARTED
+        result = self.tc_active is not None and self.tc_active.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED
         return result
 
     # =================================================================================================================
