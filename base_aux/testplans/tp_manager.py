@@ -1,23 +1,18 @@
 from typing import *
 import time
-import json
-from pathlib import Path
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.servers.m1_client_requests import *
-from base_aux.aux_datetime.m1_datetime import *
 from base_aux.loggers.m1_logger import *
-from base_aux.path2_file.m4_fileattrs import *
 from base_aux.path2_file.m3_filetext import *
 
-
 # ---------------------------------------------------------------------------------------------------------------------
-from .tc import Base_TestCase
-from .devices import Base_Device, DeviceKit
-from .gui import Base_TpGui
-from .api import TpApi_FastApi
-from .stand import Base_Stand
+from base_aux.testplans.tc import Base_TestCase
+from base_aux.testplans.devices import Base_Device, DeviceKit
+from base_aux.testplans.gui import Base_TpGui
+from base_aux.testplans.api import TpApi_FastApi
+from base_aux.testplans.stand import Base_Stand
 
 
 # =====================================================================================================================
@@ -46,8 +41,6 @@ class TpManager(Logger, QThread):
 
     api_client: Client_RequestsStack = Client_RequestsStack()   # todo: USE CLS!!! + add start
 
-    DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
-
     # AUX -----------------------------------------------------------
     STANDS: 'Stands'
     STAND: Base_Stand
@@ -70,11 +63,6 @@ class TpManager(Logger, QThread):
     # =================================================================================================================
     def __init__(self):
         super().__init__()
-
-        # results --------
-        self.DIRPATH_RESULTS = pathlib.Path(self.DIRPATH_RESULTS)
-        if not self.DIRPATH_RESULTS.exists():
-            self.DIRPATH_RESULTS.mkdir(parents=True, exist_ok=True)
 
         self.slots_connect()
         self.init_post()
@@ -229,108 +217,6 @@ class TpManager(Logger, QThread):
         self.signal__tp_finished.emit()
 
     # =================================================================================================================
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-    pass    # TODO: MOVE all into STAND???
-
-    def get_info__stand(self) -> dict[str, Any]:
-        # TODO: add into file! to separate real ARM/Stand!!!
-        result = {
-            "STAND.NAME": self.STAND.NAME,
-            "STAND.DESCRIPTION": self.STAND.DESCRIPTION,
-            "STAND.SN": self.STAND.SN,
-        }
-        return result
-
-    def get_info__tp(self) -> dict[str, Any]:
-        """
-        get info/structure about stand/TP
-        """
-        TP_TCS = []
-        for tc_cls in self.STAND.TCSc_LINE:
-            TP_TCS.append(tc_cls.get__info__tc())
-
-        result = {
-            **self.get_info__stand(),
-
-            "TESTCASES": TP_TCS,
-            # "TP_DUTS": [],      # TODO: decide how to use
-            # [
-            #     # [{DUT1}, {DUT2}, …]
-            #     {
-            #         DUT_ID: 1  # ??? 	# aux
-            #         DUT_SKIP: False
-            #     }
-            # ]
-
-            }
-        return result
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def get__results(self) -> dict[str, Any]:
-        """
-        get all results for stand/TP
-        """
-        TCS_RESULTS = {}
-        for tc_cls in self.STAND.TCSc_LINE:
-            TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
-
-        result = {
-            "STAND" : self.get_info__stand(),
-            "TCS": TCS_RESULTS,
-        }
-        return result
-
-    def save__results(self) -> None:
-        name_prefix = str(DateTimeAux())
-        for index in range(self.STAND.DEV_LINES.COUNT_COLUMNS):
-            result_i_short = {}
-            result_i_full = {}
-            for tc_cls in self.STAND.TCSc_LINE:
-                tc_inst = None
-                try:
-                    tc_inst: Base_TestCase = tc_cls.TCSi_LINE[index]
-
-                    tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
-                    tc_inst_result_short = tc_inst_result_full["tc_result"]
-                except:
-                    tc_inst_result_short = None
-                    tc_inst_result_full = None
-
-                result_i_short.update({tc_cls.DESCRIPTION: tc_inst_result_short})
-                result_i_full.update({tc_cls.DESCRIPTION: tc_inst_result_full})
-
-            DUT = tc_inst.DEV_COLUMN.DUT
-
-            if not DUT.DEV_FOUND or not DUT.DUT_FW:
-                continue
-
-            dut_info = DUT.get__info__dev()
-            result_dut = {
-                "STAND": self.get_info__stand(),
-                "DUT": dut_info,
-                "RESULTS_SHORT": result_i_short,
-                "RESULTS_FULL": result_i_full,
-            }
-
-            # data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
-
-            filename = f"{name_prefix}[{index}].json"
-            filepath = pathlib.Path(self.DIRPATH_RESULTS, filename)
-
-            tfile = TextFile(text=str(result_dut), filepath=filepath)
-            tfile.pretty__json()
-            tfile.write__text()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
     # FIXME: REF!!!
     def post__tc_results(self, tc_inst: Base_TestCase) -> None:
         # CHECK ------------------------------------------
