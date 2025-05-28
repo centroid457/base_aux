@@ -48,10 +48,13 @@ STAND - full set for one exact TP (final instances)
 	DEV_LINES: TableKit     # all devices need in TP
 	TCSc_LINE: Tableline    # TC classes in TP (iterable)
 
-        get_info__stand ?
-        get_info__tp    ?
+    INFO
+    stand__get_info__short
+    stand__get_info__full
+    stand__get_results
+    stand__save_results
     
-        RESULTS ???
+    RESULTS ???
     
 
 TC

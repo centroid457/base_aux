@@ -230,7 +230,7 @@ class TpManager(Logger, QThread):
             tc_results = {}
 
         body = {
-            **self.get_info__stand(),
+            **self.STAND.stand__get_info__short(),
             **tc_results,
         }
         self.api_client.send(body=body)

@@ -4,7 +4,6 @@ from pathlib import Path
 from base_aux.testplans.devices import *
 from base_aux.aux_attr.m4_kits import *
 from base_aux.path2_file.m4_fileattrs import *
-from base_aux.testplans.tc import Base_TestCase
 from base_aux.aux_datetime.m1_datetime import *
 
 
@@ -35,7 +34,7 @@ class Base_Stand:
             tc_cls.TCSi_LINE = TableLine(*tcs_insts)    # TODO: move into TC_CLS
 
     # =================================================================================================================
-    def get_info__stand(self) -> dict[str, Any]:
+    def stand__get_info__short(self) -> dict[str, Any]:
         result = {
             "STAND.NAME": self.NAME,
             "STAND.DESCRIPTION": self.DESCRIPTION,
@@ -43,7 +42,7 @@ class Base_Stand:
         }
         return result
 
-    def get_info__tp(self) -> dict[str, Any]:
+    def stand__get_info__full(self) -> dict[str, Any]:
         """
         get info/structure about stand/TP
         """
@@ -52,7 +51,7 @@ class Base_Stand:
             TP_TCS.append(tc_cls.get__info__tc())
 
         result = {
-            **self.get_info__stand(),
+            **self.stand__get_info__short(),
 
             "TESTCASES": TP_TCS,
             # "TP_DUTS": [],      # TODO: decide how to use
@@ -68,7 +67,7 @@ class Base_Stand:
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get__results(self) -> dict[str, Any]:
+    def stand__get_results(self) -> dict[str, Any]:
         """
         get all results for stand/TP
         """
@@ -77,12 +76,12 @@ class Base_Stand:
             TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
 
         result = {
-            "STAND" : self.get_info__stand(),
+            "STAND" : self.stand__get_info__short(),
             "TCS": TCS_RESULTS,
         }
         return result
 
-    def save__results(self) -> None:
+    def stand__save_results(self) -> None:
         name_prefix = str(DateTimeAux())
         for index in range(self.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
@@ -90,7 +89,7 @@ class Base_Stand:
             for tc_cls in self.TCSc_LINE:
                 tc_inst = None
                 try:
-                    tc_inst: Base_TestCase = tc_cls.TCSi_LINE[index]
+                    tc_inst: 'Base_TestCase' = tc_cls.TCSi_LINE[index]
 
                     tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
                     tc_inst_result_short = tc_inst_result_full["tc_result"]
@@ -108,7 +107,7 @@ class Base_Stand:
 
             dut_info = DUT.get__info__dev()
             result_dut = {
-                "STAND": self.get_info__stand(),
+                "STAND": self.stand__get_info__short(),
                 "DUT": dut_info,
                 "RESULTS_SHORT": result_i_short,
                 "RESULTS_FULL": result_i_full,

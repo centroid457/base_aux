@@ -422,7 +422,7 @@ class Base_TpGui(Gui):
         self.TM_DEV._data_reread()
 
     def BTN_save__clicked(self) -> None:
-        self.DATA.save__results()
+        self.DATA.STAND.stand__save_results()
         self.DIALOGS.finished__save()
 
     def BTN_reset_all__clicked(self) -> None:

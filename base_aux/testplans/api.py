@@ -49,14 +49,14 @@ class TpApi_Aiohttp(ServerAiohttpBase):
     # ---------------------------------------------------------
     @decorator__log_request_response
     async def response_get_json__info(self, request) -> web.Response:
-        body: dict = self.data.get_info__tp()      #FIXME:ADDMODEL???
+        body: dict = self.data.STAND.stand__get_info__full()      #FIXME:ADDMODEL???
         response = web.json_response(data=body)
         return response
 
     @decorator__log_request_response
     async def response_get_json__results(self, request) -> web.Response:
         # RESPONSE --------------------------------------------------
-        body: dict = self.data.get__results()   #FIXME:ADDMODEL???
+        body: dict = self.data.STAND.get__results()   #FIXME:ADDMODEL???
         return web.json_response(data=body)
 
 
@@ -87,11 +87,11 @@ def create_app__FastApi_Tp(self=None, data: Any = None) -> FastAPI:
 
     @app.get("/info")
     async def info() -> ModelTpInfo:
-        return ModelTpInfo(**app.data.get_info__tp())
+        return ModelTpInfo(**app.data.STAND.stand__get_info__full())
 
     @app.get("/results")
     async def results() -> ModelTpResults:
-        return ModelTpResults(**app.data.get__results())
+        return ModelTpResults(**app.data.STAND.get__results())
 
     return app
 
