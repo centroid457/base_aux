@@ -1,11 +1,13 @@
 from typing import *
 import time
+# import datetime
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.servers.m1_client_requests import *
 from base_aux.loggers.m1_logger import *
 from base_aux.path2_file.m3_filetext import *
+from base_aux.aux_datetime.m1_datetime import *
 
 # ---------------------------------------------------------------------------------------------------------------------
 from base_aux.testplans.tc import Base_TestCase
@@ -115,6 +117,7 @@ class TpManager(Logger, QThread):
             cls.STAND = item
 
     def tcs_clear(self) -> None:
+        self.tp_timestamp_start = DateTimeAux()
         for tc_cls in self.STAND.TCSc_LINE:
             tc_cls.clear__cls()
 
@@ -135,6 +138,7 @@ class TpManager(Logger, QThread):
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
+        self.tp_timestamp_last = DateTimeAux()
         self.STAND.DEV_LINES("disconnect")
 
         # self.signal__tp_finished.emit()   # dont place here!!!

@@ -67,16 +67,6 @@ TC
 	TCSi_LINE: Tableline   # access to all instances of self-class
 
 
-RESULTS -???
-RESULTS -???
-RESULTS -???
-RESULTS -???
-RESULTS -???
--------
-    ===move into STAND OR TCSi_LINE----??? 
-    =====collect in STAND/TCс-----??
-
-
 DEVICE
 --------
     NAME: str
@@ -91,3 +81,16 @@ DEVICE
 
     dev__load_info
     dev__get_info
+
+
+
+RESULTS -???  
+RESULTS -???  
+RESULTS -???  
+RESULTS -???  
+RESULTS -???  
+------------  
+    - Gen from STAND as final instance
+    - make on TableLines ??? to use Column
+    - apply save results in result-Object
+    - add str

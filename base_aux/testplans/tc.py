@@ -6,6 +6,7 @@ from base_aux.aux_dict.m3_dict_attr1_simple import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
+from base_aux.aux_datetime.m1_datetime import *
 
 from base_aux.breeders.m3_table_inst import *
 from base_aux.base_nest_dunders.m6_eq2_cls import *
@@ -67,8 +68,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__teardown: TYPING__RESULT_W_EXX = None
 
     _result: TYPING__RESULT_W_EXX = None
-    _timestamp_last: Optional[datetime.datetime]
-    timestamp_start: Optional[datetime.datetime]
+    _timestamp_last: Optional[DateTimeAux]
+    timestamp_start: Optional[DateTimeAux]
     details: dict[str, Any]
     exx: Optional[Exception]
 
@@ -96,7 +97,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # =================================================================================================================
     @property
-    def timestamp_last(self) -> datetime.datetime | None:
+    def timestamp_last(self) -> DateTimeAux | None:
         """
         None - not even started
         float - was started!
@@ -107,10 +108,10 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             return self._timestamp_last
 
         if self.isRunning():
-            return datetime.datetime.now()
+            return DateTimeAux()
 
     @timestamp_last.setter
-    def timestamp_last(self, value: datetime.datetime | None) -> None:
+    def timestamp_last(self, value: DateTimeAux | None) -> None:
         self._timestamp_last = value
 
     # =================================================================================================================
@@ -252,7 +253,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         # PREPARE --------
         self.clear()
-        self.timestamp_start = datetime.datetime.now()
+        self.timestamp_start = DateTimeAux()
         if (
                 not hasattr(self.DEV_COLUMN, "DUT")
                 or
@@ -309,7 +310,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     def teardown(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
-        self.timestamp_last = datetime.datetime.now()
+        self.timestamp_last = DateTimeAux()
 
         result = self.teardown__wrapped
         result = CallableAux(result).resolve_exx()

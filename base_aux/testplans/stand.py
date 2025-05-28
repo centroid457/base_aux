@@ -20,6 +20,29 @@ class Base_Stand:
     # TCSc_LINE: dict[type, bool]   # TODO: use TableLine??? - NO! KEEP DICT! with value like USING! so we can use one
     TCSc_LINE: TableLine = TableLine()
 
+    # =================================================================================================================
+    _tp_timestamp_last: DateTimeAux = None
+    tp_timestamp_start: DateTimeAux = None
+
+    @property
+    def tp_timestamp_last(self) -> DateTimeAux | None:
+        """
+        None - not even started
+        DateTimeAux - was started!
+            stable - finished
+            UnStable - in active thread
+        """
+        if self._tp_timestamp_last:
+            return self._tp_timestamp_last
+
+        if self.isRunning():
+            return DateTimeAux()
+
+    @tp_timestamp_last.setter
+    def tp_timestamp_last(self, value: DateTimeAux | None) -> None:
+        self._tp_timestamp_last = value
+
+    # =================================================================================================================
     def __init__(self) -> None:
         # PREPARE CLSs ========================================
         for tc_cls in self.TCSc_LINE:
