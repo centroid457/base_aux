@@ -351,27 +351,33 @@ class TableModel_Tps(TableModelTemplate):
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.CheckStateRole:
+            # -------------------------
             if row_is_summary:
                 return
-            if self.open__settings:
-                if col == self.HEADERS.SKIP:
-                    if tc_cls.SKIP:
-                        return Qt.Checked
-                    else:
-                        return Qt.Unchecked
-                if col == self.HEADERS.ASYNC:
-                    if tc_cls.ASYNC:
-                        return Qt.Checked
-                    else:
-                        return Qt.Unchecked
-                if col in self.HEADERS.DUTS:
-                    if (tc_cls and tc_cls.SKIP) or (dut and dut.SKIP):
-                        return
+            if not self.open__settings:
+                return
 
-                    if tc_inst.skip_tc_dut:
-                        return Qt.Unchecked
-                    else:
-                        return Qt.Checked
+            # -------------------------
+            if col == self.HEADERS.SKIP:
+                if tc_cls.SKIP:
+                    return Qt.Checked
+                else:
+                    return Qt.Unchecked
+
+            if col == self.HEADERS.ASYNC:
+                if tc_cls.ASYNC:
+                    return Qt.Checked
+                else:
+                    return Qt.Unchecked
+
+            if col in self.HEADERS.DUTS:
+                if (tc_cls and tc_cls.SKIP) or (dut and dut.SKIP):
+                    return
+
+                if tc_inst.skip_tc_dut:
+                    return Qt.Unchecked
+                else:
+                    return Qt.Checked
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.FontRole:
@@ -394,8 +400,8 @@ class TableModel_Tps(TableModelTemplate):
 
     def setData(self, index: QModelIndex, value: Any, role: int = None) -> bool:
         # PREPARE -----------------------------------------------------------------------------------------------------
-        row = index.row()
         col = index.column()
+        row = index.row()
 
         try:
             tc_cls = list(self.DATA.STAND.TCSc_LINE)[row]
@@ -408,8 +414,12 @@ class TableModel_Tps(TableModelTemplate):
         tc_inst = None
         if col in self.HEADERS.DUTS and not row_is_summary:
             index = col - self.HEADERS.DUTS.START_OUTER
-            dut = self.DATA.STAND.DEV_LINES.DUT[index]
-            tc_inst = tc_cls(index=index)
+            try:
+                dut = self.DATA.STAND.DEV_LINES.DUT[index]
+                # print(f"{tc_cls.TCSi_LINE=}/{index=}")
+                tc_inst = tc_cls.TCSi_LINE[index]
+            except:
+                return True
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.CheckStateRole:

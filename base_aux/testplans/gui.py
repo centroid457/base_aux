@@ -455,12 +455,12 @@ class Base_TpGui(Gui):
             dut.SKIP_reverse()
             self.TM_TCS._data_reread()
 
-    def TV_TCS__selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
+    def TV_TCS__selectionChanged(self, first: QItemSelection = None, last: QItemSelection = None) -> None:
         # print("selectionChanged")
         # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
         # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
 
-        if not first:
+        if first is None:
             # when item with noFlag IsSelectable
             return
 
