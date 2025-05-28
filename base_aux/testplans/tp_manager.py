@@ -225,7 +225,7 @@ class TpManager(Logger, QThread):
 
         # WORK ------------------------------------------
         try:
-            tc_results = tc_inst.get__results()
+            tc_results = tc_inst.tci__get_result()
         except:
             tc_results = {}
 

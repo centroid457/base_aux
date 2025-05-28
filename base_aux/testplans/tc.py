@@ -392,9 +392,11 @@ class _Info(_Base1_TestCase):
     INFO_STR__ADD_ATTRS: Iterable[str] = []
 
     @classmethod
-    def get__info__tc(cls) -> dict[str, Any]:
+    def tcc__get_info(cls) -> dict[str, Any]:
         """
-        get info/structure about TcCls
+        GOAL
+        ----
+        get info about TcCls
         """
         result = {
             "TC_NAME": cls.NAME,
@@ -405,7 +407,7 @@ class _Info(_Base1_TestCase):
         return result
 
     # =================================================================================================================
-    def get__results_pretty(self) -> str:
+    def tci__get_results__pretty(self) -> str:
         # FIXME: GET FROM INFO_GET????
         result = ""
 
@@ -450,14 +452,14 @@ class _Info(_Base1_TestCase):
 
     # =================================================================================================================
     @classmethod
-    def get__results__all(cls) -> dict[int, dict[str, Any]]:
+    def tcsi__get_results(cls) -> dict[int, dict[str, Any]]:
         results = {}
         for tc_inst in cls.TCSi_LINE:
-            results.update({tc_inst.INDEX: tc_inst.get__results()})
+            results.update({tc_inst.INDEX: tc_inst.tci__get_result()})
         return results
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get__results(self, add_info_dut: bool = True, add_info_tc: bool = True) -> dict[str, Any]:
+    def tci__get_result(self, add_info_dut: bool = True, add_info_tc: bool = True) -> dict[str, Any]:
         self.LOGGER.debug("")
 
         info_dut = {}
@@ -469,7 +471,7 @@ class _Info(_Base1_TestCase):
 
         info_tc = {}
         if add_info_tc:
-            info_tc = self.get__info__tc()
+            info_tc = self.tcc__get_info()
 
         result = {
             **info_tc,
@@ -483,7 +485,7 @@ class _Info(_Base1_TestCase):
             "tc_details": self.details,
             "result__teardown": bool(self.result__teardown),
             "timestamp_last": self.timestamp_last and str(self.timestamp_last),
-            "log": self.get__results_pretty().replace("\"", "").replace("\'", ""),
+            "log": self.tci__get_results__pretty().replace("\"", "").replace("\'", ""),
         }
         return result
 

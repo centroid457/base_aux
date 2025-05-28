@@ -495,7 +495,7 @@ class Base_TpGui(Gui):
             else:
 
                 dut = self.DATA.STAND.DEV_LINES.DUT[dut_index]
-                self.PTE.setPlainText(tc_cls.TCSi_LINE[dut_index].get__results_pretty())
+                self.PTE.setPlainText(tc_cls.TCSi_LINE[dut_index].tci__get_results__pretty())
 
         if col == self.TM_TCS.HEADERS.TEARDOWN_CLS:
             if not row_is_summary:

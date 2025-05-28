@@ -48,7 +48,7 @@ class Base_Stand:
         """
         TP_TCS = []
         for tc_cls in self.TCSc_LINE:
-            TP_TCS.append(tc_cls.get__info__tc())
+            TP_TCS.append(tc_cls.tcc__get_info())
 
         result = {
             **self.stand__get_info__short(),
@@ -73,7 +73,7 @@ class Base_Stand:
         """
         TCS_RESULTS = {}
         for tc_cls in self.TCSc_LINE:
-            TCS_RESULTS.update({tc_cls: tc_cls.get__results__all()})
+            TCS_RESULTS.update({tc_cls: tc_cls.tcsi__get_results()})
 
         result = {
             "STAND" : self.stand__get_info__short(),
@@ -91,7 +91,7 @@ class Base_Stand:
                 try:
                     tc_inst: 'Base_TestCase' = tc_cls.TCSi_LINE[index]
 
-                    tc_inst_result_full = tc_inst.get__results(add_info_dut=False, add_info_tc=False)
+                    tc_inst_result_full = tc_inst.tci__get_result(add_info_dut=False, add_info_tc=False)
                     tc_inst_result_short = tc_inst_result_full["tc_result"]
                 except:
                     tc_inst_result_short = None
