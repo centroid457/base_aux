@@ -132,9 +132,9 @@ DETAILS=====================
 class ListModel_Tp(QAbstractListModel):
     STANDS: Iterable[Base_Stand]
 
-    def __init__(self, tp_items: list[Base_Stand] = None, *args, **kwargs):
+    def __init__(self, stands: Iterable[Base_Stand] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.STANDS = tp_items or []
+        self.STANDS = stands or []
         self.STANDS = [*self.STANDS, ]
 
     def rowCount(self, parent=None, *args, **kwargs):
@@ -142,8 +142,8 @@ class ListModel_Tp(QAbstractListModel):
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
-            tp_item = self.STANDS[index.row()]
-            return tp_item.NAME
+            stand = self.STANDS[index.row()]
+            return stand.NAME
 
 
 # =====================================================================================================================
@@ -348,8 +348,8 @@ class Base_TpGui(Gui):
 
     # -----------------------------------------------------------------------------------------------------------------
     def CBB__changed(self, index: Optional[int] = 0) -> None:
-        tp_item = self.CBB.model().STANDS[index or 0]
-        self.DATA.tp_item__init(tp_item)
+        stand = self.CBB.model().STANDS[index or 0]
+        self.DATA.stand__init(stand)
 
         # ------------------------------
         self.TM_TCS.reinit(self.DATA)

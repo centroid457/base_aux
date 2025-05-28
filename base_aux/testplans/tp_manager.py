@@ -110,7 +110,7 @@ class TpManager(Logger, QThread):
 
     # =================================================================================================================
     @classmethod
-    def tp_item__init(cls, item: Base_Stand = None) -> None:
+    def stand__init(cls, item: Base_Stand = None) -> None:
         if item is not None:
             cls.STAND = item
 
