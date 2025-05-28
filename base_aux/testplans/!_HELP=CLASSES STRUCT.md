@@ -1,7 +1,7 @@
 COMMON INFO
 ===========
 
-DUT - exact testing device (PSU)
+DUT (Device Under Test) - exact testing device (PSU)
 ---
 
 INDEX
@@ -33,7 +33,7 @@ TP_MANAGER
     tc_active
 
 
-STANDS - collection of all existed TP
+STANDS - collection of all existed TP/STANDS
 --------
 	n1: STAND
 	n2: STAND
@@ -41,14 +41,14 @@ STANDS - collection of all existed TP
 
 STAND - full set for one exact TP (final instances)
 -------
-	NAME
-	DESCRIPTION
-	SN      # mean Sn of stand (SN intended get from UART fo main/root device)
-
-	DEV_LINES: TableKit     # all devices need in TP
-	TCSc_LINE: Tableline    # TC classes in TP (iterable)
-
-    INFO
+    NAME
+    DESCRIPTION
+    SN      # mean Sn of stand (SN intended get from UART fo main/root device)
+    
+    DEV_LINES: TableKit     # all devices need in TP
+    TCSc_LINE: Tableline    # TC classes in TP (iterable)
+    
+    ---INFO---
     stand__get_info__short
     stand__get_info__full
     stand__get_results
