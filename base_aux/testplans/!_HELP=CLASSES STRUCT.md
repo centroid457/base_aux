@@ -72,3 +72,18 @@ RESULTS -???
     ===move into STAND OR TCSi_LINE----??? 
     =====collect in STAND/TCс-----??
 
+
+DEVICE
+--------
+    NAME: str
+    DESCRIPTION: str
+    INDEX: int
+
+    DEV_FOUND: bool | None
+
+    SN: str
+    FW: str
+    MODEL: str
+
+    dev__load_info
+    dev__get_info

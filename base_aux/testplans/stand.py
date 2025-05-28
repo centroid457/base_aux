@@ -15,7 +15,7 @@ class Base_Stand:
 
     DIRPATH_RESULTS: Union[str, Path] = "RESULTS"
 
-    DEV_LINES: DeviceKit = {}
+    DEV_LINES: DeviceKit
 
     # TCSc_LINE: dict[type, bool]   # TODO: use TableLine??? - NO! KEEP DICT! with value like USING! so we can use one
     TCSc_LINE: TableLine = TableLine()
@@ -105,7 +105,7 @@ class Base_Stand:
             if not DUT.DEV_FOUND or not DUT.DUT_FW:
                 continue
 
-            dut_info = DUT.get__info__dev()
+            dut_info = DUT.dev__get_info()
             result_dut = {
                 "STAND": self.stand__get_info__short(),
                 "DUT": dut_info,

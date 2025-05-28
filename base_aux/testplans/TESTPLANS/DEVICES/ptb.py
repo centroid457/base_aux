@@ -48,11 +48,11 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
     #             # self.write_read__last_validate("get prsnt", "0")
     #     )
     #     if result:
-    #         self.load__INFO()
+    #         self.dev__load_info()
     #
     #     return result
 
-    def load__INFO(self) -> None:
+    def dev__load_info(self) -> None:
         if not self.SN:
             self.SN = self.write_read__last("get SN")
             self.FW = self.write_read__last("get FW")
@@ -69,7 +69,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
             self.write_read__last_validate("get prsnt", "1")
         )
         if result:
-            self.load__INFO()
+            self.dev__load_info()
 
         return result
 

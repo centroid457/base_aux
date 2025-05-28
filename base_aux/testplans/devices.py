@@ -10,7 +10,6 @@ from .models import *
 
 # =====================================================================================================================
 class Base_Device:
-    # AUX -------------------------------------------------------------------------------------------------------------
     NAME: str = None
     DESCRIPTION: str = None
     INDEX: int = None
@@ -22,8 +21,38 @@ class Base_Device:
     FW: str = None
     MODEL: str = None
 
-    # INFO -------------------------------
-    def load__INFO(self) -> None:
+    # DUT --------------------
+    SKIP: Optional[bool] = None
+
+    DUT_SN: str = None
+    DUT_FW: str = None
+    DUT_MODEL: str = None
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __init__(self, index: int = None, **kwargs):
+        """
+        :param index: None is only for SINGLE!
+        """
+        if index is not None:
+            self.INDEX = index
+        super().__init__(**kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def SKIP_reverse(self) -> None:
+        """
+        this is only for testing purpose
+        """
+        self.SKIP = not bool(self.SKIP)
+
+    # CONNECT ---------------------------------------------------------------------------------------------------------
+    def connect(self) -> bool:
+        return True
+
+    def disconnect(self) -> None:
+        pass
+
+    # INFO ------------------------------------------------------------------------------------------------------------
+    def dev__load_info(self) -> None:
         """
         GOAL
         ----
@@ -36,37 +65,12 @@ class Base_Device:
         """
         pass
 
-    # DUT -------------------------------------------------------------------------------------------------------------
-    SKIP: Optional[bool] = None
-
-    DUT_SN: str = None
-    DUT_FW: str = None
-    DUT_MODEL: str = None
-
-    def SKIP_reverse(self) -> None:
+    def dev__get_info(self) -> dict[str, Any]:
         """
-        this is only for testing purpose
+        GOAL
+        ----
+        get already loaded data!
         """
-        self.SKIP = not bool(self.SKIP)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, index: int = None, **kwargs):
-        """
-        :param index: None is only for SINGLE!
-        """
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
-
-    # CONNECT ---------------------------------------------------------------------------------------------------------
-    def connect(self) -> bool:
-        return True
-
-    def disconnect(self) -> None:
-        pass
-
-    # INFO ------------------------------------------------------------------------------------------------------------
-    def get__info__dev(self) -> dict[str, Any]:
         result = {
             "DEV_FOUND": self.DEV_FOUND,
             "INDEX": self.INDEX,

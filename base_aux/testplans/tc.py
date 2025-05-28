@@ -463,7 +463,7 @@ class _Info(_Base1_TestCase):
         info_dut = {}
         try:
             if add_info_dut:
-                info_dut = self.DEV_COLUMN.DUT.get__info__dev()
+                info_dut = self.DEV_COLUMN.DUT.dev__get_info()
         except:
             pass
 

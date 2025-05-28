@@ -365,11 +365,13 @@ class TableModel_Tps(TableModelTemplate):
                     else:
                         return Qt.Unchecked
                 if col in self.HEADERS.DUTS:
-                    if not tc_inst.SKIP and not dut.SKIP:
-                        if tc_inst.skip_tc_dut:
-                            return Qt.Unchecked
-                        else:
-                            return Qt.Checked
+                    if (tc_cls and tc_cls.SKIP) or (dut and dut.SKIP):
+                        return
+
+                    if tc_inst.skip_tc_dut:
+                        return Qt.Unchecked
+                    else:
+                        return Qt.Checked
 
         # -------------------------------------------------------------------------------------------------------------
         if role == Qt.FontRole:

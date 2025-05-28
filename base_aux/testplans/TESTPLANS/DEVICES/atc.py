@@ -30,7 +30,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
             self.INDEX = index
         super().__init__(**kwargs)
 
-    def load__INFO(self) -> None:
+    def dev__load_info(self) -> None:
         if not self.SN:
             self.SN = self.write_read__last("get SN")
             self.FW = self.write_read__last("get FW")
@@ -41,7 +41,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
             self.address_check__resolved()  # fixme: is it really need here???
         )
         if result:
-            self.load__INFO()
+            self.dev__load_info()
 
         return result
 
