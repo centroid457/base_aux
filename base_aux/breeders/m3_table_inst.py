@@ -351,7 +351,14 @@ class TableColumn:
         #     raise Exception("hello")
 
         line: TableLine = getattr(self.LINES, item)
-        return line[self.INDEX]
+        if isinstance(line, TableLine):     # as Line
+            return line[self.INDEX]
+
+        elif isinstance(line, list):        # as list                       # todo: decide is it really need?
+            return line[self.INDEX]
+
+        else:                               # as direct ATTR from LINES     # todo: decide is it really need? couse all LineAttrs would return
+            return line
 
 
 # =====================================================================================================================
