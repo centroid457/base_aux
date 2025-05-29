@@ -40,7 +40,6 @@ class Test__TC:
         # assert not hasattr(self.Victim, "SETTINGS")
         assert hasattr(self.Victim, "DEV_COLUMN")
 
-        assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
 
@@ -58,7 +57,6 @@ class Test__TC:
         # assert not hasattr(self.Victim, "SETTINGS")
         assert hasattr(self.Victim, "DEV_COLUMN")
 
-        assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
 
@@ -77,7 +75,6 @@ class Test__TC:
         # assert not hasattr(self.Victim, "SETTINGS")
         assert hasattr(self.Victim, "DEV_COLUMN")
 
-        assert not hasattr(self.Victim, "timestamp_start")
         assert not hasattr(self.Victim, "details")
         assert not hasattr(self.Victim, "exx")
 

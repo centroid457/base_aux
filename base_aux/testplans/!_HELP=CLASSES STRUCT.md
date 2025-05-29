@@ -84,11 +84,7 @@ DEVICE
 
 
 
-RESULTS -???  
-RESULTS -???  
-RESULTS -???  
-RESULTS -???  
-RESULTS -???  
+RESULTS -???
 ------------  
     - Gen from STAND as final instance
     - make on TableLines ??? to use Column

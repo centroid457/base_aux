@@ -20,27 +20,8 @@ class Base_Stand:
     # TCSc_LINE: dict[type, bool]   # TODO: use TableLine??? - NO! KEEP DICT! with value like USING! so we can use one
     TCSc_LINE: TableLine = TableLine()
 
-    # =================================================================================================================
-    _tp_timestamp_last: DateTimeAux = None
-    tp_timestamp_start: DateTimeAux = None
-
-    @property
-    def tp_timestamp_last(self) -> DateTimeAux | None:
-        """
-        None - not even started
-        DateTimeAux - was started!
-            stable - finished
-            UnStable - in active thread
-        """
-        if self._tp_timestamp_last:
-            return self._tp_timestamp_last
-
-        if self.isRunning():
-            return DateTimeAux()
-
-    @tp_timestamp_last.setter
-    def tp_timestamp_last(self, value: DateTimeAux | None) -> None:
-        self._tp_timestamp_last = value
+    TIMESTAMP_START: DateTimeAux | None = None
+    TIMESTAMP_STOP: DateTimeAux | None = None
 
     # =================================================================================================================
     def __init__(self) -> None:
@@ -57,15 +38,18 @@ class Base_Stand:
             tc_cls.TCSi_LINE = TableLine(*tcs_insts)    # TODO: move into TC_CLS
 
     # =================================================================================================================
-    def stand__get_info__short(self) -> dict[str, Any]:
+    def stand__get_info__general(self) -> dict[str, Any]:
         result = {
             "STAND.NAME": self.NAME,
             "STAND.DESCRIPTION": self.DESCRIPTION,
             "STAND.SN": self.SN,
+
+            "STAND.TIMESTAMP_START": str(self.TIMESTAMP_START),
+            "STAND.TIMESTAMP_STOP": str(self.TIMESTAMP_STOP),
         }
         return result
 
-    def stand__get_info__full(self) -> dict[str, Any]:
+    def stand__get_info__tcs(self) -> dict[str, Any]:
         """
         get info/structure about stand/TP
         """
@@ -74,8 +58,6 @@ class Base_Stand:
             TP_TCS.append(tc_cls.tcc__get_info())
 
         result = {
-            **self.stand__get_info__short(),
-
             "TESTCASES": TP_TCS,
             # "TP_DUTS": [],      # TODO: decide how to use
             # [
@@ -89,6 +71,16 @@ class Base_Stand:
             }
         return result
 
+    def stand__get_info__general_tcsc(self) -> dict[str, Any]:
+        """
+        get info/structure about stand/TP
+        """
+        result = {
+            **self.stand__get_info__general(),
+            **self.stand__get_info__tcs(),
+        }
+        return result
+
     # -----------------------------------------------------------------------------------------------------------------
     def stand__get_results(self) -> dict[str, Any]:
         """
@@ -99,13 +91,12 @@ class Base_Stand:
             TCS_RESULTS.update({tc_cls: tc_cls.tcsi__get_results()})
 
         result = {
-            "STAND" : self.stand__get_info__short(),
+            "STAND" : self.stand__get_info__general(),
             "TCS": TCS_RESULTS,
         }
         return result
 
     def stand__save_results(self) -> None:
-        name_prefix = str(DateTimeAux())
         for index in range(self.DEV_LINES.COUNT_COLUMNS):
             result_i_short = {}
             result_i_full = {}
@@ -130,7 +121,7 @@ class Base_Stand:
 
             dut_info = DUT.dev__get_info()
             result_dut = {
-                "STAND": self.stand__get_info__short(),
+                "STAND": self.stand__get_info__general(),
                 "DUT": dut_info,
                 "RESULTS_SHORT": result_i_short,
                 "RESULTS_FULL": result_i_full,
@@ -138,7 +129,7 @@ class Base_Stand:
 
             # data_text = json.dumps(result_dut, indent=4, ensure_ascii=False)
 
-            filename = f"{name_prefix}[{index}].json"
+            filename = f"{self.TIMESTAMP_STOP}[{index}].json"
             filepath = pathlib.Path(self.DIRPATH_RESULTS, filename)
 
             tfile = TextFile(text=str(result_dut), filepath=filepath)

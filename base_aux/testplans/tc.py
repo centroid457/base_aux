@@ -68,8 +68,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     result__teardown: TYPING__RESULT_W_EXX = None
 
     _result: TYPING__RESULT_W_EXX = None
-    _timestamp_last: Optional[DateTimeAux]
-    timestamp_start: Optional[DateTimeAux]
+    timestamp_start: Optional[DateTimeAux] = None
+    timestamp_stop: Optional[DateTimeAux] = None
     details: dict[str, Any]
     exx: Optional[Exception]
 
@@ -96,25 +96,6 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         super().__init__()
 
     # =================================================================================================================
-    @property
-    def timestamp_last(self) -> DateTimeAux | None:
-        """
-        None - not even started
-        float - was started!
-            stable - finished
-            UnStable - in active thread
-        """
-        if self._timestamp_last:
-            return self._timestamp_last
-
-        if self.isRunning():
-            return DateTimeAux()
-
-    @timestamp_last.setter
-    def timestamp_last(self, value: DateTimeAux | None) -> None:
-        self._timestamp_last = value
-
-    # =================================================================================================================
     @classmethod
     def clear__cls(cls):
         cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
@@ -128,8 +109,8 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.result__teardown = None
         self.result = None
 
-        self.timestamp_last = None
         self.timestamp_start = None
+        self.timestamp_stop = None
 
         self.details = {}
         self.exx = None
@@ -310,7 +291,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     def teardown(self) -> TYPING__RESULT_W_EXX:
         self.LOGGER.debug("")
-        self.timestamp_last = DateTimeAux()
+        self.timestamp_stop = DateTimeAux()
 
         result = self.teardown__wrapped
         result = CallableAux(result).resolve_exx()
@@ -437,7 +418,7 @@ class _Info(_Base1_TestCase):
         result += f"PROGRESS=====================\n"
         result += f"STATE_ACTIVE__CLS={self.__class__.STATE_ACTIVE__CLS}\n"
         result += f"timestamp_start={self.timestamp_start}\n"
-        result += f"timestamp_last={self.timestamp_last}\n"
+        result += f"timestamp_stop={self.timestamp_stop}\n"
         result += f"exx={self.exx}\n"
 
         result += "-"*60 + "\n"
@@ -485,7 +466,7 @@ class _Info(_Base1_TestCase):
             "tc_result": None if self.result is None else bool(self.result),
             "tc_details": self.details,
             "result__teardown": bool(self.result__teardown),
-            "timestamp_last": self.timestamp_last and str(self.timestamp_last),
+            "timestamp_stop": self.timestamp_stop and str(self.timestamp_stop),
             "log": self.tci__get_results__pretty().replace("\"", "").replace("\'", ""),
         }
         return result

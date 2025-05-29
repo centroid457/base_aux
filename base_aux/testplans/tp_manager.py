@@ -117,7 +117,7 @@ class TpManager(Logger, QThread):
             cls.STAND = item
 
     def tcs_clear(self) -> None:
-        self.tp_timestamp_start = DateTimeAux()
+        self.STAND.TIMESTAMP_START = DateTimeAux()
         for tc_cls in self.STAND.TCSc_LINE:
             tc_cls.clear__cls()
 
@@ -138,7 +138,7 @@ class TpManager(Logger, QThread):
         if not self._TC_RUN_SINGLE:
             self.tc_active = None
 
-        self.tp_timestamp_last = DateTimeAux()
+        self.STAND.TIMESTAMP_STOP = DateTimeAux()
         self.STAND.DEV_LINES("disconnect")
 
         # self.signal__tp_finished.emit()   # dont place here!!!
@@ -234,7 +234,7 @@ class TpManager(Logger, QThread):
             tc_results = {}
 
         body = {
-            **self.STAND.stand__get_info__short(),
+            **self.STAND.stand__get_info__general(),
             **tc_results,
         }
         self.api_client.send(body=body)
