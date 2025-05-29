@@ -49,8 +49,10 @@ STAND - full set for one exact TP (final instances)
     TCSc_LINE: Tableline    # TC classes in TP (iterable)
     
     ---INFO---
-    stand__get_info__short
-    stand__get_info__full
+    stand__get_info__general
+    stand__get_info__tcs
+    stand__get_info__general_tcsc
+
     stand__get_results
     stand__save_results
     
