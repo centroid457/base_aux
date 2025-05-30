@@ -7,14 +7,14 @@ TYPES__DICT = dict[str, Union[None, str, bool, int, float, dict, list]]
 
 
 # =====================================================================================================================
-class ModelStandInfo(BaseModel):
+class Model_StandInfo(BaseModel):
     # STAND_NAME: str           # "StandPSU"
     # STAND_DESCRIPTION: str    # "test PSU for QCD"
     # STAND_SN: str
     STAND_SETTINGS: TYPES__DICT = {}     # main settings for all TCS
 
 
-class ModelDeviceInfo(BaseModel):
+class Model_DeviceInfo(BaseModel):
     INDEX: int          # device position in stand
 
     NAME: str           # "PSU"
@@ -22,7 +22,7 @@ class ModelDeviceInfo(BaseModel):
     SN: str
 
 
-class ModelTcInfo(BaseModel):
+class Model_TcInfo(BaseModel):
     TC_NAME: str
     TC_DESCRIPTION: str
 
@@ -35,7 +35,7 @@ class ModelTcInfo(BaseModel):
     }
 
 
-class ModelTcResult(BaseModel):
+class Model_TcResult(BaseModel):
     tc_timestamp: float | None = None
 
     tc_active: bool = False
@@ -47,16 +47,16 @@ class ModelTcResult(BaseModel):
 
 
 # =====================================================================================================================
-class ModelTcResultFull(ModelTcResult, ModelTcInfo, ModelDeviceInfo):
+class Model_TcResultFull(Model_TcResult, Model_TcInfo, Model_DeviceInfo):
     pass
 
 
-class ModelTpInfo(ModelStandInfo):
-    TESTCASES: list[ModelTcInfo]
+class Model_TpInfo(Model_StandInfo):
+    TESTCASES: list[Model_TcInfo]
 
 
-class ModelTpResults(ModelStandInfo):
-    TESTCASES: list[list[ModelTcResultFull]]
+class Model_TpResults(Model_StandInfo):
+    TESTCASES: list[list[Model_TcResultFull]]
 
 
 # =====================================================================================================================
