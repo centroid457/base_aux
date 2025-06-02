@@ -16,7 +16,7 @@ from base_aux.pyqt.m2_mods import *
 
 from .tm__tcs import TableModel_Tps
 from .tm__devs import TableModel_Devs
-from .dialog import DialogsSetTp
+from .dialogs import DialogsTp
 
 
 # =====================================================================================================================
@@ -155,7 +155,7 @@ class Base_TpGui(Gui):
     SIZE = (1500, 800)
 
     HL_STYLES = TpHlStyles()
-    DIALOGS = DialogsSetTp
+    DIALOGS = DialogsTp
 
     # NEW -------------------------------------------
     DATA: "TpManager"

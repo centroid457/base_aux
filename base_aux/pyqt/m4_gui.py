@@ -69,7 +69,7 @@ class Gui(QMainWindow):     # QWidget/QMainWindow
     _QAPP: QApplication = QApplication([])
 
     # COMMON ------------------------------------------------------
-    DIALOGS: type[DialogsSet] = DialogsSet
+    DIALOGS: type[Dialogs] = Dialogs
 
     MENU: Optional[QMenu] = None
     SB: Optional[QStatusBar] = None

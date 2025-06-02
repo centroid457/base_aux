@@ -4,18 +4,16 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from base_aux.pyqt.m1_dialog import DialogsSet
+from base_aux.pyqt.m1_dialog import Dialogs
 
 
 # SET ============================================================================================================
-class DialogsSetTp(DialogsSet):
-    """
-    attempt to keep all available dialogs for current project in one place!
-    so to be sure there are no any other available!
-    """
-    @staticmethod
-    def info__about(*args) -> int:
+class DialogsTp(Dialogs):
+    @classmethod
+    def info__about(cls, *args) -> int:
         wgt = QMessageBox()
+        if not cls._apply_new__or_activate_last(name="info__about", wgt=wgt):
+            return 1024
         wgt.setMaximumWidth(1000)
         answer = wgt.information(
             None,
@@ -28,12 +26,13 @@ class DialogsSetTp(DialogsSet):
         # return always 1024
         return answer
 
-    @staticmethod
-    def finished__devs_detection(*args) -> int:
+    @classmethod
+    def finished__devs_detection(cls, *args) -> int:
         wgt = QMessageBox()
+        if not cls._apply_new__or_activate_last(name="finished__devs_detection", wgt=wgt):
+            return 1024
         wgt.resize(1000, 1000)
         wgt.setBaseSize(1000, 1000)
-        wgt.setToolTip("hello")
         answer = wgt.information(
             None,
             "Определение устройств",
@@ -44,9 +43,12 @@ class DialogsSetTp(DialogsSet):
         # return always 1024
         return answer
 
-    @staticmethod
-    def finished__tp(*args) -> int:
-        answer = QMessageBox.information(
+    @classmethod
+    def finished__tp(cls, *args) -> int:
+        wgt = QMessageBox()
+        if not cls._apply_new__or_activate_last(name="finished__tp", wgt=wgt):
+            return 1024
+        answer = wgt.information(
             None,
             "Тестирование",
             (
@@ -56,9 +58,12 @@ class DialogsSetTp(DialogsSet):
         # return always 1024
         return answer
 
-    @staticmethod
-    def finished__save(*args) -> int:
-        answer = QMessageBox.information(
+    @classmethod
+    def finished__save(cls, *args) -> int:
+        wgt = QMessageBox()
+        if not cls._apply_new__or_activate_last(name="finished__save", wgt=wgt):
+            return 1024
+        answer = wgt.information(
             None,
             "Сохранение",
             (
@@ -71,10 +76,10 @@ class DialogsSetTp(DialogsSet):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    # DialogsSetTp.info__about()
-    DialogsSetTp.finished__devs_detection()
-    # DialogsSetTp.finished__tp()
-    # DialogsSetTp.finished__save()
+    # DialogsTp.info__about()
+    DialogsTp.finished__devs_detection()
+    # DialogsTp.finished__tp()
+    # DialogsTp.finished__save()
 
 
 # =====================================================================================================================

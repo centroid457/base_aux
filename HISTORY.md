@@ -222,7 +222,7 @@
 
 0.1.4 (2024/12/04 18:35:29)
 ------------------------------
-- [TP.gui] separate layoutCtrl +DialogsSet  
+- [TP.gui] separate layoutCtrl +Dialogs  
 
 0.1.3 (2024/12/04 13:48:12)
 ------------------------------

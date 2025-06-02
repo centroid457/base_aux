@@ -14,23 +14,61 @@ from base_aux.base_sleep.m1_sleep import Sleep
 
 from base_aux.pyqt.m0_static import COLOR_TUPLE_RGB
 
+from base_aux.aux_types.m2_info import ObjectInfo
+
 
 # SET ============================================================================================================
-class DialogsSet:
+class Dialogs:
     """
+    GOAL
+    ----
     attempt to keep all available dialogs for current project in one place!
-    so to be sure there are no any other available!
-    """
-    @staticmethod
-    def info__about(*args) -> int:
-        # tis all not working!
-        # wgt = QMessageBox()
-        # wgt.resize(1000, 1000)
-        # wgt.setBaseSize(1000, 1000)
-        # wgt.setToolTip("hello")
-        # answer = wgt.information(
+    so to be sure there are no any other available/not defined!
 
-        answer = QMessageBox.information(
+    use only one active wgt for same purpose!
+    """
+    WGTS: dict[str, QMessageBox] = {}
+
+    @classmethod
+    def _apply_new__or_activate_last(cls, name: str, wgt: QMessageBox) -> bool:
+        if name in cls.WGTS and cls.WGTS[name] and cls.WGTS[name].isVisible():
+            return False
+
+        # try:
+        #     # cls.WGTS[name].close()      # not working!
+        #     # cls.WGTS[name].destroy()    # not working!
+        #     # cls.WGTS[name].done(1)      # not working!
+        #     # cls.WGTS[name].done(0)      # not working!
+        #     # cls.WGTS[name].accept()      # not working!
+        #     cls.WGTS[name].activateWindow()      # not working!
+        #     # cls.WGTS[name].reject()      # not working!
+        #     return False
+        # except:
+        #     pass
+
+        cls.WGTS[name] = wgt
+        return True
+
+    @classmethod
+    def info__about(cls, *args) -> int:
+        # 1way=SIMPLE=direct meth on class ----------------
+        # answer = QMessageBox.information(
+        #     None,
+        #     "About Program",
+        #     (
+        #         "LLC CompanyName,\n"
+        #         "Program name\n"
+        #         "(purpose)"
+        #      )
+        # )
+
+        # 2way=WgtObject -------------------------
+        wgt = QMessageBox()
+        ObjectInfo(wgt).print()
+        if not cls._apply_new__or_activate_last(name="info__about", wgt=wgt):
+            return 1024
+        wgt.setMaximumWidth(1000)
+        answer = wgt.information(
             None,
             "About Program",
             (
@@ -39,6 +77,8 @@ class DialogsSet:
                 "(purpose)"
              )
         )
+
+        ObjectInfo(wgt).print()
         # return always 1024
         return answer
 
@@ -46,7 +86,8 @@ class DialogsSet:
 # SIMPLEST ============================================================================================================
 def try__info():
     app = QApplication([])
-    print(DialogsSet.info__about())
+    print(Dialogs.info__about())
+    print(Dialogs.info__about())
     app.exec()
 
 
