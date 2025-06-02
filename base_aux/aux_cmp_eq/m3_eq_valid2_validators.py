@@ -18,15 +18,6 @@ class Validators:
     -----
     1/ NoReturn - available for all returns as common!!! but sometimes it cant be reached (like TRUE/RAISE)
     """
-    def VariantsDirect(self, other_final: Any, *variants: Any) -> bool | NoReturn:
-        return other_final in variants
-
-    def VariantsStrLow(self, other_final: Any, *variants: Any) -> bool | NoReturn:
-        other_final = str(other_final).lower()
-        variants = (str(var).lower() for var in variants)
-
-        return other_final in variants
-
     # -----------------------------------------------------------------------------------------------------------------
     def Isinstance(self, other_final: Any, *variants: type[Any]) -> bool | NoReturn:
         for variant in variants:
@@ -35,13 +26,35 @@ class Validators:
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Startswith(self, other_final: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
-        if ignorecase:
-            other_final = str(other_final).lower()
-            variants = (str(var).lower() for var in variants)
-        else:
-            other_final = str(other_final)
-            variants = (str(_) for _ in variants)
+    def Variants(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        return other_final in variants
+
+    def VariantsStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final).lower()
+        variants = (str(var).lower() for var in variants)
+
+        return other_final in variants
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def ContainsAny(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        for variant in variants:
+            if variant in other_final:
+                return True
+        return False
+
+    def ContainsAnyStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final).lower()
+        variants = [str(var).lower() for var in variants]
+
+        for variant in variants:
+            if variant in other_final:
+                return True
+        return False
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def Startswith(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final)
+        variants = (str(var) for var in variants)
 
         for var in variants:
             if other_final.startswith(var):
@@ -49,13 +62,30 @@ class Validators:
 
         return False
 
-    def Endswith(self, other_final: Any, *variants: Any, ignorecase: bool = None) -> bool | NoReturn:
-        if ignorecase:
-            other_final = str(other_final).lower()
-            variants = (str(var).lower() for var in variants)
-        else:
-            other_final = str(other_final)
-            variants = (str(_) for _ in variants)
+    def StartswithIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final).lower()
+        variants = (str(var).lower() for var in variants)
+
+        for var in variants:
+            if other_final.startswith(var):
+                return True
+
+        return False
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def Endswith(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final)
+        variants = (str(var) for var in variants)
+
+        for var in variants:
+            if other_final.endswith(var):
+                return True
+
+        return False
+
+    def EndswithIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        other_final = str(other_final).lower()
+        variants = (str(var).lower() for var in variants)
 
         for var in variants:
             if other_final.endswith(var):

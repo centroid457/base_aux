@@ -6,20 +6,32 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 @final
-class EqValid_VariantsDirect(EqValid_Base):
-    VALIDATOR = Validators.VariantsDirect
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_VariantsStrLow(EqValid_Base):
-    VALIDATOR = Validators.VariantsStrLow
+class EqValid_Isinstance(EqValid_Base):
+    VALIDATOR = Validators.Isinstance
 
 
 # =====================================================================================================================
 @final
-class EqValid_Isinstance(EqValid_Base):
-    VALIDATOR = Validators.Isinstance
+class EqValid_Variants(EqValid_Base):
+    VALIDATOR = Validators.Variants
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_VariantsStrIc(EqValid_Base):
+    VALIDATOR = Validators.VariantsStrIc
+
+
+# =====================================================================================================================
+@final
+class EqValid_ContainsAny(EqValid_Base):
+    VALIDATOR = Validators.ContainsAny
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_ContainsAnyStrIc(EqValid_Base):
+    VALIDATOR = Validators.ContainsAnyStrIc
 
 
 # =====================================================================================================================
@@ -28,10 +40,20 @@ class EqValid_Startswith(EqValid_Base):
     VALIDATOR = Validators.Startswith
 
 
+@final
+class EqValid_StartswithIc(EqValid_Base):
+    VALIDATOR = Validators.StartswithIc
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Endswith(EqValid_Base):
     VALIDATOR = Validators.Endswith
+
+
+@final
+class EqValid_EndswithIc(EqValid_Base):
+    VALIDATOR = Validators.EndswithIc
 
 
 # =====================================================================================================================

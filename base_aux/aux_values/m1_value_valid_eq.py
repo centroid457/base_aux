@@ -108,12 +108,12 @@ class ValueEqValid_Variants(ValueEqValid_Exact):
     here is only validating and keep passed value
     in ValueVariants - final value used from exact Variants!
     """
-    EQ = EqValid_VariantsDirect
+    EQ = EqValid_Variants
 
 
 @final
-class ValueEqValid_VariantsStrLow(ValueEqValid_Exact):
-    EQ = EqValid_VariantsStrLow
+class ValueEqValid_VariantsStrIc(ValueEqValid_Exact):
+    EQ = EqValid_VariantsStrIc
 
 
 # =====================================================================================================================
@@ -131,8 +131,8 @@ if __name__ == "__main__":
     except:
         assert True
 
-    assert ValueEqValid_VariantsStrLow(1, *(1, 2))
-    assert ValueEqValid_VariantsStrLow("val", *("VAL", 2))
+    assert ValueEqValid_VariantsStrIc(1, *(1, 2))
+    assert ValueEqValid_VariantsStrIc("val", *("VAL", 2))
 
 
 # =====================================================================================================================

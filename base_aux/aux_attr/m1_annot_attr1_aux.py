@@ -635,7 +635,11 @@ class AttrAux(NestInit_Source):
         return self.dump_dict(Enum_CallResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_obj(self, callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX) -> AttrDump | NoReturn:
+    def dump_obj(
+            self,
+            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+            # skip_names: list[Any] = None,   # TODO: add EgValid_Contains!!!
+    ) -> AttrDump | NoReturn:
         data = self.dump_dict(callables_resolve)
         obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
         return obj
