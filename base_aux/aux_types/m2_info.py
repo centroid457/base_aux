@@ -61,7 +61,7 @@ def _value_search_by_list(source: Any, search_list: list[Any]) -> Any | None:
 
 
 # =====================================================================================================================
-class ItemInternal(NamedTuple):
+class ItemKeyValue(NamedTuple):
     KEY: str
     VALUE: str
 
@@ -87,6 +87,10 @@ class ObjectState:
     METHODS__ELEMENTARY_COLLECTION: dict[str, Any] = field(default_factory=dict)
     METHODS__OBJECTS: dict[str, Any] = field(default_factory=dict)
     METHODS__EXX: dict[str, Exception] = field(default_factory=dict)
+
+    def items(self) -> Iterable[tuple[str, Union[list[str],  dict[str, Any]]]]:
+        for group_name, group_values in self.__getstate__().items():
+            yield group_name, group_values
 
 
 # =====================================================================================================================
@@ -133,8 +137,9 @@ class ObjectInfo:
     ]
 
     # AUX --------------------------------------------------
-    STATE: ObjectState
     SOURCE: Any = None
+    STATE: ObjectState = None
+    STATE_OLD: ObjectState | None = None
 
     def __init__(
             self,
@@ -171,25 +176,26 @@ class ObjectInfo:
             self.NAMES__SKIP_FULL.extend(names__skip_full)
         if names__skip_parts:
             if isinstance(names__skip_parts, str):
-                names__skip_full = [names__skip_parts, ]
+                names__skip_parts = [names__skip_parts, ]
             self.NAMES__SKIP_PARTS = [*self.NAMES__SKIP_PARTS, *names__skip_parts]
 
         # WORK -----------------------------------------------------------
-        self.state_clear()
+        self.state_reload()
 
         if source is not None:
             self.SOURCE = source
 
     # =================================================================================================================
     def state_clear(self) -> None:
+        self.STATE_OLD = self.STATE
         self.STATE = ObjectState()
 
     def state_reload(self) -> None:
         self.state_clear()
 
         # WORK --------------------------------------
-        name = f"log_iter={self.LOG_ITER}(wait last touched)"
-        self._print_line__group_separator(name)
+        group_name = f"log_iter={self.LOG_ITER}(wait last touched)"
+        self._print_line__group_separator(group_name)
 
         for pos, name in enumerate(dir(self.SOURCE), start=1):
             if self.LOG_ITER:
@@ -265,41 +271,46 @@ class ObjectInfo:
                     self.STATE.PROPERTIES__OBJECTS.update({name: value})
 
     # def state_diff_last(self):
+    #     # NOTE: use attrsDUMP!!! instead! cause raised values may be moved into other group! (single/collection)
+    #     self.state_reload()
+    #     result = ObjectState()
+    #     for (name_g1, values_g1), (name_g2, values_g2) in zip(self.STATE_OLD.items(), self.STATE.items()):
+    #         for
 
     # =================================================================================================================
-    def _print_line__group_separator(self, name: str) -> str:
+    def _print_line__group_separator(self, group_name: str) -> str:
         """
         GOAL MAIN - print!
         GOAL SECONDARY - return str - just for tests!!!
         """
-        result = "-" * 10 + f"{name:-<90}"      # here is standard MAX_LINE_LEN
+        result = "-" * 10 + f"{group_name:-<90}"      # here is standard MAX_LINE_LEN
         print(result)
         return result
 
-    def _print_line__name_type_value(self, name: Optional[str] = None, type_replace: Optional[str] = None, value: Union[None, Any, ItemInternal] = None, intend: Optional[int] = None) -> str:
+    def _print_line__name_type_value(self, name: Optional[str] = None, type_replace: Optional[str] = None, value: Union[None, Any, ItemKeyValue] = None, intend: Optional[int] = None) -> str:
         # -------------------------------
         name = name or ""
-        if isinstance(value, ItemInternal):
+        if isinstance(value, ItemKeyValue):
             name = ""
         block_name = f"{name}"
 
         # -------------------------------
         block_type = f"{value.__class__.__name__}"
-        if isinstance(value, ItemInternal):
+        if isinstance(value, ItemKeyValue):
             block_type = f"{value.KEY.__class__.__name__}:{value.VALUE.__class__.__name__}"
         if type_replace is not None:
             block_type = type_replace
 
         # -------------------------------
         intend = intend or 0
-        if isinstance(value, ItemInternal):
+        if isinstance(value, ItemKeyValue):
             intend = 1
 
         _block_intend = "\t" * intend
 
         # -------------------------------
         block_value = f"{value}"
-        if isinstance(value, ItemInternal):
+        if isinstance(value, ItemKeyValue):
             block_type = f"{value.KEY}:{value.VALUE}"
         elif TypeAux(value).check__exception():
             block_value = f"{value!r}"
@@ -323,8 +334,8 @@ class ObjectInfo:
     # =================================================================================================================
     def _print_block__head(self) -> None:
         # start printing ----------------------------------
-        name = f"{self.__class__.__name__}.print"
-        self._print_line__group_separator(name.upper())
+        group_name = f"{self.__class__.__name__}.print"
+        self._print_line__group_separator(group_name.upper())
 
         print(f"str(SOURCE)={str(self.SOURCE)}")
         print(f"repr(SOURCE)={repr(self.SOURCE)}")
@@ -340,8 +351,8 @@ class ObjectInfo:
         print(f"mro(SOURCE)={mro}")
 
         # SETTINGS ----------------------------------------
-        name = "SETTINGS"
-        self._print_line__group_separator(name)
+        group_name = "SETTINGS"
+        self._print_line__group_separator(group_name)
 
         print(f"{self.NAMES__USE_ONLY_PARTS=}")
         print(f"{self.NAMES__SKIP_FULL=}")
@@ -378,7 +389,7 @@ class ObjectInfo:
                     if self.MAX_ITER_ITEMS and _index > self.MAX_ITER_ITEMS:
                         self._print_line__name_type_value(name=None, type_replace="", value="...", intend=1)
                         break
-                    self._print_line__name_type_value(name=None, value=ItemInternal(item_key, item_value))
+                    self._print_line__name_type_value(name=None, value=ItemKeyValue(item_key, item_value))
 
         # SINGLE/EXX/OBJECTS ---------------------------------------------------------------------
         if any([
@@ -397,7 +408,6 @@ class ObjectInfo:
 
         print(WRAPPER_MAIN_LINE)
         self._print_block__head()
-        self.state_reload()
 
         for group_name, group_values in self.STATE.__getstate__().items():
             self._print_line__group_separator(group_name)
@@ -408,6 +418,7 @@ class ObjectInfo:
             else:
                 for name, value in group_values.items():
                     self._print_block__name_value(name, value)
+
         print(WRAPPER_MAIN_LINE)
 
     # =================================================================================================================
