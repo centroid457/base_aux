@@ -70,9 +70,11 @@ class ItemInternal(NamedTuple):
 @dataclass
 class ObjectState:
     """
-    class for keeping results
+    GOAL
+    ----
+    keep final results for obj attributes (call if callable)
     """
-    # TODO: add sort method!!!
+    # TODO: add sort method!!!???
     SKIPPED_FULLNAMES: list[str] = field(default_factory=list)
     SKIPPED_PARTNAMES: list[str] = field(default_factory=list)
 
@@ -99,8 +101,7 @@ class ObjectInfo:
     LOG_ITER: bool = None
 
     NAMES__USE_ONLY_PARTS: list[str] = []
-    NAMES__SKIP_FULL: list[str] = [
-    ]
+    NAMES__SKIP_FULL: list[str] = []
     NAMES__SKIP_PARTS: list[str] = [
         # DANGER
         "init", "new", "create", "enter", "install",
@@ -132,8 +133,7 @@ class ObjectInfo:
     ]
 
     # AUX --------------------------------------------------
-    ITEM_CLS: type[ObjectState] = ObjectState
-    ITEM: ObjectState = ITEM_CLS()
+    STATE: ObjectState
     SOURCE: Any = None
 
     def __init__(
@@ -175,17 +175,17 @@ class ObjectInfo:
             self.NAMES__SKIP_PARTS = [*self.NAMES__SKIP_PARTS, *names__skip_parts]
 
         # WORK -----------------------------------------------------------
-        self._item_clear()
+        self.state_clear()
 
         if source is not None:
             self.SOURCE = source
 
     # =================================================================================================================
-    def _item_clear(self) -> None:
-        self.ITEM = self.ITEM_CLS()
+    def state_clear(self) -> None:
+        self.STATE = ObjectState()
 
-    def _item_reload(self) -> None:
-        self._item_clear()
+    def state_reload(self) -> None:
+        self.state_clear()
 
         # WORK --------------------------------------
         name = f"log_iter={self.LOG_ITER}(wait last touched)"
@@ -215,7 +215,7 @@ class ObjectInfo:
             if SKIP_FULLNAMES:
                 SKIP_FULLNAMES.extend(SKIP_FULLNAMES)
             if name in SKIP_FULLNAMES:
-                self.ITEM.SKIPPED_FULLNAMES.append(name)
+                self.STATE.SKIPPED_FULLNAMES.append(name)
                 continue
 
             SKIP_PARTNAMES = []
@@ -224,7 +224,7 @@ class ObjectInfo:
             if SKIP_PARTNAMES:
                 SKIP_PARTNAMES.extend(SKIP_PARTNAMES)
             if _value_search_by_list(source=name, search_list=SKIP_PARTNAMES):
-                self.ITEM.SKIPPED_PARTNAMES.append(name)
+                self.STATE.SKIPPED_PARTNAMES.append(name)
                 continue
 
             # PROPERTIES/METHODS + Exception--------------------------------------------------
@@ -232,7 +232,7 @@ class ObjectInfo:
             try:
                 value = getattr(self.SOURCE, name)
             except Exception as exx:
-                self.ITEM.PROPERTIES__EXX.update({name: exx})
+                self.STATE.PROPERTIES__EXX.update({name: exx})
                 continue
 
             if callable(value):
@@ -240,7 +240,7 @@ class ObjectInfo:
                 try:
                     value = value()
                 except Exception as exx:
-                    self.ITEM.METHODS__EXX.update({name: exx})
+                    self.STATE.METHODS__EXX.update({name: exx})
                     continue
 
             # print(f"{name=}/{attr_obj=}/type={type(attr_obj)}/elementary={isinstance(attr_obj, TYPES.ELEMENTARY)}")
@@ -248,21 +248,23 @@ class ObjectInfo:
             # PLACE VALUE ---------------------------------------------------------------------
             if TypeAux(value).check__elementary_single():
                 if attr_is_method:
-                    self.ITEM.METHODS__ELEMENTARY_SINGLE.update({name: value})
+                    self.STATE.METHODS__ELEMENTARY_SINGLE.update({name: value})
                 else:
-                    self.ITEM.PROPERTIES__ELEMENTARY_SINGLE.update({name: value})
+                    self.STATE.PROPERTIES__ELEMENTARY_SINGLE.update({name: value})
 
             elif TypeAux(value).check__elementary_collection():
                 if attr_is_method:
-                    self.ITEM.METHODS__ELEMENTARY_COLLECTION.update({name: value})
+                    self.STATE.METHODS__ELEMENTARY_COLLECTION.update({name: value})
                 else:
-                    self.ITEM.PROPERTIES__ELEMENTARY_COLLECTION.update({name: value})
+                    self.STATE.PROPERTIES__ELEMENTARY_COLLECTION.update({name: value})
 
             else:
                 if attr_is_method:
-                    self.ITEM.METHODS__OBJECTS.update({name: value})
+                    self.STATE.METHODS__OBJECTS.update({name: value})
                 else:
-                    self.ITEM.PROPERTIES__OBJECTS.update({name: value})
+                    self.STATE.PROPERTIES__OBJECTS.update({name: value})
+
+    # def state_diff_last(self):
 
     # =================================================================================================================
     def _print_line__group_separator(self, name: str) -> str:
@@ -395,9 +397,9 @@ class ObjectInfo:
 
         print(WRAPPER_MAIN_LINE)
         self._print_block__head()
-        self._item_reload()
+        self.state_reload()
 
-        for group_name, group_values in self.ITEM.__getstate__().items():
+        for group_name, group_values in self.STATE.__getstate__().items():
             self._print_line__group_separator(group_name)
 
             if TypeAux(group_values).check__elementary_collection_not_dict():
@@ -409,7 +411,8 @@ class ObjectInfo:
         print(WRAPPER_MAIN_LINE)
 
     # =================================================================================================================
-    def print_diffs(self) -> None:
+    @classmethod
+    def print_diffs(cls, *state: ObjectState) -> None:
         pass
         # TODO: FINISH!
 
