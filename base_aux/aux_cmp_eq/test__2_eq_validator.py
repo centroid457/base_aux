@@ -8,6 +8,20 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
+def _ExpectAux__eq_in__direct_reverse(eq_cls, args, other, _EXPECTED) -> None | NoReturn:
+    """
+    GOAL
+    ----
+    check one EqClass by 4 variant lines
+    """
+    ExpectAux(eq_cls(*args) == other).check_assert(_EXPECTED)
+    ExpectAux(eq_cls(*args, reverse=True) == other).check_assert(not _EXPECTED)
+
+    ExpectAux(other in eq_cls(*args)).check_assert(_EXPECTED)
+    ExpectAux(other in eq_cls(*args, reverse=True)).check_assert(not _EXPECTED)
+
+
+# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -20,11 +34,7 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
     ]
 )
 def test__isinstance(args, other, _EXPECTED):
-    ExpectAux(EqValid_Isinstance(*args) == other).check_assert(_EXPECTED)
-    ExpectAux(EqValid_Isinstance(*args, reverse=True) == other).check_assert(not _EXPECTED)
-
-    ExpectAux(other in EqValid_Isinstance(*args)).check_assert(_EXPECTED)
-    ExpectAux(other in EqValid_Isinstance(*args, reverse=True)).check_assert(not _EXPECTED)
+    _ExpectAux__eq_in__direct_reverse(EqValid_Isinstance, args, other, _EXPECTED)
 
 
 # =====================================================================================================================
@@ -44,18 +54,8 @@ def test__isinstance(args, other, _EXPECTED):
     ]
 )
 def test__variants(args, other, _EXPECTED):
-    ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-
-    ExpectAux(EqValid_VariantsStrIc(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_VariantsStrIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-
-    # -----
-    ExpectAux(other in EqValid_Variants(*args)).check_assert(_EXPECTED[0])
-    ExpectAux(other in EqValid_Variants(*args, reverse=True)).check_assert(not _EXPECTED[0])
-
-    ExpectAux(other in EqValid_VariantsStrIc(*args)).check_assert(_EXPECTED[1])
-    ExpectAux(other in EqValid_VariantsStrIc(*args, reverse=True)).check_assert(not _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Variants, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_VariantsStrIc, args, other, _EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -76,18 +76,8 @@ def test__variants(args, other, _EXPECTED):
     ]
 )
 def test__contains(args, other, _EXPECTED):
-    ExpectAux(EqValid_Contains(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_ContainsStrIc(*args) == other).check_assert(_EXPECTED[1])
-
-    ExpectAux(EqValid_Contains(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_ContainsStrIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-
-    # -----
-    ExpectAux(other in EqValid_Contains(*args)).check_assert(_EXPECTED[0])
-    ExpectAux(other in EqValid_ContainsStrIc(*args)).check_assert(_EXPECTED[1])
-
-    ExpectAux(other in EqValid_Contains(*args, reverse=True)).check_assert(not _EXPECTED[0])
-    ExpectAux(other in EqValid_ContainsStrIc(*args, reverse=True)).check_assert(not _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Contains, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_ContainsStrIc, args, other, _EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -100,11 +90,8 @@ def test__contains(args, other, _EXPECTED):
     ]
 )
 def test__startswith(args, other, _EXPECTED):
-    ExpectAux(EqValid_Startswith(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Startswith(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-
-    ExpectAux(EqValid_StartswithIc(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_StartswithIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Startswith, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_StartswithIc, args, other, _EXPECTED[1])
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -117,11 +104,8 @@ def test__startswith(args, other, _EXPECTED):
     ]
 )
 def test__endswith(args, other, _EXPECTED):
-    ExpectAux(EqValid_Endswith(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Endswith(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-
-    ExpectAux(EqValid_EndswithIc(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_EndswithIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Endswith, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_EndswithIc, args, other, _EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -138,30 +122,12 @@ def test__endswith(args, other, _EXPECTED):
     ]
 )
 def test__exx_raise(other, _EXPECTED):
-    ExpectAux(EqValid_BoolTrue() == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[3])
-    ExpectAux(EqValid_ExxRaise() == other).check_assert(_EXPECTED[4])
-
-    ExpectAux(EqValid_BoolTrue(reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[1])
-    ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[3])
-    ExpectAux(EqValid_ExxRaise(reverse=True) == other).check_assert(not _EXPECTED[4])
-
-    # IN
-    ExpectAux(other in EqValid_BoolTrue()).check_assert(_EXPECTED[0])
-    ExpectAux(other in EqValid_Exx()).check_assert(_EXPECTED[1])
-    ExpectAux(other in EqValid_Raise()).check_assert(_EXPECTED[2])
-    ExpectAux(other in EqValid_NotRaise()).check_assert(_EXPECTED[3])
-    ExpectAux(other in EqValid_ExxRaise()).check_assert(_EXPECTED[4])
-
-    ExpectAux(other in EqValid_BoolTrue(reverse=True)).check_assert(not _EXPECTED[0])
-    ExpectAux(other in EqValid_Exx(reverse=True)).check_assert(not _EXPECTED[1])
-    ExpectAux(other in EqValid_Raise(reverse=True)).check_assert(not _EXPECTED[2])
-    ExpectAux(other in EqValid_NotRaise(reverse=True)).check_assert(not _EXPECTED[3])
-    ExpectAux(other in EqValid_ExxRaise(reverse=True)).check_assert(not _EXPECTED[4])
+    args = ()
+    _ExpectAux__eq_in__direct_reverse(EqValid_BoolTrue, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Exx, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_Raise, args, other, _EXPECTED[2])
+    _ExpectAux__eq_in__direct_reverse(EqValid_NotRaise, args, other, _EXPECTED[3])
+    _ExpectAux__eq_in__direct_reverse(EqValid_ExxRaise, args, other, _EXPECTED[4])
 
 
 # =====================================================================================================================
@@ -186,26 +152,16 @@ def test__exx_raise(other, _EXPECTED):
     ]
 )
 def test__lg(args, other, _EXP_obj, _EXP_sn):
-    ExpectAux(EqValid_LtGt_Obj(*args) == other).check_assert(_EXP_obj[0])
-    ExpectAux(EqValid_LtGe_Obj(*args) == other).check_assert(_EXP_obj[1])
-    ExpectAux(EqValid_LeGt_Obj(*args) == other).check_assert(_EXP_obj[2])
-    ExpectAux(EqValid_LeGe_Obj(*args) == other).check_assert(_EXP_obj[3])
-
-    ExpectAux(EqValid_LtGt_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[0])
-    ExpectAux(EqValid_LtGe_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[1])
-    ExpectAux(EqValid_LeGt_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[2])
-    ExpectAux(EqValid_LeGe_Obj(*args, reverse=True) == other).check_assert(not _EXP_obj[3])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LtGt_Obj, args, other, _EXP_obj[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LtGe_Obj, args, other, _EXP_obj[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LeGt_Obj, args, other, _EXP_obj[2])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LeGe_Obj, args, other, _EXP_obj[3])
 
     # ------
-    ExpectAux(EqValid_LtGt_NumParsedSingle(*args) == other).check_assert(_EXP_sn[0])
-    ExpectAux(EqValid_LtGe_NumParsedSingle(*args) == other).check_assert(_EXP_sn[1])
-    ExpectAux(EqValid_LeGt_NumParsedSingle(*args) == other).check_assert(_EXP_sn[2])
-    ExpectAux(EqValid_LeGe_NumParsedSingle(*args) == other).check_assert(_EXP_sn[3])
-
-    ExpectAux(EqValid_LtGt_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[0])
-    ExpectAux(EqValid_LtGe_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[1])
-    ExpectAux(EqValid_LeGt_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[2])
-    ExpectAux(EqValid_LeGe_NumParsedSingle(*args, reverse=True) == other).check_assert(not _EXP_sn[3])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LtGt_NumParsedSingle, args, other, _EXP_sn[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LtGe_NumParsedSingle, args, other, _EXP_sn[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LeGt_NumParsedSingle, args, other, _EXP_sn[2])
+    _ExpectAux__eq_in__direct_reverse(EqValid_LeGe_NumParsedSingle, args, other, _EXP_sn[3])
 
 
 # =====================================================================================================================
@@ -241,9 +197,12 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
     ]
 )
 def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
-    ExpectAux(EqValid_NumParsedSingle(expect) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_NumParsedSingle_TypeInt() == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_NumParsedSingle_TypeFloat() == other).check_assert(_EXPECTED[2])
+    args = (expect, )
+    _ExpectAux__eq_in__direct_reverse(EqValid_NumParsedSingle, args, other, _EXPECTED[0])
+
+    args = ()
+    _ExpectAux__eq_in__direct_reverse(EqValid_NumParsedSingle_TypeInt, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_NumParsedSingle_TypeFloat, args, other, _EXPECTED[2])
 
 
 # =====================================================================================================================
@@ -268,15 +227,11 @@ def test__regexp(args, other, _EXPECTED):
     ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ALL_FALSE) == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_Regexp(*args, bool_collect=Enum_BoolCumulate.ANY_FALSE) == other).check_assert(_EXPECTED[3])
 
-    ExpectAux(EqValid_RegexpAllTrue(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_RegexpAnyTrue(*args) == other).check_assert(_EXPECTED[1])
-    ExpectAux(EqValid_RegexpAllFalse(*args) == other).check_assert(_EXPECTED[2])
-    ExpectAux(EqValid_RegexpAnyFalse(*args) == other).check_assert(_EXPECTED[3])
-
-    ExpectAux(EqValid_RegexpAllTrue(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-    ExpectAux(EqValid_RegexpAnyTrue(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-    ExpectAux(EqValid_RegexpAllFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[2])
-    ExpectAux(EqValid_RegexpAnyFalse(*args, reverse=True) == other).check_assert(not _EXPECTED[3])
+    # ---------
+    _ExpectAux__eq_in__direct_reverse(EqValid_RegexpAllTrue, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__direct_reverse(EqValid_RegexpAnyTrue, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__direct_reverse(EqValid_RegexpAllFalse, args, other, _EXPECTED[2])
+    _ExpectAux__eq_in__direct_reverse(EqValid_RegexpAnyFalse, args, other, _EXPECTED[3])
 
 
 def test__regexp_manual():
