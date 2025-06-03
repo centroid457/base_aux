@@ -8,11 +8,11 @@ class Validators:
     GOAL
     ----
     collect all validators (funcs) in one place
-    applicable in EqValid_Base only (by common way), but you can try using it separated!
+    applicable in Base_EqValid only (by common way), but you can try using it separated!
 
     SPECIALLY CREATED FOR
     ---------------------
-    EqValid_Base
+    Base_EqValid
 
     RULES
     -----
@@ -109,17 +109,18 @@ class Validators:
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def TRUE(self, other_final: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
+    def BoolTrue(self, other_final: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
         """
         GOAL
         ----
         True - if Other object called with no raise and no Exception in result
         """
-        result = False
         if self.OTHER_RAISED or TypeAux(other_final).check__exception():
             return False
-
-        return bool(other_final)
+        try:
+            return bool(other_final)
+        except:
+            return False
 
     # TODO: add FALSE????? what to do with exx and real false?
 

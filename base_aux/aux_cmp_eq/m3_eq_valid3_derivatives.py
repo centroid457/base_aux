@@ -6,145 +6,145 @@ from base_aux.base_statics.m4_enums import *
 
 # =====================================================================================================================
 @final
-class EqValid_Isinstance(EqValid_Base):
+class EqValid_Isinstance(Base_EqValid):
     VALIDATOR = Validators.Isinstance
 
 
 # =====================================================================================================================
 @final
-class EqValid_Variants(EqValid_Base):
+class EqValid_Variants(Base_EqValid):
     VALIDATOR = Validators.Variants
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_VariantsStrIc(EqValid_Base):
+class EqValid_VariantsStrIc(Base_EqValid):
     VALIDATOR = Validators.VariantsStrIc
 
 
 # =====================================================================================================================
 @final
-class EqValid_Contains(EqValid_Base):
+class EqValid_Contains(Base_EqValid):
     VALIDATOR = Validators.Contains
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ContainsStrIc(EqValid_Base):
+class EqValid_ContainsStrIc(Base_EqValid):
     VALIDATOR = Validators.ContainsStrIc
 
 
 # =====================================================================================================================
 @final
-class EqValid_Startswith(EqValid_Base):
+class EqValid_Startswith(Base_EqValid):
     VALIDATOR = Validators.Startswith
 
 
 @final
-class EqValid_StartswithIc(EqValid_Base):
+class EqValid_StartswithIc(Base_EqValid):
     VALIDATOR = Validators.StartswithIc
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Endswith(EqValid_Base):
+class EqValid_Endswith(Base_EqValid):
     VALIDATOR = Validators.Endswith
 
 
 @final
-class EqValid_EndswithIc(EqValid_Base):
+class EqValid_EndswithIc(Base_EqValid):
     VALIDATOR = Validators.EndswithIc
 
 
 # =====================================================================================================================
 @final
-class EqValid_True(EqValid_Base):
-    VALIDATOR = Validators.TRUE
+class EqValid_BoolTrue(Base_EqValid):
+    VALIDATOR = Validators.BoolTrue
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Raise(EqValid_Base):
+class EqValid_Raise(Base_EqValid):
     VALIDATOR = Validators.Raise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_NotRaise(EqValid_Base):
+class EqValid_NotRaise(Base_EqValid):
     VALIDATOR = Validators.NotRaise
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Exx(EqValid_Base):
+class EqValid_Exx(Base_EqValid):
     VALIDATOR = Validators.Exx
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ExxRaise(EqValid_Base):
+class EqValid_ExxRaise(Base_EqValid):
     VALIDATOR = Validators.ExxRaise
 
 
 # =====================================================================================================================
 @final
-class EqValid_LtGt_Obj(EqValid_Base):
+class EqValid_LtGt_Obj(Base_EqValid):
     VALIDATOR = Validators.LtGt_Obj
 
 
 @final
-class EqValid_LtGe_Obj(EqValid_Base):
+class EqValid_LtGe_Obj(Base_EqValid):
     VALIDATOR = Validators.LtGe_Obj
 
 
 @final
-class EqValid_LeGt_Obj(EqValid_Base):
+class EqValid_LeGt_Obj(Base_EqValid):
     VALIDATOR = Validators.LeGt_Obj
 
 
 @final
-class EqValid_LeGe_Obj(EqValid_Base):
+class EqValid_LeGe_Obj(Base_EqValid):
     VALIDATOR = Validators.LeGe_Obj
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_LtGt_NumParsedSingle(EqValid_Base):
+class EqValid_LtGt_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.LtGt_NumParsedSingle
 
 
 @final
-class EqValid_LtGe_NumParsedSingle(EqValid_Base):
+class EqValid_LtGe_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.LtGe_NumParsedSingle
 
 
 @final
-class EqValid_LeGt_NumParsedSingle(EqValid_Base):
+class EqValid_LeGt_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.LeGt_NumParsedSingle
 
 
 @final
-class EqValid_LeGe_NumParsedSingle(EqValid_Base):
+class EqValid_LeGe_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.LeGe_NumParsedSingle
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_NumParsedSingle(EqValid_Base):
+class EqValid_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle
 
 
 @final
-class EqValid_NumParsedSingle_TypeInt(EqValid_Base):
+class EqValid_NumParsedSingle_TypeInt(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle_TypeInt
 
 
 @final
-class EqValid_NumParsedSingle_TypeFloat(EqValid_Base):
+class EqValid_NumParsedSingle_TypeFloat(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle_TypeFloat
 
 
 # =====================================================================================================================
-class EqValid_Regexp(EqValid_Base):
+class EqValid_Regexp(Base_EqValid):
     VALIDATOR = Validators.Regexp
     BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
@@ -172,25 +172,25 @@ class EqValid_RegexpAnyFalse(EqValid_Regexp):
 
 # =====================================================================================================================
 @final
-class EqValid_AttrsByKwargs(EqValid_Base):
+class EqValid_AttrsByKwargs(Base_EqValid):
     VALIDATOR = Validators.AttrsByKwargs
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # @final
-# class EqValid_AttrsByObj(EqValid_Base):
+# class EqValid_AttrsByObj(Base_EqValid):
 #     VALIDATOR = Validators.AttrsByObj
 #     ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE
 
 
 @final
-class EqValid_AttrsByObjNotPrivate(EqValid_Base):
+class EqValid_AttrsByObjNotPrivate(Base_EqValid):
     VALIDATOR = Validators.AttrsByObj
     ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE
 
 
 @final
-class EqValid_AttrsByObjNotHidden(EqValid_Base):
+class EqValid_AttrsByObjNotHidden(Base_EqValid):
     VALIDATOR = Validators.AttrsByObj
     ATTR_LEVEL: Enum_AttrScope = Enum_AttrScope.NOT_HIDDEN
 
@@ -210,7 +210,7 @@ def _explore():
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_AnnotsAllExists(EqValid_Base):
+class EqValid_AnnotsAllExists(Base_EqValid):
     VALIDATOR = Validators.AnnotsAllExists
 
 

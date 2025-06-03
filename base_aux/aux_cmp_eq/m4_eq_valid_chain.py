@@ -5,8 +5,8 @@ from base_aux.base_statics.m1_types import *
 
 # =====================================================================================================================
 @final
-class EqValidChain(EqValid_Base):
-    V_ARGS: tuple[EqValid_Base, ...]
+class EqValidChain(Base_EqValid):
+    V_ARGS: tuple[Base_EqValid, ...]
     V_KWARGS: TYPING.KWARGS_FINAL    # TODO: add params for AllTrue/Any*/False*
 
     def validate(self, other_draft: Any) -> bool:

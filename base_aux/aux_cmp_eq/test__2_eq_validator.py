@@ -3,30 +3,8 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.base_statics.m3_primitives import *
 
-from base_aux.aux_cmp_eq.m3_eq_valid1_base import _EqValidator
-
 from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(
-    argnames="source, other, _EXPECTED",
-    argvalues=[
-        (bool, None, False),
-        (bool, 0, False),
-        (bool, 1, True),
-        (bool, 2, True),
-        (bool, LAMBDA_TRUE, True),
-        (bool, LAMBDA_FALSE, False),
-    ]
-)
-def test__0_EqValidator__operators_eq_in(source, other, _EXPECTED):
-    ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
-    ExpectAux(_EqValidator(source, reverse=True) == other).check_assert(not _EXPECTED)
-
-    ExpectAux(other in _EqValidator(source)).check_assert(_EXPECTED)
-    ExpectAux(other in _EqValidator(source, reverse=True)).check_assert(not _EXPECTED)
 
 
 # =====================================================================================================================
@@ -160,17 +138,30 @@ def test__endswith(args, other, _EXPECTED):
     ]
 )
 def test__exx_raise(other, _EXPECTED):
-    ExpectAux(EqValid_True() == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_BoolTrue() == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValid_Exx() == other).check_assert(_EXPECTED[1])
     ExpectAux(EqValid_Raise() == other).check_assert(_EXPECTED[2])
     ExpectAux(EqValid_NotRaise() == other).check_assert(_EXPECTED[3])
     ExpectAux(EqValid_ExxRaise() == other).check_assert(_EXPECTED[4])
 
-    ExpectAux(EqValid_True(reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_BoolTrue(reverse=True) == other).check_assert(not _EXPECTED[0])
     ExpectAux(EqValid_Exx(reverse=True) == other).check_assert(not _EXPECTED[1])
     ExpectAux(EqValid_Raise(reverse=True) == other).check_assert(not _EXPECTED[2])
     ExpectAux(EqValid_NotRaise(reverse=True) == other).check_assert(not _EXPECTED[3])
     ExpectAux(EqValid_ExxRaise(reverse=True) == other).check_assert(not _EXPECTED[4])
+
+    # IN
+    ExpectAux(other in EqValid_BoolTrue()).check_assert(_EXPECTED[0])
+    ExpectAux(other in EqValid_Exx()).check_assert(_EXPECTED[1])
+    ExpectAux(other in EqValid_Raise()).check_assert(_EXPECTED[2])
+    ExpectAux(other in EqValid_NotRaise()).check_assert(_EXPECTED[3])
+    ExpectAux(other in EqValid_ExxRaise()).check_assert(_EXPECTED[4])
+
+    ExpectAux(other in EqValid_BoolTrue(reverse=True)).check_assert(not _EXPECTED[0])
+    ExpectAux(other in EqValid_Exx(reverse=True)).check_assert(not _EXPECTED[1])
+    ExpectAux(other in EqValid_Raise(reverse=True)).check_assert(not _EXPECTED[2])
+    ExpectAux(other in EqValid_NotRaise(reverse=True)).check_assert(not _EXPECTED[3])
+    ExpectAux(other in EqValid_ExxRaise(reverse=True)).check_assert(not _EXPECTED[4])
 
 
 # =====================================================================================================================

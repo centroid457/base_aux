@@ -3,7 +3,7 @@ from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
-class _EqValidator:
+class Base_EqValid:
     """
     MAIN IDEA
     ---------
@@ -25,10 +25,6 @@ class _EqValidator:
 
     USAGE
     -----
-    VALIDATOR - PLACE ONLY IN FIRST PLACE!
-
-    USING VALIDATION
-    ----------------
     for testing some other value with EqValidator
     1/ create/select validator object
     2/ use next operators for validating
@@ -50,7 +46,7 @@ class _EqValidator:
         dump_attrs(Cls(), skip_names=[exit, call1, call2, call3])
         dump_attrs(Cls(), skip_names=[exit, EqValid_Startswith(call)])
     """
-    VALIDATOR: TYPE__VALID_VALIDATOR
+    VALIDATOR: TYPE__VALID_VALIDATOR    # DEFINE!!!
 
     V_ARGS: TYPING.ARGS_FINAL
     V_KWARGS: TYPING.KWARGS_FINAL
@@ -60,10 +56,7 @@ class _EqValidator:
     OTHER_RAISED: bool = None
     OTHER_FINAL: Any | Exception = None
 
-    def __init__(self, validator: TYPE__VALID_VALIDATOR, *v_args, reverse: bool = None, **v_kwargs) -> None:
-        if validator is not None:
-            self.VALIDATOR = validator
-
+    def __init__(self, *v_args, reverse: bool = None, **v_kwargs) -> None:
         if reverse is not None:
             self.REVERSE = reverse
 
@@ -131,20 +124,6 @@ class _EqValidator:
 
     def VALIDATOR(self, other_final, *v_args, **v_kwargs) -> bool | NoReturn:
         return NotImplemented
-
-
-# =====================================================================================================================
-class EqValid_Base(_EqValidator):
-    def __init__(self, *v_args, **v_kwargs):
-        # print(v_args, v_kwargs)
-        # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)     # not working!
-
-        super().__init__(None, *v_args, **v_kwargs)
-        # self.V_ARGS = v_args
-        # self.V_KWARGS = v_kwargs
-        #
-        # if reverse is not None:
-        #     self.REVERSE = reverse
 
 
 # =====================================================================================================================

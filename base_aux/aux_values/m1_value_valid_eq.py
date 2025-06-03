@@ -15,19 +15,19 @@ class ValueEqValid(NestCall_Resolve):
     """
     __value: Any = NoValue
     VALUE_DEFAULT: Any = NoValue
-    EQ: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue
+    EQ: Base_EqValid | type[Base_EqValid] | EqValidChain | type[NoValue] = NoValue
 
     def __init__(
             self,
             value: Any = NoValue,
-            eq: EqValid_Base | type[EqValid_Base] | EqValidChain | type[NoValue] = NoValue,
+            eq: Base_EqValid | type[Base_EqValid] | EqValidChain | type[NoValue] = NoValue,
             eq_args: TYPING.ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**
             eq_kwargs: TYPING.KWARGS_DRAFT = KWARGS_FINAL__BLANK,
     ) -> None | NoReturn:
         if eq is not NoValue:
             self.EQ = eq
 
-        if TypeAux(self.EQ).check__class() and issubclass(self.EQ, EqValid_Base):
+        if TypeAux(self.EQ).check__class() and issubclass(self.EQ, Base_EqValid):
             self.EQ = self.EQ(*eq_args, **eq_kwargs)
 
         if value is not NoValue:
@@ -88,7 +88,7 @@ class ValueEqValid_Exact(ValueEqValid):
     ----
     exact EQ! - no need to pass EQ object! already in class
     """
-    EQ: type[EqValid_Base]
+    EQ: type[Base_EqValid]
 
     def __init__(
             self,
