@@ -44,7 +44,7 @@ def test__1_init(source, eq, _EXPECTED):
     ]
 )
 def test__2_reset(source, eq, new, _EXPECTED):
-    func_link = ValueEqValid(source, eq).reset
+    func_link = ValueEqValid(source, eq).value_update
     ExpectAux(func_link, new).check_assert(_EXPECTED)
 
 

@@ -21,7 +21,7 @@ class ValueEqValid(NestCall_Resolve):
             self,
             value: Any = NoValue,
             eq: Base_EqValid | type[Base_EqValid] | EqValidChain | type[NoValue] = NoValue,
-            eq_args: TYPING.ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**
+            eq_args: TYPING.ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**!!! but why???
             eq_kwargs: TYPING.KWARGS_DRAFT = KWARGS_FINAL__BLANK,
     ) -> None | NoReturn:
         if eq is not NoValue:
@@ -33,7 +33,8 @@ class ValueEqValid(NestCall_Resolve):
         if value is not NoValue:
             self.VALUE = value
 
-        self.VALUE_DEFAULT = self.VALUE
+        if self.VALUE_DEFAULT is NoValue:
+            self.VALUE_DEFAULT = self.VALUE
 
     def __str__(self) -> str:
         return f"{self.VALUE}"
@@ -55,13 +56,15 @@ class ValueEqValid(NestCall_Resolve):
         return self.__value
 
     @VALUE.setter
-    def VALUE(self, value: Any) -> Optional[NoReturn]:
+    def VALUE(self, value: Any) -> None | NoReturn:
         if self.EQ == value or self.EQ is NoValue:    # place EQ at first place only)
             self.__value = value
+            if self.VALUE_DEFAULT is NoValue:
+                self.VALUE_DEFAULT = value
         else:
             raise Exx__ValueNotValidated()
 
-    def reset(self, value: Any | NoValue = NoValue) -> bool | NoReturn:
+    def value_update(self, value: Any | NoValue = NoValue) -> bool | NoReturn:
         """
         set new value or default
         """
@@ -74,7 +77,7 @@ class ValueEqValid(NestCall_Resolve):
 
 
 # =====================================================================================================================
-class ValueEqValid_Exact(ValueEqValid):
+class Base_ValueEqValid(ValueEqValid):
     """
     GOAL
     ----
@@ -86,7 +89,7 @@ class ValueEqValid_Exact(ValueEqValid):
 
     NOTE
     ----
-    exact EQ! - no need to pass EQ object! already in class
+    exact EQ! - no need to pass EQ object! already kept in class
     """
     EQ: type[Base_EqValid]
 
@@ -101,7 +104,7 @@ class ValueEqValid_Exact(ValueEqValid):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class ValueEqValid_Variants(ValueEqValid_Exact):
+class ValueEqValid_Variants(Base_ValueEqValid):
     """
     SAME AS - ValueVariants but
     ---------------------------
@@ -112,7 +115,7 @@ class ValueEqValid_Variants(ValueEqValid_Exact):
 
 
 @final
-class ValueEqValid_VariantsStrIc(ValueEqValid_Exact):
+class ValueEqValid_VariantsStrIc(Base_ValueEqValid):
     EQ = EqValid_VariantsStrIc
 
 

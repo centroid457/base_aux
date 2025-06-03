@@ -11,10 +11,10 @@ TYPE__VARIANTS = list[TYPE__VARIANT] | NoValue
 
 
 # =====================================================================================================================
-# FOXME: DEPRECATE for new Eq style
-
 class ValueVariants:
     """
+    FIXME: DEPRECATE for new Eq style????
+
     used to keep separated VALUE and measure unit
 
     SAME AS - ValueEqValid_Variants
@@ -131,7 +131,7 @@ class ValueVariants:
     def value_validate(self, value: Any) -> Any | None:
         return self.value_get_variant(value) != NoValue
 
-    def reset(self) -> None:
+    def value_update(self) -> None:
         """
         set VALUE into default only if default is exists!
         """

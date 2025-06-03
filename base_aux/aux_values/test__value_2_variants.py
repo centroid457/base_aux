@@ -35,7 +35,7 @@ class Test__ValueVariants:
         assert victim.VALUE == "VAR2"
         assert victim.VALUE_DEFAULT == "VAR1"
 
-        victim.reset()
+        victim.value_update()
         assert victim.VALUE == "VAR1"
         assert victim.VALUE != "VAR2"
         assert victim.VALUE_DEFAULT == "VAR1"
