@@ -21,6 +21,19 @@ def _ExpectAux__eq_in__direct_reverse(eq_cls, args, other, _EXPECTED) -> None | 
     ExpectAux(other in eq_cls(*args, reverse=True)).check_assert(not _EXPECTED)
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+def test__EqValidObj_usage():
+    assert 1 == EqValid_BoolTrue()
+    assert 1 in EqValid_BoolTrue()
+    assert 0 not in EqValid_BoolTrue()
+
+    assert 1 in [0, 1]
+    assert 1 in [0, EqValid_BoolTrue()]
+
+    assert 0 in [0, EqValid_BoolTrue()]
+    assert 0 not in [1, EqValid_BoolTrue()]
+
+
 # =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
@@ -58,8 +71,7 @@ def test__variants(args, other, _EXPECTED):
     _ExpectAux__eq_in__direct_reverse(EqValid_VariantsStrIc, args, other, _EXPECTED[1])
 
 
-# =====================================================================================================================
-# TODO: ADD!!! FINISH!!!!
+# ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -121,7 +133,7 @@ def test__endswith(args, other, _EXPECTED):
         (LAMBDA_RAISE, (False, False, True, False, True)),
     ]
 )
-def test__exx_raise(other, _EXPECTED):
+def test__bool_exx_raise(other, _EXPECTED):
     args = ()
     _ExpectAux__eq_in__direct_reverse(EqValid_BoolTrue, args, other, _EXPECTED[0])
     _ExpectAux__eq_in__direct_reverse(EqValid_Exx, args, other, _EXPECTED[1])
@@ -130,7 +142,7 @@ def test__exx_raise(other, _EXPECTED):
     _ExpectAux__eq_in__direct_reverse(EqValid_ExxRaise, args, other, _EXPECTED[4])
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXP_obj, _EXP_sn",
     argvalues=[
@@ -164,7 +176,7 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
     _ExpectAux__eq_in__direct_reverse(EqValid_LeGe_NumParsedSingle, args, other, _EXP_sn[3])
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="other, expect, _EXPECTED",
     argvalues=[
@@ -205,7 +217,7 @@ def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
     _ExpectAux__eq_in__direct_reverse(EqValid_NumParsedSingle_TypeFloat, args, other, _EXPECTED[2])
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -238,7 +250,7 @@ def test__regexp_manual():
     ExpectAux(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").check_assert()
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="source, other, _EXPECTED",
     argvalues=[
