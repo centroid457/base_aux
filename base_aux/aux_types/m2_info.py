@@ -35,12 +35,11 @@ TODO:
     "merge items Property/Meth? - cause it does not matter callable or not (just add type info block)",
     "add check__instance_of_user_class",
 """
-
 from typing import *
-from dataclasses import dataclass, field
 
-from .m1_type_aux import TypeAux
-from base_aux.aux_attr.m0_static import check_name__buildin
+from base_aux.aux_types.m0_static import *
+from base_aux.aux_types.m1_type_aux import TypeAux
+from base_aux.aux_attr.m0_static import check_name__buildin, NAMES__SKIP_PARTS
 
 
 # =====================================================================================================================
@@ -61,39 +60,6 @@ def _value_search_by_list(source: Any, search_list: list[Any]) -> Any | None:
 
 
 # =====================================================================================================================
-class ItemKeyValue(NamedTuple):
-    KEY: str
-    VALUE: str
-
-
-# =====================================================================================================================
-@dataclass
-class ObjectState:
-    """
-    GOAL
-    ----
-    keep final results for obj attributes (call if callable)
-    """
-    # TODO: add sort method!!!???
-    SKIPPED_FULLNAMES: list[str] = field(default_factory=list)
-    SKIPPED_PARTNAMES: list[str] = field(default_factory=list)
-
-    PROPERTIES__ELEMENTARY_SINGLE: dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__ELEMENTARY_COLLECTION: dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__OBJECTS: dict[str, Any] = field(default_factory=dict)
-    PROPERTIES__EXX: dict[str, Exception] = field(default_factory=dict)
-
-    METHODS__ELEMENTARY_SINGLE: dict[str, Any] = field(default_factory=dict)
-    METHODS__ELEMENTARY_COLLECTION: dict[str, Any] = field(default_factory=dict)
-    METHODS__OBJECTS: dict[str, Any] = field(default_factory=dict)
-    METHODS__EXX: dict[str, Exception] = field(default_factory=dict)
-
-    def items(self) -> Iterable[tuple[str, Union[list[str],  dict[str, Any]]]]:
-        for group_name, group_values in self.__getstate__().items():
-            yield group_name, group_values
-
-
-# =====================================================================================================================
 class ObjectInfo:
     """
     :ivar MAX_ITER_ITEMS: 0 or None if not limited!
@@ -106,35 +72,7 @@ class ObjectInfo:
 
     NAMES__USE_ONLY_PARTS: list[str] = []
     NAMES__SKIP_FULL: list[str] = []
-    NAMES__SKIP_PARTS: list[str] = [
-        # DANGER
-        "init", "new", "create", "enter", "install",
-        "set",
-        "clone", "copy", "move",
-        "next",
-        "clear", "reduce",
-        "close", "del", "exit", "kill", "abort",
-
-        # PyQt5 Qthread
-        "exec", "exec_", "pyqtConfigure",
-        "dump",     # 'dumpObjectInfo' from PyQt5.QMenu
-
-        # GIT
-        "checkout", "detach",
-
-        # threads
-        "run", "start", "wait", "join", "terminate", "quit", "disconnect",
-
-        # change collection content/count/order
-        "pop", "popleft",
-        "append", "appendleft",
-        "extend", "extendleft",
-        "add", "insert",
-        "reverse", "rotate", "sort",
-
-        # SYS
-        "breakpointhook",  #
-    ]
+    NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
 
     # AUX --------------------------------------------------
     SOURCE: Any = None
