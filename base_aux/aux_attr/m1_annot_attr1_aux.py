@@ -652,6 +652,21 @@ class AttrAux(NestInit_Source):
         obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
         return obj
 
+    def dump_obj__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
+        """
+        MAIN DERIVATIVE!
+        """
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.EXX)
+
+    def dump_obj__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.DIRECT)
+
+    def dump_obj__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.SKIP_CALLABLE)
+
+    def dump_obj__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.RAISE)
+
     # -----------------------------------------------------------------------------------------------------------------
     def dump_str__pretty(
             self,
