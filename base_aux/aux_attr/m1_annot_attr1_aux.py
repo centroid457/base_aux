@@ -7,6 +7,7 @@ from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable import CallableAux
 from base_aux.aux_types.m1_type_aux import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
+from base_aux.aux_cmp_eq.m3_eq_valid1_base import Base_EqValid
 
 
 # =====================================================================================================================
@@ -587,7 +588,11 @@ class AttrAux(NestInit_Source):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_dict(self, callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX) -> dict[str, Any | Callable | Exception] | NoReturn:
+    def dump_dict(
+            self,
+            *skip_names: str | Base_EqValid,
+            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+    ) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
         ----------
@@ -606,10 +611,13 @@ class AttrAux(NestInit_Source):
         ---------------------
         using any object as rules for Translator
         """
+        skip_names = skip_names or []
         result = {}
         for name in self.iter__names_not_private():
             # skip is attr not exist
             if not self.name__check_have_value(name):
+                continue
+            if name in skip_names:
                 continue
 
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
@@ -619,35 +627,39 @@ class AttrAux(NestInit_Source):
 
         return result
 
-    def dump_dict__resolve_exx(self) -> dict[str, Any | Exception]:
+    def dump_dict__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(Enum_CallResolve.EXX)
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.EXX)
 
-    def dump_dict__direct(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(Enum_CallResolve.DIRECT)
+    def dump_dict__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.DIRECT)
 
-    def dump_dict__skip_callables(self) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(Enum_CallResolve.SKIP_CALLABLE)
+    def dump_dict__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.SKIP_CALLABLE)
 
-    def dump_dict__skip_raised(self) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(Enum_CallResolve.RAISE)
+    def dump_dict__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_obj(
             self,
+            *skip_names: str | Base_EqValid,
             callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
-            # skip_names: list[Any] = None,   # TODO: add EgValid_Contains!!!
     ) -> AttrDump | NoReturn:
-        data = self.dump_dict(callables_resolve)
+        data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
         obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
         return obj
 
     # -----------------------------------------------------------------------------------------------------------------
-    def dump_str__pretty(self) -> str:
+    def dump_str__pretty(
+            self,
+            *skip_names: str | Base_EqValid,
+            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+    ) -> str:
         result = f"{self.SOURCE.__class__.__name__}(Attributes):"
-        for key, value in self.dump_dict(Enum_CallResolve.EXX).items():
+        for key, value in self.dump_dict(*skip_names, callables_resolve=callables_resolve).items():
             result += f"\n    {key}={value}"
         else:
             result += f"\nEmpty=Empty"

@@ -1,6 +1,7 @@
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_attr.m4_kits import *
+from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
@@ -32,6 +33,7 @@ class VictimNested_New(Victim):
     __hello__=123
 
 
+# =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
@@ -133,18 +135,28 @@ class Victim:
     RAISE = LAMBDA_RAISE
 
 
+class VictimNames:
+    attr = None
+    _attr = None
+    __attr = None
+
+
 class Test__Dump:
     def test__zero(self):
         assert AttrAux().dump_dict() == dict()
 
-    def test__names(self):
-        class VictimNames:
-            attr = None
-            _attr = None
-            __attr = None
-
-        result = AttrAux(VictimNames()).dump_dict()
-        assert result == {"attr": None, "_attr": None}
+    @pytest.mark.parametrize(
+        argnames="source, skip, _EXPECTED",
+        argvalues=[
+            (VictimNames(), [], {"attr": None, "_attr": None}),
+            (VictimNames(), ["attr", ], {"_attr": None}),
+            (VictimNames(), [EqValid_Contains("att"), ], {}),
+            (VictimNames(), [EqValid_Contains("att5"), ], {"attr": None, "_attr": None}),
+            (VictimNames(), ["attr", EqValid_Contains("att5"), ], {"_attr": None}),
+        ]
+    )
+    def test__names(self, source, skip, _EXPECTED):
+        ExpectAux(AttrAux(source).dump_dict, skip).check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
@@ -159,7 +171,7 @@ class Test__Dump:
         ]
     )
     def test__callable_use(self, cal_use, _EXPECTED):
-        result_dict = AttrAux(Victim).dump_dict(cal_use)
+        result_dict = AttrAux(Victim).dump_dict(callables_resolve=cal_use)
         ExpectAux(dict.get, (result_dict, "NONE")).check_assert(_EXPECTED[0])
         ExpectAux(dict.get, (result_dict, "TRUE")).check_assert(_EXPECTED[1])
         ExpectAux(dict.get, (result_dict, "LTRUE")).check_assert(_EXPECTED[2])
@@ -167,7 +179,7 @@ class Test__Dump:
 
     def test__callable_use__special_raise(self):
         try:
-            result_dict = AttrAux(Victim).dump_dict(Enum_CallResolve.RAISE)
+            result_dict = AttrAux(Victim).dump_dict(callables_resolve=Enum_CallResolve.RAISE)
             assert False
         except:
             assert True

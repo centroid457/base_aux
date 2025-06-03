@@ -50,7 +50,7 @@ class Validators:
 
         SPECIALLY CREATED FOR
         ---------------------
-        AttrsDump to skip exact attrs with Parts in names
+        AttrsAux.dump_dict/AttrsDump to skip exact attrs with Parts in names
         """
         for variant in variants:
             if variant in other_final:
