@@ -37,6 +37,18 @@ class _EqValidator:
     No matter what eqObj is doing CONTAIN always will work!
 
     IF raised on any variant - pass to nest variant!
+
+    USING TRICK (GOOD PRACTICE)
+    ---------------------------
+    any parameter could have exclude/skip variants with cmp by direct EQ operator for each value or IN operator for all values
+    you can change logic by ising EqValid values instead of simple generics
+    Example
+        def dump_attrs(obj: Any, skip_names: list[str] = None):
+            pass
+            ...
+
+        dump_attrs(Cls(), skip_names=[exit, call1, call2, call3])
+        dump_attrs(Cls(), skip_names=[exit, EqValid_Startswith(call)])
     """
     VALIDATOR: TYPE__VALID_VALIDATOR
 
