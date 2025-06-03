@@ -105,7 +105,7 @@ def test__gsai(attr, _EXPECTED):
 
 # =====================================================================================================================
 def test__kwargs():
-    victim = AttrDump()
+    victim = AttrDumped()
     AttrAux(victim).sai__by_args_kwargs(**dict(a1=1, A2=2))
     assert victim.a1 == 1
     assert victim.A2 == 2

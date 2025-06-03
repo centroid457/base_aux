@@ -1,8 +1,8 @@
-from typing import final
+from typing import *
 
 
 # =====================================================================================================================
-class Base_AttrDump:
+class Base_AttrDumped:
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -12,7 +12,7 @@ class Base_AttrDump:
 
 
 @final
-class AttrDump(Base_AttrDump):
+class AttrDumped(Base_AttrDumped):
     """
     GOAL
     ----

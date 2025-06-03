@@ -37,7 +37,7 @@ class AttrAux(NestInit_Source):
     FIXME: add skip methods??? seems it need!
     """
     # SOURCE: Any
-    SOURCE: Any = AttrDump
+    SOURCE: Any = AttrDumped
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
 
@@ -364,7 +364,7 @@ class AttrAux(NestInit_Source):
         if class have not any annotations and you will access them over instance - raise!
         but if you will first access annotations over class - no raise!
 
-            AttributeError: 'AttrDump' object has no attribute '__annotations__'
+            AttributeError: 'AttrDumped' object has no attribute '__annotations__'
 
         SPECIALLY CREATED FOR
         ---------------------
@@ -380,7 +380,7 @@ class AttrAux(NestInit_Source):
         except:
             pass
 
-    def annots__append(self, **kwargs: type | Any) -> AttrDump | Any:
+    def annots__append(self, **kwargs: type | Any) -> AttrDumped | Any:
         """
         GOAL
         ----
@@ -647,9 +647,9 @@ class AttrAux(NestInit_Source):
             self,
             *skip_names: str | Base_EqValid,
             callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
-    ) -> AttrDump | NoReturn:
+    ) -> AttrDumped | NoReturn:
         data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
-        obj = AttrAux(AttrDump()).sai__by_args_kwargs(**data)
+        obj = AttrAux(AttrDumped()).sai__by_args_kwargs(**data)
         return obj
 
     def dump_obj__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:

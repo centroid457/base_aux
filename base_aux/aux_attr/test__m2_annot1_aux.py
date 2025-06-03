@@ -243,7 +243,7 @@ def test__set(data, _EXPECTED):
 
 # =====================================================================================================================
 def test__annots_ensure():
-    victim = AttrDump()
+    victim = AttrDumped()
     try:
         victim.__annotations__
         assert False

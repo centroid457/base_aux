@@ -33,7 +33,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     1/ formatters is not tested and could not working!
     """
     PAT_FORMAT: str = ""    # FORMAT PATTERN
-    VALUES: AttrDump        # values set
+    VALUES: AttrDumped        # values set
 
     RAISE_TYPES: bool = False   # todo: decide to deprecate!
 
