@@ -21,7 +21,7 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
         (bool, LAMBDA_FALSE, False),
     ]
 )
-def test___EqValidator(source, other, _EXPECTED):
+def test__0_EqValidator__operators_eq_in(source, other, _EXPECTED):
     ExpectAux(_EqValidator(source) == other).check_assert(_EXPECTED)
     ExpectAux(_EqValidator(source, reverse=True) == other).check_assert(not _EXPECTED)
 
@@ -43,6 +43,10 @@ def test___EqValidator(source, other, _EXPECTED):
 )
 def test__isinstance(args, other, _EXPECTED):
     ExpectAux(EqValid_Isinstance(*args) == other).check_assert(_EXPECTED)
+    ExpectAux(EqValid_Isinstance(*args, reverse=True) == other).check_assert(not _EXPECTED)
+
+    ExpectAux(other in EqValid_Isinstance(*args)).check_assert(_EXPECTED)
+    ExpectAux(other in EqValid_Isinstance(*args, reverse=True)).check_assert(not _EXPECTED)
 
 
 # =====================================================================================================================
@@ -63,49 +67,49 @@ def test__isinstance(args, other, _EXPECTED):
 )
 def test__variants(args, other, _EXPECTED):
     ExpectAux(EqValid_Variants(*args) == other).check_assert(_EXPECTED[0])
-    ExpectAux(EqValid_VariantsStrIc(*args) == other).check_assert(_EXPECTED[1])
-
     ExpectAux(EqValid_Variants(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+
+    ExpectAux(EqValid_VariantsStrIc(*args) == other).check_assert(_EXPECTED[1])
     ExpectAux(EqValid_VariantsStrIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
 
     # -----
     ExpectAux(other in EqValid_Variants(*args)).check_assert(_EXPECTED[0])
-    ExpectAux(other in EqValid_VariantsStrIc(*args)).check_assert(_EXPECTED[1])
-
     ExpectAux(other in EqValid_Variants(*args, reverse=True)).check_assert(not _EXPECTED[0])
+
+    ExpectAux(other in EqValid_VariantsStrIc(*args)).check_assert(_EXPECTED[1])
     ExpectAux(other in EqValid_VariantsStrIc(*args, reverse=True)).check_assert(not _EXPECTED[1])
 
 
 # =====================================================================================================================
 # TODO: ADD!!! FINISH!!!!
-# @pytest.mark.parametrize(
-#     argnames="args, other, _EXPECTED",
-#     argvalues=[
-#         ([1,2], 1, (True, True)),
-#         ([1,2], "1", (False, True)),
-#         ([1,2], 10, (False, False)),
-#         ([*"12"], "1", (True, True)),
-#         ([*"12"], "10", (False, False)),
-#         ([*"12"], "hello", (False, False)),
-#
-#         ([*"ABC"], "A", (True, True)),
-#         ([*"ABC"], "a", (False, True)),
-#         ([*"ABC"], "f", (False, False)),
-#     ]
-# )
-# def test__contains(args, other, _EXPECTED):
-#     ExpectAux(EqValid_ContainsAny(*args) == other).check_assert(_EXPECTED[0])
-#     ExpectAux(EqValid_ContainsAnyStrIc(*args) == other).check_assert(_EXPECTED[1])
-#
-#     ExpectAux(EqValid_ContainsAny(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
-#     ExpectAux(EqValid_ContainsAnyStrIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
-#
-#     # -----
-#     ExpectAux(other in EqValid_ContainsAny(*args)).check_assert(_EXPECTED[0])
-#     ExpectAux(other in EqValid_ContainsAnyStrIc(*args)).check_assert(_EXPECTED[1])
-#
-#     ExpectAux(other in EqValid_ContainsAny(*args, reverse=True)).check_assert(not _EXPECTED[0])
-#     ExpectAux(other in EqValid_ContainsAnyStrIc(*args, reverse=True)).check_assert(not _EXPECTED[1])
+@pytest.mark.parametrize(
+    argnames="args, other, _EXPECTED",
+    argvalues=[
+        ([1,2], 1, (False, True)),
+        ([1,2], "1", (False, True)),
+        ([1,2], 10, (False, True)),
+        ([*"12"], "1", (True, True)),
+        ([*"12"], "10", (True, True)),
+        ([*"12"], "hello", (False, False)),
+
+        ([*"ABC"], "A", (True, True)),
+        ([*"ABC"], "a", (False, True)),
+        ([*"ABC"], "f", (False, False)),
+    ]
+)
+def test__contains(args, other, _EXPECTED):
+    ExpectAux(EqValid_Contains(*args) == other).check_assert(_EXPECTED[0])
+    ExpectAux(EqValid_ContainsStrIc(*args) == other).check_assert(_EXPECTED[1])
+
+    ExpectAux(EqValid_Contains(*args, reverse=True) == other).check_assert(not _EXPECTED[0])
+    ExpectAux(EqValid_ContainsStrIc(*args, reverse=True) == other).check_assert(not _EXPECTED[1])
+
+    # -----
+    ExpectAux(other in EqValid_Contains(*args)).check_assert(_EXPECTED[0])
+    ExpectAux(other in EqValid_ContainsStrIc(*args)).check_assert(_EXPECTED[1])
+
+    ExpectAux(other in EqValid_Contains(*args, reverse=True)).check_assert(not _EXPECTED[0])
+    ExpectAux(other in EqValid_ContainsStrIc(*args, reverse=True)).check_assert(not _EXPECTED[1])
 
 
 # =====================================================================================================================

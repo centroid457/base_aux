@@ -25,7 +25,18 @@ class _EqValidator:
 
     USAGE
     -----
-    PLACE ONLY IN FIRST PLACE!
+    VALIDATOR - PLACE ONLY IN FIRST PLACE!
+
+    USING VALIDATION
+    ----------------
+    for testing some other value with EqValidator
+    1/ create/select validator object
+    2/ use next operators for validating
+        - EQ(eqObj == otherValue)
+        - CONTAIN(otherValue in eqObj)
+    No matter what eqObj is doing CONTAIN always will work!
+
+    IF raised on any variant - pass to nest variant!
     """
     VALIDATOR: TYPE__VALID_VALIDATOR
 

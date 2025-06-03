@@ -24,14 +24,14 @@ class EqValid_VariantsStrIc(EqValid_Base):
 
 # =====================================================================================================================
 @final
-class EqValid_ContainsAny(EqValid_Base):
-    VALIDATOR = Validators.ContainsAny
+class EqValid_Contains(EqValid_Base):
+    VALIDATOR = Validators.Contains
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ContainsAnyStrIc(EqValid_Base):
-    VALIDATOR = Validators.ContainsAnyStrIc
+class EqValid_ContainsStrIc(EqValid_Base):
+    VALIDATOR = Validators.ContainsStrIc
 
 
 # =====================================================================================================================

@@ -27,6 +27,11 @@ class Validators:
 
     # -----------------------------------------------------------------------------------------------------------------
     def Variants(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        cmp Other with each variants by IN operator
+        """
         return other_final in variants
 
     def VariantsStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
@@ -36,13 +41,23 @@ class Validators:
         return other_final in variants
 
     # -----------------------------------------------------------------------------------------------------------------
-    def ContainsAny(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def Contains(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        cmp each variant with other by IN operator
+        mainly using for check substrs (variants) in BaseStr
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        AttrsDump to skip exact attrs with Parts in names
+        """
         for variant in variants:
             if variant in other_final:
                 return True
         return False
 
-    def ContainsAnyStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def ContainsStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
         other_final = str(other_final).lower()
         variants = [str(var).lower() for var in variants]
 
