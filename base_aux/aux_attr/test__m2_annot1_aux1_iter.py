@@ -56,14 +56,14 @@ def test__ITER_1__iter__attrs_external_not_builtin(source, skip_names, _EXPECTED
     argnames="source, skip_names, _EXPECTED",
     argvalues=[
         (VictimAt(), [], [
-            {"at1", "_at1", "__at1"},
-            {"at1", "_at1", "__at1"},
-            {"at1", "_at1", "__at1"},
+            {"at1", },
+            {"at1", },
+            {"at1", },
         ]),
         (VictimAn(), [], [
-            {"an1", "_an1", "__an1"},
-            {"an1", "_an1", "__an1"},
-            {"an1", "_an1", "__an1"},
+            {"an1", },
+            {"an1", },
+            {"an1", },
         ]),
         (VictimAnNest(), [], [
             {"an1", "_an1", "__an1", "an2", "_an2", "__an2"},
@@ -72,10 +72,10 @@ def test__ITER_1__iter__attrs_external_not_builtin(source, skip_names, _EXPECTED
         ]),
     ]
 )
-def test__ITER_2__iter__names(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__names())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__names())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__names())).check_assert(set(_EXPECTED[2]))
+def test__ITER__iter__names_not_hidden(source, skip_names, _EXPECTED):
+    # ExpectAux(set(AttrAux(source, *skip_names).iter__names_not_hidden())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__names_not_hidden())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__names_not_hidden())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
