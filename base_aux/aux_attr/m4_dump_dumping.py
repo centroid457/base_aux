@@ -7,7 +7,7 @@ from base_aux.base_statics.m4_enums import *
 
 
 # =====================================================================================================================
-class Base_AttrDumping(NestInit_Source, NestCall_Resolve):
+class Base_AttrDictDumping(NestInit_Source, NestCall_Resolve):
     """
     GOAL
     ----
@@ -29,7 +29,7 @@ class Base_AttrDumping(NestInit_Source, NestCall_Resolve):
         super().__init__(source)
         self.SKIP_NAMES = skip_names
 
-    def resolve(self) -> AttrDumped | NoReturn:
+    def resolve(self) -> dict[str, Any | Exception] | NoReturn:
         # select -----
         result_obj = None
 
@@ -44,12 +44,12 @@ class Base_AttrDumping(NestInit_Source, NestCall_Resolve):
             raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
         # result -----
-        return result_obj.dump_obj(*self.SKIP_NAMES)
+        return result_obj.dump_dict(*self.SKIP_NAMES)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AttrDumping(Base_AttrDumping):
+class AttrDictDumping(Base_AttrDictDumping):
     """
     NOTE
     ----
@@ -61,13 +61,13 @@ class AttrDumping(Base_AttrDumping):
 
 
 @final
-class AnnotsAllDumping(Base_AttrDumping):
+class AnnotsAllDictDumping(Base_AttrDictDumping):
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
 
 
 @final
-class AnnotsLastDumping(Base_AttrDumping):
+class AnnotsLastDictDumping(Base_AttrDictDumping):
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.LAST_CHILD
 
@@ -75,6 +75,41 @@ class AnnotsLastDumping(Base_AttrDumping):
 # =====================================================================================================================
 if __name__ == "__main__":
     pass
+
+
+# =====================================================================================================================
+from base_aux.aux_expect.m1_expect_aux import *
+
+
+class VictimAt:
+    at1 = 1
+    _at1 = 11
+    __at1 = 111
+
+
+class VictimAn:
+    an1: int = 1
+    _an1: int = 11
+    __an1: int = 111
+
+
+class VictimAnNest(VictimAn):
+    an2: int = 1
+    _an2: int = 11
+    __an2: int = 111
+
+
+@pytest.mark.parametrize(
+    argnames="source, skip_names, _EXPECTED",
+    argvalues=[
+        (VictimAt(), [], [{"at1": 1, "_at1": 11}, {}, {}]),
+        (VictimAn(), [], [{"an1": 1, "_an1": 11}, {"an1": 1, "_an1": 11}, {"an1": 1, "_an1": 11}]),
+    ]
+)
+def test__names(source, skip_names, _EXPECTED):
+    ExpectAux(AttrDictDumping(source)(*skip_names)).check_assert(_EXPECTED[0])
+    ExpectAux(AnnotsAllDictDumping(source)(*skip_names)).check_assert(_EXPECTED[1])
+    ExpectAux(AnnotsLastDictDumping(source)(*skip_names)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

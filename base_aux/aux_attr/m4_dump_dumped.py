@@ -10,6 +10,8 @@ class Base_AttrDumped:
     """
     pass
 
+    # TODO: how to add DumpStrPretty here without mess attr names???
+
 
 @final
 class AttrDumped(Base_AttrDumped):
