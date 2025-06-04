@@ -38,8 +38,25 @@ class AttrAux(NestInit_Source):
     """
     # SOURCE: Any
     SOURCE: Any = AttrDumped
+    SKIP_NAMES: tuple[str | Base_EqValid, ...] = ()
+
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+
+    # =================================================================================================================
+    def __init__(self, source: Any = NoValue, *skip_names: str | Base_EqValid) -> None:
+        super().__init__(source)
+        if skip_names:
+            self.SKIP_NAMES = skip_names
+
+    # =================================================================================================================
+    def name__check_is_method(self, name_original: str) -> bool:
+        try:
+            value = getattr(self.SOURCE, name_original)
+        except:
+            return False
+
+        return TypeAux(value).check__callable_meth()
 
     # =================================================================================================================
     def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
@@ -64,7 +81,7 @@ class AttrAux(NestInit_Source):
 
         GOAL
         ----
-        1/ iter only without builtins!!!
+        1/ iter ALL (without builtins)!!!
         2/ use EXT private names!
 
         SPECIALLY CREATED FOR
@@ -72,18 +89,21 @@ class AttrAux(NestInit_Source):
         this class - all iterations!
         """
         for name in dir(self.SOURCE):
-            # filter builtin ----------
-            if name.startswith("__"):
+            # filter-1 skip ----------
+            if name in self.SKIP_NAMES:
+                continue
+
+            # filter-2 builtin ----------
+            if name.startswith("__") and name.endswith("__"):
                 continue
 
             # filter private external ----------
             try:
                 name_private_ext = self.get_name__private_external(name)
+                if name_private_ext is not None:
+                    name = name_private_ext
             except:
                 continue
-
-            if name_private_ext:
-                name = name_private_ext
 
             # if self.name__check_is_method(name):    # FIXME: DONT USE HERE!!! or resolve what to do!!!
             #     continue
@@ -92,18 +112,13 @@ class AttrAux(NestInit_Source):
             # print(f"{name=}")
             yield name
 
-    def name__check_is_method(self, name_original: str) -> bool:
-        try:
-            value = getattr(self.SOURCE, name_original)
-        except:
-            return False
-
-        return TypeAux(value).check__callable_meth()
-
     # -----------------------------------------------------------------------------------------------------------------
     def iter__names(self, attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
         # -------------------------------------------------
         for name in self.ITER_NAMES_SOURCE():
+            if name in self.SKIP_NAMES:
+                continue
+
             if attr_level == Enum_AttrScope.NOT_PRIVATE:
                 if not name.startswith("__"):
                     yield name
@@ -673,7 +688,11 @@ class AttrAux(NestInit_Source):
             *skip_names: str | Base_EqValid,
             callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
     ) -> str:
-        result = f"{self.SOURCE.__class__.__name__}(Attributes):"
+        try:
+            result = f"{self.SOURCE.__class__.__name__}(Attributes):"
+        except:
+            result = f"{self.SOURCE.__name__}(Attributes):"
+
         for key, value in self.dump_dict(*skip_names, callables_resolve=callables_resolve).items():
             result += f"\n    {key}={value}"
         else:
