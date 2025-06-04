@@ -7,7 +7,7 @@ class Base_EqValid:
     """
     MAIN IDEA
     ---------
-    ALL WHAT PASSED INTO INIT WOULD PASS INTO VALIDATOR() AFTER FIRST ARG (OTHER)
+    ALL not defined here ARGS/KWARGS WHAT PASSED INTO INIT WOULD PASS INTO VALIDATOR()
 
     NOTE
     ----
@@ -43,8 +43,8 @@ class Base_EqValid:
             pass
             ...
 
-        dump_attrs(Cls(), skip_names=[exit, call1, call2, call3])
-        dump_attrs(Cls(), skip_names=[exit, EqValid_Startswith(call)])
+        dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
+        dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
     """
     VALIDATOR: TYPE__VALID_VALIDATOR    # DEFINE!!!
 
@@ -56,7 +56,13 @@ class Base_EqValid:
     OTHER_RAISED: bool = None
     OTHER_FINAL: Any | Exception = None
 
-    def __init__(self, *v_args, reverse: bool = None, **v_kwargs) -> None:
+    def __init__(self, *v_args, validator: TYPE__VALID_VALIDATOR = None, reverse: bool = None, **v_kwargs) -> None:
+        """
+        :param validator: dont use! define in new class as attribute
+        """
+        if validator is not None:
+            self.VALIDATOR = validator
+
         if reverse is not None:
             self.REVERSE = reverse
 

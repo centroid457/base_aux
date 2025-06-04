@@ -22,7 +22,26 @@ def _ExpectAux__eq_in__direct_reverse(eq_cls, args, other, _EXPECTED) -> None | 
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def test__EqValidObj_usage():
+@pytest.mark.parametrize(
+    argnames="validator, other, _EXPECTED",
+    argvalues=[
+        (bool, None, False),
+        (bool, 0, False),
+        (bool, 1, True),
+        (bool, 2, True),
+        (bool, LAMBDA_TRUE, True),
+        (bool, LAMBDA_FALSE, False),
+    ]
+)
+def test__0_Base_EqValid(validator, other, _EXPECTED):
+    ExpectAux(Base_EqValid(validator=validator) == other).check_assert(_EXPECTED)
+    ExpectAux(Base_EqValid(validator=validator, reverse=True) == other).check_assert(not _EXPECTED)
+
+    ExpectAux(other in Base_EqValid(validator=validator)).check_assert(_EXPECTED)
+    ExpectAux(other in Base_EqValid(validator=validator, reverse=True)).check_assert(not _EXPECTED)
+
+
+def test__0_EqValidObj_usage():
     assert 1 == EqValid_BoolTrue()
     assert 1 in EqValid_BoolTrue()
     assert 0 not in EqValid_BoolTrue()
