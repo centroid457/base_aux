@@ -1,7 +1,7 @@
 from typing import *
 import re
 
-from base_aux.aux_attr.m4_dump import *
+from base_aux.aux_attr.m4_dump_dumped import *
 from base_aux.base_statics.m4_enums import *
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable import CallableAux
@@ -48,7 +48,7 @@ class AttrAux(NestInit_Source):
         elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
-            raise Exx__Incompatible(self._ATTRS_STYLE)
+            raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
     # -----------------------------------------------------------------------------------------------------------------
     pass
@@ -85,7 +85,7 @@ class AttrAux(NestInit_Source):
             if name_private_ext:
                 name = name_private_ext
 
-            # if self.name__check_is_method(name):    # FIXME: DONT SUE HERE!!! or resolve what to do!!!
+            # if self.name__check_is_method(name):    # FIXME: DONT USE HERE!!! or resolve what to do!!!
             #     continue
 
             # direct user attr ----------
@@ -715,7 +715,7 @@ class AnnotsAllAux(AttrAux):
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 @final
 class AnnotsLastAux(AttrAux):
     """
