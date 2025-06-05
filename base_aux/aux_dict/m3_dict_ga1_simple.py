@@ -1,11 +1,11 @@
-from base_aux.aux_dict.m2_ignorecase import DictIgnorecase
+from base_aux.aux_dict.m2_ignorecase import DictIcKeys
 from base_aux.aux_types.m2_info import ObjectInfo
 
 from base_aux.base_nest_dunders.m1_init2_annots3_required import *
 
 
 # =====================================================================================================================
-class DictAttr(DictIgnorecase):
+class DictGa(DictIcKeys):
     """
     dot.notation access to dictionary keys.
     RULES
@@ -130,7 +130,7 @@ class DictAttr(DictIgnorecase):
     def __getitem__(self, item: Any) -> Any | NoReturn:
         result = self.get(item)         # thats wrong with NESTING! not will working with saving results!!!
         if isinstance(result, dict):
-            result = DictAttr(result)
+            result = DictGa(result)
 
         return result
 
@@ -146,9 +146,9 @@ class DictAttr(DictIgnorecase):
 
 
 # =====================================================================================================================
-class DictAttrAnnotRequired(DictAttr, NestInit_AnnotsRequired):
+class DictGaAnnotRequired(DictGa, NestInit_AnnotsRequired):
     """
-    its a derivative for DictAttr with applying NestInit_AnnotsRequired
+    its a derivative for DictGa with applying NestInit_AnnotsRequired
 
     WHY NOT 1=just simple nesting NestInit_AnnotsRequired?
     --------------------------------------------
@@ -182,7 +182,7 @@ class DictAttrAnnotRequired(DictAttr, NestInit_AnnotsRequired):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    class Cls(DictAttrAnnotRequired):
+    class Cls(DictGaAnnotRequired):
         ATTR1: str
 
     victim = Cls()

@@ -2,7 +2,7 @@ import datetime
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from base_aux.aux_dict.m3_dict_attr1_simple import *
+from base_aux.aux_dict.m3_dict_ga1_simple import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
 from base_aux.loggers.m1_logger import *
@@ -62,7 +62,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # INSTANCE ------------------------------------
     INDEX: int
-    SETTINGS: DictAttr = {}
+    SETTINGS: DictGa = {}
 
     result__startup: TYPING__RESULT_W_EXX = None
     result__teardown: TYPING__RESULT_W_EXX = None

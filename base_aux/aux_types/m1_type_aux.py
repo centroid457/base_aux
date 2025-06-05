@@ -315,7 +315,7 @@ class TypeAux(NestInit_Source):
             """
             created specially for
             ---------------------
-            DictAttrAnnotRequired(dict)
+            DictGaAnnotRequired(dict)
             it is not working without it!!!
             """
             mro = ()

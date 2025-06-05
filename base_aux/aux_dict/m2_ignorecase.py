@@ -4,7 +4,7 @@ from base_aux.aux_values.m0_novalue import *
 
 
 # =====================================================================================================================
-class DictIgnorecase(dict):
+class DictIcKeys(dict):
     """
     just a Caseinsense dict
     """
