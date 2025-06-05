@@ -7,7 +7,7 @@ from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m1_callable import CallableAux
 from base_aux.aux_types.m1_type_aux import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
-from base_aux.aux_cmp_eq.m3_eq_valid1_base import Base_EqValid
+from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
 
 
 # =====================================================================================================================

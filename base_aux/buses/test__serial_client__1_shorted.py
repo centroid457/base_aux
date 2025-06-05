@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.valid.m2_valid_base import *
-from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_values.m2_variants import *
 from base_aux.aux_values.m3_unit import *
 from base_aux.buses.m1_serial1_client import *

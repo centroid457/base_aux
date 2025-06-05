@@ -1,7 +1,7 @@
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.base_statics.m3_primitives import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================

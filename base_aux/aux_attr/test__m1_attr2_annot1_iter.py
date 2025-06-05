@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import NestGAI_AnnotAttrIC
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================

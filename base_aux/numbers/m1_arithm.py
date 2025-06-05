@@ -3,11 +3,11 @@ import math
 from base_aux.base_statics.m1_types import *
 from base_aux.aux_types.m2_info import *
 
-from base_aux.aux_cmp_eq.m1_cmp import *
+from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class ArithmApplyToAttr(NestCmp):
+class ArithmApplyToAttr(NestCmp_LGET):
     """
     GOAL
     ----

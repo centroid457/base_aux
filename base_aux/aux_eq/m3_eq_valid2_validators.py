@@ -1,5 +1,5 @@
 from base_aux.valid.m1_aux_valid_lg import *
-from base_aux.aux_cmp_eq.m2_eq_aux import *
+from base_aux.aux_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================

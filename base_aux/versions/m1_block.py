@@ -1,5 +1,5 @@
-from base_aux.aux_cmp_eq.m1_cmp import *
-from base_aux.aux_cmp_eq.m0_types import *
+from base_aux.base_nest_dunders.m7_cmp import *
+from base_aux.aux_eq.m0_types import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
 
@@ -11,7 +11,7 @@ TYPE__VERSION_BLOCK_ELEMENTS_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_EL
 
 
 # =====================================================================================================================
-class VersionBlock(NestCmp, NestRepr__ClsName_SelfStr):
+class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
     """
     this is exact block in version string separated by dots!!!
 

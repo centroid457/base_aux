@@ -1,4 +1,4 @@
-from base_aux.aux_cmp_eq.m4_eq_valid_chain import *
+from base_aux.aux_eq.m4_eq_valid_chain import *
 from base_aux.base_nest_dunders.m3_calls import *
 
 

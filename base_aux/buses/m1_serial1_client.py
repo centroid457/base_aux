@@ -12,7 +12,7 @@ from base_aux.loggers.m1_logger import Logger
 from serial import Serial, PortNotOpenError
 from serial.tools import list_ports
 from base_aux.aux_values.m3_unit import *
-from base_aux.aux_cmp_eq.m2_eq_aux import EqAux
+from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.aux_callable.m2_lambda3_list import *
 
 from base_aux.buses.m0_history import HistoryIO

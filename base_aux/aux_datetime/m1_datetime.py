@@ -2,7 +2,7 @@ import datetime
 import time
 
 from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.aux_cmp_eq.m1_cmp import *
+from base_aux.base_nest_dunders.m7_cmp import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_statics.m2_exceptions import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
@@ -98,7 +98,7 @@ TYPE__DT_DRAFT = TYPE__DT_FINAL | str | float | None    #  | int    # NOTE: int 
 
 # =====================================================================================================================
 # @final    # select styles
-class DateTimeAux(NestCmp, NestRepr__ClsName_SelfStr):
+class DateTimeAux(NestCmp_LGET, NestRepr__ClsName_SelfStr):
     SOURCE: TYPE__DT_FINAL = None
     STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
     UPDATE_ON_STR: bool = None

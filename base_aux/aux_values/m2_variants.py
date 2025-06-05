@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_cmp_eq.m2_eq_aux import *
+from base_aux.aux_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================

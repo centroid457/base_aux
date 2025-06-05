@@ -1,9 +1,9 @@
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_cmp_eq.m1_cmp import *
+from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class Victim(NestCmp):
+class Victim(NestCmp_LGET):
     def __init__(self, val):
         self.VAL = val
 

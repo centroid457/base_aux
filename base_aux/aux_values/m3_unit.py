@@ -7,7 +7,7 @@ from base_aux.aux_values.m0_novalue import NoValue
 from base_aux.aux_attr.m2_annot3_cls_keys_as_values import NestGaCls_AnnotNamesAsValuesIc
 from base_aux.numbers.m1_arithm import ArithmApplyToAttr
 
-from base_aux.aux_cmp_eq.m2_eq_aux import *
+from base_aux.aux_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.testplans.devices import *
 from base_aux.buses.m1_serial2_client_derivatives import *
-from base_aux.aux_cmp_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================

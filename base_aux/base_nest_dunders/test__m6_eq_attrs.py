@@ -1,4 +1,4 @@
-from base_aux.base_nest_dunders.m6_eq_attrs import *
+from base_aux.base_nest_dunders.m6_eq1_attrs import *
 from base_aux.aux_attr.m4_kits import *
 
 
