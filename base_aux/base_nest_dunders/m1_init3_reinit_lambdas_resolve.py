@@ -28,7 +28,7 @@ class NestInit_AttrsLambdaResolve:
     """
 
     def __init__(self, *args, **kwargs) -> None | NoReturn:
-        for name in AttrAux(self).iter__names_not_private():
+        for name in AttrAux(self).iter__names_filter__not_private():
             try:        # smtimes it isnot correct!!! some objects have many attrs Properties then could Raise!
                 value = getattr(self, name)
             except:

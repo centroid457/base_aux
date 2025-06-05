@@ -21,7 +21,9 @@ class AttrAux(NestInit_Source):
     """
     NOTE
     ----
-    1. if there are several same aux_attr in different cases - you should resolve it by yourself!
+    1. if there are several same aux_attr in different cases - you should resolve it by yourself!- what it is about???!
+    2. ITERAING names
+        - DONT intend iterate PRIVATEs! - it is just for information! yoг cant use it to get values!
 
     ANNOTS
     ------
@@ -59,9 +61,16 @@ class AttrAux(NestInit_Source):
         return TypeAux(value).check__callable_meth()
 
     # =================================================================================================================
-    def ITER_NAMES_SOURCE(self) -> Iterable[TYPING__NAME_FINAL]:
+    def ITER_NAMES_EXISTED_OR_ANNOTS(self) -> Iterable[TYPING__NAME_FINAL]:
+        """
+        GOAL
+        ----
+        iterator names depends on
+            - existed
+            - annots
+        """
         if self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ATTRS_EXISTED:
-            yield from self.iter__attrs_external_not_builtin()
+            yield from self.iter__dirnames_original_not_builtin()
         elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
@@ -73,20 +82,15 @@ class AttrAux(NestInit_Source):
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
-    def iter__attrs_external_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__dirnames_original_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
         """
-        NOTE
-        ----
-        BEST WAY TO USE EXACTLY iter__not_private
-
         GOAL
         ----
-        1/ iter ALL (without builtins)!!!
-        2/ use EXT private names!
+        BASE ITERATOR for all dirnames codeOriginal userNames!!!
 
-        SPECIALLY CREATED FOR
-        ---------------------
-        this class - all iterations!
+        1/ iter ALL (without builtins)!!! - so it makes BASE iterator for overall names
+        2/ use private names in ORIGIN!
+        3/ if you need apply any filter on
         """
         for name in dir(self.SOURCE):
             # filter-1 skip ----------
@@ -97,13 +101,8 @@ class AttrAux(NestInit_Source):
             if name.startswith("__") and name.endswith("__"):
                 continue
 
-            # filter private external ----------
-            try:
-                name_private_ext = self.get_name__private_external(name)
-                if name_private_ext is not None:
-                    name = name_private_ext
-            except:
-                continue
+            # rename private original ----------
+            name = self.try_rename__private_original(name)
 
             # if self.name__check_is_method(name):    # FIXME: DONT USE HERE!!! or resolve what to do!!!
             #     continue
@@ -112,10 +111,18 @@ class AttrAux(NestInit_Source):
             # print(f"{name=}")
             yield name
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def iter__names(self, attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+        yield from []
+
+    # =================================================================================================================
+    def iter__names_filter(self, attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+        """
+        GOAL
+        ----
+        iter names with filter
+        from ITER_NAMES_EXISTED_OR_ANNOTS
+        """
         # -------------------------------------------------
-        for name in self.ITER_NAMES_SOURCE():
+        for name in self.ITER_NAMES_EXISTED_OR_ANNOTS():
             if name in self.SKIP_NAMES:
                 continue
 
@@ -137,40 +144,34 @@ class AttrAux(NestInit_Source):
             else:
                 raise Exx__Incompatible(f"{attr_level=}")
 
-    def iter__names_not_hidden(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__not_hidden(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
         ----
         hidden names are more simple to detect then private!
         cause of private methods(!) changes to "_<ClsName><__MethName>"
         """
-        return self.iter__names(Enum_AttrScope.NOT_HIDDEN)
+        return self.iter__names_filter(Enum_AttrScope.NOT_HIDDEN)
 
-    def iter__names_not_private(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__not_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         NOTE
         ----
         BEST WAY TO USE EXACTLY iter__not_private
         """
-        return self.iter__names(Enum_AttrScope.NOT_PRIVATE)
+        return self.iter__names_filter(Enum_AttrScope.NOT_PRIVATE)
 
-    def iter__names_private(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
+        NOTE
+        ----
         BUILTIN - NOT INCLUDED!
-
-        NOTE
-        ----
-        BEST WAY TO USE EXACTLY iter__not_private
 
         GOAL
         ----
         collect all privates in original names! without ClassName-Prefix
-
-        BEST IDEA
-        ---------
-        keep list of iters
         """
-        return self.iter__names(Enum_AttrScope.PRIVATE)
+        return self.iter__names_filter(Enum_AttrScope.PRIVATE)
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
@@ -189,6 +190,7 @@ class AttrAux(NestInit_Source):
             # NestSA_AttrAnycase, NestSI_AttrAnycase,
         )
 
+    # -----------------------------------------------------------------------------------------------------------------
     def iter__annot_names(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         iter all (with not existed)
@@ -197,9 +199,12 @@ class AttrAux(NestInit_Source):
 
     def iter__annot_values(self) -> Iterable[Any]:
         """
-        only existed
+        NOTE
+        ----
+        only existed and not Raised! - skip otherwise!
         """
-        for name in self.list__annots():
+        # TODO: decide what to do with 1. notExisted value, 2. existedRaised (property) 3. existedCallable
+        for name in self.iter__annot_names():
             try:
                 yield self.gai_ic(name)
             except:
@@ -207,6 +212,11 @@ class AttrAux(NestInit_Source):
 
     # -----------------------------------------------------------------------------------------------------------------
     def list__annots(self) -> list[TYPING__NAME_FINAL]:
+        """
+        GOAL
+        ----
+        symply just add list instead of iterator!
+        """
         return list(self.dump_dict__annot_types())
 
     # =================================================================================================================
@@ -225,7 +235,7 @@ class AttrAux(NestInit_Source):
         ---------------------
         Nest_AttrKit
         """
-        for attr in self.iter__names_not_private():
+        for attr in self.iter__names_filter__not_private():
             try:
                 value = getattr(self.SOURCE, attr)
             except:
@@ -261,17 +271,12 @@ class AttrAux(NestInit_Source):
             self.sai_ic(name, value)
 
     # =================================================================================================================
-    def get_name__private_external(self, dirname: str) -> TYPING__NAME_FINAL | None:
+    def try_rename__private_original(self, dirname: str) -> TYPING__NAME_FINAL:
         """
-        typically BUILTIN - NOT INCLUDED!
-
-        NOTE
-        ----
-        BEST WAY TO USE EXACTLY iter__not_private
-
         GOAL
         ----
-        using name (from dir(obj)) return user-friendly name! external name!
+        try rename attr name for private code-original or return old name
+        using name (from dir(obj)) return user-friendly code-original name!
 
         REASON
         ------
@@ -293,13 +298,13 @@ class AttrAux(NestInit_Source):
         """
         # filter not hidden -------
         if not dirname.startswith("_"):
-            return
+            return dirname
 
         # filter private builtin -------
         if dirname.startswith("__"):
-            return
+            return dirname
 
-        # parse private user -------
+        # parse private code-original name -------
         if re.fullmatch(r"_.+__.+", dirname):
             # print(f"{dirname=}")
             # print(f"{self.SOURCE=}")
@@ -311,11 +316,12 @@ class AttrAux(NestInit_Source):
                 mro = self.SOURCE.__class__.__mro__
                 # print(f"{mro=}")
 
-            # fixme: cant solve problem for NestGa_Prefix_RaiseIf! in case of _GETATTR__PREFIXES!!!
             for cls in mro:
                 if dirname.startswith(f"_{cls.__name__}__"):
-                    name_external = dirname.replace(f"_{cls.__name__}", "")
-                    return name_external
+                    name_original = dirname.replace(f"_{cls.__name__}", "")
+                    return name_original
+
+        return dirname
 
     # -----------------------------------------------------------------------------------------------------------------
     def name_ic__get_original(self, name_index: TYPING__NAME_DRAFT) -> TYPING__NAME_FINAL | None:
@@ -323,6 +329,7 @@ class AttrAux(NestInit_Source):
         get attr name_index in original register
         """
         name_index = str(name_index)
+        name_index = str(name_index).strip()
 
         # name as index for annots -------
         index = None
@@ -335,12 +342,10 @@ class AttrAux(NestInit_Source):
             return self.list__annots()[index]  # dont place in try sentence
 
         # name as str for annots/attrs ------
-        name_index = str(name_index).strip()
-
         if not name_index:
             return
 
-        for name_original in self.iter__attrs_external_not_builtin():
+        for name_original in self.iter__dirnames_original_not_builtin():
             if name_original.lower() == name_index.lower():
                 return name_original
 
@@ -595,12 +600,18 @@ class AttrAux(NestInit_Source):
                 _result_i.update(result)
                 result = _result_i
         elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
-            result = dict(self.__annotations__)
+            result = dict(self.SOURCE.__annotations__)
 
         else:
             raise Exx__Incompatible(f"{self._ANNOTS_DEPTH=}")
 
-        return result
+        # rename private original -------------------
+        result_final: dict[str, type[Any]] = dict()
+        for name, value in result.items():
+            # filter private external ----------
+            name = self.try_rename__private_original(name)
+            result_final.update({name: value})
+        return result_final
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_dict(
@@ -628,7 +639,7 @@ class AttrAux(NestInit_Source):
         """
         skip_names = skip_names or []
         result = {}
-        for name in self.iter__names_not_private():
+        for name in self.iter__names_filter__not_private():
             # skip is attr not exist
             if not self.name__check_have_value(name):
                 continue

@@ -25,7 +25,7 @@ class NestEq_AttrsNotPrivate:
             return False
 
         try:
-            for attr in AttrAux(self).iter__names_not_private():
+            for attr in AttrAux(self).iter__names_filter__not_private():
                 # 1=cmp direct --------
                 value_self_direct = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
                 value_other_direct = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
@@ -54,7 +54,7 @@ class NestEq_AttrsNotHidden:
             return False
 
         try:
-            for attr in AttrAux(self).iter__names_not_hidden():
+            for attr in AttrAux(self).iter__names_filter__not_hidden():
                 # 1=cmp direct --------
                 value_self_direct = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
                 value_other_direct = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)

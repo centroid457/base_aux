@@ -34,17 +34,17 @@ class Base_AttrDictDumping(NestInit_Source, NestCall_Resolve):
         result_obj = None
 
         if self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ATTRS_EXISTED:
-            result_obj = AttrAux(self.SOURCE)
+            result_obj = AttrAux(self.SOURCE, *self.SKIP_NAMES)
         elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
             if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED:
-                result_obj = AnnotsAllAux(self.SOURCE)
+                result_obj = AnnotsAllAux(self.SOURCE, *self.SKIP_NAMES)
             elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
-                result_obj = AnnotsLastAux(self.SOURCE)
+                result_obj = AnnotsLastAux(self.SOURCE, *self.SKIP_NAMES)
         else:
             raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
         # result -----
-        return result_obj.dump_dict(*self.SKIP_NAMES)
+        return result_obj.dump_dict()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -88,22 +88,23 @@ class VictimAt:
 
 
 class VictimAn:
-    an1: int = 1
-    _an1: int = 11
-    __an1: int = 111
+    an2: int = 2
+    _an2: int = 22
+    __an2: int = 222
 
 
 class VictimAnNest(VictimAn):
-    an2: int = 1
-    _an2: int = 11
-    __an2: int = 111
+    an3: int = 3
+    _an3: int = 33
+    __an3: int = 333
 
 
 @pytest.mark.parametrize(
     argnames="source, skip_names, _EXPECTED",
     argvalues=[
         (VictimAt(), [], [{"at1": 1, "_at1": 11}, {}, {}]),
-        (VictimAn(), [], [{"an1": 1, "_an1": 11}, {"an1": 1, "_an1": 11}, {"an1": 1, "_an1": 11}]),
+        (VictimAn(), [], [{"an2": 2, "_an2": 22}, {"an2": 2, "_an2": 22}, {"an2": 2, "_an2": 22}]),
+        (VictimAnNest(), [], [{"an2": 2, "_an2": 22, "an3": 3, "_an3": 33}, {"an2": 2, "_an2": 22, "an3": 3, "_an3": 33}, {"an3": 3, "_an3": 33}]),
     ]
 )
 def test__names(source, skip_names, _EXPECTED):

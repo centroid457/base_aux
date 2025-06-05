@@ -16,7 +16,7 @@ class NestContains_AttrIcNoPrivate:
     dont use in Nest* classes - it can used only in FINALs!!! cause it can have same or meaning is not appropriate!
     """
     def __contains__(self, item: Any) -> bool:
-        return IterAux([*AttrAux(self).iter__names_not_private()]).item__get_original(item) not in [NoValue, None]
+        return IterAux([*AttrAux(self).iter__names_filter__not_private()]).item__get_original(item) not in [NoValue, None]
         # return AttrAux(self).name_ic__check_exists(item)
 
 
@@ -32,7 +32,7 @@ class NestContains_AttrIcNotHidden:
     dont use in Nest* classes - it can used only in FINALs!!! cause it can have same or meaning is not appropriate!
     """
     def __contains__(self, item: Any):
-        return IterAux([*AttrAux(self).iter__names_not_hidden()]).item__get_original(item) not in [NoValue, None]
+        return IterAux([*AttrAux(self).iter__names_filter__not_hidden()]).item__get_original(item) not in [NoValue, None]
 
 
 # =====================================================================================================================
