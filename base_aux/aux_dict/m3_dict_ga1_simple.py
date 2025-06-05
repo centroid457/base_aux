@@ -1,4 +1,4 @@
-from base_aux.aux_dict.m2_ignorecase import DictIcKeys
+from base_aux.aux_dict.m2_dict_ic import DictIcKeys
 from base_aux.aux_types.m2_info import ObjectInfo
 
 from base_aux.base_nest_dunders.m1_init2_annots3_required import *
