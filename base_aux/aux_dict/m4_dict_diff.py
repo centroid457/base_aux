@@ -4,6 +4,7 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_dict.m3_dict_ga1_simple import *
 from base_aux.base_statics.m1_types import *
+from base_aux.aux_eq.m1_eq_args import *
 
 
 # =====================================================================================================================
@@ -12,7 +13,7 @@ class DictDiff(NestCall_Resolve):
     GOAL
     ----
     get diffs from several states,
-    dicts assumed like AttrDumped objects.
+    dicts assumed like AttrDumped objects - so keys are STR.
 
     SPECIALLY CREATED FOR
     ---------------------
@@ -28,8 +29,20 @@ class DictDiff(NestCall_Resolve):
         keys = sorted(keys)
 
         result = {}
-        # for key in keys:
-        #     for
+        for key in keys:
+            # values collect -------
+            values = []
+            for DICT in self.DICTS:
+                try:
+                    value = DICT[key]
+                except Exception as exx:
+                    value = exx
+
+                values.append(value)
+
+            # values check -------
+            if EqArgs(*values):
+
 
 
 

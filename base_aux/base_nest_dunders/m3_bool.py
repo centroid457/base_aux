@@ -26,3 +26,17 @@ class NestBool_True:
 
 
 # =====================================================================================================================
+class NestBool_Resolve:
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    EqArgs
+    """
+    def __bool__(self):
+        return self.resolve()
+
+    def resolve(self) -> bool | NoReturn:
+        return NotImplemented
+
+
+# =====================================================================================================================

@@ -6,7 +6,7 @@ from base_aux.base_statics.m3_primitives import *
 
 # =====================================================================================================================
 @final
-class EqArgs(NestInit_Args_Implicit, NestCall_Resolve):
+class EqArgs(NestInit_Args_Implicit, NestCall_Resolve, NestBool_Resolve):
     """
     GOAL
     ----
@@ -29,6 +29,14 @@ class EqArgs(NestInit_Args_Implicit, NestCall_Resolve):
                 return False
 
         return True
+
+    def __eq__(self, other: Any | bool) -> bool | NoReturn:
+        if other:   # True
+            result = bool(self.resolve())
+        else:      # False
+            result = bool(self.resolve())
+
+        return result
 
 
 # =====================================================================================================================
