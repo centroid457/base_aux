@@ -40,3 +40,13 @@ class NestBool_Resolve:
 
 
 # =====================================================================================================================
+if __name__ == "__main__":
+    for victim in [NestBool_True(), NestBool_False()]:
+        result_bool_call = bool(victim)
+        print(f"{result_bool_call=}")
+
+        result_bool_if = True if victim else False
+        print(f"{result_bool_if=}")
+
+
+# =====================================================================================================================
