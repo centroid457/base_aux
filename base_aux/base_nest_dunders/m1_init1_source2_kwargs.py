@@ -3,7 +3,7 @@ from base_aux.base_statics.m1_types import *
 
 
 # =====================================================================================================================
-class NestInit_SourceKwArgs_Implicite(NestInit_Source):
+class NestInit_SourceKwArgs_Implicit(NestInit_Source):
     """
     NOTE
     ----
@@ -25,7 +25,7 @@ class NestInit_SourceKwArgs_Implicite(NestInit_Source):
 # =====================================================================================================================
 class NestInit_SourceKwArgs_Explicite(NestInit_Source):
     """
-    MORE USEFUL THEN NestInit_SourceKwArgs_Implicite
+    MORE USEFUL THEN NestInit_SourceKwArgs_Implicit
 
     GOAL
     ----

@@ -7,7 +7,7 @@ from base_aux.aux_eq.m2_eq_aux import *
 
 
 # =====================================================================================================================
-class Lambda(NestInit_SourceKwArgs_Implicite):
+class Lambda(NestInit_SourceKwArgs_Implicit):
     """
     IDEA
     ----
