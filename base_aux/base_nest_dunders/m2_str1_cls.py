@@ -7,7 +7,10 @@ class Meta_StrCls_ClsName(type):
     GOAL
     ----
     return cls name from str(Class or inst.__class__)!
-    dont work on instance!
+
+    NOTE
+    ----
+    dont work on instance! - for this purpose add same instance method!!!
     """
     def __str__(cls) -> str:
         return cls.__name__

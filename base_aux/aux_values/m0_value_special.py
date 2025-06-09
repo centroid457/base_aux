@@ -35,9 +35,10 @@ class Base_ValueSpecial:
 # =====================================================================================================================
 class NoValue(Base_ValueSpecial):
     """
-    # TODO: DEPRECATE???=====NO! used in valid/value
-    ---------
-    use direct ArgsEmpty???/ArgsKwargs()??
+    DOUPTS
+    ------
+    1. DEPRECATE???=====NO! used in valid/value
+    2. use direct ArgsEmpty???/ArgsKwargs()??
 
     GOAL
     ----
@@ -96,6 +97,8 @@ class _ValueSpecial:
     GOAL
     ----
     just a collection for special values!
+
+    USE instance!
     """
     NOVALUE: type[NoValue] = NoValue
     GA_NOTEXISTS: type[GA_NotExists] = GA_NotExists
