@@ -11,8 +11,8 @@ from base_aux.base_singletons.m1_singleton import *
 @pytest.mark.parametrize(
     argnames="Victim",
     argvalues=[
-        SingletonCallMeta,
-        SingletonNew
+        Singleton_CallMeta,
+        Singleton_New
     ]
 )
 def test__no_args(Victim):
@@ -33,9 +33,9 @@ def test__no_args(Victim):
     try:
         assert Victim1()._SINGLETONS == [Victim1(), ]
     except:
-        assert Victim == SingletonCallMeta
+        assert Victim == Singleton_CallMeta
     else:
-        assert Victim == SingletonNew
+        assert Victim == Singleton_New
 
     assert Victim2().attr == 2
     Victim2().attr = 22
@@ -45,15 +45,15 @@ def test__no_args(Victim):
     try:
         assert Victim2()._SINGLETONS == [Victim1(), Victim2()]
     except:
-        assert Victim == SingletonCallMeta
+        assert Victim == Singleton_CallMeta
     else:
-        assert Victim == SingletonNew
+        assert Victim == Singleton_New
 
     assert Victim1().attr == 11
 
 
 def test__META_with_args():
-    Victim = SingletonCallMeta
+    Victim = Singleton_CallMeta
     Victim._drop_all()
     class Victim1(Victim):
         def __init__(self, attr):
@@ -75,7 +75,7 @@ def test__META_with_args():
 
 
 def test__NoMETA_with_args():
-    Victim = SingletonNew
+    Victim = Singleton_New
     Victim._drop_all()
     class Victim1(Victim):
         def __init__(self, attr):
@@ -95,7 +95,7 @@ def test__NoMETA_with_args():
 def test__META_nesting_else_one_meta():
     # cant use else one metaclass in nesting!
     try:
-        class Victim1(SingletonCallMeta, abc.ABC):
+        class Victim1(Singleton_CallMeta, abc.ABC):
             attr = 1
     except TypeError:
         msg = """
@@ -106,14 +106,14 @@ def test__META_nesting_else_one_meta():
     else:
         assert False
 
-    class Victim2(SingletonNew, abc.ABC):
+    class Victim2(Singleton_New, abc.ABC):
         attr = 2
     assert Victim2().attr == 2
     Victim2().attr = 22
     assert Victim2().attr == 22
 
 
-@pytest.mark.parametrize(argnames="Victim", argvalues=[SingletonCallMeta, SingletonNew])
+@pytest.mark.parametrize(argnames="Victim", argvalues=[Singleton_CallMeta, Singleton_New])
 def test__threading_spawn(Victim):
     class Victim1(Victim):
         def __init__(self):
@@ -135,7 +135,7 @@ def test__threading_spawn(Victim):
         assert thread.is_alive() is False
 
 
-@pytest.mark.parametrize(argnames="Victim", argvalues=[SingletonCallMeta, SingletonNew])
+@pytest.mark.parametrize(argnames="Victim", argvalues=[Singleton_CallMeta, Singleton_New])
 def test__several_levels_at_ones__low(Victim):
     class VictimBase2(Victim):
         attr = 0
@@ -153,7 +153,7 @@ def test__several_levels_at_ones__low(Victim):
         assert False
 
 
-@pytest.mark.parametrize(argnames="Victim", argvalues=[SingletonCallMeta, SingletonNew])
+@pytest.mark.parametrize(argnames="Victim", argvalues=[Singleton_CallMeta, Singleton_New])
 def test__several_levels_at_ones__up(Victim):
     class VictimBase2(Victim):
         attr = 0

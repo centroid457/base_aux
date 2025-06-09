@@ -27,7 +27,7 @@ class Exx_SingletonNestingLevels(Exception):
 
 
 # =====================================================================================================================
-class SingletonManagerBase:
+class Base_SingletonManager:
     """Base (manager) for classes to create singletons.
 
     GOALS:
@@ -123,7 +123,7 @@ class SingletonManagerBase:
 
 
 # =====================================================================================================================
-class SingletonCallMetaType(SingletonManagerBase, type):
+class Meta_SingletonCall(Base_SingletonManager, type):
     """metaclass which create the singletons by Call method
 
     USAGE
@@ -157,8 +157,8 @@ class SingletonCallMetaType(SingletonManagerBase, type):
         return cls.__INSTANCE
 
 
-class SingletonCallMeta(metaclass=SingletonCallMetaType):
-    """same as original metaclass SingletonCallMetaType but just an another variant of using it by simple nesting
+class Singleton_CallMeta(metaclass=Meta_SingletonCall):
+    """same as original metaclass Meta_SingletonCall but just an another variant of using it by simple nesting
     (without direct using metaclass parameter).
 
     USAGE
@@ -175,7 +175,7 @@ class SingletonCallMeta(metaclass=SingletonCallMetaType):
 
 
 # =====================================================================================================================
-class SingletonNew(SingletonManagerBase):
+class Singleton_New(Base_SingletonManager):
     """Singleton manager, creating them by using NEW method without metaclassing
     else one variant after SingletonWMetaCall, in case of metaclass is not acceptable.
 

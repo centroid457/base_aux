@@ -7,7 +7,7 @@ from base_aux.aux_callable.m2_lambda2_thread import LambdaThread
 
 
 # =====================================================================================================================
-class ThreadsDecorCollector(SingletonCallMeta):
+class ThreadsDecorCollector(Singleton_CallMeta):
     """
     TODO: DEPRECATE??? use clearly direct other methods/objects!
 

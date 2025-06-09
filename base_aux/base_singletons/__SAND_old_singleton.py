@@ -11,7 +11,7 @@ import threading
 
 # SINGLETON ===========================================================================================================
 # 1=NEW======= USE!
-class MetaSingleton(type):   # starichenko
+class Meta_Singleton(type):   # starichenko
     def __call__(cls, *args, **kwargs):
         if not hasattr(cls, '__INSTANCE'):
             # FIRST VARIANT -------------------- cant create independent singletones!

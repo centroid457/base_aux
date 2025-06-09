@@ -63,6 +63,7 @@ pass
 pass
 pass
 
+
 class NestStR_AttrsPattern:
     """
     GOAL

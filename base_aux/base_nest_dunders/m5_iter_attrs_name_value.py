@@ -18,6 +18,7 @@ class NestIter_AttrNameValueNotHidden:
             value = getattr(self, name)
             yield name, value
 
+
 # =====================================================================================================================
 class NestIter_AnnotNameValueNotPrivate:
     """
