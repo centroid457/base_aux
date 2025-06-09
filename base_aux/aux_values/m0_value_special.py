@@ -70,20 +70,7 @@ class NoValue(Base_ValueSpecial):
 
 
 # =====================================================================================================================
-class GA_NotExists(Base_ValueSpecial):
-    """
-    GOAL
-    ----
-    separate results for getattr()
-    manly using final value NOT_EXISTED when CMP several values
-
-    SPECIALLY CREATED FOR
-    ---------------------
-    DictDiff
-    """
-
-
-class GA_Raised(Base_ValueSpecial):
+class Raised(Base_ValueSpecial):
     """
     GOAL
     ----
@@ -101,8 +88,7 @@ class _ValueSpecial:
     USE instance!
     """
     NOVALUE: type[NoValue] = NoValue
-    GA_NOTEXISTS: type[GA_NotExists] = GA_NotExists
-    GA_RAISED: type[GA_Raised] = GA_Raised
+    RAISED: type[Raised] = Raised
 
     def __iter__(self) -> Iterable[type]:
         """

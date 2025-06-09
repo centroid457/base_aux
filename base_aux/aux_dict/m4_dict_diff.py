@@ -33,10 +33,13 @@ class DictDiff(NestCall_Resolve):
             # values collect -------
             values = []
             for DICT in self.DICTS:
-                try:
-                    value = DICT[key]
-                except Exception as exx:
-                    value = exx
+                if key not in DICT:
+                    value = VALUE_SPECIAL.NOVALUE
+                else:
+                    try:
+                        value = DICT[key]
+                    except :
+                        value = VALUE_SPECIAL.RAISED
 
                 values.append(value)
 
@@ -75,26 +78,19 @@ from base_aux.base_nest_dunders.m7_cmp import *
         ([{}, {}], {}),
         ([{}, {}, {}], {}),
 
-        # blank ------------
+        # diffs ------------
         ([{1:1}, {1:1}], {}),
         ([{1: 1}, {1: 11}], {1: [1, 11]}),
         ([{1: 1}, {1: 11}, {1: 111}], {1: [1, 11, 111]}),
+
+        # NOVALUE ------------
+        ([{1: 1}, {}], {1: [1, VALUE_SPECIAL.NOVALUE]}),
+        ([{1: 1}, {}, {1:11}], {1: [1, VALUE_SPECIAL.NOVALUE, 11]}),
     ]
 )
 def test__resolve__eq(dicts, _EXPECTED):
     func_link = lambda: DictDiff(*dicts).resolve()
     ExpectAux(func_link).check_assert(_EXPECTED)
 
-
-# =====================================================================================================================
-@pytest.mark.parametrize(
-    argnames="dicts, _EXPECTED",
-    argvalues=[
-        ([{1: 1}, {}], {1: [1, ]}),
-    ]
-)
-def test__resolve__eq__NOVALUE(dicts, _EXPECTED):
-    func_link = lambda: DictDiff(*dicts).resolve()
-    ExpectAux(func_link).check_assert(_EXPECTED)
 
 # =====================================================================================================================
