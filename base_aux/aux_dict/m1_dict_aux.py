@@ -195,6 +195,34 @@ class Base_DictAux(NestInit_Source):
 
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def __str__(self) -> str:
+        return self.pretty_str()
+
+    def pretty_str(self, name: str = None, _level: int = 1) -> str:
+        """
+        GOAL
+        ----
+        get and print string pretty!
+        """
+        if name is None:
+            name: str = "PRETTY_DICT"
+        else:
+            name = str(name)
+
+        load = ""
+
+        for key, value in self.SOURCE.items():
+            load += f"\n  {key}={value}"
+
+        if not load:
+            result = f"{name}={{}}"
+        else:
+            result = f"{name}={{{load}\n}}"
+
+        print(result)
+        return result
+
 
 # =====================================================================================================================
 @final
@@ -205,6 +233,12 @@ class DictAuxInline(Base_DictAux):
 @final
 class DictAuxCopy(Base_DictAux):
     SOURCE_INLINE_DEEPCOPY = Enum_SourceOrigOrCopy.COPY
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    DictAuxInline({1:1, 2:2}).pretty_str()
+    DictAuxInline({}).pretty_str()
 
 
 # =====================================================================================================================

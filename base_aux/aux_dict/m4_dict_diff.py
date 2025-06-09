@@ -1,4 +1,9 @@
 from base_aux.aux_eq.m1_eq_args import *
+from base_aux.aux_dict.m1_dict_aux import *
+
+
+# =====================================================================================================================
+TIPING__DICT_DIFF = dict[Any, tuple[Any, ...]]
 
 
 # =====================================================================================================================
@@ -19,11 +24,13 @@ class DictDiff(NestCall_Resolve):
     cmp two objects by attr values
     """
     DICTS: tuple[TYPING.DICT_ANY_ANY, ...]
+    DIFF: TIPING__DICT_DIFF
+    __diff: TIPING__DICT_DIFF = {}
 
     def __init__(self, *dicts: TYPING.DICT_ANY_ANY):
         self.DICTS = dicts
 
-    def resolve(self) -> dict[Any, tuple[Any, ...]]:
+    def resolve(self) -> TIPING__DICT_DIFF:
         keys: list[Any] = [key for DICT in self.DICTS for key in DICT]
         keys = sorted(keys)
 
@@ -46,9 +53,10 @@ class DictDiff(NestCall_Resolve):
             if not EqArgs(*values):
                 result.update({key: tuple(values)})
 
+        self.__diff = result
         return result
 
-    def __bool__(self) -> bool | NoReturn:
+    def __bool__(self) -> bool:
         """
         GOAL
         ----
@@ -56,7 +64,27 @@ class DictDiff(NestCall_Resolve):
             TRUE - if Diffs exists! (it looks from class name!)
             False - if NO Diffs!
         """
-        return bool(self.resolve())
+        return bool(self.DIFF)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def DIFF(self) -> TIPING__DICT_DIFF:
+        """
+        GOAL
+        ----
+        if not exists __diff value - resolve it!
+        """
+        if not self.__diff:
+            self.resolve()
+        return self.__diff
+
+    def __str__(self) -> str:
+        """
+        GOAL
+        ----
+        print pretty result
+        """
+        return DictAuxInline(self.DIFF).pretty_str()
 
 
 # =====================================================================================================================
