@@ -145,6 +145,12 @@ class EqValid_NumParsedSingle_TypeFloat(Base_EqValid):
 
 # =====================================================================================================================
 class EqValid_Regexp(Base_EqValid):
+    """
+    NOTE
+    ----
+    for one regexp - simply use this EqValid_Regexp
+    for several patterns - use other classes for clarification!
+    """
     VALIDATOR = Validators.Regexp
     BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
