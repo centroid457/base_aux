@@ -3,9 +3,8 @@ GOAL
 ----
 try keep all patterns for life!
 """
-from typing import *
-from base_aux.base_statics.m4_enums import *
-from base_aux.aux_values.m0_value_special import *
+from base_aux.aux_values.m5_enums import *
+from base_aux.aux_values.m1_value_special import *
 
 
 # =====================================================================================================================

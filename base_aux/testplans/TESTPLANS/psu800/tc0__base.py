@@ -8,7 +8,7 @@ from base_aux.valid.m1_aux_valid_lg import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.valid.m2_valid_base2_derivatives import *
 from base_aux.valid.m3_valid_chains import *
-from base_aux.aux_values.m1_value_valid_eq import *
+from base_aux.aux_values.m6_value_valid1_eq import *
 
 
 # =====================================================================================================================

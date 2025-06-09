@@ -1,8 +1,7 @@
-from typing import *
 import numpy as np
 
 from base_aux.base_nest_dunders.m1_init1_source import *
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_values.m3_exceptions import *
 from base_aux.aux_types.m2_info import *
 
 

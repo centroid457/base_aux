@@ -2,8 +2,8 @@ import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
-from base_aux.aux_values.m2_variants import *
-from base_aux.aux_values.m3_unit import *
+from base_aux.aux_values.m6_value_valid2_variants import *
+from base_aux.aux_values.m6_value_valid3_unit import *
 
 
 # =====================================================================================================================

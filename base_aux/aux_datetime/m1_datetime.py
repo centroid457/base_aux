@@ -4,7 +4,7 @@ import time
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.base_nest_dunders.m7_cmp import *
 from base_aux.aux_text.m1_text_aux import *
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_values.m3_exceptions import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
 
 

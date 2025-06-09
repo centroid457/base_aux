@@ -1,6 +1,4 @@
-from typing import *
-
-from base_aux.base_statics.m4_enums import NestEq_Enum
+from base_aux.aux_values.m5_enums import NestEq_Enum
 from base_aux.testplans.tc import Enum_TcGroup_Base
 
 

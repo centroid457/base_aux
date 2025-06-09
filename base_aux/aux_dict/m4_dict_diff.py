@@ -1,9 +1,3 @@
-from typing import *
-
-from base_aux.base_nest_dunders.m1_init1_source import *
-from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.aux_dict.m3_dict_ga1_simple import *
-from base_aux.base_statics.m1_types import *
 from base_aux.aux_eq.m1_eq_args import *
 
 
@@ -66,7 +60,6 @@ if __name__ == "__main__":
 
 # =====================================================================================================================
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================

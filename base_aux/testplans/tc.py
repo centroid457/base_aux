@@ -1,19 +1,10 @@
-import datetime
-
-from PyQt5.QtCore import QThread, pyqtSignal
-
 from base_aux.aux_dict.m3_dict_ga1_simple import *
 from base_aux.valid.m2_valid_base import *
 from base_aux.pyqt.m0_signals import *
-from base_aux.loggers.m1_logger import *
-from base_aux.aux_datetime.m1_datetime import *
 
-from base_aux.breeders.m3_table_inst import *
 from base_aux.base_nest_dunders.m6_eq2_cls import *
-from base_aux.base_statics.m4_enums import NestEq_Enum
 
 from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
-from base_aux.testplans.models import *
 from base_aux.testplans.stand import *
 
 

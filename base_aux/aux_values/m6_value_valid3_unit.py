@@ -1,8 +1,4 @@
-from typing import *
-import re
-
-from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_values.m0_value_special import NoValue
+from base_aux.aux_values.m3_exceptions import *
 
 from base_aux.aux_attr.m2_annot3_cls_keys_as_values import NestGaCls_AnnotNamesAsValuesIc
 from base_aux.numbers.m1_arithm import ArithmApplyToAttr

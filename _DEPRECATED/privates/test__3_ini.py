@@ -2,7 +2,7 @@ import pathlib
 import shutil
 from tempfile import TemporaryDirectory
 
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_values.m3_exceptions import *
 
 from base_aux.privates.m3_ini import PrivateIni, PrivateAuthIni
 

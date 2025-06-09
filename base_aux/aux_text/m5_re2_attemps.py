@@ -1,6 +1,6 @@
 from base_aux.aux_text.m5_re1_rexp import *
 from base_aux.aux_iter.m1_iter_aux import *
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_values.m3_exceptions import *
 
 
 # =====================================================================================================================

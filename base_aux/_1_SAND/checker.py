@@ -1,15 +1,7 @@
-from typing import *
-import platform
-
-from base_aux.aux_types.m1_type_aux import *
-from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_callable.m1_callable import *
-from base_aux.base_statics.m1_types import *
 from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.base_statics.m3_primitives import *
+from base_aux.aux_values.m4_primitives import *
 
 
 # =====================================================================================================================

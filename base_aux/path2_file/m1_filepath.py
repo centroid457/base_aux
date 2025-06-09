@@ -1,4 +1,4 @@
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 from base_aux.aux_types.m2_info import *
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.path1_dir.m1_dirpath import Resolve_DirPath

@@ -1,8 +1,4 @@
-from PyQt5.QtCore import QThread
-
-from base_aux.base_statics.m1_types import *
-from base_aux.aux_values.m2_variants import *
-from base_aux.aux_values.m3_unit import *
+from base_aux.aux_values.m6_value_valid2_variants import *
 
 from base_aux.buses.m1_serial1_client import *
 from base_aux.aux_iter.m1_iter_aux import IterAux

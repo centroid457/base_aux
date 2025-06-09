@@ -1,8 +1,4 @@
-from typing import *
-
-from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_eq.m2_eq_aux import *
-from base_aux.base_statics.m4_enums import *
 from base_aux.aux_types.m1_type_aux import *
 
 

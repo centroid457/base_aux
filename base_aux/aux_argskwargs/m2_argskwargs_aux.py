@@ -2,7 +2,7 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 
 from base_aux.aux_argskwargs.m1_argskwargs import ArgsKwargs
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 
 
 # =====================================================================================================================

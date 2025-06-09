@@ -1,7 +1,4 @@
-from typing import *
-
-from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 
 
 # =====================================================================================================================

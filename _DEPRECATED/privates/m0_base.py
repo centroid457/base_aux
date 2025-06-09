@@ -1,6 +1,6 @@
 import abc
 
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 

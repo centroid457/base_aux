@@ -1,10 +1,8 @@
 import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.base_statics.m4_enum0_nest_eq import NestEq_Enum
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
-from base_aux.base_statics.m4_enums import *
-from base_aux.aux_types.m2_info import *
+from base_aux.aux_values.m5_enums import *
 
 
 # =====================================================================================================================

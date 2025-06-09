@@ -1,7 +1,6 @@
-from typing import *
 import configparser
 
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 
 
 # =====================================================================================================================

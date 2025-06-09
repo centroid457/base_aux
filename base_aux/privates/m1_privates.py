@@ -1,5 +1,5 @@
 from base_aux.aux_attr.m4_kits import *
-from base_aux.base_statics.m4_enums import Enum_DictTextFormat
+from base_aux.aux_values.m5_enums import Enum_DictTextFormat
 from base_aux.path2_file.m4_fileattrs import FileAttrs_Loader
 
 

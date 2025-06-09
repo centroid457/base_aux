@@ -1,7 +1,4 @@
-from typing import *
 import pytest
-
-from base_aux.base_statics.m3_primitives import *
 
 
 class Cls:

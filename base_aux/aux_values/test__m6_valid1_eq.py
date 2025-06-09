@@ -1,9 +1,9 @@
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
-from base_aux.aux_values.m1_value_valid_eq import *
+from base_aux.aux_values.m6_value_valid1_eq import *
 from base_aux.aux_eq.m4_eq_valid_chain import *
-from base_aux.base_statics.m3_primitives import *
+from base_aux.aux_values.m4_primitives import *
 
 
 # =====================================================================================================================

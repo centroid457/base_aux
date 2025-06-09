@@ -1,9 +1,7 @@
-from typing import *
-
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.path2_file.m2_file import FileAux
 
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 from base_aux.aux_text.m0_patterns import *
 
 

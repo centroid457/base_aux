@@ -1,11 +1,7 @@
-from typing import *
 import platform
 
-from base_aux.aux_types.m1_type_aux import *
-from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.aux_callable.m1_callable import *
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 
 
 # =====================================================================================================================

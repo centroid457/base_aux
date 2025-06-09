@@ -4,6 +4,7 @@ import time
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 
 from base_aux.aux_eq.m2_eq_aux import *
+from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 
 
 # =====================================================================================================================

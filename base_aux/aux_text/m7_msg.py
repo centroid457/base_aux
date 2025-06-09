@@ -3,7 +3,6 @@
 # from base_aux.aux_text.m5_re1_rexp import *
 # from base_aux.aux_iter.m1_iter_aux import *
 # from base_aux.aux_attr.m1_attr2_nest8_iter_name_value import *
-# from base_aux.base_statics.m2_exceptions import *
 # from base_aux.base_nest_dunders.m3_nest_init_annots_attrs_by_kwargs import *
 # from base_aux.aux_datetime.m1_datetime import *
 #

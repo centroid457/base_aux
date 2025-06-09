@@ -1,6 +1,5 @@
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_eq.m3_eq_valid1_base import *
-from base_aux.base_statics.m1_types import *
+from base_aux.aux_values.m2_types import *
 
 
 # =====================================================================================================================

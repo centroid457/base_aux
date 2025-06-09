@@ -1,6 +1,4 @@
-from typing import *
-
-from base_aux.base_statics.m2_exceptions import *
+from base_aux.aux_values.m3_exceptions import *
 
 
 # =====================================================================================================================
