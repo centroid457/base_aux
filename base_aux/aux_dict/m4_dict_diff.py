@@ -40,7 +40,7 @@ class DictDiff(NestCall_Resolve):
 
                 values.append(value)
 
-            # values check -------
+            # values check eq -------
             if not EqArgs(*values):
                 result.update({key: values})
 
@@ -70,14 +70,31 @@ from base_aux.base_nest_dunders.m7_cmp import *
 @pytest.mark.parametrize(
     argnames="dicts, _EXPECTED",
     argvalues=[
+        # blank ------------
         ([{}, ], {}),
         ([{}, {}], {}),
         ([{}, {}, {}], {}),
+
+        # blank ------------
+        ([{1:1}, {1:1}], {}),
+        ([{1: 1}, {1: 11}], {1: [1, 11]}),
+        ([{1: 1}, {1: 11}, {1: 111}], {1: [1, 11, 111]}),
     ]
 )
-def test__resolve(dicts, _EXPECTED):
+def test__resolve__eq(dicts, _EXPECTED):
     func_link = lambda: DictDiff(*dicts).resolve()
     ExpectAux(func_link).check_assert(_EXPECTED)
 
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="dicts, _EXPECTED",
+    argvalues=[
+        ([{1: 1}, {}], {1: [1, ]}),
+    ]
+)
+def test__resolve__eq__NOVALUE(dicts, _EXPECTED):
+    func_link = lambda: DictDiff(*dicts).resolve()
+    ExpectAux(func_link).check_assert(_EXPECTED)
 
 # =====================================================================================================================

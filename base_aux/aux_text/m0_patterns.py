@@ -5,7 +5,7 @@ try keep all patterns for life!
 """
 from typing import *
 from base_aux.base_statics.m4_enums import *
-from base_aux.aux_values.m0_novalue import *
+from base_aux.aux_values.m0_value_special import *
 
 
 # =====================================================================================================================
