@@ -18,13 +18,13 @@ class DictDiff(NestCall_Resolve):
     ---------------------
     cmp two objects by attr values
     """
-    DICTS: tuple[TYPING.DICT_STR_ANY, ...]
+    DICTS: tuple[TYPING.DICT_ANY_ANY, ...]
 
-    def __init__(self, *dicts: TYPING.DICT_STR_ANY):
+    def __init__(self, *dicts: TYPING.DICT_ANY_ANY):
         self.DICTS = dicts
 
-    def resolve(self) -> dict[str, tuple[Any, ...]]:
-        keys: list[str] = [key for DICT in self.DICTS for key in DICT]
+    def resolve(self) -> dict[Any, tuple[Any, ...]]:
+        keys: list[Any] = [key for DICT in self.DICTS for key in DICT]
         keys = sorted(keys)
 
         result = {}
