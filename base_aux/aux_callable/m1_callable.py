@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.base_nest_dunders.m1_init1_source import *
+from base_aux.base_nest_dunders.m1_init1_source import NestInit_Source
 from base_aux.base_statics.m4_enums import *
 
 

@@ -1,7 +1,6 @@
 from typing import *
 
 from base_aux.base_statics.m2_exceptions import *
-from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 
 # =====================================================================================================================
@@ -108,7 +107,8 @@ class _ValueSpecial:
         ----
         iter values
         """
-        yield from AnnotsLastAux(self).iter__annot_values()
+        for name in self.__annotations__:
+            yield getattr(self, name)
 
     def __contains__(self, item: Any) -> bool:
         """

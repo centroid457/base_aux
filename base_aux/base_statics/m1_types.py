@@ -133,7 +133,7 @@ TYPE__VALID_BOOL__DRAFT = Union[
     bool,                               # as main idea! as already final generic
     Callable[[...], bool | Any | NoReturn],   # as main idea! to get final generic
     TYPE__VALID_EXX,
-    NoValue
+    VALUE_SPECIAL.NOVALUE
 ]
 TYPE__VALID_BOOL__FINAL = Union[
     # this is when you need get only bool! raise - as False!
