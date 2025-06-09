@@ -9,11 +9,18 @@ class NestEq_Enum(Enum):
     # ----
     # DEL=work IC only on Eq! not working with Contains and Init!!! need edit Metaclass!
 
+    CONSTRAINTS
+    -----------
+    1/ USE EqEnum: ONLY at SETTINGS values! and params values! so it is PARAMS using!!!
+    2/ DONT USE: with result values! (for this case see Base_ValueSpecial specially created!)
+
     GOAL
     ----
     add user friendly cmp objects with final values
 
-    VictimEq(1) == 1    # for std object it is False
+    for std object it is False but here its is correct!
+    assert Enum(1) != 1
+    assert NestEq_Enum(1) == 1
     """
     # TODO: add Contain classmeth???  cant understand! need metaclass!
 

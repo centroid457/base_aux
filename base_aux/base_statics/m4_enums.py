@@ -2,12 +2,6 @@ from base_aux.base_statics.m4_enum0_nest_eq import *
 
 
 # =====================================================================================================================
-"""
-see _examples below and tests to understand work
-"""
-
-
-# =====================================================================================================================
 class Enum_SingleMultiple(NestEq_Enum):
     NOT_EXISTS = None
     SINGLE = 1
