@@ -1,3 +1,5 @@
+from typing import *
+
 from base_aux.aux_values.m3_exceptions import *
 
 
@@ -74,6 +76,7 @@ class Raised(Base_ValueSpecial):
     ----
     just a mirror for GA_NotExists
     """
+    # todo: add Meta EqCls with Exx??? to cmp with exact values??? - no! use special logic when do cmp!
 
 
 # =====================================================================================================================

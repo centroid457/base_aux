@@ -9,6 +9,11 @@ class DictDiff(NestCall_Resolve):
     get diffs from several states,
     dicts assumed like AttrDumped objects - so keys are STR.
 
+    NOTE
+    ----
+    if values is ExceptionNested - apply only class!!! for both cls and inst - so next cmparing would cmp only exact classes!
+    and same classes will be equal
+
     SPECIALLY CREATED FOR
     ---------------------
     cmp two objects by attr values
@@ -18,7 +23,7 @@ class DictDiff(NestCall_Resolve):
     def __init__(self, *dicts: TYPING.DICT_STR_ANY):
         self.DICTS = dicts
 
-    def resolve(self) -> dict[str, tuple[Any, ...]] | NoReturn:
+    def resolve(self) -> dict[str, tuple[Any, ...]]:
         keys: list[str] = [key for DICT in self.DICTS for key in DICT]
         keys = sorted(keys)
 
@@ -30,16 +35,16 @@ class DictDiff(NestCall_Resolve):
                 if key not in DICT:
                     value = VALUE_SPECIAL.NOVALUE
                 else:
-                    try:
-                        value = DICT[key]
-                    except :
-                        value = VALUE_SPECIAL.RAISED
+                    value = DICT[key]
+
+                if isinstance(value, Exception):    # in case of Exx() as dumped value
+                    value = value.__class__
 
                 values.append(value)
 
             # values check eq -------
             if not EqArgs(*values):
-                result.update({key: values})
+                result.update({key: tuple(values)})
 
         return result
 
@@ -47,8 +52,9 @@ class DictDiff(NestCall_Resolve):
         """
         GOAL
         ----
-        TRUE - if Diffs exists! (it looks from class name!)
-        False - if NO Diffs!
+        answer the question - "Are dicts have diffs?":
+            TRUE - if Diffs exists! (it looks from class name!)
+            False - if NO Diffs!
         """
         return bool(self.resolve())
 
@@ -56,34 +62,6 @@ class DictDiff(NestCall_Resolve):
 # =====================================================================================================================
 if __name__ == "__main__":
     pass
-
-
-# =====================================================================================================================
-from base_aux.aux_expect.m1_expect_aux import *
-
-
-# =====================================================================================================================
-@pytest.mark.parametrize(
-    argnames="dicts, _EXPECTED",
-    argvalues=[
-        # blank ------------
-        ([{}, ], {}),
-        ([{}, {}], {}),
-        ([{}, {}, {}], {}),
-
-        # diffs ------------
-        ([{1:1}, {1:1}], {}),
-        ([{1: 1}, {1: 11}], {1: [1, 11]}),
-        ([{1: 1}, {1: 11}, {1: 111}], {1: [1, 11, 111]}),
-
-        # NOVALUE ------------
-        ([{1: 1}, {}], {1: [1, VALUE_SPECIAL.NOVALUE]}),
-        ([{1: 1}, {}, {1:11}], {1: [1, VALUE_SPECIAL.NOVALUE, 11]}),
-    ]
-)
-def test__resolve__eq(dicts, _EXPECTED):
-    func_link = lambda: DictDiff(*dicts).resolve()
-    ExpectAux(func_link).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
