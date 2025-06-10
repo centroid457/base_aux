@@ -139,8 +139,8 @@ class Enum_BoolCumulate(NestEq_Enum):
     """
     ALL_TRUE = all
     ANY_TRUE = any
-    ANY_FALSE = 1
-    ALL_FALSE = 2
+    ALL_FALSE = 1
+    ANY_FALSE = 2
 
 
 class Enum_PathType(NestEq_Enum):
