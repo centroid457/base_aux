@@ -194,6 +194,8 @@ for i in LAMBDA_ARGS(1, 2, 3):
 
 # ---------------------------------------------------------------------------------------------------------------------
 LAMBDA: Callable[..., Any] = lambda *args, **kwargs: None
+LAMBDA_0: Callable[..., int] = lambda *args, **kwargs: 0
+LAMBDA_1: Callable[..., int] = lambda *args, **kwargs: 1
 LAMBDA_NONE: Callable[..., None] = lambda *args, **kwargs: None
 LAMBDA_TRUE: Callable[..., bool] = lambda *args, **kwargs: True
 LAMBDA_FALSE: Callable[..., bool] = lambda *args, **kwargs: False
