@@ -1,5 +1,5 @@
-from base_aux.valid.m1_aux_valid_lg import *
 from base_aux.aux_eq.m2_eq_aux import *
+from base_aux.aux_text.m1_text_aux import *
 
 
 # =====================================================================================================================
@@ -20,20 +20,18 @@ class Validators:
     2/ other_final - always at first place! other params goes nest (usually uncovered)
     """
     # -----------------------------------------------------------------------------------------------------------------
-    def Isinstance(self, other_final: Any, variant: type[Any]) -> bool | NoReturn:
-        return isinstance(other_final, variant)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def Variant(self, other_final: Any, variant: Any) -> bool | NoReturn:
+    def IsinstanceSameinstance(self, other_final: Any, variant: type[Any] | Any) -> bool | NoReturn:
         """
         GOAL
         ----
-        cmp Other with each variants by IN operator
+        isinstance or SameInstance!!!
         """
-        return other_final == variant
+        try:
+            issubclass(variant, object)
+        except:
+            variant = variant.__class__
 
-    def VariantStrIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
-        return str(other_final).lower() == str(variant).lower()
+        return isinstance(other_final, variant)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Contain(self, other_final: Any, variant: Any) -> bool | NoReturn:
@@ -126,40 +124,95 @@ class Validators:
         return self.OTHER_RAISED or TypeAux(other_final).check__exception()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_final).ltgt(low, high)
+    def CMP_EQ(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return other_final == variant
 
-    def LtGe_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_final).ltge(low, high)
+    def CMP_EQ__StrIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return str(other_final).lower() == str(variant).lower()
 
-    def LeGt_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_final).legt(low, high)
-
-    def LeGe_Obj(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_Obj(other_final).lege(low, high)
+    def CMP_EQ__NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        other_final = TextAux(other_final).parse__number_single()
+        return self.CMP_EQ(other_final, variant)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def LtGt_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_NumParsedSingle(other_final).ltgt(low, high)
+    def CMP_LT(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_final).parse__number_single()
+        return other_final < variant
 
-    def LtGe_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_NumParsedSingle(other_final).ltge(low, high)
+    def CMP_LE(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_final).parse__number_single()
+        return other_final <= variant
 
-    def LeGt_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_NumParsedSingle(other_final).legt(low, high)
+    def CMP_GT(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_final).parse__number_single()
+        return other_final > variant
 
-    def LeGe_NumParsedSingle(self, other_final, low: Any | None = None, high: Any | None = None) -> bool | NoReturn:
-        return ValidAux_NumParsedSingle(other_final).lege(low, high)
+    def CMP_GE(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_final).parse__number_single()
+        return other_final >= variant
+
+    def CMP_LGTE(
+            self,
+            other_final: Any,
+            lt: Any | None = None,
+            le: Any | None = None,
+            gt: Any | None = None,
+            ge: Any | None = None,
+            parse__number_single: bool = None,
+    ) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_final).parse__number_single()
+
+        for validator, variant in [
+            (self.CMP_LT, lt),
+            (self.CMP_LE, le),
+            (self.CMP_GT, gt),
+            (self.CMP_GE, ge),
+        ]:
+            if variant is not None:
+                if not validator(other_final, variant):
+                    return False
+        return True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def NumParsedSingle(self, other_final, expect: Any | None | bool | Enum_NumType = True) -> bool:
-        return ValidAux_NumParsedSingle(other_final).eq(expect)
+    def CMP_LT_NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return self.CMP_LT(other_final, variant, parse__number_single=True)
+
+    def CMP_LE_NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return self.CMP_LE(other_final, variant, parse__number_single=True)
+
+    def CMP_GT_NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return self.CMP_GT(other_final, variant, parse__number_single=True)
+
+    def CMP_GE_NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return self.CMP_GE(other_final, variant, parse__number_single=True)
+
+    def CMP_LGTE_NumParsedSingle(
+            self,
+            other_final: Any,
+            lt: Any | None = None,
+            le: Any | None = None,
+            gt: Any | None = None,
+            ge: Any | None = None,
+    ) -> bool | NoReturn:
+        return self.CMP_LGTE(other_final, lt=lt, le=le, gt=gt, ge=ge, parse__number_single=True)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def NumParsedSingle_Sucess(self, other_final) -> bool:
+        other_final = TextAux(other_final).parse__number_single()
+        return other_final is not None
 
     def NumParsedSingle_TypeInt(self, other_final) -> bool:
-        return ValidAux_NumParsedSingle(other_final).eq(int)
+        other_final = TextAux(other_final).parse__number_single()
+        return isinstance(other_final, int)
 
     def NumParsedSingle_TypeFloat(self, other_final) -> bool:
-        return ValidAux_NumParsedSingle(other_final).eq(float)
+        other_final = TextAux(other_final).parse__number_single()
+        return isinstance(other_final, float)
 
     # -----------------------------------------------------------------------------------------------------------------
     def Regexp(

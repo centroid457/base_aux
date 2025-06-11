@@ -4,9 +4,8 @@ from base_aux.testplans.devices import *
 from base_aux.testplans.tc_types import *
 from base_aux.testplans.tc import *
 
-from base_aux.valid.m1_aux_valid_lg import *
-from base_aux.valid.m2_valid_base import *
-from base_aux.valid.m2_valid_base2_derivatives import *
+from base_aux.valid.m1_valid_base import *
+from base_aux.valid.m2_valid_derivatives import *
 from base_aux.valid.m3_valid_chains import *
 from base_aux.aux_values.m6_value_valid1_eq import *
 
@@ -191,11 +190,11 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="VIN",
-                    validate_link=EqValid_LeGe_NumParsedSingle(
-                        *((210, 230)
+                    validate_link=EqValid_LGTE_NumParsedSingle(
+                        **(dict(ge=210, le=230)
                         if self.expect__psu_may_start__hv()
                         else
-                        (0, 0.1))
+                        dict(ge=0, le=0.1))
                     ).validate,
                     name="GET+valid diapason",
                 ),
@@ -204,22 +203,22 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12S",
-                    validate_link=EqValid_LeGe_NumParsedSingle(
-                        *((11, 13)
+                    validate_link=EqValid_LGTE_NumParsedSingle(
+                        **(dict(ge=11, le=13)
                         if self.expect__psu_may_start__hv_or_ext()
                         else
-                        (0, 0.1))
+                        dict(ge=0, le=0.1))
                     ).validate,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12M",
-                    validate_link=EqValid_LeGe_NumParsedSingle(
-                        *((11, 13)
+                    validate_link=EqValid_LGTE_NumParsedSingle(
+                        **(dict(ge=11, le=13)
                         if self.expect__psu_may_start__hv_or_ext() and self.PTB_SET_PSON
                         else
-                        (0, 0.1))
+                        dict(ge=0, le=0.1))
                     ).validate,
                     name="GET+valid diapason",
                 ),
@@ -228,13 +227,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IIN",
-                    validate_link=EqValid_LeGe_NumParsedSingle(0, 0.1).validate,
+                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).validate,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IOUT",
-                    validate_link=EqValid_LeGe_NumParsedSingle(0, 0.1).validate,
+                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).validate,
                     name="GET+valid diapason",
                 ),
             ]

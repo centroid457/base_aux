@@ -1,4 +1,4 @@
-from base_aux.valid.m2_valid_base import *
+from base_aux.valid.m1_valid_base import *
 from base_aux.translator.m1_translator import Translator
 from base_aux.pyqt.m3_tm import TableModelTemplate
 from base_aux.breeders.m1_breeder_str2_stack import *

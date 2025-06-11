@@ -1,4 +1,4 @@
-from base_aux.valid.m2_valid_base import *
+from base_aux.valid.m1_valid_base import *
 
 from base_aux.buses.m1_serial3_server import *
 

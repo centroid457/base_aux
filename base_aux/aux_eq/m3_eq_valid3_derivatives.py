@@ -6,23 +6,9 @@ from base_aux.aux_values.m5_enums import *
 
 # =====================================================================================================================
 @final
-class EqValid_Isinstance(Base_EqValid):
+class EqValid_IsinstanceSameinstance(Base_EqValid):
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.Isinstance
-
-
-# =====================================================================================================================
-@final
-class EqValid_Variant(Base_EqValid):
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.Variant
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_VariantStrIc(Base_EqValid):
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.VariantStrIc
+    VALIDATOR = Validators.IsinstanceSameinstance
 
 
 # =====================================================================================================================
@@ -96,50 +82,78 @@ class EqValid_ExxRaise(Base_EqValid):
 
 
 # =====================================================================================================================
-@final
-class EqValid_LtGt_Obj(Base_EqValid):
-    VALIDATOR = Validators.LtGt_Obj
-
-
-@final
-class EqValid_LtGe_Obj(Base_EqValid):
-    VALIDATOR = Validators.LtGe_Obj
-
+# @final    # DONT USE FINAL!!! need next in - CHAIN!!!
+class EqValid_EQ(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.CMP_EQ
 
 @final
-class EqValid_LeGt_Obj(Base_EqValid):
-    VALIDATOR = Validators.LeGt_Obj
+class EqValid_EQ_StrIc(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.CMP_EQ__StrIc
 
+# @final    # DONT USE FINAL!!! need next in - CHAIN!!!
+class EqValid_EQ_NumParsedSingle(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.CMP_EQ__NumParsedSingle
+
+
+# =====================================================================================================================
+@final
+class EqValid_LT(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_LT
 
 @final
-class EqValid_LeGe_Obj(Base_EqValid):
-    VALIDATOR = Validators.LeGe_Obj
+class EqValid_LE(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_LE
+
+@final
+class EqValid_GT(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GT
+
+@final
+class EqValid_GE(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GE
+
+# --------------------------------
+@final
+class EqValid_LGTE(Base_EqValid):
+    VALIDATOR = Validators.CMP_LGTE
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_LtGt_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.LtGt_NumParsedSingle
-
-
-@final
-class EqValid_LtGe_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.LtGe_NumParsedSingle
-
+class EqValid_LT_NumParsedSingle(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_LT_NumParsedSingle
 
 @final
-class EqValid_LeGt_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.LeGt_NumParsedSingle
-
+class EqValid_LE_NumParsedSingle(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_LE_NumParsedSingle
 
 @final
-class EqValid_LeGe_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.LeGe_NumParsedSingle
+class EqValid_GT_NumParsedSingle(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GT_NumParsedSingle
 
+@final
+class EqValid_GE_NumParsedSingle(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GE_NumParsedSingle
+
+# --------------------------------
+@final
+class EqValid_LGTE_NumParsedSingle(Base_EqValid):
+    VALIDATOR = Validators.CMP_LGTE_NumParsedSingle
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.NumParsedSingle
+class EqValid_NumParsedSingle_Sucess(Base_EqValid):
+    VALIDATOR = Validators.NumParsedSingle_Sucess
 
 
 @final
@@ -150,6 +164,13 @@ class EqValid_NumParsedSingle_TypeInt(Base_EqValid):
 @final
 class EqValid_NumParsedSingle_TypeFloat(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle_TypeFloat
+
+@final
+class EqValid_NumParsedSingle_EQ(EqValid_EQ_NumParsedSingle):
+    """
+    just a link to keep name schema!
+    """
+    pass
 
 
 # =====================================================================================================================
@@ -162,7 +183,6 @@ class EqValid_Regexp(Base_EqValid):
     """
     VALIDATOR = Validators.Regexp
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final

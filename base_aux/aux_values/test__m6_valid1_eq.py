@@ -13,11 +13,11 @@ from base_aux.aux_values.m4_primitives import *
         (LAMBDA_RAISE, NoValue, None),
         (1, NoValue, None),
 
-        (1, EqValid_LeGe_Obj(1), None),
-        (1, EqValid_LeGe_Obj(2), Exception),
+        (1, EqValid_GE(1), None),
+        (1, EqValid_GE(2), Exception),
 
-        (1, EqValid_Variant(1), None),
-        (1, EqValid_Variant(2), Exception),
+        (1, EqValid_EQ(1), None),
+        (1, EqValid_EQ(2), Exception),
     ]
 )
 def test__1_init(source, eq, _EXPECTED):
@@ -36,11 +36,11 @@ def test__1_init(source, eq, _EXPECTED):
         (LAMBDA_RAISE, NoValue, 10, True),
         (1, NoValue, 10, True),
 
-        (1, EqValid_LeGe_Obj(1), 10, True),
-        (1, EqValid_LeGe_Obj(1), 0, Exception),
+        (1, EqValid_GE(1), 10, True),
+        (1, EqValid_GE(1), 0, Exception),
 
-        (1, EqValid_Variant(1), 10, Exception),
-        (1, EqValid_Variant(1, 10), 10, True),
+        (1, EqValid_EQ(1), 10, Exception),
+        (1, EqValid_EQ(1, 10), 10, True),
     ]
 )
 def test__2_reset(source, eq, new, _EXPECTED):
@@ -55,12 +55,12 @@ def test__2_reset(source, eq, new, _EXPECTED):
         (1, NoValue, 1, True),
         (1, NoValue, 10, False),
 
-        (1, EqValid_LeGe_Obj(1), 1, True),
-        (1, EqValid_LeGe_Obj(1), 10, False),
-        (1, EqValid_LeGe_Obj(1), 0, False),
+        (1, EqValid_GE(1), 1, True),
+        (1, EqValid_GE(1), 10, False),
+        (1, EqValid_GE(1), 0, False),
 
-        (1, EqValid_Variant(1), 10, False),
-        (1, EqValid_Variant(1, 10), 10, False),
+        (1, EqValid_EQ(1), 10, False),
+        (1, EqValid_EQ(1, 10), 10, False),
     ]
 )
 def test__3_eq(source, eq, other, _EXPECTED):

@@ -7,7 +7,7 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-EQ_ISINSTANCE_VICTIM = EqValid_Isinstance(NestInit_AnnotsAttrByKwArgs)
+EQ_ISINSTANCE_VICTIM = EqValid_IsinstanceSameinstance(NestInit_AnnotsAttrByKwArgs)
 
 
 class Test__NestInit:

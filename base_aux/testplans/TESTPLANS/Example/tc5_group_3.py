@@ -1,4 +1,4 @@
-from base_aux.valid.m2_valid_base2_derivatives import *
+from base_aux.valid.m2_valid_derivatives import *
 from base_aux.testplans.tc import *
 from .tc0_groups import *
 

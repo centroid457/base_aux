@@ -1,23 +1,16 @@
-from base_aux.aux_eq.m3_eq_valid1_base import *
-from base_aux.aux_values.m2_types import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
 @final
-class EqValidChain(Base_EqValid):
-    V_ARGS: tuple[Base_EqValid, ...]
-    V_KWARGS: TYPING.KWARGS_FINAL    # TODO: add params for AllTrue/Any*/False*
-
-    def validate(self, other_draft: Any) -> bool:
-        other_final = other_draft
-
-        for eq_i in self.V_ARGS:
-            if eq_i != other_final:
-                return False
-
-            other_final = eq_i.OTHER_FINAL
-
-        return True
+class EqValidChain(EqValid_EQ):
+    """
+    GOAL
+    ----
+    just a link BUT WITH ALL_TRUE!!! to use clear exact name!
+    """
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    pass
 
 
 # =====================================================================================================================

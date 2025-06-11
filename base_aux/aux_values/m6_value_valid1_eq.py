@@ -113,12 +113,12 @@ class ValueEqValid_Variants(Base_ValueEqValid):
     here is only validating and keep passed value
     in ValueVariants - final value used from exact Variants!
     """
-    EQ = EqValid_Variant
+    EQ = EqValid_EQ
 
 
 @final
 class ValueEqValid_VariantsStrIc(Base_ValueEqValid):
-    EQ = EqValid_VariantStrIc
+    EQ = EqValid_EQ_StrIc
 
 
 # =====================================================================================================================

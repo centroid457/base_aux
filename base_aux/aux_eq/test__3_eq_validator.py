@@ -116,11 +116,11 @@ def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _iresult
         ((bool, int), 1.0, False),
 
         ((bool, int, None), 1, True),
-        ((1, 2), 1, False),
+        ((1, 2), 1, True),
     ]
 )
 def test__isinstance(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_Isinstance, args, other, _EXPECTED)
+    _ExpectAux__eq_in__all_operators(EqValid_IsinstanceSameinstance, args, other, _EXPECTED)
 
 
 # =====================================================================================================================
@@ -140,8 +140,8 @@ def test__isinstance(args, other, _EXPECTED):
     ]
 )
 def test__variants(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_Variant, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_VariantStrIc, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__all_operators(EqValid_EQ, args, other, _EXPECTED[0])
+    _ExpectAux__eq_in__all_operators(EqValid_EQ_StrIc, args, other, _EXPECTED[1])
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ def test__bool_exx_raise(other, _EXPECTED):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, other, _EXP_obj, _EXP_sn",
+    argnames="args, other, _EXP_obj, _EXP_num",
     argvalues=[
         # fails ------
         ((1,2), False, (False, False, False, False), (False, False, False, False)),
@@ -236,32 +236,31 @@ def test__bool_exx_raise(other, _EXPECTED):
         ((1, 2), "a3c", (False, False, False, False), (False, False, False, False)),
     ]
 )
-def test__lg(args, other, _EXP_obj, _EXP_sn):
-    _ExpectAux__eq_in__all_operators(EqValid_LtGt_Obj, args, other, _EXP_obj[0])
-    _ExpectAux__eq_in__all_operators(EqValid_LtGe_Obj, args, other, _EXP_obj[1])
-    _ExpectAux__eq_in__all_operators(EqValid_LeGt_Obj, args, other, _EXP_obj[2])
-    _ExpectAux__eq_in__all_operators(EqValid_LeGe_Obj, args, other, _EXP_obj[3])
+def test__lg(args, other, _EXP_obj, _EXP_num):
+    _ExpectAux__eq_in__all_operators(EqValid_LGTE, args, other, _EXP_obj[0])
 
     # ------
-    _ExpectAux__eq_in__all_operators(EqValid_LtGt_NumParsedSingle, args, other, _EXP_sn[0])
-    _ExpectAux__eq_in__all_operators(EqValid_LtGe_NumParsedSingle, args, other, _EXP_sn[1])
-    _ExpectAux__eq_in__all_operators(EqValid_LeGt_NumParsedSingle, args, other, _EXP_sn[2])
-    _ExpectAux__eq_in__all_operators(EqValid_LeGe_NumParsedSingle, args, other, _EXP_sn[3])
+    _ExpectAux__eq_in__all_operators(EqValid_LGTE_NumParsedSingle, args, other, _EXP_num[0])
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="other, expect, _EXPECTED",
+    argnames="other, value, _EXPECTED",
     argvalues=[
         # TRASH ----
-        (True, True, (False, False, False, )),
-        (False, True, (False, False, False, )),
-        (True, False, (True, False, False, )),
-        (True, None, (True, False, False, )),
-        ("", False, (True, False, False, )),
+        (True, True, (False, False, False, False)),
+        (True, None, (False, False, False, False)),
+        (True, 1, (False, False, False, False)),
+        ("", False, (False, False, False, False)),
 
-        # VALUES ----
-        ("123", False, (False, True, False, )),
+        # # VALUES ----
+        ("123", False, (True, False, True, False)),
+        ("123", 1, (True, False, True, False)),
+        ("123", 123, (True, True, True, False)),
+
+
+
+
         ("123", True, (True, True, False, )),
 
         ("123", 1, (False, True, False, )),
@@ -281,13 +280,11 @@ def test__lg(args, other, _EXP_obj, _EXP_sn):
         ("a11.22a", float, (True, False, True, )),
     ]
 )
-def test__EqValid_NumParsedSingle(other, expect, _EXPECTED):
-    args = (expect, )
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle, args, other, _EXPECTED[0])
-
-    args = ()
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeInt, args, other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeFloat, args, other, _EXPECTED[2])
+def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_Sucess, (), other, _EXPECTED[0])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_EQ, (value, ), other, _EXPECTED[1])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeInt, (), other, _EXPECTED[2])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeFloat, (), other, _EXPECTED[3])
 
 
 # ---------------------------------------------------------------------------------------------------------------------

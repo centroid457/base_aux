@@ -43,7 +43,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
     #     result = (
     #             self.write_read__last_validate("get name", self.NAME, prefix="*:")
     #             and
-    #             self.write_read__last_validate("get addr", EqValid_NumParsedSingle(self.INDEX+1), prefix="*:")
+    #             self.write_read__last_validate("get addr", EqValid_NumParsedSingle_Sucess(self.INDEX+1), prefix="*:")
     #             # and
     #             # self.write_read__last_validate("get prsnt", "0")
     #     )

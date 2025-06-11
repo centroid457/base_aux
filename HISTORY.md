@@ -126,7 +126,7 @@
 0.2.10 (2025/02/19 16:33:46)
 ------------------------------
 - [Inits] add NestInit_AnnotsAttrsByKwArgs  
-- [EqValid] add EqValid_Isinstance +EqValid_AttrsByKwargs  
+- [EqValid] add EqValid_IsinstanceSameinstance +EqValid_AttrsByKwargs  
 
 0.2.9 (2025/02/17 12:37:00)
 ------------------------------

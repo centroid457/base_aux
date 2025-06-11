@@ -70,6 +70,7 @@ class Base_EqValid:
             _iresult_reverse: bool = None,
             _iresult_cumulate: Enum_BoolCumulate = None,
             _other_final__resolve: bool = None,
+            # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
     ) -> None:
         """
