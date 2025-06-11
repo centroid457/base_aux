@@ -149,9 +149,9 @@ class Test__Dump:
         argvalues=[
             (VictimNames(), [], {"attr": None, "_attr": None}),
             (VictimNames(), ["attr", ], {"_attr": None}),
-            (VictimNames(), [EqValid_Contains("att"), ], {}),
-            (VictimNames(), [EqValid_Contains("att5"), ], {"attr": None, "_attr": None}),
-            (VictimNames(), ["attr", EqValid_Contains("att5"), ], {"_attr": None}),
+            (VictimNames(), [EqValid_Contain("att"), ], {}),
+            (VictimNames(), [EqValid_Contain("att5"), ], {"attr": None, "_attr": None}),
+            (VictimNames(), ["attr", EqValid_Contain("att5"), ], {"_attr": None}),
         ]
     )
     def test__names(self, source, skip, _EXPECTED):

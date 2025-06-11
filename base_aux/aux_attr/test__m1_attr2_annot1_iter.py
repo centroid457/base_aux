@@ -63,17 +63,17 @@ class VictimAnNest(VictimAn):
         ]),
 
         # -------------------------------
-        (VictimAt(), [EqValid_ContainsStrIc("_a"), ], [
+        (VictimAt(), [EqValid_ContainStrIc("_a"), ], [
             {"at1", },
             {"at1", },
             {"at1", },
         ]),
-        (VictimAn(), [EqValid_ContainsStrIc("_a"), ], [
+        (VictimAn(), [EqValid_ContainStrIc("_a"), ], [
             {"an1", },
             {"an1", },
             {"an1", },
         ]),
-        (VictimAnNest(), [EqValid_ContainsStrIc("_a"), ], [
+        (VictimAnNest(), [EqValid_ContainStrIc("_a"), ], [
             {"an1", "an2", },
             {"an1", "an2", },
             {"an1", "an2", },

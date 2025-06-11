@@ -17,99 +17,65 @@ class Validators:
     RULES
     -----
     1/ NoReturn - available for all returns as common!!! but sometimes it cant be reached (like TRUE/RAISE)
+    2/ other_final - always at first place! other params goes nest (usually uncovered)
     """
     # -----------------------------------------------------------------------------------------------------------------
-    def Isinstance(self, other_final: Any, *variants: type[Any]) -> bool | NoReturn:
-        for variant in variants:
-            if isinstance(other_final, variant):
-                return True
-        return False
+    def Isinstance(self, other_final: Any, variant: type[Any]) -> bool | NoReturn:
+        return isinstance(other_final, variant)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Variants(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def Variant(self, other_final: Any, variant: Any) -> bool | NoReturn:
         """
         GOAL
         ----
         cmp Other with each variants by IN operator
         """
-        return other_final in variants
+        return other_final == variant
 
-    def VariantsStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
-        other_final = str(other_final).lower()
-        variants = (str(var).lower() for var in variants)
-
-        return other_final in variants
+    def VariantStrIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return str(other_final).lower() == str(variant).lower()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Contains(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def Contain(self, other_final: Any, variant: Any) -> bool | NoReturn:
         """
         GOAL
         ----
-        cmp each variant with other by IN operator
+        check each variant with other by IN operator
         mainly using for check substrs (variants) in BaseStr
 
         SPECIALLY CREATED FOR
         ---------------------
         AttrsAux.dump_dict/AttrsDump to skip exact attrs with Parts in names
         """
-        for variant in variants:
-            if variant in other_final:
-                return True
-        return False
+        return variant in other_final
 
-    def ContainsStrIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
-        other_final = str(other_final).lower()
-        variants = [str(var).lower() for var in variants]
-
-        for variant in variants:
-            if variant in other_final:
-                return True
-        return False
+    def ContainStrIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
+        return str(variant).lower() in str(other_final).lower()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Startswith(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def Startswith(self, other_final: Any, variant: Any) -> bool | NoReturn:
         other_final = str(other_final)
-        variants = (str(var) for var in variants)
+        variant = str(variant)
+        return other_final.startswith(variant)
 
-        for var in variants:
-            if other_final.startswith(var):
-                return True
-
-        return False
-
-    def StartswithIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def StartswithIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
         other_final = str(other_final).lower()
-        variants = (str(var).lower() for var in variants)
-
-        for var in variants:
-            if other_final.startswith(var):
-                return True
-
-        return False
+        variant = str(variant).lower()
+        return other_final.startswith(variant)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def Endswith(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def Endswith(self, other_final: Any, variant: Any) -> bool | NoReturn:
         other_final = str(other_final)
-        variants = (str(var) for var in variants)
+        variant = str(variant)
+        return other_final.endswith(variant)
 
-        for var in variants:
-            if other_final.endswith(var):
-                return True
-
-        return False
-
-    def EndswithIc(self, other_final: Any, *variants: Any) -> bool | NoReturn:
+    def EndswithIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
         other_final = str(other_final).lower()
-        variants = (str(var).lower() for var in variants)
-
-        for var in variants:
-            if other_final.endswith(var):
-                return True
-
-        return False
+        variant = str(variant).lower()
+        return other_final.endswith(variant)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def BoolTrue(self, other_final: TYPE__VALID_BOOL__DRAFT, *v_args, **v_kwargs) -> bool:
+    def BoolTrue(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -124,7 +90,7 @@ class Validators:
 
     # TODO: add FALSE????? what to do with exx and real false?
 
-    def Raise(self, other_final: Any, *variants: Any) -> bool:
+    def Raise(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -133,7 +99,7 @@ class Validators:
         """
         return self.OTHER_RAISED
 
-    def NotRaise(self, other_final, *v_args, **v_kwargs) -> bool:
+    def NotRaise(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -142,7 +108,7 @@ class Validators:
         """
         return not self.OTHER_RAISED
 
-    def Exx(self, other_final, *v_args, **v_kwargs) -> bool:
+    def Exx(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -151,7 +117,7 @@ class Validators:
         """
         return not self.OTHER_RAISED and TypeAux(other_final).check__exception()
 
-    def ExxRaise(self, other_final, *v_args, **v_kwargs) -> bool:
+    def ExxRaise(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -199,35 +165,14 @@ class Validators:
     def Regexp(
             self,
             other_final,
-            *regexps: str,
+            pattern: str,
             ignorecase: bool = True,
-            bool_collect: Enum_BoolCumulate = None,
             match_link: Callable = re.fullmatch,
     ) -> bool | NoReturn:
-        bool_collect = bool_collect or self.BOOL_COLLECT
-
-        for pattern in regexps:
-            result_i = match_link(pattern=str(pattern), string=str(other_final), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
-
-            # CUMULATE --------
-            if bool_collect == Enum_BoolCumulate.ALL_TRUE:
-                if not result_i:
-                    return False
-            elif bool_collect == Enum_BoolCumulate.ANY_TRUE:
-                if result_i:
-                    return True
-            elif bool_collect == Enum_BoolCumulate.ALL_FALSE:
-                if result_i:
-                    return False
-            elif bool_collect == Enum_BoolCumulate.ANY_FALSE:
-                if not result_i:
-                    return True
-
-        # FINAL ------------
-        if bool_collect in [Enum_BoolCumulate.ALL_TRUE, Enum_BoolCumulate.ALL_FALSE]:
-            return True
-        else:
-            return False
+        # NOTE: just a link!
+        #   you can use directly match_link in Base_EqValid!!!!
+        result = match_link(pattern=str(pattern), string=str(other_final), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
+        return result is not None
 
     # -----------------------------------------------------------------------------------------------------------------
     def AttrsByKwargs(

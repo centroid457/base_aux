@@ -7,52 +7,61 @@ from base_aux.aux_values.m5_enums import *
 # =====================================================================================================================
 @final
 class EqValid_Isinstance(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Isinstance
 
 
 # =====================================================================================================================
 @final
-class EqValid_Variants(Base_EqValid):
-    VALIDATOR = Validators.Variants
+class EqValid_Variant(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.Variant
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_VariantsStrIc(Base_EqValid):
-    VALIDATOR = Validators.VariantsStrIc
+class EqValid_VariantStrIc(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.VariantStrIc
 
 
 # =====================================================================================================================
 @final
-class EqValid_Contains(Base_EqValid):
-    VALIDATOR = Validators.Contains
+class EqValid_Contain(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.Contain
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ContainsStrIc(Base_EqValid):
-    VALIDATOR = Validators.ContainsStrIc
+class EqValid_ContainStrIc(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.ContainStrIc
 
 
 # =====================================================================================================================
 @final
 class EqValid_Startswith(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Startswith
 
 
 @final
 class EqValid_StartswithIc(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.StartswithIc
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Endswith(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Endswith
 
 
 @final
 class EqValid_EndswithIc(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.EndswithIc
 
 
@@ -152,28 +161,28 @@ class EqValid_Regexp(Base_EqValid):
     for several patterns - use other classes for clarification!
     """
     VALIDATOR = Validators.Regexp
-    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
-    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
 
 
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
-    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
 
 
 @final
 class EqValid_RegexpAllFalse(EqValid_Regexp):
-    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ALL_FALSE
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_FALSE
 
 
 @final
 class EqValid_RegexpAnyFalse(EqValid_Regexp):
-    BOOL_COLLECT: Enum_BoolCumulate = Enum_BoolCumulate.ANY_FALSE
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_FALSE
 
 
 # =====================================================================================================================
