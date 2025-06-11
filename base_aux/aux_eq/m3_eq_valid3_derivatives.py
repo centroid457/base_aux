@@ -92,6 +92,7 @@ class EqValid_EQ_StrIc(Base_EqValid):
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ__StrIc
 
+
 # @final    # DONT USE FINAL!!! need next in - CHAIN!!!
 class EqValid_EQ_NumParsedSingle(Base_EqValid):
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE

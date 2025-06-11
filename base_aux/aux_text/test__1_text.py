@@ -411,6 +411,16 @@ class Test__ParseNum:
         argnames="source, fpoint, _EXPECTED",
         argvalues=[
             (0, None, 0),
+            ("0", None, 0),
+            (123, None, 123),
+            ("123", None, 123),
+            (1.1, None, 1.1),
+            ("1.1", None, 1.1),
+            ("1,1", None, 1.1),
+            ("1,1.", None, 1.1),
+            ("1.1.", None, 1.1),
+            ("1.1,", None, 1.1),
+
             ("   0   ", None, 0),
             ("   000   ", None, 0),
             ("-aa001cc", None, 1),

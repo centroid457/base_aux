@@ -10,6 +10,9 @@ from base_aux.aux_eq.m4_eq_valid_chain import *
 @pytest.mark.parametrize(
     argnames="source, other, _EXPECTED",
     argvalues=[
+        ((EqValid_Raise(), EqValid_NotRaise(), ), LAMBDA_RAISE, False),
+        ((EqValid_NotRaise(), EqValid_Raise(), ), LAMBDA_RAISE, False),
+
         ((EqValid_NotRaise(), ), LAMBDA_RAISE, False),
         ((EqValid_NotRaise(), ), 1, True),
         ((EqValid_NotRaise(), EqValid_Raise()), 1, False),
