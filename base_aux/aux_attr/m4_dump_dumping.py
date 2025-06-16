@@ -46,7 +46,7 @@ class Base_AttrDictDumping(NestInit_Source, NestCall_Resolve):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AttrDictDumping(Base_AttrDictDumping):
+class AttrDictDumping_Existed(Base_AttrDictDumping):
     """
     NOTE
     ----
@@ -58,13 +58,13 @@ class AttrDictDumping(Base_AttrDictDumping):
 
 
 @final
-class AnnotsAllDictDumping(Base_AttrDictDumping):
+class AttrDictDumping_AnnotsAll(Base_AttrDictDumping):
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
 
 
 @final
-class AnnotsLastDictDumping(Base_AttrDictDumping):
+class AttrDictDumping_AnnotsLast(Base_AttrDictDumping):
     _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
     _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.LAST_CHILD
 
@@ -105,9 +105,9 @@ class VictimAnNest(VictimAn):
     ]
 )
 def test__names(source, skip_names, _EXPECTED):
-    ExpectAux(AttrDictDumping(source)(*skip_names)).check_assert(_EXPECTED[0])
-    ExpectAux(AnnotsAllDictDumping(source)(*skip_names)).check_assert(_EXPECTED[1])
-    ExpectAux(AnnotsLastDictDumping(source)(*skip_names)).check_assert(_EXPECTED[2])
+    ExpectAux(AttrDictDumping_Existed(source)(*skip_names)).check_assert(_EXPECTED[0])
+    ExpectAux(AttrDictDumping_AnnotsAll(source)(*skip_names)).check_assert(_EXPECTED[1])
+    ExpectAux(AttrDictDumping_AnnotsLast(source)(*skip_names)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
