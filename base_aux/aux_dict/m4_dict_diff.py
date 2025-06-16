@@ -7,7 +7,7 @@ TIPING__DICT_DIFF = dict[Any, tuple[Any, ...]]
 
 
 # =====================================================================================================================
-class DictDiff(NestCall_Resolve):
+class Base_DiffResolve(NestInit_Args_Implicit, NestCall_Resolve):
     """
     GOAL
     ----
@@ -23,38 +23,12 @@ class DictDiff(NestCall_Resolve):
     ---------------------
     cmp two objects by attr values
     """
-    DICTS: tuple[TYPING.DICT_ANY_ANY, ...]
+    ARGS: tuple[TYPING.DICT_ANY_ANY, ...]
     DIFF: TIPING__DICT_DIFF
     __diff: TIPING__DICT_DIFF = {}
 
-    def __init__(self, *dicts: TYPING.DICT_ANY_ANY):
-        self.DICTS = dicts
-
     def resolve(self) -> TIPING__DICT_DIFF:
-        keys: list[Any] = [key for DICT in self.DICTS for key in DICT]
-        keys = sorted(keys)
-
-        result = {}
-        for key in keys:
-            # values collect -------
-            values = []
-            for DICT in self.DICTS:
-                if key not in DICT:
-                    value = VALUE_SPECIAL.NOVALUE
-                else:
-                    value = DICT[key]
-
-                if isinstance(value, Exception):    # in case of Exx() as dumped value
-                    value = value.__class__
-
-                values.append(value)
-
-            # values check eq -------
-            if not EqArgs(*values):
-                result.update({key: tuple(values)})
-
-        self.__diff = result
-        return result
+        return NotImplemented
 
     def __bool__(self) -> bool:
         """
@@ -85,6 +59,35 @@ class DictDiff(NestCall_Resolve):
         print pretty result
         """
         return DictAuxInline(self.DIFF).pretty_str()
+
+
+# =====================================================================================================================
+class DictDiff(Base_DiffResolve):
+    def resolve(self) -> TIPING__DICT_DIFF:
+        keys: list[Any] = [key for DICT in self.ARGS for key in DICT]
+        keys = sorted(keys)
+
+        result = {}
+        for key in keys:
+            # values collect -------
+            values = []
+            for DICT in self.ARGS:
+                if key not in DICT:
+                    value = VALUE_SPECIAL.NOVALUE
+                else:
+                    value = DICT[key]
+
+                if isinstance(value, Exception):    # in case of Exx() as dumped value
+                    value = value.__class__
+
+                values.append(value)
+
+            # values check eq -------
+            if not EqArgs(*values):
+                result.update({key: tuple(values)})
+
+        self.__diff = result
+        return result
 
 
 # =====================================================================================================================
