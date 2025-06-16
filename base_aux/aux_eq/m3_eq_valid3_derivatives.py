@@ -93,7 +93,7 @@ class EqValid_EQ_StrIc(Base_EqValid):
     VALIDATOR = Validators.CMP_EQ__StrIc
 
 
-# @final    # DONT USE FINAL!!! need next in - CHAIN!!!
+# @final    # DONT USE FINAL!!! need next in - EqValid_NumParsedSingle_EQ!!!
 class EqValid_EQ_NumParsedSingle(Base_EqValid):
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ__NumParsedSingle
@@ -123,6 +123,7 @@ class EqValid_GE(Base_EqValid):
 # --------------------------------
 @final
 class EqValid_LGTE(Base_EqValid):
+    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LGTE
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -220,40 +220,99 @@ def test__EQ(args, other, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, other, _EXP_obj, _EXP_num",
     argvalues=[
-        # fails ------
-        ((1,2), False, (False, False, False, False), (False, False, False, False)),
-        ((1,2), Exception, (False, False, False, False), (False, False, False, False)),
-        ((Exception, 2), 1, (False, False, False, False), (False, False, False, False)),
+        # FAILS ------
+        # (
+        #         (1,2),
+        #         False,      # be careful! False < 1!!!!
+        #         (False, False, False, False),
+        #         (False, False, False, False),
+        # ),
+        (
+                (1, 2), Exception,
+                (False, False, False, False),
+                (False, False, False, False),
+        ),
+        (
+                (Exception, 2), 1,
+                (False, False, False, False),
+                (False, False, False, False),
+        ),
+        (
+                (1, 2), "hello",
+                (False, False, False, False),
+                (False, False, False, False),
+        ),
 
         # correct cmp ------
-        ((1,2), 0, (False, False, False, False), (False, False, False, False)),
-        ((1,2), 1, (False, False, True, True), (False, False, True, True)),
-        ((1,2), 2, (False, True, False, True), (False, True, False, True)),
-        ((1,2), 3, (False, False, False, False), (False, False, False, False)),
+        (
+                (1, 2), 0,
+                (True, True, False, False),
+                (True, True, False, False),
+        ),
+        # ------------------
+        (
+                (1, ), 1,
+                (False, True, True, False),
+                (False, True, True, False),
+        ),
+        (
+                (1, 2), 1,
+                (False, True, False, False),
+                (False, True, False, False),
+        ),
 
-        ((1, 2), "a0c", (False, False, False, False), (False, False, False, False)),
-        ((1, 2), "a1c", (False, False, False, False), (False, False, True, True)),
-        ((1, 2), "a2c", (False, False, False, False), (False, True, False, True)),
-        ((1, 2), "a3c", (False, False, False, False), (False, False, False, False)),
+        (
+                (1, 2), "a1c",
+                (False, False, False, False),
+                (False, True, False, False),
+        ),
+
+        # ------------------
+        (
+                (1, ), 2,
+                (False, False, True, True),
+                (False, False, True, True),
+        ),
+        (
+                (1, 2), 2,
+                (False, False, True, False),
+                (False, False, True, False),
+        ),
+        (
+                (1, 2), "a2c",
+                (False, False, False, False),
+                (False, False, True, False),
+        ),
+
+        # ------------------
+        (
+                (1, 2), 3,
+                (False, False, True, True),
+                (False, False, True, True),
+        ),
     ]
 )
-def test__LGTE(args, other, _EXP_obj, _EXP_num):
-    _ExpectAux__eq_in__all_operators(EqValid_LGTE, args, other, _EXP_obj[0])
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
+def test__LG(args, other, _EXP_obj, _EXP_num):
+    # ------
+    _ExpectAux__eq_in__all_operators(EqValid_LT, args, other, _EXP_obj[0])
+    _ExpectAux__eq_in__all_operators(EqValid_LE, args, other, _EXP_obj[1])
+    _ExpectAux__eq_in__all_operators(EqValid_GE, args, other, _EXP_obj[2])
+    _ExpectAux__eq_in__all_operators(EqValid_GT, args, other, _EXP_obj[3])
 
     # ------
-    _ExpectAux__eq_in__all_operators(EqValid_LGTE_NumParsedSingle, args, other, _EXP_num[0])
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
-    # FIXME: FINISH!!!
+    _ExpectAux__eq_in__all_operators(EqValid_LT_NumParsedSingle, args, other, _EXP_num[0])
+    _ExpectAux__eq_in__all_operators(EqValid_LE_NumParsedSingle, args, other, _EXP_num[1])
+    _ExpectAux__eq_in__all_operators(EqValid_GE_NumParsedSingle, args, other, _EXP_num[2])
+    _ExpectAux__eq_in__all_operators(EqValid_GT_NumParsedSingle, args, other, _EXP_num[3])
+
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+# TODO: add LGTE +Num
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
