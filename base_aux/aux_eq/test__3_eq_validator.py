@@ -8,16 +8,16 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
-def _ExpectAux__eq_in__all_operators(eq_cls: type[Base_EqValid], args, other, _EXPECTED) -> None | NoReturn:
+def _ExpectAux__eq_in__all_operators(eq_cls: type[Base_EqValid], other, _EXPECTED, *args, **kwargs: dict[str, Any]) -> None | NoReturn:
     """
     GOAL
     ----
     check one EqClass by 4 variant lines
     """
-    ExpectAux(eq_cls(*args) == other).check_assert(_EXPECTED)
-    # ExpectAux(eq_cls(*args, _iresult_reverse=True) == other).check_assert(not _EXPECTED)
+    ExpectAux(eq_cls(*args, **kwargs) == other).check_assert(_EXPECTED)
+    # ExpectAux(eq_cls(*args, **kwargs, _iresult_reverse=True) == other).check_assert(not _EXPECTED)
 
-    ExpectAux(other in eq_cls(*args)).check_assert(_EXPECTED)
+    ExpectAux(other in eq_cls(*args, **kwargs)).check_assert(_EXPECTED)
     # ExpectAux(other in eq_cls(*args, _iresult_reverse=True)).check_assert(not _EXPECTED)
 
 
@@ -120,7 +120,7 @@ def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _iresult
     ]
 )
 def test__isinstance(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_IsinstanceSameinstance, args, other, _EXPECTED)
+    _ExpectAux__eq_in__all_operators(EqValid_IsinstanceSameinstance, other, _EXPECTED, *args)
 
 
 # =====================================================================================================================
@@ -140,8 +140,8 @@ def test__isinstance(args, other, _EXPECTED):
     ]
 )
 def test__contains(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_Contain, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_ContainStrIc, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__all_operators(EqValid_Contain, other, _EXPECTED[0],*args)
+    _ExpectAux__eq_in__all_operators(EqValid_ContainStrIc, other, _EXPECTED[1], *args)
 
 
 # =====================================================================================================================
@@ -154,8 +154,8 @@ def test__contains(args, other, _EXPECTED):
     ]
 )
 def test__startswith(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_Startswith, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_StartswithIc, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__all_operators(EqValid_Startswith, other, _EXPECTED[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_StartswithIc, other, _EXPECTED[1], *args)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -168,8 +168,8 @@ def test__startswith(args, other, _EXPECTED):
     ]
 )
 def test__endswith(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_Endswith, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_EndswithIc, args, other, _EXPECTED[1])
+    _ExpectAux__eq_in__all_operators(EqValid_Endswith, other, _EXPECTED[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_EndswithIc, other, _EXPECTED[1], *args)
 
 
 # =====================================================================================================================
@@ -187,11 +187,11 @@ def test__endswith(args, other, _EXPECTED):
 )
 def test__bool_exx_raise(other, _EXPECTED):
     args = ()
-    _ExpectAux__eq_in__all_operators(EqValid_BoolTrue, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_Exx, args, other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_Raise, args, other, _EXPECTED[2])
-    _ExpectAux__eq_in__all_operators(EqValid_NotRaise, args, other, _EXPECTED[3])
-    _ExpectAux__eq_in__all_operators(EqValid_ExxRaise, args, other, _EXPECTED[4])
+    _ExpectAux__eq_in__all_operators(EqValid_BoolTrue, other, _EXPECTED[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_Exx, other, _EXPECTED[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_Raise, other, _EXPECTED[2], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_NotRaise, other, _EXPECTED[3], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_ExxRaise, other, _EXPECTED[4], *args)
 
 
 # =====================================================================================================================
@@ -211,9 +211,9 @@ def test__bool_exx_raise(other, _EXPECTED):
     ]
 )
 def test__EQ(args, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_EQ, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_EQ_StrIc, args, other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, args, other, _EXPECTED[2])
+    _ExpectAux__eq_in__all_operators(EqValid_EQ, other, _EXPECTED[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_EQ_StrIc, other, _EXPECTED[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, other, _EXPECTED[2], *args)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -292,26 +292,50 @@ def test__EQ(args, other, _EXPECTED):
         ),
     ]
 )
-def test__LG(args, other, _EXP_obj, _EXP_num):
+def test__LGTE_1_variants(args, other, _EXP_obj, _EXP_num):
     # ------
-    _ExpectAux__eq_in__all_operators(EqValid_LT, args, other, _EXP_obj[0])
-    _ExpectAux__eq_in__all_operators(EqValid_LE, args, other, _EXP_obj[1])
-    _ExpectAux__eq_in__all_operators(EqValid_GE, args, other, _EXP_obj[2])
-    _ExpectAux__eq_in__all_operators(EqValid_GT, args, other, _EXP_obj[3])
+    _ExpectAux__eq_in__all_operators(EqValid_LT, other, _EXP_obj[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_LE, other, _EXP_obj[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_GE, other, _EXP_obj[2], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_GT, other, _EXP_obj[3], *args)
 
     # ------
-    _ExpectAux__eq_in__all_operators(EqValid_LT_NumParsedSingle, args, other, _EXP_num[0])
-    _ExpectAux__eq_in__all_operators(EqValid_LE_NumParsedSingle, args, other, _EXP_num[1])
-    _ExpectAux__eq_in__all_operators(EqValid_GE_NumParsedSingle, args, other, _EXP_num[2])
-    _ExpectAux__eq_in__all_operators(EqValid_GT_NumParsedSingle, args, other, _EXP_num[3])
+    _ExpectAux__eq_in__all_operators(EqValid_LT_NumParsedSingle, other, _EXP_num[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_LE_NumParsedSingle, other, _EXP_num[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_GE_NumParsedSingle, other, _EXP_num[2], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_GT_NumParsedSingle, other, _EXP_num[3], *args)
 
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
-# TODO: add LGTE +Num
+@pytest.mark.parametrize(
+    argnames="kwargs, other, _EXPECTED",
+    argvalues=[
+        # FAILS ------
+        # (dict(lt=1, ), Exception, (False, False)),  # be careful! False < 1!!!!
+        (dict(lt=1, ), Exception, (False, False)),
+        (dict(lt=Exception, ), 1, (False, False)),
+        (dict(lt=1, ), "hello", (False, False)),
+
+        # correct cmp ------
+        (dict(gt=1, lt=2), 0, (False, False)),
+        (dict(gt=1, lt=2), "aaa0bbb", (False, False)),
+
+        # ------------------
+        (dict(gt=1, lt=2), 1, (False, False)),
+        (dict(ge=1, lt=2), 1, (True, True)),
+        (dict(ge=1, lt=2), "aaa1bbb", (False, True)),
+
+        # ------------------
+        (dict(gt=1, lt=2), 2, (False, False)),
+        (dict(gt=1, le=2), 2, (True, True)),
+        (dict(gt=1, le=2), "aaa2bbb", (False, True)),
+
+        # ------------------
+        (dict(gt=1, lt=2), 3, (False, False)),
+        (dict(gt=1, lt=2), "aaa3bbb", (False, False)),
+    ]
+)
+def test__LGTE_2_dict(kwargs, other, _EXPECTED):
+    _ExpectAux__eq_in__all_operators(EqValid_LGTE, other, _EXPECTED[0], **kwargs)
+    _ExpectAux__eq_in__all_operators(EqValid_LGTE_NumParsedSingle, other, _EXPECTED[1], **kwargs)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -324,7 +348,7 @@ def test__LG(args, other, _EXP_obj, _EXP_num):
         (True, 1, (False, False, False, False)),
         ("", False, (False, False, False, False)),
 
-        # # VALUES ----
+        # VALUES ----
         ("123", False, (True, False, True, False)),
         ("123", 1, (True, False, True, False)),
         ("123", 123, (True, True, True, False)),
@@ -341,11 +365,11 @@ def test__LG(args, other, _EXP_obj, _EXP_num):
     ]
 )
 def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_Sucess, (), other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_EQ, (value, ), other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, (value, ), other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeInt, (), other, _EXPECTED[2])
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeFloat, (), other, _EXPECTED[3])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_Sucess, other, _EXPECTED[0])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_EQ, other, _EXPECTED[1], value)
+    _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, other, _EXPECTED[1], value)
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeInt, other, _EXPECTED[2])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeFloat, other, _EXPECTED[3])
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -371,10 +395,10 @@ def test__regexp(args, other, _EXPECTED):
     ExpectAux(EqValid_Regexp(*args, _iresult_cumulate=Enum_BoolCumulate.ANY_FALSE) == other).check_assert(_EXPECTED[3])
 
     # ---------
-    _ExpectAux__eq_in__all_operators(EqValid_RegexpAllTrue, args, other, _EXPECTED[0])
-    _ExpectAux__eq_in__all_operators(EqValid_RegexpAnyTrue, args, other, _EXPECTED[1])
-    _ExpectAux__eq_in__all_operators(EqValid_RegexpAllFalse, args, other, _EXPECTED[2])
-    _ExpectAux__eq_in__all_operators(EqValid_RegexpAnyFalse, args, other, _EXPECTED[3])
+    _ExpectAux__eq_in__all_operators(EqValid_RegexpAllTrue, other, _EXPECTED[0], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_RegexpAnyTrue, other, _EXPECTED[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_RegexpAllFalse, other, _EXPECTED[2], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_RegexpAnyFalse, other, _EXPECTED[3], *args)
 
 
 def test__regexp_manual():

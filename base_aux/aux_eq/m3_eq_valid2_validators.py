@@ -190,6 +190,12 @@ class Validators:
             ge: Any | None = None,
             parse__number_single: bool = None,
     ) -> bool | NoReturn:
+        """
+        NOTE
+        ----
+        used all variants of cmp (l/g* + *t/e) just to make a one clear logical func!
+        intended using only one or two appropriate combination!
+        """
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
 
