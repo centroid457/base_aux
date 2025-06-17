@@ -22,6 +22,8 @@ class Validators:
     -----
     1/ NoReturn - available for all returns as common!!! but sometimes it cant be reached (like TRUE/RAISE)
     2/ other_final - always at first place! other params goes nest (usually uncovered)
+    3/ in cmp result KEEP variant ALWAYS AT FIRST PLACE!!! to use its DANDER-methods first! like in CMP_LT
+
     """
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -143,11 +145,11 @@ class Validators:
     @staticmethod
     def CMP_EQ(self, other_final: Any, variant: Any) -> bool | NoReturn:
         print(f"CMP_EQ={other_final=}/{variant=}")
-        return other_final == variant
+        return variant == other_final
 
     @staticmethod
     def CMP_EQ__StrIc(self, other_final: Any, variant: Any) -> bool | NoReturn:
-        return str(other_final).lower() == str(variant).lower()
+        return str(variant).lower() == str(other_final).lower()
 
     @staticmethod
     def CMP_EQ__NumParsedSingle(self, other_final: Any, variant: Any) -> bool | NoReturn:
@@ -160,25 +162,25 @@ class Validators:
     def CMP_LT(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
-        return other_final < variant
+        return variant > other_final    # NOTE: KEEP variant ALWAYS AT FIRST PLACE!!! to use its DANDER-methods!
 
     @staticmethod
     def CMP_LE(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
-        return other_final <= variant
+        return variant >= other_final
 
     @staticmethod
     def CMP_GT(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
-        return other_final > variant
+        return variant < other_final
 
     @staticmethod
     def CMP_GE(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
-        return other_final >= variant
+        return variant <= other_final
 
     @staticmethod
     def CMP_LGTE(
