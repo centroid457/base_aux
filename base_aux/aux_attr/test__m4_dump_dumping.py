@@ -2,7 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_expect.m1_expect_aux import *
-from base_aux.aux_attr.m4_dump_dumping import *
+from base_aux.aux_attr.m4_dump1_dumping1_dict import *
 from base_aux.aux_attr.m0_static import *
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_attr.m3_getattr0_echo import *
+from base_aux.aux_attr.m3_ga0_echo import *
 
 
 # =====================================================================================================================

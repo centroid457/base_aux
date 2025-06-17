@@ -1,32 +1,26 @@
 from base_aux.aux_dict.m1_dict_aux import *
 from base_aux.aux_dict.m4_dict_diff import *
-from base_aux.aux_attr.m4_dump_dumping import *
+from base_aux.aux_attr.m4_dump1_dumping1_dict import *
 
 
 # =====================================================================================================================
 class Base_AttrDiff(Base_DiffResolve):
     """
-    # GOAL
-    # ----
-    # get diffs from several states,
-    # dicts assumed like AttrDumped objects - so keys are STR.
-    #
-    # NOTE
-    # ----
-    # if values is ExceptionNested - apply only class!!! for both cls and inst - so next cmparing would cmp only exact classes!
-    # and same classes will be equal
-    #
-    # SPECIALLY CREATED FOR
-    # ---------------------
-    # cmp two objects by attr values
+    GOAL
+    ----
+    cmp several objects by attr values.
+    usually cmp several states of one obj after DumpAttrObj.
+
+    SPECIALLY CREATED FOR
+    ---------------------
     """
     ARGS: tuple[Any, ...]
-    CLS_ATTR_COLLECT: type[Base_AttrDictDumping] = AttrDictDumping_Existed
+    CLS_ATTR_DUMPING: type[Base_AttrDictDumping] = AttrDictDumping_Existed
 
     def resolve(self) -> TIPING__DICT_DIFF:
         DICTS = []
         for obj in self.ARGS:
-            dict_i = self.CLS_ATTR_COLLECT(obj).resolve()
+            dict_i = self.CLS_ATTR_DUMPING(obj).resolve()
             DICTS.append(dict_i)
 
         self.__diff = DictDiff(*DICTS).resolve()

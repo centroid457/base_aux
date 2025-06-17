@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 
 from base_aux.aux_values.m3_exceptions import *
-from base_aux.aux_attr.m3_getattr1_prefix_1_inst import NestGa_Prefix_RaiseIf
+from base_aux.aux_attr.m3_ga1_prefix_1_inst import NestGa_Prefix_RaiseIf
 
 
 # =====================================================================================================================
