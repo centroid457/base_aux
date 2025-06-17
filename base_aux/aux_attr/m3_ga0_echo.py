@@ -15,7 +15,7 @@ class Meta_GaClsEcho(type):
     def __getattr__(cls, item: str) -> str:
         """if no exists attr/meth
         """
-        if getattr(cls, "_UNDERSCORE_AS_SPACE"):
+        if hasattr(cls, "_UNDERSCORE_AS_SPACE") and getattr(cls, "_UNDERSCORE_AS_SPACE"):
             item = item.replace("_", " ")
         return item
 
