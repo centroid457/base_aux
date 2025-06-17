@@ -52,31 +52,45 @@ class ExampleAttrs1_Existed:
     _AE1 = 11
     __AE1 = 111
 
+    def meth1(self):
+        return 1
 
-class ExampleAttrs2_AnnotMiddle:
+    def _meth1(self):
+        return 11
+
+    def __meth1(self):
+        return 11
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ExampleAttrs21_AnnotMiddle(ExampleAttrs1_Existed):
     AN2: int = 2
     _AN2: int = 22
     __AN2: int = 222
 
+    def meth2(self) -> int:
+        return 2
 
-class ExampleAttrs32_AnnotLast(ExampleAttrs2_AnnotMiddle):
+    def _meth2(self) -> int:
+        return 22
+
+    def __meth2(self) -> int:
+        return 222
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ExampleAttrs321_AnnotLast(ExampleAttrs21_AnnotMiddle):
     AN3: int = 3
     _AN3: int = 33
     __AN3: int = 333
 
+    def meth3(self) -> int:
+        return 3
 
-class ExampleAttrs0321(ExampleAttrs32_AnnotLast, ExampleAttrs1_Existed):
-    """
-    GOAL
-    ----
-    keep one class with all specially marked attrs/annots
-    for exploring/testing attrs/annots on one object
+    def _meth3(self) -> int:
+        return 33
 
-    SPECIALLY CREATED FOR
-    ---------------------
-    Base_AttrDictDumping/Base_AttrDiff
-    """
-    pass
+    def __meth3(self) -> int:
+        return 333
 
 
 # =====================================================================================================================
