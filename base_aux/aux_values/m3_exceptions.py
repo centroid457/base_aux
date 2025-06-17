@@ -194,11 +194,11 @@ class Exx__Incompatible(Base_Exx):
     pass
 
 
-class Exx__Requirement(Exception):
+class Exx__Expected(Base_Exx):
     """
     GOAL
     ----
-    Any requirement!
+    Any requirement/exact cmp/eq
     """
 
 

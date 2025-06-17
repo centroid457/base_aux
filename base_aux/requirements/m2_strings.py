@@ -259,13 +259,13 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         # FINAL --------------
         if _meet_true is True and result is None:
             msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
-            raise Exx__Requirement(msg)
+            raise Exx__Expected(msg)
 
         if result in (True, None):
             return result
         else:
             msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
-            raise Exx__Requirement(msg)
+            raise Exx__Expected(msg)
 
 
 # =====================================================================================================================
