@@ -6,29 +6,6 @@ from base_aux.aux_expect.m1_expect_aux import *
 
 
 # =====================================================================================================================
-class Victim1_Existed:
-    # ANE
-    AE = 1
-    _AE = 11
-    __AE = 111
-
-
-class Victim2_AnnotMiddle(Victim1_Existed):
-    AM: int = 2
-    _AM: int = 22
-    __AM: int = 222
-
-
-class Victim3_AnnotLast(Victim2_AnnotMiddle):
-    AL: int = 3
-    _AL: int = 33
-    __AL: int = 333
-
-
-# TODO: ADD INTO PRIMITIVES!!!
-
-
-# =====================================================================================================================
 # @pytest.mark.parametrize(
 #     argnames="dicts, _EXPECTED",
 #     argvalues=[

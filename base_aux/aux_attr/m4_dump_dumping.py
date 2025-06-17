@@ -75,39 +75,3 @@ if __name__ == "__main__":
 
 
 # =====================================================================================================================
-from base_aux.aux_expect.m1_expect_aux import *
-
-
-class VictimAt:
-    at1 = 1
-    _at1 = 11
-    __at1 = 111
-
-
-class VictimAn:
-    an2: int = 2
-    _an2: int = 22
-    __an2: int = 222
-
-
-class VictimAnNest(VictimAn):
-    an3: int = 3
-    _an3: int = 33
-    __an3: int = 333
-
-
-@pytest.mark.parametrize(
-    argnames="source, skip_names, _EXPECTED",
-    argvalues=[
-        (VictimAt(), [], [{"at1": 1, "_at1": 11}, {}, {}]),
-        (VictimAn(), [], [{"an2": 2, "_an2": 22}, {"an2": 2, "_an2": 22}, {"an2": 2, "_an2": 22}]),
-        (VictimAnNest(), [], [{"an2": 2, "_an2": 22, "an3": 3, "_an3": 33}, {"an2": 2, "_an2": 22, "an3": 3, "_an3": 33}, {"an3": 3, "_an3": 33}]),
-    ]
-)
-def test__names(source, skip_names, _EXPECTED):
-    ExpectAux(AttrDictDumping_Existed(source)(*skip_names)).check_assert(_EXPECTED[0])
-    ExpectAux(AttrDictDumping_AnnotsAll(source)(*skip_names)).check_assert(_EXPECTED[1])
-    ExpectAux(AttrDictDumping_AnnotsLast(source)(*skip_names)).check_assert(_EXPECTED[2])
-
-
-# =====================================================================================================================

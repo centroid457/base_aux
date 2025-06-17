@@ -44,3 +44,39 @@ NAMES__SKIP_PARTS: list[str] = [
 
 
 # =====================================================================================================================
+class ExampleAttrs1_Existed:
+    """
+    just a set of exact attrs
+    """
+    AE1 = 1
+    _AE1 = 11
+    __AE1 = 111
+
+
+class ExampleAttrs2_AnnotMiddle:
+    AN2: int = 2
+    _AN2: int = 22
+    __AN2: int = 222
+
+
+class ExampleAttrs32_AnnotLast(ExampleAttrs2_AnnotMiddle):
+    AN3: int = 3
+    _AN3: int = 33
+    __AN3: int = 333
+
+
+class ExampleAttrs0321(ExampleAttrs32_AnnotLast, ExampleAttrs1_Existed):
+    """
+    GOAL
+    ----
+    keep one class with all specially marked attrs/annots
+    for exploring/testing attrs/annots on one object
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Base_AttrDictDumping/Base_AttrDiff
+    """
+    pass
+
+
+# =====================================================================================================================
