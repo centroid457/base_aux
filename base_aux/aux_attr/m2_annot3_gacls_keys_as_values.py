@@ -141,7 +141,7 @@ class NestGaCls_AnnotNamesAsValuesIc(metaclass=Meta_ClsGaAnnotNamesAsValuesIc):
     all we want - access by '*.attribute' to the value,
     so minimum we need is using annotations, that's enough for IDE checker and return string values!
     """
-    _IC = Enum_IgnoreCase.IGNORECASE
+    pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------

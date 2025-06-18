@@ -13,9 +13,7 @@ def _explore_other():
     # 1=PACKAGING.version ---------
     from packaging import version
     ObjectInfo(version.parse(str((1,2,3)))).print()
-
     result = version.parse("2.3.1") < version.parse("10.1.2")
-
     ObjectInfo(version.parse("1.2.3")).print()
     print(result)
     print()
@@ -23,7 +21,6 @@ def _explore_other():
     # 2=PKG_RESOURCES.parse_version ---------
     from pkg_resources import parse_version         # DEPRECATED!!!
     parse_version("1.9.a.dev") == parse_version("1.9a0dev")
-
 
     import sys
     print(sys.winver)
