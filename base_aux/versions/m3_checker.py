@@ -7,7 +7,7 @@ from base_aux.versions.m2_version import Version
 
 
 # =====================================================================================================================
-class CheckVersion(NestGa_Prefix_RaiseIf):
+class Base_CheckVersion(NestGa_Prefix_RaiseIf):
     SOURCE: Union[Any, Callable[..., Any]] = sys.version.split()[0]
     # print(sys.version_info)   # sys.version_info(major=3, minor=8, micro=10, releaselevel='final', serial=0)
     # return sys.version_info[:3]     # (3, 8, 10)
@@ -47,20 +47,7 @@ class CheckVersion(NestGa_Prefix_RaiseIf):
     def check_gt(self, target: Any):
         return self.ACTUAL > target
 
-
-# =====================================================================================================================
-class CheckVersion_Python(CheckVersion):
-    """
-    check version of python interpreter.
-
-    USAGE
-    -----
-    CheckVersion_Python().raise_if_not__check_ge("2")
-    CheckVersion_Python().raise_if_not__check_ge("3.11")
-    CheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
-    """
-    SOURCE = sys.version.split()[0]
-
+    # -----------------------------------------------------------------------------------------------------------------
     raise_if__check_eq: Callable[..., NoReturn | None]
     raise_if_not__check_eq: Callable[..., NoReturn | None]
 
@@ -78,6 +65,22 @@ class CheckVersion_Python(CheckVersion):
 
     raise_if__check_gt: Callable[..., NoReturn | None]
     raise_if_not__check_gt: Callable[..., NoReturn | None]
+
+
+# =====================================================================================================================
+class CheckVersion_Python(Base_CheckVersion):
+    """
+    check version of python interpreter.
+
+    USAGE
+    -----
+    CheckVersion_Python().raise_if_not__check_ge("2")
+    CheckVersion_Python().raise_if_not__check_ge("3.11")
+    CheckVersion_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
+
+    FIXME: seems can use EqRaise
+    """
+    SOURCE = sys.version.split()[0]
 
 
 # =====================================================================================================================
