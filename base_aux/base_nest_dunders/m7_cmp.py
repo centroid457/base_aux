@@ -26,11 +26,25 @@ class NestCmp_LGET:
     __le__ = lambda self, other: self.__cmp__(other) <= 0
     __ge__ = lambda self, other: self.__cmp__(other) >= 0
 
-    ltgt = lambda self, other1, other2: self > other1 and self < other2
-    ltge = lambda self, other1, other2: self > other1 and self <= other2
+    # USING - for just raiseIf prefix!
+    # FIXME: seems need to DEPRECATE? use direct EqValid_LGTE???
 
-    legt = lambda self, other1, other2: self >= other1 and self < other2
-    lege = lambda self, other1, other2: self >= other1 and self <= other2
+    # ------------------------
+    check_ltgt = lambda self, other1, other2: self > other1 and self < other2
+    check_ltge = lambda self, other1, other2: self > other1 and self <= other2
+
+    check_legt = lambda self, other1, other2: self >= other1 and self < other2
+    check_lege = lambda self, other1, other2: self >= other1 and self <= other2
+
+    # ------------------------
+    check_eq = lambda self, other: self == other
+    check_ne = lambda self, other: self != other
+
+    check_lt = lambda self, other: self < other
+    check_le = lambda self, other: self <= other
+
+    check_gt = lambda self, other: self > other
+    check_ge = lambda self, other: self >= other
 
     # CMP -------------------------------------------------------------------------------------------------------------
     def __cmp__(self, other: Any) -> int | NoReturn:

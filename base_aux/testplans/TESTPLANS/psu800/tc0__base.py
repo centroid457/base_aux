@@ -75,8 +75,8 @@ class _Base_TcAtc(Base_TestCase):
                 # Valid(
                 #     value_link=cls.STAND.DEV_LINES.ATC[0].GET,
                 #     args__value="VOUT",
-                #     validate_link=lambda source: ValidAux.lege(source, cls.ATC_VOUT * 0.9, cls.ATC_VOUT * 1.1),
-                #     name="GET+lege",
+                #     validate_link=lambda source: ValidAux.check_lege(source, cls.ATC_VOUT * 0.9, cls.ATC_VOUT * 1.1),
+                #     name="GET+check_lege",
                 # ),
                 Valid(
                     value_link=cls.STAND.DEV_LINES.ATC[0]._buffers_clear__read,

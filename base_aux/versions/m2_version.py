@@ -1,6 +1,10 @@
+from typing import *
+import sys
+
 from base_aux.aux_types.m2_info import *
 from base_aux.versions.m1_block import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
+from base_aux.aux_attr.m3_ga1_prefix_1_inst import NestGa_Prefix_RaiseIf
 
 
 # =====================================================================================================================
@@ -35,14 +39,27 @@ TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,  TYPE__VERSION_B
 
 
 # =====================================================================================================================
-class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr):
+class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
     """
+    GOAL
+    ----
+    make a version object from any source
+    direct CMP with any Other object
+
     NOTE
     ----
     VERSION - SPLIT DOTS!
     BLOCK - SPLIT ELEMENTS!
 
     :ivar SOURCE: try to pass parsed value! it will try to self-parse in _prepare_string, but make it ensured on your own!
+
+    USAGE CMP
+    ---------
+    Version_Python().raise_if_not__check_ge("2")
+    Version_Python().raise_if_not__check_ge("3.11")
+    Version_Python().raise_if_not__check_ge("3.11rc1", _comment="need Python GRATER EQUAL")
+
+    FIXME: seems can use EqRaise
     """
     SOURCE: Any
     PREPARSE: str = None
@@ -50,14 +67,15 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr):
 
     RAISE: bool = True
 
-    def __init__(self, source: Any, preparse: str = None, _raise: bool = None) -> None | NoReturn:
+    def __init__(self, source: Any = None, preparse: str = None, _raise: bool = None) -> None | NoReturn:
         if preparse is not None:
             self.PREPARSE = preparse
 
         if _raise is not None:
             self.RAISE = _raise
 
-        self.SOURCE = source
+        if source is not None:
+            self.SOURCE = source
 
         self._prepare_source()
         self._parse_blocks()
@@ -67,6 +85,13 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr):
         """
         ONLY PREPARE STRING FOR CORRECT SPLITTING BLOCKS - parsing blocks would inside VersionBlock
         """
+
+        # TODO: is it need to resolve callables??? - by now NOT!
+        # if TypeAux(self.SOURCE).check__callable_func_meth_inst():
+        #     value = self.SOURCE()
+        # else:
+        #     value = self.SOURCE
+
         if isinstance(self.SOURCE, (list, tuple)):
             result = ".".join([str(block) for block in self.SOURCE])
         else:
@@ -130,6 +155,11 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr):
         return ".".join([str(block) for block in self.BLOCKS])
 
     def __bool__(self):
+        """
+        GOAL
+        ----
+        if exists at least one NoZERO-block - return True! otherwise return False!
+        """
         if len(self) == 0:
             return False
         for block in self.BLOCKS:
@@ -187,6 +217,25 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr):
 
         # final - longest ------------
         return int(len(self) > len(other)) or -1
+
+    # -----------------------------------------------------------------------------------------------------------------
+    raise_if__check_eq: Callable[..., NoReturn | None]
+    raise_if_not__check_eq: Callable[..., NoReturn | None]
+
+    raise_if__check_ne: Callable[..., NoReturn | None]
+    raise_if_not__check_ne: Callable[..., NoReturn | None]
+
+    raise_if__check_le: Callable[..., NoReturn | None]
+    raise_if_not__check_le: Callable[..., NoReturn | None]
+
+    raise_if__check_lt: Callable[..., NoReturn | None]
+    raise_if_not__check_lt: Callable[..., NoReturn | None]
+
+    raise_if__check_ge: Callable[..., NoReturn | None]
+    raise_if_not__check_ge: Callable[..., NoReturn | None]
+
+    raise_if__check_gt: Callable[..., NoReturn | None]
+    raise_if_not__check_gt: Callable[..., NoReturn | None]
 
 
 # =====================================================================================================================
