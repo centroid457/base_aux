@@ -13,6 +13,11 @@ from base_aux.aux_values.m3_exceptions import Exx__Expected
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
+        ((1,), LAMBDA_RAISE, [False, False]),
+        ((1,), 1, [True, True]),
+        ((1, 2), 1, [False, True]),
+        ((1, 2), 0, [False, False]),
+
         ((EqValid_Raise(), EqValid_NotRaise(), ), LAMBDA_RAISE, [False, True]),
         ((EqValid_NotRaise(), EqValid_Raise(), ), LAMBDA_RAISE, [False, True]),
 
@@ -28,7 +33,9 @@ from base_aux.aux_values.m3_exceptions import Exx__Expected
 def test___EqValidator(args, other, _EXPECTED):
     ExpectAux(EqValidChain_All(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValidChain_Any(*args) == other).check_assert(_EXPECTED[1])
-    # ExpectAux(lambda: EqRaise_Any(*args) == other).check_assert(Exx__Expected if _EXPECTED else None)
+
+    ExpectAux(lambda: EqRaise_All(*args) == other).check_assert(Exx__Expected if _EXPECTED[0] else None)
+    ExpectAux(lambda: EqRaise_Any(*args) == other).check_assert(Exx__Expected if _EXPECTED[1] else None)
 
 
 # =====================================================================================================================
