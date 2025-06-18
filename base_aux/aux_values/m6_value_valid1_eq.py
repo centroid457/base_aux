@@ -17,12 +17,12 @@ class ValueEqValid(NestCall_Resolve):
     """
     __value: Any = NoValue
     VALUE_DEFAULT: Any = NoValue
-    EQ: Base_EqValid | type[Base_EqValid] | EqValidChain | type[NoValue] = NoValue
+    EQ: Base_EqValid | type[Base_EqValid] | type[NoValue] = NoValue
 
     def __init__(
             self,
             value: Any = NoValue,
-            eq: Base_EqValid | type[Base_EqValid] | EqValidChain | type[NoValue] = NoValue,
+            eq: Base_EqValid | type[Base_EqValid] | type[NoValue] = NoValue,
             eq_args: TYPING.ARGS_DRAFT = ARGS_FINAL__BLANK,          # NOTE: dont try to use INDIRECT style passing */**!!! but why???
             eq_kwargs: TYPING.KWARGS_DRAFT = KWARGS_FINAL__BLANK,
     ) -> None | NoReturn:

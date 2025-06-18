@@ -11,6 +11,10 @@ class EqArgs(NestInit_Args_Implicit, NestCall_Resolve, NestBool_Resolve):
     GOAL
     ----
     return True if all Args equal (with first arg)
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    DictDiff to cmp all elements in list with each other
     """
     def resolve(self) -> bool | NoReturn:
         # only one chans for Raise - not enough count --------------
