@@ -8,7 +8,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
     return from class just name of annotation as string value.
     if no corresponding annotation - raise!
     """
-    _IC = Enum_IgnoreCase.IGNORECASE    # NOTE: DONT USE ANOTATIONS!!!! _IC: Enum_IgnoreCase
+    _IC = Enum_IgnoreCase.IGNORECASE    # NOTE: DONT USE ANNOTATIONS here!!!! _IC: Enum_IgnoreCase
 
     # IC DEPENDENT ---------------------------------------
     def __getattr__(cls, item: str) -> str | NoReturn:
@@ -141,9 +141,10 @@ class NestGaCls_AnnotNamesAsValuesIc(metaclass=Meta_ClsGaAnnotNamesAsValuesIc):
     all we want - access by '*.attribute' to the value,
     so minimum we need is using annotations, that's enough for IDE checker and return string values!
     """
-    pass
+    _IC = Enum_IgnoreCase.IGNORECASE
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 class NestGaCls_AnnotNamesAsValuesCs(metaclass=Meta_ClsGaAnnotNamesAsValuesCs):
     pass
 
