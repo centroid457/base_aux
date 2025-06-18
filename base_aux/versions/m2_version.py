@@ -61,7 +61,7 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
 
     FIXME: seems can use EqRaise
     """
-    SOURCE: Any
+    SOURCE: Any = None
     PREPARSE: str = None
     BLOCKS: TYPE__VERSION_BLOCKS_FINAL = ()
 

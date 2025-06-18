@@ -11,7 +11,7 @@ class Test__Version:
         argvalues=[
             # ONE BLOCK ---------------------
             (True, ["", (), "", False]),
-            # (None, ["", (), "", False]),
+            (None, ["", (), "", False]),
             ("True", ["", (), "", False]),
             ("HELLO", ["", (), "", False]),
 
