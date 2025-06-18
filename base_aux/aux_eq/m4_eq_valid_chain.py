@@ -2,7 +2,7 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-# @final      # NOTE: dont use FINAL HERE! - used for - EqRaise_Any!
+# @final      # NOTE: dont use FINAL HERE! - used for - EqRaiseIf_Any!
 class Base_EqValidChain(EqValid_EQ):
     """
     GOAL

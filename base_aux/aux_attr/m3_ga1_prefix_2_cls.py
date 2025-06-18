@@ -22,6 +22,7 @@ class Meta_GaClsPrefix_Example(type):
     """
     # TODO: add example! + tests! +REF!
     # dont change markers! use exists!
+    # FIXME: change exact markers not direct but as LIST!!!
     _MARKER__BOOL_IF: str = "bool_if__"
     _MARKER__BOOL_IF_NOT: str = "bool_if_not__"
     _MARKER__RAISE_IF: str = "raise_if__"

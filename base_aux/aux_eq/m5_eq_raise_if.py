@@ -4,7 +4,7 @@ from base_aux.aux_eq.m4_eq_valid_chain import *
 
 
 # =====================================================================================================================
-class Base_EqRaise(Base_EqValidChain):
+class Base_EqRaiseIf(Base_EqValidChain):
     """
     GOAL
     ----
@@ -34,7 +34,7 @@ class Base_EqRaise(Base_EqValidChain):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqRaise_Any(Base_EqRaise):
+class EqRaiseIf_Any(Base_EqRaiseIf):
     """
     NOTE
     ----
@@ -44,7 +44,7 @@ class EqRaise_Any(Base_EqRaise):
 
 
 @final
-class EqRaise_All(Base_EqRaise):
+class EqRaiseIf_All(Base_EqRaiseIf):
     """
     NOTE
     ----
@@ -58,10 +58,10 @@ class EqRaise_All(Base_EqRaise):
 if __name__ == "__main__":
     pass
 
-    1 == EqRaise_Any(0)
+    1 == EqRaiseIf_Any(0)
 
     try:
-        1 == EqRaise_Any(1)
+        1 == EqRaiseIf_Any(1)
     except:
         assert True
     else:

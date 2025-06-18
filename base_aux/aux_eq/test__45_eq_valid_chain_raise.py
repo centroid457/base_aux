@@ -5,7 +5,7 @@ from base_aux.aux_values.m4_primitives import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_eq.m4_eq_valid_chain import *
 
-from base_aux.aux_eq.m5_eq_raise import *
+from base_aux.aux_eq.m5_eq_raise_if import *
 from base_aux.aux_values.m3_exceptions import Exx__Expected
 
 
@@ -34,8 +34,8 @@ def test___EqValidator(args, other, _EXPECTED):
     ExpectAux(EqValidChain_All(*args) == other).check_assert(_EXPECTED[0])
     ExpectAux(EqValidChain_Any(*args) == other).check_assert(_EXPECTED[1])
 
-    ExpectAux(lambda: EqRaise_All(*args) == other).check_assert(Exx__Expected if _EXPECTED[0] else None)
-    ExpectAux(lambda: EqRaise_Any(*args) == other).check_assert(Exx__Expected if _EXPECTED[1] else None)
+    ExpectAux(lambda: EqRaiseIf_All(*args) == other).check_assert(Exx__Expected if _EXPECTED[0] else None)
+    ExpectAux(lambda: EqRaiseIf_Any(*args) == other).check_assert(Exx__Expected if _EXPECTED[1] else None)
 
 
 # =====================================================================================================================
