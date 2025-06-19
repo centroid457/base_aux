@@ -1,5 +1,5 @@
 from base_aux.aux_callable.m1_callable import *
-from base_aux.aux_values.m2_typing import TYPING, TYPING__VALID_VALIDATOR
+from base_aux.aux_types.m0_static_typing import TYPING, TYPING__VALID_VALIDATOR
 from base_aux.base_nest_dunders.m3_calls import *
 
 

@@ -1,9 +1,9 @@
 import re
 
 from base_aux.aux_attr.m4_dump0_dumped import *
-from base_aux.aux_values.m2_typing import TYPING
+from base_aux.aux_types.m0_static_typing import TYPING
 from base_aux.aux_values.m5_enums import *
-from base_aux.aux_values.m2_types import *
+from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_callable.m1_callable import CallableAux
 from base_aux.aux_types.m1_type_aux import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!

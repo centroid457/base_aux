@@ -1,8 +1,8 @@
 import platform
 
 from base_aux.aux_callable.m1_callable import *
-from base_aux.aux_values.m2_types import *
-from base_aux.aux_values.m2_typing import TYPING
+from base_aux.aux_types.m0_static_types import *
+from base_aux.aux_types.m0_static_typing import TYPING
 
 # =====================================================================================================================
 TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]

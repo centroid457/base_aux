@@ -2,7 +2,7 @@ from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_nest_dunders.m1_init1_source import *
 
-from base_aux.aux_values.m2_types import TYPES
+from base_aux.aux_types.m0_static_types import TYPES
 
 
 # =====================================================================================================================

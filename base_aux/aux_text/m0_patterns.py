@@ -4,7 +4,7 @@ GOAL
 try keep all patterns for life!
 """
 from base_aux.aux_values.m5_enums import *
-from base_aux.aux_values.m1_value_special import *
+from base_aux.aux_values.m2_value_special import *
 
 
 # =====================================================================================================================

@@ -2,7 +2,7 @@ import datetime
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_eq.m2_eq_aux import *
-from base_aux.aux_values.m2_typing import TYPING, TYPING__VALID_VALIDATOR, TYPING__LAMBDA_CONSTRUCTOR
+from base_aux.aux_types.m0_static_typing import TYPING, TYPING__VALID_VALIDATOR, TYPING__LAMBDA_CONSTRUCTOR
 
 
 # =====================================================================================================================

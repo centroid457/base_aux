@@ -4,7 +4,7 @@ import string
 
 from base_aux.aux_text.m0_patterns import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
-from base_aux.aux_values.m2_typing import TYPING
+from base_aux.aux_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================

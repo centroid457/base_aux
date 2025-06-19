@@ -1,7 +1,7 @@
 import pytest
 from pytest import mark
 
-from base_aux.aux_values.m2_typing import TYPING__LAMBDA_CONSTRUCTOR
+from base_aux.aux_types.m0_static_typing import TYPING__LAMBDA_CONSTRUCTOR
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.aux_eq.m2_eq_aux import *
 

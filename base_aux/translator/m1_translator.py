@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.aux_values.m1_value_special import NoValue
+from base_aux.aux_values.m2_value_special import NoValue
 
 from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
 

@@ -1,7 +1,7 @@
 import pathlib
 
 from base_aux.aux_text.m1_text_aux import TextAux
-from base_aux.aux_values.m2_typing import TYPING
+from base_aux.aux_types.m0_static_typing import TYPING
 from base_aux.path2_file.m2_file import FileAux
 
 from base_aux.aux_text.m0_patterns import *

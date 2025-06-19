@@ -1,8 +1,8 @@
 from typing import *
 import pathlib
 
-from base_aux.aux_values.m1_value_special import VALUE_SPECIAL
-from base_aux.aux_values.m2_types import TYPES
+from base_aux.aux_values.m2_value_special import VALUE_SPECIAL
+from base_aux.aux_types.m0_static_types import TYPES
 
 
 # =====================================================================================================================

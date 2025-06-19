@@ -1,6 +1,6 @@
 from base_aux.aux_eq.m3_eq_valid2_validators import *
 from base_aux.aux_eq.m3_eq_valid1_base import *
-from base_aux.aux_values.m2_types import *
+from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_values.m5_enums import *
 
 

@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_values.m1_value_special import NoValue
+from base_aux.aux_values.m2_value_special import NoValue
 # from base_aux.aux_types.m1_type_aux import *      # RECURSION EXX
 
 

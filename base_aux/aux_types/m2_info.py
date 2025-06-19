@@ -37,7 +37,7 @@ TODO:
 """
 from typing import *
 
-from base_aux.aux_types.m0_static import *
+from base_aux.aux_types.m0_static_aux import *
 from base_aux.aux_types.m1_type_aux import TypeAux
 from base_aux.aux_attr.m0_static import check_name__buildin, NAMES__SKIP_PARTS
 
