@@ -162,7 +162,7 @@ class ClsMiddleGroup:
         """
         middle groups could be cmp only by this method!
         """
-        if not TypeAux(other).check__nested__by_cls_or_inst(ClsMiddleGroup):
+        if not TypeAux(other).check__nested__from_cls_or_inst(ClsMiddleGroup):
             return
 
         other = TypeAux(other).get__class()

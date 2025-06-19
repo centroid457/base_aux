@@ -35,25 +35,25 @@ class TestCase(Base_TcAtcPtb):
             ValidNoCum(
                 value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="V12S",
-                validate_link=EqValid_LeGe_NumParsedSingle(11, 13).resolve,
+                validate_link=EqValid_LGTE_NumParsedSingle(ge=11, le=13).resolve,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
                 value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="V12M",
-                validate_link=EqValid_LeGe_NumParsedSingle(11, 13).resolve,
+                validate_link=EqValid_LGTE_NumParsedSingle(ge=11, le=13).resolve,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
                 value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="IOUT",
-                validate_link=EqValid_LeGe_NumParsedSingle(load / 12 / 2, None).resolve,
+                validate_link=EqValid_LGTE_NumParsedSingle(ge=load / 12 / 2).resolve,
                 name="GET+valid diapason",
             ),
             ValidNoCum(
                 value_link=self.DEV_COLUMN.DUT.GET,
                 args__value="IIN",
-                validate_link=EqValid_LeGe_NumParsedSingle(load / 12 / 2, None).resolve,
+                validate_link=EqValid_LGTE_NumParsedSingle(ge=load / 12 / 2).resolve,
                 name="GET+valid diapason",
             ),
         ]

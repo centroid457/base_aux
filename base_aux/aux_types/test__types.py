@@ -766,7 +766,7 @@ class Test__1:
         ]
     )
     def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
-        func_link = TypeAux(source).check__nested__by_cls_or_inst
+        func_link = TypeAux(source).check__nested__from_cls_or_inst
         ExpectAux(func_link, parent).check_assert(_EXPECTED)
 
 

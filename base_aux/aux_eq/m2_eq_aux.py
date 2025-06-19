@@ -20,7 +20,7 @@ class EqAux(NestInit_Source):
 
         # EXX ------
         if TypeAux(other).check__exception():
-            if TypeAux(self.SOURCE).check__nested__by_cls_or_inst(other):   # CORRECT ORDER!!!
+            if TypeAux(self.SOURCE).check__nested__from_cls_or_inst(other):   # CORRECT ORDER!!!
                 return True
         # WORK ------
         try:

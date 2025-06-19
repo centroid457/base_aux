@@ -79,10 +79,10 @@ class Nest_EqCls:
         cls1: Self = TypeAux(obj1).get__class()
         cls2: Self = TypeAux(obj2).get__class()
 
-        if TypeAux(cls1).check__nested__by_cls_or_inst(Nest_EqCls):
+        if TypeAux(cls1).check__nested__from_cls_or_inst(Nest_EqCls):
             # cls1: Nest_EqCls
             return cls1._eq_cls__check(cls2)
-        elif TypeAux(cls2).check__nested__by_cls_or_inst(Nest_EqCls):
+        elif TypeAux(cls2).check__nested__from_cls_or_inst(Nest_EqCls):
             # cls1: Nest_EqCls
             return cls2._eq_cls__check(cls1)
         else:
