@@ -36,7 +36,6 @@ def test____LE__():
 
         (True, 111, {"111": 222}, True, True),
         (True, 111, {"111": 222}, False, False),
-        (True, 111, {"111": 222}, Exception, False),
 
         (False, (), {}, True, False),
 
@@ -49,9 +48,18 @@ def test____LE__():
         (LAMBDA_ECHO, (True, ), {}, True, True),
         (lambda value: value, (), {"value": True}, True, True),
         (lambda value: value, (), {"value": None}, True, False),
+
+        # TYPES -------
+        (int, (), {}, int, True),
+        (1, (), {}, int, True),
+        (1, (), {}, float, False),
+        (1, (), {}, Exception, False),
+        (Exception, (), {}, Exception, True),
+        (Exception(), (), {}, Exception, True),
+
     ]
 )
-def test__pytest_func_tester(func_link, args, kwargs, _EXPECTED, _pytestExpected):
+def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
         ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
     except:

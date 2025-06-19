@@ -22,7 +22,7 @@ class ExpectAux(NestInit_SourceKwArgs_Explicite):
             # args: TYPING.ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPING.KWARGS_DRAFT = None,
 
-            _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE OR ExxClass/noCallable!
+            _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE (noCallable) OR AnyCLass - to cmp as isinstanceOrSubclass!!!
             _MARK: pytest.MarkDecorator | None = None,
             _COMMENT: str | None = None,
     ) -> None | NoReturn:
@@ -58,16 +58,15 @@ class ExpectAux(NestInit_SourceKwArgs_Explicite):
         elif isinstance(_MARK, pytest.MarkDecorator) and _MARK.name == "skipif" and all(_MARK.args):
             pytest.skip("skipIF")
 
+        result = (
+            TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
+            or
+            EqAux(actual_value).check_doubleside__bool(_EXPECTED)
+        )
         if _MARK == mark.xfail:
-            if TypeAux(_EXPECTED).check__exception():
-                assert not TypeAux(actual_value).check__nested__from_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
-            else:
-                assert EqAux(actual_value).check_doubleside__reverse(_EXPECTED), f"[xfail]{comment}"
+            assert not result, f"[xfail]{comment}"
         else:
-            if TypeAux(_EXPECTED).check__exception():
-                assert TypeAux(actual_value).check__nested__from_cls_or_inst(_EXPECTED)
-            else:
-                assert EqAux(actual_value).check_doubleside__bool(_EXPECTED)
+            assert result
 
     def check_bool(self, *args, **kwargs) -> bool:
         """
@@ -82,22 +81,22 @@ class ExpectAux(NestInit_SourceKwArgs_Explicite):
             return False
 
 
-# # =====================================================================================================================
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
-# pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+# =====================================================================================================================
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
+pass    # USAGE EXAMPLES ----------------------------------------------------------------------------------------------
 
 def _example_TUPLE_ARGS():
     """
