@@ -1,9 +1,10 @@
 from base_aux.aux_callable.m1_callable import *
 from base_aux.aux_values.m2_types import *
+from base_aux.base_nest_dunders.m3_calls import *
 
 
 # =====================================================================================================================
-class Base_EqValid:
+class Base_EqValid(NestCall_Resolve):
     """
     RULES
     -----
@@ -147,10 +148,10 @@ class Base_EqValid:
 
     # VALIDATE-1=VALUE SINGLE -----------------------------------------------------------------------------------------
     def __eq__(self, other_draft) -> bool:
-        return self.validate(other_draft)
+        return self.resolve(other_draft)
 
     def __contains__(self, item) -> bool:
-        return self.validate(item)
+        return self.resolve(item)
 
     # VALIDATE-2=VALUE with argsKwrgs----------------------------------------------------------------------------------
     def __call__(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
@@ -160,9 +161,9 @@ class Base_EqValid:
         other_args/* - only for manual usage!
         typically used only other and only by direct eq(o1 == o2)
         """
-        return self.validate(other_draft, *other_args, **other_kwargs)
+        return self.resolve(other_draft, *other_args, **other_kwargs)
 
-    def validate(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
+    def resolve(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
         """
         GOAL
         ----

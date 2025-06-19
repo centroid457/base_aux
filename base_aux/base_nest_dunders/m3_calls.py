@@ -40,7 +40,7 @@ class NestCall_Resolve:
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
         return self.resolve()
 
-    def resolve(self) -> Any | NoReturn:
+    def resolve(self, *args, **kwargs) -> Any | NoReturn:
         return NotImplemented
 
 

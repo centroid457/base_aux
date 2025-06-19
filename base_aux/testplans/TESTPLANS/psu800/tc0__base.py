@@ -195,7 +195,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                         if self.expect__psu_may_start__hv()
                         else
                         dict(ge=0, le=0.1))
-                    ).validate,
+                    ).resolve,
                     name="GET+valid diapason",
                 ),
 
@@ -208,7 +208,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                         if self.expect__psu_may_start__hv_or_ext()
                         else
                         dict(ge=0, le=0.1))
-                    ).validate,
+                    ).resolve,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
@@ -219,7 +219,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                         if self.expect__psu_may_start__hv_or_ext() and self.PTB_SET_PSON
                         else
                         dict(ge=0, le=0.1))
-                    ).validate,
+                    ).resolve,
                     name="GET+valid diapason",
                 ),
 
@@ -227,13 +227,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IIN",
-                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).validate,
+                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).resolve,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IOUT",
-                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).validate,
+                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).resolve,
                     name="GET+valid diapason",
                 ),
             ]

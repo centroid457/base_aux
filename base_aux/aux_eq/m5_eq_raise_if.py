@@ -22,8 +22,8 @@ class Base_EqRaiseIf(Base_EqValidChain):
             self.MSG = msg
         super().__init__(*args, **kwargs)
 
-    def validate(self, other_draft: Any, *other_args, **other_kwargs) -> None | NoReturn:
-        validated = super().validate(other_draft, *other_args, **other_kwargs)
+    def resolve(self, other_draft: Any, *other_args, **other_kwargs) -> None | NoReturn:
+        validated = super().resolve(other_draft, *other_args, **other_kwargs)
         if validated:
             if self.MSG is not None:
                 msg = str(self.MSG)
