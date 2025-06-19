@@ -1,6 +1,6 @@
 import time
 
-# from base_aux.aux_argskwargs.m1_argskwargs import TYPE__LAMBDA_CONSTRUCTOR
+# from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 
 from base_aux.aux_eq.m2_eq_aux import *

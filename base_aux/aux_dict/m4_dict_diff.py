@@ -1,6 +1,6 @@
 from base_aux.aux_eq.m1_eq_args import *
 from base_aux.aux_dict.m1_dict_aux import *
-
+from base_aux.aux_values.m2_typing import TYPING
 
 # =====================================================================================================================
 TIPING__DICT_DIFF = dict[Any, tuple[Any, ...]]

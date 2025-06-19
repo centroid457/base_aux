@@ -2,6 +2,7 @@ import datetime
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_eq.m2_eq_aux import *
+from base_aux.aux_values.m2_typing import TYPING, TYPING__VALID_VALIDATOR, TYPING__LAMBDA_CONSTRUCTOR
 
 
 # =====================================================================================================================
@@ -50,11 +51,11 @@ class Valid:
     NAME: str = ""      # TODO: realise access to Valid from Chains!
     COMMENT: str = ""
 
-    SKIP_LINK: TYPE__VALID_BOOL__DRAFT = None
-    VALUE_LINK: TYPE__LAMBDA_CONSTRUCTOR
-    VALIDATE_LINK: TYPE__VALID_VALIDATOR = True
+    SKIP_LINK: TYPING.BOOL__DRAFT = None
+    VALUE_LINK: TYPING__LAMBDA_CONSTRUCTOR
+    VALIDATE_LINK: TYPING__VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPE__VALID_BOOL__DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
+    REVERSE_LINK: TYPING.BOOL__DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
     ARGS__VALUE: TYPING.ARGS_FINAL = ()
     ARGS__VALIDATE: TYPING.ARGS_FINAL = ()
@@ -64,12 +65,12 @@ class Valid:
 
     # RESULT ACTUAL ------------------------------
     timestamp_last: datetime.datetime | None = None
-    skip_last: TYPE__VALID_BOOL__FINAL = False
+    skip_last: TYPING.RESULT__BOOL = False
     STATE_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
-    value_last: TYPE__VALID_RESULT = None               # direct result value for calculating func value_link
-    validate_last: TYPE__VALID_BOOL_EXX__FINAL = True   # direct result value for calculating func validate_link === decide using only bool???
-    reverse_last: TYPE__VALID_BOOL__FINAL = None
-    validate_last_bool: TYPE__VALID_BOOL__FINAL         # represented value for validation
+    value_last: TYPING.RESULT__ANY_EXX = None               # direct result value for calculating func value_link
+    validate_last: TYPING.RESULT__BOOL_EXX = True   # direct result value for calculating func validate_link === decide using only bool???
+    reverse_last: TYPING.RESULT__BOOL = None
+    validate_last_bool: TYPING.RESULT__BOOL         # represented value for validation
     log_lines: list[str] = None
 
     # CHAINS -------------------------------------
@@ -79,11 +80,11 @@ class Valid:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            value_link: TYPE__LAMBDA_CONSTRUCTOR = NoValue,
-            validate_link: Optional[TYPE__VALID_VALIDATOR] = None,
+            value_link: TYPING__LAMBDA_CONSTRUCTOR = NoValue,
+            validate_link: Optional[TYPING__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
-            skip_link: TYPE__VALID_BOOL__DRAFT= None,
-            reverse_link: TYPE__VALID_BOOL__DRAFT = None,
+            skip_link: TYPING.BOOL__DRAFT= None,
+            reverse_link: TYPING.BOOL__DRAFT = None,
 
             args__value: TYPING.ARGS_DRAFT = (),
             args__validate: TYPING.ARGS_DRAFT = (),

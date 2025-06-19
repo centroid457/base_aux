@@ -1,5 +1,5 @@
 from base_aux.aux_callable.m1_callable import *
-from base_aux.aux_values.m2_types import *
+from base_aux.aux_values.m2_typing import TYPING, TYPING__VALID_VALIDATOR
 from base_aux.base_nest_dunders.m3_calls import *
 
 
@@ -47,7 +47,7 @@ class Base_EqValid(NestCall_Resolve):
         dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
         dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
     """
-    VALIDATOR: TYPE__VALID_VALIDATOR    # DEFINE!!!
+    VALIDATOR: TYPING__VALID_VALIDATOR    # DEFINE!!!
 
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
     V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
@@ -67,7 +67,7 @@ class Base_EqValid(NestCall_Resolve):
     def __init__(
             self,
             *v_args,
-            _validator: TYPE__VALID_VALIDATOR = None,
+            _validator: TYPING__VALID_VALIDATOR = None,
             _iresult_reverse: bool = None,
             _iresult_cumulate: Enum_BoolCumulate = None,
             _other_final__resolve: bool = None,

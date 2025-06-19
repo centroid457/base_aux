@@ -1,6 +1,7 @@
 import pytest
 from pytest import mark
 
+from base_aux.aux_values.m2_typing import TYPING__LAMBDA_CONSTRUCTOR
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.aux_eq.m2_eq_aux import *
 
@@ -15,14 +16,14 @@ class ExpectAux(NestInit_SourceKwArgs_Explicite):
     ---------------------
     unit tests bypytest
     """
-    SOURCE: TYPE__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
+    SOURCE: TYPING__LAMBDA_CONSTRUCTOR    # if func would get Exx - instance of exx would be returned for value!
 
     def check_assert(
             self,
             # args: TYPING.ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPING.KWARGS_DRAFT = None,
 
-            _EXPECTED: TYPE__VALID_RESULT = True,  # EXACT VALUE (noCallable) OR AnyCLass - to cmp as isinstanceOrSubclass!!!
+            _EXPECTED: TYPING.EXPECTED = True,  # EXACT VALUE (noCallable) OR AnyCLass - to cmp as isinstanceOrSubclass!!!
             _MARK: pytest.MarkDecorator | None = None,
             _COMMENT: str | None = None,
     ) -> None | NoReturn:

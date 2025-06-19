@@ -1,4 +1,5 @@
 import pytest
+import pathlib
 
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.path1_dir.m1_dirpath import *

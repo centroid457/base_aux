@@ -1,6 +1,5 @@
 import pytest
 
-from base_aux.aux_types.m2_info import ObjectInfo
 from base_aux.requirements.m2_strings import *
 
 

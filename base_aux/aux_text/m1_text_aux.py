@@ -2,9 +2,9 @@ import json
 import re
 import string
 
-from base_aux.aux_values.m2_types import *
 from base_aux.aux_text.m0_patterns import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
+from base_aux.aux_values.m2_typing import TYPING
 
 
 # =====================================================================================================================

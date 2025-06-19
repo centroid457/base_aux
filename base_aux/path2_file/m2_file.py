@@ -1,5 +1,3 @@
-from typing import *
-
 from base_aux.path1_dir.m2_dir import *
 from base_aux.aux_text.m1_text_aux import *
 

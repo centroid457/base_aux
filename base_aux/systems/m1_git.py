@@ -1,7 +1,4 @@
-import datetime
-
 from base_aux.aux_text.m1_text_aux import TextAux
-from base_aux.aux_types.m2_info import ObjectInfo
 from base_aux.path1_dir.m2_dir import *
 
 
