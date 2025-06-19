@@ -51,11 +51,11 @@ class Valid:
     NAME: str = ""      # TODO: realise access to Valid from Chains!
     COMMENT: str = ""
 
-    SKIP_LINK: TYPING.BOOL__DRAFT = None
+    SKIP_LINK: TYPING.BOOL_DRAFT = None
     VALUE_LINK: TYPING__LAMBDA_CONSTRUCTOR
     VALIDATE_LINK: TYPING__VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
-    REVERSE_LINK: TYPING.BOOL__DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
+    REVERSE_LINK: TYPING.BOOL_DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
     ARGS__VALUE: TYPING.ARGS_FINAL = ()
     ARGS__VALIDATE: TYPING.ARGS_FINAL = ()
@@ -83,8 +83,8 @@ class Valid:
             value_link: TYPING__LAMBDA_CONSTRUCTOR = NoValue,
             validate_link: Optional[TYPING__VALID_VALIDATOR] = None,
             validate_retry: Optional[int] = None,
-            skip_link: TYPING.BOOL__DRAFT= None,
-            reverse_link: TYPING.BOOL__DRAFT = None,
+            skip_link: TYPING.BOOL_DRAFT= None,
+            reverse_link: TYPING.BOOL_DRAFT = None,
 
             args__value: TYPING.ARGS_DRAFT = (),
             args__validate: TYPING.ARGS_DRAFT = (),

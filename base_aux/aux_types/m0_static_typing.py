@@ -43,7 +43,7 @@ class TYPING:
     ITERPATH = tuple[ITERPATH_KEY, ...]
 
     # -----------------------------------------------------------------------------------------------------------------
-    BOOL__DRAFT = Union[
+    BOOL_DRAFT = Union[
         None,
         Any,                                # fixme: hide? does it need? for results like []/{}/()/0/"" think KEEP! it mean you must know that its expecting boolComparing in further logic!
         bool,                               # as main idea! as already final generic
