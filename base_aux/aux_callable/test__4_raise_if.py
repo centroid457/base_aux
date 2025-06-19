@@ -29,19 +29,7 @@ from base_aux.aux_values.m3_exceptions import Exx__Expected
 
         # SEVERAL ---
         ((0, 1,), [None, Exx__Expected]),
-
-
-
-        # ((EqValid_Raise(), EqValid_NotRaise(), ), LAMBDA_RAISE, [False, True]),
-        # ((EqValid_NotRaise(), EqValid_Raise(), ), LAMBDA_RAISE, [False, True]),
-        #
-        # ((EqValid_NotRaise(), ), LAMBDA_RAISE, [False, False]),
-        # ((EqValid_NotRaise(), ), 1, [True, True]),
-        # ((EqValid_NotRaise(), EqValid_Raise()), 1, [False, True]),
-        #
-        # ((EqValid_NotRaise(), EqValid_GE(1)), 1, [True, True]),
-        # ((EqValid_NotRaise(), EqValid_GE(100)), 1, [False, True]),
-        # ((EqValid_NotRaise(), EqValid_GE(100, _iresult_reverse=True)), 1, [True, True]),
+        ((LAMBDA_RAISE, 1,), [None, Exx__Expected]),
     ]
 )
 def test__RaiseIf(args, _EXPECTED):
