@@ -235,7 +235,7 @@ class TypeAux(NestInit_Source):
         # except:
         #     return False
 
-    def check_metaclassed(self) -> bool:
+    def check__metaclassed(self) -> bool:
         """
         just an idea to show that class crates by metaclass!
         no idea how and where to use! just a toy for playing and deeper understanding
@@ -248,11 +248,48 @@ class TypeAux(NestInit_Source):
     def check__instance_not_elementary(self) -> bool:
         return self.check__instance() and not self.check__elementary()
 
-    def check__nested__by_cls_or_inst(self, parent: Any | type[Any]) -> bool | None:
+    def check__subclassed_or_isinst(self, parent_cls: type[Any]) -> bool | None:
         """
+        DIFFERENCE from - check__nested__from_cls_or_inst
+        ----------
+        parent is only CLASS!
+
+        GOAL
+        ----
+        check if source is subclass or instance(main goal!) of other/parent
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        aux_expect - clearly replace check__nested__from_cls_or_inst!
+        used to apply in _EXCEPT-value like Class for this case OR instance in other cases!!
+
+        :returns:
+            True - if any
+            False - if not validated
+            NONE - ifparent is not class! check cant be process!
+        """
+        if TypeAux(parent_cls).check__class():
+            try:
+                return issubclass(self.SOURCE, parent_cls)
+            except:
+                # in case of not CLASS
+                pass
+
+            return isinstance(self.SOURCE, parent_cls)
+        else:
+            # FIXME: decide to return FALSE!??
+            return
+
+    def check__nested__from_cls_or_inst(self, parent_cls_or_inst: Any | type[Any]) -> bool | None:
+        """
+        # FIXME: decide to deprecate???  use check__subclass_or_isinst instead???
+        GOAL
+        ----
         any of both variant (Instance/Class) comparing with TARGET of both variant (Instance/Class)
 
-        specially created for pytest_aux for comparing with Exception!
+        SPECIALLY CREATED FOR
+        ---------------------
+        pytest_aux for comparing with Exception!
         """
         # CMP OBJ!!!! cls_inst
         # try:
@@ -261,7 +298,7 @@ class TypeAux(NestInit_Source):
         #     checkable = isinstance(other, Nest_EqCls)
 
         source_cls = self.get__class()
-        parent_cls = TypeAux(parent).get__class()
+        parent_cls = TypeAux(parent_cls_or_inst).get__class()
         return issubclass(source_cls, parent_cls)
 
     # EXX -------------------------------------------------------------------------------------------------------------

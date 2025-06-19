@@ -60,12 +60,12 @@ class ExpectAux(NestInit_SourceKwArgs_Explicite):
 
         if _MARK == mark.xfail:
             if TypeAux(_EXPECTED).check__exception():
-                assert not TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
+                assert not TypeAux(actual_value).check__nested__from_cls_or_inst(_EXPECTED), f"[xfail]{comment}"
             else:
                 assert EqAux(actual_value).check_doubleside__reverse(_EXPECTED), f"[xfail]{comment}"
         else:
             if TypeAux(_EXPECTED).check__exception():
-                assert TypeAux(actual_value).check__nested__by_cls_or_inst(_EXPECTED)
+                assert TypeAux(actual_value).check__nested__from_cls_or_inst(_EXPECTED)
             else:
                 assert EqAux(actual_value).check_doubleside__bool(_EXPECTED)
 

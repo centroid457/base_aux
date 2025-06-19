@@ -728,46 +728,46 @@ class Test__1:
     @pytest.mark.parametrize(
         argnames="source, parent, _EXPECTED",
         argvalues=[
-            ("str", "str", True),
-            ("str", str, True),
-            (str, "str", True),
-            (str, str, True),
+            ("str", "str", [True, None]),
+            ("str", str, [True, True]),
+            (str, "str", [True, None]),
+            (str, str, [True, True]),
 
-            (int, str, False),
-            (int, "str", False),
+            (int, str, [False, False]),
+            (int, "str", [False, None]),
 
-            (111, 111, True),
-            (int, 111, True),
-            (111, int, True),
-            (int, int, True),
+            (111, 111, [True, None]),
+            (int, 111, [True, None]),
+            (111, int, [True, True]),
+            (int, int, [True, True]),
 
-            (Exception, Exception, True),
-            (Exception(), Exception, True),
-            (Exception, Exception(), True),
-            (Exception(), Exception(), True),
+            (Exception, Exception, [True, True]),
+            (Exception(), Exception, [True, True]),
+            (Exception, Exception(), [True, None]),
+            (Exception(), Exception(), [True, None]),
 
-            (ClsException, Exception, True),
-            (ClsException(), Exception, True),
-            (ClsException, Exception(), True),
-            (ClsException(), Exception(), True),
+            (ClsException, Exception, [True, True]),
+            (ClsException(), Exception, [True, True]),
+            (ClsException, Exception(), [True, None]),
+            (ClsException(), Exception(), [True, None]),
 
-            (Exception, ClsException, False),      # REMEMBER! not clear!
-            (Exception(), ClsException, False),    # REMEMBER! not clear!
-            (Exception, ClsException(), False),    # REMEMBER! not clear!
-            (Exception(), ClsException(), False),  # REMEMBER! not clear!
+            (Exception, ClsException, [False, False]),      # REMEMBER! not clear!
+            (Exception(), ClsException, [False, False]),    # REMEMBER! not clear!
+            (Exception, ClsException(), [False, None]),    # REMEMBER! not clear!
+            (Exception(), ClsException(), [False, None]),  # REMEMBER! not clear!
 
-            (Cls, Cls, True),
-            (Cls, Cls(), True),
-            (Cls(), Cls, True),
-            (Cls(), Cls(), True),
+            (Cls, Cls, [True, True]),
+            (Cls, Cls(), [True, None]),
+            (Cls(), Cls, [True, True]),
+            (Cls(), Cls(), [True, None]),
 
-            (FUNC, Cls, False),
-            (FUNC, Cls(), False),
+            (FUNC, Cls, [False, False]),
+            (FUNC, Cls(), [False, None]),
         ]
     )
     def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
-        func_link = TypeAux(source).check__nested__from_cls_or_inst
-        ExpectAux(func_link, parent).check_assert(_EXPECTED)
+        ExpectAux(TypeAux(source).check__nested__from_cls_or_inst, parent).check_assert(_EXPECTED[0])
+        ExpectAux(TypeAux(source).check__subclassed_or_isinst, parent).check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

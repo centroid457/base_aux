@@ -29,7 +29,7 @@ class EqAux(NestInit_Source):
                 return True
         except Exception as exx:
             result = exx
-            # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__by_cls_or_inst(other):
+            # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__from_cls_or_inst(other):
             #     return True
             if return_bool:
                 result = False
