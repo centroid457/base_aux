@@ -37,8 +37,11 @@ class TYPING:
     DICT_STR_STR = DICT_INI = dict[str, str]               # just to show - parsed by ini!
     JSON_ANY = ELEMENTARY | DICT_STR_ELEM  # just to show - parsed by json - any object
 
+    DICT_ANY_TUPLE_ANY = dict[Any, tuple[Any, ...]]     # as DICT_DIFF_DICTS
+    DICT_STR_TUPLE_ANY = dict[str, tuple[Any, ...]]     # as DICT_DIFF_ATTRS
+
     # -----------------------------------------------------------------------------------------------------------------
-    ORDERED_ITERABLE = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
+    ITERABLE_ORDERED = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
     ITERPATH_KEY = Union[Any, int]   # Any is for dict
     ITERPATH = tuple[ITERPATH_KEY, ...]
 

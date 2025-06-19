@@ -1,9 +1,6 @@
 from base_aux.aux_eq.m1_eq_args import *
 from base_aux.aux_dict.m1_dict_aux import *
-from base_aux.aux_types.m0_static_typing import TYPING
-
-# =====================================================================================================================
-TIPING__DICT_DIFF = dict[Any, tuple[Any, ...]]
+from base_aux.aux_types.m0_static_typing import *
 
 
 # =====================================================================================================================
@@ -23,13 +20,17 @@ class Base_DiffResolve(NestInit_Args_Implicit, NestCall_Resolve):
     ---------------------
     cmp two objects by attr values
     """
-    ARGS: tuple[TYPING.DICT_ANY_ANY, ...]
-    DIFF: TIPING__DICT_DIFF
-    __diff: TIPING__DICT_DIFF = {}
+    ARGS: tuple[Any, ...]
+    DIFF: TYPING.DICT_ANY_TUPLE_ANY
+    __diff: TYPING.DICT_ANY_TUPLE_ANY = {}
 
-    def resolve(self) -> TIPING__DICT_DIFF:
+    def resolve(self) -> TYPING.DICT_ANY_TUPLE_ANY:
+        """
+
+        """
         return NotImplemented
 
+    # -----------------------------------------------------------------------------------------------------------------
     def __bool__(self) -> bool:
         """
         GOAL
@@ -40,9 +41,8 @@ class Base_DiffResolve(NestInit_Args_Implicit, NestCall_Resolve):
         """
         return bool(self.DIFF)
 
-    # -----------------------------------------------------------------------------------------------------------------
     @property
-    def DIFF(self) -> TIPING__DICT_DIFF:
+    def DIFF(self) -> TYPING.DICT_ANY_TUPLE_ANY:
         """
         GOAL
         ----
@@ -63,7 +63,9 @@ class Base_DiffResolve(NestInit_Args_Implicit, NestCall_Resolve):
 
 # =====================================================================================================================
 class DictDiff(Base_DiffResolve):
-    def resolve(self) -> TIPING__DICT_DIFF:
+    ARGS: tuple[TYPING.DICT_ANY_ANY, ...]
+
+    def resolve(self) -> TYPING.DICT_ANY_TUPLE_ANY:
         keys: list[Any] = [key for DICT in self.ARGS for key in DICT]
         keys = sorted(keys)
 

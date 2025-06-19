@@ -26,7 +26,7 @@ class IterAux(NestInit_Source):
         assert self.victim("hello1/hello2/0", {"hello1": {"hello2": [1]}}) == Explicit(["hello1", "hello2", 0, ])
         assert self.victim("hello1/hello2/1", {"hello1": {"hello2": [1]}}) is None
     """
-    SOURCE: TYPING.ORDERED_ITERABLE = dict
+    SOURCE: TYPING.ITERABLE_ORDERED = dict
     # PATH: list[TYPING.ITERPATH_KEY]   # todo: get back!!! to work with source! or make new class!
 
     # def init_post(self):
