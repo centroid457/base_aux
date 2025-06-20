@@ -74,7 +74,7 @@ class FileAttrs_Loader(TextFile, NestCall_Resolve):
 
             result = self.TARGET(**data)
         else:
-            AnnotsAllAux(self.TARGET).sai__by_args_kwargs(**data)
+            AttrAux_AnnotsAll(self.TARGET).sai__by_args_kwargs(**data)
             result = self.TARGET
 
         return result

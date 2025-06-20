@@ -15,7 +15,7 @@
 - [pytest]:  
 	- add ini/settings file in root  
 	- hide logs for caught Raises (like in Try sent)  
-- [Annots] add AnnotsLastAux =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast  
+- [Annots] add AttrAux_AnnotsLast =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast  
 - [DictAux] separate to Base/DictAuxInline/Copy +add walk in keys_rename__by_func  
 
 0.2.24(2025.03.20 17.03.41)
@@ -81,7 +81,7 @@
 0.2.15(2025.03.06 14.57.16)
 ------------------------------
 - [TESTS] move all near source code  
-- [AnnotsAllAux] BIG REF:  
+- [AttrAux_AnnotsAll] BIG REF:  
 	- make nested Annots from Attrs +use same meth in both  
 	- rename sai_*/gai_  
 	- add values__reinit_mutable +NestInit_Mutable  
@@ -191,7 +191,7 @@
 	- [xxxAux]rename objects  
 	- [EqValid/Value] big creation  
 	- [CallableAux] create  
-- [AttrAux] ref/fix/add dump/loadfix iters  
+- [AttrAux_Existed] ref/fix/add dump/loadfix iters  
 - [Enums] extend  
 - [TextAux] ref+finish  
 - [game_nouns_5letters] start creating  
@@ -259,7 +259,7 @@
 0.0.26 (2024/11/29 14:12:13)
 ------------------------------
 - [classes] add AttrsInitKwargs+Translator  
-- [AttrAux] add attrs__to_dict  
+- [AttrAux_Existed] add attrs__to_dict  
 - [gui] apply Translator for headers[gui] fix columns resizeByContents  
 
 0.0.25 (2024/11/27 15:19:07)

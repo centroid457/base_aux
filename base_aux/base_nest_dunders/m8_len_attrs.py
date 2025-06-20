@@ -15,13 +15,13 @@ class NestLen_AttrNotPrivate:
     dont use in Nest* classes - it can used only in FINALs!!! cause it can have same or meaning is not appropriate!
     """
     def __len__(self) -> int:
-        return len([*AttrAux(self).iter__names_filter__not_private()])
+        return len([*AttrAux_Existed(self).iter__names_filter__not_private()])
 
 
 # =====================================================================================================================
 class NestLen_AttrNotHidden:
     def __len__(self) -> int:
-        return len([*AttrAux(self).iter__names_filter__not_hidden()])
+        return len([*AttrAux_Existed(self).iter__names_filter__not_hidden()])
 
 
 # =====================================================================================================================

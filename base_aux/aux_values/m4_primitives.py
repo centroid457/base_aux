@@ -588,8 +588,8 @@ def _callable__show_who_really_are():
     # from base_aux.aux_types import ObjectInfo
     # ObjectInfo(VALUES_CALLABLE).print()
     # exit()
-    from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
-    for name, item in AttrAux(VALUES_CALLABLE).dump_dict().items():
+    from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_Existed
+    for name, item in AttrAux_Existed(VALUES_CALLABLE).dump_dict().items():
         print(f"{name}={callable(item)}")
 
 

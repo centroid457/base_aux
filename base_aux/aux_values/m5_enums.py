@@ -263,7 +263,7 @@ class Enum_FormIntExt(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    AttrAux show internal external names for PRIVATES
+    AttrAux_Existed show internal external names for PRIVATES
     """
     INTERNAL = 1
     EXTERNAL = 2

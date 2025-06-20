@@ -54,7 +54,7 @@ class IterAux(NestInit_Source):
         if isinstance(self.SOURCE, (list, tuple, dict, set)):
             values = self.SOURCE
         else:
-            values = AttrAux(self.SOURCE).iter__names_filter__not_private()
+            values = AttrAux_Existed(self.SOURCE).iter__names_filter__not_private()
 
         for value in values:
             try:
@@ -111,7 +111,7 @@ class IterAux(NestInit_Source):
                     return
 
             else:
-                key_original = AttrAux(source).name_ic__get_original(str(key_i))
+                key_original = AttrAux_Existed(source).name_ic__get_original(str(key_i))
                 if key_original is None:
                     return
                 else:
@@ -133,7 +133,7 @@ class IterAux(NestInit_Source):
             try:
                 result = result[key_i]
             except:
-                result = AttrAux(result).gai_ic(key_i)     # raise
+                result = AttrAux_Existed(result).gai_ic(key_i)     # raise
 
         return result
 
@@ -154,7 +154,7 @@ class IterAux(NestInit_Source):
                     try:
                         source[key_i] = value
                     except:
-                        AttrAux(source).sai_ic(key_i, value)     # raise
+                        AttrAux_Existed(source).sai_ic(key_i, value)     # raise
                     return True
                 else:
                     source = IterAux(source).value__get(key_i)

@@ -82,7 +82,7 @@ class DictDirect_Fail(dict, NestGAI_AnnotAttrIC):
     ]
 )
 def test__annot__get_not_defined(source, _EXPECTED):
-    func_link = AnnotsAllAux(source).annots__get_not_defined
+    func_link = AttrAux_AnnotsAll(source).annots__get_not_defined
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -104,7 +104,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
     ]
 )
 def test__annot__check_all_defined(source, _EXPECTED):
-    func_link = AnnotsAllAux(source).annots__check_all_defined
+    func_link = AttrAux_AnnotsAll(source).annots__check_all_defined
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -126,7 +126,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
     ]
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
-    func_link = AnnotsAllAux(source).annots__check_all_defined_or_raise
+    func_link = AttrAux_AnnotsAll(source).annots__check_all_defined_or_raise
     ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -161,7 +161,7 @@ class Test__1:
         ]
     )
     def test__dict_types(self, source, _EXPECTED):
-        func_link = AnnotsAllAux(source).dump_dict__annot_types
+        func_link = AttrAux_AnnotsAll(source).dump_dict__annot_types
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -173,7 +173,7 @@ class Test__1:
         ]
     )
     def test__dict_values(self, source, _EXPECTED):
-        func_link = AnnotsAllAux(source).dump_dict
+        func_link = AttrAux_AnnotsAll(source).dump_dict
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -185,7 +185,7 @@ class Test__1:
         ]
     )
     def test__iter_values(self, source, _EXPECTED):
-        func_link = list(AnnotsAllAux(source).iter__annot_values())
+        func_link = list(AttrAux_AnnotsAll(source).iter__annot_values())
         ExpectAux(func_link).check_assert(_EXPECTED)
 
     # =================================================================================================================
@@ -197,7 +197,7 @@ class Test__1:
         ]
     )
     def test__all_defined(self, source, _EXPECTED):
-        func_link = AnnotsAllAux(source).annots__check_all_defined
+        func_link = AttrAux_AnnotsAll(source).annots__check_all_defined
         ExpectAux(func_link).check_assert(_EXPECTED)
 
 
@@ -209,8 +209,8 @@ def test__all_defined2():
         ATTR01 = 11
 
     victim11 = Victim11()
-    assert AnnotsAllAux(victim1).annots__check_all_defined() == False
-    assert AnnotsAllAux(victim11).annots__check_all_defined() == True
+    assert AttrAux_AnnotsAll(victim1).annots__check_all_defined() == False
+    assert AttrAux_AnnotsAll(victim11).annots__check_all_defined() == True
 
 
 # =====================================================================================================================
@@ -236,7 +236,7 @@ class VictimSet:
 def test__set(data, _EXPECTED):
     victim = VictimSet()
 
-    AnnotsAllAux(victim).sai__by_kwargs(**data)
+    AttrAux_AnnotsAll(victim).sai__by_kwargs(**data)
     for index in range(4):
         ExpectAux(getattr, (victim, f"A{index}")).check_assert(_EXPECTED[index])
 
@@ -256,13 +256,13 @@ def test__annots_ensure():
     except:
         pass
 
-    AnnotsAllAux(victim).annots__ensure()
+    AttrAux_AnnotsAll(victim).annots__ensure()
     assert victim.__annotations__ == {}
 
 
 def test__annots_append():
     # ---------------------------------------------------------
-    victim = AnnotsAllAux().annots__append(astr=str, aint=1)
+    victim = AttrAux_AnnotsAll().annots__append(astr=str, aint=1)
     assert victim.aint == 1
 
     try:
@@ -272,7 +272,7 @@ def test__annots_append():
         pass
 
     # ---------------------------------------------------------
-    victim2 = AnnotsAllAux().annots__append(astr="hello")
+    victim2 = AttrAux_AnnotsAll().annots__append(astr="hello")
     try:
         victim2.aint
         assert False
@@ -283,7 +283,7 @@ def test__annots_append():
     assert victim.__annotations__ != victim2.__annotations__
 
     # ---------------------------------------------------------
-    victim3 = AnnotsAllAux(victim).annots__append(astr="hello")
+    victim3 = AttrAux_AnnotsAll(victim).annots__append(astr="hello")
     assert victim3.aint == 1
     assert victim3.astr == "hello"
 
@@ -305,10 +305,10 @@ class Test__SpecialObjects:
 
         victimNT = Victim(1)
 
-        assert AnnotsAllAux(victimNT).annots__get_not_defined() == []
-        assert AnnotsAllAux(victimNT).annots__check_all_defined() == True
-        assert AnnotsAllAux(victimNT).dump_dict__annot_types() == {"ATTR1": int, "ATTR2": int, }
-        # assert AnnotsAllAux(victimNT).dump_dict() == {"ATTR1": 1, "ATTR2": 2, }
+        assert AttrAux_AnnotsAll(victimNT).annots__get_not_defined() == []
+        assert AttrAux_AnnotsAll(victimNT).annots__check_all_defined() == True
+        assert AttrAux_AnnotsAll(victimNT).dump_dict__annot_types() == {"ATTR1": int, "ATTR2": int, }
+        # assert AttrAux_AnnotsAll(victimNT).dump_dict() == {"ATTR1": 1, "ATTR2": 2, }
 
     @pytest.mark.skip
     def test__DataClass(self):

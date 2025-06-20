@@ -39,7 +39,7 @@ class PROJECT(PROJECT_BASE):
             "add ini/settings file in root",
             "hide logs for caught Raises (like in Try sent)",
          ],
-        "[Annots] add AnnotsLastAux =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast",
+        "[Annots] add AttrAux_AnnotsLast =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast",
         "[DictAux] separate to Base/DictAuxInline/Copy +add walk in keys_rename__by_func",
     ]
 

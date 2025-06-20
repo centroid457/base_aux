@@ -1,7 +1,7 @@
 from typing import *
 from base_aux.aux_values.m2_value_special import NoValue
 
-from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_Existed
 
 
 # =====================================================================================================================
@@ -25,7 +25,7 @@ class Translator:
             self.RETURN_SOURCE_IF_NOT_FOUND = return_source_if_not_found
 
         if not isinstance(self.RULES, dict):
-            self.RULES = AttrAux(self.RULES).dump_dict()
+            self.RULES = AttrAux_Existed(self.RULES).dump_dict()
 
     def __call__(self, source: Any, *args, **kwargs) -> Any | type[NoValue]:
         """

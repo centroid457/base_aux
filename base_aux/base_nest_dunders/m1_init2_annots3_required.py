@@ -14,7 +14,7 @@ class NestInit_AnnotsRequired(NestGAI_AnnotAttrIC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        AnnotsAllAux(self).annots__check_all_defined_or_raise()  # check only after superInit!
+        AttrAux_AnnotsAll(self).annots__check_all_defined_or_raise()  # check only after superInit!
 
     # TODO: deside is it really need NamedTuple and dataclasses??? seems its not need!!! - NEED!!! realise later!!!
 

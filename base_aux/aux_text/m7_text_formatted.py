@@ -57,15 +57,15 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
                 key = f"_{index}"
             result_dict.update({key: None})
 
-        self.VALUES = AnnotsAllAux().annots__append(**result_dict)
+        self.VALUES = AttrAux_AnnotsAll().annots__append(**result_dict)
 
     def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
-        AnnotsAllAux(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
+        AttrAux_AnnotsAll(self.VALUES).sai__by_args_kwargs(*args, **kwargs)
         self.types__apply_on_values()
 
     def init__types(self) -> None:
         annots_dict = self.VALUES.__annotations__
-        values_dict = AnnotsAllAux(self.VALUES).dump_dict()
+        values_dict = AttrAux_AnnotsAll(self.VALUES).dump_dict()
         for name, type_i in annots_dict.items():
             if (type_i == Any) and (name in values_dict) and (values_dict[name] is not None):
                 annots_dict[name] = type(values_dict[name])
@@ -73,7 +73,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     # -----------------------------------------------------------------------------------------------------------------
     def types__apply_on_values(self) -> None | NoReturn:
         annots_dict = self.VALUES.__annotations__
-        values_dict = AnnotsAllAux(self.VALUES).dump_dict()
+        values_dict = AttrAux_AnnotsAll(self.VALUES).dump_dict()
         for name, type_i in annots_dict.items():
             if (type_i != Any) and (name in values_dict) and (values_dict[name] is not None):
                 value = values_dict[name]
@@ -83,7 +83,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
                     if self.RAISE_TYPES:
                         raise exx
 
-                AnnotsAllAux(self.VALUES).sai__by_args_kwargs(**{name: value})
+                AttrAux_AnnotsAll(self.VALUES).sai__by_args_kwargs(**{name: value})
 
     def types__check_on_values(self) -> bool:
         """
@@ -110,7 +110,7 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
     def __str__(self) -> str:
         self.types__apply_on_values()
         result = str(self.PAT_FORMAT)
-        values = AnnotsAllAux(self.VALUES).dump_dict()
+        values = AttrAux_AnnotsAll(self.VALUES).dump_dict()
         group_index = 0
         while True:
             match = re.search(PatFormat.FIND_NAMES__IN_PAT, result)

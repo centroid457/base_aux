@@ -15,7 +15,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
         return cls[item]
 
     def __getitem__(cls, item: int | str | Any) -> str | NoReturn:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
         try:
             item = int(item)
         except:
@@ -33,7 +33,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
                 raise AttributeError(msg)
 
     def __contains__(cls, item: str) -> bool:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
         if cls._IC == Enum_IgnoreCase.IGNORECASE:
             return IterAux(annots).item__check_exist(item)
         else:
@@ -41,15 +41,15 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
 
     # IC independent ---------------------------------------
     def __iter__(cls) -> Iterable[str]:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
         yield from annots
 
     def __len__(cls) -> int:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
         return len(annots)
 
     def __str__(cls) -> str:
-        annots = AnnotsAllAux(cls).dump_dict__annot_types()
+        annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
         return str(tuple(annots))
 
     def __repr__(cls) -> str:

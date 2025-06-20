@@ -533,7 +533,7 @@ class Base_TpGui(Gui):
         except:
             dev_inst = self.DATA.STAND.DEV_LINES[dev_group_name]
 
-        text = AnnotsAllAux(dev_inst).dump_str__pretty()
+        text = AttrAux_AnnotsAll(dev_inst).dump_str__pretty()
         self.PTE.setPlainText(text)
 
         self.TM_DEV._data_reread()

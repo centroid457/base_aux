@@ -15,7 +15,7 @@ class NestInit_Source:
 
     SPECIALLY CREATED FOR
     ---------------------
-    apply in AttrAux and same others
+    apply in AttrAux_Existed and same others
 
     :ivar SOURCE: use Lambda or even simple Callable to make a callableGenerate default value! like dict or other user class.
         main Idea for Callable Source is generate independent value in instances.

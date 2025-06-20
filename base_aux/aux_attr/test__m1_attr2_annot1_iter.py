@@ -81,9 +81,9 @@ class VictimAnNest(VictimAn):
     ]
 )
 def test__ITER_1__iter__dirnames_original_not_builtin(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__dirnames_original_not_builtin())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -112,9 +112,9 @@ def test__ITER_1__iter__dirnames_original_not_builtin(source, skip_names, _EXPEC
     ]
 )
 def test__ITER__iter__names_filter__not_hidden(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__names_filter__not_hidden())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -139,9 +139,9 @@ def test__ITER__iter__names_filter__not_hidden(source, skip_names, _EXPECTED):
     ]
 )
 def test__ITER__iter__names_filter__not_private(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__names_filter__not_private())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -166,9 +166,9 @@ def test__ITER__iter__names_filter__not_private(source, skip_names, _EXPECTED):
     ]
 )
 def test__ITER__iter__names_filter__private(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__names_filter__private())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -194,9 +194,9 @@ def test__ITER__iter__names_filter__private(source, skip_names, _EXPECTED):
     ]
 )
 def test__ITER___iter_mro(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names)._iter_mro())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -221,9 +221,9 @@ def test__ITER___iter_mro(source, skip_names, _EXPECTED):
     ]
 )
 def test__ITER__iter__annot_names(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__annot_names())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================
@@ -248,9 +248,9 @@ def test__ITER__iter__annot_names(source, skip_names, _EXPECTED):
     ]
 )
 def test__ITER__iter__annot_values(source, skip_names, _EXPECTED):
-    ExpectAux(set(AttrAux(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[0]))
-    ExpectAux(set(AnnotsAllAux(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[1]))
-    ExpectAux(set(AnnotsLastAux(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[2]))
+    ExpectAux(set(AttrAux_Existed(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[0]))
+    ExpectAux(set(AttrAux_AnnotsAll(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[1]))
+    ExpectAux(set(AttrAux_AnnotsLast(source, *skip_names).iter__annot_values())).check_assert(set(_EXPECTED[2]))
 
 
 # =====================================================================================================================

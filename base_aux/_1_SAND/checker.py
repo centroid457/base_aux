@@ -31,7 +31,7 @@ class ValidAttr:
 
         result = {}
 
-        for name in AnnotsLastAux(self).iter__names_filter__not_hidden():
+        for name in AttrAux_AnnotsLast(self).iter__names_filter__not_hidden():
             attr_value = getattr(self, name)
 
             try:

@@ -67,7 +67,7 @@ class Nest_AttrKit(
 
 
 # =====================================================================================================================
-@final      # TODO: decide not use final and use nesting any kit, by collecting attrs???
+@final
 class AttrKit_Blank(Nest_AttrKit):
     """
     GOAL

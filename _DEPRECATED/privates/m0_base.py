@@ -1,4 +1,5 @@
 import abc
+import pathlib
 
 from base_aux.aux_types.m0_static_typing import TYPING
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
@@ -71,7 +72,8 @@ class PrivateBase(NestGAI_AnnotAttrIC, abc.ABC):
             self._RAISE = _raise
 
         if self._RAISE:
-            AnnotsAllAux(self).annots__check_all_defined_or_raise()
+
+            AttrAux_AnnotsAll(self).annots__check_all_defined_or_raise()
 
     def __str__(self):
         """return pretty string

@@ -31,12 +31,12 @@ class Base_AttrDictDumping(NestInit_Source, NestCall_Resolve):
         result_obj = None
 
         if self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ATTRS_EXISTED:
-            result_obj = AttrAux(self.SOURCE, *self.SKIP_NAMES)
+            result_obj = AttrAux_Existed(self.SOURCE, *self.SKIP_NAMES)
         elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
             if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED:
-                result_obj = AnnotsAllAux(self.SOURCE, *self.SKIP_NAMES)
+                result_obj = AttrAux_AnnotsAll(self.SOURCE, *self.SKIP_NAMES)
             elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
-                result_obj = AnnotsLastAux(self.SOURCE, *self.SKIP_NAMES)
+                result_obj = AttrAux_AnnotsLast(self.SOURCE, *self.SKIP_NAMES)
         else:
             raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 

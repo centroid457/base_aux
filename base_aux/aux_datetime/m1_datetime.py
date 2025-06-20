@@ -246,7 +246,7 @@ class DateTimeAux(NestCmp_LGET, NestRepr__ClsName_SelfStr):
         return self.SOURCE.strftime(pattern)
 
     def __getattr__(self, item: str) -> str | NoReturn:
-        if item in AttrAux(PatDateTimeFormat).iter__names_filter__not_hidden():
+        if item in AttrAux_Existed(PatDateTimeFormat).iter__names_filter__not_hidden():
             if isinstance(self.SOURCE, datetime.datetime):
                 pass
             elif isinstance(self.SOURCE, datetime.date):

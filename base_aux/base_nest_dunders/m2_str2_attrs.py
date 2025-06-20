@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux
+from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_Existed
 
 
 # =====================================================================================================================
@@ -16,7 +16,7 @@ class NestStR_AttrsNotPrivate:
     """
     def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
         result = ""
-        for attr_name in AttrAux(self).iter__names_filter__not_private():
+        for attr_name in AttrAux_Existed(self).iter__names_filter__not_private():
             if result:
                 result += ","
             elif not result:
@@ -45,7 +45,7 @@ class NestStR_AttrsNotHidden:
     """
     def __str__(self):  # it can used only in FINAL!!! dont use in Nest*!!!
         result = ""
-        for attr_name in AttrAux(self).iter__names_filter__not_hidden():
+        for attr_name in AttrAux_Existed(self).iter__names_filter__not_hidden():
             if result:
                 result += ","
             elif not result:

@@ -22,16 +22,16 @@ class NestEq_AttrsNotPrivate:
             return False
 
         try:
-            for attr in AttrAux(self).iter__names_filter__not_private():
+            for attr in AttrAux_Existed(self).iter__names_filter__not_private():
                 # 1=cmp direct --------
-                value_self_direct = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
-                value_other_direct = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_self_direct = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_other_direct = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
                 # 2=cmp callables --------      # TODO: use Enum_CallResolve.SKIPCALLABLES ???
-                value_self = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
-                value_other = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                value_self = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                value_other = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False
@@ -51,16 +51,16 @@ class NestEq_AttrsNotHidden:
             return False
 
         try:
-            for attr in AttrAux(self).iter__names_filter__not_hidden():
+            for attr in AttrAux_Existed(self).iter__names_filter__not_hidden():
                 # 1=cmp direct --------
-                value_self_direct = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
-                value_other_direct = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_self_direct = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_other_direct = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
                 # 2=cmp callables --------      # TODO: use Enum_CallResolve.SKIPCALLABLES ???
-                value_self = AttrAux(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
-                value_other = AttrAux(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                value_self = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                value_other = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False

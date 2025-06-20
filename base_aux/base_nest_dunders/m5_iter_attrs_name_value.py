@@ -6,7 +6,7 @@ from base_aux.aux_attr.m1_annot_attr1_aux import *
 # =====================================================================================================================
 class NestIter_AttrNameValueNotPrivate:
     def __iter__(self) -> tuple[str, Any]:
-        for name in AttrAux(self).iter__names_filter__not_private():
+        for name in AttrAux_Existed(self).iter__names_filter__not_private():
             value = getattr(self, name)
             yield name, value
 
@@ -14,7 +14,7 @@ class NestIter_AttrNameValueNotPrivate:
 # ---------------------------------------------------------------------------------------------------------------------
 class NestIter_AttrNameValueNotHidden:
     def __iter__(self) -> tuple[str, Any]:
-        for name in AttrAux(self).iter__names_filter__not_hidden():
+        for name in AttrAux_Existed(self).iter__names_filter__not_hidden():
             value = getattr(self, name)
             yield name, value
 
@@ -27,7 +27,7 @@ class NestIter_AnnotNameValueNotPrivate:
     MsgStruct
     """
     def __iter__(self) -> tuple[str, Any]:
-        for name in AnnotsAllAux(self).iter__names_filter__not_private():
+        for name in AttrAux_AnnotsAll(self).iter__names_filter__not_private():
             value = getattr(self, name)
             yield name, value
 
@@ -35,7 +35,7 @@ class NestIter_AnnotNameValueNotPrivate:
 # ---------------------------------------------------------------------------------------------------------------------
 class NestIter_AnnotNameValueNotHidden:
     def __iter__(self) -> tuple[str, Any]:
-        for name in AnnotsAllAux(self).iter__names_filter__not_hidden():
+        for name in AttrAux_AnnotsAll(self).iter__names_filter__not_hidden():
             value = getattr(self, name)
             yield name, value
 

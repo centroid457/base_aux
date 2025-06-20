@@ -16,8 +16,7 @@ TYPING__NAME_DRAFT = str | int | Any
 
 
 # =====================================================================================================================
-# @final    # NOTE: use nesting in Annots!
-class AttrAux(NestInit_Source):
+class Base_AttrAux(NestInit_Source):
     """
     NOTE
     ----
@@ -675,7 +674,7 @@ class AttrAux(NestInit_Source):
             callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
     ) -> AttrDumped | NoReturn:
         data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
-        obj = AttrAux(AttrDumped()).sai__by_args_kwargs(**data)
+        obj = AttrAux_Existed(AttrDumped()).sai__by_args_kwargs(**data)
         return obj
 
     def dump_obj__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
@@ -714,7 +713,14 @@ class AttrAux(NestInit_Source):
 
 # =====================================================================================================================
 @final
-class AnnotsAllAux(AttrAux):
+class AttrAux_Existed(Base_AttrAux):
+    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
+    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+@final
+class AttrAux_AnnotsAll(Base_AttrAux):
     """
     GOAL
     ----
@@ -747,7 +753,7 @@ class AnnotsAllAux(AttrAux):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AnnotsLastAux(AttrAux):
+class AttrAux_AnnotsLast(Base_AttrAux):
     """
     GOAL
     ----

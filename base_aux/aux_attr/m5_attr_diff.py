@@ -36,15 +36,15 @@ class Base_AttrDiff(Base_DiffResolve):
 
 
 # =====================================================================================================================
-class AttrDiff_Existed(NestCall_Resolve):
+class AttrDiff_Existed(Base_AttrDiff):
     CLS_ATTR_COLLECT: type[Base_AttrDictDumping] = AttrDictDumping_Existed
 
 
-class AttrDiff_AnnotsAll(NestCall_Resolve):
+class AttrDiff_AnnotsAll(Base_AttrDiff):
     CLS_ATTR_COLLECT: type[Base_AttrDictDumping] = AttrDictDumping_AnnotsAll
 
 
-class AttrDiff_AnnotsLast(NestCall_Resolve):
+class AttrDiff_AnnotsLast(Base_AttrDiff):
     CLS_ATTR_COLLECT: type[Base_AttrDictDumping] = AttrDictDumping_AnnotsLast
 
 
