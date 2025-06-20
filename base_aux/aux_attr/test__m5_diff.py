@@ -37,18 +37,56 @@ from base_aux.aux_values.m2_value_special import *
                 ExampleAttrs1_Existed(),
                 ExampleAttrs21_AnnotMiddle(),
                 [
-                    {'AN2': (NoValue, 2), '_AN2': (NoValue, 22), '_meth2': (NoValue, 22), 'meth2': (NoValue, 2)},
-                    {'AN2': (NoValue, 2), '_AN2': (NoValue, 22), '_meth2': (NoValue, 22), 'meth2': (NoValue, 2)},
-                    {},
+                    {
+                        'AN2': (NoValue, 2), '_AN2': (NoValue, 22), 'meth2': (NoValue, 2), '_meth2': (NoValue, 22),
+                    },
+                    {
+                        'AN2': (NoValue, 2), '_AN2': (NoValue, 22),
+                    },
+                    {
+                        'AN2': (NoValue, 2), '_AN2': (NoValue, 22),
+                    },
                 ]
         ),
-
+        (
+                ExampleAttrs1_Existed(),
+                ExampleAttrs321_AnnotLast(),
+                [
+                    {
+                        'AN2': (NoValue, 2), '_AN2': (NoValue, 22), 'meth2': (NoValue, 2), '_meth2': (NoValue, 22),
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33), 'meth3': (NoValue, 3), '_meth3': (NoValue, 33),
+                    },
+                    {
+                        'AN2': (NoValue, 2), '_AN2': (NoValue, 22),
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33),
+                    },
+                    {
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33),
+                    },
+                ]
+        ),
+        (
+                ExampleAttrs21_AnnotMiddle(),
+                ExampleAttrs321_AnnotLast(),
+                [
+                    {
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33), 'meth3': (NoValue, 3), '_meth3': (NoValue, 33),
+                    },
+                    {
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33),
+                    },
+                    {
+                        'AN2': (2, NoValue), '_AN2': (22, NoValue),
+                        'AN3': (NoValue, 3), '_AN3': (NoValue, 33),
+                    },
+                ]
+        ),
     ]
 )
 def test__names(source1, source2, _EXPECTED):
     ExpectAux(AttrDiff_Existed(source1, source2)).check_assert(_EXPECTED[0])
     ExpectAux(AttrDiff_AnnotsAll(source1, source2)).check_assert(_EXPECTED[1])
-    # ExpectAux(AttrDiff_AnnotsLast(source1, source2)).check_assert(_EXPECTED[2])
+    ExpectAux(AttrDiff_AnnotsLast(source1, source2)).check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
