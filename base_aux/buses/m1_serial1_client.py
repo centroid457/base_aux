@@ -13,7 +13,7 @@ from serial import Serial, PortNotOpenError
 from serial.tools import list_ports
 from base_aux.aux_values.m6_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
-from base_aux.aux_callable.m2_lambda3_list import *
+from base_aux.aux_callable.m4_lambda4_list import *
 
 from base_aux.buses.m0_history import HistoryIO
 

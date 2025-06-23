@@ -171,7 +171,7 @@ class CallableAux(NestInit_Source):
         ---------------------
         check Privates in pytest for skipping
 
-        USE LambdaTrySuccess instead!
+        USE Lambda_TrySuccess instead!
         """
         try:
             self.resolve_raise(*args, **kwargs)

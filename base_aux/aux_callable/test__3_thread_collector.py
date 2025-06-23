@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.aux_callable.m3_thread_collector import ThreadsDecorCollector
+from base_aux.aux_callable.m5_thread_collector import ThreadsDecorCollector
 
 
 # =====================================================================================================================

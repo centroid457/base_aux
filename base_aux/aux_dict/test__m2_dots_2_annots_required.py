@@ -1,4 +1,4 @@
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_TrySuccess, Lambda_TryFail
 from base_aux.aux_dict.m3_dict_ga1_simple import *
 
 
@@ -30,29 +30,29 @@ def test__obj():
 
 
 def test__dict_only():
-    assert LambdaTrySuccess(DictGaAnnotRequired) == True
-    assert LambdaTrySuccess(DictGaAnnotRequired)
+    assert Lambda_TrySuccess(DictGaAnnotRequired) == True
+    assert Lambda_TrySuccess(DictGaAnnotRequired)
 
-    assert LambdaTryFail(DictGaAnnotRequired) != True
-    assert not LambdaTryFail(DictGaAnnotRequired)
+    assert Lambda_TryFail(DictGaAnnotRequired) != True
+    assert not Lambda_TryFail(DictGaAnnotRequired)
 
-    assert LambdaTrySuccess(DictGaAnnotRequired, **dict_example)
-    assert LambdaTrySuccess(DictGaAnnotRequired, lowercase="lowercase")
-    assert LambdaTrySuccess(DictGaAnnotRequired, LOWERCASE="lowercase")
+    assert Lambda_TrySuccess(DictGaAnnotRequired, **dict_example)
+    assert Lambda_TrySuccess(DictGaAnnotRequired, lowercase="lowercase")
+    assert Lambda_TrySuccess(DictGaAnnotRequired, LOWERCASE="lowercase")
 
 
 def test__with_annots():
-    assert LambdaTryFail(Victim)
-    assert not LambdaTrySuccess(Victim)
+    assert Lambda_TryFail(Victim)
+    assert not Lambda_TrySuccess(Victim)
 
     victim = Victim(lowercase="lowercase")
     assert victim["lowercase"] == "lowercase"
 
-    assert LambdaTrySuccess(Victim, **dict_example)
-    assert LambdaTrySuccess(Victim, lowercase="lowercase")
-    assert LambdaTrySuccess(Victim, LOWERCASE="lowercase")
+    assert Lambda_TrySuccess(Victim, **dict_example)
+    assert Lambda_TrySuccess(Victim, lowercase="lowercase")
+    assert Lambda_TrySuccess(Victim, LOWERCASE="lowercase")
 
-    assert LambdaTryFail(Victim, hello="lowercase")
+    assert Lambda_TryFail(Victim, hello="lowercase")
 
     victim = Victim(lowercase="lowercase")
     assert victim == {"lowercase": "lowercase"}

@@ -1,8 +1,10 @@
 from typing import *
 
+from base_aux.base_nest_dunders.m3_calls import *
+
 
 # =====================================================================================================================
-class UrlCreator:
+class UrlCreator(NestCall_Resolve):
     # SETTINGS -------------------------------------
     PROTOCOL: Optional[str] = None
     HOST: Optional[str] = None

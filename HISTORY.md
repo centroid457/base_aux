@@ -285,7 +285,7 @@
 
 0.0.21 (2024/11/20 13:49:46)
 ------------------------------
-- [lambdas] add LambdaSleepAfter  
+- [lambdas] add Lambda_SleepAfter  
 
 0.0.20 (2024/11/19 17:28:27)
 ------------------------------
@@ -307,7 +307,7 @@
 0.0.16 (2024/11/14 18:40:40)
 ------------------------------
 - [gui] add SB+MENU +switch to MainWindow +add mods from t8 +add About  
-- [primitives] add Sleep* +LambdaSleep  
+- [primitives] add Sleep* +Lambda_Sleep  
 
 0.0.15 (2024/11/12 18:04:29)
 ------------------------------
@@ -338,7 +338,7 @@
 
 0.0.8 (2024/11/06 19:01:54)
 ------------------------------
-- [classes.Lambda] add LambdaBool/+Reversed  
+- [classes.Lambda] add Lambda_Bool/+Reversed  
 
 0.0.7 (2024/11/06 17:05:21)
 ------------------------------

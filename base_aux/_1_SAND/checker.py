@@ -1,6 +1,7 @@
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.aux_callable.m2_lambda1 import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_Bool
 from base_aux.aux_values.m4_primitives import *
 
 
@@ -18,7 +19,7 @@ from base_aux.aux_values.m4_primitives import *
 
 # =====================================================================================================================
 class ValidAttr:
-    _VALIDATOR: Lambda = LambdaBool(LAMBDA_TRUE)
+    _VALIDATOR: Lambda = Lambda_Bool(LAMBDA_TRUE)
     # A1: Lambda | ArgsKwargs | Any | Callable
     # A2: Lambda | ArgsKwargs | Any
 

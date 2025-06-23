@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_expect.m1_expect_aux import ExpectAux
 from base_aux.aux_values.m4_primitives import *
 
-from base_aux.aux_callable.m4_raise_if import *
+from base_aux.aux_callable.m6_raise_if import *
 from base_aux.aux_values.m3_exceptions import Exx__Expected
 
 

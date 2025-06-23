@@ -38,7 +38,7 @@ class NestCall_Resolve:
     files.filepath
     """
     def __call__(self, *args, **kwargs) -> Any | NoReturn:
-        return self.resolve()
+        return self.resolve(*args, **kwargs)
 
     def resolve(self, *args, **kwargs) -> Any | NoReturn:
         return NotImplemented

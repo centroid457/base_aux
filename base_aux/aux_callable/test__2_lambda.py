@@ -1,7 +1,9 @@
+from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_Bool, Lambda_BoolReversed, Lambda_TrySuccess, \
+    Lambda_TryFail, Lambda_Sleep
 from base_aux.aux_expect.m1_expect_aux import *
 from base_aux.aux_values.m4_primitives import *
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.aux_callable.m2_lambda1 import *
 
 
 # =====================================================================================================================
@@ -33,10 +35,10 @@ def test__derivatives(source, args, _EXPECTED):
     # for Cls, Expected in zip(, _EXPECTED):    # tis good idea but we cant see directly exact line!
 
     ExpectAux(Lambda(source, *args)).check_assert(_EXPECTED[0])
-    ExpectAux(LambdaBool(source, *args)).check_assert(_EXPECTED[1])
-    ExpectAux(LambdaBoolReversed(source, *args)).check_assert(_EXPECTED[2])
-    ExpectAux(LambdaTrySuccess(source, *args)).check_assert(_EXPECTED[3])
-    ExpectAux(LambdaTryFail(source, *args)).check_assert(_EXPECTED[4])
+    ExpectAux(Lambda_Bool(source, *args)).check_assert(_EXPECTED[1])
+    ExpectAux(Lambda_BoolReversed(source, *args)).check_assert(_EXPECTED[2])
+    ExpectAux(Lambda_TrySuccess(source, *args)).check_assert(_EXPECTED[3])
+    ExpectAux(Lambda_TryFail(source, *args)).check_assert(_EXPECTED[4])
 
 
 # =====================================================================================================================
@@ -44,7 +46,7 @@ def test__LambdaSleep_Ok():
     pause = 0.5
 
     start_time = time.time()
-    victim = LambdaSleep(sec=pause, source=11)
+    victim = Lambda_Sleep(sec=pause, source=11)
     assert time.time() - start_time < 0.1
     assert victim == 11     # execute on EQ
     assert time.time() - start_time > pause * 0.9
@@ -53,7 +55,7 @@ def test__LambdaSleep_Ok():
 def test__LambdaSleep_Raise():
     pause = 0.5
     start_time = time.time()
-    victim = LambdaSleep(sec=pause, source=LAMBDA_RAISE)
+    victim = Lambda_Sleep(sec=pause, source=LAMBDA_RAISE)
     assert time.time() - start_time < 0.1
     try:
         result = victim == 11     # execute on EQ
