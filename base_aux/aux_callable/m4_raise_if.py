@@ -9,6 +9,12 @@ from base_aux.base_nest_dunders.m3_calls import *
 
 # =====================================================================================================================
 class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
+    """
+    GOAL
+    ----
+    check args (callables acceptable)
+    and raise if True
+    """
     ARGS: Any | Callable[..., Any] = ()
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
 
@@ -54,6 +60,15 @@ class RaiseIf_Any(Base_RaiseIf):
 
 class RaiseIf_All(Base_RaiseIf):
     IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class RaiseIfOnInit_Any(RaiseIf_Any):
+    RESOLVE_ON_INIT: bool = True
+
+
+class RaiseIfOnInit_All(RaiseIf_All):
+    RESOLVE_ON_INIT: bool = True
 
 
 # =====================================================================================================================
