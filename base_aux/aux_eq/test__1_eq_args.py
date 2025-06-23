@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_eq.m1_eq_args import EqArgs
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.aux_values.m4_primitives import INST_EQ_RAISE, INST_EQ_FALSE, INST_EQ_TRUE
 
@@ -23,7 +23,7 @@ from base_aux.aux_values.m4_primitives import INST_EQ_RAISE, INST_EQ_FALSE, INST
     ]
 )
 def test__1(args, _EXPECTED):
-    ExpectAux(EqArgs(*args)).check_assert(_EXPECTED)
+    Lambda(EqArgs(*args)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -6,13 +6,13 @@ from base_aux.aux_types.m0_static_typing import TYPING
 # =====================================================================================================================
 class NestInit_SourceKwArgs_Implicit(NestInit_Source):
     """
-    NOTE
-    ----
-    NestInit_SourceKwArgs_Explicite is more useful!
-
     GOAL
     ----
     just to make inition source with KwArgs
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Lambda.expect__check_assert
     """
     ARGS: TYPING.ARGS_FINAL
     KWARGS: TYPING.KWARGS_FINAL
@@ -26,12 +26,6 @@ class NestInit_SourceKwArgs_Implicit(NestInit_Source):
 # =====================================================================================================================
 class NestInit_SourceKwArgs_Explicite(NestInit_Source):
     """
-    MORE USEFUL THEN NestInit_SourceKwArgs_Implicit
-
-    GOAL
-    ----
-
-    FOR PYTESTAUX!
     """
     ARGS: TYPING.ARGS_FINAL
     KWARGS: TYPING.KWARGS_FINAL

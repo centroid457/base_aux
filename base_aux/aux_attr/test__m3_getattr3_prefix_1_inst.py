@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_attr.m3_ga1_prefix_1_inst import NestGa_Prefix
 
 
@@ -83,7 +83,7 @@ def test__anycase_meth():
 )
 def test__batch(meth, args, _EXPECTED):
     func_link = lambda *_args: getattr(victim, meth)(*_args)
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
+    Lambda(func_link, *args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

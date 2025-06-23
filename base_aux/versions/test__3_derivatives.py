@@ -49,7 +49,7 @@ class Test__ReqCheckVersion_Python:
     # )
     # def test__inst__cmp__eq(self, args, _EXPECTED):
     #     func_link = lambda source1, source2: Version_Python().check_eq("1.02rc2.3")
-    #     ExpectAux(func_link, args).assert_check(_EXPECTED)
+    #     Lambda(func_link, args).assert_check(_EXPECTED)
 
 
 # =====================================================================================================================

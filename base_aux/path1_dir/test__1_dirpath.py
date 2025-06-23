@@ -1,7 +1,7 @@
 import pytest
 import pathlib
 
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.path1_dir.m1_dirpath import *
 
 
@@ -34,7 +34,7 @@ class Test_Dirpath:
     )
     def test__1(self, source, _EXPECTED):
         func_link = Resolve_DirPath(source).resolve
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

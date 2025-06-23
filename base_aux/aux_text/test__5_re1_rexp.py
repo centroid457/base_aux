@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m5_re1_rexp import RExp
 
 

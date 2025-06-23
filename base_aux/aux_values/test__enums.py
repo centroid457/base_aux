@@ -1,5 +1,5 @@
 import pytest
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
 from base_aux.aux_values.m5_enums import *
@@ -51,10 +51,10 @@ class Test_EnumStd:
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):
-        ExpectAux(source == other).check_assert(_EXPECTED[0])
+        Lambda(source == other).expect__check_assert(_EXPECTED[0])
 
         func_link = lambda x: x in source
-        ExpectAux(func_link, other).check_assert(_EXPECTED[1])
+        Lambda(func_link, other).expect__check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -113,10 +113,10 @@ class Test_EnumEq:
     )
     def test__eq_in(self, source, other, _EXPECTED):
         funk_link = lambda: source == other
-        ExpectAux(funk_link).check_assert(_EXPECTED[0])
+        Lambda(funk_link).expect__check_assert(_EXPECTED[0])
 
         func_link = lambda x: x in source
-        ExpectAux(func_link, Args(other)).check_assert(_EXPECTED[1])
+        Lambda(func_link, other).expect__check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

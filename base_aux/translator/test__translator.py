@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.translator.m1_translator import *
 
@@ -30,7 +30,7 @@ class Test__1:
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):
         func_link = Translator(rules=rules, return_source_if_not_found=notFound)
-        ExpectAux(func_link, source).check_assert(_EXPECTED)
+        Lambda(func_link, source).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

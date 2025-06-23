@@ -1,9 +1,7 @@
-from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_Bool, Lambda_BoolReversed, Lambda_TrySuccess, \
-    Lambda_TryFail, Lambda_Sleep
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda2_derivatives import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_values.m4_primitives import *
 
-from base_aux.aux_callable.m2_lambda1 import *
 
 
 # =====================================================================================================================
@@ -34,11 +32,11 @@ def test__raise():
 def test__derivatives(source, args, _EXPECTED):
     # for Cls, Expected in zip(, _EXPECTED):    # tis good idea but we cant see directly exact line!
 
-    ExpectAux(Lambda(source, *args)).check_assert(_EXPECTED[0])
-    ExpectAux(Lambda_Bool(source, *args)).check_assert(_EXPECTED[1])
-    ExpectAux(Lambda_BoolReversed(source, *args)).check_assert(_EXPECTED[2])
-    ExpectAux(Lambda_TrySuccess(source, *args)).check_assert(_EXPECTED[3])
-    ExpectAux(Lambda_TryFail(source, *args)).check_assert(_EXPECTED[4])
+    Lambda(source, *args).expect__check_assert(_EXPECTED[0])
+    Lambda_Bool(source, *args).expect__check_assert(_EXPECTED[1])
+    Lambda_BoolReversed(source, *args).expect__check_assert(_EXPECTED[2])
+    Lambda_TrySuccess(source, *args).expect__check_assert(_EXPECTED[3])
+    Lambda_TryFail(source, *args).expect__check_assert(_EXPECTED[4])
 
 
 # =====================================================================================================================

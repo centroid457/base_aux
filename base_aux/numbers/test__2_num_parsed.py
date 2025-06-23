@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.numbers.m2_num_single_parsed import *
 
 
@@ -26,9 +26,9 @@ from base_aux.numbers.m2_num_single_parsed import *
     ]
 )
 def test__NumParsedSingle(source, _EXPECTED):
-    ExpectAux(NumParsedSingle(source).resolve).check_assert(_EXPECTED[0])
-    ExpectAux(NumParsedSingleInt(source).resolve).check_assert(_EXPECTED[1])
-    ExpectAux(NumParsedSingleFloat(source).resolve).check_assert(_EXPECTED[2])
+    Lambda(NumParsedSingle(source).resolve).expect__check_assert(_EXPECTED[0])
+    Lambda(NumParsedSingleInt(source).resolve).expect__check_assert(_EXPECTED[1])
+    Lambda(NumParsedSingleFloat(source).resolve).expect__check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

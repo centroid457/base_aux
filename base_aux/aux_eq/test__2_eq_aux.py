@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_values.m4_primitives import *
 
 from base_aux.aux_eq.m2_eq_aux import *
@@ -30,13 +30,13 @@ from base_aux.aux_eq.m2_eq_aux import *
     ]
 )
 def test__eq_aux(source, args, _EXPECTED):
-    ExpectAux(EqAux(source).check_oneside__exx, args).check_assert(_EXPECTED[0])
-    ExpectAux(EqAux(source).check_oneside__bool, args).check_assert(_EXPECTED[1])
-    ExpectAux(EqAux(source).check_oneside__reverse, args).check_assert(_EXPECTED[2])
+    Lambda(EqAux(source).check_oneside__exx, args).expect__check_assert(_EXPECTED[0])
+    Lambda(EqAux(source).check_oneside__bool, args).expect__check_assert(_EXPECTED[1])
+    Lambda(EqAux(source).check_oneside__reverse, args).expect__check_assert(_EXPECTED[2])
 
-    ExpectAux(EqAux(source).check_doubleside__exx, args).check_assert(_EXPECTED[3])
-    ExpectAux(EqAux(source).check_doubleside__bool, args).check_assert(_EXPECTED[4])
-    ExpectAux(EqAux(source).check_doubleside__reverse, args).check_assert(_EXPECTED[5])
+    Lambda(EqAux(source).check_doubleside__exx, args).expect__check_assert(_EXPECTED[3])
+    Lambda(EqAux(source).check_doubleside__bool, args).expect__check_assert(_EXPECTED[4])
+    Lambda(EqAux(source).check_doubleside__reverse, args).expect__check_assert(_EXPECTED[5])
 
 
 # =====================================================================================================================

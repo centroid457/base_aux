@@ -1,4 +1,5 @@
 import time
+import pytest
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
@@ -109,6 +110,20 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
     WHY NOT 2=CallableAux
     ------------------------
     here is not intended using indirect result like Exception! just raise if raised! so not safe state!
+
+    NOTE
+    ----
+    CANT REPLACE LAMBDA IN ANY CASE!
+        func_link = lambda *_args: getattr(victim, meth)(*_args)
+    - will call at same time by Lambda, and if meth is not exists - return :
+        Lambda(getattr(victim, meth), *args)
+
+
+    TIP
+    ---
+    if need ARGS resolve by SingleMulty - do it before
+        self.ARGS = ArgsKwargsAux(args).resolve_args()
+
     """
     SOURCE: Union[Callable[..., Any], Any, type]
 
@@ -200,6 +215,72 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             print(f"wait_finished {count=}")
             count += 1
             time.sleep(sleep)
+
+    # =================================================================================================================
+    def expect__check_assert(
+            self,
+            # args: TYPING.ARGS_DRAFT = (),      # DONT USE HERE!!!
+            # kwargs: TYPING.KWARGS_DRAFT = None,
+
+            _EXPECTED: TYPING.EXPECTED = True,
+            # EXACT VALUE (noCallable) OR AnyCLass - to cmp as isinstanceOrSubclass!!!
+            _MARK: pytest.MarkDecorator | None = None,
+            _COMMENT: str | None = None,
+    ) -> None | NoReturn:
+        """
+        NOTE
+        ----
+        this is same as funcs.Valid! except following:
+            - if validation is Fail - raise assert!
+            - no skips/cumulates/logs/ last_results/*values
+
+        GOAL
+        ----
+        test target func/obj with exact parameters
+        no exception withing target func!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        unit tests by pytest
+        """
+        args = self.ARGS
+        kwargs = self.KWARGS
+        comment = _COMMENT or ""
+
+        # MARKS -------------------------
+        # print(f"{pytest.mark.skipif(True)=}")
+        if _MARK == pytest.mark.skip:
+            pytest.skip("skip")
+        elif isinstance(_MARK, pytest.MarkDecorator) and _MARK.name == "skipif" and all(_MARK.args):
+            pytest.skip("skipIF")
+
+        try:
+            actual_value = self.resolve(*args, **kwargs)
+        except Exception as exx:
+            actual_value = exx  # this is an internal value! when use incorrect ArgsKw!!!
+
+        print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
+        result = (
+                TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
+                or
+                EqAux(actual_value).check_doubleside__bool(_EXPECTED)
+        )
+        if _MARK == pytest.mark.xfail:
+            assert not result, f"[xfail]{comment}"
+        else:
+            assert result
+
+    def expect__check_bool(self, *args, **kwargs) -> bool:
+        """
+        GOAL
+        ----
+        extend work for not only in unittests
+        """
+        try:
+            self.expect__check_assert(*args, **kwargs)
+            return True
+        except:
+            return False
 
 
 # =====================================================================================================================

@@ -1,5 +1,5 @@
 import pytest
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.aux_values.m4_primitives import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
@@ -24,7 +24,7 @@ class Cls(NestCmp_LGET):
 
 def test____LE__():
     func_link = lambda result: result == 1
-    ExpectAux(func_link, Cls(1)).check_assert(True)
+    Lambda(func_link, Cls(1)).expect__check_assert(True)
 
 
 # =====================================================================================================================
@@ -32,19 +32,19 @@ def test____LE__():
     argnames="func_link, args, kwargs, _EXPECTED, _pytestExpected",
     argvalues=[
         # not callable ------------
-        (True, (), None, True, True),
+        (True, (), {}, True, True),
 
-        (True, 111, {"111": 222}, True, True),
-        (True, 111, {"111": 222}, False, False),
+        (True, (111, ), {"111": 222}, True, True),
+        (True, (111, ), {"111": 222}, False, False),
 
         (False, (), {}, True, False),
 
         # callable ------------
         (LAMBDA_ECHO, (), {}, True, False),
 
-        (LAMBDA_ECHO, None, {}, True, False),
-        (LAMBDA_ECHO, None, {}, None, True),
-        (LAMBDA_ECHO, True, {}, True, True),
+        (LAMBDA_ECHO, (None, ), {}, True, False),
+        (LAMBDA_ECHO, (None, ), {}, None, True),
+        (LAMBDA_ECHO, (True, ), {}, True, True),
         (LAMBDA_ECHO, (True, ), {}, True, True),
         (lambda value: value, (), {"value": True}, True, True),
         (lambda value: value, (), {"value": None}, True, False),
@@ -61,7 +61,7 @@ def test____LE__():
 )
 def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
-        ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+        Lambda(func_link, *args, **kwargs).expect__check_assert(_EXPECTED)
     except:
         assert not _pytestExpected
     else:
@@ -73,19 +73,17 @@ def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, []),
-        (None, {}, [None, ]),
-        (1, {}, [1, ]),
+        ((None, ), {}, [None, ]),
+        ((1, ), {}, [1, ]),
         ((1, 1), {}, [1, 1]),
 
-        ((1, 1), None, [1, 1]),
         ((1, 1), {}, [1, 1]),
         ((1, 1), {"2": 22}, [1, 1, "2"]),
         ((1, 1), {"2": 22, "3": 33}, [1, 1, "2", "3"]),
     ]
 )
 def test__func_list_direct(args, kwargs, _EXPECTED):
-    func_link = LAMBDA_LIST_DIRECT
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(LAMBDA_LIST_DIRECT, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -93,19 +91,17 @@ def test__func_list_direct(args, kwargs, _EXPECTED):
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, []),
-        (None, {}, [None, ]),
-        (1, {}, [1, ]),
+        ((None, ), {}, [None, ]),
+        ((1, ), {}, [1, ]),
         ((1, 1), {}, [1, 1]),
 
-        ((1, 1), None, [1, 1]),
         ((1, 1), {}, [1, 1]),
         ((1, 1), {"2": 22}, [1, 1, 22]),
         ((1, 1), {"2": 22, "3": 33}, [1, 1, 22, 33]),
     ]
 )
 def test__func_list_values(args, kwargs, _EXPECTED):
-    func_link = LAMBDA_LIST_VALUES
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(LAMBDA_LIST_VALUES, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -113,19 +109,17 @@ def test__func_list_values(args, kwargs, _EXPECTED):
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, {}),
-        (None, {}, {None: None}),
-        (1, {}, {1: None}),
+        ((None, ), {}, {None: None}),
+        ((1, ), {}, {1: None}),
         ((1, 1), {}, {1: None}),
 
-        ((1, 1), None, {1: None}),
         ((1, 1), {}, {1: None}),
         ((1, 1), {"2": 22}, {1: None, "2": 22}),
         ((1, 1), {"2": 22, "3": 33}, {1: None, "2": 22, "3": 33}),
     ]
 )
 def test__func_dict(args, kwargs, _EXPECTED):
-    func_link = LAMBDA_DICT
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(LAMBDA_DICT, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -133,11 +127,10 @@ def test__func_dict(args, kwargs, _EXPECTED):
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, True),
-        (None, {}, False),
-        (1, {}, True),
+        ((None, ), {}, False),
+        ((1, ), {}, True),
         ((1, 1), {}, True),
 
-        ((1, 1), None, True),
         ((1, 1), {}, True),
         ((1, 1), {"2": 22}, True),
         ((1, 1), {"2": 22, "3": 33}, True),
@@ -146,8 +139,7 @@ def test__func_dict(args, kwargs, _EXPECTED):
     ]
 )
 def test__func_all(args, kwargs, _EXPECTED):
-    func_link = LAMBDA_ALL
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(LAMBDA_ALL, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -155,11 +147,10 @@ def test__func_all(args, kwargs, _EXPECTED):
     argnames="args, kwargs, _EXPECTED",
     argvalues=[
         ((), {}, False),
-        (None, {}, False),
-        (1, {}, True),
+        ((None, ), {}, False),
+        ((1, ), {}, True),
         ((1, 1), {}, True),
 
-        ((1, 1), None, True),
         ((1, 1), {}, True),
         ((1, 1), {"2": 22}, True),
         ((1, 1), {"2": 22, "3": 33}, True),
@@ -173,8 +164,7 @@ def test__func_all(args, kwargs, _EXPECTED):
     ]
 )
 def test__func_any(args, kwargs, _EXPECTED):
-    func_link = LAMBDA_ANY
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(LAMBDA_ANY, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -189,7 +179,7 @@ def test__func_any(args, kwargs, _EXPECTED):
     ]
 )
 def test__EQ(source, other, _EXPECTED):
-    assert ExpectAux(source).check_bool(other) == _EXPECTED
+    assert Lambda(source).expect__check_bool(other) == _EXPECTED
 
 
 # =====================================================================================================================

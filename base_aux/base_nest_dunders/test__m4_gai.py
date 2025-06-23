@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 
@@ -46,8 +46,8 @@ class Test__Attr:
         ]
     )
     def test__get(self, attr, _EXPECTED):
-        ExpectAux(lambda: getattr(self.Victim(), attr)).check_assert(_EXPECTED)
-        ExpectAux(lambda: self.Victim()[attr]).check_assert(_EXPECTED)
+        Lambda(lambda: getattr(self.Victim(), attr)).expect__check_assert(_EXPECTED)
+        Lambda(lambda: self.Victim()[attr]).expect__check_assert(_EXPECTED)
 
     # @pytest.mark.parametrize(
     #     argnames="attr, _EXPECTED",
@@ -69,11 +69,11 @@ class Test__Attr:
     # def test__set(self, attr, _EXPECTED):
     #     NEW_VALUE = "NEW_VALUE"
     #     victim = Victim()
-    #     ExpectAux(lambda: setattr(victim, attr, NEW_VALUE)).check_assert(_EXPECTED)
+    #     Lambda(lambda: setattr(victim, attr, NEW_VALUE)).check_assert(_EXPECTED)
     #     if _EXPECTED == Exception:
     #         return
-    #     ExpectAux(lambda: getattr(victim, attr)).check_assert(NEW_VALUE)
-    #     # ExpectAux(lambda: Victim()[attr] = NEW_VALUE).check_assert(_EXPECTED)
+    #     Lambda(lambda: getattr(victim, attr)).check_assert(NEW_VALUE)
+    #     # Lambda(lambda: Victim()[attr] = NEW_VALUE).check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -118,8 +118,8 @@ class Test__Annot:
         ]
     )
     def test__get(self, attr, _EXPECTED):
-        # ExpectAux(lambda: getattr(self.Victim(), attr)).check_assert(_EXPECTED)
-        ExpectAux(lambda: self.Victim()[attr]).check_assert(_EXPECTED)
+        # Lambda(lambda: getattr(self.Victim(), attr)).check_assert(_EXPECTED)
+        Lambda(lambda: self.Victim()[attr]).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

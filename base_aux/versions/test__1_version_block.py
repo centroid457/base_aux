@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.versions.m2_version import *
 
 
@@ -37,13 +37,13 @@ class Test__VersionBlock:
     )
     def test__all(self, source, _EXPECTED):
         func_link = VersionBlock(source, _raise=False)._prepare_source
-        ExpectAux(func_link).check_assert(_EXPECTED[0])
+        Lambda(func_link).expect__check_assert(_EXPECTED[0])
 
         func_link = VersionBlock(source, _raise=False)._parse_elements
-        ExpectAux(func_link).check_assert(_EXPECTED[1])
+        Lambda(func_link).expect__check_assert(_EXPECTED[1])
 
         func_link = lambda: str(VersionBlock(source, _raise=False))
-        ExpectAux(func_link).check_assert(_EXPECTED[2])
+        Lambda(func_link).expect__check_assert(_EXPECTED[2])
 
     # INST ------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -79,7 +79,7 @@ class Test__VersionBlock:
     )
     def test__cmp_eq(self, args, _EXPECTED):
         func_link = lambda source1, source2: VersionBlock(source1) == source2
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, *args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

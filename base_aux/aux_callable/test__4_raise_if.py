@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_values.m4_primitives import *
 
 from base_aux.aux_callable.m6_raise_if import *
@@ -33,8 +33,8 @@ from base_aux.aux_values.m3_exceptions import Exx__Expected
     ]
 )
 def test__RaiseIf(args, _EXPECTED):
-    ExpectAux(RaiseIf_All(*args).resolve).check_assert(_EXPECTED[0])
-    ExpectAux(RaiseIf_Any(*args).resolve).check_assert(_EXPECTED[1])
+    Lambda(RaiseIf_All(*args).resolve).expect__check_assert(_EXPECTED[0])
+    Lambda(RaiseIf_Any(*args).resolve).expect__check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

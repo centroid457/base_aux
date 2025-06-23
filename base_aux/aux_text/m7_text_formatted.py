@@ -2,7 +2,7 @@ from typing import *
 
 from base_aux.aux_text.m5_re2_attemps import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.versions.m2_version import *
 
 

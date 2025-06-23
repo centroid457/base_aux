@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.requirements.m1_pkgs import *
 
@@ -90,7 +90,7 @@ class Test__Parse:
     )
     def test__same(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -108,7 +108,7 @@ class Test__Parse:
     )
     def test__single(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -126,7 +126,7 @@ class Test__Parse:
     )
     def test__multy_comma(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -143,7 +143,7 @@ class Test__Parse:
     )
     def test__multy_comma_brackets(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -157,7 +157,7 @@ class Test__Parse:
     )
     def test__from(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -171,7 +171,7 @@ class Test__Parse:
     )
     def test__combo(self, args, _EXPECTED):
         func_link = Packages.parse_text__import
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

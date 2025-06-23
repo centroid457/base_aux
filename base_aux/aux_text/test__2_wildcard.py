@@ -2,7 +2,7 @@ from typing import *
 import pytest
 import re
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m2_wildcard import *
 
 
@@ -27,7 +27,7 @@ from base_aux.aux_text.m2_wildcard import *
 )
 def test__regexp(source, _EXPECTED):
     func_link = WildCardMask(source).to_regexp
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -43,7 +43,7 @@ def test__regexp(source, _EXPECTED):
 )
 def test__fullmatch(wmask, _EXPECTED_pat, other, _EXPECTED_other):
     pat = WildCardMask(wmask).to_regexp()
-    ExpectAux(pat).check_assert(_EXPECTED_pat)
+    Lambda(pat).expect__check_assert(_EXPECTED_pat)
 
     assert bool(re.fullmatch(pattern=pat, string=other)) == _EXPECTED_other
 

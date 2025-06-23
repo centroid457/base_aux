@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -36,7 +36,7 @@ class Test__New:
         ]
     )
     def test__2_parametrized_by_one_func(self, args, _EXPECTED):
-        ExpectAux(int, args).check_assert(_EXPECTED)
+        Lambda(int, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(argnames="func_link", argvalues=[int, float, ])
@@ -48,7 +48,7 @@ class Test__New:
         ]
     )
     def test__3_parametrized_by_several_funcs(self, func_link, args, _EXPECTED):
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

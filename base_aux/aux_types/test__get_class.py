@@ -1,5 +1,5 @@
 from base_aux.aux_values.m4_primitives import *
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -49,7 +49,7 @@ class Test__ensure:
     )
     def test__ensure_class(self, source, _EXPECTED):
         func_link = TypeAux(source).get__class
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

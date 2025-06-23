@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import NestGAI_AnnotAttrIC
 from base_aux.aux_attr.m4_kits import *
 
@@ -83,7 +83,7 @@ class DictDirect_Fail(dict, NestGAI_AnnotAttrIC):
 )
 def test__annot__get_not_defined(source, _EXPECTED):
     func_link = AttrAux_AnnotsAll(source).annots__get_not_defined
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -105,7 +105,7 @@ def test__annot__get_not_defined(source, _EXPECTED):
 )
 def test__annot__check_all_defined(source, _EXPECTED):
     func_link = AttrAux_AnnotsAll(source).annots__check_all_defined
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -127,7 +127,7 @@ def test__annot__check_all_defined(source, _EXPECTED):
 )
 def test__annot__raise_if_not_defined(source, _EXPECTED):
     func_link = AttrAux_AnnotsAll(source).annots__check_all_defined_or_raise
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -162,7 +162,7 @@ class Test__1:
     )
     def test__dict_types(self, source, _EXPECTED):
         func_link = AttrAux_AnnotsAll(source).dump_dict__annot_types
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -174,7 +174,7 @@ class Test__1:
     )
     def test__dict_values(self, source, _EXPECTED):
         func_link = AttrAux_AnnotsAll(source).dump_dict
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -186,7 +186,7 @@ class Test__1:
     )
     def test__iter_values(self, source, _EXPECTED):
         func_link = list(AttrAux_AnnotsAll(source).iter__annot_values())
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -198,7 +198,7 @@ class Test__1:
     )
     def test__all_defined(self, source, _EXPECTED):
         func_link = AttrAux_AnnotsAll(source).annots__check_all_defined
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -238,7 +238,7 @@ def test__set(data, _EXPECTED):
 
     AttrAux_AnnotsAll(victim).sai__by_kwargs(**data)
     for index in range(4):
-        ExpectAux(getattr, (victim, f"A{index}")).check_assert(_EXPECTED[index])
+        Lambda(getattr, victim, f"A{index}").expect__check_assert(_EXPECTED[index])
 
 
 # =====================================================================================================================

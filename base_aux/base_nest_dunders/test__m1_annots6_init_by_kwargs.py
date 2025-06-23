@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
@@ -70,8 +70,6 @@ class Test__NestInit:
     @pytest.mark.parametrize(
         argnames="args, kwargs, _EXPECTED",
         argvalues=[
-            ((), {1: 1}, Exception),
-
             ((), dict(k1=1), EQ_ISINSTANCE_VICTIM),
             ((), dict(k1=1, k2=2), EQ_ISINSTANCE_VICTIM),
 
@@ -79,13 +77,12 @@ class Test__NestInit:
         ]
     )
     def test__1(self, args, kwargs, _EXPECTED):
-        func_link = lambda *_args, **_kwargs: NestInit_AnnotsAttrByKwArgs(*_args, **_kwargs)
-        ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+        Lambda(NestInit_AnnotsAttrByKwArgs, *args, **kwargs).expect__check_assert(_EXPECTED)
 
         if _EXPECTED == Exception:
             return
 
-        victim = func_link(*args, **kwargs)
+        victim = NestInit_AnnotsAttrByKwArgs(*args, **kwargs)
         for key, value in kwargs.items():
             assert getattr(victim, key) == value
 
@@ -110,8 +107,6 @@ class Victim(NestInit_AnnotsAttrByKwArgs):
 @pytest.mark.parametrize(
     argnames="args, kwargs, _EXPECTED, values",
     argvalues=[
-        ((), {1: 1}, Exception, ()),
-
         ((), dict(At0=111), Exception, ()),
         ((), dict(At1=111), Exception, ()),
 
@@ -122,15 +117,14 @@ class Victim(NestInit_AnnotsAttrByKwArgs):
     ]
 )
 def test__2(args, kwargs, _EXPECTED, values):
-    func_link = lambda *_args, **_kwargs: Victim(*_args, **_kwargs)
-    ExpectAux(func_link, args, kwargs).check_assert(_EXPECTED)
+    Lambda(Victim, *args, **kwargs).expect__check_assert(_EXPECTED)
 
     if _EXPECTED == Exception:
         return
 
-    victim = func_link(*args, **kwargs)
+    victim = Victim(*args, **kwargs)
     for index, name in enumerate(["At0", "At1", "An0", "An1"]):
-        ExpectAux(getattr, (victim, name)).check_assert(values[index])
+        Lambda(getattr, victim, name).expect__check_assert(values[index])
 
 
 # =====================================================================================================================

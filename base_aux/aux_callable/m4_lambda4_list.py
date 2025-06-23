@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_callable.m2_lambda1 import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_callable.m3_lambda3_thread import LambdaThread
 
 # =====================================================================================================================

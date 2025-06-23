@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.breeders.m3_table_inst import *
 
 
@@ -48,8 +48,8 @@ class Test__1_TableLine:
         ]
     )
     def test__count(self, tline, _EXPECTED):
-        ExpectAux(getattr(tline, "COUNT")).check_assert(_EXPECTED)
-        ExpectAux(len(tline)).check_assert(_EXPECTED)
+        Lambda(getattr(tline, "COUNT")).expect__check_assert(_EXPECTED)
+        Lambda(len(tline)).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -73,7 +73,7 @@ class Test__1_TableLine:
     )
     def test__gi_in(self, tline, index, _EXPECTED):
         func_link = lambda i: tline[i]
-        ExpectAux(func_link, index).check_assert(_EXPECTED)
+        Lambda(func_link, index).expect__check_assert(_EXPECTED)
 
         if _EXPECTED is not Exception:
             assert _EXPECTED in tline
@@ -92,7 +92,7 @@ class Test__1_TableLine:
     )
     def test__call(self, tline, meth, args, index, _EXPECTED):
         func_link = lambda: tline(meth, *args)[index]
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -116,7 +116,7 @@ class Test__1_TableLine:
     )
     def test__eq(self, obj1, obj2, _EXPECTED):
         func_link = lambda: obj1 == obj2
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -129,7 +129,7 @@ class Test__1_TableLine:
     )
     def test__iter(self, insts, _EXPECTED):
         func_link = lambda: [*TableLine(*insts)]
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -269,7 +269,7 @@ class Test__2_TableLines:
     )
     def test__iter_lines_insts(self, source, _EXPECTED):
         func_link = lambda s: [*s().iter_lines_insts()] == _EXPECTED
-        ExpectAux(func_link, source).check_assert()
+        Lambda(func_link, source).expect__check_assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -282,13 +282,13 @@ class Test__2_TableLines:
     )
     def test__names_values_items(self, source, names, values):
         func_link = lambda s: s().names()
-        ExpectAux(func_link, source).check_assert(names)
+        Lambda(func_link, source).expect__check_assert(names)
 
         func_link = lambda s: s().values()
-        ExpectAux(func_link, source).check_assert(values)
+        Lambda(func_link, source).expect__check_assert(values)
 
         func_link = lambda s: [*s().items()]
-        ExpectAux(func_link, source).check_assert([*zip(names, values)])
+        Lambda(func_link, source).expect__check_assert([*zip(names, values)])
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -308,7 +308,7 @@ class Test__2_TableLines:
     )
     def test__gi(self, source, name, _EXPECTED):
         func_link = lambda s: s()[name]
-        ExpectAux(func_link, source).check_assert(_EXPECTED)
+        Lambda(func_link, source).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__call(self):
@@ -389,7 +389,7 @@ class Test__3_TableColumn:
     )
     def test__item_access(self, tls, index, name, _EXPECTED):
         victim = TableColumn(lines=tls, index=index)
-        ExpectAux(getattr, (victim, name)).check_assert(_EXPECTED)
+        Lambda(getattr, victim, name).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m7_text_formatted import PatFormat, TextFormatted
 from base_aux.versions.m2_version import Version
 
@@ -90,7 +90,7 @@ class Test_Formatted:
     )
     def test__str(self, pat_format, args, kwargs, _EXPECTED):
         func_link = lambda: str(TextFormatted(pat_format, *args, **kwargs))
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -104,12 +104,12 @@ class Test_Formatted:
     def test__type_apply(self, pat_format, args, kwargs, _EXPECTED):
         victim = TextFormatted(pat_format, *args, **kwargs)
         func_link = lambda: victim.VALUES.__annotations__["name"]
-        ExpectAux(func_link).check_assert(_EXPECTED[0])
+        Lambda(func_link).expect__check_assert(_EXPECTED[0])
 
         func_link = lambda: getattr(victim.VALUES, "name")
-        ExpectAux(func_link).check_assert(_EXPECTED[1])
+        Lambda(func_link).expect__check_assert(_EXPECTED[1])
 
-        ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
+        Lambda(lambda: victim.VALUES.name.__class__).expect__check_assert(_EXPECTED[0])
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -130,25 +130,25 @@ class Test_Formatted:
         # INCORRECT ------------------------------------
         # victim.VALUES.name = str(kwargs["name"])
         # func_link = lambda: victim.VALUES.name
-        # ExpectAux(func_link).check_assert(_EXPECTED[1])
+        # Lambda(func_link).check_assert(_EXPECTED[1])
         #
-        # ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
+        # Lambda(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[0])
 
         # CORRECT ------------------------------------
         try:
             victim["name"] = new
-            ExpectAux(True).check_assert(_EXPECTED[0])
+            Lambda(True).expect__check_assert(_EXPECTED[0])
         except:
-            ExpectAux(Exception).check_assert(_EXPECTED[0])
+            Lambda(Exception).expect__check_assert(_EXPECTED[0])
             victim = TextFormatted(pat_format, *args, raise_types=False, **kwargs)
             victim["name"] = new    # NoRaise here!
             return
             pass
 
-        ExpectAux(lambda: victim.VALUES.name.__class__).check_assert(_EXPECTED[1])
+        Lambda(lambda: victim.VALUES.name.__class__).expect__check_assert(_EXPECTED[1])
 
         func_link = lambda: victim.VALUES.name
-        ExpectAux(func_link).check_assert(_EXPECTED[2])
+        Lambda(func_link).expect__check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

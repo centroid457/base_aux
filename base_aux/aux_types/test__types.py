@@ -3,7 +3,7 @@ import sys
 
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_values.m4_primitives import *
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -63,12 +63,12 @@ class Test__1:
     def test__check__bool_none(self, source, _EXPECTED):
         victim = TypeAux(source)
 
-        ExpectAux(victim.check__bool_none).check_assert(_EXPECTED[0])
-        ExpectAux(victim.check__elementary).check_assert(_EXPECTED[1])
-        ExpectAux(victim.check__elementary_single).check_assert(_EXPECTED[2])
-        ExpectAux(victim.check__elementary_single_not_none).check_assert(_EXPECTED[3])
-        ExpectAux(victim.check__elementary_collection).check_assert(_EXPECTED[4])
-        ExpectAux(victim.check__module).check_assert(_EXPECTED[5])
+        Lambda(victim.check__bool_none).expect__check_assert(_EXPECTED[0])
+        Lambda(victim.check__elementary).expect__check_assert(_EXPECTED[1])
+        Lambda(victim.check__elementary_single).expect__check_assert(_EXPECTED[2])
+        Lambda(victim.check__elementary_single_not_none).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.check__elementary_collection).expect__check_assert(_EXPECTED[4])
+        Lambda(victim.check__module).expect__check_assert(_EXPECTED[5])
 
 
 
@@ -121,7 +121,7 @@ class Test__1:
     )
     def test__check__elementary_collection_not_dict(self, source, _EXPECTED):
         func_link = TypeAux(source).check__elementary_collection_not_dict
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -180,7 +180,7 @@ class Test__1:
     )
     def test__iterable(self, source, args, _EXPECTED):
         func_link = TypeAux(source).check__iterable
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, *args).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -229,7 +229,7 @@ class Test__1:
     )
     def test__iterable_not_str(self, source, _EXPECTED):
         func_link = TypeAux(source).check__iterable_not_str
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # CALLABLE --------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -279,7 +279,7 @@ class Test__1:
     )
     def test__check__callable_func_meth_inst(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_func_meth_inst
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -328,7 +328,7 @@ class Test__1:
     )
     def test__check__callable_func_meth(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_func_meth
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -377,7 +377,7 @@ class Test__1:
     )
     def test__check__callable_func(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_func
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -426,7 +426,7 @@ class Test__1:
     )
     def test__check__callable_meth(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_meth
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -475,7 +475,7 @@ class Test__1:
     )
     def test__check__callable_inst(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_inst
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -524,7 +524,7 @@ class Test__1:
     )
     def test__check__callable_cls_as_func_builtin(self, source, _EXPECTED):
         func_link = TypeAux(source).check__callable_cls_as_func_builtin
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -574,7 +574,7 @@ class Test__1:
     )
     def test__check__class(self, source, _EXPECTED):
         func_link = TypeAux(source).check__class
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -623,7 +623,7 @@ class Test__1:
     )
     def test__check__instance(self, source, _EXPECTED):
         func_link = TypeAux(source).check__instance
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -672,7 +672,7 @@ class Test__1:
     )
     def test__check__instance_not_elementary(self, source, _EXPECTED):
         func_link = TypeAux(source).check__instance_not_elementary
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -722,7 +722,7 @@ class Test__1:
     )
     def test__check__exception(self, source, _EXPECTED):
         func_link = TypeAux(source).check__exception
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -766,8 +766,8 @@ class Test__1:
         ]
     )
     def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
-        ExpectAux(TypeAux(source).check__nested__from_cls_or_inst, parent).check_assert(_EXPECTED[0])
-        ExpectAux(TypeAux(source).check__subclassed_or_isinst, parent).check_assert(_EXPECTED[1])
+        Lambda(TypeAux(source).check__nested__from_cls_or_inst, parent).expect__check_assert(_EXPECTED[0])
+        Lambda(TypeAux(source).check__subclassed_or_isinst, parent).expect__check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.aux_values.m5_enums import *
 from base_aux.aux_text.m0_text_examples import *
@@ -24,7 +24,7 @@ class Test__sub:
     )
     def test__regexp(self, source, rule, _EXPECTED):
         func_link = TextAux(source).sub__regexp
-        ExpectAux(func_link, rule).check_assert(_EXPECTED)
+        Lambda(func_link, *rule).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, rule, _EXPECTED",
@@ -54,7 +54,7 @@ class Test__sub:
     )
     def test__words(self, source, rule, _EXPECTED):
         func_link = TextAux(source).sub__word
-        ExpectAux(func_link, rule).check_assert(_EXPECTED)
+        Lambda(func_link, *rule).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -73,7 +73,7 @@ class Test__Edit:
     )
     def test__spaces_all(self, source, _EXPECTED):
         func_link = TextAux(source).clear__spaces_all
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -89,7 +89,7 @@ class Test__Edit:
     )
     def test__spaces_duplicates(self, source, _EXPECTED):
         func_link = TextAux(source).clear__space_duplicates
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -102,7 +102,7 @@ class Test__Edit:
     )
     def test__lines(self, source, pat, _EXPECTED):
         func_link = TextAux(source).clear__lines
-        ExpectAux(func_link, pat).check_assert(_EXPECTED)
+        Lambda(func_link, pat).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, _EXPECTED",
@@ -126,7 +126,7 @@ class Test__Edit:
     )
     def test__lines_blank(self, source, _EXPECTED):
         func_link = TextAux(source).delete__lines_blank
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -175,7 +175,7 @@ class Test__Edit:
     )
     def test__clear__cmts(self, source, cmt, _EXPECTED):
         func_link = TextAux(source).delete__cmts
-        ExpectAux(func_link, cmt).check_assert(_EXPECTED)
+        Lambda(func_link, cmt).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -190,15 +190,15 @@ class Test__Edit:
         ]
     )
     def test__strip__lines(self, source, _EXPECTED):
-        ExpectAux(TextAux(source).strip__lines).check_assert(_EXPECTED[0])
-        ExpectAux(TextAux(source).lstrip__lines).check_assert(_EXPECTED[1])
-        ExpectAux(TextAux(source).rstrip__lines).check_assert(_EXPECTED[2])
+        Lambda(TextAux(source).strip__lines).expect__check_assert(_EXPECTED[0])
+        Lambda(TextAux(source).lstrip__lines).expect__check_assert(_EXPECTED[1])
+        Lambda(TextAux(source).rstrip__lines).expect__check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================
 class Test__find:
     @pytest.mark.parametrize(
-        argnames="source, patts, _EXPECTED",
+        argnames="source, patt, _EXPECTED",
         argvalues=[
             ("None123", r"\w*", ["None123", ]),
             ("None123", r"\w+(?#*.*)", ["None123", ]),
@@ -206,9 +206,9 @@ class Test__find:
             ("   None123  #cmt", r"\w+", ["None123", "cmt"]),
         ]
     )
-    def test__1(self, source, patts, _EXPECTED):
+    def test__1(self, source, patt, _EXPECTED):
         func_link = TextAux(source).findall
-        ExpectAux(func_link, patts).check_assert(_EXPECTED)
+        Lambda(func_link, patt).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -248,7 +248,7 @@ class Test__shortcut:
     )
     def test__1(self, p1,p2,p3,p4,_EXPECTED):
         func_link = TextAux(p1).shortcut
-        ExpectAux(func_link, kwargs=dict(maxlen=p2, sub=p3, where=p4)).check_assert(_EXPECTED)
+        Lambda(func_link, **dict(maxlen=p2, sub=p3, where=p4)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -284,7 +284,7 @@ class Test__try_convert_to_object:
     )
     def test__MAIN_GOAL__string_source(self, source, _EXPECTED):
         func_link = TextAux(str(source)).parse__object_stringed  # DONT DELETE STR!!!
-        assert ExpectAux(func_link).check_bool(source) == _EXPECTED
+        assert Lambda(func_link).expect__check_bool(source) == _EXPECTED
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -306,12 +306,12 @@ class Test__try_convert_to_object:
     )
     def test__parse_dict_keys(self, source, _EXPECTED):
         func_link = TextAux(source).parse__object_stringed
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     def base_test__try_convert_to_object(self, source, _EXPECTED):
         func_link = TextAux(source).parse__object_stringed
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # =================================================================================================================
     @pytest.mark.parametrize(
@@ -402,7 +402,7 @@ class Test__try_convert_to_object:
 )
 def test__requirements__get_list(source, _EXPECTED):
     func_link = TextAux(source).parse__requirements_lines
-    ExpectAux(func_link).check_assert(_EXPECTED)
+    Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -434,7 +434,7 @@ class Test__ParseNum:
     )
     def test__num(self, source, fpoint, _EXPECTED):
         func_link = TextAux(source).parse__number_single
-        ExpectAux(func_link, fpoint).check_assert(_EXPECTED)
+        Lambda(func_link, fpoint).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -453,8 +453,8 @@ class Test__ParseDict:
         ]
     )
     def test__ini(self, source, _EXPECTED):
-        ExpectAux(TextAux(source).parse__dict_ini).check_assert(_EXPECTED)
-        ExpectAux(TextAux(source).parse__dict).check_assert(_EXPECTED)
+        Lambda(TextAux(source).parse__dict_ini).expect__check_assert(_EXPECTED)
+        Lambda(TextAux(source).parse__dict).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

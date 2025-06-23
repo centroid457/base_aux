@@ -1,4 +1,4 @@
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.base_nest_dunders.m7_cmp import *
 
 
@@ -66,7 +66,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__eq(self, expr):
-        ExpectAux(expr).check_assert()
+        Lambda(expr).expect__check_assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -98,7 +98,7 @@ class Test__Cmp:
         ]
     )
     def test__inst__cmp__lg(self, expr, _EXPECTED):
-        ExpectAux(expr).check_assert(_EXPECTED)
+        Lambda(expr).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

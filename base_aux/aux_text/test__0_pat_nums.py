@@ -1,7 +1,7 @@
 import pytest
 import re
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.aux_text.m0_patterns import *
 
@@ -46,24 +46,24 @@ from base_aux.aux_text.m0_patterns import *
 def test___PatNumber(source, fpoint, _EXP_int, _EXP_float, _EXP_both):
     # INT -----
     match = re.fullmatch(PatNumberSingle(fpoint).INT_EXACT, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_int[0])
+    Lambda(match and match[1]).expect__check_assert(_EXP_int[0])
 
     match = re.fullmatch(PatNumberSingle(fpoint).INT_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_int[1])
+    Lambda(match and match[1]).expect__check_assert(_EXP_int[1])
 
     # FLOAT -----
     match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_EXACT, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_float[0])
+    Lambda(match and match[1]).expect__check_assert(_EXP_float[0])
 
     match = re.fullmatch(PatNumberSingle(fpoint).FLOAT_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_float[1])
+    Lambda(match and match[1]).expect__check_assert(_EXP_float[1])
 
     # BOTH -----
     match = re.fullmatch(PatNumberSingle(fpoint).BOTH_EXACT, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_both[0])
+    Lambda(match and match[1]).expect__check_assert(_EXP_both[0])
 
     match = re.fullmatch(PatNumberSingle(fpoint).BOTH_COVERED, source)
-    ExpectAux(match and match[1]).check_assert(_EXP_both[1])
+    Lambda(match and match[1]).expect__check_assert(_EXP_both[1])
 
 
 # =====================================================================================================================

@@ -2,7 +2,7 @@ import time
 
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_datetime.m1_datetime import *
 import operator
 
@@ -43,7 +43,7 @@ class Test__DateTime:
     )
     def test__init(self, source, _EXPECTED):
         func_link = lambda: DateTimeAux(source).SOURCE
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, other, cmp_func, _EXPECTED",
@@ -73,7 +73,7 @@ class Test__DateTime:
     )
     def test__cmp(self, source, other, cmp_func, _EXPECTED):
         func_link = lambda: cmp_func(DateTimeAux(source), other)
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     def test__cmp_ms(self):
         victim1 = DateTimeAux()

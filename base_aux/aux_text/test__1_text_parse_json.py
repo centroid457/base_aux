@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
 from base_aux.aux_text.m0_text_examples import *
 from base_aux.aux_text.m1_text_aux import *
@@ -42,9 +42,9 @@ class Test__Json:
         # assert json.loads(str(source)) == _EXPECTED
 
         victim = TextAux(source)
-        ExpectAux(victim.parse__json).check_assert(_EXPECTED[0])
-        ExpectAux(victim.parse__dict).check_assert(_EXPECTED[1])
-        ExpectAux(victim.parse__dict_auto).check_assert(_EXPECTED[2])
+        Lambda(victim.parse__json).expect__check_assert(_EXPECTED[0])
+        Lambda(victim.parse__dict).expect__check_assert(_EXPECTED[1])
+        Lambda(victim.parse__dict_auto).expect__check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

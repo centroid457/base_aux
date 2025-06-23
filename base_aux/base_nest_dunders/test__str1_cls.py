@@ -1,6 +1,6 @@
 from typing import *
 
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 from base_aux.base_nest_dunders.m2_str1_cls import *
@@ -41,8 +41,8 @@ class Test__StrCls:
         ]
     )
     def test__inst__cmp__lg(self, source, _EXPECTED):
-        ExpectAux(str(source)).check_assert(_EXPECTED)
-        ExpectAux(repr(source)).check_assert(_EXPECTED)
+        Lambda(str(source)).expect__check_assert(_EXPECTED)
+        Lambda(repr(source)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

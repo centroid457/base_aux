@@ -1,5 +1,5 @@
 from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import *
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -21,7 +21,7 @@ def test__common__define(value, _EXPECTED):
     except Exception as exx:
         define_was_ok = exx
 
-    ExpectAux(define_was_ok).check_assert(_EXPECTED)
+    Lambda(define_was_ok).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -52,7 +52,7 @@ def test__special__define_and_init(value, _EXPECTED):
         assert victim.ATTR_INT == value
         assert victim.ATTR_STR == str(value)
 
-    ExpectAux(init_was_ok).check_assert(_EXPECTED)
+    Lambda(init_was_ok).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

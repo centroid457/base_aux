@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
 from base_aux.aux_text.m0_text_examples import *
 
@@ -24,11 +24,11 @@ class Test__Ini:
         try:
             victim.read_string(source)
         except Exception as exx:
-            ExpectAux(exx).check_assert(_EXPECTED)
+            Lambda(exx).expect__check_assert(_EXPECTED)
             return
 
-        ExpectAux(victim.to_dict__direct).check_assert(_EXPECTED[0])
-        ExpectAux(victim.to_dict__merged).check_assert(_EXPECTED[1])
+        Lambda(victim.to_dict__direct).expect__check_assert(_EXPECTED[0])
+        Lambda(victim.to_dict__merged).expect__check_assert(_EXPECTED[1])
 
 
 def _explore():

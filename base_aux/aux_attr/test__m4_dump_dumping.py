@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_attr.m4_dump1_dumping1_dict import *
 from base_aux.aux_attr.m0_static import *
 
@@ -34,9 +34,9 @@ from base_aux.aux_attr.m0_static import *
     ]
 )
 def test__names(source, skip_names, _EXPECTED):
-    ExpectAux(AttrDictDumping_Existed(source)(*skip_names)).check_assert(_EXPECTED[0])
-    ExpectAux(AttrDictDumping_AnnotsAll(source)(*skip_names)).check_assert(_EXPECTED[1])
-    ExpectAux(AttrDictDumping_AnnotsLast(source)(*skip_names)).check_assert(_EXPECTED[2])
+    Lambda(AttrDictDumping_Existed(source)(*skip_names)).expect__check_assert(_EXPECTED[0])
+    Lambda(AttrDictDumping_AnnotsAll(source)(*skip_names)).expect__check_assert(_EXPECTED[1])
+    Lambda(AttrDictDumping_AnnotsLast(source)(*skip_names)).expect__check_assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

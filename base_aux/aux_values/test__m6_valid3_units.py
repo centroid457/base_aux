@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_values.m2_value_special import *
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_values.m6_value_valid3_unit import ValueUnit
 
 
@@ -57,7 +57,7 @@ class Test__WithUnit:
     )
     def test__validate(self, args, _EXPECTED):
         func_link = ValueUnit.validate
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -110,7 +110,7 @@ class Test__WithUnit:
     )
     def test__str(self, args, _EXPECTED):
         func_link = lambda: str(ValueUnit(args))
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -133,7 +133,7 @@ class Test__WithUnit:
     )
     def test__multiplier(self, args, _EXPECTED):
         func_link = lambda: ValueUnit(args).MULT
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -184,7 +184,7 @@ class Test__WithUnit:
     )
     def test__cmp_1__as_func(self, source1, source2, _EXPECTED):
         func_link = lambda: ValueUnit(source1).__cmp__(source2)
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -237,7 +237,7 @@ class Test__WithUnit:
     )
     def test__cmp_2__eq(self, source, other, _EXPECTED):
         func_link = lambda: source == other
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

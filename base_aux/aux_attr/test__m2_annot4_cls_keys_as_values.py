@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_attr.m2_annot3_gacls_keys_as_values import *
 
 
@@ -39,7 +39,7 @@ def test__ga(Victim, args, _EXPECTED):
         exp_index = 1
 
     func_link = lambda value: getattr(Victim, value)
-    ExpectAux(func_link, args).check_assert(_EXPECTED[exp_index])
+    Lambda(func_link, args).expect__check_assert(_EXPECTED[exp_index])
 
 
 # =====================================================================================================================
@@ -70,7 +70,7 @@ def test__gi(Victim, args, _EXPECTED):
         exp_index = 1
 
     func_link = lambda value: Victim[value]
-    ExpectAux(func_link, args).check_assert(_EXPECTED[exp_index])
+    Lambda(func_link, args).expect__check_assert(_EXPECTED[exp_index])
 
 
 # =====================================================================================================================
@@ -92,7 +92,7 @@ def test__in(Victim, args, _EXPECTED):
         exp_index = 1
 
     func_link = lambda value: value in Victim
-    ExpectAux(func_link, args).check_assert(_EXPECTED[exp_index])
+    Lambda(func_link, args).expect__check_assert(_EXPECTED[exp_index])
 
 
 # =====================================================================================================================

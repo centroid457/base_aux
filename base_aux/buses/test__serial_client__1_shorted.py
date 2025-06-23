@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.valid.m1_valid_base import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
@@ -310,7 +310,7 @@ class Test__WR_1(Test__WRBase):
     )
     def test__wr_last_validate(self, write, read, _EXPECTED):
         func_link = lambda: self.victim.write_read__last_validate(write, read)
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="write, read, _EXPECTED",
@@ -324,7 +324,7 @@ class Test__WR_1(Test__WRBase):
     )
     def test__wr_last_validate_regexp(self, write, read, _EXPECTED):
         func_link = lambda: self.victim.write_read__last_validate_regexp(write, read)
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     def test__wr_ReadFailPattern(self):
         self.victim.RAISE_READ_FAIL_PATTERN = True

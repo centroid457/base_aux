@@ -1,7 +1,7 @@
 from typing import *
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_callable.m2_lambda1 import Lambda
+from base_aux.aux_callable.m2_lambda import Lambda
 
 
 # =====================================================================================================================

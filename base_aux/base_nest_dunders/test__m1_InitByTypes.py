@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.base_nest_dunders.m1_init2_annots2_by_types import *
 
 from base_aux.aux_types.m2_info import *
@@ -31,7 +31,7 @@ victim1 = Victim1()
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="args, _EXPECTED",
+    argnames="arg, _EXPECTED",
     argvalues=[
         ("NONE", None),
         ("BOOL", False),
@@ -51,9 +51,8 @@ victim1 = Victim1()
         ("NEVER", Exception),
     ]
 )
-def test__all(args, _EXPECTED):
-    func_link = lambda attr: getattr(victim1, attr)
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
+def test__all(arg, _EXPECTED):
+    Lambda(getattr, victim1, arg).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -65,7 +64,7 @@ class Victim2(NestInit_AnnotsByTypes_NotExisted):
 victim2 = Victim2()
 
 @pytest.mark.parametrize(
-    argnames="args, _EXPECTED",
+    argnames="arg, _EXPECTED",
     argvalues=[
         ("NOTEXIST", 0),
         ("EXIST", 100),
@@ -73,9 +72,8 @@ victim2 = Victim2()
         ("NEVER", Exception),
     ]
 )
-def test__not_existed(args, _EXPECTED):
-    func_link = lambda attr: getattr(victim2, attr)
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
+def test__not_existed(arg, _EXPECTED):
+    Lambda(getattr, victim2, arg).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -1,5 +1,5 @@
 from base_aux.versions.m2_version import *
-from base_aux.aux_expect.m1_expect_aux import *
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_values.m3_exceptions import *
 
 
@@ -51,16 +51,16 @@ class Test__Version:
         inst = Version(source, _raise=False)
 
         func_link = inst._prepare_source
-        ExpectAux(func_link).check_assert(_EXPECTED[0])
+        Lambda(func_link).expect__check_assert(_EXPECTED[0])
 
         func_link = inst._parse_blocks
-        ExpectAux(func_link).check_assert(_EXPECTED[1])
+        Lambda(func_link).expect__check_assert(_EXPECTED[1])
 
         func_link = str(inst)
-        ExpectAux(func_link).check_assert(_EXPECTED[2])
+        Lambda(func_link).expect__check_assert(_EXPECTED[2])
 
         func_link = bool(inst)
-        ExpectAux(func_link).check_assert(_EXPECTED[3])
+        Lambda(func_link).expect__check_assert(_EXPECTED[3])
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -95,7 +95,7 @@ class Test__Version:
     )
     def test__eq(self, args, _EXPECTED):
         func_link = lambda source1, source2: Version(source1) == source2
-        ExpectAux(func_link, args).check_assert(_EXPECTED)
+        Lambda(func_link, *args).expect__check_assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="expression",
@@ -116,7 +116,7 @@ class Test__Version:
         ]
     )
     def test__cmp(self, expression):
-        ExpectAux(expression).check_assert()
+        Lambda(expression).expect__check_assert()
 
     # PARTS -----------------------------------------------------------------------------------------------------------
     def test__parts_mmm(self):

@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.numbers.m1_arithm import *
 
 
@@ -33,7 +33,7 @@ class Victim(ArithmApplyToAttr):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = ArithmApplyToAttr.number__get_string_no_zeros
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
+    Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -60,7 +60,7 @@ def test__precision_str(args, _EXPECTED):
 )
 def test__precision_str(args, _EXPECTED):
     func_link = ArithmApplyToAttr.number__try_int_if_same
-    ExpectAux(func_link, args).check_assert(_EXPECTED)
+    Lambda(func_link, args).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -106,7 +106,7 @@ class Test__Number:
         ]
     )
     def test__cmp(self, expr):
-        ExpectAux(expr).check_assert()
+        Lambda(expr).expect__check_assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -121,7 +121,7 @@ class Test__Number:
         ]
     )
     def test__precision(self, expr, _EXPECTED):
-        ExpectAux(expr).check_assert(_EXPECTED)
+        Lambda(expr).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -141,7 +141,7 @@ class Test__Number:
     )
     def test__str(self, expr, _EXPECTED):
         func_link = str(expr)
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

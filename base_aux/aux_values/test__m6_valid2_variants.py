@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_expect.m1_expect_aux import ExpectAux
+from base_aux.aux_callable.m2_lambda import *
 
 from base_aux.aux_values.m6_value_valid2_variants import *
 from base_aux.aux_values.m6_value_valid3_unit import *
@@ -147,7 +147,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -166,7 +166,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__no_value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        ExpectAux(func_link).check_assert(_EXPECTED)
+        Lambda(func_link).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
