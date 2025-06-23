@@ -3,7 +3,7 @@ from enum import Enum
 from PyQt5.QtCore import QThread
 import time
 
-from base_aux.servers.m0_url import UrlCreator
+from base_aux.servers.m0_url import Url
 
 from fastapi import FastAPI, Path, Query, Body, Response
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -564,7 +564,7 @@ class ServerFastApi_Thread(Logger, QThread):
 
     @property
     def ROOT(self) -> str:
-        return UrlCreator().URL_create(host=self.HOST, port=self.PORT)
+        return Url().resolve(host=self.HOST, port=self.PORT)
 
     def __init__(self, app: FastAPI = None, data: Any = None, *args, **kwargs):
         super().__init__(*args, **kwargs)

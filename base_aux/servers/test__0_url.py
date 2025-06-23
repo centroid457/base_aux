@@ -1,42 +1,43 @@
 import pytest
 from typing import *
-from base_aux.servers.m0_url import UrlCreator
+from base_aux.servers.m0_url import Url
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
-class Test__Url:
-    # @classmethod
-    # def setup_class(cls):
-    #     pass
-    #
-    # @classmethod
-    # def teardown_class(cls):
-    #     pass
-    #
-    # def setup_method(self, method):
-    #     pass
+@pytest.mark.parametrize(
+    argnames="kwargs_source, kwargs_resolve, _EXPECTED",
+    argvalues=[
+        (dict(), dict(), "http://localhost:80/"),
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def test__UrlCreator(self):
-        class Victim(UrlCreator):
-            PROTOCOL: str = "http"
-            HOST: str = "host"
-            PORT: int = 80
-            ROUTE: str = "route"
+        (dict(host="host"), dict(), "http://host:80/"),
 
-        victim = Victim()
-        assert victim.URL_create() == "http://host:80/route"
-        assert victim.URL_create(host="host2") == "http://host2:80/route"
-        assert victim.URL_create(port=8080) == "http://host:8080/route"
-        assert victim.URL_create(route="") == "http://host:80/"
+        (dict(host="host", route="route"), dict(), "http://host:80/route"),
 
-        assert victim.URL_create(route="route2") == "http://host:80/route2"
-        assert victim.URL_create(route="/route2") == "http://host:80/route2"
-        assert victim.URL_create(route="//route2") == "http://host:80/route2"
-        assert victim.URL_create(route="//////route2") == "http://host:80/route2"
-        assert victim.URL_create(route="/route2/") == "http://host:80/route2/"
-        assert victim.URL_create(route="/route2////") == "http://host:80/route2////"
-        assert victim.URL_create(route="/route2/route3") == "http://host:80/route2/route3"
+        (dict(host="host", route="route"), dict(host="host2"), "http://host2:80/route"),
+
+        (dict(host="host", route="route"), dict(port=8080), "http://host:8080/route"),
+
+        # ROUTE ---
+        (dict(host="host", route="route"), dict(route=""), "http://host:80/"),
+        (dict(host="host", route="route"), dict(route="route2"), "http://host:80/route2"),
+        (dict(host="host", route="route"), dict(route="/route2"), "http://host:80/route2"),
+        (dict(host="host", route="route"), dict(route="//route2"), "http://host:80/route2"),
+        (dict(host="host", route="route"), dict(route="///route2"), "http://host:80/route2"),
+
+        (dict(host="host", route="route"), dict(route="route2/"), "http://host:80/route2/"),
+        (dict(host="host", route="route"), dict(route="route2///"), "http://host:80/route2///"),
+
+        (dict(host="host", route="route"), dict(route="route2/3"), "http://host:80/route2/3"),
+        (dict(host="host", route="route"), dict(route="2/3"), "http://host:80/2/3"),
+        (dict(host="host", route="route"), dict(route=(2, 3)), "http://host:80/2/3"),
+        (dict(host="host", route="route"), dict(route=[2, 3]), "http://host:80/2/3"),
+        (dict(host="host", route="route"), dict(route=[]), "http://host:80/"),
+
+    ]
+)
+def test__url(kwargs_source, kwargs_resolve, _EXPECTED):
+    Lambda(Url(**kwargs_source).resolve, **kwargs_resolve).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

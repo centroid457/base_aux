@@ -5,6 +5,8 @@ from base_aux.aux_eq.m2_eq_aux import *
 # =====================================================================================================================
 class NestInit_AnnotsAttrByKwArgs(NestGAI_AnnotAttrIC):     # NOTE: dont create AnnotsOnly/AttrsOnly! always use this class!
     """
+    TODO: delete nesting NestGAI_AnnotAttrIC!!! use it in LastNext class!
+
     NOTE
     ----
     1. for more understanding application/logic use annots at first place! and dont mess them. keep your code clear!

@@ -1,40 +1,65 @@
 from typing import *
 
 from base_aux.base_nest_dunders.m3_calls import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 
 
 # =====================================================================================================================
-class UrlCreator(NestCall_Resolve):
-    # SETTINGS -------------------------------------
-    PROTOCOL: Optional[str] = None
-    HOST: Optional[str] = None
-    PORT: Optional[int] = None
-    ROUTE: Optional[str] = None
+class Url(NestInit_AnnotsAttrByKwArgs, NestCall_Resolve):
+    PROTOCOL: str = "http"
+    HOST: str = "localhost"
+    PORT: int = 80
+    ROUTE: str = ""
 
-    def URL_create(
+    _HIDE_PORT80: bool = None
+
+    def resolve(
             self,
             protocol: Optional[str] = None,
             host: Optional[str] = None,
             port: Optional[int] = None,
-            route: Optional[str] = None,
+            route: Optional[str | tuple[str|Any, ...]] = None,
     ) -> str:
+        # ---------------------
         if protocol is None:
-            protocol = self.PROTOCOL or "http"
-        if host is None:
-            host = self.HOST or "localhost"
-        if port is None:
-            port = self.PORT or 80
-        if route is None:
-            route = self.ROUTE or ""
+            protocol = self.PROTOCOL
 
+        # ---------------------
+        if host is None:
+            host = self.HOST
+        else:
+            host = str(host)
         if host == "0.0.0.0":
             host = "localhost"
+
+        # ---------------------
+        if port is None:
+            port = self.PORT
+
+        # ---------------------
+        if route is None:
+            route = self.ROUTE
+
+        if isinstance(route, (tuple, list)):
+            route_new = ""
+            for item in list(route):
+                route_new += f"/{item}"
+            route = route_new
+        else:
+            route = str(route)
 
         while route.startswith("/"):
             route = route[1:]
 
-        url = f"{protocol}://{host}:{port}/{route}"
-        return url
+        # FINAL -------------------
+        if self._HIDE_PORT80 and port == 80:
+            result = f"{protocol}://{host}/{route}"
+        else:
+            result = f"{protocol}://{host}:{port}/{route}"
+        return result
+
+    def __str__(self) -> str:
+        return self.resolve()
 
 
 # =====================================================================================================================

@@ -595,7 +595,11 @@ class Base_AttrAux(NestInit_Source):
         result = {}
         if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED:
             for cls in self._iter_mro():
-                _result_i = dict(cls.__annotations__)
+                try:
+                    _result_i = dict(cls.__annotations__)
+                except:
+                    break
+
                 _result_i.update(result)
                 result = _result_i
         elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:

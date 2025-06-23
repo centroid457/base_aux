@@ -7,7 +7,7 @@ from enum import Enum, auto
 from PyQt5.QtCore import QThread
 
 from base_aux.loggers.m1_logger import Logger
-from base_aux.servers.m0_url import UrlCreator
+from base_aux.servers.m0_url import Url
 
 
 # =====================================================================================================================
@@ -21,7 +21,7 @@ class ResponseMethod(Enum):
 
 
 # =====================================================================================================================
-class Client_RequestItem(Logger, UrlCreator, QThread):
+class Client_RequestItem(Logger, Url, QThread):
     """
     DONT USE IT AS ONE INSTANCE FOR SEVERAL REQUESTS!!!
     You need keep it only to manage results or sent in further time!
@@ -144,7 +144,7 @@ class Client_RequestItem(Logger, UrlCreator, QThread):
         self.RESPONSE = None
         self.EXX = None
 
-        url = self.URL_create()
+        url = self.resolve()
 
         with requests.Session() as session:
             try:
