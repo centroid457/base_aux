@@ -24,8 +24,12 @@ class NestInit_SourceKwArgs_Implicit(NestInit_Source):
 
 
 # =====================================================================================================================
-class NestInit_SourceKwArgs_Explicite(NestInit_Source):
+class _NestInit_SourceKwArgs_Explicite(NestInit_Source):
     """
+    NOTE
+    ----
+    try NOT TO USE IT!!!
+    use NestInit_SourceKwArgs_Implicit instead! as clearest!
     """
     ARGS: TYPING.ARGS_FINAL
     KWARGS: TYPING.KWARGS_FINAL
