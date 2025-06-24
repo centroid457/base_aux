@@ -6,7 +6,7 @@ from PyQt5.QtCore import QThread, QTimer
 
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_text.m7_text_formatted import *
-from base_aux.base_nest_dunders.m1_init3_reinit_lambdas_resolve import NestInit_AttrsLambdaResolve
+from base_aux.base_nest_dunders.m1_init0_reinit2_lambdas_resolve import NestInit_AttrsLambdaResolve
 
 
 # =====================================================================================================================

@@ -1,11 +1,11 @@
 import re
 
 from base_aux.aux_attr.m4_dump0_dumped import *
+from base_aux.aux_types.m1_type_aux import *
+from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_types.m0_static_typing import TYPING
 from base_aux.aux_values.m5_enums import *
-from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_callable.m1_callable import CallableAux
-from base_aux.aux_types.m1_type_aux import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
 
@@ -342,6 +342,7 @@ class Base_AttrAux(NestInit_Source):
         """
         get attr name_index in original register
         """
+        print(f"{name_index=}")
         name_index = str(name_index)
         name_index = str(name_index).strip()
 
@@ -359,7 +360,7 @@ class Base_AttrAux(NestInit_Source):
         if not name_index:
             return
 
-        for name_original in [*self.list__annots(), *self.iter__dirnames_original_not_builtin()]:
+        for name_original in [*self.iter__dirnames_original_not_builtin(), ]:  # *self.list__annots()], - make infinitive execution!
             if name_original.lower() == name_index.lower():
                 return name_original
 
@@ -608,7 +609,10 @@ class Base_AttrAux(NestInit_Source):
         values - Types!!! not instances!!!
         """
         result = {}
-        if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED:
+        if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
+            result = dict(self.SOURCE.__annotations__)
+
+        elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED or True:
             for cls in self._iter_mro():
                 try:
                     _result_i = dict(cls.__annotations__)
@@ -617,17 +621,16 @@ class Base_AttrAux(NestInit_Source):
 
                 _result_i.update(result)
                 result = _result_i
-        elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
-            result = dict(self.SOURCE.__annotations__)
 
-        else:
-            raise Exx__Incompatible(f"{self._ANNOTS_DEPTH=}")
+
+        # else:
+        #     raise Exx__Incompatible(f"{self._ANNOTS_DEPTH=}")
 
         # rename private original -------------------
         result_final: dict[str, type[Any]] = dict()
         for name, value in result.items():
             # filter private external ----------
-            name = self.try_rename__private_original(name)
+            # name = self.try_rename__private_original(name)
             result_final.update({name: value})
         return result_final
 

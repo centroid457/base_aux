@@ -84,7 +84,7 @@
 - [AttrAux_AnnotsAll] BIG REF:  
 	- make nested Annots from Attrs +use same meth in both  
 	- rename sai_*/gai_  
-	- add values__reinit_mutable +NestInit_Mutable  
+	- add values__reinit_mutable +NestInit_MutableClsValues  
 
 0.2.14(2025.03.03 16.16.50)
 ------------------------------

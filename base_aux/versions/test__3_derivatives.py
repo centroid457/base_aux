@@ -23,6 +23,7 @@ class Test__ReqCheckVersion_Python:
 
     def test__raise(self):
         # IF -----------------
+        print("START"*100)
         try:
             Version_Python("1.2").raise_if__check_eq("1.02")
         except:

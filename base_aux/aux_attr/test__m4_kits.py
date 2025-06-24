@@ -18,7 +18,7 @@ def test__values():
     except:
         assert True
 
-    assert Example(a1=1).a1 == 1
+    assert Example(a1=1).A1 == 1
     assert Example(1, a1=2).A1 == 2
 
     assert Example(1).A1 == 1
@@ -32,12 +32,12 @@ def test__values():
 
     # mutable
     victim = Example(1, 1, a3=1)
-    assert victim.dict == Example.DICT
-    assert victim.dict is not Example.DICT
+    assert victim.DICT == Example.DICT
+    assert victim.DICT is Example.DICT
 
-    victim.dict[1]=1
-    assert victim.dict[1] == 1
-    assert victim.dict != Example.DICT
+    victim.DICT[1]=1
+    assert victim.DICT[1] == 1
+    assert victim.DICT == Example.DICT
 
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 
 # =====================================================================================================================
-class NestInit_Mutable:
+class NestInit_MutableClsValues:
     """
     GOAL
     ----
@@ -15,7 +15,7 @@ class NestInit_Mutable:
     use simple copy past method!
     """
     def __init__(self, *args, **kwargs) -> None:
-        AttrAux_Existed(self).reinit__mutable_values()  # keep on first step!!! reinit only selfValues! not classvalues!
+        AttrAux_Existed(self).reinit__mutable_cls_values()  # keep on first step!!! reinit only selfValues! not classvalues!
         super().__init__(*args, **kwargs)
 
 
@@ -39,7 +39,7 @@ def test__reinit_mutables():
         SET = {}
         DICT = {}
 
-    class Victim2(Victim, NestInit_Mutable):
+    class Victim2(Victim, NestInit_MutableClsValues):
         pass
 
     victim = Victim()

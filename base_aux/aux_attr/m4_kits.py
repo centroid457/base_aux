@@ -1,15 +1,22 @@
-from base_aux.base_nest_dunders.m6_eq1_attrs import *
+from base_aux.base_nest_dunders.m1_init0_annots_required import *
+from base_aux.base_nest_dunders.m1_init0_reinit1_mutable_attrs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 from base_aux.base_nest_dunders.m2_str2_attrs import *
+# from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
+from base_aux.base_nest_dunders.m6_eq1_attrs import *
 from base_aux.base_nest_dunders.m8_contains_attrs import *
 from base_aux.base_nest_dunders.m8_len_attrs import *
 
-from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
+# from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 
 # =====================================================================================================================
 class Nest_AttrKit(
-    NestInit_AnnotsAttrByKwArgs,    # GAI+Required
+    NestInit_AnnotsAttrByKwArgs,
+
+    NestGAI_AnnotAttrIC,
+    NestInit_MutableClsValues,
+    NestInit_AnnotsRequired,
 
     NestEq_AttrsNotHidden,
     NestStR_AttrsNotHidden,

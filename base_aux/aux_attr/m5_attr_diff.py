@@ -1,4 +1,3 @@
-from base_aux.aux_dict.m1_dict_aux import *
 from base_aux.aux_dict.m4_dict_diff import *
 from base_aux.aux_attr.m4_dump1_dumping1_dict import *
 from base_aux.aux_types.m0_static_typing import *
