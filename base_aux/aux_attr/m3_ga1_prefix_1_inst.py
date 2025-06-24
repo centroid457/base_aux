@@ -64,8 +64,8 @@ class NestGa_Prefix:
                 item_name = item[len(prefix):]
                 item_value = AttrAux_Existed(self).gai_ic(item_name)
 
-                return lambda *meth_args, **meth_kwargs: CallableAux(prefix_meth).resolve_raise(
-                    *[CallableAux(item_value).resolve_raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
+                return lambda *meth_args, **meth_kwargs: CallableAux(prefix_meth).resolve__raise(
+                    *[CallableAux(item_value).resolve__raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
                     **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
                 )
 
@@ -83,7 +83,7 @@ class NestGa_Prefix_RaiseIf(NestGa_Prefix):
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
-        result = CallableAux(source).resolve_exx()
+        result = CallableAux(source).resolve__exx()
         if TypeAux(result).check__exception() or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 

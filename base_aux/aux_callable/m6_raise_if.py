@@ -32,7 +32,7 @@ class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
     def resolve(self) -> None | NoReturn:
         results_all = []
         for arg_source in self.ARGS:
-            arg_result = CallableAux(arg_source).resolve_bool()
+            arg_result = CallableAux(arg_source).resolve__bool()
             results_all.append(arg_result)
 
             if self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_TRUE:

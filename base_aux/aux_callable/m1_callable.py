@@ -41,25 +41,25 @@ class CallableAux(NestInit_Source):
             return self.SOURCE
 
         elif callable_use == Enum_CallResolve.EXX:
-            return self.resolve_exx(*args, **kwargs)
+            return self.resolve__exx(*args, **kwargs)
 
         elif callable_use == Enum_CallResolve.RAISE:
-            return self.resolve_raise(*args, **kwargs)
+            return self.resolve__raise(*args, **kwargs)
 
         elif callable_use == Enum_CallResolve.RAISE_AS_NONE:
-            return self.resolve_raise_as_none(*args, **kwargs)
+            return self.resolve__raise_as_none(*args, **kwargs)
 
         elif callable_use == Enum_CallResolve.SKIP_CALLABLE:
-            return self.resolve_skip_callables(*args, **kwargs)
+            return self.resolve__skip_callables(*args, **kwargs)
 
         elif callable_use == Enum_CallResolve.SKIP_RAISED:
-            return self.resolve_skip_raised(*args, **kwargs)
+            return self.resolve__skip_raised(*args, **kwargs)
 
         elif callable_use == Enum_CallResolve.BOOL:
-            return self.resolve_bool(*args, **kwargs)
+            return self.resolve__bool(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve_exx(self, *args, **kwargs) -> Any | Exception:
+    def resolve__exx(self, *args, **kwargs) -> Any | Exception:
         """
         GOAL
         ----
@@ -81,7 +81,7 @@ class CallableAux(NestInit_Source):
         except Exception as exx:
             return exx
 
-    def resolve_raise(self, *args, **kwargs) -> Any | NoReturn:
+    def resolve__raise(self, *args, **kwargs) -> Any | NoReturn:
         """
         just a direct result for call
 
@@ -101,25 +101,25 @@ class CallableAux(NestInit_Source):
         """
         return self(*args, **kwargs)
 
-    def resolve_raise_as_none(self, *args, **kwargs) -> Any | None:
+    def resolve__raise_as_none(self, *args, **kwargs) -> Any | None:
         try:
-            return self.resolve_raise(*args, **kwargs)
+            return self.resolve__raise(*args, **kwargs)
         except:
             return None
 
-    def resolve_skip_callables(self, *args, **kwargs) -> Any | NoReturn:
+    def resolve__skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
             return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
         else:
             return self.SOURCE
 
-    def resolve_skip_raised(self, *args, **kwargs) -> Any | NoReturn:
+    def resolve__skip_raised(self, *args, **kwargs) -> Any | NoReturn:
         try:
-            return self.resolve_raise(*args, **kwargs)
+            return self.resolve__raise(*args, **kwargs)
         except:
             return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
 
-    def resolve_bool(self, *args, **kwargs) -> bool:
+    def resolve__bool(self, *args, **kwargs) -> bool:
         """
         GOAL
         ----
@@ -152,7 +152,7 @@ class CallableAux(NestInit_Source):
         funcs.Valid.skip_link or else value/func assumed as bool result
         """
         try:
-            result = self.resolve_raise(*args, **kwargs)
+            result = self.resolve__raise(*args, **kwargs)
             try:
                 is_exx = issubclass(result, Exception)  # keep first
             except:
@@ -174,7 +174,7 @@ class CallableAux(NestInit_Source):
         USE Lambda_TrySuccess instead!
         """
         try:
-            self.resolve_raise(*args, **kwargs)
+            self.resolve__raise(*args, **kwargs)
             return False
         except:
             return True

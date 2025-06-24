@@ -263,7 +263,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
-        result = CallableAux(result).resolve_exx()
+        result = CallableAux(result).resolve__exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         print(f"{cls.result__startup_cls=}")
@@ -274,7 +274,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.LOGGER.debug("")
 
         result = self.startup__wrapped
-        result = CallableAux(result).resolve_exx()
+        result = CallableAux(result).resolve__exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         self.result__startup = result
@@ -285,7 +285,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.timestamp_stop = DateTimeAux()
 
         result = self.teardown__wrapped
-        result = CallableAux(result).resolve_exx()
+        result = CallableAux(result).resolve__exx()
         if isinstance(result, Valid):
             result.run__if_not_finished()
 
@@ -298,7 +298,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
         if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED or cls.result__teardown_cls is None:
             print(f"run__cls=teardown__cls=1")
-            cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve_exx()
+            cls.result__teardown_cls = CallableAux(cls.teardown__cls__wrapped).resolve__exx()
             if isinstance(cls.result__teardown_cls, Valid):
                 cls.result__teardown_cls.run__if_not_finished()
 

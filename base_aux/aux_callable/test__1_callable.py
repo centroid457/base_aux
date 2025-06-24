@@ -65,12 +65,12 @@ from base_aux.aux_values.m5_enums import *
 def test__get_result(source, args, _EXPECTED):
     Lambda(CallableAux(source).check_raise, *args).expect__check_assert(_EXPECTED[0])
     Lambda(CallableAux(source).check_no_raise, *args).expect__check_assert(_EXPECTED[1])
-    Lambda(CallableAux(source).resolve_raise, *args).expect__check_assert(_EXPECTED[2])
-    Lambda(CallableAux(source).resolve_raise_as_none, *args).expect__check_assert(_EXPECTED[3])
-    Lambda(CallableAux(source).resolve_exx, *args).expect__check_assert(_EXPECTED[4])
-    Lambda(CallableAux(source).resolve_bool, *args).expect__check_assert(_EXPECTED[5])
-    Lambda(CallableAux(source).resolve_skip_callables, *args).expect__check_assert(_EXPECTED[6])
-    Lambda(CallableAux(source).resolve_skip_raised, *args).expect__check_assert(_EXPECTED[7])
+    Lambda(CallableAux(source).resolve__raise, *args).expect__check_assert(_EXPECTED[2])
+    Lambda(CallableAux(source).resolve__raise_as_none, *args).expect__check_assert(_EXPECTED[3])
+    Lambda(CallableAux(source).resolve__exx, *args).expect__check_assert(_EXPECTED[4])
+    Lambda(CallableAux(source).resolve__bool, *args).expect__check_assert(_EXPECTED[5])
+    Lambda(CallableAux(source).resolve__skip_callables, *args).expect__check_assert(_EXPECTED[6])
+    Lambda(CallableAux(source).resolve__skip_raised, *args).expect__check_assert(_EXPECTED[7])
 
 
 # =====================================================================================================================

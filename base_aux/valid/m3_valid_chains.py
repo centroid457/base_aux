@@ -58,7 +58,7 @@ class ValidChains(Valid):
         self.timestamp_last = datetime.datetime.now()
 
         # SKIP ---------------------
-        self.skip_last = CallableAux(self.SKIP_LINK).resolve_bool()
+        self.skip_last = CallableAux(self.SKIP_LINK).resolve__bool()
 
         if not self.skip_last:
             # WORK =======================

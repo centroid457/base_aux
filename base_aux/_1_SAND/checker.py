@@ -28,7 +28,7 @@ class ValidAttr:
             self._VALIDATOR = validator
 
     def check(self, value: Callable[..., Any] | Any) -> AttrKit_Blank:
-        value = CallableAux(value).resolve_exx()
+        value = CallableAux(value).resolve__exx()
 
         result = {}
 

@@ -188,7 +188,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     @classmethod
     def _value_actual__get(cls) -> str | NoReturn:
-        cls._value_actual = CallableAux(cls._GETTER).resolve_raise()
+        cls._value_actual = CallableAux(cls._GETTER).resolve__raise()
         cls._value_actual = str(cls._value_actual).lower()
         return cls._value_actual
 
