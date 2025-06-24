@@ -59,8 +59,16 @@ class Base_AttrAux(NestInit_Source):
 
         return TypeAux(value).check__callable_meth()
 
+    def name__check_is_private(self, name: str) -> bool:
+        name = str(name)
+
+        if re.fullmatch(r"_.+__.+", name) is not None or name.startswith("__"):
+            return True
+
+        return False
+
     # =================================================================================================================
-    def ITER_NAMES_EXISTED_OR_ANNOTS(self) -> Iterable[TYPING__NAME_FINAL]:
+    def ITER_NAMES_BY_STYLE(self) -> Iterable[TYPING__NAME_FINAL]:
         """
         GOAL
         ----
@@ -80,6 +88,19 @@ class Base_AttrAux(NestInit_Source):
 
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
+
+    def iter__dirnames_and_annots(self) -> Iterable[TYPING__NAME_FINAL]:
+        """
+        GOAL
+        ----
+        when you try to set_ic you must intend names from ANNOTS! otherwise you can set
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        sai_ic only!
+        """
+        yield from self.iter__dirnames_original_not_builtin()
+        yield from self.iter__annot_names()
 
     def iter__dirnames_original_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
         """
@@ -121,12 +142,12 @@ class Base_AttrAux(NestInit_Source):
         from ITER_NAMES_EXISTED_OR_ANNOTS
         """
         # -------------------------------------------------
-        for name in self.ITER_NAMES_EXISTED_OR_ANNOTS():
+        for name in self.ITER_NAMES_BY_STYLE():
             if name in self.SKIP_NAMES:
                 continue
 
             if attr_level == Enum_AttrScope.NOT_PRIVATE:
-                if not name.startswith("__"):
+                if not self.name__check_is_private(name):
                     yield name
 
             elif attr_level == Enum_AttrScope.NOT_HIDDEN:
