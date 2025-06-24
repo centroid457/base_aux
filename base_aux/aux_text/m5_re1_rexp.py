@@ -2,7 +2,7 @@ from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
-class RExp(Nest_AttrKit):
+class RExp(Base_AttrKit):
     """
     GOAL
     ----

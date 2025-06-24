@@ -11,7 +11,7 @@ from base_aux.base_nest_dunders.m8_len_attrs import *
 
 
 # =====================================================================================================================
-class Nest_AttrKit(
+class Base_AttrKit(
     NestInit_AnnotsAttrByKwArgs,
 
     NestGAI_AnnotAttrIC,
@@ -75,7 +75,7 @@ class Nest_AttrKit(
 
 # =====================================================================================================================
 @final
-class AttrKit_Blank(Nest_AttrKit):
+class AttrKit_Blank(Base_AttrKit):
     """
     GOAL
     ----
@@ -86,26 +86,26 @@ class AttrKit_Blank(Nest_AttrKit):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class AttrKit_AuthNamePwd(Nest_AttrKit):
+class AttrKit_AuthNamePwd(Base_AttrKit):
     NAME: str
     PWD: str
 
 
 @final
-class AttrKit_AuthTgBot(Nest_AttrKit):
+class AttrKit_AuthTgBot(Base_AttrKit):
     LINK_ID: str = None     # @mybot20230913
     NAME: str = None        # MyBotPublicName
     TOKEN: str
 
 
 @final
-class AttrKit_AuthServer(Nest_AttrKit):
+class AttrKit_AuthServer(Base_AttrKit):
     NAME: str
     PWD: str
     SERVER: str
 
 
-class AttrKit_AddrPort(Nest_AttrKit):
+class AttrKit_AddrPort(Base_AttrKit):
     """class for keeping connection parameters/settings for exact smtp server
 
     :ivar ADDR: smtp server address like "smtp.mail.ru"

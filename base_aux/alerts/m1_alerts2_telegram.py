@@ -7,7 +7,7 @@ import telebot
 
 
 # =====================================================================================================================
-class RecipientTgID(Nest_AttrKit):
+class RecipientTgID(Base_AttrKit):
     MyTgID: str
 
 

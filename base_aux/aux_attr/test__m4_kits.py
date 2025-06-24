@@ -6,7 +6,7 @@ from base_aux.aux_attr.m4_kits import *
 
 # =====================================================================================================================
 def test__values():
-    class Example(Nest_AttrKit):
+    class Example(Base_AttrKit):
         A1: Any
         A2: Any = None
         A3 = None

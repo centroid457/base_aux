@@ -254,7 +254,7 @@ class Base_AttrAux(NestInit_Source):
 
         SPECIALLY CREATED FOR
         ---------------------
-        Nest_AttrKit
+        Base_AttrKit
         """
         try:
             source_is_cls = issubclass(self.SOURCE, object)

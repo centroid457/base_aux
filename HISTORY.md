@@ -121,7 +121,7 @@
 0.2.11 (2025/02/24 18:32:33)
 ------------------------------
 - [PRJBase] move into share +use Version  
-- [AttrsAux] add Nest_AttrKit/Callable  
+- [AttrsAux] add Base_AttrKit/Callable  
 
 0.2.10 (2025/02/19 16:33:46)
 ------------------------------
