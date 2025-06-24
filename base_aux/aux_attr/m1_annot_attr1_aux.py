@@ -155,7 +155,8 @@ class Base_AttrAux(NestInit_Source):
                     yield name
 
             elif attr_level == Enum_AttrScope.PRIVATE:
-                if name.startswith("__"):
+                if self.name__check_is_private(name):
+                    name = self.try_rename__private_original(name)
                     yield name
 
             elif attr_level == Enum_AttrScope.ALL:
@@ -651,7 +652,7 @@ class Base_AttrAux(NestInit_Source):
         result_final: dict[str, type[Any]] = dict()
         for name, value in result.items():
             # filter private external ----------
-            # name = self.try_rename__private_original(name)
+            name = self.try_rename__private_original(name)
             result_final.update({name: value})
         return result_final
 

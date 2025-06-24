@@ -6,7 +6,7 @@ from base_aux.aux_attr.m4_kits import *
 
 # =====================================================================================================================
 def test__values():
-    class Example(NestInit_AnnotsAttrByKwArgs):
+    class Example(Nest_AttrKit):
         A1: Any
         A2: Any = None
         A3 = None
@@ -33,11 +33,11 @@ def test__values():
     # mutable
     victim = Example(1, 1, a3=1)
     assert victim.DICT == Example.DICT
-    assert victim.DICT is Example.DICT
+    assert victim.DICT is not Example.DICT
 
     victim.DICT[1]=1
     assert victim.DICT[1] == 1
-    assert victim.DICT == Example.DICT
+    assert victim.DICT != Example.DICT
 
 
 # ---------------------------------------------------------------------------------------------------------------------
