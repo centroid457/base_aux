@@ -46,7 +46,8 @@ def test__eq():
         A0: Any
         A1: Any = 1
 
-    assert AttrKit_Blank(a1=1) == Example()
+    assert AttrKit_Blank(a1=1) != Example()
+    assert AttrKit_Blank(A1=1) == Example()
     assert AttrKit_Blank(a1=11) != Example()
     assert AttrKit_Blank(a0=1) != Example()
 

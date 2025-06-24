@@ -178,8 +178,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         else:
             return self.RESULT
 
-    # def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
-    #     return EqAux(self()).check_doubleside__bool(other)
+    def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
+        return self() == other
 
     def __bool__(self) -> bool | NoReturn:
         return bool(self())
