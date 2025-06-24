@@ -4,6 +4,53 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
+def test__reinit__mutable_cls_values():
+    class Victim:
+        LIST = []
+        SET = {}
+        DICT = {}
+
+        def __init__(self, LIST=None, SET=None, DICT=None):
+            if LIST is not None:
+                self.LIST = LIST
+            if SET is not None:
+                self.SET = SET
+            if DICT is not None:
+                self.DICT = DICT
+
+    # SAME BLANK ----------
+    victim = Victim()
+
+    assert Victim.LIST == victim.LIST
+    assert Victim.SET == victim.SET
+    assert Victim.DICT == victim.DICT
+
+    assert Victim.LIST is victim.LIST
+    assert Victim.SET is victim.SET
+    assert Victim.DICT is victim.DICT
+
+    AttrAux_Existed(victim).reinit__mutable_cls_values()
+    assert Victim.LIST is not victim.LIST
+    assert Victim.SET is not victim.SET
+    assert Victim.DICT is not victim.DICT
+
+    # DIFF ----------
+    victim = Victim([], {}, {})
+    assert Victim.LIST == victim.LIST
+    assert Victim.SET == victim.SET
+    assert Victim.DICT == victim.DICT
+
+    assert Victim.LIST is not victim.LIST
+    assert Victim.SET is not victim.SET
+    assert Victim.DICT is not victim.DICT
+
+    AttrAux_Existed(victim).reinit__mutable_cls_values()
+    assert Victim.LIST is not victim.LIST
+    assert Victim.SET is not victim.SET
+    assert Victim.DICT is not victim.DICT
+
+
+# =====================================================================================================================
 class Victim:
     a=1
     _h=2
