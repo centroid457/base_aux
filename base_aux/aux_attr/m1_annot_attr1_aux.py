@@ -219,7 +219,7 @@ class Base_AttrAux(NestInit_Source):
         return list(self.dump_dict__annot_types())
 
     # =================================================================================================================
-    def reinit__mutable_values(self) -> None:
+    def reinit__mutable_cls_values(self) -> None:
         """
         GOAL
         ----
@@ -234,11 +234,26 @@ class Base_AttrAux(NestInit_Source):
         ---------------------
         Nest_AttrKit
         """
+        try:
+            source_is_cls = issubclass(self.SOURCE, object)
+        except:
+            source_is_cls = False
+
         for attr in self.iter__names_filter__not_private():
-            try:
-                value = getattr(self.SOURCE, attr)
-            except:
-                continue
+            if source_is_cls:
+                try:
+                    value = getattr(self.SOURCE, attr)
+                except:
+                    continue
+            else:
+                try:
+                    value_cls = getattr(self.SOURCE.__class__, attr)
+                    value = getattr(self.SOURCE, attr)  # important using instanceValue!!!
+                except:
+                    continue
+                if value is not value_cls:
+                    # expecting that if you pass smth that it is real exact final value! which you dont need to make a copy!
+                    continue
 
             if isinstance(value, dict):
                 setattr(self.SOURCE, attr, dict(value))
@@ -337,14 +352,14 @@ class Base_AttrAux(NestInit_Source):
         except:
             pass
 
-        if index is not None:
+        if isinstance(index, int) and index is not None:
             return self.list__annots()[index]  # dont place in try sentence
 
         # name as str for annots/attrs ------
         if not name_index:
             return
 
-        for name_original in self.iter__dirnames_original_not_builtin():
+        for name_original in [*self.list__annots(), *self.iter__dirnames_original_not_builtin()]:
             if name_original.lower() == name_index.lower():
                 return name_original
 

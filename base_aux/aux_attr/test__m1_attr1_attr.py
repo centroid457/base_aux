@@ -75,31 +75,42 @@ class Victim2:
     Attr_CamelCase = "Value"
 
 
+class Victim3:
+    AnE: int = 1
+    AnNE: int
+
+
 @pytest.mark.parametrize(
-    argnames="attr, _EXPECTED",
+    argnames="victim, attr, _EXPECTED",
     argvalues=[
-        (1, (Exception, Exception, Exception, Exception, )),
-        (None, (None, False, Exception, Exception, )),
-        (True, (None, False, Exception, Exception, )),
-        ("", (None, False, Exception, Exception, )),
-        (" TRUE", (None, False, Exception, None, )),
+        (Victim2(), 1, (Exception, Exception, Exception, Exception, )),
+        (Victim2(), None, (None, False, Exception, Exception, )),
+        (Victim2(), True, (None, False, Exception, Exception, )),
+        (Victim2(), "", (None, False, Exception, Exception, )),
+        (Victim2(), " TRUE", (None, False, Exception, None, )),
 
-        ("attr_lowercase", ("attr_lowercase", True, "value", None)),
-        ("ATTR_LOWERCASE", ("attr_lowercase", True, "value", None, )),
+        (Victim2(), "attr_lowercase", ("attr_lowercase", True, "value", None)),
+        (Victim2(), "ATTR_LOWERCASE", ("attr_lowercase", True, "value", None, )),
 
-        ("ATTR_UPPERCASE", ("ATTR_UPPERCASE", True, "VALUE", None, )),
-        ("attr_uppercase", ("ATTR_UPPERCASE", True, "VALUE", None, )),
+        (Victim2(), "ATTR_UPPERCASE", ("ATTR_UPPERCASE", True, "VALUE", None, )),
+        (Victim2(), "attr_uppercase", ("ATTR_UPPERCASE", True, "VALUE", None, )),
 
-        ("     attr_uppercase", ("ATTR_UPPERCASE", True, "VALUE", None, )),
+        (Victim2(), "     attr_uppercase", ("ATTR_UPPERCASE", True, "VALUE", None, )),
+
+        # ANNOTS
+        (Victim3(), "AnE", ("AnE", True, 1, None, )),
+        (Victim3(), "ANE", ("AnE", True, 1, None, )),
+        (Victim3(), "AnNE", ("AnNE", True, Exception, None, )),
+        (Victim3(), "ANNE", ("AnNE", True, Exception, None, )),
     ]
 )
-def test__gsai(attr, _EXPECTED):
+def test__gsai(victim, attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    Lambda(AttrAux_Existed(Victim2()).name_ic__get_original, attr).expect__check_assert(_EXPECTED[0])
-    Lambda(AttrAux_Existed(Victim2()).name_ic__check_exists, attr).expect__check_assert(_EXPECTED[1])
-    Lambda(AttrAux_Existed(Victim2()).gai_ic, attr).expect__check_assert(_EXPECTED[2])
-    Lambda(AttrAux_Existed(Victim2()).sai_ic, attr, 123).expect__check_assert(_EXPECTED[3])
+    Lambda(AttrAux_Existed(victim).name_ic__get_original, attr).expect__check_assert(_EXPECTED[0])
+    Lambda(AttrAux_Existed(victim).name_ic__check_exists, attr).expect__check_assert(_EXPECTED[1])
+    Lambda(AttrAux_Existed(victim).gai_ic, attr).expect__check_assert(_EXPECTED[2])
+    Lambda(AttrAux_Existed(victim).sai_ic, attr, 123).expect__check_assert(_EXPECTED[3])
 
 
 # =====================================================================================================================
