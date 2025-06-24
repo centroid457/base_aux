@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.aux_callable.m2_lambda import Lambda
 from base_aux.aux_attr.m0_static import check_name__buildin
 
 

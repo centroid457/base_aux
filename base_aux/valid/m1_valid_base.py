@@ -1,5 +1,6 @@
 import datetime
 
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 from base_aux.aux_eq.m2_eq_aux import *
 from base_aux.aux_types.m0_static_typing import TYPING, TYPING__VALID_VALIDATOR, TYPING__LAMBDA_CONSTRUCTOR
@@ -198,7 +199,7 @@ class Valid:
         self.clear()
 
         # SKIP ---------------------
-        self.skip_last = CallableAux(self.SKIP_LINK).resolve__bool()
+        self.skip_last = Lambda(self.SKIP_LINK).resolve__bool()
 
         if not self.skip_last:
             retry_count = 0
@@ -210,7 +211,7 @@ class Valid:
                 self.timestamp_last = datetime.datetime.now()
 
                 # VALUE ---------------------
-                self.value_last = CallableAux(value_link).resolve__exx(*self.ARGS__VALUE, **self.KWARGS__VALUE)
+                self.value_last = Lambda(value_link, *self.ARGS__VALUE, **self.KWARGS__VALUE).resolve__exx()
 
                 # VALIDATE ------------------
                 if isinstance(self.value_last, Exception) and not TypeAux(self.VALIDATE_LINK).check__exception():
@@ -220,7 +221,7 @@ class Valid:
                     self.validate_last = TypeAux(self.value_last).check__nested__from_cls_or_inst(self.VALIDATE_LINK)
 
                 elif TypeAux(self.VALIDATE_LINK).check__callable_func_meth_inst():
-                    self.validate_last = CallableAux(self.VALIDATE_LINK).resolve__exx(self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE)
+                    self.validate_last = Lambda(self.VALIDATE_LINK, self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE).resolve__exx()
 
                 else:
                     self.validate_last = EqAux(self.value_last).check_doubleside__exx(self.VALIDATE_LINK)
@@ -232,7 +233,7 @@ class Valid:
                     retry_count += 1
 
             if self.REVERSE_LINK:
-                self.reverse_last = CallableAux(self.REVERSE_LINK).resolve__bool()
+                self.reverse_last = Lambda(self.REVERSE_LINK).resolve__bool()
 
             self.STATE_ACTIVE = Enum_ProcessStateActive.FINISHED
             # ============================

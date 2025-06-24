@@ -38,7 +38,7 @@ class Enum_Where3(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_CallResolve(NestEq_Enum):
+class Enum_CallResolveStyle(NestEq_Enum):
     DIRECT = 1
     EXX = 2
     RAISE = 3

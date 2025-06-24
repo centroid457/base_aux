@@ -1,5 +1,4 @@
-from base_aux.aux_eq.m2_eq_aux import *
-from base_aux.aux_values.m5_enums import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -24,14 +23,14 @@ class NestEq_AttrsNotPrivate:
         try:
             for attr in AttrAux_Existed(self).iter__names_filter__not_private():
                 # 1=cmp direct --------
-                value_self_direct = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
-                value_other_direct = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_self_direct = getattr(self, attr)
+                value_other_direct = getattr(other, attr)
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
-                # 2=cmp callables --------      # TODO: use Enum_CallResolve.SKIPCALLABLES ???
-                value_self = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
-                value_other = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                # 2=cmp callables --------      # TODO: use Enum_CallResolveStyle.SKIPCALLABLES ???
+                value_self = Lambda(getattr, self, attr).resolve__exx()
+                value_other = Lambda(getattr, other, attr).resolve__exx()
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False
@@ -53,14 +52,14 @@ class NestEq_AttrsNotHidden:
         try:
             for attr in AttrAux_Existed(self).iter__names_filter__not_hidden():
                 # 1=cmp direct --------
-                value_self_direct = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
-                value_other_direct = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.DIRECT)
+                value_self_direct = getattr(self, attr)
+                value_other_direct = getattr(other, attr)
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
-                # 2=cmp callables --------      # TODO: use Enum_CallResolve.SKIPCALLABLES ???
-                value_self = AttrAux_Existed(self).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
-                value_other = AttrAux_Existed(other).gai_ic__callable_resolve(attr, Enum_CallResolve.EXX)
+                # 2=cmp callables --------      # TODO: use Enum_CallResolveStyle.SKIPCALLABLES ???
+                value_self = Lambda(getattr, self, attr).resolve__exx()
+                value_other = Lambda(getattr, other, attr).resolve__exx()
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False

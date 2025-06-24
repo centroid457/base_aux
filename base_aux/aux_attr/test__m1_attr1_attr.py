@@ -1,4 +1,6 @@
-from base_aux.aux_callable.m2_lambda import *
+import pytest
+
+from base_aux.aux_callable.m2_lambda import Lambda
 from base_aux.aux_values.m4_primitives import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
@@ -218,13 +220,13 @@ class Test__Dump:
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
         argvalues=[
-            (Enum_CallResolve.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
-            (Enum_CallResolve.EXX, (None, True, True, Exception,)),
-            # (Enum_CallResolve.RAISE, Exception),          # need special tests!
-            (Enum_CallResolve.RAISE_AS_NONE, (None, True, True, None,)),
-            (Enum_CallResolve.BOOL, (False, True, True, False,)),
-            (Enum_CallResolve.SKIP_CALLABLE, (None, True, None, None,)),
-            (Enum_CallResolve.SKIP_RAISED, (None, True, True, None,)),
+            (Enum_CallResolveStyle.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
+            (Enum_CallResolveStyle.EXX, (None, True, True, Exception,)),
+            # (Enum_CallResolveStyle.RAISE, Exception),          # need special tests!
+            (Enum_CallResolveStyle.RAISE_AS_NONE, (None, True, True, None,)),
+            (Enum_CallResolveStyle.BOOL, (False, True, True, False,)),
+            (Enum_CallResolveStyle.SKIP_CALLABLE, (None, True, None, None,)),
+            (Enum_CallResolveStyle.SKIP_RAISED, (None, True, True, None,)),
         ]
     )
     def test__callable_use(self, cal_use, _EXPECTED):
@@ -236,7 +238,7 @@ class Test__Dump:
 
     def test__callable_use__special_raise(self):
         try:
-            result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=Enum_CallResolve.RAISE)
+            result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=Enum_CallResolveStyle.RAISE)
             assert False
         except:
             assert True

@@ -1,6 +1,7 @@
 from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
+from base_aux.aux_callable.m2_lambda import Lambda
 from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_Bool
 from base_aux.aux_values.m4_primitives import *
 
@@ -28,7 +29,7 @@ class ValidAttr:
             self._VALIDATOR = validator
 
     def check(self, value: Callable[..., Any] | Any) -> AttrKit_Blank:
-        value = CallableAux(value).resolve__exx()
+        value = Lambda(value).resolve__exx()
 
         result = {}
 

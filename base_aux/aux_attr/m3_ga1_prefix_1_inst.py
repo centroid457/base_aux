@@ -1,6 +1,6 @@
+from base_aux.aux_callable.m2_lambda import Lambda
 from base_aux.aux_values.m3_exceptions import *
 from base_aux.aux_types.m1_type_aux import TypeAux
-from base_aux.aux_callable.m1_callable import *
 
 from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_Existed
 
@@ -64,10 +64,11 @@ class NestGa_Prefix:
                 item_name = item[len(prefix):]
                 item_value = AttrAux_Existed(self).gai_ic(item_name)
 
-                return lambda *meth_args, **meth_kwargs: CallableAux(prefix_meth).resolve__raise(
-                    *[CallableAux(item_value).resolve__raise(*meth_args, **{k:v for k,v in meth_kwargs.items() if not k.isupper()}), ],
-                    **{k.lower():v for k,v in meth_kwargs.items() if k.isupper()}
-                )
+                return lambda *meth_args, **meth_kwargs: Lambda(
+                    prefix_meth,
+                    *[Lambda(item_value, *meth_args, **{k: v for k, v in meth_kwargs.items() if not k.isupper()}).resolve__raise(), ],
+                    **{k.lower(): v for k, v in meth_kwargs.items() if k.isupper()}
+                ).resolve__raise()
 
         # print(3)
         raise AttributeError(item)
@@ -83,7 +84,7 @@ class NestGa_Prefix_RaiseIf(NestGa_Prefix):
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
-        result = CallableAux(source).resolve__exx()
+        result = Lambda(source).resolve__exx()
         if TypeAux(result).check__exception() or bool(result) != bool(_reverse):
             raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 

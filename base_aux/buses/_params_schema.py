@@ -40,7 +40,7 @@ class CmdSchema:
         if self.SCHEMA == NoValue:
             return str(value)
         else:
-            result = CallableAux(self.SCHEMA, value).resolve__exx()
+            result = Lambda(self.SCHEMA, value).resolve__exx()
             return str(result)
 
 

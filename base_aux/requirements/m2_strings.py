@@ -1,6 +1,6 @@
 import platform
 
-from base_aux.aux_callable.m1_callable import *
+from base_aux.aux_callable.m2_lambda import Lambda
 from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_types.m0_static_typing import TYPING
 
@@ -188,7 +188,7 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
     @classmethod
     def _value_actual__get(cls) -> str | NoReturn:
-        cls._value_actual = CallableAux(cls._GETTER).resolve__raise()
+        cls._value_actual = Lambda(cls._GETTER).resolve__raise()
         cls._value_actual = str(cls._value_actual).lower()
         return cls._value_actual
 

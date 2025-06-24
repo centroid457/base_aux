@@ -5,7 +5,7 @@ from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_types.m0_static_typing import TYPING
 from base_aux.aux_values.m5_enums import *
-from base_aux.aux_callable.m1_callable import CallableAux
+from base_aux.aux_callable.m2_lambda import Lambda
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
 
@@ -556,7 +556,7 @@ class Base_AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: Enum_CallResolve = Enum_CallResolve.DIRECT) -> Any | Callable | Enum_CallResolve | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.DIRECT) -> Any | Callable | Enum_CallResolveStyle | NoReturn:
         """
         SAME AS
         -------
@@ -575,21 +575,21 @@ class Base_AttrAux(NestInit_Source):
         try:
             value = self.gai_ic(name_index)
         except Exception as exx:
-            if callables_resolve == Enum_CallResolve.SKIP_RAISED:
+            if callables_resolve == Enum_CallResolveStyle.SKIP_RAISED:
                 return Enum_ProcessResult.SKIPPED
-            elif callables_resolve == Enum_CallResolve.EXX:
+            elif callables_resolve == Enum_CallResolveStyle.EXX:
                 return exx
-            elif callables_resolve == Enum_CallResolve.RAISE_AS_NONE:
+            elif callables_resolve == Enum_CallResolveStyle.RAISE_AS_NONE:
                 return None
-            elif callables_resolve == Enum_CallResolve.RAISE:
+            elif callables_resolve == Enum_CallResolveStyle.RAISE:
                 raise exx
-            elif callables_resolve == Enum_CallResolve.BOOL:
+            elif callables_resolve == Enum_CallResolveStyle.BOOL:
                 return False
             else:
                 raise exx
 
         # resolve callables ------------------
-        result = CallableAux(value).resolve(callables_resolve)
+        result = Lambda(value).resolve__style(callables_resolve)
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -660,7 +660,7 @@ class Base_AttrAux(NestInit_Source):
     def dump_dict(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
     ) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
@@ -700,22 +700,22 @@ class Base_AttrAux(NestInit_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.EXX)
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.EXX)
 
     def dump_dict__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.DIRECT)
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.DIRECT)
 
     def dump_dict__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.SKIP_CALLABLE)
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.SKIP_CALLABLE)
 
     def dump_dict__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolve.RAISE)
+        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_obj(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
     ) -> AttrDumped | NoReturn:
         data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
         obj = AttrAux_Existed(AttrDumped()).sai__by_args_kwargs(**data)
@@ -725,22 +725,22 @@ class Base_AttrAux(NestInit_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.EXX)
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.EXX)
 
     def dump_obj__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.DIRECT)
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.DIRECT)
 
     def dump_obj__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.SKIP_CALLABLE)
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.SKIP_CALLABLE)
 
     def dump_obj__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolve.RAISE)
+        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_str__pretty(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolve = Enum_CallResolve.EXX,
+            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
     ) -> str:
         try:
             result = f"{self.SOURCE.__class__.__name__}(Attributes):"

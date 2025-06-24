@@ -1,10 +1,8 @@
-from typing import *
-import time
-
 from base_aux.base_nest_dunders.m1_init1_args_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_values.m3_exceptions import Exx__Expected
 from base_aux.base_nest_dunders.m3_calls import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -32,7 +30,7 @@ class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
     def resolve(self) -> None | NoReturn:
         results_all = []
         for arg_source in self.ARGS:
-            arg_result = CallableAux(arg_source).resolve__bool()
+            arg_result = Lambda(arg_source).resolve__bool()
             results_all.append(arg_result)
 
             if self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_TRUE:

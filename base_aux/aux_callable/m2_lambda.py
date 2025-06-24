@@ -1,10 +1,12 @@
 import time
+from typing import *
+
 import pytest
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.aux_types import TypeAux   # CIRCULAR IMPORT
 
-from base_aux.aux_eq.m2_eq_aux import *
+from base_aux.aux_values.m5_enums import *
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.base_nest_dunders.m3_calls import *
 
@@ -176,8 +178,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         else:
             return self.RESULT
 
-    def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
-        return EqAux(self()).check_doubleside__bool(other)
+    # def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
+    #     return EqAux(self()).check_doubleside__bool(other)
 
     def __bool__(self) -> bool | NoReturn:
         return bool(self())
@@ -260,11 +262,24 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             actual_value = exx  # this is an internal value! when use incorrect ArgsKw!!!
 
         print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
-        result = (
-                TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
-                or
-                EqAux(actual_value).check_doubleside__bool(_EXPECTED)
-        )
+        result = TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
+
+        if not result:
+            # result = EqAux(actual_value).check_doubleside__bool(_EXPECTED)
+
+            try:
+                result = actual_value == _EXPECTED
+            except:
+                pass
+
+        if not result:
+            # result = EqAux(actual_value).check_doubleside__bool(_EXPECTED)
+
+            try:
+                result = _EXPECTED == actual_value
+            except:
+                pass
+
         if _MARK == pytest.mark.xfail:
             assert not result, f"[xfail]{comment}"
         else:
@@ -279,6 +294,146 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         try:
             self.expect__check_assert(*args, **kwargs)
             return True
+        except:
+            return False
+
+    # =================================================================================================================
+    def resolve__style(self, callable_use: Enum_CallResolveStyle = Enum_CallResolveStyle.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | Enum_CallResolveStyle | bool:
+        """
+        NOTE
+        ----
+        it is just a collection for all variants in one func!
+
+        it is not so convenient to use param callable_use!
+        SO preferred using other/further direct methods!
+        """
+        if callable_use == Enum_CallResolveStyle.DIRECT:
+            return self.SOURCE
+
+        elif callable_use == Enum_CallResolveStyle.EXX:
+            return self.resolve__exx(*args, **kwargs)
+
+        elif callable_use == Enum_CallResolveStyle.RAISE:
+            return self.resolve__raise(*args, **kwargs)
+
+        elif callable_use == Enum_CallResolveStyle.RAISE_AS_NONE:
+            return self.resolve__raise_as_none(*args, **kwargs)
+
+        elif callable_use == Enum_CallResolveStyle.SKIP_CALLABLE:
+            return self.resolve__skip_callables(*args, **kwargs)
+
+        elif callable_use == Enum_CallResolveStyle.SKIP_RAISED:
+            return self.resolve__skip_raised(*args, **kwargs)
+
+        elif callable_use == Enum_CallResolveStyle.BOOL:
+            return self.resolve__bool(*args, **kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def resolve__exx(self, *args, **kwargs) -> Any | Exception:
+        """
+        GOAL
+        ----
+        same as resolve_raise but
+        attempt to simplify result by not using try-sentence.
+        so if get raise in resolve_raise - return ClsException object
+
+        USEFUL IDEA
+        -----------
+        1. in gui when its enough to get str() on result and see the result
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        just in case
+
+        """
+        try:
+            return self(*args, **kwargs)
+        except Exception as exx:
+            return exx
+
+    def resolve__raise(self, *args, **kwargs) -> Any | NoReturn:
+        """
+        just a direct result for call
+
+        SPECIFIC LOGIC
+        --------------
+        if callable - call and return result.
+        else - return source.
+
+        GOAL
+        ----
+        get common expected for any python code result - simple calculate or raise!
+        because of resolve_exx is not enough!
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        NestGa_Prefix
+        check Privates in pytest for skipping
+
+        USE Lambda_TrySuccess instead!
+        """
+        return self(*args, **kwargs)
+
+    def resolve__raise_as_none(self, *args, **kwargs) -> Any | None:
+        try:
+            return self.resolve__raise(*args, **kwargs)
+        except:
+            return None
+
+    def resolve__skip_callables(self, *args, **kwargs) -> Any | NoReturn:
+        if callable(self.SOURCE):
+            return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
+        else:
+            return self.SOURCE
+
+    def resolve__skip_raised(self, *args, **kwargs) -> Any | NoReturn:
+        try:
+            return self.resolve__raise(*args, **kwargs)
+        except:
+            return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
+
+    def resolve__bool(self, *args, **kwargs) -> bool:
+        """
+        GOAL
+        ----
+        same as resolve_exx but
+        apply bool func on result
+
+        ability to get bool result with meanings:
+            - methods/funcs must be called
+                assert get_bool(LAMBDA_TRUE) is True
+                assert get_bool(LAMBDA_NONE) is False
+
+            - Exceptions assumed as False
+                assert get_bool(Exception) is False
+                assert get_bool(Exception("FAIL")) is False
+                assert get_bool(LAMBDA_EXX) is False
+
+            - for other values get classic bool()
+                assert get_bool(None) is False
+                assert get_bool([]) is False
+                assert get_bool([None, ]) is True
+
+                assert get_bool(LAMBDA_LIST) is False
+                assert get_bool(LAMBDA_LIST, [1, ]) is True
+
+            - if on bool() exception raised - return False!
+                assert get_bool(ClsBoolRaise()) is False
+
+        CREATED SPECIALLY FOR
+        ---------------------
+        funcs.Valid.skip_link or else value/func assumed as bool result
+        """
+        try:
+            result = self.resolve__raise(*args, **kwargs)
+            try:
+                is_exx = issubclass(result, Exception)  # keep first
+            except:
+                is_exx = isinstance(result, Exception)
+
+            if is_exx:
+                return False
+            return bool(result)
         except:
             return False
 

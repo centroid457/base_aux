@@ -1,15 +1,13 @@
-import pytest
-
 from base_aux.alerts.m1_alerts1_smtp import *
 from base_aux.alerts.m1_alerts2_telegram import *
-from base_aux.aux_callable.m1_callable import *
+from base_aux.aux_callable.m2_lambda import Lambda
 
 
 # =====================================================================================================================
 # TODO: separate by base class and use victimCls as attr!
 
 @pytest.mark.skip
-@pytest.mark.skipif(CallableAux(AlertSmtp.CONN_AUTH).check_raise(), reason="no file")
+@pytest.mark.skipif(Lambda(AlertSmtp.CONN_AUTH).check_raise(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="cls", argvalues=[
         AlertSmtp,

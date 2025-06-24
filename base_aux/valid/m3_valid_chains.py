@@ -1,7 +1,8 @@
+from typing import *
 import datetime
 
+from base_aux.aux_callable.m2_lambda import *
 from base_aux.valid.m2_valid_derivatives import *
-from base_aux.aux_callable.m1_callable import *
 from base_aux.aux_values.m5_enums import *
 
 
@@ -58,7 +59,7 @@ class ValidChains(Valid):
         self.timestamp_last = datetime.datetime.now()
 
         # SKIP ---------------------
-        self.skip_last = CallableAux(self.SKIP_LINK).resolve__bool()
+        self.skip_last = Lambda(self.SKIP_LINK).resolve__bool()
 
         if not self.skip_last:
             # WORK =======================

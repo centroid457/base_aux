@@ -1,6 +1,7 @@
-from base_aux.aux_callable.m1_callable import *
-from base_aux.aux_types.m0_static_typing import TYPING, TYPING__VALID_VALIDATOR
+from base_aux.aux_types.m0_static_typing import *
 from base_aux.base_nest_dunders.m3_calls import *
+from base_aux.aux_values.m5_enums import *
+from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================
@@ -124,7 +125,7 @@ class Base_EqValid(NestCall_Resolve):
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         if self.OTHER_FINAL__RESOLVE:
             try:
-                self.OTHER_FINAL = CallableAux(other_draft).resolve__raise(*other_args, **other_kwargs)
+                self.OTHER_FINAL = Lambda(other_draft, *other_args, **other_kwargs).resolve__raise()
                 self.OTHER_RAISED = False
             except Exception as exx:
                 self.OTHER_RAISED = True
@@ -175,7 +176,7 @@ class Base_EqValid(NestCall_Resolve):
         # VALIDATION --------------------
         # 1=SINGLE
         if not self.V_ARGS:
-            validator_result = CallableAux(self.VALIDATOR).resolve__bool(self.OTHER_FINAL, **self.V_KWARGS)
+            validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, **self.V_KWARGS).resolve__bool()
             if self.IRESULT_REVERSE:
                 result = not validator_result
             else:
@@ -184,7 +185,7 @@ class Base_EqValid(NestCall_Resolve):
 
         else:
             for v_arg in self.V_ARGS:
-                validator_result = CallableAux(self.VALIDATOR).resolve__bool(self.OTHER_FINAL, v_arg, **self.V_KWARGS)
+                validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, v_arg, **self.V_KWARGS).resolve__bool()
                 if self.IRESULT_REVERSE:
                     result = not validator_result
                 else:
