@@ -2,7 +2,7 @@ from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 
 # =====================================================================================================================
-class NestInit_AnnotsRequired(NestGAI_AnnotAttrIC):
+class NestInit_AnnotsRequired:
     """Check all annotated and not defined attributes in instance have values!
     else raise!
 
