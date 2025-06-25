@@ -1,7 +1,7 @@
 # REQUIREMENTS ========================================================================================================
 # decide what to do with it!!!
 
-from base_aux.valid_getter.m2_strings import ReqCheckStr_Os
+from base_aux.valid_getter.m1_strings import ReqCheckStr_Os
 ReqCheckStr_Os.raise_if__WINDOWS()
 
 

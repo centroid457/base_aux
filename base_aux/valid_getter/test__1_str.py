@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.valid_getter.m2_strings import *
+from base_aux.valid_getter.m1_strings import *
 
 
 # =====================================================================================================================
