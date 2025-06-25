@@ -87,7 +87,13 @@ class Test:
     @pytest.mark.parametrize(
         argnames="cmds, timeout, _EXPECTED",
         argvalues=[
-
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+            # FIXME:HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
             (CMD_PING_2, 0.1, False),
             ((CMD_PING_2, 0.1), 0.1, False),
             ((CMD_PING_2, 1.1), 0.1, True),
@@ -99,7 +105,7 @@ class Test:
             ([(CMD_PING_1, 0.1), (CMD_PING_2, None)], 1.3, True),
         ]
     )
-    def test__tuple(self, cmds, timeout, _EXPECTED):        # HERE - NOT ALWAYS PASSED!!! dont panic! maybe need to skip it or ref!
+    def test__tuple(self, cmds, timeout, _EXPECTED):
         func_link = CliUser().send(cmd=cmds, timeout=timeout)
         Lambda(func_link).expect__check_assert(_EXPECTED)
 

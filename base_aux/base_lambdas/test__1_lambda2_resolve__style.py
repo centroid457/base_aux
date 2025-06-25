@@ -9,20 +9,20 @@ from base_aux.base_values.m5_enums import *
     argnames="source, args, _EXPECTED",
     argvalues=[
         (Exception, (), (False, True,
-                         Exception, Exception, Exception, False, Enum_ProcessResult.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
+                         Exception, Exception, Exception, False, VALUE_SPECIAL.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
         (Exception(), (), (False, True,
                 Exception, Exception, Exception, False, Exception, Exception)),
         (LAMBDA_EXX, (), (False, True,
-                          Exception, Exception, Exception, False, Enum_ProcessResult.SKIPPED, Exception)),
+                          Exception, Exception, Exception, False, VALUE_SPECIAL.SKIPPED, Exception)),
         (LAMBDA_RAISE, (), (True, False,
-                            Exception, None, Exception, False, Enum_ProcessResult.SKIPPED, Enum_ProcessResult.SKIPPED)),
+                            Exception, None, Exception, False, VALUE_SPECIAL.SKIPPED, VALUE_SPECIAL.SKIPPED)),
 
         (LAMBDA_TRUE, (), (False, True,
-                           True, True, True, True, Enum_ProcessResult.SKIPPED, True)),
+                           True, True, True, True, VALUE_SPECIAL.SKIPPED, True)),
         (LAMBDA_FALSE, (), (False, True,
-                            False, False, False, False, Enum_ProcessResult.SKIPPED, False)),
+                            False, False, False, False, VALUE_SPECIAL.SKIPPED, False)),
         (LAMBDA_NONE, (), (False, True,
-                           None, None, None, False, Enum_ProcessResult.SKIPPED, None)),
+                           None, None, None, False, VALUE_SPECIAL.SKIPPED, None)),
 
         (True, (), (False, True,
                 True, True, True, True, True, True)),
@@ -32,11 +32,11 @@ from base_aux.base_values.m5_enums import *
                 None, None, None, False, None, None)),
 
         (INST_CALL_TRUE, (), (False, True,
-                              True, True, True, True, Enum_ProcessResult.SKIPPED, True)),
+                              True, True, True, True, VALUE_SPECIAL.SKIPPED, True)),
         (INST_CALL_FALSE, (), (False, True,
-                               False, False, False, False, Enum_ProcessResult.SKIPPED, False)),
+                               False, False, False, False, VALUE_SPECIAL.SKIPPED, False)),
         (INST_CALL_RAISE, (), (True, False,
-                               Exception, None, Exception, False, Enum_ProcessResult.SKIPPED, Enum_ProcessResult.SKIPPED)),
+                               Exception, None, Exception, False, VALUE_SPECIAL.SKIPPED, VALUE_SPECIAL.SKIPPED)),
 
         (INST_BOOL_TRUE, (),  (False, True,
                 INST_BOOL_TRUE, INST_BOOL_TRUE, INST_BOOL_TRUE, True, INST_BOOL_TRUE, INST_BOOL_TRUE)),
@@ -51,7 +51,7 @@ from base_aux.base_values.m5_enums import *
         ([], (), (False, True,
                 [], [], [], False, [], [])),
         (LAMBDA_LIST_DIRECT, (), (False, True,
-                                  [], [], [], False, Enum_ProcessResult.SKIPPED, [])),
+                                  [], [], [], False, VALUE_SPECIAL.SKIPPED, [])),
 
         ([None, ], (), (False, True,
                 [None, ], [None, ], [None, ], True, [None, ], [None, ])),

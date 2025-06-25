@@ -576,7 +576,7 @@ class Base_AttrAux(NestInit_Source):
             value = self.gai_ic(name_index)
         except Exception as exx:
             if callables_resolve == Enum_CallResolveStyle.SKIP_RAISED:
-                return Enum_ProcessResult.SKIPPED
+                return VALUE_SPECIAL.SKIPPED
             elif callables_resolve == Enum_CallResolveStyle.EXX:
                 return exx
             elif callables_resolve == Enum_CallResolveStyle.RAISE_AS_NONE:
@@ -690,7 +690,7 @@ class Base_AttrAux(NestInit_Source):
                 continue
 
             value = self.gai_ic__callable_resolve(name_index=name, callables_resolve=callables_resolve)
-            if value is Enum_ProcessResult.SKIPPED:
+            if value is VALUE_SPECIAL.SKIPPED:
                 continue
             result.update({name: value})
 

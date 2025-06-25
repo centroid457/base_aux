@@ -382,7 +382,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
 
     def resolve__skip_callables(self, *args, **kwargs) -> Any | NoReturn:
         if callable(self.SOURCE):
-            return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
+            return VALUE_SPECIAL.SKIPPED
         else:
             return self.SOURCE
 
@@ -390,7 +390,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         try:
             return self.resolve__raise(*args, **kwargs)
         except:
-            return Enum_ProcessResult.SKIPPED  # TODO: decide using None ???
+            return VALUE_SPECIAL.SKIPPED
 
     def resolve__bool(self, *args, **kwargs) -> bool:
         """
