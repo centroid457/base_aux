@@ -12,8 +12,8 @@ from base_aux.aux_types.m0_static_typing import TYPING
 class TextAux:
     TEXT: TYPING.STR_FINAL = ""
 
-    def __init__(self, text: TYPING.STR_DRAFT = "", *args, **kwargs) -> None | NoReturn:
-        if text is not None:
+    def __init__(self, text: TYPING.STR_DRAFT = NoValue, *args, **kwargs) -> None | NoReturn:
+        if text is not NoValue:
             self.TEXT = str(text)
         super().__init__(*args, **kwargs)
 

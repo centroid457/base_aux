@@ -216,7 +216,7 @@ class Test__shortcut:
     @pytest.mark.parametrize(
         argnames="p1,p2,p3,p4,_EXPECTED",
         argvalues=[
-            (None, 5, "...", Enum_Where3.LAST, ""),  # DOES NOTY METTER!
+            (None, 5, "...", Enum_Where3.LAST, "None"),  # DOES NOT METTER!
             ("", 5, "...", Enum_Where3.LAST, ""),
             ("123456", 3, "...", Enum_Where3.LAST, "..."),
 
@@ -357,14 +357,14 @@ class Test__try_convert_to_object:
         argvalues=[
             (0, 0),
             ("0", 0),
-            ("00", None),
-            ("01", None),
+            ("00", NoValue),
+            ("01", NoValue),
             ("10", 10),
 
             ("1.0", 1.0),
             ("1.000", 1.0),
 
-            ("1,000", None),
+            ("1,000", NoValue),
         ]
     )
     def test__nums(self, source, _EXPECTED):

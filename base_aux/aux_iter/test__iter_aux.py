@@ -17,7 +17,7 @@ from base_aux.aux_values.m4_primitives import *
         (("1", ), 1, "1"),
         (("1", ), "1", "1"),
 
-        (("1", ), " 1 ", None),
+        (("1", ), " 1 ", NoValue),
 
         (("hello", ), "HELLO", "hello"),
 
@@ -27,7 +27,7 @@ from base_aux.aux_values.m4_primitives import *
 
         (AttrKit_Blank(arg1=1), "arg1", "arg1"),
         (NestInit_AnnotsAttrByKwArgs(arg1=1), "ARG1", "arg1"),
-        (NestInit_AnnotsAttrByKwArgs(arg1=1), "hello", None),
+        (NestInit_AnnotsAttrByKwArgs(arg1=1), "hello", NoValue),
     ]
 )
 def test__item__get_original(source, item, _EXPECTED):
