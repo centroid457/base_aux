@@ -25,6 +25,8 @@ class Base_ValueSpecial:
     ---------------------
     DictDiff instead of Enum values! - in there we have __Eq which cause incorrect usage/results!
     """
+
+    # TODO: add Meta EqCls with Exx??? to cmp with exact values??? - no! use special logic when do cmp!
     def __init__(self) -> NoReturn:
         msg = f"Base_ValueSpecial NEVER INITTIATE! use direct CLASS!"
         raise Exx__WrongUsage(msg)
@@ -32,7 +34,7 @@ class Base_ValueSpecial:
     # def __bool__(self):     # CANT USE!!! it works only on instance!!!
     #     return False
 
-    # todo: add classmethod! - not working!!!
+    # TODO: add classmethod! - not working!!!
     # def __str__(self):
     #     return f"{self.__class__.__name__}"
 
@@ -81,7 +83,15 @@ class Raised(Base_ValueSpecial):
     ----
     just a mirror for GA_NotExists
     """
-    # todo: add Meta EqCls with Exx??? to cmp with exact values??? - no! use special logic when do cmp!
+
+
+# =====================================================================================================================
+class Skipped(Base_ValueSpecial):
+    """
+    GOAL
+    ----
+    create special value for result in Lambda.resolve__style when skipped
+    """
 
 
 # =====================================================================================================================
@@ -93,8 +103,9 @@ class _ValueSpecial:
 
     USE instance!
     """
-    NOVALUE: type[NoValue] = NoValue
-    RAISED: type[Raised] = Raised
+    NOVALUE: type[Base_ValueSpecial] = NoValue
+    RAISED: type[Base_ValueSpecial] = Raised
+    SKIPPED: type[Base_ValueSpecial] = Skipped
 
     def __iter__(self) -> Iterable[type]:
         """
