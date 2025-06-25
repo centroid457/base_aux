@@ -2,7 +2,7 @@ import pytest
 
 from base_aux.aux_values.m2_value_special import *
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_values.m6_value_valid3_unit import ValueUnit
 
 

@@ -1,7 +1,7 @@
 import pytest
 from typing import *
 from base_aux.servers.m0_url import Url
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 
 
 # =====================================================================================================================

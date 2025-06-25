@@ -1,8 +1,7 @@
 from base_aux.aux_attr.m4_kits import *
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda2_derivatives import *
+
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.aux_callable.m2_lambda import Lambda
-from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_Bool
 from base_aux.aux_values.m4_primitives import *
 
 

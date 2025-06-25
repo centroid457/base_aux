@@ -1,6 +1,6 @@
 import platform
 
-from base_aux.aux_callable.m2_lambda import Lambda
+from base_aux.lambdas.m1_lambda import Lambda
 from base_aux.aux_types.m0_static_types import *
 from base_aux.aux_types.m0_static_typing import TYPING
 

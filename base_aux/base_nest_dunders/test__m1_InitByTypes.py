@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m1_init2_annots2_by_types import *
 
 from base_aux.aux_types.m2_info import *

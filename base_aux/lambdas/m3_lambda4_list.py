@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QThread
 
-from base_aux.aux_callable.m2_lambda import *
-from base_aux.aux_callable.m3_lambda3_thread import LambdaThread
+from base_aux.lambdas.m1_lambda import *
+from base_aux.lambdas.m2_lambda3_thread import LambdaThread
 
 # =====================================================================================================================
 TYPING__LAMBDA_LIST__DRAFT = list[Lambda | Callable | type | Any]

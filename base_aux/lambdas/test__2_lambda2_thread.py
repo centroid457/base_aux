@@ -1,6 +1,6 @@
 import time
 
-from base_aux.aux_callable.m3_lambda3_thread import LambdaThread
+from base_aux.lambdas.m2_lambda3_thread import LambdaThread
 
 
 # =====================================================================================================================

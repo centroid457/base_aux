@@ -1,7 +1,7 @@
 import pytest
 
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_values.m4_primitives import *
-from base_aux.aux_callable.m2_lambda import *
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
 
 

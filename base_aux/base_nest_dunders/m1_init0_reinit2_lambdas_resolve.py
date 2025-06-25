@@ -1,4 +1,4 @@
-from base_aux.aux_callable.m2_lambda import Lambda
+from base_aux.lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 

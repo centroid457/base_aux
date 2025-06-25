@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_values.m6_value_valid1_eq import *
 from base_aux.aux_eq.m4_eq_valid_chain import *
 from base_aux.aux_values.m4_primitives import *

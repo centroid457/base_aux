@@ -1,6 +1,6 @@
 from base_aux.alerts.m1_alerts1_smtp import *
 from base_aux.alerts.m1_alerts2_telegram import *
-from base_aux.aux_callable.m2_lambda import Lambda
+from base_aux.lambdas.m1_lambda import *
 
 
 # =====================================================================================================================

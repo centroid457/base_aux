@@ -1,9 +1,9 @@
 import pytest
 import sys
 
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_types.m1_type_aux import *
 from base_aux.aux_values.m4_primitives import *
-from base_aux.aux_callable.m2_lambda import *
 
 
 # =====================================================================================================================

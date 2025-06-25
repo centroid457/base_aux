@@ -1,8 +1,7 @@
 import pytest
 
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_eq.m1_eq_args import EqArgs
-from base_aux.aux_callable.m2_lambda import *
-
 from base_aux.aux_values.m4_primitives import INST_EQ_RAISE, INST_EQ_FALSE, INST_EQ_TRUE
 
 

@@ -1,4 +1,4 @@
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.requirements.m2_strings import *
 
 from base_aux.cli.m1_cli_user import *

@@ -2,7 +2,7 @@ from base_aux.base_nest_dunders.m1_init1_args_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.aux_values.m3_exceptions import Exx__Expected
 from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 
 
 # =====================================================================================================================

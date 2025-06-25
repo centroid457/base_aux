@@ -1,4 +1,4 @@
-from base_aux.aux_callable.m2_lambda2_derivatives import Lambda_TrySuccess, Lambda_TryFail
+from base_aux.lambdas.m1_lambda2_derivatives import *
 from base_aux.aux_dict.m3_dict_ga1_simple import *
 
 

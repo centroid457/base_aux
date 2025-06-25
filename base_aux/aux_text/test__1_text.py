@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.aux_values.m5_enums import *
 from base_aux.aux_text.m0_text_examples import *

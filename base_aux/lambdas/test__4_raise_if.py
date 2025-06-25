@@ -1,9 +1,9 @@
 import pytest
 
-from base_aux.aux_callable.m2_lambda import *
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_values.m4_primitives import *
 
-from base_aux.aux_callable.m6_raise_if import *
+from base_aux.lambdas.m5_raise_if import *
 from base_aux.aux_values.m3_exceptions import Exx__Expected
 
 

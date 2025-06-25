@@ -3,7 +3,7 @@ import time
 
 from base_aux.base_singletons.m1_singleton import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.aux_callable.m3_lambda3_thread import LambdaThread
+from base_aux.lambdas.m2_lambda3_thread import LambdaThread
 
 
 # =====================================================================================================================

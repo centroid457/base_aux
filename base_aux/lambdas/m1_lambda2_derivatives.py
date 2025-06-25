@@ -1,7 +1,7 @@
 import time
 from typing import *
 
-from base_aux.aux_callable.m2_lambda import Lambda
+from base_aux.lambdas.m1_lambda import *
 from base_aux.aux_values.m5_enums import Enum_When2
 
 
