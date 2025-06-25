@@ -1,8 +1,8 @@
 import platform
-
 from base_aux.base_lambdas.m1_lambda import Lambda
 from base_aux.base_types.m0_static_types import *
 from base_aux.base_types.m0_static_typing import TYPING
+
 
 # =====================================================================================================================
 TYPE__VALUES = Union[str, list[str], dict[str, bool | None]]

@@ -121,7 +121,7 @@ class Base_EqValid(NestCall_Resolve):
         yield from self.V_ARGS
 
     # PREPARES --------------------------------------------------------------------------------------------------------
-    def other_final__resolve(self, other_draft: Any, *other_args, **other_kwargs) -> None:
+    def _other_final__resolve(self, other_draft: Any, *other_args, **other_kwargs) -> None:
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         if self.OTHER_FINAL__RESOLVE:
             try:
@@ -134,9 +134,9 @@ class Base_EqValid(NestCall_Resolve):
             self.OTHER_FINAL = other_draft
             # self.OTHER_RAISED = False     # DONT PLACE HERE!!!
 
-        self._chain_push_tail()
+        self._other_final__push_chain()
 
-    def _chain_push_tail(self) -> None:
+    def _other_final__push_chain(self) -> None:
         """
         GOAL
         ---
@@ -155,15 +155,6 @@ class Base_EqValid(NestCall_Resolve):
         return self.resolve(item)
 
     # VALIDATE-2=VALUE with argsKwrgs----------------------------------------------------------------------------------
-    def __call__(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
-        """
-        NOTE
-        ----
-        other_args/* - only for manual usage!
-        typically used only other and only by direct eq(o1 == o2)
-        """
-        return self.resolve(other_draft, *other_args, **other_kwargs)
-
     def resolve(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
         """
         GOAL
@@ -171,11 +162,11 @@ class Base_EqValid(NestCall_Resolve):
         validate smth with special logic
         """
         # OTHER_FINAL --------------------
-        self.other_final__resolve(other_draft, *other_args, **other_kwargs)
+        self._other_final__resolve(other_draft, *other_args, **other_kwargs)
 
         # VALIDATION --------------------
-        # 1=SINGLE
         if not self.V_ARGS:
+            # 1=ARGS BLANK --------------
             validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, **self.V_KWARGS).resolve__bool()
             if self.IRESULT_REVERSE:
                 result = not validator_result
@@ -184,6 +175,7 @@ class Base_EqValid(NestCall_Resolve):
             return result
 
         else:
+            # 2=ARGS one or MORE --------------
             for v_arg in self.V_ARGS:
                 validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, v_arg, **self.V_KWARGS).resolve__bool()
                 if self.IRESULT_REVERSE:
@@ -210,6 +202,20 @@ class Base_EqValid(NestCall_Resolve):
                 return True
             else:
                 return False
+
+
+# =====================================================================================================================
+class Base_ValidCase(Base_EqValid):
+    """
+    GOAL
+    ----
+    use it as SelfComplete validator object (OTHER_DRAFT in )
+    """
+    # redefine!
+    OTHER_DRAFT: Any | Callable
+
+    def resolve(self, *other_args, **other_kwargs) -> bool:
+        return super().resolve(self.OTHER_DRAFT, *other_args, **other_kwargs)
 
 
 # =====================================================================================================================
