@@ -12,7 +12,7 @@ import shutil
 class File:
     """
     BASE CLASS FOR WORKING WITH FILES! and selecting only one!
-    if you need work only with path aux_types in FileSystem (list_dir for example) without exactly opening files
+    if you need work only with path base_types in FileSystem (list_dir for example) without exactly opening files
     use it directly or create special class.
     In other cases with special file types use other special classes inherited from this - Json/Log
 

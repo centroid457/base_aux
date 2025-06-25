@@ -49,7 +49,7 @@ class Interface_Alert:
         return str(self.MSG_ACTIVE)
 
     def _recipient_get(self) -> str:
-        """RECIPIENT SelfSending, get from obvious class aux_types!
+        """RECIPIENT SelfSending, get from obvious class base_types!
         """
         pass
 

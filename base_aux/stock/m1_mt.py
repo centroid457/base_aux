@@ -10,7 +10,7 @@ from base_aux.stock.m2_indicators import *
 
 from base_aux.privates.m1_privates import *
 from base_aux.alerts.m1_alert0_base import *
-from base_aux.aux_types.m2_info import *
+from base_aux.base_types.m2_info import *
 
 
 # =====================================================================================================================

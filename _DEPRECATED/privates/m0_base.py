@@ -1,7 +1,7 @@
 import abc
 import pathlib
 
-from base_aux.aux_types.m0_static_typing import TYPING
+from base_aux.base_types.m0_static_typing import TYPING
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 

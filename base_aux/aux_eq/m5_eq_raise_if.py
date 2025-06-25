@@ -1,5 +1,5 @@
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
-from base_aux.aux_values.m3_exceptions import Exx__Expected
+from base_aux.base_values.m3_exceptions import Exx__Expected
 from base_aux.aux_eq.m4_eq_valid_chain import *
 
 

@@ -1,7 +1,7 @@
 import math
 
-from base_aux.aux_types.m0_static_types import *
-from base_aux.aux_types.m2_info import *
+from base_aux.base_types.m0_static_types import *
+from base_aux.base_types.m2_info import *
 
 from base_aux.base_nest_dunders.m7_cmp import *
 

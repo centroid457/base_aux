@@ -18,7 +18,7 @@ class Meta_GaClsPrefix_Example(type):
 
     BEST USAGE
     ----------
-    for example usages see requirements.Base_ReqCheckStr, annot_attrs. or here _GetattrCls_Meta__Echo
+    for example usages see valid_getter.Base_ReqCheckStr, annot_attrs. or here _GetattrCls_Meta__Echo
     """
     # TODO: add example! + tests! +REF!
     # dont change markers! use exists!

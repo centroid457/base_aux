@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 

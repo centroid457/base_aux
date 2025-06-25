@@ -1,4 +1,4 @@
-from base_aux.aux_values.m3_exceptions import *
+from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================

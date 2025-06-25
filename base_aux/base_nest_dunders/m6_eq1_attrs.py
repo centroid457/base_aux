@@ -1,4 +1,4 @@
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_eq.m2_eq_aux import *
 
 # =====================================================================================================================

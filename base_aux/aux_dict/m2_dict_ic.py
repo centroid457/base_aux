@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.aux_iter.m1_iter_aux import IterAux
-from base_aux.aux_values.m2_value_special import *
+from base_aux.base_values.m2_value_special import *
 
 
 # =====================================================================================================================

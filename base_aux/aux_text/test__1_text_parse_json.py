@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
 from base_aux.aux_text.m0_text_examples import *
 from base_aux.aux_text.m1_text_aux import *

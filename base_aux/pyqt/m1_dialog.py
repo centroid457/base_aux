@@ -9,12 +9,12 @@ from threading import Thread
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from base_aux.aux_values.m4_primitives import LAMBDA_TRUE
+from base_aux.base_values.m4_primitives import LAMBDA_TRUE
 from base_aux.base_sleep.m1_sleep import Sleep
 
 from base_aux.pyqt.m0_static import COLOR_TUPLE_RGB
 
-from base_aux.aux_types.m2_info import ObjectInfo
+from base_aux.base_types.m2_info import ObjectInfo
 
 
 # SET ============================================================================================================
@@ -265,32 +265,32 @@ class GuiDialog(QWidget):
             meth=[.__class__]                       value=[<class 'sip.wrappertype'>]
             attr=[.__delattr__]                     value=[***MISSED DANGER***]
             obj=[.__dict__]                         value=[{'__module__': 'PyQt5.QtWidgets', '__doc__': 'QApplication(List[str])', 'ColorSpec': <class 'PyQt5.QtWidgets.QApplication.ColorSpec'>, 'aboutQt': <built-in method aboutQt>, 'activeModalWidget': <built-in method activeModalWidget>, 'activePopupWidget': <built-in method activePopupWidget>, 'activeWindow': <built-in method activeWindow>, 'alert': <built-in method alert>, 'allWidgets': <built-in method allWidgets>, 'autoSipEnabled': <built-in method autoSipEnabled>, 'beep': <built-in method beep>, 'childEvent': <built-in method childEvent>, 'closeAllWindows': <built-in method closeAllWindows>, 'colorSpec': <built-in method colorSpec>, 'connectNotify': <built-in method connectNotify>, 'cursorFlashTime': <built-in method cursorFlashTime>, 'customEvent': <built-in method customEvent>, 'desktop': <built-in method desktop>, 'disconnectNotify': <built-in method disconnectNotify>, 'doubleClickInterval': <built-in method doubleClickInterval>, 'event': <built-in method event>, 'exec': <built-in method exec>, 'exec_': <built-in method exec_>, 'focusWidget': <built-in method focusWidget>, 'font': <built-in method font>, 'fontMetrics': <built-in method fontMetrics>, 'globalStrut': <built-in method globalStrut>, 'isEffectEnabled': <built-in method isEffectEnabled>, 'isSignalConnected': <built-in method isSignalConnected>, 'keyboardInputInterval': <built-in method keyboardInputInterval>, 'notify': <built-in method notify>, 'palette': <built-in method palette>, 'receivers': <built-in method receivers>, 'sender': <built-in method sender>, 'senderSignalIndex': <built-in method senderSignalIndex>, 'setActiveWindow': <built-in method setActiveWindow>, 'setAutoSipEnabled': <built-in method setAutoSipEnabled>, 'setColorSpec': <built-in method setColorSpec>, 'setCursorFlashTime': <built-in method setCursorFlashTime>, 'setDoubleClickInterval': <built-in method setDoubleClickInterval>, 'setEffectEnabled': <built-in method setEffectEnabled>, 'setFont': <built-in method setFont>, 'setGlobalStrut': <built-in method setGlobalStrut>, 'setKeyboardInputInterval': <built-in method setKeyboardInputInterval>, 'setPalette': <built-in method setPalette>, 'setStartDragDistance': <built-in method setStartDragDistance>, 'setStartDragTime': <built-in method setStartDragTime>, 'setStyle': <built-in method setStyle>, 'setStyleSheet': <built-in method setStyleSheet>, 'setWheelScrollLines': <built-in method setWheelScrollLines>, 'setWindowIcon': <built-in method setWindowIcon>, 'startDragDistance': <built-in method startDragDistance>, 'startDragTime': <built-in method startDragTime>, 'style': <built-in method style>, 'styleSheet': <built-in method styleSheet>, 'timerEvent': <built-in method timerEvent>, 'topLevelAt': <built-in method topLevelAt>, 'topLevelWidgets': <built-in method topLevelWidgets>, 'wheelScrollLines': <built-in method wheelScrollLines>, 'widgetAt': <built-in method widgetAt>, 'windowIcon': <built-in method windowIcon>, 'CustomColor': 1, 'ManyColor': 2, 'NormalColor': 0, 'focusChanged': <unbound PYQT_SIGNAL focusChanged(QWidget*,QWidget*)>}]
-            meth=[.__dir__]                         value=[<method '__dir__' of 'object' aux_types>]
+            meth=[.__dir__]                         value=[<method '__dir__' of 'object' base_types>]
             attr=[.__doc__]                         value=[QApplication(List[str])]
             attr=[.__enter__]                       value=[***MISSED DANGER***]
-            meth=[.__eq__]                          value=[<slot wrapper '__eq__' of 'object' aux_types>]
+            meth=[.__eq__]                          value=[<slot wrapper '__eq__' of 'object' base_types>]
             attr=[.__exit__]                        value=[***MISSED DANGER***]
-            meth=[.__format__]                      value=[<method '__format__' of 'object' aux_types>]
-            meth=[.__ge__]                          value=[<slot wrapper '__ge__' of 'object' aux_types>]
+            meth=[.__format__]                      value=[<method '__format__' of 'object' base_types>]
+            meth=[.__ge__]                          value=[<slot wrapper '__ge__' of 'object' base_types>]
             meth=[.__getattr__]                     value=[<built-in function __getattr__>]
-            meth=[.__getattribute__]                value=[<slot wrapper '__getattribute__' of 'object' aux_types>]
-            meth=[.__gt__]                          value=[<slot wrapper '__gt__' of 'object' aux_types>]
-            meth=[.__hash__]                        value=[<slot wrapper '__hash__' of 'object' aux_types>]
+            meth=[.__getattribute__]                value=[<slot wrapper '__getattribute__' of 'object' base_types>]
+            meth=[.__gt__]                          value=[<slot wrapper '__gt__' of 'object' base_types>]
+            meth=[.__hash__]                        value=[<slot wrapper '__hash__' of 'object' base_types>]
             attr=[.__init__]                        value=[***MISSED DANGER***]
             attr=[.__init_subclass__]               value=[***MISSED DANGER***]
-            meth=[.__le__]                          value=[<slot wrapper '__le__' of 'object' aux_types>]
-            meth=[.__lt__]                          value=[<slot wrapper '__lt__' of 'object' aux_types>]
+            meth=[.__le__]                          value=[<slot wrapper '__le__' of 'object' base_types>]
+            meth=[.__lt__]                          value=[<slot wrapper '__lt__' of 'object' base_types>]
             attr=[.__module__]                      value=[PyQt5.QtWidgets]
-            meth=[.__ne__]                          value=[<slot wrapper '__ne__' of 'object' aux_types>]
+            meth=[.__ne__]                          value=[<slot wrapper '__ne__' of 'object' base_types>]
             attr=[.__new__]                         value=[***MISSED DANGER***]
             attr=[.__reduce__]                      value=[***MISSED DANGER***]
             attr=[.__reduce_ex__]                   value=[***MISSED DANGER***]
-            meth=[.__repr__]                        value=[<slot wrapper '__repr__' of 'object' aux_types>]
+            meth=[.__repr__]                        value=[<slot wrapper '__repr__' of 'object' base_types>]
             attr=[.__setattr__]                     value=[***MISSED DANGER***]
-            meth=[.__sizeof__]                      value=[<method '__sizeof__' of 'object' aux_types>]
-            meth=[.__str__]                         value=[<slot wrapper '__str__' of 'object' aux_types>]
+            meth=[.__sizeof__]                      value=[<method '__sizeof__' of 'object' base_types>]
+            meth=[.__str__]                         value=[<slot wrapper '__str__' of 'object' base_types>]
             meth=[.__subclasshook__]                value=[NotImplemented]
-            obj=[.__weakref__]                      value=[<attribute '__weakref__' of 'QObject' aux_types>]
+            obj=[.__weakref__]                      value=[<attribute '__weakref__' of 'QObject' base_types>]
             attr=[.aboutQt]                         value=[***MISSED SPECIAL***]
             meth=[.aboutToQuit]                     value=[<unbound PYQT_SIGNAL aboutToQuit()>]
             meth=[.activeModalWidget]               value=[None]

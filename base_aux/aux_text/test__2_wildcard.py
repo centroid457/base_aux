@@ -2,7 +2,7 @@ from typing import *
 import pytest
 import re
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_text.m2_wildcard import *
 
 

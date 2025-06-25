@@ -1,7 +1,7 @@
 from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.aux_types.m1_type_aux import *
-from base_aux.aux_types.m0_static_types import *
-from base_aux.aux_types.m0_static_typing import TYPING
+from base_aux.base_types.m1_type_aux import *
+from base_aux.base_types.m0_static_types import *
+from base_aux.base_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================
@@ -44,7 +44,7 @@ class IterAux(NestInit_Source):
         #
         # USEFUL in case-insensitive systems (like terminals or serial devices) or object structured by prefix-names:
         # 1. get key in dict
-        # 2. find attribute name in aux_types
+        # 2. find attribute name in base_types
         #
         # :param item:
         # :return: actual item from collection

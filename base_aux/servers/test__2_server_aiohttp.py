@@ -3,7 +3,7 @@ import pytest
 import requests
 from aiohttp import web
 
-from base_aux.requirements.m2_strings import ReqCheckStr_Os
+from base_aux.valid_getter.m2_strings import ReqCheckStr_Os
 
 from base_aux.servers.m2_server1_aiohttp import ServerAiohttpBase
 

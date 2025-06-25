@@ -1,7 +1,7 @@
 from typing import *
 import sys
 
-from base_aux.aux_types.m2_info import *
+from base_aux.base_types.m2_info import *
 from base_aux.versions.m1_block import *
 from base_aux.base_nest_dunders.m2_repr_clsname_str import *
 from base_aux.aux_attr.m3_ga1_prefix_1_inst import NestGa_Prefix_RaiseIf

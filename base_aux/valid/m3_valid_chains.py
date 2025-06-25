@@ -1,9 +1,9 @@
 from typing import *
 import datetime
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.valid.m2_valid_derivatives import *
-from base_aux.aux_values.m5_enums import *
+from base_aux.base_values.m5_enums import *
 
 
 # =====================================================================================================================

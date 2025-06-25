@@ -1,11 +1,11 @@
-from base_aux.aux_values.m3_exceptions import *
+from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
 # TODO: need decision about flags order!!! NEED HUMAN ALWAYS except hex!!!
 """
 work with bits (bitfields/flags/bites...)
-designed for common work with bitfields-like aux_types
+designed for common work with bitfields-like base_types
 field_bytearray
 flags/flags manipulate
 bits/bit user/bit work/bits manipulate

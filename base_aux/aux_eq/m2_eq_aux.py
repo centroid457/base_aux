@@ -1,5 +1,5 @@
 from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.aux_types.m0_static_typing import TYPING
+from base_aux.base_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================
@@ -59,7 +59,7 @@ class EqAux(NestInit_Source):
 
         CREATED SPECIALLY FOR
         ---------------------
-        manipulate aux_types which have special methods for __cmp__
+        manipulate base_types which have special methods for __cmp__
         for cases when we can switch places
 
         BEST USAGE

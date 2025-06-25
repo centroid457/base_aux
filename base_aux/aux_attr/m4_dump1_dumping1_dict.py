@@ -1,6 +1,6 @@
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_attr.m1_annot_attr1_aux import *
-from base_aux.aux_values.m5_enums import *
+from base_aux.base_values.m5_enums import *
 
 
 # =====================================================================================================================

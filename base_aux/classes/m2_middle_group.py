@@ -1,7 +1,7 @@
 
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.aux_types.m0_static_types import *
-from base_aux.aux_types.m0_static_typing import TYPING
+from base_aux.base_types.m0_static_types import *
+from base_aux.base_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================
@@ -11,7 +11,7 @@ class ClsMiddleGroup:
 
     NOTE1: DONT deprecate! Cant compare methods even classmethods - compare only aux_attr!
     ------------------------
-    1. comparing direct methods on aux_types will not work!!!
+    1. comparing direct methods on base_types will not work!!!
         -------------------------
             class Cls:
                 def meth(self):
@@ -110,7 +110,7 @@ class ClsMiddleGroup:
     USAGE
     -----
     1. create some middle classes which will define groups.
-    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so aux_types could be compared not just by names!
+    2. apply group methods and mention it in MIDDLE_GROUP__CMP_ATTR so base_types could be compared not just by names!
     3. do nesting your final classes by Groups
 
         # BEFORE --------------------------

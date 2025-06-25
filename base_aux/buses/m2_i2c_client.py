@@ -1,7 +1,7 @@
 # REQUIREMENTS ========================================================================================================
 # decide what to do with it!!!
 
-from base_aux.requirements.m2_strings import ReqCheckStr_Os
+from base_aux.valid_getter.m2_strings import ReqCheckStr_Os
 ReqCheckStr_Os.raise_if__WINDOWS()
 
 
@@ -10,7 +10,7 @@ from typing import *
 import re
 from smbus2 import SMBus
 
-from base_aux.aux_types.m2_info import ObjectInfo
+from base_aux.base_types.m2_info import ObjectInfo
 from base_aux.cli.m1_cli_user import CliUser
 
 

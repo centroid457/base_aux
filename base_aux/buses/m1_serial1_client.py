@@ -11,9 +11,9 @@ from base_aux.loggers.m1_logger import Logger
 
 from serial import Serial, PortNotOpenError
 from serial.tools import list_ports
-from base_aux.aux_values.m6_value_valid3_unit import *
+from base_aux.base_values.m6_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
-from base_aux.lambdas.m3_lambda4_list import *
+from base_aux.base_lambdas.m3_lambda4_list import *
 
 from base_aux.buses.m0_history import HistoryIO
 
@@ -747,7 +747,7 @@ class SerialClient(Logger):
             serial_number            	str       :
             vid                      	int       :1659
             ----------properties_exx----------------------------------------------------------------------------
-            ----------aux_types-----------------------------------------------------------------------------------
+            ----------base_types-----------------------------------------------------------------------------------
             ----------methods_ok--------------------------------------------------------------------------------
             apply_usb_info           	NoneType  :None
             usb_description          	str       :COM8
@@ -778,7 +778,7 @@ class SerialClient(Logger):
             usb_interface_path              str       :/sys/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.4/1-1.4:1.0
             vid                             int       :1659
             ----------properties_exx----------------------------------------------------------------------------
-            ----------aux_types-----------------------------------------------------------------------------------
+            ----------base_types-----------------------------------------------------------------------------------
             ----------methods_ok--------------------------------------------------------------------------------
             apply_usb_info                  NoneType  :None
             usb_description                 str       :USB-Serial Controller

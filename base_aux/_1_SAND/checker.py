@@ -1,8 +1,8 @@
 from base_aux.aux_attr.m4_kits import *
-from base_aux.lambdas.m1_lambda2_derivatives import *
+from base_aux.base_lambdas.m1_lambda2_derivatives import *
 
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.aux_values.m4_primitives import *
+from base_aux.base_values.m4_primitives import *
 
 
 # =====================================================================================================================

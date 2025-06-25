@@ -1,5 +1,5 @@
 from base_aux.aux_eq.m2_eq_aux import *
-from base_aux.aux_types.m1_type_aux import *
+from base_aux.base_types.m1_type_aux import *
 
 
 # =====================================================================================================================

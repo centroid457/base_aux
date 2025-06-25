@@ -4,11 +4,11 @@ import pytest
 from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_attr.m5_attr_diff import *
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_attr.m4_dump1_dumping1_dict import *
 from base_aux.aux_attr.m0_static import *
 
-from base_aux.aux_values.m2_value_special import *
+from base_aux.base_values.m2_value_special import *
 
 
 # =====================================================================================================================

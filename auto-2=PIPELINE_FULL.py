@@ -7,7 +7,7 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 
 # =====================================================================================================================
 from PROJECT import PROJECT
-from base_aux.requirements.m1_pkgs import Packages
+from base_aux.aux_modules.m1_pkgs import Packages
 from base_aux.cli.m1_cli_user import CliUser
 
 

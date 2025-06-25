@@ -4,7 +4,7 @@ import string
 
 from base_aux.aux_text.m0_patterns import *
 from base_aux.aux_text.m4_ini import ConfigParserMod
-from base_aux.aux_types.m0_static_typing import TYPING
+from base_aux.base_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================
@@ -89,7 +89,7 @@ class TextAux:
 
     def fix__json(self) -> str:
         # PREPARE -----------------------------------------------------------------
-        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python aux_types
+        # replace pytonic values (usually created by str(Any)) before attempting to apply json.loads to get original python base_types
         # so it just same process as re.sub by one func for several values
 
         # JSON-cmts my special ------------

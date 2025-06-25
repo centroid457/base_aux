@@ -1,7 +1,7 @@
 import pytest
 import pathlib
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.path1_dir.m1_dirpath import *
 
 

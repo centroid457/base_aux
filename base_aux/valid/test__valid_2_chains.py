@@ -1,7 +1,7 @@
 import pytest
 
-from base_aux.lambdas.m1_lambda import *
-from base_aux.aux_values.m4_primitives import *
+from base_aux.base_lambdas.m1_lambda import *
+from base_aux.base_values.m4_primitives import *
 
 from base_aux.valid.m3_valid_chains import *
 from base_aux.valid.m2_valid_derivatives import *

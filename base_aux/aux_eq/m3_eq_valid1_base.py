@@ -1,7 +1,7 @@
-from base_aux.aux_types.m0_static_typing import *
+from base_aux.base_types.m0_static_typing import *
 from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.aux_values.m5_enums import *
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_values.m5_enums import *
+from base_aux.base_lambdas.m1_lambda import *
 
 
 # =====================================================================================================================

@@ -2,8 +2,7 @@ import pathlib
 
 from PROJECT import PROJECT
 
-from base_aux.requirements.m1_pkgs import Packages
-
+from base_aux.aux_modules.m1_pkgs import Packages
 
 # =====================================================================================================================
 # VERSION = (0, 0, 1)   # use direct upgrade this module by PROJECT.NAME_INSTALL

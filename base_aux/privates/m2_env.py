@@ -4,7 +4,7 @@ import re
 
 from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_AnnotsAll
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
-from base_aux.aux_types.m1_type_aux import TypeAux
+from base_aux.base_types.m1_type_aux import TypeAux
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
 from base_aux.base_nest_dunders.m3_calls import NestCall_Resolve
 

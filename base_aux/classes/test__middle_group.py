@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.classes.m2_middle_group import *
 
 

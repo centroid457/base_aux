@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from base_aux.aux_types.m2_info import ObjectInfo
+from base_aux.base_types.m2_info import ObjectInfo
 
 from base_aux.servers.m3_server2_fastapi import ServerFastApi_Thread
 

@@ -1,6 +1,6 @@
 from base_aux.aux_eq.m1_eq_args import *
 from base_aux.aux_dict.m1_dict_aux import *
-from base_aux.aux_types.m0_static_typing import *
+from base_aux.base_types.m0_static_typing import *
 
 
 # =====================================================================================================================

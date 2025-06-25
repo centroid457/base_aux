@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_text.m7_text_formatted import PatFormat, TextFormatted
 from base_aux.versions.m2_version import Version
 
