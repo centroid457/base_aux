@@ -12,7 +12,7 @@ from base_aux.base_types.m0_static_typing import *
 
 
 # =====================================================================================================================
-# FIXME: FINISH! its just a zero stert - not working!!!
+# FIXME: FINISH! its just a zero start - not working!!!
 
 class Base_ValidAccepts:
     OTHER_DRAFT: Any | Callable = True
