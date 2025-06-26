@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_values.m6_value_valid1_eq import *
+from base_aux.base_values.m5_value_valid1_eq import *
 from base_aux.aux_eq.m4_eq_valid_chain import *
 from base_aux.base_values.m4_primitives import *
 

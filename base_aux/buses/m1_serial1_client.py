@@ -11,7 +11,7 @@ from base_aux.loggers.m1_logger import Logger
 
 from serial import Serial, PortNotOpenError
 from serial.tools import list_ports
-from base_aux.base_values.m6_value_valid3_unit import *
+from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 

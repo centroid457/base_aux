@@ -1,12 +1,10 @@
-from typing import *
-
 import time
 import pytest
 
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.base_types import TypeAux   # CIRCULAR IMPORT
 
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.base_nest_dunders.m3_calls import *
 

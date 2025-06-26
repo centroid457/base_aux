@@ -1,9 +1,9 @@
-from base_aux.base_values.m5_enum1_adj import NestEq_Enum
+from base_aux.base_enums.m2_enum1_adj import NestEq_EnumAdj
 from base_aux.testplans.tc import Enum_TcGroup_Base
 
 
 # =====================================================================================================================
-class Enum_TcGroup(NestEq_Enum):
+class Enum_TcGroup(NestEq_EnumAdj):
     G1 = "g1"
     G2 = "g2"
     G3 = "g3"

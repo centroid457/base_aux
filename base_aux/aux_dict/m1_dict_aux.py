@@ -2,7 +2,7 @@ import copy
 
 from base_aux.base_types.m0_static_typing import TYPING
 from base_aux.base_nest_dunders.m1_init1_source import *
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_types.m0_static_types import *
 
 

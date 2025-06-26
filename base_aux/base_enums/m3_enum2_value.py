@@ -1,8 +1,8 @@
-from base_aux.base_values.m5_enum0_nest_eq import *
+from base_aux.base_enums.m1_enum0_nest_eq import *
 
 
 # =====================================================================================================================
-class EnumValue_Os(NestEq_Enum):
+class EnumValue_Os(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -13,7 +13,7 @@ class EnumValue_Os(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumValue_MachineArch(NestEq_Enum):
+class EnumValue_MachineArch(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------

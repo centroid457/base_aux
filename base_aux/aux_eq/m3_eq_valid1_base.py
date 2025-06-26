@@ -1,6 +1,4 @@
 from base_aux.base_types.m0_static_typing import *
-from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_lambdas.m1_lambda import *
 
 
@@ -205,7 +203,7 @@ class Base_EqValid(NestCall_Resolve):
 
 
 # =====================================================================================================================
-class Base_ValidItem(Base_EqValid):
+class Base_ValidEnumValue(Base_EqValid):
     """
     GOAL
     ----

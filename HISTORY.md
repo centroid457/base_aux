@@ -131,7 +131,7 @@
 0.2.9 (2025/02/17 12:37:00)
 ------------------------------
 - [tc] add INFO_STR__ADD_ATTRS  
-- [enums] add NestEq_Enum  
+- [enums] add NestEq_EnumAdj  
 - [DateTimeAux] apply getattr from PatDateTimeFormat  
 
 0.2.8 (2025/02/13 19:42:18)

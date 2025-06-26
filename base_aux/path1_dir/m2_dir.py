@@ -4,7 +4,7 @@ import pathlib
 
 from base_aux.path1_dir.m1_dirpath import Resolve_DirPath
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================

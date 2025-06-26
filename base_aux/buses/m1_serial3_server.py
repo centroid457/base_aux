@@ -1,4 +1,4 @@
-from base_aux.base_values.m6_value_valid2_variants import *
+from base_aux.base_values.m5_value_valid2_variants import *
 
 from base_aux.buses.m1_serial1_client import *
 from base_aux.aux_iter.m1_iter_aux import IterAux

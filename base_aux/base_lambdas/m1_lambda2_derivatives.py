@@ -1,8 +1,5 @@
-import time
-from typing import *
-
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_values.m5_enum1_adj import EnumAdj_When2
+from base_aux.base_enums.m2_enum1_adj import EnumAdj_When2
 
 
 # =====================================================================================================================

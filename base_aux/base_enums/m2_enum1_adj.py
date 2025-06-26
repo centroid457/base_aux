@@ -1,44 +1,44 @@
-from base_aux.base_values.m5_enum0_nest_eq import *
+from base_aux.base_enums.m1_enum0_nest_eq import *
 
 
 # =====================================================================================================================
-class EnumAdj_SingleMultiple(NestEq_Enum):
+class EnumAdj_SingleMultiple(NestEq_EnumAdj):
     NOT_EXISTS = None
     SINGLE = 1
     MULTIPLE = 2
 
 
-class EnumAdj_StaticCallable(NestEq_Enum):
+class EnumAdj_StaticCallable(NestEq_EnumAdj):
     STATIC = 1
     CALLABLE = 2
 
 
 # =====================================================================================================================
-class EnumAdj_When2(NestEq_Enum):
+class EnumAdj_When2(NestEq_EnumAdj):
     BEFORE = 1
     AFTER = 2
 
 
-class EnumAdj_When3(NestEq_Enum):
+class EnumAdj_When3(NestEq_EnumAdj):
     BEFORE = 1
     AFTER = 2
     MIDDLE = 3
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class EnumAdj_Where2(NestEq_Enum):
+class EnumAdj_Where2(NestEq_EnumAdj):
     FIRST = 1
     LAST = 2
 
 
-class EnumAdj_Where3(NestEq_Enum):
+class EnumAdj_Where3(NestEq_EnumAdj):
     FIRST = 1
     LAST = 2
     MIDDLE = 3
 
 
 # =====================================================================================================================
-class EnumAdj_CallResolveStyle(NestEq_Enum):
+class EnumAdj_CallResolveStyle(NestEq_EnumAdj):
     DIRECT = 1
     EXX = 2
     RAISE = 3
@@ -50,7 +50,7 @@ class EnumAdj_CallResolveStyle(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_SourceOrigOrCopy(NestEq_Enum):
+class EnumAdj_SourceOrigOrCopy(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -65,7 +65,7 @@ class EnumAdj_SourceOrigOrCopy(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_IgnoreCase(NestEq_Enum):
+class EnumAdj_IgnoreCase(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -80,7 +80,7 @@ class EnumAdj_IgnoreCase(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_ProcessResult(NestEq_Enum):
+class EnumAdj_ProcessResult(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -98,7 +98,7 @@ class EnumAdj_ProcessResult(NestEq_Enum):
     SUCCESS = True
 
 
-class EnumAdj_ProcessStateActive(NestEq_Enum):
+class EnumAdj_ProcessStateActive(NestEq_EnumAdj):
     """
     NAME
     ----
@@ -109,7 +109,7 @@ class EnumAdj_ProcessStateActive(NestEq_Enum):
     FINISHED = False
 
 
-class EnumAdj_ProcessStateResult(NestEq_Enum):
+class EnumAdj_ProcessStateResult(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -127,7 +127,7 @@ class EnumAdj_ProcessStateResult(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_BoolCumulate(NestEq_Enum):
+class EnumAdj_BoolCumulate(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -143,17 +143,17 @@ class EnumAdj_BoolCumulate(NestEq_Enum):
     ANY_FALSE = 2
 
 
-class EnumAdj_PathType(NestEq_Enum):
+class EnumAdj_PathType(NestEq_EnumAdj):
     FILE = 1
     DIR = 2
     ALL = 3
 
 
-# class AppendType(NestEq_Enum):
+# class AppendType(NestEq_EnumAdj):
 #     NEWLINE = 1
 
 
-class EnumAdj_AttemptsUsage(NestEq_Enum):
+class EnumAdj_AttemptsUsage(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -164,7 +164,7 @@ class EnumAdj_AttemptsUsage(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_DictTextFormat(NestEq_Enum):
+class EnumAdj_DictTextFormat(NestEq_EnumAdj):
     AUTO = None     # by trying all variants
     EXTENTION = 0
 
@@ -174,7 +174,7 @@ class EnumAdj_DictTextFormat(NestEq_Enum):
     STR = "str"     # str(dict)
 
 
-class EnumAdj_TextStyle(NestEq_Enum):
+class EnumAdj_TextStyle(NestEq_EnumAdj):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -193,7 +193,7 @@ class EnumAdj_TextStyle(NestEq_Enum):
     MD = "md"
 
 
-class EnumAdj_CmtStyle(NestEq_Enum):
+class EnumAdj_CmtStyle(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -209,7 +209,7 @@ class EnumAdj_CmtStyle(NestEq_Enum):
     SEMICOLON = ";"     # for INI files
 
 
-class EnumAdj_PatCoverStyle(NestEq_Enum):
+class EnumAdj_PatCoverStyle(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -221,13 +221,13 @@ class EnumAdj_PatCoverStyle(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_NumType(NestEq_Enum):
+class EnumAdj_NumType(NestEq_EnumAdj):
     INT = int
     FLOAT = float
     BOTH = None
 
 
-class EnumAdj_NumFPoint(NestEq_Enum):
+class EnumAdj_NumFPoint(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -246,7 +246,7 @@ TYPING__FPOINT_DRAFT = EnumAdj_NumFPoint | str | None
 
 
 # =====================================================================================================================
-class EnumAdj_CmpType(NestEq_Enum):
+class EnumAdj_CmpType(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -259,7 +259,7 @@ class EnumAdj_CmpType(NestEq_Enum):
 
 
 # =====================================================================================================================
-class EnumAdj_FormIntExt(NestEq_Enum):
+class EnumAdj_FormIntExt(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -269,7 +269,7 @@ class EnumAdj_FormIntExt(NestEq_Enum):
     EXTERNAL = 2
 
 
-class EnumAdj_AttrAnnotsOrExisted(NestEq_Enum):
+class EnumAdj_AttrAnnotsOrExisted(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -279,7 +279,7 @@ class EnumAdj_AttrAnnotsOrExisted(NestEq_Enum):
     ANNOTS_ONLY = 1
 
 
-class EnumAdj_AnnotsDepthAllOrLast(NestEq_Enum):
+class EnumAdj_AnnotsDepthAllOrLast(NestEq_EnumAdj):
     """
     GOAL
     ----
@@ -293,7 +293,7 @@ class EnumAdj_AnnotsDepthAllOrLast(NestEq_Enum):
     LAST_CHILD = 1
 
 
-class EnumAdj_AttrScope(NestEq_Enum):
+class EnumAdj_AttrScope(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------

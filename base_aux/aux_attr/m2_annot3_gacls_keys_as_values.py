@@ -1,6 +1,5 @@
-from typing import *
 from base_aux.aux_iter.m1_iter_aux import *
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================

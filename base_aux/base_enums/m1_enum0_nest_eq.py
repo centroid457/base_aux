@@ -3,7 +3,7 @@ from enum import Enum
 
 # =====================================================================================================================
 # TODO: make own class! EnumIc with metaclass!
-class NestEq_Enum(Enum):
+class NestEq_EnumAdj(Enum):
     """
     # NOTE
     # ----
@@ -20,7 +20,7 @@ class NestEq_Enum(Enum):
 
     for std object it is False but here its is correct!
     assert Enum(1) != 1
-    assert NestEq_Enum(1) == 1
+    assert NestEq_EnumAdj(1) == 1
     """
     # TODO: add Contain classmeth???  cant understand! need metaclass!
 

@@ -3,7 +3,7 @@ GOAL
 ----
 try keep all patterns for life!
 """
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_values.m2_value_special import *
 
 

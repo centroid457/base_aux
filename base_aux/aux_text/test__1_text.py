@@ -1,8 +1,6 @@
-import pytest
-
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_text.m1_text_aux import TextAux
-from base_aux.base_values.m5_enum1_adj import *
+from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.aux_text.m0_text_examples import *
 
 

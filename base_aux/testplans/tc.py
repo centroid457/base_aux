@@ -19,7 +19,7 @@ class _Base0_TestCase(Logger):
 
 
 # =====================================================================================================================
-class Enum_TcGroup_Base(NestEq_Enum):
+class Enum_TcGroup_Base(NestEq_EnumAdj):
     NONE = None
 
 
