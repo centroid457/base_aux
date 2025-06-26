@@ -43,10 +43,10 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # STOP_IF_FALSE_RESULT: Optional[bool] = None     # NOT USED NOW! MAYBE NOT IMPORTANT!!!
 
     # AUXILIARY -----------------------------------
-    STATE_ACTIVE__CLS: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
+    STATE_ACTIVE__CLS: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
 
-    result__startup_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
-    result__teardown_cls: TYPING__RESULT_BASE | Enum_ProcessStateActive = None
+    result__startup_cls: TYPING__RESULT_BASE | EnumAdj_ProcessStateActive = None
+    result__teardown_cls: TYPING__RESULT_BASE | EnumAdj_ProcessStateActive = None
 
     STAND: Base_Stand
     TCSi_LINE: TableLine = TableLine()
@@ -89,7 +89,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     # =================================================================================================================
     @classmethod
     def clear__cls(cls):
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.NONE
+        cls.STATE_ACTIVE__CLS = EnumAdj_ProcessStateActive.NONE
         cls.result__startup_cls = None
         cls.result__teardown_cls = None
         for tc in cls.TCSi_LINE:
@@ -175,7 +175,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         #     return
 
         cls.clear__cls()
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.STARTED
+        cls.STATE_ACTIVE__CLS = EnumAdj_ProcessStateActive.STARTED
 
         # FIXME: teardown not call!!!
 
@@ -211,7 +211,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                     tc_inst.wait()
 
         # FINISH -------------------------------------------------
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.FINISHED
+        cls.STATE_ACTIVE__CLS = EnumAdj_ProcessStateActive.FINISHED
         print(f"[TC]FINISH={cls.NAME=}={'=' * 50}")
         return True
 
@@ -259,7 +259,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         """before batch work
         """
         print(f"startup__cls")
-        cls.result__startup_cls = Enum_ProcessStateActive.STARTED
+        cls.result__startup_cls = EnumAdj_ProcessStateActive.STARTED
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
@@ -296,7 +296,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     def teardown__cls(cls) -> TYPING__RESULT_W_EXX:
         print(f"run__cls=teardown__cls")
 
-        if cls.STATE_ACTIVE__CLS == Enum_ProcessStateActive.STARTED or cls.result__teardown_cls is None:
+        if cls.STATE_ACTIVE__CLS == EnumAdj_ProcessStateActive.STARTED or cls.result__teardown_cls is None:
             print(f"run__cls=teardown__cls=1")
             cls.result__teardown_cls = Lambda(cls.teardown__cls__wrapped).resolve__exx()
             if isinstance(cls.result__teardown_cls, Valid):
@@ -310,7 +310,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
             pass
 
         print(f"run__cls=teardown__cls=3")
-        cls.STATE_ACTIVE__CLS = Enum_ProcessStateActive.FINISHED
+        cls.STATE_ACTIVE__CLS = EnumAdj_ProcessStateActive.FINISHED
         return cls.result__teardown_cls
 
     # =================================================================================================================

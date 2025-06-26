@@ -13,7 +13,7 @@ class Base_EqValidChain(EqValid_EQ):
     ----
     it is just a link for EqValid_EQ BUT WITH ALL_TRUE!!! to use clear exact name!
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ class EqValidChain_All(Base_EqValidChain):
     ----
     for Chain it is MOST USEFUL
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 @final
@@ -35,7 +35,7 @@ class EqValidChain_Any(Base_EqValidChain):
     for Chain it is LESS USEFUL
     but created just to keep mirror
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 # =====================================================================================================================

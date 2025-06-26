@@ -4,7 +4,7 @@ import pathlib
 
 from base_aux.path1_dir.m1_dirpath import Resolve_DirPath
 from base_aux.aux_argskwargs.m2_argskwargs_aux import *
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 
 
 # =====================================================================================================================
@@ -54,12 +54,12 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
             self,
             *wmask: str,        # dont
             nested: bool = None,
-            fsobj: Enum_PathType = Enum_PathType.ALL,
+            fsobj: EnumAdj_PathType = EnumAdj_PathType.ALL,
             str_names_only: bool = False,
 
             # time filter -----
             mtime: Union[None, datetime.datetime, datetime.timedelta] = None,   # acceptable for both FileAux/Dirs
-            mtime_cmp: Enum_CmpType = Enum_CmpType.GE,
+            mtime_cmp: EnumAdj_CmpType = EnumAdj_CmpType.GE,
     ) -> Iterator[Union[pathlib.Path, str]] | NoReturn:
         """
         GOAL
@@ -84,11 +84,11 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
             mask = mask if not nested else f"**/{mask}"
             for path_obj in self.DIRPATH.glob(mask):
                 if (
-                        (fsobj == Enum_PathType.FILE and path_obj.is_file())
+                        (fsobj == EnumAdj_PathType.FILE and path_obj.is_file())
                         or
-                        (fsobj == Enum_PathType.DIR and path_obj.is_dir())
+                        (fsobj == EnumAdj_PathType.DIR and path_obj.is_dir())
                         or
-                        fsobj == Enum_PathType.ALL
+                        fsobj == EnumAdj_PathType.ALL
                 ):
                     if mtime:
                         mtime_i = path_obj.stat().st_mtime
@@ -96,13 +96,13 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
                             mtime_i = datetime.datetime.now().timestamp() - mtime_i
 
                         if (
-                                mtime_cmp == Enum_CmpType.LE and not mtime_i <= mtime  # OLDER
+                                mtime_cmp == EnumAdj_CmpType.LE and not mtime_i <= mtime  # OLDER
                                 or
-                                mtime_cmp == Enum_CmpType.LT and not mtime_i < mtime
+                                mtime_cmp == EnumAdj_CmpType.LT and not mtime_i < mtime
                                 or
-                                mtime_cmp == Enum_CmpType.GE and not mtime_i >= mtime  # NEWER
+                                mtime_cmp == EnumAdj_CmpType.GE and not mtime_i >= mtime  # NEWER
                                 or
-                                mtime_cmp == Enum_CmpType.GT and not mtime_i > mtime
+                                mtime_cmp == EnumAdj_CmpType.GT and not mtime_i > mtime
                         ):
                             continue
 
@@ -117,10 +117,10 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
         # return result
 
     def iter_files(self, *wmask, **kwargs) -> Iterator[Union[pathlib.Path, str]]:
-        yield from self.iter(*wmask, fsobj=Enum_PathType.FILE, **kwargs)
+        yield from self.iter(*wmask, fsobj=EnumAdj_PathType.FILE, **kwargs)
 
     def iter_dirs(self, *wmask, **kwargs) -> Iterator[Union[pathlib.Path, str]]:
-        yield from self.iter(*wmask, fsobj=Enum_PathType.DIR, **kwargs)
+        yield from self.iter(*wmask, fsobj=EnumAdj_PathType.DIR, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def delete_blank(self, raise_fails: bool = None) -> bool | NoReturn:

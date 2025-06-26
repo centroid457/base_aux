@@ -1,6 +1,6 @@
 from typing import *
 from base_aux.aux_iter.m1_iter_aux import *
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 
 
 # =====================================================================================================================
@@ -9,7 +9,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
     return from class just name of annotation as string value.
     if no corresponding annotation - raise!
     """
-    _IC = Enum_IgnoreCase.IGNORECASE    # NOTE: DONT USE ANNOTATIONS here!!!! _IC: Enum_IgnoreCase
+    _IC = EnumAdj_IgnoreCase.IGNORECASE    # NOTE: DONT USE ANNOTATIONS here!!!! _IC: EnumAdj_IgnoreCase
 
     # IC DEPENDENT ---------------------------------------
     def __getattr__(cls, item: str) -> str | NoReturn:
@@ -25,7 +25,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
         if isinstance(item, int):
             return list(annots)[item]
         else:
-            if cls._IC == Enum_IgnoreCase.IGNORECASE:
+            if cls._IC == EnumAdj_IgnoreCase.IGNORECASE:
                 return IterAux(annots).item__get_original(item, _raise=True)
             if item in annots:
                 return item
@@ -35,7 +35,7 @@ class Meta_ClsGaAnnotNamesAsValuesIc(type):
 
     def __contains__(cls, item: str) -> bool:
         annots = AttrAux_AnnotsAll(cls).dump_dict__annot_types()
-        if cls._IC == Enum_IgnoreCase.IGNORECASE:
+        if cls._IC == EnumAdj_IgnoreCase.IGNORECASE:
             return IterAux(annots).item__check_exist(item)
         else:
             return item in annots
@@ -62,7 +62,7 @@ class Meta_ClsGaAnnotNamesAsValuesCs(Meta_ClsGaAnnotNamesAsValuesIc):
     return from class just name of annotation as string value.
     if no corresponding annotation - raise!
     """
-    _IC = Enum_IgnoreCase.CASESENSE
+    _IC = EnumAdj_IgnoreCase.CASESENSE
 
 
 # ---------------------------------------------------------------------------------------------------------------------

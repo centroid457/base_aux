@@ -2,7 +2,7 @@ import copy
 
 from base_aux.base_types.m0_static_typing import TYPING
 from base_aux.base_nest_dunders.m1_init1_source import *
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_types.m0_static_types import *
 
 
@@ -15,13 +15,13 @@ class Base_DictAux(NestInit_Source):
     collect all methods in one class
     """
     SOURCE: TYPING.DICT_ANY_ANY = dict
-    SOURCE_INLINE_DEEPCOPY: Enum_SourceOrigOrCopy = Enum_SourceOrigOrCopy.COPY
+    SOURCE_INLINE_DEEPCOPY: EnumAdj_SourceOrigOrCopy = EnumAdj_SourceOrigOrCopy.COPY
 
     # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None | NoReturn:
-        if self.SOURCE_INLINE_DEEPCOPY == Enum_SourceOrigOrCopy.ORIGINAL:
+        if self.SOURCE_INLINE_DEEPCOPY == EnumAdj_SourceOrigOrCopy.ORIGINAL:
             pass
-        if self.SOURCE_INLINE_DEEPCOPY == Enum_SourceOrigOrCopy.COPY:
+        if self.SOURCE_INLINE_DEEPCOPY == EnumAdj_SourceOrigOrCopy.COPY:
             self.SOURCE = copy.deepcopy(self.SOURCE)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -228,12 +228,12 @@ class Base_DictAux(NestInit_Source):
 # =====================================================================================================================
 @final
 class DictAuxInline(Base_DictAux):
-    SOURCE_INLINE_DEEPCOPY = Enum_SourceOrigOrCopy.ORIGINAL
+    SOURCE_INLINE_DEEPCOPY = EnumAdj_SourceOrigOrCopy.ORIGINAL
 
 
 @final
 class DictAuxCopy(Base_DictAux):
-    SOURCE_INLINE_DEEPCOPY = Enum_SourceOrigOrCopy.COPY
+    SOURCE_INLINE_DEEPCOPY = EnumAdj_SourceOrigOrCopy.COPY
 
 
 # =====================================================================================================================

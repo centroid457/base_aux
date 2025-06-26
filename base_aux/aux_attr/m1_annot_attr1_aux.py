@@ -4,7 +4,7 @@ from base_aux.aux_attr.m4_dump0_dumped import *
 from base_aux.base_types.m1_type_aux import *
 from base_aux.base_types.m0_static_types import *
 from base_aux.base_types.m0_static_typing import TYPING
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_lambdas.m1_lambda import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
@@ -41,8 +41,8 @@ class Base_AttrAux(NestInit_Source):
     SOURCE: Any = AttrDumped
     SKIP_NAMES: tuple[str | Base_EqValid, ...] = ()
 
-    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
-    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+    _ATTRS_STYLE: EnumAdj_AttrAnnotsOrExisted = EnumAdj_AttrAnnotsOrExisted.ATTRS_EXISTED
+    _ANNOTS_DEPTH: EnumAdj_AnnotsDepthAllOrLast = EnumAdj_AnnotsDepthAllOrLast.ALL_NESTED
 
     # =================================================================================================================
     def __init__(self, source: Any = NoValue, *skip_names: str | Base_EqValid) -> None:
@@ -76,9 +76,9 @@ class Base_AttrAux(NestInit_Source):
             - existed
             - annots
         """
-        if self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ATTRS_EXISTED:
+        if self._ATTRS_STYLE == EnumAdj_AttrAnnotsOrExisted.ATTRS_EXISTED:
             yield from self.iter__dirnames_original_not_builtin()
-        elif self._ATTRS_STYLE == Enum_AttrAnnotsOrExisted.ANNOTS_ONLY:
+        elif self._ATTRS_STYLE == EnumAdj_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
             raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
@@ -134,7 +134,7 @@ class Base_AttrAux(NestInit_Source):
         yield from []
 
     # =================================================================================================================
-    def iter__names_filter(self, attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter(self, attr_level: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
         """
         GOAL
         ----
@@ -146,20 +146,20 @@ class Base_AttrAux(NestInit_Source):
             if name in self.SKIP_NAMES:
                 continue
 
-            if attr_level == Enum_AttrScope.NOT_PRIVATE:
+            if attr_level == EnumAdj_AttrScope.NOT_PRIVATE:
                 if not self.name__check_is_private(name):
                     yield name
 
-            elif attr_level == Enum_AttrScope.NOT_HIDDEN:
+            elif attr_level == EnumAdj_AttrScope.NOT_HIDDEN:
                 if not name.startswith("_"):
                     yield name
 
-            elif attr_level == Enum_AttrScope.PRIVATE:
+            elif attr_level == EnumAdj_AttrScope.PRIVATE:
                 if self.name__check_is_private(name):
                     name = self.try_rename__private_original(name)
                     yield name
 
-            elif attr_level == Enum_AttrScope.ALL:
+            elif attr_level == EnumAdj_AttrScope.ALL:
                 yield name
 
             else:
@@ -172,7 +172,7 @@ class Base_AttrAux(NestInit_Source):
         hidden names are more simple to detect then private!
         cause of private methods(!) changes to "_<ClsName><__MethName>"
         """
-        return self.iter__names_filter(Enum_AttrScope.NOT_HIDDEN)
+        return self.iter__names_filter(EnumAdj_AttrScope.NOT_HIDDEN)
 
     def iter__names_filter__not_private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
@@ -180,7 +180,7 @@ class Base_AttrAux(NestInit_Source):
         ----
         BEST WAY TO USE EXACTLY iter__not_private
         """
-        return self.iter__names_filter(Enum_AttrScope.NOT_PRIVATE)
+        return self.iter__names_filter(EnumAdj_AttrScope.NOT_PRIVATE)
 
     def iter__names_filter__private(self) -> Iterable[TYPING__NAME_FINAL]:
         """
@@ -192,7 +192,7 @@ class Base_AttrAux(NestInit_Source):
         ----
         collect all privates in original names! without ClassName-Prefix
         """
-        return self.iter__names_filter(Enum_AttrScope.PRIVATE)
+        return self.iter__names_filter(EnumAdj_AttrScope.PRIVATE)
 
     # def __iter__(self):     # DONT USE IT! USE DIRECT METHODS
     #     yield from self.iter__not_hidden()
@@ -556,7 +556,7 @@ class Base_AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.DIRECT) -> Any | Callable | Enum_CallResolveStyle | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.DIRECT) -> Any | Callable | EnumAdj_CallResolveStyle | NoReturn:
         """
         SAME AS
         -------
@@ -575,15 +575,15 @@ class Base_AttrAux(NestInit_Source):
         try:
             value = self.gai_ic(name_index)
         except Exception as exx:
-            if callables_resolve == Enum_CallResolveStyle.SKIP_RAISED:
+            if callables_resolve == EnumAdj_CallResolveStyle.SKIP_RAISED:
                 return VALUE_SPECIAL.SKIPPED
-            elif callables_resolve == Enum_CallResolveStyle.EXX:
+            elif callables_resolve == EnumAdj_CallResolveStyle.EXX:
                 return exx
-            elif callables_resolve == Enum_CallResolveStyle.RAISE_AS_NONE:
+            elif callables_resolve == EnumAdj_CallResolveStyle.RAISE_AS_NONE:
                 return None
-            elif callables_resolve == Enum_CallResolveStyle.RAISE:
+            elif callables_resolve == EnumAdj_CallResolveStyle.RAISE:
                 raise exx
-            elif callables_resolve == Enum_CallResolveStyle.BOOL:
+            elif callables_resolve == EnumAdj_CallResolveStyle.BOOL:
                 return False
             else:
                 raise exx
@@ -631,10 +631,10 @@ class Base_AttrAux(NestInit_Source):
         values - Types!!! not instances!!!
         """
         result = {}
-        if self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.LAST_CHILD:
+        if self._ANNOTS_DEPTH == EnumAdj_AnnotsDepthAllOrLast.LAST_CHILD:
             result = dict(self.SOURCE.__annotations__)
 
-        elif self._ANNOTS_DEPTH == Enum_AnnotsDepthAllOrLast.ALL_NESTED or True:
+        elif self._ANNOTS_DEPTH == EnumAdj_AnnotsDepthAllOrLast.ALL_NESTED or True:
             for cls in self._iter_mro():
                 try:
                     _result_i = dict(cls.__annotations__)
@@ -660,7 +660,7 @@ class Base_AttrAux(NestInit_Source):
     def dump_dict(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
     ) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
@@ -700,22 +700,22 @@ class Base_AttrAux(NestInit_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.EXX)
+        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXX)
 
     def dump_dict__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.DIRECT)
+        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.DIRECT)
 
     def dump_dict__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.SKIP_CALLABLE)
+        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.SKIP_CALLABLE)
 
     def dump_dict__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
-        return self.dump_dict(*skip_names, callables_resolve=Enum_CallResolveStyle.RAISE)
+        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_obj(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
     ) -> AttrDumped | NoReturn:
         data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
         obj = AttrAux_Existed(AttrDumped()).sai__by_args_kwargs(**data)
@@ -725,22 +725,22 @@ class Base_AttrAux(NestInit_Source):
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.EXX)
+        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXX)
 
     def dump_obj__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.DIRECT)
+        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.DIRECT)
 
     def dump_obj__skip_callables(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.SKIP_CALLABLE)
+        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.SKIP_CALLABLE)
 
     def dump_obj__skip_raised(self, *skip_names: str | Base_EqValid) -> dict[str, Any] | NoReturn:
-        return self.dump_obj(*skip_names, callables_resolve=Enum_CallResolveStyle.RAISE)
+        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.RAISE)
 
     # -----------------------------------------------------------------------------------------------------------------
     def dump_str__pretty(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
     ) -> str:
         try:
             result = f"{self.SOURCE.__class__.__name__}(Attributes):"
@@ -758,8 +758,8 @@ class Base_AttrAux(NestInit_Source):
 # =====================================================================================================================
 @final
 class AttrAux_Existed(Base_AttrAux):
-    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ATTRS_EXISTED
-    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+    _ATTRS_STYLE: EnumAdj_AttrAnnotsOrExisted = EnumAdj_AttrAnnotsOrExisted.ATTRS_EXISTED
+    _ANNOTS_DEPTH: EnumAdj_AnnotsDepthAllOrLast = EnumAdj_AnnotsDepthAllOrLast.ALL_NESTED
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -791,8 +791,8 @@ class AttrAux_AnnotsAll(Base_AttrAux):
         # atr2:<class 'int'>
         # atr4:<class 'int'>
     """
-    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
-    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.ALL_NESTED
+    _ATTRS_STYLE: EnumAdj_AttrAnnotsOrExisted = EnumAdj_AttrAnnotsOrExisted.ANNOTS_ONLY
+    _ANNOTS_DEPTH: EnumAdj_AnnotsDepthAllOrLast = EnumAdj_AnnotsDepthAllOrLast.ALL_NESTED
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -803,8 +803,8 @@ class AttrAux_AnnotsLast(Base_AttrAux):
     ----
     separate last/all nesting parents annotations
     """
-    _ATTRS_STYLE: Enum_AttrAnnotsOrExisted = Enum_AttrAnnotsOrExisted.ANNOTS_ONLY
-    _ANNOTS_DEPTH: Enum_AnnotsDepthAllOrLast = Enum_AnnotsDepthAllOrLast.LAST_CHILD
+    _ATTRS_STYLE: EnumAdj_AttrAnnotsOrExisted = EnumAdj_AttrAnnotsOrExisted.ANNOTS_ONLY
+    _ANNOTS_DEPTH: EnumAdj_AnnotsDepthAllOrLast = EnumAdj_AnnotsDepthAllOrLast.LAST_CHILD
 
 
 # =====================================================================================================================

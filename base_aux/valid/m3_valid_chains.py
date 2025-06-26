@@ -3,7 +3,7 @@ import datetime
 
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.valid.m2_valid_derivatives import *
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 
 
 # =====================================================================================================================
@@ -63,7 +63,7 @@ class ValidChains(Valid):
 
         if not self.skip_last:
             # WORK =======================
-            self.STATE_ACTIVE = Enum_ProcessStateActive.STARTED
+            self.STATE_ACTIVE = EnumAdj_ProcessStateActive.STARTED
             self.log_lines.append(f"(START) len={len(self)}/timestamp={self.timestamp_last}")
 
             # init self.validate_last if None -----------
@@ -91,7 +91,7 @@ class ValidChains(Valid):
                     break
 
             # -----------------
-            self.STATE_ACTIVE = Enum_ProcessStateActive.FINISHED
+            self.STATE_ACTIVE = EnumAdj_ProcessStateActive.FINISHED
             self.log_lines.append(f"(FINISH) [result={bool(self)}]/len={len(self)}")    # need after finish! to keep correct result
             # ============================
 

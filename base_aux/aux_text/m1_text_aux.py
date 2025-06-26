@@ -18,22 +18,22 @@ class TextAux:
         super().__init__(*args, **kwargs)
 
     # =================================================================================================================
-    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = 0, *, cover_type: Enum_PatCoverStyle = Enum_PatCoverStyle.NONE) -> str:
+    def sub__regexp(self, pat: str, new: str | None = None, flags: re.RegexFlag = 0, *, cover_type: EnumAdj_PatCoverStyle = EnumAdj_PatCoverStyle.NONE) -> str:
         if new is None:
             new = ""
 
         flags = flags or 0
 
-        if cover_type == Enum_PatCoverStyle.WORD:
+        if cover_type == EnumAdj_PatCoverStyle.WORD:
             pat = r"\b" + pat + r"\b"
 
-        elif cover_type == Enum_PatCoverStyle.LINE:
+        elif cover_type == EnumAdj_PatCoverStyle.LINE:
             pat = r"^" + pat + r"$"
 
         self.TEXT = re.sub(pat, new, self.TEXT, flags=flags)
         return self.TEXT
 
-    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], flags: re.RegexFlag = 0, cover_type: Enum_PatCoverStyle = Enum_PatCoverStyle.NONE) -> str:
+    def sub__regexps(self, *rules: Union[tuple[str], tuple[str, str | None], tuple[str, str | None, re.RegexFlag]], flags: re.RegexFlag = 0, cover_type: EnumAdj_PatCoverStyle = EnumAdj_PatCoverStyle.NONE) -> str:
         """
         GOAL
         ----
@@ -55,7 +55,7 @@ class TextAux:
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexp(*rule, flags=flags, cover_type=Enum_PatCoverStyle.WORD)
+        return self.sub__regexp(*rule, flags=flags, cover_type=EnumAdj_PatCoverStyle.WORD)
 
     def sub__words(self, *rules, flags: re.RegexFlag = 0) -> str:
         """
@@ -63,14 +63,14 @@ class TextAux:
         ----
         replace exact word(defined by pattern) in text.
         """
-        return self.sub__regexps(*rules, flags=flags, cover_type=Enum_PatCoverStyle.WORD)
+        return self.sub__regexps(*rules, flags=flags, cover_type=EnumAdj_PatCoverStyle.WORD)
 
     # -----------------------------------------------------------------------------------------------------------------
     def sub__line(self, *rule, flags: re.RegexFlag = 0) -> str:
-        return self.sub__regexp(*rule, flags=flags | re.MULTILINE, cover_type=Enum_PatCoverStyle.LINE)
+        return self.sub__regexp(*rule, flags=flags | re.MULTILINE, cover_type=EnumAdj_PatCoverStyle.LINE)
 
     def sub__lines(self, *rules, flags: re.RegexFlag = 0) -> str:
-        return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=Enum_PatCoverStyle.LINE)
+        return self.sub__regexps(*rules, flags=flags | re.MULTILINE, cover_type=EnumAdj_PatCoverStyle.LINE)
 
     # =================================================================================================================
     def fix__incorrect(self) -> str:
@@ -177,7 +177,7 @@ class TextAux:
         return self.TEXT
 
     # =================================================================================================================
-    def delete__cmts(self, cmt_type: Enum_CmtStyle = Enum_CmtStyle.SHARP) -> str:
+    def delete__cmts(self, cmt_type: EnumAdj_CmtStyle = EnumAdj_CmtStyle.SHARP) -> str:
         """
         GOAL
         ----
@@ -188,42 +188,42 @@ class TextAux:
         if one line cmt - full line would be deleted!
         """
         # recursion -----------------------------
-        if cmt_type == Enum_CmtStyle.ALL:
-            for cmt_type in [Enum_CmtStyle.SHARP, Enum_CmtStyle.DSLASH, Enum_CmtStyle.REM, Enum_CmtStyle.C]:
+        if cmt_type == EnumAdj_CmtStyle.ALL:
+            for cmt_type in [EnumAdj_CmtStyle.SHARP, EnumAdj_CmtStyle.DSLASH, EnumAdj_CmtStyle.REM, EnumAdj_CmtStyle.C]:
                 self.delete__cmts(cmt_type)
 
-        elif cmt_type == Enum_CmtStyle.AUTO:
-            raise NotImplementedError(Enum_CmtStyle.AUTO)
+        elif cmt_type == EnumAdj_CmtStyle.AUTO:
+            raise NotImplementedError(EnumAdj_CmtStyle.AUTO)
 
         # work ----------------------------------
-        if cmt_type == Enum_CmtStyle.SHARP:
+        if cmt_type == EnumAdj_CmtStyle.SHARP:
             self.clear__regexps(PatCmts.SHARP_LINE, flags=re.MULTILINE)
             self.clear__regexps(PatCmts.SHARP_INLINE, flags=re.MULTILINE)
 
-        elif cmt_type == Enum_CmtStyle.DSLASH:
+        elif cmt_type == EnumAdj_CmtStyle.DSLASH:
             self.clear__regexps(PatCmts.DSLASH_LINE, flags=re.MULTILINE)
             self.clear__regexps(PatCmts.DSLASH_INLINE, flags=re.MULTILINE)
 
-        elif cmt_type == Enum_CmtStyle.REM:
+        elif cmt_type == EnumAdj_CmtStyle.REM:
             self.clear__regexps(PatCmts.REM_LINE, flags=re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
             self.clear__regexps(PatCmts.REM_INLINE, flags=re.MULTILINE | re.IGNORECASE)
 
-        elif cmt_type == Enum_CmtStyle.C:
+        elif cmt_type == EnumAdj_CmtStyle.C:
             self.clear__regexps(PatCmts.C_MLINE)
 
         return self.TEXT
 
     def delete__cmts_sharp(self) -> str:
-        return self.delete__cmts(Enum_CmtStyle.SHARP)
+        return self.delete__cmts(EnumAdj_CmtStyle.SHARP)
 
     def delete__cmts_dslash(self) -> str:
-        return self.delete__cmts(Enum_CmtStyle.DSLASH)
+        return self.delete__cmts(EnumAdj_CmtStyle.DSLASH)
 
     def delete__cmts_rem(self) -> str:
-        return self.delete__cmts(Enum_CmtStyle.REM)
+        return self.delete__cmts(EnumAdj_CmtStyle.REM)
 
     def delete__cmts_c(self) -> str:
-        return self.delete__cmts(Enum_CmtStyle.C)
+        return self.delete__cmts(EnumAdj_CmtStyle.C)
 
     # =================================================================================================================
     def strip__lines(self) -> str:
@@ -271,7 +271,7 @@ class TextAux:
     def shortcut(
             self,
             maxlen: int = 15,
-            where: Enum_Where3 = Enum_Where3.LAST,
+            where: EnumAdj_Where3 = EnumAdj_Where3.LAST,
             sub: str | None = "...",
     ) -> str:
         """
@@ -290,11 +290,11 @@ class TextAux:
             if maxlen <= sub_len:
                 return sub[0:maxlen]
 
-            if where is Enum_Where3.FIRST:
+            if where is EnumAdj_Where3.FIRST:
                 result = sub + source[-(maxlen - sub_len):]
-            elif where is Enum_Where3.LAST:
+            elif where is EnumAdj_Where3.LAST:
                 result = source[0:maxlen - sub_len] + sub
-            elif where is Enum_Where3.MIDDLE:
+            elif where is EnumAdj_Where3.MIDDLE:
                 len_start = maxlen // 2 - sub_len // 2
                 len_finish = maxlen - len_start - sub_len
                 result = source[0:len_start] + sub + source[-len_finish:]
@@ -307,7 +307,7 @@ class TextAux:
     def shortcut_nosub(
             self,
             maxlen: int = 15,
-            where: Enum_Where3 = Enum_Where3.LAST,
+            where: EnumAdj_Where3 = EnumAdj_Where3.LAST,
     ) -> str:
         """
         GOAL
@@ -358,7 +358,7 @@ class TextAux:
         return
 
     # =================================================================================================================
-    def parse__number_single(self, fpoint: TYPING__FPOINT_DRAFT = Enum_NumFPoint.AUTO, num_type: Enum_NumType = Enum_NumType.BOTH) -> int | float | None:
+    def parse__number_single(self, fpoint: TYPING__FPOINT_DRAFT = EnumAdj_NumFPoint.AUTO, num_type: EnumAdj_NumType = EnumAdj_NumType.BOTH) -> int | float | None:
         """
         GOAL
         ----
@@ -376,15 +376,15 @@ class TextAux:
         """
         result = None
         if fpoint is not NoValue:
-            fpoint = Enum_NumFPoint(fpoint)
-        num_type = Enum_NumType(num_type)
+            fpoint = EnumAdj_NumFPoint(fpoint)
+        num_type = EnumAdj_NumType(num_type)
 
         # get PAT ---------
-        if num_type == Enum_NumType.INT:
+        if num_type == EnumAdj_NumType.INT:
             pat = PatNumberSingle(fpoint).INT_COVERED
-        elif num_type == Enum_NumType.FLOAT:
+        elif num_type == EnumAdj_NumType.FLOAT:
             pat = PatNumberSingle(fpoint).FLOAT_COVERED
-        elif num_type == Enum_NumType.BOTH:
+        elif num_type == EnumAdj_NumType.BOTH:
             pat = PatNumberSingle(fpoint).BOTH_COVERED
         else:
             raise TypeError(f"{num_type=}")
@@ -397,11 +397,11 @@ class TextAux:
         if value:
             value: str = value.replace(",", ".")
 
-            if num_type == Enum_NumType.INT:
+            if num_type == EnumAdj_NumType.INT:
                 result = int(value)
-            elif num_type == Enum_NumType.FLOAT:
+            elif num_type == EnumAdj_NumType.FLOAT:
                 result = float(value)
-            elif num_type == Enum_NumType.BOTH:
+            elif num_type == EnumAdj_NumType.BOTH:
                 if "." in value:
                     result = float(value)
                 else:
@@ -410,10 +410,10 @@ class TextAux:
         return result
 
     def parse__int_single(self) -> int | None:
-        return self.parse__number_single(num_type=Enum_NumType.INT)
+        return self.parse__number_single(num_type=EnumAdj_NumType.INT)
 
-    def parse__float_single(self, fpoint: TYPING__FPOINT_DRAFT = Enum_NumFPoint.AUTO) -> float | None:
-        return self.parse__number_single(fpoint=fpoint, num_type=Enum_NumType.FLOAT)
+    def parse__float_single(self, fpoint: TYPING__FPOINT_DRAFT = EnumAdj_NumFPoint.AUTO) -> float | None:
+        return self.parse__number_single(fpoint=fpoint, num_type=EnumAdj_NumType.FLOAT)
 
     # =================================================================================================================
     def parse__requirements_lines(self) -> list[str]:
@@ -426,7 +426,7 @@ class TextAux:
         ---------------------
         setup.py install_requires
         """
-        self.delete__cmts(Enum_CmtStyle.SHARP)
+        self.delete__cmts(EnumAdj_CmtStyle.SHARP)
         self.delete__lines_blank()
         self.strip__lines()
         result = self.split_lines()
@@ -459,17 +459,17 @@ class TextAux:
         return self.parse__json()
 
     # =================================================================================================================
-    def parse__dict(self, style: Enum_DictTextFormat = Enum_DictTextFormat.AUTO) -> TYPING.DICT_STR_ELEM | None:
-        if style == Enum_DictTextFormat.AUTO:
+    def parse__dict(self, style: EnumAdj_DictTextFormat = EnumAdj_DictTextFormat.AUTO) -> TYPING.DICT_STR_ELEM | None:
+        if style == EnumAdj_DictTextFormat.AUTO:
             return self.parse__dict_auto()
 
-        elif style == Enum_DictTextFormat.JSON:
+        elif style == EnumAdj_DictTextFormat.JSON:
             return self.parse__dict_json()
 
-        elif style == Enum_DictTextFormat.INI:
+        elif style == EnumAdj_DictTextFormat.INI:
             return self.parse__dict_ini()
 
-        elif style == Enum_DictTextFormat.CSV:
+        elif style == EnumAdj_DictTextFormat.CSV:
             return self.parse__dict_csv()
 
         else:
@@ -477,7 +477,7 @@ class TextAux:
 
     # -----------------------------------------------------------------------------------------------------------------
     def parse__dict_auto(self) -> TYPING.DICT_STR_ELEM | TYPING.DICT_STR_STR | None:
-        for style in [Enum_DictTextFormat.JSON, Enum_DictTextFormat.INI, Enum_DictTextFormat.CSV]:     # order is important!
+        for style in [EnumAdj_DictTextFormat.JSON, EnumAdj_DictTextFormat.INI, EnumAdj_DictTextFormat.CSV]:     # order is important!
             result = self.parse__dict(style)
             if result:
                 return result

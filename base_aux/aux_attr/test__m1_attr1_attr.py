@@ -220,13 +220,13 @@ class Test__Dump:
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
         argvalues=[
-            (Enum_CallResolveStyle.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
-            (Enum_CallResolveStyle.EXX, (None, True, True, Exception,)),
-            # (Enum_CallResolveStyle.RAISE, Exception),          # need special tests!
-            (Enum_CallResolveStyle.RAISE_AS_NONE, (None, True, True, None,)),
-            (Enum_CallResolveStyle.BOOL, (False, True, True, False,)),
-            (Enum_CallResolveStyle.SKIP_CALLABLE, (None, True, None, None,)),
-            (Enum_CallResolveStyle.SKIP_RAISED, (None, True, True, None,)),
+            (EnumAdj_CallResolveStyle.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
+            (EnumAdj_CallResolveStyle.EXX, (None, True, True, Exception,)),
+            # (EnumAdj_CallResolveStyle.RAISE, Exception),          # need special tests!
+            (EnumAdj_CallResolveStyle.RAISE_AS_NONE, (None, True, True, None,)),
+            (EnumAdj_CallResolveStyle.BOOL, (False, True, True, False,)),
+            (EnumAdj_CallResolveStyle.SKIP_CALLABLE, (None, True, None, None,)),
+            (EnumAdj_CallResolveStyle.SKIP_RAISED, (None, True, True, None,)),
         ]
     )
     def test__callable_use(self, cal_use, _EXPECTED):
@@ -238,7 +238,7 @@ class Test__Dump:
 
     def test__callable_use__special_raise(self):
         try:
-            result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=Enum_CallResolveStyle.RAISE)
+            result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=EnumAdj_CallResolveStyle.RAISE)
             assert False
         except:
             assert True

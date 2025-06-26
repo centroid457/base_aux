@@ -3,7 +3,7 @@ GOAL
 ----
 try keep all patterns for life!
 """
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_values.m2_value_special import *
 
 
@@ -61,15 +61,15 @@ class PatNumberSingle(Patterns):
     *COVERED - for any trash cover! used in re.fullmatch
     """
     # aux ---------
-    _fpoint: Enum_NumFPoint = Enum_NumFPoint.AUTO
+    _fpoint: EnumAdj_NumFPoint = EnumAdj_NumFPoint.AUTO
     _cover: tuple[str, str] = (r"\D*?", r"\D*")
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, fpoint: TYPING__FPOINT_DRAFT = NoValue) -> None | NoReturn:
         if fpoint is NoValue:
             pass
-        elif fpoint in Enum_NumFPoint:
-            self._fpoint = Enum_NumFPoint(fpoint)
+        elif fpoint in EnumAdj_NumFPoint:
+            self._fpoint = EnumAdj_NumFPoint(fpoint)
         else:
             raise TypeError(f"{fpoint=}")
 
@@ -84,11 +84,11 @@ class PatNumberSingle(Patterns):
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def FLOAT_EXACT(self) -> str:
-        if self._fpoint == Enum_NumFPoint.DOT:
+        if self._fpoint == EnumAdj_NumFPoint.DOT:
             return r"(-?\d+\.\d+)"
-        if self._fpoint == Enum_NumFPoint.COMMA:
+        if self._fpoint == EnumAdj_NumFPoint.COMMA:
             return r"(-?\d+\,\d+)"
-        if self._fpoint == Enum_NumFPoint.AUTO:
+        if self._fpoint == EnumAdj_NumFPoint.AUTO:
             return r"(-?\d+[,.]\d+)"
 
     @property

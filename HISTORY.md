@@ -15,7 +15,7 @@
 - [pytest]:  
 	- add ini/settings file in root  
 	- hide logs for caught Raises (like in Try sent)  
-- [Annots] add AttrAux_AnnotsLast =separate last/all nesting parents annotations +add Enum_AnnotsDepthAllOrLast  
+- [Annots] add AttrAux_AnnotsLast =separate last/all nesting parents annotations +add EnumAdj_AnnotsDepthAllOrLast  
 - [DictAux] separate to Base/DictAuxInline/Copy +add walk in keys_rename__by_func  
 
 0.2.24(2025.03.20 17.03.41)
@@ -165,7 +165,7 @@
 0.2.4 (2025/02/06 15:02:40)
 ------------------------------
 - [text] add parse__single_num +all derivatives  
-- [enum] add Enum_NumFPoint/Enum_NumType  
+- [enum] add EnumAdj_NumFPoint/EnumAdj_NumType  
 - [base_patterns] start separating +add singleNum  
 
 0.2.3 (2025/02/04 16:12:37)

@@ -28,7 +28,7 @@ class NestEq_AttrsNotPrivate:
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
-                # 2=cmp callables --------      # TODO: use Enum_CallResolveStyle.SKIPCALLABLES ???
+                # 2=cmp callables --------      # TODO: use EnumAdj_CallResolveStyle.SKIPCALLABLES ???
                 value_self = Lambda(getattr, self, attr).resolve__exx()
                 value_other = Lambda(getattr, other, attr).resolve__exx()
 
@@ -57,7 +57,7 @@ class NestEq_AttrsNotHidden:
                 if EqAux(value_self_direct).check_doubleside__bool(value_other_direct):
                     continue
 
-                # 2=cmp callables --------      # TODO: use Enum_CallResolveStyle.SKIPCALLABLES ???
+                # 2=cmp callables --------      # TODO: use EnumAdj_CallResolveStyle.SKIPCALLABLES ???
                 value_self = Lambda(getattr, self, attr).resolve__exx()
                 value_other = Lambda(getattr, other, attr).resolve__exx()
 

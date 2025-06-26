@@ -2,43 +2,43 @@ from base_aux.base_values.m5_enum0_nest_eq import *
 
 
 # =====================================================================================================================
-class Enum_SingleMultiple(NestEq_Enum):
+class EnumAdj_SingleMultiple(NestEq_Enum):
     NOT_EXISTS = None
     SINGLE = 1
     MULTIPLE = 2
 
 
-class Enum_StaticCallable(NestEq_Enum):
+class EnumAdj_StaticCallable(NestEq_Enum):
     STATIC = 1
     CALLABLE = 2
 
 
 # =====================================================================================================================
-class Enum_When2(NestEq_Enum):
+class EnumAdj_When2(NestEq_Enum):
     BEFORE = 1
     AFTER = 2
 
 
-class Enum_When3(NestEq_Enum):
+class EnumAdj_When3(NestEq_Enum):
     BEFORE = 1
     AFTER = 2
     MIDDLE = 3
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Enum_Where2(NestEq_Enum):
+class EnumAdj_Where2(NestEq_Enum):
     FIRST = 1
     LAST = 2
 
 
-class Enum_Where3(NestEq_Enum):
+class EnumAdj_Where3(NestEq_Enum):
     FIRST = 1
     LAST = 2
     MIDDLE = 3
 
 
 # =====================================================================================================================
-class Enum_CallResolveStyle(NestEq_Enum):
+class EnumAdj_CallResolveStyle(NestEq_Enum):
     DIRECT = 1
     EXX = 2
     RAISE = 3
@@ -50,7 +50,7 @@ class Enum_CallResolveStyle(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_SourceOrigOrCopy(NestEq_Enum):
+class EnumAdj_SourceOrigOrCopy(NestEq_Enum):
     """
     GOAL
     ----
@@ -65,7 +65,7 @@ class Enum_SourceOrigOrCopy(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_IgnoreCase(NestEq_Enum):
+class EnumAdj_IgnoreCase(NestEq_Enum):
     """
     GOAL
     ----
@@ -80,7 +80,7 @@ class Enum_IgnoreCase(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_ProcessResult(NestEq_Enum):
+class EnumAdj_ProcessResult(NestEq_Enum):
     """
     GOAL
     ----
@@ -98,7 +98,7 @@ class Enum_ProcessResult(NestEq_Enum):
     SUCCESS = True
 
 
-class Enum_ProcessStateActive(NestEq_Enum):
+class EnumAdj_ProcessStateActive(NestEq_Enum):
     """
     NAME
     ----
@@ -109,7 +109,7 @@ class Enum_ProcessStateActive(NestEq_Enum):
     FINISHED = False
 
 
-class Enum_ProcessStateResult(NestEq_Enum):
+class EnumAdj_ProcessStateResult(NestEq_Enum):
     """
     GOAL
     ----
@@ -127,7 +127,7 @@ class Enum_ProcessStateResult(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_BoolCumulate(NestEq_Enum):
+class EnumAdj_BoolCumulate(NestEq_Enum):
     """
     GOAL
     ----
@@ -143,7 +143,7 @@ class Enum_BoolCumulate(NestEq_Enum):
     ANY_FALSE = 2
 
 
-class Enum_PathType(NestEq_Enum):
+class EnumAdj_PathType(NestEq_Enum):
     FILE = 1
     DIR = 2
     ALL = 3
@@ -153,7 +153,7 @@ class Enum_PathType(NestEq_Enum):
 #     NEWLINE = 1
 
 
-class Enum_AttemptsUsage(NestEq_Enum):
+class EnumAdj_AttemptsUsage(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -164,7 +164,7 @@ class Enum_AttemptsUsage(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_DictTextFormat(NestEq_Enum):
+class EnumAdj_DictTextFormat(NestEq_Enum):
     AUTO = None     # by trying all variants
     EXTENTION = 0
 
@@ -174,7 +174,7 @@ class Enum_DictTextFormat(NestEq_Enum):
     STR = "str"     # str(dict)
 
 
-class Enum_TextStyle(NestEq_Enum):
+class EnumAdj_TextStyle(NestEq_Enum):
     ANY = any       # keep decide?
     AUTO = None     # keep decide?
 
@@ -193,7 +193,7 @@ class Enum_TextStyle(NestEq_Enum):
     MD = "md"
 
 
-class Enum_CmtStyle(NestEq_Enum):
+class EnumAdj_CmtStyle(NestEq_Enum):
     """
     GOAL
     ----
@@ -209,7 +209,7 @@ class Enum_CmtStyle(NestEq_Enum):
     SEMICOLON = ";"     # for INI files
 
 
-class Enum_PatCoverStyle(NestEq_Enum):
+class EnumAdj_PatCoverStyle(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -221,13 +221,13 @@ class Enum_PatCoverStyle(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_NumType(NestEq_Enum):
+class EnumAdj_NumType(NestEq_Enum):
     INT = int
     FLOAT = float
     BOTH = None
 
 
-class Enum_NumFPoint(NestEq_Enum):
+class EnumAdj_NumFPoint(NestEq_Enum):
     """
     GOAL
     ----
@@ -242,11 +242,11 @@ class Enum_NumFPoint(NestEq_Enum):
     AUTO = None     # auto is more important for SingleNum!
 
 
-TYPING__FPOINT_DRAFT = Enum_NumFPoint | str | None
+TYPING__FPOINT_DRAFT = EnumAdj_NumFPoint | str | None
 
 
 # =====================================================================================================================
-class Enum_CmpType(NestEq_Enum):
+class EnumAdj_CmpType(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -259,7 +259,7 @@ class Enum_CmpType(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_FormIntExt(NestEq_Enum):
+class EnumAdj_FormIntExt(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -269,7 +269,7 @@ class Enum_FormIntExt(NestEq_Enum):
     EXTERNAL = 2
 
 
-class Enum_AttrAnnotsOrExisted(NestEq_Enum):
+class EnumAdj_AttrAnnotsOrExisted(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -279,7 +279,7 @@ class Enum_AttrAnnotsOrExisted(NestEq_Enum):
     ANNOTS_ONLY = 1
 
 
-class Enum_AnnotsDepthAllOrLast(NestEq_Enum):
+class EnumAdj_AnnotsDepthAllOrLast(NestEq_Enum):
     """
     GOAL
     ----
@@ -293,7 +293,7 @@ class Enum_AnnotsDepthAllOrLast(NestEq_Enum):
     LAST_CHILD = 1
 
 
-class Enum_AttrScope(NestEq_Enum):
+class EnumAdj_AttrScope(NestEq_Enum):
     """
     SPECIALLY CREATED FOR
     ---------------------
@@ -307,28 +307,6 @@ class Enum_AttrScope(NestEq_Enum):
 
 
 # =====================================================================================================================
-class Enum_Os(NestEq_Enum):
-    """
-    SPECIALLY CREATED FOR
-    ---------------------
-    ReqCheckStr_Os
-    """
-    LINUX = "linux"
-    WINDOWS = "windows"
-
-
-class Enum_MachineArch(NestEq_Enum):
-    """
-    SPECIALLY CREATED FOR
-    ---------------------
-    ReqCheckStr_Os
-    """
-    PC = "amd64"        # standard PC
-    WSL = "x86_64"      # wsl standard
-    ARM = "aarch64"     # raspberry=ARM!
-
-
-# =====================================================================================================================
 # class Represent(NestEq_EnumNestEqIc_Enum):
 #     NAME = 1
 #     OBJECT = 2
@@ -336,23 +314,23 @@ class Enum_MachineArch(NestEq_Enum):
 
 # =====================================================================================================================
 def _examples() -> None:
-    WHEN = Enum_When2.BEFORE
-    if WHEN is Enum_When2.BEFORE:
+    WHEN = EnumAdj_When2.BEFORE
+    if WHEN is EnumAdj_When2.BEFORE:
         pass
 
-    print(Enum_NumFPoint.COMMA.name)
-    print(Enum_NumFPoint.COMMA.value)
+    print(EnumAdj_NumFPoint.COMMA.name)
+    print(EnumAdj_NumFPoint.COMMA.value)
     print()
     print()
 
-    print(Enum_NumFPoint.COMMA)  # Enum_NumFPoint.COMMA
-    print(Enum_NumFPoint("."))  # Enum_NumFPoint.DOT
+    print(EnumAdj_NumFPoint.COMMA)  # EnumAdj_NumFPoint.COMMA
+    print(EnumAdj_NumFPoint("."))  # EnumAdj_NumFPoint.DOT
 
-    print("." in Enum_NumFPoint)  # True
-    print(Enum_NumFPoint.DOT in Enum_NumFPoint)  # True
+    print("." in EnumAdj_NumFPoint)  # True
+    print(EnumAdj_NumFPoint.DOT in EnumAdj_NumFPoint)  # True
 
-    print(Enum_NumFPoint(".") == ".")  # True
-    print(Enum_NumFPoint(Enum_NumFPoint.DOT))  # Enum_NumFPoint.DOT     # BEST WAY to init value!
+    print(EnumAdj_NumFPoint(".") == ".")  # True
+    print(EnumAdj_NumFPoint(EnumAdj_NumFPoint.DOT))  # EnumAdj_NumFPoint.DOT     # BEST WAY to init value!
 
 
 # =====================================================================================================================

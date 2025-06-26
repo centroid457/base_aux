@@ -276,12 +276,12 @@ class Validators:
     def AttrsByKwargs(
             self,
             other_final,
-            # callable_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
             **kwargs: TYPING.KWARGS_FINAL
     ) -> bool | NoReturn:
         for key, value in kwargs.items():
-            value_expected = Lambda(value).resolve__style(Enum_CallResolveStyle.EXX)
-            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, Enum_CallResolveStyle.EXX)
+            value_expected = Lambda(value).resolve__style(EnumAdj_CallResolveStyle.EXX)
+            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -292,13 +292,13 @@ class Validators:
     def AttrsByObj(
             self,
             other_final,
-            # callable_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
             source: Any,
-            # attr_level: Enum_AttrScope = Enum_AttrScope.NOT_PRIVATE,
+            # attr_level: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE,
     ) -> bool | NoReturn:
         for key in AttrAux_Existed(source).iter__names_filter(self.ATTR_LEVEL):
-            value_expected = AttrAux_Existed(source).gai_ic__callable_resolve(key, Enum_CallResolveStyle.EXX)
-            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, Enum_CallResolveStyle.EXX)
+            value_expected = AttrAux_Existed(source).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
+            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -309,17 +309,17 @@ class Validators:
     # def AttrsByObjNotPrivate(
     #         self,
     #         other_final,
-    #         # callable_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
     #         source: Any,
     # ) -> bool | NoReturn:
-    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=Enum_AttrScope.NOT_PRIVATE)
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=EnumAdj_AttrScope.NOT_PRIVATE)
     # def AttrsByObjNotHidden(
     #         self,
     #         other_final,
-    #         # callable_resolve: Enum_CallResolveStyle = Enum_CallResolveStyle.EXX,
+    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
     #         source: Any,
     # ) -> bool | NoReturn:
-    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=Enum_AttrScope.NOT_HIDDEN)
+    #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=EnumAdj_AttrScope.NOT_HIDDEN)
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod

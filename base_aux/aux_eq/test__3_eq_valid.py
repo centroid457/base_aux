@@ -72,7 +72,7 @@ def _victim_validator(source, arg) -> bool:
     ]
 )
 def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTED):
-    for index, _iresult_cumulate in enumerate(Enum_BoolCumulate):
+    for index, _iresult_cumulate in enumerate(EnumAdj_BoolCumulate):
         print()
         print(index, _iresult_cumulate)
         Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).expect__check_assert(_EXPECTED[index])
@@ -87,16 +87,16 @@ def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTE
     argvalues=[
         # [direct, reverse]
         # ALL True ----
-        (_victim_validator, 1, [1, 1], Enum_BoolCumulate.ANY_TRUE, [True, False]),
-        (_victim_validator, 1, [1, 1], Enum_BoolCumulate.ANY_FALSE, [False, True]),
+        (_victim_validator, 1, [1, 1], EnumAdj_BoolCumulate.ANY_TRUE, [True, False]),
+        (_victim_validator, 1, [1, 1], EnumAdj_BoolCumulate.ANY_FALSE, [False, True]),
 
         # # ALL False ----
-        (_victim_validator, 0, [1, 1], Enum_BoolCumulate.ANY_TRUE, [False, True]),
-        (_victim_validator, 0, [1, 1], Enum_BoolCumulate.ANY_FALSE, [True, False]),
+        (_victim_validator, 0, [1, 1], EnumAdj_BoolCumulate.ANY_TRUE, [False, True]),
+        (_victim_validator, 0, [1, 1], EnumAdj_BoolCumulate.ANY_FALSE, [True, False]),
 
         # ANY
-        (_victim_validator, 1, [0, 1], Enum_BoolCumulate.ANY_TRUE, [True, True]),
-        (_victim_validator, 1, [0, 1], Enum_BoolCumulate.ANY_FALSE, [True, True]),
+        (_victim_validator, 1, [0, 1], EnumAdj_BoolCumulate.ANY_TRUE, [True, True]),
+        (_victim_validator, 1, [0, 1], EnumAdj_BoolCumulate.ANY_FALSE, [True, True]),
     ]
 )
 def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _iresult_cumulate, _EXPECTED):
@@ -389,10 +389,10 @@ def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
     ]
 )
 def test__regexp(args, other, _EXPECTED):
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=Enum_BoolCumulate.ALL_TRUE) == other).expect__check_assert(_EXPECTED[0])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=Enum_BoolCumulate.ANY_TRUE) == other).expect__check_assert(_EXPECTED[1])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=Enum_BoolCumulate.ALL_FALSE) == other).expect__check_assert(_EXPECTED[2])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=Enum_BoolCumulate.ANY_FALSE) == other).expect__check_assert(_EXPECTED[3])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE) == other).expect__check_assert(_EXPECTED[0])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE) == other).expect__check_assert(_EXPECTED[1])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE) == other).expect__check_assert(_EXPECTED[2])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE) == other).expect__check_assert(_EXPECTED[3])
 
     # ---------
     _ExpectAux__eq_in__all_operators(EqValid_RegexpAllTrue, other, _EXPECTED[0], *args)

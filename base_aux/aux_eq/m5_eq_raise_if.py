@@ -14,7 +14,7 @@ class Base_EqRaiseIf(Base_EqValidChain):
     ---------------------
     replace ClsInstPrefix Raise_If__*
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     MSG: str = None
 
     def __init__(self, *args, msg: str = None, **kwargs) -> None:
@@ -40,7 +40,7 @@ class EqRaiseIf_Any(Base_EqRaiseIf):
     ----
     for Raise it is MOST USEFUL
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 @final
@@ -51,7 +51,7 @@ class EqRaiseIf_All(Base_EqRaiseIf):
     for Chain it is LESS USEFUL
     but created just to keep mirror
     """
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 # =====================================================================================================================

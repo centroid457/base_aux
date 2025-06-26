@@ -2,7 +2,7 @@ import pytest
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 
 
 # =====================================================================================================================
@@ -121,18 +121,18 @@ class Test_EnumEq:
 
 # =====================================================================================================================
 def _examples() -> None:
-    WHEN = Enum_When2.BEFORE
-    if WHEN is Enum_When2.BEFORE:
+    WHEN = EnumAdj_When2.BEFORE
+    if WHEN is EnumAdj_When2.BEFORE:
         pass
 
-    print(Enum_NumFPoint.COMMA)  # Enum_NumFPoint.COMMA
-    print(Enum_NumFPoint("."))  # Enum_NumFPoint.DOT
+    print(EnumAdj_NumFPoint.COMMA)  # EnumAdj_NumFPoint.COMMA
+    print(EnumAdj_NumFPoint("."))  # EnumAdj_NumFPoint.DOT
 
-    print("." in Enum_NumFPoint)  # True
-    print(Enum_NumFPoint.DOT in Enum_NumFPoint)  # True
+    print("." in EnumAdj_NumFPoint)  # True
+    print(EnumAdj_NumFPoint.DOT in EnumAdj_NumFPoint)  # True
 
-    print(Enum_NumFPoint(".") == ".")  # False
-    print(Enum_NumFPoint(Enum_NumFPoint.DOT))  # Enum_NumFPoint.DOT     # BEST WAY to init value!
+    print(EnumAdj_NumFPoint(".") == ".")  # False
+    print(EnumAdj_NumFPoint(EnumAdj_NumFPoint.DOT))  # EnumAdj_NumFPoint.DOT     # BEST WAY to init value!
 
     # ObjectInfo(VictimEq).print()
 

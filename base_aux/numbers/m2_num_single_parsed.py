@@ -9,7 +9,7 @@ from base_aux.base_types.m0_static_types import TYPES
 class _NumParsedSingle(NestInit_Source, NestCall_Resolve):
     SOURCE: TYPES.NUMBER = None
 
-    _numtype: Enum_NumType = Enum_NumType.BOTH
+    _numtype: EnumAdj_NumType = EnumAdj_NumType.BOTH
 
     def init_post(self) -> None | NoReturn:
         self.SOURCE = TextAux(self.SOURCE).parse__number_single(num_type=self._numtype)
@@ -26,12 +26,12 @@ class NumParsedSingle(_NumParsedSingle):
 
 @final
 class NumParsedSingleInt(_NumParsedSingle):
-    _numtype: Enum_NumType = Enum_NumType.INT
+    _numtype: EnumAdj_NumType = EnumAdj_NumType.INT
 
 
 @final
 class NumParsedSingleFloat(_NumParsedSingle):
-    _numtype: Enum_NumType = Enum_NumType.FLOAT
+    _numtype: EnumAdj_NumType = EnumAdj_NumType.FLOAT
 
 
 # =====================================================================================================================

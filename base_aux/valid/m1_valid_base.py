@@ -67,7 +67,7 @@ class Valid:
     # RESULT ACTUAL ------------------------------
     timestamp_last: datetime.datetime | None = None
     skip_last: TYPING.RESULT__BOOL = False
-    STATE_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
+    STATE_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
     value_last: TYPING.RESULT__ANY_EXX = None               # direct result value for calculating func value_link
     validate_last: TYPING.RESULT__BOOL_EXX = True   # direct result value for calculating func validate_link === decide using only bool???
     reverse_last: TYPING.RESULT__BOOL = None
@@ -147,13 +147,13 @@ class Valid:
     def clear(self):
         self.timestamp_last = None
         self.skip_last = False
-        self.STATE_ACTIVE = Enum_ProcessStateActive.NONE
+        self.STATE_ACTIVE = EnumAdj_ProcessStateActive.NONE
         self.value_last = None
         self.validate_last = True
         self.log_lines = []
 
     def check__active(self) -> bool:
-        return self.STATE_ACTIVE == Enum_ProcessStateActive.STARTED
+        return self.STATE_ACTIVE == EnumAdj_ProcessStateActive.STARTED
 
     @property
     def validate_last_bool(self) -> bool:
@@ -171,13 +171,13 @@ class Valid:
         :return: if not finished - None
             if finished - validate_last_bool
         """
-        if self.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
+        if self.STATE_ACTIVE == EnumAdj_ProcessStateActive.FINISHED:
             return self.validate_last_bool
         else:
             return None
 
     def run__if_not_finished(self) -> bool:
-        if self.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
+        if self.STATE_ACTIVE == EnumAdj_ProcessStateActive.FINISHED:
             return bool(self)
         else:
             return self.run()
@@ -204,7 +204,7 @@ class Valid:
         if not self.skip_last:
             retry_count = 0
             # WORK =======================
-            self.STATE_ACTIVE = Enum_ProcessStateActive.STARTED
+            self.STATE_ACTIVE = EnumAdj_ProcessStateActive.STARTED
 
             while True:
                 self.clear()
@@ -235,7 +235,7 @@ class Valid:
             if self.REVERSE_LINK:
                 self.reverse_last = Lambda(self.REVERSE_LINK).resolve__bool()
 
-            self.STATE_ACTIVE = Enum_ProcessStateActive.FINISHED
+            self.STATE_ACTIVE = EnumAdj_ProcessStateActive.FINISHED
             # ============================
 
         # FINISH final ---------------------
@@ -247,7 +247,7 @@ class Valid:
         if self.skip_last:
             return True
 
-        if self.STATE_ACTIVE != Enum_ProcessStateActive.FINISHED:
+        if self.STATE_ACTIVE != EnumAdj_ProcessStateActive.FINISHED:
             return False
 
         if self.reverse_last:

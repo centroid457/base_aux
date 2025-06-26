@@ -180,7 +180,7 @@ class TableModel_Tps(TableModelTemplate):
 
                 if tc_cls.result__startup_cls is None:
                     return group_name
-                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                if tc_cls.result__startup_cls is EnumAdj_ProcessStateActive.STARTED:
                     return TcResultMsg.WAIT
                 if isinstance(tc_cls.result__startup_cls, Valid) and tc_cls.result__startup_cls.check__active():
                     return TcResultMsg.WAIT
@@ -200,7 +200,7 @@ class TableModel_Tps(TableModelTemplate):
                         if tc_inst.result.check__active():
                             return TcResultMsg.WAIT
 
-                        elif tc_inst.result.STATE_ACTIVE == Enum_ProcessStateActive.FINISHED:
+                        elif tc_inst.result.STATE_ACTIVE == EnumAdj_ProcessStateActive.FINISHED:
                             if bool(tc_inst.result):
                                 return TcResultMsg.PASS
                             else:
@@ -220,7 +220,7 @@ class TableModel_Tps(TableModelTemplate):
                     return
                 if tc_cls.result__teardown_cls is None:
                     return
-                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                if tc_cls.result__teardown_cls is EnumAdj_ProcessStateActive.STARTED:
                     return TcResultMsg.WAIT
                 if isinstance(tc_cls.result__teardown_cls, Valid) and tc_cls.result__teardown_cls.check__active():
                     return TcResultMsg.WAIT
@@ -300,7 +300,7 @@ class TableModel_Tps(TableModelTemplate):
                     return
                 if tc_cls.result__startup_cls is None:
                     return
-                if tc_cls.result__startup_cls is Enum_ProcessStateActive.STARTED:
+                if tc_cls.result__startup_cls is EnumAdj_ProcessStateActive.STARTED:
                     return QColor("#FFFF50")
                 if isinstance(tc_cls.result__startup_cls, Valid) and tc_cls.result__startup_cls.check__active():
                     return QColor("#FFFF50")
@@ -340,7 +340,7 @@ class TableModel_Tps(TableModelTemplate):
                     return
                 if tc_cls.result__teardown_cls is None:
                     return
-                if tc_cls.result__teardown_cls is Enum_ProcessStateActive.STARTED:
+                if tc_cls.result__teardown_cls is EnumAdj_ProcessStateActive.STARTED:
                     return QColor("#FFFF50")
                 if isinstance(tc_cls.result__teardown_cls, Valid) and tc_cls.result__teardown_cls.check__active():
                     return QColor("#FFFF50")

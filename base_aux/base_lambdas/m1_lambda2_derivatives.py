@@ -2,7 +2,7 @@ import time
 from typing import *
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_values.m5_enums import Enum_When2
+from base_aux.base_values.m5_enum1_adj import EnumAdj_When2
 
 
 # =====================================================================================================================
@@ -110,7 +110,7 @@ class Lambda_Sleep(Lambda):
     """
     just delay construction
     """
-    WHEN: Enum_When2 = Enum_When2.BEFORE
+    WHEN: EnumAdj_When2 = EnumAdj_When2.BEFORE
     SEC: float = 1
 
     def __init__(self, *args, sec: float = None, **kwargs) -> None:
@@ -122,12 +122,12 @@ class Lambda_Sleep(Lambda):
         if sec is None:
             sec = self.SEC
 
-        if self.WHEN is Enum_When2.BEFORE:
+        if self.WHEN is EnumAdj_When2.BEFORE:
             time.sleep(sec)
 
         self.run(*args, **kwargs)
 
-        if self.WHEN is Enum_When2.AFTER:
+        if self.WHEN is EnumAdj_When2.AFTER:
             time.sleep(sec)
 
         if self.EXX is not None:
@@ -143,7 +143,7 @@ class Lambda_SleepAfter(Lambda_Sleep):
     ---------------------
     UART/ATC tests for RST command
     """
-    WHEN: Enum_When2 = Enum_When2.AFTER
+    WHEN: EnumAdj_When2 = EnumAdj_When2.AFTER
 
 
 # =====================================================================================================================

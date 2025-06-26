@@ -14,7 +14,7 @@ class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
     and raise if True
     """
     ARGS: Any | Callable[..., Any] = ()
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
     RESOLVE_ON_INIT: bool = None
 
@@ -33,19 +33,19 @@ class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
             arg_result = Lambda(arg_source).resolve__bool()
             results_all.append(arg_result)
 
-            if self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_TRUE:
+            if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
                 if arg_result:
                     msg = f"{arg_source=}/{arg_result=}//{results_all=}"
                     raise Exx__Expected(msg)
 
-            elif self.IRESULT_CUMULATE == Enum_BoolCumulate.ALL_TRUE:
+            elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE:
                 if arg_result:
                     continue
                 else:
                     return
 
         # FINAL ---------
-        if self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_TRUE:
+        if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
             return
         else:
             raise Exx__Expected(f"{results_all=}")
@@ -53,11 +53,11 @@ class Base_RaiseIf(NestInit_Args_Implicit, NestCall_Resolve):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class RaiseIf_Any(Base_RaiseIf):
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ANY_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 class RaiseIf_All(Base_RaiseIf):
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 # ---------------------------------------------------------------------------------------------------------------------

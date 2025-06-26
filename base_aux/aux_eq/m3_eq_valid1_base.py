@@ -1,6 +1,6 @@
 from base_aux.base_types.m0_static_typing import *
 from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_lambdas.m1_lambda import *
 
 
@@ -58,7 +58,7 @@ class Base_EqValid(NestCall_Resolve):
     #   IRESULT_CUMULATE - used for cumulating ARGS validation results! - ignored FOR SINGLE result!
     #   DONT add REVERSE FinalResult! it intended in IRESULT_CUMULATE!!!
     IRESULT_REVERSE: bool = None
-    IRESULT_CUMULATE: Enum_BoolCumulate = Enum_BoolCumulate.ALL_TRUE
+    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
     OTHER_FINAL__RESOLVE: bool = True   # goal: create chains with no ReCalculation inside
     OTHER_RAISED: bool = None   # RAISE ON CALCULATION OTHER_FINAL! not on equation!!!
@@ -70,7 +70,7 @@ class Base_EqValid(NestCall_Resolve):
             *v_args,
             _validator: TYPING__VALID_VALIDATOR = None,
             _iresult_reverse: bool = None,
-            _iresult_cumulate: Enum_BoolCumulate = None,
+            _iresult_cumulate: EnumAdj_BoolCumulate = None,
             _other_final__resolve: bool = None,
             # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
@@ -184,28 +184,28 @@ class Base_EqValid(NestCall_Resolve):
                     result = validator_result
 
                 # CUMULATE --------
-                if self.IRESULT_CUMULATE == Enum_BoolCumulate.ALL_TRUE:
+                if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE:
                     if not result:
                         return False
-                elif self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_TRUE:
+                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
                     if result:
                         return True
-                elif self.IRESULT_CUMULATE == Enum_BoolCumulate.ALL_FALSE:
+                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE:
                     if result:
                         return False
-                elif self.IRESULT_CUMULATE == Enum_BoolCumulate.ANY_FALSE:
+                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
                     if not result:
                         return True
 
             # FINAL ------------
-            if self.IRESULT_CUMULATE in [Enum_BoolCumulate.ALL_TRUE, Enum_BoolCumulate.ALL_FALSE]:
+            if self.IRESULT_CUMULATE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]:
                 return True
             else:
                 return False
 
 
 # =====================================================================================================================
-class Base_ValidCase(Base_EqValid):
+class Base_ValidItem(Base_EqValid):
     """
     GOAL
     ----

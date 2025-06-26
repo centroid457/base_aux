@@ -25,14 +25,14 @@ class Base_ReAttempts:
     """
     ATTEMPTS: TYPING__REXPS_FINAL
     FLAGS_DEF: int = None
-    ATTEMPTS_USAGE: Enum_AttemptsUsage = Enum_AttemptsUsage.ALL
+    ATTEMPTS_USAGE: EnumAdj_AttemptsUsage = EnumAdj_AttemptsUsage.ALL
 
-    def __init__(self, *attempts: TYPING__REXP_DRAFT, flags_def: int = None, attempts_usage: Enum_AttemptsUsage = None) -> None:
+    def __init__(self, *attempts: TYPING__REXP_DRAFT, flags_def: int = None, attempts_usage: EnumAdj_AttemptsUsage = None) -> None:
         if flags_def is not None:
             self.FLAGS_DEF = flags_def
 
         if attempts_usage is not None:
-            self.ATTEMPTS_USAGE = Enum_AttemptsUsage(attempts_usage)
+            self.ATTEMPTS_USAGE = EnumAdj_AttemptsUsage(attempts_usage)
 
         result = []
         for attempt in attempts:
@@ -86,13 +86,13 @@ class Base_ReAttempts:
             match = re.match(rexp.PAT, other, flags)
             if match:
                 result_i = self._result__get_from_match(match)
-                if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+                if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
                     return result_i
                 else:
                     result.append(result_i)
 
         # finish
-        if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+        if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
             return None
         else:
             return result
@@ -106,12 +106,12 @@ class Base_ReAttempts:
             match = re.fullmatch(rexp.PAT, other, flags)
             if match:
                 result_i = self._result__get_from_match(match)
-                if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+                if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
                     return result_i
                 else:
                     result.append(result_i)
         # finish
-        if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+        if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
             return None
         else:
             return result
@@ -125,12 +125,12 @@ class Base_ReAttempts:
             match = re.search(rexp.PAT, other, flags)
             if match:
                 result_i = self._result__get_from_match(match)
-                if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+                if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
                     return result_i
                 else:
                     result.append(result_i)
         # finish
-        if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+        if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
             return None
         else:
             return result
@@ -144,7 +144,7 @@ class Base_ReAttempts:
 
             result_i = re.findall(rexp.PAT, other, flags)
             if result_i:
-                if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+                if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
                     return result_i
                 else:
                     result.extend(result_i)
@@ -163,7 +163,7 @@ class Base_ReAttempts:
             result = re.sub(rexp.PAT, new, other, count, flags)
             if result != other:
                 other = result
-                if self.ATTEMPTS_USAGE == Enum_AttemptsUsage.FIRST:
+                if self.ATTEMPTS_USAGE == EnumAdj_AttemptsUsage.FIRST:
                     break
 
         return result
@@ -175,12 +175,12 @@ class Base_ReAttempts:
 # =====================================================================================================================
 @final
 class ReAttemptsFirst(Base_ReAttempts):
-    ATTEMPTS_USAGE = Enum_AttemptsUsage.FIRST
+    ATTEMPTS_USAGE = EnumAdj_AttemptsUsage.FIRST
 
 
 @final
 class ReAttemptsAll(Base_ReAttempts):
-    ATTEMPTS_USAGE = Enum_AttemptsUsage.ALL
+    ATTEMPTS_USAGE = EnumAdj_AttemptsUsage.ALL
 
 
 # =====================================================================================================================

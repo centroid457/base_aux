@@ -6,7 +6,7 @@ import pytest
 # from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.base_types import TypeAux   # CIRCULAR IMPORT
 
-from base_aux.base_values.m5_enums import *
+from base_aux.base_values.m5_enum1_adj import *
 from base_aux.base_nest_dunders.m1_init1_source2_kwargs import *
 from base_aux.base_nest_dunders.m3_calls import *
 
@@ -57,11 +57,11 @@ from base_aux.base_nest_dunders.m3_calls import *
 #     #     run if not started yet
 #     #     then wait finished
 #     #     """
-#     #     if self.PROCESS_ACTIVE == Enum_ProcessStateActive.NONE:
+#     #     if self.PROCESS_ACTIVE == EnumAdj_ProcessStateActive.NONE:
 #     #         self.run()
 #     #
 #     #     count = 1
-#     #     while self.PROCESS_ACTIVE != Enum_ProcessStateActive.FINISHED:
+#     #     while self.PROCESS_ACTIVE != EnumAdj_ProcessStateActive.FINISHED:
 #     #         print(f"wait_finished {count=}")
 #     #         count += 1
 #     #         time.sleep(sleep)
@@ -130,7 +130,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
     SOURCE: Union[Callable[..., Any], Any, type]
 
     # thread ready -----
-    PROCESS_ACTIVE: Enum_ProcessStateActive = Enum_ProcessStateActive.NONE
+    PROCESS_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
     RESULT: Any = None
     EXX: Optional[Exception] = None
 
@@ -143,11 +143,11 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         and thread ready for start usage!
         """
         # ONLY ONE EXECUTION on instance!!! dont use locks! -------------
-        if self.PROCESS_ACTIVE == Enum_ProcessStateActive.STARTED:
+        if self.PROCESS_ACTIVE == EnumAdj_ProcessStateActive.STARTED:
             return
 
         # WORK ----------------------------------------------------------
-        self.PROCESS_ACTIVE = Enum_ProcessStateActive.STARTED
+        self.PROCESS_ACTIVE = EnumAdj_ProcessStateActive.STARTED
         self.RESULT = None
         self.EXX = None
 
@@ -164,7 +164,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             self.EXX = exx
 
         # FIN ----------------------------------------------------------
-        self.PROCESS_ACTIVE = Enum_ProcessStateActive.FINISHED
+        self.PROCESS_ACTIVE = EnumAdj_ProcessStateActive.FINISHED
 
     # =================================================================================================================
     def resolve(self, *args, **kwargs) -> Any | NoReturn:
@@ -209,11 +209,11 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         ----
         dont forget using always after run!!!
         """
-        if run or self.PROCESS_ACTIVE == Enum_ProcessStateActive.NONE:
+        if run or self.PROCESS_ACTIVE == EnumAdj_ProcessStateActive.NONE:
             self.run()
 
         count = 1
-        while self.PROCESS_ACTIVE != Enum_ProcessStateActive.FINISHED:
+        while self.PROCESS_ACTIVE != EnumAdj_ProcessStateActive.FINISHED:
             print(f"wait_finished {count=}")
             count += 1
             time.sleep(sleep)
@@ -298,7 +298,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             return False
 
     # =================================================================================================================
-    def resolve__style(self, callable_use: Enum_CallResolveStyle = Enum_CallResolveStyle.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | Enum_CallResolveStyle | bool:
+    def resolve__style(self, callable_use: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.RAISE, *args, **kwargs) -> Any | None | Exception | NoReturn | EnumAdj_CallResolveStyle | bool:
         """
         NOTE
         ----
@@ -307,25 +307,25 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         it is not so convenient to use param callable_use!
         SO preferred using other/further direct methods!
         """
-        if callable_use == Enum_CallResolveStyle.DIRECT:
+        if callable_use == EnumAdj_CallResolveStyle.DIRECT:
             return self.SOURCE
 
-        elif callable_use == Enum_CallResolveStyle.EXX:
+        elif callable_use == EnumAdj_CallResolveStyle.EXX:
             return self.resolve__exx(*args, **kwargs)
 
-        elif callable_use == Enum_CallResolveStyle.RAISE:
+        elif callable_use == EnumAdj_CallResolveStyle.RAISE:
             return self.resolve__raise(*args, **kwargs)
 
-        elif callable_use == Enum_CallResolveStyle.RAISE_AS_NONE:
+        elif callable_use == EnumAdj_CallResolveStyle.RAISE_AS_NONE:
             return self.resolve__raise_as_none(*args, **kwargs)
 
-        elif callable_use == Enum_CallResolveStyle.SKIP_CALLABLE:
+        elif callable_use == EnumAdj_CallResolveStyle.SKIP_CALLABLE:
             return self.resolve__skip_callables(*args, **kwargs)
 
-        elif callable_use == Enum_CallResolveStyle.SKIP_RAISED:
+        elif callable_use == EnumAdj_CallResolveStyle.SKIP_RAISED:
             return self.resolve__skip_raised(*args, **kwargs)
 
-        elif callable_use == Enum_CallResolveStyle.BOOL:
+        elif callable_use == EnumAdj_CallResolveStyle.BOOL:
             return self.resolve__bool(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------

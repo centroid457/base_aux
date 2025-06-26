@@ -17,7 +17,7 @@ class FileAttrs_Loader(TextFile, NestCall_Resolve):
     used for get settings from file into NestInit_AnnotsAttrByKwArgsIc
     """
     TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = AttrKit_Blank
-    STYLE: Enum_DictTextFormat = Enum_DictTextFormat.AUTO
+    STYLE: EnumAdj_DictTextFormat = EnumAdj_DictTextFormat.AUTO
     KEYPATH: tuple[str | int, ...]
 
     FILEPATH: pathlib.Path
@@ -28,7 +28,7 @@ class FileAttrs_Loader(TextFile, NestCall_Resolve):
             self,
             target: type | Any = None,
             keypath: tuple[str | int, ...] = None,     # path to exact dict in dict
-            style: Enum_DictTextFormat = None,
+            style: EnumAdj_DictTextFormat = None,
 
             **kwargs,       # init File/Text
     ) -> None | NoReturn:
@@ -44,12 +44,12 @@ class FileAttrs_Loader(TextFile, NestCall_Resolve):
         else:
             self.KEYPATH = tuple()
 
-    def init_style(self, style: Enum_DictTextFormat) -> None:
+    def init_style(self, style: EnumAdj_DictTextFormat) -> None:
         if style is not None:
-            self.STYLE = Enum_DictTextFormat(style)
+            self.STYLE = EnumAdj_DictTextFormat(style)
 
-        if self.STYLE == Enum_DictTextFormat.EXTENTION:
-            for item in Enum_DictTextFormat:
+        if self.STYLE == EnumAdj_DictTextFormat.EXTENTION:
+            for item in EnumAdj_DictTextFormat:
                 if self.FILEPATH.name.lower().endswith(str(item.value).lower()):
                     self.STYLE = item
                     break
