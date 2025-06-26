@@ -1,12 +1,16 @@
 from base_aux.base_lambdas.m1_lambda import *
 
 from base_aux.base_enums.m2_enum1_adj import *
+from base_aux.base_values.m2_value_special import NoValue
 
 
 # =====================================================================================================================
 class VictimStd(Enum):
     NONE = None
     A1 = 1
+    TUPLE = (1, 2)
+    STR_LOWER = "str_lower"
+    STR_UPPER = "STR_UPPER"
 
 
 class VictimEq(NestEq_EnumAdj):
@@ -15,6 +19,37 @@ class VictimEq(NestEq_EnumAdj):
     TUPLE = (1, 2)
     STR_LOWER = "str_lower"
     STR_UPPER = "STR_UPPER"
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (None, None),
+        (1, 1),
+        ((1, 2), (1, 2)),
+        ((1, 22), NoValue),
+        ("str_lower", "str_lower"),
+        ("STR_LOWER", "str_lower"),
+    ]
+)
+def test___value__get_original(source, _EXPECTED):
+    Lambda(VictimEq._value__get_original, source).expect__check_assert(_EXPECTED)
+
+# ---------------------------------------------------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (None, VictimEq.NONE),
+        (1, VictimEq.A1),
+        ((1, 2), VictimEq.TUPLE),
+        ((1, 22), Exception),
+        ("str_lower", VictimEq.STR_LOWER),
+        # ("STR_LOWER", VictimEq.STR_LOWER),    # FIXME: CANT CREATE!
+    ]
+)
+def test__init(source, _EXPECTED):
+    Lambda(VictimEq, source).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

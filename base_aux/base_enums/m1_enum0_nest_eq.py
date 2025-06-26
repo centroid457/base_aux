@@ -1,4 +1,7 @@
+from typing import *
+
 from enum import Enum
+from base_aux.base_values.m2_value_special import NoValue
 
 
 # =====================================================================================================================
@@ -22,7 +25,22 @@ class NestEq_EnumAdj(Enum):
     assert Enum(1) != 1
     assert NestEq_EnumAdj(1) == 1
     """
-    # TODO: add Contain classmeth???  cant understand! need metaclass!
+    # FIXME: cant create! - not work!!!
+    # def __new__(cls, value_druft: Any):
+    #     value_final = cls._value__get_original(value_druft)
+    #     return cls(value_final)
+
+    @classmethod
+    def _value__get_original(cls, value_druft: Any) -> Any | NoValue:
+        for item in cls:
+            value_original = item.value
+            if isinstance(value_druft, str):
+                if value_druft.lower() == str(value_original).lower():
+                    return value_original
+            if value_druft == value_original:
+                return value_original
+
+        return NoValue
 
     # def __eq__(self, other) -> bool:
     #     if isinstance(other, self.__class__):
@@ -66,6 +84,7 @@ class NestEq_EnumAdj(Enum):
         else:
             return False
 
+    # TODO: add Contain classmeth???  cant understand! need metaclass!
     # @classmethod
     # def __contains__(cls, other) -> bool:
     #     if isinstance(other, cls):
