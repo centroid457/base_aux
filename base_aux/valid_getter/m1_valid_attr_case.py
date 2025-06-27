@@ -14,7 +14,7 @@ from base_aux.base_types.m0_static_typing import *
 # =====================================================================================================================
 # FIXME: FINISH! its just a zero start - not working and not understand how it must work!!!
 
-class Base_ValidSets:
+class Base_ValidKwargSets:
     OTHER_DRAFT: Any | Callable = True
     OTHER_FINAL__RESOLVE: bool = True
     OTHER_RAISED: bool = None
@@ -50,6 +50,53 @@ class Base_ValidSets:
             eq_valid.OTHER_FINAL__RESOLVE = False
             eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
+    def _eq_expects__get_final(self, **eq_axpects: bool | None) -> dict[str, bool | None]:
+        result = {key.lower(): value for key, value in (eq_axpects or self.EQ_EXPECTS).items()}
+        return result
+
+    # =================================================================================================================
+    def _check_if__(
+            self,
+            _raise_if_fail: bool = None,
+            _bool_cumulate: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE,
+            **eq_axpects: bool | None,
+    ) -> bool | None | NoReturn:
+        results: list[bool] = []
+
+        eq_axpects = self._eq_expects__get_final(**eq_axpects)
+        for name, expect in eq_axpects.items():
+            if expect is not None:
+                validate_i = self.EQ_VALIDS[name] == self.OTHER_FINAL   # RAISE
+                result_i = validate_i is expect
+                results.append(result_i)
+
+                if (
+                        _bool_cumulate == EnumAdj_BoolCumulate.ALL_TRUE and not result_i
+                        or
+                        _bool_cumulate == EnumAdj_BoolCumulate.ALL_FALSE and result_i
+                ):
+                    msg = f"{name=}/{expect=}/{validate_i=}"
+                    if _raise_if_fail:
+                        raise Exx__ValueNotValidated(msg)               # RAISE
+                    else:
+                        print(msg)
+                        return False
+
+                if (
+                        _bool_cumulate == EnumAdj_BoolCumulate.ANY_TRUE and result_i
+                        or
+                        _bool_cumulate == EnumAdj_BoolCumulate.ANY_FALSE and not result_i
+                ):
+                    msg = f"{name=}/{expect=}/{validate_i=}"
+                    print(msg)
+                    return True
+
+        # FINAL result -----------------------
+        msg = f"{eq_axpects=}/{results=}"
+        print(msg)
+        return True
+
+
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
         """
@@ -60,7 +107,7 @@ class Base_ValidSets:
         like
             (linux=True, windows=True)
         """
-        pass
+        return self._check_if__(_raise_if_fail=True, _bool_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
 
     def raise_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
         """
@@ -69,40 +116,26 @@ class Base_ValidSets:
         seems like common usage for exact eq-results for special state
             (val1=True, val2=False, val3=True)
         """
-        pass
-
-    def raise_if__any(self, **eq_axpects: bool | None) -> None | NoReturn:
-        pass
+        return self._check_if__(_raise_if_fail=True, _bool_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
     def raise_if__all(self, **eq_axpects: bool | None) -> None | NoReturn:
-        pass
+        return self._check_if__(_raise_if_fail=True, _bool_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
+
+    def raise_if__any(self, **eq_axpects: bool | None) -> None | NoReturn:
+        return self._check_if__(_raise_if_fail=True, _bool_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def bool_if__all(self, **eq_axpects: bool | None) -> None | NoReturn:
-        accept_any_true = False
-        eq_axpects = {key.lower(): value for key, value in (eq_axpects or self.EQ_EXPECTS).items()}
-        for name, accept in eq_axpects.items():
-            if accept is not None:
-                validate = self.OTHER_FINAL == self.EQ_VALIDS[name]
-                result = accept and validate
-                if not result:
-                    msg = f"{name=}/{accept=}/{validate=}"
-                    raise Exx__ValueNotValidated(msg)
+    def bool_if__all(self, _raise_if_fail: bool = None, **eq_axpects: bool | None) -> None | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
 
     def bool_if__any(self, **eq_axpects: bool | None) -> bool | NoReturn:
-        try:
-            self.raise_if__accept_any_false__or__not_accept_any_true(**eq_axpects)
-            return True
-        except Exx__ValueNotValidated:
-            return False
-        except Exception as exx:
-            raise exx
-
-    def bool_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
-        pass
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
     def bool_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
-        pass
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
+
+    def bool_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
 # # =====================================================================================================================
 # class ValidAccepts_OS(Base_ValidAccepts):
