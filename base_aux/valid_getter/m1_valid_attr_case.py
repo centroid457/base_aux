@@ -12,40 +12,97 @@ from base_aux.base_types.m0_static_typing import *
 
 
 # =====================================================================================================================
-# FIXME: FINISH! its just a zero start - not working!!!
+# FIXME: FINISH! its just a zero start - not working and not understand how it must work!!!
 
-class Base_ValidAccepts:
+class Base_ValidSets:
     OTHER_DRAFT: Any | Callable = True
-    EQ_VARIANTS: dict[str, Any | Base_EqValid] = {}
-    EQ_ACCEPTS: dict[str, bool | None] = {}
+    OTHER_FINAL__RESOLVE: bool = True
+    OTHER_RAISED: bool = None
+    OTHER_FINAL: Any | Exception = None
 
-    def __init__(self, other_draft: Any = NoValue, **eq_variants: Any | Base_EqValid) -> None:
+    EQ_VALIDS: dict[str, Any | Base_EqValid] = {}
+    EQ_EXPECTS: dict[str, bool | None] = {}
+
+    def __init__(self, other_draft: Any = NoValue, **eq_valids: Any | Base_EqValid) -> None:
+        # INIT=eq_valids -------------------------
+        if eq_valids:
+            self.EQ_VALIDS = eq_valids
+
+        # remake to LOWER(IC)
+        self.EQ_VALIDS = {key.lower(): value for key, value in self.EQ_VALIDS.items()}
+
+        # other_draft ---------------------
         if other_draft is not NoValue:
             self.OTHER_DRAFT = other_draft
 
-        if eq_variants:
-            self.EQ_VARIANTS = eq_variants
+        if self.OTHER_FINAL__RESOLVE:
+            try:
+                self.OTHER_FINAL = Lambda(self.OTHER_DRAFT).resolve__raise()
+                self.OTHER_RAISED = False
+            except Exception as exx:
+                self.OTHER_RAISED = True
+                self.OTHER_FINAL = exx
+        else:
+            self.OTHER_FINAL = self.OTHER_DRAFT
+
+        # FINISH=_other_final__resolve
+        for eq_valid in self.EQ_VALIDS.values():
+            eq_valid.OTHER_FINAL__RESOLVE = False
+            eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
     # -----------------------------------------------------------------------------------------------------------------
-    def raise_if__accepts_fail(self, **eq_accepts: bool | None) -> None | NoReturn:
-        eq_accepts = {key.lower(): value for key, value in {**self.EQ_ACCEPTS, **eq_accepts}.items()}
-        for name, accept in eq_accepts.items():
+    def raise_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        useful to check that single POSITIVE(expecting True) variant from any variants (mutually exclusive) expecting TRUE is not correct
+
+        like
+            (linux=True, windows=True)
+        """
+        pass
+
+    def raise_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        seems like common usage for exact eq-results for special state
+            (val1=True, val2=False, val3=True)
+        """
+        pass
+
+    def raise_if__any(self, **eq_axpects: bool | None) -> None | NoReturn:
+        pass
+
+    def raise_if__all(self, **eq_axpects: bool | None) -> None | NoReturn:
+        pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def bool_if__all(self, **eq_axpects: bool | None) -> None | NoReturn:
+        accept_any_true = False
+        eq_axpects = {key.lower(): value for key, value in (eq_axpects or self.EQ_EXPECTS).items()}
+        for name, accept in eq_axpects.items():
             if accept is not None:
-                validate = self.OTHER_DRAFT == self.EQ_VARIANTS[name]
+                validate = self.OTHER_FINAL == self.EQ_VALIDS[name]
                 result = accept and validate
                 if not result:
                     msg = f"{name=}/{accept=}/{validate=}"
                     raise Exx__ValueNotValidated(msg)
 
-    def bool_if__accepts_meet(self, **accepts: bool | None) -> bool | NoReturn:
+    def bool_if__any(self, **eq_axpects: bool | None) -> bool | NoReturn:
         try:
-            self.raise_if__accepts_fail(**accepts)
+            self.raise_if__accept_any_false__or__not_accept_any_true(**eq_axpects)
             return True
         except Exx__ValueNotValidated:
             return False
         except Exception as exx:
             raise exx
 
+    def bool_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
+        pass
+
+    def bool_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
+        pass
 
 # # =====================================================================================================================
 # class ValidAccepts_OS(Base_ValidAccepts):
