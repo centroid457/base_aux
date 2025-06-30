@@ -341,12 +341,17 @@ class Base_AttrAux(NestInit_Source):
             # print(f"{dirname=}")
             # print(f"{self.SOURCE=}")
             try:
-                # print(11)
-                mro = self.SOURCE.__mro__
+                mro = self.SOURCE.__mro__   # instance has no attr __mro__ - RAISE
+                # print(f"11111{mro=}")
+                if not isinstance(mro, tuple):
+                    # BUT it could be instance ... with GETATTR!!! then
+                    mro = self.SOURCE.__class__.__mro__
+                    # print(f"33333{mro=}")
+
             except:
-                # print(111)
+                # if SOURCE was instance (NotClass) - direct check for isClass - is not correct!
                 mro = self.SOURCE.__class__.__mro__
-                # print(f"{mro=}")
+                # print(f"22222{mro=}")
 
             for cls in mro:
                 if dirname.startswith(f"_{cls.__name__}__"):
