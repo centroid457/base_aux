@@ -154,8 +154,8 @@ class EqValid_LGTE_NumParsedSingle(Base_EqValid):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_NumParsedSingle_Sucess(Base_EqValid):
-    VALIDATOR = Validators.NumParsedSingle_Sucess
+class EqValid_NumParsedSingle_Success(Base_EqValid):
+    VALIDATOR = Validators.NumParsedSingle_Success
 
 
 @final

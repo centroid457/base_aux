@@ -333,7 +333,7 @@
 
 0.0.9 (2024/11/07 16:35:46)
 ------------------------------
-- [classes.Lambda] add LambdaTrySucess/+Fail  
+- [classes.Lambda] add LambdaTrySuccess/+Fail  
 - [classes.ClsException] add Base_Exx  
 
 0.0.8 (2024/11/06 19:01:54)

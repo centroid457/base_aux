@@ -14,7 +14,7 @@ from base_aux.base_types.m0_static_typing import *
 # =====================================================================================================================
 # FIXME: FINISH! its just a zero start - not working and not understand how it must work!!!
 
-class Base_ValidKwargSets:
+class Base_ValidKwargs:
     OTHER_DRAFT: Any | Callable = True
     OTHER_FINAL__RESOLVE: bool = True
     OTHER_RAISED: bool = None

@@ -365,7 +365,7 @@ def test__LGTE_2_dict(kwargs, other, _EXPECTED):
     ]
 )
 def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_Sucess, other, _EXPECTED[0])
+    _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_Success, other, _EXPECTED[0])
     _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_EQ, other, _EXPECTED[1], value)
     _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, other, _EXPECTED[1], value)
     _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeInt, other, _EXPECTED[2])

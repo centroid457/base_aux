@@ -243,7 +243,7 @@ class Validators:
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def NumParsedSingle_Sucess(self, other_final) -> bool:
+    def NumParsedSingle_Success(self, other_final) -> bool:
         other_final = TextAux(other_final).parse__number_single()
         return other_final is not None
 

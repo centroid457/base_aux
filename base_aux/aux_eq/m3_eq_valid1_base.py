@@ -45,16 +45,25 @@ class Base_EqValid(NestCall_Resolve):
 
         dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
         dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
+
+    IRESULT_REVERSE
+    ===============
+    it mean resolve direct result anв only after that reverse exact final value!!!
+
+    IRESULT_REVERSE vs IRESULT_CUMULATE
+    -----------------------------------
+    NOTE: use only one param! - IRESULT_REVERSE or IRESULT_CUMULATE!!!
+      IRESULT_REVERSE - used for validation result!
+      IRESULT_CUMULATE - used for cumulating ARGS validation results! - ignored FOR SINGLE result!
+      DONT add REVERSE FinalResult! it intended in IRESULT_CUMULATE!!!
+
     """
     VALIDATOR: TYPING__VALID_VALIDATOR    # DEFINE!!!
 
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
     V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
 
-    # NOTE: use only one param! - IRESULT_REVERSE or IRESULT_CUMULATE!!!
-    #   IRESULT_REVERSE - used for validation result!
-    #   IRESULT_CUMULATE - used for cumulating ARGS validation results! - ignored FOR SINGLE result!
-    #   DONT add REVERSE FinalResult! it intended in IRESULT_CUMULATE!!!
+    # IRESULT_REVERSE vs IRESULT_CUMULATE: SEE notes in docstr!
     IRESULT_REVERSE: bool = None
     IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
@@ -93,12 +102,12 @@ class Base_EqValid(NestCall_Resolve):
         self.V_KWARGS = v_kwargs
 
     def __str__(self):
-        args = self.V_ARGS
-        kwargs = self.V_KWARGS
+        v_args = self.V_ARGS
+        v_kwargs = self.V_KWARGS
         _iresult_reverse = self.IRESULT_REVERSE
         _iresult_cumulate = self.IRESULT_CUMULATE
         _other_final__resolve = self.OTHER_FINAL__RESOLVE
-        return f"{self.__class__.__name__}({args=}/{kwargs=}/{_iresult_reverse=}/{_iresult_cumulate=}/{_other_final__resolve=})"
+        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_iresult_reverse=}/{_iresult_cumulate=}/{_other_final__resolve=})"
 
     def __repr__(self):
         return str(self)
