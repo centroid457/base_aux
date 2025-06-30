@@ -16,19 +16,22 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
     ARGS: Any | Callable[..., Any] = ()
     IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
-    RAISE_IF_TRUE: bool = None  # RAISE_INSTEAD_TRUE
+    RAISE_INSTEAD_TRUE: bool = None  # RAISE_INSTEAD_TRUE
     RAISE_ON_INIT: bool = None
 
-    def __init__(self, *args, raise_if_true: bool = None, raise_on_init: bool = None, **kwargs) -> None | NoReturn:
+    def __init__(self, *args, _iresult_cumulate: EnumAdj_BoolCumulate = None, _raise_instead_true: bool = None, raise_on_init: bool = None, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
 
-        if raise_if_true is not None:
-            self.RAISE_IF_TRUE = bool(raise_if_true)
+        if _iresult_cumulate is not None:
+            self.IRESULT_CUMULATE = _iresult_cumulate
+
+        if _raise_instead_true is not None:
+            self.RAISE_INSTEAD_TRUE = bool(_raise_instead_true)
 
         if raise_on_init is not None:
             self.RAISE_ON_INIT = bool(raise_on_init)
 
-        if self.RAISE_ON_INIT and self.RAISE_IF_TRUE:
+        if self.RAISE_ON_INIT and self.RAISE_INSTEAD_TRUE:
             self.resolve()
 
     def resolve(self) -> bool | NoReturn:
@@ -51,7 +54,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
 
             elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
                 if arg_result:
-                    if self.RAISE_IF_TRUE:
+                    if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
                         raise Exx__Expected(msg)
                     else:
@@ -59,7 +62,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
 
             elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
                 if not arg_result:
-                    if self.RAISE_IF_TRUE:
+                    if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
                         raise Exx__Expected(msg)
                     else:
@@ -69,7 +72,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
         if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
             return False
         else:   # self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE
-            if self.RAISE_IF_TRUE:
+            if self.RAISE_INSTEAD_TRUE:
                 msg = f"{results_all=}"
                 raise Exx__Expected(msg)
             else:
@@ -95,7 +98,7 @@ class ArgsBoolIf_AnyFalse(Base_ArgsBoolIf):
 
 # =====================================================================================================================
 class Base_ArgsRaiseIf(Base_ArgsBoolIf):
-    RAISE_IF_TRUE: bool = True
+    RAISE_INSTEAD_TRUE: bool = True
 
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -1,16 +1,13 @@
-from typing import *
-import pytest
 import requests
 from aiohttp import web
 
-from base_aux.valid_getter.m1_strings import ReqCheckStr_Os
-
 from base_aux.servers.m2_server1_aiohttp import ServerAiohttpBase
+from base_aux.aux_argskwargs.m1_kwargs_eq_valid import *
 
 
 # =====================================================================================================================
 @pytest.mark.skip   # FIXME: BROKEN!
-@pytest.mark.skipif(ReqCheckStr_Os.bool_if__LINUX(), reason="WindowsOnly if start in no main thread")
+@pytest.mark.skipif(KwargsEqExpect_OS().bool_if__any_true(linux=True), reason="WindowsOnly if start in no main thread")
 class Test__ServerAiohttp:
     # FIXME: CANT SEPARATE TESTS!!!! WORK ONLY one BY one
     PORT_TEST: int = 8081

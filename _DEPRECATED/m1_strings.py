@@ -72,6 +72,8 @@ class Meta_GetattrClassmethod(type):
 # =====================================================================================================================
 class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     """
+    TODO: DEPRECATE!!! replaced by Base_KwargsEqExpect
+
     GOAL
     ----
     check requirements with self exclusive
@@ -269,60 +271,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
 
 
 # =====================================================================================================================
-class ReqCheckStr_Os(Base_ReqCheckStr):
-    _GETTER: Callable = platform.system
-    _MEET_TRUE: bool = False        # need to use class as checker
-
-    LINUX: bool
-    WINDOWS: bool
-
-    # DERIVATIVES --------
-    bool_if__LINUX: TYPING.CALLABLE__BOOL_NONE
-    bool_if__WINDOWS: TYPING.CALLABLE__BOOL_NONE
-    bool_if_not__LINUX: TYPING.CALLABLE__BOOL_NONE
-    bool_if_not__WINDOWS: TYPING.CALLABLE__BOOL_NONE
-
-    raise_if__LINUX: TYPING.CALLABLE__RAISE_NONE
-    raise_if__WINDOWS: TYPING.CALLABLE__RAISE_NONE
-    raise_if_not__LINUX: TYPING.CALLABLE__RAISE_NONE
-    raise_if_not__WINDOWS: TYPING.CALLABLE__RAISE_NONE
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-def _examples():
-    # 1=direct сlass
-    assert ReqCheckStr_Os.bool_if__WINDOWS()
-    assert not ReqCheckStr_Os.bool_if_not__WINDOWS()
-    try:
-        ReqCheckStr_Os.raise_if__LINUX()
-        assert False
-    except:
-        pass
-
-    # 2=user object - best way!
-    class ReqCheckStr_Os_MY(ReqCheckStr_Os):
-        LINUX: bool = True
-        WINDOWS: bool = False
-
-    assert not ReqCheckStr_Os_MY().check__wo_raise()
-
-
-# =====================================================================================================================
-class ReqCheckStr_Arch(Base_ReqCheckStr):
-    _GETTER: Callable = platform.machine
-    _MEET_TRUE: bool = False
-
-    AMD64: bool      # standard PC
-    x86_64: bool     # wsl standard
-    AARCH64: bool    # raspberry=ARM!
-
-    # DERIVATIVES --------
-    raise_if_not__AARCH64: TYPING.CALLABLE__RAISE_NONE
-
-
-# =====================================================================================================================
 if __name__ == "__main__":
-    _examples()
+    pass
 
 
 # =====================================================================================================================

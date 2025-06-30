@@ -1,11 +1,10 @@
-from base_aux.base_lambdas.m1_lambda import *
-from base_aux.valid_getter.m1_strings import *
+from base_aux.aux_argskwargs.m1_kwargs_eq_valid import *
 
 from base_aux.cli.m1_cli_user import *
 
 
 # =====================================================================================================================
-if ReqCheckStr_Os.bool_if__WINDOWS():
+if KwargsEqExpect_OS().bool_if__all_true(windows=True):
     CMD_PING_1 = "ping -n 1 localhost"      #momentary! less then 0.1sec!
     CMD_PING_2 = "ping -n 2 localhost"      #about 1sec!
 else:

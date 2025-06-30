@@ -1,6 +1,6 @@
 import pytest
 
-from base_aux.valid_getter.m1_strings import *
+from _DEPRECATED.m1_strings import *
 
 
 # =====================================================================================================================
