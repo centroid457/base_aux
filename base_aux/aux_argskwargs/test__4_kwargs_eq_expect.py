@@ -81,7 +81,7 @@ def test__OS(other_draft, eq_expects, _EXPECTED):
 
 
 def test__os_2():
-    if platform.system() == "Windows":
+    if platform.system().lower() == "windows":
         assert KwargsEqExpect_OS().bool_if__any_true(windows=True)
     else:
         assert not KwargsEqExpect_OS().bool_if__any_true(windows=True)
