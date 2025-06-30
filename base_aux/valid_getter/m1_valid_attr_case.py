@@ -7,6 +7,7 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.base_nest_dunders.m4_gsai_ic__annots import *
 
 from base_aux.base_lambdas.m1_lambda import *
+from base_aux.base_values.m4_primitives import *
 from base_aux.base_types.m0_static_types import *
 from base_aux.base_types.m0_static_typing import *
 
@@ -14,22 +15,22 @@ from base_aux.base_types.m0_static_typing import *
 # =====================================================================================================================
 # FIXME: FINISH! its just a zero start - not working and not understand how it must work!!!
 
-class Base_ValidKwargs:
+class Base_ValidEqKwargs:
     OTHER_DRAFT: Any | Callable = True
     OTHER_FINAL__RESOLVE: bool = True
     OTHER_RAISED: bool = None
     OTHER_FINAL: Any | Exception = None
 
-    EQ_VALIDS: dict[str, Any | Base_EqValid] = {}
+    EQ_KWARGS: dict[str, Any | Base_EqValid] = {}
     EQ_EXPECTS: dict[str, bool | None] = {}
 
-    def __init__(self, other_draft: Any = NoValue, **eq_valids: Any | Base_EqValid) -> None:
-        # INIT=eq_valids -------------------------
-        if eq_valids:
-            self.EQ_VALIDS = eq_valids
+    def __init__(self, other_draft: Any = NoValue, **eq_kwargs: Any | Base_EqValid) -> None:
+        # INIT=eq_kwargs -------------------------
+        if eq_kwargs:
+            self.EQ_KWARGS = eq_kwargs
 
-        # remake to LOWER(IC)
-        self.EQ_VALIDS = {key.lower(): value for key, value in self.EQ_VALIDS.items()}
+        # remake to LOWERCASE
+        self.EQ_KWARGS = {key.lower(): value for key, value in self.EQ_KWARGS.items()}
 
         # other_draft ---------------------
         if other_draft is not NoValue:
@@ -46,12 +47,23 @@ class Base_ValidKwargs:
             self.OTHER_FINAL = self.OTHER_DRAFT
 
         # FINISH=_other_final__resolve
-        for eq_valid in self.EQ_VALIDS.values():
-            eq_valid.OTHER_FINAL__RESOLVE = False
-            eq_valid.OTHER_RAISED = self.OTHER_RAISED
+        for eq_valid in self.EQ_KWARGS.values():
+            if isinstance(eq_valid, Base_EqValid):
+                eq_valid.OTHER_FINAL__RESOLVE = False
+                eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
     def _eq_expects__get_final(self, **eq_axpects: bool | None) -> dict[str, bool | None]:
+        """
+        GOAL
+        ----
+        two goals:
+        1/ if passed any set - get it as pre-final, if not - get default!
+        2/ apply lowercase for keys of preFinal
+        """
         result = {key.lower(): value for key, value in (eq_axpects or self.EQ_EXPECTS).items()}
+
+        if not result:
+            result = {key.lower(): True for key, value in self.EQ_KWARGS.items()}
         return result
 
     # =================================================================================================================
@@ -60,13 +72,18 @@ class Base_ValidKwargs:
             _raise_if_fail: bool = None,
             _bool_cumulate: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE,
             **eq_axpects: bool | None,
-    ) -> bool | None | NoReturn:
+    ) -> bool | NoReturn:
         results: list[bool] = []
 
         eq_axpects = self._eq_expects__get_final(**eq_axpects)
         for name, expect in eq_axpects.items():
+
+            if name not in self.EQ_KWARGS:
+                msg = f"{name=} not in {self.EQ_KWARGS=}"
+                raise Exx__WrongUsage(msg)
+
             if expect is not None:
-                validate_i = self.EQ_VALIDS[name] == self.OTHER_FINAL   # RAISE
+                validate_i = self.EQ_KWARGS[name] == self.OTHER_FINAL   # RAISE
                 result_i = validate_i is expect
                 results.append(result_i)
 
@@ -94,8 +111,26 @@ class Base_ValidKwargs:
         # FINAL result -----------------------
         msg = f"{eq_axpects=}/{results=}"
         print(msg)
+
+        from base_aux.base_lambdas.m1_lambda2_derivatives import Boo
+        if _bool_cumulate == EnumAdj_BoolCumulate.ALL_TRUE:
+            result = Bool(results)
+        if _bool_cumulate == EnumAdj_BoolCumulate.ALL_FALSE:
+            result = all(results)
         return True
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def bool_if__all(self, _raise_if_fail: bool = None, **eq_axpects: bool | None) -> bool | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
+
+    def bool_if__any(self, **eq_axpects: bool | None) -> bool | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
+
+    def bool_if__fail_all(self, **eq_axpects: bool | None) -> bool | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
+
+    def bool_if__fail_any(self, **eq_axpects: bool | None) -> bool | NoReturn:
+        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
@@ -124,18 +159,6 @@ class Base_ValidKwargs:
     def raise_if__any(self, **eq_axpects: bool | None) -> None | NoReturn:
         return self._check_if__(_raise_if_fail=True, _bool_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def bool_if__all(self, _raise_if_fail: bool = None, **eq_axpects: bool | None) -> None | NoReturn:
-        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
-
-    def bool_if__any(self, **eq_axpects: bool | None) -> bool | NoReturn:
-        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
-
-    def bool_if__fail_all(self, **eq_axpects: bool | None) -> None | NoReturn:
-        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
-
-    def bool_if__fail_any(self, **eq_axpects: bool | None) -> None | NoReturn:
-        return self._check_if__(_raise_if_fail=False, _bool_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
 # # =====================================================================================================================
 # class ValidAccepts_OS(Base_ValidAccepts):
@@ -160,6 +183,22 @@ class Base_ValidKwargs:
 # )
 # def test__items_eq(cls, _EXPECTED):
 #     Lambda(set(cls().items_eq())).expect__check_assert(_EXPECTED)
-#
-#
-# # =====================================================================================================================
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="other_draft, eq_kwargs, eq_expects, _EXPECTED",
+    argvalues=[
+        # TOOD: add LAMBDA_RAISE
+
+        (1, dict(eq1=EqValid_EQ(1)), {}, [True, True, False, False]),
+    ]
+)
+def test__base(other_draft, eq_kwargs, eq_expects, _EXPECTED):
+    # Lambda(Base_ValidEqKwargs(other_draft, **eq_kwargs).bool_if__all, **eq_expects).expect__check_assert(_EXPECTED[0])
+    # Lambda(Base_ValidEqKwargs(other_draft, **eq_kwargs).bool_if__any, **eq_expects).expect__check_assert(_EXPECTED[1])
+    # Lambda(Base_ValidEqKwargs(other_draft, **eq_kwargs).bool_if__fail_all, **eq_expects).expect__check_assert(_EXPECTED[2])
+    Lambda(Base_ValidEqKwargs(other_draft, **eq_kwargs).bool_if__fail_any, **eq_expects).expect__check_assert(_EXPECTED[3])
+
+
+# =====================================================================================================================
