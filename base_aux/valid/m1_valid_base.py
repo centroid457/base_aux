@@ -53,8 +53,8 @@ class Valid:
     COMMENT: str = ""
 
     SKIP_LINK: TYPING.BOOL_DRAFT = None
-    VALUE_LINK: TYPING.LAMBDA_DRAFT
-    VALIDATE_LINK: TYPING__VALID_VALIDATOR = True
+    VALUE_LINK: TYPING.CALLABLE_DRAFT
+    VALIDATE_LINK: TYPING.VALID_VALIDATOR = True
     VALIDATE_RETRY: int = 0
     REVERSE_LINK: TYPING.BOOL_DRAFT = None    # in case of REVERSE - REAL RESULT IS validate_last_bool!!! idea is validate_last have direct validationResult but reversing goes into validate_last_bool
 
@@ -81,8 +81,8 @@ class Valid:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
-            value_link: TYPING.LAMBDA_DRAFT = NoValue,
-            validate_link: Optional[TYPING__VALID_VALIDATOR] = None,
+            value_link: TYPING.CALLABLE_DRAFT = NoValue,
+            validate_link: TYPING.VALID_VALIDATOR = None,
             validate_retry: Optional[int] = None,
             skip_link: TYPING.BOOL_DRAFT= None,
             reverse_link: TYPING.BOOL_DRAFT = None,

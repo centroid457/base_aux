@@ -77,6 +77,9 @@ class TYPING:
     EXPECTED = bool | type[Any | Exception] | Any
 
     # -----------------------------------------------------------------------------------------------------------------
+    CALLABLE_DRAFT = Union[Any, type[Any], Callable[..., Any | NoReturn]]
+    # CALLABLE_FINAL    # dont need final! Final - are all others!
+
     CALLABLE__NONE = Callable[..., None]
     CALLABLE__BOOL = Callable[..., bool]
     CALLABLE__EXX = Callable[..., Exception]
@@ -89,16 +92,12 @@ class TYPING:
     CALLABLE__BOOL_RAISE_NONE = Callable[..., bool | NoReturn | None]
 
     # -----------------------------------------------------------------------------------------------------------------
-    LAMBDA_DRAFT = Union[Any, type[Any], Callable[..., Any | NoReturn]]
-
-
-# =====================================================================================================================
-TYPING__VALID_VALIDATOR = Union[
-    Any,    # generic final instance as expecting value - direct comparison OR comparison instance like Valid!
-    # Type,   # Class as validator like Exception????? fixme
-    type[Exception],  # direct comparison
-    Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
-]
+    VALID_VALIDATOR = Union[
+        Any,    # generic final instance as expecting value - direct comparison OR comparison instance like Valid!
+        # Type,   # Class as validator like Exception????? fixme
+        type[Exception],  # direct comparison
+        Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
+    ]
 
 
 # =====================================================================================================================

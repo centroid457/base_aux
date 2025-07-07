@@ -58,7 +58,7 @@ class Base_EqValid(NestCall_Resolve):
       DONT add REVERSE FinalResult! it intended in IRESULT_CUMULATE!!!
 
     """
-    VALIDATOR: TYPING__VALID_VALIDATOR    # DEFINE!!!
+    VALIDATOR: TYPING.VALID_VALIDATOR    # DEFINE!!!
 
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
     V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
@@ -75,7 +75,7 @@ class Base_EqValid(NestCall_Resolve):
     def __init__(
             self,
             *v_args,
-            _validator: TYPING__VALID_VALIDATOR = None,
+            _validator: TYPING.VALID_VALIDATOR = None,
             _iresult_reverse: bool = None,
             _iresult_cumulate: EnumAdj_BoolCumulate = None,
             _other_final__resolve: bool = None,
