@@ -553,7 +553,7 @@ class Base_AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def gai_ic__callable_resolve(self, name_index: TYPING.ATTR_DRAFTTYPING.ATTR_DRAFT, callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.DIRECT) -> Any | Callable | EnumAdj_CallResolveStyle | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING.ATTR_DRAFT, callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.DIRECT) -> Any | Callable | EnumAdj_CallResolveStyle | NoReturn:
         """
         SAME AS
         -------
