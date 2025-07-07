@@ -4,6 +4,11 @@ from base_aux.aux_argskwargs.m3_args_bool_raise_if import *
 
 
 # =====================================================================================================================
+TYPING__EQ_VALID__FINAL = Base_EqValid
+TYPING__EQ_VALID__DRAFT = Any | Base_EqValid
+
+
+# =====================================================================================================================
 class Base_KwargsEqExpect:
     """
     GOAL
@@ -16,22 +21,40 @@ class Base_KwargsEqExpect:
     ---------------------
     replace inconvenient Base_ReqCheckStr for objects like ReqCheckStr_Os
     good check exact expectations
+
+    PARAMS
+    ------
+    EQ_VALID__CLS_DEF
+        if used - values in EQ_KWARGS used as arg for it!
+        EqValid_EQ_StrIc i  most useful
+
     """
     OTHER_DRAFT: Any | Callable = True
     OTHER_FINAL__RESOLVE: bool = True
     OTHER_RAISED: bool = None
     OTHER_FINAL: Any | Exception = None
 
-    EQ_KWARGS: dict[str, Any | Base_EqValid] = {}
+    EQ_VALID__CLS_DEF: type[Base_EqValid] | None = None
+    EQ_KWARGS: dict[str, TYPING__EQ_VALID__FINAL] = {}
     EQ_EXPECTS: dict[str, bool | None | Any] = {}
 
-    def __init__(self, other_draft: Any = NoValue, **eq_kwargs: Any | Base_EqValid) -> None:
+    def __init__(self, other_draft: Any | Callable = NoValue, _eq_valid__cls_def: type[Base_EqValid] = None, **eq_kwargs: TYPING__EQ_VALID__DRAFT) -> None:
+        if _eq_valid__cls_def is not None:
+            self.EQ_VALID__CLS_DEF = _eq_valid__cls_def
+
         # INIT=eq_kwargs -------------------------
         if eq_kwargs:
             self.EQ_KWARGS = eq_kwargs
 
-        # remake to LOWERCASE
-        self.EQ_KWARGS = {key.lower(): value for key, value in self.EQ_KWARGS.items()}
+        # remake to LOWERCASE + apply eqValid_def
+        EQ_KWARGS__mod = {}
+        for key, value in self.EQ_KWARGS.items():
+            if self.EQ_VALID__CLS_DEF is not None and not isinstance(value, Base_EqValid):
+                value = self.EQ_VALID__CLS_DEF(value)
+
+            EQ_KWARGS__mod[key.lower()] = value
+
+        self.EQ_KWARGS = EQ_KWARGS__mod
 
         # other_draft ---------------------
         if other_draft is not NoValue:
@@ -138,29 +161,35 @@ class Base_KwargsEqExpect:
 
 
 # =====================================================================================================================
-class KwargsEqExpect_OS(Base_KwargsEqExpect):
+class Base_KwargsEqExpect_StrIc(Base_KwargsEqExpect):
+    EQ_VALID__CLS_DEF: type[Base_EqValid] | None = EqValid_EQ_StrIc
+
+
+# =====================================================================================================================
+class KwargsEqExpect_OS(Base_KwargsEqExpect_StrIc):
     OTHER_DRAFT: Any = platform.system()  # NOTE: dont forget lambda *args: !!!! if use callable!
 
     EQ_KWARGS = dict(
-        LINUX=EqValid_EQ_StrIc("LINUX"),
-        WINDOWS=EqValid_EQ_StrIc("WINDOWS"),
+        LINUX="LINUX",
+        WINDOWS="WINDOWS",
     )
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class KwargsEqExpect_MachineArch(Base_KwargsEqExpect):
+class KwargsEqExpect_MachineArch(Base_KwargsEqExpect_StrIc):
     OTHER_DRAFT: Any = platform.machine()
 
     EQ_KWARGS = dict(
-        AMD64=EqValid_EQ_StrIc("AMD64"),        # standard PC
-        x86_64=EqValid_EQ_StrIc("x86_64"),      # wsl standard
-        AARCH64=EqValid_EQ_StrIc("AARCH64"),    # raspberry=ARM!
+        AMD64="AMD64",        # standard PC
+        x86_64="x86_64",      # wsl standard
+        AARCH64="AARCH64",    # raspberry=ARM!
     )
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
     assert KwargsEqExpect_OS().bool_if__any_true(windows=True)
+    assert KwargsEqExpect_OS().raise_if__any_true(linux=True)
 
 
 # =====================================================================================================================
