@@ -88,6 +88,9 @@ class TYPING:
 
     CALLABLE__BOOL_RAISE_NONE = Callable[..., bool | NoReturn | None]
 
+    # -----------------------------------------------------------------------------------------------------------------
+    LAMBDA_DRAFT = Union[Any, type[Any], Callable[..., Any | NoReturn]]
+
 
 # =====================================================================================================================
 TYPING__VALID_VALIDATOR = Union[
@@ -96,11 +99,6 @@ TYPING__VALID_VALIDATOR = Union[
     type[Exception],  # direct comparison
     Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
 ]
-
-
-# =====================================================================================================================
-TYPING__LAMBDA_CONSTRUCTOR = Union[Any, type[Any], Callable[..., Any | NoReturn]]
-_TYPING__LAMBDA_BOOL = Union[Any, Callable[..., bool | NoReturn]]
 
 
 # =====================================================================================================================

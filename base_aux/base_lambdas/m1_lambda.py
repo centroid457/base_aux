@@ -1,7 +1,6 @@
 import time
 import pytest
 
-# from base_aux.aux_argskwargs.m1_argskwargs import TYPING__LAMBDA_CONSTRUCTOR
 # from base_aux.base_types import TypeAux   # CIRCULAR IMPORT
 
 from base_aux.base_enums.m2_enum1_adj import *
