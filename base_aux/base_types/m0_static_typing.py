@@ -29,6 +29,9 @@ class TYPING:
     STR_FINAL = str
     STR_DRAFT = Union[STR_FINAL, Any]
 
+    ATTR_FINAL = str
+    ATTR_DRAFT = str | int | Any
+
     # -----------------------------------------------------------------------------------------------------------------
     DICT_ANY_NONE = dict[Any, None]             # just to show - dict with None values after clearing!
     DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values

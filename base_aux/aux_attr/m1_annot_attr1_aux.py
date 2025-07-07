@@ -4,11 +4,7 @@ from base_aux.aux_attr.m4_dump0_dumped import *
 from base_aux.base_lambdas.m1_lambda import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
 from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
-
-
-# =====================================================================================================================
-TYPING__NAME_FINAL = str
-TYPING__NAME_DRAFT = str | int | Any
+from base_aux.base_types.m0_static_typing import TYPING
 
 
 # =====================================================================================================================
@@ -64,7 +60,7 @@ class Base_AttrAux(NestInit_Source):
         return False
 
     # =================================================================================================================
-    def ITER_NAMES_BY_STYLE(self) -> Iterable[TYPING__NAME_FINAL]:
+    def ITER_NAMES_BY_STYLE(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -85,7 +81,7 @@ class Base_AttrAux(NestInit_Source):
     # def __contains__(self, item: str):      # IN=DONT USE IT! USE DIRECT METHOD anycase__check_exists
     #     return self.anycase__check_exists(item)
 
-    def iter__dirnames_and_annots(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__dirnames_and_annots(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -98,7 +94,7 @@ class Base_AttrAux(NestInit_Source):
         yield from self.iter__dirnames_original_not_builtin()
         yield from self.iter__annot_names()
 
-    def iter__dirnames_original_not_builtin(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__dirnames_original_not_builtin(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -130,7 +126,7 @@ class Base_AttrAux(NestInit_Source):
         yield from []
 
     # =================================================================================================================
-    def iter__names_filter(self, attr_level: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter(self, attr_level: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE) -> Iterable[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -161,7 +157,7 @@ class Base_AttrAux(NestInit_Source):
             else:
                 raise Exx__Incompatible(f"{attr_level=}")
 
-    def iter__names_filter__not_hidden(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__not_hidden(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         NOTE
         ----
@@ -170,7 +166,7 @@ class Base_AttrAux(NestInit_Source):
         """
         return self.iter__names_filter(EnumAdj_AttrScope.NOT_HIDDEN)
 
-    def iter__names_filter__not_private(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__not_private(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         NOTE
         ----
@@ -178,7 +174,7 @@ class Base_AttrAux(NestInit_Source):
         """
         return self.iter__names_filter(EnumAdj_AttrScope.NOT_PRIVATE)
 
-    def iter__names_filter__private(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__names_filter__private(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         NOTE
         ----
@@ -208,7 +204,7 @@ class Base_AttrAux(NestInit_Source):
         )
 
     # -----------------------------------------------------------------------------------------------------------------
-    def iter__annot_names(self) -> Iterable[TYPING__NAME_FINAL]:
+    def iter__annot_names(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
         iter all (with not existed)
         """
@@ -228,7 +224,7 @@ class Base_AttrAux(NestInit_Source):
                 pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def list__annots(self) -> list[TYPING__NAME_FINAL]:
+    def list__annots(self) -> list[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -303,7 +299,7 @@ class Base_AttrAux(NestInit_Source):
             self.sai_ic(name, value)
 
     # =================================================================================================================
-    def try_rename__private_original(self, dirname: str) -> TYPING__NAME_FINAL:
+    def try_rename__private_original(self, dirname: str) -> TYPING.ATTR_FINAL:
         """
         GOAL
         ----
@@ -361,7 +357,7 @@ class Base_AttrAux(NestInit_Source):
         return dirname
 
     # -----------------------------------------------------------------------------------------------------------------
-    def name_ic__get_original(self, name_index: TYPING__NAME_DRAFT) -> TYPING__NAME_FINAL | None:
+    def name_ic__get_original(self, name_index: TYPING.ATTR_DRAFT) -> TYPING.ATTR_FINAL | None:
         """
         get attr name_index in original register
         """
@@ -389,10 +385,10 @@ class Base_AttrAux(NestInit_Source):
 
         return
 
-    def name_ic__check_exists(self, name_index: TYPING__NAME_DRAFT) -> bool:
+    def name_ic__check_exists(self, name_index: TYPING.ATTR_DRAFT) -> bool:
         return self.name_ic__get_original(name_index) is not None
 
-    def name__check_have_value(self, name_index: TYPING__NAME_DRAFT) -> bool:
+    def name__check_have_value(self, name_index: TYPING.ATTR_DRAFT) -> bool:
         """
         GOAL
         ----
@@ -472,7 +468,7 @@ class Base_AttrAux(NestInit_Source):
 
         return self.SOURCE
 
-    def annots__get_not_defined(self) -> list[TYPING__NAME_FINAL]:
+    def annots__get_not_defined(self) -> list[TYPING.ATTR_FINAL]:
         """
         GOAL
         ----
@@ -512,7 +508,7 @@ class Base_AttrAux(NestInit_Source):
         return True
 
     # =================================================================================================================
-    def gai_ic(self, name_index: TYPING__NAME_DRAFT) -> Any | Callable | NoReturn:
+    def gai_ic(self, name_index: TYPING.ATTR_DRAFT) -> Any | Callable | NoReturn:
         """
         GOAL
         ----
@@ -531,7 +527,7 @@ class Base_AttrAux(NestInit_Source):
 
         return getattr(self.SOURCE, name_original)
 
-    def sai_ic(self, name_index: TYPING__NAME_DRAFT, value: Any) -> None | NoReturn:
+    def sai_ic(self, name_index: TYPING.ATTR_DRAFT, value: Any) -> None | NoReturn:
         """
         get attr value by name_index in any register
         no execution! return pure value as represented in object!
@@ -549,7 +545,7 @@ class Base_AttrAux(NestInit_Source):
         setattr(self.SOURCE, name_original, value)
         pass
 
-    def dai_ic(self, name_index: TYPING__NAME_DRAFT) -> None:
+    def dai_ic(self, name_index: TYPING.ATTR_DRAFT) -> None:
         name_original = self.name_ic__get_original(name_index)
         if name_original is None:
             return      # already not exists
@@ -557,7 +553,7 @@ class Base_AttrAux(NestInit_Source):
         delattr(self.SOURCE, name_original)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def gai_ic__callable_resolve(self, name_index: TYPING__NAME_DRAFT, callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.DIRECT) -> Any | Callable | EnumAdj_CallResolveStyle | NoReturn:
+    def gai_ic__callable_resolve(self, name_index: TYPING.ATTR_DRAFTTYPING.ATTR_DRAFT, callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.DIRECT) -> Any | Callable | EnumAdj_CallResolveStyle | NoReturn:
         """
         SAME AS
         -------
