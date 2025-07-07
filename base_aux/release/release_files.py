@@ -199,16 +199,16 @@ class ReleaseReadme(ReleaseFileBase):
 
             f"",
             f"",
-            f"## Installation",
+            f"## Module Installation",
             f"```commandline",
             f"pip install {self.PROJECT.NAME_INSTALL}",
             f"```",
 
             f"",
             f"",
-            f"## Import",
+            f"## Module Import",
             f"```python",
-            f"from {self.PROJECT.NAME_IMPORT} import *",
+            f"import {self.PROJECT.NAME_IMPORT}",
             f"```",
         ]
         self._file_append_lines(lines)
