@@ -190,6 +190,18 @@ class Exx__WrongUsage(Base_Exx):
     """
 
 
+class Exx__WrongProgrammer(Base_Exx):
+    """
+    by now its just an idea
+
+    GOAL
+    ----
+    Error for wrong programmer behaviour
+    smth about architecture
+    """
+    pass
+
+
 class Exx__Incompatible(Base_Exx):
     pass
 
