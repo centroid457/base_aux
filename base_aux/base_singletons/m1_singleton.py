@@ -1,29 +1,7 @@
 from typing import *
 from threading import Lock
 
-
-# =====================================================================================================================
-class Exx_SingletonNestingLevels(Exception):
-    """Exception when used several unsuitable levels in nesting!
-
-    EXAMPLE:
-        VictimBase = SingletonWMetaCall
-        setattr(VictimBase, "attr", 0)
-        class Victim1(VictimBase):
-            attr = 1
-
-        assert VictimBase().attr == 0
-        try:
-            assert Victim1().attr == 1
-        except Exx_SingletonDifferentNestingLevels:
-            pass
-        else:
-            assert False
-
-    MAIN RULES:
-    1. always instantiate only last Classes in your tree project!
-    """
-    pass
+from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
@@ -66,7 +44,7 @@ class Base_SingletonManager:
             msg = f"{cls_obj.__name__=} WAS BLOCKED before by creating singleton in upper nesting level"
             for cls_blocked in cls._CLS_BLOCKED:
                 msg += f"\n\t{cls_blocked.__name__=}"
-            raise Exx_SingletonNestingLevels(msg)
+            raise Exx__NestingLevels(msg)
 
         cls._CLS_USED.add(cls_obj)
 
@@ -75,7 +53,7 @@ class Base_SingletonManager:
                 msg = f"{cls_obj.__name__=} WAS USED before by creating singleton in less nesting level"
                 for cls_used in cls._CLS_USED:
                     msg += f"\n\t{cls_used.__name__=}"
-                raise Exx_SingletonNestingLevels(msg)
+                raise Exx__NestingLevels(msg)
             cls._CLS_BLOCKED.add(cls_mro)
 
     @classmethod

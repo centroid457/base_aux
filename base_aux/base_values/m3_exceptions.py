@@ -202,10 +202,6 @@ class Exx__WrongProgrammer(Base_Exx):
     pass
 
 
-class Exx__Incompatible(Base_Exx):
-    pass
-
-
 class Exx__Expected(Base_Exx):
     """
     GOAL
@@ -225,6 +221,11 @@ class Exx__Overlayed(Base_Exx):
 
 
 class Exx__NotReady(Base_Exx):
+    pass
+
+
+# =====================================================================================================================
+class Exx__Incompatible(Base_Exx):
     pass
 
 
@@ -250,6 +251,35 @@ class Exx__Valid(Base_Exx):
 
 
 class Exx__ValueNotValidated(Exx__Valid):
+    pass
+
+
+# =====================================================================================================================
+class Exx__NestingLevels(Base_Exx):
+    """Exception when used several unsuitable levels in nesting!
+
+    EXAMPLE:
+        VictimBase = SingletonWMetaCall
+        setattr(VictimBase, "attr", 0)
+        class Victim1(VictimBase):
+            attr = 1
+
+        assert VictimBase().attr == 0
+        try:
+            assert Victim1().attr == 1
+        except Exx_SingletonDifferentNestingLevels:
+            pass
+        else:
+            assert False
+
+    MAIN RULES:
+    1. always instantiate only last Classes in your tree project!
+
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    Base_SingletonManager
+    """
     pass
 
 
