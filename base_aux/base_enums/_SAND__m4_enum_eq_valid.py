@@ -1,3 +1,7 @@
+# FIXME: USE Base_KwargsEqExpect instead!!!!???? or decide to use smth!
+
+
+
 from typing import *
 
 from base_aux.base_values.m2_value_special import NoValue
@@ -5,11 +9,11 @@ from base_aux.aux_eq.m3_eq_valid1_base import *
 
 
 # =====================================================================================================================
-class Type
+class Type__:
+    pass
 
 
-
-class EnumEqValid:
+class __EnumEqValid:
     """
     GOAL
     ----
@@ -32,7 +36,8 @@ class EnumEqValid:
 
     @classmethod
     def cls__init_items(cls) -> None:
-        for name
+        for name in ():
+            pass
 
     def find_item(self, item_draft: Any) -> Self:
         pass
