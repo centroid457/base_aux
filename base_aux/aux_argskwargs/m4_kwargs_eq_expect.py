@@ -188,6 +188,10 @@ class KwargsEqExpect_OS(Base_KwargsEqExpect_StrIc):
         WINDOWS="WINDOWS",
     )
 
+    # -----------
+    WINDOWS: bool
+    LINUX: bool
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 class KwargsEqExpect_MachineArch(Base_KwargsEqExpect_StrIc):
@@ -198,6 +202,11 @@ class KwargsEqExpect_MachineArch(Base_KwargsEqExpect_StrIc):
         x86_64="x86_64",      # wsl standard
         AARCH64="AARCH64",    # raspberry=ARM!
     )
+
+    # -----------
+    AMD64: bool
+    x86_64: bool
+    AARCH64: bool
 
 
 # =====================================================================================================================
