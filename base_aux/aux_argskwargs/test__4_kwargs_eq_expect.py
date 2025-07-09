@@ -1,10 +1,10 @@
 import pytest
 
 from base_aux.aux_argskwargs.m4_kwargs_eq_expect import *
-from base_aux.aux_eq.m3_eq_valid3_derivatives import EqValid_EQ
-from base_aux.base_lambdas.m1_lambda import Lambda
-from base_aux.base_values.m3_exceptions import Exx__WrongUsage
-from base_aux.base_values.m4_primitives import ClsEqRaise, LAMBDA_RAISE
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from base_aux.base_lambdas.m1_lambda import *
+from base_aux.base_values.m3_exceptions import *
+from base_aux.base_values.m4_primitives import *
 
 
 # =====================================================================================================================
@@ -55,29 +55,36 @@ def test__base_eq_kwargs(other_draft, eq_kwargs, eq_expects, _EXPECTED):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="other_draft, eq_expects, _EXPECTED",
+    argnames="other_draft, eq_expects, _EXP_checkIf, _EXP_ga",
     argvalues=[
-        ("linux", dict(linux=True), [True, True, False, False]),
-        ("LINux", dict(linUX=True), [True, True, False, False]),
-        (lambda: "LINux", dict(linUX=True), [True, True, False, False]),
+        ("linux", dict(linux=True), [True, True, False, False], [True, False]),
+        ("LINux", dict(linUX=True), [True, True, False, False], [True, False]),
+        (lambda: "LINux", dict(linUX=True), [True, True, False, False], [True, False]),
 
-        ("windows", dict(linux=True), [False, False, True, True]),
-        ("windows", dict(linux=True, windows=True), [False, True, False, True]),
-        ("Windows", dict(linux=True, windows=True), [False, True, False, True]),
+        ("windows", dict(linux=True), [False, False, True, True], [False, True]),
+        ("windows", dict(linux=True, windows=True), [False, True, False, True], [False, True]),
+        ("Windows", dict(linux=True, windows=True), [False, True, False, True], [False, True]),
 
     ]
 )
-def test__OS(other_draft, eq_expects, _EXPECTED):
+def test__OS(other_draft, eq_expects, _EXP_checkIf, _EXP_ga):
     Victim = KwargsEqExpect_OS
-    Lambda(Victim(other_draft).bool_if__all_true, **eq_expects).expect__check_assert(_EXPECTED[0])
-    Lambda(Victim(other_draft).bool_if__any_true, **eq_expects).expect__check_assert(_EXPECTED[1])
-    Lambda(Victim(other_draft).bool_if__all_false, **eq_expects).expect__check_assert(_EXPECTED[2])
-    Lambda(Victim(other_draft).bool_if__any_false, **eq_expects).expect__check_assert(_EXPECTED[3])
+    Lambda(Victim(other_draft).bool_if__all_true, **eq_expects).expect__check_assert(_EXP_checkIf[0])
+    Lambda(Victim(other_draft).bool_if__any_true, **eq_expects).expect__check_assert(_EXP_checkIf[1])
+    Lambda(Victim(other_draft).bool_if__all_false, **eq_expects).expect__check_assert(_EXP_checkIf[2])
+    Lambda(Victim(other_draft).bool_if__any_false, **eq_expects).expect__check_assert(_EXP_checkIf[3])
 
-    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).expect__check_assert(Exx__Expected if _EXPECTED[0] else False)
-    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).expect__check_assert(Exx__Expected if _EXPECTED[1] else False)
-    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).expect__check_assert(Exx__Expected if _EXPECTED[2] else False)
-    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).expect__check_assert(Exx__Expected if _EXPECTED[3] else False)
+    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[0] else False)
+    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[1] else False)
+    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[2] else False)
+    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[3] else False)
+
+    # GA
+    Lambda(lambda: Victim(other_draft).linux).expect__check_assert(_EXP_ga[0])
+    Lambda(lambda: Victim(other_draft).LINUX).expect__check_assert(_EXP_ga[0])
+    Lambda(lambda: Victim(other_draft).windows).expect__check_assert(_EXP_ga[1])
+    Lambda(lambda: Victim(other_draft).WINDOWS).expect__check_assert(_EXP_ga[1])
+    Lambda(lambda: Victim(other_draft).HELLO).expect__check_assert(Exception)
 
 
 def test__os_2():

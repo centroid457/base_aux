@@ -159,6 +159,20 @@ class Base_KwargsEqExpect:
     def raise_if__any_true(self, **eq_axpects: bool | None | Any) -> None | NoReturn:
         return self._check_if__(_raise_instead_true=True, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def __getattr__(self, item: str) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        direct access to final validation (OTHER_DRAFT) by exact item (EqValid) in EQ_KWARGS
+
+        NOTE
+        ----
+        useful only for existed OTHER_DRAFT
+        """
+        result = self.bool_if__all_true(**{item: True})
+        return result
+
 
 # =====================================================================================================================
 class Base_KwargsEqExpect_StrIc(Base_KwargsEqExpect):
@@ -188,8 +202,11 @@ class KwargsEqExpect_MachineArch(Base_KwargsEqExpect_StrIc):
 
 # =====================================================================================================================
 if __name__ == "__main__":
+    # examples when you need WINDOWS!
     assert KwargsEqExpect_OS().bool_if__any_true(windows=True)
     assert KwargsEqExpect_OS().raise_if__any_true(linux=True)
+    assert KwargsEqExpect_OS().WINDOWS is True
+    assert KwargsEqExpect_OS().windows is True
 
 
 # =====================================================================================================================
