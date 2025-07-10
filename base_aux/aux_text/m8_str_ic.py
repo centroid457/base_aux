@@ -5,7 +5,6 @@ from base_aux.base_lambdas.m1_lambda import *
 
 from base_aux.aux_text.m5_re2_attemps import *
 from base_aux.aux_attr.m4_kits import *
-from base_aux.base_lambdas.m1_lambda import *
 from base_aux.versions.m2_version import *
 
 
@@ -28,13 +27,13 @@ class StrIc(NestInit_Source):
     ---------------------
     first creation for EnumEqValid to use for keys
     """
-    SOURCE: str = None
+    SOURCE: str | Any | Callable[[], str | Any] = None
     STYLE_REINIT: Enum__TextCaseStyle = Enum__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
 
-    def init_post(self) -> None | NoReturn:
+    def init_post(self) -> None:
         self.source_update()
 
-    def source_update(self):
+    def source_update(self) -> None:
         """
         GOAL
         ----
@@ -45,8 +44,11 @@ class StrIc(NestInit_Source):
         if you already have result on inition? - because smtms you can change source by adding some new data
         and after that you may be want toFix actual value
         """
+        # resolve -----
+        self.SOURCE = Lambda(self.SOURCE).resolve__exx()
         self.SOURCE = str(self.SOURCE)
 
+        # restyle ------
         if self.STYLE_REINIT == Enum__TextCaseStyle.UPPER:
             self.SOURCE = self.SOURCE.upper()
 
@@ -88,6 +90,57 @@ class StrIcUpper(StrIc):
 # ---------------------------------------------------------------------------------------------------------------------
 class StrIcLower(StrIc):
     STYLE_REINIT = Enum__TextCaseStyle.LOWER
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source_draft, other_draft, _EXPECTED",
+    argvalues=[
+        (1, 1, True),
+        (Lambda(1), 1, True),
+        ("AaA", "aAa", True),
+        (Lambda("AaA"), "aAa", True),
+        (Lambda("AaA"), StrIc("aAa"), True),
+    ]
+)
+def test__1_eq(source_draft, other_draft, _EXPECTED):
+    Lambda(StrIc(source_draft) == other_draft).expect__check_assert(_EXPECTED)
+    Lambda(StrIcUpper(source_draft) == other_draft).expect__check_assert(_EXPECTED)
+    Lambda(StrIcLower(source_draft) == other_draft).expect__check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="source_draft, _EXPECTED",
+    argvalues=[
+        (1, ["1", "1", "1"]),
+        ("AaA", ["AaA", "AAA", "aaa"]),
+        (Lambda("AaA"), ["AaA", "AAA", "aaa"]),
+        (Lambda(1), ["1", "1", "1"]),
+    ]
+)
+def test__2_str(source_draft, _EXPECTED):
+    Lambda(lambda: str(StrIc(source_draft))).expect__check_assert(_EXPECTED[0])
+    Lambda(lambda: str(StrIcUpper(source_draft))).expect__check_assert(_EXPECTED[1])
+    Lambda(lambda: str(StrIcLower(source_draft))).expect__check_assert(_EXPECTED[2])
+
+
+@pytest.mark.parametrize(
+    argnames="source_draft, item, _EXPECTED",
+    argvalues=[
+        (1, 0, "1"),
+        (1, 1, Exception),
+        ("AaA", "aAa", Exception),
+        (Lambda("AaA"), "aAa", Exception),
+        (Lambda(1), 0, "1"),
+        (Lambda(123), 0, "1"),
+        (Lambda(123), 1, "2"),
+        (Lambda("ABC"), 1, "b"),
+    ]
+)
+def test__2_ga(source_draft, item, _EXPECTED):
+    Lambda(lambda: StrIc(source_draft)[item]).expect__check_assert(_EXPECTED)
+    Lambda(lambda: StrIcUpper(source_draft)[item]).expect__check_assert(_EXPECTED)
+    Lambda(lambda: StrIcLower(source_draft)[item]).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
