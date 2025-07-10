@@ -140,7 +140,7 @@ def test__3_ga(source_draft, item, _EXPECTED):
 
 
 @pytest.mark.parametrize(
-    argnames="source_draft, item, _EXPECTED",
+    argnames="source_draft, other, _EXPECTED",
     argvalues=[
         (1, 0, False),
         (1, 1, True),
@@ -152,10 +152,47 @@ def test__3_ga(source_draft, item, _EXPECTED):
         (Lambda(123), 1, True),
     ]
 )
-def test__4_in(source_draft, item, _EXPECTED):
-    Lambda(item in StrIc(source_draft)).expect__check_assert(_EXPECTED)
-    Lambda(item in StrIcUpper(source_draft)).expect__check_assert(_EXPECTED)
-    Lambda(item in StrIcLower(source_draft)).expect__check_assert(_EXPECTED)
+def test__4_other_in(source_draft, other, _EXPECTED):
+    Lambda(other in StrIc(source_draft)).expect__check_assert(_EXPECTED)
+    Lambda(other in StrIcUpper(source_draft)).expect__check_assert(_EXPECTED)
+    Lambda(other in StrIcLower(source_draft)).expect__check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="source_draft, items, _EXPECTED",
+    argvalues=[
+        (1, [0, 10], False),
+        (1, [0, 1], True),
+        ("AaA", ["aAa", "aA"], True),
+        ("AaA", ["Aa", ], False),
+        (Lambda("AaA"), ["Aa", ], False),
+        (Lambda(1), [0, 10,],  False),
+        (Lambda(123), [0, 10,], False),
+        (Lambda(123), [0, 123,], True),
+    ]
+)
+def test__5_in_other(source_draft, items, _EXPECTED):
+    Lambda(StrIc(source_draft) in items).expect__check_assert(_EXPECTED)
+    Lambda(StrIcUpper(source_draft) in items).expect__check_assert(_EXPECTED)
+    Lambda(StrIcLower(source_draft) in items).expect__check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="source_1, source_2, _EXPECTED",
+    argvalues=[
+        (1, 0, 2),
+        (1, 1, 1),
+        ("AaA", "aAa", 1),
+        ("AaA", "Aa", 2),
+        (Lambda("AaA"), "Aa", 2),
+        (Lambda(1), 0, 2),
+        (Lambda(123), 0, 2),
+    ]
+)
+def test__6_set(source_1, source_2, _EXPECTED):
+    Lambda(len({StrIc(source_1), StrIcUpper(source_2)})).expect__check_assert(_EXPECTED)
+    Lambda(len({StrIc(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
+    Lambda(len({StrIcUpper(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
