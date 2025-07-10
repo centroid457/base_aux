@@ -17,14 +17,14 @@ class Patterns:
 
 
 # =====================================================================================================================
-class PatVersionBlock(Patterns):
+class Pat_VersionBlock(Patterns):
     # CLEAR: list[str] = [r"[\"' -]*", ]
     VALID_REVERSE: list[str] = [r".*\d[^0-9a-zA-Z]+\d.*", r".*[a-zA-Z][^0-9a-zA-Z]+[a-zA-Z].*", r".*[:].*"]
     # VALID: list[str] = [r"[0-9a-z]+", ]
     ITERATE: str = r"\d+|[a-z]+"
 
 
-class PatVersion(Patterns):
+class Pat_Version(Patterns):
     # VERSION_TUPLE = r"\((\d+\.+(\w+\.?)+)\)"
     # VERSION_LIST = r"\[(\d+\.+(\w+\.?)+)\]"
     VERSION_IN_BRACKETS: list = [r"\((.*)\)", r"\[(.*)\]"]  # get first bracket!!!
@@ -32,7 +32,7 @@ class PatVersion(Patterns):
 
 
 # =====================================================================================================================
-class PatCmts(Patterns):
+class Pat_Cmts(Patterns):
     """
     GOAL
     ----
@@ -51,7 +51,7 @@ class PatCmts(Patterns):
 
 
 # =====================================================================================================================
-class PatNumberSingle(Patterns):
+class Pat_NumberSingle(Patterns):
     """
     NOTE
     ----

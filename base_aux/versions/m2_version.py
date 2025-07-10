@@ -103,7 +103,7 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
                 result = new
 
         # CUT ---------
-        for pattern in PatVersion.VERSION_IN_BRACKETS:
+        for pattern in Pat_Version.VERSION_IN_BRACKETS:
             match = re.search(pattern, result)
             if match:
                 result = match[1]
@@ -114,7 +114,7 @@ class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
         # else:
         #     result = ""
 
-        for pattern in PatVersion.VALID_BRACKETS:
+        for pattern in Pat_Version.VALID_BRACKETS:
             if re.search(pattern, result) and self.RAISE:
                 raise Exx__Incompatible(f"{pattern=}/{result=}")
 

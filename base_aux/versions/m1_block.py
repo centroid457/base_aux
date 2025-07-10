@@ -34,8 +34,8 @@ class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
     ELEMENTS: TYPE__VERSION_BLOCK_ELEMENTS_FINAL = ()
     RAISE: bool = True
     EQ_VALID: Base_EqValid = EqValidChain_All(
-        # EqValid_RegexpAnyTrue(*PatVersionBlock.VALID),
-        EqValid_RegexpAllFalse(*PatVersionBlock.VALID_REVERSE),
+        # EqValid_RegexpAnyTrue(*Pat_VersionBlock.VALID),
+        EqValid_RegexpAllFalse(*Pat_VersionBlock.VALID_REVERSE),
     )
 
     def __init__(
@@ -78,7 +78,7 @@ class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
                 return ()
 
         result_list = []
-        for element in re.findall(PatVersionBlock.ITERATE, self.SOURCE):
+        for element in re.findall(Pat_VersionBlock.ITERATE, self.SOURCE):
             try:
                 element = int(element)
             except:

@@ -197,19 +197,19 @@ class TextAux:
 
         # work ----------------------------------
         if cmt_type == EnumAdj_CmtStyle.SHARP:
-            self.clear__regexps(PatCmts.SHARP_LINE, flags=re.MULTILINE)
-            self.clear__regexps(PatCmts.SHARP_INLINE, flags=re.MULTILINE)
+            self.clear__regexps(Pat_Cmts.SHARP_LINE, flags=re.MULTILINE)
+            self.clear__regexps(Pat_Cmts.SHARP_INLINE, flags=re.MULTILINE)
 
         elif cmt_type == EnumAdj_CmtStyle.DSLASH:
-            self.clear__regexps(PatCmts.DSLASH_LINE, flags=re.MULTILINE)
-            self.clear__regexps(PatCmts.DSLASH_INLINE, flags=re.MULTILINE)
+            self.clear__regexps(Pat_Cmts.DSLASH_LINE, flags=re.MULTILINE)
+            self.clear__regexps(Pat_Cmts.DSLASH_INLINE, flags=re.MULTILINE)
 
         elif cmt_type == EnumAdj_CmtStyle.REM:
-            self.clear__regexps(PatCmts.REM_LINE, flags=re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
-            self.clear__regexps(PatCmts.REM_INLINE, flags=re.MULTILINE | re.IGNORECASE)
+            self.clear__regexps(Pat_Cmts.REM_LINE, flags=re.MULTILINE | re.IGNORECASE)    # dont use \s* after REM!!!
+            self.clear__regexps(Pat_Cmts.REM_INLINE, flags=re.MULTILINE | re.IGNORECASE)
 
         elif cmt_type == EnumAdj_CmtStyle.C:
-            self.clear__regexps(PatCmts.C_MLINE)
+            self.clear__regexps(Pat_Cmts.C_MLINE)
 
         return self.TEXT
 
@@ -381,11 +381,11 @@ class TextAux:
 
         # get PAT ---------
         if num_type == EnumAdj_NumType.INT:
-            pat = PatNumberSingle(fpoint).INT_COVERED
+            pat = Pat_NumberSingle(fpoint).INT_COVERED
         elif num_type == EnumAdj_NumType.FLOAT:
-            pat = PatNumberSingle(fpoint).FLOAT_COVERED
+            pat = Pat_NumberSingle(fpoint).FLOAT_COVERED
         elif num_type == EnumAdj_NumType.BOTH:
-            pat = PatNumberSingle(fpoint).BOTH_COVERED
+            pat = Pat_NumberSingle(fpoint).BOTH_COVERED
         else:
             raise TypeError(f"{num_type=}")
 
