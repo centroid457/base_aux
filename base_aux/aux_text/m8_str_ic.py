@@ -3,10 +3,6 @@ from typing import *
 from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_lambdas.m1_lambda import *
 
-from base_aux.aux_text.m5_re2_attemps import *
-from base_aux.aux_attr.m4_kits import *
-from base_aux.versions.m2_version import *
-
 
 # =====================================================================================================================
 class Enum__TextCaseStyle(Enum):
@@ -94,6 +90,21 @@ class StrIcLower(StrIc):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
+    argnames="source_draft, _EXPECTED",
+    argvalues=[
+        (1, ["1", "1", "1"]),
+        ("AaA", ["AaA", "AAA", "aaa"]),
+        (Lambda("AaA"), ["AaA", "AAA", "aaa"]),
+        (Lambda(1), ["1", "1", "1"]),
+    ]
+)
+def test__1_str(source_draft, _EXPECTED):
+    Lambda(lambda: str(StrIc(source_draft))).expect__check_assert(_EXPECTED[0])
+    Lambda(lambda: str(StrIcUpper(source_draft))).expect__check_assert(_EXPECTED[1])
+    Lambda(lambda: str(StrIcLower(source_draft))).expect__check_assert(_EXPECTED[2])
+
+
+@pytest.mark.parametrize(
     argnames="source_draft, other_draft, _EXPECTED",
     argvalues=[
         (1, 1, True),
@@ -103,25 +114,10 @@ class StrIcLower(StrIc):
         (Lambda("AaA"), StrIc("aAa"), True),
     ]
 )
-def test__1_eq(source_draft, other_draft, _EXPECTED):
+def test__2_eq(source_draft, other_draft, _EXPECTED):
     Lambda(StrIc(source_draft) == other_draft).expect__check_assert(_EXPECTED)
     Lambda(StrIcUpper(source_draft) == other_draft).expect__check_assert(_EXPECTED)
     Lambda(StrIcLower(source_draft) == other_draft).expect__check_assert(_EXPECTED)
-
-
-@pytest.mark.parametrize(
-    argnames="source_draft, _EXPECTED",
-    argvalues=[
-        (1, ["1", "1", "1"]),
-        ("AaA", ["AaA", "AAA", "aaa"]),
-        (Lambda("AaA"), ["AaA", "AAA", "aaa"]),
-        (Lambda(1), ["1", "1", "1"]),
-    ]
-)
-def test__2_str(source_draft, _EXPECTED):
-    Lambda(lambda: str(StrIc(source_draft))).expect__check_assert(_EXPECTED[0])
-    Lambda(lambda: str(StrIcUpper(source_draft))).expect__check_assert(_EXPECTED[1])
-    Lambda(lambda: str(StrIcLower(source_draft))).expect__check_assert(_EXPECTED[2])
 
 
 @pytest.mark.parametrize(
@@ -137,10 +133,29 @@ def test__2_str(source_draft, _EXPECTED):
         (Lambda("ABC"), 1, "b"),
     ]
 )
-def test__2_ga(source_draft, item, _EXPECTED):
+def test__3_ga(source_draft, item, _EXPECTED):
     Lambda(lambda: StrIc(source_draft)[item]).expect__check_assert(_EXPECTED)
     Lambda(lambda: StrIcUpper(source_draft)[item]).expect__check_assert(_EXPECTED)
     Lambda(lambda: StrIcLower(source_draft)[item]).expect__check_assert(_EXPECTED)
+
+
+@pytest.mark.parametrize(
+    argnames="source_draft, item, _EXPECTED",
+    argvalues=[
+        (1, 0, False),
+        (1, 1, True),
+        ("AaA", "aAa", True),
+        ("AaA", "Aa", True),
+        (Lambda("AaA"), "Aa", True),
+        (Lambda(1), 0, False),
+        (Lambda(123), 0, False),
+        (Lambda(123), 1, True),
+    ]
+)
+def test__4_in(source_draft, item, _EXPECTED):
+    Lambda(item in StrIc(source_draft)).expect__check_assert(_EXPECTED)
+    Lambda(item in StrIcUpper(source_draft)).expect__check_assert(_EXPECTED)
+    Lambda(item in StrIcLower(source_draft)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
