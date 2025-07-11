@@ -79,6 +79,21 @@ class EnumAdj_IgnoreCase(NestEq_EnumAdj):
     CASESENSE = False
 
 
+class EnumAdj__TextCaseStyle(NestEq_EnumAdj):
+    """
+    GOAL
+    ----
+    select the representation for text
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    StrIc
+    """
+    ORIGINAL: int = 0
+    LOWER: int = 1
+    UPPER: int = 2
+
+
 # =====================================================================================================================
 class EnumAdj_ProcessResult(NestEq_EnumAdj):
     """

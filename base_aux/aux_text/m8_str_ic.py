@@ -2,18 +2,16 @@ from typing import *
 
 from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_lambdas.m1_lambda import *
-
-
-# =====================================================================================================================
-class Enum__TextCaseStyle(Enum):
-    ORIGINAL: int = 0
-    LOWER: int = 1
-    UPPER: int = 2
+from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================
 class StrIc(NestInit_Source):
     """
+    NOTE
+    ----
+    DO NOT USE in simple dict as keys! - use exact DictIcKeys instead!
+
     GOAL
     ----
     cmp any object with IC meaning,
@@ -21,10 +19,10 @@ class StrIc(NestInit_Source):
 
     SPECIALLY CREATED FOR
     ---------------------
-    first creation for EnumEqValid to use for keys
+    first creation for EnumEqValid to use for keys - but it is incorrect (not enough)!
     """
     SOURCE: str | Any | Callable[[], str | Any] = None
-    RESTYLE: Enum__TextCaseStyle = Enum__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
+    RESTYLE: EnumAdj__TextCaseStyle = EnumAdj__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
 
     def init_post(self) -> None:
         self.source_update()
@@ -45,10 +43,10 @@ class StrIc(NestInit_Source):
         self.SOURCE = str(self.SOURCE)
 
         # restyle ------
-        if self.RESTYLE == Enum__TextCaseStyle.UPPER:
+        if self.RESTYLE == EnumAdj__TextCaseStyle.UPPER:
             self.SOURCE = self.SOURCE.upper()
 
-        elif self.RESTYLE == Enum__TextCaseStyle.LOWER:
+        elif self.RESTYLE == EnumAdj__TextCaseStyle.LOWER:
             self.SOURCE = self.SOURCE.lower()
 
     def __str__(self) -> str:
@@ -80,12 +78,12 @@ class StrIc(NestInit_Source):
 
 # =====================================================================================================================
 class StrIcUpper(StrIc):
-    RESTYLE = Enum__TextCaseStyle.UPPER
+    RESTYLE = EnumAdj__TextCaseStyle.UPPER
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class StrIcLower(StrIc):
-    RESTYLE = Enum__TextCaseStyle.LOWER
+    RESTYLE = EnumAdj__TextCaseStyle.LOWER
 
 
 # =====================================================================================================================
@@ -200,7 +198,7 @@ def test__10_gi_from_dict():
     try:
         assert {1: 1, StrIc("AAA"): 1, "2": 2}["AAA"] == 1
     except:
-        print(f"THIS WILL newer work with gi! try use not a simple dict but DictKeysIc")
+        print(f"THIS WILL newer work with gi! try use not a simple dict but DictIcKeys")
         return
     assert False
 
