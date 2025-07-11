@@ -1,6 +1,7 @@
 import platform
 
 from base_aux.aux_argskwargs.m3_args_bool_raise_if import *
+from base_aux.aux_text.m8_str_ic import *
 
 
 # =====================================================================================================================
@@ -27,7 +28,6 @@ class Base_KwargsEqExpect:
     EQ_VALID__CLS_DEF
         if used - values in EQ_KWARGS used as arg for it!
         EqValid_EQ_StrIc i  most useful
-
     """
     OTHER_DRAFT: Any | Callable = True
     OTHER_FINAL__RESOLVE: bool = True
@@ -35,27 +35,36 @@ class Base_KwargsEqExpect:
     OTHER_FINAL: Any | Exception = None
 
     EQ_VALID__CLS_DEF: type[Base_EqValid] | None = None
-    EQ_KWARGS: dict[str, TYPING__EQ_VALID__FINAL] = {}
+    EQ_KWARGS: dict[str, TYPING__EQ_VALID__FINAL] = {}      # dont use StrIc! cant direct access as GI(value)
     EQ_EXPECTS: dict[str, bool | None | Any] = {}
 
     def __init__(self, other_draft: Any | Callable = NoValue, _eq_valid__cls_def: type[Base_EqValid] = None, **eq_kwargs: TYPING__EQ_VALID__DRAFT) -> None:
         if _eq_valid__cls_def is not None:
             self.EQ_VALID__CLS_DEF = _eq_valid__cls_def
 
-        # INIT=eq_kwargs -------------------------
-        if eq_kwargs:
-            self.EQ_KWARGS = eq_kwargs
+        self.init__eq_kwargs(**eq_kwargs)
+        self.init__other(other_draft)
+
+        # FINISH=_other_final__resolve
+        for eq_valid in self.EQ_KWARGS.values():
+            if isinstance(eq_valid, Base_EqValid):
+                eq_valid.OTHER_FINAL__RESOLVE = False
+                eq_valid.OTHER_RAISED = self.OTHER_RAISED
+
+    def init__eq_kwargs(self, **eq_kwargs: TYPING__EQ_VALID__DRAFT) -> None:
+        eq_kwargs = eq_kwargs or self.EQ_KWARGS
 
         # remake to LOWERCASE + apply eqValid_def
-        EQ_KWARGS__mod = {}
-        for key, value in self.EQ_KWARGS.items():
+        eq_kwargs__mod = {}
+        for key, value in eq_kwargs.items():
             if self.EQ_VALID__CLS_DEF is not None and not isinstance(value, Base_EqValid):
                 value = self.EQ_VALID__CLS_DEF(value)
 
-            EQ_KWARGS__mod[key.lower()] = value
+            eq_kwargs__mod[key.lower()] = value     # DONT USE
 
-        self.EQ_KWARGS = EQ_KWARGS__mod
+        self.EQ_KWARGS = eq_kwargs__mod
 
+    def init__other(self, other_draft: Any | Callable = NoValue) -> None:
         # other_draft ---------------------
         if other_draft is not NoValue:
             self.OTHER_DRAFT = other_draft
@@ -69,12 +78,6 @@ class Base_KwargsEqExpect:
                 self.OTHER_FINAL = exx
         else:
             self.OTHER_FINAL = self.OTHER_DRAFT
-
-        # FINISH=_other_final__resolve
-        for eq_valid in self.EQ_KWARGS.values():
-            if isinstance(eq_valid, Base_EqValid):
-                eq_valid.OTHER_FINAL__RESOLVE = False
-                eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
     def _eq_expects__get_final(self, **eq_axpects: bool | None | Any) -> dict[str, bool | None]:
         """

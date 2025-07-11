@@ -24,7 +24,7 @@ class StrIc(NestInit_Source):
     first creation for EnumEqValid to use for keys
     """
     SOURCE: str | Any | Callable[[], str | Any] = None
-    STYLE_REINIT: Enum__TextCaseStyle = Enum__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
+    RESTYLE: Enum__TextCaseStyle = Enum__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
 
     def init_post(self) -> None:
         self.source_update()
@@ -45,10 +45,10 @@ class StrIc(NestInit_Source):
         self.SOURCE = str(self.SOURCE)
 
         # restyle ------
-        if self.STYLE_REINIT == Enum__TextCaseStyle.UPPER:
+        if self.RESTYLE == Enum__TextCaseStyle.UPPER:
             self.SOURCE = self.SOURCE.upper()
 
-        elif self.STYLE_REINIT == Enum__TextCaseStyle.LOWER:
+        elif self.RESTYLE == Enum__TextCaseStyle.LOWER:
             self.SOURCE = self.SOURCE.lower()
 
     def __str__(self) -> str:
@@ -59,6 +59,9 @@ class StrIc(NestInit_Source):
 
     def __eq__(self, other: Any) -> bool:
         return str(other).lower() == self.SOURCE.lower()
+
+    def __hash__(self) -> int:
+        return hash(self.SOURCE.lower())
 
     def __contains__(self, other: Any) -> bool:
         return str(other).lower() in self.SOURCE.lower()
@@ -74,18 +77,15 @@ class StrIc(NestInit_Source):
         for item in self.SOURCE:
             yield self.__class__(item)
 
-    def __hash__(self):
-        return hash(self.SOURCE.lower())
-
 
 # =====================================================================================================================
 class StrIcUpper(StrIc):
-    STYLE_REINIT = Enum__TextCaseStyle.UPPER
+    RESTYLE = Enum__TextCaseStyle.UPPER
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class StrIcLower(StrIc):
-    STYLE_REINIT = Enum__TextCaseStyle.LOWER
+    RESTYLE = Enum__TextCaseStyle.LOWER
 
 
 # =====================================================================================================================
@@ -193,6 +193,16 @@ def test__6_set(source_1, source_2, _EXPECTED):
     Lambda(len({StrIc(source_1), StrIcUpper(source_2)})).expect__check_assert(_EXPECTED)
     Lambda(len({StrIc(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
     Lambda(len({StrIcUpper(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
+
+
+def test__10_gi_from_dict():
+    assert {1: 1, StrIc("AAA"): 1, "2": 2}["aaa"] == 1
+    try:
+        assert {1: 1, StrIc("AAA"): 1, "2": 2}["AAA"] == 1
+    except:
+        print(f"THIS WILL newer work with gi! try use not a simple dict but DictKeysIc")
+        return
+    assert False
 
 
 # =====================================================================================================================
