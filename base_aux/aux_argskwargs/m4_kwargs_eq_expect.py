@@ -2,6 +2,7 @@ import platform
 
 from base_aux.aux_argskwargs.m3_args_bool_raise_if import *
 from base_aux.aux_text.m8_str_ic import *
+from base_aux.aux_dict.m2_dict_ic import *
 
 
 # =====================================================================================================================
@@ -35,7 +36,7 @@ class Base_KwargsEqExpect:
     OTHER_FINAL: Any | Exception = None
 
     EQ_VALID__CLS_DEF: type[Base_EqValid] | None = None
-    EQ_KWARGS: dict[str, TYPING__EQ_VALID__FINAL] = {}      # dont use StrIc! cant direct access as GI(value)
+    EQ_KWARGS: DictIcKeys[str, TYPING__EQ_VALID__FINAL] = {}      # dont use StrIc! cant direct access as GI(value)
     EQ_EXPECTS: dict[str, bool | None | Any] = {}
 
     def __init__(self, other_draft: Any | Callable = NoValue, _eq_valid__cls_def: type[Base_EqValid] = None, **eq_kwargs: TYPING__EQ_VALID__DRAFT) -> None:
@@ -43,26 +44,20 @@ class Base_KwargsEqExpect:
             self.EQ_VALID__CLS_DEF = _eq_valid__cls_def
 
         self.init__eq_kwargs(**eq_kwargs)
-        self.init__other(other_draft)
 
-        # FINISH=_other_final__resolve
-        for eq_valid in self.EQ_KWARGS.values():
-            if isinstance(eq_valid, Base_EqValid):
-                eq_valid.OTHER_FINAL__RESOLVE = False
-                eq_valid.OTHER_RAISED = self.OTHER_RAISED
+        self.init__other(other_draft)
+        self.init__other_push__chain()
 
     def init__eq_kwargs(self, **eq_kwargs: TYPING__EQ_VALID__DRAFT) -> None:
         eq_kwargs = eq_kwargs or self.EQ_KWARGS
+        self.EQ_KWARGS = DictIcKeys(eq_kwargs)
 
-        # remake to LOWERCASE + apply eqValid_def
-        eq_kwargs__mod = {}
-        for key, value in eq_kwargs.items():
-            if self.EQ_VALID__CLS_DEF is not None and not isinstance(value, Base_EqValid):
-                value = self.EQ_VALID__CLS_DEF(value)
+        if self.EQ_VALID__CLS_DEF is None:
+            return
 
-            eq_kwargs__mod[key.lower()] = value     # DONT USE
-
-        self.EQ_KWARGS = eq_kwargs__mod
+        for key, value in self.EQ_KWARGS.items():
+             if not isinstance(value, Base_EqValid):
+                self.EQ_KWARGS[key] = self.EQ_VALID__CLS_DEF(value)
 
     def init__other(self, other_draft: Any | Callable = NoValue) -> None:
         # other_draft ---------------------
@@ -78,6 +73,12 @@ class Base_KwargsEqExpect:
                 self.OTHER_FINAL = exx
         else:
             self.OTHER_FINAL = self.OTHER_DRAFT
+
+    def init__other_push__chain(self):
+        for eq_valid in self.EQ_KWARGS.values():
+            if isinstance(eq_valid, Base_EqValid):
+                eq_valid.OTHER_FINAL__RESOLVE = False
+                eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
     def _eq_expects__get_final(self, **eq_axpects: bool | None | Any) -> dict[str, bool | None]:
         """
@@ -216,7 +217,7 @@ class KwargsEqExpect_MachineArch(Base_KwargsEqExpect_StrIc):
 if __name__ == "__main__":
     # examples when you need WINDOWS!
     assert KwargsEqExpect_OS().bool_if__any_true(windows=True)
-    assert KwargsEqExpect_OS().raise_if__any_true(linux=True)
+    assert not KwargsEqExpect_OS().raise_if__any_true(linux=True)
     assert KwargsEqExpect_OS().WINDOWS is True
     assert KwargsEqExpect_OS().windows is True
 
