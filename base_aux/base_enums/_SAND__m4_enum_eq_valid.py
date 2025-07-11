@@ -1,11 +1,85 @@
-# FIXME: USE Base_KwargsEqExpect instead!!!!???? or decide to use smth!
-
+# FIXME: USE Base_KwargsEqExpect instead!!!!???? or decide to do smth with it!
 
 
 from typing import *
 
 from base_aux.base_values.m2_value_special import NoValue
 from base_aux.aux_eq.m3_eq_valid1_base import *
+
+
+# =====================================================================================================================
+class Meta__Enum(type):
+    """
+    GOAL
+    ----
+    1/ remake ITEMS to exact EqValid
+    2/ nothing else!
+    """
+    pass
+
+
+class EnumMod:
+    _SOURCE: Any
+    _EQ_VALID__CLS_DEF: Base_EqValid
+
+    # ITEMS --------------
+    ITEM1: Base_EqValid
+    ITEM2: Base_EqValid
+    ITEM3: Base_EqValid
+
+    # DETECTED --------------
+    _VALUE: Base_EqValid    # first validated EqValid
+    _NAME: str              # original detected appropriate name
+
+    def __eq__(self, other):
+        # 1=same
+        if isinstance(other, EnumMod):
+            return self._NAME == other._NAME
+
+        try:
+            other_name = self.__class__(other)._NAME
+            return self._NAME == other_name
+        except:
+            return False
+
+    def __init__(self, source: Any) -> None | NoReturn:
+        self._SOURCE = source
+        self.init_finals()
+
+    def init_finals(self) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        1/ check source is acceptable value
+        2/ apply _VALUE
+        3/ detect relevant _NAME and apply
+        """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # =====================================================================================================================
