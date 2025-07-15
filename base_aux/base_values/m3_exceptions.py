@@ -171,6 +171,8 @@ class Exx__NotExistsNotFoundNotCreated(
     # FileNotFoundError,  # NotExists
 ):
     """
+    GOAL
+    ----
     any exception intended Exists/NotExists any object
     dont mess with ADDRESSING!
     """
@@ -182,26 +184,34 @@ class Exx__WrongUsage(Base_Exx):
     """
     GOAL
     ----
-    you perform incorrect usage!
-
-    SPECIALLY CREATED FOR
-    ---------------------
-    NoValue - never instantiate it! use value only as Class!
+    somebody perform incorrect usage!
     """
 
 
-class Exx__WrongProgrammer(Base_Exx):
+class Exx__WrongUsage_Programmer(Exx__WrongUsage):
     """
-    by now its just an idea
-
     GOAL
     ----
-    Error for wrong programmer behaviour
-    smth about architecture
+    wrong programmer behaviour (smth about architecture)
     """
     pass
 
 
+class Exx__WrongUsage_YouForgotSmth(Exx__WrongUsage_Programmer):
+    """
+    GOAL
+    ----
+    just a shallow error when you forget smth
+
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    ReleaseHistory - cause it is not Programmer
+    """
+    pass
+
+
+# =====================================================================================================================
 class Exx__Expected(Base_Exx):
     """
     GOAL
