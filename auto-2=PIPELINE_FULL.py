@@ -9,6 +9,7 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 from PROJECT import PROJECT
 from base_aux.aux_modules.m1_pkgs import Packages
 from base_aux.cli.m1_cli_user import CliUser
+from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
@@ -19,6 +20,12 @@ from base_aux.cli.m1_cli_user import CliUser
 # VERSION = (0, 0, 5)   # check latest before build
 # VERSION = (0, 0, 6)   # collect all modules into one pkg!
 VERSION = (0, 0, 7)     # fix slashes
+
+
+# =====================================================================================================================
+if len(PROJECT.VERSION) > 3:
+    msg = f"Dont use more then 3 blocks in {PROJECT.VERSION=} PYPI never accept it!"
+    raise Exx__WrongUsage(msg)
 
 
 # =====================================================================================================================

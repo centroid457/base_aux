@@ -343,7 +343,12 @@ class ReleaseHistory(ReleaseFileBase):
 
 
 # =====================================================================================================================
-def release_files__update(project: type['PROJECT']):
+def release_files__update(project: type['PROJECT']) -> None | NoReturn:
+    if len(project.VERSION) > 3:
+        msg = f"Dont use more then 3 blocks in {project.VERSION=} pypi will never accept it!"
+        Warn(msg)
+
+    pass
     CliUser().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
     ReleaseReadme(project).generate()
     ReleaseHistory(project).generate()
