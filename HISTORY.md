@@ -2,13 +2,52 @@
 
 ********************************************************************************
 ## TODO
-1. fix info content TREE  
 
 ********************************************************************************
 ## FIXME
 
 ********************************************************************************
 ## NEWS
+
+0.3.0(2025.07.15 10.49.48)
+------------------------------
+- THE BIG REF 2:  
+	- many renames/moves/regroups/deprecates  
+- [GIT]:  
+	- finish = add recursive rootFind + add check_installed  
+	- add DIRTY  
+	- add UNTRACKED_FILES + check__status  
+- [TPS]:  
+	- finish TpManager with TpItem  
+	- GUI - add CBB zero  
+	- GUI - add BTN_tm_update+apply switching tpItem without clearing results  
+	- GUI - add TableModel_Devs  
+	- GUI - TableModel_Devs show ADDRESS in table  
+	- LEDS - add blink Yellow on test  
+	- RESULTS save only for existed and presented - finish  
+- [FileText]:  
+	- add pretty__json  
+- [TableLine/lines/Columns]:  
+	- create+apply in Breeders/DevLines/TpItems...  
+- [EqValid] big full ref!:  
+	- 1/ use validator a simple func  
+	- 2/ place IRESULT_CUMULATE into base  
+	- 3/ separate other_final_calculate  
+	- create EqRaise  
+	- separate EqValidChain_All/Any  
+- [Lambda]:  
+	- move in all methods from CallableAux(deprecated)  
+- [Enums]:  
+	- separate to EnumAdj+Value  
+- CREATE:  
+	- [EqArgs]  
+	- [DictDiff]  
+	- [StrIc]  
+- [Base_KwargsEqValid] deprecate old ReqCheckStr_Os  
+- [RaiseIf] move into ArgsAux + separate to ArgsBoolIf*  
+- [Version] combine VerChecker into Vertion!+add derivatives  
+- [Base_Exx] add autoPrint msg on init!  
+- [TYPING] collect many fro other places  
 
 0.2.25(2025.03.27 13.31.43)
 ------------------------------

@@ -9,7 +9,7 @@
 ![Commit/Count/y](https://img.shields.io/github/commit-activity/y/centroid457/base_aux)
 ![Commit/Count/m](https://img.shields.io/github/commit-activity/m/centroid457/base_aux)
 
-# base_aux (current v0.2.25/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
+# base_aux (current v0.3.0/![Ver/Pypi Latest](https://img.shields.io/pypi/v/base_aux?label=pypi%20latest))
 
 ## DESCRIPTION_SHORT
 collect all my previous modules in one package
@@ -31,15 +31,15 @@ See the [LICENSE_bundled.md](LICENSE_bundled.md) file for parent licenses.
 See the [HISTORY.md](HISTORY.md) file for release history.  
 
 
-## Installation
+## Module Installation
 ```commandline
 pip install base-aux
 ```
 
 
-## Import
+## Module Import
 ```python
-from base_aux import *
+import base_aux
 ```
 
 
