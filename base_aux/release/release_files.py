@@ -27,11 +27,6 @@ VERSION = (0, 0, 14)     # move PRJBase into share +use Version
 
 
 # =====================================================================================================================
-class Exx_HistorySameVersionOrNews(Exception):
-    pass
-
-
-# =====================================================================================================================
 class PROJECT_BASE:
     NAME_IMPORT: str
     VERSION: Version
@@ -258,7 +253,7 @@ class ReleaseHistory(ReleaseFileBase):
     LAST_NEWS: str = ""
 
     # PREPARE =========================================================================================================
-    def load_last_news(self) -> None:
+    def load__last_news(self) -> None:
         string = self.filepath.read_text()
 
         # # VAR 1 --------------------------------
@@ -284,11 +279,11 @@ class ReleaseHistory(ReleaseFileBase):
         # print(f"{string=}")
         # print(f"{self.LAST_NEWS=}")
 
-    def check_new_release__is_correct(self) -> bool:
+    def check__new_release__is_correct(self) -> bool:
         # ----------------------------
         if self.LAST_NEWS.startswith(f"{self.PROJECT.VERSION}("):
-            msg = f"exists_version{self.PROJECT.VERSION=}"
-            print(msg)
+            msg = f"exists_version {self.PROJECT.VERSION=}"
+            Warn(msg)
             return False
 
         # ----------------------------
@@ -297,8 +292,8 @@ class ReleaseHistory(ReleaseFileBase):
                 news_item = news_item[0]
 
             if re.search(r'- ' + str(news_item) + r'\s*\n', self.LAST_NEWS):
-                msg = f"exists_news"
-                print(msg)
+                msg = f"exists_news {news_item=}"
+                Warn(msg)
                 return False
 
         # ----------------------------
@@ -318,10 +313,10 @@ class ReleaseHistory(ReleaseFileBase):
 
     def generate(self) -> None:
         # PREPARE --------------------------------------
-        self.load_last_news()
-        if not self.check_new_release__is_correct():
-            msg = f"[ERROR] Incorrect new data (INCREASE VERSION or CHANGE NEWS)"
-            raise Exx_HistorySameVersionOrNews(msg)
+        self.load__last_news()
+        if not self.check__new_release__is_correct():
+            msg = f"Incorrect new data (INCREASE VERSION or CHANGE NEWS)"
+            raise Exx__WrongUsage_YouForgotSmth(msg)
 
         # WRITE ----------------------------------------
         self._file_clear()

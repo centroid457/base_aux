@@ -77,8 +77,54 @@ _std = [
 
 
 # =====================================================================================================================
-class Base_Exx(
+class Warn(
     NestBool_False,
+):
+    """
+    GOAL
+    ----
+    when you dont want to use logger and raise error (by now).
+    print msg in some inner functions when raising Exx after inner function return False.
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    ReleaseHistory.check_new_release__is_correct/generate
+
+    TODO: try use direct logger?
+        or rename nito some new class! as universal Msging!
+    """
+    PREFIX: str = "[WARN]"
+    INDENT: str = "__"
+    EOL: str = "\n"
+    MSG_LINES: tuple[str, ...]
+
+    def __init__(self, *lines, prefix: str = None, **kwargs) -> None:
+        if prefix is not None:
+            self.PREFIX = prefix
+
+        self.MSG_LINES = lines
+        print(self, file=sys.stderr)
+
+        super().__init__(**kwargs)
+
+    def __str__(self):
+        return self.MSG_STR
+
+    @property
+    def MSG_STR(self) -> str:
+        result = f"{self.PREFIX}"
+        for index, line in enumerate(self.MSG_LINES):
+            if index == 0:
+                result += f"{line}"
+            else:
+                result += f"{self.EOL}{self.INDENT}{line}"
+
+        return result
+
+
+# =====================================================================================================================
+class Base_Exx(
+    Warn,
 
     Exception,
     # BaseException,
@@ -87,17 +133,15 @@ class Base_Exx(
     """
     GOAL
     ----
-    just a solution to collect all dunder methods intended for Exceptions in one place
-     - get correct bool() if get Exx as value
+    1/ with raise - just a solution to collect all dunder methods intended for Exceptions in one place
+        - get correct bool() if get Exx as value
+    2/ without raising - use like logger (Warn)
 
     SPECIALLY CREATED FOR
     ---------------------
     classes.VALID if
     """
-    def __init__(self, *args, **kwargs) -> None:
-        if args:
-            msg = f"[EXX]{args[0]}"
-            print(msg, file=sys.stderr)
+    PREFIX: str = "[EXX]"
 
 
 # =====================================================================================================================
@@ -296,6 +340,7 @@ class Exx__NestingLevels(Base_Exx):
 
 # =====================================================================================================================
 if __name__ == '__main__':
+    # WITH RAISING =====================================
     # REASON --------------
     assert bool(Exception(0)) is True
     assert bool(Exception(False)) is True
@@ -303,6 +348,10 @@ if __name__ == '__main__':
     # SOLUTION --------------
     assert bool(Base_Exx(0)) is False
     assert bool(Base_Exx(False)) is False
+
+    # NO RAISING =====================================
+    Base_Exx(0, 1, 2, 3)
+    Warn(0, 1)
 
 
 # =====================================================================================================================
