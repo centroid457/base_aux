@@ -1,3 +1,4 @@
+import sys
 from base_aux.base_nest_dunders.m3_bool import *
 
 
@@ -96,7 +97,7 @@ class Base_Exx(
     def __init__(self, *args, **kwargs) -> None:
         if args:
             msg = f"[EXX]{args[0]}"
-            print(msg)
+            print(msg, file=sys.stderr)
 
 
 # =====================================================================================================================
