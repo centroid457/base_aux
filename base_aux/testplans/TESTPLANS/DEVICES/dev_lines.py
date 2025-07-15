@@ -1,6 +1,6 @@
-from base_aux.buses.m1_serial1_client import SerialClient, Enum__AddressAutoAcceptVariant
-from base_aux.testplans.devices import *
+from base_aux.testplans.devices_base import *
 from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
+from base_aux.testplans.devices_kit import DeviceKit
 
 
 # =====================================================================================================================

@@ -1,16 +1,15 @@
 from typing import *
 import time
 
-from base_aux.testplans.devices import *
+from base_aux.testplans.devices_base import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
+class Device(Base__DeviceUart_ElTech):  # IMPORTANT! KEEP Serial FIRST Nesting!
     LOG_ENABLE = True
     RAISE_CONNECT = False
     BAUDRATE = 115200
-    PREFIX = "ATC:03:"
     EOL__SEND = b"\n"
 
     REWRITEIF_READNOANSWER = 0
@@ -29,12 +28,6 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
         if index is not None:
             self.INDEX = index
         super().__init__(**kwargs)
-
-    def dev__load_info(self) -> None:
-        if not self.SN:
-            self.SN = self.write_read__last("get SN")
-            self.FW = self.write_read__last("get FW")
-            self.MODEL = self.write_read__last("get MODEL")
 
     def connect__validate(self) -> bool:
         result = (

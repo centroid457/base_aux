@@ -1,6 +1,6 @@
 import pytest
-from base_aux.testplans.devices import *
-from base_aux.buses import *
+from base_aux.testplans.devices_base import *
+from base_aux.testplans.devices_kit import DeviceKit
 
 
 # =====================================================================================================================

@@ -1,6 +1,4 @@
-import pytest
-
-from base_aux.testplans.devices import *
+from base_aux.testplans.devices_base import *
 from base_aux.testplans.tc import *
 
 

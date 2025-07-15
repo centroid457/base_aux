@@ -1,10 +1,8 @@
-from typing import *
 from pathlib import Path
 
-from base_aux.testplans.devices import *
-from base_aux.aux_attr.m4_kits import *
 from base_aux.path2_file.m4_fileattrs import *
 from base_aux.aux_datetime.m1_datetime import *
+from base_aux.testplans.devices_kit import DeviceKit
 
 
 # =====================================================================================================================

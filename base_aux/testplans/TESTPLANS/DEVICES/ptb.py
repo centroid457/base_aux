@@ -1,5 +1,5 @@
 from typing import *
-from base_aux.testplans.devices import *
+from base_aux.testplans.devices_base import *
 from base_aux.buses.m1_serial2_client_derivatives import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
@@ -37,7 +37,7 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
 
     @property
     def PREFIX(self) -> str:
-        return f"PTB:{self.INDEX+1:02d}:"
+        return f"{self.NAME}:{self.INDEX+1:02d}:"
 
     # def address__validate(self) -> bool:  # NO NEED! only for manual!
     #     result = (

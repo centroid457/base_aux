@@ -1,9 +1,4 @@
-from typing import *
-
-from base_aux.testplans import *
-from base_aux.buses.m1_serial1_client import *
-
-from base_aux.breeders.m3_table_inst import *
+from base_aux.buses.m1_serial2_client_derivatives import *
 
 from .models import *
 
@@ -90,38 +85,16 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class DeviceKit(TableKit):
-    def __del__(self):
-        self.disconnect()
-
-    def connect(self) -> None:
-        self("connect")
-
-    def disconnect(self) -> None:
-        self("disconnect")
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def resolve_addresses(self) -> None:
-        """
-        GOAL
-        ----
-        find all devices on Uart ports
-        """
-        pass
+class Base__DeviceUart_ElTech(SerialClient_FirstFree_AnswerValid, Base_Device):
+    def dev__load_info(self) -> None:
+        if not self.SN:
+            self.SN = self.write_read__last("get SN")
+            self.FW = self.write_read__last("get FW")
+            self.MODEL = self.write_read__last("get MODEL")
 
 
-# =====================================================================================================================
-class _DeviceColumn_Example(TableColumn):
-    """
-    NOTE
-    ----
-    use direct dinamic creation TableColumn(index, TLines)!
 
-    GOAL
-    ----
-    just an example
-    """
-    LINES = DeviceKit()
+
 
 
 # =====================================================================================================================
