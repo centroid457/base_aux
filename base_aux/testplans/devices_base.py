@@ -127,7 +127,8 @@ class Base__DeviceUart_ETech(Base_Device, SerialClient_FirstFree_AnswerValid):
 
         if result:
             if self.NAME == "PTB":
-                self.write_read__last_validate("get prsnt", "1")
+                if not self.write_read__last_validate("get prsnt", "1"):
+                    return False
 
             self.dev__load_info()
 
