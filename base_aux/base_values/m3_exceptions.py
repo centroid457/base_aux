@@ -1,5 +1,4 @@
-import sys
-from base_aux.base_nest_dunders.m3_bool import *
+from base_aux.loggers.m1_print import Warn
 
 
 # =====================================================================================================================
@@ -74,52 +73,6 @@ _std = [
     # REAL VALUE = NOT AN EXCEPTION!!!
     NotImplemented,      # NotImplemented = None # (!) real value is 'NotImplemented'
 ]
-
-
-# =====================================================================================================================
-class Warn(
-    NestBool_False,
-):
-    """
-    GOAL
-    ----
-    when you dont want to use logger and raise error (by now).
-    print msg in some inner functions when raising Exx after inner function return False.
-
-    SPECIALLY CREATED FOR
-    ---------------------
-    ReleaseHistory.check_new_release__is_correct/generate
-
-    TODO: try use direct logger?
-        or rename nito some new class! as universal Msging!
-    """
-    PREFIX: str = "[WARN]"
-    INDENT: str = "__"
-    EOL: str = "\n"
-    MSG_LINES: tuple[str, ...]
-
-    def __init__(self, *lines, prefix: str = None, **kwargs) -> None:
-        if prefix is not None:
-            self.PREFIX = prefix
-
-        self.MSG_LINES = lines
-        print(self, file=sys.stderr)
-
-        super().__init__(**kwargs)
-
-    def __str__(self):
-        return self.MSG_STR
-
-    @property
-    def MSG_STR(self) -> str:
-        result = f"{self.PREFIX}"
-        for index, line in enumerate(self.MSG_LINES):
-            if index == 0:
-                result += f"{line}"
-            else:
-                result += f"{self.EOL}{self.INDENT}{line}"
-
-        return result
 
 
 # =====================================================================================================================
