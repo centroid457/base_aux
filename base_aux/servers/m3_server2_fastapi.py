@@ -14,7 +14,7 @@ import uvicorn
 from starlette import status
 from starlette.responses import Response
 
-from base_aux.loggers.m1_logger import Logger
+from base_aux.loggers.m2_logger import Logger
 
 
 # =====================================================================================================================

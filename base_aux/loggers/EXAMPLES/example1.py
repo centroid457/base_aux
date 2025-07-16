@@ -1,4 +1,4 @@
-from base_aux.loggers.m1_logger import *
+from base_aux.loggers.m2_logger import *
 from base_aux.base_types.m2_info import ObjectInfo
 
 

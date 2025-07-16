@@ -7,7 +7,7 @@ import time
 import string
 from enum import Enum, auto
 
-from base_aux.loggers.m1_logger import Logger
+from base_aux.loggers.m2_logger import Logger
 
 from serial import Serial, PortNotOpenError
 from serial.tools import list_ports

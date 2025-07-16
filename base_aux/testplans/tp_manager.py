@@ -5,7 +5,7 @@ import time
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from base_aux.servers.m1_client_requests import *
-from base_aux.loggers.m1_logger import *
+from base_aux.loggers.m2_logger import *
 from base_aux.path2_file.m3_filetext import *
 from base_aux.aux_datetime.m1_datetime import *
 

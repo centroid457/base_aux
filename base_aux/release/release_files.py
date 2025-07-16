@@ -1,7 +1,3 @@
-from typing import *
-import pathlib
-import re
-
 from base_aux.cli.m1_cli_user import *
 from base_aux.versions.m2_version import *
 from base_aux.aux_datetime.m1_datetime import *

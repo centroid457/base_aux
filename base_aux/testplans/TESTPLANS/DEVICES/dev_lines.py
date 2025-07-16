@@ -24,7 +24,7 @@ class DeviceLines__Psu800(DeviceKit):
         for port, responses in result.items():
             name_i = responses["*:get name"]
             addr_i = responses["*:get addr"]
-            print(port, responses)
+            Warn(port, responses)
 
             if name_i == "ATC":
                 filter_link = lambda dev: dev.NAME == name_i

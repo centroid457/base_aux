@@ -6,7 +6,7 @@ from enum import Enum, auto
 
 from PyQt5.QtCore import QThread
 
-from base_aux.loggers.m1_logger import Logger
+from base_aux.loggers.m2_logger import Logger
 from base_aux.servers.m0_url import Url
 
 
