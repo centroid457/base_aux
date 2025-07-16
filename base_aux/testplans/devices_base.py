@@ -26,7 +26,7 @@ class Base_Device:
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(self, index: int = None, **kwargs):
         """
-        :param index: None is only for SINGLE!
+        :param index: None is only for SINGLE! - TRY NOT TO USE IT!!!
         """
         if index is not None:
             self.INDEX = index
@@ -85,16 +85,80 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class Base__DeviceUart_ElTech(SerialClient_FirstFree_AnswerValid, Base_Device):
+class Base__DeviceUart_ETech(SerialClient_FirstFree_AnswerValid, Base_Device):
+    """
+    GOAL
+    ----
+    make a dev class for ETech UART devices
+    """
+    LOG_ENABLE = True
+    RAISE_CONNECT = False
+    BAUDRATE = 115200
+    EOL__SEND = b"\n"
+
+    REWRITEIF_READNOANSWER = 0
+    REWRITEIF_NOVALID = 0
+
+    @property
+    def PREFIX(self) -> str:
+        return f"{self.NAME}:{self.INDEX+1:02d}:"
+
     def dev__load_info(self) -> None:
         if not self.SN:
             self.SN = self.write_read__last("get SN")
             self.FW = self.write_read__last("get FW")
             self.MODEL = self.write_read__last("get MODEL")
 
+    # DETECT --------------------------------
+    @property
+    def DEV_FOUND(self) -> bool:
+        return self.address_check__resolved()
+
+    # ---------------------------------------
+    def connect__validate(self) -> bool:
+        result = self.address_check__resolved()  # fixme: is it really need here???
+
+        if result:
+            if self.NAME == "PTB":
+                self.write_read__last_validate("get prsnt", "1")
+
+            self.dev__load_info()
+
+        return result
+
+    # def address__validate(self) -> bool:  # NO NEED! only for manual!
+    #     result = (
+    #             self.write_read__last_validate("get name", self.NAME, prefix="*:")
+    #             and
+    #             self.write_read__last_validate("get addr", EqValid_NumParsedSingle_Success(self.INDEX+1), prefix="*:")
+    #             # and
+    #             # self.write_read__last_validate("get prsnt", "0")
+    #     )
+    #     if result:
+    #         self.dev__load_info()
+    #
+    #     return result
 
 
+# =====================================================================================================================
+class Base_DeviceDummy(Base__DeviceUart_ETech):  # IMPORTANT! KEEP Serial FIRST Nesting!
+    """
+    GOAL
+    ----
+    use to make final Dummy
+    """
+    @property
+    def DEV_FOUND(self) -> bool:
+        return True
 
+    def address__validate(self) -> bool:
+        return True
+
+    def connect__validate(self) -> bool:
+        return True
+
+    def connect(self, *args, **kwargs) -> bool:
+        return True
 
 
 # =====================================================================================================================

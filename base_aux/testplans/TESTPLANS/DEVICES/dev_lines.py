@@ -1,11 +1,12 @@
 from base_aux.testplans.devices_base import *
+from base_aux.breeders.m3_table_inst import *
 from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
 from base_aux.testplans.devices_kit import DeviceKit
 
 
 # =====================================================================================================================
 class DeviceLines__AtcPtbDummy(DeviceKit):
-    ATC = TableLine(atc.DeviceDummy())
+    ATC = TableLine(atc.DeviceDummy(3))
     DUT = TableLine(*[ptb.DeviceDummy(index) for index in range(2)])
 
 

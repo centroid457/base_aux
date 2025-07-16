@@ -6,58 +6,14 @@ from base_aux.buses.m1_serial2_client_derivatives import *
 
 
 # =====================================================================================================================
-class Device(Base__DeviceUart_ElTech):  # IMPORTANT! KEEP Serial FIRST Nesting!
-    LOG_ENABLE = True
-    RAISE_CONNECT = False
-    BAUDRATE = 115200
-    EOL__SEND = b"\n"
-
-    REWRITEIF_READNOANSWER = 0
-    REWRITEIF_NOVALID = 0
-
+class Device(Base__DeviceUart_ETech):  # IMPORTANT! KEEP Serial FIRST Nesting!
     NAME = "ATC"
     DESCRIPTION: str = "ATC for PSU"
 
-    # def address__validate(self) -> bool:  # NO NEED!
-    #     return  self.write_read__last_validate("get name", self.NAME, prefix=self.PREFIX)
-
-    def __init__(self, index: int = None, **kwargs):    # FIXME: decide to delete this!!!
-        """
-        :param index: None is only for SINGLE!
-        """
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
-
-    def connect__validate(self) -> bool:
-        result = (
-            self.address_check__resolved()  # fixme: is it really need here???
-        )
-        if result:
-            self.dev__load_info()
-
-        return result
-
-    # DETECT --------------------------------
-    @property
-    def DEV_FOUND(self) -> bool:
-        return self.address_check__resolved()
-
 
 # =====================================================================================================================
-class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
-    @property
-    def DEV_FOUND(self) -> bool:
-        return True
-
-    def address__validate(self) -> bool:
-        return True
-
-    def connect__validate(self) -> bool:
-        return True
-
-    def connect(self, *args, **kwargs) -> bool:
-        return True
+class DeviceDummy(Device, Base_DeviceDummy):
+    pass
 
 
 # =====================================================================================================================

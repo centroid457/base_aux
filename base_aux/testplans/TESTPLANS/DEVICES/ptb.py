@@ -1,56 +1,12 @@
 from typing import *
 from base_aux.testplans.devices_base import *
 from base_aux.buses.m1_serial2_client_derivatives import *
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
-    LOG_ENABLE = True
-    RAISE_CONNECT = False
-    BAUDRATE = 115200
-    EOL__SEND = b"\n"
-
-    REWRITEIF_READNOANSWER = 0
-    REWRITEIF_NOVALID = 0
-
-    # INFO --------------------------------
+class Device(Base__DeviceUart_ETech):  # IMPORTANT! KEEP Serial FIRST Nesting!
     NAME: str = "PTB"
     DESCRIPTION: str = "PTB for PSU"
-
-    # @property
-    # def DUT_SN(self) -> str:      # TODO: USE DIRECT FINDING!!!???
-    #     return f"SN_{self.INDEX}"
-
-    def __init__(self, index: int = None, **kwargs):    # FIXME: decide to delete this!!!
-        """
-        :param index: None is only for SINGLE!
-        """
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
-
-    # DETECT --------------------------------
-    @property
-    def DEV_FOUND(self) -> bool:
-        return self.address_check__resolved()
-
-    @property
-    def PREFIX(self) -> str:
-        return f"{self.NAME}:{self.INDEX+1:02d}:"
-
-    # def address__validate(self) -> bool:  # NO NEED! only for manual!
-    #     result = (
-    #             self.write_read__last_validate("get name", self.NAME, prefix="*:")
-    #             and
-    #             self.write_read__last_validate("get addr", EqValid_NumParsedSingle_Success(self.INDEX+1), prefix="*:")
-    #             # and
-    #             # self.write_read__last_validate("get prsnt", "0")
-    #     )
-    #     if result:
-    #         self.dev__load_info()
-    #
-    #     return result
 
     def dev__load_info(self) -> None:
         if not self.SN:
@@ -62,32 +18,10 @@ class Device(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEE
             self.DUT_FW = self.write_read__last("get PSFW")
             self.DUT_MODEL = self.write_read__last("get PSMODEL")
 
-    def connect__validate(self) -> bool:
-        result = (
-            self.address_check__resolved()  # fixme: is it really need here???
-            and
-            self.write_read__last_validate("get prsnt", "1")
-        )
-        if result:
-            self.dev__load_info()
-
-        return result
-
 
 # =====================================================================================================================
-class DeviceDummy(SerialClient_FirstFree_AnswerValid, Base_Device):  # IMPORTANT! KEEP Serial FIRST Nesting!
-    @property
-    def DEV_FOUND(self) -> bool:
-        return True
-
-    def address__validate(self) -> bool:
-        return True
-
-    def connect__validate(self) -> bool:
-        return True
-
-    def connect(self, *args, **kwargs) -> bool:
-        return True
+class DeviceDummy(Device, Base_DeviceDummy):
+    pass
 
 
 # =====================================================================================================================

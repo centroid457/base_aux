@@ -6,6 +6,7 @@ from base_aux.base_nest_dunders.m6_eq2_cls import *
 
 from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
 from base_aux.testplans.stand import *
+from base_aux.loggers.m1_logger import *
 
 
 # =====================================================================================================================
