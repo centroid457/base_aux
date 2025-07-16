@@ -24,41 +24,32 @@ class Base_Device:
     DUT_MODEL: str = None
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __init__(self, index: int = None, **kwargs):
-        """
-        :param index: None is only for SINGLE! - TRY NOT TO USE IT!!!
-        """
-        if index is not None:
-            self.INDEX = index
-        super().__init__(**kwargs)
-
-    # -----------------------------------------------------------------------------------------------------------------
     def SKIP_reverse(self) -> None:
         """
         this is only for testing purpose
         """
         self.SKIP = not bool(self.SKIP)
 
-    # CONNECT ---------------------------------------------------------------------------------------------------------
-    def connect(self) -> bool:
-        return True
-
-    def disconnect(self) -> None:
-        pass
+    # # CONNECT -------------------------------------------------------------------------------------------------------
+    # def connect(self) -> bool:
+    #     return True
+    #
+    # def disconnect(self) -> None:
+    #     pass
 
     # INFO ------------------------------------------------------------------------------------------------------------
-    def dev__load_info(self) -> None:
-        """
-        GOAL
-        ----
-        load all important attrs in object.
-        for further identification.
+    # def dev__load_info(self) -> None:
+    #     """
+    #     GOAL
+    #     ----
+    #     load all important attrs in object.
+    #     for further identification.
 
-        WHERE
-        -----
-        useful in connect_validate
-        """
-        pass
+    #     WHERE
+    #     -----
+    #     useful in connect_validate
+    #     """
+    #     pass
 
     def dev__get_info(self) -> dict[str, Any]:
         """
@@ -90,6 +81,12 @@ class Base__DeviceUart_ETech(Base_Device, SerialClient_FirstFree_AnswerValid):
     GOAL
     ----
     make a dev class for ETech UART devices
+
+    NOTE
+    ----
+    Exx in SERIAL PORTs - connecting but not not working!
+    ...VALUE_LINK=<function SerialClient.__getattr__.<locals>.<lambda> at 0x000001909BBF34C0>,ARGS__VALUE=('HV0',),value_last=Attempting to use a port that is not open,
+    reason - some methods is over
     """
     LOG_ENABLE = True
     RAISE_CONNECT = False
@@ -99,6 +96,16 @@ class Base__DeviceUart_ETech(Base_Device, SerialClient_FirstFree_AnswerValid):
     REWRITEIF_READNOANSWER = 0
     REWRITEIF_NOVALID = 0
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def __init__(self, index: int = None, **kwargs):
+        """
+        :param index: None is only for SINGLE! - TRY NOT TO USE IT!!!
+        """
+        if index is not None:
+            self.INDEX = index
+        super().__init__(**kwargs)
+
+    # -----------------------------------------------------------------------------------------------------------------
     @property
     def PREFIX(self) -> str:
         return f"{self.NAME}:{self.INDEX+1:02d}:"
