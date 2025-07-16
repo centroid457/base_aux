@@ -1,3 +1,4 @@
+from base_aux.loggers.m1_print import *
 from base_aux.testplans.devices_base import *
 from base_aux.breeders.m3_table_inst import *
 from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
@@ -12,7 +13,7 @@ class DeviceLines__AtcPtbDummy(DeviceKit):
 
 # =====================================================================================================================
 class DeviceLines__Psu800(DeviceKit):
-    ATC = TableLine(atc.Device())
+    ATC = TableLine(atc.Device(3))
     DUT = TableLine(*[ptb.Device(index) for index in range(10)])
 
     def resolve_addresses(self) -> None:
@@ -21,10 +22,11 @@ class DeviceLines__Psu800(DeviceKit):
             EOL__SEND = b"\n"
 
         result = Dev.addresses_dump__answers("*:get name", "*:get addr")
+        print(result)
         for port, responses in result.items():
             name_i = responses["*:get name"]
             addr_i = responses["*:get addr"]
-            Warn(port, responses)
+            Print(f"{port}{responses}")
 
             if name_i == "ATC":
                 filter_link = lambda dev: dev.NAME == name_i

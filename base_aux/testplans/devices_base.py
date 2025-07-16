@@ -85,7 +85,7 @@ class Base_Device:
 
 
 # =====================================================================================================================
-class Base__DeviceUart_ETech(SerialClient_FirstFree_AnswerValid, Base_Device):
+class Base__DeviceUart_ETech(Base_Device, SerialClient_FirstFree_AnswerValid):
     """
     GOAL
     ----
