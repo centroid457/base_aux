@@ -261,7 +261,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 # LED ----------------------------------------------------
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.SET,
-                    kwargs__value={"LED2": "BLINK"},
+                    kwargs__value={"LED2": "ON"},
                     validate_link="OK",
                     name="SET",
                 ),
