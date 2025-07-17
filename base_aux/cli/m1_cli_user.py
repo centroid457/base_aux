@@ -1,43 +1,44 @@
-"""
-    Designed to send commands into OS terminal
-
-    "send commands into OS terminal",
-    "check if cli commands are accessible (special utilities is installed)",
-    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
-    "use batch timeout for list",
-    "till_first_true",
-    "counter/counter_in_list",
-
-"""
-
 from typing import *
+
 import subprocess
 import time
 
 
 # =====================================================================================================================
-TYPE__CMD = Union[str, tuple[str, float | None]]
-TYPE__CMDS = Union[TYPE__CMD, list[TYPE__CMD]]
+TYPING__CMD = Union[str, tuple[str, float | None]]
+TYPING__CMDS = Union[TYPING__CMD, list[TYPING__CMD]]
 
 
 # =====================================================================================================================
 class Exx_CliNotAvailable(Exception):
-    """CLI exx because of cli can not be available due to have not some of required commands.
+    """
+    GOAL
+    ----
+    cli can not be available due to have not some of required commands.
     """
 
 
 class Exx_CliTimeout(Exception):    #use direct subprocess.TimeoutExpired??? NO!!!
-    """CLI exx because of timeout expired
+    """
+    GOAL
+    ----
+    timeout expired
     """
 
 
 class Exx_CliRetcode(Exception):
-    """CLI exx because of returnCode is not zero.
+    """
+    GOAL
+    ----
+    returnCode is not zero.
     """
 
 
 class Exx_CliStderr(Exception):
-    """CLI exx because of stderr have any data
+    """
+    GOAL
+    ----
+    stderr have any data
     """
 
 
@@ -49,7 +50,16 @@ class CliCmd:
 
 # =====================================================================================================================
 class CliUser:
-    """Class which directly send commands to OS terminal
+    """
+    GOAL
+    ----
+    send commands into OS terminal
+
+    "check if cli commands are accessible (special utilities is installed)",
+    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
+    "use batch timeout for list",
+    "till_first_true",
+    "counter/counter_in_list",
 
     :ivar TIMEOUT: default timeout for execution process
         if timeout expired and process still not finished - raise exx
@@ -101,11 +111,6 @@ class CliUser:
             ==================================================
 
         3. use --VERSION! instead! - seems work fine always!
-
-    :exception Exx_CliNotAvailable:
-    :exception Exx_CliTimeout:
-    :exception Exx_CliRetcode:
-    :exception Exx_CliStderr:
     """
     # SETTINGS ------------------------------------
     TIMEOUT: Optional[float] = 2
@@ -160,7 +165,7 @@ class CliUser:
     # SEND ------------------------------------------------------------------------------------------------------------
     def send(
             self,
-            cmd: TYPE__CMDS,
+            cmd: TYPING__CMDS,
             timeout: Optional[float] = None,
             till_first_true: Optional[bool] = None,
             _raise: Optional[bool] = None,
