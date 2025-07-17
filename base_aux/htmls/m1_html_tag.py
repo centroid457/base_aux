@@ -6,41 +6,57 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 
+from base_aux.aux_eq.m3_eq_valid1_base import *
+
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m1_alert0_base import *
 
 
 # =====================================================================================================================
-# TODO: separate ClsBASE! see Imap!
-
-
-# =====================================================================================================================
-class TagAddressChain(NamedTuple):
+class HtmlTagAddress(Base_AttrKit, NestCall_Resolve):
     """
     GOAL
     ----
     create several chains to point to one tag.
 
-    structure which used as one step of full chain for finding Tag.
-    all this params directly will be passed into function Tag.find_all!
+    all params directly will be passed into function Tag.find_all!
     There is no variants - only full values!
-
-    :ivar NAME: tag name for finding
-    :ivar ATTRS: dict with expected attr names and exact values
-        {"class": "donor-svetofor-restyle"}
-    :ivar TEXT: text in expected tag
-        None - if not specified
-    :ivar INDEX: in case of found several tags - get the exact index of them
 
     EXAMPLES
     --------
-    see in monitor implementations
-        TagAddressChain("table", {"class": "donor-svetofor-restyle"}, None, 0),
+    HtmlTagAddress("table", {"class": "donor-svetofor-restyle"}),
     """
+    SOURCE = None
+    # CHAINS = ()
+
     NAME: str
     ATTRS: dict[str, str]
-    TEXT: Optional[str]
-    INDEX: int
+    TEXT_CONTAINS: Optional[str] = None
+    INDEX: int = 0
+
+    def __init__(self, source=None, **kwargs) -> None:
+        if source is not None:
+            self.SOURCE = source
+        # self.CHAINS = chains
+
+        super().__init__(**kwargs)
+
+    def resolve(self, source=None, *args, **kwargs) -> None | str:
+        if source is None:
+            source = self.SOURCE
+
+        # for chain in self.CHAINS:
+        #     if source is None:
+        #         return None
+        #
+        #     source = chain.resolve(source)
+
+
+
+
+
+
+
 
 
 class Alert_MonitorUrlTag(AlertSelect.TELEGRAM_DEF):
@@ -67,7 +83,7 @@ class MonitorUrlTag(threading.Thread):
         stringValue - from exact attribute name
     :ivar ALERT: object which will send the alerts
     :ivar DIRPATH: path to directory where will be saved history values
-    :ivar CSV_DELIMITER: delimeter for history csvFile
+    :ivar CSV_DELIMITER: delimiter for history csvFile
 
     :ivar _source_data: full html for url
     :ivar _tag_found_last_chain: temporary kept last found tag object by one Chain
