@@ -14,7 +14,7 @@ class ChainResolve(NestInit_Source, NestCall_Resolve, Base_AttrKit):
 
     SPECIALLY CREATED FOR
     ---------------------
-    HtmlTag
+    HtmlTag to find text by chain
     """
     SOURCE: Any = None
     CHAINS: Iterable[Callable | NestCall_Resolve] = ()
@@ -24,12 +24,12 @@ class ChainResolve(NestInit_Source, NestCall_Resolve, Base_AttrKit):
             self.CHAINS = chains
         super().__init__(source=source, **kwargs)
 
-    def resolve(self, *args, source: Any = None, **kwargs) -> Any | NoReturn:
+    def resolve(self, source: Any = None, **kwargs) -> Any | NoReturn:
         if source is None:
             source = self.SOURCE
 
         for chain in self.CHAINS:
-            source = chain.resolve(*args, source=source, **kwargs)
+            source = chain(source)
 
         return source
 
