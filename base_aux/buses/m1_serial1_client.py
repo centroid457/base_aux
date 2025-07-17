@@ -9,7 +9,7 @@ from enum import Enum, auto
 
 from base_aux.loggers.m2_logger import Logger
 
-from serial import Serial, PortNotOpenError
+from serial import Serial, PortNotOpenError, SerialException
 from serial.tools import list_ports
 from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
@@ -1106,7 +1106,7 @@ class SerialClient(Logger):
         """
         EXCEPTION ORIGINAL VARIANT
         --------------------------
-            cls = <class 'test__serial_server.Victim'>, data = b'\x85RR__NAME_CMD_OR_PARAM'
+            cls = <class 'test__serial_server.Victim'>, data = b'\\x85RR__NAME_CMD_OR_PARAM
 
                 @classmethod
                 def _data_ensure__string(cls, data: AnyStr) -> Union[str, NoReturn]:
@@ -1230,7 +1230,7 @@ class SerialClient(Logger):
         return data
 
     # W ---------------------------------------------------------------------------------------------------------------
-    _COUNT_OPEN_EXCEPTIONS: int = 0
+    _COUNT_OPEN_EXCEPTIONS: int = 0  # this is just for testing/log meanings
 
     def _write(
             self,
@@ -1278,13 +1278,14 @@ class SerialClient(Logger):
             msg = f"[FAIL]write={data}/{exx!r}"
             self.LOGGER.warning(f"[{self._SERIAL.port}]{msg}")
 
-            if isinstance(exx, PortNotOpenError):
+            if isinstance(exx, (PortNotOpenError, SerialException)):
                 self._COUNT_OPEN_EXCEPTIONS += 1
                 try:
                     self._SERIAL.open()
                     # self.connect()
                 except:
-                    raise exx
+                    return False
+                    # raise exx
                 # raise exx   # here need reconnection!
 
             return False
@@ -1345,6 +1346,9 @@ class SerialClient(Logger):
             data_o = []
             remain__retry_decode = self.REWRITEIF_READFAILDECODE or 0
             while remain__retry_decode >= 0 and remain__retry_noanswer >= 0:
+                # if self._COUNT_OPEN_EXCEPTIONS > 0:
+                #     return
+
                 if self._write(data=data, prefix=prefix, args=args, kwargs=kwargs):
                     try:
                         data_o = self.read_lines(_timeout=_timeout)
