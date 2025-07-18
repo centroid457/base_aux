@@ -40,6 +40,9 @@ NAMES__SKIP_PARTS: list[str] = [
 
     # SYS
     "breakpointhook",
+    "hook",
+    # "__subclasshook__",   # bs4
+    # "__unicode__",
 ]
 
 

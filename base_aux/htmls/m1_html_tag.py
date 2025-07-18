@@ -1,19 +1,14 @@
 from typing import *
-import pathlib
-import csv
-import threading
 
-import requests
 from bs4 import BeautifulSoup
-
-from base_aux.aux_eq.m3_eq_valid1_base import *
-
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m1_alert0_base import *
 
+from base_aux.base_types.m2_info import *
+
 
 # =====================================================================================================================
-class HtmlTagParser(NestInit_Source, NestCall_Resolve, Base_AttrKit):
+class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
     """
     GOAL
     ----
@@ -27,22 +22,27 @@ class HtmlTagParser(NestInit_Source, NestCall_Resolve, Base_AttrKit):
     HtmlTagAddress("table", {"class": "donor-svetofor-restyle"}),
     """
     SOURCE: str = None
-    # CHAINS = ()
-
-    # BS4.find_all -----------------------------
-    NAME: str
-    ATTRS: dict[str, str]
-    TEXT_FIND: Optional[str] = None
     INDEX: int = 0
 
-    def __init__(self, source: str | BeautifulSoup = None, **kwargs) -> None:
-        if source is not None:
-            self.SOURCE = str(source)
+    # BS4.find_all -----------------------------
+    # TODO: use as KWARGS???
+    NAME: str = None
+    ATTRS: dict[str, str] = dict()
+    STRING: Optional[str] = None
+    RECURSIVE: bool = None
 
+    def __init__(self, source: str | BeautifulSoup = NoValue, **kwargs) -> None:
+        if source is not NoValue:
+            self.SOURCE = str(source)
         super().__init__(**kwargs)
 
-    def resolve(self, source=None, **kwargs) -> None | str:
-        if source is None:
+    def resolve(self, source=NoValue, **kwargs) -> None | str:
+        """
+        GOAL
+        ----
+        from html source get exact tag
+        """
+        if source == NoValue:
             source = self.SOURCE
 
         if source:
@@ -57,15 +57,52 @@ class HtmlTagParser(NestInit_Source, NestCall_Resolve, Base_AttrKit):
             Warn(msg)
             return
 
+        # collect params ---------
+        params = dict()
+        if self.NAME is not None:
+            params |= dict(name=self.NAME)
+        if self.ATTRS:
+            params |= dict(attrs=self.ATTRS)
+        if self.STRING is not None:
+            params |= dict(string=self.STRING)
+        if self.RECURSIVE is not None:
+            params |= dict(string=self.RECURSIVE)
+
+        params |= dict(limit=self.INDEX + 1)
+
+        # find -------------------
         try:
-            tags = bs_tag.find_all(name=self.NAME, attrs=self.ATTRS, string=self.TEXT_FIND, limit=self.INDEX + 1)
+            tags = bs_tag.find_all(**params)
             bs_tag = tags[self.INDEX]
         except Exception as exx:
             msg = f"URL WAS CHANGED? can't find {self=}\n{exx!r}"
             Warn(msg)
             return
 
-        return str(bs_tag).strip()   # full markup!
+        return bs_tag.text
+
+
+# =====================================================================================================================
+# TODO: make tag access by attr name with calling and selection by kwargs
+#   tag.a(**kwargs).header(**kwargs).b().a()
+
+
+# =====================================================================================================================
+def explore():
+    markup = 'hello<a href="http://example.com/">\nlink <i>example.com</i>\n</a>'
+    soup = BeautifulSoup(markup, 'html.parser')
+    print(soup.a)
+    print()
+    ObjectInfo(soup.a, log_iter=True).print()
+
+    # for name in dir(soup.a):
+    #     print(name)
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    explore()
+    # run_over_api()
 
 
 # =====================================================================================================================
