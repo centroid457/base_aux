@@ -12,11 +12,10 @@ class ClsMain(ClsFullTypes):
 
 ObjectInfo(
     ClsMain(),
-    log_iter=True,
     names__use_only_parts=[],
     names__skip_full=["attrSkipFullName", ],
     names__skip_parts=["SkipPartName", ],
-    hide_build_in=None,
+    skip__build_in=None,
 ).print()
 """
 ==========================================================================================
@@ -29,11 +28,10 @@ mro(SOURCE)=['ClsMain', 'ClsFullTypes', 'object']
 self.NAMES__USE_ONLY_PARTS=[]
 self.NAMES__SKIP_FULL=['attrSkipFullName']
 self.NAMES__SKIP_PARTS=['init', 'new', 'create', 'enter', 'install', 'set', 'clone', 'copy', 'move', 'next', 'clear', 'reduce', 'close', 'del', 'exit', 'kill', 'exec', 'exec_', 'pyqtConfigure', 'checkout', 'detach', 'run', 'start', 'wait', 'join', 'terminate', 'quit', 'disconnect', 'pop', 'popleft', 'append', 'appendleft', 'extend', 'extendleft', 'add', 'insert', 'reverse', 'rotate', 'sort', 'SkipPartName']
-self.HIDE_BUILD_IN=None
-self.LOG_ITER=True
+self.SKIP__BUILD_IN=None
 self.MAX_LINE_LEN=100
 self.MAX_ITER_ITEMS=5
-----------log_iter(wait last touched)---------------------------------------------------------------
+----------show_touch_names--------------------------------------------------------------------------
 1:	__class__
 2:	__delattr__
 3:	__dict__
@@ -221,11 +219,10 @@ methExx             	Exception   :Exception('exxMsg')
 
 ObjectInfo(
     ClsMain(),
-    # log_iter=False,
     names__use_only_parts="attr",
     # names__skip_full=["attrSkipFullName", ],
     # names__skip_parts=["SkipPartName", ],
-    # hide_build_in=None,
+    # skip__build_in=None,
     # max_line_len=0,
     # max_iter_items=0,
 ).print()
@@ -240,11 +237,10 @@ mro(SOURCE)=['ClsMain', 'ClsFullTypes', 'object']
 self.NAMES__USE_ONLY_PARTS=['attr']
 self.NAMES__SKIP_FULL=['attrSkipFullName']
 self.NAMES__SKIP_PARTS=['init', 'new', 'create', 'enter', 'install', 'set', 'clone', 'copy', 'move', 'next', 'clear', 'reduce', 'close', 'del', 'exit', 'kill', 'exec', 'exec_', 'pyqtConfigure', 'checkout', 'detach', 'run', 'start', 'wait', 'join', 'terminate', 'quit', 'disconnect', 'pop', 'popleft', 'append', 'appendleft', 'extend', 'extendleft', 'add', 'insert', 'reverse', 'rotate', 'sort', 'SkipPartName']
-self.HIDE_BUILD_IN=None
-self.LOG_ITER=None
+self.SKIP__BUILD_IN=None
 self.MAX_LINE_LEN=100
 self.MAX_ITER_ITEMS=5
-----------log_iter(wait last touched)---------------------------------------------------------------
+----------show_touch_names--------------------------------------------------------------------------
 ----------SKIPPED_FULLNAMES-------------------------------------------------------------------------
 1:	attrSkipFullName
 ----------SKIPPED_PARTNAMES-------------------------------------------------------------------------

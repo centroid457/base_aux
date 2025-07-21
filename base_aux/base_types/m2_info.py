@@ -1,42 +1,4 @@
-"""
-Designed to print info about object (properties+methods results)
-
-But why? if we can use debugger directly?
-Reason:
-1. to get and save standard text info,
-it useful to keep this info for future quick eye sight without exact condition like other OS or device/devlist/configuration
-2. in debugger we cant see result of methods!
-try to see for example information from platform module! it have only methods and no one in object tree in debugger!
-```python
-import platform
-
-obj = platform
-print(platform.platform())
-pass    # place debug point here
-```
-3. Useful if you wish to see info from remote SOURCE if connecting directly over ssh for example
-
-FEATURES
-    "print all properties/methods results",
-    "show exceptions on methods/properties",
-    "skip names by full/part names and use only by partnames",
-    "separated collections by groups",
-
-
-TODO:
-    "add TIMEOUT (use start in thread!) for print! use timeout for GETATTR!!!",
-    [
-        "realise PRINT_DIFFS=CHANGE_state/COMPARE_objects (one from different states like thread before and after start)!",
-        "this is about to save object STATE!",
-        "add parameter show only diffs or show all",
-        "add TESTS after this step!",
-    ],
-    "apply asyncio.run for coroutine?",
-    "merge items Property/Meth? - cause it does not matter callable or not (just add type info block)",
-    "add check__instance_of_user_class",
-"""
 from typing import *
-
 from base_aux.base_types.m0_static_aux import *
 from base_aux.base_types.m1_type_aux import TypeAux
 from base_aux.aux_attr.m0_static import check_name__buildin, NAMES__SKIP_PARTS
@@ -62,22 +24,58 @@ def _value_search_by_list(source: Any, search_list: list[Any]) -> Any | None:
 # =====================================================================================================================
 class ObjectInfo:
     """
+    GOAL
+    ----
+    print info about object (properties+methods results)
+
+    But why? if we can use debugger directly?
+    Reason:
+    1. to get and save standard text info,
+    it useful to keep this info for future quick eye sight without exact condition like other OS or device/devlist/configuration
+    2. in debugger we cant see result of methods!
+    try to see for example information from platform module! it have only methods and no one in object tree in debugger!
+    ```python
+    import platform
+
+    obj = platform
+    print(platform.platform())
+    pass    # place debug point here
+    ```
+    3. Useful if you wish to see info from remote SOURCE if connecting directly over ssh for example
+
+    FEATURES
+        "print all properties/methods results",
+        "show exceptions on methods/properties",
+        "skip names by full/part names and use only by partnames",
+        "separated collections by groups",
+
+    TODO:
+        "add TIMEOUT (use start in thread!) for print! use timeout for GETATTR!!!",
+        [
+            "realise PRINT_DIFFS=CHANGE_state/COMPARE_objects (one from different states like thread before and after start)!",
+            "this is about to save object STATE!",
+            "add parameter show only diffs or show all",
+            "add TESTS after this step!",
+        ],
+        "apply asyncio.run for coroutine?",
+        "merge items Property/Meth? - cause it does not matter callable or not (just add type info block)",
+        "add check__instance_of_user_class",
+
     :ivar MAX_ITER_ITEMS: 0 or None if not limited!
     """
-    # SETTINGS --------------------------------------------
-    MAX_LINE_LEN: int = 100
-    MAX_ITER_ITEMS: int = 5
-    HIDE_BUILD_IN: bool = None
-    LOG_ITER: bool = None
-
-    NAMES__USE_ONLY_PARTS: list[str] = []
-    NAMES__SKIP_FULL: list[str] = []
-    NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
-
-    # AUX --------------------------------------------------
+    # AUX -------------------------------------------------------------------------------------------------------------
     SOURCE: Any = None
     STATE: ObjectState = None
     STATE_OLD: ObjectState | None = None
+
+    # SETTINGS --------------------------------------------------------------------------------------------------------
+    MAX_LINE_LEN: int = 100
+    MAX_ITER_ITEMS: int = 5
+
+    SKIP__BUILD_IN: bool = True
+    NAMES__USE_ONLY_PARTS: list[str] = []
+    NAMES__SKIP_FULL: list[str] = []
+    NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
 
     def __init__(
             self,
@@ -85,23 +83,23 @@ class ObjectInfo:
 
             max_line_len: Optional[int] = None,
             max_iter_items: Optional[int] = None,
-            hide_build_in: Optional[bool] = None,
-            log_iter: Optional[bool] = None,
+            skip__build_in: Optional[bool] = None,
 
             names__use_only_parts: Union[None, str, list[str]] = None,
             names__skip_full: Union[None, str, list[str]] = None,
             names__skip_parts: str | list[str] = None,
     ):
-        # SETTINGS -----------------------------------------------------------
+        if source is not None:
+            self.SOURCE = source
+
+        # SETTINGS ----------------------------------------------------------------------------------------------------
         # RAPAMS -----------------------
         if max_line_len is not None:
             self.MAX_LINE_LEN = max_line_len
         if max_iter_items is not None:
             self.MAX_ITER_ITEMS = max_iter_items
-        if hide_build_in is not None:
-            self.HIDE_BUILD_IN = hide_build_in
-        if log_iter is not None:
-            self.LOG_ITER = log_iter
+        if skip__build_in is not None:
+            self.SKIP__BUILD_IN = skip__build_in
 
         # LISTS -----------------------
         if names__use_only_parts:
@@ -120,9 +118,6 @@ class ObjectInfo:
         # WORK -----------------------------------------------------------
         self.state_reload()
 
-        if source is not None:
-            self.SOURCE = source
-
     # =================================================================================================================
     def state_clear(self) -> None:
         self.STATE_OLD = self.STATE
@@ -132,17 +127,31 @@ class ObjectInfo:
         self.state_clear()
 
         # WORK --------------------------------------
-        group_name = f"log_iter={self.LOG_ITER}(wait last touched)"
-        self._print_line__group_separator(group_name)
+        self._print_line__group_separator(f"show_touch_names")
+        #
+        # print()
+        # print(dir(self.SOURCE))
+        # for dirname in dir(self.SOURCE):
+        #     print(dirname)
+        # print()
 
         for pos, name in enumerate(dir(self.SOURCE), start=1):
-            if self.LOG_ITER:
-                print(f"{pos}:\t{name}")
+            print(f"{pos:4d}:{name}")
 
-            # FILTER -----------------------------------------------------------------------
-            if self.HIDE_BUILD_IN and check_name__buildin(name):
+            # SKIP ----------------------------------------------------------------------------------------------------
+            if self.SKIP__BUILD_IN and check_name__buildin(name):
+                self.STATE.SKIPPED_BUILDIN.append(name)
                 continue
 
+            if name in self.NAMES__SKIP_FULL:
+                self.STATE.SKIPPED_FULLNAMES.append(name)
+                continue
+
+            if _value_search_by_list(source=name, search_list=self.NAMES__SKIP_PARTS):
+                self.STATE.SKIPPED_PARTNAMES.append(name)
+                continue
+
+            # FILTER --------------------------------------------------------------------------------------------------
             if self.NAMES__USE_ONLY_PARTS:
                 use_name = False
                 for name_include_item in self.NAMES__USE_ONLY_PARTS:
@@ -152,26 +161,7 @@ class ObjectInfo:
                 if not use_name:
                     continue
 
-            # SKIP ------------------------------------------------------------------------
-            SKIP_FULLNAMES = []
-            if self.NAMES__SKIP_FULL:
-                SKIP_FULLNAMES.extend(self.NAMES__SKIP_FULL)
-            if SKIP_FULLNAMES:
-                SKIP_FULLNAMES.extend(SKIP_FULLNAMES)
-            if name in SKIP_FULLNAMES:
-                self.STATE.SKIPPED_FULLNAMES.append(name)
-                continue
-
-            SKIP_PARTNAMES = []
-            if self.NAMES__SKIP_PARTS:
-                SKIP_PARTNAMES.extend(self.NAMES__SKIP_PARTS)
-            if SKIP_PARTNAMES:
-                SKIP_PARTNAMES.extend(SKIP_PARTNAMES)
-            if _value_search_by_list(source=name, search_list=SKIP_PARTNAMES):
-                self.STATE.SKIPPED_PARTNAMES.append(name)
-                continue
-
-            # PROPERTIES/METHODS + Exception--------------------------------------------------
+            # PROPERTIES/METHODS + Exception---------------------------------------------------------------------------
             attr_is_method: bool = False
             try:
                 value = getattr(self.SOURCE, name)
@@ -189,7 +179,7 @@ class ObjectInfo:
 
             # print(f"{name=}/{attr_obj=}/type={type(attr_obj)}/elementary={isinstance(attr_obj, TYPES.ELEMENTARY)}")
 
-            # PLACE VALUE ---------------------------------------------------------------------
+            # PLACE VALUE ---------------------------------------------------------------------------------------------
             if TypeAux(value).check__elementary_single():
                 if attr_is_method:
                     self.STATE.METHODS__ELEMENTARY_SINGLE.update({name: value})
@@ -270,7 +260,7 @@ class ObjectInfo:
         return result
 
     # =================================================================================================================
-    def _print_block__head(self) -> None:
+    def _print_block__header(self) -> None:
         # start printing ----------------------------------
         group_name = f"{self.__class__.__name__}.print"
         self._print_line__group_separator(group_name.upper())
@@ -292,12 +282,11 @@ class ObjectInfo:
         group_name = "SETTINGS"
         self._print_line__group_separator(group_name)
 
+        print(f"{self.SKIP__BUILD_IN=}")
+
         print(f"{self.NAMES__USE_ONLY_PARTS=}")
         print(f"{self.NAMES__SKIP_FULL=}")
         print(f"{self.NAMES__SKIP_PARTS=}")
-
-        print(f"{self.HIDE_BUILD_IN=}")
-        print(f"{self.LOG_ITER=}")
 
         print(f"{self.MAX_LINE_LEN=}")
         print(f"{self.MAX_ITER_ITEMS=}")
@@ -345,14 +334,14 @@ class ObjectInfo:
         WRAPPER_MAIN_LINE = "="*min(90, self.MAX_LINE_LEN)  # here we need use less then
 
         print(WRAPPER_MAIN_LINE)
-        self._print_block__head()
+        self._print_block__header()
 
         for group_name, group_values in self.STATE.__getstate__().items():
             self._print_line__group_separator(group_name)
 
             if TypeAux(group_values).check__elementary_collection_not_dict():
                 for pos, name in enumerate(group_values, start=1):
-                    print(f"{pos}:\t{name}")
+                    print(f"{pos:4d}:{name}")
             else:
                 for name, value in group_values.items():
                     self._print_block__name_value(name, value)
@@ -364,6 +353,19 @@ class ObjectInfo:
     def print_diffs(cls, *state: ObjectState) -> None:
         pass
         # TODO: FINISH!
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    class Victim:
+        A1 = 1
+
+        def meth1(self):
+            return 1
+
+
+    ObjectInfo(Victim()).print()
+    assert True
 
 
 # =====================================================================================================================

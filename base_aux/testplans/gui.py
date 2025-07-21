@@ -458,7 +458,7 @@ class Base_TpGui(Gui):
     def TV_TCS__selectionChanged(self, first: QItemSelection = None, last: QItemSelection = None) -> None:
         # print("selectionChanged")
         # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
-        # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
+        # ObjectInfo(first.indexes()[0]).print(skip_fullnames=["takeFirst", "takeLast"])
 
         if first is None:
             # when item with noFlag IsSelectable
@@ -506,7 +506,7 @@ class Base_TpGui(Gui):
     def TV_DEV__selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
         # print("selectionChanged")
         # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
-        # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
+        # ObjectInfo(first.indexes()[0]).print(skip_fullnames=["takeFirst", "takeLast"])
 
         if not first:
             # when item with noFlag IsSelectable

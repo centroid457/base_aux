@@ -791,7 +791,7 @@ class SerialClient(Logger):
 
         # find not opened ports ----------------------------------------
         for obj in list_ports.comports():
-            # ObjectInfo(obj).print(hide_skipped=True, hide_build_in=True)
+            # ObjectInfo(obj).print(hide_skipped=True, skip__build_in=True)
             result.append(obj.device)
             if Exx_SerialPL2303IncorrectDriver.MARKER in str(obj):
                 msg = f'[WARN] incorrect driver [{Exx_SerialPL2303IncorrectDriver.MARKER}]'

@@ -8,16 +8,26 @@ from base_aux.base_types.m2_info import *
 
 # =====================================================================================================================
 class Test_FREEZE:
-    @classmethod
-    def setup_class(cls):
-        pass
+    # @classmethod
+    # def setup_class(cls):
+    #     pass
+    #
+    # @classmethod
+    # def teardown_class(cls):
+    #     pass
+    #
+    # def setup_method(self, method):
+    #     pass
 
-    @classmethod
-    def teardown_class(cls):
-        pass
+    # -----------------------------------------------------------------------------------------------------------------
+    def test__zero(self):
+        class Victim:
+            A1 = 1
+            def meth1(self):
+                return 1
 
-    def setup_method(self, method):
-        pass
+        ObjectInfo(Victim(), skip__build_in=False).print()
+        assert True
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__QThread(self):
@@ -25,7 +35,10 @@ class Test_FREEZE:
             def run(self):
                 time.sleep(0.3)
 
-        ObjectInfo(Victim()).print()
+            def hello(self):
+                pass
+
+        ObjectInfo(Victim(), skip__build_in=False).print()
         assert True
 
 

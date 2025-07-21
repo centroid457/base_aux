@@ -93,8 +93,13 @@ def explore():
     soup = BeautifulSoup(markup, 'html.parser')
     print(soup.a)
     print()
-    ObjectInfo(soup.a, log_iter=True).print()
+    print()
+    print()
+    ObjectInfo(soup.a, names__skip_full=["unwrap", "wrap"]).print()
 
+    print()
+    print()
+    print()
     # for name in dir(soup.a):
     #     print(name)
 

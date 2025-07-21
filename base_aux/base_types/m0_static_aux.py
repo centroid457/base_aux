@@ -18,6 +18,7 @@ class ObjectState:
     keep final results for obj attributes (call if callable)
     """
     # TODO: add sort method!!!???
+    SKIPPED_BUILDIN: list[str] = field(default_factory=list)
     SKIPPED_FULLNAMES: list[str] = field(default_factory=list)
     SKIPPED_PARTNAMES: list[str] = field(default_factory=list)
 

@@ -406,11 +406,10 @@ mro(SOURCE)=['QCheckBox', 'QAbstractButton', 'QWidget', 'QObject', 'wrapper', 'Q
 self.NAMES__USE_ONLY_PARTS=[]
 self.NAMES__SKIP_FULL=[]
 self.NAMES__SKIP_PARTS=['init', 'new', 'create', 'enter', 'install', 'set', 'clone', 'copy', 'move', 'next', 'clear', 'reduce', 'close', 'del', 'exit', 'kill', 'exec', 'exec_', 'pyqtConfigure', 'checkout', 'detach', 'run', 'start', 'wait', 'join', 'terminate', 'quit', 'disconnect', 'pop', 'popleft', 'append', 'appendleft', 'extend', 'extendleft', 'add', 'insert', 'reverse', 'rotate', 'sort']
-self.HIDE_BUILD_IN=None
-self.LOG_ITER=None
+self.SKIP__BUILD_IN=None
 self.MAX_LINE_LEN=100
 self.MAX_ITER_ITEMS=5
-----------log_iter(wait last touched)---------------------------------------------------------------
+----------show_touch_names---------------------------------------------------------------
 ----------SKIPPED_FULLNAMES-------------------------------------------------------------------------
 ----------SKIPPED_PARTNAMES-------------------------------------------------------------------------
 1:	__delattr__
@@ -946,7 +945,7 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
     def TV_selectionChanged(self, first: QItemSelection, last: QItemSelection) -> None:
         # print("selectionChanged")
         # print(f"{first=}")  # first=<PyQt5.QtCore.QItemSelection object at 0x000001C79A107460>
-        # ObjectInfo(first.indexes()[0]).print(_log_iter=True, skip_fullnames=["takeFirst", "takeLast"])
+        # ObjectInfo(first.indexes()[0]).print(skip_fullnames=["takeFirst", "takeLast"])
 
         # print(f"{first=}")
 
