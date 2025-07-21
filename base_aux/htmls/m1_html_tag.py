@@ -95,7 +95,7 @@ def explore():
     print()
     print()
     print()
-    ObjectInfo(soup.a, names__skip_full=["unwrap", "wrap"]).print()
+    ObjectInfo(soup.a).print()
 
     print()
     print()

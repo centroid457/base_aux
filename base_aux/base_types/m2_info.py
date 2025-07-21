@@ -1,4 +1,6 @@
 from typing import *
+from base_aux.loggers.m1_print import *
+
 from base_aux.base_types.m0_static_aux import *
 from base_aux.base_types.m1_type_aux import TypeAux
 from base_aux.aux_attr.m0_static import check_name__buildin, NAMES__SKIP_PARTS
@@ -68,11 +70,15 @@ class ObjectInfo:
     STATE: ObjectState = None
     STATE_OLD: ObjectState | None = None
 
+    NAMES_COUNT__ON_START: int = 0
+    NAMES_COUNT__ON_FINISH: int = 0
+
     # SETTINGS --------------------------------------------------------------------------------------------------------
     MAX_LINE_LEN: int = 100
     MAX_ITER_ITEMS: int = 5
 
     SKIP__BUILD_IN: bool = True
+
     NAMES__USE_ONLY_PARTS: list[str] = []
     NAMES__SKIP_FULL: list[str] = []
     NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
@@ -115,8 +121,13 @@ class ObjectInfo:
                 names__skip_parts = [names__skip_parts, ]
             self.NAMES__SKIP_PARTS = [*self.NAMES__SKIP_PARTS, *names__skip_parts]
 
-        # WORK -----------------------------------------------------------
+        # WORK --------------------------------------------------------------------------------------------------------
         self.state_reload()
+
+    # =================================================================================================================
+    @property
+    def SOURCE_NAMES_COUNT_WAS_CHANGED(self) -> bool:
+        return self.NAMES_COUNT__ON_START != self.NAMES_COUNT__ON_FINISH
 
     # =================================================================================================================
     def state_clear(self) -> None:
@@ -128,7 +139,9 @@ class ObjectInfo:
 
         # WORK --------------------------------------
         self._print_line__group_separator(f"show_touch_names")
-        #
+        self.NAMES_COUNT__ON_START = len(dir(self.SOURCE))
+        print(f"{self.NAMES_COUNT__ON_START=}")
+
         # print()
         # print(dir(self.SOURCE))
         # for dirname in dir(self.SOURCE):
@@ -198,6 +211,15 @@ class ObjectInfo:
                 else:
                     self.STATE.PROPERTIES__OBJECTS.update({name: value})
 
+        self.NAMES_COUNT__ON_FINISH = len(dir(self.SOURCE))
+        print(f"{self.NAMES_COUNT__ON_FINISH=}")
+
+        msg = f"{self.SOURCE_NAMES_COUNT_WAS_CHANGED=}//{self.NAMES_COUNT__ON_START}/{self.NAMES_COUNT__ON_FINISH}"
+        if self.SOURCE_NAMES_COUNT_WAS_CHANGED:
+            Warn(msg)
+        else:
+            Print(msg)
+
     # def state_diff_last(self):
     #     # NOTE: use attrsDUMP!!! instead! cause raised values may be moved into other group! (single/collection)
     #     self.state_reload()
@@ -206,16 +228,16 @@ class ObjectInfo:
     #         for
 
     # =================================================================================================================
-    def _print_line__group_separator(self, group_name: str) -> str:
+    def _print_line__group_separator(self, group_name: str) -> None:
         """
         GOAL MAIN - print!
         GOAL SECONDARY - return str - just for tests!!!
         """
         result = "-" * 10 + f"{group_name:-<90}"      # here is standard MAX_LINE_LEN
         print(result)
-        return result
+        # return result
 
-    def _print_line__name_type_value(self, name: Optional[str] = None, type_replace: Optional[str] = None, value: Union[None, Any, ItemKeyValue] = None, intend: Optional[int] = None) -> str:
+    def _print_line__name_type_value(self, name: Optional[str] = None, type_replace: Optional[str] = None, value: Union[None, Any, ItemKeyValue] = None, intend: Optional[int] = None) -> None:
         # -------------------------------
         name = name or ""
         if isinstance(value, ItemKeyValue):
@@ -237,7 +259,11 @@ class ObjectInfo:
         _block_intend = "\t" * intend
 
         # -------------------------------
-        block_value = f"{value}"
+        try:
+            block_value = f"{value}"
+        except Exception as exx:
+            block_value = f"{exx!r}"
+
         if isinstance(value, ItemKeyValue):
             block_type = f"{value.KEY}:{value.VALUE}"
         elif TypeAux(value).check__exception():
@@ -253,11 +279,15 @@ class ObjectInfo:
         print(result)
 
         # -------------------------------
-        if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeAux(value).check__exception():
-            # additional print repr()
-            self._print_line__name_type_value(name=None, type_replace="__repr()", value=repr(value))
+        try:
+            if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeAux(value).check__exception():
+                # additional print repr()
+                self._print_line__name_type_value(name=None, type_replace="__repr()", value=repr(value))
+        except Exception as exx:
+            print(f"{exx!r}")
+            pass
 
-        return result
+        # return result
 
     # =================================================================================================================
     def _print_block__header(self) -> None:
@@ -265,9 +295,20 @@ class ObjectInfo:
         group_name = f"{self.__class__.__name__}.print"
         self._print_line__group_separator(group_name.upper())
 
-        print(f"str(SOURCE)={str(self.SOURCE)}")
-        print(f"repr(SOURCE)={repr(self.SOURCE)}")
-        print(f"type(SOURCE)={type(self.SOURCE)}")
+        try:
+            print(f"str(SOURCE)={str(self.SOURCE)}")
+        except Exception as exx:
+            print(f"str(SOURCE)={exx!r}")
+
+        try:
+            print(f"repr(SOURCE)={repr(self.SOURCE)}")
+        except Exception as exx:
+            print(f"repr(SOURCE)={exx!r}")
+
+        try:
+            print(f"type(SOURCE)={type(self.SOURCE)}")
+        except Exception as exx:
+            print(f"type(SOURCE)={exx!r}")
 
         try:
             mro = self.SOURCE.__class__.__mro__
@@ -294,7 +335,11 @@ class ObjectInfo:
     def _print_block__name_value(self, name, value) -> None:
         # ALWAYS ---------------------------------------------------------------------------------
         self._print_line__name_type_value(name=name, value=value)
-        if len(str(value)) <= self.MAX_LINE_LEN:
+        try:
+            if len(str(value)) <= self.MAX_LINE_LEN:
+                return
+        except Exception as exx:
+            print(f"{exx!r}")
             return
 
         # COLLECTION -----------------------------------------------------------------------------

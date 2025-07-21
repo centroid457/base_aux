@@ -32,6 +32,10 @@ class Print:
         self.MSG_LINES = lines
         print(self, file=self.OUTPUT)
 
+        if self.OUTPUT == sys.stderr:
+            # additional print - cause of stderr prints not in same
+            print(self, file=sys.stdout)
+
         super().__init__(**kwargs)
 
     def __str__(self):
