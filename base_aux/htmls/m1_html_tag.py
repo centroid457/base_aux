@@ -3,7 +3,6 @@ from typing import *
 from bs4 import BeautifulSoup
 from base_aux.alerts.m2_select import *
 from base_aux.alerts.m1_alert0_base import *
-
 from base_aux.base_types.m2_info import *
 
 
@@ -24,7 +23,7 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
     SOURCE: str = None
     INDEX: int = 0
 
-    # BS4.find_all -----------------------------
+    # BS4.find_all ----------------------------------------------------------------------------------------------------
     # TODO: use as KWARGS???
     NAME: str = None
     ATTRS: dict[str, str] = dict()
@@ -40,7 +39,7 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
         """
         GOAL
         ----
-        from html source get exact tag
+        from html source get load/body for exact tag
         """
         if source == NoValue:
             source = self.SOURCE
@@ -79,7 +78,7 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
             Warn(msg)
             return
 
-        return bs_tag.text
+        return bs_tag.decode_contents()     # get exact internal boby(load) of tag without self-bracket-markup
 
 
 # =====================================================================================================================
@@ -89,19 +88,26 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
 
 # =====================================================================================================================
 def explore():
-    markup = 'hello<a href="http://example.com/">\nlink <i>example.com</i>\n</a>'
-    soup = BeautifulSoup(markup, 'html.parser')
-    print(soup.a)
-    print()
-    print()
-    print()
-    ObjectInfo(soup.a).print()
+    load = 'hello<a href="http://example.com/">\nlink <i>example.com</i>\n</a>'
 
-    print()
-    print()
-    print()
+    # soup = BeautifulSoup(markup, 'html.parser')
+    # print(soup.a)
+    # print()
+    # print()
+    # print()
+    # ObjectInfo(soup.a).print()
+    #
+    # print()
+    # print()
+    # print()
+
     # for name in dir(soup.a):
     #     print(name)
+
+    load = HtmlTagParser(load, name="a").resolve()
+    print(f"{load=}")
+    load = HtmlTagParser(load, name="i").resolve()
+    print(f"{load=}")
 
 
 # =====================================================================================================================

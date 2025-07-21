@@ -361,7 +361,7 @@ class Base_AttrAux(NestInit_Source):
         """
         get attr name_index in original register
         """
-        print(f"{name_index=}")
+        # print(f"{name_index=}")
         name_index = str(name_index)
         name_index = str(name_index).strip()
 
