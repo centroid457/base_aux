@@ -11,7 +11,7 @@ class ChainResolve(NestInit_Source, NestCall_Resolve, Base_AttrKit):
     """
     GOAL
     ----
-    get cumulated result from several resolvers
+    get cumulated result from several resolvers/callers
 
     SPECIALLY CREATED FOR
     ---------------------
