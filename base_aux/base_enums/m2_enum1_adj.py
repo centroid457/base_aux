@@ -49,6 +49,21 @@ class EnumAdj_CallResolveStyle(NestEq_EnumAdj):
     SKIP_RAISED = 7
 
 
+class EnumAdj_ReturnOnRaise(NestEq_EnumAdj):
+    """
+    GOAL
+    ----
+    select what to return on raise
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    ChainResolve
+    """
+    RAISE = 1
+    NONE = 2
+    EXX = 3
+
+
 # =====================================================================================================================
 class EnumAdj_SourceOrigOrCopy(NestEq_EnumAdj):
     """
