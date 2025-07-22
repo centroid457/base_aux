@@ -6,20 +6,30 @@ from base_aux.base_types.m2_info import *
 
 
 # =====================================================================================================================
-class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
+# TODO: make tag access by attr name with calling and selection by kwargs
+#   tag.a(**kwargs).header(**kwargs).b().a()
+
+
+# =====================================================================================================================
+class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
     """
     GOAL
     ----
-    create several chains to point to one tag.
+    get value(body/load) for html tag.
+    if several tags found - return exact index!
 
-    all params directly will be passed into function Tag.find_all!
-    There is no variants - only full values!
+    KWARGS - all params directly will be passed into function Tag.find_all!
 
     EXAMPLES
     --------
-    HtmlTagAddress("table", {"class": "donor-svetofor-restyle"}),
+    HtmlTagAddress(name="table", attrs={"class": "donor-svetofor-restyle"}),
+
+    # TODO: NOTE
+        ----
+        FOR CHAINS/PIPES use universal chain Class !
     """
     SOURCE: str = None
+
     INDEX: int = 0
 
     # BS4.find_all ----------------------------------------------------------------------------------------------------
@@ -30,32 +40,38 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
     RECURSIVE: bool = None
 
     def __init__(self, source: str | BeautifulSoup = NoValue, **kwargs) -> None:
-        if source is not NoValue:
+        if source not in [NoValue, None]:
             self.SOURCE = str(source)
+
         super().__init__(**kwargs)
 
-    def resolve(self, source=NoValue, **kwargs) -> None | str:
+    # -----------------------------------------------------------------------------------------------------------------
+    def resolve(self, source: str | BeautifulSoup = NoValue) -> None | str:
         """
         GOAL
         ----
         from html source get load/body for exact tag
         """
-        if source == NoValue:
-            source = self.SOURCE
+        if source not in [NoValue, None]:
+            self.SOURCE = str(source)
 
-        if source:
+        return self.get_body()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def get_body(self) -> None | str:
+        if self.SOURCE:
             try:
-                bs_tag: BeautifulSoup = BeautifulSoup(markup=source, features='html.parser')
+                bs_tag: BeautifulSoup = BeautifulSoup(markup=self.SOURCE, features='html.parser')
             except Exception as exx:
-                msg = f"[CRITICAL] can't parse {source=}\n{exx!r}"
+                msg = f"[CRITICAL] can't parse {self.SOURCE=}\n{exx!r}"
                 Warn(msg)
                 return
         else:
-            msg = f"[CRITICAL] empty {source=}"
+            msg = f"[CRITICAL] empty {self.SOURCE=}"
             Warn(msg)
             return
 
-        # collect params ---------
+        # collect params ----------------------------------------------------------------------------------------------
         params = dict()
         if self.NAME is not None:
             params |= dict(name=self.NAME)
@@ -64,11 +80,11 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
         if self.STRING is not None:
             params |= dict(string=self.STRING)
         if self.RECURSIVE is not None:
-            params |= dict(string=self.RECURSIVE)
+            params |= dict(recursive=self.RECURSIVE)
 
         params |= dict(limit=self.INDEX + 1)
 
-        # find -------------------
+        # find --------------------------------------------------------------------------------------------------------
         try:
             tags = bs_tag.find_all(**params)
             bs_tag = tags[self.INDEX]
@@ -78,11 +94,6 @@ class HtmlTagParser(NestCall_Resolve, Base_AttrKit):
             return
 
         return bs_tag.decode_contents()     # get exact internal boby(load) of tag without self-bracket-markup
-
-
-# =====================================================================================================================
-# TODO: make tag access by attr name with calling and selection by kwargs
-#   tag.a(**kwargs).header(**kwargs).b().a()
 
 
 # =====================================================================================================================
