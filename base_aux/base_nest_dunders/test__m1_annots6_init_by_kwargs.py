@@ -2,12 +2,12 @@ import pytest
 
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
-EQ_ISINSTANCE_VICTIM = EqValid_IsinstanceSameinstance(NestInit_AnnotsAttrByKwArgs)
+EQ_ISINSTANCE_VICTIM = EqValid_IsinstanceSameinstance(NestInit_AnnotsAttr_ByArgsKwargs)
 
 
 class Test__NestInit:
@@ -15,14 +15,14 @@ class Test__NestInit:
         try:
             AttrKit_Blank()
             # Init_AnnotsAttrsByKwArgsIc()
-            NestInit_AnnotsAttrByKwArgs()
+            NestInit_AnnotsAttr_ByArgsKwargs()
             # NestInit_AnnotsAttrByKwArgsIc()
             assert True
         except:
             assert False
 
         assert AttrKit_Blank(a1=1).a1 == 1
-        assert NestInit_AnnotsAttrByKwArgs(a1=1).a1 == 1
+        assert NestInit_AnnotsAttr_ByArgsKwargs(a1=1).a1 == 1
         try:
             assert AttrKit_Blank(a1=1).A1 == 1
             assert False
@@ -30,7 +30,7 @@ class Test__NestInit:
             assert True
 
         try:
-            assert NestInit_AnnotsAttrByKwArgs(a1=1).A1 == 1
+            assert NestInit_AnnotsAttr_ByArgsKwargs(a1=1).A1 == 1
             assert False
         except:
             assert True
@@ -39,7 +39,7 @@ class Test__NestInit:
         # assert Init_AnnotsAttrsByKwArgsIc(a1=1).A1 == 1
 
     def test__Nested(self):
-        class Example(NestInit_AnnotsAttrByKwArgs):
+        class Example(NestInit_AnnotsAttr_ByArgsKwargs):
             A1: Any
             A2: Any = None
             A3 = None
@@ -77,12 +77,12 @@ class Test__NestInit:
         ]
     )
     def test__1(self, args, kwargs, _EXPECTED):
-        Lambda(NestInit_AnnotsAttrByKwArgs, *args, **kwargs).expect__check_assert(_EXPECTED)
+        Lambda(NestInit_AnnotsAttr_ByArgsKwargs, *args, **kwargs).expect__check_assert(_EXPECTED)
 
         if _EXPECTED == Exception:
             return
 
-        victim = NestInit_AnnotsAttrByKwArgs(*args, **kwargs)
+        victim = NestInit_AnnotsAttr_ByArgsKwargs(*args, **kwargs)
         for key, value in kwargs.items():
             assert getattr(victim, key) == value
 
@@ -96,7 +96,7 @@ class Test__NestInit:
 
 
 # =====================================================================================================================
-class Victim(NestInit_AnnotsAttrByKwArgs):
+class Victim(NestInit_AnnotsAttr_ByArgsKwargs):
     # At0
     At1 = None
     An0: Any

@@ -1,11 +1,11 @@
 from typing import *
 
 from base_aux.base_nest_dunders.m3_calls import *
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 
 
 # =====================================================================================================================
-class Url(NestInit_AnnotsAttrByKwArgs, NestCall_Resolve):
+class Url(NestInit_AnnotsAttr_ByArgsKwargs, NestCall_Resolve):
     PROTOCOL: str = "http"
     HOST: str = "localhost"
     PORT: int = 80

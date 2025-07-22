@@ -3,7 +3,7 @@ import pytest
 from base_aux.aux_iter.m1_iter_aux import *
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.base_values.m4_primitives import *
 
 
@@ -26,8 +26,8 @@ from base_aux.base_values.m4_primitives import *
         ({1: 11}, "1", 1),
 
         (AttrKit_Blank(arg1=1), "arg1", "arg1"),
-        (NestInit_AnnotsAttrByKwArgs(arg1=1), "ARG1", "arg1"),
-        (NestInit_AnnotsAttrByKwArgs(arg1=1), "hello", NoValue),
+        (NestInit_AnnotsAttr_ByArgsKwargs(arg1=1), "ARG1", "arg1"),
+        (NestInit_AnnotsAttr_ByArgsKwargs(arg1=1), "hello", NoValue),
     ]
 )
 def test__item__get_original(source, item, _EXPECTED):
@@ -84,9 +84,9 @@ def test__item__get_original_2():
         # ({"hello": [1]}, "hello", (0, "hello")),
         # hello/1
 
-        (NestInit_AnnotsAttrByKwArgs(arg1=1), ("arg1",), [("arg1",), 1]),
-        ([{"hello": NestInit_AnnotsAttrByKwArgs(arg1=1)}, 123], (0, "HELLO", "arg1"), [(0, "hello", "arg1"), 1]),
-        ([{"hello": NestInit_AnnotsAttrByKwArgs(arg1=[1, 2])}, 123], (0, "HELLO", "arg1", 1), [(0, "hello", "arg1", 1), 2]),
+        (NestInit_AnnotsAttr_ByArgsKwargs(arg1=1), ("arg1",), [("arg1",), 1]),
+        ([{"hello": NestInit_AnnotsAttr_ByArgsKwargs(arg1=1)}, 123], (0, "HELLO", "arg1"), [(0, "hello", "arg1"), 1]),
+        ([{"hello": NestInit_AnnotsAttr_ByArgsKwargs(arg1=[1, 2])}, 123], (0, "HELLO", "arg1", 1), [(0, "hello", "arg1", 1), 2]),
 
     ]
 )

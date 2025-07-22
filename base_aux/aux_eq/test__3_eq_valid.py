@@ -4,7 +4,7 @@ from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_values.m4_primitives import *
 
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 
 
 # =====================================================================================================================
@@ -419,7 +419,7 @@ def test__regexp_manual():
     ]
 )
 def test__AttrsByKwargs(source, other, _EXPECTED):
-    Lambda(EqValid_AttrsByKwargs(**source) == NestInit_AnnotsAttrByKwArgs(**other)).expect__check_assert(_EXPECTED)
+    Lambda(EqValid_AttrsByKwargs(**source) == NestInit_AnnotsAttr_ByArgsKwargs(**other)).expect__check_assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -439,10 +439,10 @@ def test__AttrsByKwargs(source, other, _EXPECTED):
 )
 def test__AttrsByObj(source, other, _EXPECTED):
     Lambda(
-        EqValid_AttrsByObjNotPrivate(NestInit_AnnotsAttrByKwArgs(**source)) == NestInit_AnnotsAttrByKwArgs(**other)
+        EqValid_AttrsByObjNotPrivate(NestInit_AnnotsAttr_ByArgsKwargs(**source)) == NestInit_AnnotsAttr_ByArgsKwargs(**other)
     ).expect__check_assert(_EXPECTED[0])
     Lambda(
-        EqValid_AttrsByObjNotHidden(NestInit_AnnotsAttrByKwArgs(**source)) == NestInit_AnnotsAttrByKwArgs(**other)
+        EqValid_AttrsByObjNotHidden(NestInit_AnnotsAttr_ByArgsKwargs(**source)) == NestInit_AnnotsAttr_ByArgsKwargs(**other)
     ).expect__check_assert(_EXPECTED[1])
 
 

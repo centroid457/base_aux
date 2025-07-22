@@ -62,9 +62,9 @@ def test__eq():
 
 # =====================================================================================================================
 def test__cls_name():
-    assert NestInit_AnnotsAttrByKwArgs().__class__.__name__ == f"NestInit_AnnotsAttrByKwArgs"
+    assert NestInit_AnnotsAttr_ByArgsKwargs().__class__.__name__ == f"NestInit_AnnotsAttr_ByArgsKwargs"
 
-    class Victim(NestInit_AnnotsAttrByKwArgs):
+    class Victim(NestInit_AnnotsAttr_ByArgsKwargs):
         A1: Any = None
 
     assert Victim().__class__.__name__ == f"Victim"

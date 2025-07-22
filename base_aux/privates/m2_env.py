@@ -5,14 +5,14 @@ import re
 from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_AnnotsAll
 from base_aux.aux_attr.m4_kits import AttrKit_Blank
 from base_aux.base_types.m1_type_aux import TypeAux
-from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_kwargs import NestInit_AnnotsAttrByKwArgs
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import NestInit_AnnotsAttr_ByArgsKwargs
 from base_aux.base_nest_dunders.m3_calls import NestCall_Resolve
 
 
 # =====================================================================================================================
 class PvLoaderEnv(NestCall_Resolve):
     # INIT -------
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any = AttrKit_Blank
+    TARGET: type[NestInit_AnnotsAttr_ByArgsKwargs] | Any = AttrKit_Blank
     PATTS: tuple[str, ...] = ()
 
     def __init__(
@@ -30,7 +30,7 @@ class PvLoaderEnv(NestCall_Resolve):
             self.PATTS = patts
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve(self) -> NestInit_AnnotsAttrByKwArgs | Any | NoReturn:
+    def resolve(self) -> NestInit_AnnotsAttr_ByArgsKwargs | Any | NoReturn:
         # get dict -------
         data = dict(os.environ)     # just a copy!
 
@@ -41,7 +41,7 @@ class PvLoaderEnv(NestCall_Resolve):
                 data.pop(out_i)
 
         # load args -------
-        if TypeAux(self.TARGET).check__class() and issubclass(self.TARGET, NestInit_AnnotsAttrByKwArgs):
+        if TypeAux(self.TARGET).check__class() and issubclass(self.TARGET, NestInit_AnnotsAttr_ByArgsKwargs):
             # used for check Annots all inited!
 
             result = self.TARGET(**data)

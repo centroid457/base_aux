@@ -19,7 +19,7 @@ class PvLoaderIni(FileAttrs_Loader):
     FILEPATH = pathlib.Path.home().joinpath("pv.ini")
 
     # INIT -------
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
+    TARGET: type[NestInit_AnnotsAttr_ByArgsKwargs] | Any
     KEYPATH: tuple[str | int, ...]
 
 
@@ -42,7 +42,7 @@ class PvLoaderJson(FileAttrs_Loader):
     FILEPATH = pathlib.Path.home().joinpath("pv.json")
 
     # INIT -------
-    TARGET: type[NestInit_AnnotsAttrByKwArgs] | Any
+    TARGET: type[NestInit_AnnotsAttr_ByArgsKwargs] | Any
     KEYPATH: tuple[str | int, ...]
 
 

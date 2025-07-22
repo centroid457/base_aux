@@ -14,7 +14,7 @@ class NestEq_AttrsNotPrivate:
     cmp second - resolveExx!!!
     """
     def __eq__(self, other: Any) -> bool:
-        # if isinstance() NestInit_AnnotsAttrByKwArgs == NestInit_AnnotsAttrByKwArgs:
+        # if isinstance() NestInit_AnnotsAttr_ByArgsKwargs == NestInit_AnnotsAttr_ByArgsKwargs:
         #     # check by names
 
         if other is None:
@@ -43,7 +43,7 @@ class NestEq_AttrsNotPrivate:
 # =====================================================================================================================
 class NestEq_AttrsNotHidden:
     def __eq__(self, other: Any) -> bool:
-        # if isinstance() NestInit_AnnotsAttrByKwArgs == NestInit_AnnotsAttrByKwArgs:
+        # if isinstance() NestInit_AnnotsAttr_ByArgsKwargs == NestInit_AnnotsAttr_ByArgsKwargs:
         #     # check by names
 
         if other is None:

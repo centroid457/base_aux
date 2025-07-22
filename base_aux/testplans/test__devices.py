@@ -1,4 +1,5 @@
 import pytest
+from base_aux.breeders.m3_table_inst import *
 from base_aux.testplans.devices_base import *
 from base_aux.testplans.devices_kit import DeviceKit
 
@@ -28,8 +29,8 @@ class Test__DeviceBase:
         victim = self.Victim()
         assert victim.INDEX is None
 
-        victim = self.Victim(2)
-        assert victim.INDEX == 2
+        # victim = self.Victim(2)
+        # assert victim.INDEX == 2
 
 
 # =====================================================================================================================

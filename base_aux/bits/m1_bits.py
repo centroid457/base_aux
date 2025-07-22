@@ -1,3 +1,5 @@
+from typing import *
+
 from base_aux.base_values.m3_exceptions import *
 
 
