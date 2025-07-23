@@ -1,7 +1,7 @@
 import pytest
+
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_types.m2_info import *
-
 from base_aux.htmls.m1_html_tag import *
 
 
@@ -10,7 +10,7 @@ EXAMPLE_HTML = """
 <!doctype html>
 <html lang="en-US">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>TITLE</title>
   </head>
   <body>
@@ -30,17 +30,39 @@ EXAMPLE_HTML = """
         (EXAMPLE_HTML, dict(name="p"), "TextP1"),
         (EXAMPLE_HTML, dict(name="p", index=0), "TextP1"),
         (EXAMPLE_HTML, dict(name="p", index=1), "TextP2"),
+        (EXAMPLE_HTML, dict(name="p", index=2), None),
         (EXAMPLE_HTML, dict(name="a", attrs=dict(cls="cls1")), "TextLink1"),
         (EXAMPLE_HTML, dict(name="a", attrs=dict(id="link1")), "TextLink1"),
         (EXAMPLE_HTML, dict(name="a123", attrs=dict(id="link1")), None),
     ]
 )
-def test__tags(source, address, _EXPECTED):
+def test__tag(source, address, _EXPECTED):
     Lambda(HtmlTagParser(source, **address).resolve).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
-def test__1():
+@pytest.mark.parametrize(
+    argnames="source, chain_dicts, _EXPECTED",
+    argvalues=[
+        # one chain ------
+        (EXAMPLE_HTML, [dict(name="p"),], "TextP1"),
+        (EXAMPLE_HTML, [dict(name="p", index=0),], "TextP1"),
+        (EXAMPLE_HTML, [dict(name="p", index=1),], "TextP2"),
+        (EXAMPLE_HTML, [dict(name="p", index=2),], None),
+        (EXAMPLE_HTML, [dict(name="a", attrs=dict(cls="cls1")),], "TextLink1"),
+        (EXAMPLE_HTML, [dict(name="a", attrs=dict(id="link1")),], "TextLink1"),
+        (EXAMPLE_HTML, [dict(name="a123", attrs=dict(id="link1")),], None),
+
+        # reveral chains ------
+        (EXAMPLE_HTML, [dict(name="body"), dict(name="p", index=1)], "TextP2"),
+    ]
+)
+def test__chain(source, chain_dicts, _EXPECTED):
+    Lambda(ChainResolve_HtmlTagParser(*[HtmlTagParser(**chain_dict) for chain_dict in chain_dicts], source=source).resolve).expect__check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+def test__direct():
     victim = HtmlTagParser(source=EXAMPLE_HTML, name="p")
     print(victim.resolve())
 

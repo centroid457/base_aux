@@ -26,7 +26,6 @@ class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
     HtmlTagAddress(name="table", attrs={"class": "donor-svetofor-restyle"}),
     """
     SOURCE: str = None
-
     INDEX: int = 0
 
     # BS4.find_all params ---------------------------------------------------------------------------------------------
@@ -118,6 +117,7 @@ def explore():
     print(f"{ChainResolve_HtmlTagParser(HtmlTagParser(name="a"), source=load0).resolve()=}")
     print(f"{ChainResolve_HtmlTagParser(HtmlTagParser(name="a")).resolve(source=load0)=}")
     print(f"{ChainResolve_HtmlTagParser(HtmlTagParser(name="a"), HtmlTagParser(name="i")).resolve(source=load0)=}")
+    print(f"{ChainResolve_HtmlTagParser(HtmlTagParser(name="a"), HtmlTagParser(name="i"), source=load0).resolve()=}")
 
 
 # =====================================================================================================================
