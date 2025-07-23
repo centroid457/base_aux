@@ -11,6 +11,7 @@ from base_aux.stock.m2_indicators import *
 from base_aux.privates.m1_privates import *
 from base_aux.alerts.m1_alert0_base import *
 from base_aux.base_types.m2_info import *
+from base_aux.aux_attr.m4_kits import *
 
 
 # =====================================================================================================================
@@ -27,9 +28,9 @@ TYPING__INDICATOR_VALUES = Union[None, float, TYPING__PD_SERIES]
 
 # =====================================================================================================================
 class MT5(NestInit_AttrsLambdaResolve):
-    CONN_AUTH = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
+    CONN_AUTH: Base_AttrKit = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
     SYMBOL: TYPING__SYMBOL_FINAL = Symbols.BRENT_UNIVERSAL
-    TF: TYPING__TF = mt5.TIMEFRAME_M10
+    TF: TYPING__TF = mt5.TIMEFRAME_D1
     __SYMBOLS_AVAILABLE: list[mt5.SymbolInfo] = None
 
     # BAR_LAST: np.ndarray = None
@@ -54,8 +55,10 @@ class MT5(NestInit_AttrsLambdaResolve):
     ) -> None | NoReturn:
         super().__init__()
 
-        self.TF = tf or self.TF
-        self.SYMBOL = symbol or self.SYMBOL
+        if tf is not None:
+            self.TF = tf
+        if symbol is not None:
+            self.SYMBOL = symbol or self.SYMBOL
 
         self.mt5_connect()
 

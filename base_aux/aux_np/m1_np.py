@@ -1,7 +1,12 @@
 from typing import *
+import sys
 import numpy as np
 
 from base_aux.base_nest_dunders.m1_init1_source import *
+
+# =====================================================================================================================
+pass    # settings
+np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
 
 # =====================================================================================================================
