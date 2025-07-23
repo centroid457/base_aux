@@ -15,6 +15,7 @@ cls
 pytest ^
     --cov-config=.coveragerc^
     --cov=base_aux^
-    --cov-report html
+    --cov-report html^
+    --cov-report term
 
 pause
