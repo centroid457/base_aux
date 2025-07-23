@@ -33,6 +33,7 @@ __pycache__/
 
 # PYTEST -------------------
 .pytest_cache/
+.coverage
 
 # PYPI DISTRIBUTION --------
 build/
@@ -57,7 +58,6 @@ pyinstaller/
 
 # some other ---------------
 htmlcov/
-.coverage
 *~lock*
 manage.sh
 todo.org

@@ -1,6 +1,7 @@
 rem ====================================
 rem VERSION = (0, 0, 1)  # add rule 1
 rem VERSION = (0, 0, 2)  # move tests into base_aux directory!
+rem VERSION = (0, 0, 3)  # add COV into HTML
 
 rem ====================================
 REM RULES:
@@ -11,5 +12,9 @@ rem ====================================
 echo off
 cls
 
-pytest
+pytest ^
+    --cov-config=.coveragerc^
+    --cov=base_aux^
+    --cov-report html
+
 pause
