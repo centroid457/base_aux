@@ -24,17 +24,12 @@ class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
     EXAMPLES
     --------
     HtmlTagAddress(name="table", attrs={"class": "donor-svetofor-restyle"}),
-
-    # TODO: NOTE
-        ----
-        FOR CHAINS/PIPES use universal chain Class !
     """
     SOURCE: str = None
 
     INDEX: int = 0
 
-    # BS4.find_all ----------------------------------------------------------------------------------------------------
-    # TODO: use as KWARGS???
+    # BS4.find_all params ---------------------------------------------------------------------------------------------
     NAME: str = None
     ATTRS: dict[str, str] = dict()
     STRING: Optional[str] = None

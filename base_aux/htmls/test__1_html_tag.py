@@ -17,33 +17,37 @@ EXAMPLE_HTML = """
     <p>TextP1</p>
     <p>TextP2</p>
     <a href="http://example.com/">LinkText<i>Italic</i></a>
-    <a class="link1" href="http://example.com/link1" id="link1">TextLink1</a>
+    <a cls="cls1" href="http://example.com/link1" id="link1">TextLink1</a>
   </body>
 </html>
 """
 
 
 # =====================================================================================================================
-# TODO: FINISH!!!
 @pytest.mark.parametrize(
-    argnames="source, chains, _EXPECTED",
+    argnames="source, address, _EXPECTED",
     argvalues=[
-        # (EXAMPLE_HTML, (lambda x: x+1, ), 2),
+        (EXAMPLE_HTML, dict(name="p"), "TextP1"),
+        (EXAMPLE_HTML, dict(name="p", index=0), "TextP1"),
+        (EXAMPLE_HTML, dict(name="p", index=1), "TextP2"),
+        (EXAMPLE_HTML, dict(name="a", attrs=dict(cls="cls1")), "TextLink1"),
+        (EXAMPLE_HTML, dict(name="a", attrs=dict(id="link1")), "TextLink1"),
+        (EXAMPLE_HTML, dict(name="a123", attrs=dict(id="link1")), None),
     ]
 )
-def test__chains(source, chains, _EXPECTED):
-    Lambda(HtmlTagParser(source=source).resolve).expect__check_assert(_EXPECTED)
+def test__tags(source, address, _EXPECTED):
+    Lambda(HtmlTagParser(source, **address).resolve).expect__check_assert(_EXPECTED)
 
 
+# =====================================================================================================================
 def test__1():
     victim = HtmlTagParser(source=EXAMPLE_HTML, name="p")
     print(victim.resolve())
 
     body = HtmlTagParser(source=EXAMPLE_HTML, name="body").resolve()
     print(f"{body=}")
-    p = HtmlTagParser(source=body, name="p").resolve()
-    assert p == "TextP1"
 
+    assert HtmlTagParser(source=body, name="p").resolve() == "TextP1"
 
     # Lambda(victim.resolve).expect__check_assert("TextP1")
     # pass
