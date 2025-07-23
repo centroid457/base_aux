@@ -28,6 +28,14 @@ TYPING__INDICATOR_VALUES = Union[None, float, TYPING__PD_SERIES]
 
 # =====================================================================================================================
 class MT5(NestInit_AttrsLambdaResolve):
+    """
+    GOAL
+    ----
+    1/ connect to mt5
+    2/ get history
+
+    DONT get/calculate indicators!!!
+    """
     CONN_AUTH: Base_AttrKit = PvLoaderIni_AuthServer(keypath=("AUTH_MT5_DEF",))
     SYMBOL: TYPING__SYMBOL_FINAL = Symbols.BRENT_UNIVERSAL
     TF: TYPING__TF = mt5.TIMEFRAME_D1
@@ -625,17 +633,17 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         return result
 
-    def indicator_WMA(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
-        return self._indicator_get_by_obj(IndicatorParams_WMA(*args), **kwargs)
-
-    def indicator_STOCH(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
-        return self._indicator_get_by_obj(IndicatorParams_STOCH(*args), **kwargs)
-
-    def indicator_ADX(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
-        return self._indicator_get_by_obj(IndicatorParams_ADX(*args), **kwargs)
-
-    def indicator_MACD(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
-        return self._indicator_get_by_obj(IndicatorParams_MACD(*args), **kwargs)
+    # def indicator_WMA(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
+    #     return self._indicator_get_by_obj(IndicatorParams_WMA(*args), **kwargs)
+    #
+    # def indicator_STOCH(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
+    #     return self._indicator_get_by_obj(IndicatorParams_STOCH(*args), **kwargs)
+    #
+    # def indicator_ADX(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
+    #     return self._indicator_get_by_obj(IndicatorParams_ADX(*args), **kwargs)
+    #
+    # def indicator_MACD(self, args: Collection[int], **kwargs) -> TYPING__INDICATOR_VALUES:
+    #     return self._indicator_get_by_obj(IndicatorParams_MACD(*args), **kwargs)
 
 
 # =====================================================================================================================

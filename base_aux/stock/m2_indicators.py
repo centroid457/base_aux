@@ -1,6 +1,5 @@
 from enum import Enum, auto
 from dataclasses import dataclass
-
 from base_aux.aux_attr.m1_annot_attr1_aux import AttrAux_AnnotsAll
 
 
@@ -13,7 +12,7 @@ class IndicatorName(Enum):
     RSI = auto()
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 class IndicatorParamsBase:
     NAME: IndicatorName = None
     COLUMN_NAME__TEMPLATE: str = None
@@ -30,7 +29,6 @@ class IndicatorParamsBase:
 
     def bars_expected__get(self) -> int:
         """
-
         РАСЧЕТ ДЛИНЫ БАРОВ
             количество влияет на результат!!!!
             при не особо достаточном количестве баров - расчет произойдет НО значения будут отличаться от фактического!!!
