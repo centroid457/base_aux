@@ -42,12 +42,13 @@ class Valid:
     WHY NOT: 2?
     -----------
 
-
     ATTRS
     =====
     :ivar REVERSE_LINK:
     created specially for applying DRY in testplans - then PSU will not PowerOk on different HvIn
     """
+
+    # TODO: ref to Lambda??? seems same but more
 
     NAME: str = ""      # TODO: realise access to Valid from Chains!
     COMMENT: str = ""
@@ -68,7 +69,7 @@ class Valid:
     timestamp_last: datetime.datetime | None = None
     skip_last: TYPING.RESULT__BOOL = False
     STATE_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
-    value_last: TYPING.RESULT__ANY_EXX = None               # direct result value for calculating func value_link
+    value_last: TYPING.RESULT__ANY_EXX = None       # direct result value for calculating func value_link
     validate_last: TYPING.RESULT__BOOL_EXX = True   # direct result value for calculating func validate_link === decide using only bool???
     reverse_last: TYPING.RESULT__BOOL = None
     validate_last_bool: TYPING.RESULT__BOOL         # represented value for validation
