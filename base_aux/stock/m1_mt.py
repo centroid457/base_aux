@@ -629,7 +629,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             result = df
         else:
             try:
-                # if less then need!
+                # if less then need! - TODO: cut !
                 result = df[-return_tail::]
             except:
                 pass

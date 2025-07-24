@@ -1,4 +1,8 @@
 from enum import Enum
+
+import numpy as np
+import pandas as pd
+
 from dataclasses import dataclass
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 
@@ -6,6 +10,10 @@ from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.aux_dict.m2_dict_ic import *
+
+
+# =====================================================================================================================
+TYPING__PD_SERIES = pd.core.series.Series
 
 
 # =====================================================================================================================
@@ -19,7 +27,8 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     ACCESS
         3/ access to indicator values
     """
-    SOURCE: Any     # decide what TYPE should it be
+    SOURCE: np.ndarray      # HISTORY original
+    DF: TYPING__PD_SERIES   #
 
     # UNIVERSAl -------------
     NAME: str = "DEF_IndNameInfo"   # just info!
@@ -30,8 +39,23 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     pass    # KEEP ALWAYS ALL LAST!!!
 
     # ACCESS ---------------
-    def __getattr__(self, item: str):
-        pass
+    def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:   # TODO: use NpNdArray????
+        """
+        GOAL
+        ----
+        return exact Indicator values DF!!!
+        """
+        column_name = self.COLUMN_NAME__TEMPLATES[item]
+        try:        # FIXME: check directly?
+            # if result gives only one column - its not have header! so it will raise!
+            # like WMA!
+            # but it used for others! like ADX/STOCH/MACD!
+            return self.DF[column_name]
+        except:
+            pass
+        return self.DF
+
+    # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!!
 
     # INITS ----------------
     # def __init__(self, source, **kwargs):
@@ -48,13 +72,22 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         ----
         do all final calculates and fixes on source
         """
+        self._ipost0_fix_attrs()
+        self._ipost1_warn_if_not_enough_data()
+        self._ipost2_fix_column_templates()
+        self.ipost3_calculate_values()
+        self._ipost4_round_values()
+
+    def _ipost0_fix_attrs(self) -> None:
+        """
+        GOAL
+        ----
+        main goal - Warn if not enough lines to calculate correct values
+        """
+        self.DF = pd.DataFrame(self.SOURCE)
         self.COLUMN_NAME__TEMPLATES = DictIcKeys(self.COLUMN_NAME__TEMPLATES)     # just make a cls copy to self
 
-        self._1_warn_if_not_enough_data()
-        self._2_fix_column_templates()
-        self._3_calculate_values()
-
-    def _1_warn_if_not_enough_data(self) -> None:
+    def _ipost1_warn_if_not_enough_data(self) -> None:
         """
         GOAL
         ----
@@ -64,7 +97,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         if len_source < self.ENOUGH_LINES_THRESH:
             Warn(f"{len_source=}/{self.ENOUGH_LINES_THRESH=}")
 
-    def _2_fix_column_templates(self) -> None:
+    def _ipost2_fix_column_templates(self) -> None:
         """
         GOAL
         ----
@@ -77,13 +110,21 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
                 value = value % attrs_dict
                 self.COLUMN_NAME__TEMPLATES[name] = value
 
-    def _3_calculate_values(self) -> None:
+    def ipost3_calculate_values(self) -> None:
         """
         GOAL
         ----
         do exact calculations
         """
         raise NotImplementedError()
+
+    def _ipost4_round_values(self) -> None:
+        """
+        GOAL
+        ----
+        round indicator calculations
+        """
+        self.DF = self.DF.iloc[:].round(self.ROUND_VALUES)  # FIXME: use only ind calculated values
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -99,6 +140,9 @@ class Indicator_Adx(Base_Indicator):
     ADX: Any
     ADP: Any
     ADN: Any
+
+    def ipost3_calculate_values(self) -> None:
+        self.DF = self.DF.ta.adx(length=self.length, lensig=self.lensig)
 
 
 # =====================================================================================================================
