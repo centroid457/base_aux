@@ -236,7 +236,7 @@ class ThreadDeCollector_MapDrawer_Shift(ThreadsDecorCollector):
 
 class IndicatorMapDrawer_Simple(MT5, threading.Thread):
     ALERT: type[Base_Alert] = Alert_MapDrawer
-    INDICATOR: type[IndicatorParamsBase] = IndicatorParams_RSI
+    INDICATOR: type[Base_IndicatorParams] = IndicatorParams_RSI
     INDICATOR_SETTINGS: Iterable[int] = (5, )
 
     TF = mt5.TIMEFRAME_D1

@@ -12,6 +12,7 @@ from base_aux.privates.m1_privates import *
 from base_aux.alerts.m1_alert0_base import *
 from base_aux.base_types.m2_info import *
 from base_aux.aux_attr.m4_kits import *
+from base_aux.loggers.m1_print import *
 
 
 # =====================================================================================================================
@@ -31,8 +32,11 @@ class MT5(NestInit_AttrsLambdaResolve):
     """
     GOAL
     ----
-    1/ connect to mt5
-    2/ get history
+    MAIN
+        1/ connect to mt5   # TODO: move mt5 into classAttr! to use connection for one time only
+        2/ get history
+    EXTRA
+        3/ do smth universal things like getting Available symbols
 
     DONT get/calculate indicators!!!
     """
@@ -69,6 +73,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             self.SYMBOL = symbol or self.SYMBOL
 
         self.mt5_connect()
+        self._SYMBOL_init()
 
     def __del__(self):
         mt5.shutdown()
@@ -77,14 +82,12 @@ class MT5(NestInit_AttrsLambdaResolve):
     def mt5_connect(self) -> None | NoReturn:
         result = mt5.initialize(login=int(self.CONN_AUTH.NAME), password=self.CONN_AUTH.PWD, server=self.CONN_AUTH.SERVER)
         msg = f"[{result}]initialize[{mt5.last_error()=}]"
-        print(msg)
+        Print(msg)
         if not result:
             msg += f"SMTIMES PWD DROPPED_DOWN/CORRUPTED in MT5!!! - you should simply update it in MT5"
             msg += f"\n{self.CONN_AUTH}"
-            print(msg)
+            Warn(msg)
             raise ConnectionError(msg)
-
-        self._SYMBOL_init()
 
     # SYMBOL ==========================================================================================================
     def _SYMBOL_init(self) -> None | NoReturn:
@@ -567,7 +570,7 @@ class MT5(NestInit_AttrsLambdaResolve):
     # INDICATOR =======================================================================================================
     def _indicator_get_by_obj(
             self,
-            indicator_params: IndicatorParamsBase,
+            indicator_params: Base_IndicatorParams,
             *,
             return_tail: Optional[int] = 1,
             tf_split: Optional[int] = None,

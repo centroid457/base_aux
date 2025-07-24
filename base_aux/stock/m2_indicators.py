@@ -1,31 +1,107 @@
-from enum import Enum, auto
+from enum import Enum
 from dataclasses import dataclass
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_nest_dunders.m3_calls import *
+from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
+from base_aux.aux_dict.m2_dict_ic import *
 
 
 # =====================================================================================================================
-class Base_Indicator(NestInit_Source, NestCall_Resolve):
+class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     """
     GOAL
     ----
-    1/ init source as PD
-    2/ calculate exact Indicator PD
-    3/ access to indicator values
+    ON INIT
+        1/ init source as PD - dont do smth with source - no shrink! only add new calculations!
+        2/ calculate additional exact Indicator PD
+    ACCESS
+        3/ access to indicator values
     """
-    SOURCE: Any     # decide what it should be
+    SOURCE: Any     # decide what TYPE should it be
+
+    # UNIVERSAl -------------
+    NAME: str = "DEF_IndNameInfo"   # just info!
+    ROUND_VALUES: int = 1
+    COLUMN_NAME__TEMPLATES: DictIcKeys[str, str]  # if not know what to use - keep blanc str "" or None!!!
+
+    # ANNOTS LAST ----------
+    pass    # KEEP ALWAYS ALL LAST!!!
+
+    # ACCESS ---------------
+    def __getattr__(self, item: str):
+        pass
+
+    # INITS ----------------
+    # def __init__(self, source, **kwargs):
+    #     pass
+    #     super().__init__(**kwargs)
+
+    @property
+    def ENOUGH_LINES_THRESH(self) -> int:
+        raise NotImplementedError()
+
+    def init_post(self) -> None:
+        """
+        GOAL
+        ----
+        do all final calculates and fixes on source
+        """
+        self.COLUMN_NAME__TEMPLATES = DictIcKeys(self.COLUMN_NAME__TEMPLATES)     # just make a cls copy to self
+
+        self._1_warn_if_not_enough_data()
+        self._2_fix_column_templates()
+        self._3_calculate_values()
+
+    def _1_warn_if_not_enough_data(self) -> None:
+        """
+        GOAL
+        ----
+        main goal - Warn if not enough lines to calculate correct values
+        """
+        len_source = len(self.SOURCE)
+        if len_source < self.ENOUGH_LINES_THRESH:
+            Warn(f"{len_source=}/{self.ENOUGH_LINES_THRESH=}")
+
+    def _2_fix_column_templates(self) -> None:
+        """
+        GOAL
+        ----
+        load all params in templates
+        """
+        attrs_dict = AttrAux_AnnotsLast(self).dump_dict__skip_raised()
+
+        for name, value in self.COLUMN_NAME__TEMPLATES.items():
+            if isinstance(value, str):
+                value = value % attrs_dict
+                self.COLUMN_NAME__TEMPLATES[name] = value
+
+    def _3_calculate_values(self) -> None:
+        """
+        GOAL
+        ----
+        do exact calculations
+        """
+        raise NotImplementedError()
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Adx(Base_Indicator):
+    NAME = "ADX"
+    COLUMN_NAME__TEMPLATES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+
+    # adj ---------
+    length: int = 13
+    lensig: int = 9
+
+    # results -----
+    ADX: Any
+    ADP: Any
+    ADN: Any
 
 
-
-
-
-
-
-
+# =====================================================================================================================
 
 
 
@@ -44,17 +120,26 @@ class Base_Indicator(NestInit_Source, NestCall_Resolve):
 # =====================================================================================================================
 # =====================================================================================================================
 # =====================================================================================================================
-# =====================================================================================================================
-class IndicatorName(Enum):
-    WMA = auto()
-    STOCH = auto()
-    ADX = auto()
-    MACD = auto()
-    RSI = auto()
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
+pass    # TODO: OLD ref!
 
 
 # =====================================================================================================================
-class IndicatorParamsBase:
+class IndicatorName(Enum):  # TODO: add IC!
+    WMA = "WMA"
+    STOCH = "STOCH"
+    ADX = "ADX"
+    MACD = "MACD"
+    RSI = "RSI"
+
+
+# =====================================================================================================================
+class Base_IndicatorParams:
     NAME: IndicatorName = None
     COLUMN_NAME__TEMPLATE: str = None
     ROUND: int = None
@@ -88,7 +173,7 @@ class IndicatorParamsBase:
 
 # =====================================================================================================================
 @dataclass
-class IndicatorParams_WMA(IndicatorParamsBase):
+class IndicatorParams_WMA(Base_IndicatorParams):
     length: int
 
     NAME: IndicatorName = IndicatorName.WMA
@@ -98,7 +183,7 @@ class IndicatorParams_WMA(IndicatorParamsBase):
 
 
 @dataclass
-class IndicatorParams_STOCH(IndicatorParamsBase):
+class IndicatorParams_STOCH(Base_IndicatorParams):
     """
     always work with 14/3/3!!!
     """
@@ -113,7 +198,7 @@ class IndicatorParams_STOCH(IndicatorParamsBase):
 
 
 @dataclass
-class IndicatorParams_ADX(IndicatorParamsBase):
+class IndicatorParams_ADX(Base_IndicatorParams):
     length: int
     lensig: int
 
@@ -124,7 +209,7 @@ class IndicatorParams_ADX(IndicatorParamsBase):
 
 
 @dataclass
-class IndicatorParams_MACD(IndicatorParamsBase):
+class IndicatorParams_MACD(Base_IndicatorParams):
     fast: int
     slow: int
     signal: int
@@ -141,7 +226,7 @@ class IndicatorParams_MACD(IndicatorParamsBase):
 
 
 @dataclass
-class IndicatorParams_RSI(IndicatorParamsBase):
+class IndicatorParams_RSI(Base_IndicatorParams):
     length: int
 
     NAME: IndicatorName = IndicatorName.RSI
