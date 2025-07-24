@@ -1,8 +1,10 @@
 from typing import *
 import pathlib
+import numpy as np
 
 from base_aux.base_values.m2_value_special import VALUE_SPECIAL
 from base_aux.base_types.m0_static_types import TYPES
+# from base_aux.base_lambdas.m1_lambda import Lambda    # DONT IMPORT! circular inport!
 
 
 # =====================================================================================================================
@@ -15,14 +17,14 @@ class TYPING:
     """
     ELEMENTARY = Union[*TYPES.ELEMENTARY]
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ARGS/KWARGS -----------------------------------------------------------------------------------------------------
     ARGS_FINAL = tuple[Any, ...]
     ARGS_DRAFT = Union[Any, ARGS_FINAL, 'ArgsKwargs']           # you can use direct single value
 
     KWARGS_FINAL = dict[str, Any]
     KWARGS_DRAFT = Union[None, KWARGS_FINAL, 'ArgsKwargs']  # if passed NONE - no data!
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # PATH ------------------------------------------------------------------------------------------------------------
     PATH_FINAL = pathlib.Path
     PATH_DRAFT = Union[str, PATH_FINAL]
 
@@ -32,7 +34,7 @@ class TYPING:
     ATTR_FINAL = str
     ATTR_DRAFT = str | int | Any
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # DICT ------------------------------------------------------------------------------------------------------------
     DICT_ANY_NONE = dict[Any, None]             # just to show - dict with None values after clearing!
     DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values
     DICT_STR_ANY = dict[str, Any]               # just to show - dict could be any! on values! not just an elementary1
@@ -58,7 +60,7 @@ class TYPING:
         VALUE_SPECIAL.NOVALUE
     ]
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # RESULT ----------------------------------------------------------------------------------------------------------
     RESULT__NONE = None
     RESULT__BOOL = bool
     RESULT__EXX = Exception     # | type[Exception] - DONT USE typeExx! from any process Exception comes as instance!
@@ -76,7 +78,7 @@ class TYPING:
     # -----------------------------------------------------------------------------------------------------------------
     EXPECTED = bool | type[Any | Exception] | Any
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # CALLABLE --------------------------------------------------------------------------------------------------------
     CALLABLE_DRAFT = Union[Any, type[Any], Callable[..., Any | NoReturn]]
     # CALLABLE_FINAL    # dont need final! Final - are all others!
 
@@ -98,6 +100,10 @@ class TYPING:
         type[Exception],  # direct comparison
         Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
     ]
+
+    # TS NP PD --------------------------------------------------------------------------------------------------------
+    TIME_SERIES__FINAL = np.ndarray
+    TIME_SERIES__DRAFT = np.ndarray | list[tuple[Any, ...]]
 
 
 # =====================================================================================================================

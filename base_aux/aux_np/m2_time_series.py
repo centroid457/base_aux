@@ -1,6 +1,7 @@
 import numpy as np
 
 from base_aux.base_nest_dunders.m1_init1_source import *
+from base_aux.base_types.m0_static_typing import *
 from base_aux.base_values.m3_exceptions import *
 from base_aux.base_types.m2_info import *
 
@@ -19,13 +20,15 @@ TS_EXAMPLE_LIST = [
     (1741999200, 70.62, 70.62, 70.62, 70.62,  10, 3,  10),
 ]
 
-TYPING__TS_FINAL = np.ndarray
-TYPING__TS_DRAFT = np.ndarray | list[tuple[Any, ...]]
-
 
 # =====================================================================================================================
 class TimeSeriesAux(NestInit_Source):
-    SOURCE: TYPING__TS_FINAL    # todo: add zero data!
+    """
+    GOAL
+    ----
+
+    """
+    SOURCE: TYPING.TIME_SERIES__FINAL    # todo: add zero data!
 
     DTYPE_DICT: dict[str, str | type] = dict(    # template for making dtype
         time='<i8',
@@ -84,7 +87,7 @@ class TimeSeriesAux(NestInit_Source):
         return self.SOURCE.dtype.fields
 
     # -----------------------------------------------------------------------------------------------------------------
-    def split_groups(self, group_len: int) -> TYPING__TS_FINAL:
+    def split_groups(self, group_len: int) -> TYPING.TIME_SERIES__FINAL:
         """
         GOAL
         ----

@@ -454,7 +454,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             _start: int = None,
             _symbol: TYPING__SYMBOL_DRAFT = None,
             _tf: TYPING__TF = None
-    ) -> Union[np.ndarray]:
+    ) -> np.ndarray:
         """get history bars
         :param tf_multiply: correct count of bars in case of using increasing tf
 
