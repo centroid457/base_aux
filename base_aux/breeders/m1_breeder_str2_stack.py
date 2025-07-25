@@ -71,9 +71,11 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
     _RAISE_IF_INDEX_SKIPPED: bool = True
 
     # aux ----------------------
-    _DATA: dict[int, str] = {}
+    _DATA: dict[int, str]
 
     def __init__(self):
+        self._DATA = dict()
+
         if self._INDEX_START is None:
             self._INDEX_START = 0
 
@@ -149,16 +151,15 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
     def count(self) -> int:
         return len(self._DATA)
 
-    @classmethod
-    def raise_if_index_skipped(cls) -> None | NoReturn:
+    def raise_if_index_skipped(self) -> None | NoReturn:
         index_prev = None
-        for index in cls._DATA:
+        for index in self._DATA:
             if index_prev is None:
                 index_prev = index
                 continue
 
-            if index - index_prev != 1:
-                msg = f"index [{index-1}]"
+            if index != index_prev + 1:
+                msg = f"raise_if_index_skipped {index=}/{index_prev=}"
                 raise Exx__NotExistsNotFoundNotCreated(msg)
             index_prev = index
 

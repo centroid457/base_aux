@@ -93,6 +93,13 @@ class Test__BreederStrStack:
         assert victim[5] == "series45_2"
         assert victim[6] == "name6"
 
+        try:
+            victim[7]
+        except:
+            pass
+        else:
+            assert False
+
     def test__index__break_order(self):
         class Victim(BreederStrStack):
             name0: int = 0
@@ -139,14 +146,14 @@ class Test__BreederStrStack:
             assert False
 
     def test__exx_1__skipped_1(self):
-        class BreederStrStack_Example2(BreederStrStack):
+        class Victim(BreederStrStack):
             name0: int = 0
             name1: int = 1
             TAIL: BreederStrSeries = BreederStrSeries(2, 2, "%s")
             TAIL2: BreederStrSeries = BreederStrSeries(20, 2, "%s")
 
         try:
-            victim = BreederStrStack_Example2()
+            victim = Victim()
         except:
             pass
         else:
@@ -219,7 +226,7 @@ class Test__BreederStrStack:
         assert self.victim.TAIL[1] == "1"
         assert self.victim.TAIL[2] == "2"
         try:
-            assert self.victim[3]
+            assert self.victim.TAIL[3]
         except:
             pass
         else:

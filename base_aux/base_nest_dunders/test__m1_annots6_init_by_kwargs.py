@@ -21,14 +21,9 @@ class Test__NestInit:
             assert False
 
         assert AttrKit_Blank(a1=1).a1 == 1
-        assert NestInit_AnnotsAttr_ByArgsKwargs(a1=1).a1 == 1
-        try:
-            assert AttrKit_Blank(a1=1).A1 == 1
-        except:
-            pass
-        else:
-            assert False
+        assert AttrKit_Blank(a1=1).A1 == 1
 
+        assert NestInit_AnnotsAttr_ByArgsKwargs(a1=1).a1 == 1
         try:
             assert NestInit_AnnotsAttr_ByArgsKwargs(a1=1).A1 == 1
         except:
@@ -45,12 +40,7 @@ class Test__NestInit:
             A2: Any = None
             A3 = None
 
-        try:
-            Example()
-        except:
-            pass
-        else:
-            assert False
+        Example()
 
         # assert Example(a1=1).A1 == 1
         # assert Example(1, a1=2).A1 == 2
