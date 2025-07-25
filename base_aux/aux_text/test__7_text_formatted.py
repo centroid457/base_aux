@@ -65,12 +65,26 @@ class Test_Formatted:
         assert victim.VALUES.name == "name_other"
         assert victim.VALUES.value == 222
 
+        victim.other("hello =222")
+        print(str(victim))
+        assert victim.VALUES.name == ""
+        assert victim.VALUES.value == 222
+
+        victim.other("hello  name_other=222")
+        print(str(victim))
+        assert victim.VALUES.name == " name_other"
+        assert victim.VALUES.value == 222
+
         # EXX --------
-        try:
-            victim("hello  name_other=222")
-            assert False
-        except:
-            pass
+        for wrong_value in ["he name_other=222", "hello name_222", "hello name_other222", ]:
+            try:
+                victim(wrong_value)
+            except:
+                pass
+            else:
+                print(111111, str(victim))
+                print(222222, repr(victim))
+                assert False
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

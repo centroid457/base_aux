@@ -18,7 +18,10 @@ class PatFormat:
 
 
 # =====================================================================================================================
-class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
+class TextFormatted(
+    NestCall_Other,
+    # NestRepr__ClsName_SelfStr     # use manual
+):
     """
     GOAL
     ----
@@ -148,6 +151,12 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
             group_index += 1
         return result
 
+    def __repr__(self):
+        values = AttrAux_AnnotsAll(self.VALUES).dump_dict()
+        result = f"{self.__class__.__name__}({self})"
+        result += f"kwargs={values}"
+        return result
+
     # -----------------------------------------------------------------------------------------------------------------
     def other(self, other: str) -> Any | NoReturn:
         """
@@ -166,9 +175,12 @@ class TextFormatted(NestCall_Other, NestRepr__ClsName_SelfStr):
         values_match = re.fullmatch(pat_values_fullmatch, other)
         if values_match:
             values = values_match.groups()
+            # values = [value.strip() for value in values]  # DONT DO STRIP!!!
             self.sai__values_args_kwargs(*values)
         else:
             raise Exx__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
+
+        print(self)
 
 
 # =====================================================================================================================
