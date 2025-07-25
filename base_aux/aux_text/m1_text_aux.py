@@ -500,7 +500,7 @@ class TextAux:
             ini.read_string(self.TEXT)
             return ini.to_dict()
         except Exception as exx:
-            msg = f"[CRITICAL] incorrect file!{exx!r}"
+            msg = f"incorrect file!{exx!r}"
             print(msg)
             return
 

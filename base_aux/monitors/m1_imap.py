@@ -109,7 +109,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
                 print(self._conn.select())  # ('OK', [b'5'])
 
         except Exception as exx:
-            msg = f"[CRITICAL] not exists [folder={name}]"
+            msg = f"not exists [folder={name}]"
             print(msg)
             raise Exception(msg)
             # raise exx

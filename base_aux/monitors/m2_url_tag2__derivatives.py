@@ -181,7 +181,7 @@ class Monitor_AcraRaiting_GTLC(MonitorUrlTag):
     NOT WORKING!
 [Try send --------------------------------------------------------------------------------
 [ALERT]Monitor_AcraRaiting_GTLC
-LOST URL SSLError(MaxRetryError("HTTPSConnectionPool(host='www.acra-ratings.ru', port=443): Max retries exceeded with url: /ratings/issuers/50/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1002)')))"))[CRITICAL] empty self._source_data=''
+LOST URL SSLError(MaxRetryError("HTTPSConnectionPool(host='www.acra-ratings.ru', port=443): Max retries exceeded with url: /ratings/issuers/50/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1002)')))"))empty self._source_data=''
 2023.09.18 21:02:54
 Try send] --------------------------------------------------------------------------------
 [READY] send

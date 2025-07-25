@@ -6,51 +6,55 @@ from base_aux.aux_attr.m4_kits import *
 
 # =====================================================================================================================
 def test__values():
-    class Example(Base_AttrKit):
+    class Victim(Base_AttrKit):
         A1: Any
         A2: Any = None
         A3 = None
         DICT: dict = {}
 
     try:
-        Example()
+        Victim()
     except:
         pass
     else:
         assert False
 
-    assert Example(a1=1).A1 == 1
-    assert Example(1, a1=2).A1 == 2
+    assert Victim(a1=1).A1 == 1
+    assert Victim(A1=1).a1 == 1
+    assert Victim(1).a1 == 1
+    assert Victim(1).A1 == 1
 
-    assert Example(1).A1 == 1
-    assert Example(1).A2 == None
-    assert Example(1).A3 == None
+    assert Victim(1, a1=2).A1 == 2
 
-    assert Example(1, 1, 1).A1 == 1
-    assert Example(1, 1, 1).A2 == 1
-    assert Example(1, 1, 1).A3 == None
-    assert Example(1, 1, a3=1).A3 == 1
+    assert Victim(1).A1 == 1
+    assert Victim(1).A2 == None
+    assert Victim(1).A3 == None
+
+    assert Victim(1, 1, 1).A1 == 1
+    assert Victim(1, 1, 1).A2 == 1
+    assert Victim(1, 1, 1).A3 == None
+    assert Victim(1, 1, a3=1).A3 == 1
 
     # mutable
-    victim = Example(1, 1, a3=1)
-    assert victim.DICT == Example.DICT
-    assert victim.DICT is not Example.DICT
+    victim = Victim(1, 1, a3=1)
+    assert victim.DICT == Victim.DICT
+    assert victim.DICT is not Victim.DICT
 
     victim.DICT[1]=1
     assert victim.DICT[1] == 1
-    assert victim.DICT != Example.DICT
+    assert victim.DICT != Victim.DICT
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 def test__eq():
-    class Example:
+    class Victim:
         A0: Any
         A1: Any = 1
 
-    assert AttrKit_Blank(a1=1) != Example()
-    assert AttrKit_Blank(A1=1) == Example()
-    assert AttrKit_Blank(a1=11) != Example()
-    assert AttrKit_Blank(a0=1) != Example()
+    assert AttrKit_Blank(a1=1) != Victim()
+    assert AttrKit_Blank(A1=1) == Victim()
+    assert AttrKit_Blank(a1=11) != Victim()
+    assert AttrKit_Blank(a0=1) != Victim()
 
     try:
         AttrKit_AuthTgBot(1)

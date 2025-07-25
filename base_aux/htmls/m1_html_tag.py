@@ -53,11 +53,11 @@ class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
             try:
                 bs_tag: BeautifulSoup = BeautifulSoup(markup=self.SOURCE, features='html.parser')
             except Exception as exx:
-                msg = f"[CRITICAL] can't parse {self.SOURCE=}\n{exx!r}"
+                msg = f"can't parse {self.SOURCE=}\n{exx!r}"
                 Warn(msg)
                 return
         else:
-            msg = f"[CRITICAL] empty {self.SOURCE=}"
+            msg = f"empty {self.SOURCE=}"
             Warn(msg)
             return
 

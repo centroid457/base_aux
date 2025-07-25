@@ -502,7 +502,7 @@ class Base_AttrAux(NestInit_Source):
         not_defined = self.annots__get_not_defined()
         if not_defined:
             dict_type = self.dump_dict__annot_types()
-            msg = f"[CRITICAL]{not_defined=} in {dict_type=}"
+            msg = f"{not_defined=} in {dict_type=}"
             raise Exx__NotExistsNotFoundNotCreated(msg)
 
         return True
