@@ -222,7 +222,7 @@ class CliUser:
             self.counter_in_list = 0
 
         # params apply ------------------------------------------------------------------------------------------------
-        Print(msg = f"[CLI_SEND] [{cmd}]")
+        Print(f"[CLI_SEND]{cmd}")
 
         if isinstance(cmd, tuple) and len(cmd) == 2:
             cmd, timeout_i = cmd
