@@ -60,7 +60,7 @@ class TextFormatted(
                 key = f"_{index}"
             result_dict.update({key: None})
 
-        self.VALUES = AttrAux_AnnotsAll().annots__append(**result_dict)
+        self.VALUES = AttrAux_AnnotsAll().annots__append_with_values(**result_dict)
 
     def sai__values_args_kwargs(self, *args, **kwargs) -> None | NoReturn:
         AttrAux_AnnotsAll(self.VALUES).sai__by_args_kwargs(*args, **kwargs)

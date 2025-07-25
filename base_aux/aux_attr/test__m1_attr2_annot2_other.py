@@ -264,8 +264,15 @@ def test__annots_ensure():
 
 def test__annots_append():
     # ---------------------------------------------------------
-    victim = AttrAux_AnnotsAll().annots__append(astr=str, aint=1)
-    assert victim.aint == 1
+    victim = AttrAux_AnnotsAll().annots__append_with_values()
+    assert "astr" not in victim.__annotations__
+    assert "aint" not in victim.__annotations__
+    assert victim.__annotations__ == dict()
+
+    victim = AttrAux_AnnotsAll(victim).annots__append_with_values(astr=str, aint=1)
+    assert "astr" in victim.__annotations__
+    assert "aint" in victim.__annotations__
+    assert victim.__annotations__ == dict(astr=str, aint=int)
 
     try:
         victim.astr
@@ -274,8 +281,10 @@ def test__annots_append():
     else:
         assert False
 
+    assert victim.aint == 1
+
     # ---------------------------------------------------------
-    victim2 = AttrAux_AnnotsAll().annots__append(astr="hello")
+    victim2 = AttrAux_AnnotsAll().annots__append_with_values(astr="hello")
     try:
         victim2.aint
     except:
@@ -287,7 +296,7 @@ def test__annots_append():
     assert victim.__annotations__ != victim2.__annotations__
 
     # ---------------------------------------------------------
-    victim3 = AttrAux_AnnotsAll(victim).annots__append(astr="hello")
+    victim3 = AttrAux_AnnotsAll(victim).annots__append_with_values(astr="hello")
     assert victim3.aint == 1
     assert victim3.astr == "hello"
 

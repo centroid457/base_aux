@@ -434,11 +434,11 @@ class Base_AttrAux(NestInit_Source):
         except:
             pass
 
-    def annots__append(self, **kwargs: type | Any) -> AttrDumped | Any:
+    def annots__append_with_values(self, **kwargs: type | Any) -> AttrDumped | Any:
         """
         GOAL
         ----
-        add new annot in last position
+        append new annot in last position
 
         BEST USAGE
         ----------
