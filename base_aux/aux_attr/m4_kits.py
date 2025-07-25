@@ -113,6 +113,43 @@ class AttrKit_AddrPort(Base_AttrKit):
 
 
 # =====================================================================================================================
+@final
+class AttrKit_StableNames(
+    NestInit_AnnotsAttr_ByKwargs,
+
+    NestGAI_AnnotAttrIC,
+
+    NestEq_AttrsNotHidden,
+    NestStR_AttrsNotHidden,
+    NestLen_AttrNotHidden,
+    NestContains_AttrIcNotHidden,
+):
+    """
+    GOAL
+    ----
+    create attrs by init.
+    then try to update values.
+
+    SAME AS - 1=Base_AttrKit
+    ------------------------
+    BUT attrs create by stable names only on INIT by kwargs! online!
+    """
+    def __init__(self, **kwargs: Any):
+        super().__init__(**kwargs)
+
+        self.load_annots()  # add into AttrsAnnots
+
+    def __call__(self, *args, **kwargs):
+        """
+        GOAL
+        ----
+        set values only for existed keys
+        """
+
+        pass
+
+
+# =====================================================================================================================
 if __name__ == '__main__':
     pass
 
