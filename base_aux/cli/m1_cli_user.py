@@ -3,6 +3,8 @@ from typing import *
 import subprocess
 import time
 
+from base_aux.loggers.m1_print import *
+
 
 # =====================================================================================================================
 TYPING__CMD = Union[str, tuple[str, float | None]]
@@ -209,8 +211,7 @@ class CliUser:
                         return True
                 else:
                     if not result:
-                        msg = f"[ERROR] {cmd_item=} in full sequence {cmd=}"
-                        print(msg)
+                        Warn(f"{cmd_item=} in full sequence {cmd=}")
                         return False
 
             return result
@@ -221,8 +222,7 @@ class CliUser:
             self.counter_in_list = 0
 
         # params apply ------------------------------------------------------------------------------------------------
-        msg = f"[CLI_SEND] [{cmd}]"
-        print(msg)
+        Print(msg = f"[CLI_SEND] [{cmd}]")
 
         if isinstance(cmd, tuple) and len(cmd) == 2:
             cmd, timeout_i = cmd
@@ -322,8 +322,7 @@ class CliUser:
         if self.CMDS_REQUIRED:
             for cmd, error_msg in self.CMDS_REQUIRED.items():
                 if not self.send(cmd, _raise=False):
-                    msg = f"[ERROR] cmd NOT available [{cmd}]"
-                    print(msg)
+                    Print(f"cmd NOT available [{cmd}]")
                     self.print_state()
                     return False
         return True
