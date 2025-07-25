@@ -8,9 +8,10 @@ from base_aux.aux_text.m5_re1_rexp import RExp
 def test__rexp():
     try:
         RExp()
-        assert False
     except:
         pass
+    else:
+        assert False
 
     assert RExp(111)[0] == 111
 

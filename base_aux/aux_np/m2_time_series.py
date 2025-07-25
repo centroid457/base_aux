@@ -190,9 +190,10 @@ pass    # ======================================================================
 def _explore_init():
     try:
         obj = TimeSeriesAux()
-        assert False
     except:
         pass
+    else:
+        assert False
 
     obj = TimeSeriesAux(TS_EXAMPLE_LIST)
     # print(obj.SOURCE)

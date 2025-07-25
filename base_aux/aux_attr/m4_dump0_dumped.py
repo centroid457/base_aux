@@ -50,9 +50,10 @@ if __name__ == "__main__":
     victim = Cls()
     try:
         print(victim.__annotations__)
-        assert False
     except:
         pass
+    else:
+        assert False
     victim.__class__.__annotations__
     print(victim.__annotations__)
 

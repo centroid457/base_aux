@@ -14,9 +14,10 @@ def test__values():
 
     try:
         Example()
-        assert False
     except:
-        assert True
+        pass
+    else:
+        assert False
 
     assert Example(a1=1).A1 == 1
     assert Example(1, a1=2).A1 == 2
@@ -53,9 +54,10 @@ def test__eq():
 
     try:
         AttrKit_AuthTgBot(1)
-        assert False
     except:
-        assert True
+        pass
+    else:
+        assert False
 
     assert AttrKit_AuthTgBot(1, 2, 3).token == 3
 

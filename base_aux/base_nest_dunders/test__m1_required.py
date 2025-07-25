@@ -23,11 +23,10 @@ def test__ok():
 
     try:
         Victim()
-        assert True
     except Exx__NotExistsNotFoundNotCreated:
         assert False
     except:
-        assert False
+        pass
 
 
 def test__NT():

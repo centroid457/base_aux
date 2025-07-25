@@ -8,9 +8,10 @@ from base_aux.base_values.m4_primitives import *
 def test__raise():
     try:
         Lambda(LAMBDA_RAISE)()
-        assert False
     except:
-        assert True
+        pass
+    else:
+        assert False
 
     assert Lambda(INST_EXCEPTION)() == INST_EXCEPTION
     assert isinstance(Lambda(Exception)(), Exception)
@@ -57,9 +58,10 @@ def test__LambdaSleep_Raise():
     assert time.time() - start_time < 0.1
     try:
         result = victim == 11     # execute on EQ
-        assert False
     except:
-        assert True
+        pass
+    else:
+        assert False
     assert time.time() - start_time > pause * 0.9
 
 

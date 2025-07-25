@@ -124,16 +124,17 @@ if __name__ == "__main__":
     assert ValueEqValid_Variants(1, *(1, 2))
     try:
         assert ValueEqValid_Variants(1, *(10, 2))
-        assert False
     except:
-        assert True
+        pass
+    else:
+        assert False
 
     try:
         assert ValueEqValid_Variants("val", *("VAL", 2))
-        assert False
     except:
-        assert True
-
+        pass
+    else:
+        assert False
     assert ValueEqValid_VariantsStrIc(1, *(1, 2))
     assert ValueEqValid_VariantsStrIc("val", *("VAL", 2))
 

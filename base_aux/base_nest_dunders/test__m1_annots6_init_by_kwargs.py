@@ -17,7 +17,6 @@ class Test__NestInit:
             # Init_AnnotsAttrsByKwArgsIc()
             NestInit_AnnotsAttr_ByArgsKwargs()
             # NestInit_AnnotsAttrByKwArgsIc()
-            assert True
         except:
             assert False
 
@@ -93,10 +92,10 @@ class Test__NestInit:
             # args used only for Annots!
             try:
                 getattr(victim, arg)
-                assert False
             except:
-                assert True
-
+                pass
+            else:
+                assert False
 
 # =====================================================================================================================
 class Victim(NestInit_AnnotsAttr_ByArgsKwargs):
