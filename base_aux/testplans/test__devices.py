@@ -100,16 +100,18 @@ class Test__DevicesLines:
         assert victim.DUT == victim.DUT[1]
         try:
             victim.PTB
-            assert False
         except:
             pass
+        else:
+            assert False
 
         assert hasattr(victim, "DUT") is True
         try:
             hasattr(victim, "ATC")
-            assert False
         except:
             pass
+        else:
+            assert False
 
         assert victim["DUT"] is not None
         assert victim["DUT"] is not None

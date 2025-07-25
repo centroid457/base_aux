@@ -60,9 +60,10 @@ class Test__ValueVariants:
 
         try:
             victim1.VALUE = "VAR2"
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
     def test__case(self):
         victim = self.Victim(value="var1", variants=["VAR1", "VAR2"])
@@ -71,9 +72,10 @@ class Test__ValueVariants:
 
         try:
             victim = self.Victim(value="var1", variants=["VAR1", "VAR2"], ignorecase=False)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
     def test__types__None(self):
         victim = self.Victim(variants=["NONE", ])

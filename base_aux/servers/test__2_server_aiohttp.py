@@ -53,9 +53,10 @@ class Test__ServerAiohttp:
         # double start DEPandant -------------------------
         try:
             self.victim.run()
-            assert False
         except:
             pass
+        else:
+            assert False
 
         # double start INDEPandant ------------------------
         self.victim_2.start()
@@ -97,9 +98,10 @@ class Test__ServerAiohttp:
         self.victim._app.shutdown()
         try:
             response = requests.get(url=f"http://localhost:{self.victim.PORT}/", timeout=0.3)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         self.victim._app.startup()
         response = requests.get(url=f"http://localhost:{self.victim.PORT}/", timeout=0.3)

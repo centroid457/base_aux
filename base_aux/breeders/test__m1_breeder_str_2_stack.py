@@ -70,9 +70,10 @@ class Test__BreederStrStack:
 
         try:
             victim = Victim()
-            assert False
         except:
             pass
+        else:
+            assert False
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__index__auto(self):
@@ -119,9 +120,10 @@ class Test__BreederStrStack:
 
         try:
             victim = Victim()
-            assert False
         except:
             pass
+        else:
+            assert False
 
     def test__exx_1__overlayd_2(self):
         class Victim(BreederStrStack):
@@ -131,9 +133,10 @@ class Test__BreederStrStack:
 
         try:
             victim = Victim()
-            assert False
         except:
             pass
+        else:
+            assert False
 
     def test__exx_1__skipped_1(self):
         class BreederStrStack_Example2(BreederStrStack):
@@ -144,9 +147,10 @@ class Test__BreederStrStack:
 
         try:
             victim = BreederStrStack_Example2()
-            assert False
         except:
             pass
+        else:
+            assert False
 
     def test__exx_1__skipped_2(self):
         class Victim(BreederStrStack):
@@ -156,9 +160,10 @@ class Test__BreederStrStack:
 
         try:
             victim = Victim()
-            assert False
         except:
             pass
+        else:
+            assert False
 
     # -----------------------------------------------------------------------------------------------------------------
     def test_1__main_1__getitem(self):
@@ -168,9 +173,10 @@ class Test__BreederStrStack:
         assert self.victim[3] == "2"
         try:
             assert self.victim[4]
-            assert False
         except:
             pass
+        else:
+            assert False
 
         assert self.victim["name0"] == 0
         assert self.victim["name1"] == 1
@@ -178,9 +184,10 @@ class Test__BreederStrStack:
         assert self.victim["2"] == 3
         try:
             assert self.victim["3"]
-            assert False
         except:
             pass
+        else:
+            assert False
 
     def test_1__main_2__contain(self):
         assert 0 in self.victim
@@ -204,30 +211,35 @@ class Test__BreederStrStack:
     def test_2__sub_2__getitem(self):
         try:
             assert self.victim.TAIL[0]
-            assert False
         except:
             pass
+        else:
+            assert False
+
         assert self.victim.TAIL[1] == "1"
         assert self.victim.TAIL[2] == "2"
         try:
             assert self.victim[3]
-            assert False
         except:
             pass
+        else:
+            assert False
 
         # 2--------
         try:
             assert self.victim.TAIL["0"]
-            assert False
         except:
             pass
+        else:
+            assert False
         assert self.victim.TAIL["1"] == 1
         assert self.victim.TAIL["2"] == 2
         try:
             assert self.victim.TAIL["3"]
-            assert False
         except:
             pass
+        else:
+            assert False
 
     def test_2__sub_2__contain(self):
         assert 0 not in self.victim.TAIL

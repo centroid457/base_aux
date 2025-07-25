@@ -67,9 +67,10 @@ class Test__RequestItem:
         # check MANUALLY ----------------------------
         try:
             response = requests.post(url=f"http://{host_wrong}/", timeout=0.2, json=TEST_DATA)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # check VICTIM ------------------------------
         class VictimPost(Client_RequestItem):
@@ -176,9 +177,10 @@ class Test__RequestsStack:
         # check MANUALLY ----------------------------
         try:
             response = requests.post(url=f"http://{host_wrong}/", timeout=0.2, json=TEST_DATA)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # check VICTIM ------------------------------
         class ClientRequestItem_1(Client_RequestItem):

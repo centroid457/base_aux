@@ -239,9 +239,10 @@ class Test__Dump:
     def test__callable_use__special_raise(self):
         try:
             result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=EnumAdj_CallResolveStyle.RAISE)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
 
 # =====================================================================================================================

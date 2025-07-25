@@ -41,9 +41,10 @@ class Test__Cls:
     def test__marker__not_exist(self):
         try:
             self.Victim.hello__true()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
     def test__marker__case_sense(self):
         assert self.Victim.bool_if__true() is True
@@ -63,9 +64,11 @@ class Test__Cls:
 
         try:
             self.Victim.raise_if__TRUE()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
+
         self.Victim.raise_if__FALSE()
         self.Victim.raise_if__NONE()
         self.Victim.raise_if__NOT_EXIST()
@@ -73,19 +76,24 @@ class Test__Cls:
         self.Victim.raise_if_not__TRUE()
         try:
             self.Victim.raise_if_not__FALSE()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
+
         try:
             self.Victim.raise_if_not__NONE()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
+
         try:
             self.Victim.raise_if_not__NOT_EXIST()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
 
 # =====================================================================================================================
@@ -130,9 +138,10 @@ class Test__Instance:
 
         try:
             victim = Victim()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # -----------------------
         class Victim(Base_ReqCheckStr):
@@ -243,9 +252,10 @@ class Test__Instance:
         Victim._RAISE = True
         try:
             victim.check__w_raise()
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # _MEET_TRUE = False
         Victim._RAISE = False

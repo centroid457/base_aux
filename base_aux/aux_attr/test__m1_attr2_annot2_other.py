@@ -246,15 +246,17 @@ def test__annots_ensure():
     victim = AttrDumped()
     try:
         victim.__annotations__
-        assert False
     except:
         pass
+    else:
+        assert False
 
     try:
         victim.__annotations__
-        assert False
     except:
         pass
+    else:
+        assert False
 
     AttrAux_AnnotsAll(victim).annots__ensure()
     assert victim.__annotations__ == {}
@@ -267,19 +269,21 @@ def test__annots_append():
 
     try:
         victim.astr
-        assert False
     except:
         pass
+    else:
+        assert False
 
     # ---------------------------------------------------------
     victim2 = AttrAux_AnnotsAll().annots__append(astr="hello")
     try:
         victim2.aint
-        assert False
     except:
         pass
-    assert victim2.astr == "hello"
+    else:
+        assert False
 
+    assert victim2.astr == "hello"
     assert victim.__annotations__ != victim2.__annotations__
 
     # ---------------------------------------------------------
@@ -299,9 +303,10 @@ class Test__SpecialObjects:
 
         try:
             victimNT = Victim() # will not need! raised just on NamedTuple!
-            assert False
         except:
             pass
+        else:
+            assert False
 
         victimNT = Victim(1)
 

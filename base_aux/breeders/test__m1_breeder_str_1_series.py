@@ -119,35 +119,39 @@ class Test__BreederStrSeries:
         assert victim[0] == "test_0"
         try:
             result = victim[1]
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # values
         assert victim["test_0"] == 0
         try:
             result = victim["test_1"]
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # --------------------------------------------------
         victim = self.Victim(0, 1, "test_%s", 1)
         # indexes
         try:
             result = victim[0]
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
         assert victim[1] == "test_1"
 
 
         # values
         try:
             result = victim["test_0"]
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
         assert victim["test_1"] == 1
 
     def test__listed_index__by_outer(self):
@@ -163,9 +167,10 @@ class Test__BreederStrSeries:
         assert victim.get_listed_index__by_outer(1) == 1
         try:
             assert victim.get_listed_index__by_outer(2)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # --------------------------------------------------
         victim = self.Victim(0, 2, "test_%s", 1)
@@ -179,9 +184,10 @@ class Test__BreederStrSeries:
         assert victim.get_listed_index__by_outer(1) == 1
         try:
             assert victim.get_listed_index__by_outer(2)
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
     def test__listed_index__by_value(self):
         # --------------------------------------------------
@@ -193,9 +199,10 @@ class Test__BreederStrSeries:
         assert victim.get_listed_index__by_value("test_1") == 1
         try:
             assert victim.get_listed_index__by_value("test_2")
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
 
         # --------------------------------------------------
         victim = self.Victim(0, 2, "test_%s", 1)
@@ -204,9 +211,10 @@ class Test__BreederStrSeries:
 
         try:
             assert victim.get_listed_index__by_value("test_0")
-            assert False
         except:
-            assert True
+            pass
+        else:
+            assert False
         assert victim.get_listed_index__by_value("test_1") == 0
         assert victim.get_listed_index__by_value("test_2") == 1
 
