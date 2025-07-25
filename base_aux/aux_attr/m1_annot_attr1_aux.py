@@ -609,7 +609,7 @@ class Base_AttrAux(NestInit_Source):
 
         return self.SOURCE
 
-    def sai__by_kwargs(self, **kwargs: dict[str, Any]) -> Any | NoReturn:
+    def sai__by_kwargs(self, **kwargs: dict[str, Any]) -> Any:
         for name, value in kwargs.items():
             self.sai_ic(name, value)
 

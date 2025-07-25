@@ -40,7 +40,7 @@ class AttrKit_StableKeySet(
 
         AttrAux_AnnotsLast(self).annots__append_with_values(**kwargs)
 
-    def __call__(self, *args, **kwargs) -> Self:
+    def __call__(self, *args, **kwargs) -> Self | NoReturn:
         """
         GOAL
         ----
@@ -48,6 +48,11 @@ class AttrKit_StableKeySet(
         so it used as try to update def values!
         """
         AttrAux_AnnotsLast(self).sai__by_args(*args)
+
+        for name in kwargs:
+            if AttrAux_AnnotsLast(self).name_ic__get_original(name) is None:
+                msg = f"{name=} not in {self=}"
+                raise Exx__NotExistsNotFoundNotCreated(msg)
         AttrAux_AnnotsLast(self).sai__by_kwargs(**kwargs)
 
         return self
