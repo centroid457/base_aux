@@ -31,6 +31,9 @@ def test____LE__():
 @pytest.mark.parametrize(
     argnames="func_link, args, kwargs, _EXPECTED, _pytestExpected",
     argvalues=[
+        # Special Values -------
+        # (NoValue, (), {}, NoValue, True),   # CANT CHECK NoValue))))
+
         # not callable ------------
         (True, (), {}, True, True),
 
@@ -56,16 +59,16 @@ def test____LE__():
         (1, (), {}, Exception, False),
         (Exception, (), {}, Exception, True),
         (Exception(), (), {}, Exception, True),
-
     ]
 )
 def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     try:
-        Lambda(func_link, *args, **kwargs).expect__check_assert(_EXPECTED)
+        result = Lambda(func_link, *args, **kwargs).expect__check_assert(_EXPECTED)
     except:
         assert not _pytestExpected
     else:
         assert _pytestExpected
+        # assert result == _pytestExpected
 
 
 # =====================================================================================================================

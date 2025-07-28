@@ -114,9 +114,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
     ----
     CANT REPLACE LAMBDA IN ANY CASE!
         func_link = lambda *_args: getattr(victim, meth)(*_args)
-    - will call at same time by Lambda, and if meth is not exists - return :
+    - will call at same time by Lambda, and if meth is not exists - return:
         Lambda(getattr(victim, meth), *args)
-
 
     TIP
     ---
@@ -152,6 +151,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         kwargs = {**self.KWARGS, **kwargs}
 
         try:
+            # if self.SOURCE == NoValue:
+            #     self.RESULT = self.SOURCE
             if callable(self.SOURCE):  # callable accept all variants! TypeAux.check__callable_func_meth_inst_cls!
                 self.RESULT = self.SOURCE(*args, **kwargs)
             else:
