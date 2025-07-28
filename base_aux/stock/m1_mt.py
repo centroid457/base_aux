@@ -1,12 +1,10 @@
 import threading
 
 import MetaTrader5 as mt5
-import pandas as pd
-import numpy as np
 
-from base_aux.aux_np.m2_time_series import TimeSeriesAux
+from base_aux.aux_np_pd.m2_time_series import TimeSeriesAux
 from base_aux.stock.m0_symbols import *
-from base_aux.stock.m2_indicators import *
+from base_aux.aux_np_pd.m3_indicators import *
 
 from base_aux.privates.m1_privates import *
 from base_aux.alerts.m1_alert0_base import *

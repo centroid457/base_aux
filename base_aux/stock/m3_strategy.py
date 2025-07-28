@@ -1,6 +1,6 @@
 import sys
 
-from base_aux.aux_np.m1_np import *
+from base_aux.aux_np_pd.m1_np import *
 from base_aux.alerts.m2_select import *
 from base_aux.base_lambdas.m4_thread_collector import *
 

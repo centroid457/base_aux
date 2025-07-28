@@ -1,8 +1,4 @@
-import pytest
-import MetaTrader5 as mt5
-
 from base_aux.stock.m3_strategy import *
-from base_aux.stock.m2_indicators import *
 from base_aux.stock.m1_mt import *
 
 

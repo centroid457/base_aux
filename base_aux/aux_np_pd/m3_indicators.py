@@ -27,13 +27,16 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     ACCESS
         3/ access to indicator values
     """
-    SOURCE: np.ndarray      # HISTORY original
-    DF: TYPING__PD_SERIES   #
+    SOURCE: np.ndarray      # HISTORY input
+    DF: TYPING__PD_SERIES   # OUTPUT
 
     # UNIVERSAl -------------
-    NAME: str = "DEF_IndNameInfo"   # just info!
-    ROUND_VALUES: int = 1
-    COLUMN_NAME__TEMPLATES: DictIcKeys[str, str]  # if not know what to use - keep blanc str "" or None!!!
+    NAME: str = "DEF_IndNameInfo"                   # just info!
+    ROUND_VALUES: int | tuple[int, ...] = 1         # each for each column! or one for all!
+    COLUMN_NAME__TEMPLATES: DictIcKeys[str, str]     # if not know what to use - keep blanc str "" or None!!!
+    # TODO:
+    #  - rename columns!!!
+    #  - values as EqValid! not a !
 
     # ANNOTS LAST ----------
     pass    # KEEP ALWAYS ALL LAST!!!
@@ -76,7 +79,8 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         self._ipost1_warn_if_not_enough_data()
         self._ipost2_fix_column_templates()
         self.ipost3_calculate_values()
-        self._ipost4_round_values()
+        self._ipost4_rename_columns()
+        self._ipost5_round_values()
 
     def _ipost0_fix_attrs(self) -> None:
         """
@@ -118,12 +122,20 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         """
         raise NotImplementedError()
 
-    def _ipost4_round_values(self) -> None:
+    def _ipost4_rename_columns(self) -> None:
+        """
+        GOAL
+        ----
+        rename columns to use finals simple names!
+        """
+
+    def _ipost5_round_values(self) -> None:
         """
         GOAL
         ----
         round indicator calculations
         """
+        # TODO: use schema for several columns!
         self.DF = self.DF.iloc[:].round(self.ROUND_VALUES)  # FIXME: use only ind calculated values
 
 
