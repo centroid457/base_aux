@@ -8,6 +8,8 @@ from base_aux.base_lambdas.m1_lambda import *
 # =====================================================================================================================
 class DictIcKeys(dict):
     """
+    GOAL
+    ----
     just a Caseinsense dict
     """
     # __getattr__ = dict.get
@@ -26,12 +28,18 @@ class DictIcKeys(dict):
     #     super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def key__get_original(self, key: str | Any) -> str | NoValue | Any:
+        keys_list = list(self)
+        result = IterAux(keys_list).item__get_original(key)
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
     def get(self, item: str | Any) -> Any | None:    # | NoReturn:
         """
         always get value or None!
         if you need check real contain key - check contain)))) [assert key in self] or [getitem_original]
         """
-        key_original = IterAux(self).item__get_original(item)
+        key_original = self.key__get_original(item)
         if key_original is NoValue:
             return None
             # key_original = item
@@ -43,7 +51,7 @@ class DictIcKeys(dict):
     # def set(self, item: Any, value: Any) -> None:
 
     def pop(self, item: str | Any) -> Any:
-        item_original = IterAux(self).item__get_original(item)
+        item_original = self.key__get_original(item)
         if item_original is NoValue:
             item_original = item
 
@@ -51,14 +59,14 @@ class DictIcKeys(dict):
 
     def update(self, m, /, **kwargs) -> None:
         for item, value in m.items():
-            key_original = IterAux(self).item__get_original(item)
+            key_original = self.key__get_original(item)
             if key_original is NoValue:
                 key_original = item
 
             super().update({key_original: value})
 
     def __contains__(self, item: Any) -> bool:
-        return IterAux(self).item__get_original(item) is not NoValue
+        return self.key__get_original(item) is not NoValue
 
     # -----------------------------------------------------------------------------------------------------------------
     # ITEM is universal!
