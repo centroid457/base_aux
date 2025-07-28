@@ -1,7 +1,7 @@
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 from base_aux.base_types.m1_type_aux import *
 from base_aux.base_types.m0_static_types import *
-from base_aux.base_types.m0_static_typing import TYPING
+from base_aux.base_types.m0_static_typing import *
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class IterAux(NestInit_Source):
     #     self.PATH = []
 
     # -----------------------------------------------------------------------------------------------------------------
-    def item__get_original(self, item: Any, _raise: bool = None) -> Any | NoValue:
+    def item__get_original(self, item: Any | str | int, _raise: bool = None) -> Any | NoValue:
         """
         get FIRST original item from any collection by comparing str(expected).lower()==str(original).lower().
 
