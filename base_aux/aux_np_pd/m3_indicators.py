@@ -33,10 +33,10 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     # UNIVERSAl -------------
     NAME: str = "DEF_IndNameInfo"                   # just info!
     ROUND_VALUES: int | tuple[int, ...] = 1         # each for each column! or one for all!
-    COLUMN_NAME__TEMPLATES: DictIcKeys[str, str]     # if not know what to use - keep blanc str "" or None!!!
+    COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]    # if not know what to use - keep blanc str "" or None!!!
     # TODO:
     #  - rename columns!!!
-    #  - values as EqValid! not a !
+    #  - values as EqValid or pattern! not just a simple final values!
 
     # ANNOTS LAST ----------
     pass    # KEEP ALWAYS ALL LAST!!!
@@ -48,14 +48,14 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         ----
         return exact Indicator values DF!!!
         """
-        column_name = self.COLUMN_NAME__TEMPLATES[item]
+        column_name = self.COLUMN_NAMES[item]
         try:        # FIXME: check directly?
             # if result gives only one column - its not have header! so it will raise!
             # like WMA!
             # but it used for others! like ADX/STOCH/MACD!
             return self.DF[column_name]
-        except:
-            pass
+        except Exception as exx:
+            raise exx
         return self.DF
 
     # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!!
@@ -75,23 +75,29 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         ----
         do all final calculates and fixes on source
         """
-        self._ipost0_fix_attrs()
-        self._ipost1_warn_if_not_enough_data()
-        self._ipost2_fix_column_templates()
-        self.ipost3_calculate_values()
-        self._ipost4_rename_columns()
-        self._ipost5_round_values()
+        self._init_post0_fix_attrs()
+        self._init_post1_warn_if_not_enough_data()
+        self._init_post2_fix_column_templates()
+        self.init_post3_calculate_values()
+        self._init_post4_rename_columns()
+        self._init_post5_round_values()
 
-    def _ipost0_fix_attrs(self) -> None:
+    def _init_post0_fix_attrs(self) -> None:
         """
         GOAL
         ----
-        main goal - Warn if not enough lines to calculate correct values
+        fix/remake/create all attrs if need
         """
         self.DF = pd.DataFrame(self.SOURCE)
-        self.COLUMN_NAME__TEMPLATES = DictIcKeys(self.COLUMN_NAME__TEMPLATES)     # just make a cls copy to self
 
-    def _ipost1_warn_if_not_enough_data(self) -> None:
+        self.COLUMN_NAMES = DictIcKeys(self.COLUMN_NAMES)     # just make a cls copy to self
+
+        # round
+        count_col = len(self.COLUMN_NAMES)
+        if isinstance(self.ROUND_VALUES, int):
+            self.ROUND_VALUES = (self.ROUND_VALUES, ) * count_col
+
+    def _init_post1_warn_if_not_enough_data(self) -> None:
         """
         GOAL
         ----
@@ -101,7 +107,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         if len_source < self.ENOUGH_LINES_THRESH:
             Warn(f"{len_source=}/{self.ENOUGH_LINES_THRESH=}")
 
-    def _ipost2_fix_column_templates(self) -> None:
+    def _init_post2_fix_column_templates(self) -> None:
         """
         GOAL
         ----
@@ -109,12 +115,12 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         """
         attrs_dict = AttrAux_AnnotsLast(self).dump_dict__skip_raised()
 
-        for name, value in self.COLUMN_NAME__TEMPLATES.items():
+        for name, value in self.COLUMN_NAMES.items():
             if isinstance(value, str):
                 value = value % attrs_dict
-                self.COLUMN_NAME__TEMPLATES[name] = value
+                self.COLUMN_NAMES[name] = value
 
-    def ipost3_calculate_values(self) -> None:
+    def init_post3_calculate_values(self) -> None:
         """
         GOAL
         ----
@@ -122,14 +128,14 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         """
         raise NotImplementedError()
 
-    def _ipost4_rename_columns(self) -> None:
+    def _init_post4_rename_columns(self) -> None:
         """
         GOAL
         ----
         rename columns to use finals simple names!
         """
 
-    def _ipost5_round_values(self) -> None:
+    def _init_post5_round_values(self) -> None:
         """
         GOAL
         ----
@@ -142,7 +148,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Adx(Base_Indicator):
     NAME = "ADX"
-    COLUMN_NAME__TEMPLATES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
 
     # adj ---------
     length: int = 13
@@ -153,7 +159,7 @@ class Indicator_Adx(Base_Indicator):
     ADP: Any
     ADN: Any
 
-    def ipost3_calculate_values(self) -> None:
+    def init_post3_calculate_values(self) -> None:
         self.DF = self.DF.ta.adx(length=self.length, lensig=self.lensig)
 
 
