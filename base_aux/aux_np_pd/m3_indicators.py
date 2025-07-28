@@ -14,6 +14,7 @@ from base_aux.aux_dict.m2_dict_ic import *
 
 # =====================================================================================================================
 TYPING__PD_SERIES = pd.core.series.Series
+# TYPING__PD_SERIES = pd.Series
 
 
 # =====================================================================================================================
@@ -31,9 +32,10 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     DF: TYPING__PD_SERIES   # OUTPUT
 
     # UNIVERSAl -------------
-    NAME: str = "DEF_IndNameInfo"                   # just info!
-    ROUND_VALUES: int | tuple[int, ...] = 1         # each for each column! or one for all!
-    COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]    # if not know what to use - keep blanc str "" or None!!!
+    NAME: str = "DEF_IndNameInfo"                       # just info!
+    ROUND_VALUES: int | tuple[int, ...] = 1             # each for each column! or one for all!
+    COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]   # if not know what to use - keep blanc str "" or None!!!
+
     # TODO:
     #  - rename columns!!!
     #  - values as EqValid or pattern! not just a simple final values!
@@ -42,7 +44,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     pass    # KEEP ALWAYS ALL LAST!!!
 
     # ACCESS ---------------
-    def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:   # TODO: use NpNdArray????
+    def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:   # TODO: use NpNdArray???
         """
         GOAL
         ----
@@ -56,6 +58,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
             return self.DF[column_name]
         except Exception as exx:
             raise exx
+
         return self.DF
 
     # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!!
@@ -89,8 +92,7 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
         fix/remake/create all attrs if need
         """
         self.DF = pd.DataFrame(self.SOURCE)
-
-        self.COLUMN_NAMES = DictIcKeys(self.COLUMN_NAMES)     # just make a cls copy to self
+        self.COLUMN_NAMES = DictIcKeys(self.COLUMN_NAMES)    # just make a cls copy to self
 
         # round
         count_col = len(self.COLUMN_NAMES)
