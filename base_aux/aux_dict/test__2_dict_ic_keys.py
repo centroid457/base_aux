@@ -2,6 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.aux_dict.m2_dict_ic import *
+from base_aux.base_lambdas.m1_lambda import *
 
 
 # =====================================================================================================================
@@ -83,6 +84,38 @@ def test__dict_ic():
         assert victim.pop('name') == "VALUE"
         assert list(victim) == [1, ]
         # victim['NAme'] = 'VALUE'
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        (dict(attr1=1), ["attr1", ]),
+        (dict(ATTR1=1), ["ATTR1", ]),
+        ({1:1}, [1, ]),
+    ]
+)
+def test__keys(source, _EXPECTED):
+    Lambda(list(DictIcKeys(source))).expect__check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, key, _EXPECTED",
+    argvalues=[
+        (dict(attr1=1), "attr1", "attr1"),
+        (dict(attr1=1), "ATTR1", "attr1"),
+        (dict(ATTR1=1), "ATTR1", "ATTR1"),
+        (dict(attr1=1), "hello", None),
+
+        (dict(attr1=1), 0, None),
+        ({1:1}, 0, None),
+        ({1:1}, 1, 1),
+    ]
+)
+def test__key__get_original(source, key, _EXPECTED):
+    value = DictIcKeys(source).key__get_original(key)
+    Lambda(value).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
