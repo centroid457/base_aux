@@ -113,8 +113,7 @@ class _ValueSpecial:
         ----
         iter values
         """
-        for name in self.__annotations__:
-            yield getattr(self, name)
+        yield from self.__annotations__.values()
 
     def __contains__(self, item: Any) -> bool:
         """
