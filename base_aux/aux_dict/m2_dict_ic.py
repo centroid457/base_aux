@@ -27,6 +27,11 @@ class DictIcKeys(dict):
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
 
+    # def __init__(self, *args, **kwargs):
+    #     _LOCK_KEYS = self.__LOCK_KEYS
+    #     super().__init__(*args, **kwargs)
+    #     self.__LOCK_KEYS = _LOCK_KEYS
+
     # -----------------------------------------------------------------------------------------------------------------
     def key__get_original(self, key: str | Any) -> str | NoValue | Any:
         keys_list = list(self)
@@ -57,8 +62,12 @@ class DictIcKeys(dict):
 
         return super().pop(item_original)
 
-    def update(self, m, /, **kwargs) -> None:
-        for item, value in m.items():
+    def update(self, *args, **kwargs) -> None | NoReturn:
+        if args:
+            params = args[0]
+        else:
+            params = kwargs
+        for item, value in params.items():
             key_original = self.key__get_original(item)
             if key_original is NoValue:
                 key_original = item
@@ -95,6 +104,56 @@ class DictIcKeys(dict):
                 return False
 
         return True
+
+
+# =====================================================================================================================
+@final
+class DictIc_LockedKeys(DictIcKeys):
+    """
+    GOAL
+    ----
+    create INLINE/OnTheFly (ByOneLine) keys set on init object!
+    so you dont need create one more/extra object!
+    like in
+        class MyLockedKeys:
+            ATTR1: str = "ATTR1"
+            ATTR2: int = 2
+            def update(**kwargs):
+                pass
+
+        class Final:
+            PARAMS = MyLockedKeys()
+            def __init__(**kwargs):
+                self.PARAMS.update(**kwargs)
+
+    use instead
+        class Final:
+            PARAMS = DictIc_LockedKeys(ATTR1="ATTR1, ATTR2=2)
+            def __init__(**kwargs):
+                self.PARAMS.update(**kwargs)
+
+    make dict similar to named tuple
+    when you setup keys only on init!
+    """
+    def __setitem__(self, item: Any, value: Any) -> None:
+        if item not in self:
+            msg = f"[{self.__class__.__name__}]{item=}/{value=}"
+            raise Exx__WrongUsage(msg)
+
+        self.update({item: value})
+
+    def update(self, *args, **kwargs) -> None | NoReturn:
+        if args:
+            params = args[0]
+        else:
+            params = kwargs
+        for item, value in params.items():
+            key_original = self.key__get_original(item)
+            if key_original is NoValue:
+                msg = f"[{self.__class__.__name__}]{item=}/{value=}"
+                raise Exx__WrongUsage(msg)
+
+            super().update({key_original: value})
 
 
 # =====================================================================================================================

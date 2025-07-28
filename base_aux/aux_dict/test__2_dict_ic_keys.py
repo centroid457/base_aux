@@ -6,7 +6,7 @@ from base_aux.base_lambdas.m1_lambda import *
 
 
 # =====================================================================================================================
-def test__dict_ic():
+def test__universe():
     victim1 = DictIcKeys()
     victim1['NAme'] = 'VALUE'
     victim1[1] = 1
@@ -88,34 +88,119 @@ def test__dict_ic():
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, _EXPECTED",
+    argnames="source, keys_all_str, _EXPECTED",
     argvalues=[
-        (dict(attr1=1), ["attr1", ]),
-        (dict(ATTR1=1), ["ATTR1", ]),
-        ({1:1}, [1, ]),
+        (dict(), True, []),
+        (dict(attr1=1), True, ["attr1", ]),
+        (dict(ATTR1=1), True, ["ATTR1", ]),
+        ({1:1}, False, [1, ]),
     ]
 )
-def test__keys(source, _EXPECTED):
+def test__keys(source, keys_all_str, _EXPECTED):
     Lambda(list(DictIcKeys(source))).expect__check_assert(_EXPECTED)
+    Lambda(list(DictIc_LockedKeys(source))).expect__check_assert(_EXPECTED)
+
+    if not keys_all_str:
+        return
+
+    Lambda(list(DictIcKeys(**source))).expect__check_assert(_EXPECTED)
+    Lambda(list(DictIc_LockedKeys(**source))).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="source, key, _EXPECTED",
+    argnames="source, key, keys_all_str, _EXPECTED",
     argvalues=[
-        (dict(attr1=1), "attr1", "attr1"),
-        (dict(attr1=1), "ATTR1", "attr1"),
-        (dict(ATTR1=1), "ATTR1", "ATTR1"),
-        (dict(attr1=1), "hello", None),
+        (dict(), "attr1", True, None),
+        (dict(attr1=1), "attr1", True, "attr1"),
+        (dict(attr1=1), "ATTR1", True, "attr1"),
+        (dict(ATTR1=1), "ATTR1", True, "ATTR1"),
+        (dict(attr1=1), "hello", True, None),
 
-        (dict(attr1=1), 0, None),
-        ({1:1}, 0, None),
-        ({1:1}, 1, 1),
+        (dict(attr1=1), 0, True, None),
+        ({1:1}, 0, False, None),
+        ({1:1}, 1, False, 1),
     ]
 )
-def test__key__get_original(source, key, _EXPECTED):
-    value = DictIcKeys(source).key__get_original(key)
-    Lambda(value).expect__check_assert(_EXPECTED)
+def test__key__get_original(source, key, keys_all_str, _EXPECTED):
+    Lambda(DictIcKeys(source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(DictIc_LockedKeys(source).key__get_original(key)).expect__check_assert(_EXPECTED)
+
+    if not keys_all_str:
+        return
+
+    Lambda(DictIcKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(DictIc_LockedKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="source, key, keys_all_str, _EXPECTED",
+    argvalues=[
+        (dict(attr1=1), "attr1", True, [None, None]),
+        (dict(attr1=1), "ATTR1", True, [None, None]),
+        (dict(ATTR1=1), "ATTR1", True, [None, None]),
+        (dict(attr1=1), "hello", True, [None, Exception]),
+
+        (dict(attr1=1), 0, False, [None, Exception]),
+        ({1:1}, 0, False, [None, Exception]),
+        ({1:1}, 1, False, [None, None]),
+    ]
+)
+def test__set(source, key, keys_all_str, _EXPECTED):
+    # -------------------------------------------------
+    victim = DictIcKeys(source)
+    Lambda(victim.update({key: 11})).expect__check_assert(_EXPECTED[0])
+    Lambda(victim.get(key)).expect__check_assert(11)
+
+    victim[key] = 111
+    Lambda(victim.get(key)).expect__check_assert(111)
+
+    if keys_all_str:
+        Lambda(victim.update(**{key: 1111})).expect__check_assert(_EXPECTED[0])
+        Lambda(victim.get(key)).expect__check_assert(1111)
+
+    # -------------------------------------------------
+    victim = DictIc_LockedKeys(source)
+    Lambda(lambda: victim.update({key: 2})).expect__check_assert(_EXPECTED[1])
+
+    if _EXPECTED[1] == Exception:
+        assert key not in victim
+
+        # ---------------
+        try:
+            victim[key] = 123
+        except:
+            pass
+        else:
+            assert False
+        Lambda(victim.get(key)).expect__check_assert(None)
+
+        # ---------------
+        try:
+            victim.update({key: 123})
+        except:
+            pass
+        else:
+            assert False
+        Lambda(victim.get(key)).expect__check_assert(None)
+
+    else:
+        assert key in victim
+
+        # ---------------
+        Lambda(victim.update({key: 11})).expect__check_assert(_EXPECTED[1])
+        Lambda(victim.get(key)).expect__check_assert(11)
+
+        victim[key] = 111
+        Lambda(victim.get(key)).expect__check_assert(111)
+
+
+    # if not keys_all_str:
+    #     return
+    #
+    # Lambda(DictIcKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    # Lambda(DictIc_LockedKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
