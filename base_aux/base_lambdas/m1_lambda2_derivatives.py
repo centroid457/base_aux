@@ -68,7 +68,7 @@ class Lambda_TrySuccess(Lambda_Bool):
 
     3. pytest assertions
 
-        class Victim(DictGaAnnotRequired):
+        class Victim(DictIcKeys_Ga_AnnotRequired):
             lowercase: str
 
         assert Lambda_TryFail(Victim)

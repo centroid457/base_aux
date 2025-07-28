@@ -11,7 +11,7 @@ dict_example = {
 }
 
 
-class Victim(DictGa):
+class Victim(DictIcKeys_Ga):
     lowercase: str
 
 

@@ -9,16 +9,16 @@ dict_example = {
 }
 
 
-class Victim(DictGaAnnotRequired):
+class Victim(DictIcKeys_Ga_AnnotRequired):
     lowercase: str
 
 
 # =====================================================================================================================
 def test__obj():
-    # victim = DictGaAnnotRequired()
+    # victim = DictIcKeys_Ga_AnnotRequired()
     # assert victim == {}
     #
-    # victim = DictGaAnnotRequired(hello=1)
+    # victim = DictIcKeys_Ga_AnnotRequired(hello=1)
     # assert victim == {"hello": 1}
 
     try:
@@ -30,15 +30,15 @@ def test__obj():
 
 
 def test__dict_only():
-    assert Lambda_TrySuccess(DictGaAnnotRequired) == True
-    assert Lambda_TrySuccess(DictGaAnnotRequired)
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired) == True
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired)
 
-    assert Lambda_TryFail(DictGaAnnotRequired) != True
-    assert not Lambda_TryFail(DictGaAnnotRequired)
+    assert Lambda_TryFail(DictIcKeys_Ga_AnnotRequired) != True
+    assert not Lambda_TryFail(DictIcKeys_Ga_AnnotRequired)
 
-    assert Lambda_TrySuccess(DictGaAnnotRequired, **dict_example)
-    assert Lambda_TrySuccess(DictGaAnnotRequired, lowercase="lowercase")
-    assert Lambda_TrySuccess(DictGaAnnotRequired, LOWERCASE="lowercase")
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, **dict_example)
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, lowercase="lowercase")
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, LOWERCASE="lowercase")
 
 
 def test__with_annots():

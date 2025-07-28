@@ -54,7 +54,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # INSTANCE ------------------------------------
     INDEX: int
-    SETTINGS: DictGa = {}
+    SETTINGS: DictIcKeys_Ga = {}
 
     result__startup: TYPING__RESULT_W_EXX = None
     result__teardown: TYPING__RESULT_W_EXX = None

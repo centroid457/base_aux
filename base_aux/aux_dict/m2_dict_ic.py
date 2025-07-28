@@ -107,7 +107,7 @@ class DictIcKeys(dict):
 
 
 # =====================================================================================================================
-@final
+# @final
 class DictIc_LockedKeys(DictIcKeys):
     """
     GOAL
@@ -134,6 +134,10 @@ class DictIc_LockedKeys(DictIcKeys):
 
     make dict similar to named tuple
     when you setup keys only on init!
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    indics and other PARAMS useful objects
     """
     def __setitem__(self, item: Any, value: Any) -> None:
         if item not in self:

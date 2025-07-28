@@ -1,11 +1,11 @@
-from base_aux.aux_dict.m2_dict_ic import DictIcKeys
+from base_aux.aux_dict.m2_dict_ic import *
 from base_aux.base_types.m2_info import ObjectInfo
 
 from base_aux.base_nest_dunders.m1_init0_annots_required import *
 
 
 # =====================================================================================================================
-class DictGa(DictIcKeys):
+class DictIcKeys_Ga(DictIcKeys):
     """
     dot.notation access to dictionary keys.
     RULES
@@ -128,9 +128,16 @@ class DictGa(DictIcKeys):
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getitem__(self, item: Any) -> Any | NoReturn:
-        result = self.get(item)         # thats wrong with NESTING! not will working with saving results!!!
+        """
+        GOAL
+        ----
+        reinit all dicts to DictGa!
+        """
+        # result = super().__getitem__(item)      # not working! wrong with NESTING! not will working with saving results!!!
+        result = self.get(item)               # its OK!!!!
+
         if isinstance(result, dict):
-            result = DictGa(result)
+            result = DictIcKeys_Ga(result)
 
         return result
 
@@ -146,9 +153,19 @@ class DictGa(DictIcKeys):
 
 
 # =====================================================================================================================
-class DictGaAnnotRequired(DictGa, NestInit_AnnotsRequired):
+class DictIc_LockedKeys_Ga(DictIc_LockedKeys, DictIcKeys_Ga):
     """
-    its a derivative for DictGa with applying NestInit_AnnotsRequired
+    GOAL
+    ----
+    just a combination for dict LK+GA
+    """
+    pass
+
+
+# =====================================================================================================================
+class DictIcKeys_Ga_AnnotRequired(DictIcKeys_Ga, NestInit_AnnotsRequired):
+    """
+    its a derivative for DictIcKeys_Ga with applying NestInit_AnnotsRequired
 
     WHY NOT 1=just simple nesting NestInit_AnnotsRequired?
     --------------------------------------------
@@ -182,7 +199,7 @@ class DictGaAnnotRequired(DictGa, NestInit_AnnotsRequired):
 
 # =====================================================================================================================
 if __name__ == '__main__':
-    class Cls(DictGaAnnotRequired):
+    class Cls(DictIcKeys_Ga_AnnotRequired):
         ATTR1: str
 
     victim = Cls()

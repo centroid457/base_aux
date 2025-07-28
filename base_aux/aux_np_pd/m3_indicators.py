@@ -18,7 +18,7 @@ TYPING__PD_SERIES = pd.core.series.Series
 
 
 # =====================================================================================================================
-class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
+class Base_Indicator(NestInit_Source):
     """
     GOAL
     ----
@@ -39,6 +39,9 @@ class Base_Indicator(NestInit_Source, NestInit_AnnotsAttr_ByKwargs):
     # TODO:
     #  - rename columns!!!
     #  - values as EqValid or pattern! not just a simple final values!
+
+    # def __init__(self, source: Any, **kwargs):
+    #     pass
 
     # ANNOTS LAST ----------
     pass    # KEEP ALWAYS ALL LAST!!!
