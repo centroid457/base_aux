@@ -80,9 +80,9 @@ class DictIcKeys(dict):
     # -----------------------------------------------------------------------------------------------------------------
     # ITEM is universal!
     def __getitem__(self, item: Any) -> Any | NoReturn:
-        if item not in self:        # decide use original behaviour or Raise!?
-            msg = f"{item=}"
-            raise KeyError(msg)
+        # if item not in self:        # decide use original behaviour or Raise!?
+        #     msg = f"{item=}"
+        #     raise KeyError(msg)
         return self.get(item)
 
     def __setitem__(self, item: Any, value: Any) -> None:

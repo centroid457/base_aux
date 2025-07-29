@@ -39,7 +39,7 @@ def test__universe(VictimCls):
         assert 0 not in victim
 
         # ACCESS
-        Lambda(lambda: victim[0]).expect__check_assert(Exception)   # keep original behaviour - maybe need switch to None???
+        Lambda(lambda: victim[0]).expect__check_assert(None)   # keep original behaviour - maybe need switch to None???
         Lambda(lambda: victim.get(0)).expect__check_assert(None)
 
         assert victim[1] == 1
