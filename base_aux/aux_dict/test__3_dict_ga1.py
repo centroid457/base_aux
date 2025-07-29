@@ -2,6 +2,7 @@ from typing import *
 import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
+from base_aux.base_lambdas.m1_lambda2_derivatives import *
 from base_aux.aux_dict.m3_dict_ga import *
 
 
@@ -20,38 +21,34 @@ class Victim(DictIcKeys_Ga):
 def test__init():
     victim = Victim()
     assert victim == {}
-    assert victim[1] == None
-    assert victim.lowercase == None
+
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    Lambda(lambda: victim.lowercase).expect__check_assert(Exception)
 
     victim = Victim({})
     assert victim == {}
-    assert victim[1] == None
-    assert victim.lowercase == None
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    Lambda(lambda: victim.lowercase).expect__check_assert(Exception)
 
     victim = Victim(**{})
     assert victim == {}
-    assert victim[1] == None
-    assert victim.lowercase == None
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    Lambda(lambda: victim.lowercase).expect__check_assert(Exception)
 
     victim = Victim({1:1})
     assert victim == {1:1}
-    assert victim[1] == 1
-    assert victim.lowercase == None
+    Lambda(lambda: victim[1]).expect__check_assert(1)
+    Lambda(lambda: victim.lowercase).expect__check_assert(Exception)
 
     victim = Victim(dict_example)
     assert victim == dict_example
-    assert victim[1] == None
-    assert victim.lowercase == "lowercase"
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    Lambda(lambda: victim.lowercase).expect__check_assert("lowercase")
 
     victim = Victim(**dict_example)
     assert victim == dict_example
-    assert victim[1] == None
-    assert victim.lowercase == "lowercase"
-
-    victim = Victim(lowercase="lowercase")
-    assert victim == {"lowercase": "lowercase"}
-    assert victim[1] == None
-    assert victim.lowercase == "lowercase"
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    Lambda(lambda: victim.lowercase).expect__check_assert("lowercase")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -59,8 +56,8 @@ def test__not_exist():
     victim = Victim(dict_example)
     assert victim == dict_example
 
-    assert victim.NOT_EXIST == None
-    assert victim["NOT_EXIST"] == None
+    Lambda(lambda: victim.NOT_EXIST).expect__check_assert(Exception)
+    Lambda(lambda: victim["NOT_EXIST"]).expect__check_assert(Exception)
     victim["NOT_EXIST"] = 1
     assert victim.not_exist == 1
     assert victim["not_exist"] == 1
@@ -106,7 +103,8 @@ def test__access_items():
     assert victim["LOWERCASE"] == 222
     victim["lowercase"] = "lowercase"
 
-    assert victim[1] == None
+    Lambda(lambda: victim[1]).expect__check_assert(Exception)
+    # assert victim[1] == None
     victim[1] = 1
     assert victim[1] == 1
 

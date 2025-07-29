@@ -128,9 +128,9 @@ class DictIcKeys_Ga(DictIcKeys):
     """
     # -----------------------------------------------------------------------------------------------------------------
     def __getitem__(self, item: Any) -> Any | NoReturn:
-        # if item not in self:
-        #     msg = f"{item=}"
-        #     raise KeyError(msg)
+        if item not in self:
+            msg = f"{item=}"
+            raise KeyError(msg)
 
         # result = super().__getitem__(item)      # not working! wrong with NESTING! not will working with saving results!!!
         result = self.get(item)               # its OK!!!!

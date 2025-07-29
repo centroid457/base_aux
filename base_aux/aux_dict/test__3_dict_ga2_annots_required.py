@@ -30,33 +30,36 @@ def test__obj():
 
 
 def test__dict_only():
-    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired) == True
-    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired)
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired).resolve() == True
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired).resolve()
 
-    assert Lambda_TryFail(DictIcKeys_Ga_AnnotRequired) != True
-    assert not Lambda_TryFail(DictIcKeys_Ga_AnnotRequired)
+    assert Lambda_TryFail(DictIcKeys_Ga_AnnotRequired).resolve() != True
+    assert not Lambda_TryFail(DictIcKeys_Ga_AnnotRequired).resolve()
 
-    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, **dict_example)
-    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, lowercase="lowercase")
-    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, LOWERCASE="lowercase")
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, **dict_example).resolve()
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, lowercase="lowercase").resolve()
+    assert Lambda_TrySuccess(DictIcKeys_Ga_AnnotRequired, LOWERCASE="lowercase").resolve()
 
 
 def test__with_annots():
-    assert Lambda_TryFail(Victim)
-    assert not Lambda_TrySuccess(Victim)
+    assert Lambda_TryFail(Victim).resolve()
+    assert not Lambda_TrySuccess(Victim).resolve()
 
     victim = Victim(lowercase="lowercase")
     assert victim["lowercase"] == "lowercase"
 
-    assert Lambda_TrySuccess(Victim, **dict_example)
-    assert Lambda_TrySuccess(Victim, lowercase="lowercase")
-    assert Lambda_TrySuccess(Victim, LOWERCASE="lowercase")
+    assert Lambda_TrySuccess(Victim, **dict_example).resolve()
+    assert Lambda_TrySuccess(Victim, lowercase="lowercase").resolve()
+    assert Lambda_TrySuccess(Victim, LOWERCASE="lowercase").resolve()
 
-    assert Lambda_TryFail(Victim, hello="lowercase")
+    assert Lambda_TryFail(Victim, hello="lowercase").resolve()
 
     victim = Victim(lowercase="lowercase")
     assert victim == {"lowercase": "lowercase"}
-    assert victim[1] == None
+
+    # assert victim[1] == None
+    assert Lambda_TryFail(lambda: victim[1]).resolve()
+
     assert victim.lowercase == "lowercase"
 
 
