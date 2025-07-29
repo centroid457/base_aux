@@ -166,6 +166,10 @@ def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
         Lambda(victim.update(**{key: 1111})).expect__check_assert(_EXPECTED[0])
         Lambda(victim.get(key)).expect__check_assert(1111)
 
+        # kwargs out
+        Lambda(dict(**VictimClsPair[0](source))).expect__check_assert(source)
+        Lambda(dict(**VictimClsPair[1](source))).expect__check_assert(source)
+
     # -------------------------------------------------
     victim = VictimClsPair[1](source)
     Lambda(lambda: victim.update({key: 2})).expect__check_assert(_EXPECTED[1])
