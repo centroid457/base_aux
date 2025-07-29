@@ -7,8 +7,9 @@ from dataclasses import dataclass
 from base_aux.aux_attr.m1_annot_attr1_aux import *
 
 from base_aux.base_nest_dunders.m1_init1_source import *
-from base_aux.base_nest_dunders.m3_calls import *
+from base_aux.base_nest_dunders.m1_init3_params_dict_kwargs_update import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
+from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_dict.m2_dict_ic import *
 
 
@@ -18,7 +19,7 @@ TYPING__PD_SERIES = pd.core.series.Series
 
 
 # =====================================================================================================================
-class Base_Indicator(NestInit_Source):
+class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     """
     GOAL
     ----
@@ -30,6 +31,8 @@ class Base_Indicator(NestInit_Source):
     """
     SOURCE: np.ndarray      # HISTORY input
     DF: TYPING__PD_SERIES   # OUTPUT
+
+    PARAMS: DictIc_LockedKeys_Ga
 
     # UNIVERSAl -------------
     NAME: str = "DEF_IndNameInfo"                       # just info!
@@ -154,10 +157,7 @@ class Base_Indicator(NestInit_Source):
 class Indicator_Adx(Base_Indicator):
     NAME = "ADX"
     COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-
-    # adj ---------
-    length: int = 13
-    lensig: int = 9
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=13, lensig=9)
 
     # results -----
     ADX: Any
@@ -165,7 +165,8 @@ class Indicator_Adx(Base_Indicator):
     ADN: Any
 
     def init_post3_calculate_values(self) -> None:
-        self.DF = self.DF.ta.adx(length=self.length, lensig=self.lensig)
+        # self.DF = self.DF.ta.adx(**self.PARAMS)
+        self.DF = self.DF.ta.adx(length=self.PARAMS.length, lensig=self.PARAMS.lensig)
 
 
 # =====================================================================================================================

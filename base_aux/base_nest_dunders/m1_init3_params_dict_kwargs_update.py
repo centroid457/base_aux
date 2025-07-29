@@ -1,11 +1,11 @@
 from typing import *
 import pytest
 
-from base_aux.aux_dict.m2_dict_ic import *
+from base_aux.aux_dict.m3_dict_ga import *
 
 
 # =====================================================================================================================
-class NestInit_ParamsDict_UpdateKwargs:
+class NestInit_ParamsDict_UpdateByKwargs:
     """
     GOAL
     ----
@@ -15,7 +15,7 @@ class NestInit_ParamsDict_UpdateKwargs:
     ---------------------
     indics
     """
-    PARAMS: DictIc_LockedKeys
+    PARAMS: DictIc_LockedKeys_Ga
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args)
@@ -24,7 +24,7 @@ class NestInit_ParamsDict_UpdateKwargs:
 
 # =====================================================================================================================
 def test__():
-    class Victim(NestInit_ParamsDict_UpdateKwargs):
+    class Victim(NestInit_ParamsDict_UpdateByKwargs):
         PARAMS = DictIc_LockedKeys(attr1=1, attr2=2)
 
     victim = Victim(attr2=22)
