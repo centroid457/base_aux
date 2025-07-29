@@ -205,12 +205,25 @@ def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
         victim[key] = 111
         Lambda(victim.get(key)).expect__check_assert(111)
 
-
     # if not keys_all_str:
     #     return
     #
     # Lambda(VictimClsPair[0](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
     # Lambda(VictimClsPair[1](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+
+
+# =====================================================================================================================
+@pytest.mark.skip
+@pytest.mark.parametrize(argnames="VictimCls",argvalues=[DictIcKeys, DictIc_LockedKeys, DictIcKeys_Ga, DictIc_LockedKeys_Ga])
+@pytest.mark.parametrize(
+    argnames="source",
+    argvalues=[
+        dict(),
+        dict(a1=1),
+    ]
+)
+def test__kwargs_unpack(VictimCls, source):
+    Lambda(dict(**VictimCls({key.lower(): value for key, value in source.items()}))).expect__check_assert({key.upper(): value for key, value in source.items()})
 
 
 # =====================================================================================================================

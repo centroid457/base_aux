@@ -26,6 +26,9 @@ class Base_AttrKit(
     https://www.attrs.org/en/stable/examples.html
     yes! but more simple! and not so complicated! clear one way logic!
 
+    SAME AS - 2=NAMEDTUPLE
+    ----------------------
+
     GOAL
     ----
     just show that child is a kit
@@ -102,6 +105,7 @@ class AttrKit_AuthServer(Base_AttrKit):
     SERVER: str
 
 
+@final
 class AttrKit_AddrPort(Base_AttrKit):
     """class for keeping connection parameters/settings for exact smtp server
 
