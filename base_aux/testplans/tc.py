@@ -1,4 +1,4 @@
-from base_aux.aux_dict.m3_dict_ga1_simple import *
+from base_aux.aux_dict.m3_dict_ga import *
 from base_aux.valid.m1_valid_base import *
 from base_aux.pyqt.m0_signals import *
 

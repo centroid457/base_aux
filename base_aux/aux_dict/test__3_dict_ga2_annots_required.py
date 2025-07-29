@@ -1,5 +1,5 @@
 from base_aux.base_lambdas.m1_lambda2_derivatives import *
-from base_aux.aux_dict.m3_dict_ga1_simple import *
+from base_aux.aux_dict.m3_dict_ga import *
 
 
 # =====================================================================================================================

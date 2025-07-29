@@ -1,21 +1,24 @@
 from typing import *
 import pytest
 
-from base_aux.aux_dict.m2_dict_ic import *
 from base_aux.base_lambdas.m1_lambda import *
+from base_aux.aux_dict.m2_dict_ic import *
+from base_aux.aux_dict.m3_dict_ga import *
 
 
 # =====================================================================================================================
-def test__universe():
-    victim1 = DictIcKeys()
+@pytest.mark.parametrize(argnames="VictimCls", argvalues=[DictIcKeys, DictIcKeys_Ga])
+def test__universe(VictimCls):
+    victim1 = VictimCls()
     victim1['NAme'] = 'VALUE'
     victim1[1] = 1
 
-    victim2 = DictIcKeys(NAme='VALUE')
+    victim2 = VictimCls(NAme='VALUE')
     victim2[1] = 1
 
-    victim3 = DictIcKeys({"NAme": 'VALUE', 1: 1})
+    victim3 = VictimCls({"NAme": 'VALUE', 1: 1})
 
+    # -------------------------------------------
     for victim in [victim1, victim2, victim3, ]:
         assert len(victim) == 2
 
@@ -96,15 +99,16 @@ def test__universe():
         ({1:1}, False, [1, ]),
     ]
 )
-def test__keys(source, keys_all_str, _EXPECTED):
-    Lambda(list(DictIcKeys(source))).expect__check_assert(_EXPECTED)
-    Lambda(list(DictIc_LockedKeys(source))).expect__check_assert(_EXPECTED)
+@pytest.mark.parametrize(argnames="VictimClsPair", argvalues=[(DictIcKeys, DictIc_LockedKeys), (DictIcKeys_Ga, DictIc_LockedKeys_Ga)])
+def test__keys(VictimClsPair, source, keys_all_str, _EXPECTED):
+    Lambda(list(VictimClsPair[0](source))).expect__check_assert(_EXPECTED)
+    Lambda(list(VictimClsPair[1](source))).expect__check_assert(_EXPECTED)
 
     if not keys_all_str:
         return
 
-    Lambda(list(DictIcKeys(**source))).expect__check_assert(_EXPECTED)
-    Lambda(list(DictIc_LockedKeys(**source))).expect__check_assert(_EXPECTED)
+    Lambda(list(VictimClsPair[0](**source))).expect__check_assert(_EXPECTED)
+    Lambda(list(VictimClsPair[1](**source))).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -122,15 +126,16 @@ def test__keys(source, keys_all_str, _EXPECTED):
         ({1:1}, 1, False, 1),
     ]
 )
-def test__key__get_original(source, key, keys_all_str, _EXPECTED):
-    Lambda(DictIcKeys(source).key__get_original(key)).expect__check_assert(_EXPECTED)
-    Lambda(DictIc_LockedKeys(source).key__get_original(key)).expect__check_assert(_EXPECTED)
+@pytest.mark.parametrize(argnames="VictimClsPair", argvalues=[(DictIcKeys, DictIc_LockedKeys), (DictIcKeys_Ga, DictIc_LockedKeys_Ga)])
+def test__key__get_original(VictimClsPair, source, key, keys_all_str, _EXPECTED):
+    Lambda(VictimClsPair[0](source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(VictimClsPair[1](source).key__get_original(key)).expect__check_assert(_EXPECTED)
 
     if not keys_all_str:
         return
 
-    Lambda(DictIcKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
-    Lambda(DictIc_LockedKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(VictimClsPair[0](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(VictimClsPair[1](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -147,9 +152,10 @@ def test__key__get_original(source, key, keys_all_str, _EXPECTED):
         ({1:1}, 1, False, [None, None]),
     ]
 )
-def test__set(source, key, keys_all_str, _EXPECTED):
+@pytest.mark.parametrize(argnames="VictimClsPair", argvalues=[(DictIcKeys, DictIc_LockedKeys), (DictIcKeys_Ga, DictIc_LockedKeys_Ga)])
+def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
     # -------------------------------------------------
-    victim = DictIcKeys(source)
+    victim = VictimClsPair[0](source)
     Lambda(victim.update({key: 11})).expect__check_assert(_EXPECTED[0])
     Lambda(victim.get(key)).expect__check_assert(11)
 
@@ -161,7 +167,7 @@ def test__set(source, key, keys_all_str, _EXPECTED):
         Lambda(victim.get(key)).expect__check_assert(1111)
 
     # -------------------------------------------------
-    victim = DictIc_LockedKeys(source)
+    victim = VictimClsPair[1](source)
     Lambda(lambda: victim.update({key: 2})).expect__check_assert(_EXPECTED[1])
 
     if _EXPECTED[1] == Exception:
@@ -199,8 +205,8 @@ def test__set(source, key, keys_all_str, _EXPECTED):
     # if not keys_all_str:
     #     return
     #
-    # Lambda(DictIcKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
-    # Lambda(DictIc_LockedKeys(**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    # Lambda(VictimClsPair[0](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    # Lambda(VictimClsPair[1](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================

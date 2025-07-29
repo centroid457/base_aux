@@ -1,7 +1,7 @@
 from typing import *
 import pytest
 
-from base_aux.aux_dict.m3_dict_ga1_simple import *
+from base_aux.aux_dict.m3_dict_ga import *
 
 
 # =====================================================================================================================
