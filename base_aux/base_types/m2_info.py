@@ -83,13 +83,20 @@ class ObjectInfo:
     NAMES__SKIP_FULL: list[str] = []
     NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
 
+    HIDE_NAMES__TOUCHED: bool = None
+    HIDE_NAMES__BUILDIN: bool = None
+
     def __init__(
             self,
             source: Optional[Any] = None,
 
+            /,
             max_line_len: Optional[int] = None,
             max_iter_items: Optional[int] = None,
             skip__build_in: Optional[bool] = None,
+
+            hide_names__touched: bool = None,
+            hide_names__buildin: bool = None,
 
             names__use_only_parts: Union[None, str, list[str]] = None,
             names__skip_full: Union[None, str, list[str]] = None,
@@ -107,7 +114,12 @@ class ObjectInfo:
         if skip__build_in is not None:
             self.SKIP__BUILD_IN = skip__build_in
 
-        # LISTS -----------------------
+        if hide_names__touched is not None:
+            self.HIDE_NAMES__TOUCHED = hide_names__touched
+        if hide_names__buildin is not None:
+            self.HIDE_NAMES__BUILDIN = hide_names__buildin
+
+        # NAMES LISTS -----------------------
         if names__use_only_parts:
             if isinstance(names__use_only_parts, str):
                 names__use_only_parts = [names__use_only_parts, ]
@@ -138,7 +150,7 @@ class ObjectInfo:
         self.state_clear()
 
         # WORK --------------------------------------
-        self._print_line__group_separator(f"show_touch_names")
+        self._print_line__group_separator(f"{self.HIDE_NAMES__TOUCHED=}")
         self.NAMES_COUNT__ON_START = len(dir(self.SOURCE))
         print(f"{self.NAMES_COUNT__ON_START=}")
 
@@ -149,7 +161,8 @@ class ObjectInfo:
         # print()
 
         for pos, name in enumerate(dir(self.SOURCE), start=1):
-            print(f"{pos:4d}:{name}")
+            if not self.HIDE_NAMES__TOUCHED:
+                print(f"{pos:4d}:{name}")
 
             # SKIP ----------------------------------------------------------------------------------------------------
             if self.SKIP__BUILD_IN and check_name__buildin(name):
@@ -383,6 +396,10 @@ class ObjectInfo:
 
         for group_name, group_values in self.STATE.__getstate__().items():
             self._print_line__group_separator(group_name)
+
+            if group_name == "SKIPPED_BUILDIN" and self.HIDE_NAMES__BUILDIN:
+                print(f"{self.HIDE_NAMES__BUILDIN=}")
+                continue
 
             if TypeAux(group_values).check__elementary_collection_not_dict():
                 for pos, name in enumerate(group_values, start=1):
