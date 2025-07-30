@@ -113,8 +113,11 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         main goal - Warn if not enough lines to calculate correct values
         """
         len_source = len(self.SOURCE)
-        if len_source < self.HISTORY_ENOUGH_THRESH:
-            Warn(f"{len_source=}/{self.HISTORY_ENOUGH_THRESH=}")
+        try:
+            if len_source < self.HISTORY_ENOUGH_THRESH:
+                Warn(f"{len_source=}/{self.HISTORY_ENOUGH_THRESH=}")
+        except Exception as exx:
+            Warn(f"{len_source=}/{exx!r}")
 
     def _init_post2_fix_column_templates(self) -> None:
         """
@@ -226,7 +229,7 @@ class Indicator_Stoch(Base_Indicator):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class Indicator_Rsih(Base_Indicator):
+class Indicator_Rsi(Base_Indicator):
     NAME = "RSI"
     # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
