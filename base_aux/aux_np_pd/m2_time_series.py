@@ -28,7 +28,7 @@ class TimeSeriesAux(NestInit_Source):
     ----
 
     """
-    SOURCE: TYPING.TIME_SERIES__FINAL    # todo: add zero data!
+    SOURCE: TYPING.TIME_SERIES__FINAL    # todo: add zero data!???
 
     DTYPE_DICT: dict[str, str | type] = dict(    # template for making dtype
         time='<i8',
@@ -144,7 +144,7 @@ class TimeSeriesAux(NestInit_Source):
         result = result[::divider]
         return result
 
-    # ------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
     def _windows_get(self, divider: int) -> np.ndarray:
         bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=divider)
         bars_windows_stepped = bars_windows[::divider]

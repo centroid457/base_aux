@@ -12,7 +12,7 @@ class Device(Base__DeviceUart_ETech):  # IMPORTANT! KEEP Serial FIRST Nesting!
 
 
 # =====================================================================================================================
-class DeviceDummy(Device, Base_DeviceDummy):
+class DeviceDummy(Base_DeviceDummy, Device):
     pass
 
 

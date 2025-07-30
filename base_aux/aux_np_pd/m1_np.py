@@ -4,16 +4,20 @@ import numpy as np
 
 from base_aux.base_nest_dunders.m1_init1_source import *
 
-# =====================================================================================================================
-pass    # settings
-np.set_printoptions(threshold=sys.maxsize, linewidth=300)
-
 
 # =====================================================================================================================
 @final
 class NpAux(NestInit_Source):
     SOURCE: np.ndarray
 
+    def init_post(self) -> None:
+        self.set_printoptions()
+
+    @classmethod
+    def set_printoptions(cls):
+        np.set_printoptions(threshold=sys.maxsize, linewidth=300)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def d2_get_compact_str(
         self,
         values_translater: dict[Any, Any] = None,

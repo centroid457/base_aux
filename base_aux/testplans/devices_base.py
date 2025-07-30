@@ -155,6 +155,8 @@ class Base_DeviceDummy(Base__DeviceUart_ETech):  # IMPORTANT! KEEP Serial FIRST 
     ----
     use to make final Dummy
     """
+    _ADDRESS = "DUMMY"
+
     @property
     def DEV_FOUND(self) -> bool:
         return True
