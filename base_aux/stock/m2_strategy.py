@@ -50,7 +50,7 @@ class MonitorBase(MT5, threading.Thread):
             self.state_calculating = False
 
             if not self.LOAD_HISTORY_BARS:
-                self.bar_new__wait()
+                self.history_new__wait()
             else:
                 self.LOAD_HISTORY_BARS -= 1
 
@@ -276,7 +276,7 @@ class IndicatorMapDrawer_Simple(MT5, threading.Thread):
         count_need = self.INDICATOR(*self.INDICATOR_SETTINGS).bars_expected__get() + self.MAP_LENGTH
 
         # get history
-        history = self.bars__get(count=count_need, tf_multiply=tf_split)
+        history = self.history__get(count=count_need, tf_multiply=tf_split)
 
         # add results
         for shift in range(tf_split):

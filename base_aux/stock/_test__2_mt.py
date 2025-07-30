@@ -1,4 +1,4 @@
-from base_aux.stock.m3_strategy import *
+from base_aux.stock.m2_strategy import *
 from base_aux.stock.m1_mt import *
 
 
@@ -55,7 +55,7 @@ class Test_mt5:
     def test__bars_np(self):
         victim = MT5()
 
-        bars1 = victim.bars__get()
+        bars1 = victim.history__get()
         print(bars1)            # [(1695763200, 93.89, 93.91, 93.75, 93.84, 527, 1, 2116)]
         assert bars1.shape == (1, )
         assert isinstance(bars1, np.ndarray)
@@ -90,7 +90,7 @@ elem=723/<class 'numpy.uint64'>
             """
             assert isinstance(elem, (np.int64, np.float64, np.uint64, np.intc, ))
 
-        bars2 = victim.bars__get(2)
+        bars2 = victim.history__get(2)
         print(bars2)
         assert bars2.shape == (2, )
         assert isinstance(bars2, np.ndarray)
@@ -98,13 +98,13 @@ elem=723/<class 'numpy.uint64'>
 
     def test__steps(self):
         victim = MT5()
-        assert victim.bars__get(1, tf_multiply=1).shape == (1,)
-        assert victim.bars__get(1, tf_multiply=2).shape == (1,)
-        assert victim.bars__get(1, tf_multiply=3).shape == (1,)
+        assert victim.history__get(1, tf_multiply=1).shape == (1,)
+        assert victim.history__get(1, tf_multiply=2).shape == (1,)
+        assert victim.history__get(1, tf_multiply=3).shape == (1,)
 
-        assert victim.bars__get(2, tf_multiply=1).shape == (2,)
-        assert victim.bars__get(2, tf_multiply=2).shape == (2,)
-        assert victim.bars__get(2, tf_multiply=3).shape == (2,)
+        assert victim.history__get(2, tf_multiply=1).shape == (2,)
+        assert victim.history__get(2, tf_multiply=2).shape == (2,)
+        assert victim.history__get(2, tf_multiply=3).shape == (2,)
 
 # =====================================================================================================================
 class Test__INDICATORS:

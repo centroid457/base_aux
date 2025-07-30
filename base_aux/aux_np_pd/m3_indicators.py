@@ -1,5 +1,3 @@
-from enum import Enum
-
 import numpy as np
 import pandas as pd
 
@@ -32,52 +30,54 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     SOURCE: np.ndarray      # HISTORY input
     DF: TYPING__PD_SERIES   # OUTPUT
 
-    PARAMS: DictIc_LockedKeys_Ga
-
-    # UNIVERSAl -------------
+    # ---------------------------
     NAME: str = "DEF_IndNameInfo"                       # just info!
+    PARAMS: DictIc_LockedKeys_Ga
     ROUND_VALUES: int | tuple[int, ...] = 1             # each for each column! or one for all!
     COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]   # if not know what to use - keep blanc str "" or None!!!
 
-    # TODO:
-    #  - rename columns!!!
-    #  - values as EqValid or pattern! not just a simple final values!
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        """
+        GOAL
+        ----
+        exact method for making calculations for TA
 
-    # def __init__(self, source: Any, **kwargs):
-    #     pass
+        NOTE
+        ----
+        use property! or find solution to use in classmethod!!
+        """
+        raise NotImplementedError()
 
-    # ANNOTS LAST ----------
-    pass    # KEEP ALWAYS ALL LAST!!!
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        """
+        GOAL
+        ----
+        calculate (for exact params) history depth wich is enough for correct calculations the indicator
+        """
+        raise NotImplementedError()
 
-    # ACCESS ---------------
+    # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:   # TODO: use NpNdArray???
         """
         GOAL
         ----
-        return exact Indicator values DF!!!
+        return exact Indicator values from DF!!!
         """
-        column_name = self.COLUMN_NAMES[item]
         try:        # FIXME: check directly?
             # if result gives only one column - its not have header! so it will raise!
             # like WMA!
             # but it used for others! like ADX/STOCH/MACD!
+
+            column_name = self.COLUMN_NAMES[item]
             return self.DF[column_name]
         except Exception as exx:
             raise exx
 
-        return self.DF
-
     # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!!
 
-    # INITS ----------------
-    # def __init__(self, source, **kwargs):
-    #     pass
-    #     super().__init__(**kwargs)
-
-    @property
-    def ENOUGH_LINES_THRESH(self) -> int:
-        raise NotImplementedError()
-
+    # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None:
         """
         GOAL
@@ -85,11 +85,12 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         do all final calculates and fixes on source
         """
         self._init_post0_fix_attrs()
-        self._init_post1_warn_if_not_enough_data()
+        self._init_post1_warn_if_not_enough_history()
         self._init_post2_fix_column_templates()
-        self.init_post3_calculate_values()
+        self._init_post3_calculate_ta()
         self._init_post4_rename_columns()
         self._init_post5_round_values()
+        self.init_post6_calculate_final()
 
     def _init_post0_fix_attrs(self) -> None:
         """
@@ -105,15 +106,15 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         if isinstance(self.ROUND_VALUES, int):
             self.ROUND_VALUES = (self.ROUND_VALUES, ) * count_col
 
-    def _init_post1_warn_if_not_enough_data(self) -> None:
+    def _init_post1_warn_if_not_enough_history(self) -> None:
         """
         GOAL
         ----
         main goal - Warn if not enough lines to calculate correct values
         """
         len_source = len(self.SOURCE)
-        if len_source < self.ENOUGH_LINES_THRESH:
-            Warn(f"{len_source=}/{self.ENOUGH_LINES_THRESH=}")
+        if len_source < self.HISTORY_ENOUGH_THRESH:
+            Warn(f"{len_source=}/{self.HISTORY_ENOUGH_THRESH=}")
 
     def _init_post2_fix_column_templates(self) -> None:
         """
@@ -128,13 +129,13 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
                 value = value % attrs_dict
                 self.COLUMN_NAMES[name] = value
 
-    def init_post3_calculate_values(self) -> None:
+    def _init_post3_calculate_ta(self) -> None:
         """
         GOAL
         ----
-        do exact calculations
+        do exact TA calculations
         """
-        raise NotImplementedError()
+        self.DF = self.TA_METH(**self.PARAMS)
 
     def _init_post4_rename_columns(self) -> None:
         """
@@ -142,6 +143,13 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         rename columns to use finals simple names!
         """
+        # TODO: values as EqValid or pattern! not just a simple final values!
+
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
+        # TODO: FINISH
 
     def _init_post5_round_values(self) -> None:
         """
@@ -152,8 +160,16 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         # TODO: use schema for several columns!
         self.DF = self.DF.iloc[:].round(self.ROUND_VALUES)  # FIXME: use only ind calculated values
 
+    def init_post6_calculate_final(self) -> None:
+        """
+        GOAl
+        ----
+        do extra calculations like for geom sums in addition for common indicator
+        """
+        return NotImplemented()
 
-# ---------------------------------------------------------------------------------------------------------------------
+
+# =====================================================================================================================
 class Indicator_Adx(Base_Indicator):
     NAME = "ADX"
     COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
@@ -164,14 +180,87 @@ class Indicator_Adx(Base_Indicator):
     ADP: Any
     ADN: Any
 
-    def init_post3_calculate_values(self) -> None:
-        # self.DF = self.DF.ta.adx(**self.PARAMS)
-        self.DF = self.DF.ta.adx(length=self.PARAMS.length, lensig=self.PARAMS.lensig)
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.adx
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
 
 
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Wma(Base_Indicator):
+    NAME = "WMA"
+    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+
+    # results -----
+    WMA: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.wma
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Stoch(Base_Indicator):
+    NAME = "STOCH"
+    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+
+    # results -----
+    STOCH: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.stoch
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Rsih(Base_Indicator):
+    NAME = "RSI"
+    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+
+    # results -----
+    RSI: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.rsi
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Macd(Base_Indicator):
+    NAME = "MACD"
+    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    # PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+
+    # results -----
+    MACD: Any
+    SIGNAL: Any
+    HIST: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.macd
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
 
 
 

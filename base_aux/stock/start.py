@@ -1,4 +1,4 @@
-from base_aux.stock.m3_strategy import *
+from base_aux.stock.m2_strategy import *
 
 
 class MonitorADX(MonitorADX):

@@ -315,7 +315,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         https://www.moex.com/ru/marketdata/?g=4#/mode=groups&group=4&collection=3&boardgroup=57&data_type=current&category=main
         """
         _devider = _devider or 1000 * 1000
-        bar = self.bars__get(_symbol=_symbol, _tf=mt5.TIMEFRAME_D1)
+        bar = self.history__get(_symbol=_symbol, _tf=mt5.TIMEFRAME_D1)
         # print(f"{bar['real_volume']=}")
 
         item = mt5.symbol_info(_symbol)
@@ -448,7 +448,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         return self._symbols__volume_price
 
     # BAR HISTORY =====================================================================================================
-    def bars__get(
+    def history__get(
             self,
             count: int = 1,
             tf_multiply: int = None,
@@ -456,7 +456,10 @@ class MT5(NestInit_AttrsLambdaResolve):
             _symbol: TYPING__SYMBOL_DRAFT = None,
             _tf: TYPING__TF = None
     ) -> np.ndarray:
-        """get history bars
+        """
+        GOAL
+        ----
+        get history bars
         :param tf_multiply: correct count of bars in case of using increasing tf
 
         :_start: 0 is actual and not finished!
@@ -510,13 +513,13 @@ class MT5(NestInit_AttrsLambdaResolve):
 
         return bars
 
-    def bar_new__wait(self, old: np.ndarray, sleep: int = 10) -> None:
+    def history_new__wait(self, old: np.ndarray, sleep: int = 10) -> None:
         count = 0
         new = None
         while not new or old == new:
             count += 1
             try:
-                new = self.bars__get()[0]
+                new = self.history__get()[0]
                 break
             except:
                 pass
@@ -579,7 +582,7 @@ class MT5(NestInit_AttrsLambdaResolve):
             _symbol: TYPING__SYMBOL_DRAFT = None,
     ) -> TYPING__INDICATOR_VALUES:
         # GET -----------------------------
-        bars_np = _bars or self.bars__get(
+        bars_np = _bars or self.history__get(
             count=indicator_params.bars_expected__get(),
             tf_multiply=tf_split,
             # shrink=indicator_params.NAME == IndicatorName.ADX,
@@ -650,7 +653,7 @@ class MT5(NestInit_AttrsLambdaResolve):
 # =====================================================================================================================
 def _explore():
     obj = MT5()
-    bar1 = obj.bars__get(10)
+    bar1 = obj.history__get(10)
     print(bar1)
     ObjectInfo(bar1).print()
     # print(bar1.dtype)
