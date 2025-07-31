@@ -10,7 +10,13 @@ from base_aux.base_types.m2_info import *
 
 
 # =====================================================================================================================
-TS_EXAMPLE_LIST = [
+TS_EXAMPLE__ZERO_LINE: TYPING__NP_TS__LINE = (0, .0,.0,.0,.0, 0,0,0)
+
+TS_EXAMPLE__ZERO_SET: TYPING__NP_TS__DRAFT = [
+    TS_EXAMPLE__ZERO_LINE,
+]
+
+TS_EXAMPLE__LIST: TYPING__NP_TS__DRAFT = [
     (1741993200, 70.54, 70.54, 70.49, 70.51, 163, 1, 254),
     (1741993800, 70.52, 70.55, 70.52, 70.54,  56, 1,  82),
     (1741994400, 70.54, 70.56, 70.52, 70.55, 176, 1, 201),
@@ -31,9 +37,9 @@ class TimeSeriesAux(NestInit_Source):
     ----
     EXACT methods expecting ndarray as timeSeries
     """
-    SOURCE: TYPING__NP_TS__FINAL = [0, .0,.0,.0,.0, 0,0,0]
+    SOURCE: TYPING__NP_TS__FINAL = TS_EXAMPLE__ZERO_SET
 
-    DTYPE_DICT: dict[str, str | type] = dict(       # template for making dtype
+    DTYPE_DICT: dict[str, str | dtype] = dict(       # template for making dtype
         time='<i8',
         open='<f8',
         high='<f8',
@@ -47,6 +53,9 @@ class TimeSeriesAux(NestInit_Source):
 
     # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None | NoReturn:
+        self.unsure__ndarray()
+
+    def unsure__ndarray(self) -> None:
         if isinstance(self.SOURCE, (list, tuple)):
             self.SOURCE = np.array(self.SOURCE, dtype=self.DTYPE_ITEMS)
         # TODO: make copy
@@ -203,7 +212,7 @@ def _explore_init():
 
 
     exit()
-    obj = TimeSeriesAux(TS_EXAMPLE_LIST)
+    obj = TimeSeriesAux(TS_EXAMPLE__LIST)
     # print(obj.SOURCE)
     # ObjectInfo(obj.SOURCE).print()
 
@@ -216,7 +225,7 @@ def _explore_init():
     assert obj.SOURCE["close"].ndim == 1
 
     try:
-        obj = TimeSeriesAux(TS_EXAMPLE_LIST[0])
+        obj = TimeSeriesAux(TS_EXAMPLE__LIST[0])
         assert False
         print(obj.SOURCE)
     except:
@@ -224,9 +233,9 @@ def _explore_init():
 
 
 def _explore_split():
-    obj = TimeSeriesAux(TS_EXAMPLE_LIST)
+    obj = TimeSeriesAux(TS_EXAMPLE__LIST)
     print(obj.SOURCE.shape)
-    assert obj.SOURCE.size == len(TS_EXAMPLE_LIST)
+    assert obj.SOURCE.size == len(TS_EXAMPLE__LIST)
 
 
     # ObjectInfo(obj.SOURCE).print()

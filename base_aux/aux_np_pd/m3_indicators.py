@@ -20,17 +20,18 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     ACCESS
         3/ access to indicator values
     """
-    SOURCE: TYPING__NP__FINAL   # HISTORY input
-    DF: TYPING__PD_SERIES       # OUTPUT
+    SOURCE: TYPING__NP_TS__FINAL    # HISTORY input
+    DF: TYPING__PD_DATAFRAME        # result OUTPUT
 
     # ---------------------------
     NAME: str = "DEF_IndNameInfo"                       # just info!
     PARAMS: DictIc_LockedKeys_Ga
     ROUND_VALUES: int | tuple[int, ...] = 1             # each for each column! or one for all!
     COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]   # if not know what to use - keep blanc str "" or None!!!
+    COLUMN_NAME__NONAME: str = "DEF_IndNoNameColumn"    # when TA_METH return pdSeries instead of pdDf
 
     @property
-    def TA_METH(self) -> Callable[..., Any]:
+    def TA_METH(self) -> Callable[..., TYPING__PD_DATAFRAME | TYPING__PD_SERIES]:
         """
         GOAL
         ----
@@ -52,23 +53,20 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:   # TODO: use NpNdArray???
+    # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!! --- use originally indexing
+
+    def __getattr__(self, item: str) -> TYPING__PD_SERIES | NoReturn:
         """
         GOAL
         ----
         return exact Indicator values from DF!!!
         """
-        try:        # FIXME: check directly?
-            # if result gives only one column - its not have header! so it will raise!
-            # like WMA!
-            # but it used for others! like ADX/STOCH/MACD!
-
-            column_name = self.COLUMN_NAMES[item]
+        try:
+            column_name = self.COLUMN_NAMES.key__get_original(item)
             return self.DF[column_name]
         except Exception as exx:
+            Warn(f"{item=}/{exx!r}")
             raise exx
-
-    # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!!
 
     # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None:
@@ -77,15 +75,15 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         do all final calculates and fixes on source
         """
-        self._init_post0_fix_attrs()
-        self._init_post1_warn_if_not_enough_history()
-        self._init_post2_fix_column_templates()
-        self._init_post3_calculate_ta()
-        self._init_post4_rename_columns()
-        self._init_post5_round_values()
-        self.init_post6_calculate_final()
+        self._init_post0__fix_attrs()
+        self._init_post1__warn_if_not_enough_history()
+        self._init_post2__calculate_ta()
+        self._init_post3__df_ensure_colname_and_df()
+        self._init_post4__rename_columns()
+        self._init_post5__round_values()
+        self.init_post6__calculate_final()
 
-    def _init_post0_fix_attrs(self) -> None:
+    def _init_post0__fix_attrs(self) -> None:
         """
         GOAL
         ----
@@ -99,7 +97,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         if isinstance(self.ROUND_VALUES, int):
             self.ROUND_VALUES = (self.ROUND_VALUES, ) * count_col
 
-    def _init_post1_warn_if_not_enough_history(self) -> None:
+    def _init_post1__warn_if_not_enough_history(self) -> None:
         """
         GOAL
         ----
@@ -112,20 +110,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         except Exception as exx:
             Warn(f"{len_source=}/{exx!r}")
 
-    def _init_post2_fix_column_templates(self) -> None:
-        """
-        GOAL
-        ----
-        load all params in templates
-        """
-        attrs_dict = AttrAux_AnnotsLast(self).dump_dict__skip_raised()
-
-        for name, value in self.COLUMN_NAMES.items():
-            if isinstance(value, str):
-                value = value % attrs_dict
-                self.COLUMN_NAMES[name] = value
-
-    def _init_post3_calculate_ta(self) -> None:
+    def _init_post2__calculate_ta(self) -> None:
         """
         GOAL
         ----
@@ -133,12 +118,30 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         """
         self.DF = self.TA_METH(**self.PARAMS)
 
-    def _init_post4_rename_columns(self) -> None:
+    def _init_post3__df_ensure_colname_and_df(self) -> None:
+        """
+        GOAL
+        ----
+        when indicator calculated into pdSeries instead of pdDataframe
+        like for singleDimentional as Wma/Stoch/
+        1. reformat into DF
+        2. set name if NONAME column
+        """
+        if isinstance(self.DF, pd.core.series.Series):
+
+
+    def _init_post4__rename_columns(self) -> None:
         """
         GOAL
         ----
         rename columns to use finals simple names!
         """
+        for name, value in self.COLUMN_NAMES.items():
+
+            if isinstance(value, str):
+                value = value % attrs_dict
+                self.COLUMN_NAMES[name] = value
+
         # TODO: values as EqValid or pattern! not just a simple final values!
 
         # TODO: FINISH
@@ -147,7 +150,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         # TODO: FINISH
         # TODO: FINISH
 
-    def _init_post5_round_values(self) -> None:
+    def _init_post5__round_values(self) -> None:
         """
         GOAL
         ----
@@ -156,7 +159,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         # TODO: use schema for several columns!
         self.DF = self.DF.iloc[:].round(self.ROUND_VALUES)  # FIXME: use only ind calculated values
 
-    def init_post6_calculate_final(self) -> None:
+    def init_post6__calculate_final(self) -> None:
         """
         GOAl
         ----
@@ -166,30 +169,11 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
 
 
 # =====================================================================================================================
-class Indicator_Adx(Base_Indicator):
-    NAME = "ADX"
-    COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=13, lensig=9)
-
-    # results -----
-    ADX: Any
-    ADP: Any
-    ADN: Any
-
-    @property
-    def TA_METH(self) -> Callable[..., Any]:
-        return self.DF.ta.adx
-
-    @property
-    def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Wma(Base_Indicator):
     NAME = "WMA"
     # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+    COLUMN_NAME__NONAME = "WMA"
 
     # results -----
     WMA: Any
@@ -208,6 +192,7 @@ class Indicator_Stoch(Base_Indicator):
     NAME = "STOCH"
     # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+    COLUMN_NAME__NONAME = "STOCH"
 
     # results -----
     STOCH: Any
@@ -226,6 +211,7 @@ class Indicator_Rsi(Base_Indicator):
     NAME = "RSI"
     # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+    COLUMN_NAME__NONAME = "RSI"
 
     # results -----
     RSI: Any
@@ -233,6 +219,26 @@ class Indicator_Rsi(Base_Indicator):
     @property
     def TA_METH(self) -> Callable[..., Any]:
         return self.DF.ta.rsi
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        raise NotImplementedError()
+
+
+# =====================================================================================================================
+class Indicator_Adx(Base_Indicator):
+    NAME = "ADX"
+    COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=13, lensig=9)
+
+    # results -----
+    ADX: Any
+    ADP: Any
+    ADN: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.adx
 
     @property
     def HISTORY_ENOUGH_THRESH(self) -> int:

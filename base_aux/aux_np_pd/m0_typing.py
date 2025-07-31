@@ -5,8 +5,10 @@ import numpy as np
 
 
 # =====================================================================================================================
+TYPING__NP_TS__LINE = tuple[int,   float, float, float, float,   int, int, int]
+
 TYPING__NP__FINAL = np.ndarray
-TYPING__NP__DRAFT = np.ndarray | list[tuple[Any, ...]]
+TYPING__NP__DRAFT = np.ndarray | list[TYPING__NP_TS__LINE]
 
 TYPING__NP_TS__FINAL = TYPING__NP__FINAL
 TYPING__NP_TS__DRAFT = TYPING__NP__DRAFT

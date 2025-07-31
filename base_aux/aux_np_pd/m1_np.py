@@ -15,8 +15,8 @@ class NpAux(NestInit_Source):
         self.set_printoptions()
 
     @classmethod
-    def set_printoptions(cls):
-        np.set_printoptions(threshold=sys.maxsize, linewidth=300)
+    def set_printoptions(cls, linewidth=300):
+        np.set_printoptions(threshold=sys.maxsize, linewidth=linewidth)
 
     # -----------------------------------------------------------------------------------------------------------------
     def d2_get_compact_str(
@@ -27,7 +27,6 @@ class NpAux(NestInit_Source):
         use_rows_num: bool = None
     ) -> str:
         """
-
         :param values_translater: dictionary to change exact elements
         :param separate_rows_blocks: add blank line on step
         :param wrap: add additional strings before and after data
