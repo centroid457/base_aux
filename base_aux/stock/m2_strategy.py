@@ -126,7 +126,7 @@ class MonitorADX(MonitorBase):
             self.state_full_column_1_10 = False
 
     def print__array_interpreted(self) -> None:
-        text = NpAux(self.RESULTS).d2_get_compact_str(
+        text = NdArrayAux(self.RESULTS).d2_get_compact_str(
             values_translater=self.ARRAY_INTERPRETER,
             separate_rows_blocks=20,
             wrap=True,

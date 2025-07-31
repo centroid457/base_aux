@@ -501,7 +501,7 @@ class MT5(NestInit_AttrsLambdaResolve):
         #     print(f"{type(bar)}={bar}")     # <class 'numpy.void'>=(1671753600, 137.49, 138.26, 136.81, 137.94, 53823, 0, 2283422)
 
         if tf_multiply > 1:
-            bars = TimeSeriesAux(bars).shrink(tf_multiply)
+            bars = NpTimeSeriesAux(bars).shrink(tf_multiply)
 
         # if count == 1:
         #     # bars = [(1695729000, 92.3, 92.42, 92.22, 92.23, 944, 1, 3381)]
