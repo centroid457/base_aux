@@ -2,18 +2,11 @@ import numpy as np
 import pandas as pd
 
 from dataclasses import dataclass
-from base_aux.aux_attr.m1_annot_attr1_aux import *
+from base_aux.aux_np_pd.m0_typing import *
 
-from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_nest_dunders.m1_init3_params_dict_kwargs_update import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
-from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.aux_dict.m2_dict_ic import *
-
-
-# =====================================================================================================================
-TYPING__PD_SERIES = pd.core.series.Series
-# TYPING__PD_SERIES = pd.Series
 
 
 # =====================================================================================================================
@@ -27,8 +20,8 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     ACCESS
         3/ access to indicator values
     """
-    SOURCE: np.ndarray      # HISTORY input
-    DF: TYPING__PD_SERIES   # OUTPUT
+    SOURCE: TYPING__NP__FINAL   # HISTORY input
+    DF: TYPING__PD_SERIES       # OUTPUT
 
     # ---------------------------
     NAME: str = "DEF_IndNameInfo"                       # just info!

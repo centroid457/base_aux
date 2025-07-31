@@ -2,6 +2,7 @@ import threading
 
 import MetaTrader5 as mt5
 
+from base_aux.aux_np_pd.m0_typing  import *
 from base_aux.aux_np_pd.m2_time_series import TimeSeriesAux
 from base_aux.stock.m0_symbols import *
 from base_aux.aux_np_pd.m3_indicators import *
@@ -21,7 +22,6 @@ from base_aux.loggers.m1_print import *
 TYPING__SYMBOL_FINAL = mt5.SymbolInfo
 TYPING__SYMBOL_DRAFT = Union[str, mt5.SymbolInfo]
 TYPING__TF = int
-TYPING__PD_SERIES = pd.core.series.Series
 TYPING__INDICATOR_VALUES = Union[None, float, TYPING__PD_SERIES]
 
 
@@ -573,11 +573,11 @@ class MT5(NestInit_AttrsLambdaResolve):
             self,
             indicator_params: Base_IndicatorParams,
             *,
-            return_tail: Optional[int] = 1,
-            tf_split: Optional[int] = None,
+            return_tail: int = 1,
+            tf_split: int = None,
 
-            _bars: Optional[np.ndarray] = None,
-            _add_history: Optional[int] = None,
+            _bars: np.ndarray = None,
+            _add_history: int = None,
             _tf: TYPING__TF = None,
             _symbol: TYPING__SYMBOL_DRAFT = None,
     ) -> TYPING__INDICATOR_VALUES:

@@ -2,13 +2,14 @@ from typing import *
 import sys
 import numpy as np
 
+from base_aux.aux_np_pd.m0_typing import *
 from base_aux.base_nest_dunders.m1_init1_source import *
 
 
 # =====================================================================================================================
 @final
 class NpAux(NestInit_Source):
-    SOURCE: np.ndarray
+    SOURCE: TYPING__NP__FINAL
 
     def init_post(self) -> None:
         self.set_printoptions()

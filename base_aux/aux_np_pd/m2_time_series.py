@@ -1,5 +1,8 @@
 import numpy as np
 
+from base_aux.aux_np_pd.m0_typing import *
+from numpy import dtype
+
 from base_aux.base_nest_dunders.m1_init1_source import *
 from base_aux.base_types.m0_static_typing import *
 from base_aux.base_values.m3_exceptions import *
@@ -26,11 +29,11 @@ class TimeSeriesAux(NestInit_Source):
     """
     GOAL
     ----
-
+    EXACT methods expecting ndarray as timeSeries
     """
-    SOURCE: TYPING.TIME_SERIES__FINAL    # todo: add zero data!???
+    SOURCE: TYPING__NP_TS__FINAL = [0, .0,.0,.0,.0, 0,0,0]
 
-    DTYPE_DICT: dict[str, str | type] = dict(    # template for making dtype
+    DTYPE_DICT: dict[str, str | type] = dict(       # template for making dtype
         time='<i8',
         open='<f8',
         high='<f8',
@@ -49,7 +52,7 @@ class TimeSeriesAux(NestInit_Source):
         # TODO: make copy
 
     # -----------------------------------------------------------------------------------------------------------------
-    def get_fields(self) -> dict[str, Any]:
+    def get_fields(self) -> dict[str, tuple[dtype, int]]:
         """
         GOAL
         ----
@@ -87,7 +90,7 @@ class TimeSeriesAux(NestInit_Source):
         return self.SOURCE.dtype.fields
 
     # -----------------------------------------------------------------------------------------------------------------
-    def split_groups(self, group_len: int) -> TYPING.TIME_SERIES__FINAL:
+    def split_groups(self, group_len: int) -> TYPING__NP_TS__FINAL:
         """
         GOAL
         ----
@@ -188,16 +191,24 @@ pass    # ======================================================================
 
 
 def _explore_init():
-    try:
-        obj = TimeSeriesAux()
-    except:
-        pass
-    else:
-        assert False
+    obj = TimeSeriesAux()
+    print(obj.get_fields())
+    print(obj.get_fields()["time"])
+    print(obj.get_fields()["time"][1])
+    print(type(obj.SOURCE.dtype.fields["time"][1]))
+    ObjectInfo(obj.SOURCE.dtype.fields["time"][1]).print()
 
+    exit()
+    print(obj.get_fields()["time"][1])
+
+
+    exit()
     obj = TimeSeriesAux(TS_EXAMPLE_LIST)
     # print(obj.SOURCE)
     # ObjectInfo(obj.SOURCE).print()
+
+    print(obj.get_fields())
+
     assert obj.SOURCE.ndim == 1
 
     print(obj.SOURCE["close"])
@@ -226,7 +237,7 @@ def _explore_split():
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    _explore_split()
+    _explore_init()
 
 
 # =====================================================================================================================

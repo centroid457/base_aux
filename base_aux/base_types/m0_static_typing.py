@@ -1,6 +1,5 @@
 from typing import *
 import pathlib
-import numpy as np
 
 from base_aux.base_values.m2_value_special import VALUE_SPECIAL
 from base_aux.base_types.m0_static_types import TYPES
@@ -100,10 +99,6 @@ class TYPING:
         type[Exception],  # direct comparison
         Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
     ]
-
-    # TS NP PD --------------------------------------------------------------------------------------------------------
-    TIME_SERIES__FINAL = np.ndarray
-    TIME_SERIES__DRAFT = np.ndarray | list[tuple[Any, ...]]
 
 
 # =====================================================================================================================
