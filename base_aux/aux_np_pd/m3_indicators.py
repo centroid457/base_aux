@@ -7,6 +7,13 @@ from base_aux.aux_np_pd.m0_typing import *
 from base_aux.base_nest_dunders.m1_init3_params_dict_kwargs_update import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.aux_dict.m2_dict_ic import *
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+
+
+# =====================================================================================================================
+class ColumnSettings(NamedTuple):
+    EQ: str | Base_EqValid | None = None    # none is when you dont know exact
+    ROUND: int = 1
 
 
 # =====================================================================================================================
@@ -19,6 +26,11 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         2/ calculate additional exact Indicator PD
     ACCESS
         3/ access to indicator values
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    input data from mt5
+    calculate indicator values
     """
     SOURCE: TYPING__NP_TS__FINAL    # HISTORY input
     DF: TYPING__PD_DATAFRAME        # result OUTPUT
@@ -26,8 +38,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     # ---------------------------
     NAME: str = "DEF_IndNameInfo"                       # just info!
     PARAMS: DictIc_LockedKeys_Ga
-    ROUND_VALUES: int | tuple[int, ...] = 1             # each for each column! or one for all!
-    COLUMN_NAMES: DictIcKeys[str, str | Base_EqValid]   # if not know what to use - keep blanc str "" or None!!!
+    COLUMN_SETINGS: DictIcKeys[str, ColumnSettings]     # if not know what to use - keep blanc str "" or None!!!
     COLUMN_NAME__NONAME: str = "DEF_IndNoNameColumn"    # when TA_METH return pdSeries instead of pdDf
 
     @property
@@ -49,6 +60,10 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         GOAL
         ----
         calculate (for exact params) history depth wich is enough for correct calculations the indicator
+
+        QUESTION
+        --------
+        # FIXME: ENAUGH FOR WHAT??? one length is enough to calculate one value!
         """
         raise NotImplementedError()
 
@@ -62,7 +77,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         return exact Indicator values from DF!!!
         """
         try:
-            column_name = self.COLUMN_NAMES.key__get_original(item)
+            column_name = self.COLUMN_SETINGS.key__get_original(item)
             return self.DF[column_name]
         except Exception as exx:
             Warn(f"{item=}/{exx!r}")
@@ -90,10 +105,10 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         fix/remake/create all attrs if need
         """
         self.DF = pd.DataFrame(self.SOURCE)
-        self.COLUMN_NAMES = DictIcKeys(self.COLUMN_NAMES)    # just make a cls copy to self
+        self.COLUMN_SETINGS = DictIcKeys(self.COLUMN_SETINGS)    # just make a cls copy to self
 
         # round
-        count_col = len(self.COLUMN_NAMES)
+        count_col = len(self.COLUMN_SETINGS)
         if isinstance(self.ROUND_VALUES, int):
             self.ROUND_VALUES = (self.ROUND_VALUES, ) * count_col
 
@@ -136,11 +151,11 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         rename columns to use finals simple names!
         """
-        for name, value in self.COLUMN_NAMES.items():
+        for name, value in self.COLUMN_SETINGS.items():
 
             if isinstance(value, str):
                 value = value % attrs_dict
-                self.COLUMN_NAMES[name] = value
+                self.COLUMN_SETINGS[name] = value
 
         # TODO: values as EqValid or pattern! not just a simple final values!
 
@@ -171,7 +186,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
 # =====================================================================================================================
 class Indicator_Wma(Base_Indicator):
     NAME = "WMA"
-    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
     COLUMN_NAME__NONAME = "WMA"
 
@@ -190,7 +205,7 @@ class Indicator_Wma(Base_Indicator):
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Stoch(Base_Indicator):
     NAME = "STOCH"
-    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
     COLUMN_NAME__NONAME = "STOCH"
 
@@ -209,7 +224,7 @@ class Indicator_Stoch(Base_Indicator):
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Rsi(Base_Indicator):
     NAME = "RSI"
-    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
     COLUMN_NAME__NONAME = "RSI"
 
@@ -228,7 +243,11 @@ class Indicator_Rsi(Base_Indicator):
 # =====================================================================================================================
 class Indicator_Adx(Base_Indicator):
     NAME = "ADX"
-    COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    COLUMN_SETINGS = dict(
+        adx=ColumnSettings(EqValid_Regexp(r"ADX_/d+.*")),
+        adp=ColumnSettings(),
+        adn=ColumnSettings()
+    )
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=13, lensig=9)
 
     # results -----
@@ -248,7 +267,7 @@ class Indicator_Adx(Base_Indicator):
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Macd(Base_Indicator):
     NAME = "MACD"
-    # COLUMN_NAMES = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
+    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
     # PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
 
     # results -----

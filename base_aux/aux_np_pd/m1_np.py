@@ -102,6 +102,9 @@ class NdArrayAux(NestInit_Source):
         """
         return self.SOURCE.dtype.fields
 
+
+# =====================================================================================================================
+class NdArray2dAux(NdArrayAux):
     # -----------------------------------------------------------------------------------------------------------------
     def d2_get_compact_str(
         self,
@@ -183,7 +186,18 @@ class NdArrayAux(NestInit_Source):
         # TODO: FINISH!
 
     # SHRINK ----------------------------------------------------------------------------------------------------------
-    def shrink(self, divider: int) -> TYPING__NP__FINAL:
+    def shrink_simple(self, window_len: int) -> TYPING__NP__FINAL:
+        """
+        DIFFERENCE - from shrink
+        ----------
+        just drop other data! without calculations
+
+        when important only one column in calculations!
+        such as RSI/WMA typically use only close values from timeSeries!
+        """
+        return self.SOURCE[::window_len]
+
+    def shrink(self, window_len: int) -> TYPING__NP__FINAL:
         """
         GOAL
         ----
@@ -194,42 +208,31 @@ class NdArrayAux(NestInit_Source):
             10lines for tf=10m
         and it will be actual TS for TF! you dont need wait for finishing exact TF
         """
-        if divider == 1:
+        if window_len == 1:
             return self.SOURCE
-        elif divider < 1:
-            raise Exx__WrongUsage(f"{divider=}")
+        elif window_len < 1:
+            raise Exx__WrongUsage(f"{window_len=}")
 
-        windows = self._windows_get(divider)
+        windows = self._windows_get(window_len)
         result = self._windows_shrink(windows)
         return result
 
-    def shrink_simple(self, divider: int, column: str = None) -> TYPING__NP_TS__FINAL:
-        """
-        FIXME: DEPRECATE COLUMNS!!! - not need!!!
-
-        DIFFERENCE - from shrink
-        ----------
-        just drop other data! without calculations
-
-        when important only one column in calculations!
-        such as RSI/WMA typically use only close values from timeSeries!
-        """
-        result = self.SOURCE
-        if column:
-            result = result[column]
-        result = result[::divider]
-        return result
-
     # -----------------------------------------------------------------------------------------------------------------
-    def _windows_get(self, divider: int) -> TYPING__NP_TS__FINAL:
-        bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=divider)
-        bars_windows_stepped = bars_windows[::divider]
+    def _windows_get(self, window_len: int) -> TYPING__NP__FINAL:
+        """
+        GOAL
+        ----
+        separate ndarray into windows
+        """
+        bars_windows = np.lib.stride_tricks.sliding_window_view(x=self.SOURCE, window_shape=window_len)
+        bars_windows_stepped = bars_windows[::window_len]
         return bars_windows_stepped
 
-    def _windows_shrink(self, windows: np.ndarray) -> TYPING__NP_TS__FINAL:
+    @classmethod
+    def _windows_shrink(cls, windows: np.ndarray) -> TYPING__NP__FINAL:
         result: Optional[np.ndarray] = None
         for window in windows:
-            void_new = self._window_shrink(window)
+            void_new = cls._window_shrink(window)
             try:
                 result = np.concatenate([result, [void_new]])
             except Exception as exx:
@@ -238,19 +241,18 @@ class NdArrayAux(NestInit_Source):
                 result = np.array([void_new])
         return result
 
-    def _window_shrink(self, window: np.ndarray) -> np.void | np.ndarray:   # np.void - is acually! np.ndarray - just for IDE typeChecking!
-        void_new = window[0].copy()
+    @classmethod
+    def _window_shrink(cls, window: np.ndarray) -> np.void | np.ndarray:   # NOTE: np.void - is acually! np.ndarray - just for IDE typeChecking!
+        """
+        GOAL
+        ----
+        modify several lines in exact one window into one line!
 
-        void_new["time"] = window["time"].max()
-        void_new["open"] = window["open"][-1]
-        void_new["high"] = window["high"].max()
-        void_new["low"] = window["low"].min()
-        void_new["close"] = window["close"][0]
-        void_new["tick_volume"] = window["tick_volume"].sum()    # may be incorrect
-        void_new["spread"] = void_new["high"] - void_new["low"]    # may be incorrect
-        void_new["real_volume"] = window["real_volume"].sum()
-
-        return void_new
+        SPECIALLY CREATED FOR
+        ---------------------
+        NpTimeSeriesAux.shrink
+        """
+        raise NotImplementedError()
 
 
 # =====================================================================================================================
