@@ -373,7 +373,6 @@ def RSI():
 
     indicator = df.ta.rsi(length=20)
     print(f"{indicator=}")
-    print(indicator.tail(1))
     """
 indicator=
 0            NaN
@@ -395,14 +394,22 @@ Name: RSI_20, dtype: float64
 46.08166200413547
 (154,)
     """
+    # print(f"[{indicator.tail(1)=}]")
+    """
+[indicator.tail(1)=153    36.105644
+Name: RSI_20, dtype: float64]
+    """
+    # indicator = indicator.round(1)
+    # print(f"[{indicator.tail(1)=}]")
+
     print()
     print()
-    print(indicator.iloc[len(indicator) - 1])  # 87.08000641334098
-    print(indicator.shape)  # (154,)
-    print(f"{type(indicator)=}")    # <class 'pandas.core.series.Series'>
+    # print(indicator.iloc[len(indicator) - 1])  # 87.08000641334098
+    # print(indicator.shape)  # (154,)
+    # print(f"{type(indicator)=}")    # <class 'pandas.core.series.Series'>
 
     # SET NAME
-    print(f"{indicator.name=}")     # indicator.name='RSI_20'
+    # print(f"{indicator.name=}")     # indicator.name='RSI_20'
     # indicator.name = "HELLO"
     # print(f"{indicator=}")
     """
@@ -420,10 +427,11 @@ indicator=
 153    37.648513
 Name: HELLO, Length: 154, dtype: float64
     """
-    indicator = pd.DataFrame(indicator)
-    print(f"{type(indicator)=}")    # <class 'pandas.core.frame.DataFrame'>
+    # indicator = pd.DataFrame(indicator)
+    # print(f"{type(indicator)=}")    # <class 'pandas.core.frame.DataFrame'>
     # print(f"{indicator.name=}")     # AttributeError: 'DataFrame' object has no attribute 'name'. Did you mean: 'rename'?
-    print(f"{indicator=}")
+    # indicator["RSI_20"] = indicator["RSI_20"].round(1)
+    # print(f"{indicator=}")
     """
 indicator=
             RSI_20
@@ -439,12 +447,24 @@ indicator=
 152  37.315832
 153  38.178916
     """
+    # indicator = indicator.tail(2)
+    # print(f"{indicator=}")
+
+    print(f"{len(rates)=}")
+    print(f"{len(indicator)=}")
+    # indicator = pd.DataFrame(indicator, index=range(20))
+    # print(f"{len(indicator)=}")
+    # print(f"{indicator=}")
+
+    indicator = pd.DataFrame(indicator, index=rates["time"])
+    print(f"{len(indicator)=}")
+    print(f"{indicator=}")
 
 
 # =====================================================================================================================
 # ADX()
 # MACD()
+# WMA()
 # STOCH(10,1,1,)
-WMA()
 # STOCH(20,5,5,)
-# RSI()
+RSI()

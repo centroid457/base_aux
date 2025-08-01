@@ -41,11 +41,11 @@ class NdArrayAux(NestInit_Source):
 
     # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None:
-        self.set_printoptions()
+        self._init_post0__np_set_printoptions()
         self.unsure__ndarray_dtype()
 
-    @classmethod
-    def set_printoptions(cls):
+    @staticmethod
+    def _init_post0__np_set_printoptions():
         np.set_printoptions(threshold=sys.maxsize, linewidth=300)
 
     def unsure__ndarray_dtype(self) -> TYPING__NP__FINAL:
