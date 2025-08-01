@@ -32,8 +32,8 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     input data from mt5
     calculate indicator values
     """
-    SOURCE: TYPING__NP_TS__FINAL    # HISTORY input
-    DF: TYPING__PD_DATAFRAME        # result OUTPUT
+    SOURCE: TYPING__NP_TS__FINAL    # HISTORY input - from MT5
+    DF: TYPING__PD_DATAFRAME        # result OUTPUT - from PD_TA
 
     # ---------------------------
     NAME: str = "DEF_IndNameInfo"                       # just info!
@@ -61,11 +61,22 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         calculate (for exact params) history depth wich is enough for correct calculations the indicator
 
-        QUESTION
-        --------
-        # FIXME: ENAUGH FOR WHAT??? one length is enough to calculate one value!
+        ORIGINAL IDEA
+        -------------
+        РАСЧЕТ ДЛИНЫ БАРОВ
+            количество влияет на результат!!!!
+            при не особо достаточном количестве баров - расчет произойдет НО значения будут отличаться от фактического!!!
+            видимо из-за того что будет расчитываться с нулевыми некоторыми начальными значениями!!!
+
+            sum * 2 = это очень мало!!!!!
+            sum * 10 = кажется первая, что вообще показала полное совпадение с Tinkoff терминалом!!!
+
+            ADX
+                !!! ЭТО ОЧЕНЬ ВАЖНО ДЛЯ ADX !!!!
+            STOCH
+                вообще не важно - кажется там сколько длина его - столько и баров достаточно!!!
         """
-        raise NotImplementedError()
+        return sum(self.PARAMS.values()) * 10
 
     # -----------------------------------------------------------------------------------------------------------------
     # TODO: decide what to do with Series/Tail/Last or use help to direct access after!!! --- use originally indexing
@@ -74,7 +85,13 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         """
         GOAL
         ----
-        return exact Indicator values from DF!!!
+        return exact Indicator values series from DF!!!
+
+        NOTE
+        ----
+        result_last_element = df.iloc[len(df) - 1]
+        result_full_series = df
+        result_tail_cut = df[-return_tail::]
         """
         try:
             column_name = self.COLUMN_SETINGS.key__get_original(item)
@@ -96,7 +113,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         self._init_post3__df_ensure_colname_and_df()
         self._init_post4__rename_columns()
         self._init_post5__round_values()
-        self.init_post6__calculate_final()
+        self.init_post6__calculate_extra_columns()
 
     def _init_post0__fix_attrs(self) -> None:
         """
@@ -105,12 +122,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         fix/remake/create all attrs if need
         """
         self.DF = pd.DataFrame(self.SOURCE)
-        self.COLUMN_SETINGS = DictIcKeys(self.COLUMN_SETINGS)    # just make a cls copy to self
-
-        # round
-        count_col = len(self.COLUMN_SETINGS)
-        if isinstance(self.ROUND_VALUES, int):
-            self.ROUND_VALUES = (self.ROUND_VALUES, ) * count_col
+        self.COLUMN_SETINGS = DictIcKeys(self.COLUMN_SETINGS)    # just make a cls COPY to self
 
     def _init_post1__warn_if_not_enough_history(self) -> None:
         """
@@ -143,7 +155,9 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         2. set name if NONAME column
         """
         if isinstance(self.DF, pd.core.series.Series):
-
+            if self.DF.name is None:
+                self.DF.name = self.COLUMN_NAME__NONAME
+            self.DF = pd.DataFrame(self.SOURCE)
 
     def _init_post4__rename_columns(self) -> None:
         """
@@ -151,19 +165,10 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         rename columns to use finals simple names!
         """
-        for name, value in self.COLUMN_SETINGS.items():
-
-            if isinstance(value, str):
-                value = value % attrs_dict
-                self.COLUMN_SETINGS[name] = value
-
-        # TODO: values as EqValid or pattern! not just a simple final values!
-
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
+        for col_original in self.DF.columns:
+            for col_name, col_settings in self.COLUMN_SETINGS.items():
+                if col_settings.EQ == col_original:
+                    self.DF.rename({col_original: col_name})
 
     def _init_post5__round_values(self) -> None:
         """
@@ -171,10 +176,12 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         ----
         round indicator calculations
         """
-        # TODO: use schema for several columns!
-        self.DF = self.DF.iloc[:].round(self.ROUND_VALUES)  # FIXME: use only ind calculated values
+        # df = df.iloc[:].round(indicator_obj.ROUND)    # old logic
 
-    def init_post6__calculate_final(self) -> None:
+        for col_name, col_settings in self.COLUMN_SETINGS.items():
+            self.DF[col_name].round(col_settings.ROUND)
+
+    def init_post6__calculate_extra_columns(self) -> None:
         """
         GOAl
         ----
@@ -185,9 +192,16 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
 
 # =====================================================================================================================
 class Indicator_Wma(Base_Indicator):
+    """
+    COLUMN_NAME__TEMPLATE = WMA_%(length)s
+    """
     NAME = "WMA"
-    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+    COLUMN_SETINGS = dict(
+        WMA=ColumnSettings(EqValid_Regexp(r"WMA_\d+"), 1),
+    )
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
+        length=12,
+    )
     COLUMN_NAME__NONAME = "WMA"
 
     # results -----
@@ -199,33 +213,24 @@ class Indicator_Wma(Base_Indicator):
 
     @property
     def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-class Indicator_Stoch(Base_Indicator):
-    NAME = "STOCH"
-    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
-    COLUMN_NAME__NONAME = "STOCH"
-
-    # results -----
-    STOCH: Any
-
-    @property
-    def TA_METH(self) -> Callable[..., Any]:
-        return self.DF.ta.stoch
-
-    @property
-    def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
+        return self.PARAMS.length
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Rsi(Base_Indicator):
+    """
+    length: int
+
+    COLUMN_NAME__TEMPLATE: str = "RSI_%(length)s"
+    ROUND: int = 1
+    """
     NAME = "RSI"
-    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
+    COLUMN_SETINGS = dict(
+        RSI=ColumnSettings(EqValid_Regexp(r"RSI_\d+"), 1),
+    )
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
+        length=12,
+    )
     COLUMN_NAME__NONAME = "RSI"
 
     # results -----
@@ -237,23 +242,31 @@ class Indicator_Rsi(Base_Indicator):
 
     @property
     def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
+        return self.PARAMS.length
 
 
 # =====================================================================================================================
 class Indicator_Adx(Base_Indicator):
+    """
+    length: int
+    lensig: int
+    "ADX_%(lensig)s"
+    """
     NAME = "ADX"
     COLUMN_SETINGS = dict(
-        adx=ColumnSettings(EqValid_Regexp(r"ADX_/d+.*")),
-        adp=ColumnSettings(),
-        adn=ColumnSettings()
+        ADX=ColumnSettings(EqValid_Regexp(r"ADX_\d+"), 1),
+        DMP=ColumnSettings(EqValid_Regexp(r"DMP_\d+"), 1),
+        DMN=ColumnSettings(EqValid_Regexp(r"DMN_\d+"), 1),
     )
-    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=13, lensig=9)
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
+        length=13,
+        lensig=9,
+    )
 
     # results -----
     ADX: Any
-    ADP: Any
-    ADN: Any
+    DMP: Any
+    DMN: Any
 
     @property
     def TA_METH(self) -> Callable[..., Any]:
@@ -261,138 +274,16 @@ class Indicator_Adx(Base_Indicator):
 
     @property
     def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
+        return sum(self.PARAMS.values()) * 10
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class Indicator_Macd(Base_Indicator):
-    NAME = "MACD"
-    # COLUMN_SETINGS = dict(adx="ADX_%(lensig)s", adp=None, adn=None)
-    # PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(length=12)
-
-    # results -----
-    MACD: Any
-    SIGNAL: Any
-    HIST: Any
-
-    @property
-    def TA_METH(self) -> Callable[..., Any]:
-        return self.DF.ta.macd
-
-    @property
-    def HISTORY_ENOUGH_THRESH(self) -> int:
-        raise NotImplementedError()
-
-
-
-
-
-
-
-
-
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-pass    # TODO: OLD ref!
-
-
-# =====================================================================================================================
-class IndicatorName(Enum):  # TODO: add IC!
-    WMA = "WMA"
-    STOCH = "STOCH"
-    ADX = "ADX"
-    MACD = "MACD"
-    RSI = "RSI"
-
-
-# =====================================================================================================================
-class Base_IndicatorParams:
-    NAME: IndicatorName = None
-    COLUMN_NAME__TEMPLATE: str = None
-    ROUND: int = None
-
-    def __iter__(self):
-        yield from self.params_dict__get().values()
-
-    def column_name__get(self) -> str:
-        return self.COLUMN_NAME__TEMPLATE % self.params_dict__get()
-
-    def params_dict__get(self):
-        return AttrAux_AnnotsAll(self).dump_dict()
-
-    def bars_expected__get(self) -> int:
-        """
-        РАСЧЕТ ДЛИНЫ БАРОВ
-            количество влияет на результат!!!!
-            при не особо достаточном количестве баров - расчет произойдет НО значения будут отличаться от фактического!!!
-            видимо из-за того что будет вычитаться с нулевыми некоторыми начальными значениями!!!
-
-            sum * 2 = это очень мало!!!!!
-            sum * 10 = кажется первая, что вообще показала полное совпадение с Tinkoff терминалом!!!
-
-            ADX
-                !!! ЭТО ОЧЕНЬ ВАЖНО ДЛЯ ADX !!!!
-            STOCH
-                вообще не важно - кажется там сколько длина его - столько и баров достаточно!!!
-        """
-        return sum(self) * 10
-
-
-# =====================================================================================================================
-@dataclass
-class IndicatorParams_WMA(Base_IndicatorParams):
-    length: int
-
-    NAME: IndicatorName = IndicatorName.WMA
-    # FUNCTION: Callable = ta.wma     # NOT WORKING!
-    COLUMN_NAME__TEMPLATE: str = "WMA_%(length)s"
-    ROUND: int = 1
-
-
-@dataclass
-class IndicatorParams_STOCH(Base_IndicatorParams):
     """
-    always work with 14/3/3!!!
-    """
-    fast_k: int
-    slow_k: int
-    slow_d: int
-
-    NAME: IndicatorName = IndicatorName.STOCH
-    COLUMN_NAME__TEMPLATE: str = "STOCHk_%(fast_k)s_%(slow_k)s_%(slow_d)s"
-    # COLUMN_NAME__TEMPLATE: str = "STOCHk_14_3_3"
-    ROUND: int = 1
-
-
-@dataclass
-class IndicatorParams_ADX(Base_IndicatorParams):
-    length: int
-    lensig: int
-
-    NAME: IndicatorName = IndicatorName.ADX
-
-    COLUMN_NAME__TEMPLATE: str = "ADX_%(lensig)s"
-    ROUND: int = 1
-
-
-@dataclass
-class IndicatorParams_MACD(Base_IndicatorParams):
     fast: int
     slow: int
     signal: int
 
-    NAME: IndicatorName = IndicatorName.MACD
     ROUND: int = 3
 
     @property
@@ -401,16 +292,67 @@ class IndicatorParams_MACD(Base_IndicatorParams):
             return "MACDh_%(slow)s_%(fast)s_%(signal)s"
         else:
             return "MACDh_%(fast)s_%(slow)s_%(signal)s"
+    """
+    NAME = "MACD"
+    COLUMN_SETINGS = dict(
+        MACD=ColumnSettings(EqValid_Regexp(r"MACD(?:_\d+){3}"), 3),     # check
+        HIST=ColumnSettings(EqValid_Regexp(r"MACDh(?:_\d+){3}"), 3),
+        SIG=ColumnSettings(EqValid_Regexp(r"MACDs(?:_\d+){3}"), 3),  # check
+    )
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
+        fast=12,
+        slow=26,
+        signal=9,
+    )
+
+    # results -----
+    MACD: Any
+    HIST: Any
+    SIG: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.macd
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        return sum(self.PARAMS.values()) * 10
 
 
-@dataclass
-class IndicatorParams_RSI(Base_IndicatorParams):
-    length: int
+# ---------------------------------------------------------------------------------------------------------------------
+class Indicator_Stoch(Base_Indicator):
+    """
+    always work with 14/3/3!!!
 
-    NAME: IndicatorName = IndicatorName.RSI
+    fast_k: int
+    slow_k: int
+    slow_d: int
 
-    COLUMN_NAME__TEMPLATE: str = "RSI_%(length)s"
-    ROUND: int = 1
+    COLUMN_NAME__TEMPLATE: str = "STOCHk_%(fast_k)s_%(slow_k)s_%(slow_d)s"
+    COLUMN_NAME__TEMPLATE: str = "STOCHk_14_3_3"
+    """
+    NAME = "STOCH"
+    COLUMN_SETINGS = dict(
+        STOCH=ColumnSettings(EqValid_Regexp(r"STOCHk(?:_\d+){3}"), 1),
+        STOCHd=ColumnSettings(EqValid_Regexp(r"STOCHd(?:_\d+){3}"), 1),
+    )
+    PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
+        fast_k=3,
+        slow_k=14,
+        slow_d=3,
+    )
+
+    # results -----
+    STOCH: Any
+    STOCHd: Any
+
+    @property
+    def TA_METH(self) -> Callable[..., Any]:
+        return self.DF.ta.stoch
+
+    @property
+    def HISTORY_ENOUGH_THRESH(self) -> int:
+        return self.PARAMS.slow_k
 
 
 # =====================================================================================================================
