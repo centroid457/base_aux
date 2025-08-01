@@ -47,6 +47,7 @@ print()
 print()
 print(f"*"*100)
 
+
 # =====================================================================================================================
 import pandas_ta as ta  # VERY IMPORTANT!!! even if no used
 
@@ -312,6 +313,7 @@ def STOCH(fast_k=10, slow_k=3, slow_d=3):
     print(indicator.iloc[len(indicator) - 1]["STOCHk_14_3_3"])  # 87.08000641334098
     print(indicator.iloc[len(indicator) - 1]["STOCHd_14_3_3"])  # 87.08000641334098
     print(indicator.shape)  # (141, 2)
+    print(f"{type(indicator)=}")    #<class 'pandas.core.frame.DataFrame'>
 
 
 # =====================================================================================================================
@@ -342,6 +344,26 @@ Name: WMA_20, dtype: float64
     print()
     print(indicator.iloc[len(indicator) - 1])  # 87.08000641334098
     print(indicator.shape)  # (154,)
+    print(f"{type(indicator)=}")    # <class 'pandas.core.series.Series'>
+
+    indicator = pd.DataFrame(indicator)
+    print(f"{type(indicator)=}")    # <class 'pandas.core.frame.DataFrame'>
+    print(f"{indicator=}")
+    """
+indicator=
+             WMA_20
+0           NaN
+1           NaN
+2           NaN
+3           NaN
+4           NaN
+..          ...
+149  305.352762
+150  305.245619
+151  305.141381
+152  305.045810
+153  304.954333
+    """
 
 
 # =====================================================================================================================
@@ -352,8 +374,6 @@ def RSI():
     indicator = df.ta.rsi(length=20)
     print(f"{indicator=}")
     print(indicator.tail(1))
-
-    #
     """
 indicator=
 0            NaN
@@ -379,12 +399,52 @@ Name: RSI_20, dtype: float64
     print()
     print(indicator.iloc[len(indicator) - 1])  # 87.08000641334098
     print(indicator.shape)  # (154,)
+    print(f"{type(indicator)=}")    # <class 'pandas.core.series.Series'>
+
+    # SET NAME
+    print(f"{indicator.name=}")     # indicator.name='RSI_20'
+    # indicator.name = "HELLO"
+    # print(f"{indicator=}")
+    """
+indicator=
+0            NaN
+1            NaN
+2            NaN
+3            NaN
+4            NaN
+         ...    
+149    32.657488
+150    33.353140
+151    36.131115
+152    37.902101
+153    37.648513
+Name: HELLO, Length: 154, dtype: float64
+    """
+    indicator = pd.DataFrame(indicator)
+    print(f"{type(indicator)=}")    # <class 'pandas.core.frame.DataFrame'>
+    # print(f"{indicator.name=}")     # AttributeError: 'DataFrame' object has no attribute 'name'. Did you mean: 'rename'?
+    print(f"{indicator=}")
+    """
+indicator=
+            RSI_20
+0          NaN
+1          NaN
+2          NaN
+3          NaN
+4          NaN
+..         ...
+149  33.353338
+150  36.131320
+151  37.902311
+152  37.315832
+153  38.178916
+    """
 
 
 # =====================================================================================================================
 # ADX()
 # MACD()
 # STOCH(10,1,1,)
+WMA()
 # STOCH(20,5,5,)
-# WMA()
-RSI()
+# RSI()

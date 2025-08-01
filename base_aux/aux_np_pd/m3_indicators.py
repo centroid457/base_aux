@@ -9,6 +9,9 @@ from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.aux_dict.m2_dict_ic import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
+# calculates ta_meth!!!
+import pandas_ta as ta  # VERY IMPORTANT!!! even if no used!
+
 
 # =====================================================================================================================
 class ColumnSettings(NamedTuple):
@@ -39,7 +42,6 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     NAME: str = "DEF_IndNameInfo"                       # just info!
     PARAMS: DictIc_LockedKeys_Ga
     COLUMN_SETINGS: DictIcKeys[str, ColumnSettings]     # if not know what to use - keep blanc str "" or None!!!
-    COLUMN_NAME__NONAME: str = "DEF_IndNoNameColumn"    # when TA_METH return pdSeries instead of pdDf
 
     @property
     def TA_METH(self) -> Callable[..., TYPING__PD_DATAFRAME | TYPING__PD_SERIES]:
@@ -110,7 +112,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         self._init_post0__fix_attrs()
         self._init_post1__warn_if_not_enough_history()
         self._init_post2__calculate_ta()
-        self._init_post3__df_ensure_colname_and_df()
+        self._init_post3__ensure_df()
         self._init_post4__rename_columns()
         self._init_post5__round_values()
         self.init_post6__calculate_extra_columns()
@@ -145,7 +147,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         """
         self.DF = self.TA_METH(**self.PARAMS)
 
-    def _init_post3__df_ensure_colname_and_df(self) -> None:
+    def _init_post3__ensure_df(self) -> None:
         """
         GOAL
         ----
@@ -155,8 +157,6 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         2. set name if NONAME column
         """
         if isinstance(self.DF, pd.core.series.Series):
-            if self.DF.name is None:
-                self.DF.name = self.COLUMN_NAME__NONAME
             self.DF = pd.DataFrame(self.SOURCE)
 
     def _init_post4__rename_columns(self) -> None:
@@ -202,7 +202,6 @@ class Indicator_Wma(Base_Indicator):
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
         length=12,
     )
-    COLUMN_NAME__NONAME = "WMA"
 
     # results -----
     WMA: Any
@@ -231,7 +230,6 @@ class Indicator_Rsi(Base_Indicator):
     PARAMS: DictIc_LockedKeys_Ga = DictIc_LockedKeys_Ga(
         length=12,
     )
-    COLUMN_NAME__NONAME = "RSI"
 
     # results -----
     RSI: Any
@@ -250,6 +248,7 @@ class Indicator_Adx(Base_Indicator):
     """
     length: int
     lensig: int
+
     "ADX_%(lensig)s"
     """
     NAME = "ADX"
