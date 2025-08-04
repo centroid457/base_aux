@@ -1,7 +1,12 @@
+from base_aux.versions.m3_derivatives import *
 from base_aux.testplans.tp_manager import *
 from base_aux.servers.m1_client_requests import *
 
 from TESTPLANS.stands import Stands
+
+
+# =====================================================================================================================
+Version_Python().raise_if_not__check_ge("3.11", COMMENT="need greater equal!")
 
 
 # =====================================================================================================================
@@ -36,6 +41,52 @@ class TpManager__Example(TpManager):
 
     GUI__START = True
     API_SERVER__START = True
+
+    # def post__tc_results(self, tc_inst: Base_TestCase) -> None:
+    #     # CHECK ------------------------------------------
+    #     if not self.api_client or tc_inst.result is None:
+    #         return
+    #
+    #     # WORK ------------------------------------------
+    #     # TODO: need CREATE good Model + generate it + use pydantic in MW + validate + add correct in SQL
+    #     body = {
+    #         "sn": tc_inst.DEVICES__BREEDER_INST.DUT.SN,
+    #         "timestamp": tc_inst.timestamp_last,
+    #         "factory_record": {
+    #             "name": "name_stand",
+    #             "stand_number": 111,
+    #             "shift_number": 222,
+    #         },
+    #         "test_result": "PASS" if tc_inst.result else "FAIL",
+    #         "components": {
+    #             "component1": "comp1",
+    #             "component2": "comp2",
+    #         },
+    #         "versions": {
+    #             "board_version": "ver_board",
+    #             "firmware_version": "ver_fir",
+    #         },
+    #         "test_log": {
+    #             "test_name": "test1",
+    #             "test_result": "PASS" if tc_inst.result else "FAIL",
+    #             "parameters": {
+    #                 "param1": 111,
+    #                 "param2": 222,
+    #             },
+    #             "log_file": "log_file.txt",
+    #         },
+    #         "history_record": {
+    #             "status": "Shipped",
+    #             "other_databases": {
+    #                 "database1": "DB1",
+    #                 "database2": "DB2",
+    #             },
+    #         },
+    #
+    #         # **tc_inst.get__results().dict(),
+    #     }
+    #     print(body)
+    #     self.api_client.send(body=body)
 
 
 # =====================================================================================================================
