@@ -35,7 +35,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
     input data from mt5
     calculate indicator values
     """
-    SOURCE: TYPING__NP_TS__FINAL    # HISTORY input - from MT5
+    SOURCE: TYPING__NP_TS__FINAL    # HISTORY input - from MT5 - todo: update to DF? use with loaded TA data?
     DF: TYPING__PD_DATAFRAME        # result OUTPUT - from PD_TA
 
     # ---------------------------
