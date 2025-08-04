@@ -50,13 +50,13 @@ class PROJECT_BASE:
 class ReleaseFileBase:
     # ------------------------------------------------
     FILE_NAME: str = "FILE.md"
-    PROJECT: type['PROJECT'] = None
+    PROJECT: type[PROJECT_BASE] = None
 
     # ------------------------------------------------
     LINE_SEPARATOR_MAIN: str = "*" * 80
     LINE_SEPARATOR_PART: str = "-" * 30
 
-    def __init__(self, project: type['PROJECT']):
+    def __init__(self, project: type[PROJECT_BASE]):
         self.PROJECT = project
 
     @property
@@ -119,11 +119,11 @@ class ReleaseReadme(ReleaseFileBase):
     # GENERATE ========================================================================================================
     def generate(self) -> None:
         self._file_clear()
-        self.append_badges()
-        self.append_main()
-        self.append_examples()
+        self.append1_badges()
+        self.append2_main()
+        self.append3_examples()
 
-    def append_badges(self) -> None:
+    def append1_badges(self) -> None:
         lines = [
             # VER -------------
             f"![Ver/TestedPython](https://img.shields.io/pypi/pyversions/{self.PROJECT.NAME_IMPORT})",
@@ -147,7 +147,7 @@ class ReleaseReadme(ReleaseFileBase):
         ]
         self._file_append_lines(lines)
 
-    def append_main(self) -> None:
+    def append2_main(self) -> None:
         # FEATURES ----------------------------------------------------
         features = [
             f"",
@@ -188,6 +188,21 @@ class ReleaseReadme(ReleaseFileBase):
             f"## Release history",
             f"See the [HISTORY.md](HISTORY.md) file for release history.  ",
 
+            # f"",
+            # f"",
+            # f"## Python Installation",
+            # f"```commandline",
+            # f"pip install {self.PROJECT.NAME_INSTALL}",
+            # f"```",
+
+            f"",
+            f"",
+            f"## Requirements Installation",
+            f"NOTE: all requirements for module will install automatically or install manually",
+            f"```commandline",
+            f"pip install -r requirements.txt",
+            f"```",
+
             f"",
             f"",
             f"## Module Installation",
@@ -204,7 +219,7 @@ class ReleaseReadme(ReleaseFileBase):
         ]
         self._file_append_lines(lines)
 
-    def append_examples(self) -> None:
+    def append3_examples(self) -> None:
         """
         NOTE: don't skip none-python files! it could be as part of examples! just name it in appropriate way!
         """

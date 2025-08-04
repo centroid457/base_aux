@@ -1,6 +1,12 @@
 # FIXME: this is NOT ACTUAL!!!
 
 
+GOAL
+====
+    first time it was created for helping coordinating in project!
+    so you can see whehe and in what class you can access to exact need data!
+
+
 COMMON INFO
 ===========
 
