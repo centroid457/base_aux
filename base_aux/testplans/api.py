@@ -86,12 +86,15 @@ def create_app__FastApi_Tp(self=None, data: Any = None) -> FastAPI:
         return True
 
     @app.get("/info")
-    async def info() -> Model_TpInfo:
-        return Model_TpInfo(**app.data.STAND.stand__get_info__general_tcsc())
+    async def info() -> dict:   # -> Model_TpInfo:
+        # return Model_TpInfo(**app.data.STAND.stand__get_info__general_tcsc())
+        return dict(**app.data.STAND.stand__get_info__general_tcsc())
 
     @app.get("/results")
-    async def results() -> Model_TpResults:
-        return Model_TpResults(**app.data.STAND.stand__get_results())
+    async def results() -> dict:    # -> Model_TpResults:
+        # return Model_TpResults(**app.data.STAND.stand__get_results())
+        result = dict(**app.data.STAND.stand__get_results())
+        return result
 
     return app
 

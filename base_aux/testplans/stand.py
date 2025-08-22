@@ -73,6 +73,120 @@ class Base_Stand:
     def stand__get_info__general_tcsc(self) -> dict[str, Any]:
         """
         get info/structure about stand/TP
+===================================
+some example
+===================================
+{
+  "STAND.NAME": "[ОТК] БП800",
+  "STAND.DESCRIPTION": "[DEF] STAND DESCRIPTION",
+  "STAND.SN": "[DEF] STAND SN",
+  "STAND.TIMESTAMP_START": "None",
+  "STAND.TIMESTAMP_STOP": "None",
+  "TESTCASES": [
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOff,HvOff,PsOff]присутствие БП",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOff,HvOff,PsOff]тест Заземления",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOff,HvOff,PsOff]проверка значений параметров ВЫКЛ",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOff,HvOff,PsOn]проверка значений параметров ВКЛ",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOn,HvOff,PsOff]тест PmBus",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOn,HvOff,PsOff]\nпроверка значений параметров ВЫКЛ",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc0,ExtOn,HvOff,PsOn]\nпроверка значений параметров ВКЛ",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOff]\nпроверка значений параметров в ВЫКЛ состоянии",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOn]\nпроверка значений параметров во ВКЛ состоянии",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOn]тест КЗ\nшины ожидания (STANDBY)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOn]тест КЗ\nшины главного питания (MAIN)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOn]тест нагрузочный\nшины ожидания (STANDBY)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc220,ExtOff,HvOn,PsOn]тест нагрузочный\nшины главного питания (MAIN)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc150,ExtOff,HvOn,PsOn]\nграница включения - нижняя (OFF)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc160,ExtOff,HvOn,PsOn]\nграница включения - нижняя (ON)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc250,ExtOff,HvOn,PsOn]\nграница включения - верхняя (ON)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    },
+    {
+      "TC_NAME": "",
+      "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+      "TC_ASYNC": true,
+      "TC_SKIP": null
+    }
+  ]
+}
         """
         result = {
             **self.stand__get_info__general(),
@@ -84,10 +198,276 @@ class Base_Stand:
     def stand__get_results(self) -> dict[str, Any]:
         """
         get all results for stand/TP
+===================================
+some example
+===================================
+{
+  "STAND": {
+    "STAND.NAME": "[ОТК] БП800",
+    "STAND.DESCRIPTION": "[DEF] STAND DESCRIPTION",
+    "STAND.SN": "[DEF] STAND SN",
+    "STAND.TIMESTAMP_START": "None",
+    "STAND.TIMESTAMP_STOP": "None"
+  },
+  "TCS": {
+    "": {       # NOTE: here is wrong! all TCS have no name! so all get balnk"" value and all are rewrite each other! need # FIXME
+      "0": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 0,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=0\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "1": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 1,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=1\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "2": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 2,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=2\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "3": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 3,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=3\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "4": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 4,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=4\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "5": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 5,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=5\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "6": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 6,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=6\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "7": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 7,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=7\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "8": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 8,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=8\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      },
+      "9": {
+        "TC_NAME": "",
+        "TC_DESCRIPTION": "[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)",
+        "TC_ASYNC": true,
+        "TC_SKIP": null,
+        "DEV_FOUND": false,
+        "INDEX": 9,
+        "SKIP": null,
+        "NAME": "PTB",
+        "DESCRIPTION": "PTB for PSU",
+        "SN": "",
+        "FW": "",
+        "MODEL": "",
+        "DUT_SN": "",
+        "DUT_FW": "",
+        "DUT_MODEL": "",
+        "timestamp_start": null,
+        "tc_active": false,
+        "tc_result_startup": false,
+        "tc_result": null,
+        "tc_details": {},
+        "result__teardown": false,
+        "timestamp_stop": null,
+        "log": "INDEX=9\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+      }
+    }
+  }
+}
         """
         TCS_RESULTS = {}
         for tc_cls in self.TCSc_LINE:
-            TCS_RESULTS.update({tc_cls: tc_cls.tcsi__get_results()})
+            TCS_RESULTS.update({tc_cls.NAME: tc_cls.tcsi__get_results()})
 
         result = {
             "STAND" : self.stand__get_info__general(),
