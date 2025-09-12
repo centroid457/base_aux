@@ -157,6 +157,12 @@ class EnumAdj_ProcessStateResult(NestEq_EnumAdj):
 
 
 # =====================================================================================================================
+class EnumAdj_StopResetHardSoft(NestEq_EnumAdj):
+    SOFT: int = 1
+    HARD: int = 2
+
+
+# =====================================================================================================================
 class EnumAdj_BoolCumulate(NestEq_EnumAdj):
     """
     GOAL
