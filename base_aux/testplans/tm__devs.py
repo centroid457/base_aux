@@ -1,13 +1,13 @@
 from base_aux.valid.m1_valid_base import *
 from base_aux.translator.m1_translator import Translator
-from base_aux.pyqt.m3_tm import TableModelTemplate
+from base_aux.pyqt.m3_tm import Base_TableModel
 from base_aux.breeders.m1_breeder_str2_stack import *
 from base_aux.breeders.m1_breeder_str1_series import *
 from base_aux.pyqt.m0_static import *
 
 
 # =====================================================================================================================
-class TableModel_Devs(TableModelTemplate):
+class TableModel_Devs(Base_TableModel):
     DATA: "TpManager"
     HEADERS: "Headers"
     HTRANSLATOR: Translator

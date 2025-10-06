@@ -20,6 +20,10 @@ class PROJECT(PROJECT_BASE):
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
     DESCRIPTION_SHORT: str = "collect all my previous modules in one package"
     DESCRIPTION_LONG: str = """
+NAMING  
+1. Base_* - you can just simply using it by nesting!  
+2. Template_* - somtimes you cant apply Class as universal baseClass! so in such case this class created only as template.  
+and you should use it as template for creating your own class.
 """
     FEATURES: list[str] = [
         # "feat1",

@@ -694,7 +694,7 @@ class _ClsCountExecutions:     # starichenko
 
 
 # DECORATORS ==========================================================================================================
-def _decorator_for_class_method_TEMPLATE(_func_link):    # starichenko
+def TEMPLATE_decorator_for_class_method(_func_link):    # starichenko
     """
     this is only TAMPLATE for decorator! use it like a sample!
     works on INIT! like any others!)

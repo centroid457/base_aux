@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 
 # =====================================================================================================================
-class SignalsTemplate(QObject):
+class Base_Signals(QObject):
     """
     see tests for usage examples
 

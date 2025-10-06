@@ -25,7 +25,7 @@ class Enum_TcGroup_Base(NestEq_EnumAdj):
 
 
 # =====================================================================================================================
-class Signals(SignalsTemplate):
+class Signals(Base_Signals):
     signal__tc_state_changed = pyqtSignal(_Base0_TestCase)
 
 

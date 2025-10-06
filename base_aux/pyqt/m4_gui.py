@@ -11,7 +11,7 @@ from base_aux.pyqt.m0_static import *
 from base_aux.pyqt.m1_dialog import *
 
 from base_aux.pyqt.m0_base import Row_, Dev_, Data_
-from base_aux.pyqt.m3_tm import TableModelTemplate
+from base_aux.pyqt.m3_tm import Base_TableModel
 from base_aux.pyqt.m0_base2_th import HeaderViewCB
 from base_aux.pyqt.m0_base1_hl import *
 
@@ -831,7 +831,7 @@ windowTitleChanged  	TypeError   :TypeError('native Qt signal is not callable')
         if self.DATA is None:
             self.DATA = Data_([Row_(f"row{index}") for index in range(5)], [Dev_(f"dev{index}") for index in range(4)])
 
-        self.TM = TableModelTemplate(self.DATA)
+        self.TM = Base_TableModel(self.DATA)
 
         # WORK ---------------------------
         self.TV = QTableView()

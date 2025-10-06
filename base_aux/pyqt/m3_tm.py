@@ -14,7 +14,7 @@ class Headers(BreederStrStack):
 
 
 # =====================================================================================================================
-class TableModelTemplate(QAbstractTableModel):
+class Base_TableModel(QAbstractTableModel):
     DATA: Data_
     HEADERS: BreederStrStack = Headers()
     HTRANSLATOR: Translator = None

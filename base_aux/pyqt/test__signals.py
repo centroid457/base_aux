@@ -9,7 +9,7 @@ from PyQt5.QtCore import pyqtSignal
 class Test__Signals:
     # -----------------------------------------------------------------------------------------------------------------
     def setup_method(self, method):
-        class Signals(SignalsTemplate):
+        class Signals(Base_Signals):
             signal__send_no = pyqtSignal()
 
             signal__send_one__wo_def = pyqtSignal(int)
