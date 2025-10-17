@@ -1,11 +1,11 @@
-# ==========================
-# VERSION = (0, 0, 1)#use build as broadcast/nested
-# VERSION = (0, 0, 2)#add BACKUPS + start HELP
-# VERSION = (0, 0, 3)#add DrawIo *.dtmp
-# VERSION = (0, 0, 4)#add LOGS
-# VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
-# VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
+# VERSION = (0, 0, 8)#add TRASH_CAN/obsidian +separate UNIVERSAL +reverce version order
 # VERSION = (0, 0, 7)#add pyinstaller +TEMP/ as short
+# VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
+# VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
+# VERSION = (0, 0, 4)#add LOGS
+# VERSION = (0, 0, 3)#add DrawIo *.dtmp
+# VERSION = (0, 0, 2)#add BACKUPS + start HELP
+# VERSION = (0, 0, 1)#use build as broadcast/nested
 
 # HELP ---------------------
 # 1=NESTING
@@ -49,6 +49,11 @@ pyinstaller/
 #documentation/build/*
 #documentation/source/_build/*
 
+# UNIVERSAL ================
+# TRASH_CAN ----------------
+# first found in obsidian!
+*.trash
+
 # BACKUPS ------------------
 *.bkp
 
@@ -70,6 +75,9 @@ todo.org
 # THIRD-PARTY ==============
 # DrawIo
 *.dtmp
+
+# obsidian
+*.obsidian
 
 # USER =====================
 # TEMP ---------------------
