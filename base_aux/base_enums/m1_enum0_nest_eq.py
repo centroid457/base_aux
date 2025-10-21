@@ -96,5 +96,14 @@ class NestEq_EnumAdj(Enum):
     #     else:
     #         return False
 
+    @classmethod
+    def as_dict__all(cls):
+        """
+        GOAL
+        ----
+        get all existed items in class
+        """
+        return {member.name: member.value for member in cls}
+
 
 # =====================================================================================================================
