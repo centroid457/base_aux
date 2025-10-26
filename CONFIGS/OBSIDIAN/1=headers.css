@@ -1,0 +1,217 @@
+/* ================================================================================ */
+/* ===== TEXT STYLING ===== */
+.markdown-preview-view,
+.markdown-source-view .cm-line {
+  line-height: 1.0 !important;	/*ОТСТУП строк ТЕКСТА!=0.8 тесно! 1.0 самый раз! если не указывать то слишком большой!*/
+}
+
+/* ================================================================================ */
+/* ===== HEADINGS STYLING ===== */
+
+/* ================================================================================
+VARIABLES
+*/
+/* as variant
+:root {
+  --h1-bg: hsla(210, 100%, 90%, 0.9);
+}
+*/
+
+.theme-light {
+  --h1-bg: hsla(210, 100%, 90%, 0.9);
+  --h2-bg: hsla(210, 100%, 90%, 0.8);
+  --h3-bg: hsla(210, 100%, 90%, 0.7);
+  --h4-bg: hsla(210, 100%, 90%, 0.6);
+  --h5-bg: hsla(210, 100%, 90%, 0.5);
+  --h6-bg: hsla(210, 100%, 90%, 0.4);
+
+  --h1-border: hsla(210, 100%, 60%, 0.9);
+  --h2-border: hsla(210, 100%, 60%, 0.8);
+  --h3-border: hsla(210, 100%, 60%, 0.7);
+  --h4-border: hsla(210, 100%, 60%, 0.6);
+  --h5-border: hsla(210, 100%, 60%, 0.5);
+  --h6-border: hsla(210, 100%, 60%, 0.4);
+}
+
+.theme-dark {
+  --h1-bg: hsla(210, 100%, 25%, 0.9);
+  --h2-bg: hsla(210, 100%, 25%, 0.8);
+  --h3-bg: hsla(210, 100%, 25%, 0.7);
+  --h4-bg: hsla(210, 100%, 25%, 0.6);
+  --h5-bg: hsla(210, 100%, 25%, 0.5);
+  --h6-bg: hsla(210, 100%, 25%, 0.4);
+
+  --h1-border: hsla(210, 100%, 60%, 0.9);
+  --h2-border: hsla(210, 100%, 60%, 0.8);
+  --h3-border: hsla(210, 100%, 60%, 0.7);
+  --h4-border: hsla(210, 100%, 60%, 0.6);
+  --h5-border: hsla(210, 100%, 60%, 0.5);
+  --h6-border: hsla(210, 100%, 60%, 0.4);
+}
+
+/* ================================================================================ */
+/* ===== COMMON ===== */
+.markdown-preview-view h1,
+.markdown-preview-view h2,
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6,
+.markdown-source-view .cm-header-1,
+.markdown-source-view .cm-header-2,
+.markdown-source-view .cm-header-3,
+.markdown-source-view .cm-header-4,
+.markdown-source-view .cm-header-5,
+.markdown-source-view .cm-header-6
+{
+  font-weight: 600;
+  margin: 0.1em 0 0.1em 0 !important;	/*отступы между блоками заголовков TOP+LEFT+BOT+RIGHT*/
+  padding: 0.1em 0.1em;					/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT*/
+
+  border-radius: 15px !important;	/*скругление фона заголовков*/
+
+  line-height: 0.75 !important;		/*расстояние между строками заголовков=.7заглавные буквы накладываются при переносе .75*/
+  page-break-inside: avoid !important; /* Защита от разрыва при печати */
+}
+
+.markdown-preview-view h1,
+.markdown-preview-view h2,
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6
+{
+  border-left: solid !important;	/*размерный тип контура*/
+}
+/* ================================================================================ */
+.markdown-preview-view h1,
+.markdown-source-view .cm-header-1
+{
+  background-color: var(--h1-bg) !important;
+  border-left-color: var(--h1-border) !important;
+  border-left-width: 6px !important;	/*толщина линии контура*/
+
+  font-size: 1.5em;
+  padding: 0.4em 0.45em;	/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT*/
+}
+.markdown-preview-view h2,
+.markdown-source-view .cm-header-2
+{
+  background-color: var(--h2-bg) !important;
+  border-left-color: var(--h2-border) !important;
+  border-left-width: 5px !important;
+
+  font-size: 1.4em;
+  padding: 0.3em 0.40em;
+}
+.markdown-preview-view h3,
+.markdown-source-view .cm-header-3
+{
+  background-color: var(--h3-bg) !important;
+  border-left-color: var(--h3-border) !important;
+  border-left-width: 4px !important;
+
+  font-size: 1.3em;
+  padding: 0.2em 0.35em;
+}
+.markdown-preview-view h4,
+.markdown-source-view .cm-header-4
+{
+  background-color: var(--h4-bg) !important;
+  border-left-color: var(--h4-border) !important;
+  border-left-width: 3px !important;
+
+  font-size: 1.2em;
+  padding: 0.3em 0.30em;
+}
+.markdown-preview-view h5,
+.markdown-source-view .cm-header-5
+{
+  background-color: var(--h5-bg) !important;
+  border-left-color: var(--h5-border) !important;
+  border-left-width: 2px !important;
+
+  font-size: 1.1em;
+  padding: 0.2em 0.25em;
+  font-style: italic;
+}
+.markdown-preview-view h6,
+.markdown-source-view .cm-header-6
+{
+  background-color: var(--h6-bg) !important;
+  border-left-color: var(--h6-border) !important;
+  border-left-width: 1px !important;
+
+  font-size: 1.0em;
+  padding: 0.1em 0.20em;
+  font-style: italic;
+}
+
+/* ================================================================================ */
+/* ===== АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
+@media (max-width: 768px)
+{
+  .markdown-preview-view h1,
+  .markdown-preview-view h2,
+  .markdown-preview-view h3,
+  .markdown-preview-view h4,
+  .markdown-preview-view h5,
+  .markdown-preview-view h6
+  {
+    padding: 0.4em 0.6em;
+    margin: 0.6em 0 0.3em 0;
+  }
+
+  .markdown-source-view .cm-header-1,
+  .markdown-source-view .cm-header-2,
+  .markdown-source-view .cm-header-3,
+  .markdown-source-view .cm-header-4,
+  .markdown-source-view .cm-header-5,
+  .markdown-source-view .cm-header-6
+  {
+    padding: 0.3em 0.5em;
+    margin: 0.5em 0 0.25em 0;
+  }
+}
+
+/* ================================================================================ */
+/* ===== ЭФФЕКТЫ ===== */
+/* Индикатор уровня перед заголовком */
+.markdown-preview-view h1::before,
+.markdown-preview-view h2::before,
+.markdown-preview-view h3::before,
+.markdown-preview-view h4::before,
+.markdown-preview-view h5::before,
+.markdown-preview-view h6::before
+{
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.5em;
+  color: var(--h1-border);
+  font-weight: bold;
+
+  /*content: attr(data-heading);*/
+}
+.markdown-preview-view h1::before {content: "h1";}	/*dont know why but DONT DELETE!!!*/
+.markdown-preview-view h2::before {content: "h2";}	/*dont know why but DONT DELETE!!!*/
+.markdown-preview-view h3::before {content: "h3";}	/*dont know why but DONT DELETE!!!*/
+.markdown-preview-view h4::before {content: "h4";}	/*dont know why but DONT DELETE!!!*/
+.markdown-preview-view h5::before {content: "h5";}	/*dont know why but DONT DELETE!!!*/
+.markdown-preview-view h6::before {content: "h6";}	/*dont know why but DONT DELETE!!!*/
+
+/* ===== при наведении ===== */
+.markdown-preview-view h1:hover,
+.markdown-preview-view h2:hover,
+.markdown-preview-view h3:hover,
+.markdown-preview-view h4:hover,
+.markdown-preview-view h5:hover,
+.markdown-preview-view h6:hover
+{
+  opacity: 0.90;							/* затенить исходный цвет*/
+  transform: translateX(2px);				/* показать уровень - тоже почему то нужно!!! не хватает того что сверху"*/
+  box-shadow: 0px 0px  10px  rgba(200,200,200,0.9);	/*смещение по XY +размер +цвет Тени*/
+}
+
+/* ================================================================================ */
