@@ -81,9 +81,16 @@ VARIABLES
 .markdown-preview-view h5,
 .markdown-preview-view h6
 {
-  border-left: solid !important;	/*размерный тип контура*/
+  border-left: solid;	/*double=двойная dotted=точки dashed=штрих groove=Градиент =тип контура*/
 }
 /* ================================================================================ */
+.markdown-preview-view h1 {border-left: solid;}
+.markdown-preview-view h2 {border-left: dashed;}
+.markdown-preview-view h3 {border-left: dotted;}
+.markdown-preview-view h4 {border-left: solid;}
+.markdown-preview-view h5 {border-left: dashed;}
+.markdown-preview-view h6 {border-left: dotted;}
+
 .markdown-preview-view h1,
 .markdown-source-view .cm-header-1
 {
@@ -102,7 +109,7 @@ VARIABLES
   border-left-width: 5px !important;
 
   font-size: 1.4em;
-  padding: 0.3em 0.40em;
+  padding: 0.35em 0.40em;
 }
 .markdown-preview-view h3,
 .markdown-source-view .cm-header-3
@@ -112,7 +119,7 @@ VARIABLES
   border-left-width: 4px !important;
 
   font-size: 1.3em;
-  padding: 0.2em 0.35em;
+  padding: 0.3em 0.35em;
 }
 .markdown-preview-view h4,
 .markdown-source-view .cm-header-4
@@ -122,7 +129,7 @@ VARIABLES
   border-left-width: 3px !important;
 
   font-size: 1.2em;
-  padding: 0.3em 0.30em;
+  padding: 0.25em 0.30em;
 }
 .markdown-preview-view h5,
 .markdown-source-view .cm-header-5
@@ -143,7 +150,7 @@ VARIABLES
   border-left-width: 1px !important;
 
   font-size: 1.0em;
-  padding: 0.1em 0.20em;
+  padding: 0.15em 0.20em;
   font-style: italic;
 }
 
