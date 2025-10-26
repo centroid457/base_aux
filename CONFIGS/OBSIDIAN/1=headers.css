@@ -68,7 +68,7 @@ VARIABLES
   margin: 0.1em 0 0.1em 0 !important;	/*отступы между блоками заголовков TOP+LEFT+BOT+RIGHT*/
   padding: 0.1em 0.1em;					/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT*/
 
-  border-radius: 15px !important;	/*скругление фона заголовков*/
+  border-radius: 5px !important;	/*скругление фона заголовков*/
 
   line-height: 0.75 !important;		/*расстояние между строками заголовков=.7заглавные буквы накладываются при переносе .75*/
   page-break-inside: avoid !important; /* Защита от разрыва при печати */
@@ -85,18 +85,18 @@ VARIABLES
 }
 /* ================================================================================ */
 .markdown-preview-view h1 {
-	border: double;
-}
-.markdown-preview-view h2 {
 	border: solid;
 }
-.markdown-preview-view h3 {
-	border-left: double;
-	border-bottom: double;
+.markdown-preview-view h2 {
+	border: double;
 }
-.markdown-preview-view h4 {
+.markdown-preview-view h3 {
 	border-left: solid;
 	border-bottom: solid;
+}
+.markdown-preview-view h4 {
+	border-left: double;
+	border-bottom: double;
 }
 .markdown-preview-view h5 {
 	border-bottom: dashed;
