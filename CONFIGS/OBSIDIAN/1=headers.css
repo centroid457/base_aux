@@ -72,6 +72,10 @@ VARIABLES
 
   line-height: 0.75 !important;		/*расстояние между строками заголовков=.7заглавные буквы накладываются при переносе .75*/
   page-break-inside: avoid !important; /* Защита от разрыва при печати */
+
+  /*display: block !important;  /*делает чтото важное!!! строки в EDIT разносятся на дополнительную строку!!! зачем???*/
+  /*box-sizing: border-box;	/*не влияет!!!! ни на что*/
+  /*width: 100%;				/*не влияет!!!! ни на что*/
 }
 
 .markdown-preview-view h1,
@@ -102,6 +106,25 @@ VARIABLES
 	border-bottom: dashed;
 }
 .markdown-preview-view h6 {
+	border-bottom: dotted;
+}
+
+.markdown-source-view .cm-header-1 {
+	border-bottom: solid;
+}
+.markdown-source-view .cm-header-2 {
+	border-bottom: double;
+}
+.markdown-source-view .cm-header-3 {
+	border-bottom: solid;
+}
+.markdown-source-view .cm-header-4 {
+	border-bottom: double;
+}
+.markdown-source-view .cm-header-5 {
+	border-bottom: dashed;
+}
+.markdown-source-view .cm-header-6 {
 	border-bottom: dotted;
 }
 
