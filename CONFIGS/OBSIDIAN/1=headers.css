@@ -81,22 +81,36 @@ VARIABLES
 .markdown-preview-view h5,
 .markdown-preview-view h6
 {
-  border-left: solid;	/*double=двойная dotted=точки dashed=штрих groove=Градиент =тип контура*/
+  /*border: solid;	/*double=двойная dotted=точки dashed=штрих groove=Градиент =тип контура*/
 }
 /* ================================================================================ */
-.markdown-preview-view h1 {border-left: solid;}
-.markdown-preview-view h2 {border-left: dashed;}
-.markdown-preview-view h3 {border-left: dotted;}
-.markdown-preview-view h4 {border-left: solid;}
-.markdown-preview-view h5 {border-left: dashed;}
-.markdown-preview-view h6 {border-left: dotted;}
+.markdown-preview-view h1 {
+	border: double;
+}
+.markdown-preview-view h2 {
+	border: solid;
+}
+.markdown-preview-view h3 {
+	border-left: double;
+	border-bottom: double;
+}
+.markdown-preview-view h4 {
+	border-left: solid;
+	border-bottom: solid;
+}
+.markdown-preview-view h5 {
+	border-bottom: dashed;
+}
+.markdown-preview-view h6 {
+	border-bottom: dotted;
+}
 
 .markdown-preview-view h1,
 .markdown-source-view .cm-header-1
 {
   background-color: var(--h1-bg) !important;
-  border-left-color: var(--h1-border) !important;
-  border-left-width: 6px !important;	/*толщина линии контура*/
+  border-color: var(--h1-border) !important;
+  border-width: 4px !important;	/*толщина линии контура*/
 
   font-size: 1.5em;
   padding: 0.4em 0.45em;	/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT*/
@@ -105,8 +119,8 @@ VARIABLES
 .markdown-source-view .cm-header-2
 {
   background-color: var(--h2-bg) !important;
-  border-left-color: var(--h2-border) !important;
-  border-left-width: 5px !important;
+  border-color: var(--h2-border) !important;
+  border-width: 4px !important;
 
   font-size: 1.4em;
   padding: 0.35em 0.40em;
@@ -115,8 +129,8 @@ VARIABLES
 .markdown-source-view .cm-header-3
 {
   background-color: var(--h3-bg) !important;
-  border-left-color: var(--h3-border) !important;
-  border-left-width: 4px !important;
+  border-color: var(--h3-border) !important;
+  border-width: 3px !important;
 
   font-size: 1.3em;
   padding: 0.3em 0.35em;
@@ -125,8 +139,8 @@ VARIABLES
 .markdown-source-view .cm-header-4
 {
   background-color: var(--h4-bg) !important;
-  border-left-color: var(--h4-border) !important;
-  border-left-width: 3px !important;
+  border-color: var(--h4-border) !important;
+  border-width: 3px !important;
 
   font-size: 1.2em;
   padding: 0.25em 0.30em;
@@ -135,8 +149,8 @@ VARIABLES
 .markdown-source-view .cm-header-5
 {
   background-color: var(--h5-bg) !important;
-  border-left-color: var(--h5-border) !important;
-  border-left-width: 2px !important;
+  border-color: var(--h5-border) !important;
+  border-width: 2px !important;
 
   font-size: 1.1em;
   padding: 0.2em 0.25em;
@@ -146,8 +160,8 @@ VARIABLES
 .markdown-source-view .cm-header-6
 {
   background-color: var(--h6-bg) !important;
-  border-left-color: var(--h6-border) !important;
-  border-left-width: 1px !important;
+  border-color: var(--h6-border) !important;
+  border-width: 2px !important;
 
   font-size: 1.0em;
   padding: 0.15em 0.20em;
