@@ -235,6 +235,15 @@ class TypeAux(NestInit_Source):
         # except:
         #     return False
 
+        # 5 -----------------
+        # NOT ACCEPTABLE
+        # class Cls:
+        #     pass
+        #
+        # obj = Cls()
+        # print(isinstance(obj, object))  # True
+        # print(isinstance(Cls, object))  # True
+
     def check__metaclassed(self) -> bool:
         """
         just an idea to show that class crates by metaclass!
