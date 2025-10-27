@@ -6,6 +6,21 @@
 }
 
 /* ================================================================================ */
+/* ===== TODO ===== */
+/*
+# TODO:
+0=ALL
+	- изменить размеры текста
+1=PDF
+	- PADDINGS не работает!
+2=PARAGRAPH
+	- MARGINES добавить отступы между собой!
+	- делать ли отступ на первый символ?
+3=EDIT
+	- наложение заголовков идет и его фона особенно при переносе
+*/
+
+/* ================================================================================ */
 /* ===== HEADINGS STYLING ===== */
 
 /* ================================================================================
@@ -136,7 +151,7 @@ VARIABLES
   border-width: 4px !important;	/*толщина линии контура*/
 
   font-size: 1.5em;
-  padding: 0.4em 0.45em;	/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT*/
+  padding: 0.2em 0.45em;	/*отступы текста внутри от краев TOP+LEFT+BOT+RIGHT >>> 0.4/0.4/0.3/0.3/0.2/0.2*/
 }
 .markdown-preview-view h2,
 .markdown-source-view .cm-header-2
@@ -146,7 +161,7 @@ VARIABLES
   border-width: 4px !important;
 
   font-size: 1.4em;
-  padding: 0.35em 0.40em;
+  padding: 0.2em 0.40em;
 }
 .markdown-preview-view h3,
 .markdown-source-view .cm-header-3
@@ -156,7 +171,7 @@ VARIABLES
   border-width: 3px !important;
 
   font-size: 1.3em;
-  padding: 0.3em 0.35em;
+  padding: 0.2em 0.35em;
 }
 .markdown-preview-view h4,
 .markdown-source-view .cm-header-4
@@ -166,7 +181,7 @@ VARIABLES
   border-width: 3px !important;
 
   font-size: 1.2em;
-  padding: 0.25em 0.30em;
+  padding: 0.2em 0.30em;
 }
 .markdown-preview-view h5,
 .markdown-source-view .cm-header-5
