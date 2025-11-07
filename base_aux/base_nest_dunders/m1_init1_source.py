@@ -2,10 +2,11 @@ from typing import *
 
 from base_aux.base_values.m2_value_special import NoValue
 # from base_aux.base_types.m1_type_aux import *      # RECURSION EXX
+from .m1_init0_post import NestInit_Post
 
 
 # =====================================================================================================================
-class NestInit_Source:
+class NestInit_Source(NestInit_Post):
     """
     GOAL
     ----
@@ -54,29 +55,14 @@ class NestInit_Source:
         return result
 
     def __init__(self, source: Any = NoValue, *args, **kwargs) -> None | NoReturn:
-        super().__init__(*args, **kwargs)
         self.init_source(source)
-        self.init_post()
+        super().__init__(*args, **kwargs)
 
     def init_source(self, source: Any = NoValue) -> None | NoReturn:
         if source is not NoValue:
             self.SOURCE = source
         else:
             self.SOURCE = self.SOURCE_DEF
-
-    def init_post(self) -> None | NoReturn:
-        """
-        GOAL
-        ----
-        user initions
-
-        TYPICAL USAGE
-        -------------
-        make some conversations for source, like str for text
-        or
-        make initial tests/checks for source, like typecheck
-        """
-        return NotImplemented
 
 
 # =====================================================================================================================
