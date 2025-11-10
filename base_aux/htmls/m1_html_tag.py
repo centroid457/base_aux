@@ -52,8 +52,8 @@ class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
         if self.SOURCE:
             try:
                 bs_tag: BeautifulSoup = BeautifulSoup(markup=self.SOURCE, features='html.parser')
-            except Exception as exx:
-                msg = f"can't parse {self.SOURCE=}\n{exx!r}"
+            except Exception as exc:
+                msg = f"can't parse {self.SOURCE=}\n{exc!r}"
                 Warn(msg)
                 return
         else:
@@ -78,8 +78,8 @@ class HtmlTagParser(NestCall_Resolve, NestInit_AnnotsAttr_ByKwargs):
         try:
             tags = bs_tag.find_all(**params)
             bs_tag = tags[self.INDEX]
-        except Exception as exx:
-            msg = f"URL WAS CHANGED? can't find {self=}\n{exx!r}"
+        except Exception as exc:
+            msg = f"URL WAS CHANGED? can't find {self=}\n{exc!r}"
             Warn(msg)
             return
 

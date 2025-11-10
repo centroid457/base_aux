@@ -75,7 +75,7 @@ class Test_Formatted:
         assert victim.VALUES.name == " name_other"
         assert victim.VALUES.value == 222
 
-        # EXX --------
+        # EXC --------
         for wrong_value in ["he name_other=222", "hello name_222", "hello name_other222", ]:
             try:
                 victim(wrong_value)

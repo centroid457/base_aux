@@ -40,7 +40,7 @@ class Test__TC:
         assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "details")
-        assert not hasattr(self.Victim, "exx")
+        assert not hasattr(self.Victim, "exc")
 
     def test__cls__devices_apply__NONE(self):
         assert len(self.Victim.TCSi_LINE) == 0
@@ -57,7 +57,7 @@ class Test__TC:
         assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "details")
-        assert not hasattr(self.Victim, "exx")
+        assert not hasattr(self.Victim, "exc")
 
     def test__cls__devices_apply__example(self):
         assert len(self.Victim.TCSi_LINE) == 0
@@ -75,7 +75,7 @@ class Test__TC:
         assert hasattr(self.Victim, "DEV_COLUMN")
 
         assert not hasattr(self.Victim, "details")
-        assert not hasattr(self.Victim, "exx")
+        assert not hasattr(self.Victim, "exc")
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__inst(self):

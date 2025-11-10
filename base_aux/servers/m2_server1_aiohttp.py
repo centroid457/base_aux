@@ -18,15 +18,15 @@ TYPE__REQUEST = Any
 
 
 # =====================================================================================================================
-class Exx__AiohttpServerStartSameAddress(Exception):
+class Exc__AiohttpServerStartSameAddress(Exception):
     pass
 
 
-class Exx__LinuxPermition(Exception):
+class Exc__LinuxPermition(Exception):
     pass
 
 
-class Exx__AiohttpServerOtherError(Exception):
+class Exc__AiohttpServerOtherError(Exception):
     pass
 
 
@@ -85,7 +85,7 @@ class ServerAiohttpBase(QThread):
         NOTE: this will block process!
         but if start() in thread - it would be OK!
 
-        EXX will not catch from start!!! but will CAUSE SYS_EXIT!!!
+        EXC will not catch from start!!! but will CAUSE SYS_EXIT!!!
         """
         try:
             web.run_app(app=self._app, port=self.PORT)
@@ -93,19 +93,19 @@ class ServerAiohttpBase(QThread):
             # 1. dont use parameter host="localhost" - its incorrect! from other host you cant access by IP!!! - if not specified - OK!
 
             # this will not catch!!! cause of thread maybe!!!
-        except PermissionError as exx:
+        except PermissionError as exc:
             # PermissionError(13, "error while attempting to bind on address ('127.0.0.1', 80): permission denied"
-            msg = f"[ERROR] need linux rights for accessing ports under 1024 (execute [sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.11]) or use appropriate port {exx!r}"
-            raise Exx__LinuxPermition(msg)
+            msg = f"[ERROR] need linux rights for accessing ports under 1024 (execute [sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.11]) or use appropriate port {exc!r}"
+            raise Exc__LinuxPermition(msg)
 
-        except OSError as exx:
+        except OSError as exc:
             # OSError(10048, "error while attempting to bind on address ('0.0.0.0', 80)
-            msg = f"[ERROR]started same server address/port {exx!r}"
-            raise Exx__AiohttpServerStartSameAddress(msg)
+            msg = f"[ERROR]started same server address/port {exc!r}"
+            raise Exc__AiohttpServerStartSameAddress(msg)
 
-        except Exception as exx:
-            msg = f"[ERROR] other error {exx!r}"
-            raise Exx__AiohttpServerOtherError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
+        except Exception as exc:
+            msg = f"[ERROR] other error {exc!r}"
+            raise Exc__AiohttpServerOtherError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
 
     def start(self, *args):
         if not self.isRunning():

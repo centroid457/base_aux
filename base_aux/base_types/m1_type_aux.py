@@ -310,7 +310,7 @@ class TypeAux(NestInit_Source):
         parent_cls = TypeAux(parent_cls_or_inst).get__class()
         return issubclass(source_cls, parent_cls)
 
-    # EXX -------------------------------------------------------------------------------------------------------------
+    # EXC -------------------------------------------------------------------------------------------------------------
     def check__exception(self) -> bool:
         """
         any of both variant (Instance/Class) of any Exception!

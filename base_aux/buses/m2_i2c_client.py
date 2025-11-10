@@ -13,7 +13,7 @@ from base_aux.cli.m1_cli_user import CliUser
 
 
 # =====================================================================================================================
-class Exx_I2cConnection(Exception):
+class Exc_I2cConnection(Exception):
     pass
 
 

@@ -62,7 +62,7 @@ class ValueEqValid(NestCall_Resolve):
             if self.VALUE_DEFAULT is NoValue:
                 self.VALUE_DEFAULT = value
         else:
-            raise Exx__ValueNotValidated()
+            raise Exc__ValueNotValidated()
 
     def value_update(self, value: Any | NoValue = NoValue) -> bool | NoReturn:
         """

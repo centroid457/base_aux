@@ -290,7 +290,7 @@ class Base_TableModel(QAbstractTableModel):
 
     def setData(self, index: QModelIndex, value: Any, role: int = Qt.EditRole) -> bool:
         """
-        NOTE: при фактическом изменении ОБЯЗАТЕЛЬНО возвращать TRUE!!! Иначе Exx!!!!
+        NOTE: при фактическом изменении ОБЯЗАТЕЛЬНО возвращать TRUE!!! Иначе Exc!!!!
         in other cases you can return True either, or None!
         """
         # TODO: ALWAYS START data_reread after any SETDATA

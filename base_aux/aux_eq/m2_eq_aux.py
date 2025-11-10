@@ -10,16 +10,16 @@ class EqAux(NestInit_Source):
     # NOTE: dont use Args/Kwargs here in EqAux! - no callables! just final objects!
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_oneside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
+    def check_oneside__exc(self, other: Any, return_bool: bool = None) -> bool | Exception:
         # if self.CALLABLES:
-        #     self.SOURCE = CallableAux(self.SOURCE).resolve_exx()
+        #     self.SOURCE = CallableAux(self.SOURCE).resolve_exc()
         #
         #     try:
         #         other = CallableAux(other).resolve_raise()
-        #     except Exception as exx:
-        #         return exx
+        #     except Exception as exc:
+        #         return exc
 
-        # EXX ------
+        # EXC ------
         if TypeAux(other).check__exception():
             if TypeAux(self.SOURCE).check__nested__from_cls_or_inst(other):   # CORRECT ORDER!!!
                 return True
@@ -28,8 +28,8 @@ class EqAux(NestInit_Source):
             result = self.SOURCE == other
             if result:
                 return True
-        except Exception as exx:
-            result = exx
+        except Exception as exc:
+            result = exc
             # if TypeAux(other).check__exception() and TypeAux(result12).check__nested__from_cls_or_inst(other):
             #     return True
             if return_bool:
@@ -39,13 +39,13 @@ class EqAux(NestInit_Source):
         return result
 
     def check_oneside__bool(self, other: Any) -> bool:
-        return self.check_oneside__exx(other, return_bool=True)
+        return self.check_oneside__exc(other, return_bool=True)
 
     def check_oneside__reverse(self, other: Any) -> bool:
         return self.check_oneside__bool(other) is not True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_doubleside__exx(self, other: Any, return_bool: bool = None) -> bool | Exception:
+    def check_doubleside__exc(self, other: Any, return_bool: bool = None) -> bool | Exception:
         """
         GOAL
         ----
@@ -55,7 +55,7 @@ class EqAux(NestInit_Source):
 
         if any result is True - return True.
         if at least one false - return False
-        if both exx - return first exx  # todo: deside return False in here!
+        if both exc - return first exc  # todo: deside return False in here!
 
         CREATED SPECIALLY FOR
         ---------------------
@@ -81,11 +81,11 @@ class EqAux(NestInit_Source):
         but i think in one case i get ClsException and with switching i get correct result!!! (maybe fake! need explore!)
         """
         # ONESIDE ------
-        result12 = self.check_oneside__exx(other=other, return_bool=return_bool)
+        result12 = self.check_oneside__exc(other=other, return_bool=return_bool)
         if result12 is True:
             return True
 
-        result21 = EqAux(other).check_oneside__exx(other=self.SOURCE, return_bool=return_bool)
+        result21 = EqAux(other).check_oneside__exc(other=self.SOURCE, return_bool=return_bool)
         if result21 is True:
             return True
 
@@ -102,14 +102,14 @@ class EqAux(NestInit_Source):
 
     def check_doubleside__bool(self, other: Any) -> bool:
         """
-        same as compare_doublesided_or_exx but
+        same as compare_doublesided_or_exc but
         in case of ClsException - return False
 
         CREATED SPECIALLY FOR
         ---------------------
         Valid.value_validate
         """
-        return self.check_doubleside__exx(other, return_bool=True)
+        return self.check_doubleside__exc(other, return_bool=True)
 
     def check_doubleside__reverse(self, other: Any) -> bool:
         """
@@ -137,8 +137,8 @@ class EqAux(NestInit_Source):
                     return False
             try:
                 actual = getattr(self.SOURCE, key)
-            except Exception as exx:
-                actual = exx
+            except Exception as exc:
+                actual = exc
 
             if actual != expected:
                 msg = f"for {key_real=} {actual=}/{expected=}"

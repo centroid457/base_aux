@@ -122,7 +122,7 @@ name1=value12
 
         try:
             Cls(_filepath=self.VICTIM().filepath, _section="AUTH")
-        except Exx__NotExistsNotFoundNotCreated:
+        except Exc__NotExistsNotFoundNotCreated:
             pass
         else:
             assert False

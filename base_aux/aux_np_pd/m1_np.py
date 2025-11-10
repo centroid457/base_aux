@@ -173,7 +173,7 @@ class NdArray2dAux(NdArrayAux):
         FOR WHAT? --- delete????  it was trying to make windows and now not used????
         """
         # if self.SOURCE.ndim != 1:
-        #     raise Exx__Incompatible
+        #     raise Exc__Incompatible
         new_shape = []
         shape = self.SOURCE.shape
         a = np.arange(5)
@@ -211,7 +211,7 @@ class NdArray2dAux(NdArrayAux):
         if window_len == 1:
             return self.SOURCE
         elif window_len < 1:
-            raise Exx__WrongUsage(f"{window_len=}")
+            raise Exc__WrongUsage(f"{window_len=}")
 
         windows = self._windows_get(window_len)
         result = self._windows_shrink(windows)
@@ -235,9 +235,9 @@ class NdArray2dAux(NdArrayAux):
             void_new = cls._window_shrink(window)
             try:
                 result = np.concatenate([result, [void_new]])
-            except Exception as exx:
+            except Exception as exc:
                 # if no elements
-                # print(f"{exx!r}")
+                # print(f"{exc!r}")
                 result = np.array([void_new])
         return result
 

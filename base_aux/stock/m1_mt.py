@@ -98,11 +98,11 @@ class MT5(NestInit_AttrsLambdaResolve):
             last_error = mt5.last_error()
             if last_error[0] != 1:
                 msg = f"incorrect {_symbol=}/{last_error=}"
-                raise Exx__NotExistsNotFoundNotCreated(msg)
+                raise Exc__NotExistsNotFoundNotCreated(msg)
 
         if not isinstance(_symbol, mt5.SymbolInfo):
             msg = f"incorrect {_symbol=}"
-            raise Exx__NotExistsNotFoundNotCreated(msg)
+            raise Exc__NotExistsNotFoundNotCreated(msg)
 
         return _symbol
 

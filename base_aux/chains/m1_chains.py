@@ -34,15 +34,15 @@ class ChainResolve(NestInit_Source, NestCall_Resolve, Base_AttrKit):
         for chain in self.CHAINS:
             try:
                 source = chain(source)
-            except Exception as exx:
-                Warn(f"{source=}/{exx!r}")
+            except Exception as exc:
+                Warn(f"{source=}/{exc!r}")
 
                 if self.ON_RAISE == EnumAdj_ReturnOnRaise.NONE:
                     return None
                 elif self.ON_RAISE == EnumAdj_ReturnOnRaise.RAISE:
-                    raise exx
-                elif self.ON_RAISE == EnumAdj_ReturnOnRaise.EXX:    # NOTE: dont use it! just as variant
-                    return exx
+                    raise exc
+                elif self.ON_RAISE == EnumAdj_ReturnOnRaise.EXC:    # NOTE: dont use it! just as variant
+                    return exc
 
         return source
 

@@ -204,7 +204,7 @@ class Test__Instance:
         try:
             victim = self.Victim().check__w_raise()
             assert False
-        except Exx__Expected:
+        except Exc__Expected:
             assert True
 
     # SETTINGS ATTRIBUTES ---------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ class Test__Instance:
         try:
             victim = self.Victim().check__w_raise()
             assert False
-        except Exx__Expected:
+        except Exc__Expected:
             assert True
 
         # _RAISE = False

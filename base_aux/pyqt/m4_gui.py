@@ -550,7 +550,7 @@ __weakref__         	NoneType    :None
 __dict__            	dict        :{}
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
 staticMetaObject    	QMetaObject :<PyQt5.QtCore.QMetaObject object at 0x000001A3759622D0>
-----------PROPERTIES__EXX---------------------------------------------------------------------------
+----------PROPERTIES__EXC---------------------------------------------------------------------------
 ----------METHODS__ELEMENTARY_SINGLE----------------------------------------------------------------
 PaintDeviceMetric   	PaintDeviceMetric:0
 RenderFlag          	RenderFlag  :0
@@ -736,7 +736,7 @@ windowFlags         	WindowFlags :<PyQt5.QtCore.Qt.WindowFlags object at 0x00000
 windowHandle        	QWindow     :<PyQt5.QtGui.QWindow object at 0x000001A37592E290>
 windowIcon          	QIcon       :<PyQt5.QtGui.QIcon object at 0x000001A37592E320>
 windowState         	WindowStates:<PyQt5.QtCore.Qt.WindowStates object at 0x000001A375962C70>
-----------METHODS__EXX------------------------------------------------------------------------------
+----------METHODS__EXC------------------------------------------------------------------------------
 __eq__              	TypeError   :TypeError('expected 1 argument, got 0')
 __format__          	TypeError   :TypeError('QCheckBox.__format__() takes exactly one argument...
 __ge__              	TypeError   :TypeError('expected 1 argument, got 0')

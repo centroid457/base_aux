@@ -38,7 +38,7 @@ class Test__ensure:
             # CALLABLES --------------
             (LAMBDA_TRUE, TYPES.FUNCTION),
             (LAMBDA_NONE, TYPES.FUNCTION),
-            (LAMBDA_EXX, TYPES.FUNCTION),
+            (LAMBDA_EXC, TYPES.FUNCTION),
 
             (VALUES_CALLABLE.METH_INST, TYPES.METHOD),
             (VALUES_CALLABLE.METH_CLS, TYPES.FUNCTION),

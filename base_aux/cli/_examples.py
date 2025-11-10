@@ -30,7 +30,7 @@ self.last_stdout=
 --------------------------------------------------
 self.last_stderr=
 --------------------------------------------------
-self.last_exx_timeout=Exx_CliTimeout()
+self.last_exc_timeout=Exc_CliTimeout()
 ==================================================
 """
 
@@ -63,7 +63,7 @@ self.last_stdout=
 --------------------------------------------------
 self.last_stderr=
 --------------------------------------------------
-self.last_exx_timeout=Exx_CliTimeout()
+self.last_exc_timeout=Exc_CliTimeout()
 ==================================================
 [ERROR] cmd_item=('ping localhost', 0.1) in full sequence cmd=['python --version', ('ping localhost', 0.1)]
 """

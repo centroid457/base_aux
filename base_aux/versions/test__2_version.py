@@ -73,7 +73,7 @@ class Test__Version:
             (("01rc02", "1rc20"), False),
 
             # not clean chars
-            (("1rc2", "[11:rc.22]"), Exx__Incompatible),
+            (("1rc2", "[11:rc.22]"), Exc__Incompatible),
 
             # iterables
             (("1rc2", [1, "rc", 2]), False),

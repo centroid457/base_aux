@@ -152,7 +152,7 @@ class TLS_3_3(TableKit):
     SINGLE2 = TL_22
 
 
-class TLS_Exx(TableKit):
+class TLS_Exc(TableKit):
     SINGLE = TL_11
     MULTY = TL_11_22_33
     MULTY2 = TL_11_22
@@ -166,7 +166,7 @@ class Test__2_TableLines:
             (TLS_1_1, True),
             (TLS_1_3, True),
             (TLS_3_3, True),
-            (TLS_Exx, False),
+            (TLS_Exc, False),
         ]
     )
     def test__init_noRaise__attrs(self, source, _EXPECTED):
@@ -221,10 +221,10 @@ class Test__2_TableLines:
                 MULTY = TL_11_22_33,
                 SINGLE2 = TL_22,
             ), True),
-            (TLS_Exx, dict(
+            (TLS_Exc, dict(
                 # MULTY=TL_11_22,
             ), False),
-            (TLS_Exx, dict(
+            (TLS_Exc, dict(
                 MULTY = TL_11_22,
             ), True),
         ]
@@ -244,7 +244,7 @@ class Test__2_TableLines:
             (TLS_1_1, (1,1)),
             (TLS_1_3, (1,3)),
             (TLS_3_3, (3,3)),
-            (TLS_Exx, Exception),
+            (TLS_Exc, Exception),
         ]
     )
     def test__size(self, source, _EXPECTED):

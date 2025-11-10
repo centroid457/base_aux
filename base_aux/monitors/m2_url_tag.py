@@ -186,8 +186,8 @@ class MonitorUrlTag(threading.Thread):
             response = requests.get(self.URL, timeout=self.TIMEOUT_REQUEST)
             self._source_data = response.text
             return True
-        except Exception as exx:
-            self.msg += f"LOST URL {exx!r}"
+        except Exception as exc:
+            self.msg += f"LOST URL {exc!r}"
 
     def source__get_tag(self) -> Optional[bool]:
         """find tag from source and save tag object in attribute
@@ -195,8 +195,8 @@ class MonitorUrlTag(threading.Thread):
         if self._source_data:
             try:
                 self._tag_found_last_chain = BeautifulSoup(markup=self._source_data, features='html.parser')
-            except Exception as exx:
-                self.msg += f"[CRITICAL] can't parse {self._source_data=}\n{exx!r}"
+            except Exception as exc:
+                self.msg += f"[CRITICAL] can't parse {self._source_data=}\n{exc!r}"
                 return
         else:
             self.msg += f"[CRITICAL] empty {self._source_data=}"
@@ -206,8 +206,8 @@ class MonitorUrlTag(threading.Thread):
             for chain in self.TAG_CHAINS:
                 tags = self._tag_found_last_chain.find_all(name=chain.NAME, attrs=chain.ATTRS, string=chain.TEXT, limit=chain.INDEX + 1)
                 self._tag_found_last_chain = tags[chain.INDEX]
-        except Exception as exx:
-            self.msg += f"URL WAS CHANGED! can't find {chain=}\n{exx!r}"
+        except Exception as exc:
+            self.msg += f"URL WAS CHANGED! can't find {chain=}\n{exc!r}"
             return
 
         return True

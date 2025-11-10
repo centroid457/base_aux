@@ -15,7 +15,7 @@ class BreederStrSeries(NamedTuple):
 
     def _raise_if_start_outer_none(self) -> NoReturn | None:
         if self.START_OUTER is None:
-            raise Exx__StartOuterNONE_UsedInStackByRecreation()
+            raise Exc__StartOuterNONE_UsedInStackByRecreation()
 
     def __contains__(self, item: Union[int, str]) -> Union[bool, NoReturn]:
         """
@@ -48,7 +48,7 @@ class BreederStrSeries(NamedTuple):
                     return key
 
         msg = f"{item=}"
-        raise Exx__NotExistsNotFoundNotCreated(msg)
+        raise Exc__NotExistsNotFoundNotCreated(msg)
 
     def get_dict__outer(self) -> dict[int, str] | NoReturn:
         self._raise_if_start_outer_none()
@@ -88,7 +88,7 @@ class BreederStrSeries(NamedTuple):
                 else:
                     result += 1
         else:
-            raise Exx__NotExistsNotFoundNotCreated()
+            raise Exc__NotExistsNotFoundNotCreated()
 
     def get_listed_index__by_value(self, value: str) -> int | NoReturn:
         result = 0
@@ -99,7 +99,7 @@ class BreederStrSeries(NamedTuple):
                 else:
                     result += 1
         else:
-            raise Exx__NotExistsNotFoundNotCreated()
+            raise Exc__NotExistsNotFoundNotCreated()
 
 
 # =====================================================================================================================

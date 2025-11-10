@@ -13,7 +13,7 @@ class TestCase(Base_TcAtcPtb):
     _DESCRIPTION = "присутствие БП"
 
     # -----------------------------------------------------------------------------------------------------------------
-    def run__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def run__wrapped(self) -> TYPING__RESULT_W_EXC:
         result = Valid(
             value_link=self.DEV_COLUMN.DUT.GET,
             args__value="PRSNT",

@@ -16,7 +16,7 @@ class TestCase(Base_TestCase):
 
     # RUN -------------------------------------------------------------------------------------------------------------
     @classmethod
-    def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_EXX:
+    def teardown__cls__wrapped(cls) -> TYPING__RESULT_W_EXC:
         return False
 
 

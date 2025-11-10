@@ -84,9 +84,9 @@ class NestGa_Prefix_RaiseIf(NestGa_Prefix):
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__(self, source: Any, _reverse: bool | None = None, comment: str = "") -> None | NoReturn:
-        result = Lambda(source).resolve__exx()
+        result = Lambda(source).resolve__exc()
         if TypeAux(result).check__exception() or bool(result) != bool(_reverse):
-            raise Exx__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
+            raise Exc__GetattrPrefix_RaiseIf(f"[raise_if__/{_reverse=}]met conditions ({source=}/{comment=})")
 
     def raise_if_not__(self, source: Any, comment: str = "") -> None | NoReturn:
         return self.raise_if__(source=source, _reverse=True, comment=comment)
@@ -115,26 +115,26 @@ def _example():
     # ON ATTRIBUTE --------------------
     # apply prefix+item
     GetattrPrefixInst_RaiseIf_data().raise_if__attr0()  # OK
-    GetattrPrefixInst_RaiseIf_data().raise_if__attr1()  # Exx__GetattrPrefix_RaiseIf
+    GetattrPrefixInst_RaiseIf_data().raise_if__attr1()  # Exc__GetattrPrefix_RaiseIf
 
     # ON METH -------------------------
     # args - one
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(0)  # OK
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1)  # OK
-    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2)  # Exx__GetattrPrefix_RaiseIf
+    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2)  # Exc__GetattrPrefix_RaiseIf
 
     # args - several
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1,2)  # OK
-    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2,2)  # Exx__GetattrPrefix_RaiseIf
+    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2,2)  # Exc__GetattrPrefix_RaiseIf
 
     # kwargs
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1, arg2=2)  # OK
-    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2, arg2=2)  # Exx__GetattrPrefix_RaiseIf
+    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2, arg2=2)  # Exc__GetattrPrefix_RaiseIf
 
     # send kwarg for PREFIX ----------
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1, arg2=2, comment="WRONG!")    # RAISE comment argument invalid for meth()!!!
     GetattrPrefixInst_RaiseIf_data().raise_if__meth(1, arg2=2, COMMENT="CORRECT!")  # OK
-    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2, arg2=2, COMMENT="CORRECT!")  # Exx__GetattrPrefix_RaiseIf
+    GetattrPrefixInst_RaiseIf_data().raise_if__meth(2, arg2=2, COMMENT="CORRECT!")  # Exc__GetattrPrefix_RaiseIf
 
 
 # =====================================================================================================================

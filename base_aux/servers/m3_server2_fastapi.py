@@ -607,7 +607,7 @@ def start_3__by_asyncio(app: FastAPI) -> Never:
 #
 #     DATA = DataExample()
 #
-#     @get("/data/{attr}")    # EXX
+#     @get("/data/{attr}")    # EXC
 #     def hello(self, attr):
 #         return getattr(self.DATA, attr)
 #

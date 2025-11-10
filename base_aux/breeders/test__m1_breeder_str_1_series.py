@@ -28,13 +28,13 @@ class Test__BreederStrSeries:
         try:
             assert victim.get_dict__inner()
             assert False
-        except Exx__StartOuterNONE_UsedInStackByRecreation:
+        except Exc__StartOuterNONE_UsedInStackByRecreation:
             assert True
 
         try:
             assert victim.get_dict__outer()
             assert False
-        except Exx__StartOuterNONE_UsedInStackByRecreation:
+        except Exc__StartOuterNONE_UsedInStackByRecreation:
             assert True
 
     def test__init_params(self):

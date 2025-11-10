@@ -240,7 +240,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
-    def run__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def run__wrapped(self) -> TYPING__RESULT_W_EXC:
         # BY DEFAULT PARAMS WOULD CHECK!!!
         result_chain = ValidChains(
             chains=self.steps__check_params()
@@ -248,7 +248,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
         return result_chain
 
     # =================================================================================================================
-    def startup__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def startup__wrapped(self) -> TYPING__RESULT_W_EXC:
         result_chain = ValidChains(
             [
                 # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),
@@ -316,7 +316,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
         return result_chain
 
     # -----------------------------------------------------------------------------------------------------------------
-    def teardown__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def teardown__wrapped(self) -> TYPING__RESULT_W_EXC:
         result_chain = ValidChains(
             chains=[
                 # ValidBreak(not any([self.PTB_SET_EXTON, self.PTB_SET_HVON, self.PTB_SET_PSON])),

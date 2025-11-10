@@ -24,10 +24,10 @@ class Test__Gui:
             TITLE = "[GUI] TEST"
             # SIZE = (300, 100)
 
-        with pytest.raises(SystemExit) as exx:
+        with pytest.raises(SystemExit) as exc:
             Gui_1()
-        assert exx.type == SystemExit
-        assert exx.value.code == 0
+        assert exc.type == SystemExit
+        assert exc.value.code == 0
 
 
 # =====================================================================================================================

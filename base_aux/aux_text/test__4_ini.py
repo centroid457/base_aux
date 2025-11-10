@@ -23,8 +23,8 @@ class Test__Ini:
 
         try:
             victim.read_string(source)
-        except Exception as exx:
-            Lambda(exx).expect__check_assert(_EXPECTED)
+        except Exception as exc:
+            Lambda(exc).expect__check_assert(_EXPECTED)
             return
 
         Lambda(victim.to_dict__direct).expect__check_assert(_EXPECTED[0])

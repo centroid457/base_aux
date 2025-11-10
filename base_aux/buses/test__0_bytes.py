@@ -55,7 +55,7 @@ def test__data_ensure__bytes(func_link, args, _EXPECTED):
         (b"str\n", "str\n"),
         (b"str\r\n", "str\r\n"),
 
-        (b'step400\x1d', Exx_SerialRead_FailDecoding)
+        (b'step400\x1d', Exc_SerialRead_FailDecoding)
     ]
 )
 def test__data_ensure__string(func_link, args, _EXPECTED):

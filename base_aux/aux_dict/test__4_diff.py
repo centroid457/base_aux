@@ -24,7 +24,7 @@ from base_aux.base_lambdas.m1_lambda import *
         ([{1: 1}, {}], {1: (1, VALUE_SPECIAL.NOVALUE)}),
         ([{1: 1}, {}, {1:11}], {1: (1, VALUE_SPECIAL.NOVALUE, 11)}),
 
-        # EXX ------------
+        # EXC ------------
         ([{1: Exception}, {1: Exception}], {}),
         ([{1: Exception}, {1: Exception()}], {}),
         ([{1: Exception()}, {1: Exception}], {}),
@@ -32,9 +32,9 @@ from base_aux.base_lambdas.m1_lambda import *
 
         ([{1: 1}, {1: Exception}], {1: (1, Exception)}),
         ([{1: 1}, {1: Exception()}], {1: (1, Exception)}),
-        ([{1: Exx__GetattrPrefix}, {1: Exception}], {1: (Exx__GetattrPrefix, Exception)}),
-        ([{1: Exx__GetattrPrefix()}, {1: Exception()}], {1: (Exx__GetattrPrefix, Exception)}),
-        ([{1: Exx__GetattrPrefix()}, {1: Exx__GetattrPrefix}], {}),
+        ([{1: Exc__GetattrPrefix}, {1: Exception}], {1: (Exc__GetattrPrefix, Exception)}),
+        ([{1: Exc__GetattrPrefix()}, {1: Exception()}], {1: (Exc__GetattrPrefix, Exception)}),
+        ([{1: Exc__GetattrPrefix()}, {1: Exc__GetattrPrefix}], {}),
     ]
 )
 def test__resolve(dicts, _EXPECTED):

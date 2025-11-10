@@ -67,7 +67,7 @@ class PrivateCsv(PrivateBase):
                 continue
 
             if key in result and self.RAISE_SAME_KEYS:
-                raise Exx__SameKeys
+                raise Exc__SameKeys
 
             result.update({key: value})
 

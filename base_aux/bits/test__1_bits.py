@@ -21,7 +21,7 @@ class Test__Bitfield:
     def test__0_bits(self):
         try:
             self.VICTIM(0)
-        except Exx__Incompatible:
+        except Exc__Incompatible:
             assert True
         else:
             assert False

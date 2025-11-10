@@ -241,7 +241,7 @@ class SerialServer_Base(Logger, QThread):
         # EXEC METHOD --------------------
         try:
             result = meth(line_parsed)
-        except TypeError as exx:
+        except TypeError as exc:
             try:
                 result = meth()
             except:
@@ -402,7 +402,7 @@ class SerialServer_Base(Logger, QThread):
         # EXEC METHOD --------------------
         try:
             result = meth(line_parsed)
-        except TypeError as exx:
+        except TypeError as exc:
             try:
                 result = meth()
             except:
@@ -449,7 +449,7 @@ class SerialServer_Example(SerialServer_Base):
         "FLOAT": 1.1,
 
         "CALL": time.time,
-        "EXX": time.strftime,
+        "EXC": time.strftime,
 
         "LIST": [0, 1, 2],
         "LIST_2": [[11]],

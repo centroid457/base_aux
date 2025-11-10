@@ -26,10 +26,10 @@ class Base_ValueSpecial:
     DictDiff instead of Enum values! - in there we have __Eq which cause incorrect usage/results!
     """
 
-    # TODO: add Meta EqCls with Exx??? to cmp with exact values??? - no! use special logic when do cmp!
+    # TODO: add Meta EqCls with Exc??? to cmp with exact values??? - no! use special logic when do cmp!
     def __init__(self) -> NoReturn:
         msg = f"Base_ValueSpecial NEVER INITTIATE! use direct CLASS!"
-        raise Exx__WrongUsage(msg)
+        raise Exc__WrongUsage(msg)
 
     # def __bool__(self):     # CANT USE!!! it works only on instance!!!
     #     return False

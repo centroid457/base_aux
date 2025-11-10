@@ -10,7 +10,7 @@ class NestBool_False:
 
     SPECIALLY CREATED FOR
     ---------------------
-    Base_Exx
+    Base_Exc
     """
     def __bool__(self):
         return False

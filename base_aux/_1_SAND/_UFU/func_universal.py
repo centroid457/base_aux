@@ -179,21 +179,21 @@ def logging_debug_class_and_func_names(self_obj=None, _debug_mod=None):  # stari
     logging_and_print_debug(msg)
 
 
-def log_error_explanation_by_dict(exx, exx_dict=None, operation_name=None):     # starichenko
+def log_error_explanation_by_dict(exc, exc_dict=None, operation_name=None):     # starichenko
     """
-    :param exx: Exception object
-    :param exx_dict: user explanation dict for errors - usually found errors!
+    :param exc: Exception object
+    :param exc_dict: user explanation dict for errors - usually found errors!
     :param operation_name: string describing operation! usually name of function
     """
-    logging_and_print_debug(f'1=[{operation_name}][{type(exx)}][{exx}] UNEXPECTED ERROR')
+    logging_and_print_debug(f'1=[{operation_name}][{type(exc)}][{exc}] UNEXPECTED ERROR')
 
-    if exx_dict is None:
-        exx_dict = DICT_EXCEPTION_EXPLANATION
+    if exc_dict is None:
+        exc_dict = DICT_EXCEPTION_EXPLANATION
 
     # KNOWN ERRORS!
     key, value = value_search_by_dict_return_key_and_value(
-        source=str(exx),
-        search_dict=exx_dict,
+        source=str(exc),
+        search_dict=exc_dict,
         search_type_1starts_2full_3ends_4any_5fullmatch=4
     )
     if value:
@@ -317,8 +317,8 @@ def import_module_get_link_by_str(module_name):   # starichenko
     module_imported_link = None
     try:
         module_imported_link = import_module(module_name)
-    except Exception as exx:
-        msg = f"{exx!r}"
+    except Exception as exc:
+        msg = f"{exc!r}"
         logging_and_print_warning(msg)
 
     return module_imported_link
@@ -338,8 +338,8 @@ def import_obj_get_link_by_str(module_name, obj_name):   # starichenko
         # module_imported_link = import_module(file_name + f".{obj_name}")  # ModuleNotFoundError("No module named 'test2.cls2'; 'test2' is not a package")
         module_imported_link = import_module(module_name)
         obj_link = getattr(module_imported_link, f"{obj_name}")
-    except Exception as exx:
-        msg = f"{exx!r}"
+    except Exception as exc:
+        msg = f"{exc!r}"
         logging_and_print_warning(msg)
 
     return obj_link
@@ -366,17 +366,17 @@ def module_install(module_name: str):   #old
         # После перезапуска приложения консоль с logging работает в нормальном режиме.
         out = check_output("pip install{} {}".format(" --user" if pip_install_to_user_path else "", module_name))
         logging.debug(f"Установлен модуль {module_name=}")
-    except Exception as exx1:
+    except Exception as exc1:
         try:
             out = check_output(f"pip install --user {module_name}")
             pip_install_to_user_path = True
             logging_and_print_debug(f"Установлен модуль {module_name=}")
-        except Exception as exx2:
+        except Exception as exc2:
             try:
                 out = check_output(f"pip install --trusted-host "
                                    f"pypi.org --trusted-host files.pythonhosted.org {module_name}")
-            except Exception as exx3:
-                msg = f'ошибка установки модуля {module_name}//{exx3!r}//{exx2!r}'
+            except Exception as exc3:
+                msg = f'ошибка установки модуля {module_name}//{exc3!r}//{exc2!r}'
                 logging_and_print_warning(msg)
     return out
 
@@ -769,10 +769,10 @@ def decorator_try__return_none_and_log_explanation(_func_link):     # starichenk
         result = None
         try:
             result = _func_link(*args, **kwargs)
-        except Exception as exx:
+        except Exception as exc:
             if _DECORATOR_show_error:
-                logging_and_print_warning(f"{exx!r}")
-                log_error_explanation_by_dict(exx=exx, operation_name=_func_link.__name__)
+                logging_and_print_warning(f"{exc!r}")
+                log_error_explanation_by_dict(exc=exc, operation_name=_func_link.__name__)
         return result
     return _wrapper
 
@@ -1005,11 +1005,11 @@ def funcs_all_true(funcs_link_sequence=[], flag_run_all=False, func_link_with_fi
             get_answer = func_link()
             logging_and_print_debug(
                 f"[{step_prefix_w_index}][{func_name}] expected_answer=[{expected_answer}] get_answer=[{get_answer}]")
-        except Exception as exx:
+        except Exception as exc:
             flag_step_get_exception = True
             get_answer = "***EXCEPTION***"
             logging_and_print_warning(f"[{step_prefix_w_index}][{func_name}] expected_answer=[{expected_answer}] get_answer=[{get_answer}]")
-            logging_and_print_warning(f"[{type(exx)}][{exx}]")
+            logging_and_print_warning(f"[{type(exc)}][{exc}]")
 
         # 2.4=STEP=RESOLVE --------------------------------------------------------------------
         result = get_answer == expected_answer
@@ -2422,8 +2422,8 @@ def list_sort_with_correct_inner_numbs(source, use_float=False, on_error_return_
     source_list = list(source)
     try:
         result = sorted(source_list, key=lambda i: str_get_alphanum_list(source=i, use_float=use_float))
-    except Exception as exx:
-        msg = f"{exx!r}\n"
+    except Exception as exc:
+        msg = f"{exc!r}\n"
         msg += f"ERROR - some elements starts from DIGIT and others from LITERAL sign"
         logging_and_print_warning(msg)
         if on_error_return_source:

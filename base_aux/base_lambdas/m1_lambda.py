@@ -128,7 +128,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
     # thread ready -----
     PROCESS_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
     RESULT: Any = None
-    EXX: Optional[Exception] = None
+    EXC: Optional[Exception] = None
 
     # UNIVERSAL =======================================================================================================
     def run(self, *args, **kwargs) -> None:
@@ -145,7 +145,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         # WORK ----------------------------------------------------------
         self.PROCESS_ACTIVE = EnumAdj_ProcessStateActive.STARTED
         self.RESULT = None
-        self.EXX = None
+        self.EXC = None
 
         args = args or self.ARGS
         kwargs = {**self.KWARGS, **kwargs}
@@ -157,9 +157,9 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
                 self.RESULT = self.SOURCE(*args, **kwargs)
             else:
                 self.RESULT = self.SOURCE
-        except Exception as exx:
-            print(f"{exx!r}")
-            self.EXX = exx
+        except Exception as exc:
+            print(f"{exc!r}")
+            self.EXC = exc
 
         # FIN ----------------------------------------------------------
         self.PROCESS_ACTIVE = EnumAdj_ProcessStateActive.FINISHED
@@ -171,8 +171,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         self.wait_finished()
 
         # FIN ----------------------------------------------------------
-        if self.EXX is not None:
-            raise self.EXX
+        if self.EXC is not None:
+            raise self.EXC
         else:
             return self.RESULT
 
@@ -188,7 +188,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         self.wait_finished()
 
         # FIN ----------------------------------------------------------
-        if self.EXX is not None:
+        if self.EXC is not None:
             return True
         else:
             return False
@@ -256,8 +256,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
 
         try:
             actual_value = self.resolve(*args, **kwargs)
-        except Exception as exx:
-            actual_value = exx  # this is an internal value! when use incorrect ArgsKw!!!
+        except Exception as exc:
+            actual_value = exc  # this is an internal value! when use incorrect ArgsKw!!!
 
         print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
         result = TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
@@ -308,8 +308,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         if callable_use == EnumAdj_CallResolveStyle.DIRECT:
             return self.SOURCE
 
-        elif callable_use == EnumAdj_CallResolveStyle.EXX:
-            return self.resolve__exx(*args, **kwargs)
+        elif callable_use == EnumAdj_CallResolveStyle.EXC:
+            return self.resolve__exc(*args, **kwargs)
 
         elif callable_use == EnumAdj_CallResolveStyle.RAISE:
             return self.resolve__raise(*args, **kwargs)
@@ -327,7 +327,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             return self.resolve__bool(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def resolve__exx(self, *args, **kwargs) -> Any | Exception:
+    def resolve__exc(self, *args, **kwargs) -> Any | Exception:
         """
         GOAL
         ----
@@ -346,8 +346,8 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         """
         try:
             return self(*args, **kwargs)
-        except Exception as exx:
-            return exx
+        except Exception as exc:
+            return exc
 
     def resolve__raise(self, *args, **kwargs) -> Any | NoReturn:
         """
@@ -361,7 +361,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         GOAL
         ----
         get common expected for any python code result - simple calculate or raise!
-        because of resolve_exx is not enough!
+        because of resolve_exc is not enough!
 
         SPECIALLY CREATED FOR
         ---------------------
@@ -394,7 +394,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         """
         GOAL
         ----
-        same as resolve_exx but
+        same as resolve_exc but
         apply bool func on result
 
         ability to get bool result with meanings:
@@ -405,7 +405,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             - Exceptions assumed as False
                 assert get_bool(Exception) is False
                 assert get_bool(Exception("FAIL")) is False
-                assert get_bool(LAMBDA_EXX) is False
+                assert get_bool(LAMBDA_EXC) is False
 
             - for other values get classic bool()
                 assert get_bool(None) is False
@@ -425,11 +425,11 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         try:
             result = self.resolve__raise(*args, **kwargs)
             try:
-                is_exx = issubclass(result, Exception)  # keep first
+                is_exc = issubclass(result, Exception)  # keep first
             except:
-                is_exx = isinstance(result, Exception)
+                is_exc = isinstance(result, Exception)
 
-            if is_exx:
+            if is_exc:
                 return False
             return bool(result)
         except:

@@ -84,7 +84,7 @@ class Base__DeviceUart_ETech(Base_Device, SerialClient_FirstFree_AnswerValid):
 
     NOTE
     ----
-    Exx in SERIAL PORTs - connecting but not not working!
+    Exc in SERIAL PORTs - connecting but not not working!
     ...VALUE_LINK=<function SerialClient.__getattr__.<locals>.<lambda> at 0x000001909BBF34C0>,ARGS__VALUE=('HV0',),value_last=Attempting to use a port that is not open,
     reason - some methods is over
     """

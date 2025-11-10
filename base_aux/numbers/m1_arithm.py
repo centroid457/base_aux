@@ -46,7 +46,7 @@ class ArithmApplyToAttr(NestCmp_LGET):
     @property
     def NUMBER_ARITHM(self) -> Union[TYPES.NUMBER, NoReturn]:
         if not self.NUMBER_ARITHM__ATTR:
-            raise Exx__NotExistsNotFoundNotCreated()
+            raise Exc__NotExistsNotFoundNotCreated()
 
         result = getattr(self, self.NUMBER_ARITHM__ATTR)
         if TypeAux(result).check__callable_func_meth_inst():
@@ -56,7 +56,7 @@ class ArithmApplyToAttr(NestCmp_LGET):
     @NUMBER_ARITHM.setter
     def NUMBER_ARITHM(self, other) -> None | NoReturn:
         if not self.NUMBER_ARITHM__ATTR:
-            raise Exx__NotExistsNotFoundNotCreated()
+            raise Exc__NotExistsNotFoundNotCreated()
 
         if self.NUMBER_ARITHM__PRECISION is not None:
             other = round(other, self.NUMBER_ARITHM__PRECISION)
@@ -90,7 +90,7 @@ class ArithmApplyToAttr(NestCmp_LGET):
             assert 1 != 1.0
             assert int(1) == int(1.0)
         3. fix correct comparing strings
-            assert int("1.0") == 1  # will get EXX!!!
+            assert int("1.0") == 1  # will get EXC!!!
             assert number__try_int_if_same("1.0") == 1  # will get True
 
         Created specially for

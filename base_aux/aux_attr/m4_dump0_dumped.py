@@ -22,7 +22,7 @@ class AttrDumped(Base_AttrDumped):
 
     WHY NOT - AttrsKit
     ------------------
-    cause sometimes it makes circular recursion exx!
+    cause sometimes it makes circular recursion exc!
     """
 
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     class Cls:
         pass
 
-    # print(Cls().__annotations__)    # inst first - exx
+    # print(Cls().__annotations__)    # inst first - exc
     print(Cls.__annotations__)
     print()
 

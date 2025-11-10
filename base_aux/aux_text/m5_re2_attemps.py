@@ -41,7 +41,7 @@ class Base_ReAttempts:
             elif isinstance(attempt, str):
                 result.append(RExp(attempt))
             else:
-                raise Exx__Incompatible(f"{attempt=}")
+                raise Exc__Incompatible(f"{attempt=}")
 
         self.ATTEMPTS = result
 
@@ -61,7 +61,7 @@ class Base_ReAttempts:
         3. if several groups - return tuple of groups
         """
         if not isinstance(match, re.Match):
-            raise Exx__WrongUsage(f"{match=}")
+            raise Exc__WrongUsage(f"{match=}")
 
         groups = match.groups()
         if groups:

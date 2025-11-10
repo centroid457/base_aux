@@ -60,7 +60,7 @@ class Test__BreederStrStack:
         assert victim[index_start +5] == "series45_2"
         assert victim[index_start +6] == "name6"
 
-    def test__index_start__exx_overlayd(self):
+    def test__index_start__exc_overlayd(self):
         class Victim(BreederStrStack):
             name0: int = None
             name1: int | None = 0
@@ -118,7 +118,7 @@ class Test__BreederStrStack:
         }
 
     # -----------------------------------------------------------------------------------------------------------------
-    def test__exx_1__overlayd_1(self):
+    def test__exc_1__overlayd_1(self):
         class Victim(BreederStrStack):
             name0: int = 0
             name1: int = 1
@@ -132,7 +132,7 @@ class Test__BreederStrStack:
         else:
             assert False
 
-    def test__exx_1__overlayd_2(self):
+    def test__exc_1__overlayd_2(self):
         class Victim(BreederStrStack):
             name0: int = 0
             name1: int = 1
@@ -145,7 +145,7 @@ class Test__BreederStrStack:
         else:
             assert False
 
-    def test__exx_1__skipped_1(self):
+    def test__exc_1__skipped_1(self):
         class Victim(BreederStrStack):
             name0: int = 0
             name1: int = 1
@@ -159,7 +159,7 @@ class Test__BreederStrStack:
         else:
             assert False
 
-    def test__exx_1__skipped_2(self):
+    def test__exc_1__skipped_2(self):
         class Victim(BreederStrStack):
             name0: int = 0
             # name1: int = 1

@@ -26,7 +26,7 @@ class Bitfield:
 
     def __init__(self, field_size: int):
         if field_size < 1:
-            raise Exx__Incompatible(f"{field_size=}")
+            raise Exc__Incompatible(f"{field_size=}")
 
         self.field_size = field_size
         self._field_bytearray = bytearray((field_size + 7) // 8)
@@ -62,7 +62,7 @@ class Bitfield:
 
     def __getitem__(self, idx: int) -> Union[int, NoReturn]:
         if idx < -self.field_size or idx > self.field_size - 1:
-            raise Exx__Addressing
+            raise Exc__Addressing
         return self._field_bytearray[idx // 8] >> (idx % 8) & 1
 
     def __setitem__(self, idx: int, value: Union[int, bool, Any]) -> Optional[NoReturn]:

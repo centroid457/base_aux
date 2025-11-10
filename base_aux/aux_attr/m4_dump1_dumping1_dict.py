@@ -37,7 +37,7 @@ class Base_AttrDictDumping(NestInit_Source, NestCall_Resolve):
             elif self._ANNOTS_DEPTH == EnumAdj_AnnotsDepthAllOrLast.LAST_CHILD:
                 result_obj = AttrAux_AnnotsLast(self.SOURCE, *self.SKIP_NAMES)
         else:
-            raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
+            raise Exc__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
         # result -----
         return result_obj.dump_dict()

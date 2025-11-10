@@ -7,7 +7,7 @@ USEFUL IDEAS
 ------------
 - in tests
 - could be clearly used in docstrings without needless defining
-    assert get_bool(LAMBDA_EXX) is False
+    assert get_bool(LAMBDA_EXC) is False
 """
 # =====================================================================================================================
 from typing import *
@@ -159,8 +159,8 @@ def FUNC_DICT(*args, **kwargs) -> dict[Any, Any | None]:
     return result
 
 
-def FUNC_EXX(*args, **kwargs) -> Exception:
-    return Exception("FUNC_EXX")
+def FUNC_EXC(*args, **kwargs) -> Exception:
+    return Exception("FUNC_EXC")
 
 
 def FUNC_RAISE(*args, **kwargs) -> NoReturn:
@@ -200,8 +200,8 @@ LAMBDA_NONE: Callable[..., None] = lambda *args, **kwargs: None
 LAMBDA_TRUE: Callable[..., bool] = lambda *args, **kwargs: True
 LAMBDA_FALSE: Callable[..., bool] = lambda *args, **kwargs: False
 
-LAMBDA_EXX: Callable[..., Exception] = lambda *args, **kwargs: Exception("LAMBDA_EXX")
-# LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXX")      # raise=SyntaxError: invalid syntax
+LAMBDA_EXC: Callable[..., Exception] = lambda *args, **kwargs: Exception("LAMBDA_EXC")
+# LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXC")      # raise=SyntaxError: invalid syntax
 LAMBDA_RAISE: Callable[..., NoReturn] = lambda *args, **kwargs: FUNC_RAISE()
 # LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
 LAMBDA_GEN: Callable[..., Iterable[Any]] = lambda *args, **kwargs: FUNC_GEN()
@@ -329,10 +329,10 @@ class ClsCallRaise:
 INST_CALL_RAISE = ClsCallRaise()
 
 
-class ClsCallExx:
+class ClsCallExc:
     def __call__(self, *args, **kwargs) -> Exception:
-        return Exception("ClsCallExx")
-INST_CALL_EXX = ClsCallExx()
+        return Exception("ClsCallExc")
+INST_CALL_EXC = ClsCallExc()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -478,7 +478,7 @@ class ClsFullTypes:
     attrFuncTrue = FUNC_TRUE
     attrFuncList = FUNC_LIST_DIRECT
     attrFuncDict = FUNC_DICT
-    attrFuncExx = FUNC_EXX
+    attrFuncExc = FUNC_EXC
     attrFuncRaise = FUNC_RAISE
     attrFuncGen = FUNC_GEN
 
@@ -494,8 +494,8 @@ class ClsFullTypes:
     attrInstCallTrue = INST_CALL_TRUE
     attrClsCallRaise = ClsCallRaise
     attrInstCallRaise = INST_CALL_RAISE
-    attrClsCallExx = ClsCallExx
-    attrInstCallExx = INST_CALL_EXX
+    attrClsCallExc = ClsCallExc
+    attrInstCallExc = INST_CALL_EXC
 
     attrClsIterYield = ClsIterYield
     attrInstIterYield = INST_ITER_YIELD
@@ -527,8 +527,8 @@ class ClsFullTypes:
     def propertyInt(self) -> int:
         return 1
     @property
-    def propertyExx(self) -> Exception:
-        return Exception("propertyExx")
+    def propertyExc(self) -> Exception:
+        return Exception("propertyExc")
     @property
     def propertyRaise(self) -> NoReturn:
         raise Exception("propertyRaise")
@@ -540,8 +540,8 @@ class ClsFullTypes:
         return
     def methInt(self) -> int:
         return 1
-    def methExx(self) -> Exception:
-        return Exception("methExx")
+    def methExc(self) -> Exception:
+        return Exception("methExc")
     def methRaise(self) -> NoReturn:
         raise Exception("methRaise")
     def methFunc(self) -> Callable:

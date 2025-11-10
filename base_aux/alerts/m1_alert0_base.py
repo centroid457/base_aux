@@ -70,7 +70,7 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, NestCall_MethodNa
     TIMEOUT_SEND: float = 1.2
     RECONNECT_LIMIT: int = 3
     RECONNECT_PAUSE: int = 60
-    # TIMEOUT_RATELIMIT: int = 600    # when EXX 451, b'Ratelimit exceeded
+    # TIMEOUT_RATELIMIT: int = 600    # when EXC 451, b'Ratelimit exceeded
 
     MSGS_UNSENT: deque[str | TextFormatted | Any]
 
@@ -146,16 +146,16 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, NestCall_MethodNa
                         self.result_connect = self._connect_unsafe()
                         if self.result_connect:
                             print("[connect] SUCCESS")
-                    except Exception as exx:
-                        print(f"[connect] ERROR [{exx!r}]")
+                    except Exception as exc:
+                        print(f"[connect] ERROR [{exc!r}]")
 
                 if self.result_connect and not self.result_login:
                     try:
                         self.result_login = self._login_unsafe()
                         if self.result_login:
                             print("[login] SUCCESS")
-                    except Exception as exx:
-                        print(f"[LOGIN] ERROR [{exx!r}]")
+                    except Exception as exc:
+                        print(f"[LOGIN] ERROR [{exc!r}]")
 
                 self.ready_to_send = self.result_connect and self.result_login
                 if self.ready_to_send:
@@ -209,8 +209,8 @@ class Base_Alert(NestInit_AttrsLambdaResolve, Interface_Alert, NestCall_MethodNa
                 if sent_result:
                     self.MSGS_UNSENT.popleft()
                     print("[send] SUCCESS")
-            except Exception as exx:
-                msg = f"[sent] ERROR [{exx!r}]"
+            except Exception as exc:
+                msg = f"[sent] ERROR [{exc!r}]"
                 # [send] ERROR [SMTPDataError(451, b'Ratelimit exceeded for mailbox centroid@mail.ru. Try again later.')]
                 print(msg)
                 break

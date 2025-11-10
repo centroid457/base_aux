@@ -76,7 +76,7 @@ _std = [
 
 
 # =====================================================================================================================
-class Base_Exx(
+class Base_Exc(
     Warn,
 
     Exception,
@@ -87,19 +87,19 @@ class Base_Exx(
     GOAL
     ----
     1/ with raise - just a solution to collect all dunder methods intended for Exceptions in one place
-        - get correct bool() if get Exx as value
+        - get correct bool() if get Exc as value
     2/ without raising - use like logger (Warn)
 
     SPECIALLY CREATED FOR
     ---------------------
     classes.VALID if
     """
-    PREFIX: str = "[EXX]"
+    PREFIX: str = "[EXC]"
 
 
 # =====================================================================================================================
-class Exx__EncodeDecode(
-    Base_Exx,
+class Exc__EncodeDecode(
+    Base_Exc,
 
     # BytesWarning,
     # EncodingWarning,
@@ -116,8 +116,8 @@ class Exx__EncodeDecode(
     pass
 
 
-class Exx__Connection(
-    Base_Exx,
+class Exc__Connection(
+    Base_Exc,
 
     # ConnectionError,
     # ConnectionAbortedError,
@@ -128,8 +128,8 @@ class Exx__Connection(
     pass
 
 
-class Exx__Imports(
-    Base_Exx,
+class Exc__Imports(
+    Base_Exc,
 
     # ImportError,
     # ImportWarning,
@@ -138,8 +138,8 @@ class Exx__Imports(
     pass
 
 
-class Exx__SyntaxFormat(
-    Base_Exx,
+class Exc__SyntaxFormat(
+    Base_Exc,
 
     # SyntaxWarning,
     # SyntaxError,
@@ -151,8 +151,8 @@ class Exx__SyntaxFormat(
     pass
 
 
-class Exx__Addressing(
-    Base_Exx,
+class Exc__Addressing(
+    Base_Exc,
 
     # NameError,
     # AttributeError,
@@ -162,8 +162,8 @@ class Exx__Addressing(
     pass
 
 
-class Exx__NotExistsNotFoundNotCreated(
-    Base_Exx,
+class Exc__NotExistsNotFoundNotCreated(
+    Base_Exc,
 
     # FileExistsError,    # ExistsAlready
     # FileNotFoundError,  # NotExists
@@ -178,7 +178,7 @@ class Exx__NotExistsNotFoundNotCreated(
 
 
 # =====================================================================================================================
-class Exx__WrongUsage(Base_Exx):
+class Exc__WrongUsage(Base_Exc):
     """
     GOAL
     ----
@@ -186,7 +186,7 @@ class Exx__WrongUsage(Base_Exx):
     """
 
 
-class Exx__WrongUsage_Programmer(Exx__WrongUsage):
+class Exc__WrongUsage_Programmer(Exc__WrongUsage):
     """
     GOAL
     ----
@@ -195,7 +195,7 @@ class Exx__WrongUsage_Programmer(Exx__WrongUsage):
     pass
 
 
-class Exx__WrongUsage_YouForgotSmth(Exx__WrongUsage_Programmer):
+class Exc__WrongUsage_YouForgotSmth(Exc__WrongUsage_Programmer):
     """
     GOAL
     ----
@@ -210,7 +210,7 @@ class Exx__WrongUsage_YouForgotSmth(Exx__WrongUsage_Programmer):
 
 
 # =====================================================================================================================
-class Exx__Expected(Base_Exx):
+class Exc__Expected(Base_Exc):
     """
     GOAL
     ----
@@ -218,7 +218,7 @@ class Exx__Expected(Base_Exx):
     """
 
 
-class Exx__Overlayed(Base_Exx):
+class Exc__Overlayed(Base_Exc):
     """
     GOAL
     ----
@@ -228,25 +228,25 @@ class Exx__Overlayed(Base_Exx):
     pass
 
 
-class Exx__NotReady(Base_Exx):
+class Exc__NotReady(Base_Exc):
     pass
 
 
 # =====================================================================================================================
-class Exx__Incompatible(Base_Exx):
+class Exc__Incompatible(Base_Exc):
     pass
 
 
 # =====================================================================================================================
-class Exx__GetattrPrefix(Base_Exx):
+class Exc__GetattrPrefix(Base_Exc):
     pass
 
 
-class Exx__GetattrPrefix_RaiseIf(Exx__GetattrPrefix):
+class Exc__GetattrPrefix_RaiseIf(Exc__GetattrPrefix):
     pass
 
 
-class Exx__StartOuterNONE_UsedInStackByRecreation(Base_Exx):
+class Exc__StartOuterNONE_UsedInStackByRecreation(Base_Exc):
     """
     in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
     """
@@ -254,16 +254,16 @@ class Exx__StartOuterNONE_UsedInStackByRecreation(Base_Exx):
 
 
 # =====================================================================================================================
-class Exx__Valid(Base_Exx):
+class Exc__Valid(Base_Exc):
     pass
 
 
-class Exx__ValueNotValidated(Exx__Valid):
+class Exc__ValueNotValidated(Exc__Valid):
     pass
 
 
 # =====================================================================================================================
-class Exx__NestingLevels(Base_Exx):
+class Exc__NestingLevels(Base_Exc):
     """Exception when used several unsuitable levels in nesting!
 
     EXAMPLE:
@@ -275,7 +275,7 @@ class Exx__NestingLevels(Base_Exx):
         assert VictimBase().attr == 0
         try:
             assert Victim1().attr == 1
-        except Exx_SingletonDifferentNestingLevels:
+        except Exc_SingletonDifferentNestingLevels:
             pass
         else:
             assert False
@@ -299,11 +299,11 @@ if __name__ == '__main__':
     assert bool(Exception(False)) is True
 
     # SOLUTION --------------
-    assert bool(Base_Exx(0)) is False
-    assert bool(Base_Exx(False)) is False
+    assert bool(Base_Exc(0)) is False
+    assert bool(Base_Exc(False)) is False
 
     # NO RAISING =====================================
-    Base_Exx(0, 1, 2, 3)
+    Base_Exc(0, 1, 2, 3)
     Warn(0, 1)
 
 

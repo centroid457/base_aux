@@ -52,7 +52,7 @@ class Base_AttrKit(
         ----
         1/ generate object with exact attrs values by Kwargs like template
         2/ for further comparing by Eq
-        3/ all callables will resolve as Exx
+        3/ all callables will resolve as Exc
     """
     def _redefine_nones(self, *args, **kwargs) -> None:
         """

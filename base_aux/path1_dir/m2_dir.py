@@ -132,10 +132,10 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
         result = True
         try:
             self.DIRPATH.rmdir()
-        except Exception as exx:  # TODO: separate AccessPermition/FilesExists
+        except Exception as exc:  # TODO: separate AccessPermition/FilesExists
             result = False
             if raise_fails:
-                raise exx
+                raise exc
         return result
 
     def delete_blank_items_wmask(
@@ -166,10 +166,10 @@ class DirAux:   # NOTE: Init_SOURCE - dont nest!!!
             if path.is_file():
                 try:
                     path.unlink()
-                except Exception as exx:
+                except Exception as exc:
                     result = False
                     if raise_fails:
-                        raise exx
+                        raise exc
 
             elif path.is_dir():
                 result &= cls.delete_items(*cls(path).iter_files(), raise_fails=raise_fails)

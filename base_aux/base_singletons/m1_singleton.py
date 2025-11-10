@@ -44,7 +44,7 @@ class Base_SingletonManager:
             msg = f"{cls_obj.__name__=} WAS BLOCKED before by creating singleton in upper nesting level"
             for cls_blocked in cls._CLS_BLOCKED:
                 msg += f"\n\t{cls_blocked.__name__=}"
-            raise Exx__NestingLevels(msg)
+            raise Exc__NestingLevels(msg)
 
         cls._CLS_USED.add(cls_obj)
 
@@ -53,7 +53,7 @@ class Base_SingletonManager:
                 msg = f"{cls_obj.__name__=} WAS USED before by creating singleton in less nesting level"
                 for cls_used in cls._CLS_USED:
                     msg += f"\n\t{cls_used.__name__=}"
-                raise Exx__NestingLevels(msg)
+                raise Exc__NestingLevels(msg)
             cls._CLS_BLOCKED.add(cls_mro)
 
     @classmethod

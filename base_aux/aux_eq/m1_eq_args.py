@@ -21,7 +21,7 @@ class EqArgs(NestInit_Args_Implicit, NestCall_Resolve, NestBool_Resolve):
         # only one chans for Raise - not enough count --------------
         if len(self.ARGS) < 2:
             msg = f"need at least 2 args {self.ARGS=}"
-            raise Exx__WrongUsage(msg)
+            raise Exc__WrongUsage(msg)
 
         arg_0 = self.ARGS[0]
 

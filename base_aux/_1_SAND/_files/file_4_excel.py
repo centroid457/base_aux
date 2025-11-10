@@ -128,8 +128,8 @@ class Win32comExcelProcessor(_ExcelProcessor):
             self.pythoncom = pythoncom
             return win32com.client
 
-        except Exception as exx:
-            UFU.logging_and_print_warning(f"{exx!r}")
+        except Exception as exc:
+            UFU.logging_and_print_warning(f"{exc!r}")
             UFU.logging_and_print_warning('Cannot import Excel library')
 
     def initialize(self, file_path):
@@ -150,8 +150,8 @@ class Win32comExcelProcessor(_ExcelProcessor):
             self.app = Dispatch("Excel.Application")
             # msg = f"created {self.app=}"
             # UFU.logging_and_print_warning(msg)
-        except Exception as exx:
-            msg = f"[Exception] Cannot dispatch ExcelApp:{exx!r}"
+        except Exception as exc:
+            msg = f"[Exception] Cannot dispatch ExcelApp:{exc!r}"
             UFU.logging_and_print_warning(msg)
             return
 
@@ -170,15 +170,15 @@ class Win32comExcelProcessor(_ExcelProcessor):
                 UFU.logging_and_print_warning("Закрываем принудительно все открытые предыдущие сеансы книг Excel")
                 try:
                     self.app.Workbooks.Close()
-                except Exception as exx:
-                    UFU.logging_and_print_warning(f"Ошибка закрытия книг Excel. {exx!r}")
+                except Exception as exc:
+                    UFU.logging_and_print_warning(f"Ошибка закрытия книг Excel. {exc!r}")
             UFU.logging_and_print_debug(f"Открываем книгу Excel: {file_path=}")
             self.workbook = self.app.Workbooks.Open(file_path)
             # msg = f"created {self.workbook.FullName=}{file_path=}"
             # UFU.logging_and_print_warning(msg)
             return True
-        except Exception as exx:
-            msg = f"[Exception] Cannot open Excel {file_path=}:{exx!r}"
+        except Exception as exc:
+            msg = f"[Exception] Cannot open Excel {file_path=}:{exc!r}"
             UFU.logging_and_print_error(msg)
 
             msg = f"maybe you have some inconvenient range Names in XLSX-file (ex. Print_Area, ...?) find and delete it in [{file_path=}]"
@@ -188,26 +188,26 @@ class Win32comExcelProcessor(_ExcelProcessor):
                 self.app.DisplayAlerts = True
                 self.app.Workbooks.Close()
                 self.app.Quit()
-            except Exception as exx:
-                UFU.logging_and_print_warning(f"Ошибка при попытке корректного закрытия книги и приложения Excel. {exx!r}")
+            except Exception as exc:
+                UFU.logging_and_print_warning(f"Ошибка при попытке корректного закрытия книги и приложения Excel. {exc!r}")
 
     def close(self):
         result = True
         try:
             self.workbook.Save()
             self.workbook.Close()
-        except Exception as exx:
+        except Exception as exc:
             result = False
-            UFU.logging_and_print_warning(f"[EXCEPTION]Cannot close workbook:{exx!r}")
+            UFU.logging_and_print_warning(f"[EXCEPTION]Cannot close workbook:{exc!r}")
 
         try:
             self.app.DisplayAlerts = False
             self.app.Visible = False
             # self.app.Quit()  # Убрал закрытие всего приложения, т.к. тут должны работать с конкретной книгой.
             # self.app = None
-        except Exception as exx:
+        except Exception as exc:
             result = False
-            UFU.logging_and_print_error(f"[EXCEPTION]Cannot quit Excel application:{exx!r}")
+            UFU.logging_and_print_error(f"[EXCEPTION]Cannot quit Excel application:{exc!r}")
 
         return result
 
@@ -223,9 +223,9 @@ class Win32comExcelProcessor(_ExcelProcessor):
                 for sheet in sheets:
                     # logging.debug(f"sheet (Name, index) = ({sheet.Name}, {sheet.index})")
                     sheets_name_list.append(sheet.Name)
-        except Exception as exx:
-            UFU.logging_and_print_warning(f'{exx!r}')
-            raise exx
+        except Exception as exc:
+            UFU.logging_and_print_warning(f'{exc!r}')
+            raise exc
         return sheets_name_list
         
     # 1=sheets=DIRECT name/index --------------------------------------------------
@@ -348,8 +348,8 @@ class Win32comExcelProcessor(_ExcelProcessor):
 
             try:
                 self.sheet_remove(sheet_i)
-            except Exception as exx:
-                UFU.logging_and_print_error(f"{exx!r}")
+            except Exception as exc:
+                UFU.logging_and_print_error(f"{exc!r}")
 
         return True
 
@@ -573,8 +573,8 @@ def _test__read_cell_value():
         print(file_processor.cell_value_get())
         print(file_processor.cell_value_set(value="hello"))
         print(file_processor.cell_value_get())
-    except Exception as exx:
-        print(f"EXCEPTION!{exx!r}")
+    except Exception as exc:
+        print(f"EXCEPTION!{exc!r}")
     file_processor.close()
 
 
@@ -585,8 +585,8 @@ def _test__table_write_by_dict():
     file_processor.initialize(protocol_fullpath)
     try:
         print(file_processor.excel_dump_dict(values_dict={1:123}))
-    except Exception as exx:
-        print(f"EXCEPTION!{exx!r}")
+    except Exception as exc:
+        print(f"EXCEPTION!{exc!r}")
     file_processor.close()
 
 

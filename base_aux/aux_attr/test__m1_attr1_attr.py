@@ -221,7 +221,7 @@ class Test__Dump:
         argnames="cal_use, _EXPECTED",
         argvalues=[
             (EnumAdj_CallResolveStyle.DIRECT, (None, True, LAMBDA_TRUE, LAMBDA_RAISE,)),
-            (EnumAdj_CallResolveStyle.EXX, (None, True, True, Exception,)),
+            (EnumAdj_CallResolveStyle.EXC, (None, True, True, Exception,)),
             # (EnumAdj_CallResolveStyle.RAISE, Exception),          # need special tests!
             (EnumAdj_CallResolveStyle.RAISE_AS_NONE, (None, True, True, None,)),
             (EnumAdj_CallResolveStyle.BOOL, (False, True, True, False,)),

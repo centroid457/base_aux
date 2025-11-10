@@ -18,8 +18,8 @@ def test__common__define(value, _EXPECTED):
             ATTR_INT = int(value)
             ATTR_STR = str(value)
 
-    except Exception as exx:
-        define_was_ok = exx
+    except Exception as exc:
+        define_was_ok = exc
 
     Lambda(define_was_ok).expect__check_assert(_EXPECTED)
 
@@ -39,14 +39,14 @@ def test__special__define_and_init(value, _EXPECTED):
         ATTR_INT = Lambda(int, value)
         ATTR_STR = Lambda(str, value)
 
-    assert True     # no exx above!
+    assert True     # no exc above!
 
     # INIT -----------------------
     init_was_ok = True
     try:
         victim = Victim()
-    except Exception as exx:
-        init_was_ok = exx
+    except Exception as exc:
+        init_was_ok = exc
     else:
         assert victim.ATTR0 == 0
         assert victim.ATTR_INT == value

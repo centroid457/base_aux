@@ -147,7 +147,7 @@ def test__several_levels_at_ones__low(Victim):
     assert VictimBase2().attr == 0
     try:
         assert Victim1().attr == 1
-    except Exx__NestingLevels:
+    except Exc__NestingLevels:
         pass
     else:
         assert False
@@ -168,7 +168,7 @@ def test__several_levels_at_ones__up(Victim):
     assert Victim2().attr == 2
     try:
         assert VictimBase2().attr == 0
-    except Exx__NestingLevels:
+    except Exc__NestingLevels:
         pass
     else:
         assert False

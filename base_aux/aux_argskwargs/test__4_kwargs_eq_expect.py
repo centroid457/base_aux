@@ -24,7 +24,7 @@ from base_aux.base_values.m4_primitives import *
         (1, dict(eq1=1), dict(eq1=False), [False, False, True, True], [True, Exception]),
 
         # RAISED --------
-        (1, dict(eq1=1), dict(eq111=True), [Exx__WrongUsage, Exx__WrongUsage, Exx__WrongUsage, Exx__WrongUsage], [True, Exception]),
+        (1, dict(eq1=1), dict(eq111=True), [Exc__WrongUsage, Exc__WrongUsage, Exc__WrongUsage, Exc__WrongUsage], [True, Exception]),
 
         (1, dict(eq1=ClsEqRaise()), dict(), [False, False, True, True], [False, Exception]),                # NOTE: this is not correct usage! nobody will not do this!
         (1, dict(eq1=ClsEqRaise()), dict(eq1=Exception), [True, True, False, False], [False, Exception]),   # NOTE: this is not correct usage! nobody will not do this!
@@ -81,10 +81,10 @@ def test__OS(other_draft, eq_expects, _EXP_checkIf, _EXP_ga):
     Lambda(Victim(other_draft).bool_if__all_false, **eq_expects).expect__check_assert(_EXP_checkIf[2])
     Lambda(Victim(other_draft).bool_if__any_false, **eq_expects).expect__check_assert(_EXP_checkIf[3])
 
-    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[0] else False)
-    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[1] else False)
-    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[2] else False)
-    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).expect__check_assert(Exx__Expected if _EXP_checkIf[3] else False)
+    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).expect__check_assert(Exc__Expected if _EXP_checkIf[0] else False)
+    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).expect__check_assert(Exc__Expected if _EXP_checkIf[1] else False)
+    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).expect__check_assert(Exc__Expected if _EXP_checkIf[2] else False)
+    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).expect__check_assert(Exc__Expected if _EXP_checkIf[3] else False)
 
     # GA
     Lambda(lambda: Victim(other_draft).linux).expect__check_assert(_EXP_ga[0])

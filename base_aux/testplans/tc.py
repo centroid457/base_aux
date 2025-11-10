@@ -4,7 +4,7 @@ from base_aux.pyqt.m0_signals import *
 
 from base_aux.base_nest_dunders.m6_eq2_cls import *
 
-from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXX
+from base_aux.testplans.tc_types import TYPING__RESULT_BASE, TYPING__RESULT_W_NORETURN, TYPING__RESULT_W_EXC
 from base_aux.testplans.stand import *
 from base_aux.loggers.m2_logger import *
 
@@ -56,14 +56,14 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
     INDEX: int
     SETTINGS: DictIcKeys_Ga = {}
 
-    result__startup: TYPING__RESULT_W_EXX = None
-    result__teardown: TYPING__RESULT_W_EXX = None
+    result__startup: TYPING__RESULT_W_EXC = None
+    result__teardown: TYPING__RESULT_W_EXC = None
 
-    _result: TYPING__RESULT_W_EXX = None
+    _result: TYPING__RESULT_W_EXC = None
     timestamp_start: Optional[DateTimeAux] = None
     timestamp_stop: Optional[DateTimeAux] = None
     details: dict[str, Any]
-    exx: Optional[Exception]
+    exc: Optional[Exception]
 
     # =================================================================================================================
     @property
@@ -105,7 +105,7 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         self.timestamp_stop = None
 
         self.details = {}
-        self.exx = None
+        self.exc = None
 
     # @classmethod
     # @property
@@ -115,11 +115,11 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
 
     # RESULT ----------------------------------------------------------------------------------------------------------
     @property
-    def result(self) -> TYPING__RESULT_W_EXX:
+    def result(self) -> TYPING__RESULT_W_EXC:
         return self._result
 
     @result.setter
-    def result(self, value: TYPING__RESULT_W_EXX) -> None:
+    def result(self, value: TYPING__RESULT_W_EXC) -> None:
         self._result = value
         self.signals.signal__tc_state_changed.emit(self)
         if isinstance(value, Exception):
@@ -248,15 +248,15 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
                     self.result.run__if_not_finished()
 
                 self.LOGGER.debug(f"run-run_wrapped FINISHED WITH {self.result=}")
-            except Exception as exx:
+            except Exception as exc:
                 self.result = False
-                self.exx = exx
+                self.exc = exc
         self.LOGGER.debug("run-teardown")
         self.teardown()
 
     # =================================================================================================================
     @classmethod
-    def startup__cls(cls) -> TYPING__RESULT_W_EXX:
+    def startup__cls(cls) -> TYPING__RESULT_W_EXC:
         """before batch work
         """
         print(f"startup__cls")
@@ -264,29 +264,29 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         # cls.clear__cls()
 
         result = cls.startup__cls__wrapped
-        result = Lambda(result).resolve__exx()
+        result = Lambda(result).resolve__exc()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         print(f"{cls.result__startup_cls=}")
         cls.result__startup_cls = result
         return result
 
-    def startup(self) -> TYPING__RESULT_W_EXX:
+    def startup(self) -> TYPING__RESULT_W_EXC:
         self.LOGGER.debug("")
 
         result = self.startup__wrapped
-        result = Lambda(result).resolve__exx()
+        result = Lambda(result).resolve__exc()
         if isinstance(result, Valid):
             result.run__if_not_finished()
         self.result__startup = result
         return result
 
-    def teardown(self) -> TYPING__RESULT_W_EXX:
+    def teardown(self) -> TYPING__RESULT_W_EXC:
         self.LOGGER.debug("")
         self.timestamp_stop = DateTimeAux()
 
         result = self.teardown__wrapped
-        result = Lambda(result).resolve__exx()
+        result = Lambda(result).resolve__exc()
         if isinstance(result, Valid):
             result.run__if_not_finished()
 
@@ -294,12 +294,12 @@ class _Base1_TestCase(Nest_EqCls, _Base0_TestCase, QThread):
         return result
 
     @classmethod
-    def teardown__cls(cls) -> TYPING__RESULT_W_EXX:
+    def teardown__cls(cls) -> TYPING__RESULT_W_EXC:
         print(f"run__cls=teardown__cls")
 
         if cls.STATE_ACTIVE__CLS == EnumAdj_ProcessStateActive.STARTED or cls.result__teardown_cls is None:
             print(f"run__cls=teardown__cls=1")
-            cls.result__teardown_cls = Lambda(cls.teardown__cls__wrapped).resolve__exx()
+            cls.result__teardown_cls = Lambda(cls.teardown__cls__wrapped).resolve__exc()
             if isinstance(cls.result__teardown_cls, Valid):
                 cls.result__teardown_cls.run__if_not_finished()
 
@@ -411,7 +411,7 @@ class _Info(_Base1_TestCase):
         result += f"STATE_ACTIVE__CLS={self.__class__.STATE_ACTIVE__CLS}\n"
         result += f"timestamp_start={self.timestamp_start}\n"
         result += f"timestamp_stop={self.timestamp_stop}\n"
-        result += f"exx={self.exx}\n"
+        result += f"exc={self.exc}\n"
 
         result += "-"*60 + "\n"
         result += f"result__startup={self.result__startup}\n"

@@ -19,7 +19,7 @@ from base_aux.buses.m0_history import HistoryIO
 
 
 # =====================================================================================================================
-class Exx_SerialAddress_NotApplyed(Exception):
+class Exc_SerialAddress_NotApplyed(Exception):
     """
         raise SerialException("Port must be configured before it can be used.")
     serial.serialutil.SerialException: Port must be configured before it can be used.
@@ -27,54 +27,54 @@ class Exx_SerialAddress_NotApplyed(Exception):
     pass
 
 
-class Exx_SerialAddress_NotExists(Exception):
+class Exc_SerialAddress_NotExists(Exception):
     """
     SerialException("could not open port 'COM6': FileNotFoundError(2, 'Не удается найти указанный файл.', None, 2)") - всегда несуществующий порт в Windows!!!
     """
     pass
 
 
-class Exx_SerialAddresses_NoVacant(Exception):
+class Exc_SerialAddresses_NoVacant(Exception):
     pass
 
 
-class Exx_SerialAddresses_NoAutodetected(Exception):
+class Exc_SerialAddresses_NoAutodetected(Exception):
     pass
 
 
-class Exx_SerialAddress_AlreadyOpened(Exception):
+class Exc_SerialAddress_AlreadyOpened(Exception):
     """
     SerialException("could not open port 'COM7': PermissionError(13, 'Отказано в доступе.', None, 5)")
     """
     pass
 
 
-class Exx_SerialAddress_AlreadyOpened_InOtherObject(Exception):
+class Exc_SerialAddress_AlreadyOpened_InOtherObject(Exception):
     """
     SerialException("could not open port 'COM7': PermissionError(13, 'Отказано в доступе.', None, 5)")
     """
     pass
 
 
-class Exx_SerialAddress_OtherError(Exception):
+class Exc_SerialAddress_OtherError(Exception):
     """
     SerialException("could not open port 'COM7': OSError(22, 'Указано несуществующее устройство.', None, 433)") - порт есть, но получена ошибка при открытии!!!
     """
     pass
 
 
-class Exx_SerialRead_NotFullLine(Exception):
+class Exc_SerialRead_NotFullLine(Exception):
     pass
 
 
-class Exx_SerialRead_FailPattern(Exception):
+class Exc_SerialRead_FailPattern(Exception):
     """
     if read string which match error pattern
     """
     pass
 
 
-class Exx_SerialRead_FailDecoding(Exception):
+class Exc_SerialRead_FailDecoding(Exception):
     """
     REASON
     ------
@@ -86,7 +86,7 @@ class Exx_SerialRead_FailDecoding(Exception):
     """
 
 
-class Exx_SerialPL2303IncorrectDriver(Exception):
+class Exc_SerialPL2303IncorrectDriver(Exception):
     """
     REASON
     ------
@@ -299,7 +299,7 @@ class SerialClient(Logger):
             # no final connection! specially keep ability to connect without Emu on cls main perpose (search ports)!
     ) -> Union[bool, NoReturn]:
         msg = None
-        exx = None
+        exc = None
         need_open = True
 
         # SETTINGS ---------------------------------
@@ -314,7 +314,7 @@ class SerialClient(Logger):
                 return False
 
             if not self.address__resolve(address):
-                exx = Exx_SerialAddress_NotApplyed()
+                exc = Exc_SerialAddress_NotApplyed()
                 need_open = False
             else:
                 address = self.ADDRESS
@@ -332,7 +332,7 @@ class SerialClient(Logger):
                 if self._SERIAL.is_open:
                     self._SERIAL.port = None
                     msg = f"[ERROR] Attempt to connect to already opened port IN OTHER OBJECT {self._SERIAL}"
-                    exx = Exx_SerialAddress_AlreadyOpened_InOtherObject(msg)
+                    exc = Exc_SerialAddress_AlreadyOpened_InOtherObject(msg)
 
                     need_open = False
             else:
@@ -345,36 +345,36 @@ class SerialClient(Logger):
                 self._SERIAL.open()
                 # self.write_eol()
                 # self.buffers_clear()
-            except Exception as _exx:
+            except Exception as _exc:
                 if not _touch_connection:
-                    self.LOGGER.error(f"[{self._SERIAL.port}]{_exx!r}")
+                    self.LOGGER.error(f"[{self._SERIAL.port}]{_exc!r}")
 
-                if "FileNotFoundError" in str(_exx):
+                if "FileNotFoundError" in str(_exc):
                     msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._SERIAL}"
-                    exx = Exx_SerialAddress_NotExists(repr(_exx))
+                    exc = Exc_SerialAddress_NotExists(repr(_exc))
 
                     # self.detect_available_ports()
 
-                elif "Port must be configured before" in str(_exx):
+                elif "Port must be configured before" in str(_exc):
                     msg = f"[ERROR] PORT NOT CONFIGURED {self._SERIAL}"
-                    exx = Exx_SerialAddress_NotApplyed(repr(_exx))
+                    exc = Exc_SerialAddress_NotApplyed(repr(_exc))
 
-                elif "PermissionError" in str(_exx):
+                elif "PermissionError" in str(_exc):
                     msg = f"[ERROR] PORT ALREADY OPENED {self._SERIAL}"
-                    exx = Exx_SerialAddress_AlreadyOpened(repr(_exx))
+                    exc = Exc_SerialAddress_AlreadyOpened(repr(_exc))
 
                 else:
                     msg = f"[ERROR] PORT OTHER ERROR {self._SERIAL}"
-                    exx = Exx_SerialAddress_OtherError(repr(_exx))
+                    exc = Exc_SerialAddress_OtherError(repr(_exc))
 
         # FINISH -----------------------------------------------
         # FAIL -----------------------------
-        if exx:
+        if exc:
             if not _touch_connection:
                 self.LOGGER.error(f"[{self._SERIAL.port}]{msg}")
 
             if _raise:
-                raise exx
+                raise exc
             else:
                 return False
 
@@ -622,8 +622,8 @@ class SerialClient(Logger):
                 try:
                     if self.address__validate():
                         result = address
-                except Exception as exx:
-                    print(f"finding address {exx!r}")
+                except Exception as exc:
+                    print(f"finding address {exc!r}")
                     pass
 
                 self.disconnect()
@@ -683,7 +683,7 @@ class SerialClient(Logger):
         IDEA:
         1. this func will exec on every accessible address
         2. if this func return True - address would be accepted!
-        3. raiseExx/NoReturn - equivalent as False!
+        3. raiseExc/NoReturn - equivalent as False!
         """
 
     def _address__validate_shorted(self) -> bool | None:
@@ -700,7 +700,7 @@ class SerialClient(Logger):
             inst = SerialClient()
             inst.connect(address=address, _raise=True, _touch_connection=True)
             inst.disconnect()
-        except Exx_SerialAddress_NotExists:
+        except Exc_SerialAddress_NotExists:
             return False
         except:
             return False
@@ -746,13 +746,13 @@ class SerialClient(Logger):
             product                  	NoneType  :None
             serial_number            	str       :
             vid                      	int       :1659
-            ----------properties_exx----------------------------------------------------------------------------
+            ----------properties_exc----------------------------------------------------------------------------
             ----------base_types-----------------------------------------------------------------------------------
             ----------methods_ok--------------------------------------------------------------------------------
             apply_usb_info           	NoneType  :None
             usb_description          	str       :COM8
             usb_info                 	str       :USB VID:PID=067B:2303 SER= LOCATION=1-2.4.3
-            ----------methods_exx-------------------------------------------------------------------------------
+            ----------methods_exc-------------------------------------------------------------------------------
             ====================================================================================================
 
         RASPBERRY - USB
@@ -777,13 +777,13 @@ class SerialClient(Logger):
             usb_device_path                 str       :/sys/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.4
             usb_interface_path              str       :/sys/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.4/1-1.4:1.0
             vid                             int       :1659
-            ----------properties_exx----------------------------------------------------------------------------
+            ----------properties_exc----------------------------------------------------------------------------
             ----------base_types-----------------------------------------------------------------------------------
             ----------methods_ok--------------------------------------------------------------------------------
             apply_usb_info                  NoneType  :None
             usb_description                 str       :USB-Serial Controller
             usb_info                        str       :USB VID:PID=067B:2303 LOCATION=1-1.4
-            ----------methods_exx-------------------------------------------------------------------------------
+            ----------methods_exc-------------------------------------------------------------------------------
             read_line                       TypeError :join() missing 1 required positional argument: 'a'
             ====================================================================================================
         """
@@ -793,9 +793,9 @@ class SerialClient(Logger):
         for obj in list_ports.comports():
             # ObjectInfo(obj).print(hide_skipped=True, skip__build_in=True)
             result.append(obj.device)
-            if Exx_SerialPL2303IncorrectDriver.MARKER in str(obj):
-                msg = f'[WARN] incorrect driver [{Exx_SerialPL2303IncorrectDriver.MARKER}]'
-                raise Exx_SerialPL2303IncorrectDriver(msg)
+            if Exc_SerialPL2303IncorrectDriver.MARKER in str(obj):
+                msg = f'[WARN] incorrect driver [{Exc_SerialPL2303IncorrectDriver.MARKER}]'
+                raise Exc_SerialPL2303IncorrectDriver(msg)
         return result
 
     @staticmethod
@@ -1058,7 +1058,7 @@ class SerialClient(Logger):
                 if _raise:
                     msg = f"[ERROR] match fail [{pattern=}/{data=}]"
                     self.LOGGER.error(f"[{self._SERIAL.port}]{msg}")
-                    raise Exx_SerialRead_FailPattern(msg)
+                    raise Exc_SerialRead_FailPattern(msg)
                 else:
                     return True
 
@@ -1122,10 +1122,10 @@ class SerialClient(Logger):
                 result = data.decode(encoding=cls.ENCODING)
             else:
                 result = str(data)
-        except Exception as exx:
-            print(f"{exx!r}")
+        except Exception as exc:
+            print(f"{exc!r}")
             msg = f"[FAIL] decoding {data=}"
-            raise Exx_SerialRead_FailDecoding(msg)
+            raise Exc_SerialRead_FailDecoding(msg)
 
         # check printable ascii ------------------
         for char in result:
@@ -1133,7 +1133,7 @@ class SerialClient(Logger):
                 char = chr(char)
             if char not in string.printable:
                 msg = f"[FAIL] decoding [{char=}]"
-                raise Exx_SerialRead_FailDecoding(msg)
+                raise Exc_SerialRead_FailDecoding(msg)
         # ----------------------------------------
 
         return result
@@ -1163,7 +1163,7 @@ class SerialClient(Logger):
 
         TODO: here possible rewrite by getting from history!!!
         """
-        # FIXME: return Object??? need keep exx for not finished readline!!!
+        # FIXME: return Object??? need keep exc for not finished readline!!!
         # var1: just read as usual - could cause error with not full bytes read in ONE CHAR!!!
         # data = self._SERIAL.readline()
 
@@ -1204,7 +1204,7 @@ class SerialClient(Logger):
         if data:
             if not eol_received:
                 msg = f"[ERROR]NotFullLine read_line={data}->CLEAR!!!"
-                exx = Exx_SerialRead_NotFullLine(msg)
+                exc = Exc_SerialRead_NotFullLine(msg)
                 data = b""
             else:
                 msg = f"[OK]read_line={data}"
@@ -1274,19 +1274,19 @@ class SerialClient(Logger):
         try:
             data_length = self._SERIAL.write(data)
             msg = f"[OK]write={data}/{data_length=}"
-        except Exception as exx:
-            msg = f"[FAIL]write={data}/{exx!r}"
+        except Exception as exc:
+            msg = f"[FAIL]write={data}/{exc!r}"
             self.LOGGER.warning(f"[{self._SERIAL.port}]{msg}")
 
-            if isinstance(exx, (PortNotOpenError, SerialException)):
+            if isinstance(exc, (PortNotOpenError, SerialException)):
                 self._COUNT_OPEN_EXCEPTIONS += 1
                 try:
                     self._SERIAL.open()
                     # self.connect()
                 except:
                     return False
-                    # raise exx
-                # raise exx   # here need reconnection!
+                    # raise exc
+                # raise exc   # here need reconnection!
 
             return False
 
@@ -1357,7 +1357,7 @@ class SerialClient(Logger):
                         else:
                             remain__retry_noanswer -= 1
 
-                    except Exx_SerialRead_FailDecoding:
+                    except Exc_SerialRead_FailDecoding:
                         remain__retry_decode -= 1
 
                     self.buffers_clear()

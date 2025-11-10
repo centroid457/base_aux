@@ -32,8 +32,8 @@ class Lambda_Bool(Lambda):
     def resolve(self, *args, **kwargs) -> bool | NoReturn:
         self.run(*args, **kwargs)
 
-        if self.EXX is not None:
-            raise self.EXX
+        if self.EXC is not None:
+            raise self.EXC
         else:
             return bool(self.RESULT)
 
@@ -46,8 +46,8 @@ class Lambda_BoolReversed(Lambda_Bool):
     def resolve(self, *args, **kwargs) -> bool | NoReturn:
         self.run(*args, **kwargs)
 
-        if self.EXX is not None:
-            raise self.EXX
+        if self.EXC is not None:
+            raise self.EXC
         else:
             return not bool(self.RESULT)
 
@@ -85,7 +85,7 @@ class Lambda_TrySuccess(Lambda_Bool):
     def resolve(self, *args, **kwargs) -> bool:
         self.run(*args, **kwargs)
 
-        if self.EXX is not None:
+        if self.EXC is not None:
             return False
         else:
             return True
@@ -96,7 +96,7 @@ class Lambda_TryFail(Lambda_TrySuccess):
     def resolve(self, *args, **kwargs) -> bool:
         self.run(*args, **kwargs)
 
-        if self.EXX is not None:
+        if self.EXC is not None:
             return True
         else:
             return False
@@ -127,8 +127,8 @@ class Lambda_Sleep(Lambda):
         if self.WHEN is EnumAdj_When2.AFTER:
             time.sleep(sec)
 
-        if self.EXX is not None:
-            raise self.EXX
+        if self.EXC is not None:
+            raise self.EXC
         else:
             return self.RESULT
 

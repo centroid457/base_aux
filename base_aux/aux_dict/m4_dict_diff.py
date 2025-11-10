@@ -79,7 +79,7 @@ class DictDiff(Base_DiffResolve):
                 else:
                     value = DICT[key]
 
-                if isinstance(value, Exception):    # in case of Exx() as dumped value
+                if isinstance(value, Exception):    # in case of Exc() as dumped value
                     value = value.__class__
 
                 values.append(value)

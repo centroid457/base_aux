@@ -73,7 +73,7 @@ class Base_AttrAux(NestInit_Source):
         elif self._ATTRS_STYLE == EnumAdj_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
-            raise Exx__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
+            raise Exc__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
     # -----------------------------------------------------------------------------------------------------------------
     pass
@@ -155,7 +155,7 @@ class Base_AttrAux(NestInit_Source):
                 yield name
 
             else:
-                raise Exx__Incompatible(f"{attr_level=}")
+                raise Exc__Incompatible(f"{attr_level=}")
 
     def iter__names_filter__not_hidden(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
@@ -393,7 +393,7 @@ class Base_AttrAux(NestInit_Source):
         GOAL
         ----
         check attr really existed!
-        separate exx on getattr (like for property) and name-not-existed.
+        separate exc on getattr (like for property) and name-not-existed.
         used only due to annots!
 
         SPECIALLY CREATED FOR
@@ -503,7 +503,7 @@ class Base_AttrAux(NestInit_Source):
         if not_defined:
             dict_type = self.dump_dict__annot_types()
             msg = f"{not_defined=} in {dict_type=}"
-            raise Exx__NotExistsNotFoundNotCreated(msg)
+            raise Exc__NotExistsNotFoundNotCreated(msg)
 
         return True
 
@@ -541,7 +541,7 @@ class Base_AttrAux(NestInit_Source):
         if not name_original:
             raise IndexError(f"{name_index=}/{self=}")
 
-        # NOTE: you still have no exx with setattr(self.SOURCE, "    HELLO", value) and ""
+        # NOTE: you still have no exc with setattr(self.SOURCE, "    HELLO", value) and ""
         setattr(self.SOURCE, name_original, value)
         pass
 
@@ -571,19 +571,19 @@ class Base_AttrAux(NestInit_Source):
 
         try:
             value = self.gai_ic(name_index)
-        except Exception as exx:
+        except Exception as exc:
             if callables_resolve == EnumAdj_CallResolveStyle.SKIP_RAISED:
                 return VALUE_SPECIAL.SKIPPED
-            elif callables_resolve == EnumAdj_CallResolveStyle.EXX:
-                return exx
+            elif callables_resolve == EnumAdj_CallResolveStyle.EXC:
+                return exc
             elif callables_resolve == EnumAdj_CallResolveStyle.RAISE_AS_NONE:
                 return None
             elif callables_resolve == EnumAdj_CallResolveStyle.RAISE:
-                raise exx
+                raise exc
             elif callables_resolve == EnumAdj_CallResolveStyle.BOOL:
                 return False
             else:
-                raise exx
+                raise exc
 
         # resolve callables ------------------
         result = Lambda(value).resolve__style(callables_resolve)
@@ -643,7 +643,7 @@ class Base_AttrAux(NestInit_Source):
 
 
         # else:
-        #     raise Exx__Incompatible(f"{self._ANNOTS_DEPTH=}")
+        #     raise Exc__Incompatible(f"{self._ANNOTS_DEPTH=}")
 
         # rename private original -------------------
         result_final: dict[str, type[Any]] = dict()
@@ -657,7 +657,7 @@ class Base_AttrAux(NestInit_Source):
     def dump_dict(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
     ) -> dict[str, Any | Callable | Exception] | NoReturn:
         """
         MAIN IDEA
@@ -693,11 +693,11 @@ class Base_AttrAux(NestInit_Source):
 
         return result
 
-    def dump_dict__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
+    def dump_dict__resolve_exc(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXX)
+        return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXC)
 
     def dump_dict__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
         return self.dump_dict(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.DIRECT)
@@ -712,17 +712,17 @@ class Base_AttrAux(NestInit_Source):
     def dump_obj(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
     ) -> AttrDumped | NoReturn:
         data = self.dump_dict(*skip_names, callables_resolve=callables_resolve)
         obj = AttrAux_Existed(AttrDumped()).sai__by_args_kwargs(**data)
         return obj
 
-    def dump_obj__resolve_exx(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
+    def dump_obj__resolve_exc(self, *skip_names: str | Base_EqValid) -> dict[str, Any | Exception]:
         """
         MAIN DERIVATIVE!
         """
-        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXX)
+        return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.EXC)
 
     def dump_obj__direct(self, *skip_names: str | Base_EqValid) -> TYPING.KWARGS_FINAL:
         return self.dump_obj(*skip_names, callables_resolve=EnumAdj_CallResolveStyle.DIRECT)
@@ -737,7 +737,7 @@ class Base_AttrAux(NestInit_Source):
     def dump_str__pretty(
             self,
             *skip_names: str | Base_EqValid,
-            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+            callables_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
     ) -> str:
         try:
             result = f"{self.SOURCE.__class__.__name__}(Attributes):"

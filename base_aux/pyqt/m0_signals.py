@@ -21,7 +21,7 @@ class Base_Signals(QObject):
 
     EXCEPTIONS
     ----------
-    in PyQt you will not get an Exx! just stop the program!
+    in PyQt you will not get an Exc! just stop the program!
     1. if your code stops on EMIT() - see the exact target! don't forget use mandatory params!
     """
     pass

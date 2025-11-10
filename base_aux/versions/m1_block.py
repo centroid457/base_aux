@@ -73,7 +73,7 @@ class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
     def _parse_elements(self) -> TYPE__VERSION_BLOCK_ELEMENTS_FINAL | NoReturn:
         if self.EQ_VALID and self.EQ_VALID != self.SOURCE:
             if self.RAISE:
-                raise Exx__Incompatible(f"{self.SOURCE=}/{self.EQ_VALID=}")
+                raise Exc__Incompatible(f"{self.SOURCE=}/{self.EQ_VALID=}")
             else:
                 return ()
 
@@ -88,7 +88,7 @@ class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
             if len(result_list) > 1:
                 if type(result_list[-1]) == type(result_list[-2]):
                     if self.RAISE:
-                        raise Exx__Incompatible(f"{result_list[-1]=}/{result_list[-2]=}")
+                        raise Exc__Incompatible(f"{result_list[-1]=}/{result_list[-2]=}")
                     else:
                         result_list = ()
                         break

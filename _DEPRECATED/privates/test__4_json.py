@@ -150,7 +150,7 @@ class Test__Json:
 
         try:
             Cls(_filepath=self.VICTIM().filepath, _section="AUTH")
-        except Exx__AnnotNotDefined:
+        except Exc__AnnotNotDefined:
             pass
         else:
             assert False
@@ -175,7 +175,7 @@ class Test__Json:
 
         try:
             Cls2(_filepath=self.VICTIM().filepath, _section="AUTH")
-        except Exx__AnnotNotDefined:
+        except Exc__AnnotNotDefined:
             pass
         else:
             assert False

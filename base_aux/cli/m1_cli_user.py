@@ -12,7 +12,7 @@ TYPING__CMDS = Union[TYPING__CMD, list[TYPING__CMD]]
 
 
 # =====================================================================================================================
-class Exx_CliNotAvailable(Exception):
+class Exc_CliNotAvailable(Exception):
     """
     GOAL
     ----
@@ -20,7 +20,7 @@ class Exx_CliNotAvailable(Exception):
     """
 
 
-class Exx_CliTimeout(Exception):    #use direct subprocess.TimeoutExpired??? NO!!!
+class Exc_CliTimeout(Exception):    #use direct subprocess.TimeoutExpired??? NO!!!
     """
     GOAL
     ----
@@ -28,7 +28,7 @@ class Exx_CliTimeout(Exception):    #use direct subprocess.TimeoutExpired??? NO!
     """
 
 
-class Exx_CliRetcode(Exception):
+class Exc_CliRetcode(Exception):
     """
     GOAL
     ----
@@ -36,7 +36,7 @@ class Exx_CliRetcode(Exception):
     """
 
 
-class Exx_CliStderr(Exception):
+class Exc_CliStderr(Exception):
     """
     GOAL
     ----
@@ -64,9 +64,9 @@ class CliUser:
     "counter/counter_in_list",
 
     :ivar TIMEOUT: default timeout for execution process
-        if timeout expired and process still not finished - raise exx
+        if timeout expired and process still not finished - raise exc
     :ivar _last_sp: Popen object
-    :ivar last_exx_timeout: saved Exx_CliTimeout if it was
+    :ivar last_exc_timeout: saved Exc_CliTimeout if it was
     :ivar last_cmd: command for execution
     :ivar last_stdout: full stdout data
     :ivar last_stderr: full stderr data
@@ -92,7 +92,7 @@ class CliUser:
             --------------------------------------------------
             self.last_stderr=
             --------------------------------------------------
-            self._last_exx_timeout=Exx_CliTimeout("TimeoutExpired('STM32_Programmer_CLI --help', 2)")
+            self._last_exc_timeout=Exc_CliTimeout("TimeoutExpired('STM32_Programmer_CLI --help', 2)")
             ==================================================
             [ERROR] cmd NOT available [STM32_Programmer_CLI --help]
             ==================================================
@@ -109,7 +109,7 @@ class CliUser:
             --------------------------------------------------
             self.last_stderr=
             --------------------------------------------------
-            self._last_exx_timeout=Exx_CliTimeout("TimeoutExpired('STM32_Programmer_CLI', 2)")
+            self._last_exc_timeout=Exc_CliTimeout("TimeoutExpired('STM32_Programmer_CLI', 2)")
             ==================================================
 
         3. use --VERSION! instead! - seems work fine always!
@@ -132,7 +132,7 @@ class CliUser:
     last_cmd: str = ""
     last_stdout: str = ""         # USE ONLY "" AS DEFAULT!!!
     last_stderr: str = ""         # USE ONLY "" AS DEFAULT!!!
-    last_exx_timeout: Optional[Exx_CliTimeout] = None
+    last_exc_timeout: Optional[Exc_CliTimeout] = None
     last_retcode: Optional[int] = None
     last_finished: Optional[bool] = None
 
@@ -143,7 +143,7 @@ class CliUser:
         self._reinit_values()       # need to keep always one values!
 
         if not self.cli_check_available():
-            raise Exx_CliNotAvailable
+            raise Exc_CliNotAvailable
 
     def _reinit_values(self) -> None:
         self._last_sp = None
@@ -152,7 +152,7 @@ class CliUser:
         self.last_cmd = ""
         self.last_stdout = ""
         self.last_stderr = ""
-        self.last_exx_timeout = None
+        self.last_exc_timeout = None
         self.last_retcode = None
         self.last_finished = None
 
@@ -162,7 +162,7 @@ class CliUser:
 
         :return: True if last_finished with no errors
         """
-        return all([self.last_finished, self.last_retcode == 0, not self.last_stderr, not self.last_exx_timeout])
+        return all([self.last_finished, self.last_retcode == 0, not self.last_stderr, not self.last_exc_timeout])
 
     # SEND ------------------------------------------------------------------------------------------------------------
     def send(
@@ -240,10 +240,10 @@ class CliUser:
         # work --------------------------------------------------------------------------------------------------------
         if timeout < 0:
             msg = f"{timeout=} is sub zero"
-            self.last_exx_timeout = Exx_CliTimeout(msg)
+            self.last_exc_timeout = Exc_CliTimeout(msg)
             print(msg)
             if _raise:
-                raise Exx_CliTimeout(msg)
+                raise Exc_CliTimeout(msg)
             else:
                 return False
 
@@ -257,7 +257,7 @@ class CliUser:
             self.last_duration = round(time.time() - time_start, 3)
             if timeout < self.last_duration:
                 self._last_sp.kill()
-                self.last_exx_timeout = Exx_CliTimeout()
+                self.last_exc_timeout = Exc_CliTimeout()
                 break
             line = self._last_sp.stdout.readline()
             if line != "":
@@ -276,12 +276,12 @@ class CliUser:
             self.print_state()
 
         if _raise:
-            if self.last_exx_timeout:
-                raise self.last_exx_timeout
+            if self.last_exc_timeout:
+                raise self.last_exc_timeout
             if self.last_retcode != 0:
-                raise Exx_CliRetcode(self.last_retcode)
+                raise Exc_CliRetcode(self.last_retcode)
             if self.last_stderr:
-                raise Exx_CliStderr(self.last_stderr)
+                raise Exc_CliStderr(self.last_stderr)
 
         return self.last_finished_success
 
@@ -310,7 +310,7 @@ class CliUser:
             for line in self.last_stderr.split("\n"):
                 print(f"{self._buffer_indent}{line!r}")
         print(f"-" * 50)
-        print(f"{self.last_exx_timeout=}")
+        print(f"{self.last_exc_timeout=}")
         print(f"="*50)
 
     def cli_check_available(self) -> bool:

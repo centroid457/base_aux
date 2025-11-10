@@ -108,11 +108,11 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
             else:
                 print(self._conn.select())  # ('OK', [b'5'])
 
-        except Exception as exx:
+        except Exception as exc:
             msg = f"not exists [folder={name}]"
             print(msg)
             raise Exception(msg)
-            # raise exx
+            # raise exc
 
     def _conn_close(self) -> None:
         """close connection
@@ -176,13 +176,13 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
                 try:
                     # has russian
                     subject = email.header.decode_header(msg["Subject"])[0][0].decode()
-                except Exception as exx:
+                except Exception as exc:
                     # english only!
                     subject = msg["Subject"]
 
                 subject = subject or ""
                 result.append(subject)
-        except Exception as exx:
+        except Exception as exc:
             self._conn_clear()
 
         return result

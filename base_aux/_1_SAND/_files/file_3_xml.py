@@ -120,8 +120,8 @@ class ProcessorXml(File):  # starichenko
         try:
             xml_string = xml_bytes.decode(encoding="utf-8")
             return True
-        except Exception as exx:
-            msg = f"XML have NONPRINTABLE INCORRECT data!!!\n{exx!r}"
+        except Exception as exc:
+            msg = f"XML have NONPRINTABLE INCORRECT data!!!\n{exc!r}"
             print(msg)
             msg = f"НЕОБХОДИМО САМОСТОЯТЕЛЬНО НАЙТИ НЕКОРРЕКТНЫЕ ДАННЫЕ И ИХ количество!!!"
             print(msg)

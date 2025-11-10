@@ -181,17 +181,17 @@ def test__endswith(args, other, _EXPECTED):
         (1, (True, False, False, True, False)),
         (Exception, (False, True, False, True, True)),
         (Exception(), (False, True, False, True, True)),
-        (LAMBDA_EXX, (False, True, False, True, True)),
+        (LAMBDA_EXC, (False, True, False, True, True)),
         (LAMBDA_RAISE, (False, False, True, False, True)),
     ]
 )
-def test__bool_exx_raise(other, _EXPECTED):
+def test__bool_exc_raise(other, _EXPECTED):
     args = ()
     _ExpectAux__eq_in__all_operators(EqValid_BoolTrue, other, _EXPECTED[0], *args)
-    _ExpectAux__eq_in__all_operators(EqValid_Exx, other, _EXPECTED[1], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_Exc, other, _EXPECTED[1], *args)
     _ExpectAux__eq_in__all_operators(EqValid_Raise, other, _EXPECTED[2], *args)
     _ExpectAux__eq_in__all_operators(EqValid_NotRaise, other, _EXPECTED[3], *args)
-    _ExpectAux__eq_in__all_operators(EqValid_ExxRaise, other, _EXPECTED[4], *args)
+    _ExpectAux__eq_in__all_operators(EqValid_ExcRaise, other, _EXPECTED[4], *args)
 
 
 # =====================================================================================================================
@@ -381,7 +381,7 @@ def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
         ((r"\d", r"\d\d", ), 1, (False, True, False, True)),
 
         ((r"\d\d",), LAMBDA_RAISE, (False, False, True, True)),
-        ((r"\d\d",), LAMBDA_EXX, (False, False, True, True)),
+        ((r"\d\d",), LAMBDA_EXC, (False, False, True, True)),
 
         ((r"true",), "Tr", (False, False, True, True)),
         ((r"true",), "True", (True, True, False, False)),

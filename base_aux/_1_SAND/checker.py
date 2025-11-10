@@ -28,7 +28,7 @@ class ValidAttr:
             self._VALIDATOR = validator
 
     def check(self, value: Callable[..., Any] | Any) -> AttrKit_Blank:
-        value = Lambda(value).resolve__exx()
+        value = Lambda(value).resolve__exc()
 
         result = {}
 
@@ -42,8 +42,8 @@ class ValidAttr:
                     result_validate = self._VALIDATOR.run(value, *ArgsKwargs.ARGS, **ArgsKwargs.KWARGS)
                 else:   # Any
                     result_validate = attr_value == value
-            except Exception as exx:
-                result_validate = exx
+            except Exception as exc:
+                result_validate = exc
 
             result.update({name: result_validate})
         return AttrKit_Blank(**result)

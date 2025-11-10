@@ -102,7 +102,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
             if isinstance(index, int):
                 if index in result:
                     msg = f"{index=} from {result=}"
-                    raise Exx__Overlayed(msg)
+                    raise Exc__Overlayed(msg)
                 result.update({index: attr})
                 index_last = index
 
@@ -118,7 +118,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
                 for key, value in result_sub_dict.items():
                     if key in result:
                         msg = f"{key=} from {result_sub_dict=}"
-                        raise Exx__Overlayed(msg)
+                        raise Exc__Overlayed(msg)
                     result.update({key: value})
                     index_last = key
 
@@ -139,7 +139,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
                     return name
 
         msg = f"{item=}"
-        raise Exx__NotExistsNotFoundNotCreated(msg)
+        raise Exc__NotExistsNotFoundNotCreated(msg)
 
     def __contains__(self, item: Union[int, str]) -> bool:
         """
@@ -160,7 +160,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
 
             if index != index_prev + 1:
                 msg = f"raise_if_index_skipped {index=}/{index_prev=}"
-                raise Exx__NotExistsNotFoundNotCreated(msg)
+                raise Exc__NotExistsNotFoundNotCreated(msg)
             index_prev = index
 
 

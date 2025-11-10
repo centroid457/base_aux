@@ -8,10 +8,10 @@ from base_aux.base_values.m4_primitives import *
     argnames="source, args, _EXPECTED",
     argvalues=[
         (Exception, (), (False, True,
-                         Exception, Exception, Exception, False, VALUE_SPECIAL.SKIPPED, Exception)),  # be careful here! exx in source return exx NO RAISE!!!!
+                         Exception, Exception, Exception, False, VALUE_SPECIAL.SKIPPED, Exception)),  # be careful here! exc in source return exc NO RAISE!!!!
         (Exception(), (), (False, True,
                 Exception, Exception, Exception, False, Exception, Exception)),
-        (LAMBDA_EXX, (), (False, True,
+        (LAMBDA_EXC, (), (False, True,
                           Exception, Exception, Exception, False, VALUE_SPECIAL.SKIPPED, Exception)),
         (LAMBDA_RAISE, (), (True, False,
                             Exception, None, Exception, False, VALUE_SPECIAL.SKIPPED, VALUE_SPECIAL.SKIPPED)),
@@ -63,7 +63,7 @@ def test__get_result(source, args, _EXPECTED):
     Lambda(Lambda(source, *args).check_no_raise).expect__check_assert(_EXPECTED[1])
     Lambda(Lambda(source, *args).resolve__raise).expect__check_assert(_EXPECTED[2])
     Lambda(Lambda(source, *args).resolve__raise_as_none).expect__check_assert(_EXPECTED[3])
-    Lambda(Lambda(source, *args).resolve__exx).expect__check_assert(_EXPECTED[4])
+    Lambda(Lambda(source, *args).resolve__exc).expect__check_assert(_EXPECTED[4])
     Lambda(Lambda(source, *args).resolve__bool).expect__check_assert(_EXPECTED[5])
     Lambda(Lambda(source, *args).resolve__skip_callables).expect__check_assert(_EXPECTED[6])
     Lambda(Lambda(source, *args).resolve__skip_raised).expect__check_assert(_EXPECTED[7])

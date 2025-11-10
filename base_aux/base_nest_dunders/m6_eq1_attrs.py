@@ -11,7 +11,7 @@ class NestEq_AttrsNotPrivate:
     LOGIC
     -----
     cmp first - direct callables
-    cmp second - resolveExx!!!
+    cmp second - resolveExc!!!
     """
     def __eq__(self, other: Any) -> bool:
         # if isinstance() NestInit_AnnotsAttr_ByArgsKwargs == NestInit_AnnotsAttr_ByArgsKwargs:
@@ -29,8 +29,8 @@ class NestEq_AttrsNotPrivate:
                     continue
 
                 # 2=cmp callables --------      # TODO: use EnumAdj_CallResolveStyle.SKIPCALLABLES ???
-                value_self = Lambda(getattr, self, attr).resolve__exx()
-                value_other = Lambda(getattr, other, attr).resolve__exx()
+                value_self = Lambda(getattr, self, attr).resolve__exc()
+                value_other = Lambda(getattr, other, attr).resolve__exc()
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False
@@ -58,8 +58,8 @@ class NestEq_AttrsNotHidden:
                     continue
 
                 # 2=cmp callables --------      # TODO: use EnumAdj_CallResolveStyle.SKIPCALLABLES ???
-                value_self = Lambda(getattr, self, attr).resolve__exx()
-                value_other = Lambda(getattr, other, attr).resolve__exx()
+                value_self = Lambda(getattr, self, attr).resolve__exc()
+                value_other = Lambda(getattr, other, attr).resolve__exc()
 
                 if not EqAux(value_self).check_doubleside__bool(value_other):
                     return False

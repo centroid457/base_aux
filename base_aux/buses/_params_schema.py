@@ -40,7 +40,7 @@ class CmdSchema:
         if self.SCHEMA == NoValue:
             return str(value)
         else:
-            result = Lambda(self.SCHEMA, value).resolve__exx()
+            result = Lambda(self.SCHEMA, value).resolve__exc()
             return str(result)
 
 
@@ -95,7 +95,7 @@ class SerialServer_Example(SerialServer_Base):
         "FLOAT": 1.1,
 
         "CALL": time.time,
-        "EXX": time.strftime,
+        "EXC": time.strftime,
 
         "LIST": [0, 1, 2],
         "LIST_2": [[11]],

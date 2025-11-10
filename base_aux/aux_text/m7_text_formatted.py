@@ -82,9 +82,9 @@ class TextFormatted(
                 value = values_dict[name]
                 try:
                     value = type_i(value)
-                except Exception as exx:
+                except Exception as exc:
                     if self.RAISE_TYPES:
-                        raise exx
+                        raise exc
 
                 AttrAux_AnnotsAll(self.VALUES).sai__by_args_kwargs(**{name: value})
 
@@ -178,7 +178,7 @@ class TextFormatted(
             # values = [value.strip() for value in values]  # DONT DO STRIP!!!
             self.sai__values_args_kwargs(*values)
         else:
-            raise Exx__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
+            raise Exc__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
 
         print(self)
 

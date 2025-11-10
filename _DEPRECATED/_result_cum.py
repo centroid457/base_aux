@@ -14,7 +14,7 @@
 #
 #
 # # =====================================================================================================================
-# TYPE__RESULT_CUM_STEP = Union[bool, Any, "Valid"]     # DONT USE CALLABLES!!! Valid is most PREFIRED! specially in case of EXX!!
+# TYPE__RESULT_CUM_STEP = Union[bool, Any, "Valid"]     # DONT USE CALLABLES!!! Valid is most PREFIRED! specially in case of EXC!!
 # TYPE__RESULT_CUM_STEPS = Union[TYPE__RESULT_CUM_STEP, list[TYPE__RESULT_CUM_STEP]]
 #
 #

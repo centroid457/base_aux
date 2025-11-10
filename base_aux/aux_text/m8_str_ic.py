@@ -39,7 +39,7 @@ class StrIc(NestInit_Source):
         and after that you may be want toFix actual value
         """
         # resolve -----
-        self.SOURCE = Lambda(self.SOURCE).resolve__exx()
+        self.SOURCE = Lambda(self.SOURCE).resolve__exc()
         self.SOURCE = str(self.SOURCE)
 
         # restyle ------

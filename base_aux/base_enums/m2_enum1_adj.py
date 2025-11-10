@@ -40,7 +40,7 @@ class EnumAdj_Where3(NestEq_EnumAdj):
 # =====================================================================================================================
 class EnumAdj_CallResolveStyle(NestEq_EnumAdj):
     DIRECT = 1
-    EXX = 2
+    EXC = 2
     RAISE = 3
     RAISE_AS_NONE = 4
     BOOL = 5
@@ -61,7 +61,7 @@ class EnumAdj_ReturnOnRaise(NestEq_EnumAdj):
     """
     RAISE = 1
     NONE = 2
-    EXX = 3
+    EXC = 3
 
 
 # =====================================================================================================================

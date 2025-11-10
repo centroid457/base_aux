@@ -10,7 +10,7 @@ class TestCase(Base_TestCase):
     DESCRIPTION = "test TC_inst startup fail"
 
     # RUN -------------------------------------------------------------------------------------------------------------
-    def startup__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def startup__wrapped(self) -> TYPING__RESULT_W_EXC:
         return False
 
 

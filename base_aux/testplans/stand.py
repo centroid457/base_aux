@@ -234,7 +234,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=0\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=0\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "1": {
         "TC_NAME": "",
@@ -259,7 +259,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=1\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=1\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "2": {
         "TC_NAME": "",
@@ -284,7 +284,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=2\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=2\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "3": {
         "TC_NAME": "",
@@ -309,7 +309,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=3\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=3\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "4": {
         "TC_NAME": "",
@@ -334,7 +334,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=4\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=4\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "5": {
         "TC_NAME": "",
@@ -359,7 +359,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=5\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=5\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "6": {
         "TC_NAME": "",
@@ -384,7 +384,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=6\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=6\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "7": {
         "TC_NAME": "",
@@ -409,7 +409,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=7\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=7\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "8": {
         "TC_NAME": "",
@@ -434,7 +434,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=8\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=8\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       },
       "9": {
         "TC_NAME": "",
@@ -459,7 +459,7 @@ some example
         "tc_details": {},
         "result__teardown": false,
         "timestamp_stop": null,
-        "log": "INDEX=9\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexx=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
+        "log": "INDEX=9\nDUT_SN=None\nDUT_ADDRESS=Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID\ntc_skip_dut=None\nTC_NAME=\nTC_GROUP=Atc260\nTC_DESCRIPTION=[Atc260,ExtOff,HvOn,PsOn]\nграница включения - верхняя (OFF)\nTC_ASYNC=True\nTC_SKIP=None\nSETTINGS=====================\nINFO_STR__ADD_ATTRS===========\nATC_VOUT:260\nPTB_SET_EXTON:False\nPTB_SET_HVON:True\nPTB_SET_PSON:True\nPROGRESS=====================\nSTATE_ACTIVE__CLS=EnumAdj_ProcessStateActive.NONE\ntimestamp_start=None\ntimestamp_stop=None\nexc=None\n------------------------------------------------------------\nresult__startup=None\nresult=None\nresult__teardown=None\n------------------------------------------------------------\nDETAILS=====================\n"
       }
     }
   }

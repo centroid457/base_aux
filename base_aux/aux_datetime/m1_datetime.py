@@ -146,7 +146,7 @@ class DateTimeAux(NestCmp_LGET, NestRepr__ClsName_SelfStr):
         elif isinstance(source, self.__class__):
             self.SOURCE = source.SOURCE
         else:
-            raise Exx__Incompatible(f"{source=}")
+            raise Exc__Incompatible(f"{source=}")
 
     @staticmethod
     def parse_str(source: str, _raise: bool = None) -> TYPE__DT_FINAL | None | NoReturn:
@@ -169,7 +169,7 @@ class DateTimeAux(NestCmp_LGET, NestRepr__ClsName_SelfStr):
                 result = ""
 
         if not result and _raise:
-            raise Exx__Incompatible(f"{source=}")
+            raise Exc__Incompatible(f"{source=}")
         return result
 
     # -----------------------------------------------------------------------------------------------------------------

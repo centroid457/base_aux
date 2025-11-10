@@ -98,9 +98,9 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         try:
             column_name = self.COLUMN_SETINGS.key__get_original(item)
             return self.DF[column_name]
-        except Exception as exx:
-            Warn(f"{item=}/{exx!r}")
-            raise exx
+        except Exception as exc:
+            Warn(f"{item=}/{exc!r}")
+            raise exc
 
     # -----------------------------------------------------------------------------------------------------------------
     def init_post(self) -> None:
@@ -143,8 +143,8 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
         try:
             if len_source < self.HISTORY_ENOUGH_THRESH:
                 Warn(f"{len_source=}/{self.HISTORY_ENOUGH_THRESH=}")
-        except Exception as exx:
-            Warn(f"{len_source=}/{exx!r}")
+        except Exception as exc:
+            Warn(f"{len_source=}/{exc!r}")
 
     def _init_post2__calculate_ta(self) -> None:
         """

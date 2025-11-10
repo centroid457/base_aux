@@ -199,8 +199,8 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
     def check__wo_raise(cls, *args, **kwargs) -> TYPING.RESULT__BOOL_NONE:
         try:
             return cls.check__w_raise(*args, **kwargs)
-        except Exception as exx:
-            print(f"{exx!r}")
+        except Exception as exc:
+            print(f"{exc!r}")
             return False
 
     @classmethod
@@ -261,13 +261,13 @@ class Base_ReqCheckStr(metaclass=Meta_GetattrClassmethod):
         # FINAL --------------
         if _meet_true is True and result is None:
             msg = f"[WARN] value is not MeetTrue [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
-            raise Exx__Expected(msg)
+            raise Exc__Expected(msg)
 
         if result in (True, None):
             return result
         else:
             msg = f"[WARN] value is not [{cls.__name__}/{cls._value_actual=}/req={value_acceptance}]"
-            raise Exx__Expected(msg)
+            raise Exc__Expected(msg)
 
 
 # =====================================================================================================================

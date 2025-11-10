@@ -21,7 +21,7 @@ class Test:
         assert victim.last_cmd == CMD_PING_1
         assert victim.last_finished is True
 
-        assert victim.last_exx_timeout is None
+        assert victim.last_exc_timeout is None
         assert bool(victim.last_stdout) is True
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode == 0
@@ -72,7 +72,7 @@ class Test:
         assert victim.last_cmd == CMD_PING_2
         assert victim.last_finished is True
 
-        assert victim.last_exx_timeout is None
+        assert victim.last_exc_timeout is None
         assert bool(victim.last_stdout) is True
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode == 0
@@ -120,26 +120,26 @@ class Test:
         assert victim.last_cmd == CMD_PING_1
         assert victim.last_finished is True
 
-        assert victim.last_exx_timeout is None
+        assert victim.last_exc_timeout is None
         assert bool(victim.last_stdout) is True
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode == 0
         assert victim.last_finished_success
 
-    def test__exx_timeout(self):
+    def test__exc_timeout(self):
         victim = CliUser()
 
         assert not victim.send(CMD_PING_2, timeout=0.1)
         assert victim.last_cmd == CMD_PING_2
         assert victim.last_finished is True
 
-        assert isinstance(victim.last_exx_timeout, Exx_CliTimeout)
+        assert isinstance(victim.last_exc_timeout, Exc_CliTimeout)
         # assert bool(victim.last_stdout) is False
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode is None
         assert not victim.last_finished_success
 
-    def test__exx_not_exists(self):
+    def test__exc_not_exists(self):
         victim = CliUser()
 
         cmd_line = "ping123"
@@ -147,21 +147,21 @@ class Test:
         assert victim.last_cmd == cmd_line
         assert victim.last_finished is True
 
-        assert victim.last_exx_timeout is None
+        assert victim.last_exc_timeout is None
         # assert bool(victim.last_stdout) is False
         assert bool(victim.last_stderr) is True
         assert victim.last_retcode not in [0, None]
         assert not victim.last_finished_success
 
-    def test__exx_cli_available(self):
+    def test__exc_cli_available(self):
         # one cmd ------------------------------------------------
         class CliUserForAvailable(CliUser):
             CMDS_REQUIRED = {"ping123": None, }
 
         try:
             victim = CliUserForAvailable()
-        except Exception as exx:
-            assert isinstance(exx, Exx_CliNotAvailable)
+        except Exception as exc:
+            assert isinstance(exc, Exc_CliNotAvailable)
 
         # two cmd ------------------------------------------------
         class CliUserForAvailable(CliUser):

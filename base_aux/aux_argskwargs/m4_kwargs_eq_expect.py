@@ -68,9 +68,9 @@ class Base_KwargsEqExpect:
             try:
                 self.OTHER_FINAL = Lambda(self.OTHER_DRAFT).resolve__raise()
                 self.OTHER_RAISED = False
-            except Exception as exx:
+            except Exception as exc:
                 self.OTHER_RAISED = True
-                self.OTHER_FINAL = exx
+                self.OTHER_FINAL = exc
         else:
             self.OTHER_FINAL = self.OTHER_DRAFT
 
@@ -108,7 +108,7 @@ class Base_KwargsEqExpect:
 
             if name not in self.EQ_KWARGS:
                 msg = f"{name=} not in {self.EQ_KWARGS=}"
-                raise Exx__WrongUsage(msg)
+                raise Exc__WrongUsage(msg)
 
             if expect is not None:
                 result_i = Lambda(

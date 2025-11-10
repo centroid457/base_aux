@@ -147,7 +147,7 @@ self.last_stdout=
 --------------------------------------------------
 self.last_stderr=
 --------------------------------------------------
-self.last_exx_timeout=None
+self.last_exc_timeout=None
 ==================================================
 
 
@@ -170,7 +170,7 @@ self.last_stdout=
 --------------------------------------------------
 self.last_stderr=
 --------------------------------------------------
-self.last_exx_timeout=None
+self.last_exc_timeout=None
 ==================================================
 
 
@@ -201,7 +201,7 @@ self.last_stdout=
 --------------------------------------------------
 self.last_stderr=
 --------------------------------------------------
-self.last_exx_timeout=None
+self.last_exc_timeout=None
 ==================================================
 
 
@@ -251,7 +251,7 @@ self.last_stderr=
         |'hint: See above for details.'
         |''
 --------------------------------------------------
-self.last_exx_timeout=None
+self.last_exc_timeout=None
 ==================================================
 """
         # LIST -----------------------------------------------
@@ -354,7 +354,7 @@ self.last_stderr=
         |"TypeError: canonicalize_version() got an unexpected keyword argument 'strip_trailing_zero'"
         |''
 --------------------------------------------------
-self.last_exx_timeout=None
+self.last_exc_timeout=None
 ==================================================
 [ERROR] cmd_item=('python -m build --sdist -n', 60) in full sequence cmd=[('python -m build --sdist -n', 60), ('python -m build --wheel -n', 60), ('twine upload dist/*', 90)]
 
@@ -656,20 +656,20 @@ self.last_exx_timeout=None
             print(f"[not exists]{path=}")
             return []   # or raise?
 
-        file_exx = None
+        file_exc = None
         result_for_file = []
         try:
             filetext = path.read_text(encoding="utf8")
             result_for_file = cls.parse_import_modules__txt(text=filetext, patterns=patterns)
-        except Exception as exx:
-            file_exx = exx
+        except Exception as exc:
+            file_exc = exc
 
-        if (result_for_file or print_empty_files) or file_exx:
+        if (result_for_file or print_empty_files) or file_exc:
             print(f"{path}".ljust(80, "-"))
-            if not file_exx:
+            if not file_exc:
                 print(f"\t{result_for_file}")
             else:
-                print(f"\t{file_exx}")
+                print(f"\t{file_exc}")
         return result_for_file
 
     # -----------------------------------------------------------------------------------------------------------------

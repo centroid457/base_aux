@@ -3,7 +3,7 @@ from base_aux.path1_dir.m2_dir import *
 
 
 try:
-    import git  # GITPYTHON # need try statement! if not installed git.exe raise Exx even if module was setup!!!
+    import git  # GITPYTHON # need try statement! if not installed git.exe raise Exc even if module was setup!!!
 except:
     print(f"[git.ERROR] is not setup in OS")
 
@@ -52,8 +52,8 @@ class Git(DirAux):
                 else:
                     self.DIRPATH = parent
                     continue
-            except Exception as exx:
-                print(f"[git.WARN] unexpected {exx!r}")
+            except Exception as exc:
+                print(f"[git.WARN] unexpected {exc!r}")
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_installed(self) -> bool:
@@ -69,8 +69,8 @@ class Git(DirAux):
         try:
             import git
             return True
-        except Exception as exx:
-            print(f"[git.WARN] setup git! {exx!r}")
+        except Exception as exc:
+            print(f"[git.WARN] setup git! {exc!r}")
             return False
 
     def check_detected(self) -> bool:
@@ -156,8 +156,8 @@ class Git(DirAux):
         if self.check_detected():
             try:
                 result = self.REPO.active_branch.name
-            except Exception as exx:
-                msg = f"[GIT] DETACHED HEAD - you work not on last commit on brange! {exx!r}"
+            except Exception as exc:
+                msg = f"[GIT] DETACHED HEAD - you work not on last commit on brange! {exc!r}"
                 print(msg)
                 result = "*DETACHED_HEAD*"
             return result

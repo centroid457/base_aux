@@ -34,7 +34,7 @@ class Test__Tp:
 
         assert not victim.result
         assert not victim.details
-        assert not victim.exx
+        assert not victim.exc
 
         # TODO: FINISH!
         # TODO: FINISH!

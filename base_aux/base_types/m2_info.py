@@ -191,16 +191,16 @@ class ObjectInfo:
             attr_is_method: bool = False
             try:
                 value = getattr(self.SOURCE, name)
-            except Exception as exx:
-                self.STATE.PROPERTIES__EXX.update({name: exx})
+            except Exception as exc:
+                self.STATE.PROPERTIES__EXC.update({name: exc})
                 continue
 
             if callable(value):
                 attr_is_method = True
                 try:
                     value = value()
-                except Exception as exx:
-                    self.STATE.METHODS__EXX.update({name: exx})
+                except Exception as exc:
+                    self.STATE.METHODS__EXC.update({name: exc})
                     continue
 
             # print(f"{name=}/{attr_obj=}/type={type(attr_obj)}/elementary={isinstance(attr_obj, TYPES.ELEMENTARY)}")
@@ -274,8 +274,8 @@ class ObjectInfo:
         # -------------------------------
         try:
             block_value = f"{value}"
-        except Exception as exx:
-            block_value = f"{exx!r}"
+        except Exception as exc:
+            block_value = f"{exc!r}"
 
         if isinstance(value, ItemKeyValue):
             block_type = f"{value.KEY}:{value.VALUE}"
@@ -296,8 +296,8 @@ class ObjectInfo:
             if name and str(value) != repr(value) and str(value) != str(block_value) and not TypeAux(value).check__exception():
                 # additional print repr()
                 self._print_line__name_type_value(name=None, type_replace="__repr()", value=repr(value))
-        except Exception as exx:
-            print(f"{exx!r}")
+        except Exception as exc:
+            print(f"{exc!r}")
             pass
 
         # return result
@@ -310,18 +310,18 @@ class ObjectInfo:
 
         try:
             print(f"str(SOURCE)={str(self.SOURCE)}")
-        except Exception as exx:
-            print(f"str(SOURCE)={exx!r}")
+        except Exception as exc:
+            print(f"str(SOURCE)={exc!r}")
 
         try:
             print(f"repr(SOURCE)={repr(self.SOURCE)}")
-        except Exception as exx:
-            print(f"repr(SOURCE)={exx!r}")
+        except Exception as exc:
+            print(f"repr(SOURCE)={exc!r}")
 
         try:
             print(f"type(SOURCE)={type(self.SOURCE)}")
-        except Exception as exx:
-            print(f"type(SOURCE)={exx!r}")
+        except Exception as exc:
+            print(f"type(SOURCE)={exc!r}")
 
         try:
             mro = self.SOURCE.__class__.__mro__
@@ -351,8 +351,8 @@ class ObjectInfo:
         try:
             if len(str(value)) <= self.MAX_LINE_LEN:
                 return
-        except Exception as exx:
-            print(f"{exx!r}")
+        except Exception as exc:
+            print(f"{exc!r}")
             return
 
         # COLLECTION -----------------------------------------------------------------------------
@@ -376,7 +376,7 @@ class ObjectInfo:
                         break
                     self._print_line__name_type_value(name=None, value=ItemKeyValue(item_key, item_value))
 
-        # SINGLE/EXX/OBJECTS ---------------------------------------------------------------------
+        # SINGLE/EXC/OBJECTS ---------------------------------------------------------------------
         if any([
             TypeAux(value).check__elementary_single(),
             TypeAux(value).check__exception(),

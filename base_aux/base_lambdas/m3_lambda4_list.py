@@ -57,7 +57,7 @@ class LambdaListThread(QThread):
         self.wait_finished()
 
         for item in self.LAMBDAS:
-            if item.EXX is not None:
+            if item.EXC is not None:
                 return True
             else:
                 return False

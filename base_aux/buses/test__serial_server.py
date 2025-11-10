@@ -80,7 +80,7 @@ class Test__SerialServer_NoConnection:
             float(victim._cmd__(CmdArgsKwargsParser("call")))
         except:
             assert False
-        assert victim._cmd__(CmdArgsKwargsParser("exx")) == AnswerVariants.ERR__PARAM_CALLING
+        assert victim._cmd__(CmdArgsKwargsParser("exc")) == AnswerVariants.ERR__PARAM_CALLING
 
         assert victim._cmd__(CmdArgsKwargsParser("list")) == "[0, 1, 2]"
         assert victim._cmd__(CmdArgsKwargsParser("_set")) == "{0, 1, 2}"

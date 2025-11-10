@@ -15,10 +15,10 @@ class PrivateJson(PrivateBase):
         """
         try:
             json_data = json.loads(self._text)
-        except Exception as exx:
-            msg = f"[CRITICAL] incorrect format file!\n{exx!r}"
+        except Exception as exc:
+            msg = f"[CRITICAL] incorrect format file!\n{exc!r}"
             print(msg)
-            raise exx
+            raise exc
 
         if self.SECTION:
             json_data = json_data.get(self.SECTION)

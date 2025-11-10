@@ -71,14 +71,14 @@ class EqValid_NotRaise(Base_EqValid):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Exx(Base_EqValid):
-    VALIDATOR = Validators.Exx
+class EqValid_Exc(Base_EqValid):
+    VALIDATOR = Validators.Exc
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ExxRaise(Base_EqValid):
-    VALIDATOR = Validators.ExxRaise
+class EqValid_ExcRaise(Base_EqValid):
+    VALIDATOR = Validators.ExcRaise
 
 
 # =====================================================================================================================

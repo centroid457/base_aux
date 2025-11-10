@@ -134,9 +134,9 @@ class Base_EqValid(NestCall_Resolve):
             try:
                 self.OTHER_FINAL = Lambda(other_draft, *other_args, **other_kwargs).resolve__raise()
                 self.OTHER_RAISED = False
-            except Exception as exx:
+            except Exception as exc:
                 self.OTHER_RAISED = True
-                self.OTHER_FINAL = exx
+                self.OTHER_FINAL = exc
         else:
             self.OTHER_FINAL = other_draft
             # self.OTHER_RAISED = False     # DONT PLACE HERE!!!

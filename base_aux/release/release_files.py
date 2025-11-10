@@ -327,7 +327,7 @@ class ReleaseHistory(ReleaseFileBase):
         self.load__last_news()
         if not self.check__new_release__is_correct():
             msg = f"Incorrect new data (INCREASE VERSION or CHANGE NEWS)"
-            raise Exx__WrongUsage_YouForgotSmth(msg)
+            raise Exc__WrongUsage_YouForgotSmth(msg)
 
         # WRITE ----------------------------------------
         self._file_clear()

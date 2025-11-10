@@ -451,8 +451,8 @@ class TextAux:
         try:
             result = json.loads(self.TEXT)
             return result
-        except Exception as exx:
-            print(f"{exx!r}")
+        except Exception as exc:
+            print(f"{exc!r}")
             return NoValue
 
     def parse__object_stringed(self) -> TYPING.JSON_ANY | NoValue:
@@ -499,8 +499,8 @@ class TextAux:
         try:
             ini.read_string(self.TEXT)
             return ini.to_dict()
-        except Exception as exx:
-            msg = f"incorrect file!{exx!r}"
+        except Exception as exc:
+            msg = f"incorrect file!{exc!r}"
             print(msg)
             return
 

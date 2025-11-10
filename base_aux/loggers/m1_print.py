@@ -63,7 +63,7 @@ class Warn(
     GOAL
     ----
     when you dont want to use logger and raise error (by now).
-    print msg in some inner functions when raising Exx after inner function return False.
+    print msg in some inner functions when raising Exc after inner function return False.
 
     SPECIALLY CREATED FOR
     ---------------------

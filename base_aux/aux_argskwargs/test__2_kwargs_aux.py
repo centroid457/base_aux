@@ -33,7 +33,7 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import *
         # CALLABLES --------------
         (LAMBDA_TRUE, (LAMBDA_TRUE,)),
         (LAMBDA_NONE, (LAMBDA_NONE,)),
-        (LAMBDA_EXX, (LAMBDA_EXX,)),
+        (LAMBDA_EXC, (LAMBDA_EXC,)),
 
         (ClsGen, (ClsGen,)),
         (INST_GEN, (INST_GEN,)),

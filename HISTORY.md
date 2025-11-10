@@ -54,7 +54,7 @@
 - [Base_KwargsEqValid] deprecate old ReqCheckStr_Os  
 - [RaiseIf] move into ArgsAux + separate to ArgsBoolIf*  
 - [Version] combine VerChecker into Vertion!+add derivatives  
-- [Base_Exx] add autoPrint msg on init!  
+- [Base_Exc] add autoPrint msg on init!  
 - [TYPING] collect many fro other places  
 
 0.2.25(2025.03.27 13.31.43)
@@ -79,7 +79,7 @@
 - [alerts] ref to use deque+fix tlgrm +add Qtimer  
 - [mt] ref TimeSeries +move into nympyAux  
 - [nest] add NestCall_MethodName  
-- [lambda] ref to keep Result/Exx in object  
+- [lambda] ref to keep Result/Exc in object  
 - [Lambda] add Lambdalist +nest in threadItem  
 - [flake8] add exclude Deprecated+hidden dirs  
 - [serial] ref addresses_dump__answers quick threading   
@@ -146,7 +146,7 @@
 - [NestInit_AttrsLambdasResolve] use with Resolvers  
 - [Nest*_Attrs]:  
 	- separate all for Attrs Contains/Eq/Len/StR  
-	- [NestSAI_AttrAnycase] deprecate all Setattrs* cause recursion exx  
+	- [NestSAI_AttrAnycase] deprecate all Setattrs* cause recursion exc  
 - [EqValid]:  
 	- add EqValid_AnnotsAllExists  
 	- add EqValid_AttrsByObjNotPrivate*  
@@ -198,7 +198,7 @@
 ------------------------------
 - [EqValid] add EqValid_SingleNumParced  
 - [Nums] add NumParsedSingle  
-- [baseStatics] collect/move all in one place enums/exx/types/primitives  
+- [baseStatics] collect/move all in one place enums/exc/types/primitives  
 - [Init*/Nest*] apply naming Style for special classes  
 - [File/Dir] at last add and finish  
 - [File+Text] combine in one class  
@@ -381,7 +381,7 @@
 0.0.9 (2024/11/07 16:35:46)
 ------------------------------
 - [classes.Lambda] add LambdaTrySuccess/+Fail  
-- [classes.ClsException] add Base_Exx  
+- [classes.ClsException] add Base_Exc  
 
 0.0.8 (2024/11/06 19:01:54)
 ------------------------------
@@ -389,7 +389,7 @@
 
 0.0.7 (2024/11/06 17:05:21)
 ------------------------------
-- [classes.Lambda] add check_raise/*noRaise/*getResultOrExx  
+- [classes.Lambda] add check_raise/*noRaise/*getResultOrExc  
 
 0.0.6 (2024/11/06 15:56:06)
 ------------------------------

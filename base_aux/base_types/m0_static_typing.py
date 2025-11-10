@@ -62,14 +62,14 @@ class TYPING:
     # RESULT ----------------------------------------------------------------------------------------------------------
     RESULT__NONE = None
     RESULT__BOOL = bool
-    RESULT__EXX = Exception     # | type[Exception] - DONT USE typeExx! from any process Exception comes as instance!
+    RESULT__EXC = Exception     # | type[Exception] - DONT USE typeExc! from any process Exception comes as instance!
 
-    RESULT__ANY_EXX = Any | Exception
+    RESULT__ANY_EXC = Any | Exception
     RESULT__ANY_RAISE = Any | NoReturn
 
     RESULT__BOOL_NONE = bool | None
     RESULT__BOOL_RAISE = bool | NoReturn
-    RESULT__BOOL_EXX = bool | Exception
+    RESULT__BOOL_EXC = bool | Exception
     RESULT__RAISE_NONE = NoReturn | None
 
     RESULT__BOOL_RAISE_NONE = bool | NoReturn | None
@@ -83,11 +83,11 @@ class TYPING:
 
     CALLABLE__NONE = Callable[..., None]
     CALLABLE__BOOL = Callable[..., bool]
-    CALLABLE__EXX = Callable[..., Exception]
+    CALLABLE__EXC = Callable[..., Exception]
 
     CALLABLE__BOOL_NONE = Callable[..., bool | None]
     CALLABLE__BOOL_RAISE = Callable[..., bool | NoReturn]
-    CALLABLE__BOOL_EXX = Callable[..., bool | Exception]
+    CALLABLE__BOOL_EXC = Callable[..., bool | Exception]
     CALLABLE__RAISE_NONE = Callable[..., NoReturn | None]  # not expecting any bool! intended/inportant only raising as inappropriate position!
 
     CALLABLE__BOOL_RAISE_NONE = Callable[..., bool | NoReturn | None]

@@ -35,8 +35,8 @@ class Test_mt5:
         self.VICTIM.SYMBOL = "Нефть Brent 1234"
         try:
             victim = self.VICTIM()
-        except Exception as exx:
-            assert isinstance(exx, Exx__NotExistsNotFoundNotCreated)
+        except Exception as exc:
+            assert isinstance(exc, Exc__NotExistsNotFoundNotCreated)
         else:
             assert False
 

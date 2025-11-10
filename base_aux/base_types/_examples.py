@@ -61,11 +61,11 @@ self.MAX_ITER_ITEMS=5
 27:	__weakref__
 28:	attrBytes
 29:	attrCls
-30:	attrClsBoolExx
+30:	attrClsBoolExc
 31:	attrClsBoolFalse
 32:	attrClsBoolTrue
 33:	attrClsCall
-34:	attrClsCallExx
+34:	attrClsCallExc
 35:	attrClsCallTrue
 36:	attrClsGen
 37:	attrClsIterYield
@@ -74,17 +74,17 @@ self.MAX_ITER_ITEMS=5
 40:	attrFloat
 41:	attrFunc
 42:	attrFuncDict
-43:	attrFuncExx
+43:	attrFuncExc
 44:	attrFuncGen
 45:	attrFuncList
 46:	attrFuncTrue
 47:	attrGenCompr
 48:	attrInst
-49:	attrInstBooExx
+49:	attrInstBooExc
 50:	attrInstBoolFalse
 51:	attrInstBoolTrue
 52:	attrInstCall
-53:	attrInstCallExx
+53:	attrInstCallExc
 54:	attrInstCallTrue
 55:	attrInstGen
 56:	attrInstIterYield
@@ -103,12 +103,12 @@ self.MAX_ITER_ITEMS=5
 69:	attrUpper
 70:	attrZero
 71:	classmethodNone
-72:	methExx
+72:	methExc
 73:	methFunc
 74:	methInt
 75:	methNone
 76:	propertyClassmethodNone
-77:	propertyExx
+77:	propertyExc
 78:	propertyFunc
 79:	propertyInt
 80:	propertyNone
@@ -155,13 +155,13 @@ attrTuple           	tuple       :(1, 2, 3)
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
 attrGenCompr        	generator   :<generator object <genexpr> at 0x000001C74A47D780>
 attrInst            	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE35F0>
-attrInstBooExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
+attrInstBooExc      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
 attrInstBoolFalse   	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3770>
 attrInstBoolTrue    	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3740>
 attrInstGen         	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE3710>
 attrInstIterYield   	ClsIterYield:<pytest_aux.primitives.ClsIterYield object at 0x000001C74ACE36E0>
-----------PROPERTIES__EXX---------------------------------------------------------------------------
-propertyExx         	Exception   :Exception('exxMsg')
+----------PROPERTIES__Exc---------------------------------------------------------------------------
+propertyExc         	Exception   :Exception('ExcMsg')
 ----------METHODS__ELEMENTARY_SINGLE----------------------------------------------------------------
 __getstate__        	NoneType    :None
 __hash__            	int         :122198590432
@@ -192,17 +192,17 @@ attrFuncList        	list        :[<__main__.ClsMain object at 0x000001C739A83E0
 __class__           	ClsMain     :<__main__.ClsMain object at 0x000001C739C51A60>
 __subclasshook__    	NotImplementedType:NotImplemented
 attrCls             	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C739E91EB0>
-attrClsBoolExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE2690>
+attrClsBoolExc      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE2690>
 attrClsBoolFalse    	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE27E0>
 attrClsBoolTrue     	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE28D0>
 attrClsCall         	ClsCall     :<pytest_aux.primitives.ClsCall object at 0x000001C74ACE2990>
-attrClsCallExx      	ClsCallExx  :<pytest_aux.primitives.ClsCallExx object at 0x000001C74ACE2A50>
+attrClsCallExc      	ClsCallExc  :<pytest_aux.primitives.ClsCallExc object at 0x000001C74ACE2A50>
 attrClsCallTrue     	ClsCallTrue :<pytest_aux.primitives.ClsCallTrue object at 0x000001C74ACE2AE0>
 attrClsGen          	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE2B40>
 attrClsIterYield    	ClsIterYield:<pytest_aux.primitives.ClsIterYield object at 0x000001C74ACE2BA0>
 attrFuncGen         	generator   :<generator object FUNC_GEN at 0x000001C74ACCE740>
 methFunc            	function    :<function FUNC at 0x000001C74ACEA2A0>
-----------METHODS__EXX------------------------------------------------------------------------------
+----------METHODS__Exc------------------------------------------------------------------------------
 __eq__              	TypeError   :TypeError('expected 1 argument, got 0')
 __format__          	TypeError   :TypeError('ClsMain.__format__() takes exactly one argument (...
 __ge__              	TypeError   :TypeError('expected 1 argument, got 0')
@@ -211,9 +211,9 @@ __gt__              	TypeError   :TypeError('expected 1 argument, got 0')
 __le__              	TypeError   :TypeError('expected 1 argument, got 0')
 __lt__              	TypeError   :TypeError('expected 1 argument, got 0')
 __ne__              	TypeError   :TypeError('expected 1 argument, got 0')
-attrFuncExx         	Exception   :Exception('CALLABLE_EXX')
-attrInstCallExx     	Exception   :Exception()
-methExx             	Exception   :Exception('exxMsg')
+attrFuncExc         	Exception   :Exception('CALLABLE_EXC')
+attrInstCallExc     	Exception   :Exception()
+methExc             	Exception   :Exception('excMsg')
 ==========================================================================================
 """
 
@@ -271,12 +271,12 @@ attrTuple           	tuple       :(1, 2, 3)
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
 attrGenCompr        	generator   :<generator object <genexpr> at 0x000001C74A47D780>
 attrInst            	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE35F0>
-attrInstBooExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
+attrInstBooExc      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE37A0>
 attrInstBoolFalse   	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3770>
 attrInstBoolTrue    	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3740>
 attrInstGen         	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE3710>
 attrInstIterYield   	ClsIterYield:<pytest_aux.primitives.ClsIterYield object at 0x000001C74ACE36E0>
-----------PROPERTIES__EXX---------------------------------------------------------------------------
+----------PROPERTIES__EXC---------------------------------------------------------------------------
 ----------METHODS__ELEMENTARY_SINGLE----------------------------------------------------------------
 attrFunc            	NoneType    :None
 attrFuncTrue        	bool        :True
@@ -288,18 +288,18 @@ attrFuncDict        	dict        :{<__main__.ClsMain object at 0x000001C748B236B
 attrFuncList        	list        :[<__main__.ClsMain object at 0x000001C748B236B0>]
 ----------METHODS__OBJECTS--------------------------------------------------------------------------
 attrCls             	ClsEmpty    :<pytest_aux.primitives.ClsEmpty object at 0x000001C74ACE39E0>
-attrClsBoolExx      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE3A10>
+attrClsBoolExc      	ClsBoolRaise  :<pytest_aux.primitives.ClsBoolRaise object at 0x000001C74ACE3A10>
 attrClsBoolFalse    	ClsBoolFalse:<pytest_aux.primitives.ClsBoolFalse object at 0x000001C74ACE3A70>
 attrClsBoolTrue     	ClsBoolTrue :<pytest_aux.primitives.ClsBoolTrue object at 0x000001C74ACE3AA0>
 attrClsCall         	ClsCall     :<pytest_aux.primitives.ClsCall object at 0x000001C74ACE3AD0>
-attrClsCallExx      	ClsCallExx  :<pytest_aux.primitives.ClsCallExx object at 0x000001C74ACE3B00>
+attrClsCallExc      	ClsCallExc  :<pytest_aux.primitives.ClsCallExc object at 0x000001C74ACE3B00>
 attrClsCallTrue     	ClsCallTrue :<pytest_aux.primitives.ClsCallTrue object at 0x000001C74ACE3B30>
 attrClsGen          	ClsGen      :<pytest_aux.primitives.ClsGen object at 0x000001C74ACE3B60>
 attrClsIterYield    	ClsIterYield:<pytest_aux.primitives.ClsIterYield object at 0x000001C74ACE3B90>
 attrFuncGen         	generator   :<generator object FUNC_GEN at 0x000001C74ACCE8E0>
-----------METHODS__EXX------------------------------------------------------------------------------
+----------METHODS__EXC------------------------------------------------------------------------------
 __getattribute__    	TypeError   :TypeError('expected 1 argument, got 0')
-attrFuncExx         	Exception   :Exception('CALLABLE_EXX')
-attrInstCallExx     	Exception   :Exception()
+attrFuncExc         	Exception   :Exception('CALLABLE_EXC')
+attrInstCallExc     	Exception   :Exception()
 ==========================================================================================
 """

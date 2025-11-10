@@ -125,8 +125,8 @@ class ProcessorTextLog(File):     # starichenko
             with open(filepath, 'r', encoding='utf-8') as fo:
                 data = fo.read()
                 self.loglines_set(data.splitlines(keepends=False))
-        except Exception as exx:
-            msg = f"{exx!r}]"
+        except Exception as exc:
+            msg = f"{exc!r}]"
             UFU.logging_and_print_warning(msg)
             return []
 
@@ -158,8 +158,8 @@ class ProcessorTextLog(File):     # starichenko
             with open(filepath, "a" if append else "w", encoding='utf-8') as fo:
                 fo.writelines(map(self._logline_eol_ensure, data_list))
                 return True
-        except Exception as exx:
-            UFU.logging_and_print_warning(f'{exx!r}')
+        except Exception as exc:
+            UFU.logging_and_print_warning(f'{exc!r}')
 
     # READ/WRITE PART -------------------------------------------------------------------------------------------------
     def loglines_tail(self):  # starichenko

@@ -52,7 +52,7 @@
 #         for name in kwargs:
 #             if AttrAux_AnnotsLast(self).name_ic__get_original(name) is None:
 #                 msg = f"{name=} not in {self=}"
-#                 raise Exx__NotExistsNotFoundNotCreated(msg)
+#                 raise Exc__NotExistsNotFoundNotCreated(msg)
 #         AttrAux_AnnotsLast(self).sai__by_kwargs(**kwargs)
 #
 #         return self

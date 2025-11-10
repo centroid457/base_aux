@@ -17,7 +17,7 @@ class ThreadsDecorCollector(Singleton_CallMeta):
 
     GOAL
     ----
-    Manager for spawning threads and keep its instances with additional data (result/exx).
+    Manager for spawning threads and keep its instances with additional data (result/exc).
     Singleton! do you dont need saving instances!
 
     USAGE

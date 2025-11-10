@@ -48,7 +48,7 @@ class Client_RequestItem(Logger, Url, QThread):
     BODY: Optional[TYPE__REQUEST_BODY]
     # REQUEST: Optional[requests.Request]
     RESPONSE: Optional[requests.Response]
-    EXX: Union[None, requests.ConnectTimeout, Exception]
+    EXC: Union[None, requests.ConnectTimeout, Exception]
     TIMESTAMP: float
 
     # AUX ------------------------------------------
@@ -72,7 +72,7 @@ class Client_RequestItem(Logger, Url, QThread):
 
         self.BODY = body
         self.RESPONSE = None
-        self.EXX = None
+        self.EXC = None
         self.TIMESTAMP = 0
 
         # if url is None:
@@ -108,7 +108,7 @@ class Client_RequestItem(Logger, Url, QThread):
             return self.RESPONSE.ok
 
     def __str__(self) -> str:
-        return f"[{self.INDEX=}/len={self.__class__.INDEX+1}/{self.retry_index=}/{self.check_success()=}]{self.EXX=}/{self.RESPONSE=}"
+        return f"[{self.INDEX=}/len={self.__class__.INDEX+1}/{self.retry_index=}/{self.check_success()=}]{self.EXC=}/{self.RESPONSE=}"
 
     def __repr__(self) -> str:
         return str(self)
@@ -142,7 +142,7 @@ class Client_RequestItem(Logger, Url, QThread):
     def _send(self) -> None:
         self.TIMESTAMP = time.time()
         self.RESPONSE = None
-        self.EXX = None
+        self.EXC = None
 
         url = self.resolve()
 
@@ -152,8 +152,8 @@ class Client_RequestItem(Logger, Url, QThread):
                     self.RESPONSE = session.post(url=url, json=self.BODY or {}, timeout=self.TIMEOUT_SEND)
                 elif self.METHOD == ResponseMethod.GET:
                     self.RESPONSE = session.get(url=url, timeout=self.TIMEOUT_SEND)
-            except Exception as exx:
-                self.EXX = exx
+            except Exception as exc:
+                self.EXC = exc
 
         self.LOGGER.debug(self)
 
@@ -206,7 +206,7 @@ class Client_RequestsStack(Logger, QThread):
         if self.check_success():
             self.LOGGER.info(f"[STACK] is empty")
         else:
-            self.LOGGER.warning(f"[STACK] is stopped [at len={len(self.stack)}] by some errors [exx={self.request_active.EXX=}]")
+            self.LOGGER.warning(f"[STACK] is stopped [at len={len(self.stack)}] by some errors [exc={self.request_active.EXC=}]")
 
     def send(self, **kwargs) -> None:
         """

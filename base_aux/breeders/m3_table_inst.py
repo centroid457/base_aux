@@ -93,8 +93,8 @@ class TableLine:
     #     for inst in self.INSTS:
     #         try:
     #             result_i = getattr(inst, item)
-    #         except Exception as exx:
-    #             result_i = exx
+    #         except Exception as exc:
+    #             result_i = exc
     #
     #         result.append(result_i)
     #
@@ -124,8 +124,8 @@ class TableLine:
                 try:
                     inst_meth = getattr(inst, meth)
                     ints_result = inst_meth(*args, **kwargs)
-                except Exception as exx:
-                    ints_result = exx
+                except Exception as exc:
+                    ints_result = exc
             else:
                 ints_result = results[-1]
 
@@ -196,7 +196,7 @@ class TableKit:     # todo: add AttrsKit nesting???
                 setattr(self, name, value)
             else:
                 msg = f"{value=} is not TableLine type"
-                raise Exx__WrongUsage(msg)
+                raise Exc__WrongUsage(msg)
 
     def _init_count_columns(self) -> None:
         for name, line in self.items():
@@ -206,7 +206,7 @@ class TableKit:     # todo: add AttrsKit nesting???
         for name, line in self.items():
             if line.COUNT not in [self.COUNT_COLUMNS, 1]:
                 msg = f"{name=}/{line.COUNT=}/{self.COUNT_COLUMNS=}"
-                raise Exx__WrongUsage(msg)
+                raise Exc__WrongUsage(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __len__(self) -> int:
@@ -230,7 +230,7 @@ class TableKit:     # todo: add AttrsKit nesting???
             self._count_columns = new
         elif self._count_columns != new:
             msg = f"{new=}/{self.COUNT_COLUMNS=}"
-            raise Exx__WrongUsage(msg)
+            raise Exc__WrongUsage(msg)
 
     def size(self) -> tuple[int, int]:
         return len(self), self.COUNT_COLUMNS
@@ -256,7 +256,7 @@ class TableKit:     # todo: add AttrsKit nesting???
             return result
         else:
             msg = f"no TableLine item in LINES [{item=}]"
-            raise Exx__Addressing(msg)
+            raise Exc__Addressing(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
     def items(self) -> Iterable[tuple[str, TableLine]]:
@@ -331,11 +331,11 @@ class TableColumn:
 
         if not isinstance(self.LINES, TableKit):
             msg = f"{self.LINES=} is non type(TableKit)"
-            raise Exx__WrongUsage(msg)
+            raise Exc__WrongUsage(msg)
 
         if index + 1 > self.LINES.COUNT_COLUMNS:
             msg = f"{index=}/{self.LINES.COUNT_COLUMNS=}"
-            raise Exx__Addressing(msg)
+            raise Exc__Addressing(msg)
 
         self.INDEX = index
 

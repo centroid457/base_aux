@@ -13,7 +13,7 @@ class TestCase(Base_TcAtcPtb):
     _DESCRIPTION = "тест PmBus"
 
     # -----------------------------------------------------------------------------------------------------------------
-    def run__wrapped(self) -> TYPING__RESULT_W_EXX:
+    def run__wrapped(self) -> TYPING__RESULT_W_EXC:
         result_chain = ValidChains(
             chains=[
                 ValidNoCum(

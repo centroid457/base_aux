@@ -44,7 +44,7 @@ class NestInit_AnnotsAttr_ByArgsKwargs(NestInit_AnnotsAttr_ByArgs, NestInit_Anno
         - used for ANNOTS ONLY - used as values! not names!
         - inited first without Kwargs sense
         - if args less then annots - no matter
-        - if args more then annots - no matter+no exx
+        - if args more then annots - no matter+no exc
         - if kwargs use same keys - it will overwrite by kwargs (args set first)
     KWARGS
         - used for both annots/attrs (annots see first)

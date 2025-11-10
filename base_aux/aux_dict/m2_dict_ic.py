@@ -142,7 +142,7 @@ class DictIc_LockedKeys(DictIcKeys):
     def __setitem__(self, item: Any, value: Any) -> None:
         if item not in self:
             msg = f"[{self.__class__.__name__}]{item=}/{value=}"
-            raise Exx__WrongUsage(msg)
+            raise Exc__WrongUsage(msg)
 
         self.update({item: value})
 
@@ -155,7 +155,7 @@ class DictIc_LockedKeys(DictIcKeys):
             key_original = self.key__get_original(item)
             if key_original is NoValue:
                 msg = f"[{self.__class__.__name__}]{item=}/{value=}"
-                raise Exx__WrongUsage(msg)
+                raise Exc__WrongUsage(msg)
 
             super().update({key_original: value})
 

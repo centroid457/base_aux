@@ -10,7 +10,7 @@ class NestInit_AttrsLambdaResolve:
     GOAL
     ----
     if you need create object in classAttribute only on real inition of class
-    useful in case of raising exx on init, but you want to pass instance in class attribute with inplace initiation
+    useful in case of raising exc on init, but you want to pass instance in class attribute with inplace initiation
 
     REASON EXAMPLE
     --------------

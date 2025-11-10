@@ -22,7 +22,7 @@ class Valid:
     -----------
     1. Exceptions
     any exception is a special state!
-    so dont try to compare Exception with any real NoExx value or validate it in validator_link!
+    so dont try to compare Exception with any real NoExc value or validate it in validator_link!
     if expect exception just place it directly in Validator!
 
     2. Callables
@@ -69,8 +69,8 @@ class Valid:
     timestamp_last: datetime.datetime | None = None
     skip_last: TYPING.RESULT__BOOL = False
     STATE_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
-    value_last: TYPING.RESULT__ANY_EXX = None       # direct result value for calculating func value_link
-    validate_last: TYPING.RESULT__BOOL_EXX = True   # direct result value for calculating func validate_link === decide using only bool???
+    value_last: TYPING.RESULT__ANY_EXC = None       # direct result value for calculating func value_link
+    validate_last: TYPING.RESULT__BOOL_EXC = True   # direct result value for calculating func validate_link === decide using only bool???
     reverse_last: TYPING.RESULT__BOOL = None
     validate_last_bool: TYPING.RESULT__BOOL         # represented value for validation
     log_lines: list[str] = None
@@ -212,7 +212,7 @@ class Valid:
                 self.timestamp_last = datetime.datetime.now()
 
                 # VALUE ---------------------
-                self.value_last = Lambda(value_link, *self.ARGS__VALUE, **self.KWARGS__VALUE).resolve__exx()
+                self.value_last = Lambda(value_link, *self.ARGS__VALUE, **self.KWARGS__VALUE).resolve__exc()
 
                 # VALIDATE ------------------
                 if isinstance(self.value_last, Exception) and not TypeAux(self.VALIDATE_LINK).check__exception():
@@ -222,10 +222,10 @@ class Valid:
                     self.validate_last = TypeAux(self.value_last).check__nested__from_cls_or_inst(self.VALIDATE_LINK)
 
                 elif TypeAux(self.VALIDATE_LINK).check__callable_func_meth_inst():
-                    self.validate_last = Lambda(self.VALIDATE_LINK, self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE).resolve__exx()
+                    self.validate_last = Lambda(self.VALIDATE_LINK, self.value_last, *self.ARGS__VALIDATE, **self.KWARGS__VALIDATE).resolve__exc()
 
                 else:
-                    self.validate_last = EqAux(self.value_last).check_doubleside__exx(self.VALIDATE_LINK)
+                    self.validate_last = EqAux(self.value_last).check_doubleside__exc(self.VALIDATE_LINK)
 
                 # FINISH retry
                 if not self.VALIDATE_RETRY or retry_count == self.VALIDATE_RETRY or self.validate_last_bool:

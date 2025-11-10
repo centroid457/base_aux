@@ -207,7 +207,7 @@ class ValueUnit(ArithmApplyToAttr):
                 self.SEPARATOR = match[2] or ""
                 self.UNIT = match[3] or ""
             else:
-                raise Exx__NotExistsNotFoundNotCreated()
+                raise Exc__NotExistsNotFoundNotCreated()
 
             # UNIT_MULT ------------------
             if not self.UNIT_MULT__DISABLE:
@@ -269,7 +269,7 @@ class ValueUnit(ArithmApplyToAttr):
         # cmp units -----------
         if self.UNIT_BASE and other.UNIT_BASE and self.UNIT_BASE != other.UNIT_BASE:
             msg = f"{self!r}/{other!r}"
-            raise Exx__Incompatible(msg)
+            raise Exc__Incompatible(msg)
 
         # cmp -----------
         if self.VALUE_PURE == other.VALUE_PURE:

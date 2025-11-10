@@ -234,15 +234,15 @@ class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because 
 
         try:
             file_text = filepath.read_text(encoding="utf-8")
-        except Exception as exx:
-            msg = f"ERROR loading {filepath=}/{exx!r}"
+        except Exception as exc:
+            msg = f"ERROR loading {filepath=}/{exc!r}"
             print(msg)
             return
 
         try:
             json_dict = json.loads(file_text)
-        except Exception as exx:
-            msg = f'ERROR decoding Json {filepath=}/{exx!r}'
+        except Exception as exc:
+            msg = f'ERROR decoding Json {filepath=}/{exc!r}'
             print(msg)
             return
 
@@ -292,8 +292,8 @@ class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because 
         try:
             data_serialisable = self.json_get_serialisable(json_dict)
             data_text = json.dumps(data_serialisable, indent=4, ensure_ascii=False)
-        except Exception as exx:
-            msg = f'ERROR encoding {json_dict=}/{exx!r}'
+        except Exception as exc:
+            msg = f'ERROR encoding {json_dict=}/{exc!r}'
             print(msg)
             return
 
@@ -306,8 +306,8 @@ class ProcessorJsonDict(File):     # P*JsonDICT IS IMPORTANT IN NAME!!! because 
             print(f"{filepath=} dump", result)
             if result:
                 return True
-        except Exception as exx:
-            msg = f'ERROR dumping {filepath=}/{exx!r}'
+        except Exception as exc:
+            msg = f'ERROR dumping {filepath=}/{exc!r}'
             print(msg)
             return
 

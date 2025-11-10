@@ -25,7 +25,7 @@ class TextFile(FileAux, TextAux):
         if filepath is not None:
             self.FILEPATH = pathlib.Path(filepath)
         if self.check_exists() and not self.FILEPATH.is_file():
-            raise Exx__Incompatible(f"{self.FILEPATH=}")
+            raise Exc__Incompatible(f"{self.FILEPATH=}")
 
         if text is not None:
             self.TEXT = str(text)

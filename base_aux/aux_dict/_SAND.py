@@ -673,8 +673,8 @@ def dict_value_get_by_keypath(source: dict, keypath: Union[str, list]) -> Option
     try:
         for key in keypath:
             value_temp = value_temp[key]
-    except Exception as exx:
-        msg = f"no {keypath=} in {source=}\n{exx!r}"
+    except Exception as exc:
+        msg = f"no {keypath=} in {source=}\n{exc!r}"
         logging_and_print_warning(msg)
         return
 

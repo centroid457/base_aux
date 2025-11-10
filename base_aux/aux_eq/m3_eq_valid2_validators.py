@@ -101,7 +101,7 @@ class Validators:
         except:
             return False
 
-    # TODO: add FALSE????? what to do with exx and real false?
+    # TODO: add FALSE????? what to do with exc and real false?
 
     @staticmethod
     def Raise(self, other_final: Any) -> bool:
@@ -124,7 +124,7 @@ class Validators:
         return not self.OTHER_RAISED
 
     @staticmethod
-    def Exx(self, other_final: Any) -> bool:
+    def Exc(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -134,7 +134,7 @@ class Validators:
         return not self.OTHER_RAISED and TypeAux(other_final).check__exception()
 
     @staticmethod
-    def ExxRaise(self, other_final: Any) -> bool:
+    def ExcRaise(self, other_final: Any) -> bool:
         """
         GOAL
         ----
@@ -276,12 +276,12 @@ class Validators:
     def AttrsByKwargs(
             self,
             other_final,
-            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
             **kwargs: TYPING.KWARGS_FINAL
     ) -> bool | NoReturn:
         for key, value in kwargs.items():
-            value_expected = Lambda(value).resolve__style(EnumAdj_CallResolveStyle.EXX)
-            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
+            value_expected = Lambda(value).resolve__style(EnumAdj_CallResolveStyle.EXC)
+            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXC)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -292,13 +292,13 @@ class Validators:
     def AttrsByObj(
             self,
             other_final,
-            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+            # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
             source: Any,
             # attr_level: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE,
     ) -> bool | NoReturn:
         for key in AttrAux_Existed(source).iter__names_filter(self.ATTR_LEVEL):
-            value_expected = AttrAux_Existed(source).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
-            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXX)
+            value_expected = AttrAux_Existed(source).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXC)
+            value_other = AttrAux_Existed(other_final).gai_ic__callable_resolve(key, EnumAdj_CallResolveStyle.EXC)
             if not EqAux(value_expected).check_doubleside__bool(value_other):
                 return False
 
@@ -309,14 +309,14 @@ class Validators:
     # def AttrsByObjNotPrivate(
     #         self,
     #         other_final,
-    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
     #         source: Any,
     # ) -> bool | NoReturn:
     #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=EnumAdj_AttrScope.NOT_PRIVATE)
     # def AttrsByObjNotHidden(
     #         self,
     #         other_final,
-    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXX,
+    #         # callable_resolve: EnumAdj_CallResolveStyle = EnumAdj_CallResolveStyle.EXC,
     #         source: Any,
     # ) -> bool | NoReturn:
     #     return self._AttrsByObj(other_final=other_final, source=source, attr_level=EnumAdj_AttrScope.NOT_HIDDEN)

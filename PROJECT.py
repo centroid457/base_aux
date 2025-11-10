@@ -6,7 +6,8 @@ from base_aux.release.release_files import *
 # VERSION = (0, 0, 4)   # add AUTHOR_NICKNAME_GITHUB for badges
 # VERSION = (0, 0, 5)   # separate PROJECT_BASE #TODO: need to separate into module!
 # VERSION = (0, 0, 6)   # group Ver+News just place together
-VERSION = (0, 0, 7)     # move PRJBase into share +use Version
+# VERSION = (0, 0, 7)   # move PRJBase into share +use Version
+VERSION = (0, 0, 8)     # simply move info about Namings into separated file HELP_RULES
 
 
 # =====================================================================================================================
@@ -20,10 +21,6 @@ class PROJECT(PROJECT_BASE):
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
     DESCRIPTION_SHORT: str = "collect all my previous modules in one package"
     DESCRIPTION_LONG: str = """
-NAMING  
-1. Base_* - you can just simply using it by nesting!  
-2. Template_* - somtimes you cant apply Class as universal baseClass! so in such case this class created only as template.  
-and you should use it as template for creating your own class.
 """
     FEATURES: list[str] = [
         # "feat1",

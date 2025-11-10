@@ -25,19 +25,19 @@ def test__register():
     # --------------------------------
     try:
         Victim().raise_if__true()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
     try:
         Victim().raise_if__TRUE()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
     try:
         Victim().RAISE_IF__TRUE()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
@@ -66,7 +66,7 @@ def test__attr__static():
 
     try:
         Victim().raise_if__TRUE()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
@@ -79,7 +79,7 @@ def test__attr__static():
 
     try:
         Victim().raise_if_not__FALSE()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
@@ -90,7 +90,7 @@ def test__attr__static():
 
     try:
         Victim().raise_if_not__NONE()
-    except Exx__GetattrPrefix_RaiseIf:
+    except Exc__GetattrPrefix_RaiseIf:
         pass
     else:
         assert False
@@ -115,7 +115,7 @@ def test__meth_not_passed():
     argnames="args, _EXPECTED",
     argvalues=[
         (None, None),
-        (True, Exx__GetattrPrefix_RaiseIf),
+        (True, Exc__GetattrPrefix_RaiseIf),
         (False, None),
     ]
 )
@@ -127,9 +127,9 @@ def test___meth__raise_if(args, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, _EXPECTED",
     argvalues=[
-        (None, Exx__GetattrPrefix_RaiseIf),
+        (None, Exc__GetattrPrefix_RaiseIf),
         (True, None),
-        (False, Exx__GetattrPrefix_RaiseIf),
+        (False, Exc__GetattrPrefix_RaiseIf),
     ]
 )
 def test___meth__raise_if_not(args, _EXPECTED):
@@ -143,10 +143,10 @@ def test__comment():
     COMMENT_APPLYED = "COMMENT_APPLYED"
     try:
         Victim().raise_if__METH(True, COMMENT=COMMENT_APPLYED)
-    except Exx__GetattrPrefix_RaiseIf as exx:
-        print(exx)
-        # ObjectInfo(exx).print()
-        assert COMMENT_APPLYED in str(exx)
+    except Exc__GetattrPrefix_RaiseIf as exc:
+        print(exc)
+        # ObjectInfo(exc).print()
+        assert COMMENT_APPLYED in str(exc)
     else:
         assert False
 

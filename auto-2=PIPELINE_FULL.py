@@ -25,7 +25,7 @@ VERSION = (0, 0, 7)     # fix slashes
 # =====================================================================================================================
 if len(PROJECT.VERSION) > 3:
     msg = f"Dont use more then 3 blocks in {PROJECT.VERSION=} PYPI never accept it!"
-    raise Exx__WrongUsage(msg)
+    raise Exc__WrongUsage(msg)
 
 
 # =====================================================================================================================

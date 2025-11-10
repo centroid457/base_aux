@@ -29,8 +29,8 @@ class Sleep:
     def FALSE(self, *args, **kwargs) -> bool:
         return self.echo(echo=False, *args, **kwargs)
 
-    def EXX(self, *args, **kwargs) -> Exception:
-        return self.echo(echo=Exception("Sleep.EXX"), *args, **kwargs)
+    def EXC(self, *args, **kwargs) -> Exception:
+        return self.echo(echo=Exception("Sleep.EXC"), *args, **kwargs)
 
     def RAISE(self, *args, **kwargs) -> NoReturn:
         time.sleep(self.SEC)
