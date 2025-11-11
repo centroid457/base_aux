@@ -12,8 +12,11 @@
 and you should use it as template for creating your own class.  
 
 2. SPECIFIC parent/statics  
-   - Enum_* - Enum
-   - Data_* - dataclasses/STRUCTURES separated from execution logic
+   1. static - cant be switched into other BaseType 
+      - Enum_* - Enum
+   2. BaseType can be logically replaced in any type (so prefix need to be changed inconveniently!)  
+      - Data_* - dataclasses/STRUCTURES separated(!) from execution logic
+      - Nt_* - NamedTuple
 
 
 ********************************************************************************
