@@ -1,3 +1,4 @@
+import asyncio
 from typing import *
 import pathlib
 
@@ -99,6 +100,11 @@ class TYPING:
         type[Exception],  # direct comparison
         Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
     ]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    AIO_CORO = Callable[..., Awaitable[Any]]
+    AIO_TASK = asyncio.Task
+    AIO_AW = Awaitable[Any]
 
 
 # =====================================================================================================================

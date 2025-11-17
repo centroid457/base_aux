@@ -30,6 +30,7 @@ class TYPES:
     GOAL
     ----
     collect all types USEFUL variants
+    using in isinstance (single or tuple)
     """
     # SINGLE ---------------------------
     NONE: type = type(None)
