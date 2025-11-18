@@ -1,6 +1,7 @@
 import asyncio
 from typing import *
 import pathlib
+import collections
 
 from base_aux.base_values.m2_value_special import VALUE_SPECIAL
 from base_aux.base_types.m0_static_types import TYPES
@@ -102,7 +103,9 @@ class TYPING:
     ]
 
     # -----------------------------------------------------------------------------------------------------------------
-    AIO_CORO = Callable[..., Awaitable[Any]]
+    AIO_CORO__CALLABLE = Callable[..., Awaitable[Any]]
+    AIO_CORO__ABC = collections.abc.Coroutine[Any, Any, bool] | None    # as new version!
+
     AIO_TASK = asyncio.Task
     AIO_AW = Awaitable[Any]
 
