@@ -19,6 +19,7 @@
 # VERSION = (0, 0, 10)  # add installation note
 # VERSION = (0, 1, 0)   # combine all modules into one
 # VERSION = (0, 1, 1)   # add comments for Lincenses
+# VERSION = (0, 1, 2)   # add pytest-asyncio
 
 # ==========================
 # deploy -------------------
@@ -27,7 +28,8 @@ twine       #Apache2
 setuptools  #MIT
 
 # debug/test ---------------
-pytest      #MIT
+pytest          #MIT
+pytest-asyncio  #Apache2.0
 
 # SPECIAL ------------------
 numpy       #BSD
