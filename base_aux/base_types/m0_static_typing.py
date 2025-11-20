@@ -103,11 +103,23 @@ class TYPING:
     ]
 
     # -----------------------------------------------------------------------------------------------------------------
-    AIO_CORO__CALLABLE = Callable[..., Awaitable[Any]]
-    AIO_CORO__ABC = collections.abc.Coroutine[Any, Any, bool] | None    # as new version!
+    AIO_FUNC = Callable[..., Awaitable[Any]]                    # func defined with ASYNC key which result as AWAITABLE
+    AIO_CORO = collections.abc.Coroutine[Any, Any, bool | Any]  # as new version for typing
 
-    AIO_TASK = asyncio.Task
-    AIO_AW = Awaitable[Any]
+    AIO_TASK = asyncio.Task     # started Task in the loop
+    AIO_AW = Awaitable[Any]     # object
+    """
+    import asyncio
+    import types
+    
+    async def example():
+        pass
+    
+    print(type(example))           # <class 'function'>
+    print(type(example()))         # <class 'coroutine'>
+    print(isinstance(example, types.CoroutineType))  # False
+    print(isinstance(example(), types.CoroutineType)) # True
+    """
 
 
 # =====================================================================================================================
