@@ -49,8 +49,8 @@ from base_aux.base_values.m4_primitives import *
                 (), (), (), False, (), ())),
         ([], (), (False, True,
                 [], [], [], False, [], [])),
-        (LAMBDA_LIST_DIRECT, (), (False, True,
-                                  [], [], [], False, VALUE_SPECIAL.SKIPPED, [])),
+        (LAMBDA_LIST_KEYS, (), (False, True,
+                                [], [], [], False, VALUE_SPECIAL.SKIPPED, [])),
 
         ([None, ], (), (False, True,
                 [None, ], [None, ], [None, ], True, [None, ], [None, ])),

@@ -11,6 +11,7 @@ USEFUL IDEAS
 """
 # =====================================================================================================================
 from typing import *
+import asyncio
 
 
 # =====================================================================================================================
@@ -76,7 +77,9 @@ class VALUES_NOT_BLANK(VALUES_NOT_BLANK__ELEMENTARY_SINGLE, VALUES_NOT_BLANK__EL
 
 
 # =====================================================================================================================
-GEN_COMPR: Iterable = (i for i in range(3))
+COMPR_TUPLE_GEN: Generator = (i for i in range(3))
+COMPR_LIST: list = [i for i in range(3)]
+COMPR_DICT: dict = {i:i for i in range(3)}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -96,86 +99,129 @@ def FUNC_FALSE(*args, **kwargs) -> bool:
     return False
 
 
-def FUNC_ALL(*args, **kwargs) -> bool:
-    """
-    return all(args) and all(kwargs.values())
-
-    CREATED SPECIALLY FOR
-    ---------------------
-    funcs.Valid.run as tests
-    """
-    return all(args) and all(kwargs.values())
-
-
-def FUNC_ANY(*args, **kwargs) -> bool:
-    """
-    return any(args) or any(kwargs.values())
-
-    CREATED SPECIALLY FOR
-    ---------------------
-    funcs.Valid.run as tests
-    """
-    return any(args) or any(kwargs.values())
-
-
-def FUNC_LIST_DIRECT(*args, **kwargs) -> list[Any]:
-    """
-    DIRECT LIST() for Args+Kwargs
-
-    CREATED SPECIALLY FOR
-    ---------------------
-    funcs.Valid.get_bool as test variant
-
-    return list(args) + list(kwargs)
-    """
-    return list(args) + list(kwargs)
-
-
-def FUNC_LIST_VALUES(*args, **kwargs) -> list[Any]:
-    """
-    LIST() values for Args+Kwargs.values()
-
-    CREATED SPECIALLY FOR
-    ---------------------
-    funcs.Valid.get_bool as test variant
-
-    return list(args) + list(kwargs.values())
-    """
-    return list(args) + list(kwargs.values())
-
-
-def FUNC_DICT(*args, **kwargs) -> dict[Any, Any | None]:
-    """
-    DIRECT DICT() for Args+Kwargs
-
-    CREATED SPECIALLY FOR
-    ---------------------
-    funcs.Valid.get_bool as test variant
-
-    return like DICT(*args, **kwargs)
-    """
-    result = dict.fromkeys(args)
-    result.update(kwargs)
-    return result
-
-
 def FUNC_EXC(*args, **kwargs) -> Exception:
     return Exception("FUNC_EXC")
 
 
 def FUNC_RAISE(*args, **kwargs) -> NoReturn:
-    raise Exception("CALLABLE_RAISE")
+    raise Exception("FUNC_RAISE")
 
 
-def FUNC_GEN(*args, **kwargs) -> Generator:
-    yield from range(5)
-
-
-def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any | NoReturn:
+def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any:
     return echo
 
 
+def FUNC_GEN_KEYS(*args, **kwargs) -> Generator:
+    """
+    NOTE:
+        'KEYS' means
+            - args - used as keys,
+            - if result imply to use only one value from kwargs (like LIST) it will get he exact part KEYS,
+        'VALUES' means
+            - args - used as values,
+            - if result imply to use only one value from kwargs (like LIST) it will get he exact part VALUES,
+    """
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    yield from keys
+
+
+def FUNC_GEN_VALUES(*args, **kwargs) -> Generator:
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    yield from values
+
+
+def FUNC_ALL_VALUES(*args, **kwargs) -> bool:
+    """
+    CREATED SPECIALLY FOR
+    ---------------------
+    funcs.Valid.run as tests
+    """
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    return all(values)
+
+
+def FUNC_ANY_VALUES(*args, **kwargs) -> bool:
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    return any(values)
+
+
+def FUNC_LIST_KEYS(*args, **kwargs) -> list[Any]:
+    """
+    CREATED SPECIALLY FOR
+    ---------------------
+    funcs.Valid.get_bool as test variant
+    """
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    return keys
+
+
+def FUNC_LIST_VALUES(*args, **kwargs) -> list[Any]:
+    keys = [*args, *kwargs]
+    values = [*args, *kwargs.values()]
+    return values
+
+
+def FUNC_DICT_KEYS(*args, **kwargs) -> dict[Any, Any | None]:
+    result = dict.fromkeys(args)
+    result.update(kwargs)
+    return result
+
+
+def FUNC_DICT_VALUES(*args, **kwargs) -> dict[Any, Any | None]:
+    result = {f"_k{i}": arg for i, arg in zip(range(len(args)), args)}
+    result.update(kwargs)
+    return result
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+async def AIO_FUNC(*args, **kwargs) -> None:
+    pass
+
+
+async def AIO_FUNC_NONE(*args, **kwargs) -> None:
+    return None
+
+
+async def AIO_FUNC_TRUE(*args, **kwargs) -> bool:
+    return True
+
+
+async def AIO_FUNC_FALSE(*args, **kwargs) -> bool:
+    return False
+
+
+async def AIO_FUNC_EXC(*args, **kwargs) -> Exception:
+    return Exception("AIO_FUNC_EXC")
+
+
+async def AIO_FUNC_RAISE(*args, **kwargs) -> NoReturn:
+    raise Exception("AIO_FUNC_RAISE")
+
+
+async def AIO_FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any:
+    return echo
+
+
+# async def AIO_FUNC_GEN_KEYS(*args, **kwargs) -> Generator:
+#     keys = [*args, *kwargs]
+#     values = [*args, *kwargs.values()]
+#     yield from keys         # Python does not support 'yield from' inside async functions
+#
+#
+# async def AIO_FUNC_GEN_VALUES(*args, **kwargs) -> Generator:
+#     keys = [*args, *kwargs]
+#     values = [*args, *kwargs.values()]
+#     yield from values       # Python does not support 'yield from' inside async functions
+
+
 # =====================================================================================================================
+# AIO_LAMBDA_ARGS: Callable[..., tuple[Any, ...]] = async lambda *args: args        # Expression expected
+
 LAMBDA_ARGS: Callable[..., tuple[Any, ...]] = lambda *args: args        # used as resolve ARGS
 LAMBDA_KWARGS: Callable[..., dict[str, Any]] = lambda **kwargs: kwargs  # used as resolve KWARGS
 """
@@ -203,22 +249,25 @@ LAMBDA_FALSE: Callable[..., bool] = lambda *args, **kwargs: False
 LAMBDA_EXC: Callable[..., Exception] = lambda *args, **kwargs: Exception("LAMBDA_EXC")
 # LAMBDA_RAISE = lambda *args, **kwargs: raise Exception("LAMBDA_EXC")      # raise=SyntaxError: invalid syntax
 LAMBDA_RAISE: Callable[..., NoReturn] = lambda *args, **kwargs: FUNC_RAISE()
-# LAMBDA_GEN = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
-LAMBDA_GEN: Callable[..., Iterable[Any]] = lambda *args, **kwargs: FUNC_GEN()
+# LAMBDA_GEN_VALUES = lambda *args, **kwargs: yield from range(5)      # yield=SyntaxError: invalid syntax
+LAMBDA_GEN_VALUES: Callable[..., Iterable[Any]] = lambda *args, **kwargs: FUNC_GEN_VALUES()
 LAMBDA_ECHO: Callable[..., Any] = lambda echo, *args, **kwargs: echo
 
-LAMBDA_ALL: Callable[..., bool] = lambda *args, **kwargs: FUNC_ALL(*args, **kwargs)
-LAMBDA_ANY: Callable[..., bool] = lambda *args, **kwargs: FUNC_ANY(*args, **kwargs)
+LAMBDA_ALL_VALUES: Callable[..., bool] = lambda *args, **kwargs: FUNC_ALL_VALUES(*args, **kwargs)
+LAMBDA_ANY_VALUES: Callable[..., bool] = lambda *args, **kwargs: FUNC_ANY_VALUES(*args, **kwargs)
 
-LAMBDA_LIST_DIRECT = lambda *args, **kwargs: FUNC_LIST_DIRECT(*args, **kwargs)
+LAMBDA_LIST_KEYS = lambda *args, **kwargs: FUNC_LIST_KEYS(*args, **kwargs)
 LAMBDA_LIST_VALUES = lambda *args, **kwargs: FUNC_LIST_VALUES(*args, **kwargs)
-LAMBDA_DICT = lambda *args, **kwargs: FUNC_DICT(*args, **kwargs)
+
+LAMBDA_DICT_KEYS = lambda *args, **kwargs: FUNC_DICT_KEYS(*args, **kwargs)
+LAMBDA_DICT_VALUES = lambda *args, **kwargs: FUNC_DICT_VALUES(*args, **kwargs)
 
 
 # =====================================================================================================================
 class ClsException(Exception):
     pass
 INST_EXCEPTION = ClsException("Exception")
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # class ClsBool(bool):  # cant use it!
@@ -476,13 +525,13 @@ class ClsFullTypes:
 
     attrFunc = FUNC
     attrFuncTrue = FUNC_TRUE
-    attrFuncList = FUNC_LIST_DIRECT
-    attrFuncDict = FUNC_DICT
+    attrFuncList = FUNC_LIST_KEYS
+    attrFuncDict = FUNC_DICT_KEYS
     attrFuncExc = FUNC_EXC
     attrFuncRaise = FUNC_RAISE
-    attrFuncGen = FUNC_GEN
+    attrFuncGen = FUNC_GEN_VALUES
 
-    attrGenCompr = GEN_COMPR
+    attrGenCompr = COMPR_TUPLE_GEN
 
     attrCls = ClsEmpty
     attrInst = ClsEmpty()

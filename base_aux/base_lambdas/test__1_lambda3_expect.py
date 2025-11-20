@@ -86,7 +86,7 @@ def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
     ]
 )
 def test__func_list_direct(args, kwargs, _EXPECTED):
-    Lambda(LAMBDA_LIST_DIRECT, *args, **kwargs).expect__check_assert(_EXPECTED)
+    Lambda(LAMBDA_LIST_KEYS, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ def test__func_list_values(args, kwargs, _EXPECTED):
     ]
 )
 def test__func_dict(args, kwargs, _EXPECTED):
-    Lambda(LAMBDA_DICT, *args, **kwargs).expect__check_assert(_EXPECTED)
+    Lambda(LAMBDA_DICT_KEYS, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -142,7 +142,7 @@ def test__func_dict(args, kwargs, _EXPECTED):
     ]
 )
 def test__func_all(args, kwargs, _EXPECTED):
-    Lambda(LAMBDA_ALL, *args, **kwargs).expect__check_assert(_EXPECTED)
+    Lambda(LAMBDA_ALL_VALUES, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ def test__func_all(args, kwargs, _EXPECTED):
     ]
 )
 def test__func_any(args, kwargs, _EXPECTED):
-    Lambda(LAMBDA_ANY, *args, **kwargs).expect__check_assert(_EXPECTED)
+    Lambda(LAMBDA_ANY_VALUES, *args, **kwargs).expect__check_assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
