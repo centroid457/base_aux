@@ -33,7 +33,14 @@ __pycache__/
 
 # PYTEST -------------------
 .pytest_cache/
+
+# pytest coverage
+# html results
+htmlcov/
+# final one file result (with bytes)
 .coverage
+# temp files for exact testing files
+.coverage.*
 
 # PYPI DISTRIBUTION --------
 build/
@@ -62,7 +69,6 @@ pyinstaller/
 *.log.*
 
 # some other ---------------
-htmlcov/
 *~lock*
 manage.sh
 todo.org
