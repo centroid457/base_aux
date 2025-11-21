@@ -104,10 +104,18 @@ class TYPING:
 
     # -----------------------------------------------------------------------------------------------------------------
     AIO_FUNC = Callable[..., Awaitable[Any]]                    # func defined with ASYNC key which result as AWAITABLE
+    AIO_FUNC__ANY = Callable[..., Awaitable[Any]]                    # func defined with ASYNC key which result as AWAITABLE
+    AIO_FUNC__BOOL = Callable[..., Awaitable[bool]]                    # func defined with ASYNC key which result as AWAITABLE
+
     AIO_CORO = collections.abc.Coroutine[Any, Any, bool | Any]  # as new version for typing
+    AIO_CORO__ANY = collections.abc.Coroutine[Any, Any, Any]
+    AIO_CORO__BOOL = collections.abc.Coroutine[Any, Any, bool]
+
+    AIO_AW = Awaitable[Any]     # object
+    AIO_AW__ANY = Awaitable[Any]
+    AIO_AW__BOOL = Awaitable[bool]
 
     AIO_TASK = asyncio.Task     # started Task in the loop
-    AIO_AW = Awaitable[Any]     # object
     """
     import asyncio
     import types
