@@ -9,6 +9,13 @@
 ********************************************************************************
 ## NEWS
 
+0.3.2(2025.11.21 14.11.00)
+------------------------------
+- [Warn/Print] separate  
+- [pytest] add COVerage  
+- [CONFIGS] add separated directory for obsidian/git/pycharm/...  
+- [AIO] start add Primitives/Typing/...  
+
 0.3.1.2(2025.07.15 15.24.01)
 ------------------------------
 - [Warn] create  
