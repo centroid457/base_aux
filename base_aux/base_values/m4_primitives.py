@@ -83,7 +83,7 @@ COMPR_DICT: dict = {i:i for i in range(3)}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-def FUNC(*args, **kwargs) -> None:
+def FUNC(*args, **kwargs) -> Any | None:
     pass
 
 
@@ -107,7 +107,7 @@ def FUNC_RAISE(*args, **kwargs) -> NoReturn:
     raise Exception("FUNC_RAISE")
 
 
-def FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any:
+def FUNC_ECHO(echo: Any, *args, **kwargs) -> Any:
     return echo
 
 
@@ -179,7 +179,7 @@ def FUNC_DICT_VALUES(*args, **kwargs) -> dict[Any, Any | None]:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-async def AIO_FUNC(*args, **kwargs) -> None:
+async def AIO_FUNC(*args, **kwargs) -> Any | None:
     pass
 
 
@@ -203,7 +203,7 @@ async def AIO_FUNC_RAISE(*args, **kwargs) -> NoReturn:
     raise Exception("AIO_FUNC_RAISE")
 
 
-async def AIO_FUNC_ECHO(echo: Any = None, *args, **kwargs) -> Any:
+async def AIO_FUNC_ECHO(echo: Any, *args, **kwargs) -> Any:
     return echo
 
 
@@ -239,7 +239,7 @@ for i in LAMBDA_ARGS(1, 2, 3):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-LAMBDA: Callable[..., Any] = lambda *args, **kwargs: None
+LAMBDA: Callable[..., Any | None] = lambda *args, **kwargs: None
 LAMBDA_0: Callable[..., int] = lambda *args, **kwargs: 0
 LAMBDA_1: Callable[..., int] = lambda *args, **kwargs: 1
 LAMBDA_NONE: Callable[..., None] = lambda *args, **kwargs: None
