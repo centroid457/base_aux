@@ -1,6 +1,6 @@
 # ==========================
-# RULES
-# 1=DONT USE MINUS in moduleNames!!! thi and all next moduls will not applyed!!!
+# HELP
+# 1=DONT USE MINUS in moduleNames!!! this and all next moduls will not applyed!!!
 # 2=how to install
 #   pip install -r .\requirements.txt               # without upgrade option is not enough!
 #   pip install -u -r .\requirements.txt            # just -u may not be recognized
@@ -20,8 +20,12 @@
 # VERSION = (0, 1, 0)   # combine all modules into one
 # VERSION = (0, 1, 1)   # add comments for Lincenses
 # VERSION = (0, 1, 2)   # add pytest-asyncio
+# VERSION = (0, 1, 3)   # separate special_occasion/common/COMMUNICATE +add aioserial/base_aux
 
 # ==========================
+# base ---------------------
+#base_aux    #MIT
+
 # deploy -------------------
 build       #MIT
 twine       #Apache2
@@ -31,19 +35,21 @@ setuptools  #MIT
 pytest          #MIT
 pytest-asyncio  #Apache2.0
 
-# SPECIAL ------------------
-numpy       #BSD
-
+# COMMUNICATE --------------
 pyserial    #BSD3
+# aioserial   #OSI Approved (MPL-2.0)    =pyserial-asyncio
 smbus2      #MIT/linuxOnly
 telebot     #GPL2
-
-PyQt5       #GPL3
 
 aiohttp     #Apache2
 FastAPI     #MIT
 requests    #Apache2
 uvicorn     #BSD3
+
+# COMMON -------------------
+numpy       #BSD
+
+PyQt5       #GPL3
 
 PyYAML      #MIT
 pydantic    #MIT
@@ -51,5 +57,9 @@ pydantic    #MIT
 bs4         #MIT
 
 gitpython   #BSD3
+
+# ==========================
+# SPECIAL OCCASION ---------
+
 
 # ==========================
