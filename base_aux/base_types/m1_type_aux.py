@@ -257,11 +257,14 @@ class TypeAux(NestInit_Source):
     def check__instance_not_elementary(self) -> bool:
         return self.check__instance() and not self.check__elementary()
 
-    def check__subclassed_or_isinst(self, parent_cls: type[Any]) -> bool | None:
+    def check__subclassed_or_isinst__from_cls(self, *parent_cls: type[Any]) -> bool:
         """
+        FIXME: deprecate! use only check__nested__from_cls_or_inst - its more clear!
+
         DIFFERENCE from - check__nested__from_cls_or_inst
         ----------
-        parent is only CLASS!
+        here parent is only CLASS!!! - main
+        source could be ClsOrInst - same
 
         GOAL
         ----
@@ -274,24 +277,27 @@ class TypeAux(NestInit_Source):
 
         :returns:
             True - if any
-            False - if not validated
-            NONE - ifparent is not class! check cant be process!
+            False - if not validated even if parent is not class!
         """
-        if TypeAux(parent_cls).check__class():
-            try:
-                return issubclass(self.SOURCE, parent_cls)
-            except:
-                # in case of not CLASS
-                pass
+        for parent_cls_i in parent_cls:
+            if TypeAux(parent_cls_i).check__class():
+                try:
+                    result = issubclass(self.SOURCE, parent_cls_i) or self.SOURCE is parent_cls_i
+                except:
+                    # in case of not CLASS
+                    result = isinstance(self.SOURCE, parent_cls_i)
+                if result:
+                    return True
 
-            return isinstance(self.SOURCE, parent_cls)
-        else:
-            # FIXME: decide to return FALSE!??
-            return
+        return False
 
-    def check__nested__from_cls_or_inst(self, parent_cls_or_inst: Any | type[Any]) -> bool | None:
+    def check__subclassed_or_isinst__from_cls_or_inst(self, *parent_cls_or_inst: Any | type[Any]) -> bool:
         """
-        # FIXME: decide to deprecate???  use check__subclass_or_isinst instead???
+        DIFFERENCE from - check__subclassed_or_isinst
+        ----------
+        here parent is both CLASS INST!!! - main
+        source could be ClsOrInst - same
+
         GOAL
         ----
         any of both variant (Instance/Class) comparing with TARGET of both variant (Instance/Class)
@@ -305,10 +311,15 @@ class TypeAux(NestInit_Source):
         #     checkable = issubclass(other, Nest_EqCls)   # keep first!!!
         # except:
         #     checkable = isinstance(other, Nest_EqCls)
-
         source_cls = self.get__class()
-        parent_cls = TypeAux(parent_cls_or_inst).get__class()
-        return issubclass(source_cls, parent_cls)
+
+        for parent_cls_or_inst__i in parent_cls_or_inst:
+            parent_cls = TypeAux(parent_cls_or_inst__i).get__class()
+            result = issubclass(source_cls, parent_cls)
+            if result:
+                return True
+
+        return False
 
     # EXC -------------------------------------------------------------------------------------------------------------
     def check__exception(self) -> bool:

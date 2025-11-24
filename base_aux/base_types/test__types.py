@@ -726,48 +726,66 @@ class Test__1:
 
     # =================================================================================================================
     @pytest.mark.parametrize(
+        argnames="index",
+        argvalues=[
+            0,
+            1,
+    ])
+    @pytest.mark.parametrize(
         argnames="source, parent, _EXPECTED",
         argvalues=[
-            ("str", "str", [True, None]),
+            ("str", ("str", str), [True, True]),
+            ("str", (str, "str"), [True, True]),
+
+            ("str", "str", [True, False]),
             ("str", str, [True, True]),
-            (str, "str", [True, None]),
+            (str, "str", [True, False]),
             (str, str, [True, True]),
 
             (int, str, [False, False]),
-            (int, "str", [False, None]),
+            (int, "str", [False, False]),
 
-            (111, 111, [True, None]),
-            (int, 111, [True, None]),
+            (111, 111, [True, False]),
+            (int, 111, [True, False]),
             (111, int, [True, True]),
             (int, int, [True, True]),
 
             (Exception, Exception, [True, True]),
             (Exception(), Exception, [True, True]),
-            (Exception, Exception(), [True, None]),
-            (Exception(), Exception(), [True, None]),
+            (Exception, Exception(), [True, False]),
+            (Exception(), Exception(), [True, False]),
 
             (ClsException, Exception, [True, True]),
             (ClsException(), Exception, [True, True]),
-            (ClsException, Exception(), [True, None]),
-            (ClsException(), Exception(), [True, None]),
+            (ClsException, Exception(), [True, False]),
+            (ClsException(), Exception(), [True, False]),
 
             (Exception, ClsException, [False, False]),      # REMEMBER! not clear!
             (Exception(), ClsException, [False, False]),    # REMEMBER! not clear!
-            (Exception, ClsException(), [False, None]),    # REMEMBER! not clear!
-            (Exception(), ClsException(), [False, None]),  # REMEMBER! not clear!
+            (Exception, ClsException(), [False, False]),    # REMEMBER! not clear!
+            (Exception(), ClsException(), [False, False]),  # REMEMBER! not clear!
 
             (Cls, Cls, [True, True]),
-            (Cls, Cls(), [True, None]),
+            (Cls, Cls(), [True, False]),
             (Cls(), Cls, [True, True]),
-            (Cls(), Cls(), [True, None]),
+            (Cls(), Cls(), [True, False]),
 
             (FUNC, Cls, [False, False]),
-            (FUNC, Cls(), [False, None]),
+            (FUNC, Cls(), [False, False]),
         ]
     )
-    def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED):
-        Lambda(TypeAux(source).check__nested__from_cls_or_inst, parent).expect__check_assert(_EXPECTED[0])
-        Lambda(TypeAux(source).check__subclassed_or_isinst, parent).expect__check_assert(_EXPECTED[1])
+    def test__check__nested__by_cls_or_inst(self, source, parent, _EXPECTED, index):
+        if index == 0:
+            func_link = TypeAux(source).check__subclassed_or_isinst__from_cls_or_inst
+        elif index == 1:
+            func_link = TypeAux(source).check__subclassed_or_isinst__from_cls
+        else:
+            raise Exception(f"incorrect {index=}")
+
+        if isinstance(parent, (tuple, list)):
+            Lambda(func_link, *parent).expect__check_assert(_EXPECTED[index])
+        else:
+            Lambda(func_link, parent).expect__check_assert(_EXPECTED[index])
 
 
 # =====================================================================================================================

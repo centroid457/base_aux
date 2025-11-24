@@ -21,7 +21,7 @@ class EqAux(NestInit_Source):
 
         # EXC ------
         if TypeAux(other).check__exception():
-            if TypeAux(self.SOURCE).check__nested__from_cls_or_inst(other):   # CORRECT ORDER!!!
+            if TypeAux(self.SOURCE).check__subclassed_or_isinst__from_cls_or_inst(other):   # CORRECT ORDER!!!
                 return True
         # WORK ------
         try:

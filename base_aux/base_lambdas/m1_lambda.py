@@ -260,7 +260,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             actual_value = exc  # this is an internal value! when use incorrect ArgsKw!!!
 
         print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
-        result = TypeAux(actual_value).check__subclassed_or_isinst(_EXPECTED)
+        result = TypeAux(actual_value).check__subclassed_or_isinst__from_cls(_EXPECTED)
 
         if not result:
             # result = EqAux(actual_value).check_doubleside__bool(_EXPECTED)
