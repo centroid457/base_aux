@@ -1,7 +1,7 @@
 import time
 import pytest
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.aux_datetime.m2_timer import *
+from base_aux.aux_datetime.m2_stopwatch import *
 
 
 # =====================================================================================================================
@@ -16,7 +16,7 @@ START_AMENDMENT = 0.0000001
 )
 def test__timer(pause: float):
     ethalon = time.time()
-    victim = StopWatchStarted()
+    victim = StopwatchStarted()
     assert victim.time_started - ethalon <= START_AMENDMENT
 
     time.sleep(pause)
