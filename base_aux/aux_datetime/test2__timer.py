@@ -16,11 +16,11 @@ START_AMENDMENT = 0.0000001
 )
 def test__timer(pause: float):
     ethalon = time.time()
-    victim = Timer()
-    assert victim.started - ethalon <= START_AMENDMENT
+    victim = StopWatchStarted()
+    assert victim.time_started - ethalon <= START_AMENDMENT
 
     time.sleep(pause)
-    assert victim.check() > pause - START_AMENDMENT
+    assert victim.get_elapsed_time__from_start() > pause - START_AMENDMENT
 
 
 # =====================================================================================================================
