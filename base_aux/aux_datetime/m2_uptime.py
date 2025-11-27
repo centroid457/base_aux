@@ -10,10 +10,15 @@ class Uptime:
 
     SPECIALLY CREATED FOR
     ---------------------
-
+    tests
     """
+    time_started: float
+
     def __init__(self):
-        self.started: float = time.time()
+        self.reset()
+
+    def reset(self) -> None:
+        self.time_started = time.time()
 
     def get(self) -> float:
         """
@@ -21,7 +26,7 @@ class Uptime:
         ----
         return time passed from start (initial time)
         """
-        return time.time() - self.started
+        return time.time() - self.time_started
 
 
 # =====================================================================================================================
