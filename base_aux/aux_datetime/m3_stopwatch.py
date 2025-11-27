@@ -1,13 +1,4 @@
-import asyncio
-from typing import *
-import datetime
 import time
-
-from base_aux.aux_attr.m1_annot_attr1_aux import *
-
-
-# =====================================================================================================================
-# TODO: GET BACK simple TIMER! +use it in Stopwatch!!!???
 
 
 # =====================================================================================================================
@@ -17,6 +8,16 @@ class Stopwatch:
     ----
     create (at last) timer to check time passed
     """
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+    # TODO: FINISH! add tests
+
     START_ON_INIT: bool = False
 
     def __init__(self, start: bool = None):
