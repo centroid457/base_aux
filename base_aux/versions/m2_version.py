@@ -36,7 +36,7 @@ TYPE__VERSION_DRAFT = Union[TYPE__VERSION_BLOCK_ELEMENTS_DRAFT,  TYPE__VERSION_B
 
 
 # =====================================================================================================================
-class Version(NestCmp_LGET, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
+class Version(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf):
     """
     GOAL
     ----

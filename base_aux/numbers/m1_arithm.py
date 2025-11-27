@@ -7,7 +7,7 @@ from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class ArithmApplyToAttr(NestCmp_LGET):
+class ArithmApplyToAttr(NestCmp_GLET_Any):
     """
     GOAL
     ----

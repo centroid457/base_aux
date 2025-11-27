@@ -12,7 +12,7 @@ TYPE__VERSION_BLOCK_ELEMENTS_DRAFT = Union[str, int, list[TYPE__VERSION_BLOCK_EL
 
 
 # =====================================================================================================================
-class VersionBlock(NestCmp_LGET, NestRepr__ClsName_SelfStr):
+class VersionBlock(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr):
     """
     this is exact block in version string separated by dots!!!
 

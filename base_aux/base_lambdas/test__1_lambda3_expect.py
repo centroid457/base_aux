@@ -8,7 +8,7 @@ from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class Cls(NestCmp_LGET):
+class Cls(NestCmp_GLET_Any):
     def __init__(self, value):
         self.VALUE = value
 

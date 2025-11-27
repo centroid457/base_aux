@@ -98,7 +98,7 @@ TYPE__DT_DRAFT = TYPE__DT_FINAL | str | float | None    #  | int    # NOTE: int 
 
 # =====================================================================================================================
 # @final    # select styles
-class DateTimeAux(NestCmp_LGET, NestRepr__ClsName_SelfStr):
+class DateTimeAux(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr):
     SOURCE: TYPE__DT_FINAL = None
     STYLE: TYPE__TUPLE_DT_STYLE__FINAL = DateTimeStyle_Tuples.DOTS
     UPDATE_ON_STR: bool = None

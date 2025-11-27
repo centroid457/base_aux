@@ -3,7 +3,7 @@ from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class Victim(NestCmp_LGET):
+class Victim(NestCmp_GLET_Any):
     def __init__(self, val):
         self.VAL = val
 
