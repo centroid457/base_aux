@@ -18,6 +18,10 @@ class TYPING:
     """
     ELEMENTARY = Union[*TYPES.ELEMENTARY]
 
+    # DIGIT -----------------------------------------------------------------------------------------------------------
+    DIGIT_FLOAT_INT = Union[float, int]
+    DIGIT_FLOAT_INT_NONE = Union[float, int, None]
+
     # ARGS/KWARGS -----------------------------------------------------------------------------------------------------
     ARGS_FINAL = tuple[Any, ...]
     ARGS_DRAFT = Union[Any, ARGS_FINAL, 'ArgsKwargs']           # you can use direct single value
