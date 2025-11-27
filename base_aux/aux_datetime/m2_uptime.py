@@ -20,6 +20,7 @@ class Uptime:
     def reset(self) -> None:
         self.time_started = time.time()
 
+    # -----------------------------------------------------------------------------------------------------------------
     def get(self) -> float:
         """
         GOAL
@@ -27,6 +28,14 @@ class Uptime:
         return time passed from start (initial time)
         """
         return time.time() - self.time_started
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_lt(self, other: float, accuracy: float = 0) -> bool: raise NotImplementedError()
+    def check_le(self, other: float, accuracy: float = 0) -> bool: raise NotImplementedError()
+    def check_gt(self, other: float, accuracy: float = 0) -> bool: raise NotImplementedError()
+    def check_ge(self, other: float, accuracy: float = 0) -> bool: raise NotImplementedError()
+
+    # TODO: add __cmp__/__eq__
 
 
 # =====================================================================================================================
