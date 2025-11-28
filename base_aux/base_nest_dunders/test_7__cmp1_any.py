@@ -27,7 +27,7 @@ class Victim(NestCmp_GLET_Any):
 
 
 # =====================================================================================================================
-class Test__Cmp:
+class Test__CmpAny:
     # @classmethod
     # def setup_class(cls):
     #     pass

@@ -17,7 +17,7 @@ START_AMENDMENT = 0.0000001
 def test__uptime(pause: float):
     ethalon = time.time()
     victim = Uptime()
-    assert victim.started - ethalon <= START_AMENDMENT
+    assert victim.time_started - ethalon <= START_AMENDMENT
 
     time.sleep(pause)
     assert victim.get() > pause - START_AMENDMENT

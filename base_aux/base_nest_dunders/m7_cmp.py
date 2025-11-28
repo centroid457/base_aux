@@ -83,7 +83,7 @@ class NestCmp_GLET_Any:
 
 
 # =====================================================================================================================
-class NestCmp_GLET_DigitAccuracy(ABC):
+class NestCmp_GLET_DigitAccuracy:
     """
     GOAL
     ----
@@ -92,7 +92,6 @@ class NestCmp_GLET_DigitAccuracy(ABC):
     CMP_ACCURACY: TYPING.DIGIT_FLOAT_INT = 0
     CMP_VALUE: TYPING.DIGIT_FLOAT_INT    # property
 
-    @abstractmethod
     @property
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         raise NotImplementedError()
