@@ -1,8 +1,9 @@
 from base_aux.aux_attr.m1_annot_attr1_aux import *
+from base_aux.base_nest_dunders.m7_cmp import *
 
 
 # =====================================================================================================================
-class Uptime:
+class Uptime(NestCmp_GLET_DigitAccuracy):
     """
     GOAL
     ----
@@ -12,11 +13,15 @@ class Uptime:
     ---------------------
     tests
     """
-    def __init__(self, accuracy: float = 0):
-        self.accuracy: float = accuracy
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.time_started: float = time.time()
         self.time_stopped: float | None = None
+
+    @property
+    def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
+        return self.get()
 
     def restart(self) -> None:
         self.time_started = time.time()
@@ -39,20 +44,6 @@ class Uptime:
             return time.time() - self.time_started
 
     # -----------------------------------------------------------------------------------------------------------------
-    # TODO/FIXME: apply NestCmp_GLET_DigitAccuracy!!
-    def check_lt(self, other: float, accuracy: float = 0) -> bool:
-        raise NotImplementedError()
-
-    def check_le(self, other: float, accuracy: float = 0) -> bool:
-        raise NotImplementedError()
-
-    def check_gt(self, other: float, accuracy: float = 0) -> bool:
-        raise NotImplementedError()
-
-    def check_ge(self, other: float, accuracy: float = 0) -> bool:
-        raise NotImplementedError()
-
-    # TODO: add __cmp__/__eq__
 
 
 # =====================================================================================================================
