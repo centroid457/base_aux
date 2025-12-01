@@ -17,28 +17,29 @@ class Victim(NestCmp_GLET_DigitAccuracy):
 # =====================================================================================================================
 class Test_CmpDigit:
     @pytest.mark.parametrize(
-        argnames="source, accuracy, other, _EXPECTED",
+        argnames="source, accuracy, other, _EXP_GLET, _EXP_EQ",
         argvalues=[
             # TRIVIAL ---------------------------------
-            (1, None, "hello", (Exception, Exception, Exception, Exception)),
+            (1, None, "hello", (Exception, Exception, Exception, Exception), (Exception, Exception)),
 
-            # 1+1---------------------------------
-            (1, None, 1, (False, True, True, False)),
-            (1, None, 1.0, (False, True, True, False)),
-            (1.0, None, 1.0, (False, True, True, False)),
-            (1.0, None, 1, (False, True, True, False)),
+            # 1+1--------------------------------------
+            (1, None, 1, (False, True, True, False), (True, False)),
+            (1, None, 1.0, (False, True, True, False), (True, False)),
+            (1.0, None, 1.0, (False, True, True, False), (True, False)),
+            (1.0, None, 1, (False, True, True, False), (True, False)),
 
-            (1, 0, 1, (False, True, True, False)),
-            (1, 0, 1.0, (False, True, True, False)),
-            (1.0, 0.0, 1.0, (False, True, True, False)),
-            (1.0, 0, 1, (False, True, True, False)),
+            (1, 0, 1, (False, True, True, False), (True, False)),
+            (1, 0, 1.0, (False, True, True, False), (True, False)),
+            (1.0, 0.0, 1.0, (False, True, True, False), (True, False)),
+            (1.0, 0, 1, (False, True, True, False), (True, False)),
 
-            # 1+1.1---------------------------------
-            (1, 0.2, 0.9, (True, True, True, True)),
-            (1, 0.1, 0.9, (True, True, True, False)),
-            (1, 0, 1.1, (False, False, True, True)),
-            (1, 0.1, 1.1, (False, True, True, True)),
-            (1, 0.2, 1.1, (True, True, True, True)),
+            # 1+0.9/1.1---------------------------------
+            (1, 0.2, 0.9, (True, True, True, True), (True, False)),
+            (1, 0.1, 0.9, (True, True, True, False), (True, False)),
+            (1, 0, 0.9, (True, True, False, False), (False, True)),
+            (1, 0, 1.1, (False, False, True, True), (False, True)),
+            (1, 0.1, 1.1, (False, True, True, True), (True, False)),
+            (1, 0.2, 1.1, (True, True, True, True), (True, False)),
         ]
     )
     def test__cmp_glet(
@@ -46,39 +47,52 @@ class Test_CmpDigit:
             source: float | int,
             accuracy: float | None,
             other: float | int,
-            _EXPECTED: bool | Exception,
+            _EXP_GLET: tuple[bool | Exception, ...],
+            _EXP_EQ: tuple[bool | Exception, ...],
     ):
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy=accuracy)
 
-        Lambda(victim.cmp_gt, other=other).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_ge, other=other).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_gt, other=other).expect__check_assert(_EXP_GLET[0])
+        Lambda(victim.cmp_ge, other=other).expect__check_assert(_EXP_GLET[1])
+        Lambda(victim.cmp_le, other=other).expect__check_assert(_EXP_GLET[2])
+        Lambda(victim.cmp_lt, other=other).expect__check_assert(_EXP_GLET[3])
+
+        Lambda(victim.cmp_eq, other=other).expect__check_assert(_EXP_EQ[0])
+        Lambda(victim.cmp_ne, other=other).expect__check_assert(_EXP_EQ[1])
 
         # -----------------------------------------------
         victim = Victim(source=source)
 
-        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[0])
+        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[1])
+        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[2])
+        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[3])
+
+        Lambda(victim.cmp_eq, other=other, accuracy=accuracy).expect__check_assert(_EXP_EQ[0])
+        Lambda(victim.cmp_ne, other=other, accuracy=accuracy).expect__check_assert(_EXP_EQ[1])
 
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy=accuracy)
 
-        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[0])
+        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[1])
+        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[2])
+        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXP_GLET[3])
+
+        Lambda(victim.cmp_eq, other=other, accuracy=accuracy).expect__check_assert(_EXP_EQ[0])
+        Lambda(victim.cmp_ne, other=other, accuracy=accuracy).expect__check_assert(_EXP_EQ[1])
 
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy=accuracy)
 
-        Lambda(operator.gt, victim, other).expect__check_assert(_EXPECTED[0])
-        Lambda(operator.ge, victim, other).expect__check_assert(_EXPECTED[1])
-        Lambda(operator.le, victim, other).expect__check_assert(_EXPECTED[2])
-        Lambda(operator.lt, victim, other).expect__check_assert(_EXPECTED[3])
+        Lambda(operator.gt, victim, other).expect__check_assert(_EXP_GLET[0])
+        Lambda(operator.ge, victim, other).expect__check_assert(_EXP_GLET[1])
+        Lambda(operator.le, victim, other).expect__check_assert(_EXP_GLET[2])
+        Lambda(operator.lt, victim, other).expect__check_assert(_EXP_GLET[3])
+
+        Lambda(operator.eq, victim, other).expect__check_assert(_EXP_EQ[0])
+        Lambda(operator.ne, victim, other).expect__check_assert(_EXP_EQ[1])
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__accuracy_in_levels(self):
