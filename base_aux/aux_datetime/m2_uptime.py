@@ -39,6 +39,7 @@ class Uptime:
             return time.time() - self.time_started
 
     # -----------------------------------------------------------------------------------------------------------------
+    # TODO/FIXME: apply NestCmp_GLET_DigitAccuracy!!
     def check_lt(self, other: float, accuracy: float = 0) -> bool:
         raise NotImplementedError()
 

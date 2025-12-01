@@ -98,7 +98,7 @@ class NestCmp_GLET_DigitAccuracy:
 
     def __init__(self, *args, cmp_accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None, **kwargs) -> None:
         if cmp_accuracy:
-            self.CMP_ACCURACY = cmp_accuracy
+            self.CMP_ACCURACY = cmp_accuracy or 0
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -133,28 +133,28 @@ class NestCmp_GLET_DigitAccuracy:
     __ge__ = lambda self, other: self.cmp_ge(other)
 
     # BASE ------------------------------------------------------------------------------------------------------------
-    def cmp_lt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
-
-        result = self.CMP_VALUE < (other + accuracy)
-        return result
-
-    def cmp_le(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
-
-        result = self.CMP_VALUE <= (other + accuracy)
-        return result
-
-    def cmp_gt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool:
+    def cmp_gt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:   # NoReturn is only for bad accuracy and insorrect (nonDigital) other!!!!
         accuracy = self._cmp_accuracy__get_active(accuracy)
 
         result = (other - accuracy) < self.CMP_VALUE
         return result
 
-    def cmp_ge(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool:
+    def cmp_ge(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
         accuracy = self._cmp_accuracy__get_active(accuracy)
 
         result = (other - accuracy) <= self.CMP_VALUE
+        return result
+
+    def cmp_lt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
+        accuracy = self._cmp_accuracy__get_active(accuracy)
+
+        result = self.CMP_VALUE < (other + accuracy)
+        return result
+
+    def cmp_le(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
+        accuracy = self._cmp_accuracy__get_active(accuracy)
+
+        result = self.CMP_VALUE <= (other + accuracy)
         return result
 
 
