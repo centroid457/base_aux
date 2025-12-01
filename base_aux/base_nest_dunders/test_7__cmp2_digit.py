@@ -23,6 +23,11 @@ class Test_CmpDigit:
             (1, None, "hello", (Exception, Exception, Exception, Exception)),
 
             # 1+1---------------------------------
+            (1, None, 1, (False, True, True, False)),
+            (1, None, 1.0, (False, True, True, False)),
+            (1.0, None, 1.0, (False, True, True, False)),
+            (1.0, None, 1, (False, True, True, False)),
+
             (1, 0, 1, (False, True, True, False)),
             (1, 0, 1.0, (False, True, True, False)),
             (1.0, 0.0, 1.0, (False, True, True, False)),
@@ -34,8 +39,6 @@ class Test_CmpDigit:
             (1, 0, 1.1, (False, False, True, True)),
             (1, 0.1, 1.1, (False, True, True, True)),
             (1, 0.2, 1.1, (True, True, True, True)),
-
-            (1, None, 1, (False, True, True, False)),
         ]
     )
     def test__cmp_glet(
@@ -79,6 +82,8 @@ class Test_CmpDigit:
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__accuracy_in_levels(self):
+        # COULВ BE DELETED!!! not need!
+
         # 1=NONE
         victim = Victim(source=1, cmp_accuracy=None)
 
@@ -115,13 +120,6 @@ class Test_CmpDigit:
         assert victim.cmp_le(other)
         assert victim.cmp_ge(other, accuracy=0.1)
         assert victim.cmp_le(other, accuracy=0.1)
-
-        # FIXME: !!!=================================
-        # assert victim > other
-        # assert victim.cmp_gt(other)
-        # assert not victim.cmp_lt(other)
-        # assert victim.cmp_gt(other, accuracy=0.1)
-        # assert not victim.cmp_lt(other, accuracy=0.1)
 
 
 # =====================================================================================================================
