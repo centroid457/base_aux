@@ -34,12 +34,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 2))
+    VERSION = Version((0, 3, 3))
     NEWS: list[str] = [
-        "[Warn/Print] separate",
-        "[pytest] add COVerage",
-        "[CONFIGS] add separated directory for obsidian/git/pycharm/...",
-        "[AIO] start add Primitives/Typing/...",
+        "[datetime] create Uptime",
+        "[NestDunders] create NestCmp_GLET_DigitAccuracy",
     ]
 
 
