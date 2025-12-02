@@ -114,10 +114,11 @@ class NestCmp_GLET_DigitAccuracy:
         return result
 
     # DEPENDANTS -------------------
+    # NOTE: be careful when get Exc on second cmp with first False!
     cmp_gtlt = lambda self, other1, other2, accuracy=None: self.cmp_gt(other1, accuracy) and self.cmp_lt(other2, accuracy)
-    cmp_gelt = lambda self, other1, other2, accuracy=None: self.cmp_ge(other1, accuracy) and self.cmp_lt(other2, accuracy)
-
     cmp_gtle = lambda self, other1, other2, accuracy=None: self.cmp_gt(other1, accuracy) and self.cmp_le(other2, accuracy)
+
+    cmp_gelt = lambda self, other1, other2, accuracy=None: self.cmp_ge(other1, accuracy) and self.cmp_lt(other2, accuracy)
     cmp_gele = lambda self, other1, other2, accuracy=None: self.cmp_ge(other1, accuracy) and self.cmp_le(other2, accuracy)
 
     cmp_eq = lambda self, other, accuracy=None: self.cmp_gele(other, other, accuracy)
@@ -145,16 +146,16 @@ class NestCmp_GLET_DigitAccuracy:
         result = (other - accuracy) <= self.CMP_VALUE
         return result
 
-    def cmp_lt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
-
-        result = self.CMP_VALUE < (other + accuracy)
-        return result
-
     def cmp_le(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
         accuracy = self._cmp_accuracy__get_active(accuracy)
 
         result = self.CMP_VALUE <= (other + accuracy)
+        return result
+
+    def cmp_lt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
+        accuracy = self._cmp_accuracy__get_active(accuracy)
+
+        result = self.CMP_VALUE < (other + accuracy)
         return result
 
 
