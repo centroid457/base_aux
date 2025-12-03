@@ -9,7 +9,7 @@ altgraph==0.17.4
 annotated-types==0.7.0
 anyio==4.6.2.post1
 attrs==24.2.0
-base_aux==0.3.2
+base_aux==0.3.3
 beautifulsoup4==4.13.4
 bidict==0.23.1
 black==25.1.0
