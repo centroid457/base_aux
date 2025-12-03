@@ -19,6 +19,11 @@ class Uptime(NestCmp_GLET_DigitAccuracy):
         self.time_started: float = time.time()
         self.time_stopped: float | None = None
 
+    def __str__(self) -> str:
+        value = self.get()
+        # todo: add values like 00d00h00m00s000ms
+        return f"{self.__class__.__name__}({value})"
+
     @property
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         return self.get()
