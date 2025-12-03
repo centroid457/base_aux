@@ -102,6 +102,13 @@ class NestCmp_GLET_DigitAccuracy:
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.CMP_VALUE})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.CMP_VALUE})"
+
+    # -----------------------------------------------------------------------------------------------------------------
     def _cmp_accuracy__get_active(self, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> TYPING.DIGIT_FLOAT_INT | NoReturn:
         if accuracy is not None:
             result = accuracy
