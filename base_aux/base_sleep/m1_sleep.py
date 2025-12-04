@@ -20,6 +20,13 @@ class Sleep:
             self.sec = self.DEF_SEC
 
     # -----------------------------------------------------------------------------------------------------------------
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.sec})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def echo(self, echo: Any = None, *args, **kwargs) -> Any:
         time.sleep(self.sec)
         return echo
