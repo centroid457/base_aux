@@ -34,10 +34,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 4))
+    VERSION = Version((0, 3, 5))
     NEWS: list[str] = [
-        "[NestDunders.NestCmp_GLET_DigitAccuracy] add str/repr",
-        "[Sleep] extend with aio_* methods",
+        "[sleep] add Base_SleepAw*",
+        "[TypeAux] add check__coro*",
     ]
 
 
