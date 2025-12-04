@@ -13,6 +13,7 @@ class NestEq_AttrsNotPrivate:
     cmp first - direct callables
     cmp second - resolveExc!!!
     """
+    # TODO: add __str/repr__
     def __eq__(self, other: Any) -> bool:
         # if isinstance() NestInit_AnnotsAttr_ByArgsKwargs == NestInit_AnnotsAttr_ByArgsKwargs:
         #     # check by names

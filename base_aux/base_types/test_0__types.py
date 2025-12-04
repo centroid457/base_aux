@@ -1,5 +1,6 @@
 import pytest
 import sys
+import asyncio
 
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_types.m1_type_aux import *
@@ -786,6 +787,22 @@ class Test__1:
             Lambda(func_link, *parent).expect__check_assert(_EXPECTED[index])
         else:
             Lambda(func_link, parent).expect__check_assert(_EXPECTED[index])
+
+    # =================================================================================================================
+    @pytest.mark.parametrize(
+        argnames="source, _EXPECTED",
+        argvalues=[
+            (None, (False, False)),
+            (asyncio.sleep, (True, False)),
+            (asyncio.sleep(1), (False, True)),
+        ]
+    )
+    def test__check__aio(self, source, _EXPECTED):
+        func_link = TypeAux(source).check__coro_func
+        Lambda(func_link).expect__check_assert(_EXPECTED[0])
+
+        func_link = TypeAux(source).check__coro
+        Lambda(func_link).expect__check_assert(_EXPECTED[1])
 
 
 # =====================================================================================================================
