@@ -1,3 +1,5 @@
+import pytest
+
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m7_cmp import *
 import operator
