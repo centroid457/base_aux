@@ -4,7 +4,6 @@ import asyncio
 
 
 # =====================================================================================================================
-@final
 class Sleep:
     """
     GOAL
@@ -62,6 +61,42 @@ class Sleep:
     async def aio_RAISE(self, *args, **kwargs) -> NoReturn:
         await self.aio_echo()
         raise Exception("Sleep.RAISE")
+
+
+# =====================================================================================================================
+class Base_SleepAw(Sleep):
+    async def start(self) -> Any | NoReturn:
+        raise NotImplementedError()
+
+    def __await__(self) -> None | NoReturn:
+        result = yield from self.start().__await__()
+        return result
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class SleepAwNone(Base_SleepAw):
+    async def start(self) -> None:
+        return await self.aio_NONE()
+
+
+class SleepAwTrue(Base_SleepAw):
+    async def start(self) -> bool:
+        return await self.aio_TRUE()
+
+
+class SleepAwFalse(Base_SleepAw):
+    async def start(self) -> bool:
+        return await self.aio_FALSE()
+
+
+class SleepAwExc(Base_SleepAw):
+    async def start(self) -> Exception:
+        return await self.aio_EXC()
+
+
+class SleepAwRaise(Base_SleepAw):
+    async def start(self) -> NoReturn:
+        return await self.aio_RAISE()
 
 
 # =====================================================================================================================
