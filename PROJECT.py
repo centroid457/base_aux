@@ -34,10 +34,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 5))
+    VERSION = Version((0, 3, 6))
     NEWS: list[str] = [
-        "[sleep] add Base_SleepAw*",
-        "[TypeAux] add check__coro*",
+        "[sleep] add __str/repr__",
     ]
 
 
