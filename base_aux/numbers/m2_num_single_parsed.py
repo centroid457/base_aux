@@ -11,7 +11,7 @@ class _NumParsedSingle(NestInit_Source, NestCall_Resolve):
 
     _numtype: EnumAdj_NumType = EnumAdj_NumType.BOTH
 
-    def init_post(self) -> None | NoReturn:
+    def _init_post(self) -> None | NoReturn:
         self.SOURCE = TextAux(self.SOURCE).parse__number_single(num_type=self._numtype)
 
     def resolve(self) -> TYPES.NUMBER | None:

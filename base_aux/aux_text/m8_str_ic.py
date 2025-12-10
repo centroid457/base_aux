@@ -24,7 +24,7 @@ class StrIc(NestInit_Source):
     SOURCE: str | Any | Callable[[], str | Any] = None
     RESTYLE: EnumAdj__TextCaseStyle = EnumAdj__TextCaseStyle.ORIGINAL   # REMAKE original source - todo: decide to deprecate?
 
-    def init_post(self) -> None:
+    def _init_post(self) -> None:
         self.source_update()
 
     def source_update(self) -> None:

@@ -18,7 +18,7 @@ class Base_DictAux(NestInit_Source):
     SOURCE_INLINE_DEEPCOPY: EnumAdj_SourceOrigOrCopy = EnumAdj_SourceOrigOrCopy.COPY
 
     # -----------------------------------------------------------------------------------------------------------------
-    def init_post(self) -> None | NoReturn:
+    def _init_post(self) -> None | NoReturn:
         if self.SOURCE_INLINE_DEEPCOPY == EnumAdj_SourceOrigOrCopy.ORIGINAL:
             pass
         if self.SOURCE_INLINE_DEEPCOPY == EnumAdj_SourceOrigOrCopy.COPY:

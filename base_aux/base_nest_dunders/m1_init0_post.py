@@ -11,9 +11,9 @@ class NestInit_Post:
     def __init__(self, *args, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
 
-        self.init_post()    # call always last!!!
+        self._init_post()    # call always last!!!
 
-    def init_post(self) -> None | NoReturn:     # call always last!!!
+    def _init_post(self) -> None | NoReturn:     # call always last!!!
         """
         GOAL
         ----

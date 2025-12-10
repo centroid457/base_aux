@@ -40,7 +40,7 @@ class NdArrayAux(NestInit_Source):
         return list(self.DEF__DTYPE_DICT.items())
 
     # -----------------------------------------------------------------------------------------------------------------
-    def init_post(self) -> None:
+    def _init_post(self) -> None:
         self._init_post0__np_set_printoptions()
         self.unsure__ndarray_dtype()
 

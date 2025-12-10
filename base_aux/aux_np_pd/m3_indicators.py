@@ -103,7 +103,7 @@ class Base_Indicator(NestInit_Source, NestInit_ParamsDict_UpdateByKwargs):
             raise exc
 
     # -----------------------------------------------------------------------------------------------------------------
-    def init_post(self) -> None:
+    def _init_post(self) -> None:
         """
         GOAL
         ----
