@@ -34,9 +34,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 6))
+    VERSION = Version((0, 3, 7))
     NEWS: list[str] = [
-        "[sleep] add __str/repr__",
+        "[NestDunders] add NestGa_Self/Monkey_GaSelf_CallResult",
     ]
 
 
