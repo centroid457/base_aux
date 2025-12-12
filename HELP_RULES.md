@@ -20,6 +20,7 @@ and you should use it as template for creating your own class.
    2. BaseType can be logically replaced in any type (so prefix need to be changed inconveniently!)  
       - Data_* - dataclasses/STRUCTURES separated(!) from execution logic
       - Nt_* - NamedTuple
+   3. Monkey_* - special test objects
 
 
 ********************************************************************************
