@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.base_nest_dunders.m4_gsai_ic__annots import NestGAI_AnnotAttrIC
+from base_aux.base_nest_dunders.m4_gsai_annots import NestGAI_AnnotAttrIC
 from base_aux.aux_attr.m4_kits import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
