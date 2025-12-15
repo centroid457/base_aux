@@ -9,6 +9,11 @@
 ********************************************************************************
 ## NEWS
 
+0.3.8(2025.12.15 11.47.24)
+------------------------------
+- [HELP_RULES] create Mark_*  
+- [Monkey] create new folder +separate Mark_* +separate from NestGa_Self  
+
 0.3.7(2025.12.12 18.11.51)
 ------------------------------
 - [NestDunders] add NestGa_Self/Monkey_GaSelf_CallResult  
