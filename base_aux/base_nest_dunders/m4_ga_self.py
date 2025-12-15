@@ -53,5 +53,11 @@ class Monkey_GaSelf_CallResult(NestGa_Self):
     def __call__(self) -> Any:
         return self._call_result
 
+    def __eq__(self, other: Self | Any) -> bool:
+        if isinstance(other, self.__class__):
+            return self._call_result == other._call_result
+        else:
+            return False
+
 
 # =====================================================================================================================
