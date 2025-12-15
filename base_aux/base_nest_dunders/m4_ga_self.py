@@ -24,40 +24,22 @@ class NestGa_Self:
 
     EXAMPLE
     -------
-    use any chain
+    1. use any chain if not exists ga
         class Victim(NestGa_Self): ...
         victim = Victim()
         assert victim == victim.hello.world
+
+    2. use as nested
+        class Victim(NestGa_Self):
+            attr=1
+            def meth(self, param=None):
+                return param
+        victim = Victim()
+        assert victim.attr == victim.hello.world.attr
+        assert victim.meth() == victim.hello.world.meth()
     """
     def __getattr__(self, item: str) -> Self:
         return self
-
-
-# =====================================================================================================================
-class Monkey_GaSelf_CallResult(NestGa_Self):
-    """
-    GOAL
-    ----
-    in test suits when we need some object like
-        victim.any.attr.chain.could.be.here()
-
-    EXAMPLE
-    -------
-    use any attr chain
-        victim = Monkey_GaSelf_CallResult(5)
-        assert victim.any.attr.chain.could.be.here() == 5
-    """
-    def __init__(self, call_result: Any = None) -> None:
-        self._call_result: Any = call_result
-
-    def __call__(self) -> Any:
-        return self._call_result
-
-    def __eq__(self, other: Self | Any) -> bool:
-        if isinstance(other, self.__class__):
-            return self._call_result == other._call_result
-        else:
-            return False
 
 
 # =====================================================================================================================
