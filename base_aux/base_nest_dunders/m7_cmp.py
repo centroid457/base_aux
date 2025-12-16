@@ -89,49 +89,80 @@ class NestCmp_GLET_DigitAccuracy:
     ----
     apply for digital obj
     """
-    CMP_ACCURACY: TYPING.DIGIT_FLOAT_INT = 0
+    # CMP_ACCURACY_VALUE_MIN: TYPING.DIGIT_FLOAT_INT_NONE = None  # TODO: add! in case of Percent!
+
+    CMP_ACCURACY_VALUE: TYPING.DIGIT_FLOAT_INT_NONE = None
+    CMP_ACCURACY_PERCENT: TYPING.DIGIT_FLOAT_INT_NONE = None
+
     CMP_VALUE: TYPING.DIGIT_FLOAT_INT    # property
 
     @property
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         raise NotImplementedError()
 
-    def __init__(self, *args, cmp_accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None, **kwargs) -> None:
-        if cmp_accuracy:
-            self.CMP_ACCURACY = cmp_accuracy or 0
+    def __init__(self, *args, cmp_accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None, cmp_accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None, **kwargs) -> None | NoReturn:
+        if cmp_accuracy_value is not None and cmp_accuracy_percent is not None:
+            raise Exc__WrongUsage(f"dont use both {cmp_accuracy_value=}/{cmp_accuracy_percent=}")
+
+        if cmp_accuracy_value is not None:
+            self.CMP_ACCURACY_VALUE = cmp_accuracy_value
+        if cmp_accuracy_percent is not None:
+            self.CMP_ACCURACY_PERCENT = cmp_accuracy_percent
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}({self.CMP_VALUE})"
+        return f"{self.__class__.__name__}({self.CMP_VALUE}/accuracy_default={self._cmp_accuracy__get_active()})"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.CMP_VALUE})"
+        return str(self)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _cmp_accuracy__get_active(self, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> TYPING.DIGIT_FLOAT_INT | NoReturn:
-        if accuracy is not None:
-            result = accuracy
-        else:
-            result = self.CMP_ACCURACY or 0
+    def _cmp_accuracy__translate_from_percent(self, percent: float) -> float:
+        return self.CMP_VALUE * percent / 100
 
+    def _cmp_accuracy__get_active(self, accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None, accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None) -> TYPING.DIGIT_FLOAT_INT | NoReturn:     # add tests for meth
+        """
+        GOAL
+        ----
+        return final accuracy_value VALUE! from
+        """
+        result = 0
+        if accuracy_value is not None and accuracy_percent is not None:
+            raise Exc__WrongUsage(f"dont use both {accuracy_value=}/{accuracy_percent=}")
+
+        elif accuracy_value is None and accuracy_percent is None:
+            if self.CMP_ACCURACY_VALUE is not None:
+                result = self.CMP_ACCURACY_VALUE
+            elif self.CMP_ACCURACY_PERCENT is not None:
+                result = self._cmp_accuracy__translate_from_percent(self.CMP_ACCURACY_PERCENT)
+            else:
+                result = 0
+
+        elif accuracy_value is not None:
+            result = accuracy_value
+
+        elif accuracy_percent is not None:
+            result = self._cmp_accuracy__translate_from_percent(accuracy_percent)
+
+        # final check -------------------------------------
         if not isinstance(result, (int, float)):
-            raise Exc__WrongUsage(f'{accuracy=}')
+            raise Exc__WrongUsage(f'{accuracy_value=}')
 
         return result
 
     # DEPENDANTS -------------------
     # NOTE: be careful when get Exc on second cmp with first False!
-    cmp_gtlt = lambda self, other1, other2, accuracy=None: self.cmp_gt(other1, accuracy) and self.cmp_lt(other2, accuracy)
-    cmp_gtle = lambda self, other1, other2, accuracy=None: self.cmp_gt(other1, accuracy) and self.cmp_le(other2, accuracy)
+    cmp_gtlt = lambda self, other1, other2, accuracy_value=None, accuracy_percent=None: self.cmp_gt(other1, accuracy_value, accuracy_percent) and self.cmp_lt(other2, accuracy_value, accuracy_percent)
+    cmp_gtle = lambda self, other1, other2, accuracy_value=None, accuracy_percent=None: self.cmp_gt(other1, accuracy_value, accuracy_percent) and self.cmp_le(other2, accuracy_value, accuracy_percent)
 
-    cmp_gelt = lambda self, other1, other2, accuracy=None: self.cmp_ge(other1, accuracy) and self.cmp_lt(other2, accuracy)
-    cmp_gele = lambda self, other1, other2, accuracy=None: self.cmp_ge(other1, accuracy) and self.cmp_le(other2, accuracy)
+    cmp_gelt = lambda self, other1, other2, accuracy_value=None, accuracy_percent=None: self.cmp_ge(other1, accuracy_value, accuracy_percent) and self.cmp_lt(other2, accuracy_value, accuracy_percent)
+    cmp_gele = lambda self, other1, other2, accuracy_value=None, accuracy_percent=None: self.cmp_ge(other1, accuracy_value, accuracy_percent) and self.cmp_le(other2, accuracy_value, accuracy_percent)
 
-    cmp_eq = lambda self, other, accuracy=None: self.cmp_gele(other, other, accuracy)
-    cmp_ne = lambda self, other, accuracy=None: not self.cmp_eq(other, accuracy)
+    cmp_eq = lambda self, other, accuracy_value=None, accuracy_percent=None: self.cmp_gele(other, other, accuracy_value, accuracy_percent)
+    cmp_ne = lambda self, other, accuracy_value=None, accuracy_percent=None: not self.cmp_eq(other, accuracy_value, accuracy_percent)
 
-    # accuracy DEF ------------------------
+    # accuracy_value DEF ------------------------
     __eq__ = lambda self, other: self.cmp_eq(other)
     # __ne__ = lambda self, other: self.__cmp__(other) != 0
 
@@ -141,28 +172,48 @@ class NestCmp_GLET_DigitAccuracy:
     __ge__ = lambda self, other: self.cmp_ge(other)
 
     # BASE ------------------------------------------------------------------------------------------------------------
-    def cmp_gt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:   # NoReturn is only for bad accuracy and insorrect (nonDigital) other!!!!
-        accuracy = self._cmp_accuracy__get_active(accuracy)
+    def cmp_gt(
+            self,
+            other: TYPING.DIGIT_FLOAT_INT,
+            accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None
+    ) -> bool | NoReturn:   # NoReturn is only for bad accuracy_value and insorrect (nonDigital) other!!!!
+        accuracy_value = self._cmp_accuracy__get_active(accuracy_value=accuracy_value, accuracy_percent=accuracy_percent)
 
-        result = (other - accuracy) < self.CMP_VALUE
+        result = (other - accuracy_value) < self.CMP_VALUE
         return result
 
-    def cmp_ge(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
+    def cmp_ge(
+            self,
+            other: TYPING.DIGIT_FLOAT_INT,
+            accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None
+    ) -> bool | NoReturn:
+        accuracy_value = self._cmp_accuracy__get_active(accuracy_value=accuracy_value, accuracy_percent=accuracy_percent)
 
-        result = (other - accuracy) <= self.CMP_VALUE
+        result = (other - accuracy_value) <= self.CMP_VALUE
         return result
 
-    def cmp_le(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
+    def cmp_le(
+            self,
+            other: TYPING.DIGIT_FLOAT_INT,
+            accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None
+    ) -> bool | NoReturn:
+        accuracy_value = self._cmp_accuracy__get_active(accuracy_value=accuracy_value, accuracy_percent=accuracy_percent)
 
-        result = self.CMP_VALUE <= (other + accuracy)
+        result = self.CMP_VALUE <= (other + accuracy_value)
         return result
 
-    def cmp_lt(self, other: TYPING.DIGIT_FLOAT_INT, accuracy: TYPING.DIGIT_FLOAT_INT_NONE = None) -> bool | NoReturn:
-        accuracy = self._cmp_accuracy__get_active(accuracy)
+    def cmp_lt(
+            self,
+            other: TYPING.DIGIT_FLOAT_INT,
+            accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None
+    ) -> bool | NoReturn:
+        accuracy_value = self._cmp_accuracy__get_active(accuracy_value=accuracy_value, accuracy_percent=accuracy_percent)
 
-        result = self.CMP_VALUE < (other + accuracy)
+        result = self.CMP_VALUE < (other + accuracy_value)
         return result
 
 

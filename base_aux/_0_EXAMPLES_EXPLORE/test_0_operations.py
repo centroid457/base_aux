@@ -16,7 +16,7 @@ class Victim(NestCmp_GLET_DigitAccuracy):
 # =====================================================================================================================
 class Test_CmpDigit:
     @pytest.mark.parametrize(
-        argnames="source, accuracy, other, _EXPECTED",
+        argnames="source, accuracy_value, other, _EXPECTED",
         argvalues=[
             (1, None, 1, (True, False, True, False)),
             (1, None, "hello", (Exception, Exception, Exception, Exception)),
@@ -30,7 +30,7 @@ class Test_CmpDigit:
             _EXPECTED: bool | Exception,
     ):
         # -----------------------------------------------
-        victim = Victim(source=source, cmp_accuracy=accuracy)
+        victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
         Lambda(victim.cmp_ge, other=other).expect__check_assert(_EXPECTED[0])
         Lambda(victim.cmp_gt, other=other).expect__check_assert(_EXPECTED[1])
@@ -46,7 +46,7 @@ class Test_CmpDigit:
         Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[3])
 
         # -----------------------------------------------
-        victim = Victim(source=source, cmp_accuracy=accuracy)
+        victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
         Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[0])
         Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[1])
@@ -61,7 +61,7 @@ class Test_CmpDigit:
         # else:
         #     assert result is _EXPECTED[0]
 
-        victim = Victim(source=source, cmp_accuracy=accuracy)
+        victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
         Lambda(operator.ge, victim, other).expect__check_assert(_EXPECTED[0])
         Lambda(operator.gt, victim, other).expect__check_assert(_EXPECTED[1])
