@@ -261,7 +261,22 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         except Exception as exc:
             actual_value = exc  # this is an internal value! when use incorrect ArgsKw!!!
 
-        print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
+        try:
+            print(f"Expected[{self.SOURCE}/{args=}/{kwargs=}//{actual_value=}/{_EXPECTED=}]")
+        except Exception as exc:
+            print(f"!iternal exc! {self.__class__.__name__}({exc=})")
+            for part_name, part_obj in dict(
+                    source=self.SOURCE,
+                    args=args,
+                    kwargs=kwargs,
+                    actual_value=actual_value,
+                    _EXPECTED=_EXPECTED,
+            ).items():
+                try:
+                    print(f"{part_name=}/{part_obj=}")
+                except Exception as exc:
+                    print(f"{part_name=}/{exc=}")
+
         result = TypeAux(actual_value).check__subclassed_or_isinst__from_cls(_EXPECTED)
 
         if not result:
