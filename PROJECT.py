@@ -34,10 +34,11 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 8))
+    VERSION = Version((0, 3, 9))
     NEWS: list[str] = [
-        "[HELP_RULES] create Mark_*",
-        "[Monkey] create new folder +separate Mark_* +separate from NestGa_Self",
+        "[Sleep] move into datetime",
+        "[Lambda] great improovement! fix internal exc!",
+        "[NestCmp_GLET_DigitAccuracy] add accurecyPercent! - no tests",
     ]
 
 

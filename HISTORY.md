@@ -9,6 +9,12 @@
 ********************************************************************************
 ## NEWS
 
+0.3.9(2025.12.16 13.38.25)
+------------------------------
+- [Sleep] move into datetime  
+- [Lambda] great improovement! fix internal exc!  
+- [NestCmp_GLET_DigitAccuracy] add accurecyPercent! - no tests  
+
 0.3.8(2025.12.15 11.47.24)
 ------------------------------
 - [HELP_RULES] create Mark_*  
