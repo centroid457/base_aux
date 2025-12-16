@@ -3,7 +3,7 @@ import time
 import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.aux_datetime.m1_datetime import *
+from base_aux.aux_datetime.m2_datetime import *
 import operator
 
 

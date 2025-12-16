@@ -1,6 +1,6 @@
 from base_aux.cli.m1_cli_user import *
 from base_aux.versions.m2_version import *
-from base_aux.aux_datetime.m1_datetime import *
+from base_aux.aux_datetime.m2_datetime import *
 
 # from PROJECT import PROJECT
 

@@ -1,7 +1,7 @@
 import time
 import pytest
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.aux_datetime.m2_uptime import *
+from base_aux.aux_datetime.m3_uptime import *
 
 
 # =====================================================================================================================

@@ -84,12 +84,6 @@ def time_convert_to_human(seconds):
 #     return True
 
 
-def time_get_offset_to_now(start):  # starichenko
-    """return time offset from start in seconds to now!
-    """
-    return time.time() - start
-
-
 def time_sleep_remaining_time(seconds=1, start=None):   # starichenko
     """sleep remaining time from start point!
 
