@@ -9,7 +9,7 @@ KWARGS_FINAL__BLANK = {}
 
 
 # =====================================================================================================================
-class Base_ValueSpecial:
+class Mark_ValueSpecial:
     """
     GOAL
     ----
@@ -28,7 +28,7 @@ class Base_ValueSpecial:
 
     # TODO: add Meta EqCls with Exc??? to cmp with exact values??? - no! use special logic when do cmp!
     def __init__(self) -> NoReturn:
-        msg = f"Base_ValueSpecial NEVER INITTIATE! use direct CLASS!"
+        msg = f"Mark_ValueSpecial NEVER INITTIATE! use direct CLASS!"
         raise Exc__WrongUsage(msg)
 
     # def __bool__(self):     # CANT USE!!! it works only on instance!!!
@@ -40,7 +40,7 @@ class Base_ValueSpecial:
 
 
 # =====================================================================================================================
-class NoValue(Base_ValueSpecial):
+class NoValue(Mark_ValueSpecial):
     """
     DOUPTS
     ------
@@ -77,7 +77,7 @@ class NoValue(Base_ValueSpecial):
 
 
 # =====================================================================================================================
-class Raised(Base_ValueSpecial):
+class Raised(Mark_ValueSpecial):
     """
     GOAL
     ----
@@ -86,7 +86,7 @@ class Raised(Base_ValueSpecial):
 
 
 # =====================================================================================================================
-class Skipped(Base_ValueSpecial):
+class Skipped(Mark_ValueSpecial):
     """
     GOAL
     ----
@@ -103,9 +103,9 @@ class _ValueSpecial:
 
     USE instance!
     """
-    NOVALUE: type[Base_ValueSpecial] = NoValue
-    RAISED: type[Base_ValueSpecial] = Raised
-    SKIPPED: type[Base_ValueSpecial] = Skipped
+    NOVALUE: type[Mark_ValueSpecial] = NoValue
+    RAISED: type[Mark_ValueSpecial] = Raised
+    SKIPPED: type[Mark_ValueSpecial] = Skipped
 
     def __iter__(self) -> Iterable[type]:
         """

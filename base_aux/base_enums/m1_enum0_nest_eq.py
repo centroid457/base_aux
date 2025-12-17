@@ -15,7 +15,7 @@ class NestEq_EnumAdj(Enum):
     CONSTRAINTS
     -----------
     1/ USE EqEnum: ONLY at SETTINGS values! and params values! so it is PARAMS using!!!
-    2/ DONT USE: with result values! (for this case see Base_ValueSpecial specially created!)
+    2/ DONT USE: with result values! (for this case see Mark_ValueSpecial specially created!)
 
     GOAL
     ----
