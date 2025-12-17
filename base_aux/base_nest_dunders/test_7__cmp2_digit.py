@@ -1,8 +1,8 @@
-import pytest
-
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m7_cmp import *
 import operator
+
+from base_aux.base_values.m6_operator import gtlt, gtle, gelt, gele
 
 
 # =====================================================================================================================
@@ -14,28 +14,6 @@ class Victim(NestCmp_GLET_DigitAccuracy):
     @property
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         return self.SOURCE
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# TODO: move in special funcs! aux/static!
-def gtlt(a, b, c):
-    "Same as a < b < c."
-    return a < b < c
-
-
-def gtle(a, b, c):
-    "Same as a < b <= c."
-    return a < b <= c
-
-
-def gelt(a, b, c):
-    "Same as a <= b < c."
-    return a <= b < c
-
-
-def gele(a, b, c):
-    "Same as a <= b <= c."
-    return a <= b <= c
 
 
 # =====================================================================================================================
