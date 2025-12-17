@@ -100,14 +100,19 @@ class NestCmp_GLET_DigitAccuracy:
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         raise NotImplementedError()
 
-    def __init__(self, *args, cmp_accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None, cmp_accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None, **kwargs) -> None | NoReturn:
-        if cmp_accuracy_value is not None and cmp_accuracy_percent is not None:
-            raise Exc__WrongUsage(f"dont use both {cmp_accuracy_value=}/{cmp_accuracy_percent=}")
-
+    def __init__(
+            self,
+            *args,
+            cmp_accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            cmp_accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            **kwargs,
+    ) -> None | NoReturn:
         if cmp_accuracy_value is not None:
             self.CMP_ACCURACY_VALUE = cmp_accuracy_value
         if cmp_accuracy_percent is not None:
             self.CMP_ACCURACY_PERCENT = cmp_accuracy_percent
+
+        self._cmp_accuracy__check_correctness(cmp_accuracy_value, cmp_accuracy_percent)
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -118,6 +123,34 @@ class NestCmp_GLET_DigitAccuracy:
         return str(self)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def _cmp_accuracy__check_correctness(
+            self,
+            cmp_accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            cmp_accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            raised: bool = True,
+    ) -> bool | NoReturn:
+        raised_msg = None
+        # step1 --------
+        if cmp_accuracy_value is not None and cmp_accuracy_percent is not None:
+            raised_msg = f"dont use both {cmp_accuracy_value=}/{cmp_accuracy_percent=}"
+
+        elif self.CMP_ACCURACY_VALUE is not None and self.CMP_ACCURACY_PERCENT is not None:
+            raised_msg = f"dont use both {self.CMP_ACCURACY_VALUE=}/{self.CMP_ACCURACY_PERCENT=}"
+
+        # step2 --------
+        for accuracy in [cmp_accuracy_value, cmp_accuracy_percent, self.CMP_ACCURACY_VALUE, self.CMP_ACCURACY_PERCENT]:
+            if accuracy is not None and not isinstance(accuracy, (int, float)):
+                raised_msg = f"inappropriate type {accuracy=}"
+                break
+
+        # final --------
+        if raised_msg:
+            print(raised_msg)
+            if raised:
+                raise Exc__WrongUsage(raised_msg)
+
+        return raised_msg is None
+
     def _cmp_accuracy__translate_from_percent(self, percent: float) -> float:
         return self.CMP_VALUE * percent / 100
 
@@ -127,11 +160,13 @@ class NestCmp_GLET_DigitAccuracy:
         ----
         return final accuracy_value VALUE! from
         """
-        result = 0
-        if accuracy_value is not None and accuracy_percent is not None:
-            raise Exc__WrongUsage(f"dont use both {accuracy_value=}/{accuracy_percent=}")
+        self._cmp_accuracy__check_correctness(accuracy_value, accuracy_percent)
 
-        elif accuracy_value is None and accuracy_percent is None:
+        result = 0
+        # if accuracy_value is not None and accuracy_percent is not None:
+        #     raise Exc__WrongUsage(f"dont use both {accuracy_value=}/{accuracy_percent=}")
+
+        if accuracy_value is None and accuracy_percent is None:
             if self.CMP_ACCURACY_VALUE is not None:
                 result = self.CMP_ACCURACY_VALUE
             elif self.CMP_ACCURACY_PERCENT is not None:
