@@ -152,6 +152,13 @@ class NestCmp_GLET_DigitAccuracy:
         return raised_msg is None
 
     def _cmp_accuracy__translate_from_percent(self, accuracy_percent: float | None = None) -> float:
+        """
+        NOTE
+        ----
+        CAREFUL for actual values!!!
+        when FLOAT+FLOAT - applied additional tailing value!!!
+        dont mind it and dont use its result too strong!!!
+        """
         if accuracy_percent is None:
             accuracy_percent = self.CMP_ACCURACY_PERCENT or 0
 
