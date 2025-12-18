@@ -151,10 +151,18 @@ class NestCmp_GLET_DigitAccuracy:
 
         return raised_msg is None
 
-    def _cmp_accuracy__translate_from_percent(self, percent: float) -> float:
-        return self.CMP_VALUE * percent / 100
+    def _cmp_accuracy__translate_from_percent(self, accuracy_percent: float | None = None) -> float:
+        if accuracy_percent is None:
+            accuracy_percent = self.CMP_ACCURACY_PERCENT or 0
 
-    def _cmp_accuracy__get_active(self, accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None, accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None) -> TYPING.DIGIT_FLOAT_INT | NoReturn:     # add tests for meth
+        result = self.CMP_VALUE * accuracy_percent / 100
+        return result
+
+    def _cmp_accuracy__get_active(
+            self,
+            accuracy_value: TYPING.DIGIT_FLOAT_INT_NONE = None,
+            accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None
+    ) -> TYPING.DIGIT_FLOAT_INT | NoReturn:     # add tests for meth
         """
         GOAL
         ----

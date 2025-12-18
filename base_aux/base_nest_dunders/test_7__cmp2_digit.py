@@ -48,6 +48,37 @@ def test__cmp_accuracy__check_correctness(
     Lambda(Victim, 1, cmp_accuracy_value=accuracy_v, cmp_accuracy_percent=accuracy_p).expect__check_assert(NestCmp_GLET_DigitAccuracy if _EXPECTED else Exception)
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+@pytest.mark.parametrize(
+    argnames="source, accuracy_p, _EXPECTED",
+    argvalues=[
+        (0, None, 0),
+        (0, 0, 0),
+        (1, 0, 0),
+
+        (100, 0, 0),
+        (100, 0.1, 0.1),
+        (100, 1, 1),
+        (100, 10, 10),
+        (100, 1000, 1000),
+
+        (0.1, 0, 0),
+        (0.1, 0.1, 0.001),  # FIXME! use cmp by percent!
+        (0.1, 1, 0.001),
+        (0.1, 10, 0.01),
+        (0.1, 1000, 1),
+    ]
+)
+def test__cmp_accuracy__translate_from_percent(
+        source: float | None,
+        accuracy_p: float | None,
+        _EXPECTED: float,
+):
+    victim = Victim(source)
+
+    Lambda(victim._cmp_accuracy__translate_from_percent, accuracy_p).expect__check_assert(_EXPECTED)
+
+
 # =====================================================================================================================
 @pytest.mark.parametrize(
     argnames="source, other, accuracy_vp, _EXP_GLET, _EXP_EQ",
