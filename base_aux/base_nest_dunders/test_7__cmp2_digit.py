@@ -22,8 +22,14 @@ class Victim(NestCmp_GLET_DigitAccuracy):
     argvalues=[
         (None, None, True),
         (0, None, True),
-        (0, 0, False),
         (None, 0, True),
+
+        (0, 0, False),
+        ("exc", None, False),
+        ("exc", 0, False),
+        (None, "exc", False),
+        (0, "exc", False),
+        ("exc", "exc", False),
     ]
 )
 def test__cmp_accuracy__check_correctness(
@@ -43,8 +49,6 @@ def test__cmp_accuracy__check_correctness(
 
 
 # =====================================================================================================================
-# TODO: add tests for percent!!!
-
 @pytest.mark.parametrize(
     argnames="source, other, accuracy_vp, _EXP_GLET, _EXP_EQ",
     argvalues=[
@@ -66,13 +70,29 @@ def test__cmp_accuracy__check_correctness(
         (1.0, 1.0,  (0.0, None), (False, True, True, False), (True, False)),
         (1.0, 1,    (0, None), (False, True, True, False), (True, False)),
 
+        (1, 1,      (None, 0), (False, True, True, False), (True, False)),
+        (1, 1.0,    (None, 0), (False, True, True, False), (True, False)),
+        (1.0, 1.0,  (None, 0.0), (False, True, True, False), (True, False)),
+        (1.0, 1,    (None, 0), (False, True, True, False), (True, False)),
+
         # 1+0.9/1.1---------------------------------
         (1, 0.9, (0.2, None), (True, True, True, True), (True, False)),
         (1, 0.9, (0.1, None), (True, True, True, False), (True, False)),
+        (1, 0.9, (0.05, None), (True, True, False, False), (False, True)),
         (1, 0.9, (0, None), (True, True, False, False), (False, True)),
         (1, 1.1, (0, None), (False, False, True, True), (False, True)),
+        (1, 1.1, (0.05, None), (False, False, True, True), (False, True)),
         (1, 1.1, (0.1, None), (False, True, True, True), (True, False)),
         (1, 1.1, (0.2, None), (True, True, True, True), (True, False)),
+
+        (1, 0.9, (None, 20), (True, True, True, True), (True, False)),
+        (1, 0.9, (None, 10), (True, True, True, False), (True, False)),
+        (1, 0.9, (None, 5), (True, True, False, False), (False, True)),
+        (1, 0.9, (None, 0), (True, True, False, False), (False, True)),
+        (1, 1.1, (None, 0), (False, False, True, True), (False, True)),
+        (1, 1.1, (None, 5), (False, False, True, True), (False, True)),
+        (1, 1.1, (None, 10), (False, True, True, True), (True, False)),
+        (1, 1.1, (None, 20), (True, True, True, True), (True, False)),
     ]
 )
 def test__cmp_glet__single(
