@@ -34,7 +34,7 @@ class Test_Dirpath:
     )
     def test__1(self, source, _EXPECTED):
         func_link = Resolve_DirPath(source).resolve
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

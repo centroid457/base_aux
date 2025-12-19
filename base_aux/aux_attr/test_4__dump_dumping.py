@@ -34,9 +34,9 @@ from base_aux.aux_attr.m0_static import *
     ]
 )
 def test__names(source, skip_names, _EXPECTED):
-    Lambda(AttrDictDumping_Existed(source)(*skip_names)).expect__check_assert(_EXPECTED[0])
-    Lambda(AttrDictDumping_AnnotsAll(source)(*skip_names)).expect__check_assert(_EXPECTED[1])
-    Lambda(AttrDictDumping_AnnotsLast(source)(*skip_names)).expect__check_assert(_EXPECTED[2])
+    Lambda(AttrDictDumping_Existed(source)(*skip_names)).check_expected__assert(_EXPECTED[0])
+    Lambda(AttrDictDumping_AnnotsAll(source)(*skip_names)).check_expected__assert(_EXPECTED[1])
+    Lambda(AttrDictDumping_AnnotsLast(source)(*skip_names)).check_expected__assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

@@ -149,7 +149,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -168,7 +168,7 @@ class Test__ValueVariants:
     )
     def test__cmp_objs__no_value(self, source1, obj2, _EXPECTED):
         func_link = lambda: source1 == obj2
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

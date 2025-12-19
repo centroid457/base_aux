@@ -30,15 +30,15 @@ from base_aux.base_values.m3_exceptions import Exc__Expected
     ]
 )
 def test__RaiseIf(args, _EXPECTED):
-    Lambda(ArgsBoolIf_AllTrue(*args).resolve).expect__check_assert(_EXPECTED[0])
-    Lambda(ArgsBoolIf_AnyTrue(*args).resolve).expect__check_assert(_EXPECTED[1])
-    Lambda(ArgsBoolIf_AllFalse(*args).resolve).expect__check_assert(_EXPECTED[2])
-    Lambda(ArgsBoolIf_AnyFalse(*args).resolve).expect__check_assert(_EXPECTED[3])
+    Lambda(ArgsBoolIf_AllTrue(*args).resolve).check_expected__assert(_EXPECTED[0])
+    Lambda(ArgsBoolIf_AnyTrue(*args).resolve).check_expected__assert(_EXPECTED[1])
+    Lambda(ArgsBoolIf_AllFalse(*args).resolve).check_expected__assert(_EXPECTED[2])
+    Lambda(ArgsBoolIf_AnyFalse(*args).resolve).check_expected__assert(_EXPECTED[3])
 
-    Lambda(ArgsRaiseIf_AllTrue(*args).resolve).expect__check_assert(Exc__Expected if _EXPECTED[0] else False)
-    Lambda(ArgsRaiseIf_AnyTrue(*args).resolve).expect__check_assert(Exc__Expected if _EXPECTED[1] else False)
-    Lambda(ArgsRaiseIf_AllFalse(*args).resolve).expect__check_assert(Exc__Expected if _EXPECTED[2] else False)
-    Lambda(ArgsRaiseIf_AnyFalse(*args).resolve).expect__check_assert(Exc__Expected if _EXPECTED[3] else False)
+    Lambda(ArgsRaiseIf_AllTrue(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[0] else False)
+    Lambda(ArgsRaiseIf_AnyTrue(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[1] else False)
+    Lambda(ArgsRaiseIf_AllFalse(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[2] else False)
+    Lambda(ArgsRaiseIf_AnyFalse(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[3] else False)
 
 
 # =====================================================================================================================

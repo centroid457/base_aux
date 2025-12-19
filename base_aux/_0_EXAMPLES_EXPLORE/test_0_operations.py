@@ -32,26 +32,26 @@ class Test_CmpDigit:
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
-        Lambda(victim.cmp_ge, other=other).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_gt, other=other).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_ge, other=other).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.cmp_gt, other=other).check_expected__assert(_EXPECTED[1])
+        Lambda(victim.cmp_le, other=other).check_expected__assert(_EXPECTED[2])
+        Lambda(victim.cmp_lt, other=other).check_expected__assert(_EXPECTED[3])
 
         # -----------------------------------------------
         victim = Victim(source=source)
 
-        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[1])
+        Lambda(victim.cmp_le, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[2])
+        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[3])
 
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
-        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.cmp_le, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[2])
-        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).expect__check_assert(_EXPECTED[3])
+        Lambda(victim.cmp_ge, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.cmp_gt, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[1])
+        Lambda(victim.cmp_le, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[2])
+        Lambda(victim.cmp_lt, other=other, accuracy=accuracy).check_expected__assert(_EXPECTED[3])
 
         # -----------------------------------------------
         # try:      # NOTE: USE OPERATOR instead!!!
@@ -63,10 +63,10 @@ class Test_CmpDigit:
 
         victim = Victim(source=source, cmp_accuracy_value=accuracy)
 
-        Lambda(operator.ge, victim, other).expect__check_assert(_EXPECTED[0])
-        Lambda(operator.gt, victim, other).expect__check_assert(_EXPECTED[1])
-        Lambda(operator.le, victim, other).expect__check_assert(_EXPECTED[2])
-        Lambda(operator.lt, victim, other).expect__check_assert(_EXPECTED[3])
+        Lambda(operator.ge, victim, other).check_expected__assert(_EXPECTED[0])
+        Lambda(operator.gt, victim, other).check_expected__assert(_EXPECTED[1])
+        Lambda(operator.le, victim, other).check_expected__assert(_EXPECTED[2])
+        Lambda(operator.lt, victim, other).check_expected__assert(_EXPECTED[3])
 
 
 # =====================================================================================================================

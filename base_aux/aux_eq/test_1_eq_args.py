@@ -22,7 +22,7 @@ from base_aux.base_values.m4_primitives import INST_EQ_RAISE, INST_EQ_FALSE, INS
     ]
 )
 def test__1(args, _EXPECTED):
-    Lambda(EqArgs(*args)).expect__check_assert(_EXPECTED)
+    Lambda(EqArgs(*args)).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

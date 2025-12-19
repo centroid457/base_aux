@@ -36,7 +36,7 @@ class Test__New:
         ]
     )
     def test__2_parametrized_by_one_func(self, args, _EXPECTED):
-        Lambda(int, args).expect__check_assert(_EXPECTED)
+        Lambda(int, args).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(argnames="func_link", argvalues=[int, float, ])
@@ -48,7 +48,7 @@ class Test__New:
         ]
     )
     def test__3_parametrized_by_several_funcs(self, func_link, args, _EXPECTED):
-        Lambda(func_link, args).expect__check_assert(_EXPECTED)
+        Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

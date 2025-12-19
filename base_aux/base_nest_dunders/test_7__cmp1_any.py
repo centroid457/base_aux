@@ -66,7 +66,7 @@ class Test__CmpAny:
         ]
     )
     def test__inst__cmp__eq(self, expr):
-        Lambda(expr).expect__check_assert()
+        Lambda(expr).check_expected__assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -98,7 +98,7 @@ class Test__CmpAny:
         ]
     )
     def test__inst__cmp__lg(self, expr, _EXPECTED):
-        Lambda(expr).expect__check_assert(_EXPECTED)
+        Lambda(expr).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -46,8 +46,8 @@ class Test__Attr:
         ]
     )
     def test__get(self, attr, _EXPECTED):
-        Lambda(lambda: getattr(self.Victim(), attr)).expect__check_assert(_EXPECTED)
-        Lambda(lambda: self.Victim()[attr]).expect__check_assert(_EXPECTED)
+        Lambda(lambda: getattr(self.Victim(), attr)).check_expected__assert(_EXPECTED)
+        Lambda(lambda: self.Victim()[attr]).check_expected__assert(_EXPECTED)
 
     # @pytest.mark.parametrize(
     #     argnames="attr, _EXPECTED",
@@ -119,7 +119,7 @@ class Test__Annot:
     )
     def test__get(self, attr, _EXPECTED):
         # Lambda(lambda: getattr(self.Victim(), attr)).check_assert(_EXPECTED)
-        Lambda(lambda: self.Victim()[attr]).expect__check_assert(_EXPECTED)
+        Lambda(lambda: self.Victim()[attr]).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -42,9 +42,9 @@ class Test__Json:
         # assert json.loads(str(source)) == _EXPECTED
 
         victim = TextAux(source)
-        Lambda(victim.parse__json).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.parse__dict).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.parse__dict_auto).expect__check_assert(_EXPECTED[2])
+        Lambda(victim.parse__json).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.parse__dict).check_expected__assert(_EXPECTED[1])
+        Lambda(victim.parse__dict_auto).check_expected__assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

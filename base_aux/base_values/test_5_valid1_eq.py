@@ -26,7 +26,7 @@ def test__1_init(source, eq, _EXPECTED):
         # here it will be compared with source or Exception!
 
     func_link = ValueEqValid
-    Lambda(func_link, source, eq).expect__check_assert(_EXPECTED)
+    Lambda(func_link, source, eq).check_expected__assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ def test__1_init(source, eq, _EXPECTED):
 )
 def test__2_reset(source, eq, new, _EXPECTED):
     func_link = ValueEqValid(source, eq).value_update
-    Lambda(func_link, new).expect__check_assert(_EXPECTED)
+    Lambda(func_link, new).check_expected__assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ def test__2_reset(source, eq, new, _EXPECTED):
 )
 def test__3_eq(source, eq, other, _EXPECTED):
     func_link = ValueEqValid(source, eq) == other
-    Lambda(func_link).expect__check_assert(_EXPECTED)
+    Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -37,7 +37,7 @@ from base_aux.base_lambdas.m1_lambda import *
     ]
 )
 def test__url(kwargs_source, kwargs_resolve, _EXPECTED):
-    Lambda(Url(**kwargs_source).resolve, **kwargs_resolve).expect__check_assert(_EXPECTED)
+    Lambda(Url(**kwargs_source).resolve, **kwargs_resolve).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

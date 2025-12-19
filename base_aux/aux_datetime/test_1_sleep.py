@@ -31,7 +31,7 @@ async def test__1(
     except BaseException as exc:
         result = exc
 
-    Lambda(result).expect__check_assert(_EXPECTED)
+    Lambda(result).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

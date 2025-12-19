@@ -29,7 +29,7 @@ from base_aux.buses.m1_serial1_client import *
     ]
 )
 def test__data_ensure__bytes(func_link, args, _EXPECTED):
-    Lambda(func_link, args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ def test__data_ensure__bytes(func_link, args, _EXPECTED):
     ]
 )
 def test__data_ensure__string(func_link, args, _EXPECTED):
-    Lambda(func_link, args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -92,7 +92,7 @@ class Victim(SerialClient):
     ]
 )
 def test__bytes_eol__ensures(func_link, args, _EXPECTED):
-    Lambda(func_link, args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ def test__bytes_eol__ensures(func_link, args, _EXPECTED):
     ]
 )
 def test__data_eol__clear(func_link, args, _EXPECTED):
-    Lambda(func_link, args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -151,7 +151,7 @@ def test__data_eol__clear(func_link, args, _EXPECTED):
     ]
 )
 def test__create_cmd_line(func_link, args, _EXPECTED):
-    Lambda(func_link, *args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, *args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

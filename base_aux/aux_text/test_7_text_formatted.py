@@ -104,7 +104,7 @@ class Test_Formatted:
     )
     def test__str(self, pat_format, args, kwargs, _EXPECTED):
         func_link = lambda: str(TextFormatted(pat_format, *args, **kwargs))
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -118,12 +118,12 @@ class Test_Formatted:
     def test__type_apply(self, pat_format, args, kwargs, _EXPECTED):
         victim = TextFormatted(pat_format, *args, **kwargs)
         func_link = lambda: victim.VALUES.__annotations__["name"]
-        Lambda(func_link).expect__check_assert(_EXPECTED[0])
+        Lambda(func_link).check_expected__assert(_EXPECTED[0])
 
         func_link = lambda: getattr(victim.VALUES, "name")
-        Lambda(func_link).expect__check_assert(_EXPECTED[1])
+        Lambda(func_link).check_expected__assert(_EXPECTED[1])
 
-        Lambda(lambda: victim.VALUES.name.__class__).expect__check_assert(_EXPECTED[0])
+        Lambda(lambda: victim.VALUES.name.__class__).check_expected__assert(_EXPECTED[0])
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -151,18 +151,18 @@ class Test_Formatted:
         # CORRECT ------------------------------------
         try:
             victim["name"] = new
-            Lambda(True).expect__check_assert(_EXPECTED[0])
+            Lambda(True).check_expected__assert(_EXPECTED[0])
         except:
-            Lambda(Exception).expect__check_assert(_EXPECTED[0])
+            Lambda(Exception).check_expected__assert(_EXPECTED[0])
             victim = TextFormatted(pat_format, *args, raise_types=False, **kwargs)
             victim["name"] = new    # NoRaise here!
             return
             pass
 
-        Lambda(lambda: victim.VALUES.name.__class__).expect__check_assert(_EXPECTED[1])
+        Lambda(lambda: victim.VALUES.name.__class__).check_expected__assert(_EXPECTED[1])
 
         func_link = lambda: victim.VALUES.name
-        Lambda(func_link).expect__check_assert(_EXPECTED[2])
+        Lambda(func_link).check_expected__assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

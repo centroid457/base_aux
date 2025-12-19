@@ -43,7 +43,7 @@ from base_aux.aux_argskwargs.m2_argskwargs_aux import *
     ]
 )
 def test__args(source, _EXPECTED):
-    Lambda(ArgsKwargsAux(source).resolve_args).expect__check_assert(_EXPECTED)
+    Lambda(ArgsKwargsAux(source).resolve_args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

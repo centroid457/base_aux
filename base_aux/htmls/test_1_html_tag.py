@@ -37,7 +37,7 @@ EXAMPLE_HTML = """
     ]
 )
 def test__tag(source, address, _EXPECTED):
-    Lambda(HtmlTagParser(source, **address).resolve).expect__check_assert(_EXPECTED)
+    Lambda(HtmlTagParser(source, **address).resolve).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -58,7 +58,7 @@ def test__tag(source, address, _EXPECTED):
     ]
 )
 def test__chain(source, chain_dicts, _EXPECTED):
-    Lambda(ChainResolve_HtmlTagParser(*[HtmlTagParser(**chain_dict) for chain_dict in chain_dicts], source=source).resolve).expect__check_assert(_EXPECTED)
+    Lambda(ChainResolve_HtmlTagParser(*[HtmlTagParser(**chain_dict) for chain_dict in chain_dicts], source=source).resolve).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

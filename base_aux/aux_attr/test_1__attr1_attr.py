@@ -111,10 +111,10 @@ class VictimNested_New(Victim):
     ]
 )
 def test__iter(source, _EXPECTED):
-    Lambda(set(AttrAux_Existed(source).iter__dirnames_original_not_builtin())).expect__check_assert(_EXPECTED[0])
-    Lambda(set(AttrAux_Existed(source).iter__names_filter__not_hidden())).expect__check_assert(_EXPECTED[1])
-    Lambda(set(AttrAux_Existed(source).iter__names_filter__not_private())).expect__check_assert(_EXPECTED[2])
-    Lambda(set(AttrAux_Existed(source).iter__names_filter__private())).expect__check_assert(_EXPECTED[3])
+    Lambda(set(AttrAux_Existed(source).iter__dirnames_original_not_builtin())).check_expected__assert(_EXPECTED[0])
+    Lambda(set(AttrAux_Existed(source).iter__names_filter__not_hidden())).check_expected__assert(_EXPECTED[1])
+    Lambda(set(AttrAux_Existed(source).iter__names_filter__not_private())).check_expected__assert(_EXPECTED[2])
+    Lambda(set(AttrAux_Existed(source).iter__names_filter__private())).check_expected__assert(_EXPECTED[3])
 
 
 # =====================================================================================================================
@@ -156,10 +156,10 @@ class Victim3:
 def test__gsai(victim, attr, _EXPECTED):
     # use here EXACTLY the instance! if used class - value would changed in class and further values will not cmp correctly!
 
-    Lambda(AttrAux_Existed(victim).name_ic__get_original, attr).expect__check_assert(_EXPECTED[0])
-    Lambda(AttrAux_Existed(victim).name_ic__check_exists, attr).expect__check_assert(_EXPECTED[1])
-    Lambda(AttrAux_Existed(victim).gai_ic, attr).expect__check_assert(_EXPECTED[2])
-    Lambda(AttrAux_Existed(victim).sai_ic, attr, 123).expect__check_assert(_EXPECTED[3])
+    Lambda(AttrAux_Existed(victim).name_ic__get_original, attr).check_expected__assert(_EXPECTED[0])
+    Lambda(AttrAux_Existed(victim).name_ic__check_exists, attr).check_expected__assert(_EXPECTED[1])
+    Lambda(AttrAux_Existed(victim).gai_ic, attr).check_expected__assert(_EXPECTED[2])
+    Lambda(AttrAux_Existed(victim).sai_ic, attr, 123).check_expected__assert(_EXPECTED[3])
 
 
 # =====================================================================================================================
@@ -215,7 +215,7 @@ class Test__Dump:
         ]
     )
     def test__names(self, source, skip, _EXPECTED):
-        Lambda(AttrAux_Existed(source).dump_dict, *skip).expect__check_assert(_EXPECTED)
+        Lambda(AttrAux_Existed(source).dump_dict, *skip).check_expected__assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="cal_use, _EXPECTED",
@@ -231,10 +231,10 @@ class Test__Dump:
     )
     def test__callable_use(self, cal_use, _EXPECTED):
         result_dict = AttrAux_Existed(Victim).dump_dict(callables_resolve=cal_use)
-        Lambda(dict.get, result_dict, "NONE").expect__check_assert(_EXPECTED[0])
-        Lambda(dict.get, result_dict, "TRUE").expect__check_assert(_EXPECTED[1])
-        Lambda(dict.get, result_dict, "LTRUE").expect__check_assert(_EXPECTED[2])
-        Lambda(dict.get, result_dict, "RAISE").expect__check_assert(_EXPECTED[3])
+        Lambda(dict.get, result_dict, "NONE").check_expected__assert(_EXPECTED[0])
+        Lambda(dict.get, result_dict, "TRUE").check_expected__assert(_EXPECTED[1])
+        Lambda(dict.get, result_dict, "LTRUE").check_expected__assert(_EXPECTED[2])
+        Lambda(dict.get, result_dict, "RAISE").check_expected__assert(_EXPECTED[3])
 
     def test__callable_use__special_raise(self):
         try:

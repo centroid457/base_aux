@@ -57,7 +57,7 @@ class Test__WithUnit:
     )
     def test__validate(self, args, _EXPECTED):
         func_link = ValueUnit.validate
-        Lambda(func_link, args).expect__check_assert(_EXPECTED)
+        Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -110,7 +110,7 @@ class Test__WithUnit:
     )
     def test__str(self, args, _EXPECTED):
         func_link = lambda: str(ValueUnit(args))
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -133,7 +133,7 @@ class Test__WithUnit:
     )
     def test__multiplier(self, args, _EXPECTED):
         func_link = lambda: ValueUnit(args).MULT
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -184,7 +184,7 @@ class Test__WithUnit:
     )
     def test__cmp_1__as_func(self, source1, source2, _EXPECTED):
         func_link = lambda: ValueUnit(source1).__cmp__(source2)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -237,7 +237,7 @@ class Test__WithUnit:
     )
     def test__cmp_2__eq(self, source, other, _EXPECTED):
         func_link = lambda: source == other
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

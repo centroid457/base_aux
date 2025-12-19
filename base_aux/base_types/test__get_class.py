@@ -49,7 +49,7 @@ class Test__ensure:
     )
     def test__ensure_class(self, source, _EXPECTED):
         func_link = TypeAux(source).get__class
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

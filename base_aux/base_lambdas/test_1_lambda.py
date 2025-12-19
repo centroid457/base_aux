@@ -32,11 +32,11 @@ def test__raise():
 def test__derivatives(source, args, _EXPECTED):
     # for Cls, Expected in zip(, _EXPECTED):    # tis good idea but we cant see directly exact line!
 
-    Lambda(source, *args).expect__check_assert(_EXPECTED[0])
-    Lambda_Bool(source, *args).expect__check_assert(_EXPECTED[1])
-    Lambda_BoolReversed(source, *args).expect__check_assert(_EXPECTED[2])
-    Lambda_TrySuccess(source, *args).expect__check_assert(_EXPECTED[3])
-    Lambda_TryFail(source, *args).expect__check_assert(_EXPECTED[4])
+    Lambda(source, *args).check_expected__assert(_EXPECTED[0])
+    Lambda_Bool(source, *args).check_expected__assert(_EXPECTED[1])
+    Lambda_BoolReversed(source, *args).check_expected__assert(_EXPECTED[2])
+    Lambda_TrySuccess(source, *args).check_expected__assert(_EXPECTED[3])
+    Lambda_TryFail(source, *args).check_expected__assert(_EXPECTED[4])
 
 
 # =====================================================================================================================

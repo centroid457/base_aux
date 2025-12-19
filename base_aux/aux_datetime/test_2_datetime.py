@@ -43,7 +43,7 @@ class Test__DateTime:
     )
     def test__init(self, source, _EXPECTED):
         func_link = lambda: DateTimeAux(source).SOURCE
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="source, other, cmp_func, _EXPECTED",
@@ -73,7 +73,7 @@ class Test__DateTime:
     )
     def test__cmp(self, source, other, cmp_func, _EXPECTED):
         func_link = lambda: cmp_func(DateTimeAux(source), other)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     def test__cmp_ms(self):
         victim1 = DateTimeAux()

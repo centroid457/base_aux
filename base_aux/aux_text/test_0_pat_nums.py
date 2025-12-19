@@ -45,24 +45,24 @@ from base_aux.aux_text.m0_patterns import *
 def test___PatNumber(source, fpoint, _EXP_int, _EXP_float, _EXP_both):
     # INT -----
     match = re.fullmatch(Pat_NumberSingle(fpoint).INT_EXACT, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_int[0])
+    Lambda(match and match[1]).check_expected__assert(_EXP_int[0])
 
     match = re.fullmatch(Pat_NumberSingle(fpoint).INT_COVERED, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_int[1])
+    Lambda(match and match[1]).check_expected__assert(_EXP_int[1])
 
     # FLOAT -----
     match = re.fullmatch(Pat_NumberSingle(fpoint).FLOAT_EXACT, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_float[0])
+    Lambda(match and match[1]).check_expected__assert(_EXP_float[0])
 
     match = re.fullmatch(Pat_NumberSingle(fpoint).FLOAT_COVERED, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_float[1])
+    Lambda(match and match[1]).check_expected__assert(_EXP_float[1])
 
     # BOTH -----
     match = re.fullmatch(Pat_NumberSingle(fpoint).BOTH_EXACT, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_both[0])
+    Lambda(match and match[1]).check_expected__assert(_EXP_both[0])
 
     match = re.fullmatch(Pat_NumberSingle(fpoint).BOTH_COVERED, source)
-    Lambda(match and match[1]).expect__check_assert(_EXP_both[1])
+    Lambda(match and match[1]).check_expected__assert(_EXP_both[1])
 
 
 # =====================================================================================================================

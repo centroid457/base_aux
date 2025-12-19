@@ -113,7 +113,7 @@ class Base_KwargsEqExpect:
             if expect is not None:
                 result_i = Lambda(
                     lambda: self.EQ_KWARGS[name] == self.OTHER_FINAL,
-                ).expect__check_bool(expect)
+                ).check_expected__bool(expect)
                 results.append(result_i)
 
         # FINAL result -----------------------

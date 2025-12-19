@@ -34,7 +34,7 @@ class VictimEq(NestEq_EnumAdj):
     ]
 )
 def test___value__get_original(source, _EXPECTED):
-    Lambda(VictimEq._value__get_original, source).expect__check_assert(_EXPECTED)
+    Lambda(VictimEq._value__get_original, source).check_expected__assert(_EXPECTED)
 
 # ---------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
@@ -49,7 +49,7 @@ def test___value__get_original(source, _EXPECTED):
     ]
 )
 def test__init(source, _EXPECTED):
-    Lambda(VictimEq, source).expect__check_assert(_EXPECTED)
+    Lambda(VictimEq, source).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -84,10 +84,10 @@ class Test_EnumStd:
         ]
     )
     def test__eq_in(self, source, other, _EXPECTED):
-        Lambda(source == other).expect__check_assert(_EXPECTED[0])
+        Lambda(source == other).check_expected__assert(_EXPECTED[0])
 
         func_link = lambda x: x in source
-        Lambda(func_link, other).expect__check_assert(_EXPECTED[1])
+        Lambda(func_link, other).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -146,10 +146,10 @@ class Test_EnumEq:
     )
     def test__eq_in(self, source, other, _EXPECTED):
         funk_link = lambda: source == other
-        Lambda(funk_link).expect__check_assert(_EXPECTED[0])
+        Lambda(funk_link).check_expected__assert(_EXPECTED[0])
 
         func_link = lambda x: x in source
-        Lambda(func_link, other).expect__check_assert(_EXPECTED[1])
+        Lambda(func_link, other).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

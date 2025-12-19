@@ -28,7 +28,7 @@ from base_aux.aux_attr.m0_static import check_name__buildin
 )
 def test__name_is_build_in(source, _EXPECTED):
     func_link = check_name__buildin(source)
-    Lambda(func_link).expect__check_assert(_EXPECTED)
+    Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

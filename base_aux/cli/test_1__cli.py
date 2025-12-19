@@ -106,7 +106,7 @@ class Test:
     )
     def test__tuple(self, cmds, timeout_def, _EXPECTED):
         func_link = CliUser().send(cmd=cmds, timeout=timeout_def)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     def test__list__till_first_true(self):
         victim = CliUser()

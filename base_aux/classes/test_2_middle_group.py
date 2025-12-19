@@ -62,7 +62,7 @@ class VictimAttr1CmpAttr2_TryBreak(VictimAttr1CmpAttr2):
     ]
 )
 def test__victim__check_equal__cls(obj, other, _EXPECTED):
-    Lambda(obj.middle_group__check_equal__cls, other).expect__check_assert(_EXPECTED)
+    Lambda(obj.middle_group__check_equal__cls, other).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

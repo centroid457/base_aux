@@ -33,7 +33,7 @@ from base_aux.base_values.m4_primitives import *
 def test__item__get_original(source, item, _EXPECTED):
     victim = IterAux(source)
     func_link = victim.item__get_original
-    Lambda(func_link, item).expect__check_assert(_EXPECTED)
+    Lambda(func_link, item).check_expected__assert(_EXPECTED)
 
 
 def test__item__get_original_2():
@@ -92,10 +92,10 @@ def test__item__get_original_2():
 )
 def test__path__get_original__value_get(source, path, _EXPECTED):
     func_link = IterAux(source).keypath__get_original
-    Lambda(func_link, *path).expect__check_assert(_EXPECTED[0])
+    Lambda(func_link, *path).check_expected__assert(_EXPECTED[0])
 
     func_link = IterAux(source).value__get
-    Lambda(func_link, *path).expect__check_assert(_EXPECTED[1])
+    Lambda(func_link, *path).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -144,10 +144,10 @@ def test__valuse_set():
 )
 def test__get_first_is_not_none(source, variants, _EXPECTED):
     func_link = IterAux(source).get_first_is_not_none
-    Lambda(func_link).expect__check_assert(_EXPECTED[0])
+    Lambda(func_link).check_expected__assert(_EXPECTED[0])
 
     func_link = lambda: IterAux(source).get_first_is_not(*variants)
-    Lambda(func_link).expect__check_assert(_EXPECTED[1])
+    Lambda(func_link).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

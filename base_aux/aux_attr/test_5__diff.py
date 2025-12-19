@@ -84,9 +84,9 @@ from base_aux.base_values.m2_value_special import *
     ]
 )
 def test__names(source1, source2, _EXPECTED):
-    Lambda(AttrDiff_Existed(source1, source2)).expect__check_assert(_EXPECTED[0])
-    Lambda(AttrDiff_AnnotsAll(source1, source2)).expect__check_assert(_EXPECTED[1])
-    Lambda(AttrDiff_AnnotsLast(source1, source2)).expect__check_assert(_EXPECTED[2])
+    Lambda(AttrDiff_Existed(source1, source2)).check_expected__assert(_EXPECTED[0])
+    Lambda(AttrDiff_AnnotsAll(source1, source2)).check_expected__assert(_EXPECTED[1])
+    Lambda(AttrDiff_AnnotsLast(source1, source2)).check_expected__assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

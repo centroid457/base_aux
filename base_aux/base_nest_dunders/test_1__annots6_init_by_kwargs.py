@@ -69,7 +69,7 @@ class Test__NestInit:
         ]
     )
     def test__1(self, args, kwargs, _EXPECTED):
-        Lambda(NestInit_AnnotsAttr_ByArgsKwargs, *args, **kwargs).expect__check_assert(_EXPECTED)
+        Lambda(NestInit_AnnotsAttr_ByArgsKwargs, *args, **kwargs).check_expected__assert(_EXPECTED)
 
         if _EXPECTED == Exception:
             return
@@ -109,11 +109,11 @@ class Victim(NestInit_AnnotsAttr_ByArgsKwargs):
     ]
 )
 def test__2(args, kwargs, _EXPECTED, values):
-    Lambda(Victim, *args, **kwargs).expect__check_assert(_EXPECTED)
+    Lambda(Victim, *args, **kwargs).check_expected__assert(_EXPECTED)
 
     victim = Victim(*args, **kwargs)
     for index, name in enumerate(["At0", "At1", "An0", "An1"]):
-        Lambda(getattr, victim, name).expect__check_assert(values[index])
+        Lambda(getattr, victim, name).check_expected__assert(values[index])
 
 
 # =====================================================================================================================

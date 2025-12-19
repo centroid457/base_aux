@@ -114,11 +114,11 @@ class Test__ValidTypes:
     def test__validate__types(self, args, _EXPECTED):
         # DIRECT -------
         func_link = Valid(*args)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
         # REVERSE ------
         func_link = ValidReverse(*args)
-        Lambda(func_link).expect__check_assert(not _EXPECTED)
+        Lambda(func_link).check_expected__assert(not _EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -134,7 +134,7 @@ class Test__ValidTypes:
         # assert source == Valid(*valid_args)
 
         func_link = lambda *_args: source == Valid(*_args)
-        Lambda(func_link, *args).expect__check_assert(_EXPECTED)
+        Lambda(func_link, *args).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -160,7 +160,7 @@ class Test__ValidTypes:
     )
     def test__value__args_kwargs(self, source, args__value, kwargs__value, validate, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate, args__value=args__value, kwargs__value=kwargs__value)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -199,7 +199,7 @@ class Test__ValidTypes:
     )
     def test__validate__args_kwargs(self, source, args__validate, kwargs__validate, validate, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate, args__validate=args__validate, kwargs__validate=kwargs__validate)
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -276,7 +276,7 @@ class Test__ValidTypes:
     )
     def test__retry(self, source, validate_link, retry, _EXPECTED):
         func_link = Valid(value_link=source, validate_link=validate_link, validate_retry=retry).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

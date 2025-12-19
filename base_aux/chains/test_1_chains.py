@@ -14,7 +14,7 @@ from base_aux.chains.m1_chains import *
     ]
 )
 def test__chains(source, chains, _EXPECTED):
-    Lambda(ChainResolve(*chains, source=source).resolve).expect__check_assert(_EXPECTED)
+    Lambda(ChainResolve(*chains, source=source).resolve).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

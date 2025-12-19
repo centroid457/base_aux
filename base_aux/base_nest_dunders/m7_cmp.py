@@ -129,6 +129,12 @@ class NestCmp_GLET_DigitAccuracy:
             accuracy_percent: TYPING.DIGIT_FLOAT_INT_NONE = None,
             raised: bool = True,
     ) -> bool | NoReturn:
+        """
+        GOAL
+        ----
+        1. use only one value in one level (method/init - value)
+        2. use appropriate type
+        """
         raised_msg = None
         # step1 --------
         if accuracy_value is not None and accuracy_percent is not None:
@@ -151,7 +157,7 @@ class NestCmp_GLET_DigitAccuracy:
 
         return raised_msg is None
 
-    def _cmp_accuracy__translate_from_percent(self, accuracy_percent: float | None = None) -> float:
+    def _cmp_accuracy__translate_from_percent(self, accuracy_percent: float | None = None) -> float | NoReturn:
         """
         NOTE
         ----

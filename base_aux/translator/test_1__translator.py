@@ -29,7 +29,7 @@ class Test__1:
     )
     def test__direct(self, rules, notFound, source, _EXPECTED):
         func_link = Translator(rules=rules, return_source_if_not_found=notFound)
-        Lambda(func_link, source).expect__check_assert(_EXPECTED)
+        Lambda(func_link, source).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

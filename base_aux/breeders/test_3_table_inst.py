@@ -48,8 +48,8 @@ class Test__1_TableLine:
         ]
     )
     def test__count(self, tline, _EXPECTED):
-        Lambda(getattr(tline, "COUNT")).expect__check_assert(_EXPECTED)
-        Lambda(len(tline)).expect__check_assert(_EXPECTED)
+        Lambda(getattr(tline, "COUNT")).check_expected__assert(_EXPECTED)
+        Lambda(len(tline)).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -73,7 +73,7 @@ class Test__1_TableLine:
     )
     def test__gi_in(self, tline, index, _EXPECTED):
         func_link = lambda i: tline[i]
-        Lambda(func_link, index).expect__check_assert(_EXPECTED)
+        Lambda(func_link, index).check_expected__assert(_EXPECTED)
 
         if _EXPECTED is not Exception:
             assert _EXPECTED in tline
@@ -92,7 +92,7 @@ class Test__1_TableLine:
     )
     def test__call(self, tline, meth, args, index, _EXPECTED):
         func_link = lambda: tline(meth, *args)[index]
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -116,7 +116,7 @@ class Test__1_TableLine:
     )
     def test__eq(self, obj1, obj2, _EXPECTED):
         func_link = lambda: obj1 == obj2
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -129,7 +129,7 @@ class Test__1_TableLine:
     )
     def test__iter(self, insts, _EXPECTED):
         func_link = lambda: [*TableLine(*insts)]
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -269,7 +269,7 @@ class Test__2_TableLines:
     )
     def test__iter_lines_insts(self, source, _EXPECTED):
         func_link = lambda s: [*s().iter_lines_insts()] == _EXPECTED
-        Lambda(func_link, source).expect__check_assert()
+        Lambda(func_link, source).check_expected__assert()
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -282,13 +282,13 @@ class Test__2_TableLines:
     )
     def test__names_values_items(self, source, names, values):
         func_link = lambda s: s().names()
-        Lambda(func_link, source).expect__check_assert(names)
+        Lambda(func_link, source).check_expected__assert(names)
 
         func_link = lambda s: s().values()
-        Lambda(func_link, source).expect__check_assert(values)
+        Lambda(func_link, source).check_expected__assert(values)
 
         func_link = lambda s: [*s().items()]
-        Lambda(func_link, source).expect__check_assert([*zip(names, values)])
+        Lambda(func_link, source).check_expected__assert([*zip(names, values)])
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -308,7 +308,7 @@ class Test__2_TableLines:
     )
     def test__gi(self, source, name, _EXPECTED):
         func_link = lambda s: s()[name]
-        Lambda(func_link, source).expect__check_assert(_EXPECTED)
+        Lambda(func_link, source).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     def test__call(self):
@@ -389,7 +389,7 @@ class Test__3_TableColumn:
     )
     def test__item_access(self, tls, index, name, _EXPECTED):
         victim = TableColumn(lines=tls, index=index)
-        Lambda(getattr, victim, name).expect__check_assert(_EXPECTED)
+        Lambda(getattr, victim, name).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

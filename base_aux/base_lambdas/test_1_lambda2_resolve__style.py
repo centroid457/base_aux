@@ -59,14 +59,14 @@ from base_aux.base_values.m4_primitives import *
     ]
 )
 def test__get_result(source, args, _EXPECTED):
-    Lambda(Lambda(source, *args).check_raise).expect__check_assert(_EXPECTED[0])
-    Lambda(Lambda(source, *args).check_no_raise).expect__check_assert(_EXPECTED[1])
-    Lambda(Lambda(source, *args).resolve__raise).expect__check_assert(_EXPECTED[2])
-    Lambda(Lambda(source, *args).resolve__raise_as_none).expect__check_assert(_EXPECTED[3])
-    Lambda(Lambda(source, *args).resolve__exc).expect__check_assert(_EXPECTED[4])
-    Lambda(Lambda(source, *args).resolve__bool).expect__check_assert(_EXPECTED[5])
-    Lambda(Lambda(source, *args).resolve__skip_callables).expect__check_assert(_EXPECTED[6])
-    Lambda(Lambda(source, *args).resolve__skip_raised).expect__check_assert(_EXPECTED[7])
+    Lambda(Lambda(source, *args).check_raise__bool).check_expected__assert(_EXPECTED[0])
+    Lambda(Lambda(source, *args).check_no_raise__bool).check_expected__assert(_EXPECTED[1])
+    Lambda(Lambda(source, *args).resolve__raise).check_expected__assert(_EXPECTED[2])
+    Lambda(Lambda(source, *args).resolve__raise_as_none).check_expected__assert(_EXPECTED[3])
+    Lambda(Lambda(source, *args).resolve__exc).check_expected__assert(_EXPECTED[4])
+    Lambda(Lambda(source, *args).resolve__bool).check_expected__assert(_EXPECTED[5])
+    Lambda(Lambda(source, *args).resolve__skip_callables).check_expected__assert(_EXPECTED[6])
+    Lambda(Lambda(source, *args).resolve__skip_raised).check_expected__assert(_EXPECTED[7])
 
 
 # =====================================================================================================================

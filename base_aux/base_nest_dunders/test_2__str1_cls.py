@@ -40,8 +40,8 @@ class Test__StrCls:
         ]
     )
     def test__inst__cmp__lg(self, source, _EXPECTED):
-        Lambda(str(source)).expect__check_assert(_EXPECTED)
-        Lambda(repr(source)).expect__check_assert(_EXPECTED)
+        Lambda(str(source)).check_expected__assert(_EXPECTED)
+        Lambda(repr(source)).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -32,7 +32,7 @@ class Test__ValidChains:
     )
     def test__types_single(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -43,7 +43,7 @@ class Test__ValidChains:
     )
     def test__nocum(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -67,7 +67,7 @@ class Test__ValidChains:
     )
     def test__chains(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
@@ -82,7 +82,7 @@ class Test__ValidChains:
     )
     def test__util1_sleep(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     @pytest.mark.parametrize(
         argnames="chains, _EXPECTED",
@@ -100,7 +100,7 @@ class Test__ValidChains:
     )
     def test__util2_break(self, chains, _EXPECTED):
         func_link = ValidChains(chains).run
-        Lambda(func_link).expect__check_assert(_EXPECTED)
+        Lambda(func_link).check_expected__assert(_EXPECTED)
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(

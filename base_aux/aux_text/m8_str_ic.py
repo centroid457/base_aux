@@ -97,9 +97,9 @@ class StrIcLower(StrIc):
     ]
 )
 def test__1_str(source_draft, _EXPECTED):
-    Lambda(lambda: str(StrIc(source_draft))).expect__check_assert(_EXPECTED[0])
-    Lambda(lambda: str(StrIcUpper(source_draft))).expect__check_assert(_EXPECTED[1])
-    Lambda(lambda: str(StrIcLower(source_draft))).expect__check_assert(_EXPECTED[2])
+    Lambda(lambda: str(StrIc(source_draft))).check_expected__assert(_EXPECTED[0])
+    Lambda(lambda: str(StrIcUpper(source_draft))).check_expected__assert(_EXPECTED[1])
+    Lambda(lambda: str(StrIcLower(source_draft))).check_expected__assert(_EXPECTED[2])
 
 
 @pytest.mark.parametrize(
@@ -113,9 +113,9 @@ def test__1_str(source_draft, _EXPECTED):
     ]
 )
 def test__2_eq(source_draft, other_draft, _EXPECTED):
-    Lambda(StrIc(source_draft) == other_draft).expect__check_assert(_EXPECTED)
-    Lambda(StrIcUpper(source_draft) == other_draft).expect__check_assert(_EXPECTED)
-    Lambda(StrIcLower(source_draft) == other_draft).expect__check_assert(_EXPECTED)
+    Lambda(StrIc(source_draft) == other_draft).check_expected__assert(_EXPECTED)
+    Lambda(StrIcUpper(source_draft) == other_draft).check_expected__assert(_EXPECTED)
+    Lambda(StrIcLower(source_draft) == other_draft).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -132,9 +132,9 @@ def test__2_eq(source_draft, other_draft, _EXPECTED):
     ]
 )
 def test__3_ga(source_draft, item, _EXPECTED):
-    Lambda(lambda: StrIc(source_draft)[item]).expect__check_assert(_EXPECTED)
-    Lambda(lambda: StrIcUpper(source_draft)[item]).expect__check_assert(_EXPECTED)
-    Lambda(lambda: StrIcLower(source_draft)[item]).expect__check_assert(_EXPECTED)
+    Lambda(lambda: StrIc(source_draft)[item]).check_expected__assert(_EXPECTED)
+    Lambda(lambda: StrIcUpper(source_draft)[item]).check_expected__assert(_EXPECTED)
+    Lambda(lambda: StrIcLower(source_draft)[item]).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -151,9 +151,9 @@ def test__3_ga(source_draft, item, _EXPECTED):
     ]
 )
 def test__4_other_in(source_draft, other, _EXPECTED):
-    Lambda(other in StrIc(source_draft)).expect__check_assert(_EXPECTED)
-    Lambda(other in StrIcUpper(source_draft)).expect__check_assert(_EXPECTED)
-    Lambda(other in StrIcLower(source_draft)).expect__check_assert(_EXPECTED)
+    Lambda(other in StrIc(source_draft)).check_expected__assert(_EXPECTED)
+    Lambda(other in StrIcUpper(source_draft)).check_expected__assert(_EXPECTED)
+    Lambda(other in StrIcLower(source_draft)).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -170,9 +170,9 @@ def test__4_other_in(source_draft, other, _EXPECTED):
     ]
 )
 def test__5_in_other(source_draft, items, _EXPECTED):
-    Lambda(StrIc(source_draft) in items).expect__check_assert(_EXPECTED)
-    Lambda(StrIcUpper(source_draft) in items).expect__check_assert(_EXPECTED)
-    Lambda(StrIcLower(source_draft) in items).expect__check_assert(_EXPECTED)
+    Lambda(StrIc(source_draft) in items).check_expected__assert(_EXPECTED)
+    Lambda(StrIcUpper(source_draft) in items).check_expected__assert(_EXPECTED)
+    Lambda(StrIcLower(source_draft) in items).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -188,9 +188,9 @@ def test__5_in_other(source_draft, items, _EXPECTED):
     ]
 )
 def test__6_set(source_1, source_2, _EXPECTED):
-    Lambda(len({StrIc(source_1), StrIcUpper(source_2)})).expect__check_assert(_EXPECTED)
-    Lambda(len({StrIc(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
-    Lambda(len({StrIcUpper(source_1), StrIcLower(source_2)})).expect__check_assert(_EXPECTED)
+    Lambda(len({StrIc(source_1), StrIcUpper(source_2)})).check_expected__assert(_EXPECTED)
+    Lambda(len({StrIc(source_1), StrIcLower(source_2)})).check_expected__assert(_EXPECTED)
+    Lambda(len({StrIcUpper(source_1), StrIcLower(source_2)})).check_expected__assert(_EXPECTED)
 
 
 def test__10_gi_from_dict():

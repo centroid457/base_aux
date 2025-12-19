@@ -20,7 +20,7 @@ def func_example(arg1: Any, arg2: Any) -> str:
     ]
 )
 def test__short_variant(func_link, args, _EXPECTED):
-    Lambda(func_link, args).expect__check_assert(_EXPECTED)
+    Lambda(func_link, args).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -44,7 +44,7 @@ def test__short_variant(func_link, args, _EXPECTED):
 )
 @pytest.mark.parametrize(argnames="func_link", argvalues=[func_example, ])
 def test__long_variant(func_link, args, kwargs, _EXPECTED, _MARK, _COMMENT):
-    Lambda(func_link, args, kwargs).expect__check_assert(_EXPECTED, _MARK, _COMMENT)
+    Lambda(func_link, args, kwargs).check_expected__assert(_EXPECTED, _MARK, _COMMENT)
 
 
 # =====================================================================================================================

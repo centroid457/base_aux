@@ -26,9 +26,9 @@ from base_aux.numbers.m2_num_single_parsed import *
     ]
 )
 def test__NumParsedSingle(source, _EXPECTED):
-    Lambda(NumParsedSingle(source).resolve).expect__check_assert(_EXPECTED[0])
-    Lambda(NumParsedSingleInt(source).resolve).expect__check_assert(_EXPECTED[1])
-    Lambda(NumParsedSingleFloat(source).resolve).expect__check_assert(_EXPECTED[2])
+    Lambda(NumParsedSingle(source).resolve).check_expected__assert(_EXPECTED[0])
+    Lambda(NumParsedSingleInt(source).resolve).check_expected__assert(_EXPECTED[1])
+    Lambda(NumParsedSingleFloat(source).resolve).check_expected__assert(_EXPECTED[2])
 
 
 # =====================================================================================================================

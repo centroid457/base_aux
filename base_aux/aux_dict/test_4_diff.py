@@ -39,7 +39,7 @@ from base_aux.base_lambdas.m1_lambda import *
 )
 def test__resolve(dicts, _EXPECTED):
     func_link = lambda: DictDiff(*dicts).resolve()
-    Lambda(func_link).expect__check_assert(_EXPECTED)
+    Lambda(func_link).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

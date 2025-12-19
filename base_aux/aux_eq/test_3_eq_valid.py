@@ -14,10 +14,10 @@ def _ExpectAux__eq_in__all_operators(eq_cls: type[Base_EqValid], other, _EXPECTE
     ----
     check one EqClass by 4 variant lines
     """
-    Lambda(eq_cls(*args, **kwargs) == other).expect__check_assert(_EXPECTED)
+    Lambda(eq_cls(*args, **kwargs) == other).check_expected__assert(_EXPECTED)
     # Lambda(eq_cls(*args, **kwargs, _iresult_reverse=True) == other).check_assert(not _EXPECTED)
 
-    Lambda(other in eq_cls(*args, **kwargs)).expect__check_assert(_EXPECTED)
+    Lambda(other in eq_cls(*args, **kwargs)).check_expected__assert(_EXPECTED)
     # Lambda(other in eq_cls(*args, _iresult_reverse=True)).check_assert(not _EXPECTED)
 
 
@@ -47,11 +47,11 @@ def test__0_EqValidObj__usage_operators():
     ]
 )
 def test__0_Base_EqValid__single(_validator, other, _EXPECTED):
-    Lambda(Base_EqValid(_validator=_validator) == other).expect__check_assert(_EXPECTED)
-    Lambda(Base_EqValid(_validator=_validator, _iresult_reverse=True) == other).expect__check_assert(not _EXPECTED)
+    Lambda(Base_EqValid(_validator=_validator) == other).check_expected__assert(_EXPECTED)
+    Lambda(Base_EqValid(_validator=_validator, _iresult_reverse=True) == other).check_expected__assert(not _EXPECTED)
 
-    Lambda(other in Base_EqValid(_validator=_validator)).expect__check_assert(_EXPECTED)
-    Lambda(other in Base_EqValid(_validator=_validator, _iresult_reverse=True)).expect__check_assert(not _EXPECTED)
+    Lambda(other in Base_EqValid(_validator=_validator)).check_expected__assert(_EXPECTED)
+    Lambda(other in Base_EqValid(_validator=_validator, _iresult_reverse=True)).check_expected__assert(not _EXPECTED)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -75,11 +75,11 @@ def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTE
     for index, _iresult_cumulate in enumerate(EnumAdj_BoolCumulate):
         print()
         print(index, _iresult_cumulate)
-        Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).expect__check_assert(_EXPECTED[index])
-        Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True) == other).expect__check_assert(not _EXPECTED[index])
+        Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).check_expected__assert(_EXPECTED[index])
+        Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True) == other).check_expected__assert(not _EXPECTED[index])
 
-        Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).expect__check_assert(_EXPECTED[index])
-        Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True)).expect__check_assert(not _EXPECTED[index])
+        Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).check_expected__assert(_EXPECTED[index])
+        Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True)).check_expected__assert(not _EXPECTED[index])
 
 
 @pytest.mark.parametrize(
@@ -100,11 +100,11 @@ def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTE
     ]
 )
 def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _iresult_cumulate, _EXPECTED):
-    Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).expect__check_assert(_EXPECTED[0])
-    Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True) == other).expect__check_assert(_EXPECTED[1])
+    Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).check_expected__assert(_EXPECTED[0])
+    Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True) == other).check_expected__assert(_EXPECTED[1])
 
-    Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).expect__check_assert(_EXPECTED[0])
-    Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True)).expect__check_assert(_EXPECTED[1])
+    Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).check_expected__assert(_EXPECTED[0])
+    Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate, _iresult_reverse=True)).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================
@@ -389,10 +389,10 @@ def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
     ]
 )
 def test__regexp(args, other, _EXPECTED):
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE) == other).expect__check_assert(_EXPECTED[0])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE) == other).expect__check_assert(_EXPECTED[1])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE) == other).expect__check_assert(_EXPECTED[2])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE) == other).expect__check_assert(_EXPECTED[3])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE) == other).check_expected__assert(_EXPECTED[0])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE) == other).check_expected__assert(_EXPECTED[1])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE) == other).check_expected__assert(_EXPECTED[2])
+    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE) == other).check_expected__assert(_EXPECTED[3])
 
     # ---------
     _ExpectAux__eq_in__all_operators(EqValid_RegexpAllTrue, other, _EXPECTED[0], *args)
@@ -402,7 +402,7 @@ def test__regexp(args, other, _EXPECTED):
 
 
 def test__regexp_manual():
-    Lambda(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").expect__check_assert()
+    Lambda(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").check_expected__assert()
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -419,7 +419,7 @@ def test__regexp_manual():
     ]
 )
 def test__AttrsByKwargs(source, other, _EXPECTED):
-    Lambda(EqValid_AttrsByKwargs(**source) == NestInit_AnnotsAttr_ByArgsKwargs(**other)).expect__check_assert(_EXPECTED)
+    Lambda(EqValid_AttrsByKwargs(**source) == NestInit_AnnotsAttr_ByArgsKwargs(**other)).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.parametrize(
@@ -440,10 +440,10 @@ def test__AttrsByKwargs(source, other, _EXPECTED):
 def test__AttrsByObj(source, other, _EXPECTED):
     Lambda(
         EqValid_AttrsByObjNotPrivate(NestInit_AnnotsAttr_ByArgsKwargs(**source)) == NestInit_AnnotsAttr_ByArgsKwargs(**other)
-    ).expect__check_assert(_EXPECTED[0])
+    ).check_expected__assert(_EXPECTED[0])
     Lambda(
         EqValid_AttrsByObjNotHidden(NestInit_AnnotsAttr_ByArgsKwargs(**source)) == NestInit_AnnotsAttr_ByArgsKwargs(**other)
-    ).expect__check_assert(_EXPECTED[1])
+    ).check_expected__assert(_EXPECTED[1])
 
 
 # =====================================================================================================================

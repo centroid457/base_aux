@@ -24,11 +24,11 @@ class Test__Ini:
         try:
             victim.read_string(source)
         except Exception as exc:
-            Lambda(exc).expect__check_assert(_EXPECTED)
+            Lambda(exc).check_expected__assert(_EXPECTED)
             return
 
-        Lambda(victim.to_dict__direct).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.to_dict__merged).expect__check_assert(_EXPECTED[1])
+        Lambda(victim.to_dict__direct).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.to_dict__merged).check_expected__assert(_EXPECTED[1])
 
 
 def _explore():

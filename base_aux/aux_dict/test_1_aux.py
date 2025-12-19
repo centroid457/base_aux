@@ -103,12 +103,12 @@ def test__keys_del():
 def test__keys_change__by_func__walk(source, func, walk, _EXPECTED, post_eq):
     # COPY
     func_link = DictAuxCopy(source).keys_change__by_func
-    Lambda(func_link, func, walk).expect__check_assert(_EXPECTED)
+    Lambda(func_link, func, walk).check_expected__assert(_EXPECTED)
     assert (source == _EXPECTED) == post_eq[0]
 
     # INLINE
     func_link = DictAuxInline(source).keys_change__by_func
-    Lambda(func_link, func, walk).expect__check_assert(_EXPECTED)
+    Lambda(func_link, func, walk).check_expected__assert(_EXPECTED)
     assert source == _EXPECTED     #) == post_eq[1]      # HERE IS ALWAYS TRUE!!!!
 
 
@@ -132,7 +132,7 @@ def test__keys_change__by_func__walk(source, func, walk, _EXPECTED, post_eq):
 )
 def test__values_change__by_func__walk(source, func, walk, _EXPECTED):
     func_link = DictAuxCopy(source).values_change__by_func
-    Lambda(func_link, func, walk).expect__check_assert(_EXPECTED)
+    Lambda(func_link, func, walk).check_expected__assert(_EXPECTED)
 
 
 @pytest.mark.skip

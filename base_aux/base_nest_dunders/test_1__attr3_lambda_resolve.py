@@ -21,7 +21,7 @@ def test__common__define(value, _EXPECTED):
     except Exception as exc:
         define_was_ok = exc
 
-    Lambda(define_was_ok).expect__check_assert(_EXPECTED)
+    Lambda(define_was_ok).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -52,7 +52,7 @@ def test__special__define_and_init(value, _EXPECTED):
         assert victim.ATTR_INT == value
         assert victim.ATTR_STR == str(value)
 
-    Lambda(init_was_ok).expect__check_assert(_EXPECTED)
+    Lambda(init_was_ok).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

@@ -39,8 +39,8 @@ def test__universe(VictimCls):
         assert 0 not in victim
 
         # ACCESS
-        Lambda(lambda: victim[0]).expect__check_assert(Exception)   # keep original behaviour - maybe need switch to None???
-        Lambda(lambda: victim.get(0)).expect__check_assert(None)
+        Lambda(lambda: victim[0]).check_expected__assert(Exception)   # keep original behaviour - maybe need switch to None???
+        Lambda(lambda: victim.get(0)).check_expected__assert(None)
 
         assert victim[1] == 1
         assert victim.get(1) == 1
@@ -101,14 +101,14 @@ def test__universe(VictimCls):
 )
 @pytest.mark.parametrize(argnames="VictimClsPair", argvalues=[(DictIcKeys, DictIc_LockedKeys), (DictIcKeys_Ga, DictIc_LockedKeys_Ga)])
 def test__keys(VictimClsPair, source, keys_all_str, _EXPECTED):
-    Lambda(list(VictimClsPair[0](source))).expect__check_assert(_EXPECTED)
-    Lambda(list(VictimClsPair[1](source))).expect__check_assert(_EXPECTED)
+    Lambda(list(VictimClsPair[0](source))).check_expected__assert(_EXPECTED)
+    Lambda(list(VictimClsPair[1](source))).check_expected__assert(_EXPECTED)
 
     if not keys_all_str:
         return
 
-    Lambda(list(VictimClsPair[0](**source))).expect__check_assert(_EXPECTED)
-    Lambda(list(VictimClsPair[1](**source))).expect__check_assert(_EXPECTED)
+    Lambda(list(VictimClsPair[0](**source))).check_expected__assert(_EXPECTED)
+    Lambda(list(VictimClsPair[1](**source))).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -128,14 +128,14 @@ def test__keys(VictimClsPair, source, keys_all_str, _EXPECTED):
 )
 @pytest.mark.parametrize(argnames="VictimClsPair", argvalues=[(DictIcKeys, DictIc_LockedKeys), (DictIcKeys_Ga, DictIc_LockedKeys_Ga)])
 def test__key__get_original(VictimClsPair, source, key, keys_all_str, _EXPECTED):
-    Lambda(VictimClsPair[0](source).key__get_original(key)).expect__check_assert(_EXPECTED)
-    Lambda(VictimClsPair[1](source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(VictimClsPair[0](source).key__get_original(key)).check_expected__assert(_EXPECTED)
+    Lambda(VictimClsPair[1](source).key__get_original(key)).check_expected__assert(_EXPECTED)
 
     if not keys_all_str:
         return
 
-    Lambda(VictimClsPair[0](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
-    Lambda(VictimClsPair[1](**source).key__get_original(key)).expect__check_assert(_EXPECTED)
+    Lambda(VictimClsPair[0](**source).key__get_original(key)).check_expected__assert(_EXPECTED)
+    Lambda(VictimClsPair[1](**source).key__get_original(key)).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -156,23 +156,23 @@ def test__key__get_original(VictimClsPair, source, key, keys_all_str, _EXPECTED)
 def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
     # -------------------------------------------------
     victim = VictimClsPair[0](source)
-    Lambda(victim.update({key: 11})).expect__check_assert(_EXPECTED[0])
-    Lambda(victim.get(key)).expect__check_assert(11)
+    Lambda(victim.update({key: 11})).check_expected__assert(_EXPECTED[0])
+    Lambda(victim.get(key)).check_expected__assert(11)
 
     victim[key] = 111
-    Lambda(victim.get(key)).expect__check_assert(111)
+    Lambda(victim.get(key)).check_expected__assert(111)
 
     if keys_all_str:
-        Lambda(victim.update(**{key: 1111})).expect__check_assert(_EXPECTED[0])
-        Lambda(victim.get(key)).expect__check_assert(1111)
+        Lambda(victim.update(**{key: 1111})).check_expected__assert(_EXPECTED[0])
+        Lambda(victim.get(key)).check_expected__assert(1111)
 
         # kwargs out
-        Lambda(dict(**VictimClsPair[0](source))).expect__check_assert(source)
-        Lambda(dict(**VictimClsPair[1](source))).expect__check_assert(source)
+        Lambda(dict(**VictimClsPair[0](source))).check_expected__assert(source)
+        Lambda(dict(**VictimClsPair[1](source))).check_expected__assert(source)
 
     # -------------------------------------------------
     victim = VictimClsPair[1](source)
-    Lambda(lambda: victim.update({key: 2})).expect__check_assert(_EXPECTED[1])
+    Lambda(lambda: victim.update({key: 2})).check_expected__assert(_EXPECTED[1])
 
     if _EXPECTED[1] == Exception:
         assert key not in victim
@@ -184,7 +184,7 @@ def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
             pass
         else:
             assert False
-        Lambda(victim.get(key)).expect__check_assert(None)
+        Lambda(victim.get(key)).check_expected__assert(None)
 
         # ---------------
         try:
@@ -193,17 +193,17 @@ def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
             pass
         else:
             assert False
-        Lambda(victim.get(key)).expect__check_assert(None)
+        Lambda(victim.get(key)).check_expected__assert(None)
 
     else:
         assert key in victim
 
         # ---------------
-        Lambda(victim.update({key: 11})).expect__check_assert(_EXPECTED[1])
-        Lambda(victim.get(key)).expect__check_assert(11)
+        Lambda(victim.update({key: 11})).check_expected__assert(_EXPECTED[1])
+        Lambda(victim.get(key)).check_expected__assert(11)
 
         victim[key] = 111
-        Lambda(victim.get(key)).expect__check_assert(111)
+        Lambda(victim.get(key)).check_expected__assert(111)
 
     # if not keys_all_str:
     #     return
@@ -223,7 +223,7 @@ def test__si_update(VictimClsPair, source, key, keys_all_str, _EXPECTED):
     ]
 )
 def test__kwargs_unpack(VictimCls, source):
-    Lambda(dict(**VictimCls({key.lower(): value for key, value in source.items()}))).expect__check_assert({key.upper(): value for key, value in source.items()})
+    Lambda(dict(**VictimCls({key.lower(): value for key, value in source.items()}))).check_expected__assert({key.upper(): value for key, value in source.items()})
 
 
 # =====================================================================================================================

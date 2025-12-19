@@ -52,7 +52,7 @@ victim1 = Victim1()
     ]
 )
 def test__all(arg, _EXPECTED):
-    Lambda(getattr, victim1, arg).expect__check_assert(_EXPECTED)
+    Lambda(getattr, victim1, arg).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
@@ -73,7 +73,7 @@ victim2 = Victim2()
     ]
 )
 def test__not_existed(arg, _EXPECTED):
-    Lambda(getattr, victim2, arg).expect__check_assert(_EXPECTED)
+    Lambda(getattr, victim2, arg).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================
