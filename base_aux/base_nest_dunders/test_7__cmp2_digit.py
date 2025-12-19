@@ -44,7 +44,7 @@ def test__cmp_accuracy__check_correctness(
     Lambda(victim._cmp_accuracy__check_correctness, accuracy_v, accuracy_p).check_expected__assert(True if _EXPECTED else Exception)
     Lambda(victim._cmp_accuracy__check_correctness, accuracy_v, accuracy_p, True).check_expected__assert(True if _EXPECTED else Exception)
 
-    Lambda(Victim, 1, cmp_accuracy_value=accuracy_v, cmp_accuracy_percent=accuracy_p).check_raised__assert(_EXPECTED)
+    Lambda(Victim, 1, cmp_accuracy_value=accuracy_v, cmp_accuracy_percent=accuracy_p).check_no_raised__assert(_EXPECTED)
     Lambda(Victim, 1, cmp_accuracy_value=accuracy_v, cmp_accuracy_percent=accuracy_p).check_expected__assert(NestCmp_GLET_DigitAccuracy if _EXPECTED else Exception)
 
 

@@ -205,25 +205,32 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         return bool(self())
 
     # =================================================================================================================
-    def check_raised__bool(self, *args, **kwargs) -> bool:
-        self.run(*args, **kwargs)
+    def check_raised__bool(self, _EXPECTED: bool = True) -> bool:
+        self.run()
         self.wait_finished()
 
         # FIN ----------------------------------------------------------
         if self.EXC is not None:
-            return True
+            return _EXPECTED is True
         else:
-            return False
+            return _EXPECTED is False
 
-    def check_no_raised__bool(self, *args, **kwargs) -> bool:
-        return not self.check_raised__bool(*args, **kwargs)
+    def check_no_raised__bool(self, _EXPECTED: bool = True) -> bool:
+        self.run()
+        self.wait_finished()
+
+        # FIN ----------------------------------------------------------
+        if self.EXC is not None:
+            return _EXPECTED is False
+        else:
+            return _EXPECTED is True
 
     # ----------------------------------------------------------------
-    def check_raised__assert(self, *args, **kwargs) -> None | NoReturn:
-        assert self.check_raised__bool(*args, **kwargs) is True
+    def check_raised__assert(self, _EXPECTED: bool = True) -> None | NoReturn:
+        assert self.check_raised__bool() is _EXPECTED
 
-    def check_no_raised__assert(self, *args, **kwargs) -> None | NoReturn:
-        assert self.check_raised__bool(*args, **kwargs) is False
+    def check_no_raised__assert(self, _EXPECTED: bool = True) -> None | NoReturn:
+        assert self.check_no_raised__bool() is _EXPECTED
 
     # =================================================================================================================
     def check_expected__assert(

@@ -59,28 +59,76 @@ def test__check_all_meth__simple(
 
         _EXPECTED_RAISED: bool,
 ):
-    assert Lambda(func_link, *args).check_raised__bool() is _EXPECTED_RAISED
-    assert Lambda(func_link, *args).check_no_raised__bool() is not _EXPECTED_RAISED
+    assert Lambda(func_link, *args).check_raised__bool(_EXPECTED_RAISED) is True
+    assert Lambda(func_link, *args).check_no_raised__bool(not _EXPECTED_RAISED) is True
 
     if _EXPECTED_RAISED:
-        assert Lambda(func_link, *args).check_raised__assert() is None
+        assert Lambda(func_link, *args).check_raised__bool() is True
+        assert Lambda(func_link, *args).check_raised__bool(True) is True
+        assert Lambda(func_link, *args).check_raised__bool(False) is False
 
+        assert Lambda(func_link, *args).check_no_raised__bool() is False
+        assert Lambda(func_link, *args).check_no_raised__bool(True) is False
+        assert Lambda(func_link, *args).check_no_raised__bool(False) is True
+
+        # assert RAISED-----------------
+        assert Lambda(func_link, *args).check_raised__assert() is None
+        assert Lambda(func_link, *args).check_raised__assert(True) is None
+        try:
+            Lambda(func_link, *args).check_raised__assert(False)
+        except:
+            assert True
+        else:
+            assert False
+
+        # assert NoRAISED-----------------
         try:
             Lambda(func_link, *args).check_no_raised__assert()
         except:
             assert True
         else:
             assert False
+        try:
+            Lambda(func_link, *args).check_no_raised__assert(True)
+        except:
+            assert True
+        else:
+            assert False
+        assert Lambda(func_link, *args).check_no_raised__assert(False) is None
 
     else:
+        assert Lambda(func_link, *args).check_raised__bool() is False
+        assert Lambda(func_link, *args).check_raised__bool(True) is False
+        assert Lambda(func_link, *args).check_raised__bool(False) is True
+
+        assert Lambda(func_link, *args).check_no_raised__bool() is True
+        assert Lambda(func_link, *args).check_no_raised__bool(True) is True
+        assert Lambda(func_link, *args).check_no_raised__bool(False) is False
+
+        # assert RAISED-----------------
         try:
             Lambda(func_link, *args).check_raised__assert()
         except:
             assert True
         else:
             assert False
+        try:
+            Lambda(func_link, *args).check_raised__assert(True)
+        except:
+            assert True
+        else:
+            assert False
+        assert Lambda(func_link, *args).check_raised__assert(False) is None
 
+        # assert NoRAISED-----------------
         assert Lambda(func_link, *args).check_no_raised__assert() is None
+        assert Lambda(func_link, *args).check_no_raised__assert(True) is None
+        try:
+            Lambda(func_link, *args).check_no_raised__assert(False)
+        except:
+            assert True
+        else:
+            assert False
 
 
 # =====================================================================================================================
