@@ -105,7 +105,10 @@ class Lambda_TryFail(Lambda_TrySuccess):
 # =====================================================================================================================
 class Lambda_Sleep(Lambda):
     """
-    just delay construction
+    GOAL
+    ----
+    it is not just a sleep func!
+    it sleep added for other func! - before or after its execution!
     """
     WHEN: EnumAdj_When2 = EnumAdj_When2.BEFORE
     SEC: float = 1
