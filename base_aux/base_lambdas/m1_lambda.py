@@ -130,7 +130,7 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
     # thread ready -----
     PROCESS_ACTIVE: EnumAdj_ProcessStateActive = EnumAdj_ProcessStateActive.NONE
     RESULT: Any = None
-    EXC: Optional[Exception] = None
+    EXC: BaseException | None = None
 
     # UNIVERSAL =======================================================================================================
     def run(self, *args, **kwargs) -> None:
@@ -159,44 +159,12 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
                 self.RESULT = self.SOURCE(*args, **kwargs)
             else:
                 self.RESULT = self.SOURCE
-        except Exception as exc:
+        except BaseException as exc:
             print(f"{exc!r}")
             self.EXC = exc
 
         # FIN ----------------------------------------------------------
         self.PROCESS_ACTIVE = EnumAdj_ProcessStateActive.FINISHED
-
-    # =================================================================================================================
-    def resolve(self, *args, **kwargs) -> Any | NoReturn:
-        # OVERWRITE for derivatives!!!!
-        self.run(*args, **kwargs)
-        self.wait_finished()
-
-        # FIN ----------------------------------------------------------
-        if self.EXC is not None:
-            raise self.EXC
-        else:
-            return self.RESULT
-
-    def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
-        return self() == other
-
-    def __bool__(self) -> bool | NoReturn:
-        return bool(self())
-
-    # =================================================================================================================
-    def check_raise(self, *args, **kwargs) -> bool:     # TODO: decide what to do with different kwArgs in several starts/runs
-        self.run(*args, **kwargs)
-        self.wait_finished()
-
-        # FIN ----------------------------------------------------------
-        if self.EXC is not None:
-            return True
-        else:
-            return False
-
-    def check_no_raise(self, *args, **kwargs) -> bool:
-        return not self.check_raise(*args, **kwargs)
 
     def wait_finished(self, sleep: float = 1, run: bool = None) -> None:
         """
@@ -219,7 +187,46 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
             time.sleep(sleep)
 
     # =================================================================================================================
-    def expect__check_assert(
+    def resolve(self, *args, **kwargs) -> Any | NoReturn:
+        # OVERWRITE for derivatives!!!!
+        self.run(*args, **kwargs)
+        self.wait_finished()
+
+        # FIN ----------------------------------------------------------
+        if self.EXC is not None:
+            raise self.EXC
+        else:
+            return self.RESULT
+
+    def __eq__(self, other: Any) -> bool | NoReturn:        # TODO: decide deprecate???
+        return self() == other
+
+    def __bool__(self) -> bool | NoReturn:
+        return bool(self())
+
+    # =================================================================================================================
+    def check_raise__bool(self, *args, **kwargs) -> bool:     # TODO: decide what to do with different kwArgs in several starts/runs
+        self.run(*args, **kwargs)
+        self.wait_finished()
+
+        # FIN ----------------------------------------------------------
+        if self.EXC is not None:
+            return True
+        else:
+            return False
+
+    def check_no_raise__bool(self, *args, **kwargs) -> bool:
+        return not self.check_raise__bool(*args, **kwargs)
+
+    # ----------------------------------------------------------------
+    def check_raise__assert(self, *args, **kwargs) -> None | NoReturn:  # TODO: add tests
+        assert not self.check_raise__bool(*args, **kwargs)
+
+    def check_no_raise__assert(self, *args, **kwargs) -> None | NoReturn:
+        assert not self.check_no_raise__bool(*args, **kwargs)
+
+    # =================================================================================================================
+    def check_expected__assert(
             self,
             # args: TYPING.ARGS_DRAFT = (),      # DONT USE HERE!!!
             # kwargs: TYPING.KWARGS_DRAFT = None,
@@ -300,14 +307,14 @@ class Lambda(NestInit_SourceKwArgs_Implicit, NestCall_Resolve):
         else:
             assert result
 
-    def expect__check_bool(self, *args, **kwargs) -> bool:
+    def check_expected__bool(self, *args, **kwargs) -> bool:
         """
         GOAL
         ----
         extend work for not only in unittests
         """
         try:
-            self.expect__check_assert(*args, **kwargs)
+            self.check_expected__assert(*args, **kwargs)
             return True
         except:
             return False
