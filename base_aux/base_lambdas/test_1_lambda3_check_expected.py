@@ -56,14 +56,17 @@ def test____LE__():
         (int, (), {}, int, True),
         (1, (), {}, int, True),
         (1, (), {}, float, False),
+
         (1, (), {}, Exception, False),
         (Exception, (), {}, Exception, True),
         (Exception(), (), {}, Exception, True),
     ]
 )
 def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
+    assert Lambda(func_link, *args, **kwargs).check_expected__bool(_EXPECTED) == _pytestExpected
+
     try:
-        result = Lambda(func_link, *args, **kwargs).check_expected__assert(_EXPECTED)
+        Lambda(func_link, *args, **kwargs).check_expected__assert(_EXPECTED)
     except:
         assert not _pytestExpected
     else:
