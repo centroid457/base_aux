@@ -18,6 +18,44 @@ class Victim(NestCmp_GLET_DigitAccuracy):
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
+    argnames="source, init_acc_vp, run_acc_vp, _EXPECTED",
+    argvalues=[
+        (10, (None, None), (None, None), (0, 0)),
+        (10, (0, None), (None, None), (0, 0)),
+
+        (10, (1, None), (None, None), (1, 1)),
+        (10, (None, 1), (None, None), (0.1, 0.1)),
+        (10, (None, 1), (1, None), (0.1, 1)),
+        (10, (1, None), (None, 1), (1, 0.1)),
+    ]
+)
+def test__cmp_accuracy__last(
+        source: float | None,
+        init_acc_vp: tuple[float | None, float | None],
+        run_acc_vp: tuple[float | None, float | None],
+        _EXPECTED: tuple[float, float],
+):
+    # INIT
+    victim = Victim(source, cmp_accuracy_value=init_acc_vp[0], cmp_accuracy_percent=init_acc_vp[1])
+    assert victim._cmp_accuracy__last == _EXPECTED[0]
+
+    victim.cmp_ge(2)
+    assert victim._cmp_accuracy__last == _EXPECTED[0]
+
+    # call
+    victim.cmp_ge(3, *run_acc_vp)
+    assert victim._cmp_accuracy__last == _EXPECTED[1]
+
+    # 2=after _cmp_accuracy__get_active
+    assert victim._cmp_accuracy__get_active() == _EXPECTED[0]
+    assert victim._cmp_accuracy__last == _EXPECTED[0]
+
+    assert victim._cmp_accuracy__get_active(*run_acc_vp) == _EXPECTED[1]
+    assert victim._cmp_accuracy__last == _EXPECTED[1]
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
     argnames="accuracy_v, accuracy_p, _EXPECTED",
     argvalues=[
         (None, None, True),

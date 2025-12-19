@@ -96,6 +96,8 @@ class NestCmp_GLET_DigitAccuracy:
 
     CMP_VALUE: TYPING.DIGIT_FLOAT_INT    # property
 
+    _cmp_accuracy__last: TYPING.DIGIT_FLOAT_INT_NONE = None
+
     @property
     def CMP_VALUE(self) -> TYPING.DIGIT_FLOAT_INT:
         raise NotImplementedError()
@@ -113,11 +115,12 @@ class NestCmp_GLET_DigitAccuracy:
             self.CMP_ACCURACY_PERCENT = cmp_accuracy_percent
 
         self._cmp_accuracy__check_correctness(cmp_accuracy_value, cmp_accuracy_percent)
+        self._cmp_accuracy__get_active()    # simply update _cmp_accuracy__last! no more here!
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}({self.CMP_VALUE}/accuracy_default={self._cmp_accuracy__get_active()})"
+        return f"{self.__class__.__name__}({self.CMP_VALUE}/accuracy_last={self._cmp_accuracy__last})"
 
     def __repr__(self) -> str:
         return str(self)
@@ -205,6 +208,7 @@ class NestCmp_GLET_DigitAccuracy:
         if not isinstance(result, (int, float)):
             raise Exc__WrongUsage(f'{accuracy_value=}')
 
+        self._cmp_accuracy__last = result
         return result
 
     # DEPENDANTS -------------------
