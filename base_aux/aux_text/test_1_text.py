@@ -282,7 +282,9 @@ class Test__try_convert_to_object:
     )
     def test__MAIN_GOAL__string_source(self, source, _EXPECTED):
         func_link = TextAux(str(source)).parse__object_stringed  # DONT DELETE STR!!!
-        assert Lambda(func_link).check_expected__bool(source) == _EXPECTED
+
+        assert Lambda(func_link).check_expected__bool(source) == _EXPECTED      # IT IS CORRECT! dont change!
+        # Lambda(func_link, source).check_expected__assert(_EXPECTED)           # it is not the same!!!
 
     # -----------------------------------------------------------------------------------------------------------------
     @pytest.mark.parametrize(
