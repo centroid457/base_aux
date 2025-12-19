@@ -9,6 +9,10 @@
 ********************************************************************************
 ## NEWS
 
+0.3.11(2025.12.19 17.43.05)
+------------------------------
+- [NestCmp_GLET_DigitAccuracy] add _cmp_accuracy__last so str(self) fixed +add test__cmp_accuracy__last  
+
 0.3.10(2025.12.19 16.59.41)
 ------------------------------
 - [NestCmp_GLET_DigitAccuracy] add tests for percent!  
