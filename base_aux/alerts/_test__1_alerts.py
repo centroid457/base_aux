@@ -7,7 +7,7 @@ from base_aux.base_lambdas.m1_lambda import *
 # TODO: separate by base class and use victimCls as attr!
 
 @pytest.mark.skip
-@pytest.mark.skipif(Lambda(AlertSmtp.CONN_AUTH).check_raise__bool(), reason="no file")
+@pytest.mark.skipif(Lambda(AlertSmtp.CONN_AUTH).check_raised__bool(), reason="no file")
 class Test__1:
     @pytest.mark.parametrize(argnames="cls", argvalues=[
         AlertSmtp,

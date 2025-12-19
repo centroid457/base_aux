@@ -103,8 +103,10 @@ def FUNC_EXC(*args, **kwargs) -> Exception:
     return Exception("FUNC_EXC")
 
 
-def FUNC_RAISE(*args, **kwargs) -> NoReturn:
-    raise Exception("FUNC_RAISE")
+def FUNC_RAISE(*args, _exc: type[BaseException] | None = None, _msg: str | None = None, **kwargs) -> NoReturn:
+    _exc = _exc or Exception
+    _msg = _msg or "FUNC_RAISE"
+    raise _exc(_msg)
 
 
 def FUNC_ECHO(echo: Any, *args, **kwargs) -> Any:

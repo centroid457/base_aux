@@ -59,8 +59,8 @@ from base_aux.base_values.m4_primitives import *
     ]
 )
 def test__get_result(source, args, _EXPECTED):
-    Lambda(Lambda(source, *args).check_raise__bool).check_expected__assert(_EXPECTED[0])
-    Lambda(Lambda(source, *args).check_no_raise__bool).check_expected__assert(_EXPECTED[1])
+    Lambda(Lambda(source, *args).check_raised__bool).check_expected__assert(_EXPECTED[0])
+    Lambda(Lambda(source, *args).check_no_raised__bool).check_expected__assert(_EXPECTED[1])
     Lambda(Lambda(source, *args).resolve__raise).check_expected__assert(_EXPECTED[2])
     Lambda(Lambda(source, *args).resolve__raise_as_none).check_expected__assert(_EXPECTED[3])
     Lambda(Lambda(source, *args).resolve__exc).check_expected__assert(_EXPECTED[4])

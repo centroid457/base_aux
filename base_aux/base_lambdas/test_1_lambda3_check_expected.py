@@ -29,49 +29,142 @@ def test____LE__():
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="func_link, args, kwargs, _EXPECTED, _pytestExpected",
+    argnames="func_link, args, _EXPECTED_RAISED",
     argvalues=[
         # Special Values -------
-        # (NoValue, (), {}, NoValue, True),   # CANT CHECK NoValue))))
+        # (NoValue, (), False),   # CANT CHECK NoValue))))
 
         # not callable ------------
-        (True, (), {}, True, True),
-
-        (True, (111, ), {"111": 222}, True, True),
-        (True, (111, ), {"111": 222}, False, False),
-
-        (False, (), {}, True, False),
+        (True, (), False),
+        (True, (111, ), False),
+        (False, (), False),
 
         # callable ------------
-        (LAMBDA_ECHO, (), {}, True, False),
-
-        (LAMBDA_ECHO, (None, ), {}, True, False),
-        (LAMBDA_ECHO, (None, ), {}, None, True),
-        (LAMBDA_ECHO, (True, ), {}, True, True),
-        (LAMBDA_ECHO, (True, ), {}, True, True),
-        (lambda value: value, (), {"value": True}, True, True),
-        (lambda value: value, (), {"value": None}, True, False),
+        (LAMBDA_ECHO, (), True),
+        (LAMBDA_ECHO, (None, ), False),
+        (LAMBDA_ECHO, (True, ), False),
+        (lambda value: value, (), True),
 
         # TYPES -------
-        (int, (), {}, int, True),
-        (1, (), {}, int, True),
-        (1, (), {}, float, False),
-
-        (1, (), {}, Exception, False),
-        (Exception, (), {}, Exception, True),
-        (Exception(), (), {}, Exception, True),
+        (int, (), False),
+        (1, (), False),
+        (Exception, (), False),
+        (Exception(), (), False),
+        (LAMBDA_RAISE, (), True),
     ]
 )
-def test__check_assert(func_link, args, kwargs, _EXPECTED, _pytestExpected):
-    assert Lambda(func_link, *args, **kwargs).check_expected__bool(_EXPECTED) == _pytestExpected
+def test__check_all_meth__simple(
+        func_link: Any | Callable,
+        args: Any,
 
+        _EXPECTED_RAISED: bool,
+):
+    assert Lambda(func_link, *args).check_raised__bool() is _EXPECTED_RAISED
+    assert Lambda(func_link, *args).check_no_raised__bool() is not _EXPECTED_RAISED
+
+    if _EXPECTED_RAISED:
+        assert Lambda(func_link, *args).check_raised__assert() is None
+
+        try:
+            Lambda(func_link, *args).check_no_raised__assert()
+        except:
+            assert True
+        else:
+            assert False
+
+    else:
+        try:
+            Lambda(func_link, *args).check_raised__assert()
+        except:
+            assert True
+        else:
+            assert False
+
+        assert Lambda(func_link, *args).check_no_raised__assert() is None
+
+
+# =====================================================================================================================
+@pytest.mark.parametrize(
+    argnames="func_link, args, kwargs, _EXPECTED, _Expected_pytestResult, _EXP_raised",
+    argvalues=[
+        # Special Values -------
+        # (NoValue, (), {}, NoValue, True, False),   # CANT CHECK NoValue))))
+
+        # not callable ------------
+        (True, (), {}, True, True, False),
+
+        (True, (111, ), {"111": 222}, True, True, False),
+        (True, (111, ), {"111": 222}, False, False, False),
+
+        (False, (), {}, True, False, False),
+
+        # callable ------------
+        (LAMBDA_ECHO, (), {}, True, False, True),
+
+        (LAMBDA_ECHO, (None, ), {}, True, False, False),
+        (LAMBDA_ECHO, (None, ), {}, None, True, False),
+        (LAMBDA_ECHO, (True, ), {}, True, True, False),
+        (LAMBDA_ECHO, (True, ), {}, True, True, False),
+        (lambda value: value, (), {"value": True}, True, True, False),
+        (lambda value: value, (), {"value": None}, True, False, False),
+
+        # TYPES -------
+        (int, (), {}, int, True, False),
+        (1, (), {}, int, True, False),
+        (1, (), {}, float, False, False),
+
+        (1, (), {}, Exception, False, False),
+        (Exception, (), {}, Exception, True, False),
+        (Exception(), (), {}, Exception, True, False),
+
+        (LAMBDA_RAISE, (), {}, Exception, True, True),
+    ]
+)
+def test__check_all_meth__complex(
+        func_link: Any | Callable,
+        args: Any,
+        kwargs: Any,
+        _EXPECTED: Any | type[Any],
+        _Expected_pytestResult: bool,
+        _EXP_raised: bool
+):
+    # check_RAISED ----------------------------
+    assert Lambda(func_link, *args, **kwargs).check_raised__bool() is _EXP_raised
+    assert Lambda(func_link, *args, **kwargs).check_no_raised__bool() is not _EXP_raised
+
+    if _EXP_raised:
+        # ---------------
+        assert Lambda(func_link, *args, **kwargs).check_raised__assert() is None
+
+        # ---------------
+        try:
+            Lambda(func_link, *args, **kwargs).check_no_raised__assert()
+        except:
+            assert True
+        else:
+            assert False
+
+    else:
+        # ---------------
+        assert Lambda(func_link, *args, **kwargs).check_no_raised__assert() is None
+
+        # ---------------
+        try:
+            Lambda(func_link, *args, **kwargs).check_raised__assert()
+        except:
+            assert True
+        else:
+            assert False
+
+    # check_EXPECTED --------------------------
+    assert Lambda(func_link, *args, **kwargs).check_expected__bool(_EXPECTED) == _Expected_pytestResult
     try:
         Lambda(func_link, *args, **kwargs).check_expected__assert(_EXPECTED)
     except:
-        assert not _pytestExpected
+        assert not _Expected_pytestResult
     else:
-        assert _pytestExpected
-        # assert result == _pytestExpected
+        assert _Expected_pytestResult
+        # assert result == _Expected_pytestResult
 
 
 # =====================================================================================================================
