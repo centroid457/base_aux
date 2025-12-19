@@ -34,11 +34,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 9))
+    VERSION = Version((0, 3, 10))
     NEWS: list[str] = [
-        "[Sleep] move into datetime",
-        "[Lambda] great improovement! fix internal exc!",
-        "[NestCmp_GLET_DigitAccuracy] add accurecyPercent! - no tests",
+        "[NestCmp_GLET_DigitAccuracy] add tests for percent!",
+        "[Lambda] add check_raise__assert/check_no_raise__assert, +rename all meth to more clear like check_expected__assert/bool",
     ]
 
 

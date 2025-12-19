@@ -9,6 +9,11 @@
 ********************************************************************************
 ## NEWS
 
+0.3.10(2025.12.19 16.59.41)
+------------------------------
+- [NestCmp_GLET_DigitAccuracy] add tests for percent!  
+- [Lambda] add check_raise__assert/check_no_raise__assert, +rename all meth to more clear like check_expected__assert/bool  
+
 0.3.9(2025.12.16 13.38.25)
 ------------------------------
 - [Sleep] move into datetime  
