@@ -15,7 +15,7 @@ class TableObj:
 
     def __init__(
             self,
-            **schema: list[Any],
+            **schema: list[Any] | Collection,
     ) -> None | NoReturn:
         if not self._validate_schema(schema):
             msg = f"[{self.__class__.__name__}]countColumns/{schema=}"
