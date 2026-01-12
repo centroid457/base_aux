@@ -109,7 +109,8 @@ class ValueVariants:
         if variant != NoValue:
             self.__value = variant
         else:
-            raise Exc__ValueNotValidated()
+            msg = f"{value=}/{variant=}"
+            raise Exc__Incompatible_Data(msg)
 
     def value_get_variant(self, value: Any) -> TYPE__VARIANT | NoValue:
         for variant in self.VARIANTS:

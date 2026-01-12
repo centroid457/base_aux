@@ -61,7 +61,7 @@ class FileAttrs_Loader(TextFile, NestCall_Resolve):
         # get dict -------
         data = self.parse__dict(self.STYLE)
         if data is None:
-            raise Exc__Incompatible(f"{self.STYLE=}/{self.TEXT=}")
+            raise Exc__Incompatible_Data(f"{self.STYLE=}/{self.TEXT=}")
 
         # load keypath ---
         if self.KEYPATH:

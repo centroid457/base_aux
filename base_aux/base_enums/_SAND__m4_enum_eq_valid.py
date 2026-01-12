@@ -106,7 +106,7 @@ class __EnumEqValid:
                 return
 
         msg = f"{value=} not in {self.values()=}"
-        raise Exc__Incompatible(msg)
+        raise Exc__Incompatible_Data(msg)
 
     @classmethod
     def cls__init_items(cls) -> None:

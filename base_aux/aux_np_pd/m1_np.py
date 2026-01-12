@@ -173,7 +173,7 @@ class NdArray2dAux(NdArrayAux):
         FOR WHAT? --- delete????  it was trying to make windows and now not used????
         """
         # if self.SOURCE.ndim != 1:
-        #     raise Exc__Incompatible
+        #     raise Exc__Incompatible_Data
         new_shape = []
         shape = self.SOURCE.shape
         a = np.arange(5)

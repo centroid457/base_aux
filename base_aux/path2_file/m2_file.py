@@ -21,7 +21,7 @@ class FileAux:
                 # self.read__text()     # NOTE: dont read here! it maybe Bytes! read only in TextFile!
                 pass
             else:
-                raise Exc__Incompatible(f"{self.FILEPATH=}")
+                raise Exc__Incompatible_Data(f"{self.FILEPATH=}")
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ class FileAux:
                 self.TEXT = self.FILEPATH.read_text(encoding="utf-8")
                 return self.TEXT
             else:
-                raise Exc__Incompatible(f"{self.FILEPATH=}")
+                raise Exc__Incompatible_Data(f"{self.FILEPATH=}")
 
     def read__bytes(self) -> Optional[bytes]:
         if self.FILEPATH.exists() and self.FILEPATH.is_file():

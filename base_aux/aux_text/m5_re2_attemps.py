@@ -41,7 +41,7 @@ class Base_ReAttempts:
             elif isinstance(attempt, str):
                 result.append(RExp(attempt))
             else:
-                raise Exc__Incompatible(f"{attempt=}")
+                raise Exc__Incompatible_Data(f"{attempt=}")
 
         self.ATTEMPTS = result
 

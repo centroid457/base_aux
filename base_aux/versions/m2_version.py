@@ -110,13 +110,13 @@ class Version(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf
                 break
 
         if "," in result and "." in result and self.RAISE:
-            raise Exc__Incompatible(result)
+            raise Exc__Incompatible_Data(result)
         # else:
         #     result = ""
 
         for pattern in Pat_Version.VALID_BRACKETS:
             if re.search(pattern, result) and self.RAISE:
-                raise Exc__Incompatible(f"{pattern=}/{result=}")
+                raise Exc__Incompatible_Data(f"{pattern=}/{result=}")
 
         result = re.sub(r"\A\D+", "", result)   # ver/version
         result = re.sub(r",+", ".", result)
@@ -140,7 +140,7 @@ class Version(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr, NestGa_Prefix_RaiseIf
                 result.append(block)
             except Exception as exc:
                 if self.RAISE:
-                    raise Exc__Incompatible(exc)
+                    raise Exc__Incompatible_Data(exc)
                 else:
                     return ()
 

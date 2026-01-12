@@ -178,6 +178,34 @@ class Exc__NotExistsNotFoundNotCreated(
 
 
 # =====================================================================================================================
+class Exc__Incompatible(Base_Exc):
+    """
+    GOAL
+    ----
+    any incompatibility
+    """
+    pass
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+class Exc__Incompatible_Data(Exc__Incompatible):
+    pass
+
+
+class Exc__Incompatible_Struct(Exc__Incompatible):
+    """
+    GOAL
+    ----
+    data has incorrect structure/schema
+
+    SPECIALLY CREATED FOR
+    ---------------------
+    aio_testplan.TableObj._validate_schema
+    """
+    pass
+
+
+# =====================================================================================================================
 class Exc__WrongUsage(Base_Exc):
     """
     GOAL
@@ -186,6 +214,7 @@ class Exc__WrongUsage(Base_Exc):
     """
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 class Exc__WrongUsage_Programmer(Exc__WrongUsage):
     """
     GOAL
@@ -229,11 +258,12 @@ class Exc__Overlayed(Base_Exc):
 
 
 class Exc__NotReady(Base_Exc):
-    pass
-
-
-# =====================================================================================================================
-class Exc__Incompatible(Base_Exc):
+    """
+    GOAL
+    ----
+    any not ready state/object
+    connection/...
+    """
     pass
 
 
@@ -250,15 +280,6 @@ class Exc__StartOuterNONE_UsedInStackByRecreation(Base_Exc):
     """
     in stack it will be recreate automatically! so dont use in pure single BreederStrSeries!
     """
-    pass
-
-
-# =====================================================================================================================
-class Exc__Valid(Base_Exc):
-    pass
-
-
-class Exc__ValueNotValidated(Exc__Valid):
     pass
 
 

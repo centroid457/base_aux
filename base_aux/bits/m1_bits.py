@@ -26,7 +26,7 @@ class Bitfield:
 
     def __init__(self, field_size: int):
         if field_size < 1:
-            raise Exc__Incompatible(f"{field_size=}")
+            raise Exc__Incompatible_Data(f"{field_size=}")
 
         self.field_size = field_size
         self._field_bytearray = bytearray((field_size + 7) // 8)

@@ -178,7 +178,7 @@ class TextFormatted(
             # values = [value.strip() for value in values]  # DONT DO STRIP!!!
             self.sai__values_args_kwargs(*values)
         else:
-            raise Exc__Incompatible(f"{other=}, {self.PAT_FORMAT=}")
+            raise Exc__Incompatible_Data(f"{other=}, {self.PAT_FORMAT=}")
 
         print(self)
 

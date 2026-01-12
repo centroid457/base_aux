@@ -62,7 +62,8 @@ class ValueEqValid(NestCall_Resolve):
             if self.VALUE_DEFAULT is NoValue:
                 self.VALUE_DEFAULT = value
         else:
-            raise Exc__ValueNotValidated()
+            msg = f"{value=}/{self.EQ=}/"
+            raise Exc__Incompatible_Data(msg)
 
     def value_update(self, value: Any | NoValue = NoValue) -> bool | NoReturn:
         """

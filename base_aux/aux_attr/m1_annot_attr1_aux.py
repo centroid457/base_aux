@@ -73,7 +73,7 @@ class Base_AttrAux(NestInit_Source):
         elif self._ATTRS_STYLE == EnumAdj_AttrAnnotsOrExisted.ANNOTS_ONLY:
             yield from self.iter__annot_names()
         else:
-            raise Exc__Incompatible(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
+            raise Exc__Incompatible_Data(f"{self._ATTRS_STYLE=}/{self._ANNOTS_DEPTH=}")
 
     # -----------------------------------------------------------------------------------------------------------------
     pass
@@ -155,7 +155,7 @@ class Base_AttrAux(NestInit_Source):
                 yield name
 
             else:
-                raise Exc__Incompatible(f"{attr_level=}")
+                raise Exc__Incompatible_Data(f"{attr_level=}")
 
     def iter__names_filter__not_hidden(self) -> Iterable[TYPING.ATTR_FINAL]:
         """
@@ -643,7 +643,7 @@ class Base_AttrAux(NestInit_Source):
 
 
         # else:
-        #     raise Exc__Incompatible(f"{self._ANNOTS_DEPTH=}")
+        #     raise Exc__Incompatible_Data(f"{self._ANNOTS_DEPTH=}")
 
         # rename private original -------------------
         result_final: dict[str, type[Any]] = dict()
