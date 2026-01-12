@@ -22,7 +22,10 @@ class TableObj:
             raise Exc__Incompatible(msg)
 
         self.schema = schema
-        self.__count_columns: int = len(list(self.schema.values())[0])
+        try:
+            self.__count_columns: int = len(list(self.schema.values())[0])
+        except:
+            self.__count_columns: int = 0
 
     @classmethod
     def _validate_schema(cls, schema: dict[str, list[Any]]) -> bool:
@@ -33,6 +36,12 @@ class TableObj:
         mainly by counts!
         """
         len_expect = None
+        if not isinstance(schema, dict):
+            # just in case!
+            msg = f"[{cls.__name__}]/{schema=}"
+            print(msg)
+            return False
+
         for name, line in schema.items():
             if not isinstance(name, str):
                 # just in case!
@@ -64,6 +73,9 @@ class TableObj:
         return self.__count_columns
 
     def __getitem__(self, item: str) -> list[Any] | NoReturn:
+        return self.schema[item]
+
+    def __getattr__(self, item: str) -> list[Any] | NoReturn:   # FIXME: deprecate???
         return self.schema[item]
 
 
