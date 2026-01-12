@@ -1,6 +1,6 @@
 from base_aux.loggers.m1_print import *
 from base_aux.testplans.devices_base import *
-from base_aux.breeders.m3_table_inst import *
+from base_aux.breeders.m2_table_inst import *
 from base_aux.testplans.TESTPLANS.DEVICES import atc, ptb
 from base_aux.testplans.devices_kit import DeviceKit
 

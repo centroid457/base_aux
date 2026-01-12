@@ -1,4 +1,4 @@
-from base_aux.breeders.m3_table_inst import TableKit, TableColumn
+from base_aux.breeders.m2_table_inst import TableKit, TableColumn
 
 
 # =====================================================================================================================

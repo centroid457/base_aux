@@ -1,7 +1,7 @@
 import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.breeders.m3_table_inst import *
+from base_aux.breeders.m2_table_inst import *
 
 
 # =====================================================================================================================

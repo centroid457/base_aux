@@ -48,18 +48,18 @@ class Test__Version:
         ]
     )
     def test__all(self, source, _EXPECTED):
-        inst = Version(source, _raise=False)
+        victim = Version(source, _raise=False)
 
-        func_link = inst._prepare_source
+        func_link = victim._prepare_source
         Lambda(func_link).check_expected__assert(_EXPECTED[0])
 
-        func_link = inst._parse_blocks
+        func_link = victim._parse_blocks
         Lambda(func_link).check_expected__assert(_EXPECTED[1])
 
-        func_link = str(inst)
+        func_link = str(victim)
         Lambda(func_link).check_expected__assert(_EXPECTED[2])
 
-        func_link = bool(inst)
+        func_link = bool(victim)
         Lambda(func_link).check_expected__assert(_EXPECTED[3])
 
     # -----------------------------------------------------------------------------------------------------------------

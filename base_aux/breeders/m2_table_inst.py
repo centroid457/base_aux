@@ -1,4 +1,6 @@
 """
+TODO: try to use simple TableObj instead!!!
+
 IDEAS
 -----
 TableLine
@@ -17,7 +19,6 @@ USAGE
 """
 
 # =====================================================================================================================
-
 from base_aux.base_values.m3_exceptions import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 
