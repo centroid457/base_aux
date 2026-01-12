@@ -11,7 +11,7 @@ class TableObj:
     create table of objects (lines+columns)
     all lines are same len
     """
-    schema: dict[str, list[Any]]
+    schema: dict[str, list[Any] | Collection]   # Collection if for universal
 
     def __init__(
             self,
@@ -24,7 +24,8 @@ class TableObj:
         self.schema = schema
         self.__count_columns: int = len(list(self.schema.values())[0])
 
-    def _validate_schema(self, schema: dict[str, list[Any]]) -> bool:
+    @classmethod
+    def _validate_schema(cls, schema: dict[str, list[Any]]) -> bool:
         """
         GOAL
         ----
@@ -33,14 +34,24 @@ class TableObj:
         """
         len_expect = None
         for name, line in schema.items():
-            len_cur = len(line)
+            if not isinstance(name, str):
+                # just in case!
+                msg = f"[{cls.__name__}]/{name=}"
+                print(msg)
+                return False
+
+            try:
+                len_cur = len(line)
+            except Exception as exc:
+                print(f"{exc!r}")
+                return False
 
             # init expected
             if len_expect is None:
                 len_expect = len_cur
 
             if len_expect != len_cur:
-                msg = f"[{self.__class__.__name__}]/{name=}/{len_expect=}/{len_cur=}"
+                msg = f"[{cls.__name__}]/{name=}/{len_expect=}/{len_cur=}"
                 print(msg)
                 return False
 
