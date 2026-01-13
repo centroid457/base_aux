@@ -9,6 +9,10 @@
 ********************************************************************************
 ## NEWS
 
+0.3.12(2026.01.13 15.25.53)
+------------------------------
+- [Tables] create TableObj/TableObj_Column  
+
 0.3.11(2025.12.19 17.43.05)
 ------------------------------
 - [NestCmp_GLET_DigitAccuracy] add _cmp_accuracy__last so str(self) fixed +add test__cmp_accuracy__last  
