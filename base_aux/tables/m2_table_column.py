@@ -11,15 +11,15 @@ class TableColumn:
     get item by name+index_column from Table
     just an attempt for simplification access to exact index item from list
 
-    but you can access it directly by
-        dev_table.ATC[index]
-    instead
+    now you can access objects directly by
         dev_table_column.ATC
+    instead old
+        dev_table.ATC[index]
     """
-    table: TableObj
+    table: TableObj | dict[Any, list | Collection]
     column: int
 
-    def __init__(self, *, column: int, table: TableObj | dict[Any, Any]) -> None:
+    def __init__(self, *, column: int, table: TableObj | dict[Any, list | Collection]) -> None:
         self.table = table
         self.column = column
 

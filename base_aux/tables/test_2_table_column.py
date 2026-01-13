@@ -8,35 +8,31 @@ from base_aux.tables.m2_table_column import TableColumn
 
 # =====================================================================================================================
 @pytest.mark.parametrize(
-    argnames="table, col, _EXP_count_lines, _EXP_count_col",
+    argnames="data, col, name, _EXPECTED",
     argvalues=[
-        # CORRECT -------------
-        (TableObj(), 0, 0),
-        (TableObj(ATC=[]), 1, 0),
-        (TableObj(ATC=[1,]), 1, 1),
-        (TableObj(ATC=[1,2,]), 1, 2),
-        (TableObj(ATC=[1,], PTB=[2,]), 2, 1),
-        (TableObj(ATC=[1,], PTB=(2,)), 2, 1),
-        (TableObj(ATC=[1,], PTB={2,}), 2, 1),
-        (TableObj(ATC=[], PTB=[]), 2, 0),
+        # TableObj -------------
+        (dict(), 0, "ATC", Exception),
 
-        (TableObj(ATC="atc", PTB=[1, 2, 3]), 2, 3),
-        (TableObj(ATC="atc", PTB={1:1, 2:2, 3:3}), 2, 3),
+        (dict(ATC=[]), 0, "ATC", Exception),
+        (dict(ATC=[]), 1, "ATC", Exception),
+
+        (dict(ATC=[1,]), 0, "ATC", 1),
+        (dict(ATC=[1,]), 1, "ATC", Exception),
+        (dict(ATC=[1,]), 0, "atc", Exception),
+
+        (dict(ATC=[1,2,]), 1, "ATC", 2),
+
+        (dict(ATC=[1,], PTB=[2,]), 0, "PTB", 2),
+        (dict(ATC=[1,], PTB=(2,)), 0, "PTB", 2),
+        (dict(ATC=[1,], PTB={2,}), 0, "PTB", Exception),
+
+        (dict(ATC="atc", PTB=[1, 2, 3]), 2, "ATC", "c"),
     ]
 )
-def test__full(table, col, _EXP_count_lines, _EXP_count_col):
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    # FIXME: FINISH
-    raise Exception()
-    Lambda(TableColumn(table=table, column=col)).check_expected__assert(_EXP_valid)
-    Lambda(lambda: TableObj(**schema)).check_raised__assert(not _EXP_valid)
+def test__full(data, col, name, _EXPECTED):
+    for victim in [data, TableObj(**data)]:
+        Lambda(lambda: TableColumn(table=victim, column=col)[name]).check_expected__assert(_EXPECTED)
+        Lambda(lambda: getattr(TableColumn(table=victim, column=col), name)).check_expected__assert(_EXPECTED)
 
 
 # =====================================================================================================================

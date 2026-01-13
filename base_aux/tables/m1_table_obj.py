@@ -76,7 +76,19 @@ class TableObj:
         return self.schema[item]
 
     def __getattr__(self, item: str) -> list[Any] | NoReturn:   # FIXME: deprecate???
+        # if item.startswith("__") and item.endswith("__"):
+        #     raise KeyError()
         return self.schema[item]
+
+    @property
+    def __name__(self) -> str:
+        """
+        GOAL
+        ----
+        just for suppression internal unexpected error when using tests for TableColumn!
+        it appears only in there!
+        """
+        return self.__class__.__name__
 
 
 # =====================================================================================================================
