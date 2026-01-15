@@ -1,100 +1,228 @@
-# VERSION = (0, 0, 8)#add TRASH_CAN/obsidian +separate UNIVERSAL +reverce version order
-# VERSION = (0, 0, 7)#add pyinstaller +TEMP/ as short
-# VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
-# VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
-# VERSION = (0, 0, 4)#add LOGS
-# VERSION = (0, 0, 3)#add DrawIo *.dtmp
-# VERSION = (0, 0, 2)#add BACKUPS + start HELP
 # VERSION = (0, 0, 1)#use build as broadcast/nested
+# VERSION = (0, 0, 2)#add BACKUPS + start HELP
+# VERSION = (0, 0, 3)#add DrawIo *.dtmp
+# VERSION = (0, 0, 4)#add LOGS
+# VERSION = (0, 0, 5)#add LOG.* for RotatingFileHandler
+# VERSION = (0, 0, 6)#add blocks C+THIRD-PARTY
+# VERSION = (0, 0, 7)#add pyinstaller +TEMP/ as short
+# VERSION = (0, 0, 8)#add TRASH_CAN/obsidian +separate UNIVERSAL +reverce version order
+# VERSION = (0, 1, 0)#ask DeepSeek
 
 # HELP ---------------------
+# 0=READY gitignore sets
+#   https://github.com/github/gitignore/tree/main
 # 1=NESTING
-# (*.xyz) or the same (**/*.xyz) - files in any nested directory!
-# (*xyz/) or the same (**/*xyz/) same as for directories
-# 2=CaseInsensitive!
-# (HELP) same as (help)!!! may be exists some flag for it!
+#   (*.xyz) or the same (**/*.xyz) - files in any nested directory!
+#   (*xyz/) or the same (**/*xyz/) same as for directories
+# 2=CaseSense!
+#   Linux/Mac-Sensitive!
+#   Windows - INSensitive!
+#   TRICKS
+#       *.so => *.[Ss][Oo]
+#       global patts use in one line with SPACING -> *.so/ *.SO/ *.So/
+#       BUT in real life many global static folders uses only one regicter!
 # 3=SLASH_ENDS not need but if used applyed only for directories!
-# (*xyz) - both for directories and files
-# (*xyz/) - only for directories
+#   (*xyz) - both for directories and files
+#   (*xyz/) - only for directories
+# 4=UNIGNORE=keep special files in ignored folder
+#   .vscode/*
+#   !.vscode/settings.json
+#   !.vscode/tasks.json
 
-# PYTHON ===================
-# virtual env --------------
-.venv/
-venv/
-env/
+# PYTHON ===============================================
+# ENV ----------------------
+# virtual env
+# BUT sometimes you should commit it!
+.venv/ .VENV/ .Venv/
+venv/ VENV/ Venv/
+venv.bak/
+
+env/ ENV/
+.env
+
+.env.*
+.env.*/
+#.env.local
+#.env.development.local
+#.env.test.local
+#.env.production.local
+#env.bak/
+
+pythonenv*
+
+# PipEnv
+.pipenv/
+# sometimes it could commit!
+Pipfile.lock
+
+# pyenv
+.python-version
 
 # byte-compiled ------------
-__pycache__/
-*.py[cod]
+__pypackages__
+# sometimes it could commit!
+poetry.lock
 
-# IDE ----------------------
-.idea/
-.vscode/
+# byte-compiled ------------
+__pycache__/ __PyCache__/ __PYCACHE__/
+*.py[cod] *.PY[COD]
 
 # PYTEST -------------------
 .pytest_cache/
+.tox/
+test-results/
+junit.xml
 
-# pytest coverage
+# pytest COVERAGE
 # html results
 htmlcov/
 # final one file result (with bytes)
 .coverage
+.cache
 # temp files for exact testing files
 .coverage.*
 
 # PYPI DISTRIBUTION --------
-build/
+build/ Build/ BUILD/
 _build/
-dist/
 
+dist/ Dist/ DIST/
+sdist/
+
+*.egg
 *.egg-info/
+develop-eggs/
+
+parts/
+var/
 
 # pyinstaller --------------
 pyinstaller/
+
+# MyPy ---------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebooks --------
+.ipynb_checkpoints/
 
 # documentation ------------
 #documentation/build/*
 #documentation/source/_build/*
 
-# UNIVERSAL ================
+# C ------------------------
+# extensions (not sure???)
+*.so
+
+# Компиляция - not sure to use!!!
+#*.o
+#*.a
+#*.out
+#*.lst
+#*.map
+#*.sym
+#*.lss
+#*.su
+#*.d
+#*.elf
+#*.hex  - bad idea!
+#*.bin  - bad idea!
+#*.srec
+
+# IDE ==================================================
+# PyCharm ------------------
+.idea/
+.Idea/
+.IDEA/
+out/
+*.iml
+
+# VSCODE -------------------
+.vscode/ .Vscode/ .VSCode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Eclipse ------------------
+.metadata/
+
+# CubeIDE ------------------
+.project
+.cproject
+.settings/
+
+# IAR Embedded Workbench
+*.eww
+*.ewp
+*.ewd
+#*.bat - bad idea! WINDOWS CMD!!!!
+
+# UNIVERSAL ============================================
 # TRASH_CAN ----------------
 # first found in obsidian!
 *.trash
 
 # BACKUPS ------------------
+*~
 *.bkp
+*.bak
+*.backup
+
+# TEMP ---------------------
+._*
+-*
+tmp/ TMP/
+*.tmp
+
+temp/ TEMP/
+*.temp
+
+TEMPORARY/
 
 # LOGS ---------------------
 *.log
 *.log.*
 
-# some other ---------------
-*~lock*
-manage.sh
-todo.org
-*.orig
-
-# C ========================
-# extensions (not sure???)
-*.so
-
-# THIRD-PARTY ==============
-# DrawIo
-*.dtmp
-
-# obsidian
-*.obsidian
-
-# USER =====================
-# TEMP ---------------------
-TEMPORARY/
-TEMP/
--*
-
 # user saved data ----------
 USERDATA/
 
-# ========================================
-# SPECIAL FOR THIS PROJECT ---------------
+# OS SPECIFIC ==========================================
+# WINDOWS ------------------
+thumbs.db Thumbs.db
 
-# ========================================
+# macOS --------------------
+.ds_store .DS_Store .Ds_Store
+
+# THIRD-PARTY ==========================================
+# GIT ----------------------
+# merge backup data
+*.orig
+
+# VIM ----------------------
+*.swp
+*.swo
+
+# DB -----------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# DrawIo -------------------
+*.dtmp
+
+# obsidian -----------------
+*.obsidian
+
+# DOUBTFUL ??????????===================================
+#*~lock*
+#Это очень специфичный паттерн, который может быть связан с:
+#Файлы блокировки базы данных (например, SQLite создаёт database.lock)
+#Файлы блокировки IDE/редакторов (некоторые редакторы создают .lock файлы)
+#Файлы блокировки пакетных менеджеров (например, package-lock.json для npm, но этот файл НЕ должен игнорироваться!)
+
+# ======================================================
+# SPECIAL FOR THIS PROJECT -----------------------------
+
+# ======================================================
