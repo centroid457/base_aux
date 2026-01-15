@@ -18,9 +18,9 @@
 #   Linux/Mac-Sensitive!
 #   Windows - INSensitive!
 #   TRICKS
-#       *.so => *.[Ss][Oo]
-#       global patts use in one line with SPACING -> *.so/ *.SO/ *.So/
-#       BUT in real life many global static folders uses only one regicter!
+#       CORRECT: *.so => *.[Ss][Oo]
+#       WRONG: one line with SPACING ===> *.so/ *.SO/ *.So/ -> will exclude exact names with spaces "*.so/ *.SO/ *.So/"
+#   BUT in real life many global static folders uses only one register!
 # 3=SLASH_ENDS not need but if used applyed only for directories!
 #   (*xyz) - both for directories and files
 #   (*xyz/) - only for directories
@@ -28,16 +28,28 @@
 #   .vscode/*
 #   !.vscode/settings.json
 #   !.vscode/tasks.json
+# 5=CHECKS
+#   git check-ignore -v path/to/file
+#   git status --ignored
+
+# SECURITY FIRST =======================================
+# Files that should NEVER be committed
+.env
+*.key
+*.pem
 
 # PYTHON ===============================================
 # ENV ----------------------
 # virtual env
 # BUT sometimes you should commit it!
-.venv/ .VENV/ .Venv/
-venv/ VENV/ Venv/
+.venv/
+.VENV/
+venv/
+VENV/
 venv.bak/
 
-env/ ENV/
+env/
+ENV/
 .env
 
 .env.*
@@ -53,7 +65,7 @@ pythonenv*
 # PipEnv
 .pipenv/
 # sometimes it could commit!
-Pipfile.lock
+#Pipfile.lock
 
 # pyenv
 .python-version
@@ -61,11 +73,11 @@ Pipfile.lock
 # byte-compiled ------------
 __pypackages__
 # sometimes it could commit!
-poetry.lock
+#poetry.lock
 
 # byte-compiled ------------
-__pycache__/ __PyCache__/ __PYCACHE__/
-*.py[cod] *.PY[COD]
+__pycache__/
+*.py[cod]
 
 # PYTEST -------------------
 .pytest_cache/
@@ -83,10 +95,10 @@ htmlcov/
 .coverage.*
 
 # PYPI DISTRIBUTION --------
-build/ Build/ BUILD/
+build/
 _build/
 
-dist/ Dist/ DIST/
+dist/
 sdist/
 
 *.egg
@@ -133,13 +145,12 @@ dmypy.json
 # IDE ==================================================
 # PyCharm ------------------
 .idea/
-.Idea/
-.IDEA/
 out/
 *.iml
 
 # VSCODE -------------------
-.vscode/ .Vscode/ .VSCode/
+.vscode/
+.VSCODE/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -173,12 +184,16 @@ out/
 # TEMP ---------------------
 ._*
 -*
-tmp/ TMP/
+
+tmp/
 *.tmp
 
-temp/ TEMP/
+temp/
 *.temp
 
+# user
+TMP/
+TEMP/
 TEMPORARY/
 
 # LOGS ---------------------
@@ -190,30 +205,43 @@ USERDATA/
 
 # OS SPECIFIC ==========================================
 # WINDOWS ------------------
-thumbs.db Thumbs.db
+thumbs.db
+Thumbs.db
 
 # macOS --------------------
-.ds_store .DS_Store .Ds_Store
+.ds_store
+.DS_Store
+.Ds_Store
 
 # THIRD-PARTY ==========================================
 # GIT ----------------------
 # merge backup data
 *.orig
 
+# Docker -------------------
+docker-compose.override.yml
+
 # VIM ----------------------
 *.swp
 *.swo
 
 # DB -----------------------
-*.db
-*.sqlite
-*.sqlite3
+# place TEMP files into TEMP!!!
+#*.db
+#*.sqlite
+#*.sqlite3
 
 # DrawIo -------------------
 *.dtmp
 
 # obsidian -----------------
 *.obsidian
+
+# Vagrant ------------------
+.vagrant/
+
+# Kubernetes ---------------
+kubeconfig
 
 # DOUBTFUL ??????????===================================
 #*~lock*
