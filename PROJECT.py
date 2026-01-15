@@ -34,9 +34,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 12))
+    VERSION = Version((0, 3, 13))
     NEWS: list[str] = [
-        "[Tables] create TableObj/TableObj_Column",
+        "[.gitignore] VERSION = (0, 1, 0)#ask DeepSeek",
     ]
 
 
