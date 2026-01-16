@@ -1,7 +1,7 @@
 from typing import *
 import time
 
-from base_aux.base_singletons.m1_singleton import *
+from base_aux.base_instance_managers.m1_singleton import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
 from base_aux.base_lambdas.m2_lambda3_thread import LambdaThread
 
