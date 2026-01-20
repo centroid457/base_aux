@@ -34,10 +34,15 @@ setuptools  #MIT
 # debug/test ---------------
 pytest          #MIT
 pytest-asyncio  #Apache2.0
+testcontainers  #docker #Apache2.0
+
+# DEVOPS -------------------
+gitpython   #BSD3
+docker      #Apache
 
 # COMMUNICATE --------------
 pyserial    #BSD3
-# aioserial   #OSI Approved (MPL-2.0)    =pyserial-asyncio
+# aioserial #OSI Approved (MPL-2.0)    =pyserial-asyncio
 smbus2      #MIT/linuxOnly
 telebot     #GPL2
 
@@ -55,8 +60,6 @@ PyYAML      #MIT
 pydantic    #MIT
 
 bs4         #MIT
-
-gitpython   #BSD3
 
 # ==========================
 # SPECIAL OCCASION ---------

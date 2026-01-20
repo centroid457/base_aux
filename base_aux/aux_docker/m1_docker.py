@@ -3,14 +3,17 @@
 
 from base_aux.base_types.m2_info import ObjectInfo
 import docker
+# import testcontainers
 
 
+# =====================================================================================================================
 class _Docker_ExcVariants:
     DOCKER_DESCTOP = "docker.errors.DockerException: Error while fetching server API version: (2, 'CreateFile', 'Не удается найти указанный файл.')"
     MODULES_UPDATE = "docker.errors.DockerException: Error while fetching server API version: Not supported URL scheme http+docker"
     TESTCONTAINERS_ENV = "ConnectionError: Port mapping for container f58f05a18244edddfce5034e809dfe2cd6d4e36284e19f974e260c7ebbcd8f17 and port 8080 is not available"
 
 
+# =====================================================================================================================
 def docker__check_ready_os() -> bool:
     try:
         client = docker.from_env()
@@ -36,4 +39,9 @@ def docker__check_ready_os() -> bool:
         return False
 
 
-docker__check_ready_os()
+# =====================================================================================================================
+if __name__ == "__main__":
+    docker__check_ready_os()
+
+
+# =====================================================================================================================
