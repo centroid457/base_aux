@@ -1,6 +1,10 @@
 # ==========================
 # HELP
 # 1=DONT USE MINUS in moduleNames!!! this and all next moduls will not applyed!!!
+#   ??? - after 'pytest-asyncio' its works ok! 'pytest_asyncio' - not working(module not exists)!
+#   1. ide check instaled - working!??
+#   2. ide install - working!??
+#   3. pip install - working??
 # 2=how to install
 #   pip install -r .\requirements.txt               # without upgrade option is not enough!
 #   pip install -u -r .\requirements.txt            # just -u may not be recognized
@@ -8,19 +12,13 @@
 
 # --------------------------
 # VERSION = (0, 0, 1)   # just add version
-# VERSION = (0, 0, 2)   # add funcs-aux
-# VERSION = (0, 0, 3)   # add block NESTED REQUIREMENTS
-# VERSION = (0, 0, 4)   # add loggers-aux
-# VERSION = (0, 0, 5)   # add pytest-aux
-# VERSION = (0, 0, 6)   # add nested in COMMON
-# VERSION = (0, 0, 7)   # add new block TESTS +add classes into COMMON
-# VERSION = (0, 0, 8)   # add [deploy]build+twine+setuptools+cli +add singleton-meta in common/rename common to BASE/regroup subsets
 # VERSION = (0, 0, 9)   # fix names without Minus!
 # VERSION = (0, 0, 10)  # add installation note
 # VERSION = (0, 1, 0)   # combine all modules into one
 # VERSION = (0, 1, 1)   # add comments for Lincenses
 # VERSION = (0, 1, 2)   # add pytest-asyncio
 # VERSION = (0, 1, 3)   # separate special_occasion/common/COMMUNICATE +add aioserial/base_aux
+# VERSION = (0, 1, 4)   # separate DEVOPS, add testcontainers
 
 # ==========================
 # base ---------------------
@@ -34,7 +32,7 @@ setuptools  #MIT
 # debug/test ---------------
 pytest          #MIT
 pytest-asyncio  #Apache2.0
-testcontainers  #docker #Apache2.0
+testcontainers  #Apache2.0 #docker
 
 # DEVOPS -------------------
 gitpython   #BSD3
