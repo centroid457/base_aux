@@ -43,6 +43,9 @@ NAMES__SKIP_PARTS: list[str] = [
     "hook",
     # "__subclasshook__",   # bs4
     # "__unicode__",
+
+    # testcontainers(docker)
+    "stop", "load",
 ]
 
 

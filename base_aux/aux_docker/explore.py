@@ -6,6 +6,9 @@ from testcontainers.rabbitmq import RabbitMqContainer
 import pika
 import time
 
+from base_aux.base_types.m2_info import ObjectInfo
+
+
 with RabbitMqContainer(
         image="rabbitmq:3-management",  # версия с веб-интерфейсом
 
@@ -15,6 +18,8 @@ with RabbitMqContainer(
         #   внешний ответный порт создастся динамически!
         #   если не указать то проброса не последует!
 ) as rabbitmq:
+    # ObjectInfo(rabbitmq).print()
+
     QUEUE_TESTING_NAME = "queue_testing"
 
     # 1=получение актуальных данных --------
