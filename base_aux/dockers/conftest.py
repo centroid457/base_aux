@@ -17,7 +17,7 @@ def rabbitmq_container():
 @pytest.fixture
 def rabbitmq_connection(rabbitmq_container):
     """Фикстура подключения к RabbitMQ"""
-    connection_params = pika.ConnectionParameters(
+    _conn_params = pika.ConnectionParameters(
         host=rabbitmq_container.get_container_host_ip(),
         port=rabbitmq_container.get_exposed_port(5672),
         credentials=pika.PlainCredentials(
@@ -25,7 +25,7 @@ def rabbitmq_connection(rabbitmq_container):
             password=rabbitmq_container.password
         )
     )
-    connection = pika.BlockingConnection(connection_params)
+    connection = pika.BlockingConnection(_conn_params)
     yield connection
     connection.close()
 

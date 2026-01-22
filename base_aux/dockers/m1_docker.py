@@ -15,28 +15,33 @@ class _Docker_ExcVariants:
 
 # =====================================================================================================================
 def docker__check_ready_os() -> bool:
+    result = None
+
     try:
         client = docker.from_env()
         print(f"{client.ping()=}")  # Должно вернуть True
         print(f"{client.version()=}")
 
-        return client.ping()
+        result = client.ping()
     except docker.errors.DockerException as exc:
         print(f"{exc!r}")
         ObjectInfo(exc).print()
 
         if "CreateFile" in str(exc):
-            print(f"[err/docker] docker Desctop start!")
+            print(f"[err/docker] DockerDesctop NOT started!")
 
         elif "URL scheme" in str(exc):
-            print(f"[err/docker] update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
+            print(f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
 
-        return False
+        result = False
 
     except BaseException as exc:
-        print(f"UNEXPECTED {exc!r}")
+        print(f"[err/docker] UNEXPECTED {exc!r}")
         ObjectInfo(exc).print()
-        return False
+        result = False
+
+    print(f"docker__check_ready_os({result=})")
+    return result
 
 
 # =====================================================================================================================

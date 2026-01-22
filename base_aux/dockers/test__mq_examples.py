@@ -4,6 +4,19 @@ from datetime import datetime
 
 
 # =====================================================================================================================
+def test__0_check_could_start_tests():
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    # TODO: FINISH!
+    raise NotImplemented(f"FINISH")
+
+
 def test_rabbitmq_connection(rabbitmq_connection):
     """Тест подключения к RabbitMQ"""
     assert rabbitmq_connection.is_open
