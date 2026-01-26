@@ -123,7 +123,8 @@ class ObjectInfo:
         if names__use_only_parts:
             if isinstance(names__use_only_parts, str):
                 names__use_only_parts = [names__use_only_parts, ]
-            self.NAMES__USE_ONLY_PARTS = names__use_only_parts
+            self.NAMES__USE_ONLY_PARTS = [*self.NAMES__USE_ONLY_PARTS, *names__use_only_parts]
+
         if names__skip_full:
             if isinstance(names__skip_full, str):
                 names__skip_full = [names__skip_full, ]
