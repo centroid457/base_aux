@@ -40,10 +40,7 @@ class TestCls_Started:
 
 
 # =====================================================================================================================
-import pytest
-
-
-class TestCls_InternalDep:
+class TestCls_InternalDep1_OriginalNames:
     @pytest.mark.dependency
     @pytest.mark.skipif(True, reason="skip")
     def test_cls_base__skip(self):
@@ -58,6 +55,25 @@ class TestCls_InternalDep:
         pass
 
     @pytest.mark.dependency(depends=["TestCls_InternalDep::test_cls_base__ok", ])
+    def test_cls__ok(self):
+        pass
+
+
+class TestCls_InternalDep2_GlobalNames:
+    @pytest.mark.dependency(name="global_skip")
+    @pytest.mark.skipif(True, reason="skip")
+    def test_cls_base__skip(self):
+        pass
+
+    @pytest.mark.dependency(name="global_ok")
+    def test_cls_base__ok(self):
+        pass
+
+    @pytest.mark.dependency(depends=["global_skip", ], ignore=["global_skip", ])
+    def test_cls__skipped(self):
+        pass
+
+    @pytest.mark.dependency(depends=["global_ok", ])
     def test_cls__ok(self):
         pass
 
