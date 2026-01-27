@@ -15,8 +15,6 @@ class _Docker_ExcVariants:
 
 # =====================================================================================================================
 def docker__check_ready_os() -> bool:
-    result = None
-
     try:
         client = docker.from_env()
         print(f"{client.ping()=}")  # Должно вернуть True
@@ -28,7 +26,7 @@ def docker__check_ready_os() -> bool:
         ObjectInfo(exc).print()
 
         if "CreateFile" in str(exc):
-            print(f"[err/docker] DockerDesctop NOT started!")
+            print(f"[err/docker] Windows DockerDesctop NOT started!")
 
         elif "URL scheme" in str(exc):
             print(f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
