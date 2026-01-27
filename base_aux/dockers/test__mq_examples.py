@@ -14,6 +14,11 @@ def test__0_check_could_start_tests():
 # =====================================================================================================================
 @pytest.mark.dependency(depends=["test__0_check_could_start_tests", ])
 class Test_RabbitMqExample:
+    """
+    GOAL
+    ----
+    check common mq routines by pika
+    """
     def test_rabbitmq_connection(self, rabbitmq_connection):
         """Тест подключения к RabbitMQ"""
         assert rabbitmq_connection.is_open
