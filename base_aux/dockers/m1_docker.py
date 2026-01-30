@@ -48,27 +48,28 @@ def docker__check_ready_os() -> bool:
 class DockerMan:
     def __init__(
             self,
-            image_name: str = "ubuntu:latest",
+            image_name: str = "ubuntu",
             container_name: str = "test_container",
     ):
         self.image_name: str = image_name
         self.container_name: str = container_name
 
-        self._client_daemon: docker.client.DockerClient | None = None
+        self._daemon_client: docker.client.DockerClient | None = None
         self.container: docker.models.containers.Container | None = None
 
-    def connect_daemon(self) -> bool:
+    # -----------------------------------------------------------------------------------------------------------------
+    def daemon_connect(self) -> bool:
         """
         GOAL
         ----
         create connection to the system docker service-daemon!
         """
         result = True
-        if self._client_daemon is None:
+        if self._daemon_client is None:
             try:
                 # connect to daemon!
                 # any call - always create new object!
-                self._client_daemon = docker.from_env()
+                self._daemon_client = docker.from_env()
             except BaseException as exc:
                 print(f"{exc!r}")
                 result = False
@@ -78,43 +79,94 @@ class DockerMan:
         print(f"connect_daemon/{result=}")
         return True
 
+    def daemon_images(self) -> list[docker.models.containers.Image]:
+        """
+        GOAL
+        ----
+        show all already downloaded (used before) images in system
+
+
+            item=<Image: ''>
+            item=<Image: ''>
+            item=<Image: 'ubuntu:latest'>
+            item=<Image: 'rabbitmq:latest'>
+            item=<Image: 'reponame:latest'>
+            item=<Image: '4volume-2compose-app:latest'>
+            item=<Image: 'flask_only:latest'>
+            item=<Image: 'hello-web1:latest'>
+            item=<Image: 'myflask:latest'>
+            item=<Image: 'redis:alpine'>
+            item=<Image: 'myrepo:latest'>
+            item=<Image: 'hello-web:latest'>
+            item=<Image: 'project-web:latest'>
+            item=<Image: 'python:3.10-alpine'>
+            item=<Image: 'python:latest'>
+            item=<Image: 'alpine:latest'>
+            item=<Image: 'rabbitmq:management'>
+            item=<Image: 'busybox:latest'>
+            item=<Image: 'rabbitmq:3-management'>
+            item=<Image: 'testcontainers/ryuk:0.8.1'>
+        """
+        images_list = self._daemon_client.images.list(
+            # name="ubuntu",
+            # can use only FULL name! like ubuntu (for any variants ubuntu:latest/...)
+            # PART names is not working!
+            # all=True,
+        )
+        for item in images_list:
+            print(f"\t{item=}")
+        return images_list
+
+    # -----------------------------------------------------------------------------------------------------------------
     def run_container(self) -> bool:
         """
         GOAL
         ----
-        run image - create container
+        run image - create container or get old existed
         """
         result = True
-        old_container: docker.models.containers.Container
+        old_container: docker.models.containers.Container | None = None
 
-        # check old/existed
+        # 1=old check exists ------------
         try:
-            old_container = self._client_daemon.containers.get(self.container_name)
+            old_container = self._daemon_client.containers.get(self.container_name)
             print(f"old exists: {old_container.id=}")
-
-            if old_container.status == "running":
-                print("old.stopping...")
-                old_container.stop()
-                print("old.stopped...")
-
-            print("old.deleting...")
-            old_container.remove()
-            print("old.deleted...")
         except docker.errors.NotFound:
-            print("Старый контейнер не найден, создаю новый...")
-        except docker.errors.APIError as exc:
-            print(f"Ошибка при удалении старого контейнера: {exc!r}")
+            print(f"old NOT exists")
         except BaseException as exc:
-            print(f"[unexpected] {exc!r}")
+            print(f"old [unexpected] {exc!r}")
 
+        # 2=old try remove ------------
+        if old_container is not None:
+            try:
+                if old_container.status == "running":
+                    self.container = old_container
+                    print(f"[OK]run_container = already exists")
+                    # no need to stop old and start new
+                    return True
+
+                    # print("old.stopping...")
+                    # old_container.stop()
+                    # print("old.stopped...")
+
+                print("old.removing...")
+                old_container.remove()
+                print("old.removed...")
+
+            except docker.errors.APIError as exc:
+                print(f"Ошибка при удалении старого контейнера: {exc!r}")
+            except BaseException as exc:
+                print(f"[unexpected] {exc!r}")
+
+        # 3=start new ------------
         try:
-            self.container = self._client_daemon.containers.run(
+            self.container = self._daemon_client.containers.run(
                 image=self.image_name,
                 name=self.container_name,
                 # command=None,   # str/list
                 command="tail -f /dev/null",  # Бесконечная команда для поддержания работы иначе контейнер будет остановлен!!
                 detach=True,
-                # remove=True,    # autoremove cont after stop
+                remove=True,    # autoremove container after stop
             )
             """
             DETACH
@@ -129,7 +181,7 @@ class DockerMan:
             print(f"{exc!r}")
             result = False
 
-        print(f"run_img//{self.image_name=}/{self.container_name=}/{result=}")
+        print(f"run_container//{self.image_name=}/{self.container_name=}/{result=}")
         return result
 
     def stop_container(self) -> bool:
@@ -139,22 +191,26 @@ class DockerMan:
         finish working with container!
         stop/remove container
         """
+        if self.container is None:
+            return True
+
         try:
             if self.container.status == "running":
                 print("container.stopping...")
                 self.container.stop()
                 print("container.stopped...")
 
-            print("container.deleting...")
+            print("container.removing...")
             self.container.remove()
-            print("container.deleted...")
+            print("container.removed...")
             return True
 
-        except BaseException as exc:
+        except BaseException as exc:    # FIXME: separate excs
             print(f"[unexpected] {exc!r}")
 
         return False
 
+    # -----------------------------------------------------------------------------------------------------------------
     def send_cmd(
             self,
             cmd: str = "echo hello world",
@@ -164,9 +220,14 @@ class DockerMan:
         print(f"send_cmd//{cmd=}/{result=}")
         return result
 
-    # ---------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
     def cont__list(self):
-        cont_list = self._client_daemon.containers.list()
+        cont_list = self._daemon_client.containers.list()
         print(f"{cont_list=}")
         # [<Container '45e6d2de7c54'>, <Container 'db18e4f20eaa'>, ...]
 
@@ -174,7 +235,7 @@ class DockerMan:
             return
 
         try:
-            self.container = self._client_daemon.containers.get('45e6d2de7c54')
+            self.container = self._daemon_client.containers.get('45e6d2de7c54')
             print(f"{self.container=}")
         except:
             return
@@ -191,27 +252,27 @@ class DockerMan:
         for line in self.container.logs(stream=True):
             print(line.strip())
 
-    def images__list(self):
-        images_list = self._client_daemon.images.list()
-        # [<Image 'ubuntu'>, <Image 'nginx'>, ...]
-        print(f"{images_list=}")
-
 
 # =====================================================================================================================
 if __name__ == "__main__":
     assert docker__check_ready_os()
 
     docker_man = DockerMan()
-    docker_man.connect_daemon()
-    docker_man.run_container()
+    docker_man.daemon_connect()
     print()
+    # docker_man.daemon_images()
+
+
+    print()
+    # exit()
+    docker_man.run_container()
     docker_man.send_cmd(f"echo hello 111")
     docker_man.send_cmd(f"date")
-    docker_man.send_cmd(f"uname -a")
-    docker_man.send_cmd(f"ping localhost")
-    docker_man.send_cmd(f"echo hello 222")
-    docker_man.send_cmd(f"ping")
-    docker_man.send_cmd(f"free -m")
+    # docker_man.send_cmd(f"uname -a")
+    # docker_man.send_cmd(f"ping localhost")
+    # docker_man.send_cmd(f"echo hello 222")
+    # docker_man.send_cmd(f"ping")
+    # docker_man.send_cmd(f"free -m")
     """
     send_cmd//cmd='free -m'/result='               total        used        free      shared  buff/cache   available\nMem:            7788         920        6563           5         468        6867\nSwap:           2048           0        2048\n'
     
@@ -222,7 +283,7 @@ if __name__ == "__main__":
     
     C:\\Users\a.starichenko>
     """
-    docker_man.send_cmd(f"ps aux")
+    # docker_man.send_cmd(f"ps aux")
     """
     send_cmd//cmd='ps aux'/result='USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nroot           1  1.2  0.0   2728  1280 ?        Ss   10:18   0:00 tail -f /dev/null\nroot          49 40.0  0.0   7888  3712 ?        Rs   10:18   0:00 ps aux\n'
     
@@ -233,7 +294,9 @@ if __name__ == "__main__":
     C:\\Users\a.starichenko>
     """
 
-    docker_man.stop_container()
+    # docker_man.stop_container()
+    # docker_man.daemon_images()
+
 
     # docker_man.run(detach=False)
 
@@ -242,7 +305,7 @@ if __name__ == "__main__":
     # print()
     # ObjectInfo(result).print()
     # print()
-    # ObjectInfo(result._client_daemon).print()
+    # ObjectInfo(result._daemon_client).print()
 
     # docker_man.cont__list()
 
