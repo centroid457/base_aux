@@ -3,6 +3,7 @@
 
 from base_aux.base_types.m2_info import ObjectInfo
 import docker
+# from docker.models.containers import Container
 # import testcontainers
 
 
@@ -53,36 +54,42 @@ class DockerMan:
         self.image_name: str = image_name
         self.container_name: str = container_name
 
-        self._client: docker.client.DockerClient | None = None
-        self.container = None
+        self._client_daemon: docker.client.DockerClient | None = None
+        self.container: docker.models.containers.Container | None = None
 
-    def connect(self) -> bool:
+    def connect_daemon(self) -> bool:
         """
         GOAL
         ----
         create connection to the system docker service-daemon!
         """
         result = True
-        try:
-            self._client = docker.from_env()     # connect to daemon!
-        except BaseException as exc:
-            print(f"{exc!r}")
-            result = False
+        if self._client_daemon is None:
+            try:
+                # connect to daemon!
+                # any call - always create new object!
+                self._client_daemon = docker.from_env()
+            except BaseException as exc:
+                print(f"{exc!r}")
+                result = False
+        else:
+            print(f"connect_daemon//already existed")
 
-        print(f"connect/{result=}")
+        print(f"connect_daemon/{result=}")
         return True
 
-    def run_img(self) -> bool:
+    def run_container(self) -> bool:
         """
         GOAL
         ----
         run image - create container
         """
         result = True
+        old_container: docker.models.containers.Container
 
         # check old/existed
         try:
-            old_container = self._client.containers.get(self.container_name)
+            old_container = self._client_daemon.containers.get(self.container_name)
             print(f"old exists: {old_container.id=}")
 
             if old_container.status == "running":
@@ -95,17 +102,19 @@ class DockerMan:
             print("old.deleted...")
         except docker.errors.NotFound:
             print("Старый контейнер не найден, создаю новый...")
-        except docker.errors.APIError as e:
-            print(f"Ошибка при удалении старого контейнера: {e}")
+        except docker.errors.APIError as exc:
+            print(f"Ошибка при удалении старого контейнера: {exc!r}")
+        except BaseException as exc:
+            print(f"[unexpected] {exc!r}")
 
         try:
-            self.container = self._client.containers.run(
+            self.container = self._client_daemon.containers.run(
                 image=self.image_name,
                 name=self.container_name,
                 # command=None,   # str/list
                 command="tail -f /dev/null",  # Бесконечная команда для поддержания работы иначе контейнер будет остановлен!!
                 detach=True,
-                remove=True,    # autoremove cont after stop
+                # remove=True,    # autoremove cont after stop
             )
             """
             DETACH
@@ -123,6 +132,29 @@ class DockerMan:
         print(f"run_img//{self.image_name=}/{self.container_name=}/{result=}")
         return result
 
+    def stop_container(self) -> bool:
+        """
+        GOAL
+        ----
+        finish working with container!
+        stop/remove container
+        """
+        try:
+            if self.container.status == "running":
+                print("container.stopping...")
+                self.container.stop()
+                print("container.stopped...")
+
+            print("container.deleting...")
+            self.container.remove()
+            print("container.deleted...")
+            return True
+
+        except BaseException as exc:
+            print(f"[unexpected] {exc!r}")
+
+        return False
+
     def send_cmd(
             self,
             cmd: str = "echo hello world",
@@ -134,7 +166,7 @@ class DockerMan:
 
     # ---------------------------------------------------------------------------------
     def cont__list(self):
-        cont_list = self._client.containers.list()
+        cont_list = self._client_daemon.containers.list()
         print(f"{cont_list=}")
         # [<Container '45e6d2de7c54'>, <Container 'db18e4f20eaa'>, ...]
 
@@ -142,7 +174,7 @@ class DockerMan:
             return
 
         try:
-            self.container = self._client.containers.get('45e6d2de7c54')
+            self.container = self._client_daemon.containers.get('45e6d2de7c54')
             print(f"{self.container=}")
         except:
             return
@@ -160,7 +192,7 @@ class DockerMan:
             print(line.strip())
 
     def images__list(self):
-        images_list = self._client.images.list()
+        images_list = self._client_daemon.images.list()
         # [<Image 'ubuntu'>, <Image 'nginx'>, ...]
         print(f"{images_list=}")
 
@@ -170,8 +202,8 @@ if __name__ == "__main__":
     assert docker__check_ready_os()
 
     docker_man = DockerMan()
-    docker_man.connect()
-    docker_man.run_img()
+    docker_man.connect_daemon()
+    docker_man.run_container()
     print()
     docker_man.send_cmd(f"echo hello 111")
     docker_man.send_cmd(f"date")
@@ -179,7 +211,29 @@ if __name__ == "__main__":
     docker_man.send_cmd(f"ping localhost")
     docker_man.send_cmd(f"echo hello 222")
     docker_man.send_cmd(f"ping")
-    docker_man.send_cmd(f"ping ya.ru")
+    docker_man.send_cmd(f"free -m")
+    """
+    send_cmd//cmd='free -m'/result='               total        used        free      shared  buff/cache   available\nMem:            7788         920        6563           5         468        6867\nSwap:           2048           0        2048\n'
+    
+    C:\\Users\a.starichenko>docker run busybox free -m
+                  total        used        free      shared  buff/cache   available
+    Mem:           7788         730        5110           5        1948        6900
+    Swap:          2048           0        2048
+    
+    C:\\Users\a.starichenko>
+    """
+    docker_man.send_cmd(f"ps aux")
+    """
+    send_cmd//cmd='ps aux'/result='USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nroot           1  1.2  0.0   2728  1280 ?        Ss   10:18   0:00 tail -f /dev/null\nroot          49 40.0  0.0   7888  3712 ?        Rs   10:18   0:00 ps aux\n'
+    
+    C:\\Users\a.starichenko>docker run busybox ps aux
+    PID   USER     TIME  COMMAND
+        1 root      0:00 ps aux
+    
+    C:\\Users\a.starichenko>
+    """
+
+    docker_man.stop_container()
 
     # docker_man.run(detach=False)
 
@@ -188,7 +242,7 @@ if __name__ == "__main__":
     # print()
     # ObjectInfo(result).print()
     # print()
-    # ObjectInfo(result._client).print()
+    # ObjectInfo(result._client_daemon).print()
 
     # docker_man.cont__list()
 
