@@ -79,8 +79,8 @@ _std = [
 class Base_Exc(
     Warn,
 
-    Exception,
-    # BaseException,
+    # Exception,
+    BaseException,
     # BaseExceptionGroup,
 ):
     """
@@ -234,6 +234,17 @@ class Exc__WrongUsage_YouForgotSmth(Exc__WrongUsage_Programmer):
     SPECIALLY CREATED FOR
     ---------------------
     ReleaseHistory - cause it is not Programmer
+    """
+    pass
+
+
+# =====================================================================================================================
+class Exc__UnExpectedError(Base_Exc):
+    """
+    GOAL
+    ----
+    Any not expected Exception!
+    when we catch all exact variants and finally get not specified.
     """
     pass
 
