@@ -1,3 +1,5 @@
+from typing import *
+
 # import os
 # os.environ["TESTCONTAINERS_RYUK_DISABLED"] = "true"
 
@@ -79,7 +81,8 @@ class DockerMan:
         print(f"connect_daemon/{result=}")
         return True
 
-    def daemon_images(self) -> list[docker.models.containers.Image]:
+    # -----------------------------------------------------------------------------------------------------------------
+    def images_list(self) -> list[docker.models.containers.Image]:
         """
         GOAL
         ----
@@ -118,7 +121,20 @@ class DockerMan:
         return images_list
 
     # -----------------------------------------------------------------------------------------------------------------
-    def run_container(self) -> bool:
+    def containers_list(self) -> list[docker.models.containers.Container]:
+        """
+        GOAL
+        ----
+        show list of existed containers
+        """
+        cont_list = self._daemon_client.containers.list()
+        print(f"containers_list.COUNT/{len(cont_list)=}")
+        for item in cont_list:
+            print(f"\t{item=}")
+
+        return cont_list
+
+    def container_start(self) -> bool:
         """
         GOAL
         ----
@@ -143,7 +159,6 @@ class DockerMan:
                     self.container = old_container
                     print(f"[OK]run_container = already exists")
                     # no need to stop old and start new
-                    return True
 
                     # print("old.stopping...")
                     # old_container.stop()
@@ -159,32 +174,37 @@ class DockerMan:
                 print(f"[unexpected] {exc!r}")
 
         # 3=start new ------------
-        try:
-            self.container = self._daemon_client.containers.run(
-                image=self.image_name,
-                name=self.container_name,
-                # command=None,   # str/list
-                command="tail -f /dev/null",  # Бесконечная команда для поддержания работы иначе контейнер будет остановлен!!
-                detach=True,
-                remove=True,    # autoremove container after stop
-            )
-            """
-            DETACH
-                if TRUE return ContainerCollection
-                FALSE - bytes (as cmd answer!)
-                bytes | docker.client.ContainerCollection
-                
-                detach=True/result=<Container: 153d16781ab9>    # OBJECT
-                detach=False/result=b'hello world\n'            # OUTPUT
-            """
-        except BaseException as exc:
-            print(f"{exc!r}")
-            result = False
+        if self.container is None:
+            try:
+                self.container = self._daemon_client.containers.run(
+                    image=self.image_name,
+                    name=self.container_name,
+                    # command=None,   # str/list
+                    command="tail -f /dev/null",  # Бесконечная команда для поддержания работы иначе контейнер будет остановлен!!
+                    detach=True,
+                    remove=True,    # autoremove container after stop
+                )
+                """
+                DETACH
+                    if TRUE return ContainerCollection
+                    FALSE - bytes (as cmd answer!)
+                    bytes | docker.client.ContainerCollection
+                    
+                    detach=True/result=<Container: 153d16781ab9>    # OBJECT
+                    detach=False/result=b'hello world\n'            # OUTPUT
+                """
+            except BaseException as exc:
+                print(f"{exc!r}")
+                result = False
 
+        # ----------------------
+        cont_attrs = self.container.attrs['Config']['Image']    # "bfirsh/reticulate-splines"
+        print(f"{cont_attrs=}")
+        # ----------------------
         print(f"run_container//{self.image_name=}/{self.container_name=}/{result=}")
         return result
 
-    def stop_container(self) -> bool:
+    def container_stop(self) -> bool:
         """
         GOAL
         ----
@@ -211,10 +231,37 @@ class DockerMan:
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_cmd(
+    def container_send(
             self,
-            cmd: str = "echo hello world",
+            cmd: str = "echo HELLO WORLD",
     ) -> str:
+        """
+        GOAL
+        ----
+        send cmd to container
+        return answer
+
+        EXAMPLES
+        --------
+        1=docker_man.send_cmd(f"free -m")
+            send_cmd//cmd='free -m'/result='               total        used        free      shared  buff/cache   available\nMem:            7788         920        6563           5         468        6867\nSwap:           2048           0        2048\n'
+
+            C:\\Users\a.starichenko>docker run busybox free -m
+                          total        used        free      shared  buff/cache   available
+            Mem:           7788         730        5110           5        1948        6900
+            Swap:          2048           0        2048
+
+            C:\\Users\a.starichenko>
+
+        2=docker_man.send_cmd(f"ps aux")
+            send_cmd//cmd='ps aux'/result='USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nroot           1  1.2  0.0   2728  1280 ?        Ss   10:18   0:00 tail -f /dev/null\nroot          49 40.0  0.0   7888  3712 ?        Rs   10:18   0:00 ps aux\n'
+
+            C:\\Users\a.starichenko>docker run busybox ps aux
+            PID   USER     TIME  COMMAND
+                1 root      0:00 ps aux
+
+            C:\\Users\a.starichenko>
+        """
         result = self.container.exec_run(cmd)
         result = result.output.decode('utf-8') if result.output else ""
         print(f"send_cmd//{cmd=}/{result=}")
@@ -224,31 +271,13 @@ class DockerMan:
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    def cont__list(self):
-        cont_list = self._daemon_client.containers.list()
-        print(f"{cont_list=}")
-        # [<Container '45e6d2de7c54'>, <Container 'db18e4f20eaa'>, ...]
-
-        if not cont_list:
-            return
-
-        try:
-            self.container = self._daemon_client.containers.get('45e6d2de7c54')
-            print(f"{self.container=}")
-        except:
-            return
-
-        cont_attrs = self.container.attrs['Config']['Image']  # "bfirsh/reticulate-splines"
-        print(f"{cont_attrs=}")
-
-        print(f"{self.container.logs()=}")
-        "Reticulating spline 1...\n"
-
-        self.container.stop()
-
-    def cont__stream_logs(self):
+    def container__stream_logs(self) -> Never:  # FIXME; dont understand what it is!!!
+        """
+        GOAL
+        ----
+        start streaming stdout
+        blocking point!!!
+        """
         for line in self.container.logs(stream=True):
             print(line.strip())
 
@@ -259,55 +288,21 @@ if __name__ == "__main__":
 
     docker_man = DockerMan()
     docker_man.daemon_connect()
-    print()
-    # docker_man.daemon_images()
+    # docker_man.containers_list()
 
+    docker_man.container_start()
 
-    print()
-    # exit()
-    docker_man.run_container()
-    docker_man.send_cmd(f"echo hello 111")
-    docker_man.send_cmd(f"date")
-    # docker_man.send_cmd(f"uname -a")
-    # docker_man.send_cmd(f"ping localhost")
-    # docker_man.send_cmd(f"echo hello 222")
-    # docker_man.send_cmd(f"ping")
-    # docker_man.send_cmd(f"free -m")
-    """
-    send_cmd//cmd='free -m'/result='               total        used        free      shared  buff/cache   available\nMem:            7788         920        6563           5         468        6867\nSwap:           2048           0        2048\n'
-    
-    C:\\Users\a.starichenko>docker run busybox free -m
-                  total        used        free      shared  buff/cache   available
-    Mem:           7788         730        5110           5        1948        6900
-    Swap:          2048           0        2048
-    
-    C:\\Users\a.starichenko>
-    """
-    # docker_man.send_cmd(f"ps aux")
-    """
-    send_cmd//cmd='ps aux'/result='USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nroot           1  1.2  0.0   2728  1280 ?        Ss   10:18   0:00 tail -f /dev/null\nroot          49 40.0  0.0   7888  3712 ?        Rs   10:18   0:00 ps aux\n'
-    
-    C:\\Users\a.starichenko>docker run busybox ps aux
-    PID   USER     TIME  COMMAND
-        1 root      0:00 ps aux
-    
-    C:\\Users\a.starichenko>
-    """
+    docker_man.container_send(f"echo hello 111")
+    docker_man.container_send(f"date")
+    # docker_man.container_send("watch echo 1")
+    # docker_man.container_send("printf 'HelloWorld\n%.0s' {1..5}")
+    docker_man.container_send(f"ping localhost")
 
-    # docker_man.stop_container()
-    # docker_man.daemon_images()
+    docker_man.container__stream_logs()
 
-
-    # docker_man.run(detach=False)
-
-    # result = docker_man.run(detach=True)
-    #
-    # print()
-    # ObjectInfo(result).print()
-    # print()
-    # ObjectInfo(result._daemon_client).print()
-
-    # docker_man.cont__list()
+    ObjectInfo(docker_man.container).print()
+    # docker_man.container_send(f"echo hello 222")
+    # docker_man.container_send(f"ping")
 
 
 # =====================================================================================================================

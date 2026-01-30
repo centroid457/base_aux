@@ -21,31 +21,49 @@ NAMES__SKIP_PARTS: list[str] = [
     "clear", "reduce",
     "close", "del", "exit", "kill", "abort",
 
-    # PyQt5 Qthread
-    "exec", "exec_", "pyqtConfigure",
-    "dump",  # 'dumpObjectInfo' from PyQt5.QMenu
-
     # GIT
-    "checkout", "detach",
+    "commit",
+    "checkout",
 
-    # threads
-    "run", "start", "wait", "join", "terminate", "quit", "disconnect",
+    "attach", "detach",
+
+    # threads/process/execution
+    "connect", "disconnect",
+    "exec", "exec_", "pyqtConfigure",   # PyQt5 Qthread
+    "run", "start",
+    "wait", "pause", "continue",
+    "join",
+    "terminate", "quit", "stop",
 
     # change collection content/count/order
     "pop", "popleft",
-    "append", "appendleft",
+    "put", "input",
     "extend", "extendleft",
+    "append", "appendleft",
+    "update",
     "add", "insert",
     "reverse", "rotate", "sort",
 
+    # data
+    "load", "reload",
+    "dump",  # 'dumpObjectInfo' from PyQt5.QMenu
+    "move", "remove",
+
+    # RE*
+    "rename",
+    "remove",
+    "resize",
+    "restart",
+    "reload",
+
+    # UN*
+    "unpause"
+    
     # SYS
     "breakpointhook",
     "hook",
     # "__subclasshook__",   # bs4
     # "__unicode__",
-
-    # testcontainers(docker)
-    "stop", "load",
 ]
 
 
