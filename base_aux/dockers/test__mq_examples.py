@@ -2,13 +2,13 @@ import pytest
 import json
 import pika
 from datetime import datetime
-from base_aux.dockers.m1_docker import docker__check_ready_os
+from base_aux.dockers.m1_docker import DockerMan
 
 
 # =====================================================================================================================
 @pytest.mark.dependency()
 def test__0_check_could_start_tests():
-    assert docker__check_ready_os()
+    assert DockerMan.docker__check_ready_os()
 
 
 # =====================================================================================================================

@@ -17,47 +17,54 @@ class _Docker_ExcVariants:
 
 
 # =====================================================================================================================
-def docker__check_ready_os() -> bool:
-    try:
-        client = docker.from_env()
-        print(f"{client.ping()=}")  # Должно вернуть True
-        print(f"{client.version()=}")
-
-        result = client.ping()
-    except docker.errors.DockerException as exc:
-        print(f"{exc!r}")
-        ObjectInfo(exc).print()
-
-        if "CreateFile" in str(exc):
-            print(f"[err/docker] Windows DockerDesctop NOT started!")
-
-        elif "URL scheme" in str(exc):
-            print(f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
-
-        result = False
-
-    except BaseException as exc:
-        print(f"[err/docker] UNEXPECTED {exc!r}")
-        ObjectInfo(exc).print()
-        result = False
-
-    print(f"docker__check_ready_os({result=})")
-    print()
-    return result
-
-
-# =====================================================================================================================
 class DockerMan:
     def __init__(
             self,
             image_name: str = "ubuntu",
             container_name: str = "test_container",
-    ):
+
+            raised: bool = True
+    ) -> None | NoReturn:
         self.image_name: str = image_name
         self.container_name: str = container_name
 
         self._daemon_client: docker.client.DockerClient | None = None
         self.container: docker.models.containers.Container | None = None
+
+        if not self.docker__check_ready_os() and raised:
+            msg = f"DockerMan.docker__check_ready_os=False"
+            raise Exception(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def docker__check_ready_os() -> bool:
+        try:
+            client = docker.from_env()
+            print(f"{client.ping()=}")  # Должно вернуть True
+            print(f"{client.version()=}")
+
+            result = client.ping()
+        except docker.errors.DockerException as exc:
+            print(f"{exc!r}")
+            # ObjectInfo(exc).print()
+
+            if "CreateFile" in str(exc):
+                print(f"[err/docker] Windows DockerDesctop NOT started!")
+
+            elif "URL scheme" in str(exc):
+                print(
+                    f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
+
+            result = False
+
+        except BaseException as exc:
+            print(f"[docker] UNEXPECTED {exc!r}")
+            # ObjectInfo(exc).print()
+            result = False
+
+        print(f"docker__check_ready_os({result=})")
+        print()
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def daemon_connect(self) -> bool:
@@ -284,7 +291,7 @@ class DockerMan:
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    assert docker__check_ready_os()
+    assert DockerMan.docker__check_ready_os()
 
     docker_man = DockerMan()
     docker_man.daemon_connect()
@@ -298,9 +305,9 @@ if __name__ == "__main__":
     # docker_man.container_send("printf 'HelloWorld\n%.0s' {1..5}")
     docker_man.container_send(f"ping localhost")
 
-    docker_man.container__stream_logs()
+    # docker_man.container__stream_logs()
 
-    ObjectInfo(docker_man.container).print()
+    # ObjectInfo(docker_man.container).print()
     # docker_man.container_send(f"echo hello 222")
     # docker_man.container_send(f"ping")
 

@@ -1,7 +1,7 @@
 import pika
 import pytest
 from testcontainers.rabbitmq import RabbitMqContainer
-from base_aux.dockers.m1_docker import docker__check_ready_os
+from base_aux.dockers.m1_docker import DockerMan
 
 import os
 os.environ["TESTCONTAINERS_RYUK_DISABLED"] = "true"
@@ -10,7 +10,7 @@ os.environ["TESTCONTAINERS_RYUK_DISABLED"] = "true"
 # =====================================================================================================================
 @pytest.fixture(scope="session")    # scope=SESSION - одно подключение на все тесты одного запуска тестового окружения! экономит время на создание и подключение!!!
 def rabbitmq_container():
-    assert docker__check_ready_os()
+    assert DockerMan.docker__check_ready_os()
 
     with RabbitMqContainer("rabbitmq:3-management") as container:
         yield container
