@@ -18,6 +18,8 @@ class _Docker_ExcVariants:
 
 # =====================================================================================================================
 class DockerMan:
+    _daemon_client: docker.client.DockerClient | None = None
+
     def __init__(
             self,
             image_name: str = "ubuntu",
@@ -28,7 +30,6 @@ class DockerMan:
         self.image_name: str = image_name
         self.container_name: str = container_name
 
-        self._daemon_client: docker.client.DockerClient | None = None
         self.container: docker.models.containers.Container | None = None
 
         if not self.docker__check_ready_os() and raised:
@@ -36,57 +37,48 @@ class DockerMan:
             raise Exception(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def docker__check_ready_os() -> bool:
-        try:
-            client = docker.from_env()
-            print(f"{client.ping()=}")  # Должно вернуть True
-            print(f"{client.version()=}")
-
-            result = client.ping()
-        except docker.errors.DockerException as exc:
-            print(f"{exc!r}")
-            # ObjectInfo(exc).print()
-
-            if "CreateFile" in str(exc):
-                print(f"[err/docker] Windows DockerDesctop NOT started!")
-
-            elif "URL scheme" in str(exc):
-                print(
-                    f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
-
-            result = False
-
-        except BaseException as exc:
-            print(f"[docker] UNEXPECTED {exc!r}")
-            # ObjectInfo(exc).print()
-            result = False
-
-        print(f"docker__check_ready_os({result=})")
-        print()
-        return result
+    @classmethod
+    def docker__check_ready_os(cls) -> bool:
+        return cls.daemon_connect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def daemon_connect(self) -> bool:
+    @classmethod
+    def daemon_connect(cls) -> bool:
         """
         GOAL
         ----
         create connection to the system docker service-daemon!
         """
         result = True
-        if self._daemon_client is None:
+        if cls._daemon_client is None:
             try:
                 # connect to daemon!
                 # any call - always create new object!
-                self._daemon_client = docker.from_env()
+                cls._daemon_client = docker.from_env()
+                result = cls._daemon_client.ping()
+
+                print(f"{cls._daemon_client.ping()=}")  # Должно вернуть True
+                print(f"{cls._daemon_client.version()=}")
+
+            except docker.errors.DockerException as exc:
+                if "CreateFile" in str(exc):
+                    print(f"[err/docker] Windows DockerDesctop NOT started!")
+
+                elif "URL scheme" in str(exc):
+                    print(
+                        f"[err/docker] OLD MODULES => update all modules like 'pip install --upgrade testcontainers docker sqlalchemy psycopg2-binary'")
+
+                result = False
+
             except BaseException as exc:
+                print(f"[docker] UNEXPECTED {exc!r}")
                 print(f"{exc!r}")
                 result = False
         else:
             print(f"connect_daemon//already existed")
 
         print(f"connect_daemon/{result=}")
-        return True
+        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def images_list(self) -> list[docker.models.containers.Image]:
@@ -170,10 +162,10 @@ class DockerMan:
                     # print("old.stopping...")
                     # old_container.stop()
                     # print("old.stopped...")
-
-                print("old.removing...")
-                old_container.remove()
-                print("old.removed...")
+                else:
+                    print("old.removing...")
+                    old_container.remove()
+                    print("old.removed...")
 
             except docker.errors.APIError as exc:
                 print(f"Ошибка при удалении старого контейнера: {exc!r}")
@@ -291,8 +283,6 @@ class DockerMan:
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    assert DockerMan.docker__check_ready_os()
-
     docker_man = DockerMan()
     docker_man.daemon_connect()
     # docker_man.containers_list()
@@ -303,7 +293,7 @@ if __name__ == "__main__":
     docker_man.container_send(f"date")
     # docker_man.container_send("watch echo 1")
     # docker_man.container_send("printf 'HelloWorld\n%.0s' {1..5}")
-    docker_man.container_send(f"ping localhost")
+    # docker_man.container_send(f"ping localhost")
 
     # docker_man.container__stream_logs()
 
