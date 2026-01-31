@@ -405,7 +405,7 @@ mro(SOURCE)=['QCheckBox', 'QAbstractButton', 'QWidget', 'QObject', 'wrapper', 'Q
 ----------SETTINGS----------------------------------------------------------------------------------
 self.NAMES__USE_ONLY_PARTS=[]
 self.NAMES__SKIP_FULL=[]
-self.NAMES__SKIP_PARTS=['init', 'new', 'create', 'enter', 'install', 'set', 'clone', 'copy', 'move', 'next', 'clear', 'reduce', 'close', 'del', 'exit', 'kill', 'exec', 'exec_', 'pyqtConfigure', 'checkout', 'detach', 'run', 'start', 'wait', 'join', 'terminate', 'quit', 'disconnect', 'pop', 'popleft', 'append', 'appendleft', 'extend', 'extendleft', 'add', 'insert', 'reverse', 'rotate', 'sort']
+self.ATTRS__DANGER=['init', 'new', 'create', 'enter', 'install', 'set', 'clone', 'copy', 'move', 'next', 'clear', 'reduce', 'close', 'del', 'exit', 'kill', 'exec', 'exec_', 'pyqtConfigure', 'checkout', 'detach', 'run', 'start', 'wait', 'join', 'terminate', 'quit', 'disconnect', 'pop', 'popleft', 'append', 'appendleft', 'extend', 'extendleft', 'add', 'insert', 'reverse', 'rotate', 'sort']
 self.SKIP__BUILD_IN=None
 self.MAX_LINE_LEN=100
 self.MAX_ITER_ITEMS=5

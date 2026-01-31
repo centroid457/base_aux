@@ -12,7 +12,7 @@ GOAL
 ----
 collect all variants for attr-names which better to skip cause of damage/break/make irreversible changes in original object
 """
-NAMES__SKIP_PARTS: list[str] = [
+ATTRS__DANGER: list[str] = [
     # DANGER
     "init", "new", "create", "enter", "install",
     "set",

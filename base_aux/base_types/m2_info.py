@@ -3,7 +3,7 @@ from base_aux.loggers.m1_print import *
 
 from base_aux.base_types.m0_static_aux import *
 from base_aux.base_types.m1_type_aux import TypeAux
-from base_aux.aux_attr.m0_static import check_name__buildin, NAMES__SKIP_PARTS
+from base_aux.aux_attr.m0_static import check_name__buildin, ATTRS__DANGER
 
 
 # =====================================================================================================================
@@ -81,7 +81,7 @@ class ObjectInfo:
 
     NAMES__USE_ONLY_PARTS: list[str] = []
     NAMES__SKIP_FULL: list[str] = []
-    NAMES__SKIP_PARTS: list[str] = NAMES__SKIP_PARTS
+    NAMES__SKIP_PARTS: list[str] = ATTRS__DANGER
 
     HIDE_NAMES__TOUCHED: bool = None
     HIDE_NAMES__BUILDIN: bool = None
