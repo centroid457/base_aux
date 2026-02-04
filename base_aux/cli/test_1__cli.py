@@ -133,7 +133,7 @@ class Test:
         assert victim.last_cmd == CMD_PING_2
         assert victim.last_finished is True
 
-        assert isinstance(victim.last_exc_timeout, Exc_CliTimeout)
+        assert isinstance(victim.last_exc_timeout, TimeoutError)
         # assert bool(victim.last_stdout) is False
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode is None
@@ -161,7 +161,7 @@ class Test:
         try:
             victim = CliUserForAvailable()
         except Exception as exc:
-            assert isinstance(exc, Exc_CliNotAvailable)
+            assert isinstance(exc, Exc__NotAvailable)
 
         # two cmd ------------------------------------------------
         class CliUserForAvailable(CliUser):

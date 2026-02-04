@@ -101,7 +101,7 @@ class ProcessorTextLog(File):     # starichenko
 
     # READ/WRITE FULL -------------------------------------------------------------------------------------------------
     def loglines_read(self, filepath=None):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
 
@@ -163,7 +163,7 @@ class ProcessorTextLog(File):     # starichenko
 
     # READ/WRITE PART -------------------------------------------------------------------------------------------------
     def loglines_tail(self):  # starichenko
-        raise NotImplementedError
+        raise NotImplementedError()
 
     # DATA ============================================================================================================
     pass
@@ -198,7 +198,7 @@ class ProcessorTextLog(File):     # starichenko
 
     # BLOCKS ----------------------------------------------------------------------------------------------------------
     def logblocks_iter__split_by_same_startswith(self, count_chars, data=None, reverse=False):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def logblocks_iter__split_by_pattern(self, pattern, data=None, reverse=False, include_pattern_line=True):
         """

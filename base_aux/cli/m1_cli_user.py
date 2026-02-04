@@ -4,6 +4,7 @@ import subprocess
 import time
 
 from base_aux.loggers.m1_print import *
+from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
@@ -12,22 +13,6 @@ TYPING__CMDS = Union[TYPING__CMD, list[TYPING__CMD]]
 
 
 # =====================================================================================================================
-class Exc_CliNotAvailable(Exception):
-    """
-    GOAL
-    ----
-    cli can not be available due to have not some of required commands.
-    """
-
-
-class Exc_CliTimeout(Exception):    #use direct subprocess.TimeoutExpired??? NO!!!
-    """
-    GOAL
-    ----
-    timeout expired
-    """
-
-
 class Exc_CliRetcode(Exception):
     """
     GOAL
@@ -66,7 +51,7 @@ class CliUser:
     :ivar TIMEOUT: default timeout for execution process
         if timeout expired and process still not finished - raise exc
     :ivar _last_sp: Popen object
-    :ivar last_exc_timeout: saved Exc_CliTimeout if it was
+    :ivar last_exc_timeout: saved TimeoutError if it was
     :ivar last_cmd: command for execution
     :ivar last_stdout: full stdout data
     :ivar last_stderr: full stderr data
@@ -92,7 +77,7 @@ class CliUser:
             --------------------------------------------------
             self.last_stderr=
             --------------------------------------------------
-            self._last_exc_timeout=Exc_CliTimeout("TimeoutExpired('STM32_Programmer_CLI --help', 2)")
+            self._last_exc_timeout=TimeoutError("TimeoutExpired('STM32_Programmer_CLI --help', 2)")
             ==================================================
             [ERROR] cmd NOT available [STM32_Programmer_CLI --help]
             ==================================================
@@ -109,7 +94,7 @@ class CliUser:
             --------------------------------------------------
             self.last_stderr=
             --------------------------------------------------
-            self._last_exc_timeout=Exc_CliTimeout("TimeoutExpired('STM32_Programmer_CLI', 2)")
+            self._last_exc_timeout=TimeoutError("TimeoutExpired('STM32_Programmer_CLI', 2)")
             ==================================================
 
         3. use --VERSION! instead! - seems work fine always!
@@ -132,7 +117,7 @@ class CliUser:
     last_cmd: str = ""
     last_stdout: str = ""         # USE ONLY "" AS DEFAULT!!!
     last_stderr: str = ""         # USE ONLY "" AS DEFAULT!!!
-    last_exc_timeout: Optional[Exc_CliTimeout] = None
+    last_exc_timeout: Optional[TimeoutError] = None
     last_retcode: Optional[int] = None
     last_finished: Optional[bool] = None
 
@@ -143,7 +128,8 @@ class CliUser:
         self._reinit_values()       # need to keep always one values!
 
         if not self.cli_check_available():
-            raise Exc_CliNotAvailable
+            msg = f"CLI not available"
+            raise Exc__NotAvailable(msg)
 
     def _reinit_values(self) -> None:
         self._last_sp = None
@@ -240,10 +226,10 @@ class CliUser:
         # work --------------------------------------------------------------------------------------------------------
         if timeout < 0:
             msg = f"{timeout=} is sub zero"
-            self.last_exc_timeout = Exc_CliTimeout(msg)
+            self.last_exc_timeout = TimeoutError(msg)
             print(msg)
             if _raise:
-                raise Exc_CliTimeout(msg)
+                raise TimeoutError(msg)
             else:
                 return False
 
@@ -257,7 +243,7 @@ class CliUser:
             self.last_duration = round(time.time() - time_start, 3)
             if timeout < self.last_duration:
                 self._last_sp.kill()
-                self.last_exc_timeout = Exc_CliTimeout()
+                self.last_exc_timeout = TimeoutError()
                 break
             line = self._last_sp.stdout.readline()
             if line != "":

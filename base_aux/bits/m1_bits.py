@@ -36,7 +36,7 @@ class Bitfield:
 
     @classmethod
     def create_from_int(cls, flags: int, field_size: Optional[int] = None) -> 'Bitfield':
-        raise NotImplemented
+        raise NotImplemented()
     # todo: FINISH!
     # todo: FINISH!
     # todo: FINISH!
@@ -62,7 +62,7 @@ class Bitfield:
 
     def __getitem__(self, idx: int) -> Union[int, NoReturn]:
         if idx < -self.field_size or idx > self.field_size - 1:
-            raise Exc__Addressing
+            raise Exc__Addressing()
         return self._field_bytearray[idx // 8] >> (idx % 8) & 1
 
     def __setitem__(self, idx: int, value: Union[int, bool, Any]) -> Optional[NoReturn]:

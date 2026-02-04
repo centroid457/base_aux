@@ -80,7 +80,7 @@ class _ExcelProcessor:
         return True  - successful
         return False - not successful
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def cell(self, row, column, sheet_index=0):
         """ Returns instance of interface-class for working with cells
