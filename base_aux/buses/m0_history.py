@@ -14,10 +14,8 @@ TYPE__IO = tuple[str, list[str]]
 
 
 class HistoryIO:
-    history: list[TYPE__IO] = []
-
     def __init__(self):
-        self.history = []
+        self.history: list[TYPE__IO] = []
 
     def count(self) -> int:
         """
@@ -46,7 +44,7 @@ class HistoryIO:
         self.add_input(data_i)
         self.add_output(data_o)
 
-    def add_history(self, history: 'HistoryIO') -> None:
+    def add_history(self, history: Self) -> None:
         for data_i, data_o in history.history:
             self.add_input(data_i)
             self.add_output(data_o)

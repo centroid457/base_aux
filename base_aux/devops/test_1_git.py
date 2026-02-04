@@ -1,6 +1,6 @@
 import pathlib
 
-from base_aux.systems.m1_git import *
+from base_aux.devops.m1_git import *
 
 
 # =====================================================================================================================
