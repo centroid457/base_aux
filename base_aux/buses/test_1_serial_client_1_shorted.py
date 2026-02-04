@@ -271,16 +271,14 @@ class Test__WR_1(Test__WRBase):
         assert self.victim.write_read(["11", "22"]).list_input() == ["11", "22"]
         assert self.victim.write_read(["11", "22"]).as_dict() == {"11": ["11", ], "22": ["22", ], }
 
-        history = HistoryIO()
+        history = IoHistory()
         history.add_io("hello", "hello")
         assert self.victim.write_read("hello").as_dict() == history.as_dict()
-        assert history.check_equal_io() is True
 
-        history = HistoryIO()
+        history = IoHistory()
         history.add_io("11", "11")
         history.add_io("22", "22")
         assert self.victim.write_read(["11", "22"]).as_dict() == history.as_dict()
-        assert history.check_equal_io() is True
 
     def test__wr_last(self):
         assert self.victim.write_read__last("hello") == "hello"

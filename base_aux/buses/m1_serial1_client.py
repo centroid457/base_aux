@@ -1,11 +1,7 @@
-from typing import *
-
-import re
 import sys
 import glob
-import time
 import string
-from enum import Enum, auto
+from enum import auto
 
 from base_aux.loggers.m2_logger import Logger
 
@@ -15,7 +11,7 @@ from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 
-from base_aux.buses.m0_history import HistoryIO
+from base_aux.base_histories.m2_io_history import IoHistory
 
 
 # =====================================================================================================================
@@ -194,7 +190,7 @@ class SerialClient(Logger):
     _EMULATOR__START: bool = None  # DONT DELETE! it need when you reconnecting! cause of address replaced after disconnecting by exact str after PAIRED*
 
     # AUX -----------------------------------------------------
-    history: HistoryIO = None
+    history: IoHistory
     _SERIAL: Serial
 
     ADDRESSES__SYSTEM: dict[str, Union[None, Self]] = {}
@@ -223,7 +219,7 @@ class SerialClient(Logger):
         if eol__send is not None:
             self.EOL__SEND = eol__send
 
-        self.history = HistoryIO()
+        self.history = IoHistory()
         self.init_serial()
 
         # self.addresses_system__detect()   # DONT USE in init!!!
@@ -1320,7 +1316,7 @@ class SerialClient(Logger):
 
             retry_noanswer: int | None = None,
             _timeout: Optional[float] = None,
-    ) -> Union[HistoryIO, NoReturn]:
+    ) -> Union[IoHistory, NoReturn]:
         """
         send data and return history
 
@@ -1330,7 +1326,7 @@ class SerialClient(Logger):
         DONT USE! IF WANT TO BE SURE!
         instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
         """
-        history = HistoryIO()
+        history = IoHistory()
         if retry_noanswer is None:
             retry_noanswer = self.REWRITEIF_READNOANSWER
         remain__retry_noanswer = retry_noanswer or 0
@@ -1466,7 +1462,7 @@ class SerialClient(Logger):
         """
         return self.write_read__last_validate(*args, **kwargs, _as_regexp=True)
 
-    def dump_cmds(self, cmds: list[str] = None) -> Union[HistoryIO, NoReturn]:
+    def dump_cmds(self, cmds: list[str] = None) -> Union[IoHistory, NoReturn]:
         """
         useful to get results for standard cmds list
         if you need to read all params from device!
