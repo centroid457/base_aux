@@ -79,8 +79,8 @@ _std = [
 class Base_Exc(
     Warn,
 
-    # Exception,
-    BaseException,
+    Exception,
+    # BaseException,    # DONT USE BASEEXCEPTION!!! or check all tests!
     # BaseExceptionGroup,
 ):
     """
@@ -174,6 +174,10 @@ class Exc__NotExistsNotFoundNotCreated(
     any exception intended Exists/NotExists any object
     dont mess with ADDRESSING!
     """
+    pass
+
+
+class Exc__NotAvailable(Exc__NotExistsNotFoundNotCreated):
     pass
 
 
