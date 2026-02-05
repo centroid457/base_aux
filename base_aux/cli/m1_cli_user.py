@@ -103,7 +103,7 @@ class CliUser:
     TIMEOUT: Optional[float] = 2
     RAISE: Optional[bool] = None
 
-    CMDS_REQUIRED: Optional[dict[str, Optional[str]]] = None
+    CMDS_REQUIRED: dict[str, Optional[str]] | None = None
 
     _buffer_indent: str = "\t|"
 
@@ -113,6 +113,8 @@ class CliUser:
     counter: int = 0
     counter_in_list: int = 0
 
+    # TODO: use history!
+    # TODO: move all in object
     last_duration: float = 0
     last_cmd: str = ""
     last_stdout: str = ""         # USE ONLY "" AS DEFAULT!!!

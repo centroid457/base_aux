@@ -9,7 +9,7 @@ from base_aux.base_histories.m1_io_item import IoItem
 #   2. add top(n=10)
 #   if when writeLine - always readLines?
 
-TYPING__IO_OUTPUT_DRAFT =  str | list[str]
+TYPING__IO_OUTPUT_DRAFT = str | list[str]
 TYPING__IO_ITEM_DRAFT = IoItem | tuple[str, str | list[str]]
 TYPING__IO_HISTORY_DRAFT = list[IoItem] | list[tuple[str, list[str]]]
 
@@ -32,10 +32,10 @@ class IoHistory:
         if not source:
             pass
         elif isinstance(source, self.__class__):
-            self._history = source._history
+            self._history = list(source._history)
         elif isinstance(source, list):
             for item in source:
-                self.add_item(item)
+                self.add_io_item(item)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__IO_HISTORY_DRAFT) -> bool:
@@ -83,16 +83,17 @@ class IoHistory:
     def clear(self) -> None:
         self._history.clear()
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def add_item(self, data: IoItem | tuple[str, str | list[str]]) -> None:
+    # =================================================================================================================
+    def add_io_item(self, data: IoItem | tuple[str, TYPING__IO_OUTPUT_DRAFT]) -> None:
         if isinstance(data, IoItem):
             self._history.append(data)
         if isinstance(data, tuple):
-            input, output = data
+            d_input, output = data
             if isinstance(output, str):
                 output = [output, ]
-            self._history.append(IoItem(input, output))
+            self._history.append(IoItem(d_input, output))
 
+    # -----------------------------------------------------------------------------------------------------------------
     def add_input(self, data: str) -> None:
         self._history.append(IoItem(data))
 
@@ -101,18 +102,14 @@ class IoHistory:
         if not self._history:
             self.add_input("")
 
-        if isinstance(data, (tuple, list, )):
-            self.last_outputs.extend(data)
-        else:
-            # SINGLE
-            self.last_outputs.append(data)
+        self.last_io_item.append(data)
 
     def add_io(self, data_i: str, data_o: TYPING__IO_OUTPUT_DRAFT) -> None:
-        self.add_item((data_i, data_o))
+        self.add_io_item((data_i, data_o))
 
     def add_history(self, data: Self) -> None:
         for item in data:
-            self.add_item(item)
+            self.add_io_item(item)
 
     # =================================================================================================================
     @property
@@ -122,6 +119,7 @@ class IoHistory:
         except:
             return None
 
+    # -----------------------------------------------------------------------------------------------------------------
     @property
     def last_input(self) -> str:
         try:
@@ -143,7 +141,7 @@ class IoHistory:
         except:
             return ""
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     def list_input(self) -> list[str]:
         result = []
         for item in self._history:

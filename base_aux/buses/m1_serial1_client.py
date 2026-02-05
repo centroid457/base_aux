@@ -1393,7 +1393,7 @@ class SerialClient(Logger):
 
     def write_read__last_validate(
             self,
-            input: Union[str, list[str]] | None,
+            input: Union[str, list[str]] | None,    # fixme: rename!
             expect: Union[Any, list[Any]],
             prefix: Optional[str] = None,
             args: Optional[list] = None,

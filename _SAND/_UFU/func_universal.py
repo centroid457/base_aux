@@ -74,7 +74,7 @@ DICT_EXCEPTION_EXPLANATION = {     # starichenko
 FUNC_LINK_LAMBDA_TRUE = lambda _=None: True     # starichenko # if you want co compare equality any func_link with LambdaTrue - use it constant link!!!
 FUNC_LINK_LAMBDA_FALSE = lambda _=None: False
 FUNC_LINK_LAMBDA_NONE = lambda _=None: None
-FUNC_LINK_LAMBDA_REPEATER = lambda input=None: input
+FUNC_LINK_LAMBDA_REPEATER = lambda source=None: source
 
 LIST_RUSSIAM_LETTERS_LOWERCASE = list("абвгдеёжзийклмнопрстуфхцчшщъыьэю")
 LIST_RUSSIAM_LETTERS_UPPERCASE = list("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮ")

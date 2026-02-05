@@ -11,8 +11,8 @@ CWD = pathlib.Path().cwd()
 class Test__Git:
     def test__1(self):
         victim = Git()
-        assert victim.check_installed() is True
-        assert victim.check_detected() is True
+        assert victim.check__git_installed() is True
+        assert victim.check__repo_detected() is True
 
 
 # =====================================================================================================================

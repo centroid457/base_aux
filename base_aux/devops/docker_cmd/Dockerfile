@@ -27,7 +27,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # copy full prj ------------------
-COPY .. .
+COPY ../../dockers .
 
 # ---------------------------------
 HEALTHCHECK \

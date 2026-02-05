@@ -1,7 +1,7 @@
 import pika
 import pytest
 from testcontainers.rabbitmq import RabbitMqContainer
-from base_aux.dockers.m1_docker import DockerMan
+from base_aux.devops.m2_docker import DockerMan
 
 import os
 os.environ["TESTCONTAINERS_RYUK_DISABLED"] = "true"

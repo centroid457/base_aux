@@ -2,7 +2,7 @@ import pytest
 import json
 import pika
 from datetime import datetime
-from base_aux.dockers.m1_docker import DockerMan
+from base_aux.devops.m2_docker import DockerMan
 
 
 # =====================================================================================================================

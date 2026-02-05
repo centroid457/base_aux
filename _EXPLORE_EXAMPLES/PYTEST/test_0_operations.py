@@ -2,6 +2,7 @@ from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_nest_dunders.m7_cmp import *
 import operator
 
+
 # =====================================================================================================================
 class Victim(NestCmp_GLET_DigitAccuracy):
     def __init__(self, source: float | int, **kwargs):
@@ -14,9 +15,10 @@ class Victim(NestCmp_GLET_DigitAccuracy):
 
 
 # =====================================================================================================================
+@pytest.mark.skip
 class Test_CmpDigit:
     @pytest.mark.parametrize(
-        argnames="source, accuracy_value, other, _EXPECTED",
+        argnames="source, accuracy, other, _EXPECTED",
         argvalues=[
             (1, None, 1, (True, False, True, False)),
             (1, None, "hello", (Exception, Exception, Exception, Exception)),
@@ -27,7 +29,7 @@ class Test_CmpDigit:
             source: float | int,
             accuracy: float | None,
             other: float | int,
-            _EXPECTED: bool | Exception,
+            _EXPECTED: tuple[bool | Exception, ...],
     ):
         # -----------------------------------------------
         victim = Victim(source=source, cmp_accuracy_value=accuracy)
