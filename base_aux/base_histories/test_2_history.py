@@ -66,21 +66,21 @@ def test__add_io__list_last():
     victim: IoHistory = IoHistory()
     assert victim._history == []
     assert victim.last_input == ""
-    assert victim.last_output == ""
+    assert victim.last_stdout_line == ""
 
     victim.add_io("in1", "out1")
     assert victim._history == [IoItem("in1", ["out1", ]), ]
     assert victim.list_input() == ["in1", ]
     assert victim.list_output() == ["out1", ]
     assert victim.last_input == "in1"
-    assert victim.last_output == "out1"
+    assert victim.last_stdout_line == "out1"
 
     victim.add_io("in2", ["out2", "out22", ])
     assert victim._history == [IoItem("in1", ["out1", ]), IoItem("in2", ["out2", "out22", ]), ]
     assert victim.list_input() == ["in1", "in2"]
     assert victim.list_output() == ["out1", "out2", "out22", ]
     assert victim.last_input == "in2"
-    assert victim.last_output == "out22"
+    assert victim.last_stdout_line == "out22"
 
 
 def test__add_history():

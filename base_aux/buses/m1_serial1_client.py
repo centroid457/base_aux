@@ -1389,7 +1389,7 @@ class SerialClient(Logger):
             kwargs=kwargs,
             retry_noanswer=retry_noanswer,
             _timeout=_timeout,
-        ).last_output
+        ).last_stdout_line
 
     def write_read__last_validate(
             self,

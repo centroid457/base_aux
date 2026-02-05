@@ -162,6 +162,13 @@ class EnumAdj_StopResetHardSoft(NestEq_EnumAdj):
     HARD: int = 2
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+class EnumAdj_Buffer(NestEq_EnumAdj):
+    STDIN: int = 1
+    STDOUT: int = 2
+    STDERR: int = 3
+
+
 # =====================================================================================================================
 class EnumAdj_BoolCumulate(NestEq_EnumAdj):
     """

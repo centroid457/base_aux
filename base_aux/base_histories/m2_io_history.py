@@ -71,7 +71,7 @@ class IoHistory:
         if isinstance(item, str):
             for io_item in self:
                 if io_item.INPUT == item:
-                    return io_item.OUTPUT
+                    return io_item.STDOUT
 
     def __len__(self) -> int:
         return len(self._history)
@@ -128,16 +128,16 @@ class IoHistory:
             return ""
 
     @property
-    def last_outputs(self) -> list[str]:
+    def last_stdout(self) -> list[str]:
         try:
-            return self.last_io_item.OUTPUT
+            return self.last_io_item.STDOUT
         except:
             return []
 
     @property
-    def last_output(self) -> str:
+    def last_stdout_line(self) -> str:
         try:
-            return self.last_outputs[-1]
+            return self.last_stdout[-1]
         except:
             return ""
 
@@ -151,8 +151,8 @@ class IoHistory:
 
     def list_output(self) -> list[str]:
         result = []
-        for item in self._history:
-            for line in item.OUTPUT:
+        for item in self._history:  # FIXME!
+            for line in item.STDOUT:
                 result.append(line)
                 print(line)
         return result
@@ -170,8 +170,8 @@ class IoHistory:
         for item in self._history:
             print(f"{item.INPUT:20}:", end="")
             indent = ""
-            if item.OUTPUT:
-                for line in item.OUTPUT:
+            if item.STDOUT:
+                for line in item.STDOUT:
                     line = f"{indent}{line}"
                     print(line)
                     indent = " "*20 + ":"
@@ -187,7 +187,7 @@ class IoHistory:
         """
         result = {}
         for item in self._history:
-            result[item.INPUT] = item.OUTPUT
+            result[item.INPUT] = item.STDOUT
 
         return result
 

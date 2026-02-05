@@ -30,14 +30,9 @@ class Exc_CliStderr(Exception):
 
 
 # =====================================================================================================================
-class CliCmd:
-    # TODO: ADD
-    pass
-
-
-# =====================================================================================================================
 class CliUser:
     """
+    TODO: replace by new ver!
     GOAL
     ----
     send commands into OS terminal
@@ -108,20 +103,11 @@ class CliUser:
     _buffer_indent: str = "\t|"
 
     # VALUES --------------------------------------
-    _last_sp: Optional[subprocess.Popen] = None
-
-    counter: int = 0
+    # counter: int = 0      # todo: get from history
     counter_in_list: int = 0
 
     # TODO: use history!
     # TODO: move all in object
-    last_duration: float = 0
-    last_cmd: str = ""
-    last_stdout: str = ""         # USE ONLY "" AS DEFAULT!!!
-    last_stderr: str = ""         # USE ONLY "" AS DEFAULT!!!
-    last_exc_timeout: Optional[TimeoutError] = None
-    last_retcode: Optional[int] = None
-    last_finished: Optional[bool] = None
 
     # init ------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs):
@@ -134,15 +120,15 @@ class CliUser:
             raise Exc__NotAvailable(msg)
 
     def _reinit_values(self) -> None:
-        self._last_sp = None
+        self._last_sp: Optional[subprocess.Popen] = None
 
-        self.last_duration = 0
-        self.last_cmd = ""
-        self.last_stdout = ""
-        self.last_stderr = ""
-        self.last_exc_timeout = None
-        self.last_retcode = None
-        self.last_finished = None
+        self.last_duration: float = 0
+        self.last_cmd: str = ""
+        self.last_stdout: str = ""      # USE ONLY "" AS DEFAULT!!!
+        self.last_stderr: str = ""      # USE ONLY "" AS DEFAULT!!!
+        self.last_exc_timeout: Optional[TimeoutError] = None
+        self.last_retcode: Optional[int] = None
+        self.last_finished: Optional[bool] = None
 
     @property
     def last_finished_success(self) -> Optional[bool]:
@@ -160,8 +146,8 @@ class CliUser:
             till_first_true: Optional[bool] = None,
             _raise: Optional[bool] = None,
             _use_counter_list: Optional[bool] = None,
-            print_all_states: Optional[bool] = None
-    ) -> Union[bool, NoReturn]:
+            print_all_states: Optional[bool] = None,
+    ) -> bool | NoReturn:
         """execute CLI command in terminal
 
         :param cmd: commands for execution
@@ -218,7 +204,6 @@ class CliUser:
                 timeout = timeout_i
 
         self.last_cmd = cmd
-        self.counter += 1
 
         if timeout is None:
             timeout = self.TIMEOUT
@@ -279,9 +264,6 @@ class CliUser:
         if not self.last_finished_success:
             print(f"[{'#'*21}ERROR{'#'*21}]")
 
-        print(f"{self.counter=}")
-        print(f"{self.counter_in_list=}")
-
         print(f"{self.last_cmd=}")
         print(f"{self.last_duration=}")
         print(f"{self.last_finished=}")
@@ -314,6 +296,77 @@ class CliUser:
                     self.print_state()
                     return False
         return True
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    print()
+    print()
+    print()
+    print()
+    victim = CliUser()
+    victim.send("ping localhost", timeout=0.1)
+    print()
+    # victim.print_state()
+    """
+    [CLI_SEND] [ping localhost]
+    ....
+    ==================================================
+    [#####################ERROR#####################]
+    self.counter=1
+    self.counter_in_list=0
+    self.last_cmd='ping localhost'
+    self.last_duration=1.041
+    self.last_finished=True
+    self.last_finished_success=False
+    self.last_retcode=None
+    --------------------------------------------------
+    self.last_stdout=
+    	|''
+    	|'Обмен пакетами с starichenko.corp.element-t.ru [::1] с 32 байтами данных:'
+    	|'Ответ от ::1: время<1мс '
+    	|'Ответ от ::1: время<1мс '
+    	|''
+    --------------------------------------------------
+    self.last_stderr=
+    --------------------------------------------------
+    self.last_exc_timeout=TimeoutError()
+    ==================================================
+    """
+
+    print()
+    print()
+    print()
+    print()
+    victim.send(["python --version", ("ping localhost", 0.1), ])
+    """
+    [CLI_SEND] [python --version]
+    .
+    [CLI_SEND] [('ping localhost', 0.1)]
+    ....
+    ==================================================
+    [#####################ERROR#####################]
+    self.counter=3
+    self.counter_in_list=2
+    self.last_cmd='ping localhost'
+    self.last_duration=1.042
+    self.last_finished=True
+    self.last_finished_success=False
+    self.last_retcode=None
+    --------------------------------------------------
+    self.last_stdout=
+    	|''
+    	|'Обмен пакетами с starichenko.corp.element-t.ru [::1] с 32 байтами данных:'
+    	|'Ответ от ::1: время<1мс '
+    	|'Ответ от ::1: время<1мс '
+    	|''
+    --------------------------------------------------
+    self.last_stderr=
+    --------------------------------------------------
+    self.last_exc_timeout=TimeoutError()
+    ==================================================
+    [ERROR] cmd_item=('ping localhost', 0.1) in full sequence cmd=['python --version', ('ping localhost', 0.1)]
+    """
 
 
 # =====================================================================================================================

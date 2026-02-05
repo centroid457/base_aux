@@ -262,7 +262,7 @@ class Test__WR_1(Test__WRBase):
         assert self.victim.read_lines() == [f"hello{line}" for line in range(3)]
 
     def test__wr(self):
-        assert self.victim.write_read("hello").last_output == "hello"
+        assert self.victim.write_read("hello").last_stdout_line == "hello"
         assert self.victim.write_read([f"hello{line}" for line in range(3)]).list_output() == [f"hello{line}" for line in range(3)]
 
         # params -----------------------
@@ -334,25 +334,25 @@ class Test__WR_1(Test__WRBase):
             assert False
 
         self.victim.RAISE_READ_FAIL_PATTERN = False
-        assert self.victim.write_read("123 FAil 123").last_output == "123 FAil 123"
+        assert self.victim.write_read("123 FAil 123").last_stdout_line == "123 FAil 123"
 
     def test__r_all(self):
         assert self.victim._write([f"hello{i}" for i in range(3)]) is True
         assert self.victim.read_lines() == [f"hello{i}" for i in range(3)]
 
     def test__write_args_kwargs(self):
-        assert self.victim.write_read("hello").last_output == "hello"
-        assert self.victim.write_read("hello", args=[1, 2]).last_output == "hello 1 2"
-        assert self.victim.write_read("hello", kwargs={"CH1": 1}).last_output == "hello CH1=1"
-        assert self.victim.write_read("hello", args=[1, 2], kwargs={"CH1": 1}).last_output == "hello 1 2 CH1=1"
+        assert self.victim.write_read("hello").last_stdout_line == "hello"
+        assert self.victim.write_read("hello", args=[1, 2]).last_stdout_line == "hello 1 2"
+        assert self.victim.write_read("hello", kwargs={"CH1": 1}).last_stdout_line == "hello CH1=1"
+        assert self.victim.write_read("hello", args=[1, 2], kwargs={"CH1": 1}).last_stdout_line == "hello 1 2 CH1=1"
 
     def test__CMD_PREFIX(self):
         self.victim.PREFIX = "DEV:01:"
-        assert self.victim.write_read("hello").last_output == f"{self.victim.PREFIX}hello"
-        assert self.victim.write_read("hello 12").last_output == f"{self.victim.PREFIX}hello 12"
+        assert self.victim.write_read("hello").last_stdout_line == f"{self.victim.PREFIX}hello"
+        assert self.victim.write_read("hello 12").last_stdout_line == f"{self.victim.PREFIX}hello 12"
 
         self.victim.PREFIX = ""
-        assert self.victim.write_read("hello").last_output == "hello"
+        assert self.victim.write_read("hello").last_stdout_line == "hello"
 
 
 # =====================================================================================================================
