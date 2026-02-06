@@ -1,18 +1,18 @@
 from typing import *
 
 from base_aux.base_values.m3_exceptions import *
-from base_aux.cmds.m1_result import CmdResult
+from base_aux.cmds.m1_result import *
 
 
 # =====================================================================================================================
 # TODO:
 #   1. use deque with base_types Write Read WEol REol None(not used)?
-#   2. add top(n=10)
 #   if when writeLine - always readLines?
 
-TYPING__IO_OUTPUT_DRAFT = str | list[str]
-TYPING__IO_ITEM_DRAFT = CmdResult | tuple[str, str | list[str]]
-TYPING__IO_HISTORY_DRAFT = list[CmdResult] | list[tuple[str, list[str]]]
+
+# =====================================================================================================================
+TYPING__CMD_RESULT_DRAFT = CmdResult | tuple[TYPING__CMD_LINE, TYPING__CMD_LINES_DRAFT] | tuple[TYPING__CMD_LINE, TYPING__CMD_LINES_DRAFT, TYPING__CMD_LINES_DRAFT]
+TYPING__CMD_HISTORY_DRAFT = list[TYPING__CMD_RESULT_DRAFT]
 
 
 # =====================================================================================================================
@@ -33,7 +33,7 @@ class CmdHistory:
     """
     _history: list[CmdResult]
 
-    def __init__(self, source: Self | TYPING__IO_HISTORY_DRAFT | None = None) -> None:
+    def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
         self._history = []
         if not source:
             pass
@@ -44,7 +44,7 @@ class CmdHistory:
                 self.add_result(item)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __eq__(self, other: Self | TYPING__IO_HISTORY_DRAFT) -> bool:
+    def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
         # 1=prepare
         if isinstance(other, self.__class__):
             if len(self) != len(other):
@@ -64,7 +64,7 @@ class CmdHistory:
     def __iter__(self) -> CmdResult:
         yield from self._history
 
-    def __getitem__(self, item: int | str) -> CmdResult | list[str] | NoReturn:
+    def __getitem__(self, item: int | TYPING__CMD_LINE) -> CmdResult | list[TYPING__CMD_LINE] | NoReturn:
         """
         GOAL
         ----
@@ -74,7 +74,7 @@ class CmdHistory:
         """
         if isinstance(item, int):
             return self._history[item]
-        elif isinstance(item, str):
+        elif isinstance(item, (str, bytes)):
             for io_item in self:
                 if io_item.INPUT == item:
                     return io_item.STDOUT
@@ -91,31 +91,40 @@ class CmdHistory:
         self._history.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
-    @property
-    def is_success(self) -> bool:
+    def check_all_finished(self) -> bool:
+        """
+        GOAL
+        ----
+        all results are finished
+        """
+        for result in self._history:
+            if not result.finished:
+                return False
+        return True
+
+    def check_all_success(self) -> bool:
         """
         GOAL
         ----
         all results are success
         """
         for result in self._history:
-            if result.is_fail:
+            if result.check_fail():
                 return False
         return True
 
-    @property
-    def is_fail(self) -> bool:
+    def check_any_fail(self) -> bool:
         """
         GOAL
         ----
         any results is fail
         """
-        return not self.is_success
+        return not self.check_all_success()
 
     # =================================================================================================================
     def add_result(
             self,
-            data: CmdResult | tuple[str, TYPING__IO_OUTPUT_DRAFT] | tuple[str, TYPING__IO_OUTPUT_DRAFT, TYPING__IO_OUTPUT_DRAFT]
+            data: TYPING__CMD_RESULT_DRAFT,
     ) -> None:
         if isinstance(data, CmdResult):
             pass
@@ -129,17 +138,17 @@ class CmdHistory:
             raise Exc__Incompatible(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def append_input(self, data: str) -> None:
+    def append_input(self, data: TYPING__CMD_LINE) -> None:
         self._history.append(CmdResult(data))
 
-    def append_stdout(self, data: TYPING__IO_OUTPUT_DRAFT) -> None:
+    def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
         # init base
         if not self._history:
             self.append_input("")
 
         self.last_result.append_stdout(data)
 
-    def append_stderr(self, data: TYPING__IO_OUTPUT_DRAFT) -> None:
+    def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
         # init base
         if not self._history:
             self.append_input("")
@@ -148,9 +157,9 @@ class CmdHistory:
 
     def add_ioe(
             self,
-            data_i: str,
-            data_o: TYPING__IO_OUTPUT_DRAFT | None = None,
-            data_e: TYPING__IO_OUTPUT_DRAFT | None = None,
+            data_i: TYPING__CMD_LINE,
+            data_o: TYPING__CMD_LINES_DRAFT | None = None,
+            data_e: TYPING__CMD_LINES_DRAFT | None = None,
     ) -> None:
         self.add_result((data_i, data_o, data_e))
 
@@ -168,67 +177,67 @@ class CmdHistory:
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def last_input(self) -> str:
+    def last_input(self) -> TYPING__CMD_LINE:
         try:
             return self.last_result.INPUT
         except:
             return ""
 
     @property
-    def last_stdout_buff(self) -> list[str]:
+    def last_stdout_buff(self) -> list[TYPING__CMD_LINE]:
         try:
             return self.last_result.STDOUT
         except:
             return []
 
     @property
-    def last_stdout_line(self) -> str:
+    def last_stdout_line(self) -> TYPING__CMD_LINE:
         try:
             return self.last_result.STDOUT[-1]
         except:
             return ""
 
     @property
-    def last_stderr_buff(self) -> list[str]:
+    def last_stderr_buff(self) -> list[TYPING__CMD_LINE]:
         try:
             return self.last_result.STDERR
         except:
             return []
 
     @property
-    def last_stderr_line(self) -> str:
+    def last_stderr_line(self) -> TYPING__CMD_LINE:
         try:
             return self.last_result.STDERR[-1]
         except:
             return ""
 
     # =================================================================================================================
-    def list_input(self) -> list[str]:
+    def list_input(self) -> list[TYPING__CMD_LINE]:
         result = []
         for item in self._history:
             result.append(item.INPUT)
             print(item.INPUT)
         return result
 
-    def list_stdout_lines(self) -> list[str]:
+    def list_stdout_lines(self) -> list[TYPING__CMD_LINE]:
         result = []
         for h_result in self._history:
             result.extend(h_result.STDOUT)
         return result
 
-    def list_stderr_lines(self) -> list[str]:
+    def list_stderr_lines(self) -> list[TYPING__CMD_LINE]:
         result = []
         for h_result in self._history:
             result.extend(h_result.STDERR)
         return result
 
-    def list_stdouterr_lines(self) -> list[str]:
+    def list_stdouterr_lines(self) -> list[TYPING__CMD_LINE]:
         result = []
         for h_result in self._history:
             result.extend(h_result.STDOUTERR)
         return result
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # =================================================================================================================
     def print_io(self) -> None:
         """
         GOAL
@@ -239,16 +248,10 @@ class CmdHistory:
         print()
         print("="*10 + f"{title:=<90}")
         for result in self._history:
-            print(f"{result.INPUT:20}:", end="")
-            indent = ""
-            for buffer in [result.STDOUT, result.STDERR]:
-                for line in buffer:
-                    line = f"{indent}{line}"
-                    print(line)
-                    indent = " "*20 + ":"
+            result.print_state()
         print("="*100)
 
-    def _as_dict(self) -> dict[str, list[str]]:
+    def _as_dict(self) -> dict[TYPING__CMD_LINE, list[TYPING__CMD_LINE]]:
         """
         GOAL
         ----

@@ -25,7 +25,6 @@ class Test:
         assert victim.last_stdout
         assert not victim.last_stderr
         assert victim.last_retcode == 0
-        assert victim.last_finished_success
 
     def test__list(self):
         victim = CmdExecutor()
@@ -40,7 +39,6 @@ class Test:
         assert bool(victim.last_stdout) is True
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode == 0
-        assert victim.last_finished_success
 
     def test__list_not_passed_timeout(self):
         victim = CmdExecutor()
@@ -85,7 +83,6 @@ class Test:
         assert bool(victim.last_stdout) is True
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode == 0
-        assert victim.last_finished_success
 
     def test__exc_timeout(self):
         victim = CmdExecutor()
@@ -98,7 +95,6 @@ class Test:
         # assert bool(victim.last_stdout) is False
         assert bool(victim.last_stderr) is False
         assert victim.last_retcode is None
-        assert not victim.last_finished_success
 
     def test__exc_not_exists(self):
         victim = CmdExecutor()
@@ -112,7 +108,6 @@ class Test:
         # assert bool(victim.last_stdout) is False
         assert bool(victim.last_stderr) is True
         assert victim.last_retcode not in [0, None]
-        assert not victim.last_finished_success
 
     def test__exc_cli_available(self):
         # one cmd ------------------------------------------------

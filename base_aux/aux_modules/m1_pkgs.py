@@ -105,7 +105,7 @@ class Packages:
         cmd = CmdPattern.INSTALL__MODULE % (self.PY_PATH, modules)
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
-        return self.cli.last_finished_success
+        return self.cli.history.last_result.check_finished_and_success()
 
     def reinstall(self, module: str) -> None:
         """
@@ -133,7 +133,6 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.347492
 self.last_finished=True
-self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -159,7 +158,6 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.39782
 self.last_finished=True
-self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -181,7 +179,6 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade requirements-checker'
 self.last_duration=1.367846
 self.last_finished=True
-self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -211,7 +208,6 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade privates'
 self.last_duration=1.392156
 self.last_finished=True
-self.last_finished_success=False
 self.last_retcode=1
 --------------------------------------------------
 self.last_stdout=
@@ -282,7 +278,6 @@ self.counter=3
 self.last_cmd='python -m build --sdist -n'
 self.last_duration=0.593
 self.last_finished=True
-self.last_finished_success=False
 self.last_retcode=1
 --------------------------------------------------
 self.last_stdout=
@@ -383,7 +378,7 @@ self.last_exc_timeout=None
 
         # FINISH ===================================================
         print(text_cum)
-        return self.cli.last_finished_success
+        return self.cli.history.last_result.check_finished_and_success()
 
     def upgrade_pip(self) -> bool:
         """

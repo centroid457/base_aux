@@ -9,11 +9,6 @@ from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
-TYPING__CMD = Union[str, tuple[str, float | None]]
-TYPING__CMDS = Union[TYPING__CMD, list[TYPING__CMD]]
-
-
-# =====================================================================================================================
 class CmdExecutor:
     """
     GOAL
@@ -28,14 +23,6 @@ class CmdExecutor:
     :ivar TIMEOUT: default timeout for execution process
         if timeout expired and process still not finished - raise exc
     :ivar _last_sp: Popen object
-    :ivar last_exc_timeout: saved TimeoutError if it was
-    :ivar last_cmd: command for execution
-    :ivar last_stdout: full stdout data
-    :ivar last_stderr: full stderr data
-    :ivar last_retcode: returned code if process was last_finished
-    :ivar last_finished: flag shows if command process was finished
-        useful if execute in threading.
-
     :ivar CMDS_REQUIRED: commands for cli_check_available
         dict with NAME - exact commands which will send into terminal in order to check some utility is installed,
         VALUE - message if command get any error
@@ -46,8 +33,6 @@ class CmdExecutor:
             [#####################ERROR#####################]
             self.last_cmd='STM32_Programmer_CLI --help'
             self.last_duration=2.029675
-            self.last_finished=True
-            self.last_finished_success=False
             self.last_retcode=None
             --------------------------------------------------
             self.last_stdout=
@@ -63,8 +48,6 @@ class CmdExecutor:
             [#####################ERROR#####################]
             self.last_cmd='STM32_Programmer_CLI'
             self.last_duration=2.022585
-            self.last_finished=True
-            self.last_finished_success=False
             self.last_retcode=None
             --------------------------------------------------
             self.last_stdout=
@@ -82,45 +65,20 @@ class CmdExecutor:
 
     CMDS_REQUIRED: dict[str, Optional[str]] | None = None
 
-    _buffer_indent: str = "\t|"
-
-    # VALUES --------------------------------------
-    # TODO: use history!
-    # TODO: move all in object
-
     # init ------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._reinit_values()       # need to keep always one values!
+        self.history = CmdHistory()
 
         if not self.cli_check_available():
             msg = f"CLI not available"
             raise Exc__NotAvailable(msg)
 
-    def _reinit_values(self) -> None:
-        self._last_sp: Optional[subprocess.Popen] = None
-
-        self.last_duration: float = 0
-        self.last_cmd: str = ""
-        self.last_stdout: str = ""      # USE ONLY "" AS DEFAULT!!!
-        self.last_stderr: str = ""      # USE ONLY "" AS DEFAULT!!!
-        self.last_exc_timeout: Optional[TimeoutError] = None
-        self.last_retcode: Optional[int] = None
-        self.last_finished: Optional[bool] = None
-
-    @property
-    def last_finished_success(self) -> Optional[bool]:
-        """check if process last_finished correct
-
-        :return: True if last_finished with no errors
-        """
-        return all([self.last_finished, self.last_retcode == 0, not self.last_stderr, not self.last_exc_timeout])
-
     # SEND ------------------------------------------------------------------------------------------------------------
     def send(
             self,
-            cmd: TYPING__CMDS,
+            cmd: TYPING__CMDS_CONDITIONS,
             timeout: Optional[float] = None,
             till_first_true: Optional[bool] = None,
             _raise: Optional[bool] = None,
@@ -164,9 +122,6 @@ class CmdExecutor:
                         return False
 
             return result
-
-        # params reinit -----------------------------------------------------------------------------------------------
-        self._reinit_values()
 
         # params apply ------------------------------------------------------------------------------------------------
         Print(f"[CLI_SEND]{cmd}")
@@ -218,8 +173,6 @@ class CmdExecutor:
         self.last_stderr = self._last_sp.stderr.read()
         self.last_retcode = self._last_sp.returncode
         self.last_finished = True
-        if print_all_states or not self.last_finished_success:
-            self.print_state()
 
         if _raise:
             if self.last_exc_timeout:
@@ -228,33 +181,9 @@ class CmdExecutor:
                 msg = f"{self.last_retcode=}/{self.last_stderr=}"
                 raise Exception(msg)
 
-        return self.last_finished_success
+        return self.history.last_result.check_finished_and_success()
 
     # AUXILIARY -------------------------------------------------------------------------------------------------------
-    def print_state(self) -> None:
-        print(f"="*50)
-        if not self.last_finished_success:
-            print(f"[{'#'*21}ERROR{'#'*21}]")
-
-        print(f"{self.last_cmd=}")
-        print(f"{self.last_duration=}")
-        print(f"{self.last_finished=}")
-        print(f"{self.last_finished_success=}")
-        print(f"{self.last_retcode=}")
-        print(f"-" * 50)
-        print("self.last_stdout=")
-        if self.last_stdout:
-            for line in self.last_stdout.split("\n"):
-                print(f"{self._buffer_indent}{line!r}")
-        print(f"-"*50)
-        print("self.last_stderr=")
-        if self.last_stderr:
-            for line in self.last_stderr.split("\n"):
-                print(f"{self._buffer_indent}{line!r}")
-        print(f"-" * 50)
-        print(f"{self.last_exc_timeout=}")
-        print(f"="*50)
-
     def cli_check_available(self) -> bool:
         """check list of commands which will show that further work will executable and your environment is ready.
 
@@ -265,7 +194,7 @@ class CmdExecutor:
             for cmd, error_msg in self.CMDS_REQUIRED.items():
                 if not self.send(cmd, _raise=False):
                     Print(f"cmd NOT available [{cmd}]")
-                    self.print_state()
+                    self.history.print_io()
                     return False
         return True
 
@@ -288,8 +217,6 @@ if __name__ == "__main__":
     self.counter=1
     self.last_cmd='ping localhost'
     self.last_duration=1.041
-    self.last_finished=True
-    self.last_finished_success=False
     self.last_retcode=None
     --------------------------------------------------
     self.last_stdout=
@@ -320,8 +247,6 @@ if __name__ == "__main__":
     self.counter=3
     self.last_cmd='ping localhost'
     self.last_duration=1.042
-    self.last_finished=True
-    self.last_finished_success=False
     self.last_retcode=None
     --------------------------------------------------
     self.last_stdout=
