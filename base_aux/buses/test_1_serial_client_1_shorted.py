@@ -266,19 +266,19 @@ class Test__WR_1(Test__WRBase):
         assert self.victim.write_read([f"hello{line}" for line in range(3)]).list_stdout_lines() == [f"hello{line}" for line in range(3)]
 
         # params -----------------------
-        assert self.victim.write_read("hello").as_dict() == {"hello": ["hello", ], }
+        assert self.victim.write_read("hello")._as_dict() == {"hello": ["hello", ], }
 
         assert self.victim.write_read(["11", "22"]).list_input() == ["11", "22"]
-        assert self.victim.write_read(["11", "22"]).as_dict() == {"11": ["11", ], "22": ["22", ], }
+        assert self.victim.write_read(["11", "22"])._as_dict() == {"11": ["11", ], "22": ["22", ], }
 
         history = CmdHistory()
         history.add_ioe("hello", "hello")
-        assert self.victim.write_read("hello").as_dict() == history.as_dict()
+        assert self.victim.write_read("hello")._as_dict() == history._as_dict()
 
         history = CmdHistory()
         history.add_ioe("11", "11")
         history.add_ioe("22", "22")
-        assert self.victim.write_read(["11", "22"]).as_dict() == history.as_dict()
+        assert self.victim.write_read(["11", "22"])._as_dict() == history._as_dict()
 
     def test__wr_last(self):
         assert self.victim.write_read__last("hello") == "hello"

@@ -130,7 +130,6 @@ NOT EXISTS
 [CLI_SEND] [python -m pip install --upgrade singleton-meta]
 ==================================================
 self.counter=1
-self.counter_in_list=0
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.347492
 self.last_finished=True
@@ -157,7 +156,6 @@ ALREADY OK
 [CLI_SEND] [python -m pip install --upgrade singleton-meta]
 ==================================================
 self.counter=1
-self.counter_in_list=0
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.39782
 self.last_finished=True
@@ -180,7 +178,6 @@ GOOD UPGRADE
 [CLI_SEND] [python -m pip install --upgrade requirements-checker]
 ==================================================
 self.counter=1
-self.counter_in_list=0
 self.last_cmd='python -m pip install --upgrade requirements-checker'
 self.last_duration=1.367846
 self.last_finished=True
@@ -211,7 +208,6 @@ ERROR ON DISTRIBUTION
 ==================================================
 [#####################ERROR#####################]
 self.counter=1
-self.counter_in_list=0
 self.last_cmd='python -m pip install --upgrade privates'
 self.last_duration=1.392156
 self.last_finished=True
@@ -283,7 +279,6 @@ self.last_exc_timeout=None
 ==================================================
 [#####################ERROR#####################]
 self.counter=3
-self.counter_in_list=1
 self.last_cmd='python -m build --sdist -n'
 self.last_duration=0.593
 self.last_finished=True

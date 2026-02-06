@@ -5,6 +5,7 @@ import time
 
 from base_aux.loggers.m1_print import *
 from base_aux.base_values.m3_exceptions import *
+from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
@@ -13,26 +14,8 @@ TYPING__CMDS = Union[TYPING__CMD, list[TYPING__CMD]]
 
 
 # =====================================================================================================================
-class Exc_CliRetcode(Exception):
-    """
-    GOAL
-    ----
-    returnCode is not zero.
-    """
-
-
-class Exc_CliStderr(Exception):
-    """
-    GOAL
-    ----
-    stderr have any data
-    """
-
-
-# =====================================================================================================================
 class CmdExecutor:
     """
-    TODO: replace by new ver!
     GOAL
     ----
     send commands into OS terminal
@@ -41,7 +24,6 @@ class CmdExecutor:
     "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
     "use batch timeout for list",
     "till_first_true",
-    "counter/counter_in_list",
 
     :ivar TIMEOUT: default timeout for execution process
         if timeout expired and process still not finished - raise exc
@@ -103,9 +85,6 @@ class CmdExecutor:
     _buffer_indent: str = "\t|"
 
     # VALUES --------------------------------------
-    # counter: int = 0      # todo: get from history
-    counter_in_list: int = 0
-
     # TODO: use history!
     # TODO: move all in object
 
@@ -145,7 +124,6 @@ class CmdExecutor:
             timeout: Optional[float] = None,
             till_first_true: Optional[bool] = None,
             _raise: Optional[bool] = None,
-            _use_counter_list: Optional[bool] = None,
             print_all_states: Optional[bool] = None,
     ) -> bool | NoReturn:
         """execute CLI command in terminal
@@ -157,12 +135,10 @@ class CmdExecutor:
             if single - apply as single!
         :param till_first_true: useful for detection or just multiPlatform usage
         :param _raise: if till_first_true=True it will not work (return always bool in this case)!!!
-        :param _use_counter_list: DONT USE! internal flag for counter_in_list
         :param print_all_states: all or only Failed
         """
         # CMDS LIST ---------------------------------------------------------------------------------------------------
         if isinstance(cmd, list):
-            self.counter_in_list = 0
             time_start = time.time()
             result = True
 
@@ -171,14 +147,13 @@ class CmdExecutor:
                 _raise_list = False
 
             for cmd_item in cmd:
-                self.counter_in_list += 1
                 time_passed = time.time() - time_start
                 try:
                     timeout = timeout - time_passed
                 except:
                     pass
 
-                result = self.send(cmd=cmd_item, timeout=timeout, _raise=_raise_list, _use_counter_list=True)
+                result = self.send(cmd=cmd_item, timeout=timeout, _raise=_raise_list)
 
                 if till_first_true:
                     if result:
@@ -192,8 +167,6 @@ class CmdExecutor:
 
         # params reinit -----------------------------------------------------------------------------------------------
         self._reinit_values()
-        if not _use_counter_list:
-            self.counter_in_list = 0
 
         # params apply ------------------------------------------------------------------------------------------------
         Print(f"[CLI_SEND]{cmd}")
@@ -251,10 +224,9 @@ class CmdExecutor:
         if _raise:
             if self.last_exc_timeout:
                 raise self.last_exc_timeout
-            if self.last_retcode != 0:
-                raise Exc_CliRetcode(self.last_retcode)
-            if self.last_stderr:
-                raise Exc_CliStderr(self.last_stderr)
+            if self.last_retcode or self.last_stderr:
+                msg = f"{self.last_retcode=}/{self.last_stderr=}"
+                raise Exception(msg)
 
         return self.last_finished_success
 
@@ -314,7 +286,6 @@ if __name__ == "__main__":
     ==================================================
     [#####################ERROR#####################]
     self.counter=1
-    self.counter_in_list=0
     self.last_cmd='ping localhost'
     self.last_duration=1.041
     self.last_finished=True
@@ -347,7 +318,6 @@ if __name__ == "__main__":
     ==================================================
     [#####################ERROR#####################]
     self.counter=3
-    self.counter_in_list=2
     self.last_cmd='ping localhost'
     self.last_duration=1.042
     self.last_finished=True

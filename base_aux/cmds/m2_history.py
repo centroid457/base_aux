@@ -21,6 +21,11 @@ class CmdHistory:
     GOAL
     ----
     collect IO (request/response) sequence
+    and manage it
+        - cumulate is_succcess
+        - get last result
+        - get last line from any buff
+        - collect same buffers
 
     CONSTRAINTS
     -----------
@@ -84,6 +89,28 @@ class CmdHistory:
     # -----------------------------------------------------------------------------------------------------------------
     def clear(self) -> None:
         self._history.clear()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def is_success(self) -> bool:
+        """
+        GOAL
+        ----
+        all results are success
+        """
+        for result in self._history:
+            if result.is_fail:
+                return False
+        return True
+
+    @property
+    def is_fail(self) -> bool:
+        """
+        GOAL
+        ----
+        any results is fail
+        """
+        return not self.is_success
 
     # =================================================================================================================
     def add_result(
@@ -221,10 +248,11 @@ class CmdHistory:
                     indent = " "*20 + ":"
         print("="*100)
 
-    def as_dict(self) -> dict[str, list[str]]:
+    def _as_dict(self) -> dict[str, list[str]]:
         """
         GOAL
         ----
+        unit testing!
         get table results   # TODO: DEPRECATE!!! maybe not useful! use direct clear exact values!
 
         CAREFUL

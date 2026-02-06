@@ -21,11 +21,13 @@ class CmdResult:
     INPUT: str = ""    # dont use collection on input!!! dont use None here!
     STDOUT: list[str] = field(default_factory=list)
     STDERR: list[str] = field(default_factory=list)
+    # DEBUG: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
         self.duration: float = 0
         self.retcode: int | None = None
+        self.timedout: bool = False
 
         if self.STDOUT is None:
             self.STDOUT = []
@@ -44,6 +46,19 @@ class CmdResult:
     @property
     def STDOUTERR(self) -> list[str]:
         return [*self.STDOUT, *self.STDERR]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def set_timedout(self) -> None:
+        self.timedout = True
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def is_success(self) -> bool:
+        return self.retcode in [0, None] and not self.STDERR and not self.timedout
+
+    @property
+    def is_fail(self) -> bool:
+        return not self.is_success
 
     # -----------------------------------------------------------------------------------------------------------------
     def append(
