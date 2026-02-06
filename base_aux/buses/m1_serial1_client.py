@@ -11,7 +11,7 @@ from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 
-from base_aux.base_histories.m2_io_history import IoHistory
+from base_aux.cmds.m2_history import CmdHistory
 
 
 # =====================================================================================================================
@@ -190,7 +190,7 @@ class SerialClient(Logger):
     _EMULATOR__START: bool = None  # DONT DELETE! it need when you reconnecting! cause of address replaced after disconnecting by exact str after PAIRED*
 
     # AUX -----------------------------------------------------
-    history: IoHistory
+    history: CmdHistory
     _SERIAL: Serial
 
     ADDRESSES__SYSTEM: dict[str, Union[None, Self]] = {}
@@ -219,7 +219,7 @@ class SerialClient(Logger):
         if eol__send is not None:
             self.EOL__SEND = eol__send
 
-        self.history = IoHistory()
+        self.history = CmdHistory()
         self.init_serial()
 
         # self.addresses_system__detect()   # DONT USE in init!!!
@@ -1213,7 +1213,7 @@ class SerialClient(Logger):
         data = self._bytes_edition__apply(data)
         data = self._data_eol__clear(data)
         data = self._data_ensure__string(data)
-        self.history.add_output(data)
+        self.history.append_stdout(data)
         self.answer_is_fail(data)
 
         # NOTE: dont delete! need to direct cmp
@@ -1262,7 +1262,7 @@ class SerialClient(Logger):
 
         # SINGLE ---------------------
         data = self._create_cmd_line(cmd=data, prefix=prefix, args=args, kwargs=kwargs)
-        self.history.add_input(self._data_ensure__string(data))
+        self.history.append_input(self._data_ensure__string(data))
 
         data = self._data_ensure__bytes(data)
         data = self._bytes_eol__ensure(data)
@@ -1316,7 +1316,7 @@ class SerialClient(Logger):
 
             retry_noanswer: int | None = None,
             _timeout: Optional[float] = None,
-    ) -> Union[IoHistory, NoReturn]:
+    ) -> Union[CmdHistory, NoReturn]:
         """
         send data and return history
 
@@ -1326,7 +1326,7 @@ class SerialClient(Logger):
         DONT USE! IF WANT TO BE SURE!
         instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
         """
-        history = IoHistory()
+        history = CmdHistory()
         if retry_noanswer is None:
             retry_noanswer = self.REWRITEIF_READNOANSWER
         remain__retry_noanswer = retry_noanswer or 0
@@ -1357,7 +1357,7 @@ class SerialClient(Logger):
                         remain__retry_decode -= 1
 
                     self.buffers_clear()
-            history.add_io(self._data_ensure__string(data), data_o)
+            history.add_ioe(self._data_ensure__string(data), data_o)
 
         # RESULT ----------------------------
         return history
@@ -1462,7 +1462,7 @@ class SerialClient(Logger):
         """
         return self.write_read__last_validate(*args, **kwargs, _as_regexp=True)
 
-    def dump_cmds(self, cmds: list[str] = None) -> Union[IoHistory, NoReturn]:
+    def dump_cmds(self, cmds: list[str] = None) -> Union[CmdHistory, NoReturn]:
         """
         useful to get results for standard cmds list
         if you need to read all params from device!

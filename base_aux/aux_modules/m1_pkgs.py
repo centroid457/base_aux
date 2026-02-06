@@ -5,7 +5,7 @@ from typing import *
 
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_types.m1_type_aux import TypeAux
-from base_aux.cli.m1_cli_user import CliUser
+from base_aux.cmds.m3_executor import CmdExecutor
 from base_aux.versions.m2_version import Version
 
 
@@ -74,7 +74,7 @@ class Packages:
 
     ]
     PY_PATH: str = sys.executable
-    cli: CliUser
+    cli: CmdExecutor
 
     # FILENAME_457: str = "requirements__centoid457.txt"      # FILE WILL NOT GO WITHING MODULE AS PART!
     # FILEPATH_457: pathlib.Path = pathlib.Path(__file__).parent.joinpath(FILENAME_457)
@@ -92,7 +92,7 @@ class Packages:
         if py_path is not None:
             self.PY_PATH = py_path
 
-        self.cli = CliUser()
+        self.cli = CmdExecutor()
 
     # =================================================================================================================
     def install(self, modules: Union[str, list[str]]) -> bool:

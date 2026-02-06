@@ -30,14 +30,14 @@ class Exc_CliStderr(Exception):
 
 
 # =====================================================================================================================
-class CliUser:
+class CmdExecutor:
     """
     TODO: replace by new ver!
     GOAL
     ----
     send commands into OS terminal
 
-    "check if cli commands are accessible (special utilities is installed)",
+    "check if cmds commands are accessible (special utilities is installed)",
     "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
     "use batch timeout for list",
     "till_first_true",
@@ -304,7 +304,7 @@ if __name__ == "__main__":
     print()
     print()
     print()
-    victim = CliUser()
+    victim = CmdExecutor()
     victim.send("ping localhost", timeout=0.1)
     print()
     # victim.print_state()

@@ -9,7 +9,7 @@ KwargsEqExpect_OS().raise_if__any_true(windows=True)
 from typing import *
 import re
 
-from base_aux.cli.m1_cli_user import CliUser
+from base_aux.cmds.m3_executor import CmdExecutor
 
 
 # =====================================================================================================================
@@ -49,7 +49,7 @@ class BusI2c:
             buses = re.findall(pattern=r"i2c-(\\d+) ", string=string)
             print(f"found {buses=}")
         """
-        cli = CliUser()
+        cli = CmdExecutor()
         cli.send("i2cdetect -l")
         buses = re.findall(pattern=Patterns.I2C_BUS_ID, string=cli.last_stdout)
         print(f"found {buses=}")
@@ -81,7 +81,7 @@ class BusI2c:
         else:
             buses = [bus_id, ]
 
-        cli = CliUser()
+        cli = CmdExecutor()
         bus_devices: dict[int, list[int]] = {}
         for bus in buses:
             cli.send(f"i2cdetect -y {bus}")

@@ -1,6 +1,6 @@
 from base_aux.aux_argskwargs.m4_kwargs_eq_expect import *
 
-from base_aux.cli.m1_cli_user import *
+from base_aux.cmds.m3_executor import *
 
 
 # =====================================================================================================================
@@ -15,7 +15,7 @@ else:
 # =====================================================================================================================
 class Test:
     def test__ok(self):
-        victim = CliUser()
+        victim = CmdExecutor()
 
         assert victim.send(CMD_PING_1, timeout=2)
         assert victim.last_cmd == CMD_PING_1
@@ -30,7 +30,7 @@ class Test:
         assert victim.counter_in_list == 0
 
     def test__count(self):
-        victim = CliUser()
+        victim = CmdExecutor()
         assert victim.counter == 0
         assert victim.counter_in_list == 0
 
@@ -59,7 +59,7 @@ class Test:
         assert victim.counter_in_list == 1
 
     def test__list(self):
-        victim = CliUser()
+        victim = CmdExecutor()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert victim.counter_in_list == 2
@@ -79,7 +79,7 @@ class Test:
         assert victim.last_finished_success
 
     def test__list_not_passed_timeout(self):
-        victim = CliUser()
+        victim = CmdExecutor()
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=0.1)
         assert victim.send([CMD_PING_1, CMD_PING_2])
 
@@ -105,11 +105,11 @@ class Test:
         ]
     )
     def test__tuple(self, cmds, timeout_def, _EXPECTED):
-        func_link = CliUser().send(cmd=cmds, timeout=timeout_def)
+        func_link = CmdExecutor().send(cmd=cmds, timeout=timeout_def)
         Lambda(func_link).check_expected__assert(_EXPECTED)
 
     def test__list__till_first_true(self):
-        victim = CliUser()
+        victim = CmdExecutor()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert victim.counter_in_list == 2
@@ -127,7 +127,7 @@ class Test:
         assert victim.last_finished_success
 
     def test__exc_timeout(self):
-        victim = CliUser()
+        victim = CmdExecutor()
 
         assert not victim.send(CMD_PING_2, timeout=0.1)
         assert victim.last_cmd == CMD_PING_2
@@ -140,7 +140,7 @@ class Test:
         assert not victim.last_finished_success
 
     def test__exc_not_exists(self):
-        victim = CliUser()
+        victim = CmdExecutor()
 
         cmd_line = "ping123"
         assert not victim.send(cmd_line, timeout=10)
@@ -155,7 +155,7 @@ class Test:
 
     def test__exc_cli_available(self):
         # one cmd ------------------------------------------------
-        class CliUserForAvailable(CliUser):
+        class CliUserForAvailable(CmdExecutor):
             CMDS_REQUIRED = {"ping123": None, }
 
         try:
@@ -164,7 +164,7 @@ class Test:
             assert isinstance(exc, Exc__NotAvailable)
 
         # two cmd ------------------------------------------------
-        class CliUserForAvailable(CliUser):
+        class CliUserForAvailable(CmdExecutor):
             CMDS_REQUIRED = {CMD_PING_1: None, }
 
         victim = CliUserForAvailable()
