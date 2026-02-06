@@ -124,7 +124,7 @@ class Test:
             CMDS_REQUIRED = {CMD_PING_1: None, }
 
         victim = CliUserForAvailable()
-        assert victim.cli_check_available()
+        assert victim.check__accessible()
 
 
 # =====================================================================================================================

@@ -11,9 +11,6 @@ TYPING__CMD_LINE = str | bytes
 TYPING__CMD_LINES = Collection[TYPING__CMD_LINE]
 TYPING__CMD_LINES_DRAFT = TYPING__CMD_LINE | TYPING__CMD_LINES
 
-TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | int | None]]
-TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITION]]
-
 
 # =====================================================================================================================
 @dataclass
@@ -25,6 +22,10 @@ class CmdCondition:
     """
     LINE: TYPING__CMD_LINE
     TIMEOUT: float | int | None = None
+
+
+TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | int | None]]
+TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITION]]
 
 
 # =====================================================================================================================

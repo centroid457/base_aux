@@ -20,7 +20,7 @@ class CmdExecutor:
     "use batch timeout for list",
     "till_first_true",
 
-    :ivar TIMEOUT: default timeout for execution process
+    :ivar TIMEOUT_DEF: default timeout for execution process
         if timeout expired and process still not finished - raise exc
     :ivar _last_sp: Popen object
     :ivar CMDS_REQUIRED: commands for cli_check_available
@@ -60,7 +60,7 @@ class CmdExecutor:
         3. use --VERSION! instead! - seems work fine always!
     """
     # SETTINGS ------------------------------------
-    TIMEOUT: Optional[float] = 2
+    TIMEOUT_DEF: Optional[float] = 2
     RAISE: Optional[bool] = None
 
     CMDS_REQUIRED: dict[str, Optional[str]] | None = None
@@ -71,20 +71,43 @@ class CmdExecutor:
 
         self.history = CmdHistory()
 
-        if not self.cli_check_available():
+        if not self.check__accessible():
             msg = f"CLI not available"
             raise Exc__NotAvailable(msg)
 
     # SEND ------------------------------------------------------------------------------------------------------------
+    def send_single(
+            self,
+            cmd: TYPING__CMD_CONDITION,
+            timeout: Optional[float] = None,
+            _raise: Optional[bool] = None,
+    ) -> bool:
+        pass
+
+    def send_batch(
+            self,
+            cmds: TYPING__CMDS_CONDITIONS,
+            type_iteration = till_first_fail/till_first_true/all_,
+            timeout_full: Optional[float] = None,
+            _raise: Optional[bool] = None,
+    ) -> bool:
+        pass
+
+
+
+
+
+
+
+
     def send(
             self,
             cmd: TYPING__CMDS_CONDITIONS,
             timeout: Optional[float] = None,
             till_first_true: Optional[bool] = None,
             _raise: Optional[bool] = None,
-            print_all_states: Optional[bool] = None,
     ) -> bool | NoReturn:
-        """execute CLI command in terminal
+        """execute command
 
         :param cmd: commands for execution
         :param timeout: use special timeout step_result_enum, instead of default, for cms_list will used as cumulated!
@@ -93,7 +116,6 @@ class CmdExecutor:
             if single - apply as single!
         :param till_first_true: useful for detection or just multiPlatform usage
         :param _raise: if till_first_true=True it will not work (return always bool in this case)!!!
-        :param print_all_states: all or only Failed
         """
         # CMDS LIST ---------------------------------------------------------------------------------------------------
         if isinstance(cmd, list):
@@ -134,7 +156,7 @@ class CmdExecutor:
         self.last_cmd = cmd
 
         if timeout is None:
-            timeout = self.TIMEOUT
+            timeout = self.TIMEOUT_DEF
         if _raise is None:
             _raise = self.RAISE
 
@@ -184,8 +206,11 @@ class CmdExecutor:
         return self.history.last_result.check_finished_and_success()
 
     # AUXILIARY -------------------------------------------------------------------------------------------------------
-    def cli_check_available(self) -> bool:
-        """check list of commands which will show that further work will executable and your environment is ready.
+    def check__accessible(self) -> bool:
+        """
+        GOAL
+        ----
+        check list of commands which will show that further work will executable and your environment is ready.
 
         Useful because commands uwually depends on installed programs and OS.
         so if you want to be sure of it on start point - run it!
