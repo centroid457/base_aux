@@ -51,6 +51,7 @@ class CmdHistory:
         elif isinstance(source, list):
             for item in source:
                 self._add_result(item)
+                self.set_finished()
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -108,10 +109,14 @@ class CmdHistory:
         last result is finished (all are finished).
         so history is free to go! feel free to start new stepResult
         """
-        return self.last_result.finished
+        if self.last_result is None:
+            return False
+        else:
+            return self.last_result.finished
 
     def set_finished(self, timed_out: bool | None = None) -> None:
-        return self.last_result.set_finished(timed_out)
+        if self.last_result is not None:
+            return self.last_result.set_finished(timed_out)
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_all_success(self) -> bool:
@@ -149,7 +154,7 @@ class CmdHistory:
         this is the MAIN NewLine creation method.
         use all addings over this method!!!
         """
-        if not self.check_finished():
+        if self.last_result is not None and not self.check_finished():
             msg = f"cant start new CmdResult in history without finishing last one!!! {self.last_result=}"
             raise Exc__NotReady(msg)
 
@@ -169,7 +174,7 @@ class CmdHistory:
             raise Exc__Incompatible(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def add_input(self, data: TYPING__CMD_LINE) -> None:
+    def add_input(self, data: TYPING__CMD_LINE) -> None | NoReturn:
         self._add_result(CmdResult(data))
 
     def add_ioe(
@@ -177,10 +182,10 @@ class CmdHistory:
             data_i: TYPING__CMD_LINE,
             data_o: TYPING__CMD_LINES_DRAFT | None = None,
             data_e: TYPING__CMD_LINES_DRAFT | None = None,
-    ) -> None:
+    ) -> None | NoReturn:
         self._add_result((data_i, data_o, data_e))
 
-    def add_history(self, data: Self) -> None:
+    def add_history(self, data: Self) -> None | NoReturn:
         for item in data:
             self._add_result(item)
 
