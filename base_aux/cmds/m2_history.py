@@ -212,6 +212,18 @@ class CmdHistory:
         except:
             return None
 
+    # @property
+    # def prev_result(self) -> CmdResult | None:
+    #     """
+    #     GOAL
+    #     ----
+    #     if we have some new cmd to send but read new stdouterr before - # DONT NEED!!!  JUST CALL append_stdout!
+    #     """
+    #     try:
+    #         return self._history[-2]
+    #     except:
+    #         return None
+
     # -----------------------------------------------------------------------------------------------------------------
     @property
     def last_input(self) -> TYPING__CMD_LINE:
