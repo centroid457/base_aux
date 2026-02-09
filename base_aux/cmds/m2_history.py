@@ -30,17 +30,19 @@ class CmdHistory:
     use actual state for outside objects!
         if send input - show it immediately!
         no need to wait any timeout or exiting send method.
+        so if you start using any bus and send cmd
+            1. dont create CmdResult
+            2. dont manipulate by CmdResult directly
+            3. manage all by CmdHistory object! over its methods
 
     CONSTRAINTS
     -----------
     always use "" instead of None in value lines
     """
     _history: list[CmdResult]
-    _locked: bool
 
     def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
         self._history = []
-        self._locked = False
 
         if not source:
             pass
@@ -48,22 +50,7 @@ class CmdHistory:
             self._history = list(source._history)
         elif isinstance(source, list):
             for item in source:
-                self.add_result(item)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def check_locked(self) -> bool:
-        return self._locked
-
-    def lock(self) -> bool:
-        if not self._locked:
-            self._locked = True
-            return True
-
-        return False
-
-    def unlock(self) -> None:
-        self.last_result.set_finished()
-        self._locked = False
+                self._add_result(item)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -83,9 +70,6 @@ class CmdHistory:
         return True
 
     # -----------------------------------------------------------------------------------------------------------------
-    def __iter__(self) -> CmdResult:
-        yield from self._history
-
     def __getitem__(self, item: int | TYPING__CMD_LINE) -> CmdResult | list[TYPING__CMD_LINE] | NoReturn:
         """
         GOAL
@@ -102,8 +86,12 @@ class CmdHistory:
                     return io_item.STDOUT
             msg = f"not found/{item=}"
         else:
-            msg = f"incompatiible type/{item=}"
+            msg = f"incompatible type/{item=}"
         raise Exception(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __iter__(self) -> CmdResult:
+        yield from self._history
 
     def __len__(self) -> int:
         return len(self._history)
@@ -113,22 +101,29 @@ class CmdHistory:
         self._history.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def check_all_finished(self) -> bool:
+    def check_finished(self) -> bool:
         """
         GOAL
         ----
-        all results are finished
+        last result is finished (all are finished).
+        so history is free to go! feel free to start new stepResult
         """
-        for result in self._history:
-            if not result.finished:
-                return False
-        return True
+        return self.last_result.finished
 
+    def set_finished(self, timed_out: bool | None = None) -> None:
+        return self.last_result.set_finished(timed_out)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def check_all_success(self) -> bool:
         """
         GOAL
         ----
         all results are success
+
+        SPECIALLY CREATED FOR
+        ---------------------
+        send some batch of cmds and check are all success to future work in cli
+        so we could do pre validation
         """
         for result in self._history:
             if result.check_fail():
@@ -144,14 +139,28 @@ class CmdHistory:
         return not self.check_all_success()
 
     # =================================================================================================================
-    def add_result(
+    def _add_result(
             self,
             data: TYPING__CMD_RESULT_DRAFT,
-    ) -> None:
+    ) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        this is the MAIN NewLine creation method.
+        use all addings over this method!!!
+        """
+        if not self.check_finished():
+            msg = f"cant start new CmdResult in history without finishing last one!!! {self.last_result=}"
+            raise Exc__NotReady(msg)
+
+        # --------------------------
         if isinstance(data, CmdResult):
             pass
         elif isinstance(data, tuple):
             data = CmdResult(*data)
+        else:
+            msg = f"expect CmdResult/tuple/{data=}"
+            raise Exc__Incompatible(msg)
 
         try:
             self._history.append(data)
@@ -160,22 +169,8 @@ class CmdHistory:
             raise Exc__Incompatible(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def append_input(self, data: TYPING__CMD_LINE) -> None:
-        self._history.append(CmdResult(data))
-
-    def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        # init base
-        if not self._history:
-            self.append_input("")
-
-        self.last_result.append_stdout(data)
-
-    def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        # init base
-        if not self._history:
-            self.append_input("")
-
-        self.last_result.append_stderr(data)
+    def add_input(self, data: TYPING__CMD_LINE) -> None:
+        self._add_result(CmdResult(data))
 
     def add_ioe(
             self,
@@ -183,11 +178,26 @@ class CmdHistory:
             data_o: TYPING__CMD_LINES_DRAFT | None = None,
             data_e: TYPING__CMD_LINES_DRAFT | None = None,
     ) -> None:
-        self.add_result((data_i, data_o, data_e))
+        self._add_result((data_i, data_o, data_e))
 
     def add_history(self, data: Self) -> None:
         for item in data:
-            self.add_result(item)
+            self._add_result(item)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        # init base
+        if not self._history:
+            self.add_input("")
+
+        self.last_result.append_stdout(data)
+
+    def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        # init base
+        if not self._history:
+            self.add_input("")
+
+        self.last_result.append_stderr(data)
 
     # =================================================================================================================
     @property

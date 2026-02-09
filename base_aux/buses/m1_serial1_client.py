@@ -1262,7 +1262,7 @@ class SerialClient(Logger):
 
         # SINGLE ---------------------
         data = self._create_cmd_line(cmd=data, prefix=prefix, args=args, kwargs=kwargs)
-        self.history.append_input(self._data_ensure__string(data))
+        self.history.add_input(self._data_ensure__string(data))
 
         data = self._data_ensure__bytes(data)
         data = self._bytes_eol__ensure(data)

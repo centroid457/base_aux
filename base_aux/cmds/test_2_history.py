@@ -17,7 +17,7 @@ def test__add_list_asdict_eq():
     assert victim._history == []
     assert victim._as_dict() == {}
 
-    victim.append_input("in1")
+    victim.add_input("in1")
     assert victim == [("in1", []), ]
     assert victim == [CmdResult("in1", []), ]
     assert victim._history == [CmdResult("in1", []), ]
@@ -25,7 +25,7 @@ def test__add_list_asdict_eq():
     assert victim.list_stdout_lines() == []
     assert victim._as_dict() == {"in1": []}
 
-    victim.append_input("in2")
+    victim.add_input("in2")
     assert victim == [("in1", []), ("in2", [])]
     assert victim == [CmdResult("in1", []), CmdResult("in2", [])]
     assert victim._history == [CmdResult("in1", []), CmdResult("in2", [])]
