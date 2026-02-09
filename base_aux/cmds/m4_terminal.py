@@ -4,6 +4,8 @@ import queue
 import time
 import os
 
+from base_aux.base_types.m2_info import ObjectInfo
+
 
 # =====================================================================================================================
 class ContinuousTerminal:
@@ -21,6 +23,7 @@ class ContinuousTerminal:
             bufsize=1,
             universal_newlines=True,
             encoding="cp866" if os.name == "nt" else "utf8",
+            # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
         )
 
         # Очередь для чтения вывода
@@ -55,8 +58,11 @@ class ContinuousTerminal:
         """Отправка команды и получение вывода"""
         print(f"--->{command}")
         # Отправляем команду
-        self.sp.stdin.write(command + "\n")
-        self.sp.stdin.flush()
+        try:
+            self.sp.stdin.write(command + "\n")
+            self.sp.stdin.flush()
+        except:
+            return
 
         # Собираем вывод
         output = []
@@ -79,64 +85,72 @@ class ContinuousTerminal:
     def close(self):
         """Корректное закрытие"""
         if self.sp:
-            self.sp.stdin.write("exit\n")
-            self.sp.stdin.flush()
+            try:
+                self.sp.stdin.write("exit\n")
+                self.sp.stdin.flush()
+            except:
+                pass
             self.sp.terminate()
             self.sp.wait()
 
     def send_ctrl_c(self):
         """
+        DONT USE IT!!!
+        NOT ALWAYS working and actually only ones!
+
         Отправка Ctrl+C в терминал для прерывания текущей команды
         без закрытия сессии
         """
-        # if not self.sp:     # not self.is_running or
-        #     raise RuntimeError("Сессия терминала не активна")
+        self.sp.terminate()
 
-        self.sp.stdin.write('\x03\n')
-        self.sp.stdin.flush()
+        # import signal
+        # import ctypes
+        # ctypes.windll.kernel32.GenerateConsoleCtrlEvent(0, self.sp.pid)     # вообще не работает!!!
 
-        # # self.send_command("Stop-Process -Name ping -Force -ErrorAction SilentlyContinue")
-        #
-        # # self.sp.send_signal(0)
-        #
-        # # Способ 1: Прямая отправка Ctrl+C через stdin (ASCII код 3)
-        # self.sp.stdin.write('\x03')
-        # self.sp.stdin.flush()
-        # time.sleep(0.2)
-        #
-        # # Способ 2: Отправка Enter для сброса
+        # SIGNALS -----------------------------
+        sigs = dict(
+            # SUPPORTED --------------------
+            CTRL_C_EVENT = 0,
+            # CTRL_BREAK_EVENT = 1,   #
+            # SIGTERM=15,     # STOP!
+            # SIG_DFL = 0,
+            # SIG_IGN = 1,
+
+            # ValueError: Unsupported signal -------------------------------
+            # NSIG = 23,  # ValueError: Unsupported signal: 23
+            # SIGABRT = 22,     ValueError: Unsupported signal: 22
+            # SIGBREAK = 21,      ValueError: Unsupported signal: 21
+            # SIGFPE = 8,
+            # SIGILL = 4,
+            # SIGINT = 2,
+            # SIGSEGV = 11,
+        )
+        # for sname, svalue in sigs.items():
+        #     print(f"{sname=}")
+        #     self.sp.send_signal(1)
+        #     time.sleep(0.5)
+        #     self.sp.send_signal(0)
+        #     time.sleep(0.5)
+        #     self.sp.send_signal(1)
+        #     time.sleep(0.5)
+        #     self.sp.send_signal(0)
+        #     time.sleep(0.5)
+        # self.sp.send_signal(subprocess.signal.CTRL_C_EVENT)
+        # self.sp.send_signal(0)  # работает НО закрывает вообще возможность работы дальнейшей с self.sp!!!
+        # И ТО ПОСЛЕ ЗАВЕРШЕНИЯ САМОЙ КОМАНДЫ! ПРИНУДИТЕЛЬНО НЕ ЗАВЕРШАЕТСЯ!!!!
+
+        # # self.send_command("Stop-Process -Name ping -Force -ErrorAction SilentlyContinue")   # НЕТ ТАКОЙ КОМАНДЫ
+
+        # ВООБЩЕ НИ НА ЧТО НЕ ВЛИЯЕТ!!!
+        # self.sp.stdin.write('^C')
+        # self.sp.stdin.write('^C\n')
+        # self.sp.stdin.write('Control-C\n')
+        # self.sp.stdin.write('\x03')   # Ctrl+C через stdin (ASCII код 3)
         # self.sp.stdin.write('\n')
+        # self.sp.stdin.write('\x03\n')
+
         # self.sp.stdin.flush()
-        # time.sleep(0.2)
-
-
-
         return
-
-        if os.name == "nt":  # Windows
-            # Для Windows отправляем Ctrl+C через send_signal
-            print(1)
-            self.sp.send_signal(0)
-            print(2)
-            time.sleep(0.3)  # Даем время на обработку
-            print(3)
-            return
-
-            try:
-                # CTRL_C_EVENT = 0
-                # self.sp.send_signal(subprocess.signal.CTRL_C_EVENT)
-                self.sp.send_signal(0)
-                time.sleep(0.3)  # Даем время на обработку
-                return True
-            except (AttributeError, OSError):
-                # Альтернативный способ для Windows
-                try:
-                    import ctypes
-                    ctypes.windll.kernel32.GenerateConsoleCtrlEvent(0, self.sp.pid)
-                    time.sleep(0.3)
-                    return True
-                except:
-                    return False
 
 
 # =====================================================================================================================
@@ -152,23 +166,21 @@ if __name__ == "__main__":
             # "cd",
             # "cd ..",
             # "cd",
-            "ping ya.ru",
+            "ping ya.ru -n 4",
 
             # "pwd",
             # "ls -la",
         ]:
             term.send_command(cmd)
 
-        # Демонстрация сохранения состояния
-        # term.send_command("touch test_file.txt")
-        # print(term.send_command("ls test_file.txt"))
-
-        # time.sleep(1)
+        # ObjectInfo(term.sp).print()
         print(f"{term.send_ctrl_c()=}")
-        term.send_command("echo hello")
-        for index in range(5):
-            term.send_command(f"echo {index}")
+        for index in range(3):
+            term.send_command(f"echo final {index}")
             time.sleep(0.5)
+
+        term.send_command("echo finish!")
+        time.sleep(1)
 
     finally:
         term.close()

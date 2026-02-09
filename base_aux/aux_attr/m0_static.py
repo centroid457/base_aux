@@ -34,6 +34,7 @@ ATTRS__DANGER: list[str] = [
     "wait", "pause", "continue",
     "join",
     "terminate", "quit", "stop",
+    "communicate",  # subprocess
 
     # change collection content/count/order
     "pop", "popleft",
