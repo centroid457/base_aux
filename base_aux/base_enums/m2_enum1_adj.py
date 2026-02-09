@@ -206,6 +206,17 @@ class EnumAdj_AttemptsUsage(NestEq_EnumAdj):
     ALL = all
 
 
+class EnumAdj_TypeIteration(NestEq_EnumAdj):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    CmdSession
+    """
+    ALL = None
+    TILL_FIRST_FAIL = 1
+    TILL_FIRST_OK = 2
+
+
 # =====================================================================================================================
 class EnumAdj_DictTextFormat(NestEq_EnumAdj):
     AUTO = None     # by trying all variants

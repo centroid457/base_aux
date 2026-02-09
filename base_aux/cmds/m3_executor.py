@@ -6,10 +6,11 @@ import time
 from base_aux.loggers.m1_print import *
 from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m2_history import *
+from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================
-class CmdExecutor:
+class CmdSession:
     """
     GOAL
     ----
@@ -70,10 +71,27 @@ class CmdExecutor:
         super().__init__(*args, **kwargs)
 
         self.history = CmdHistory()
+        self.CMDS_REQUIRED = self.CMDS_REQUIRED or {}
 
-        if not self.check__accessible():
+        if not self.check__cmds_required():
             msg = f"CLI not available"
             raise Exc__NotAvailable(msg)
+
+    def check__cmds_required(self) -> bool:
+        """
+        GOAL
+        ----
+        check list of commands which will show that further work will executable and your environment is ready.
+
+        Useful because commands uwually depends on installed programs and OS.
+        so if you want to be sure of it on start point - run it!
+        """
+        for cmd, error_msg in self.CMDS_REQUIRED.items():
+            if not self.send_single(cmd, _raise=False):
+                Print(f"cmd NOT available [{cmd=}/{error_msg=}]")
+                self.history.print_io()
+                return False
+        return True
 
     # SEND ------------------------------------------------------------------------------------------------------------
     def send_single(
@@ -87,7 +105,7 @@ class CmdExecutor:
     def send_batch(
             self,
             cmds: TYPING__CMDS_CONDITIONS,
-            type_iteration = till_first_fail/till_first_true/all_,
+            type_iteration: EnumAdj_TypeIteration = EnumAdj_TypeIteration.ALL,
             timeout_full: Optional[float] = None,
             _raise: Optional[bool] = None,
     ) -> bool:
@@ -205,24 +223,6 @@ class CmdExecutor:
 
         return self.history.last_result.check_finished_and_success()
 
-    # AUXILIARY -------------------------------------------------------------------------------------------------------
-    def check__accessible(self) -> bool:
-        """
-        GOAL
-        ----
-        check list of commands which will show that further work will executable and your environment is ready.
-
-        Useful because commands uwually depends on installed programs and OS.
-        so if you want to be sure of it on start point - run it!
-        """
-        if self.CMDS_REQUIRED:
-            for cmd, error_msg in self.CMDS_REQUIRED.items():
-                if not self.send(cmd, _raise=False):
-                    Print(f"cmd NOT available [{cmd}]")
-                    self.history.print_io()
-                    return False
-        return True
-
 
 # =====================================================================================================================
 if __name__ == "__main__":
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     print()
     print()
     print()
-    victim = CmdExecutor()
+    victim = CmdSession()
     victim.send("ping localhost", timeout=0.1)
     print()
     # victim.print_state()
