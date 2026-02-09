@@ -29,7 +29,7 @@ class CmdExecutor:
 
         RECOMMENDATIONS
         --------------
-        1. --HELP never works as expected! always timedout!!!!
+        1. --HELP never works as expected! always timed_out!!!!
             [#####################ERROR#####################]
             self.last_cmd='STM32_Programmer_CLI --help'
             self.last_duration=2.029675
@@ -44,7 +44,7 @@ class CmdExecutor:
             [ERROR] cmd NOT available [STM32_Programmer_CLI --help]
             ==================================================
 
-        2. DIRECT SIMPLE CLI COMMAND AS UTILITY_NAME.EXE without any parameter MAY NOT WORK!!! may timedout! implied the same as HELP parameter!
+        2. DIRECT SIMPLE CLI COMMAND AS UTILITY_NAME.EXE without any parameter MAY NOT WORK!!! may timed_out! implied the same as HELP parameter!
             [#####################ERROR#####################]
             self.last_cmd='STM32_Programmer_CLI'
             self.last_duration=2.022585

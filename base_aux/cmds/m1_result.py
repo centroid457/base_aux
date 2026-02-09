@@ -48,13 +48,13 @@ class CmdResult:
     INPUT: TYPING__CMD_LINE = ""    # dont use collection on input!!! dont use None here!
     STDOUT: list[TYPING__CMD_LINE] = field(default_factory=list)
     STDERR: list[TYPING__CMD_LINE] = field(default_factory=list)
-    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)
+    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating
 
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
         self.duration: float = 0
         self.retcode: int | None = None     # not always used
-        self.timedout: bool = False     # not always used
+        self.timed_out: bool = False     # not always used
         self.finished: bool = False     # not always used
 
         if self.STDOUT is None:
@@ -76,7 +76,7 @@ class CmdResult:
         return [*self.STDOUT, *self.STDERR]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def set_finished(self, timedout: bool | None = None) -> None:
+    def set_finished(self, timed_out: bool | None = None) -> None:
         """
         GOAL
         ----
@@ -85,12 +85,12 @@ class CmdResult:
         """
         self.finished = True
 
-        if timedout is not None:
-            self.timedout = timedout
+        if timed_out is not None:
+            self.timed_out = timed_out
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_success(self) -> bool:
-        return self.retcode in [0, None] and not self.STDERR and not self.timedout
+        return self.retcode in [0, None] and not self.STDERR and not self.timed_out
 
     def check_fail(self) -> bool:
         return not self.check_success()
@@ -117,7 +117,7 @@ class CmdResult:
         elif _type_buffer == EnumAdj_Buffer.STDERR:
             source = self.STDERR
         else:
-            msg = f"use only STDOUT/STDERR, {_type_buffer=}"
+            msg = f"use only STDOUT/STDERR/{_type_buffer=}"
             raise Exc__Incompatible(msg)
 
         if isinstance(data, (str, bytes)):
@@ -145,7 +145,7 @@ class CmdResult:
             print(f"{self.duration=}")
             print(f"{self.check_success()=}")
             print(f"{self.retcode=}")
-            print(f"{self.timedout=}")
+            print(f"{self.timed_out=}")
             print(f"{self.finished=}")
             print(f"-" * 50)
             print("=")

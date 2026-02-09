@@ -27,14 +27,21 @@ class CmdHistory:
         - get last line from any buff
         - collect same buffers
 
+    use actual state for outside objects!
+        if send input - show it immediately!
+        no need to wait any timeout or exiting send method.
+
     CONSTRAINTS
     -----------
     always use "" instead of None in value lines
     """
     _history: list[CmdResult]
+    _locked: bool
 
     def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
         self._history = []
+        self._locked = False
+
         if not source:
             pass
         elif isinstance(source, self.__class__):
@@ -42,6 +49,21 @@ class CmdHistory:
         elif isinstance(source, list):
             for item in source:
                 self.add_result(item)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def check_locked(self) -> bool:
+        return self._locked
+
+    def lock(self) -> bool:
+        if not self._locked:
+            self._locked = True
+            return True
+
+        return False
+
+    def unlock(self) -> None:
+        self.last_result.set_finished()
+        self._locked = False
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -117,7 +139,7 @@ class CmdHistory:
         """
         GOAL
         ----
-        any results is fail
+        any result is fail
         """
         return not self.check_all_success()
 
