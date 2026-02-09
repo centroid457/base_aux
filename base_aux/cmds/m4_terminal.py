@@ -89,8 +89,29 @@ class ContinuousTerminal:
         Отправка Ctrl+C в терминал для прерывания текущей команды
         без закрытия сессии
         """
-        if not self.sp:     # not self.is_running or
-            raise RuntimeError("Сессия терминала не активна")
+        # if not self.sp:     # not self.is_running or
+        #     raise RuntimeError("Сессия терминала не активна")
+
+        self.sp.stdin.write('\x03\n')
+        self.sp.stdin.flush()
+
+        # # self.send_command("Stop-Process -Name ping -Force -ErrorAction SilentlyContinue")
+        #
+        # # self.sp.send_signal(0)
+        #
+        # # Способ 1: Прямая отправка Ctrl+C через stdin (ASCII код 3)
+        # self.sp.stdin.write('\x03')
+        # self.sp.stdin.flush()
+        # time.sleep(0.2)
+        #
+        # # Способ 2: Отправка Enter для сброса
+        # self.sp.stdin.write('\n')
+        # self.sp.stdin.flush()
+        # time.sleep(0.2)
+
+
+
+        return
 
         if os.name == "nt":  # Windows
             # Для Windows отправляем Ctrl+C через send_signal
@@ -143,7 +164,7 @@ if __name__ == "__main__":
         # print(term.send_command("ls test_file.txt"))
 
         # time.sleep(1)
-        # term.send_ctrl_c()
+        print(f"{term.send_ctrl_c()=}")
         term.send_command("echo hello")
         for index in range(5):
             term.send_command(f"echo {index}")
