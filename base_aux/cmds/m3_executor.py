@@ -189,7 +189,13 @@ class CmdSession:
                 return False
 
         # todo: check for linux! encoding is not necessary!
-        self._last_sp = subprocess.Popen(args=cmd, text=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="cp866")    #, encoding="cp866"
+        self._last_sp = subprocess.Popen(
+            args=cmd,
+            text=True, shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding="cp866",   #, encoding="cp866"
+        )
 
         # WORK --------------------------------
         time_start = time.time()
