@@ -15,7 +15,7 @@ else:
 # =====================================================================================================================
 class Test:
     def test__ok(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
 
         assert victim.send(CMD_PING_1, timeout=2)
         assert victim.last_cmd == CMD_PING_1
@@ -27,7 +27,7 @@ class Test:
         assert victim.last_retcode == 0
 
     def test__list(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert not victim.send([CMD_PING_1, CMD_PING_2, CMD_PING_2], timeout=2)
@@ -41,7 +41,7 @@ class Test:
         assert victim.last_retcode == 0
 
     def test__list_not_passed_timeout(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=0.1)
         assert victim.send([CMD_PING_1, CMD_PING_2])
 
@@ -67,11 +67,11 @@ class Test:
         ]
     )
     def test__tuple(self, cmds, timeout_def, _EXPECTED):
-        func_link = CmdSession().send(cmd=cmds, timeout=timeout_def)
+        func_link = CmdSession_old().send(cmd=cmds, timeout=timeout_def)
         Lambda(func_link).check_expected__assert(_EXPECTED)
 
     def test__list__till_first_true(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert victim.send([CMD_PING_1, CMD_PING_2], timeout=1, till_first_true=True)
@@ -85,7 +85,7 @@ class Test:
         assert victim.last_retcode == 0
 
     def test__exc_timeout(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
 
         assert not victim.send(CMD_PING_2, timeout=0.1)
         assert victim.last_cmd == CMD_PING_2
@@ -97,7 +97,7 @@ class Test:
         assert victim.last_retcode is None
 
     def test__exc_not_exists(self):
-        victim = CmdSession()
+        victim = CmdSession_old()
 
         cmd_line = "ping123"
         assert not victim.send(cmd_line, timeout=10)
@@ -111,7 +111,7 @@ class Test:
 
     def test__exc_cli_available(self):
         # one cmd ------------------------------------------------
-        class CliUserForAvailable(CmdSession):
+        class CliUserForAvailable(CmdSession_old):
             CMDS_REQUIRED = {"ping123": None, }
 
         try:
@@ -120,7 +120,7 @@ class Test:
             assert isinstance(exc, Exc__NotAvailable)
 
         # two cmd ------------------------------------------------
-        class CliUserForAvailable(CmdSession):
+        class CliUserForAvailable(CmdSession_old):
             CMDS_REQUIRED = {CMD_PING_1: None, }
 
         victim = CliUserForAvailable()

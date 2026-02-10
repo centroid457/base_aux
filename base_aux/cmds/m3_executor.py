@@ -10,7 +10,7 @@ from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================
-class CmdSession:
+class CmdSession_old:
     """
     GOAL
     ----
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     print()
     print()
     print()
-    victim = CmdSession()
+    victim = CmdSession_old()
     victim.send("ping localhost", timeout=0.1)
     print()
     # victim.print_state()

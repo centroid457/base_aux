@@ -360,7 +360,7 @@ def release_files__update(project: type['PROJECT']) -> None | NoReturn:
         Warn(msg)
 
     pass
-    CmdSession().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
+    CmdSession_old().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
     ReleaseReadme(project).generate()
     ReleaseHistory(project).generate()
 

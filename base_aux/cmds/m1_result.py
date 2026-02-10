@@ -46,9 +46,15 @@ class CmdResult:
             - i2c (linux)
     """
     INPUT: TYPING__CMD_LINE = ""    # dont use collection on input!!! dont use None here!
+
     STDOUT: list[TYPING__CMD_LINE] = field(default_factory=list)
+    # only exact STDOUT buffer
+
     STDERR: list[TYPING__CMD_LINE] = field(default_factory=list)
+    # place all STDERR buffer and execution exceptions
+
     # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating
+    # think to place all additional comments here
 
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
@@ -83,6 +89,8 @@ class CmdResult:
         mark/show that execution is finished for any cause
         and no need to wait any more
         """
+        self.duration = (datetime.now() - self.timestamp).total_seconds()
+
         self.finished = True
 
         if timed_out is not None:
@@ -110,7 +118,7 @@ class CmdResult:
         append means only for output!
         for input try set it on inition only!
         """
-        self.duration = datetime.now() - self.timestamp
+        self.duration = (datetime.now() - self.timestamp).total_seconds()
 
         if _type_buffer == EnumAdj_Buffer.STDOUT:
             source = self.STDOUT

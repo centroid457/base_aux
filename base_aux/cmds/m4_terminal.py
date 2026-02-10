@@ -5,15 +5,18 @@ import time
 import os
 
 from base_aux.base_types.m2_info import ObjectInfo
+from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
 class ContinuousTerminal:
     def __init__(
             self,
+            id: str | None = None,
     ):
-        # Очередь для чтения вывода
-        self.output_queue = queue.Queue()
+        self.id: str | None = id
+        self.history: CmdHistory = CmdHistory()
+
         self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -30,11 +33,18 @@ class ContinuousTerminal:
             encoding="cp866" if os.name == "nt" else "utf8",
             # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
         )
-        self.reader_thread = threading.Thread(
-            target=self._reader_stdout,
+        self.thread__read_stdout = threading.Thread(
+            target=self._read_stdout,
             daemon=True
         )
-        self.reader_thread.start()
+        self.thread__read_stderr = threading.Thread(
+            target=self._read_stderr,
+            daemon=True
+        )
+
+        self.thread__read_stdout.start()
+        self.thread__read_stderr.start()
+
         time.sleep(0.3)
         return True
 
@@ -64,8 +74,7 @@ class ContinuousTerminal:
         if self._conn:
             try:
                 # think it very need! smth is not correct in output after restart without this block!!!
-                self._conn.stdin.write("exit\n")
-                self._conn.stdin.flush()
+                self.send_command("exit\n")
             except:
                 pass
 
@@ -75,7 +84,7 @@ class ContinuousTerminal:
             except:
                 pass
 
-            # self.reader_thread.join()
+            # self.thread__read_stdout.join()
 
     def _send_ctrl_c(self):
         """
@@ -139,43 +148,66 @@ class ContinuousTerminal:
         return
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _reader_stdout(self):
+    def _read_stdout(self):
         """Поток для непрерывного чтения вывода"""
         while self._conn.poll() is None:
-            line = self._conn.stdout.readline()
-            if line:
-                line = line.strip()
-                print(f"{line}")
-                self.output_queue.put(line)
+            try:
+                line = self._conn.stdout.readline()
+                if line:
+                    line = line.strip()
+                    print(f"{line}")
+                    self.history.append_stdout(line)
+            except Exception as exc:
+                print(f"{exc!r}")
+                pass
+
+    def _read_stderr(self):
+        """Поток для непрерывного чтения вывода"""
+        while self._conn.poll() is None:
+            try:
+                line = self._conn.stderr.readline()
+                if line:
+                    line = line.strip()
+                    print(f"{line}")
+                    self.history.append_stderr(line)
+            except Exception as exc:
+                print(f"{exc!r}")
+                pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(self, command):
+    def send_command(self, cmd: str, timeout: float = 1) -> CmdResult | None:
         """Отправка команды и получение вывода"""
-        print(f"--->{command}")
+        print(f"--->{cmd}")
+        self.history.add_input(cmd)
+
         try:
-            self._conn.stdin.write(command + "\n")
+            self._conn.stdin.write(f"{cmd}\n")
             self._conn.stdin.flush()
+            self._wait_finish_executing_cmd(timeout)
         except Exception as exc:
             print(f"{exc!r}")
-            return
+            self.history.append_stderr(f"{exc!r}")
 
-        # Собираем вывод
-        output = []
-        time.sleep(0.1)  # Даем время на выполнение
+        self.history.set_finished()
+        return self.history.last_result
 
-        # Читаем вывод в течение 2 секунд
-        start_time = time.time()
-        while time.time() - start_time < 2:
-            try:
-                line = self.output_queue.get(timeout=0.1)
-                output.append(line)
-            except queue.Empty:
-                if output:  # Если уже что-то получили, выходим
-                    break
+    def _wait_finish_executing_cmd(self, timeout: float = 1) -> None:
+        """
+        GOAL
+        ----
+        ensure finishing any buffer activity
+        1. wait long timeout for start activity
+        2. wait short timeout2 for close waiting any new line!
+        """
+        duration = self.history.last_result.duration
 
-        result = "\n".join(output)
-        # print(f"[{result}]")
-        return result
+        time_start = time.time()
+        while time.time() - time_start < timeout:
+            if duration != self.history.last_result.duration:
+                # if get smth - go out!
+                timeout = 0
+
+            time.sleep(0.1)
 
 
 # =====================================================================================================================
@@ -191,7 +223,7 @@ if __name__ == "__main__":
             # "cd",
             # "cd ..",
             # "cd",
-            "ping ya.ru -n 4",
+            "ping ya.ru -n 2",
 
             # "pwd",
             # "ls -la",
@@ -200,16 +232,17 @@ if __name__ == "__main__":
 
         # ObjectInfo(term._conn).print()
         # print(f"{term._send_ctrl_c()=}")
-        print(f"{term.reconnect()=}")
+        # print(f"{term.reconnect()=}")
         for index in range(3):
             term.send_command(f"echo final {index}")
             time.sleep(0.5)
 
         term.send_command("echo finish!")
-        time.sleep(1)
 
     finally:
         term.close()
+
+    time.sleep(2)
 
 
 # =====================================================================================================================

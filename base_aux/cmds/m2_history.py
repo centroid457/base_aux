@@ -112,9 +112,10 @@ class CmdHistory:
         if self.last_result is None:
             return False
         else:
-            return self.last_result.finished
+            return self.last_result.finished    # todo: rename finishedReason - used as @property finished!
 
     def set_finished(self, timed_out: bool | None = None) -> None:
+        # TODO: use reason - timedOut/Correct/Other
         if self.last_result is not None:
             return self.last_result.set_finished(timed_out)
 
@@ -154,9 +155,9 @@ class CmdHistory:
         this is the MAIN NewLine creation method.
         use all addings over this method!!!
         """
-        if self.last_result is not None and not self.check_finished():
-            msg = f"cant start new CmdResult in history without finishing last one!!! {self.last_result=}"
-            raise Exc__NotReady(msg)
+        # if self.last_result is not None and not self.check_finished():
+        #     msg = f"cant start new CmdResult in history without finishing last one!!! {self.last_result=}"
+        #     raise Exc__NotReady(msg)
 
         # --------------------------
         if isinstance(data, CmdResult):
