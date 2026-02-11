@@ -91,6 +91,14 @@ class ContinuousTerminal:
 
             # self.thread__read_stdout.join()
 
+    def clear_history(self) -> None:
+        """
+        NOTE
+        ----
+        use only manually!
+        """
+        self.history.clear()
+
     def _send_ctrl_c(self):
         """
         DONT USE IT!!!
