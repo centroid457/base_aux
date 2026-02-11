@@ -56,6 +56,7 @@ class CmdSession_OsTerminal:
             encoding="cp866" if os.name == "nt" else "utf8",
             # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             cwd=self.cwd,
+            # timeout=1,    № is not accesible here in Popen!!!!
         )
         self.thread__read_stdout = threading.Thread(
             target=self._reading_stdout,
@@ -184,11 +185,9 @@ class CmdSession_OsTerminal:
         """Поток для непрерывного чтения вывода"""
         while self._conn.poll() is None:
             try:
-
                 line = self._conn.stdout.readline()
                 line = line and line.rstrip()
                 if line:
-                    # line = line.strip()
                     print(f"{line}")
                     self.history.append_stdout(line)
 
@@ -205,7 +204,6 @@ class CmdSession_OsTerminal:
                 line = self._conn.stderr.readline()
                 line = line and line.rstrip()
                 if line:
-                    # line = line.strip()
                     print(f"{line}")
                     self.history.append_stderr(line)
 
@@ -327,9 +325,9 @@ def _explore__cd_reconnect():
 # =====================================================================================================================
 # Пример использования
 if __name__ == "__main__":
-    # _explore__ping()
+    _explore__ping()
     # _explore__cd()
-    _explore__cd_reconnect()
+    # _explore__cd_reconnect()
 
 
 # =====================================================================================================================
