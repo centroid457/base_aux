@@ -165,13 +165,16 @@ class ContinuousTerminal:
         """Поток для непрерывного чтения вывода"""
         while self._conn.poll() is None:
             try:
+
                 line = self._conn.stdout.readline()
+                line = line and line.rstrip()
                 if line:
-                    line = line.strip()
+                    # line = line.strip()
                     print(f"{line}")
                     self.history.append_stdout(line)
             except Exception as exc:
                 print(f"{exc!r}")
+                # time.sleep(0.1)
                 pass
 
     def _read_stderr(self):
@@ -179,12 +182,14 @@ class ContinuousTerminal:
         while self._conn.poll() is None:
             try:
                 line = self._conn.stderr.readline()
+                line = line and line.rstrip()
                 if line:
-                    line = line.strip()
+                    # line = line.strip()
                     print(f"{line}")
                     self.history.append_stderr(line)
             except Exception as exc:
                 print(f"{exc!r}")
+                # time.sleep(0.1)
                 pass
 
     # -----------------------------------------------------------------------------------------------------------------
