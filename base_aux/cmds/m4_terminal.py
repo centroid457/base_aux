@@ -9,7 +9,11 @@ from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
-class CmdSession:
+
+
+
+# =====================================================================================================================
+class CmdSession_OsTerminal:
     """
     GOAL
     ----
@@ -17,9 +21,16 @@ class CmdSession:
     """
     def __init__(
             self,
+            *,
             id: str | None = None,
+            cwd: str | None = None,
+
+            **kwargs,
     ):
+        super().__init__(**kwargs)
+
         self.id: str | None = id
+        self.cwd: str | None = cwd
         self.history: CmdHistory = CmdHistory()
 
         self.connect()
@@ -44,6 +55,7 @@ class CmdSession:
             universal_newlines=True,
             encoding="cp866" if os.name == "nt" else "utf8",
             # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            cwd=self.cwd,
         )
         self.thread__read_stdout = threading.Thread(
             target=self._reading_stdout,
@@ -86,7 +98,7 @@ class CmdSession:
         if self._conn:
             try:
                 # think it very need! smth is not correct in output after restart without this block!!!
-                self.send_command("exit\n")
+                self.send_command("exit")
             except:
                 pass
 
@@ -252,9 +264,8 @@ class CmdSession:
 
 
 # =====================================================================================================================
-# Пример использования
-if __name__ == "__main__":
-    with CmdSession() as term:
+def _explore__ping():
+    with CmdSession_OsTerminal() as term:
         for cmd in [
             # "echo HELLO",
             # "echo 'Hello from persistent terminal'",
@@ -279,6 +290,46 @@ if __name__ == "__main__":
         term.send_command("echo finish!")
 
     time.sleep(2)
+
+
+def _explore__cd():
+    with CmdSession_OsTerminal() as term:
+        for cmd in [
+            # "cd",
+            # "dir",
+
+            "cd ..",
+            "cd",
+            "dir",
+
+            "cd ..",
+            "cd",
+            "dir",
+
+            # "pwd",
+            # "ls -la",
+        ]:
+            term.send_command(cmd)
+
+        time.sleep(1)
+
+
+def _explore__cd_reconnect():
+    with CmdSession_OsTerminal() as term:
+        for _ in range(3):
+            term.send_command("cd ../..")
+            term.send_command("cd")
+            term.reconnect()
+
+        time.sleep(1)
+
+
+# =====================================================================================================================
+# Пример использования
+if __name__ == "__main__":
+    # _explore__ping()
+    # _explore__cd()
+    _explore__cd_reconnect()
 
 
 # =====================================================================================================================
