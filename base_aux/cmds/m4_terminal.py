@@ -173,9 +173,7 @@ class ContinuousTerminal:
                     print(f"{line}")
                     self.history.append_stdout(line)
 
-                retcode = self._conn.returncode
-                if retcode not in [0, None]:
-                    self.history.last_result.retcode = retcode
+                self.history.set_retcode(self._conn.returncode)
             except Exception as exc:
                 print(f"{exc!r}")
                 # time.sleep(0.1)
@@ -192,10 +190,7 @@ class ContinuousTerminal:
                     print(f"{line}")
                     self.history.append_stderr(line)
 
-                retcode = self._conn.returncode
-                if retcode not in [0, None]:
-                    self.history.last_result.retcode = retcode
-
+                self.history.set_retcode(self._conn.returncode)
             except Exception as exc:
                 print(f"{exc!r}")
                 # time.sleep(0.1)

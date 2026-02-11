@@ -118,6 +118,10 @@ class CmdHistory:
         if self.last_result is not None:
             return self.last_result.set_finished(status)
 
+    def set_retcode(self, other: int | None = None):
+        if self.last_result is not None:
+            return self.last_result.set_retcode(other)
+
     # -----------------------------------------------------------------------------------------------------------------
     def check_all_success(self) -> bool:
         """

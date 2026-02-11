@@ -60,7 +60,7 @@ class CmdResult:
         self.timestamp: datetime = datetime.now()
         self.duration: float = 0
         self.finished_status: EnumAdj_FinishedStatus = EnumAdj_FinishedStatus.NOT_FINISHED
-        self.retcode: int | None = None
+        self._retcode: int | None = None    # if None then not setted!
 
         if self.STDOUT is None:
             self.STDOUT = []
@@ -79,6 +79,15 @@ class CmdResult:
     @property
     def STDOUTERR(self) -> list[TYPING__CMD_LINE]:
         return [*self.STDOUT, *self.STDERR]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def retcode(self) -> int | None:
+        return self._retcode
+
+    def set_retcode(self, other: int | None = None) -> None:
+        if self._retcode is None and other is not None:
+            self._retcode = other
 
     # -----------------------------------------------------------------------------------------------------------------
     def set_finished(self, status: EnumAdj_FinishedStatus | None = None) -> None:
@@ -106,7 +115,7 @@ class CmdResult:
         return self.finished_status != EnumAdj_FinishedStatus.NOT_FINISHED
 
     def check__timed_out(self) -> bool:
-        return self.finished_status != EnumAdj_FinishedStatus.TIMED_OUT
+        return self.finished_status == EnumAdj_FinishedStatus.TIMED_OUT
 
     def check__finished_and_success(self) -> bool:
         return self.check__finished() and self.check__success()

@@ -17,7 +17,7 @@ class CmdSession_old:
     send commands into OS terminal
 
     "check if cmds commands are accessible (special utilities is installed)",
-    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/retcode/full state)",
+    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/_retcode/full state)",
     "use batch timeout for list",
     "till_first_true",
 
