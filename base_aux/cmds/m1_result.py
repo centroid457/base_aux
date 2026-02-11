@@ -2,7 +2,7 @@ from typing import *
 from datetime import datetime
 
 from dataclasses import dataclass, field
-from base_aux.base_enums.m2_enum1_adj import EnumAdj_Buffer
+from base_aux.base_enums.m2_enum1_adj import EnumAdj_Buffer, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
 
 
@@ -59,9 +59,8 @@ class CmdResult:
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
         self.duration: float = 0
-        self.retcode: int | None = None     # not always used
-        self.timed_out: bool = False     # not always used
-        self.finished: bool = False     # not always used
+        self.finished_status: EnumAdj_FinishedStatus = EnumAdj_FinishedStatus.NOT_FINISHED
+        self.retcode: int | None = None
 
         if self.STDOUT is None:
             self.STDOUT = []
@@ -82,29 +81,35 @@ class CmdResult:
         return [*self.STDOUT, *self.STDERR]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def set_finished(self, timed_out: bool | None = None) -> None:
+    def set_finished(self, status: EnumAdj_FinishedStatus | None = None) -> None:
         """
         GOAL
         ----
         mark/show that execution is finished for any cause
         and no need to wait any more
         """
+
+        if status is None:
+            status = EnumAdj_FinishedStatus.CORRECT
+        self.finished_status = status
+
         self.duration = (datetime.now() - self.timestamp).total_seconds()
 
-        self.finished = True
-
-        if timed_out is not None:
-            self.timed_out = timed_out
-
     # -----------------------------------------------------------------------------------------------------------------
-    def check_success(self) -> bool:
-        return self.retcode in [0, None] and not self.STDERR and not self.timed_out
+    def check__success(self) -> bool:
+        return self.retcode in [0, None] and not self.STDERR and self.finished_status in [EnumAdj_FinishedStatus.NOT_FINISHED, EnumAdj_FinishedStatus.CORRECT]
 
-    def check_fail(self) -> bool:
-        return not self.check_success()
+    def check__fail(self) -> bool:
+        return not self.check__success()
 
-    def check_finished_and_success(self) -> bool:
-        return self.finished and self.check_success()
+    def check__finished(self) -> bool:
+        return self.finished_status != EnumAdj_FinishedStatus.NOT_FINISHED
+
+    def check__timed_out(self) -> bool:
+        return self.finished_status != EnumAdj_FinishedStatus.TIMED_OUT
+
+    def check__finished_and_success(self) -> bool:
+        return self.check__finished() and self.check__success()
 
     # -----------------------------------------------------------------------------------------------------------------
     def append(
@@ -145,16 +150,15 @@ class CmdResult:
         if not short:
             print(f"="*50)
 
-        if self.check_fail():
+        if self.check__fail():
             print(f"[{'#'*21}ERROR{'#'*21}]")
 
         print(f"{self.INPUT=}")
         if not short:
             print(f"{self.duration=}")
-            print(f"{self.check_success()=}")
+            print(f"{self.check__success()=}")
             print(f"{self.retcode=}")
-            print(f"{self.timed_out=}")
-            print(f"{self.finished=}")
+            print(f"{self.finished_status=}")
             print(f"-" * 50)
             print("=")
 

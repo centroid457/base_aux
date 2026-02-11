@@ -105,7 +105,7 @@ class Packages:
         cmd = CmdPattern.INSTALL__MODULE % (self.PY_PATH, modules)
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
-        return self.cli.history.last_result.check_finished_and_success()
+        return self.cli.history.last_result.check__finished_and_success()
 
     def reinstall(self, module: str) -> None:
         """
@@ -378,7 +378,7 @@ self.last_exc_timeout=None
 
         # FINISH ===================================================
         print(text_cum)
-        return self.cli.history.last_result.check_finished_and_success()
+        return self.cli.history.last_result.check__finished_and_success()
 
     def upgrade_pip(self) -> bool:
         """

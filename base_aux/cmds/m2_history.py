@@ -51,7 +51,7 @@ class CmdHistory:
         elif isinstance(source, list):
             for item in source:
                 self._add_result(item)
-                self.set_finished()
+                # self.set_finished()
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -112,12 +112,11 @@ class CmdHistory:
         if self.last_result is None:
             return False
         else:
-            return self.last_result.finished    # todo: rename finishedReason - used as @property finished!
+            return self.last_result.check__finished()
 
-    def set_finished(self, timed_out: bool | None = None) -> None:
-        # TODO: use reason - timedOut/Correct/Other
+    def set_finished(self, status: EnumAdj_FinishedStatus | None = None) -> None:
         if self.last_result is not None:
-            return self.last_result.set_finished(timed_out)
+            return self.last_result.set_finished(status)
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_all_success(self) -> bool:
@@ -132,7 +131,7 @@ class CmdHistory:
         so we could do pre validation
         """
         for result in self._history:
-            if result.check_fail():
+            if result.check__fail():
                 return False
         return True
 

@@ -227,7 +227,7 @@ class CmdSession_old:
                 msg = f"{self.last_retcode=}/{self.last_stderr=}"
                 raise Exception(msg)
 
-        return self.history.last_result.check_finished_and_success()
+        return self.history.last_result.check__finished_and_success()
 
 
 # =====================================================================================================================

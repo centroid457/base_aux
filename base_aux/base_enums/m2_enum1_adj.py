@@ -179,7 +179,7 @@ class EnumAdj_FinishedStatus(NestEq_EnumAdj):
     CORRECT: int = 1
 
     TIMED_OUT: int = 10
-    EXC: int = 11
+    EXCEPTION: int = 11
 
 
 # =====================================================================================================================

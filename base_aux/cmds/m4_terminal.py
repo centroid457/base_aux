@@ -172,6 +172,10 @@ class ContinuousTerminal:
                     # line = line.strip()
                     print(f"{line}")
                     self.history.append_stdout(line)
+
+                retcode = self._conn.returncode
+                if retcode not in [0, None]:
+                    self.history.last_result.retcode = retcode
             except Exception as exc:
                 print(f"{exc!r}")
                 # time.sleep(0.1)
@@ -187,6 +191,11 @@ class ContinuousTerminal:
                     # line = line.strip()
                     print(f"{line}")
                     self.history.append_stderr(line)
+
+                retcode = self._conn.returncode
+                if retcode not in [0, None]:
+                    self.history.last_result.retcode = retcode
+
             except Exception as exc:
                 print(f"{exc!r}")
                 # time.sleep(0.1)
@@ -195,21 +204,26 @@ class ContinuousTerminal:
     # -----------------------------------------------------------------------------------------------------------------
     def send_command(self, cmd: str, timeout_start: float = 1, timeout_finish: float = 0.1) -> CmdResult | None:
         """Отправка команды и получение вывода"""
+        print()
         print(f"--->{cmd}")
-        self.history.add_input(cmd)
 
+        self.history.add_input(cmd)
         try:
             self._conn.stdin.write(f"{cmd}\n")
             self._conn.stdin.flush()
-            self.wait__finish_executing_cmd(timeout_start, timeout_finish)
+            if self.wait__finish_executing_cmd(timeout_start, timeout_finish):
+                _finished_status = EnumAdj_FinishedStatus.CORRECT
+            else:
+                _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
         except Exception as exc:
             print(f"{exc!r}")
             self.history.append_stderr(f"{exc!r}")
+            _finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
-        self.history.set_finished()
+        self.history.set_finished(status=_finished_status)
         return self.history.last_result
 
-    def wait__finish_executing_cmd(self, timeout_start: float = 1, timeout_finish: float = 0.1) -> None:
+    def wait__finish_executing_cmd(self, timeout_start: float = 1, timeout_finish: float = 0.1) -> bool:
         """
         GOAL
         ----
@@ -217,17 +231,22 @@ class ContinuousTerminal:
         1. wait long timeout_start for start activity
         2. wait short timeout2 for close waiting any new line!
         """
+        data_reseived: bool = False
+
         duration = self.history.last_result.duration
 
         timeout_active = timeout_start
         time_start = time.time()
         while time.time() - time_start < timeout_active:
             if duration != self.history.last_result.duration:
+                data_reseived = True
                 duration = self.history.last_result.duration
                 time_start = time.time()
                 timeout_active = timeout_finish
             else:
                 time.sleep(timeout_finish / 3)   # at least we need to execute last check
+
+        return data_reseived
 
 
 # =====================================================================================================================
