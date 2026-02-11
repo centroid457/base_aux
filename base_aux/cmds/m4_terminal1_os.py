@@ -4,7 +4,7 @@ import time
 import os
 
 from base_aux.cmds.m2_history import *
-from base_aux.cmds.m4_terminal0_base import Base_CmdSession
+from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
@@ -18,16 +18,26 @@ class CmdSession_OsTerminal(Base_CmdSession):
             self,
             *,
             cwd: str | None = None,
+
             **kwargs,
     ):
         super().__init__(**kwargs)
+
         self.cwd: str | None = cwd
+
+        self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+
+        self._conn: subprocess.Popen | None = None
+        self._thread__reading_stdout: threading.Thread | None = None
+        self._thread__reading_stderr: threading.Thread | None = None
+        self._stop_reading: bool = False
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
-        print(f"{self.__class__.__name__}({self.id=}).connect")
+        if self._conn is not None:
+            return True
 
-        self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+        print(f"{self.__class__.__name__}({self.id=}).connect")
         self._conn = subprocess.Popen(
             args=[self.shell_cmd, ],
             stdin=subprocess.PIPE,
@@ -41,17 +51,19 @@ class CmdSession_OsTerminal(Base_CmdSession):
             cwd=self.cwd,
             # timeout=1,    № is not accesible here in Popen!!!!
         )
-        self.thread__read_stdout = threading.Thread(
+        self._thread__reading_stdout = threading.Thread(
             target=self._reading_stdout,
             daemon=True
         )
-        self.thread__read_stderr = threading.Thread(
+        self._thread__reading_stderr = threading.Thread(
             target=self._reading_stderr,
             daemon=True
         )
 
-        self.thread__read_stdout.start()
-        self.thread__read_stderr.start()
+        self._stop_reading = False
+
+        self._thread__reading_stdout.start()
+        self._thread__reading_stderr.start()
 
         time.sleep(0.3)
         return True
@@ -72,14 +84,19 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
             try:
                 self._conn.terminate()
-                self._conn.wait()
+                self._conn.wait(3)
             except:
                 pass
 
-            # self.thread__read_stdout.join()
+            # self._thread__reading_stdout.join()
+
+        self._stop_reading = True
+        self._conn = None
+        self._thread__reading_stdout = None
+        self._thread__reading_stderr = None
         print(f"{self.__class__.__name__}({self.id=}).disconnect")
 
-
+    # -----------------------------------------------------------------------------------------------------------------
     def _send_ctrl_c(self):
         """
         DONT USE IT!!!
@@ -144,7 +161,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
     # -----------------------------------------------------------------------------------------------------------------
     def _reading_stdout(self):
         """Поток для непрерывного чтения вывода"""
-        while self._conn.poll() is None:
+        while self._conn.poll() is None and not self._stop_reading:
             try:
                 line = self._conn.stdout.readline()
                 line = line and line.rstrip()
@@ -160,7 +177,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
     def _reading_stderr(self):
         """Поток для непрерывного чтения вывода"""
-        while self._conn.poll() is None:
+        while self._conn.poll() is None and not self._stop_reading:
             try:
                 line = self._conn.stderr.readline()
                 line = line and line.rstrip()
