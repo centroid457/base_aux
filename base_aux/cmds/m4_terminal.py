@@ -25,6 +25,13 @@ class CmdSession:
         self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
         self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
         self._conn = subprocess.Popen(
@@ -39,11 +46,11 @@ class CmdSession:
             # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
         )
         self.thread__read_stdout = threading.Thread(
-            target=self._read_stdout,
+            target=self._reading_stdout,
             daemon=True
         )
         self.thread__read_stderr = threading.Thread(
-            target=self._read_stderr,
+            target=self._reading_stderr,
             daemon=True
         )
 
@@ -161,7 +168,7 @@ class CmdSession:
         return
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _read_stdout(self):
+    def _reading_stdout(self):
         """Поток для непрерывного чтения вывода"""
         while self._conn.poll() is None:
             try:
@@ -179,7 +186,7 @@ class CmdSession:
                 # time.sleep(0.1)
                 pass
 
-    def _read_stderr(self):
+    def _reading_stderr(self):
         """Поток для непрерывного чтения вывода"""
         while self._conn.poll() is None:
             try:
@@ -197,7 +204,7 @@ class CmdSession:
                 pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(self, cmd: str, timeout_start: float = 1, timeout_finish: float = 0.1) -> CmdResult | None:
+    def send_command(self, cmd: str, timeout_start: float = 1, timeout_finish: float = 0.1) -> CmdResult:
         """Отправка команды и получение вывода"""
         print()
         print(f"--->{cmd}")
@@ -247,9 +254,7 @@ class CmdSession:
 # =====================================================================================================================
 # Пример использования
 if __name__ == "__main__":
-    term = CmdSession()
-
-    try:
+    with CmdSession() as term:
         for cmd in [
             # "echo HELLO",
             # "echo 'Hello from persistent terminal'",
@@ -272,9 +277,6 @@ if __name__ == "__main__":
             time.sleep(0.5)
 
         term.send_command("echo finish!")
-
-    finally:
-        term.close()
 
     time.sleep(2)
 
