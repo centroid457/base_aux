@@ -38,30 +38,29 @@ class CmdSession_OsTerminal(Base_CmdSession):
             return True
 
         print(f"{self.__class__.__name__}({self.id=}).connect")
-        self._conn = subprocess.Popen(
-            args=[self.shell_cmd, ],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            bufsize=1,
-            universal_newlines=True,
-            encoding="cp866" if os.name == "nt" else "utf8",
-            # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-            cwd=self.cwd,
-            # timeout=1,    № is not accesible here in Popen!!!!
-        )
-        self._thread__reading_stdout = threading.Thread(
-            target=self._reading_stdout,
-            daemon=True
-        )
-        self._thread__reading_stderr = threading.Thread(
-            target=self._reading_stderr,
-            daemon=True
-        )
+        try:
+            self._conn = subprocess.Popen(
+                args=[self.shell_cmd, ],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                universal_newlines=True,
+                encoding="cp866" if os.name == "nt" else "utf8",
+                # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                cwd=self.cwd,
+                # timeout=1,    № is not accesible here in Popen!!!!
+            )
+        except Exception as exc:
+            msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
+            print(msg)
+            self.history.append_stderr(msg)
+            return False
 
         self._stop_reading = False
-
+        self._thread__reading_stdout = threading.Thread(target=self._reading_stdout, daemon=True)
+        self._thread__reading_stderr = threading.Thread(target=self._reading_stderr, daemon=True)
         self._thread__reading_stdout.start()
         self._thread__reading_stderr.start()
 

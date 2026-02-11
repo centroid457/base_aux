@@ -1,7 +1,5 @@
-import subprocess
 import threading
 import time
-import os
 
 import serial
 import serial.tools.list_ports
