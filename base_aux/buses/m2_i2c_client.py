@@ -9,7 +9,7 @@ KwargsEqExpect_OS().raise_if__any_true(windows=True)
 from typing import *
 import re
 
-from base_aux.cmds.m3_executor import CmdSession_old
+from base_aux.cmds.m3_executor_old import CmdSession_old
 
 
 # =====================================================================================================================

@@ -9,7 +9,7 @@ from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
-class ContinuousTerminal:
+class CmdSession:
     """
     GOAL
     ----
@@ -247,7 +247,7 @@ class ContinuousTerminal:
 # =====================================================================================================================
 # Пример использования
 if __name__ == "__main__":
-    term = ContinuousTerminal()
+    term = CmdSession()
 
     try:
         for cmd in [

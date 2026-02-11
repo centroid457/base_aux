@@ -5,7 +5,7 @@ from typing import *
 
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_types.m1_type_aux import TypeAux
-from base_aux.cmds.m3_executor import CmdSession_old
+from base_aux.cmds.m3_executor_old import CmdSession_old
 from base_aux.versions.m2_version import Version
 
 
