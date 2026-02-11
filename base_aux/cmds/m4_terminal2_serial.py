@@ -43,19 +43,21 @@ class CmdSession_Serial(Base_CmdSession):
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
-        if self._conn and self._conn.is_open:
-            return True
-
         try:
-            self._conn = serial.Serial(
-                port=self.port,
-                baudrate=self.baudrate,
-                bytesize=self.bytesize,
-                parity=self.parity,
-                stopbits=self.stopbits,
-                timeout=self.timeout,
-                write_timeout=self.write_timeout,
-            )
+            if self._conn is None:
+                self._conn = serial.Serial(
+                    port=self.port,
+                    baudrate=self.baudrate,
+                    bytesize=self.bytesize,
+                    parity=self.parity,
+                    stopbits=self.stopbits,
+                    timeout=self.timeout,
+                    write_timeout=self.write_timeout,
+                )
+            if self._conn.is_open:
+                return True
+
+            self._conn.open()
         except Exception as exc:
             msg = f"[{self.port=}]{exc!r}"
             print(msg)
@@ -67,19 +69,14 @@ class CmdSession_Serial(Base_CmdSession):
         self._thread__reading_stdout.start()
 
         time.sleep(0.3)
-        return True
+        return self._conn.is_open
 
-    def close(self) -> None:
-        if self._conn:
-            try:
-                # Попытка отправить exit (если это логический терминал)
-                if self._conn.is_open:
-                    self.send_command("exit", timeout_finish=0.5)
-            except:
-                pass
+    def disconnect(self) -> None:
+        if self._conn is not None:
 
             self._stop_reading = True
-            if self._thread__reading_stdout:
+
+            if self._thread__reading_stdout is not None:
                 self._thread__reading_stdout.join(timeout=1)
 
             try:
@@ -88,26 +85,16 @@ class CmdSession_Serial(Base_CmdSession):
                 pass
             self._conn = None
 
-    def reconnect(self) -> None:
-        """Переподключение к порту (закрыть/открыть) без сброса истории"""
-        self.close()
-        self.connect()
-
-    def clear_history(self) -> None:
-        """Ручная очистка истории"""
-        self.history.clear()
-
     # -----------------------------------------------------------------------------------------------------------------
     def _reading_stdout(self):
-        """Поток непрерывного чтения из последовательного порта"""
-        while not self._stop_reading and self._conn and self._conn.is_open:
+        while not self._stop_reading and self._conn is not None and self._conn.is_open:
             try:
                 # Читаем строку до символа конца строки (или по таймауту)
                 line_bytes = self._conn.readline()
                 if line_bytes:
-                    line = line_bytes.decode(self.encoding, errors='replace').rstrip('\r\n')
+                    line = line_bytes.decode(self.encoding, errors='replace').rstrip('\r').rstrip('\n').rstrip('\r').rstrip('\n')
                     if line:
-                        print(f"{line}")   # опционально, как в оригинале
+                        print(f"{line}")
                         self.history.append_stdout(line)
 
                 # Для совместимости с методом wait__finish_executing_cmd обновляем duration

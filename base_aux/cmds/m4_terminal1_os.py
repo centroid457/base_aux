@@ -74,7 +74,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
         close connection
         ready to exit
         """
-        if self._conn:
+        if self._conn is not None:
             try:
                 # think it very need! smth is not correct in output after restart without this block!!!
                 self.send_command("exit")
@@ -83,16 +83,22 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
             try:
                 self._conn.terminate()
-                self._conn.wait(3)
+                self._conn.wait(2)
             except:
                 pass
 
-            # self._thread__reading_stdout.join()
-
         self._stop_reading = True
-        self._conn = None
+
+        if self._thread__reading_stdout is not None:
+            self._thread__reading_stdout.join(timeout=1)
+        if self._thread__reading_stderr is not None:
+            self._thread__reading_stderr.join(timeout=1)
+
         self._thread__reading_stdout = None
         self._thread__reading_stderr = None
+
+        self._conn = None
+
         print(f"{self.__class__.__name__}({self.id=}).disconnect")
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -160,7 +166,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
     # -----------------------------------------------------------------------------------------------------------------
     def _reading_stdout(self):
         """Поток для непрерывного чтения вывода"""
-        while self._conn.poll() is None and not self._stop_reading:
+        while not self._stop_reading and self._conn is not None and self._conn.poll() is None:
             try:
                 line = self._conn.stdout.readline()
                 line = line and line.rstrip()
@@ -176,7 +182,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
     def _reading_stderr(self):
         """Поток для непрерывного чтения вывода"""
-        while self._conn.poll() is None and not self._stop_reading:
+        while not self._stop_reading and self._conn is not None and  self._conn.poll() is None:
             try:
                 line = self._conn.stderr.readline()
                 line = line and line.rstrip()
