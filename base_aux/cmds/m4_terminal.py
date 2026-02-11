@@ -10,6 +10,11 @@ from base_aux.cmds.m2_history import *
 
 # =====================================================================================================================
 class ContinuousTerminal:
+    """
+    GOAL
+    ----
+    access to terminal with continuous connection - keeping state!
+    """
     def __init__(
             self,
             id: str | None = None,
@@ -175,7 +180,7 @@ class ContinuousTerminal:
                 pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(self, cmd: str, timeout: float = 1) -> CmdResult | None:
+    def send_command(self, cmd: str, timeout_start: float = 1, timeout_finish: float = 0.1) -> CmdResult | None:
         """Отправка команды и получение вывода"""
         print(f"--->{cmd}")
         self.history.add_input(cmd)
@@ -183,7 +188,7 @@ class ContinuousTerminal:
         try:
             self._conn.stdin.write(f"{cmd}\n")
             self._conn.stdin.flush()
-            self._wait_finish_executing_cmd(timeout)
+            self.wait__finish_executing_cmd(timeout_start, timeout_finish)
         except Exception as exc:
             print(f"{exc!r}")
             self.history.append_stderr(f"{exc!r}")
@@ -191,23 +196,25 @@ class ContinuousTerminal:
         self.history.set_finished()
         return self.history.last_result
 
-    def _wait_finish_executing_cmd(self, timeout: float = 1) -> None:
+    def wait__finish_executing_cmd(self, timeout_start: float = 1, timeout_finish: float = 0.1) -> None:
         """
         GOAL
         ----
         ensure finishing any buffer activity
-        1. wait long timeout for start activity
+        1. wait long timeout_start for start activity
         2. wait short timeout2 for close waiting any new line!
         """
         duration = self.history.last_result.duration
 
+        timeout_active = timeout_start
         time_start = time.time()
-        while time.time() - time_start < timeout:
+        while time.time() - time_start < timeout_active:
             if duration != self.history.last_result.duration:
-                # if get smth - go out!
-                timeout = 0
-
-            time.sleep(0.1)
+                duration = self.history.last_result.duration
+                time_start = time.time()
+                timeout_active = timeout_finish
+            else:
+                time.sleep(timeout_finish / 3)   # at least we need to execute last check
 
 
 # =====================================================================================================================
@@ -228,7 +235,7 @@ if __name__ == "__main__":
             # "pwd",
             # "ls -la",
         ]:
-            term.send_command(cmd)
+            term.send_command(cmd, timeout_finish=1.1)
 
         # ObjectInfo(term._conn).print()
         # print(f"{term._send_ctrl_c()=}")
