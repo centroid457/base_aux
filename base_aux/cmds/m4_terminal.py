@@ -9,11 +9,40 @@ from base_aux.cmds.m2_history import *
 
 
 # =====================================================================================================================
+class Base_CmdSession:
+    def __init__(
+            self,
+            *,
+            id: str | None = None,
 
+            timeout_start: float = 1,
+            timeout_finish: float = 0.1,
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
+
+        self.id: str | None = id
+        self.timeout_start: float = timeout_start
+        self.timeout_finish: float = timeout_finish
+        self.history: CmdHistory = CmdHistory()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def connect(self) -> None:
+        raise NotImplementedError()
+
+    def close(self) -> None:
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
 
 # =====================================================================================================================
-class CmdSession_OsTerminal:
+class CmdSession_OsTerminal(Base_CmdSession):
     """
     GOAL
     ----
@@ -22,25 +51,11 @@ class CmdSession_OsTerminal:
     def __init__(
             self,
             *,
-            id: str | None = None,
             cwd: str | None = None,
-
             **kwargs,
     ):
         super().__init__(**kwargs)
-
-        self.id: str | None = id
         self.cwd: str | None = cwd
-        self.history: CmdHistory = CmdHistory()
-
-        self.connect()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
@@ -235,7 +250,7 @@ class CmdSession_OsTerminal:
         self.history.set_finished(status=_finished_status)
         return self.history.last_result
 
-    def wait__finish_executing_cmd(self, timeout_start: float = 1, timeout_finish: float = 0.1) -> bool:
+    def wait__finish_executing_cmd(self, timeout_start: float | None = None, timeout_finish: float | None = None) -> bool:
         """
         GOAL
         ----
@@ -243,55 +258,51 @@ class CmdSession_OsTerminal:
         1. wait long timeout_start for start activity
         2. wait short timeout2 for close waiting any new line!
         """
-        data_reseived: bool = False
+        timeout_start = timeout_start or self.timeout_start
+        timeout_finish = timeout_finish or self.timeout_finish
 
-        duration = self.history.last_result.duration
+        data_received: bool = False
+
+        duration: float = self.history.last_result.duration
 
         timeout_active = timeout_start
         time_start = time.time()
         while time.time() - time_start < timeout_active:
             if duration != self.history.last_result.duration:
-                data_reseived = True
+                data_received = True
                 duration = self.history.last_result.duration
                 time_start = time.time()
                 timeout_active = timeout_finish
             else:
                 time.sleep(timeout_finish / 3)   # at least we need to execute last check
 
-        return data_reseived
+        return data_received
 
 
 # =====================================================================================================================
 def _explore__ping():
     with CmdSession_OsTerminal() as term:
-        for cmd in [
-            # "echo HELLO",
-            # "echo 'Hello from persistent terminal'",
-            # "dir",
-            # "cd",
-            # "cd ..",
-            # "cd",
-            "ping ya.ru -n 2",
+        if not term.connect():
+            return
 
-            # "pwd",
-            # "ls -la",
-        ]:
-            term.send_command(cmd, timeout_finish=1.1)
+        term.send_command("ping ya.ru -n 2", timeout_finish=1.1)
 
         # ObjectInfo(term._conn).print()
         # print(f"{term._send_ctrl_c()=}")
         # print(f"{term.reconnect()=}")
         for index in range(3):
             term.send_command(f"echo final {index}")
-            time.sleep(0.5)
 
         term.send_command("echo finish!")
 
-    time.sleep(2)
+    time.sleep(0.5)
 
 
 def _explore__cd():
     with CmdSession_OsTerminal() as term:
+        if not term.connect():
+            return
+
         for cmd in [
             # "cd",
             # "dir",
@@ -309,17 +320,20 @@ def _explore__cd():
         ]:
             term.send_command(cmd)
 
-        time.sleep(1)
+    time.sleep(0.5)
 
 
 def _explore__cd_reconnect():
     with CmdSession_OsTerminal() as term:
+        if not term.connect():
+            return
+
         for _ in range(3):
             term.send_command("cd ../..")
             term.send_command("cd")
             term.reconnect()
 
-        time.sleep(1)
+    time.sleep(0.5)
 
 
 # =====================================================================================================================
