@@ -169,6 +169,19 @@ class EnumAdj_Buffer(NestEq_EnumAdj):
     STDERR: int = 3
 
 
+class EnumAdj_FinishedStatus(NestEq_EnumAdj):
+    """
+    SPECIALLY CREATED FOR
+    ---------------------
+    CmdResult
+    """
+    NOT_FINISHED: int = 0
+    CORRECT: int = 1
+
+    TIMED_OUT: int = 10
+    EXC: int = 11
+
+
 # =====================================================================================================================
 class EnumAdj_BoolCumulate(NestEq_EnumAdj):
     """
