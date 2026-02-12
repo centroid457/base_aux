@@ -86,6 +86,8 @@ HTML_TEMPLATE = """
         }
         .stdout { color: #b5cea8; }
         .stderr { color: #f48771; }
+        .stdin  { color: #dcdcaa; }
+        .system { color: #569cd6; font-style: italic; }
         #input { 
             width: 100%; 
             padding: 10px; 
@@ -117,28 +119,40 @@ HTML_TEMPLATE = """
     <script>
         let socket = null;
         let sessionId = null;
-
+        let isNewSession = true; // по умолчанию – новая сессия
+    
         async function initSession() {
             const storedId = localStorage.getItem('terminal_session_id');
             if (storedId) {
                 const resp = await fetch(`/sessions/${storedId}`);
                 if (resp.ok) {
                     sessionId = storedId;
+                    isNewSession = false; // сессия восстановлена
                     document.getElementById('status').innerHTML = `✅ Сессия восстановлена: ${sessionId}`;
                     connectWebSocket();
                     return;
                 }
                 localStorage.removeItem('terminal_session_id');
             }
-        
+    
             const resp = await fetch('/sessions', { method: 'POST' });
             const data = await resp.json();
             sessionId = data.session_id;
+            isNewSession = true; // новая сессия
             localStorage.setItem('terminal_session_id', sessionId);
             document.getElementById('status').innerHTML = `✅ Сессия создана: ${sessionId}`;
             connectWebSocket();
         }
-
+    
+        function addOutputLine(type, text) {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = type; // stdout, stderr, stdin, system
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+    
         async function loadHistory() {
             if (!sessionId) return;
             try {
@@ -146,65 +160,69 @@ HTML_TEMPLATE = """
                 const history = await resp.json();
                 addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
                 history.forEach(cmd => {
-                    addOutputLine('stdin', `→ ${cmd.input}`);
-                    cmd.stdout.forEach(line => addOutputLine('stdout', line));
-                    cmd.stderr.forEach(line => addOutputLine('stderr', line));
+                    if (cmd.input) {
+                        addOutputLine('stdin', `→ ${cmd.input}`);
+                    }
+                    if (cmd.stdout && Array.isArray(cmd.stdout)) {
+                        cmd.stdout.forEach(line => addOutputLine('stdout', line));
+                    }
+                    if (cmd.stderr && Array.isArray(cmd.stderr)) {
+                        cmd.stderr.forEach(line => addOutputLine('stderr', line));
+                    }
                 });
                 addOutputLine('system', '=== КОНЕЦ ИСТОРИИ ===');
             } catch (err) {
                 addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
             }
         }
-
+    
         function connectWebSocket() {
             if (socket) socket.close();
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             socket = new WebSocket(`${protocol}//${window.location.host}/ws/${sessionId}`);
-
+    
             socket.onopen = () => {
                 document.getElementById('status').innerHTML = `✅ Сессия: ${sessionId} (WebSocket открыт)`;
+                // Автоматически загружаем историю, если сессия не новая
+                if (!isNewSession) {
+                    loadHistory();
+                }
             };
-
+    
             socket.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
-                const output = document.getElementById('output');
-                const line = document.createElement('div');
-                line.className = msg.type === 'stdout' ? 'stdout' : 'stderr';
-                line.textContent = `[${msg.type}] ${msg.line}`;
-                output.appendChild(line);
-                output.scrollTop = output.scrollHeight;
+                addOutputLine(msg.type, msg.line);
             };
-
+    
             socket.onclose = () => {
                 document.getElementById('status').innerHTML = `❌ Сессия: ${sessionId} (отключено)`;
             };
-
+    
             socket.onerror = (err) => {
                 console.error('WebSocket error', err);
             };
         }
-
+    
         function reconnect() {
             if (sessionId && socket && socket.readyState === WebSocket.OPEN) {
-                socket.send('/reconnect');   // отправляем команду переподключения сессии
+                socket.send('/reconnect');
             } else {
                 console.warn('WebSocket не открыт, переподключение невозможно');
             }
         }
-
+    
         document.getElementById('input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && socket && socket.readyState === WebSocket.OPEN) {
                 const cmd = e.target.value;
                 if (cmd.trim() === '') return;
                 socket.send(cmd);
-                e.target.value = '';  // очистить поле
+                e.target.value = '';
             }
         });
-
+    
         window.onload = initSession;
         window.onbeforeunload = () => {
             if (socket) socket.close();
-            // ❌ DELETE больше не отправляется – сессия остаётся жить
         };
     </script>
 </body>
