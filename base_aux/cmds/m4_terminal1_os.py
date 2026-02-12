@@ -161,6 +161,31 @@ class CmdSession_OsTerminal(Base_CmdSession):
         return
 
     # -----------------------------------------------------------------------------------------------------------------
+    def _reading_stdout2_bytes(self):
+        pass
+        # while not self._stop_reading and self._conn is not None and self._conn.poll() is None:
+        #     try:
+        #         result_line: AnyStr = ""
+        #         for
+        #             line = self._conn.stdout.read(1)
+        #
+        #     except:
+        #         pass
+        #
+        #     try:
+        #         line = self._conn.stdout.readline()
+        #         line = line and line.rstrip()
+        #         if line:
+        #             print(f"[STDOUT]{line}")
+        #             self.history.append_stdout(line)
+        #
+        #         self.history.set_retcode(self._conn.returncode)
+        #     except Exception as exc:
+        #         print(f"{exc!r}")
+        #         # time.sleep(0.1)
+        #         pass
+
+    # -----------------------------------------------------------------------------------------------------------------
     def _reading_stdout(self):
         """Поток для непрерывного чтения вывода"""
         while not self._stop_reading and self._conn is not None and self._conn.poll() is None:

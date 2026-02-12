@@ -96,7 +96,7 @@ class CmdSession_OsTerminalAio(Base_CmdSession):
     # -----------------------------------------------------------------------------------------------------------------
     async def _reading_stdout(self):
         """Асинхронное чтение stdout."""
-        while not self._stop_reading and self._conn and self._conn.returncode is None:
+        while not self._stop_reading and self._conn:
             try:
                 line = await self._conn.stdout.readline()
                 if not line:
@@ -115,7 +115,7 @@ class CmdSession_OsTerminalAio(Base_CmdSession):
 
     async def _reading_stderr(self):
         """Асинхронное чтение stderr."""
-        while not self._stop_reading and self._conn and self._conn.returncode is None:
+        while not self._stop_reading and self._conn:
             try:
                 line = await self._conn.stderr.readline()
                 if not line:
@@ -250,9 +250,9 @@ async def explore__cd_reconnect():
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    # asyncio.run(explore__ping())
+    asyncio.run(explore__ping())
     # asyncio.run(explore__cd())
-    asyncio.run(explore__cd_reconnect())
+    # asyncio.run(explore__cd_reconnect())
 
 
 # =====================================================================================================================
