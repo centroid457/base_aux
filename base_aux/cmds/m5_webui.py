@@ -33,9 +33,27 @@ class SessionManager:
     #     await session.reconnect()
 
     async def close_session(self, session_id: str) -> None:
+        """Принудительно завершает сессию без отправки exit."""
         session = self.sessions.pop(session_id, None)
-        if session:
-            await session.disconnect()
+        if not session:
+            return
+
+        # Останавливаем фоновые задачи чтения
+        session._stop_reading = True
+        for task in session._reader_tasks:
+            task.cancel()
+        await asyncio.gather(*session._reader_tasks, return_exceptions=True)
+        session._reader_tasks.clear()
+
+        # Завершаем процесс
+        if session._conn:
+            try:
+                session._conn.terminate()
+                await asyncio.wait_for(session._conn.wait(), timeout=1.0)
+            except asyncio.TimeoutError:
+                session._conn.kill()
+                await session._conn.wait()
+            session._conn = None
 
 
 session_manager = SessionManager()
@@ -220,7 +238,11 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         try:
             while True:
                 out_type, line = await output_queue.get()
-                await websocket.send_json({"type": out_type, "line": line})
+                try:
+                    await websocket.send_json({"type": out_type, "line": line})
+                except (WebSocketDisconnect, RuntimeError):
+                    # Сокет закрыт – прекращаем отправку
+                    break
         except asyncio.CancelledError:
             pass
 
