@@ -28,6 +28,10 @@ class SessionManager:
     async def get_session(self, session_id: str) -> Optional[CmdSession_OsTerminalAio]:
         return self.sessions.get(session_id)
 
+    # async def reconnect_session(self, session_id: str) -> None:
+    #     session = self.sessions.get(session_id)
+    #     await session.reconnect()
+
     async def close_session(self, session_id: str) -> None:
         session = self.sessions.pop(session_id, None)
         if session:
@@ -131,8 +135,10 @@ HTML_TEMPLATE = """
         }
 
         function reconnect() {
-            if (sessionId) {
-                connectWebSocket();
+            if (sessionId && socket && socket.readyState === WebSocket.OPEN) {
+                socket.send('/reconnect');   // отправляем команду переподключения сессии
+            } else {
+                console.warn('WebSocket не открыт, переподключение невозможно');
             }
         }
 
@@ -166,9 +172,15 @@ async def create_session():
     session_id = await session_manager.create_session()
     return {"session_id": session_id}
 
+# @app.post("/sessions/{session_id}")
+# async def reconnect_session(session_id: str):
+#     await session_manager.reconnect_session(session_id)
+#     return {"status": "closed"}
+
 @app.delete("/sessions/{session_id}")
 async def delete_session(session_id: str):
     await session_manager.close_session(session_id)
+    # await session_manager.reconnect_session(session_id)
     return {"status": "closed"}
 
 @app.websocket("/ws/{session_id}")
@@ -215,20 +227,17 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     send_task = asyncio.create_task(send_output())
 
     try:
-        # Принимаем команды от клиента
         while True:
             cmd = await websocket.receive_text()
-            await session.send_command(cmd)
+            if cmd == '/reconnect':
+                await session.reconnect()  # переподключаем сессию
+                # можно отправить клиенту уведомление
+                await websocket.send_json({"type": "system", "line": "🔄 Сессия переподключена"})
+            else:
+                await session.send_command(cmd)
     except WebSocketDisconnect:
         pass
-    finally:
-        send_task.cancel()
-        await send_task
-        # Восстанавливаем оригинальные методы
-        session.history.append_stdout = original_append_stdout
-        session.history.append_stderr = original_append_stderr
-        # Закрываем сессию при отключении клиента
-        await session_manager.close_session(session_id)
+
 
 # =====================================================================================================================
 if __name__ == "__main__":

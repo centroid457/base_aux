@@ -90,7 +90,9 @@ class WebTerminalSession(CmdSession_OsTerminalAio):
                 await self._output_callback("stderr", msg + "\r\n")
                 break
 
+
 app = FastAPI(title="Web Terminal UI")
+
 
 # ------------------------------------------------------------
 # 5. HTML ШАБЛОН (xterm.js)
@@ -193,9 +195,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     return HTML_TEMPLATE
+
 
 @app.websocket("/ws")
 async def websocket_terminal(websocket: WebSocket):
