@@ -1,6 +1,7 @@
 from typing import *
 import time
 import os
+import uuid
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m2_history import CmdHistory
@@ -24,7 +25,7 @@ class Base_CmdSession:
         self._reader_tasks: list[Any] = []
         self._conn: Any | None = None
 
-        self.id: str | None = id
+        self.id: str | None = id or str(uuid.uuid4())
         self.timeout_start: float = timeout_start
         self.timeout_finish: float = timeout_finish
         self.history: CmdHistory = CmdHistory()
