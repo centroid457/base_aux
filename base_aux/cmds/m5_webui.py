@@ -5,7 +5,7 @@ from datetime import datetime
 from enum import Enum
 from dataclasses import dataclass, field
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import uvicorn
@@ -54,6 +54,9 @@ class SessionManager:
                 session._conn.kill()
                 await session._conn.wait()
             session._conn = None
+
+    async def session_exists(self, session_id: str) -> bool:
+        return session_id in self.sessions
 
 
 session_manager = SessionManager()
@@ -116,12 +119,41 @@ HTML_TEMPLATE = """
         let sessionId = null;
 
         async function initSession() {
-            // Создаём новую сессию на сервере
+            const storedId = localStorage.getItem('terminal_session_id');
+            if (storedId) {
+                const resp = await fetch(`/sessions/${storedId}`);
+                if (resp.ok) {
+                    sessionId = storedId;
+                    document.getElementById('status').innerHTML = `✅ Сессия восстановлена: ${sessionId}`;
+                    connectWebSocket();
+                    return;
+                }
+                localStorage.removeItem('terminal_session_id');
+            }
+        
             const resp = await fetch('/sessions', { method: 'POST' });
             const data = await resp.json();
             sessionId = data.session_id;
-            document.getElementById('status').innerHTML = `✅ Сессия: ${sessionId}`;
+            localStorage.setItem('terminal_session_id', sessionId);
+            document.getElementById('status').innerHTML = `✅ Сессия создана: ${sessionId}`;
             connectWebSocket();
+        }
+
+        async function loadHistory() {
+            if (!sessionId) return;
+            try {
+                const resp = await fetch(`/sessions/${sessionId}/history`);
+                const history = await resp.json();
+                addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
+                history.forEach(cmd => {
+                    addOutputLine('stdin', `→ ${cmd.input}`);
+                    cmd.stdout.forEach(line => addOutputLine('stdout', line));
+                    cmd.stderr.forEach(line => addOutputLine('stderr', line));
+                });
+                addOutputLine('system', '=== КОНЕЦ ИСТОРИИ ===');
+            } catch (err) {
+                addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
+            }
         }
 
         function connectWebSocket() {
@@ -172,9 +204,7 @@ HTML_TEMPLATE = """
         window.onload = initSession;
         window.onbeforeunload = () => {
             if (socket) socket.close();
-            if (sessionId) {
-                fetch(`/sessions/${sessionId}`, { method: 'DELETE' }).catch(() => {});
-            }
+            // ❌ DELETE больше не отправляется – сессия остаётся жить
         };
     </script>
 </body>
@@ -252,14 +282,48 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         while True:
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
-                await session.reconnect()  # переподключаем сессию
-                # можно отправить клиенту уведомление
+                await session.reconnect()
                 await websocket.send_json({"type": "system", "line": "🔄 Сессия переподключена"})
             else:
                 await session.send_command(cmd)
     except WebSocketDisconnect:
         pass
+    finally:
+        send_task.cancel()
+        await send_task
+        # Восстанавливаем оригинальные методы
+        session.history.append_stdout = original_append_stdout
+        session.history.append_stderr = original_append_stderr
+        # ❌ НЕ закрываем сессию автоматически
+        # await session_manager.close_session(session_id)
 
+
+@app.get("/sessions/{session_id}")
+async def get_session(session_id: str):
+    exists = await session_manager.session_exists(session_id)
+    if exists:
+        return {"session_id": session_id, "active": True}
+    raise HTTPException(status_code=404, detail="Session not found")
+
+
+@app.get("/sessions/{session_id}/history")
+async def get_session_history(session_id: str):
+    session = await session_manager.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    history_data = []
+    for result in session.history:
+        history_data.append({
+            "input": result.INPUT,
+            "stdout": result.STDOUT,
+            "stderr": result.STDERR,
+            "timestamp": result.timestamp.isoformat() if result.timestamp else None,
+            "duration": result.duration,
+            "finished_status": result.finished_status.value if result.finished_status else None,
+            "retcode": result.retcode
+        })
+    return history_data
 
 # =====================================================================================================================
 if __name__ == "__main__":
