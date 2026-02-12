@@ -17,24 +17,65 @@ from base_aux.cmds.m4_terminal1_os2_aio import *
 class SessionManager:
     def __init__(self):
         self.sessions: dict[str, CmdSession_OsTerminalAio] = {}
-        self.active_connections: dict[str, WebSocket] = {}
+        # Ключ: session_id, значение: список очередей для каждого WebSocket
+        self._output_queues: dict[str, list[asyncio.Queue]] = {}
+        # Флаг: был ли уже применён патч к методам истории
+        self._patched: set[str] = set()
 
-    # sessions --------
     async def create_session(self, session_id: Optional[str] = None) -> str:
         if session_id is None:
             session_id = str(uuid.uuid4())
         session = CmdSession_OsTerminalAio(id=session_id)
         self.sessions[session_id] = session
+        self._output_queues[session_id] = []
         return session_id
 
     async def get_session(self, session_id: str) -> Optional[CmdSession_OsTerminalAio]:
         return self.sessions.get(session_id)
 
+    async def register_queue(self, session_id: str, queue: asyncio.Queue) -> None:
+        """Добавляет очередь для рассылки вывода."""
+        if session_id not in self._output_queues:
+            self._output_queues[session_id] = []
+        self._output_queues[session_id].append(queue)
+
+    async def unregister_queue(self, session_id: str, queue: asyncio.Queue) -> None:
+        """Удаляет очередь и, если она последняя, восстанавливает оригинальные методы."""
+        queues = self._output_queues.get(session_id)
+        if queues and queue in queues:
+            queues.remove(queue)
+        # Если больше нет клиентов – восстанавливаем оригинальные методы истории
+        if session_id in self.sessions and not queues:
+            session = self.sessions[session_id]
+            if hasattr(session, '_original_append_stdout'):
+                session.history.append_stdout = session._original_append_stdout
+                session.history.append_stderr = session._original_append_stderr
+                del session._original_append_stdout
+                del session._original_append_stderr
+            self._patched.discard(session_id)
+            # Можно также удалить пустой список, но оставим для аккуратности
+            self._output_queues[session_id] = []
+
+    async def broadcast(self, session_id: str, msg: tuple[str, str]) -> None:
+        """Разослать сообщение (тип, строка) во все очереди сессии."""
+        queues = self._output_queues.get(session_id, [])
+        for q in queues:
+            await q.put(msg)
+
     async def close_session(self, session_id: str) -> None:
-        """Принудительно завершает сессию без отправки exit."""
+        """Принудительно завершает сессию, очищает очереди."""
         session = self.sessions.pop(session_id, None)
         if not session:
             return
+
+        # Удаляем все очереди и восстанавливаем оригиналы
+        self._output_queues.pop(session_id, None)
+        if hasattr(session, '_original_append_stdout'):
+            session.history.append_stdout = session._original_append_stdout
+            session.history.append_stderr = session._original_append_stderr
+            del session._original_append_stdout
+            del session._original_append_stderr
+        self._patched.discard(session_id)
 
         # Останавливаем фоновые задачи чтения
         session._stop_reading = True
@@ -510,37 +551,40 @@ async def list_sessions():
 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
-    await websocket.accept()
     session = await session_manager.get_session(session_id)
     if not session:
         await websocket.close(code=1008, reason="Invalid session")
         return
 
-    # Подключаемся к терминалу, если ещё не подключены
+    # Подключаем процесс, если ещё не подключён
     if not session._conn:
         await session.connect()
 
-    # Создаём очередь для перехвата вывода
+    # --- 1. Создаём очередь для этого клиента ---
     output_queue = asyncio.Queue()
+    await session_manager.register_queue(session_id, output_queue)
 
-    # Сохраняем оригинальные методы
-    original_append_stdout = session.history.append_stdout
-    original_append_stderr = session.history.append_stderr
+    # --- 2. Патчим методы истории (только один раз!) ---
+    if session_id not in session_manager._patched:
+        # Сохраняем оригиналы как атрибуты экземпляра сессии
+        session._original_append_stdout = session.history.append_stdout
+        session._original_append_stderr = session.history.append_stderr
 
-    # Патчим методы для отправки строк в очередь
-    def patched_append_stdout(data):
-        original_append_stdout(data)
-        # Создаём задачу, чтобы не блокировать чтение
-        asyncio.create_task(output_queue.put(("stdout", data)))
+        def patched_append_stdout(data):
+            # Сначала вызываем оригинал (сохраняем в истории)
+            session._original_append_stdout(data)
+            # Рассылаем всем подключённым клиентам
+            asyncio.create_task(session_manager.broadcast(session_id, ("stdout", data)))
 
-    def patched_append_stderr(data):
-        original_append_stderr(data)
-        asyncio.create_task(output_queue.put(("stderr", data)))
+        def patched_append_stderr(data):
+            session._original_append_stderr(data)
+            asyncio.create_task(session_manager.broadcast(session_id, ("stderr", data)))
 
-    session.history.append_stdout = patched_append_stdout
-    session.history.append_stderr = patched_append_stderr
+        session.history.append_stdout = patched_append_stdout
+        session.history.append_stderr = patched_append_stderr
+        session_manager._patched.add(session_id)
 
-    # Задача для отправки данных из очереди в WebSocket
+    # --- 3. Задача отправки из очереди этого клиента в его WebSocket ---
     async def send_output():
         try:
             while True:
@@ -548,14 +592,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                 try:
                     await websocket.send_json({"type": out_type, "line": line})
                 except (WebSocketDisconnect, RuntimeError):
-                    # Сокет закрыт – прекращаем отправку
                     break
         except asyncio.CancelledError:
             pass
 
     send_task = asyncio.create_task(send_output())
 
+    # --- 4. Принимаем команды от клиента ---
     try:
+        await websocket.accept()  # <-- перенесём accept сюда, после регистрации
         while True:
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
@@ -568,12 +613,8 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     finally:
         send_task.cancel()
         await send_task
-        # Восстанавливаем оригинальные методы
-        session.history.append_stdout = original_append_stdout
-        session.history.append_stderr = original_append_stderr
-        # ❌ НЕ закрываем сессию автоматически
-        # await session_manager.close_session(session_id)
-        session_manager.unregister_connection(session_id)
+        # Отписываем клиента
+        await session_manager.unregister_queue(session_id, output_queue)
 
 
 # =====================================================================================================================
