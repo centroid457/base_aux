@@ -13,11 +13,13 @@ import uvicorn
 from base_aux.cmds.m4_terminal1_os2_aio import *
 
 
-# ==================== Менеджер сессий ====================
+# =====================================================================================================================
 class SessionManager:
     def __init__(self):
         self.sessions: dict[str, CmdSession_OsTerminalAio] = {}
+        self.active_connections: dict[str, WebSocket] = {}
 
+    # sessions --------
     async def create_session(self, session_id: Optional[str] = None) -> str:
         if session_id is None:
             session_id = str(uuid.uuid4())
@@ -27,10 +29,6 @@ class SessionManager:
 
     async def get_session(self, session_id: str) -> Optional[CmdSession_OsTerminalAio]:
         return self.sessions.get(session_id)
-
-    # async def reconnect_session(self, session_id: str) -> None:
-    #     session = self.sessions.get(session_id)
-    #     await session.reconnect()
 
     async def close_session(self, session_id: str) -> None:
         """Принудительно завершает сессию без отправки exit."""
@@ -58,196 +56,457 @@ class SessionManager:
     async def session_exists(self, session_id: str) -> bool:
         return session_id in self.sessions
 
+    async def get_all_session_ids(self) -> list[str]:
+        return list(self.sessions.keys())
+
+    # connections --------
+    async def register_connection(self, session_id: str, websocket: WebSocket):
+        """Регистрирует WebSocket для сессии, закрывая предыдущее соединение."""
+        if session_id in self.active_connections:
+            old_ws = self.active_connections[session_id]
+            try:
+                await old_ws.close(code=1000, reason="New connection")
+            except:
+                pass
+        self.active_connections[session_id] = websocket
+
+    def unregister_connection(self, session_id: str):
+        self.active_connections.pop(session_id, None)
+
 
 session_manager = SessionManager()
 
 
-# ==================== FastAPI приложение ====================
-app = FastAPI(title="Web Terminal")
-
-# HTML страница будет встроена прямо в код для простоты
+# =====================================================================================================================
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Web Terminal</title>
+    <title>Web Terminal — Multi Session</title>
     <style>
-        body { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; }
-        #output { 
-            background: #2d2d2d; 
-            padding: 15px; 
-            border-radius: 5px; 
-            height: 400px; 
+        * { box-sizing: border-box; }
+        body {
+            font-family: monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            margin: 0;
+        }
+        #app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #fff;
+        }
+        #add-session-btn {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #add-session-btn:hover { background: #1177bb; }
+        #sessions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .session-window {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .session-header {
+            background: #3c3c3c;
+            padding: 8px 12px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #555;
+        }
+        .session-title {
+            font-weight: bold;
+            color: #9cdcfe;
+            font-size: 14px;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #f48771;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+        .close-btn:hover {
+            background: #f48771;
+            color: #1e1e1e;
+        }
+        .output {
+            background: #1e1e1e;
+            padding: 12px;
+            height: 300px;
             overflow-y: scroll;
             white-space: pre-wrap;
             word-wrap: break-word;
-            border: 1px solid #444;
+            font-family: monospace;
+            border-bottom: 1px solid #444;
         }
         .stdout { color: #b5cea8; }
         .stderr { color: #f48771; }
         .stdin  { color: #dcdcaa; }
         .system { color: #569cd6; font-style: italic; }
-        #input { 
-            width: 100%; 
-            padding: 10px; 
-            font-size: 16px; 
-            background: #3c3c3c; 
-            color: #fff; 
-            border: 1px solid #555; 
-            margin-top: 10px;
-            border-radius: 3px;
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background: #2d2d2d;
         }
-        #status { margin-top: 10px; color: #888; }
-        a { color: #569cd6; }
-        .header { display: flex; justify-content: space-between; align-items: center; }
-        button { background: #0e639c; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; }
-        button:hover { background: #1177bb; }
+        .session-input {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            background: #3c3c3c;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .session-input:focus {
+            outline: none;
+            border-color: #0e639c;
+        }
+        .reconnect-btn {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            margin-left: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .reconnect-btn:hover { background: #1177bb; }
+        .status {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>🔌 Web Terminal</h2>
-        <div>
-            <span id="status">⚡ Подключение...</span>
-            <button onclick="reconnect()">Переподключиться</button>
-        </div>
+    <div id="app-header">
+        <h1>🔌 Web Terminal — Multi Session</h1>
+        <button id="add-session-btn">➕ Новая сессия</button>
     </div>
-    <div id="output"></div>
-    <input type="text" id="input" placeholder="Введите команду и нажмите Enter" autofocus>
+    <div id="sessions-container"></div>
 
     <script>
-        let socket = null;
-        let sessionId = null;
-        let isNewSession = true; // по умолчанию – новая сессия
-    
-        async function initSession() {
-            const storedId = localStorage.getItem('terminal_session_id');
-            if (storedId) {
-                const resp = await fetch(`/sessions/${storedId}`);
-                if (resp.ok) {
-                    sessionId = storedId;
-                    isNewSession = false; // сессия восстановлена
-                    document.getElementById('status').innerHTML = `✅ Сессия восстановлена: ${sessionId}`;
-                    connectWebSocket();
-                    return;
+        // --------------------------------------------------------------
+        // Глобальный менеджер сессий
+        // --------------------------------------------------------------
+        const sessionManager = {
+            sessions: new Map(),
+            container: document.getElementById('sessions-container'),
+            addSessionBtn: document.getElementById('add-session-btn'),
+
+            async init() {
+                const serverIds = await this.fetchServerSessions();
+                let storedIds = this.loadStoredIds();
+                storedIds = storedIds.filter(id => serverIds.includes(id));
+                this.saveStoredIds(storedIds);
+
+                for (const id of storedIds) {
+                    this.createSessionWindow(id, false);
                 }
-                localStorage.removeItem('terminal_session_id');
+
+                if (this.sessions.size === 0) {
+                    await this.createNewSession();
+                }
+
+                this.addSessionBtn.addEventListener('click', () => this.createNewSession());
+            },
+
+            async fetchServerSessions() {
+                try {
+                    const resp = await fetch('/sessions');
+                    const data = await resp.json();
+                    return data.sessions || [];
+                } catch {
+                    return [];
+                }
+            },
+
+            loadStoredIds() {
+                const stored = localStorage.getItem('terminal_session_ids');
+                return stored ? JSON.parse(stored) : [];
+            },
+
+            saveStoredIds(ids) {
+                localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
+            },
+
+            async createNewSession() {
+                const resp = await fetch('/sessions', { method: 'POST' });
+                const data = await resp.json();
+                const sessionId = data.session_id;
+                const stored = this.loadStoredIds();
+                stored.push(sessionId);
+                this.saveStoredIds(stored);
+                this.createSessionWindow(sessionId, true);
+                return sessionId;
+            },
+
+            createSessionWindow(sessionId, isNew) {
+                if (this.sessions.has(sessionId)) return;
+                const sessionUI = new SessionUI(sessionId, this.container, isNew);
+                this.sessions.set(sessionId, sessionUI);
+                sessionUI.init();
+            },
+
+            async closeSession(sessionId) {
+                await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
+                const stored = this.loadStoredIds();
+                const updated = stored.filter(id => id !== sessionId);
+                this.saveStoredIds(updated);
+                
+                const sessionUI = this.sessions.get(sessionId);
+                if (sessionUI) {
+                    sessionUI.destroy();
+                    this.sessions.delete(sessionId);
+                }
+
+                if (this.sessions.size === 0) {
+                    await this.createNewSession();
+                }
             }
-    
-            const resp = await fetch('/sessions', { method: 'POST' });
-            const data = await resp.json();
-            sessionId = data.session_id;
-            isNewSession = true; // новая сессия
-            localStorage.setItem('terminal_session_id', sessionId);
-            document.getElementById('status').innerHTML = `✅ Сессия создана: ${sessionId}`;
-            connectWebSocket();
-        }
-    
-        function addOutputLine(type, text) {
-            const output = document.getElementById('output');
-            const line = document.createElement('div');
-            line.className = type; // stdout, stderr, stdin, system
-            line.textContent = text;
-            output.appendChild(line);
-            output.scrollTop = output.scrollHeight;
-        }
-    
-        async function loadHistory() {
-            if (!sessionId) return;
-            try {
-                const resp = await fetch(`/sessions/${sessionId}/history`);
-                const history = await resp.json();
-                addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
-                history.forEach(cmd => {
-                    if (cmd.input) {
-                        addOutputLine('stdin', `→ ${cmd.input}`);
-                    }
-                    if (cmd.stdout && Array.isArray(cmd.stdout)) {
-                        cmd.stdout.forEach(line => addOutputLine('stdout', line));
-                    }
-                    if (cmd.stderr && Array.isArray(cmd.stderr)) {
-                        cmd.stderr.forEach(line => addOutputLine('stderr', line));
+        };
+
+        // --------------------------------------------------------------
+        // Класс одного окна сессии
+        // --------------------------------------------------------------
+        class SessionUI {
+            constructor(sessionId, container, isNew) {
+                this.sessionId = sessionId;
+                this.container = container;
+                this.isNew = isNew;
+                this.socket = null;
+                this.element = null;
+                this.outputElement = null;
+                this.inputElement = null;
+                this.statusElement = null;
+            }
+
+            init() {
+                this.render();
+                this.connectWebSocket();
+            }
+
+            render() {
+                const windowDiv = document.createElement('div');
+                windowDiv.className = 'session-window';
+                windowDiv.dataset.sessionId = this.sessionId;
+
+                // Header
+                const header = document.createElement('div');
+                header.className = 'session-header';
+                const title = document.createElement('span');
+                title.className = 'session-title';
+                title.textContent = `📟 Сессия: ${this.sessionId.slice(0,8)}...`;
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-btn';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.onclick = () => sessionManager.closeSession(this.sessionId);
+                header.appendChild(title);
+                header.appendChild(closeBtn);
+
+                // Output
+                const output = document.createElement('div');
+                output.className = 'output';
+                this.outputElement = output;
+
+                // Input area
+                const inputArea = document.createElement('div');
+                inputArea.className = 'input-area';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'session-input';
+                input.placeholder = 'Введите команду и нажмите Enter';
+                this.inputElement = input;
+
+                const reconnectBtn = document.createElement('button');
+                reconnectBtn.className = 'reconnect-btn';
+                reconnectBtn.textContent = '🔄';
+                reconnectBtn.title = 'Переподключиться';
+                reconnectBtn.onclick = () => this.sendReconnect();
+
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'status';
+                statusSpan.textContent = '⚡ соединяемся...';
+                this.statusElement = statusSpan;
+
+                inputArea.appendChild(input);
+                inputArea.appendChild(reconnectBtn);
+                inputArea.appendChild(statusSpan);
+
+                windowDiv.appendChild(header);
+                windowDiv.appendChild(output);
+                windowDiv.appendChild(inputArea);
+                this.container.appendChild(windowDiv);
+                this.element = windowDiv;
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
+                        const cmd = e.target.value.trim();
+                        if (cmd) {
+                            this.socket.send(cmd);
+                            e.target.value = '';
+                        }
                     }
                 });
-                addOutputLine('system', '=== КОНЕЦ ИСТОРИИ ===');
-            } catch (err) {
-                addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
             }
-        }
-    
-        function connectWebSocket() {
-            if (socket) socket.close();
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            socket = new WebSocket(`${protocol}//${window.location.host}/ws/${sessionId}`);
-    
-            socket.onopen = () => {
-                document.getElementById('status').innerHTML = `✅ Сессия: ${sessionId} (WebSocket открыт)`;
-                // Автоматически загружаем историю, если сессия не новая
-                if (!isNewSession) {
-                    loadHistory();
+
+            connectWebSocket() {
+                if (this.socket) this.socket.close();
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/ws/${this.sessionId}`;
+                this.socket = new WebSocket(wsUrl);
+
+                this.socket.onopen = () => {
+                    this.statusElement.textContent = '✅ онлайн';
+                    if (!this.isNew) this.loadHistory();
+                };
+                this.socket.onmessage = (e) => {
+                    const msg = JSON.parse(e.data);
+                    this.addOutputLine(msg.type, msg.line);
+                };
+                this.socket.onclose = () => {
+                    this.statusElement.textContent = '❌ отключено';
+                };
+                this.socket.onerror = () => {
+                    this.statusElement.textContent = '⚠️ ошибка';
+                };
+            }
+
+            sendReconnect() {
+                if (this.socket?.readyState === WebSocket.OPEN) {
+                    this.socket.send('/reconnect');
                 }
-            };
-    
-            socket.onmessage = (event) => {
-                const msg = JSON.parse(event.data);
-                addOutputLine(msg.type, msg.line);
-            };
-    
-            socket.onclose = () => {
-                document.getElementById('status').innerHTML = `❌ Сессия: ${sessionId} (отключено)`;
-            };
-    
-            socket.onerror = (err) => {
-                console.error('WebSocket error', err);
-            };
-        }
-    
-        function reconnect() {
-            if (sessionId && socket && socket.readyState === WebSocket.OPEN) {
-                socket.send('/reconnect');
-            } else {
-                console.warn('WebSocket не открыт, переподключение невозможно');
+            }
+
+            async loadHistory() {
+                try {
+                    const resp = await fetch(`/sessions/${this.sessionId}/history`);
+                    const history = await resp.json();
+                    this.addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
+                    history.forEach(cmd => {
+                        if (cmd.input) this.addOutputLine('stdin', `→ ${cmd.input}`);
+                        cmd.stdout?.forEach(l => this.addOutputLine('stdout', l));
+                        cmd.stderr?.forEach(l => this.addOutputLine('stderr', l));
+                    });
+                    this.addOutputLine('system', '=== КОНЕЦ ИСТОРИИ ===');
+                } catch (err) {
+                    this.addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
+                }
+            }
+
+            addOutputLine(type, text) {
+                const line = document.createElement('div');
+                line.className = type;
+                line.textContent = text;
+                this.outputElement.appendChild(line);
+                this.outputElement.scrollTop = this.outputElement.scrollHeight;
+            }
+
+            destroy() {
+                this.socket?.close();
+                this.element?.remove();
             }
         }
-    
-        document.getElementById('input').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && socket && socket.readyState === WebSocket.OPEN) {
-                const cmd = e.target.value;
-                if (cmd.trim() === '') return;
-                socket.send(cmd);
-                e.target.value = '';
-            }
-        });
-    
-        window.onload = initSession;
+
+        // --------------------------------------------------------------
+        // Запуск
+        // --------------------------------------------------------------
+        window.onload = () => sessionManager.init();
         window.onbeforeunload = () => {
-            if (socket) socket.close();
+            sessionManager.sessions.forEach(s => s.socket?.close());
         };
     </script>
 </body>
 </html>
 """
 
+
+# =====================================================================================================================
+app = FastAPI(title="Web Terminal")
+
+
 @app.get("/", response_class=HTMLResponse)
 async def get_html():
     return HTML_TEMPLATE
+
 
 @app.post("/sessions")
 async def create_session():
     session_id = await session_manager.create_session()
     return {"session_id": session_id}
 
-# @app.post("/sessions/{session_id}")
-# async def reconnect_session(session_id: str):
-#     await session_manager.reconnect_session(session_id)
-#     return {"status": "closed"}
 
 @app.delete("/sessions/{session_id}")
 async def delete_session(session_id: str):
     await session_manager.close_session(session_id)
     # await session_manager.reconnect_session(session_id)
     return {"status": "closed"}
+
+
+@app.get("/sessions/{session_id}")
+async def get_session(session_id: str):
+    exists = await session_manager.session_exists(session_id)
+    if exists:
+        return {"session_id": session_id, "active": True}
+    raise HTTPException(status_code=404, detail="Session not found")
+
+
+@app.get("/sessions/{session_id}/history")
+async def get_session_history(session_id: str):
+    session = await session_manager.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    history_data = []
+    for result in session.history:
+        history_data.append({
+            "input": result.INPUT,
+            "stdout": result.STDOUT,
+            "stderr": result.STDERR,
+            "timestamp": result.timestamp.isoformat() if result.timestamp else None,
+            "duration": result.duration,
+            "finished_status": result.finished_status.value if result.finished_status else None,
+            "retcode": result.retcode
+        })
+    return history_data
+
+
+@app.get("/sessions")
+async def list_sessions():
+    ids = await session_manager.get_all_session_ids()
+    return {"sessions": ids}
+
 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
@@ -314,34 +573,8 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         session.history.append_stderr = original_append_stderr
         # ❌ НЕ закрываем сессию автоматически
         # await session_manager.close_session(session_id)
+        session_manager.unregister_connection(session_id)
 
-
-@app.get("/sessions/{session_id}")
-async def get_session(session_id: str):
-    exists = await session_manager.session_exists(session_id)
-    if exists:
-        return {"session_id": session_id, "active": True}
-    raise HTTPException(status_code=404, detail="Session not found")
-
-
-@app.get("/sessions/{session_id}/history")
-async def get_session_history(session_id: str):
-    session = await session_manager.get_session(session_id)
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
-
-    history_data = []
-    for result in session.history:
-        history_data.append({
-            "input": result.INPUT,
-            "stdout": result.STDOUT,
-            "stderr": result.STDERR,
-            "timestamp": result.timestamp.isoformat() if result.timestamp else None,
-            "duration": result.duration,
-            "finished_status": result.finished_status.value if result.finished_status else None,
-            "retcode": result.retcode
-        })
-    return history_data
 
 # =====================================================================================================================
 if __name__ == "__main__":
