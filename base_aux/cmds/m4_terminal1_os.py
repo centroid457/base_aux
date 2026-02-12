@@ -25,7 +25,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
         self.cwd: str | None = cwd
 
-        self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+        self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
         self._conn: subprocess.Popen | None = None
         self._thread__reading_stdout: threading.Thread | None = None
@@ -40,14 +40,14 @@ class CmdSession_OsTerminal(Base_CmdSession):
         print(f"{self.__class__.__name__}({self.id=}).connect")
         try:
             self._conn = subprocess.Popen(
-                args=[self.shell_cmd, ],
+                args=[self._shell_cmd, ],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
                 bufsize=1,
                 universal_newlines=True,
-                encoding="cp866" if os.name == "nt" else "utf8",
+                encoding=self._encoding,
                 # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
                 cwd=self.cwd,
                 # timeout=1,    № is not accesible here in Popen!!!!
@@ -171,7 +171,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
                 line = self._conn.stdout.readline()
                 line = line and line.rstrip()
                 if line:
-                    print(f"{line}")
+                    print(f"[STDOUT]{line}")
                     self.history.append_stdout(line)
 
                 self.history.set_retcode(self._conn.returncode)
@@ -187,7 +187,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
                 line = self._conn.stderr.readline()
                 line = line and line.rstrip()
                 if line:
-                    print(f"{line}")
+                    print(f"[STDERR]{line}")
                     self.history.append_stderr(line)
 
                 self.history.set_retcode(self._conn.returncode)
@@ -198,8 +198,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
     # -----------------------------------------------------------------------------------------------------------------
     def send_command(self, cmd: str, timeout_start: float | None = None, timeout_finish: float | None = None) -> CmdResult:
-        print()
-        print(f"--->{cmd}")
+        print(f"\n[STD_IN]--->{cmd}")
 
         self.history.add_input(cmd)
         try:

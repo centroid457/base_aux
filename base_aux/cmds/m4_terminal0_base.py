@@ -1,4 +1,5 @@
 import time
+import os
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m2_history import CmdHistory
@@ -16,6 +17,8 @@ class Base_CmdSession:
             **kwargs,
     ):
         super().__init__(**kwargs)
+
+        self._encoding: str = "cp866" if os.name == "nt" else "utf8"
 
         self.id: str | None = id
         self.timeout_start: float = timeout_start
