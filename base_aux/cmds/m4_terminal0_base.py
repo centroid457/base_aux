@@ -1,3 +1,4 @@
+from typing import *
 import time
 import os
 
@@ -19,7 +20,9 @@ class Base_CmdSession:
         super().__init__(**kwargs)
 
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
-        self._reader_tasks: list = []
+        self._stop_reading: bool = False
+        self._reader_tasks: list[Any] = []
+        self._conn: Any | None = None
 
         self.id: str | None = id
         self.timeout_start: float = timeout_start

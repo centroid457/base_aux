@@ -14,6 +14,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
     ----
     access to terminal with continuous connection - keeping state!
     """
+    _conn: subprocess.Popen | None
     _reader_tasks: list[threading.Thread]
 
     def __init__(
@@ -26,11 +27,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
         super().__init__(**kwargs)
 
         self.cwd: str | None = cwd
-
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
-
-        self._conn: subprocess.Popen | None = None
-        self._stop_reading: bool = False
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
@@ -99,7 +96,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
         self._reader_tasks.clear()
         self._conn = None
 
-        print(f"{self.__class__.__name__}({self.id=}).disconnect")
+        print(f"{self.__class__.__name__}({self.id=}).disconnected")
 
     # -----------------------------------------------------------------------------------------------------------------
     def _send_ctrl_c(self):

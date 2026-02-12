@@ -6,10 +6,13 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class AsyncCmdSession_OsTerminal(Base_CmdSession):
+class CmdSession_OsTerminalAio(Base_CmdSession):
     """
     Асинхронная версия CmdSession_OsTerminal на asyncio.subprocess.
     """
+    _conn: asyncio.subprocess.Process | None
+    _reader_tasks: list[asyncio.Task]
+
     def __init__(
             self,
             *,
@@ -21,13 +24,8 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
         self.cwd: str | None = cwd
         self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
-        self._conn: asyncio.subprocess.Process | None = None
-        self._reader_tasks: list[asyncio.Task] = []
-        self._stop_reading: bool = False
-
     # -----------------------------------------------------------------------------------------------------------------
     async def connect(self) -> bool:
-        """Асинхронный запуск shell-процесса."""
         if self._conn is not None:
             return True
 
@@ -50,13 +48,12 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
             return False
 
         self._stop_reading = False
-        # Запускаем асинхронные задачи чтения stdout и stderr
+
         self._reader_tasks = [
-            asyncio.create_task(self._reader_stdout()),
-            asyncio.create_task(self._reader_stderr()),
+            asyncio.create_task(self._reading_stdout()),
+            asyncio.create_task(self._reading_stderr()),
         ]
 
-        # Даём процессу время инициализироваться (неблокирующая пауза)
         await asyncio.sleep(0.3)
         return True
 
@@ -73,7 +70,7 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
             try:
                 self._conn.terminate()
                 try:
-                    await asyncio.wait_for(self._conn.wait(), timeout=2.0)
+                    await asyncio.wait_for(self._conn.wait(), timeout=1.0)
                 except asyncio.TimeoutError:
                     self._conn.kill()
                     await self._conn.wait()
@@ -87,18 +84,17 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
             task.cancel()
         await asyncio.gather(*self._reader_tasks, return_exceptions=True)
         self._reader_tasks.clear()
-
         self._conn = None
-        print(f"{self.__class__.__name__}({self.id=}).disconnect")
+
+        print(f"{self.__class__.__name__}({self.id=}).disconnected")
 
     # -----------------------------------------------------------------------------------------------------------------
     async def reconnect(self) -> None:
-        """Переподключение: закрыть и открыть заново."""
         await self.disconnect()
         await self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _reader_stdout(self):
+    async def _reading_stdout(self):
         """Асинхронное чтение stdout."""
         while not self._stop_reading and self._conn and self._conn.returncode is None:
             try:
@@ -117,7 +113,7 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
                 print(f"stdout reader error: {exc!r}")
                 break
 
-    async def _reader_stderr(self):
+    async def _reading_stderr(self):
         """Асинхронное чтение stderr."""
         while not self._stop_reading and self._conn and self._conn.returncode is None:
             try:
@@ -205,7 +201,7 @@ class AsyncCmdSession_OsTerminal(Base_CmdSession):
 
 # =====================================================================================================================
 async def explore__ping():
-    async with AsyncCmdSession_OsTerminal() as term:
+    async with CmdSession_OsTerminalAio() as term:
         if not await term.connect():
             return
 
@@ -220,7 +216,7 @@ async def explore__ping():
 
 
 async def explore__cd():
-    async with AsyncCmdSession_OsTerminal() as term:
+    async with CmdSession_OsTerminalAio() as term:
         if not await term.connect():
             return
 
@@ -240,7 +236,7 @@ async def explore__cd():
 
 
 async def explore__cd_reconnect():
-    async with AsyncCmdSession_OsTerminal() as term:
+    async with CmdSession_OsTerminalAio() as term:
         if not await term.connect():
             return
 
