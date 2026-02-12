@@ -19,6 +19,7 @@ class Base_CmdSession:
         super().__init__(**kwargs)
 
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
+        self._reader_tasks: list = []
 
         self.id: str | None = id
         self.timeout_start: float = timeout_start

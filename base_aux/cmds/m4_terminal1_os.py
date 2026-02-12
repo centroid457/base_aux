@@ -14,6 +14,8 @@ class CmdSession_OsTerminal(Base_CmdSession):
     ----
     access to terminal with continuous connection - keeping state!
     """
+    _reader_tasks: list[threading.Thread]
+
     def __init__(
             self,
             *,
@@ -28,8 +30,6 @@ class CmdSession_OsTerminal(Base_CmdSession):
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
         self._conn: subprocess.Popen | None = None
-        self._thread__reading_stdout: threading.Thread | None = None
-        self._thread__reading_stderr: threading.Thread | None = None
         self._stop_reading: bool = False
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -59,10 +59,14 @@ class CmdSession_OsTerminal(Base_CmdSession):
             return False
 
         self._stop_reading = False
-        self._thread__reading_stdout = threading.Thread(target=self._reading_stdout, daemon=True)
-        self._thread__reading_stderr = threading.Thread(target=self._reading_stderr, daemon=True)
-        self._thread__reading_stdout.start()
-        self._thread__reading_stderr.start()
+
+        self._reader_tasks = [
+            threading.Thread(target=self._reading_stdout, daemon=True),
+            threading.Thread(target=self._reading_stderr, daemon=True),
+        ]
+
+        for reader_task in self._reader_tasks:
+            reader_task.start()
 
         time.sleep(0.3)
         return True
@@ -89,14 +93,10 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
         self._stop_reading = True
 
-        if self._thread__reading_stdout is not None:
-            self._thread__reading_stdout.join(timeout=1)
-        if self._thread__reading_stderr is not None:
-            self._thread__reading_stderr.join(timeout=1)
+        for reader_task in self._reader_tasks:
+            reader_task.join(timeout=1)
 
-        self._thread__reading_stdout = None
-        self._thread__reading_stderr = None
-
+        self._reader_tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnect")
