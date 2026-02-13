@@ -31,6 +31,16 @@ class Base_CmdSession:
         self.history: CmdHistory = CmdHistory()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def get_name(cls) -> str:
+        """
+        GOAl
+        ----
+        get name from class with ability not to redefine and receive correct class name
+        """
+        return cls.__name__
+
+    # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> None:
         raise NotImplementedError()
 

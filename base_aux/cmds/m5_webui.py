@@ -14,94 +14,104 @@ from base_aux.cmds.m4_terminal1_os2_aio import *
 
 
 # =====================================================================================================================
-class SessionManager:
+class ObjectManager:
+    """
+    GOAL
+    ----
+    controlling object collection
+    """
+    ITEM_CLASS: type[CmdSession_OsTerminalAio] = CmdSession_OsTerminalAio
+    terminals: dict[str, CmdSession_OsTerminalAio]
+    _last_index: int = 0
+
     def __init__(self):
-        self.sessions: dict[str, CmdSession_OsTerminalAio] = {}
-        # Ключ: session_id, значение: список очередей для каждого WebSocket
+        self.terminals = {}
+        # Ключ: id, значение: список очередей для каждого WebSocket
         self._output_queues: dict[str, list[asyncio.Queue]] = {}
         # Флаг: был ли уже применён патч к методам истории
         self._patched: set[str] = set()
 
-    async def create_session(self, session_id: Optional[str] = None) -> str:
-        if session_id is None:
-            session_id = str(uuid.uuid4())
-        session = CmdSession_OsTerminalAio(id=session_id)
-        self.sessions[session_id] = session
-        self._output_queues[session_id] = []
-        return session_id
+    async def create(self, id: Optional[str] = None) -> str:
+        if id is None:
+            self._last_index += 1
+            id = f"[{self._last_index}]{self.ITEM_CLASS.get_name()}"
+        new_item = self.ITEM_CLASS(id=id)
+        self.terminals[id] = new_item
+        self._output_queues[id] = []
+        return id
 
-    async def get_session(self, session_id: str) -> Optional[CmdSession_OsTerminalAio]:
-        return self.sessions.get(session_id)
+    async def get_item(self, id: str) -> Optional[CmdSession_OsTerminalAio]:
+        return self.terminals.get(id)
 
-    async def register_queue(self, session_id: str, queue: asyncio.Queue) -> None:
+    async def register_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Добавляет очередь для рассылки вывода."""
-        if session_id not in self._output_queues:
-            self._output_queues[session_id] = []
-        self._output_queues[session_id].append(queue)
+        if id not in self._output_queues:
+            self._output_queues[id] = []
+        self._output_queues[id].append(queue)
 
-    async def unregister_queue(self, session_id: str, queue: asyncio.Queue) -> None:
+    async def unregister_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Удаляет очередь и, если она последняя, восстанавливает оригинальные методы."""
-        queues = self._output_queues.get(session_id)
+        queues = self._output_queues.get(id)
         if queues and queue in queues:
             queues.remove(queue)
         # Если больше нет клиентов – восстанавливаем оригинальные методы истории
-        if session_id in self.sessions and not queues:
-            session = self.sessions[session_id]
-            if hasattr(session, '_original_append_stdout'):
-                session.history.append_stdout = session._original_append_stdout
-                session.history.append_stderr = session._original_append_stderr
-                del session._original_append_stdout
-                del session._original_append_stderr
-            self._patched.discard(session_id)
+        if id in self.terminals and not queues:
+            object_item = self.terminals[id]
+            if hasattr(object_item, '_original_append_stdout'):
+                object_item.history.append_stdout = object_item._original_append_stdout
+                object_item.history.append_stderr = object_item._original_append_stderr
+                del object_item._original_append_stdout
+                del object_item._original_append_stderr
+            self._patched.discard(id)
             # Можно также удалить пустой список, но оставим для аккуратности
-            self._output_queues[session_id] = []
+            self._output_queues[id] = []
 
-    async def broadcast(self, session_id: str, msg: tuple[str, str]) -> None:
+    async def broadcast(self, id: str, msg: tuple[str, str]) -> None:
         """Разослать сообщение (тип, строка) во все очереди сессии."""
-        queues = self._output_queues.get(session_id, [])
+        queues = self._output_queues.get(id, [])
         for q in queues:
             await q.put(msg)
 
-    async def close_session(self, session_id: str) -> None:
-        """Принудительно завершает сессию, очищает очереди."""
-        session = self.sessions.pop(session_id, None)
-        if not session:
+    async def close_item(self, id: str) -> None:
+        """Принудительно закрывает обьект очищает очереди."""
+        item = self.terminals.pop(id, None)
+        if not item:
             return
 
         # Удаляем все очереди и восстанавливаем оригиналы
-        self._output_queues.pop(session_id, None)
-        if hasattr(session, '_original_append_stdout'):
-            session.history.append_stdout = session._original_append_stdout
-            session.history.append_stderr = session._original_append_stderr
-            del session._original_append_stdout
-            del session._original_append_stderr
-        self._patched.discard(session_id)
+        self._output_queues.pop(id, None)
+        if hasattr(item, '_original_append_stdout'):
+            item.history.append_stdout = item._original_append_stdout
+            item.history.append_stderr = item._original_append_stderr
+            del item._original_append_stdout
+            del item._original_append_stderr
+        self._patched.discard(id)
 
         # Останавливаем фоновые задачи чтения
-        session._stop_reading = True
-        for task in session._reader_tasks:
+        item._stop_reading = True
+        for task in item._reader_tasks:
             task.cancel()
-        await asyncio.gather(*session._reader_tasks, return_exceptions=True)
-        session._reader_tasks.clear()
+        await asyncio.gather(*item._reader_tasks, return_exceptions=True)
+        item._reader_tasks.clear()
 
         # Завершаем процесс
-        if session._conn:
+        if item._conn:
             try:
-                session._conn.terminate()
-                await asyncio.wait_for(session._conn.wait(), timeout=1.0)
+                item._conn.terminate()
+                await asyncio.wait_for(item._conn.wait(), timeout=1.0)
             except asyncio.TimeoutError:
-                session._conn.kill()
-                await session._conn.wait()
-            session._conn = None
+                item._conn.kill()
+                await item._conn.wait()
+            item._conn = None
 
-    async def session_exists(self, session_id: str) -> bool:
-        return session_id in self.sessions
+    async def item_exists(self, id: str) -> bool:
+        return id in self.terminals
 
-    async def get_all_session_ids(self) -> list[str]:
-        return list(self.sessions.keys())
+    async def get_all_item_ids(self) -> list[str]:
+        return list(self.terminals)
 
 
-session_manager = SessionManager()
+object_manager = ObjectManager()
 
 
 # =====================================================================================================================
@@ -133,7 +143,7 @@ HTML_TEMPLATE = """
             font-size: 24px;
             color: #fff;
         }
-        #add-session-btn {
+        #add-item-btn {
             background: #0e639c;
             color: white;
             border: none;
@@ -143,8 +153,8 @@ HTML_TEMPLATE = """
             font-size: 16px;
             font-weight: bold;
         }
-        #add-session-btn:hover { background: #1177bb; }
-        #sessions-container {
+        #add-item-btn:hover { background: #1177bb; }
+        #terminals-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -239,18 +249,18 @@ HTML_TEMPLATE = """
 <body>
     <div id="app-header">
         <h1>🔌 Web Terminal</h1>
-        <button id="add-session-btn">➕ Новый обьект</button>
+        <button id="add-item-btn">➕ Новый обьект</button>
     </div>
-    <div id="sessions-container"></div>
+    <div id="terminals-container"></div>
 
     <script>
         // --------------------------------------------------------------
         // Глобальный менеджер сессий
         // --------------------------------------------------------------
         const sessionManager = {
-            sessions: new Map(),
-            container: document.getElementById('sessions-container'),
-            addSessionBtn: document.getElementById('add-session-btn'),
+            terminals: new Map(),
+            container: document.getElementById('terminals-container'),
+            addSessionBtn: document.getElementById('add-item-btn'),
 
             async init() {
                 const serverIds = await this.fetchServerSessions();
@@ -262,7 +272,7 @@ HTML_TEMPLATE = """
                     this.createSessionWindow(id, false);
                 }
 
-                if (this.sessions.size === 0) {
+                if (this.terminals.size === 0) {
                     await this.createNewSession();
                 }
 
@@ -271,9 +281,9 @@ HTML_TEMPLATE = """
 
             async fetchServerSessions() {
                 try {
-                    const resp = await fetch('/sessions');
+                    const resp = await fetch('/terminals');
                     const data = await resp.json();
-                    return data.sessions || [];
+                    return data.terminals || [];
                 } catch {
                     return [];
                 }
@@ -289,9 +299,9 @@ HTML_TEMPLATE = """
             },
 
             async createNewSession() {
-                const resp = await fetch('/sessions', { method: 'POST' });
+                const resp = await fetch('/terminals', { method: 'POST' });
                 const data = await resp.json();
-                const sessionId = data.session_id;
+                const sessionId = data.id;
                 const stored = this.loadStoredIds();
                 stored.push(sessionId);
                 this.saveStoredIds(stored);
@@ -300,25 +310,25 @@ HTML_TEMPLATE = """
             },
 
             createSessionWindow(sessionId, isNew) {
-                if (this.sessions.has(sessionId)) return;
+                if (this.terminals.has(sessionId)) return;
                 const sessionUI = new SessionUI(sessionId, this.container, isNew);
-                this.sessions.set(sessionId, sessionUI);
+                this.terminals.set(sessionId, sessionUI);
                 sessionUI.init();
             },
 
             async closeSession(sessionId) {
-                await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
+                await fetch(`/terminals/${sessionId}`, { method: 'DELETE' });
                 const stored = this.loadStoredIds();
                 const updated = stored.filter(id => id !== sessionId);
                 this.saveStoredIds(updated);
                 
-                const sessionUI = this.sessions.get(sessionId);
+                const sessionUI = this.terminals.get(sessionId);
                 if (sessionUI) {
                     sessionUI.destroy();
-                    this.sessions.delete(sessionId);
+                    this.terminals.delete(sessionId);
                 }
 
-                if (this.sessions.size === 0) {
+                if (this.terminals.size === 0) {
                     await this.createNewSession();
                 }
             }
@@ -354,7 +364,7 @@ HTML_TEMPLATE = """
                 header.className = 'session-header';
                 const title = document.createElement('span');
                 title.className = 'session-title';
-                title.textContent = `📟 Сессия: ${this.sessionId.slice(0,8)}...`;
+                title.textContent = `📟 ${this.sessionId}`;
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'close-btn';
                 closeBtn.innerHTML = '&times;';
@@ -438,7 +448,7 @@ HTML_TEMPLATE = """
 
             async loadHistory() {
                 try {
-                    const resp = await fetch(`/sessions/${this.sessionId}/history`);
+                    const resp = await fetch(`/terminals/${this.sessionId}/history`);
                     const history = await resp.json();
                     this.addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
                     history.forEach(cmd => {
@@ -471,7 +481,7 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         window.onload = () => sessionManager.init();
         window.onbeforeunload = () => {
-            sessionManager.sessions.forEach(s => s.socket?.close());
+            sessionManager.terminals.forEach(s => s.socket?.close());
         };
     </script>
 </body>
@@ -488,30 +498,30 @@ async def get_html():
     return HTML_TEMPLATE
 
 
-@app.post("/sessions")
+@app.post("/terminals")
 async def create_session():
-    session_id = await session_manager.create_session()
-    return {"session_id": session_id}
+    id = await object_manager.create()
+    return {"id": id}
 
 
-@app.delete("/sessions/{session_id}")
-async def delete_session(session_id: str):
-    await session_manager.close_session(session_id)
-    # await session_manager.reconnect_session(session_id)
+@app.delete("/terminals/{id}")
+async def delete_session(id: str):
+    await object_manager.close_item(id)
+    # await object_manager.reconnect_session(id)
     return {"status": "closed"}
 
 
-@app.get("/sessions/{session_id}")
-async def get_session(session_id: str):
-    exists = await session_manager.session_exists(session_id)
+@app.get("/terminals/{id}")
+async def get_item(id: str):
+    exists = await object_manager.item_exists(id)
     if exists:
-        return {"session_id": session_id, "active": True}
+        return {"id": id, "active": True}
     raise HTTPException(status_code=404, detail="Session not found")
 
 
-@app.get("/sessions/{session_id}/history")
-async def get_session_history(session_id: str):
-    session = await session_manager.get_session(session_id)
+@app.get("/terminals/{id}/history")
+async def get_session_history(id: str):
+    session = await object_manager.get_item(id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
@@ -529,15 +539,15 @@ async def get_session_history(session_id: str):
     return history_data
 
 
-@app.get("/sessions")
+@app.get("/terminals")
 async def list_sessions():
-    ids = await session_manager.get_all_session_ids()
-    return {"sessions": ids}
+    ids = await object_manager.get_all_item_ids()
+    return {"terminals": ids}
 
 
-@app.websocket("/ws/{session_id}")
-async def websocket_endpoint(websocket: WebSocket, session_id: str):
-    session = await session_manager.get_session(session_id)
+@app.websocket("/ws/{id}")
+async def websocket_endpoint(websocket: WebSocket, id: str):
+    session = await object_manager.get_item(id)
     if not session:
         await websocket.close(code=1008, reason="Invalid session")
         return
@@ -548,10 +558,10 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
     # --- 1. Создаём очередь для этого клиента ---
     output_queue = asyncio.Queue()
-    await session_manager.register_queue(session_id, output_queue)
+    await object_manager.register_queue(id, output_queue)
 
     # --- 2. Патчим методы истории (только один раз!) ---
-    if session_id not in session_manager._patched:
+    if id not in object_manager._patched:
         # Сохраняем оригиналы как атрибуты экземпляра сессии
         session._original_append_stdout = session.history.append_stdout
         session._original_append_stderr = session.history.append_stderr
@@ -560,15 +570,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
             # Сначала вызываем оригинал (сохраняем в истории)
             session._original_append_stdout(data)
             # Рассылаем всем подключённым клиентам
-            asyncio.create_task(session_manager.broadcast(session_id, ("stdout", data)))
+            asyncio.create_task(object_manager.broadcast(id, ("stdout", data)))
 
         def patched_append_stderr(data):
             session._original_append_stderr(data)
-            asyncio.create_task(session_manager.broadcast(session_id, ("stderr", data)))
+            asyncio.create_task(object_manager.broadcast(id, ("stderr", data)))
 
         session.history.append_stdout = patched_append_stdout
         session.history.append_stderr = patched_append_stderr
-        session_manager._patched.add(session_id)
+        object_manager._patched.add(id)
 
     # --- 3. Задача отправки из очереди этого клиента в его WebSocket ---
     async def send_output():
@@ -600,7 +610,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         send_task.cancel()
         await send_task
         # Отписываем клиента
-        await session_manager.unregister_queue(session_id, output_queue)
+        await object_manager.unregister_queue(id, output_queue)
 
 
 # =====================================================================================================================
