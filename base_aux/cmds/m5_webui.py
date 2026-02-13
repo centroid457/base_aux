@@ -26,11 +26,10 @@ class ObjectManager:
 
     def __init__(self):
         self.items = {}
-        # Ключ: id, значение: список очередей для каждого WebSocket
         self._client_output_queues: dict[str, list[asyncio.Queue]] = {}
-        # Флаг: был ли уже применён патч к методам истории
         self._patched: set[str] = set()
 
+    # -----------------------------------------------------------------------------------------------------------------
     async def create_item(self, id: str | None = None) -> str:
         if id is None:
             self._last_index += 1
@@ -41,9 +40,20 @@ class ObjectManager:
             self._client_output_queues[id] = []
         return id
 
-    async def get_item(self, id: str) -> Optional[CmdSession_OsTerminalAio]:
+    async def get_item(self, id: str) -> CmdSession_OsTerminalAio | None:
         return self.items.get(id)
 
+    async def del_item(self, id: str) -> None:
+        """Принудительно закрывает обьект очищает очереди."""
+        item = self.items.pop(id, None)
+        if not item:
+            return
+
+        await item.disconnect()
+        self._client_output_queues.pop(id, None)
+        self._patched.discard(id)
+
+    # -----------------------------------------------------------------------------------------------------------------
     async def add__client_output_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Добавляет очередь для рассылки вывода."""
         if id not in self._client_output_queues:
@@ -74,24 +84,6 @@ class ObjectManager:
         client_queues = self._client_output_queues.get(id, [])
         for client_queue in client_queues:
             await client_queue.put(msg)
-
-    async def del_item(self, id: str) -> None:
-        """Принудительно закрывает обьект очищает очереди."""
-        item = self.items.pop(id, None)
-        if not item:
-            return
-
-        # Удаляем все очереди и восстанавливаем оригиналы
-        self._client_output_queues.pop(id, None)
-        if hasattr(item, '_original_append_stdout'):
-            item.history.append_stdout = item._original_append_stdout
-            item.history.append_stderr = item._original_append_stderr
-            del item._original_append_stdout
-            del item._original_append_stderr
-        self._patched.discard(id)
-
-        # Останавливаем фоновые задачи чтения
-        await item.disconnect()
 
 
 object_manager = ObjectManager()
@@ -593,8 +585,8 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
         await item.connect()
 
     # --- 1. Создаём очередь для этого клиента ---
-    output_queue = asyncio.Queue()
-    await object_manager.add__client_output_queue(id, output_queue)
+    client_output_queue = asyncio.Queue()
+    await object_manager.add__client_output_queue(id, client_output_queue)
 
     # --- 2. Патчим методы истории (только один раз!) ---
     if id not in object_manager._patched:
@@ -620,7 +612,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
     async def send_output():
         try:
             while True:
-                out_type, line = await output_queue.get()
+                out_type, line = await client_output_queue.get()
                 try:
                     await websocket.send_json({"type": out_type, "line": line})
                 except (WebSocketDisconnect, RuntimeError):
@@ -632,7 +624,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
 
     # --- 4. Принимаем команды от клиента ---
     try:
-        await websocket.accept()  # <-- перенесём accept сюда, после регистрации
+        await websocket.accept()
         while True:
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
@@ -646,7 +638,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
         send_task.cancel()
         await send_task
         # Отписываем клиента
-        await object_manager.del__client_output_queue(id, output_queue)
+        await object_manager.del__client_output_queue(id, client_output_queue)
 
 
 # =====================================================================================================================
