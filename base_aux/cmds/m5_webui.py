@@ -130,7 +130,7 @@ HTML_TEMPLATE = """
             padding: 20px;
             margin: 0;
         }
-        #app-header {
+        #div_app_header__style {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -143,7 +143,7 @@ HTML_TEMPLATE = """
             font-size: 24px;
             color: #fff;
         }
-        #btn_add_item__cls {
+        #btn_add_item__style {
             background: #0e639c;
             color: white;
             border: none;
@@ -153,13 +153,14 @@ HTML_TEMPLATE = """
             font-size: 16px;
             font-weight: bold;
         }
-        #btn_add_item__cls:hover { background: #1177bb; }
-        #terminals-container {
+        #btn_add_item__style:hover { background: #1177bb; }
+        
+        #items_container__style {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-        .session-window {
+        .div_itembox__style {
             background: #2d2d2d;
             border: 1px solid #444;
             border-radius: 6px;
@@ -168,7 +169,7 @@ HTML_TEMPLATE = """
             flex-direction: column;
         }
         
-        .div_termheader__cls {
+        .div_termheader__style {
             background: #3c3c3c;
             padding: 8px 12px;
             border-top-left-radius: 6px;
@@ -178,13 +179,13 @@ HTML_TEMPLATE = """
             align-items: center;
             border-bottom: 1px solid #555;
         }
-        .span_itemid__cls {
+        .span_itemid__style {
             font-weight: bold;
             color: #9cdcfe;
             font-size: 14px;
         }
         
-        .btn_reconnect__cls {
+        .btn_reconnect__style {
             background: #0e639c;
             color: white;
             border: none;
@@ -194,9 +195,9 @@ HTML_TEMPLATE = """
             cursor: pointer;
             font-size: 12px;
         }
-        .btn_reconnect__cls:hover { background: #1177bb; }
+        .btn_reconnect__style:hover { background: #1177bb; }
         
-        .btn_close__cls {
+        .btn_close__style {
             background: transparent;
             border: none;
             color: #f48771;
@@ -205,12 +206,12 @@ HTML_TEMPLATE = """
             padding: 0 6px;
             border-radius: 4px;
         }
-        .btn_close__cls:hover {
+        .btn_close__style:hover {
             background: #f48771;
             color: #1e1e1e;
         }
         
-        .output {
+        .div_output__style {
             background: #1e1e1e;
             padding: 12px;
             height: 300px;
@@ -224,12 +225,12 @@ HTML_TEMPLATE = """
         .stderr { color: #f48771; }
         .stdin  { color: #dcdcaa; }
         .system { color: #569cd6; font-style: italic; }
-        .input-area {
+        .div_input__style {
             display: flex;
             padding: 10px;
             background: #2d2d2d;
         }
-        .session-input {
+        .input_item__style{
             flex: 1;
             padding: 8px;
             font-size: 14px;
@@ -239,11 +240,11 @@ HTML_TEMPLATE = """
             border-radius: 4px;
             font-family: monospace;
         }
-        .session-input:focus {
+        .input_item__style:focus {
             outline: none;
             border-color: #0e639c;
         }
-        .status {
+        .span_status__style {
             margin-left: 10px;
             font-size: 12px;
             color: #888;
@@ -251,11 +252,11 @@ HTML_TEMPLATE = """
     </style>
 </head>
 <body>
-    <div id="app-header">
+    <div id="div_app_header__style">
         <h1>🔌 Web Terminal</h1>
-        <button id="btn_add_item__cls">➕ Новый обьект</button>
+        <button id="btn_add_item__style">➕ Новый объект</button>
     </div>
-    <div id="terminals-container"></div>
+    <div id="items_container__style"></div>
 
     <script>
         // --------------------------------------------------------------
@@ -263,8 +264,8 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         const sessionManager = {
             terminals: new Map(),
-            container: document.getElementById('terminals-container'),
-            addSessionBtn: document.getElementById('btn_add_item__cls'),
+            container: document.getElementById('items_container__style'),
+            addItemBtn: document.getElementById('btn_add_item__style'),
 
             async init() {
                 const serverIds = await this.fetchServerSessions();
@@ -280,7 +281,7 @@ HTML_TEMPLATE = """
                     await this.createNewSession();
                 }
 
-                this.addSessionBtn.addEventListener('click', () => this.createNewSession());
+                this.addItemBtn.addEventListener('click', () => this.createNewSession());
             },
 
             async fetchServerSessions() {
@@ -320,7 +321,7 @@ HTML_TEMPLATE = """
                 sessionUI.init();
             },
 
-            async closeSession(itemId) {
+            async closeItem(itemId) {
                 await fetch(`/terminals/${itemId}`, { method: 'DELETE' });
                 const stored = this.loadStoredIds();
                 const updated = stored.filter(id => id !== itemId);
@@ -359,62 +360,65 @@ HTML_TEMPLATE = """
             }
 
             render() {
-                const windowDiv = document.createElement('div');
-                windowDiv.className = 'session-window';
-                windowDiv.dataset.itemId = this.itemId;
+                const div_itembox = document.createElement('div');
+                div_itembox.className = 'div_itembox__style';
+                div_itembox.dataset.itemId = this.itemId;
 
                 // Header
                 const div_termheader = document.createElement('div');
-                div_termheader.className = 'div_termheader__cls';
+                div_termheader.className = 'div_termheader__style';
                 
                 const span_itemid = document.createElement('span');
-                span_itemid.className = 'span_itemid__cls';
+                span_itemid.className = 'span_itemid__style';
                 span_itemid.textContent = `📟 ${this.itemId}`;
                 
                 const btn_reconnect = document.createElement('button');
-                btn_reconnect.className = 'btn_reconnect__cls';
+                btn_reconnect.className = 'btn_reconnect__style';
                 btn_reconnect.textContent = '🔄';
                 btn_reconnect.title = 'Переподключиться';
                 btn_reconnect.onclick = () => this.sendReconnect();
                 
                 const btn_close = document.createElement('button');
-                btn_close.className = 'btn_close__cls';
+                btn_close.className = 'btn_close__style';
+                btn_close.title = 'Закрыть';
                 btn_close.innerHTML = '&times;';
-                btn_close.onclick = () => sessionManager.closeSession(this.itemId);
+                btn_close.onclick = () => sessionManager.closeItem(this.itemId);
                 
                 div_termheader.appendChild(span_itemid);
                 div_termheader.appendChild(btn_reconnect);
                 div_termheader.appendChild(btn_close);
 
                 // Output
-                const output = document.createElement('div');
-                output.className = 'output';
-                this.outputElement = output;
+                const div_output = document.createElement('div');
+                div_output.className = 'div_output__style';
+                this.outputElement = div_output;
 
                 // Input area
-                const inputArea = document.createElement('div');
-                inputArea.className = 'input-area';
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'session-input';
-                input.placeholder = 'Введите команду и нажмите Enter';
-                this.inputElement = input;
+                const div_input = document.createElement('div');
+                div_input.className = 'div_input__style';
+                
+                const input_item = document.createElement('input');
+                input_item.type = 'text';
+                input_item.className = 'input_item__style';
+                input_item.placeholder = 'Введите команду и нажмите Enter';
+                this.inputElement = input_item;
 
-                const statusSpan = document.createElement('span');
-                statusSpan.className = 'status';
-                statusSpan.textContent = '⚡ соединяемся...';
-                this.statusElement = statusSpan;
+                const span_status = document.createElement('span');
+                span_status.className = 'span_status__style';
+                span_status.textContent = '⚡ соединяемся...';
+                this.statusElement = span_status;
 
-                inputArea.appendChild(input);
-                inputArea.appendChild(statusSpan);
+                div_input.appendChild(input_item);
+                div_input.appendChild(span_status);
 
-                windowDiv.appendChild(div_termheader);
-                windowDiv.appendChild(output);
-                windowDiv.appendChild(inputArea);
-                this.container.appendChild(windowDiv);
-                this.element = windowDiv;
+                div_itembox.appendChild(div_termheader);
+                div_itembox.appendChild(div_output);
+                div_itembox.appendChild(div_input);
+                
+                this.container.appendChild(div_itembox);
+                this.element = div_itembox;
 
-                input.addEventListener('keydown', (e) => {
+                input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
                         const cmd = e.target.value.trim();
                         if (cmd) {
