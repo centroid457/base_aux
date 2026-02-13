@@ -120,7 +120,7 @@ HTML_TEMPLATE = """
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Web Terminal — Multi Session</title>
+    <title>Web Terminal</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -143,7 +143,7 @@ HTML_TEMPLATE = """
             font-size: 24px;
             color: #fff;
         }
-        #add-item-btn {
+        #btn_add_item__cls {
             background: #0e639c;
             color: white;
             border: none;
@@ -153,7 +153,7 @@ HTML_TEMPLATE = """
             font-size: 16px;
             font-weight: bold;
         }
-        #add-item-btn:hover { background: #1177bb; }
+        #btn_add_item__cls:hover { background: #1177bb; }
         #terminals-container {
             display: flex;
             flex-direction: column;
@@ -167,7 +167,8 @@ HTML_TEMPLATE = """
             display: flex;
             flex-direction: column;
         }
-        .session-header {
+        
+        .div_termheader__cls {
             background: #3c3c3c;
             padding: 8px 12px;
             border-top-left-radius: 6px;
@@ -177,12 +178,25 @@ HTML_TEMPLATE = """
             align-items: center;
             border-bottom: 1px solid #555;
         }
-        .session-title {
+        .span_itemid__cls {
             font-weight: bold;
             color: #9cdcfe;
             font-size: 14px;
         }
-        .close-btn {
+        
+        .btn_reconnect__cls {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            margin-left: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn_reconnect__cls:hover { background: #1177bb; }
+        
+        .btn_close__cls {
             background: transparent;
             border: none;
             color: #f48771;
@@ -191,10 +205,11 @@ HTML_TEMPLATE = """
             padding: 0 6px;
             border-radius: 4px;
         }
-        .close-btn:hover {
+        .btn_close__cls:hover {
             background: #f48771;
             color: #1e1e1e;
         }
+        
         .output {
             background: #1e1e1e;
             padding: 12px;
@@ -228,17 +243,6 @@ HTML_TEMPLATE = """
             outline: none;
             border-color: #0e639c;
         }
-        .reconnect-btn {
-            background: #0e639c;
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            margin-left: 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .reconnect-btn:hover { background: #1177bb; }
         .status {
             margin-left: 10px;
             font-size: 12px;
@@ -249,7 +253,7 @@ HTML_TEMPLATE = """
 <body>
     <div id="app-header">
         <h1>🔌 Web Terminal</h1>
-        <button id="add-item-btn">➕ Новый обьект</button>
+        <button id="btn_add_item__cls">➕ Новый обьект</button>
     </div>
     <div id="terminals-container"></div>
 
@@ -260,7 +264,7 @@ HTML_TEMPLATE = """
         const sessionManager = {
             terminals: new Map(),
             container: document.getElementById('terminals-container'),
-            addSessionBtn: document.getElementById('add-item-btn'),
+            addSessionBtn: document.getElementById('btn_add_item__cls'),
 
             async init() {
                 const serverIds = await this.fetchServerSessions();
@@ -301,31 +305,31 @@ HTML_TEMPLATE = """
             async createNewSession() {
                 const resp = await fetch('/terminals', { method: 'POST' });
                 const data = await resp.json();
-                const sessionId = data.id;
+                const itemId = data.id;
                 const stored = this.loadStoredIds();
-                stored.push(sessionId);
+                stored.push(itemId);
                 this.saveStoredIds(stored);
-                this.createSessionWindow(sessionId, true);
-                return sessionId;
+                this.createSessionWindow(itemId, true);
+                return itemId;
             },
 
-            createSessionWindow(sessionId, isNew) {
-                if (this.terminals.has(sessionId)) return;
-                const sessionUI = new SessionUI(sessionId, this.container, isNew);
-                this.terminals.set(sessionId, sessionUI);
+            createSessionWindow(itemId, isNew) {
+                if (this.terminals.has(itemId)) return;
+                const sessionUI = new SessionUI(itemId, this.container, isNew);
+                this.terminals.set(itemId, sessionUI);
                 sessionUI.init();
             },
 
-            async closeSession(sessionId) {
-                await fetch(`/terminals/${sessionId}`, { method: 'DELETE' });
+            async closeSession(itemId) {
+                await fetch(`/terminals/${itemId}`, { method: 'DELETE' });
                 const stored = this.loadStoredIds();
-                const updated = stored.filter(id => id !== sessionId);
+                const updated = stored.filter(id => id !== itemId);
                 this.saveStoredIds(updated);
                 
-                const sessionUI = this.terminals.get(sessionId);
+                const sessionUI = this.terminals.get(itemId);
                 if (sessionUI) {
                     sessionUI.destroy();
-                    this.terminals.delete(sessionId);
+                    this.terminals.delete(itemId);
                 }
 
                 if (this.terminals.size === 0) {
@@ -338,8 +342,8 @@ HTML_TEMPLATE = """
         // Класс одного окна сессии
         // --------------------------------------------------------------
         class SessionUI {
-            constructor(sessionId, container, isNew) {
-                this.sessionId = sessionId;
+            constructor(itemId, container, isNew) {
+                this.itemId = itemId;
                 this.container = container;
                 this.isNew = isNew;
                 this.socket = null;
@@ -357,20 +361,30 @@ HTML_TEMPLATE = """
             render() {
                 const windowDiv = document.createElement('div');
                 windowDiv.className = 'session-window';
-                windowDiv.dataset.sessionId = this.sessionId;
+                windowDiv.dataset.itemId = this.itemId;
 
                 // Header
-                const header = document.createElement('div');
-                header.className = 'session-header';
-                const title = document.createElement('span');
-                title.className = 'session-title';
-                title.textContent = `📟 ${this.sessionId}`;
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'close-btn';
-                closeBtn.innerHTML = '&times;';
-                closeBtn.onclick = () => sessionManager.closeSession(this.sessionId);
-                header.appendChild(title);
-                header.appendChild(closeBtn);
+                const div_termheader = document.createElement('div');
+                div_termheader.className = 'div_termheader__cls';
+                
+                const span_itemid = document.createElement('span');
+                span_itemid.className = 'span_itemid__cls';
+                span_itemid.textContent = `📟 ${this.itemId}`;
+                
+                const btn_reconnect = document.createElement('button');
+                btn_reconnect.className = 'btn_reconnect__cls';
+                btn_reconnect.textContent = '🔄';
+                btn_reconnect.title = 'Переподключиться';
+                btn_reconnect.onclick = () => this.sendReconnect();
+                
+                const btn_close = document.createElement('button');
+                btn_close.className = 'btn_close__cls';
+                btn_close.innerHTML = '&times;';
+                btn_close.onclick = () => sessionManager.closeSession(this.itemId);
+                
+                div_termheader.appendChild(span_itemid);
+                div_termheader.appendChild(btn_reconnect);
+                div_termheader.appendChild(btn_close);
 
                 // Output
                 const output = document.createElement('div');
@@ -386,22 +400,15 @@ HTML_TEMPLATE = """
                 input.placeholder = 'Введите команду и нажмите Enter';
                 this.inputElement = input;
 
-                const reconnectBtn = document.createElement('button');
-                reconnectBtn.className = 'reconnect-btn';
-                reconnectBtn.textContent = '🔄';
-                reconnectBtn.title = 'Переподключиться';
-                reconnectBtn.onclick = () => this.sendReconnect();
-
                 const statusSpan = document.createElement('span');
                 statusSpan.className = 'status';
                 statusSpan.textContent = '⚡ соединяемся...';
                 this.statusElement = statusSpan;
 
                 inputArea.appendChild(input);
-                inputArea.appendChild(reconnectBtn);
                 inputArea.appendChild(statusSpan);
 
-                windowDiv.appendChild(header);
+                windowDiv.appendChild(div_termheader);
                 windowDiv.appendChild(output);
                 windowDiv.appendChild(inputArea);
                 this.container.appendChild(windowDiv);
@@ -421,7 +428,7 @@ HTML_TEMPLATE = """
             connectWebSocket() {
                 if (this.socket) this.socket.close();
                 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                const wsUrl = `${protocol}//${window.location.host}/ws/${this.sessionId}`;
+                const wsUrl = `${protocol}//${window.location.host}/ws/${this.itemId}`;
                 this.socket = new WebSocket(wsUrl);
 
                 this.socket.onopen = () => {
@@ -448,7 +455,7 @@ HTML_TEMPLATE = """
 
             async loadHistory() {
                 try {
-                    const resp = await fetch(`/terminals/${this.sessionId}/history`);
+                    const resp = await fetch(`/terminals/${this.itemId}/history`);
                     const history = await resp.json();
                     this.addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
                     history.forEach(cmd => {
