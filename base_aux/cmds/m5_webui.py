@@ -107,9 +107,6 @@ class ObjectManager:
     async def item_exists(self, id: str) -> bool:
         return id in self.items
 
-    async def get_all_item_ids(self) -> list[str]:
-        return list(self.items)
-
 
 object_manager = ObjectManager()
 
@@ -551,7 +548,7 @@ async def get_item_history(id: str):
 
 @app.get("/items")
 async def list_items():
-    ids = await object_manager.get_all_item_ids()
+    ids = list(object_manager.items)
     return {"items": ids}
 
 
