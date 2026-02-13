@@ -135,6 +135,10 @@ HTML_TEMPLATE = """
             padding-bottom: 10px;
             border-bottom: 1px solid #444;
         }
+        #div_app_header__id.disconnected {
+            background-color: #8b0000;      /* тёмно-красный */
+            transition: background-color 0.3s;
+        }
         h1 {
             margin: 0;
             font-size: 24px;
@@ -265,7 +269,8 @@ HTML_TEMPLATE = """
             items: new Map(),
             container: document.getElementById('div_items_container__id'),
             addItemBtn: document.getElementById('btn_add_item__id'),
-
+            healthSocket: null,                          // <-- новое поле
+            
             async init() {
                 const serverIds = await this.fetchServerItems();
                 let storedIds = this.loadStoredIds();
@@ -281,8 +286,32 @@ HTML_TEMPLATE = """
                 }
 
                 this.addItemBtn.addEventListener('click', () => this.createNewItem());
+                
+                this.initHealthCheck();                   // <-- вызов после всего
             },
 
+            initHealthCheck() {
+                const connect = () => {
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    this.healthSocket = new WebSocket(`${protocol}//${window.location.host}/ws/ping`);
+                    
+                    this.healthSocket.onopen = () => {
+                        document.getElementById('div_app_header__id').classList.remove('disconnected');
+                    };
+                    
+                    this.healthSocket.onclose = () => {
+                        document.getElementById('div_app_header__id').classList.add('disconnected');
+                        setTimeout(() => connect(), 3000);   // переподключаемся через 3 сек
+                    };
+                    
+                    this.healthSocket.onerror = () => {
+                        document.getElementById('div_app_header__id').classList.add('disconnected');
+                        this.healthSocket.close();           // инициируем закрытие, вызовется onclose
+                    };
+                };
+                connect();
+            },
+    
             async fetchServerItems() {
                 try {
                     const resp = await fetch('/items');
@@ -492,6 +521,7 @@ HTML_TEMPLATE = """
         window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
             itemsManager.items.forEach(s => s.socket?.close());
+            if (itemsManager.healthSocket) itemsManager.healthSocket.close();
         };
     </script>
 </body>
@@ -552,6 +582,17 @@ async def get_item_history(id: str):
 async def list_items():
     ids = list(object_manager.items)
     return {"items": ids}
+
+
+@app.websocket("/ws/ping")
+async def websocket_ping(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        # Держим соединение открытым, игнорируем входящие сообщения
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        pass
 
 
 @app.websocket("/ws/{id}")
