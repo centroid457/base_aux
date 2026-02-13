@@ -172,8 +172,9 @@ HTML_TEMPLATE = """
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;  /* flex-start=по порядку/ space-between=равномерно*/
             align-items: center;
+            gap: 8px;                     /* отступы между всеми детьми */
             border-bottom: 1px solid #555;
         }
         .span_itemid__style {
@@ -191,6 +192,7 @@ HTML_TEMPLATE = """
             border-radius: 3px;
             cursor: pointer;
             font-size: 12px;
+            margin-left: auto;        /* прижимает эту кнопку вправо вместе с последующими элементами*/
         }
         .btn_reconnect__style:hover { background: #1177bb; }
         
