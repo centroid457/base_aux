@@ -100,20 +100,6 @@ class SessionManager:
     async def get_all_session_ids(self) -> list[str]:
         return list(self.sessions.keys())
 
-    # connections --------
-    async def register_connection(self, session_id: str, websocket: WebSocket):
-        """Регистрирует WebSocket для сессии, закрывая предыдущее соединение."""
-        if session_id in self.active_connections:
-            old_ws = self.active_connections[session_id]
-            try:
-                await old_ws.close(code=1000, reason="New connection")
-            except:
-                pass
-        self.active_connections[session_id] = websocket
-
-    def unregister_connection(self, session_id: str):
-        self.active_connections.pop(session_id, None)
-
 
 session_manager = SessionManager()
 
@@ -252,8 +238,8 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div id="app-header">
-        <h1>🔌 Web Terminal — Multi Session</h1>
-        <button id="add-session-btn">➕ Новая сессия</button>
+        <h1>🔌 Web Terminal</h1>
+        <button id="add-session-btn">➕ Новый обьект</button>
     </div>
     <div id="sessions-container"></div>
 
