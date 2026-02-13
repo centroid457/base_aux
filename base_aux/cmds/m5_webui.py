@@ -262,29 +262,29 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         // Глобальный менеджер сессий
         // --------------------------------------------------------------
-        const sessionManager = {
+        const itemsManager = {
             terminals: new Map(),
             container: document.getElementById('items_container__style'),
             addItemBtn: document.getElementById('btn_add_item__style'),
 
             async init() {
-                const serverIds = await this.fetchServerSessions();
+                const serverIds = await this.fetchServerItems();
                 let storedIds = this.loadStoredIds();
                 storedIds = storedIds.filter(id => serverIds.includes(id));
                 this.saveStoredIds(storedIds);
 
                 for (const id of storedIds) {
-                    this.createSessionWindow(id, false);
+                    this.addItemBlock(id, false);
                 }
 
                 if (this.terminals.size === 0) {
-                    await this.createNewSession();
+                    await this.createNewItem();
                 }
 
-                this.addItemBtn.addEventListener('click', () => this.createNewSession());
+                this.addItemBtn.addEventListener('click', () => this.createNewItem());
             },
 
-            async fetchServerSessions() {
+            async fetchServerItems() {
                 try {
                     const resp = await fetch('/terminals');
                     const data = await resp.json();
@@ -303,22 +303,22 @@ HTML_TEMPLATE = """
                 localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
             },
 
-            async createNewSession() {
+            async createNewItem() {
                 const resp = await fetch('/terminals', { method: 'POST' });
                 const data = await resp.json();
                 const itemId = data.id;
                 const stored = this.loadStoredIds();
                 stored.push(itemId);
                 this.saveStoredIds(stored);
-                this.createSessionWindow(itemId, true);
+                this.addItemBlock(itemId, true);
                 return itemId;
             },
 
-            createSessionWindow(itemId, isNew) {
+            addItemBlock(itemId, isNew) {
                 if (this.terminals.has(itemId)) return;
-                const sessionUI = new SessionUI(itemId, this.container, isNew);
-                this.terminals.set(itemId, sessionUI);
-                sessionUI.init();
+                const itemUI = new ItemUI(itemId, this.container, isNew);
+                this.terminals.set(itemId, itemUI);
+                itemUI.init();
             },
 
             async closeItem(itemId) {
@@ -327,22 +327,22 @@ HTML_TEMPLATE = """
                 const updated = stored.filter(id => id !== itemId);
                 this.saveStoredIds(updated);
                 
-                const sessionUI = this.terminals.get(itemId);
-                if (sessionUI) {
-                    sessionUI.destroy();
+                const itemUI = this.terminals.get(itemId);
+                if (itemUI) {
+                    itemUI.destroy();
                     this.terminals.delete(itemId);
                 }
 
                 if (this.terminals.size === 0) {
-                    await this.createNewSession();
+                    await this.createNewItem();
                 }
             }
         };
 
         // --------------------------------------------------------------
-        // Класс одного окна сессии
+        // Класс одного item
         // --------------------------------------------------------------
-        class SessionUI {
+        class ItemUI {
             constructor(itemId, container, isNew) {
                 this.itemId = itemId;
                 this.container = container;
@@ -382,7 +382,7 @@ HTML_TEMPLATE = """
                 btn_close.className = 'btn_close__style';
                 btn_close.title = 'Закрыть';
                 btn_close.innerHTML = '&times;';
-                btn_close.onclick = () => sessionManager.closeItem(this.itemId);
+                btn_close.onclick = () => itemsManager.closeItem(this.itemId);
                 
                 div_termheader.appendChild(span_itemid);
                 div_termheader.appendChild(btn_reconnect);
@@ -490,9 +490,9 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         // Запуск
         // --------------------------------------------------------------
-        window.onload = () => sessionManager.init();
+        window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
-            sessionManager.terminals.forEach(s => s.socket?.close());
+            itemsManager.terminals.forEach(s => s.socket?.close());
         };
     </script>
 </body>
