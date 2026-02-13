@@ -130,7 +130,7 @@ HTML_TEMPLATE = """
             padding: 20px;
             margin: 0;
         }
-        #div_app_header__style {
+        #div_app_header__id {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -143,7 +143,7 @@ HTML_TEMPLATE = """
             font-size: 24px;
             color: #fff;
         }
-        #btn_add_item__style {
+        #btn_add_item__id {
             background: #0e639c;
             color: white;
             border: none;
@@ -153,9 +153,9 @@ HTML_TEMPLATE = """
             font-size: 16px;
             font-weight: bold;
         }
-        #btn_add_item__style:hover { background: #1177bb; }
+        #btn_add_item__id:hover { background: #1177bb; }
         
-        #items_container__style {
+        #div_items_container__id {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -252,11 +252,11 @@ HTML_TEMPLATE = """
     </style>
 </head>
 <body>
-    <div id="div_app_header__style">
+    <div id="div_app_header__id">
         <h1>🔌 Web Terminal</h1>
-        <button id="btn_add_item__style">➕ Новый объект</button>
+        <button id="btn_add_item__id">➕ Новый объект</button>
     </div>
-    <div id="items_container__style"></div>
+    <div id="div_items_container__id"></div>
 
     <script>
         // --------------------------------------------------------------
@@ -264,8 +264,8 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         const itemsManager = {
             terminals: new Map(),
-            container: document.getElementById('items_container__style'),
-            addItemBtn: document.getElementById('btn_add_item__style'),
+            container: document.getElementById('div_items_container__id'),
+            addItemBtn: document.getElementById('btn_add_item__id'),
 
             async init() {
                 const serverIds = await this.fetchServerItems();
