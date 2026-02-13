@@ -368,9 +368,14 @@ HTML_TEMPLATE = """
                 const div_itemheader = document.createElement('div');
                 div_itemheader.className = 'div_termheader__style';
                 
+                const span_status = document.createElement('span');
+                span_status.className = 'span_status__style';
+                span_status.textContent = '⚡';
+                this.statusElement = span_status;
+                
                 const span_itemid = document.createElement('span');
                 span_itemid.className = 'span_itemid__style';
-                span_itemid.textContent = `📟 ${this.itemId}`;
+                span_itemid.textContent = `${this.itemId}`;
                 
                 const btn_reconnect = document.createElement('button');
                 btn_reconnect.className = 'btn_reconnect__style';
@@ -384,6 +389,7 @@ HTML_TEMPLATE = """
                 btn_close.innerHTML = '&times;';
                 btn_close.onclick = () => itemsManager.closeItem(this.itemId);
                 
+                div_itemheader.appendChild(span_status);
                 div_itemheader.appendChild(span_itemid);
                 div_itemheader.appendChild(btn_reconnect);
                 div_itemheader.appendChild(btn_close);
@@ -403,13 +409,7 @@ HTML_TEMPLATE = """
                 input_item.placeholder = 'Введите команду и нажмите Enter';
                 this.inputElement = input_item;
 
-                const span_status = document.createElement('span');
-                span_status.className = 'span_status__style';
-                span_status.textContent = '⚡ соединяемся...';
-                this.statusElement = span_status;
-
                 div_input.appendChild(input_item);
-                div_input.appendChild(span_status);
 
                 div_itembox.appendChild(div_itemheader);
                 div_itembox.appendChild(div_output);
