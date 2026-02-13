@@ -79,6 +79,7 @@ class ObjectManager:
             # Можно также удалить пустой список, но оставим для аккуратности
             self._client_output_queues[id] = []
 
+    # -----------------------------------------------------------------------------------------------------------------
     async def broadcast(self, id: str, msg: tuple[str, str]) -> None:
         """Разослать сообщение (тип, строка) во все очереди item."""
         client_queues = self._client_output_queues.get(id, [])
