@@ -27,33 +27,35 @@ class ObjectManager:
     def __init__(self):
         self.items = {}
         # Ключ: id, значение: список очередей для каждого WebSocket
-        self._output_queues: dict[str, list[asyncio.Queue]] = {}
+        self._client_output_queues: dict[str, list[asyncio.Queue]] = {}
         # Флаг: был ли уже применён патч к методам истории
         self._patched: set[str] = set()
 
-    async def create_item(self, id: Optional[str] = None) -> str:
+    async def create_item(self, id: str | None = None) -> str:
         if id is None:
             self._last_index += 1
             id = f"[{self._last_index}]{self.ITEM_CLASS.get_name()}"
-        new_item = self.ITEM_CLASS(id=id)
-        self.items[id] = new_item
-        self._output_queues[id] = []
+        if id not in self.items:
+            new_item = self.ITEM_CLASS(id=id)
+            self.items[id] = new_item
+            self._client_output_queues[id] = []
         return id
 
     async def get_item(self, id: str) -> Optional[CmdSession_OsTerminalAio]:
         return self.items.get(id)
 
-    async def register_queue(self, id: str, queue: asyncio.Queue) -> None:
+    async def add__client_output_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Добавляет очередь для рассылки вывода."""
-        if id not in self._output_queues:
-            self._output_queues[id] = []
-        self._output_queues[id].append(queue)
+        if id not in self._client_output_queues:
+            self._client_output_queues[id] = []
+        self._client_output_queues[id].append(queue)
 
-    async def unregister_queue(self, id: str, queue: asyncio.Queue) -> None:
+    async def del__client_output_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Удаляет очередь и, если она последняя, восстанавливает оригинальные методы."""
-        queues = self._output_queues.get(id)
+        queues = self._client_output_queues.get(id)
         if queues and queue in queues:
             queues.remove(queue)
+
         # Если больше нет клиентов – восстанавливаем оригинальные методы истории
         if id in self.items and not queues:
             object_item = self.items[id]
@@ -62,24 +64,25 @@ class ObjectManager:
                 object_item.history.append_stderr = object_item._original_append_stderr
                 del object_item._original_append_stdout
                 del object_item._original_append_stderr
+
             self._patched.discard(id)
             # Можно также удалить пустой список, но оставим для аккуратности
-            self._output_queues[id] = []
+            self._client_output_queues[id] = []
 
     async def broadcast(self, id: str, msg: tuple[str, str]) -> None:
-        """Разослать сообщение (тип, строка) во все очереди сессии."""
-        queues = self._output_queues.get(id, [])
-        for q in queues:
-            await q.put(msg)
+        """Разослать сообщение (тип, строка) во все очереди item."""
+        client_queues = self._client_output_queues.get(id, [])
+        for client_queue in client_queues:
+            await client_queue.put(msg)
 
-    async def close_item(self, id: str) -> None:
+    async def del_item(self, id: str) -> None:
         """Принудительно закрывает обьект очищает очереди."""
         item = self.items.pop(id, None)
         if not item:
             return
 
         # Удаляем все очереди и восстанавливаем оригиналы
-        self._output_queues.pop(id, None)
+        self._client_output_queues.pop(id, None)
         if hasattr(item, '_original_append_stdout'):
             item.history.append_stdout = item._original_append_stdout
             item.history.append_stderr = item._original_append_stderr
@@ -88,24 +91,7 @@ class ObjectManager:
         self._patched.discard(id)
 
         # Останавливаем фоновые задачи чтения
-        item._stop_reading = True
-        for task in item._reader_tasks:
-            task.cancel()
-        await asyncio.gather(*item._reader_tasks, return_exceptions=True)
-        item._reader_tasks.clear()
-
-        # Завершаем процесс
-        if item._conn:
-            try:
-                item._conn.terminate()
-                await asyncio.wait_for(item._conn.wait(), timeout=1.0)
-            except asyncio.TimeoutError:
-                item._conn.kill()
-                await item._conn.wait()
-            item._conn = None
-
-    async def item_exists(self, id: str) -> bool:
-        return id in self.items
+        await item.disconnect()
 
 
 object_manager = ObjectManager()
@@ -489,13 +475,13 @@ HTML_TEMPLATE = """
                 try {
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
-                    this.addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
+                    this.addOutputLine('system', '=== ИСТОРИЯ ===');
                     history.forEach(cmd => {
                         if (cmd.input) this.addOutputLine('stdin', `→ ${cmd.input}`);
                         cmd.stdout?.forEach(l => this.addOutputLine('stdout', l));
                         cmd.stderr?.forEach(l => this.addOutputLine('stderr', l));
                     });
-                    this.addOutputLine('system', '=== КОНЕЦ ИСТОРИИ ===');
+                    this.addOutputLine('system', '=== ИСТОРИЯ ===');
                 } catch (err) {
                     this.addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
                 }
@@ -546,13 +532,13 @@ async def create_item():
 
 @app.delete("/items/{id}")
 async def delete_item(id: str):
-    await object_manager.close_item(id)
+    await object_manager.del_item(id)
     return {"status": "closed"}
 
 
 @app.get("/items/{id}")
 async def get_item(id: str):
-    exists = await object_manager.item_exists(id)
+    exists = id in object_manager.items
     if exists:
         return {"id": id, "active": True}
     raise HTTPException(status_code=404, detail=f"{id=}Item not found")
@@ -560,12 +546,12 @@ async def get_item(id: str):
 
 @app.get("/items/{id}/history")
 async def get_item_history(id: str):
-    session = await object_manager.get_item(id)
-    if not session:
+    item = await object_manager.get_item(id)
+    if not item:
         raise HTTPException(status_code=404, detail=f"{id=}Item not found")
 
     history_data = []
-    for result in session.history:
+    for result in item.history:
         history_data.append({
             "input": result.INPUT,
             "stdout": result.STDOUT,
@@ -597,37 +583,37 @@ async def websocket_ping(websocket: WebSocket):
 
 @app.websocket("/ws/{id}")
 async def websocket_endpoint(websocket: WebSocket, id: str):
-    session = await object_manager.get_item(id)
-    if not session:
-        await websocket.close(code=1008, reason="Invalid session")
+    item = await object_manager.get_item(id)
+    if not item:
+        await websocket.close(code=1008, reason=f"{id=}/Invalid")
         return
 
     # Подключаем процесс, если ещё не подключён
-    if not session._conn:
-        await session.connect()
+    if not item._conn:
+        await item.connect()
 
     # --- 1. Создаём очередь для этого клиента ---
     output_queue = asyncio.Queue()
-    await object_manager.register_queue(id, output_queue)
+    await object_manager.add__client_output_queue(id, output_queue)
 
     # --- 2. Патчим методы истории (только один раз!) ---
     if id not in object_manager._patched:
-        # Сохраняем оригиналы как атрибуты экземпляра сессии
-        session._original_append_stdout = session.history.append_stdout
-        session._original_append_stderr = session.history.append_stderr
+        # Сохраняем оригиналы как атрибуты экземпляра item
+        item._original_append_stdout = item.history.append_stdout
+        item._original_append_stderr = item.history.append_stderr
 
         def patched_append_stdout(data):
             # Сначала вызываем оригинал (сохраняем в истории)
-            session._original_append_stdout(data)
+            item._original_append_stdout(data)
             # Рассылаем всем подключённым клиентам
             asyncio.create_task(object_manager.broadcast(id, ("stdout", data)))
 
         def patched_append_stderr(data):
-            session._original_append_stderr(data)
+            item._original_append_stderr(data)
             asyncio.create_task(object_manager.broadcast(id, ("stderr", data)))
 
-        session.history.append_stdout = patched_append_stdout
-        session.history.append_stderr = patched_append_stderr
+        item.history.append_stdout = patched_append_stdout
+        item.history.append_stderr = patched_append_stderr
         object_manager._patched.add(id)
 
     # --- 3. Задача отправки из очереди этого клиента в его WebSocket ---
@@ -650,17 +636,17 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
         while True:
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
-                await session.reconnect()
+                await item.reconnect()
                 await websocket.send_json({"type": "system", "line": "🔄 Сессия переподключена"})
             else:
-                await session.send_command(cmd)
+                await item.send_command(cmd)
     except WebSocketDisconnect:
         pass
     finally:
         send_task.cancel()
         await send_task
         # Отписываем клиента
-        await object_manager.unregister_queue(id, output_queue)
+        await object_manager.del__client_output_queue(id, output_queue)
 
 
 # =====================================================================================================================
