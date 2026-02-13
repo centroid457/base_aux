@@ -21,27 +21,27 @@ class ObjectManager:
     controlling object collection
     """
     ITEM_CLASS: type[CmdSession_OsTerminalAio] = CmdSession_OsTerminalAio
-    terminals: dict[str, CmdSession_OsTerminalAio]
+    items: dict[str, CmdSession_OsTerminalAio]
     _last_index: int = 0
 
     def __init__(self):
-        self.terminals = {}
+        self.items = {}
         # Ключ: id, значение: список очередей для каждого WebSocket
         self._output_queues: dict[str, list[asyncio.Queue]] = {}
         # Флаг: был ли уже применён патч к методам истории
         self._patched: set[str] = set()
 
-    async def create(self, id: Optional[str] = None) -> str:
+    async def create_item(self, id: Optional[str] = None) -> str:
         if id is None:
             self._last_index += 1
             id = f"[{self._last_index}]{self.ITEM_CLASS.get_name()}"
         new_item = self.ITEM_CLASS(id=id)
-        self.terminals[id] = new_item
+        self.items[id] = new_item
         self._output_queues[id] = []
         return id
 
     async def get_item(self, id: str) -> Optional[CmdSession_OsTerminalAio]:
-        return self.terminals.get(id)
+        return self.items.get(id)
 
     async def register_queue(self, id: str, queue: asyncio.Queue) -> None:
         """Добавляет очередь для рассылки вывода."""
@@ -55,8 +55,8 @@ class ObjectManager:
         if queues and queue in queues:
             queues.remove(queue)
         # Если больше нет клиентов – восстанавливаем оригинальные методы истории
-        if id in self.terminals and not queues:
-            object_item = self.terminals[id]
+        if id in self.items and not queues:
+            object_item = self.items[id]
             if hasattr(object_item, '_original_append_stdout'):
                 object_item.history.append_stdout = object_item._original_append_stdout
                 object_item.history.append_stderr = object_item._original_append_stderr
@@ -74,7 +74,7 @@ class ObjectManager:
 
     async def close_item(self, id: str) -> None:
         """Принудительно закрывает обьект очищает очереди."""
-        item = self.terminals.pop(id, None)
+        item = self.items.pop(id, None)
         if not item:
             return
 
@@ -105,10 +105,10 @@ class ObjectManager:
             item._conn = None
 
     async def item_exists(self, id: str) -> bool:
-        return id in self.terminals
+        return id in self.items
 
     async def get_all_item_ids(self) -> list[str]:
-        return list(self.terminals)
+        return list(self.items)
 
 
 object_manager = ObjectManager()
@@ -263,7 +263,7 @@ HTML_TEMPLATE = """
         // Глобальный менеджер сессий
         // --------------------------------------------------------------
         const itemsManager = {
-            terminals: new Map(),
+            items: new Map(),
             container: document.getElementById('div_items_container__id'),
             addItemBtn: document.getElementById('btn_add_item__id'),
 
@@ -277,7 +277,7 @@ HTML_TEMPLATE = """
                     this.addItemBlock(id, false);
                 }
 
-                if (this.terminals.size === 0) {
+                if (this.items.size === 0) {
                     await this.createNewItem();
                 }
 
@@ -286,9 +286,9 @@ HTML_TEMPLATE = """
 
             async fetchServerItems() {
                 try {
-                    const resp = await fetch('/terminals');
+                    const resp = await fetch('/items');
                     const data = await resp.json();
-                    return data.terminals || [];
+                    return data.items || [];
                 } catch {
                     return [];
                 }
@@ -304,7 +304,7 @@ HTML_TEMPLATE = """
             },
 
             async createNewItem() {
-                const resp = await fetch('/terminals', { method: 'POST' });
+                const resp = await fetch('/items', { method: 'POST' });
                 const data = await resp.json();
                 const itemId = data.id;
                 const stored = this.loadStoredIds();
@@ -315,25 +315,25 @@ HTML_TEMPLATE = """
             },
 
             addItemBlock(itemId, isNew) {
-                if (this.terminals.has(itemId)) return;
+                if (this.items.has(itemId)) return;
                 const itemUI = new ItemUI(itemId, this.container, isNew);
-                this.terminals.set(itemId, itemUI);
+                this.items.set(itemId, itemUI);
                 itemUI.init();
             },
 
             async closeItem(itemId) {
-                await fetch(`/terminals/${itemId}`, { method: 'DELETE' });
+                await fetch(`/items/${itemId}`, { method: 'DELETE' });
                 const stored = this.loadStoredIds();
                 const updated = stored.filter(id => id !== itemId);
                 this.saveStoredIds(updated);
                 
-                const itemUI = this.terminals.get(itemId);
+                const itemUI = this.items.get(itemId);
                 if (itemUI) {
                     itemUI.destroy();
-                    this.terminals.delete(itemId);
+                    this.items.delete(itemId);
                 }
 
-                if (this.terminals.size === 0) {
+                if (this.items.size === 0) {
                     await this.createNewItem();
                 }
             }
@@ -365,8 +365,8 @@ HTML_TEMPLATE = """
                 div_itembox.dataset.itemId = this.itemId;
 
                 // Header
-                const div_termheader = document.createElement('div');
-                div_termheader.className = 'div_termheader__style';
+                const div_itemheader = document.createElement('div');
+                div_itemheader.className = 'div_termheader__style';
                 
                 const span_itemid = document.createElement('span');
                 span_itemid.className = 'span_itemid__style';
@@ -384,9 +384,9 @@ HTML_TEMPLATE = """
                 btn_close.innerHTML = '&times;';
                 btn_close.onclick = () => itemsManager.closeItem(this.itemId);
                 
-                div_termheader.appendChild(span_itemid);
-                div_termheader.appendChild(btn_reconnect);
-                div_termheader.appendChild(btn_close);
+                div_itemheader.appendChild(span_itemid);
+                div_itemheader.appendChild(btn_reconnect);
+                div_itemheader.appendChild(btn_close);
 
                 // Output
                 const div_output = document.createElement('div');
@@ -411,7 +411,7 @@ HTML_TEMPLATE = """
                 div_input.appendChild(input_item);
                 div_input.appendChild(span_status);
 
-                div_itembox.appendChild(div_termheader);
+                div_itembox.appendChild(div_itemheader);
                 div_itembox.appendChild(div_output);
                 div_itembox.appendChild(div_input);
                 
@@ -436,7 +436,7 @@ HTML_TEMPLATE = """
                 this.socket = new WebSocket(wsUrl);
 
                 this.socket.onopen = () => {
-                    this.statusElement.textContent = '✅ онлайн';
+                    this.statusElement.textContent = '✅';
                     if (!this.isNew) this.loadHistory();
                 };
                 this.socket.onmessage = (e) => {
@@ -444,10 +444,10 @@ HTML_TEMPLATE = """
                     this.addOutputLine(msg.type, msg.line);
                 };
                 this.socket.onclose = () => {
-                    this.statusElement.textContent = '❌ отключено';
+                    this.statusElement.textContent = '❌';
                 };
                 this.socket.onerror = () => {
-                    this.statusElement.textContent = '⚠️ ошибка';
+                    this.statusElement.textContent = '⚠️';
                 };
             }
 
@@ -459,7 +459,7 @@ HTML_TEMPLATE = """
 
             async loadHistory() {
                 try {
-                    const resp = await fetch(`/terminals/${this.itemId}/history`);
+                    const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
                     this.addOutputLine('system', '=== ЗАГРУЖЕНА ИСТОРИЯ СЕССИИ ===');
                     history.forEach(cmd => {
@@ -492,7 +492,7 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
-            itemsManager.terminals.forEach(s => s.socket?.close());
+            itemsManager.items.forEach(s => s.socket?.close());
         };
     </script>
 </body>
@@ -509,32 +509,31 @@ async def get_html():
     return HTML_TEMPLATE
 
 
-@app.post("/terminals")
-async def create_session():
-    id = await object_manager.create()
+@app.post("/items")
+async def create_item():
+    id = await object_manager.create_item()
     return {"id": id}
 
 
-@app.delete("/terminals/{id}")
-async def delete_session(id: str):
+@app.delete("/items/{id}")
+async def delete_item(id: str):
     await object_manager.close_item(id)
-    # await object_manager.reconnect_session(id)
     return {"status": "closed"}
 
 
-@app.get("/terminals/{id}")
+@app.get("/items/{id}")
 async def get_item(id: str):
     exists = await object_manager.item_exists(id)
     if exists:
         return {"id": id, "active": True}
-    raise HTTPException(status_code=404, detail="Session not found")
+    raise HTTPException(status_code=404, detail=f"{id=}Item not found")
 
 
-@app.get("/terminals/{id}/history")
-async def get_session_history(id: str):
+@app.get("/items/{id}/history")
+async def get_item_history(id: str):
     session = await object_manager.get_item(id)
     if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+        raise HTTPException(status_code=404, detail=f"{id=}Item not found")
 
     history_data = []
     for result in session.history:
@@ -550,10 +549,10 @@ async def get_session_history(id: str):
     return history_data
 
 
-@app.get("/terminals")
-async def list_sessions():
+@app.get("/items")
+async def list_items():
     ids = await object_manager.get_all_item_ids()
-    return {"terminals": ids}
+    return {"items": ids}
 
 
 @app.websocket("/ws/{id}")
