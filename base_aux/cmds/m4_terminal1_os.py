@@ -15,7 +15,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
     access to terminal with continuous connection - keeping state!
     """
     _conn: subprocess.Popen | None
-    _reader_tasks: list[threading.Thread]
+    _bg_tasks: list[threading.Thread]
 
     def __init__(
             self,
@@ -57,12 +57,12 @@ class CmdTerminal_Os(Base_CmdTerminal):
 
         self._stop_reading = False
 
-        self._reader_tasks = [
+        self._bg_tasks = [
             threading.Thread(target=self._reading_stdout, daemon=True),
             threading.Thread(target=self._reading_stderr, daemon=True),
         ]
 
-        for reader_task in self._reader_tasks:
+        for reader_task in self._bg_tasks:
             reader_task.start()
 
         time.sleep(0.3)
@@ -90,10 +90,10 @@ class CmdTerminal_Os(Base_CmdTerminal):
 
         self._stop_reading = True
 
-        for reader_task in self._reader_tasks:
+        for reader_task in self._bg_tasks:
             reader_task.join(timeout=1)
 
-        self._reader_tasks.clear()
+        self._bg_tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
@@ -226,7 +226,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
         try:
             self._conn.stdin.write(f"{cmd}\n")
             self._conn.stdin.flush()
-            if self.wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
                 _finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT

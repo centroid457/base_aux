@@ -22,7 +22,7 @@ class Base_CmdTerminal:
 
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
         self._stop_reading: bool = False
-        self._reader_tasks: list[Any] = []
+        self._bg_tasks: list[Any] = []
         self._conn: Any | None = None
 
         self.id: str | None = id or str(uuid.uuid4())
@@ -83,7 +83,7 @@ class Base_CmdTerminal:
     def send_command(self, cmd: str, timeout_start: float | None = None, timeout_finish: float | None = None) -> CmdResult:
         raise NotImplementedError()
 
-    def wait__finish_executing_cmd(self, timeout_start: float | None = None, timeout_finish: float | None = None) -> bool:
+    def _wait__finish_executing_cmd(self, timeout_start: float | None = None, timeout_finish: float | None = None) -> bool:
         """
         GOAL
         ----
@@ -95,15 +95,14 @@ class Base_CmdTerminal:
         timeout_finish = timeout_finish or self.timeout_finish
 
         data_received: bool = False
-
-        duration: float = self.history.last_result.duration
+        last_duration: float = self.history.last_result.duration
 
         timeout_active = timeout_start
         time_start = time.time()
         while time.time() - time_start < timeout_active:
-            if duration != self.history.last_result.duration:
+            if last_duration != self.history.last_result.duration:
                 data_received = True
-                duration = self.history.last_result.duration
+                last_duration = self.history.last_result.duration
                 time_start = time.time()
                 timeout_active = timeout_finish
             else:

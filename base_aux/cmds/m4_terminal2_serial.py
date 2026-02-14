@@ -125,7 +125,7 @@ class CmdTerminal_Serial(Base_CmdTerminal):
             self._conn.flush()
 
             # Ожидание завершения вывода
-            if self.wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
                 _finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT

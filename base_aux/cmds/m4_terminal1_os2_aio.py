@@ -11,7 +11,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     Асинхронная версия CmdTerminal_Os на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
-    _reader_tasks: list[asyncio.Task]
+    _bg_tasks: list[asyncio.Task]
 
     def __init__(
             self,
@@ -49,7 +49,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
         self._stop_reading = False
 
-        self._reader_tasks = [
+        self._bg_tasks = [
             asyncio.create_task(self._reading_stdout()),
             asyncio.create_task(self._reading_stderr()),
         ]
@@ -80,10 +80,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         self._stop_reading = True
 
         # Отменяем задачи чтения и ждём их завершения
-        for task in self._reader_tasks:
+        for task in self._bg_tasks:
             task.cancel()
-        await asyncio.gather(*self._reader_tasks, return_exceptions=True)
-        self._reader_tasks.clear()
+        await asyncio.gather(*self._bg_tasks, return_exceptions=True)
+        self._bg_tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
@@ -110,7 +110,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             except asyncio.CancelledError:
                 break
             except Exception as exc:
-                print(f"stdout reader error: {exc!r}")
+                print(f"UNEXPECTED _reading_stdout: {exc!r}")
                 break
 
     async def _reading_stderr(self):
@@ -133,7 +133,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                 break
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def wait__finish_executing_cmd(
+    async def _wait__finish_executing_cmd(
             self,
             timeout_start: float | None = None,
             timeout_finish: float | None = None
@@ -177,7 +177,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             await self._conn.stdin.drain()
 
             # Ожидание завершения вывода команды
-            if await self.wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):
                 finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 finished_status = EnumAdj_FinishedStatus.TIMED_OUT
