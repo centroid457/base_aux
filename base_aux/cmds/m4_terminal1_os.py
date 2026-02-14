@@ -15,7 +15,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
     access to terminal with continuous connection - keeping state!
     """
     _conn: subprocess.Popen | None
-    _bg_tasks: list[threading.Thread]
+    _tasks: list[threading.Thread]
 
     def __init__(
             self,
@@ -30,25 +30,38 @@ class CmdTerminal_Os(Base_CmdTerminal):
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
     # -----------------------------------------------------------------------------------------------------------------
+    def _create_conn(self) -> None | NoReturn:
+        self._conn = subprocess.Popen(
+            args=[self._shell_cmd, ],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1,
+            universal_newlines=True,
+            encoding=self._encoding,
+            # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            cwd=self.cwd,
+            # timeout=1,    № is not accesible here in Popen!!!!
+        )
+
+    def _create_tasks(self) -> None:
+        self._tasks = [
+            threading.Thread(target=self._reading_stdout, daemon=True),
+            threading.Thread(target=self._reading_stderr, daemon=True),
+        ]
+
+        for reader_task in self._tasks:
+            reader_task.start()
+
+    # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
         if self._conn is not None:
             return True
 
         print(f"{self.__class__.__name__}({self.id=}).connect")
         try:
-            self._conn = subprocess.Popen(
-                args=[self._shell_cmd, ],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1,
-                universal_newlines=True,
-                encoding=self._encoding,
-                # creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-                cwd=self.cwd,
-                # timeout=1,    № is not accesible here in Popen!!!!
-            )
+            self._create_conn()
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
             print(msg)
@@ -56,14 +69,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
             return False
 
         self._stop_reading = False
-
-        self._bg_tasks = [
-            threading.Thread(target=self._reading_stdout, daemon=True),
-            threading.Thread(target=self._reading_stderr, daemon=True),
-        ]
-
-        for reader_task in self._bg_tasks:
-            reader_task.start()
+        self._create_tasks()
 
         time.sleep(0.3)
         return True
@@ -90,10 +96,10 @@ class CmdTerminal_Os(Base_CmdTerminal):
 
         self._stop_reading = True
 
-        for reader_task in self._bg_tasks:
+        for reader_task in self._tasks:
             reader_task.join(timeout=1)
 
-        self._bg_tasks.clear()
+        self._tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")

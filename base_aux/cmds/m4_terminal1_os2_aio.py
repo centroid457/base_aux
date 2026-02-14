@@ -11,7 +11,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     Асинхронная версия CmdTerminal_Os на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
-    _bg_tasks: list[asyncio.Task]
+    _tasks: list[asyncio.Task]
 
     def __init__(
             self,
@@ -25,6 +25,24 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
     # -----------------------------------------------------------------------------------------------------------------
+    async def _create_conn(self) -> None | NoReturn:
+        self._conn = await asyncio.create_subprocess_exec(
+            self.shell_cmd,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=self.cwd,
+            # text=True,                                            # not appropriate!
+            # encoding="cp866" if os.name == "nt" else "utf8",      # not appropriate!
+        )
+
+    def _create_tasks(self) -> None:
+        self._tasks = [
+            asyncio.create_task(self._reading_stdout()),
+            asyncio.create_task(self._reading_stderr()),
+        ]
+
+    # -----------------------------------------------------------------------------------------------------------------
     async def connect(self) -> bool:
         if self._conn is not None:
             return True
@@ -32,15 +50,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         print(f"{self.__class__.__name__}({self.id=}).connect")
 
         try:
-            self._conn = await asyncio.create_subprocess_exec(
-                self.shell_cmd,
-                stdin=asyncio.subprocess.PIPE,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-                cwd=self.cwd,
-                # text=True,                                            # not appropriate!
-                # encoding="cp866" if os.name == "nt" else "utf8",      # not appropriate!
-            )
+            await self._create_conn()
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
             print(msg)
@@ -48,11 +58,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             return False
 
         self._stop_reading = False
-
-        self._bg_tasks = [
-            asyncio.create_task(self._reading_stdout()),
-            asyncio.create_task(self._reading_stderr()),
-        ]
+        self._create_tasks()
 
         await asyncio.sleep(0.3)
         return True
@@ -80,10 +86,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         self._stop_reading = True
 
         # Отменяем задачи чтения и ждём их завершения
-        for task in self._bg_tasks:
+        for task in self._tasks:
             task.cancel()
-        await asyncio.gather(*self._bg_tasks, return_exceptions=True)
-        self._bg_tasks.clear()
+        await asyncio.gather(*self._tasks, return_exceptions=True)
+        self._tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")

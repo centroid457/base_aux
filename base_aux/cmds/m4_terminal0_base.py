@@ -22,7 +22,7 @@ class Base_CmdTerminal:
 
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
         self._stop_reading: bool = False
-        self._bg_tasks: list[Any] = []
+        self._tasks: list[Any] = []
         self._conn: Any | None = None
 
         self.id: str | None = id or str(uuid.uuid4())
@@ -42,6 +42,22 @@ class Base_CmdTerminal:
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> None:
+        raise NotImplementedError()
+
+    def _create_conn(self) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        only create only one _conn! no validate/ no catching exc!!!
+        """
+        raise NotImplementedError()
+
+    def _create_tasks(self) -> None:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
         raise NotImplementedError()
 
     def disconnect(self) -> None:
