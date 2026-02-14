@@ -257,7 +257,7 @@ HTML_TEMPLATE = """
                 this.saveStoredIds(storedIds);
 
                 for (const id of storedIds) {
-                    this.addItemBlock(id, false);
+                    this.addItemBlock(id);
                 }
 
                 if (this.items.size === 0) {
@@ -317,13 +317,13 @@ HTML_TEMPLATE = """
                 const stored = this.loadStoredIds();
                 stored.push(itemId);
                 this.saveStoredIds(stored);
-                this.addItemBlock(itemId, true);
+                this.addItemBlock(itemId);
                 return itemId;
             },
 
-            addItemBlock(itemId, isNew) {
+            addItemBlock(itemId) {
                 if (this.items.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, this.container, isNew);
+                const itemUI = new ItemUI(itemId, this.container);
                 this.items.set(itemId, itemUI);
                 itemUI.init();
             },
@@ -350,10 +350,9 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, container, isNew) {
+            constructor(itemId, container) {
                 this.itemId = itemId;
                 this.container = container;
-                this.isNew = isNew;
                 this.socket = null;
                 this.element = null;
                 this.outputElement = null;
@@ -444,7 +443,7 @@ HTML_TEMPLATE = """
 
                 this.socket.onopen = () => {
                     this.statusElement.textContent = '✅';
-                    if (!this.isNew) this.loadHistory();
+                    this.loadHistory();
                 };
                 this.socket.onmessage = (e) => {
                     const msg = JSON.parse(e.data);
@@ -468,23 +467,22 @@ HTML_TEMPLATE = """
                 try {
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
-                    this.addOutputLine('system', '=== ИСТОРИЯ ===');
                     history.forEach(cmd => {
                         if (cmd.input) this.addOutputLine('stdin', `→ ${cmd.input}`);
                         cmd.stdout?.forEach(l => this.addOutputLine('stdout', l));
                         cmd.stderr?.forEach(l => this.addOutputLine('stderr', l));
                     });
-                    this.addOutputLine('system', '=== ИСТОРИЯ ===');
+                    this.addOutputLine('system', '=== HISTORY ===');
                 } catch (err) {
                     this.addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
                 }
             }
 
             addOutputLine(type, text) {
-                const line = document.createElement('div');
-                line.className = type;
-                line.textContent = text;
-                this.outputElement.appendChild(line);
+                const div_msg = document.createElement('div');
+                div_msg.className = type;
+                div_msg.textContent = text;
+                this.outputElement.appendChild(div_msg);
                 this.outputElement.scrollTop = this.outputElement.scrollHeight;
             }
 
