@@ -20,8 +20,8 @@ class ObjectManager:
     ----
     controlling object collection
     """
-    ITEM_CLASS: type[CmdSession_OsTerminalAio] = CmdSession_OsTerminalAio
-    items: dict[str, CmdSession_OsTerminalAio]
+    ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
+    items: dict[str, CmdTerminal_OsAio]
     _last_index: int = 0
 
     def __init__(self):
@@ -40,7 +40,7 @@ class ObjectManager:
             self._client_output_queues[id] = []
         return id
 
-    async def get_item(self, id: str) -> CmdSession_OsTerminalAio | None:
+    async def get_item(self, id: str) -> CmdTerminal_OsAio | None:
         return self.items.get(id)
 
     async def del_item(self, id: str) -> None:

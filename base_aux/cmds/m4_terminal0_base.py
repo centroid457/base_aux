@@ -8,7 +8,7 @@ from base_aux.cmds.m2_history import CmdHistory
 
 
 # =====================================================================================================================
-class Base_CmdSession:
+class Base_CmdTerminal:
     def __init__(
             self,
             *,

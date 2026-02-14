@@ -8,7 +8,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdSession_OsTerminal(Base_CmdSession):
+class CmdTerminal_Os(Base_CmdTerminal):
     """
     GOAL
     ----
@@ -241,7 +241,7 @@ class CmdSession_OsTerminal(Base_CmdSession):
 
 # =====================================================================================================================
 def _explore__ping():
-    with CmdSession_OsTerminal() as term:
+    with CmdTerminal_Os() as term:
         if not term.connect():
             return
 
@@ -259,7 +259,7 @@ def _explore__ping():
 
 
 def _explore__cd():
-    with CmdSession_OsTerminal() as term:
+    with CmdTerminal_Os() as term:
         if not term.connect():
             return
 
@@ -284,7 +284,7 @@ def _explore__cd():
 
 
 def _explore__cd_reconnect():
-    with CmdSession_OsTerminal() as term:
+    with CmdTerminal_Os() as term:
         if not term.connect():
             return
 

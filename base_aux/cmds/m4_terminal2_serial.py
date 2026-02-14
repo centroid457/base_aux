@@ -9,7 +9,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdSession_Serial(Base_CmdSession):
+class CmdTerminal_Serial(Base_CmdTerminal):
     def __init__(
             self,
             *,
@@ -169,7 +169,7 @@ def _explore__serial_basic():
     port_name = ports[0].device
     print(f"Используем порт: {port_name}")
 
-    with CmdSession_Serial(
+    with CmdTerminal_Serial(
             port=port_name,
             baudrate=115200,
             timeout=1.0,
@@ -192,7 +192,7 @@ def _explore__serial_basic():
 
 def _explore__serial_custom():
     """Пример с ручным указанием порта и скорости"""
-    with CmdSession_Serial(
+    with CmdTerminal_Serial(
             port="COM3",
             baudrate=9600,
             timeout=2.0,

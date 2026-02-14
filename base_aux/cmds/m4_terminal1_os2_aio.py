@@ -6,9 +6,9 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdSession_OsTerminalAio(Base_CmdSession):
+class CmdTerminal_OsAio(Base_CmdTerminal):
     """
-    Асинхронная версия CmdSession_OsTerminal на asyncio.subprocess.
+    Асинхронная версия CmdTerminal_Os на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
     _reader_tasks: list[asyncio.Task]
@@ -201,7 +201,7 @@ class CmdSession_OsTerminalAio(Base_CmdSession):
 
 # =====================================================================================================================
 async def explore__ping():
-    async with CmdSession_OsTerminalAio() as term:
+    async with CmdTerminal_OsAio() as term:
         if not await term.connect():
             return
 
@@ -216,7 +216,7 @@ async def explore__ping():
 
 
 async def explore__cd():
-    async with CmdSession_OsTerminalAio() as term:
+    async with CmdTerminal_OsAio() as term:
         if not await term.connect():
             return
 
@@ -236,7 +236,7 @@ async def explore__cd():
 
 
 async def explore__cd_reconnect():
-    async with CmdSession_OsTerminalAio() as term:
+    async with CmdTerminal_OsAio() as term:
         if not await term.connect():
             return
 
