@@ -203,10 +203,10 @@ HTML_TEMPLATE = """
             font-family: monospace;
             border-bottom: 1px solid #444;
         }
-        .stdout { color: #b5cea8; }
-        .stderr { color: #f48771; }
-        .stdin  { color: #dcdcaa; }
-        .system { color: #569cd6; font-style: italic; }
+        .msg_stdin__style  { color: #ffffff; }
+        .msg_stdout__style { color: #b5cea8; }
+        .msg_stderr__style { color: #f48771; }
+        .msg_system__style { color: #569cd6; font-style: italic; }
         .div_input__style {
             display: flex;
             padding: 10px;
@@ -447,7 +447,7 @@ HTML_TEMPLATE = """
                 };
                 this.socket.onmessage = (e) => {
                     const msg = JSON.parse(e.data);
-                    this.addOutputLine(msg.type, msg.line);
+                    this.addOutputLine(msg.msg_style, msg.msg_text);
                 };
                 this.socket.onclose = () => {
                     this.statusElement.textContent = '❌';
@@ -468,20 +468,21 @@ HTML_TEMPLATE = """
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
                     history.forEach(cmd => {
-                        if (cmd.input) this.addOutputLine('stdin', `→ ${cmd.input}`);
-                        cmd.stdout?.forEach(l => this.addOutputLine('stdout', l));
-                        cmd.stderr?.forEach(l => this.addOutputLine('stderr', l));
+                        if (cmd.input) this.addOutputLine('msg_stdin__style', `→ ${cmd.input}`);
+                        cmd.stdout?.forEach(l => this.addOutputLine('msg_stdout__style', l));
+                        cmd.stderr?.forEach(l => this.addOutputLine('msg_stderr__style', l));
                     });
-                    this.addOutputLine('system', '=== HISTORY ===');
+                    this.addOutputLine('msg_system__style', '=== HISTORY ===');
                 } catch (err) {
-                    this.addOutputLine('stderr', `Ошибка загрузки истории: ${err.message}`);
+                    this.addOutputLine('msg_stderr__style', `Ошибка loadHistory ${err.message}`);
                 }
             }
 
-            addOutputLine(type, text) {
+            addOutputLine(msg_style, msg_text) {
                 const div_msg = document.createElement('div');
-                div_msg.className = type;
-                div_msg.textContent = text;
+                div_msg.className = msg_style;
+                div_msg.textContent = msg_text;
+                
                 this.outputElement.appendChild(div_msg);
                 this.outputElement.scrollTop = this.outputElement.scrollHeight;
             }
@@ -597,11 +598,11 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
             # Сначала вызываем оригинал (сохраняем в истории)
             item._original_append_stdout(data)
             # Рассылаем всем подключённым клиентам
-            asyncio.create_task(object_manager.broadcast(id, ("stdout", data)))
+            asyncio.create_task(object_manager.broadcast(id, ("msg_stdout__style", data)))
 
         def patched_append_stderr(data):
             item._original_append_stderr(data)
-            asyncio.create_task(object_manager.broadcast(id, ("stderr", data)))
+            asyncio.create_task(object_manager.broadcast(id, ("msg_stderr__style", data)))
 
         item.history.append_stdout = patched_append_stdout
         item.history.append_stderr = patched_append_stderr
@@ -611,9 +612,9 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
     async def send_output():
         try:
             while True:
-                out_type, line = await client_output_queue.get()
+                msg_style, msg_text = await client_output_queue.get()
                 try:
-                    await websocket.send_json({"type": out_type, "line": line})
+                    await websocket.send_json({"msg_style": msg_style, "msg_text": msg_text})
                 except (WebSocketDisconnect, RuntimeError):
                     break
         except asyncio.CancelledError:
@@ -628,7 +629,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
                 await item.reconnect()
-                await websocket.send_json({"type": "system", "line": "🔄 Сессия переподключена"})
+                await websocket.send_json({"msg_style": "msg_system__style", "msg_text": "🔄 Сессия переподключена"})
             else:
                 await item.send_command(cmd)
     except WebSocketDisconnect:
