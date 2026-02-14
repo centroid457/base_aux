@@ -23,6 +23,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
         self.cwd: str | None = cwd
         self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+        self._last_byte_time: float = 0.0   # время последнего полученного байта
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
@@ -59,6 +60,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
         self._stop_reading = False
         self._create_tasks()
+        self._last_byte_time = asyncio.get_event_loop().time()
 
         await asyncio.sleep(0.3)
         return True
@@ -100,43 +102,112 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         await self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _reading_stdout(self):
-        """Асинхронное чтение stdout."""
+    # async def _reading_stdout(self):
+    #     """Асинхронное чтение stdout."""
+    #     while not self._stop_reading and self._conn:
+    #         try:
+    #             line = await self._conn.stdout.readline()
+    #             if not line:
+    #                 break
+    #             line = line.decode(self._encoding)
+    #             line = line.rstrip()
+    #             if line:
+    #                 print(f"[STDOUT]{line}")
+    #                 self.history.append_stdout(line)
+    #             self.history.set_retcode(self._conn.returncode)
+    #         except asyncio.CancelledError:
+    #             break
+    #         except Exception as exc:
+    #             print(f"UNEXPECTED _reading_stdout: {exc!r}")
+    #             break
+    #
+    # async def _reading_stderr(self):
+    #     """Асинхронное чтение stderr."""
+    #     while not self._stop_reading and self._conn:
+    #         try:
+    #             line = await self._conn.stderr.readline()
+    #             if not line:
+    #                 break
+    #             line = line.decode(self._encoding)
+    #             line = line.rstrip()
+    #             if line:
+    #                 print(f"[STDERR]{line}")
+    #                 self.history.append_stderr(line)
+    #             self.history.set_retcode(self._conn.returncode)
+    #         except asyncio.CancelledError:
+    #             break
+    #         except Exception as exc:
+    #             print(f"stderr reader error: {exc!r}")
+    #             break
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------------------
+    async def _read_stream(self, stream: asyncio.StreamReader, append_method: Callable):
+        """
+        Чтение потока по одному байту с двумя таймаутами.
+        - timeout_start – ожидание первого байта строки.
+        - timeout_finish – ожидание последующих байтов.
+        - Любой EOL (\r или \n) завершает текущую строку, последующие EOL игнорируются.
+        - По таймауту строка также завершается.
+        - Добавление в историю через append_method.
+        """
         while not self._stop_reading and self._conn:
+            print(1)
+            bytes_accumulated = bytearray()
+            timeout_active = self.timeout_start
             try:
-                line = await self._conn.stdout.readline()
-                if not line:
-                    break
-                line = line.decode(self._encoding)
-                line = line.rstrip()
-                if line:
-                    print(f"[STDOUT]{line}")
-                    self.history.append_stdout(line)
-                self.history.set_retcode(self._conn.returncode)
+                while True:
+                    print(2)
+                    try:
+                        b = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
+                    except asyncio.TimeoutError:
+                        # Таймаут – строка завершена (без EOL)
+                        break
+
+                    # Любой полученный байт фиксирует активность
+                    self._last_byte_time = asyncio.get_event_loop().time()
+
+                    # После первого байта переключаемся на finish-таймаут
+                    timeout_active = self.timeout_finish
+
+                    print(3)
+                    if b == b'':  # EOF – канал закрыт
+                        break
+
+                    print(4)
+                    if b in (b'\r', b'\n'):
+                        # Встретили EOL – завершаем текущую строку (если были данные)
+                        if bytes_accumulated:
+                            line = bytes_accumulated.decode(self._encoding).rstrip()
+                            if line:
+                                append_method(line)
+                        bytes_accumulated = bytearray()
+                        continue
+                    else:
+                        bytes_accumulated.extend(b)
+
+                print(5)
+                # Выход по таймауту – добавляем накопленное (если есть)
+                if bytes_accumulated:
+                    line = bytes_accumulated.decode(self._encoding).rstrip()
+                    if line:
+                        append_method(line)
+
+                print(6)
+
             except asyncio.CancelledError:
+                print(7)
                 break
             except Exception as exc:
-                print(f"UNEXPECTED _reading_stdout: {exc!r}")
+                print(f"UNEXPECTED _read_stream: {exc!r}")
                 break
 
+    async def _reading_stdout(self):
+        await self._read_stream(self._conn.stdout, self.history.append_stdout)
+
     async def _reading_stderr(self):
-        """Асинхронное чтение stderr."""
-        while not self._stop_reading and self._conn:
-            try:
-                line = await self._conn.stderr.readline()
-                if not line:
-                    break
-                line = line.decode(self._encoding)
-                line = line.rstrip()
-                if line:
-                    print(f"[STDERR]{line}")
-                    self.history.append_stderr(line)
-                self.history.set_retcode(self._conn.returncode)
-            except asyncio.CancelledError:
-                break
-            except Exception as exc:
-                print(f"stderr reader error: {exc!r}")
-                break
+        await self._read_stream(self._conn.stderr, self.history.append_stderr)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
@@ -144,29 +215,23 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             timeout_start: float | None = None,
             timeout_finish: float | None = None
     ) -> bool:
-        """
-        Ожидание завершения активности команды.
-        Асинхронная версия: проверяет изменение времени последнего вывода.
-        """
+        """Ожидание завершения вывода команды по таймаутам."""
         timeout_start = timeout_start or self.timeout_start
         timeout_finish = timeout_finish or self.timeout_finish
 
-        data_received = False
-        last_duration = self.history.last_result.duration
-
-        # Первый этап – ждём начала активности (timeout_start)
-        time_start = asyncio.get_event_loop().time()
-        while asyncio.get_event_loop().time() - time_start < timeout_start:
-            if self.history.last_result.duration != last_duration:
-                data_received = True
-                last_duration = self.history.last_result.duration
-                # Переключаемся на ожидание тишины
-                time_start = asyncio.get_event_loop().time()
-                timeout_start = timeout_finish
-            else:
-                await asyncio.sleep(timeout_finish / 3)
-
-        return data_received
+        start_wait = asyncio.get_event_loop().time()
+        # Ждём первого байта (timeout_start)
+        while asyncio.get_event_loop().time() - start_wait < timeout_start:
+            if self._last_byte_time > start_wait:
+                # Данные пошли – переходим в режим ожидания тишины (timeout_finish)
+                quiet_start = asyncio.get_event_loop().time()
+                while asyncio.get_event_loop().time() - quiet_start < timeout_finish:
+                    if self._last_byte_time > quiet_start:
+                        quiet_start = asyncio.get_event_loop().time()
+                    await asyncio.sleep(0.05)
+                return True
+            await asyncio.sleep(0.05)
+        return False
 
     # -----------------------------------------------------------------------------------------------------------------
     async def send_command(
@@ -178,11 +243,9 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         print(f"\n[STD_IN]--->{cmd}")
         self.history.add_input(cmd)
         try:
-            # Запись в stdin процесса
             self._conn.stdin.write(f"{cmd}\n".encode(self._encoding))
             await self._conn.stdin.drain()
 
-            # Ожидание завершения вывода команды
             if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):
                 finished_status = EnumAdj_FinishedStatus.CORRECT
             else:

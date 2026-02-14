@@ -62,6 +62,10 @@ class CmdResult:
         self.finished_status: EnumAdj_FinishedStatus = EnumAdj_FinishedStatus.NOT_FINISHED
         self._retcode: int | None = None    # if None then not setted!
 
+        # self.stdin_bytes: bytes = b""
+        # self.stdout_bytes: bytes = b""
+        # self.stderr_bytes: bytes = b""
+
         if self.STDOUT is None:
             self.STDOUT = []
         elif isinstance(self.STDOUT, (str, bytes)):
