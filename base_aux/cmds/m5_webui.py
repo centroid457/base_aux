@@ -206,7 +206,7 @@ HTML_TEMPLATE = """
             healthSocket: null,
             
             async init() {
-                const serverIds = await this.fetchServerItems();
+                const serverIds = await this.getServerIds();
                 let storedIds = this.loadStoredIds();
                 storedIds = storedIds.filter(id => serverIds.includes(id));
                 this.saveStoredIds(storedIds);
@@ -246,7 +246,7 @@ HTML_TEMPLATE = """
                 connect();
             },
     
-            async fetchServerItems() {
+            async getServerIds() {
                 try {
                     const resp = await fetch('/items');
                     const data = await resp.json();
@@ -381,7 +381,7 @@ HTML_TEMPLATE = """
                 div_itembox.appendChild(div_input);
                 
                 this.element_ItemBox = div_itembox;
-                this.container_items.appendChild(this.element_ItemBox); // добавляем в DOM? нельзхя вынести вверх!!!!
+                this.container_items.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
 
                 input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
@@ -408,7 +408,7 @@ HTML_TEMPLATE = """
                 };
                 this.socket.onmessage = (e) => {
                     const msg = JSON.parse(e.data);
-                    this.addOutputLine(msg.msg_style, msg.msg_text);
+                    this.addHistoryLine(msg.msg_style, msg.msg_text);
                 };
                 this.socket.onclose = () => {
                     this.element_Status.textContent = '❌';
@@ -431,22 +431,22 @@ HTML_TEMPLATE = """
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
                     history.forEach(cmd => {
-                        if (cmd.input) this.addOutputLine('msg_stdin__style', `→ ${cmd.input}`);
-                        cmd.stdout?.forEach(l => this.addOutputLine('msg_stdout__style', l));
-                        cmd.stderr?.forEach(l => this.addOutputLine('msg_stderr__style', l));
+                        if (cmd.input) this.addHistoryLine('msg_stdin__style', `→ ${cmd.input}`);
+                        cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__style', l));
+                        cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__style', l));
                     });
-                    this.addOutputLine('msg_system__style', '=== HISTORY ===');
+                    this.addHistoryLine('msg_system__style', '=== HISTORY ===');
                 } catch (err) {
-                    this.addOutputLine('msg_stderr__style', `Ошибка loadHistory ${err.message}`);
+                    this.addHistoryLine('msg_stderr__style', `Ошибка loadHistory ${err.message}`);
                 }
             }
 
-            addOutputLine(msg_style, msg_text) {
-                const div_msg = document.createElement('div');
-                div_msg.className = msg_style;
-                div_msg.textContent = msg_text;
+            addHistoryLine(msg_style, msg_text) {
+                const div_msg_line = document.createElement('div');
+                div_msg_line.className = msg_style;
+                div_msg_line.textContent = msg_text;
                 
-                this.element_OutputBox.appendChild(div_msg);
+                this.element_OutputBox.appendChild(div_msg_line);
                 this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
             }
 
