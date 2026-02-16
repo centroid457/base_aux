@@ -43,6 +43,7 @@ class CmdHistory:
 
     def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
         self._history = []
+        self._listeners = []  # список слушателей (msg_style, msg_text)
 
         if not source:
             pass
@@ -52,6 +53,22 @@ class CmdHistory:
             for item in source:
                 self._add_result(item)
                 # self.set_finished()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def listener__add(self, listener):
+        """listener – вызываемый объект, принимающий (msg_style, msg_text)"""
+        self._listeners.append(listener)
+
+    def listener__del(self, listener):
+        if listener in self._listeners:
+            self._listeners.remove(listener)
+
+    def _listeners__notify(self, msg_style: str, msg_text: str):
+        for listener in self._listeners:
+            try:
+                listener(msg_style, msg_text)
+            except:
+                pass   # игнорируем ошибки в одном слушателе
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -194,6 +211,7 @@ class CmdHistory:
         # INPUT -------------
         if buffer == EnumAdj_Buffer.STDIN:
             self._add_result(CmdResult(data))
+            self._listeners__notify("msg_stdin__style", data)
             return
 
         # OUTPUT ------------
@@ -202,9 +220,11 @@ class CmdHistory:
 
         if buffer == EnumAdj_Buffer.STDOUT:
             self.last_result.append_stdout(data)
+            self._listeners__notify("msg_stdiout__style", data)
 
         elif buffer == EnumAdj_Buffer.STDERR:
             self.last_result.append_stderr(data)
+            self._listeners__notify("msg_stderr__style", data)
 
     def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
         self._add_data(data, buffer=EnumAdj_Buffer.STDIN)

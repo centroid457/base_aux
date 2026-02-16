@@ -27,8 +27,8 @@ class Base_CmdTerminal:
 
         self._last_byte_time: float = 0.0   # время последнего полученного байта
         self._stop_reading: bool = False
-        self._bg_tasks: list[Any] = []
         self._conn: Any | None = None
+        self._bg_tasks: list[Any] = []
 
         self.id: str | None = id or str(uuid.uuid4())
         self.timeout_start: float = timeout_start

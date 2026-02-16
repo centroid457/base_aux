@@ -87,6 +87,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     async def reconnect(self) -> None:
         await self.disconnect()
         await self.connect()
+        self.history._listeners__notify('msg_system__style', "🔄 Сессия переподключена")  # оповещаем о переподключении
 
     # -----------------------------------------------------------------------------------------------------------------
     # async def _reading_stdout(self):

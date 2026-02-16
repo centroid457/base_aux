@@ -15,21 +15,13 @@ from base_aux.cmds.m4_terminal1_os2_aio import *
 
 # =====================================================================================================================
 class ObjectManager:
-    """
-    GOAL
-    ----
-    controlling object collection
-    """
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
     _last_index: int = 0
 
     def __init__(self):
         self.items = {}
-        self._client_output_queues: dict[str, list[asyncio.Queue]] = {}
-        self._patched: set[str] = set()
 
-    # -----------------------------------------------------------------------------------------------------------------
     async def create_item(self, id: str | None = None) -> str:
         if id is None:
             self._last_index += 1
@@ -37,58 +29,18 @@ class ObjectManager:
         if id not in self.items:
             new_item = self.ITEM_CLASS(id=id)
             self.items[id] = new_item
-            self._client_output_queues[id] = []
         return id
 
     async def get_item(self, id: str) -> CmdTerminal_OsAio | None:
         return self.items.get(id)
 
     async def del_item(self, id: str) -> None:
-        """Принудительно закрывает обьект очищает очереди."""
         item = self.items.pop(id, None)
-        if not item:
-            return
-
-        await item.disconnect()
-        self._client_output_queues.pop(id, None)
-        self._patched.discard(id)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def add__client_output_queue(self, id: str, queue: asyncio.Queue) -> None:
-        """Добавляет очередь для рассылки вывода."""
-        if id not in self._client_output_queues:
-            self._client_output_queues[id] = []
-        self._client_output_queues[id].append(queue)
-
-    async def del__client_output_queue(self, id: str, queue: asyncio.Queue) -> None:
-        """Удаляет очередь и, если она последняя, восстанавливает оригинальные методы."""
-        queues = self._client_output_queues.get(id)
-        if queues and queue in queues:
-            queues.remove(queue)
-
-        # Если больше нет клиентов – восстанавливаем оригинальные методы истории
-        if id in self.items and not queues:
-            object_item = self.items[id]
-            if hasattr(object_item, '_original_append_stdout'):
-                object_item.history.add_data__stdin = object_item._original_add_input
-                object_item.history.add_data__stdout = object_item._original_append_stdout
-                object_item.history.add_data__stderr = object_item._original_append_stderr
-                del object_item._original_add_input
-                del object_item._original_append_stdout
-                del object_item._original_append_stderr
-
-            self._patched.discard(id)
-            # Можно также удалить пустой список, но оставим для аккуратности
-            self._client_output_queues[id] = []
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def broadcast(self, id: str, msg: tuple[str, str]) -> None:
-        """Разослать сообщение (тип, строка) во все очереди item."""
-        client_queues = self._client_output_queues.get(id, [])
-        for client_queue in client_queues:
-            await client_queue.put(msg)
+        if item:
+            await item.disconnect()
 
 
+# -----------------------------------------------------------------------------------------------------------------
 object_manager = ObjectManager()
 
 
@@ -582,42 +534,20 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
         await websocket.close(code=1008, reason=f"{id=}/Invalid")
         return
 
-    # Подключаем процесс, если ещё не подключён
+    # Создаём очередь для этого клиента
+    client_output_queue = asyncio.Queue()
+
+    # Создаём слушателя, который будет класть сообщения в очередь
+    def listener(msg_style, msg_text):
+        asyncio.create_task(client_output_queue.put((msg_style, msg_text)))
+
+    item.history.listener__add(listener)
+
+    # Подключаем процесс, если ещё не подключён (теперь слушатель уже есть)
     if not item._conn:
         await item.connect()
 
-    # --- 1. Создаём очередь для этого клиента ---
-    client_output_queue = asyncio.Queue()
-    await object_manager.add__client_output_queue(id, client_output_queue)
-
-    # --- 2. Патчим методы истории (только один раз!) ---
-    if id not in object_manager._patched:
-        # Сохраняем оригиналы как атрибуты экземпляра item
-        item._original_add_input = item.history.add_data__stdin
-        item._original_append_stdout = item.history.add_data__stdout
-        item._original_append_stderr = item.history.add_data__stderr
-
-        def patched_append_stdout(data):
-            # Сначала вызываем оригинал (сохраняем в истории)
-            item._original_append_stdout(data)
-            # Рассылаем всем подключённым клиентам
-            asyncio.create_task(object_manager.broadcast(id, ("msg_stdout__style", data)))
-
-        def patched_append_stderr(data):
-            item._original_append_stderr(data)
-            asyncio.create_task(object_manager.broadcast(id, ("msg_stderr__style", data)))
-
-        def patched_add_input(data):
-            item._original_add_input(data)
-            # Добавляем префикс "→ " для единообразия с загрузкой истории
-            asyncio.create_task(object_manager.broadcast(id, ("msg_stdin__style", f"→ {data}")))
-
-        item.history.add_data__stdin = patched_add_input
-        item.history.add_data__stdout = patched_append_stdout
-        item.history.add_data__stderr = patched_append_stderr
-        object_manager._patched.add(id)
-
-    # --- 3. Задача отправки из очереди этого клиента в его WebSocket ---
+    # Задача отправки из очереди в WebSocket
     async def send_output():
         try:
             while True:
@@ -631,14 +561,12 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
 
     send_task = asyncio.create_task(send_output())
 
-    # --- 4. Принимаем команды от клиента ---
     try:
         await websocket.accept()
         while True:
             cmd = await websocket.receive_text()
             if cmd == '/reconnect':
                 await item.reconnect()
-                await websocket.send_json({"msg_style": "msg_system__style", "msg_text": "🔄 Сессия переподключена"})
             else:
                 await item.send_command(cmd)
     except WebSocketDisconnect:
@@ -646,8 +574,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
     finally:
         send_task.cancel()
         await send_task
-        # Отписываем клиента
-        await object_manager.del__client_output_queue(id, client_output_queue)
+        item.history.listener__del(listener)
 
 
 # =====================================================================================================================
