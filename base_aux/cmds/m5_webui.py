@@ -201,7 +201,7 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         const itemsManager = {
             items: new Map(),
-            container: document.getElementById('div_items_container__id'),
+            container_items: document.getElementById('div_items_container__id'),
             addItemBtn: document.getElementById('btn_add_item__id'),
             healthSocket: null,
             
@@ -278,7 +278,8 @@ HTML_TEMPLATE = """
 
             addItemBlock(itemId, isNew) {
                 if (this.items.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, this.container, isNew);
+                const itemUI = new ItemUI(itemId, isNew);
+                this.container_items.appendChild(itemUI.element_ItemBox);
                 this.items.set(itemId, itemUI);
                 itemUI.init();
             },
@@ -305,16 +306,16 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, container, isNew) {
+            constructor(itemId, isNew) {
                 this.itemId = itemId;
-                this.container = container;
-                this.isNew = isNew;                    // сохраняем флаг
+                this.isNew = isNew;
                 
                 this.socket = null;
-                this.element = null;
-                this.outputElement = null;
-                this.inputElement = null;
-                this.statusElement = null;
+                
+                this.element_ItemBox = null;
+                this.element_OutputBox = null;
+                this.element_InputBox = null;
+                this.element_Status = null;
             }
 
             init() {
@@ -327,14 +328,14 @@ HTML_TEMPLATE = """
                 div_itembox.className = 'div_itembox__style';
                 div_itembox.dataset.itemId = this.itemId;
 
-                // Header
+                // Header -------------------------------------------
                 const div_itemheader = document.createElement('div');
                 div_itemheader.className = 'div_termheader__style';
                 
                 const span_status = document.createElement('span');
                 span_status.className = 'span_status__style';
                 span_status.textContent = '⚡';
-                this.statusElement = span_status;
+                this.element_Status = span_status;
                 
                 const span_itemid = document.createElement('span');
                 span_itemid.className = 'span_itemid__style';
@@ -357,10 +358,10 @@ HTML_TEMPLATE = """
                 div_itemheader.appendChild(btn_reconnect);
                 div_itemheader.appendChild(btn_close);
 
-                // Output
+                // Output -------------------------------------------
                 const div_output = document.createElement('div');
                 div_output.className = 'div_output__style';
-                this.outputElement = div_output;
+                this.element_OutputBox = div_output;
 
                 // Input area
                 const div_input = document.createElement('div');
@@ -370,7 +371,7 @@ HTML_TEMPLATE = """
                 input_item.type = 'text';
                 input_item.className = 'input_item__style';
                 input_item.placeholder = 'Введите команду и нажмите Enter';
-                this.inputElement = input_item;
+                this.element_InputBox = input_item;
 
                 div_input.appendChild(input_item);
 
@@ -378,8 +379,7 @@ HTML_TEMPLATE = """
                 div_itembox.appendChild(div_output);
                 div_itembox.appendChild(div_input);
                 
-                this.container.appendChild(div_itembox);
-                this.element = div_itembox;
+                this.element_ItemBox = div_itembox;
 
                 input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
@@ -399,7 +399,7 @@ HTML_TEMPLATE = """
                 this.socket = new WebSocket(wsUrl);
 
                 this.socket.onopen = () => {
-                    this.statusElement.textContent = '✅';
+                    this.element_Status.textContent = '✅';
                     if (!this.isNew) {
                         this.loadHistory();
                     }
@@ -409,10 +409,10 @@ HTML_TEMPLATE = """
                     this.addOutputLine(msg.msg_style, msg.msg_text);
                 };
                 this.socket.onclose = () => {
-                    this.statusElement.textContent = '❌';
+                    this.element_Status.textContent = '❌';
                 };
                 this.socket.onerror = () => {
-                    this.statusElement.textContent = '⚠️';
+                    this.element_Status.textContent = '⚠️';
                 };
             }
 
@@ -424,7 +424,7 @@ HTML_TEMPLATE = """
 
             async loadHistory() {
                 // Очищаем окно перед загрузкой, чтобы избежать дублей
-                this.outputElement.innerHTML = '';
+                this.element_OutputBox.innerHTML = '';
                 try {
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
@@ -444,13 +444,13 @@ HTML_TEMPLATE = """
                 div_msg.className = msg_style;
                 div_msg.textContent = msg_text;
                 
-                this.outputElement.appendChild(div_msg);
-                this.outputElement.scrollTop = this.outputElement.scrollHeight;
+                this.element_OutputBox.appendChild(div_msg);
+                this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
             }
 
             destroy() {
                 this.socket?.close();
-                this.element?.remove();
+                this.element_ItemBox?.remove();
             }
         }
 
