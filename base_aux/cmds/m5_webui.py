@@ -197,13 +197,13 @@ HTML_TEMPLATE = """
 
     <script>
         // --------------------------------------------------------------
-        // Глобальный менеджер сессий
+        // Глобальный менеджер обьектов
         // --------------------------------------------------------------
         const itemsManager = {
             items: new Map(),
             container: document.getElementById('div_items_container__id'),
             addItemBtn: document.getElementById('btn_add_item__id'),
-            healthSocket: null,                          // <-- новое поле
+            healthSocket: null,
             
             async init() {
                 const serverIds = await this.fetchServerItems();
@@ -513,7 +513,7 @@ async def create_item():
 
 
 @app.delete("/items/{id}")
-async def delete_item(id: str):
+async def del_item(id: str):
     await object_manager.del_item(id)
     return {"status": "closed"}
 
