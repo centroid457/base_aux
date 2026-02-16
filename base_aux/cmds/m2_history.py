@@ -177,36 +177,56 @@ class CmdHistory:
             msg = f"{data=}/{exc!r}"
             raise Exc__Incompatible(msg)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    def add_input(self, data: TYPING__CMD_LINE) -> None | NoReturn:
-        self._add_result(CmdResult(data))
-
-    def add_ioe(
-            self,
-            data_i: TYPING__CMD_LINE,
-            data_o: TYPING__CMD_LINES_DRAFT | None = None,
-            data_e: TYPING__CMD_LINES_DRAFT | None = None,
-    ) -> None | NoReturn:
-        self._add_result((data_i, data_o, data_e))
-
-    def add_history(self, data: Self) -> None | NoReturn:
+    def _add_history(self, data: Self) -> None | NoReturn:
         for item in data:
             self._add_result(item)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        # init base
+    def _add_data(self, data: TYPING__CMD_LINES_DRAFT, buffer: EnumAdj_Buffer = EnumAdj_Buffer.STDOUT) -> None:
+        """
+        GOAL
+        ----
+        base adding data in result object! by buffer
+        """
+        if buffer not in EnumAdj_Buffer:
+            raise Exc__WrongUsage(f"{buffer=}")
+
+        # INPUT -------------
+        if buffer == EnumAdj_Buffer.STDIN:
+            self._add_result(CmdResult(data))
+            return
+
+        # OUTPUT ------------
         if not self._history:
-            self.add_input("")
+            self.add_data__stdin("")
 
-        self.last_result.append_stdout(data)
+        if buffer == EnumAdj_Buffer.STDOUT:
+            self.last_result.append_stdout(data)
 
-    def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        # init base
-        if not self._history:
-            self.add_input("")
+        elif buffer == EnumAdj_Buffer.STDERR:
+            self.last_result.append_stderr(data)
 
-        self.last_result.append_stderr(data)
+    def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
+        self._add_data(data, buffer=EnumAdj_Buffer.STDIN)
+
+    def add_data__stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        self._add_data(data, buffer=EnumAdj_Buffer.STDOUT)
+
+    def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        self._add_data(data, buffer=EnumAdj_Buffer.STDERR)
+
+    def add_data__stdioe(
+            self,
+            data_i: TYPING__CMD_LINE | None = None,
+            data_o: TYPING__CMD_LINES_DRAFT | None = None,
+            data_e: TYPING__CMD_LINES_DRAFT | None = None,
+    ) -> None | NoReturn:
+        if data_i is not None:
+            self.add_data__stdin(data_i)
+        if data_o is not None:
+            self.add_data__stdout(data_o)
+        if data_e is not None:
+            self.add_data__stderr(data_e)
 
     # =================================================================================================================
     @property
@@ -215,18 +235,6 @@ class CmdHistory:
             return self._history[-1]
         except:
             return None
-
-    # @property
-    # def prev_result(self) -> CmdResult | None:
-    #     """
-    #     GOAL
-    #     ----
-    #     if we have some new cmd to send but read new stdouterr before - # DONT NEED!!!  JUST CALL append_stdout!
-    #     """
-    #     try:
-    #         return self._history[-2]
-    #     except:
-    #         return None
 
     # -----------------------------------------------------------------------------------------------------------------
     @property

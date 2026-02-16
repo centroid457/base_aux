@@ -16,19 +16,26 @@ class Base_CmdTerminal:
 
             timeout_start: float = 1,
             timeout_finish: float = 0.1,
+
+            cwd: str | None = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
 
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
+        self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+
+        self._last_byte_time: float = 0.0   # время последнего полученного байта
         self._stop_reading: bool = False
-        self._tasks: list[Any] = []
+        self._bg_tasks: list[Any] = []
         self._conn: Any | None = None
 
         self.id: str | None = id or str(uuid.uuid4())
         self.timeout_start: float = timeout_start
         self.timeout_finish: float = timeout_finish
         self.history: CmdHistory = CmdHistory()
+
+        self.cwd: str | None = cwd
 
     # -----------------------------------------------------------------------------------------------------------------
     @classmethod

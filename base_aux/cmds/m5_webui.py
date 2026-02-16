@@ -70,9 +70,9 @@ class ObjectManager:
         if id in self.items and not queues:
             object_item = self.items[id]
             if hasattr(object_item, '_original_append_stdout'):
-                object_item.history.add_input = object_item._original_add_input
-                object_item.history.append_stdout = object_item._original_append_stdout
-                object_item.history.append_stderr = object_item._original_append_stderr
+                object_item.history.add_data__stdin = object_item._original_add_input
+                object_item.history.add_data__stdout = object_item._original_append_stdout
+                object_item.history.add_data__stderr = object_item._original_append_stderr
                 del object_item._original_add_input
                 del object_item._original_append_stdout
                 del object_item._original_append_stderr
@@ -593,9 +593,9 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
     # --- 2. Патчим методы истории (только один раз!) ---
     if id not in object_manager._patched:
         # Сохраняем оригиналы как атрибуты экземпляра item
-        item._original_add_input = item.history.add_input
-        item._original_append_stdout = item.history.append_stdout
-        item._original_append_stderr = item.history.append_stderr
+        item._original_add_input = item.history.add_data__stdin
+        item._original_append_stdout = item.history.add_data__stdout
+        item._original_append_stderr = item.history.add_data__stderr
 
         def patched_append_stdout(data):
             # Сначала вызываем оригинал (сохраняем в истории)
@@ -612,9 +612,9 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
             # Добавляем префикс "→ " для единообразия с загрузкой истории
             asyncio.create_task(object_manager.broadcast(id, ("msg_stdin__style", f"→ {data}")))
 
-        item.history.add_input = patched_add_input
-        item.history.append_stdout = patched_append_stdout
-        item.history.append_stderr = patched_append_stderr
+        item.history.add_data__stdin = patched_add_input
+        item.history.add_data__stdout = patched_append_stdout
+        item.history.add_data__stderr = patched_append_stderr
         object_manager._patched.add(id)
 
     # --- 3. Задача отправки из очереди этого клиента в его WebSocket ---

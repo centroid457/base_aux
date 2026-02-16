@@ -61,7 +61,7 @@ class CmdTerminal_Serial(Base_CmdTerminal):
         except Exception as exc:
             msg = f"[{self.port=}]{exc!r}"
             print(msg)
-            self.history.append_stderr(msg)
+            self.history.add_data__stderr(msg)
             return False
 
         self._stop_reading = False
@@ -95,17 +95,17 @@ class CmdTerminal_Serial(Base_CmdTerminal):
                     line = line_bytes.decode(self.encoding, errors='replace').rstrip('\r').rstrip('\n').rstrip('\r').rstrip('\n')
                     if line:
                         print(f"{line}")
-                        self.history.append_stdout(line)
+                        self.history.add_data__stdout(line)
 
                 # Для совместимости с методом wait__finish_executing_cmd обновляем duration
                 # просто факт добавления строки уже обновит last_result.duration
             except serial.SerialException as e:
                 print(f"Ошибка последовательного порта: {e!r}")
-                self.history.append_stderr(f"Serial error: {e!r}")
+                self.history.add_data__stderr(f"Serial error: {e!r}")
                 break
             except Exception as e:
                 print(f"Неизвестная ошибка чтения: {e!r}")
-                self.history.append_stderr(f"Read error: {e!r}")
+                self.history.add_data__stderr(f"Read error: {e!r}")
                 break
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ class CmdTerminal_Serial(Base_CmdTerminal):
         print()
         print(f"--->{cmd}")
 
-        self.history.add_input(cmd)
+        self.history.add_data__stdin(cmd)
         try:
             # Отправка команды
             data = (cmd + self.eol).encode(self.encoding)
@@ -131,7 +131,7 @@ class CmdTerminal_Serial(Base_CmdTerminal):
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
         except Exception as exc:
             print(f"{exc!r}")
-            self.history.append_stderr(f"{exc!r}")
+            self.history.add_data__stderr(f"{exc!r}")
             _finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
         self.history.set_finished(status=_finished_status)

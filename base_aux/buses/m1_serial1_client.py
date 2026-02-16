@@ -1213,7 +1213,7 @@ class SerialClient(Logger):
         data = self._bytes_edition__apply(data)
         data = self._data_eol__clear(data)
         data = self._data_ensure__string(data)
-        self.history.append_stdout(data)
+        self.history.add_data__stdout(data)
         self.answer_is_fail(data)
 
         # NOTE: dont delete! need to direct cmp
@@ -1262,7 +1262,7 @@ class SerialClient(Logger):
 
         # SINGLE ---------------------
         data = self._create_cmd_line(cmd=data, prefix=prefix, args=args, kwargs=kwargs)
-        self.history.add_input(self._data_ensure__string(data))
+        self.history.add_data__stdin(self._data_ensure__string(data))
 
         data = self._data_ensure__bytes(data)
         data = self._bytes_eol__ensure(data)
@@ -1336,7 +1336,7 @@ class SerialClient(Logger):
             for data_i in data:
                 history_i = self.write_read(data_i, prefix=prefix, args=args, kwargs=kwargs,
                                             retry_noanswer=retry_noanswer)
-                history.add_history(history_i)
+                history._add_history(history_i)
         else:
             # SINGLE LAST -----------------------
             data_o = []
@@ -1357,7 +1357,7 @@ class SerialClient(Logger):
                         remain__retry_decode -= 1
 
                     self.buffers_clear()
-            history.add_ioe(self._data_ensure__string(data), data_o)
+            history.add_data__stdioe(self._data_ensure__string(data), data_o)
 
         # RESULT ----------------------------
         return history

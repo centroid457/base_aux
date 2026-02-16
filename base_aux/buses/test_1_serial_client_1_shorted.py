@@ -272,12 +272,12 @@ class Test__WR_1(Test__WRBase):
         assert self.victim.write_read(["11", "22"])._as_dict() == {"11": ["11", ], "22": ["22", ], }
 
         history = CmdHistory()
-        history.add_ioe("hello", "hello")
+        history.add_data__stdioe("hello", "hello")
         assert self.victim.write_read("hello")._as_dict() == history._as_dict()
 
         history = CmdHistory()
-        history.add_ioe("11", "11")
-        history.add_ioe("22", "22")
+        history.add_data__stdioe("11", "11")
+        history.add_data__stdioe("22", "22")
         assert self.victim.write_read(["11", "22"])._as_dict() == history._as_dict()
 
     def test__wr_last(self):

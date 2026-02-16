@@ -1,5 +1,4 @@
 import asyncio
-import os
 
 from base_aux.cmds.m2_history import *
 from base_aux.cmds.m4_terminal0_base import *
@@ -11,24 +10,12 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     Асинхронная версия CmdTerminal_Os на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
-    _tasks: list[asyncio.Task]
-
-    def __init__(
-            self,
-            *,
-            cwd: str | None = None,
-            **kwargs,
-    ):
-        super().__init__(**kwargs)
-
-        self.cwd: str | None = cwd
-        self.shell_cmd: str = "cmd" if os.name == "nt" else "bash"
-        self._last_byte_time: float = 0.0   # время последнего полученного байта
+    _bg_tasks: list[asyncio.Task]
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
         self._conn = await asyncio.create_subprocess_exec(
-            self.shell_cmd,
+            self._shell_cmd,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -38,7 +25,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         )
 
     def _create_tasks(self) -> None:
-        self._tasks = [
+        self._bg_tasks = [
             asyncio.create_task(self._reading_stdout()),
             asyncio.create_task(self._reading_stderr()),
         ]
@@ -55,7 +42,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
             print(msg)
-            self.history.append_stderr(msg)
+            self.history.add_data__stderr(msg)
             return False
 
         self._stop_reading = False
@@ -88,10 +75,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         self._stop_reading = True
 
         # Отменяем задачи чтения и ждём их завершения
-        for task in self._tasks:
+        for task in self._bg_tasks:
             task.cancel()
-        await asyncio.gather(*self._tasks, return_exceptions=True)
-        self._tasks.clear()
+        await asyncio.gather(*self._bg_tasks, return_exceptions=True)
+        self._bg_tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
@@ -153,12 +140,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         - Добавление в историю через append_method.
         """
         while not self._stop_reading and self._conn:
-            print(1)
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_start
             try:
                 while True:
-                    print(2)
                     try:
                         b = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
                     except asyncio.TimeoutError:
@@ -171,11 +156,9 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                     # После первого байта переключаемся на finish-таймаут
                     timeout_active = self.timeout_finish
 
-                    print(3)
                     if b == b'':  # EOF – канал закрыт
                         break
 
-                    print(4)
                     if b in (b'\r', b'\n'):
                         # Встретили EOL – завершаем текущую строку (если были данные)
                         if bytes_accumulated:
@@ -187,27 +170,23 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                     else:
                         bytes_accumulated.extend(b)
 
-                print(5)
                 # Выход по таймауту – добавляем накопленное (если есть)
                 if bytes_accumulated:
                     line = bytes_accumulated.decode(self._encoding).rstrip()
                     if line:
                         append_method(line)
 
-                print(6)
-
             except asyncio.CancelledError:
-                print(7)
                 break
             except Exception as exc:
                 print(f"UNEXPECTED _read_stream: {exc!r}")
                 break
 
     async def _reading_stdout(self):
-        await self._read_stream(self._conn.stdout, self.history.append_stdout)
+        await self._read_stream(self._conn.stdout, self.history.add_data__stdout)
 
     async def _reading_stderr(self):
-        await self._read_stream(self._conn.stderr, self.history.append_stderr)
+        await self._read_stream(self._conn.stderr, self.history.add_data__stderr)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
@@ -241,7 +220,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             timeout_finish: float | None = None
     ) -> CmdResult:
         print(f"\n[STD_IN]--->{cmd}")
-        self.history.add_input(cmd)
+        self.history.add_data__stdin(cmd)
         try:
             self._conn.stdin.write(f"{cmd}\n".encode(self._encoding))
             await self._conn.stdin.drain()
@@ -252,7 +231,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                 finished_status = EnumAdj_FinishedStatus.TIMED_OUT
         except Exception as exc:
             print(f"{exc!r}")
-            self.history.append_stderr(f"{exc!r}")
+            self.history.add_data__stderr(f"{exc!r}")
             finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
         self.history.set_finished(status=finished_status)

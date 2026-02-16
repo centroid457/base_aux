@@ -1,7 +1,6 @@
 import subprocess
 import threading
 import time
-import os
 
 from base_aux.cmds.m2_history import *
 from base_aux.cmds.m4_terminal0_base import *
@@ -15,19 +14,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
     access to terminal with continuous connection - keeping state!
     """
     _conn: subprocess.Popen | None
-    _tasks: list[threading.Thread]
-
-    def __init__(
-            self,
-            *,
-            cwd: str | None = None,
-
-            **kwargs,
-    ):
-        super().__init__(**kwargs)
-
-        self.cwd: str | None = cwd
-        self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
+    _bg_tasks: list[threading.Thread]
 
     # -----------------------------------------------------------------------------------------------------------------
     def _create_conn(self) -> None | NoReturn:
@@ -46,12 +33,12 @@ class CmdTerminal_Os(Base_CmdTerminal):
         )
 
     def _create_tasks(self) -> None:
-        self._tasks = [
+        self._bg_tasks = [
             threading.Thread(target=self._reading_stdout, daemon=True),
             threading.Thread(target=self._reading_stderr, daemon=True),
         ]
 
-        for reader_task in self._tasks:
+        for reader_task in self._bg_tasks:
             reader_task.start()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -65,7 +52,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
             print(msg)
-            self.history.append_stderr(msg)
+            self.history.add_data__stderr(msg)
             return False
 
         self._stop_reading = False
@@ -96,10 +83,10 @@ class CmdTerminal_Os(Base_CmdTerminal):
 
         self._stop_reading = True
 
-        for reader_task in self._tasks:
+        for reader_task in self._bg_tasks:
             reader_task.join(timeout=1)
 
-        self._tasks.clear()
+        self._bg_tasks.clear()
         self._conn = None
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
@@ -200,7 +187,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
                 line = line and line.rstrip()
                 if line:
                     print(f"[STDOUT]{line}")
-                    self.history.append_stdout(line)
+                    self.history.add_data__stdout(line)
 
                 self.history.set_retcode(self._conn.returncode)
             except Exception as exc:
@@ -216,7 +203,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
                 line = line and line.rstrip()
                 if line:
                     print(f"[STDERR]{line}")
-                    self.history.append_stderr(line)
+                    self.history.add_data__stderr(line)
 
                 self.history.set_retcode(self._conn.returncode)
             except Exception as exc:
@@ -228,7 +215,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
     def send_command(self, cmd: str, timeout_start: float | None = None, timeout_finish: float | None = None) -> CmdResult:
         print(f"\n[STD_IN]--->{cmd}")
 
-        self.history.add_input(cmd)
+        self.history.add_data__stdin(cmd)
         try:
             self._conn.stdin.write(f"{cmd}\n")
             self._conn.stdin.flush()
@@ -238,7 +225,7 @@ class CmdTerminal_Os(Base_CmdTerminal):
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
         except Exception as exc:
             print(f"{exc!r}")
-            self.history.append_stderr(f"{exc!r}")
+            self.history.add_data__stderr(f"{exc!r}")
             _finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
         self.history.set_finished(status=_finished_status)
