@@ -278,8 +278,8 @@ HTML_TEMPLATE = """
 
             addItemBlock(itemId, isNew) {
                 if (this.items.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, isNew);
-                this.container_items.appendChild(itemUI.element_ItemBox);
+                const itemUI = new ItemUI(itemId, this.container_items, isNew);
+                // this.container_items.appendChild(itemUI.element_ItemBox); - так нельзя!!!!
                 this.items.set(itemId, itemUI);
                 itemUI.init();
             },
@@ -306,8 +306,9 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, isNew) {
+            constructor(itemId, container_items, isNew) {
                 this.itemId = itemId;
+                this.container_items = container_items; 
                 this.isNew = isNew;
                 
                 this.socket = null;
@@ -380,6 +381,7 @@ HTML_TEMPLATE = """
                 div_itembox.appendChild(div_input);
                 
                 this.element_ItemBox = div_itembox;
+                this.container_items.appendChild(this.element_ItemBox); // добавляем в DOM? нельзхя вынести вверх!!!!
 
                 input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
