@@ -202,14 +202,14 @@ HTML_TEMPLATE = """
         const itemsManager = {
             items: new Map(),
             container_items: document.getElementById('div_items_container__id'),
-            addItemBtn: document.getElementById('btn_add_item__id'),
-            healthSocket: null,
+            btn_AddItem: document.getElementById('btn_add_item__id'),
+            socket_HealthCheck: null,
             
             async init() {
-                const serverIds = await this.getServerIds();
-                let storedIds = this.loadStoredIds();
+                const serverIds = await this.get_IdsServer();
+                let storedIds = this.get_IdsClient();
                 storedIds = storedIds.filter(id => serverIds.includes(id));
-                this.saveStoredIds(storedIds);
+                this.set_IdsClient(storedIds);
 
                 for (const id of storedIds) {
                     this.addItemBlock(id, false);
@@ -219,7 +219,7 @@ HTML_TEMPLATE = """
                     await this.createNewItem();
                 }
 
-                this.addItemBtn.addEventListener('click', () => this.createNewItem());
+                this.btn_AddItem.addEventListener('click', () => this.createNewItem());
                 
                 this.initHealthCheck();                   // <-- вызов после всего
             },
@@ -227,26 +227,26 @@ HTML_TEMPLATE = """
             initHealthCheck() {
                 const connect = () => {
                     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                    this.healthSocket = new WebSocket(`${protocol}//${window.location.host}/ws/ping`);
+                    this.socket_HealthCheck = new WebSocket(`${protocol}//${window.location.host}/ws/ping`);
                     
-                    this.healthSocket.onopen = () => {
+                    this.socket_HealthCheck.onopen = () => {
                         document.getElementById('div_app_header__id').classList.remove('disconnected');
                     };
                     
-                    this.healthSocket.onclose = () => {
+                    this.socket_HealthCheck.onclose = () => {
                         document.getElementById('div_app_header__id').classList.add('disconnected');
                         setTimeout(() => connect(), 3000);   // переподключаемся через 3 сек
                     };
                     
-                    this.healthSocket.onerror = () => {
+                    this.socket_HealthCheck.onerror = () => {
                         document.getElementById('div_app_header__id').classList.add('disconnected');
-                        this.healthSocket.close();           // инициируем закрытие, вызовется onclose
+                        this.socket_HealthCheck.close();           // инициируем закрытие, вызовется onclose
                     };
                 };
                 connect();
             },
     
-            async getServerIds() {
+            async get_IdsServer() {
                 try {
                     const resp = await fetch('/items');
                     const data = await resp.json();
@@ -256,12 +256,12 @@ HTML_TEMPLATE = """
                 }
             },
 
-            loadStoredIds() {
+            get_IdsClient() {
                 const stored = localStorage.getItem('terminal_session_ids');
                 return stored ? JSON.parse(stored) : [];
             },
 
-            saveStoredIds(ids) {
+            set_IdsClient(ids) {
                 localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
             },
 
@@ -269,9 +269,9 @@ HTML_TEMPLATE = """
                 const resp = await fetch('/items', { method: 'POST' });
                 const data = await resp.json();
                 const itemId = data.id;
-                const stored = this.loadStoredIds();
+                const stored = this.get_IdsClient();
                 stored.push(itemId);
-                this.saveStoredIds(stored);
+                this.set_IdsClient(stored);
                 this.addItemBlock(itemId, true);
                 return itemId;
             },
@@ -286,9 +286,9 @@ HTML_TEMPLATE = """
 
             async closeItem(itemId) {
                 await fetch(`/items/${itemId}`, { method: 'DELETE' });
-                const stored = this.loadStoredIds();
+                const stored = this.get_IdsClient();
                 const updated = stored.filter(id => id !== itemId);
-                this.saveStoredIds(updated);
+                this.set_IdsClient(updated);
                 
                 const itemUI = this.items.get(itemId);
                 if (itemUI) {
@@ -462,7 +462,7 @@ HTML_TEMPLATE = """
         window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
             itemsManager.items.forEach(s => s.socket?.close());
-            if (itemsManager.healthSocket) itemsManager.healthSocket.close();
+            if (itemsManager.socket_HealthCheck) itemsManager.socket_HealthCheck.close();
         };
     </script>
 </body>
