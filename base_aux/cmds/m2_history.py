@@ -211,7 +211,7 @@ class CmdHistory:
         # INPUT -------------
         if buffer == EnumAdj_Buffer.STDIN:
             self._add_result(CmdResult(data))
-            self._listeners__notify("msg_stdin__style", data)
+            self._listeners__notify("msg_stdin__style", f"→ {data}")
             return
 
         # OUTPUT ------------
@@ -220,7 +220,7 @@ class CmdHistory:
 
         if buffer == EnumAdj_Buffer.STDOUT:
             self.last_result.append_stdout(data)
-            self._listeners__notify("msg_stdiout__style", data)
+            self._listeners__notify("msg_stdout__style", data)
 
         elif buffer == EnumAdj_Buffer.STDERR:
             self.last_result.append_stderr(data)
