@@ -55,29 +55,32 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     # -----------------------------------------------------------------------------------------------------------------
     async def disconnect(self) -> None:
         """Корректное завершение процесса и остановка задач чтения."""
-        if self._conn is not None:
-            # Попытка отправить exit перед закрытием
-            try:
-                await self.send_command("exit")
-            except Exception:
-                pass
+        self._stop_reading = True
 
+        if self._conn:
             try:
                 self._conn.terminate()
+                # Ждём завершения процесса с таймаутом
                 try:
-                    await asyncio.wait_for(self._conn.wait(), timeout=1.0)
+                    await asyncio.wait_for(self._conn.wait(), timeout=2.0)
                 except asyncio.TimeoutError:
                     self._conn.kill()
                     await self._conn.wait()
             except Exception:
                 pass
 
-        self._stop_reading = True
-
-        # Отменяем задачи чтения и ждём их завершения
+        # Отменяем задачи чтения
         for task in self._bg_tasks:
             task.cancel()
-        await asyncio.gather(*self._bg_tasks, return_exceptions=True)
+        # Ждём их завершения с таймаутом, игнорируя ошибки
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*self._bg_tasks, return_exceptions=True),
+                timeout=3.0
+            )
+        except asyncio.TimeoutError:
+            # Если задачи не завершились, просто забудем о них
+            pass
         self._bg_tasks.clear()
         self._conn = None
 
