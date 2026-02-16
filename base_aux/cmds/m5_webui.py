@@ -211,7 +211,7 @@ HTML_TEMPLATE = """
                 this.saveStoredIds(storedIds);
 
                 for (const id of storedIds) {
-                    this.addItemBlock(id);
+                    this.addItemBlock(id, false);
                 }
 
                 if (this.items.size === 0) {
@@ -271,13 +271,13 @@ HTML_TEMPLATE = """
                 const stored = this.loadStoredIds();
                 stored.push(itemId);
                 this.saveStoredIds(stored);
-                this.addItemBlock(itemId);
+                this.addItemBlock(itemId, true);
                 return itemId;
             },
 
-            addItemBlock(itemId) {
+            addItemBlock(itemId, isNew) {
                 if (this.items.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, this.container);
+                const itemUI = new ItemUI(itemId, this.container, isNew);
                 this.items.set(itemId, itemUI);
                 itemUI.init();
             },
@@ -304,9 +304,11 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, container) {
+            constructor(itemId, container, isNew) {
                 this.itemId = itemId;
                 this.container = container;
+                this.isNew = isNew;                    // сохраняем флаг
+                
                 this.socket = null;
                 this.element = null;
                 this.outputElement = null;
@@ -397,7 +399,9 @@ HTML_TEMPLATE = """
 
                 this.socket.onopen = () => {
                     this.statusElement.textContent = '✅';
-                    this.loadHistory();
+                    if (!this.isNew) {
+                        this.loadHistory();
+                    }
                 };
                 this.socket.onmessage = (e) => {
                     const msg = JSON.parse(e.data);
@@ -418,6 +422,8 @@ HTML_TEMPLATE = """
             }
 
             async loadHistory() {
+                // Очищаем окно перед загрузкой, чтобы избежать дублей
+                this.outputElement.innerHTML = '';
                 try {
                     const resp = await fetch(`/items/${this.itemId}/history`);
                     const history = await resp.json();
