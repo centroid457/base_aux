@@ -200,7 +200,7 @@ HTML_TEMPLATE = """
         // Глобальный менеджер обьектов
         // --------------------------------------------------------------
         const itemsManager = {
-            items: new Map(),
+            items: new Map(),   // its a DICT=.set(itemId, itemUI)
             container_items: document.getElementById('div_items_container__id'),
             btn_AddItem: document.getElementById('btn_add_item__id'),
             socket_HealthCheck: null,
