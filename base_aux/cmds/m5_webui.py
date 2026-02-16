@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 import uvicorn
 
 from base_aux.cmds.m4_terminal1_os2_aio import *
@@ -468,7 +469,30 @@ HTML_TEMPLATE = """
 
 
 # =====================================================================================================================
-app = FastAPI(title="Web Terminal")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
+    print(f"FastApi.Startup: START")
+    first_id = await object_manager.create_item()
+    first_item = object_manager.items.get(first_id)
+    if first_item:
+        print(f"FastApi.Startup: {first_id=}")
+        await first_item.connect()
+    # ------------------------------------------------------------------
+
+    yield  # <-- здесь сервер работает и обрабатывает запросы
+
+    # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
+    for item_id, item in list(object_manager.items.items()):
+        print(f"FastApi.Shutdown: {item_id=}")
+        await item.disconnect()
+
+    print(f"FastApi.Shutdown: FINISHED")
+    # ---------------------------------------------------------------------
+
+
+# =====================================================================================================================
+app = FastAPI(title="Web Terminal", lifespan=lifespan)
 
 
 @app.get("/", response_class=HTMLResponse)
