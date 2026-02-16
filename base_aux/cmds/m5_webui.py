@@ -500,6 +500,12 @@ async def get_html():
     return HTML_TEMPLATE
 
 
+@app.get("/items")
+async def list_items():
+    ids = list(object_manager.items)
+    return {"items": ids}
+
+
 @app.post("/items")
 async def create_item():
     id = await object_manager.create_item()
@@ -538,12 +544,6 @@ async def get_item_history(id: str):
             "retcode": result.retcode
         })
     return history_data
-
-
-@app.get("/items")
-async def list_items():
-    ids = list(object_manager.items)
-    return {"items": ids}
 
 
 @app.websocket("/ws/ping")

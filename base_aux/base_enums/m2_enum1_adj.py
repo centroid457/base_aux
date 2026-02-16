@@ -167,6 +167,7 @@ class EnumAdj_Buffer(NestEq_EnumAdj):
     STDIN: int = 1
     STDOUT: int = 2
     STDERR: int = 3
+    DEBUG: int = 9
 
 
 class EnumAdj_FinishedStatus(NestEq_EnumAdj):
