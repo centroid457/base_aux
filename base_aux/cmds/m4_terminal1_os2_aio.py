@@ -160,20 +160,18 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                     try:
                         new_byte = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
                     except asyncio.TimeoutError:
-                        # Таймаут – строка завершена (без EOL)
                         break
+                    except (BrokenPipeError, ConnectionResetError):
+                        # Канал закрыт – выходим из цикла чтения
+                        return
 
-                    # Любой полученный байт фиксирует активность
                     self._last_byte_time = asyncio.get_event_loop().time()
-
-                    # После первого байта переключаемся на finish-таймаут
                     timeout_active = self.timeout_finish
 
-                    if new_byte == b'':  # EOF – канал закрыт
-                        break
+                    if new_byte == b'':  # EOF
+                        return
 
                     if new_byte in (b'\r', b'\n'):
-                        # Встретили EOL – завершаем текущую строку (если были данные)
                         if bytes_accumulated:
                             new_line = bytes_accumulated.decode(self._encoding).rstrip()
                             if new_line:
@@ -183,7 +181,6 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                     else:
                         bytes_accumulated.extend(new_byte)
 
-                # Выход по таймауту – добавляем накопленное (если есть)
                 if bytes_accumulated:
                     new_line = bytes_accumulated.decode(self._encoding).rstrip()
                     if new_line:
@@ -212,12 +209,15 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         timeout_finish = timeout_finish or self.timeout_finish
 
         start_wait = asyncio.get_event_loop().time()
-        # Ждём первого байта (timeout_start)
         while asyncio.get_event_loop().time() - start_wait < timeout_start:
+            # Если процесс завершился, сразу выходим
+            if self._conn and self._conn.returncode is not None:
+                return True
             if self._last_byte_time > start_wait:
-                # Данные пошли – переходим в режим ожидания тишины (timeout_finish)
                 quiet_start = asyncio.get_event_loop().time()
                 while asyncio.get_event_loop().time() - quiet_start < timeout_finish:
+                    if self._conn and self._conn.returncode is not None:
+                        return True
                     if self._last_byte_time > quiet_start:
                         quiet_start = asyncio.get_event_loop().time()
                     await asyncio.sleep(0.05)
