@@ -130,7 +130,7 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
-    async def _read_stream(self, stream: asyncio.StreamReader, append_method: Callable):
+    async def _read_stream(self, stream: asyncio.StreamReader, _buffer: EnumAdj_Buffer):
         """
         Чтение потока по одному байту с двумя таймаутами.
         - timeout_start – ожидание первого байта строки.
@@ -139,13 +139,22 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         - По таймауту строка также завершается.
         - Добавление в историю через append_method.
         """
+        # init BUFFER -------------------
+        if _buffer == EnumAdj_Buffer.STDOUT:
+            append_method = self.history.add_data__stdout
+        elif _buffer == EnumAdj_Buffer.STDERR:
+            append_method = self.history.add_data__stderr
+        else:
+            raise Exc__WrongUsage(f'{_buffer=}')
+
+        # BUFFER -------------------
         while not self._stop_reading and self._conn:
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_start
             try:
                 while True:
                     try:
-                        b = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
+                        new_byte = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
                     except asyncio.TimeoutError:
                         # Таймаут – строка завершена (без EOL)
                         break
@@ -156,25 +165,25 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                     # После первого байта переключаемся на finish-таймаут
                     timeout_active = self.timeout_finish
 
-                    if b == b'':  # EOF – канал закрыт
+                    if new_byte == b'':  # EOF – канал закрыт
                         break
 
-                    if b in (b'\r', b'\n'):
+                    if new_byte in (b'\r', b'\n'):
                         # Встретили EOL – завершаем текущую строку (если были данные)
                         if bytes_accumulated:
-                            line = bytes_accumulated.decode(self._encoding).rstrip()
-                            if line:
-                                append_method(line)
+                            new_line = bytes_accumulated.decode(self._encoding).rstrip()
+                            if new_line:
+                                append_method(new_line)
                         bytes_accumulated = bytearray()
                         continue
                     else:
-                        bytes_accumulated.extend(b)
+                        bytes_accumulated.extend(new_byte)
 
                 # Выход по таймауту – добавляем накопленное (если есть)
                 if bytes_accumulated:
-                    line = bytes_accumulated.decode(self._encoding).rstrip()
-                    if line:
-                        append_method(line)
+                    new_line = bytes_accumulated.decode(self._encoding).rstrip()
+                    if new_line:
+                        append_method(new_line)
 
             except asyncio.CancelledError:
                 break
@@ -183,10 +192,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
                 break
 
     async def _reading_stdout(self):
-        await self._read_stream(self._conn.stdout, self.history.add_data__stdout)
+        await self._read_stream(self._conn.stdout, EnumAdj_Buffer.STDOUT)
 
     async def _reading_stderr(self):
-        await self._read_stream(self._conn.stderr, self.history.add_data__stderr)
+        await self._read_stream(self._conn.stderr, EnumAdj_Buffer.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
