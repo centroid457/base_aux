@@ -1,0 +1,72 @@
+/* Базовые стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* Горизонтальная панель */
+.info-bar {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    align-items: center;
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.label {
+    font-weight: bold;
+    color: #ccc;
+}
+
+.value {
+    color: #fff;
+}
+
+/* Кнопка показа деталей */
+.details-toggle {
+    padding: 15px 20px;
+}
+
+#show-details-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#show-details-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Панель детальной информации */
+.details-panel {
+    margin: 0 20px 20px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+#details-content {
+    white-space: pre-wrap;
+    font-family: monospace;
+    line-height: 1.5;
+}

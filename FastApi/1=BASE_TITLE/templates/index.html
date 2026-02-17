@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ service_name }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Горизонтальная панель с основной информацией -->
+    <header class="info-bar">
+        <div class="info-item">
+            <span class="label">Сервис:</span>
+            <span class="value" id="service-name">{{ service_name }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Описание:</span>
+            <span class="value" id="service-description">{{ service_description }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Ваш IP:</span>
+            <span class="value" id="client-ip">загрузка...</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Текущий URL:</span>
+            <span class="value" id="current-url">загрузка...</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Серверное время:</span>
+            <span class="value" id="server-clock">загрузка...</span>
+        </div>
+    </header>
+
+    <!-- Ссылка для открытия детальной информации -->
+    <div class="details-toggle">
+        <button id="show-details-btn">Показать подробную информацию о сервисе</button>
+    </div>
+
+    <!-- Блок детальной информации (скрыт по умолчанию) -->
+    <div id="details-panel" class="details-panel hidden">
+        <h2>Детальная информация</h2>
+        <div id="details-content">Загрузка...</div>
+    </div>
+
+    <!-- Подключаем скрипты -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

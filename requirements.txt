@@ -17,6 +17,7 @@
 # VERSION = (0, 1, 3)   # separate special_occasion/common/COMMUNICATE +add aioserial/base_aux
 # VERSION = (0, 1, 4)   # separate DEVOPS, add testcontainers
 # VERSION = (0, 1, 5)   # add plagins pytest-cov/dependency
+# VERSION = (0, 1, 6)   # separate SERVERS block
 
 # ==========================
 # base ---------------------
@@ -38,6 +39,7 @@ testcontainers      #Apache2.0 #docker
 # DEVOPS -------------------
 gitpython   #BSD3
 docker      #Apache
+psutil      #BSD-3-Clause
 
 # COMMUNICATE --------------
 pyserial    #BSD3
@@ -45,9 +47,13 @@ pyserial    #BSD3
 smbus2      #MIT/linuxOnly
 telebot     #GPL2
 
+# SERVERS -------------------
+jinja2      #OSI Approved :: BSD License
+python-multipart  #OSI Approved :: Apache Software License= может потребоваться для форм
+
+requests    #Apache2
 aiohttp     #Apache2
 FastAPI     #MIT
-requests    #Apache2
 uvicorn     #BSD3
 
 # COMMON -------------------
