@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Обновляем часы каждые 60 секунд (можно меньше, например 10 с)
     updateClock(); // сразу при загрузке
-    setInterval(updateClock, 60000); // 60 000 мс = 1 минута
+    setInterval(updateClock, 50000); // 60 000 мс = 1 минута
 
     // Обработка кнопки "Подробнее"
     showDetailsBtn.addEventListener('click', () => {
         if (detailsPanel.classList.contains('hidden')) {
             // Показываем панель и заполняем данными
             detailsPanel.classList.remove('hidden');
-            showDetailsBtn.textContent = 'Скрыть подробную информацию';
+            // showDetailsBtn.textContent = 'Скрыть подробную информацию';
 
             if (window.detailsData) {
                 renderDetails(window.detailsData);
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             detailsPanel.classList.add('hidden');
-            showDetailsBtn.textContent = 'Показать подробную информацию о сервисе';
+            // showDetailsBtn.textContent = 'Показать подробную информацию о сервисе';
         }
     });
 

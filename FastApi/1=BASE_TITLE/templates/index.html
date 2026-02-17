@@ -10,11 +10,11 @@
     <!-- Горизонтальная панель с основной информацией -->
     <header class="info-bar">
         <div class="info-item">
-            <span class="label">Сервис:</span>
+            <span class="label">Service:</span>
             <span class="value" id="service-name">{{ service_name }}</span>
         </div>
         <div class="info-item">
-            <span class="label">Описание:</span>
+            <span class="label">Description:</span>
             <span class="value" id="service-description">{{ service_description }}</span>
         </div>
         <div class="info-item">
@@ -29,12 +29,12 @@
             <span class="label">Серверное время:</span>
             <span class="value" id="server-clock">загрузка...</span>
         </div>
-    </header>
+        <!-- Ссылка для открытия детальной информации -->
+        <div class="details-toggle">
+            <button id="show-details-btn">i</button>
+        </div>
 
-    <!-- Ссылка для открытия детальной информации -->
-    <div class="details-toggle">
-        <button id="show-details-btn">Показать подробную информацию о сервисе</button>
-    </div>
+    </header>
 
     <!-- Блок детальной информации (скрыт по умолчанию) -->
     <div id="details-panel" class="details-panel hidden">
