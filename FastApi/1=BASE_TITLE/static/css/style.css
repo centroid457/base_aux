@@ -6,67 +6,90 @@ body {
     background-color: #f5f5f5;
 }
 
-/* Горизонтальная панель */
+/* Минималистичная панель */
 .info-bar {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     background-color: #333;
     color: #fff;
-    padding: 10px 20px;
-    align-items: center;
-    gap: 20px;
+    padding: 4px 8px;        /* минимальные отступы */
+    gap: 12px;
+    font-size: 13px;
 }
 
 .info-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
+    white-space: nowrap;
 }
 
 .label {
     font-weight: bold;
-    color: #ccc;
+    color: #aaa;
 }
 
 .value {
     color: #fff;
 }
 
-/* Кнопка показа деталей */
-.details-toggle {
-    padding: 15px 20px;
+/* Кнопка-иконка */
+.info-toggle {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: auto;       /* прижимаем вправо */
+    padding: 0 4px;
+    line-height: 1;
+}
+.info-toggle:hover {
+    color: #0af;
 }
 
-#show-details-btn {
-    // padding: 8px 16px;
-    // background-color: #007bff;
-    // color: white;
-    // border: none;
-    // border-radius: 4px;
-    // cursor: pointer;
-    // font-size: 14px;
-}
-
-#show-details-btn:hover {
-    // background-color: #0056b3;
-}
-
-/* Панель детальной информации */
+/* Панель деталей */
 .details-panel {
-    margin: 0 20px 20px;
-    padding: 20px;
+    margin: 10px 8px 8px 8px;
+    padding: 12px;
     background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-family: monospace;
+    font-size: 13px;
+    overflow-x: auto;
 }
 
 .hidden {
     display: none;
 }
 
-#details-content {
-    white-space: pre-wrap;
-    font-family: monospace;
-    line-height: 1.5;
+/* Стили для структурированного вывода */
+.details-group {
+    margin-bottom: 15px;
+}
+.details-group h3 {
+    margin: 0 0 5px 0;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+.details-table {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+}
+.details-row {
+    display: contents;
+}
+.details-key {
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+}
+.details-value {
+    color: #000;
+    word-break: break-word;
 }

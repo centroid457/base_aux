@@ -7,42 +7,37 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <!-- Горизонтальная панель с основной информацией -->
+    <!-- Минималистичная горизонтальная панель -->
     <header class="info-bar">
         <div class="info-item">
-            <span class="label">Service:</span>
-            <span class="value" id="service-name">{{ service_name }}</span>
+            <span class="label">Сервис:</span>
+            <span class="value">{{ service_name }}</span>
         </div>
         <div class="info-item">
-            <span class="label">Description:</span>
-            <span class="value" id="service-description">{{ service_description }}</span>
+            <span class="label">Описание:</span>
+            <span class="value">{{ service_description }}</span>
         </div>
         <div class="info-item">
             <span class="label">Ваш IP:</span>
-            <span class="value" id="client-ip">загрузка...</span>
+            <span class="value" id="client-ip">...</span>
         </div>
         <div class="info-item">
-            <span class="label">Текущий URL:</span>
-            <span class="value" id="current-url">загрузка...</span>
+            <span class="label">URL:</span>
+            <span class="value" id="current-url">...</span>
         </div>
         <div class="info-item">
             <span class="label">Серверное время:</span>
-            <span class="value" id="server-clock">загрузка...</span>
+            <span class="value" id="server-clock">...</span>
         </div>
-        <!-- Ссылка для открытия детальной информации -->
-        <div class="details-toggle">
-            <button id="show-details-btn">i</button>
-        </div>
-
+        <!-- Кнопка-иконка "i" справа -->
+        <button id="info-toggle" class="info-toggle" title="Подробная информация">ⓘ</button>
     </header>
 
     <!-- Блок детальной информации (скрыт по умолчанию) -->
     <div id="details-panel" class="details-panel hidden">
-        <h2>Детальная информация</h2>
         <div id="details-content">Загрузка...</div>
     </div>
 
-    <!-- Подключаем скрипты -->
     <script src="/static/js/script.js"></script>
 </body>
 </html>
