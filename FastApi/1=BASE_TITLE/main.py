@@ -15,7 +15,7 @@ from fastapi.templating import Jinja2Templates
 # =====================================================================================================================
 SERVICE_NAME = "My Universal Service"
 SERVICE_DESCRIPTION = "A handy web service template"
-SERVICE_AUTHOR = "Your Name"
+SERVICE_AUTHOR = "Andrey Starichenko"
 SERVICE_START_TIME = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 app = FastAPI(title=SERVICE_NAME, description=SERVICE_DESCRIPTION)
@@ -106,7 +106,7 @@ def get_server_time() -> str:
 
 # =====================================================================================================================
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def html__home(request: Request):
     return templates.TemplateResponse("index.html", {
         "request": request,
         "service_name": SERVICE_NAME,
@@ -115,8 +115,15 @@ async def read_root(request: Request):
     })
 
 
+@app.get("/service_details", response_class=HTMLResponse)
+async def html__service_details(request: Request):
+    """Страница с детальной информацией о системе и сервисе."""
+    # Контекст для хедера не нужен, так как данные подгружаются через API
+    return templates.TemplateResponse("service_details.html", {"request": request})
+
+
 @app.get("/api/info")
-async def api_info(request: Request):
+async def api__info(request: Request):
     """Возвращает структурированный словарь со всей информацией."""
     client_ip = request.client.host
     if "x-forwarded-for" in request.headers:
@@ -172,7 +179,7 @@ async def api_info(request: Request):
 
 
 @app.get("/api/clock")
-async def api_clock():
+async def api__clock():
     return {"server_time": get_server_time()}
 
 

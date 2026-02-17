@@ -7,37 +7,9 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <!-- Минималистичная горизонтальная панель -->
-    <header class="info-bar">
-        <div class="info-item">
-            <span class="label">Сервис:</span>
-            <span class="value">{{ service_name }}</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Описание:</span>
-            <span class="value">{{ service_description }}</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Ваш IP:</span>
-            <span class="value" id="client-ip">...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">URL:</span>
-            <span class="value" id="current-url">...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Серверное время:</span>
-            <span class="value" id="server-clock">...</span>
-        </div>
-        <!-- Кнопка-иконка "i" справа -->
-        <button id="info-toggle" class="info-toggle" title="Подробная информация">ⓘ</button>
-    </header>
+    <h1>ПРИМЕР</h1>
+    <p>Главной страницы</p>
 
-    <!-- Блок детальной информации (скрыт по умолчанию) -->
-    <div id="details-panel" class="details-panel hidden">
-        <div id="details-content">Загрузка...</div>
-    </div>
-
-    <script src="/static/js/script.js"></script>
+    <script src="/static/js/header.js" data-comment="place to last posшtion right before bodyTag closing"></script>
 </body>
 </html>
