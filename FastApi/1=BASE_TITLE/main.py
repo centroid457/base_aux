@@ -3,6 +3,7 @@ import platform
 import time
 from datetime import datetime
 from typing import Dict, Any
+from dataclasses import dataclass
 
 import psutil
 import uvicorn
@@ -13,105 +14,154 @@ from fastapi.templating import Jinja2Templates
 
 
 # =====================================================================================================================
-SERVICE_NAME = "My Universal Service"
-SERVICE_DESCRIPTION = "A handy web service template"
-SERVICE_AUTHOR = "Andrey Starichenko"
-SERVICE_START_TIME = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+@dataclass
+class ServiceDetails:
+    SERVICE_NAME: str = "Base Info Title Header"
+    SERVICE_DESCRIPTION: str = "gen/place a universal title header into any project"
+    SERVICE_AUTHOR: str = "Andrey Starichenko"
+    SERVICE_FRAMEWORK: str = "FastAPI"
 
-app = FastAPI(title=SERVICE_NAME, description=SERVICE_DESCRIPTION)
+    def __post_init__(self):
+        self.SERVICE_INFO: dict[str, str] = {
+            "name": self.SERVICE_NAME,
+            "description": self.SERVICE_DESCRIPTION,
+            "author": self.SERVICE_AUTHOR,
+            "framework": self.SERVICE_FRAMEWORK,
+
+        }
+        self.OS_INFO: dict[str, str] = {
+            "os": platform.system(),
+            "os_version": platform.platform(),
+            "hostname": platform.node(),
+            "processor": platform.processor(),
+            "architecture": platform.machine(),
+        }
+        self.RUNTIME: dict[str, str] = {
+            "os__boot_time": self.get__boot_time(),
+            "service__start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            **self.get__user_info(),
+        }
+
+    def get(self, request: Request | None = None) -> dict[str, dict[str, Any | str | int | float | None]]:
+        result = {
+            "SERVICE_INFO": self.SERVICE_INFO,
+            "OS_INFO": self.OS_INFO,
+            "RUNTIME": self.RUNTIME,
+            "LOAD": {
+                "CPU_LOAD": self.CPU_LOAD,
+                "MEMORY": self.get__memory_info(),
+                "DISK": self.get__disk_info(),
+            },
+            "CLIENT": self.get__client_info(request),
+        }
+        return result
+
+    def get__client_info(self, request: Request | None = None) -> dict:
+        result = {}
+
+        if request is not None:
+            client_ip = request.client.host
+            if not client_ip:
+                if "x-forwarded-for" in request.headers:
+                    client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
+
+            result["client_ip"] = client_ip
+            result["host_domain"] = request.url.hostname
+            result["current_url"] = str(request.url)
+
+        # CLIENT будет заполнен на фронтенде (браузер, ОС, локальное время)
+        result["ip"] = "—",   # будет заполнено в JS
+        result["browser"] = "—",   # будет заполнено в JS
+        result["os"] = "—",   # будет заполнено в JS
+        result["local_time"] = "—",   # будет заполнено в JS
+        result["user_agent"] = "—",   # будет заполнено в JS
+
+        return result
+
+    def get__boot_time(self) -> str:
+        try:
+            boot_timestamp = psutil.boot_time()
+            return datetime.fromtimestamp(boot_timestamp).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            return "N/A"
+
+    def get__user_info(self) -> dict[str, Any]:
+        try:
+            if platform.system() == "Windows":
+                import ctypes
+                is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            else:
+                is_admin = os.geteuid() == 0
+
+            username = os.getlogin() if hasattr(os, 'getlogin') else os.environ.get('USER', 'Unknown')
+        except Exception:
+            username = "Unknown"
+            is_admin = False
+
+        return {
+            "service_username": username,
+            "service_userlevel": "администратор" if is_admin else "обычный пользователь",
+        }
+
+    @property
+    def CPU_LOAD(self) -> dict:
+        return self.get__system_load()
+
+    def get__system_load(self) -> dict[str, Any]:
+        try:
+            load_avg = psutil.getloadavg()
+            return {
+                "load_1min": round(load_avg[0], 2),
+                "load_5min": round(load_avg[1], 2),
+                "load_15min": round(load_avg[2], 2),
+            }
+        except Exception:
+            return {}
+
+    def get__memory_info(self) -> dict[str, Any]:
+        try:
+            mem = psutil.virtual_memory()
+            return {
+                "total": f"{mem.total / (1024**3):.2f} GB",
+                "available": f"{mem.available / (1024**3):.2f} GB",
+                "used": f"{mem.used / (1024**3):.2f} GB",
+                "percent": f"{mem.percent}%"
+            }
+        except Exception:
+            return {"error": "N/A"}
+
+    def get__disk_info(self) -> dict[str, Any]:
+        try:
+            disk = psutil.disk_usage('/')
+            return {
+                "total": f"{disk.total / (1024**3):.2f} GB",
+                "used": f"{disk.used / (1024**3):.2f} GB",
+                "free": f"{disk.free / (1024**3):.2f} GB",
+                "percent": f"{disk.percent}%"
+            }
+        except Exception:
+            return {"error": "N/A"}
+
+
+# =====================================================================================================================
+service_details = ServiceDetails()
+
+
+# =====================================================================================================================
+app = FastAPI(title=service_details.SERVICE_NAME, description=service_details.SERVICE_DESCRIPTION)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
 # =====================================================================================================================
-def get_os_info() -> Dict[str, Any]:
-    """Информация об ОС сервера."""
-    return {
-        "os": platform.system(),
-        "os_version": platform.platform(),
-        "hostname": platform.node(),
-        "processor": platform.processor(),
-        "machine": platform.machine(),
-    }
-
-
-def get_boot_time() -> str:
-    try:
-        boot_timestamp = psutil.boot_time()
-        return datetime.fromtimestamp(boot_timestamp).strftime("%Y-%m-%d %H:%M:%S")
-    except Exception:
-        return "N/A"
-
-
-def get_user_info() -> Dict[str, Any]:
-    try:
-        if platform.system() == "Windows":
-            import ctypes
-            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        else:
-            is_admin = os.geteuid() == 0
-
-        username = os.getlogin() if hasattr(os, 'getlogin') else os.environ.get('USER', 'Unknown')
-    except Exception:
-        username = "Unknown"
-        is_admin = False
-
-    return {
-        "username": username,
-        "user_level": "администратор" if is_admin else "обычный пользователь"
-    }
-
-
-def get_system_load() -> Dict[str, Any]:
-    try:
-        load_avg = psutil.getloadavg()
-        return {
-            "load_1min": round(load_avg[0], 2),
-            "load_5min": round(load_avg[1], 2),
-            "load_15min": round(load_avg[2], 2),
-        }
-    except Exception:
-        return {}
-
-
-def get_memory_info() -> Dict[str, Any]:
-    try:
-        mem = psutil.virtual_memory()
-        return {
-            "total": f"{mem.total / (1024**3):.2f} GB",
-            "available": f"{mem.available / (1024**3):.2f} GB",
-            "used": f"{mem.used / (1024**3):.2f} GB",
-            "percent": f"{mem.percent}%"
-        }
-    except Exception:
-        return {"error": "N/A"}
-
-
-def get_disk_info() -> Dict[str, Any]:
-    try:
-        disk = psutil.disk_usage('/')
-        return {
-            "total": f"{disk.total / (1024**3):.2f} GB",
-            "used": f"{disk.used / (1024**3):.2f} GB",
-            "free": f"{disk.free / (1024**3):.2f} GB",
-            "percent": f"{disk.percent}%"
-        }
-    except Exception:
-        return {"error": "N/A"}
-
-
-def get_server_time() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
-# =====================================================================================================================
 @app.get("/", response_class=HTMLResponse)
-async def html__home(request: Request):
+async def html__index(request: Request):
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "service_name": SERVICE_NAME,
-        "service_description": SERVICE_DESCRIPTION,
-        "author": SERVICE_AUTHOR
+        "service_name": service_details.SERVICE_NAME,
+        "service_description": service_details.SERVICE_DESCRIPTION,
+        "author": service_details.SERVICE_AUTHOR,
+        "any other": "123",
     })
 
 
@@ -125,62 +175,13 @@ async def html__service_details(request: Request):
 @app.get("/api/info")
 async def api__info(request: Request):
     """Возвращает структурированный словарь со всей информацией."""
-    client_ip = request.client.host
-    if "x-forwarded-for" in request.headers:
-        client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
-
-    # Домен хоста (из запроса)
-    host_domain = request.url.hostname
-
-    os_info = get_os_info()
-    boot_time = get_boot_time()
-    user_info = get_user_info()
-    load_info = get_system_load()
-
-    # Формируем единый словарь
-    data = {
-        "SERVICE": {
-            "name": SERVICE_NAME,
-            "description": SERVICE_DESCRIPTION,
-            "author": SERVICE_AUTHOR,
-            "start_time": SERVICE_START_TIME,
-            "framework": "FastAPI"
-        },
-        "SERVICE SYSTEM": {
-            "host_domain": host_domain,
-            "os": os_info["os"],
-            "os_version": os_info["os_version"],
-            "hostname": os_info["hostname"],
-            "processor": os_info["processor"],
-            "architecture": os_info["machine"],
-            "boot_time": boot_time,
-            "user": user_info["username"],
-            "user_level": user_info["user_level"],
-            "CpuLoad": get_system_load(),  # теперь это словарь с ключами 1min,5min,15min
-            "Memory": get_memory_info(),
-            "Disk (/)": get_disk_info(),
-        },
-        "NETWORK": {
-            "client_ip": client_ip,
-            "current_url": str(request.url),
-            "server_hostname": platform.node(),
-            "server_domain": host_domain,
-        },
-        # CLIENT будет заполнен на фронтенде (браузер, ОС, локальное время)
-        "CLIENT": {
-            "ip": client_ip,  # дублируем, но можно оставить
-            "browser": "—",   # будет заполнено в JS
-            "os": "—",
-            "local_time": "—",
-            "user_agent": "—",
-        }
-    }
+    data = service_details.get(request)
     return data
 
 
 @app.get("/api/clock")
 async def api__clock():
-    return {"server_time": get_server_time()}
+    return {"server_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 
 # =====================================================================================================================
