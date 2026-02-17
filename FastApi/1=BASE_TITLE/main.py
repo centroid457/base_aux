@@ -11,7 +11,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# Конфигурация сервиса
+
+# =====================================================================================================================
 SERVICE_NAME = "My Universal Service"
 SERVICE_DESCRIPTION = "A handy web service template"
 SERVICE_AUTHOR = "Your Name"
@@ -22,6 +23,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+# =====================================================================================================================
 def get_os_info() -> Dict[str, Any]:
     """Информация об ОС сервера."""
     return {
@@ -72,10 +74,37 @@ def get_system_load() -> Dict[str, Any]:
         return {}
 
 
+def get_memory_info() -> Dict[str, Any]:
+    try:
+        mem = psutil.virtual_memory()
+        return {
+            "total": f"{mem.total / (1024**3):.2f} GB",
+            "available": f"{mem.available / (1024**3):.2f} GB",
+            "used": f"{mem.used / (1024**3):.2f} GB",
+            "percent": f"{mem.percent}%"
+        }
+    except Exception:
+        return {"error": "N/A"}
+
+
+def get_disk_info() -> Dict[str, Any]:
+    try:
+        disk = psutil.disk_usage('/')
+        return {
+            "total": f"{disk.total / (1024**3):.2f} GB",
+            "used": f"{disk.used / (1024**3):.2f} GB",
+            "free": f"{disk.free / (1024**3):.2f} GB",
+            "percent": f"{disk.percent}%"
+        }
+    except Exception:
+        return {"error": "N/A"}
+
+
 def get_server_time() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
+# =====================================================================================================================
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {
@@ -120,9 +149,9 @@ async def api_info(request: Request):
             "boot_time": boot_time,
             "user": user_info["username"],
             "user_level": user_info["user_level"],
-            "load_1min": load_info.get("load_1min", "N/A"),
-            "load_5min": load_info.get("load_5min", "N/A"),
-            "load_15min": load_info.get("load_15min", "N/A"),
+            "CpuLoad": get_system_load(),  # теперь это словарь с ключами 1min,5min,15min
+            "Memory": get_memory_info(),
+            "Disk (/)": get_disk_info(),
         },
         "NETWORK": {
             "client_ip": client_ip,
@@ -147,5 +176,9 @@ async def api_clock():
     return {"server_time": get_server_time()}
 
 
+# =====================================================================================================================
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+
+# =====================================================================================================================

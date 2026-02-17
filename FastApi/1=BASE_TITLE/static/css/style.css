@@ -57,7 +57,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    font-family: monospace;
+    font-family: 'Segoe UI', monospace;
     font-size: 13px;
     overflow-x: auto;
 }

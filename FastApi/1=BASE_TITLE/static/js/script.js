@@ -69,34 +69,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Функция отрисовки детальной информации
-    function renderDetails(data) {
-        if (!data) {
-            detailsContent.innerHTML = '<p>Нет данных</p>';
-            return;
-        }
-
+    function renderDetails(data, container, level = 0) {
+        if (!data) return '';
         let html = '';
-        for (const [groupName, groupData] of Object.entries(data)) {
-            html += `<div class="details-group">`;
-            html += `<h3>${groupName}</h3>`;
-            html += `<div class="details-table">`;
+        const indent = level * 20; // отступ в пикселях для подгрупп
 
-            for (const [key, value] of Object.entries(groupData)) {
-                // Форматируем значение: если объект/массив - JSON, иначе просто строку
-                let displayValue = value;
-                if (typeof value === 'object' && value !== null) {
-                    displayValue = JSON.stringify(value, null, 2);
-                }
+        for (const [key, value] of Object.entries(data)) {
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                // Это подгруппа – рисуем заголовок и рекурсивно её содержимое
+                html += `<div style="margin-left: ${indent}px; margin-top: 8px;">`;
+                html += `<h4 style="margin: 0 0 4px 0; color: #2c3e50; font-size: 14px;">${key}</h4>`;
+                html += renderDetails(value, null, level + 1);
+                html += `</div>`;
+            } else {
+                // Обычная пара ключ-значение
                 html += `
-                    <div class="details-row">
-                        <div class="details-key">${key}:</div>
-                        <div class="details-value">${displayValue}</div>
+                    <div style="display: flex; margin-left: ${indent}px; gap: 10px; font-size: 13px; line-height: 1.5;">
+                        <div style="font-weight: bold; min-width: 120px; color: #555;">${key}:</div>
+                        <div style="color: #000;">${value !== null && value !== undefined ? value : '—'}</div>
                     </div>
                 `;
             }
-            html += `</div></div>`;
         }
-        detailsContent.innerHTML = html;
+
+        if (container) {
+            container.innerHTML = html;
+        }
+        return html;
     }
 
     // Обновление часов
@@ -120,15 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обработка клика по кнопке "i"
     toggleBtn.addEventListener('click', async () => {
         if (detailsPanel.classList.contains('hidden')) {
-            // Показываем панель
             detailsPanel.classList.remove('hidden');
 
-            // Если данные ещё не загружены или нет клиентской части, загружаем/обновляем
             if (!serverData) {
                 detailsContent.innerHTML = 'Загрузка...';
                 await fetchServerInfo();
             } else {
-                // Обновляем клиентское время и возможно ОС (если изменилось)
                 const clientInfo = getClientInfo();
                 serverData.CLIENT.local_time = clientInfo.local_time;
                 serverData.CLIENT.browser = clientInfo.browser;
@@ -136,7 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 serverData.CLIENT.user_agent = clientInfo.user_agent;
             }
 
-            renderDetails(serverData);
+            // Передаём контейнер для отрисовки
+            renderDetails(serverData, detailsContent);
         } else {
             detailsPanel.classList.add('hidden');
         }
