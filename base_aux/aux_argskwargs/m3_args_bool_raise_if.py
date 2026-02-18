@@ -1,6 +1,6 @@
 from base_aux.base_nest_dunders.m1_init1_args_kwargs import *
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
-from base_aux.base_values.m3_exceptions import Exc__Expected
+from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 from base_aux.base_nest_dunders.m3_calls import *
 from base_aux.base_lambdas.m1_lambda import *
 
@@ -56,7 +56,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
                 if arg_result:
                     if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
-                        raise Exc__Expected(msg)
+                        raise Exc__ExpectedAnother(msg)
                     else:
                         return True
 
@@ -64,7 +64,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
                 if not arg_result:
                     if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
-                        raise Exc__Expected(msg)
+                        raise Exc__ExpectedAnother(msg)
                     else:
                         return True
 
@@ -74,7 +74,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
         else:   # self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE
             if self.RAISE_INSTEAD_TRUE:
                 msg = f"{results_all=}"
-                raise Exc__Expected(msg)
+                raise Exc__ExpectedAnother(msg)
             else:
                 return True
 

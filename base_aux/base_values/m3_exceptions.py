@@ -182,6 +182,16 @@ class Exc__NotAvailable(Exc__NotExistsNotFoundNotCreated):
 
 
 # =====================================================================================================================
+class Exc__Permission(PermissionError):  # use original! but keep here new name!
+    """
+    GOAL
+    ----
+    catch exception and show that cause is permition!
+    """
+    pass
+
+
+# =====================================================================================================================
 class Exc__Incompatible(Base_Exc):
     """
     GOAL
@@ -253,20 +263,20 @@ class Exc__UnExpectedError(Base_Exc):
     pass
 
 
+class Exc__ExpectedAnother(Base_Exc):
+    """
+    GOAL
+    ----
+    Any requirement/exact cmp/eq is not match!
+    """
+
+
 # =====================================================================================================================
-class Exc__Expected(Base_Exc):
+class Exc__Overlapped(Base_Exc):
     """
     GOAL
     ----
-    Any requirement/exact cmp/eq
-    """
-
-
-class Exc__Overlayed(Base_Exc):
-    """
-    GOAL
-    ----
-    ENY OVERLAY ITEMS/ADDRESSES
+    ENY OVERLAPPED ITEMS/ADDRESSES
     index
     """
     pass

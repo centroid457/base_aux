@@ -4,10 +4,9 @@ import pathlib
 import json
 import functools
 
-import requests
 from aiohttp import web
-import aiohttp
 import yaml
+from base_aux.base_values.m3_exceptions import *
 
 from PyQt5.QtCore import QThread
 
@@ -15,19 +14,6 @@ from PyQt5.QtCore import QThread
 # =====================================================================================================================
 TYPE__SELF = Any
 TYPE__REQUEST = Any
-
-
-# =====================================================================================================================
-class Exc__AiohttpServerStartSameAddress(Exception):
-    pass
-
-
-class Exc__LinuxPermition(Exception):
-    pass
-
-
-class Exc__AiohttpServerOtherError(Exception):
-    pass
 
 
 # =====================================================================================================================
@@ -96,16 +82,16 @@ class ServerAiohttpBase(QThread):
         except PermissionError as exc:
             # PermissionError(13, "error while attempting to bind on address ('127.0.0.1', 80): permission denied"
             msg = f"[ERROR] need linux rights for accessing ports under 1024 (execute [sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.11]) or use appropriate port {exc!r}"
-            raise Exc__LinuxPermition(msg)
+            raise Exc__Permission(msg)
 
         except OSError as exc:
             # OSError(10048, "error while attempting to bind on address ('0.0.0.0', 80)
             msg = f"[ERROR]started same server address/port {exc!r}"
-            raise Exc__AiohttpServerStartSameAddress(msg)
+            raise Exc__Overlapped(msg)
 
         except Exception as exc:
-            msg = f"[ERROR] other error {exc!r}"
-            raise Exc__AiohttpServerOtherError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
+            msg = f"{exc!r}"
+            raise Exc__UnExpectedError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
 
     def start(self, *args):
         if not self.isRunning():
@@ -225,9 +211,9 @@ class ServerAiohttpBase(QThread):
         html = self.html_create(data="", request=request, redirect_time=1)
         return web.Response(text=html, content_type='text/html')
 
-    async def _response_get_json__converted_to_html(self, request) -> web.Response:
+    async def _response_get_json__converted_to_html(self, request: web.Request) -> web.Response:
         route_json = request.path[1:].replace(self._ROUTE_NAME_PREFIX_HTML_FOR_JSON, "")
-        response: requests.Response = await getattr(self, self._ROUTE_FUNC_START_PATTERN % "get_json" + route_json)(request)
+        response: web.Response = await getattr(self, self._ROUTE_FUNC_START_PATTERN % "get_json" + route_json)(request)
         data_text = response.text   # no json/data here in instance!
         data_json = json.loads(data_text)
 

@@ -102,7 +102,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
             if isinstance(index, int):
                 if index in result:
                     msg = f"{index=} from {result=}"
-                    raise Exc__Overlayed(msg)
+                    raise Exc__Overlapped(msg)
                 result.update({index: attr})
                 index_last = index
 
@@ -118,7 +118,7 @@ class BreederStrStack(NestGAI_AnnotAttrIC):
                 for key, value in result_sub_dict.items():
                     if key in result:
                         msg = f"{key=} from {result_sub_dict=}"
-                        raise Exc__Overlayed(msg)
+                        raise Exc__Overlapped(msg)
                     result.update({key: value})
                     index_last = key
 

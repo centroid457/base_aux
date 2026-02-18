@@ -1,7 +1,7 @@
 from base_aux.base_values.m4_primitives import *
 
 from base_aux.aux_argskwargs.m3_args_bool_raise_if import *
-from base_aux.base_values.m3_exceptions import Exc__Expected
+from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 
 
 # =====================================================================================================================
@@ -35,10 +35,10 @@ def test__RaiseIf(args, _EXPECTED):
     Lambda(ArgsBoolIf_AllFalse(*args).resolve).check_expected__assert(_EXPECTED[2])
     Lambda(ArgsBoolIf_AnyFalse(*args).resolve).check_expected__assert(_EXPECTED[3])
 
-    Lambda(ArgsRaiseIf_AllTrue(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[0] else False)
-    Lambda(ArgsRaiseIf_AnyTrue(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[1] else False)
-    Lambda(ArgsRaiseIf_AllFalse(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[2] else False)
-    Lambda(ArgsRaiseIf_AnyFalse(*args).resolve).check_expected__assert(Exc__Expected if _EXPECTED[3] else False)
+    Lambda(ArgsRaiseIf_AllTrue(*args).resolve).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[0] else False)
+    Lambda(ArgsRaiseIf_AnyTrue(*args).resolve).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[1] else False)
+    Lambda(ArgsRaiseIf_AllFalse(*args).resolve).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[2] else False)
+    Lambda(ArgsRaiseIf_AnyFalse(*args).resolve).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[3] else False)
 
 
 # =====================================================================================================================

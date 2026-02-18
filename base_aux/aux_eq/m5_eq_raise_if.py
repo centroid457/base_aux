@@ -1,5 +1,5 @@
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
-from base_aux.base_values.m3_exceptions import Exc__Expected
+from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 from base_aux.aux_eq.m4_eq_valid_chain import *
 
 
@@ -29,7 +29,7 @@ class Base_EqRaiseIf(Base_EqValidChain):
                 msg = str(self.MSG)
             else:
                 msg = str(self)
-            raise Exc__Expected(msg)
+            raise Exc__ExpectedAnother(msg)
 
 
 # ---------------------------------------------------------------------------------------------------------------------

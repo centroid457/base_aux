@@ -81,10 +81,10 @@ def test__OS(other_draft, eq_expects, _EXP_checkIf, _EXP_ga):
     Lambda(Victim(other_draft).bool_if__all_false, **eq_expects).check_expected__assert(_EXP_checkIf[2])
     Lambda(Victim(other_draft).bool_if__any_false, **eq_expects).check_expected__assert(_EXP_checkIf[3])
 
-    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).check_expected__assert(Exc__Expected if _EXP_checkIf[0] else False)
-    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).check_expected__assert(Exc__Expected if _EXP_checkIf[1] else False)
-    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).check_expected__assert(Exc__Expected if _EXP_checkIf[2] else False)
-    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).check_expected__assert(Exc__Expected if _EXP_checkIf[3] else False)
+    Lambda(Victim(other_draft).raise_if__all_true, **eq_expects).check_expected__assert(Exc__ExpectedAnother if _EXP_checkIf[0] else False)
+    Lambda(Victim(other_draft).raise_if__any_true, **eq_expects).check_expected__assert(Exc__ExpectedAnother if _EXP_checkIf[1] else False)
+    Lambda(Victim(other_draft).raise_if__all_false, **eq_expects).check_expected__assert(Exc__ExpectedAnother if _EXP_checkIf[2] else False)
+    Lambda(Victim(other_draft).raise_if__any_false, **eq_expects).check_expected__assert(Exc__ExpectedAnother if _EXP_checkIf[3] else False)
 
     # GA
     Lambda(lambda: Victim(other_draft).linux).check_expected__assert(_EXP_ga[0])
