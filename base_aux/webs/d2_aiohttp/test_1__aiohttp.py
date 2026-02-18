@@ -1,7 +1,7 @@
 import requests
 from aiohttp import web
 
-from base_aux.servers.m2_server1_aiohttp import ServerAiohttpBase
+from base_aux.webs.d2_aiohttp.m1_aiohttp import ServerAiohttpBase
 from base_aux.aux_argskwargs.m4_kwargs_eq_expect import *
 
 

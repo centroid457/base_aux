@@ -1,18 +1,13 @@
-from typing import *
-import time
 # import datetime
 
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 
-from base_aux.servers.m1_client_requests import *
+from base_aux.webs.d1_clients.m1_requests import *
 from base_aux.loggers.m2_logger import *
-from base_aux.path2_file.m3_filetext import *
 from base_aux.aux_datetime.m2_datetime import *
 
 # ---------------------------------------------------------------------------------------------------------------------
 from base_aux.testplans.tc import Base_TestCase
-from base_aux.testplans.devices_base import Base_Device
-from base_aux.testplans.devices_kit import DeviceKit
 from base_aux.testplans.gui import Base_TpGui
 from base_aux.testplans.api import TpApi_FastApi
 from base_aux.testplans.stand import Base_Stand

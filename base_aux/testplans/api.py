@@ -1,11 +1,5 @@
-from typing import *
-
-from aiohttp import web
-from fastapi import FastAPI, Response
-from fastapi.responses import RedirectResponse
-
-from base_aux.servers.m2_server1_aiohttp import *
-from base_aux.servers.m3_server2_fastapi import *
+from base_aux.webs.d2_aiohttp.m1_aiohttp import *
+from base_aux.webs.d3_fastapi.m1_fastapi import *
 
 from .models import *
 
