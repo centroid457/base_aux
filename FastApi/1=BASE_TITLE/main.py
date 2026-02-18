@@ -16,29 +16,26 @@ from fastapi.templating import Jinja2Templates
 # =====================================================================================================================
 @dataclass
 class ServiceDetails:
-    SERVICE_NAME: str = "Base Info Title Header"
+    SERVICE_NAME: str = "TitleHeader"
     SERVICE_DESCRIPTION: str = "gen/place a universal title header into any project"
     SERVICE_AUTHOR: str = "Andrey Starichenko"
     SERVICE_FRAMEWORK: str = "FastAPI"
 
     def __post_init__(self):
         self.SERVICE_INFO: dict[str, str] = {
+            "service__start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "name": self.SERVICE_NAME,
             "description": self.SERVICE_DESCRIPTION,
             "author": self.SERVICE_AUTHOR,
             "framework": self.SERVICE_FRAMEWORK,
-
         }
         self.OS_INFO: dict[str, str] = {
+            "os__boot_time": self.get__boot_time(),
             "os": platform.system(),
             "os_version": platform.platform(),
             "hostname": platform.node(),
             "processor": platform.processor(),
             "architecture": platform.machine(),
-        }
-        self.RUNTIME: dict[str, str] = {
-            "os__boot_time": self.get__boot_time(),
-            "service__start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             **self.get__user_info(),
         }
 
@@ -46,9 +43,8 @@ class ServiceDetails:
         result = {
             "SERVICE_INFO": self.SERVICE_INFO,
             "OS_INFO": self.OS_INFO,
-            "RUNTIME": self.RUNTIME,
-            "LOAD": {
-                "CPU_LOAD": self.CPU_LOAD,
+            "RUNTIME": {
+                "CPU_LOAD": self.get__system_load(),
                 "MEMORY": self.get__memory_info(),
                 "DISK": self.get__disk_info(),
             },
@@ -103,10 +99,6 @@ class ServiceDetails:
             "service_userlevel": "администратор" if is_admin else "обычный пользователь",
         }
 
-    @property
-    def CPU_LOAD(self) -> dict:
-        return self.get__system_load()
-
     def get__system_load(self) -> dict[str, Any]:
         try:
             load_avg = psutil.getloadavg()
@@ -160,21 +152,20 @@ async def html__index(request: Request):
         "request": request,
         "service_name": service_details.SERVICE_NAME,
         "service_description": service_details.SERVICE_DESCRIPTION,
-        "author": service_details.SERVICE_AUTHOR,
-        "any other": "123",
+        # "any other": "123",
     })
 
 
 @app.get("/service_details", response_class=HTMLResponse)
 async def html__service_details(request: Request):
-    """Страница с детальной информацией о системе и сервисе."""
-    # Контекст для хедера не нужен, так как данные подгружаются через API
-    return templates.TemplateResponse("service_details.html", {"request": request})
+    return templates.TemplateResponse("service_details.html", {
+        "request": request
+    })
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @app.get("/api/info")
 async def api__info(request: Request):
-    """Возвращает структурированный словарь со всей информацией."""
     data = service_details.get(request)
     return data
 
