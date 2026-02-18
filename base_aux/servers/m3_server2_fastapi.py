@@ -19,9 +19,9 @@ from base_aux.loggers.m2_logger import Logger
 
 # =====================================================================================================================
 class DataExample:
-    int = 1
-    float = 1.2
-    str = "string"
+    INT = 1
+    FLOAT = 1.2
+    STR = "string"
     list = [1, "2"]
     dict = {1: "2", "22": 11}       # by FastAPI return={"1":"2","22":11}
 
