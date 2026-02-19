@@ -5,12 +5,20 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_OsAio(Base_CmdTerminal):
+class CmdTerminal_OsAio(Abc_CmdTerminal):
     """
-    Асинхронная версия CmdTerminal_Os на asyncio.subprocess.
+    Асинхронная версия CmdTerminal_OsSync на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
     _bg_tasks: list[asyncio.Task]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    async def __aenter__(self):
+        await self.connect()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.disconnect()
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
@@ -26,8 +34,8 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
     def _create_tasks(self) -> None:
         self._bg_tasks = [
-            asyncio.create_task(self._reading_stdout()),
-            asyncio.create_task(self._reading_stderr()),
+            asyncio.create_task(self._bg_reading_buffer__stdout()),
+            asyncio.create_task(self._bg_reading_buffer__stderr()),
         ]
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -52,7 +60,6 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         await asyncio.sleep(0.3)
         return True
 
-    # -----------------------------------------------------------------------------------------------------------------
     async def disconnect(self) -> None:
         """Корректное завершение процесса и остановка задач чтения."""
         self._stop_reading = True
@@ -86,55 +93,47 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
 
-    # -----------------------------------------------------------------------------------------------------------------
     async def reconnect(self) -> None:
         await self.disconnect()
         await self.connect()
         self.history._listeners__notify('msg_system__style', "🔄 Сессия переподключена")  # оповещаем о переподключении
 
     # -----------------------------------------------------------------------------------------------------------------
-    # async def _reading_stdout(self):
-    #     """Асинхронное чтение stdout."""
-    #     while not self._stop_reading and self._conn:
-    #         try:
-    #             line = await self._conn.stdout.readline()
-    #             if not line:
-    #                 break
-    #             line = line.decode(self._encoding)
-    #             line = line.rstrip()
-    #             if line:
-    #                 print(f"[STDOUT]{line}")
-    #                 self.history.append_stdout(line)
-    #             self.history.set_retcode(self._conn.returncode)
-    #         except asyncio.CancelledError:
-    #             break
-    #         except Exception as exc:
-    #             print(f"UNEXPECTED _reading_stdout: {exc!r}")
-    #             break
-    #
-    # async def _reading_stderr(self):
-    #     """Асинхронное чтение stderr."""
-    #     while not self._stop_reading and self._conn:
-    #         try:
-    #             line = await self._conn.stderr.readline()
-    #             if not line:
-    #                 break
-    #             line = line.decode(self._encoding)
-    #             line = line.rstrip()
-    #             if line:
-    #                 print(f"[STDERR]{line}")
-    #                 self.history.append_stderr(line)
-    #             self.history.set_retcode(self._conn.returncode)
-    #         except asyncio.CancelledError:
-    #             break
-    #         except Exception as exc:
-    #             print(f"stderr reader error: {exc!r}")
-    #             break
+    async def _read_byte_with_timeout(
+            self,
+            timeout: float = 0.05,
+            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage | asyncio.CancelledError:
+        buffer: asyncio.StreamReader | None = None
 
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _read_stream(self, stream: asyncio.StreamReader, _buffer: EnumAdj_Buffer):
+        if self._conn is None:
+            raise Exc__IoConnection(f"{self._conn=}")
+
+        # init BUFFER -------------------
+        if buffer_type == EnumAdj_BufferType.STDOUT:
+            buffer = self._conn.stdout
+        elif buffer_type == EnumAdj_BufferType.STDERR:
+            buffer = self._conn.stderr
+        else:
+            raise Exc__WrongUsage(f'{buffer_type=}')
+
+        if buffer is None:
+            raise Exc__WrongUsage(f"{self._conn=}/{buffer_type=}/{buffer=}")
+
+        # READ -------------------
+        try:
+            new_byte = await asyncio.wait_for(buffer.read(1), timeout=timeout)
+            return new_byte
+        except asyncio.CancelledError:
+            raise
+        except asyncio.TimeoutError as exc:
+            raise Exc__IoTimeout(f"{exc!r}")
+        except (BrokenPipeError, ConnectionResetError) as exc:
+            raise Exc__IoConnection(f"{exc!r}")
+        except BaseException as exc:
+            raise Exc__UnDefined(f"{exc!r}")
+
+    async def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
         - timeout_start – ожидание первого байта строки.
@@ -143,25 +142,35 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         - По таймауту строка также завершается.
         - Добавление в историю через append_method.
         """
+        buffer: asyncio.StreamReader | None = None
+
+        if self._conn is None:
+            return
+
         # init BUFFER -------------------
-        if _buffer == EnumAdj_Buffer.STDOUT:
+        if buffer_type == EnumAdj_BufferType.STDOUT:
+            buffer = self._conn.stdout
             append_method = self.history.add_data__stdout
-        elif _buffer == EnumAdj_Buffer.STDERR:
+        elif buffer_type == EnumAdj_BufferType.STDERR:
+            buffer = self._conn.stderr
             append_method = self.history.add_data__stderr
         else:
-            raise Exc__WrongUsage(f'{_buffer=}')
+            raise Exc__WrongUsage(f'{buffer_type=}')
+
+        if buffer is None:
+            return
 
         # BUFFER -------------------
-        while not self._stop_reading and self._conn:
+        while not self._stop_reading and self._conn is not None:
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_start
             try:
                 while True:
                     try:
-                        new_byte = await asyncio.wait_for(stream.read(1), timeout=timeout_active)
-                    except asyncio.TimeoutError:
+                        new_byte = await self._read_byte_with_timeout(timeout=timeout_active, buffer_type=buffer_type)
+                    except Exc__IoTimeout:
                         break
-                    except (BrokenPipeError, ConnectionResetError):
+                    except Exc__IoConnection:
                         # Канал закрыт – выходим из цикла чтения
                         return
 
@@ -173,30 +182,33 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
 
                     if new_byte in (b'\r', b'\n'):
                         if bytes_accumulated:
-                            new_line = bytes_accumulated.decode(self._encoding).rstrip()
+                            new_line : str = bytes_accumulated.decode(self._encoding).rstrip()
                             if new_line:
                                 append_method(new_line)
+                                self.history.set_retcode(self._conn.returncode)
+
                         bytes_accumulated = bytearray()
                         continue
                     else:
                         bytes_accumulated.extend(new_byte)
 
                 if bytes_accumulated:
-                    new_line = bytes_accumulated.decode(self._encoding).rstrip()
+                    new_line: str  = bytes_accumulated.decode(self._encoding).rstrip()
                     if new_line:
                         append_method(new_line)
+                        self.history.set_retcode(self._conn.returncode)
 
             except asyncio.CancelledError:
                 break
-            except Exception as exc:
+            except BaseException as exc:
                 print(f"UNEXPECTED _read_stream: {exc!r}")
                 break
 
-    async def _reading_stdout(self):
-        await self._read_stream(self._conn.stdout, EnumAdj_Buffer.STDOUT)
+    async def _bg_reading_buffer__stdout(self):
+        await self._bg_reading_buffer(EnumAdj_BufferType.STDOUT)
 
-    async def _reading_stderr(self):
-        await self._read_stream(self._conn.stderr, EnumAdj_Buffer.STDERR)
+    async def _bg_reading_buffer__stderr(self):
+        await self._bg_reading_buffer(EnumAdj_BufferType.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
@@ -232,7 +244,6 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
             timeout_start: float | None = None,
             timeout_finish: float | None = None
     ) -> CmdResult:
-        print(f"\n[STD_IN]--->{cmd}")
         self.history.add_data__stdin(cmd)
         try:
             self._conn.stdin.write(f"{cmd}\n".encode(self._encoding))
@@ -250,28 +261,17 @@ class CmdTerminal_OsAio(Base_CmdTerminal):
         self.history.set_finished(status=finished_status)
         return self.history.last_result
 
-    # -----------------------------------------------------------------------------------------------------------------
-    # Асинхронный контекстный менеджер
-    async def __aenter__(self):
-        await self.connect()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.disconnect()
-
 
 # =====================================================================================================================
 async def explore__ping():
     async with CmdTerminal_OsAio() as term:
-        if not await term.connect():
-            return
+        # await term.send_command("ping ya.ru -n 2", timeout_finish=1.1)
 
-        await term.send_command("ping ya.ru -n 2", timeout_finish=1.1)
-
-        for i in range(3):
-            await term.send_command(f"echo final {i}")
+        # for i in range(3):
+        #     await term.send_command(f"echo final {i}")
 
         await term.send_command("echo finish!")
+        await asyncio.sleep(10)
 
     await asyncio.sleep(0.5)
 
@@ -309,11 +309,20 @@ async def explore__cd_reconnect():
     await asyncio.sleep(0.5)
 
 
+async def explore__smth():
+    async with CmdTerminal_OsAio() as term:
+        await term.send_command("echo finish!")
+        await asyncio.sleep(10)
+
+    await asyncio.sleep(0.5)
+
+
 # =====================================================================================================================
 if __name__ == "__main__":
-    asyncio.run(explore__ping())
+    # asyncio.run(explore__ping())
     # asyncio.run(explore__cd())
     # asyncio.run(explore__cd_reconnect())
+    asyncio.run(explore__smth())
 
 
 # =====================================================================================================================

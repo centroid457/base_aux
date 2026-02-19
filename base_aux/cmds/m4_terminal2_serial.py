@@ -9,7 +9,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_Serial(Base_CmdTerminal):
+class CmdTerminal_Serial(Abc_CmdTerminal):
     def __init__(
             self,
             *,

@@ -170,7 +170,7 @@ class Exc__NotAvailable(Exc__NotExistsNotFoundNotCreated):
 
 
 # =====================================================================================================================
-class Exc__UnExpectedError(Base_Exc):
+class Exc__UnDefined(Base_Exc):
     """
     GOAL
     ----

@@ -2,7 +2,7 @@ from typing import *
 from datetime import datetime
 
 from dataclasses import dataclass, field
-from base_aux.base_enums.m2_enum1_adj import EnumAdj_Buffer, EnumAdj_FinishedStatus
+from base_aux.base_enums.m2_enum1_adj import EnumAdj_BufferType, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
 
 
@@ -128,7 +128,7 @@ class CmdResult:
     def append(
             self,
             data: TYPING__CMD_LINES_DRAFT,
-            _type_buffer: EnumAdj_Buffer = EnumAdj_Buffer.STDOUT,
+            _type_buffer: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
     ) -> None | NoReturn:
         """
         GOAL
@@ -138,9 +138,9 @@ class CmdResult:
         """
         self.duration = (datetime.now() - self.timestamp).total_seconds()
 
-        if _type_buffer == EnumAdj_Buffer.STDOUT:
+        if _type_buffer == EnumAdj_BufferType.STDOUT:
             source = self.STDOUT
-        elif _type_buffer == EnumAdj_Buffer.STDERR:
+        elif _type_buffer == EnumAdj_BufferType.STDERR:
             source = self.STDERR
         else:
             msg = f"use only STDOUT/STDERR/{_type_buffer=}"
@@ -153,10 +153,10 @@ class CmdResult:
                 self.append(data=item, _type_buffer=_type_buffer)
 
     def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        return self.append(data=data, _type_buffer=EnumAdj_Buffer.STDOUT)
+        return self.append(data=data, _type_buffer=EnumAdj_BufferType.STDOUT)
 
     def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        return self.append(data=data, _type_buffer=EnumAdj_Buffer.STDERR)
+        return self.append(data=data, _type_buffer=EnumAdj_BufferType.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
     def print_state(self, short: bool | None = None) -> None:

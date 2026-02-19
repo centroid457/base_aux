@@ -138,9 +138,10 @@ class CmdHistory:
         if self.last_result is not None:
             return self.last_result.set_finished(status)
 
-    def set_retcode(self, other: int | None = None):
+    def set_retcode(self, retcode: int | None = None):
+        # print(f"{retcode=}")
         if self.last_result is not None:
-            return self.last_result.set_retcode(other)
+            return self.last_result.set_retcode(retcode)
 
     # -----------------------------------------------------------------------------------------------------------------
     def check_all_success(self) -> bool:
@@ -202,17 +203,20 @@ class CmdHistory:
             self._add_result(item)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _add_data(self, data: TYPING__CMD_LINES_DRAFT, buffer: EnumAdj_Buffer = EnumAdj_Buffer.STDOUT) -> None:
+    def _add_data(self, data: TYPING__CMD_LINES_DRAFT, buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT) -> None:
         """
         GOAL
         ----
         base adding data in result object! by buffer
         """
-        if buffer not in EnumAdj_Buffer:
-            raise Exc__WrongUsage(f"{buffer=}")
+        if buffer_type not in EnumAdj_BufferType:
+            raise Exc__WrongUsage(f"{buffer_type=}")
 
         # INPUT -------------
-        if buffer == EnumAdj_Buffer.STDIN:
+        if buffer_type == EnumAdj_BufferType.STDIN:
+            print()
+            print(f"[{buffer_type.name}]--->{data}")
+
             self._add_result(CmdResult(data))
             self._listeners__notify("msg_stdin__style", f"→ {data}")
             return
@@ -221,22 +225,24 @@ class CmdHistory:
         if not self._history:
             self.add_data__stdin("")
 
-        if buffer == EnumAdj_Buffer.STDOUT:
+        print(f"[{buffer_type.name}]{data}")
+
+        if buffer_type == EnumAdj_BufferType.STDOUT:
             self.last_result.append_stdout(data)
             self._listeners__notify("msg_stdout__style", data)
 
-        elif buffer == EnumAdj_Buffer.STDERR:
+        elif buffer_type == EnumAdj_BufferType.STDERR:
             self.last_result.append_stderr(data)
             self._listeners__notify("msg_stderr__style", data)
 
     def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
-        self._add_data(data, buffer=EnumAdj_Buffer.STDIN)
+        self._add_data(data, buffer_type=EnumAdj_BufferType.STDIN)
 
     def add_data__stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        self._add_data(data, buffer=EnumAdj_Buffer.STDOUT)
+        self._add_data(data, buffer_type=EnumAdj_BufferType.STDOUT)
 
     def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        self._add_data(data, buffer=EnumAdj_Buffer.STDERR)
+        self._add_data(data, buffer_type=EnumAdj_BufferType.STDERR)
 
     def add_data__stdioe(
             self,

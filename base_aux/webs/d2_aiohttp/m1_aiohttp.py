@@ -91,7 +91,7 @@ class ServerAiohttpBase(QThread):
 
         except Exception as exc:
             msg = f"{exc!r}"
-            raise Exc__UnExpectedError(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
+            raise Exc__UnDefined(msg)  # DON'T DELETE RAISE! - IT IS VERY NECESSARY/IMPORTANT for tests!
 
     def start(self, *args):
         if not self.isRunning():

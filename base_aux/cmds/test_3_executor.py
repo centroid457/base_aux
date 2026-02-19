@@ -13,7 +13,7 @@ else:
 
 
 # =====================================================================================================================
-@pytest.mark.skip
+# @pytest.mark.skip
 class Test:
     def test__ok(self):
         victim = CmdSession_old()

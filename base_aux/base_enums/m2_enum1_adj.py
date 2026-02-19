@@ -163,7 +163,7 @@ class EnumAdj_StopResetHardSoft(NestEq_EnumAdj):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-class EnumAdj_Buffer(NestEq_EnumAdj):
+class EnumAdj_BufferType(NestEq_EnumAdj):
     STDIN: int = 1
     STDOUT: int = 2
     STDERR: int = 3
