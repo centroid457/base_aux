@@ -5,20 +5,11 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_OsAio(Abc_CmdTerminal):
+class CmdTerminal_OsAio(Base_CmdTerminalAio):
     """
     Асинхронная версия CmdTerminal_OsSync на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
-    _bg_tasks: list[asyncio.Task]
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def __aenter__(self):
-        await self.connect()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.disconnect()
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
@@ -39,32 +30,8 @@ class CmdTerminal_OsAio(Abc_CmdTerminal):
         ]
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def connect(self) -> bool:
+    async def _del_conn(self) -> None:
         if self._conn is not None:
-            return True
-
-        print(f"{self.__class__.__name__}({self.id=}).connect")
-
-        try:
-            await self._create_conn()
-        except Exception as exc:
-            msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
-            print(msg)
-            self.history.add_data__stderr(msg)
-            return False
-
-        self._stop_reading = False
-        self._create_tasks()
-        self._last_byte_time = asyncio.get_event_loop().time()
-
-        await asyncio.sleep(0.3)
-        return True
-
-    async def disconnect(self) -> None:
-        """Корректное завершение процесса и остановка задач чтения."""
-        self._stop_reading = True
-
-        if self._conn:
             try:
                 self._conn.terminate()
                 # Ждём завершения процесса с таймаутом
@@ -75,6 +42,10 @@ class CmdTerminal_OsAio(Abc_CmdTerminal):
                     await self._conn.wait()
             except Exception:
                 pass
+            self._conn = None
+
+    async def _del_tasks(self) -> None:
+        self._stop_reading = True
 
         # Отменяем задачи чтения
         for task in self._bg_tasks:
@@ -83,20 +54,12 @@ class CmdTerminal_OsAio(Abc_CmdTerminal):
         try:
             await asyncio.wait_for(
                 asyncio.gather(*self._bg_tasks, return_exceptions=True),
-                timeout=3.0
+                timeout=2
             )
         except asyncio.TimeoutError:
             # Если задачи не завершились, просто забудем о них
             pass
         self._bg_tasks.clear()
-        self._conn = None
-
-        print(f"{self.__class__.__name__}({self.id=}).disconnected")
-
-    async def reconnect(self) -> None:
-        await self.disconnect()
-        await self.connect()
-        self.history._listeners__notify('msg_system__style', "🔄 Сессия переподключена")  # оповещаем о переподключении
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _read_byte_with_timeout(
@@ -132,110 +95,6 @@ class CmdTerminal_OsAio(Abc_CmdTerminal):
             raise Exc__IoConnection(f"{exc!r}")
         except BaseException as exc:
             raise Exc__UnDefined(f"{exc!r}")
-
-    async def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
-        """
-        Чтение потока по одному байту с двумя таймаутами.
-        - timeout_start – ожидание первого байта строки.
-        - timeout_finish – ожидание последующих байтов.
-        - Любой EOL (\r или \n) завершает текущую строку, последующие EOL игнорируются.
-        - По таймауту строка также завершается.
-        - Добавление в историю через append_method.
-        """
-        buffer: asyncio.StreamReader | None = None
-
-        if self._conn is None:
-            return
-
-        # init BUFFER -------------------
-        if buffer_type == EnumAdj_BufferType.STDOUT:
-            buffer = self._conn.stdout
-            append_method = self.history.add_data__stdout
-        elif buffer_type == EnumAdj_BufferType.STDERR:
-            buffer = self._conn.stderr
-            append_method = self.history.add_data__stderr
-        else:
-            raise Exc__WrongUsage(f'{buffer_type=}')
-
-        if buffer is None:
-            return
-
-        # BUFFER -------------------
-        while not self._stop_reading and self._conn is not None:
-            bytes_accumulated = bytearray()
-            timeout_active = self.timeout_start
-            try:
-                while True:
-                    try:
-                        new_byte = await self._read_byte_with_timeout(timeout=timeout_active, buffer_type=buffer_type)
-                    except Exc__IoTimeout:
-                        break
-                    except Exc__IoConnection:
-                        # Канал закрыт – выходим из цикла чтения
-                        return
-
-                    self._last_byte_time = asyncio.get_event_loop().time()
-                    timeout_active = self.timeout_finish
-
-                    if new_byte == b'':  # EOF
-                        return
-
-                    if new_byte in (b'\r', b'\n'):
-                        if bytes_accumulated:
-                            new_line : str = bytes_accumulated.decode(self._encoding).rstrip()
-                            if new_line:
-                                append_method(new_line)
-                                self.history.set_retcode(self._conn.returncode)
-
-                        bytes_accumulated = bytearray()
-                        continue
-                    else:
-                        bytes_accumulated.extend(new_byte)
-
-                if bytes_accumulated:
-                    new_line: str  = bytes_accumulated.decode(self._encoding).rstrip()
-                    if new_line:
-                        append_method(new_line)
-                        self.history.set_retcode(self._conn.returncode)
-
-            except asyncio.CancelledError:
-                break
-            except BaseException as exc:
-                print(f"UNEXPECTED _read_stream: {exc!r}")
-                break
-
-    async def _bg_reading_buffer__stdout(self):
-        await self._bg_reading_buffer(EnumAdj_BufferType.STDOUT)
-
-    async def _bg_reading_buffer__stderr(self):
-        await self._bg_reading_buffer(EnumAdj_BufferType.STDERR)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _wait__finish_executing_cmd(
-            self,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None
-    ) -> bool:
-        """Ожидание завершения вывода команды по таймаутам."""
-        timeout_start = timeout_start or self.timeout_start
-        timeout_finish = timeout_finish or self.timeout_finish
-
-        start_wait = asyncio.get_event_loop().time()
-        while asyncio.get_event_loop().time() - start_wait < timeout_start:
-            # Если процесс завершился, сразу выходим
-            if self._conn and self._conn.returncode is not None:
-                return True
-            if self._last_byte_time > start_wait:
-                quiet_start = asyncio.get_event_loop().time()
-                while asyncio.get_event_loop().time() - quiet_start < timeout_finish:
-                    if self._conn and self._conn.returncode is not None:
-                        return True
-                    if self._last_byte_time > quiet_start:
-                        quiet_start = asyncio.get_event_loop().time()
-                    await asyncio.sleep(0.05)
-                return True
-            await asyncio.sleep(0.05)
-        return False
 
     # -----------------------------------------------------------------------------------------------------------------
     async def send_command(
@@ -311,6 +170,7 @@ async def explore__cd_reconnect():
 
 async def explore__smth():
     async with CmdTerminal_OsAio() as term:
+        await term.send_command("echo start!")
         await term.send_command("echo finish!")
         await asyncio.sleep(10)
 

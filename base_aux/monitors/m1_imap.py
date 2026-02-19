@@ -83,7 +83,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
     def _connect(self) -> Union[bool, NoReturn]:
         """connect, create connection object and establish connection.
         """
-        if self._conn:
+        if self._conn is not None:
             return True
 
         print(f"\n _connect {self.__class__.__name__}")
@@ -92,7 +92,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
         except:
             pass
 
-        if self._conn:
+        if self._conn is not None:
             print(self._conn.login(self.AUTH.USER, self.AUTH.PWD))
             self.folder_select(self.FOLDER)
             print(self._conn.search(None, 'UNSEEN'))  # ('OK', [b''])
@@ -117,7 +117,7 @@ class MonitorImap(NestInit_AttrsLambdaResolve, threading.Thread):
     def _conn_close(self) -> None:
         """close connection
         """
-        if self._conn:
+        if self._conn is not None:
             self._conn.close()
             self._conn.logout()
 
