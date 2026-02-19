@@ -51,10 +51,10 @@ class CmdResult:
     # only exact STDOUT buffer
 
     STDERR: list[TYPING__CMD_LINE] = field(default_factory=list)
-    # place all STDERR buffer and execution exceptions
+    # STDERR buffer and execution exceptions
 
-    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating
-    # think to place all additional comments here
+    DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating? NO!!! very need!
+    # all additional comments here
 
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
@@ -75,6 +75,11 @@ class CmdResult:
             self.STDERR = []
         elif isinstance(self.STDERR, (str, bytes)):
             self.STDERR = [self.STDERR, ]
+
+        if self.DEBUG is None:
+            self.DEBUG = []
+        elif isinstance(self.DEBUG, (str, bytes)):
+            self.DEBUG = [self.DEBUG, ]
 
     def __str__(self) -> str:
         result = f"{self.__class__.__name__}({self.INPUT=},{self.STDOUT=},{self.STDERR=})"
@@ -128,7 +133,7 @@ class CmdResult:
     def append(
             self,
             data: TYPING__CMD_LINES_DRAFT,
-            _type_buffer: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
     ) -> None | NoReturn:
         """
         GOAL
@@ -138,25 +143,30 @@ class CmdResult:
         """
         self.duration = (datetime.now() - self.timestamp).total_seconds()
 
-        if _type_buffer == EnumAdj_BufferType.STDOUT:
+        if buffer_type == EnumAdj_BufferType.STDOUT:
             source = self.STDOUT
-        elif _type_buffer == EnumAdj_BufferType.STDERR:
+        elif buffer_type == EnumAdj_BufferType.STDERR:
             source = self.STDERR
+        elif buffer_type == EnumAdj_BufferType.DEBUG:
+            source = self.DEBUG
         else:
-            msg = f"use only STDOUT/STDERR/{_type_buffer=}"
+            msg = f"use only STDOUT/STDERR/DEBUG{buffer_type=}"
             raise Exc__Incompatible(msg)
 
         if isinstance(data, (str, bytes)):
             source.append(data)
         else:
             for item in data:
-                self.append(data=item, _type_buffer=_type_buffer)
+                self.append(data=item, buffer_type=buffer_type)
 
-    def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        return self.append(data=data, _type_buffer=EnumAdj_BufferType.STDOUT)
-
-    def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        return self.append(data=data, _type_buffer=EnumAdj_BufferType.STDERR)
+    # def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.STDOUT)
+    #
+    # def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.STDERR)
+    #
+    # def append_debug(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.DEBUG)
 
     # -----------------------------------------------------------------------------------------------------------------
     def print_state(self, short: bool | None = None) -> None:
