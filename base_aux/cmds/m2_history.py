@@ -66,7 +66,18 @@ class CmdHistory:
     # def listeners__clear(self) -> None:
     #     self._listeners.clear()
 
-    def _listeners__notify(self, msg_style: str, msg_text: str) -> None:
+    def _listeners__notify(self, msg_text: str, buffer_type: EnumAdj_BufferType) -> None:
+        if buffer_type == EnumAdj_BufferType.STDIN:
+            msg_style = f"msg_stdin__style"
+        elif buffer_type == EnumAdj_BufferType.STDOUT:
+            msg_style = f"msg_stdout__style"
+        elif buffer_type == EnumAdj_BufferType.STDERR:
+            msg_style = f"msg_stderr__style"
+        elif buffer_type == EnumAdj_BufferType.DEBUG:
+            msg_style = f"msg_debug__style"
+        else:
+            raise Exception(f"{buffer_type=}")
+
         for listener in self._listeners:
             try:
                 listener(msg_style, msg_text)
@@ -218,7 +229,7 @@ class CmdHistory:
             print(f"[{buffer_type.name}]--->{data}")
 
             self._add_result(CmdResult(data))
-            self._listeners__notify("msg_stdin__style", f"→ {data}")
+            self._listeners__notify(msg_text=f"→{data}", buffer_type=buffer_type)
             return
 
         # OUTPUT ------------
@@ -226,14 +237,8 @@ class CmdHistory:
             self.add_data__stdin("")
 
         print(f"[{buffer_type.name}]{data}")
-
-        if buffer_type == EnumAdj_BufferType.STDOUT:
-            self.last_result.append_stdout(data)
-            self._listeners__notify("msg_stdout__style", data)
-
-        elif buffer_type == EnumAdj_BufferType.STDERR:
-            self.last_result.append_stderr(data)
-            self._listeners__notify("msg_stderr__style", data)
+        self.last_result.append(data=data, buffer_type=buffer_type)
+        self._listeners__notify(msg_text=data, buffer_type=buffer_type)
 
     def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
         self._add_data(data, buffer_type=EnumAdj_BufferType.STDIN)
@@ -243,6 +248,9 @@ class CmdHistory:
 
     def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
         self._add_data(data, buffer_type=EnumAdj_BufferType.STDERR)
+
+    def add_data__debug(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        self._add_data(data, buffer_type=EnumAdj_BufferType.DEBUG)
 
     def add_data__stdioe(
             self,

@@ -161,7 +161,8 @@ HTML_TEMPLATE = """
         .msg_stdin__style  { color: #ffffff; }
         .msg_stdout__style { color: #b5cea8; }
         .msg_stderr__style { color: #f48771; }
-        .msg_system__style { color: #569cd6; font-style: italic; }
+        .msg_debug__style { color: #569cd6; font-style: italic; }
+        
         .div_input__style {
             display: flex;
             padding: 10px;
@@ -435,7 +436,7 @@ HTML_TEMPLATE = """
                         cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__style', l));
                         cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__style', l));
                     });
-                    this.addHistoryLine('msg_system__style', '=== HISTORY ===');
+                    this.addHistoryLine('msg_debug__style', '=== HISTORY ===');
                 } catch (err) {
                     this.addHistoryLine('msg_stderr__style', `Ошибка loadHistory ${err.message}`);
                 }

@@ -164,20 +164,20 @@ class CmdTerminal_OsSync(Base_CmdTerminalSync):
         # SIGNALS -----------------------------
         sigs = dict(
             # SUPPORTED --------------------
-            CTRL_C_EVENT = 0,
-            # CTRL_BREAK_EVENT = 1,   #
-            # SIGTERM=15,     # STOP!
-            # SIG_DFL = 0,
-            # SIG_IGN = 1,
+            CTRL_C_EVENT=0,
+            CTRL_BREAK_EVENT=1,   #
+            SIGTERM=15,     # STOP!
+            SIG_DFL=0,
+            SIG_IGN=1,
 
             # ValueError: Unsupported signal -------------------------------
-            # NSIG = 23,  # ValueError: Unsupported signal: 23
-            # SIGABRT = 22,     ValueError: Unsupported signal: 22
-            # SIGBREAK = 21,      ValueError: Unsupported signal: 21
-            # SIGFPE = 8,
-            # SIGILL = 4,
-            # SIGINT = 2,
-            # SIGSEGV = 11,
+            # NSIG=23,  # ValueError: Unsupported signal: 23
+            # SIGABRT=22,     ValueError: Unsupported signal: 22
+            # SIGBREAK=21,      ValueError: Unsupported signal: 21
+            # SIGFPE=8,
+            # SIGILL=4,
+            # SIGINT=2,
+            # SIGSEGV=11,
         )
         # for sname, svalue in sigs.items():
         #     print(f"{sname=}")
@@ -273,7 +273,6 @@ def explore__smth():
 
 
 # =====================================================================================================================
-# Пример использования
 if __name__ == "__main__":
     # _explore__ping()
     # _explore__cd()

@@ -351,6 +351,8 @@ class Base_CmdTerminalAio(Abc_CmdTerminal):
             self.history.add_data__stderr(msg)
             return False
 
+        self.history.add_data__debug("🔄connected")
+
         self._stop_reading = False
         self._create_tasks()
         self._last_byte_time = asyncio.get_event_loop().time()
@@ -368,7 +370,6 @@ class Base_CmdTerminalAio(Abc_CmdTerminal):
     async def reconnect(self) -> None:
         await self.disconnect()
         await self.connect()
-        self.history._listeners__notify('msg_system__style', "🔄 Сессия переподключена")  # оповещаем о переподключении
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
