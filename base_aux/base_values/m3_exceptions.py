@@ -116,18 +116,6 @@ class Exc__EncodeDecode(
     pass
 
 
-class Exc__Connection(
-    Base_Exc,
-
-    # ConnectionError,
-    # ConnectionAbortedError,
-    # ConnectionResetError,
-    # ConnectionRefusedError,
-    # TimeoutError,
-):
-    pass
-
-
 class Exc__Imports(
     Base_Exc,
 
@@ -182,11 +170,84 @@ class Exc__NotAvailable(Exc__NotExistsNotFoundNotCreated):
 
 
 # =====================================================================================================================
+class Exc__UnExpectedError(Base_Exc):
+    """
+    GOAL
+    ----
+    Any not expected Exception!
+    when we catch all exact variants and finally get not specified.
+    """
+    pass
+
+
+class Exc__ExpectedAnother(Base_Exc):
+    """
+    GOAL
+    ----
+    Any requirement/exact cmp/eq is not match!
+    """
+
+
+# =====================================================================================================================
+class Exc__Io(
+    Base_Exc,
+
+    # ConnectionError,
+    # ConnectionAbortedError,
+    # ConnectionResetError,
+    # ConnectionRefusedError,
+    # TimeoutError,
+):
+    """
+    GOAL
+    ----
+    SPECIALLY CREATED FOR
+    ---------------------
+    CmdTerminal_OsAio._bg_reading_buffer
+    to make a universal exceptions in different objects
+    """
+    pass
+
+
+class Exc__IoConnection(
+    Exc__Io,
+):
+    """
+    GOAL
+    ----
+    Connection Broken/Closed while read/write process
+    """
+    pass
+
+
+class Exc__IoTimeout(
+    Exc__Io,
+):
+    """
+    GOAL
+    ----
+    read/write process was timed out
+    """
+    pass
+
+
+class Exc__IoCancel(
+    Exc__Io,
+):
+    """
+    GOAL
+    ----
+    read/write process was cancelled
+    """
+    pass
+
+
+# =====================================================================================================================
 class Exc__Permission(PermissionError):  # use original! but keep here new name!
     """
     GOAL
     ----
-    catch exception and show that cause is permition!
+    catch exception and show that cause is permission!
     """
     pass
 
@@ -250,25 +311,6 @@ class Exc__WrongUsage_YouForgotSmth(Exc__WrongUsage_Programmer):
     ReleaseHistory - cause it is not Programmer
     """
     pass
-
-
-# =====================================================================================================================
-class Exc__UnExpectedError(Base_Exc):
-    """
-    GOAL
-    ----
-    Any not expected Exception!
-    when we catch all exact variants and finally get not specified.
-    """
-    pass
-
-
-class Exc__ExpectedAnother(Base_Exc):
-    """
-    GOAL
-    ----
-    Any requirement/exact cmp/eq is not match!
-    """
 
 
 # =====================================================================================================================
