@@ -12,7 +12,63 @@ from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
-class Abc_CmdTerminal:
+class AbcUser_CmdTerminal:
+    _conn: Any | None
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def _create_conn(self) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        only create only one _conn! no validate/ no catching exc!!!
+        """
+        raise NotImplementedError()
+
+    def _create_tasks(self) -> None:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def _del_conn(self) -> None:
+        """
+        GOAL
+        ----
+        only create only one _conn! no validate/ no catching exc!!!
+        """
+        raise NotImplementedError()
+
+    def _del_tasks(self) -> None:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def _read_byte_with_timeout(
+            self,
+            timeout: float = 0.05,
+            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def send_command(
+            self,
+            cmd: str,
+            timeout_start: float | None = None,
+            timeout_finish: float | None = None,
+    ) -> CmdResult:
+        raise NotImplementedError()
+
+
+# =====================================================================================================================
+class Abc_CmdTerminal(AbcUser_CmdTerminal):
     def __init__(
             self,
             *,
@@ -68,57 +124,6 @@ class Abc_CmdTerminal:
         raise NotImplementedError()
 
     def reconnect(self) -> None:
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def _create_conn(self) -> None | NoReturn:
-        """
-        GOAL
-        ----
-        only create only one _conn! no validate/ no catching exc!!!
-        """
-        raise NotImplementedError()
-
-    def _create_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
-        """
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def _del_conn(self) -> None:
-        """
-        GOAL
-        ----
-        only create only one _conn! no validate/ no catching exc!!!
-        """
-        raise NotImplementedError()
-
-    def _del_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
-        """
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def _read_byte_with_timeout(
-            self,
-            timeout: float = 0.05,
-            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
-    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def send_command(
-            self,
-            cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
-    ) -> CmdResult:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------

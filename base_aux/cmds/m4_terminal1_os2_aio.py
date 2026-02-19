@@ -172,7 +172,7 @@ async def explore__smth():
     async with CmdTerminal_OsAio() as term:
         await term.send_command("echo start!")
         await term.send_command("echo finish!")
-        await asyncio.sleep(10)
+        await asyncio.sleep(2)
 
     await asyncio.sleep(0.5)
 
