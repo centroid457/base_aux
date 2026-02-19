@@ -435,6 +435,7 @@ HTML_TEMPLATE = """
                         if (cmd.input) this.addHistoryLine('msg_stdin__style', `→ ${cmd.input}`);
                         cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__style', l));
                         cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__style', l));
+                        cmd.debug?.forEach(l => this.addHistoryLine('msg_debug__style', l));
                     });
                     this.addHistoryLine('msg_debug__style', '=== HISTORY ===');
                 } catch (err) {
@@ -535,12 +536,13 @@ async def get_item_history(id: str):
     if not item:
         raise HTTPException(status_code=404, detail=f"{id=}Item not found")
 
-    history_data = []
+    history_data: list[dict] = []
     for result in item.history:
         history_data.append({
             "input": result.INPUT,
             "stdout": result.STDOUT,
             "stderr": result.STDERR,
+            "debug": result.DEBUG,
             "timestamp": result.timestamp.isoformat() if result.timestamp else None,
             "duration": result.duration,
             "finished_status": result.finished_status.value if result.finished_status else None,

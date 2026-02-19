@@ -351,6 +351,9 @@ class Base_CmdTerminalAio(Abc_CmdTerminal):
             self.history.add_data__stderr(msg)
             return False
 
+        if not self.history._history:
+            self.history.add_data__stdin("")
+
         self.history.add_data__debug("🔄connected")
 
         self._stop_reading = False
@@ -365,6 +368,7 @@ class Base_CmdTerminalAio(Abc_CmdTerminal):
         self._stop_reading = True
         await self._del_tasks()
         await self._del_conn()
+        self.history.add_data__debug("disconnected")
         print(f"{self.__class__.__name__}({self.id=}).disconnected")
 
     async def reconnect(self) -> None:

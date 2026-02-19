@@ -55,7 +55,7 @@ class CmdHistory:
                 # self.set_finished()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def listener__add(self, listener) -> None:
+    def listener__add(self, listener: Callable) -> None:
         """listener – вызываемый объект, принимающий (msg_style, msg_text)"""
         self._listeners.append(listener)
 
