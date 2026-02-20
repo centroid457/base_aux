@@ -1,8 +1,5 @@
 from typing import *
 from enum import Enum
-from PyQt5.QtCore import QThread
-import time
-import uvicorn
 
 from fastapi import FastAPI, Query, Body
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -10,8 +7,8 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 from starlette.responses import Response
 
-from base_aux.webs.d0_url.m0_url import Url
 from base_aux.loggers.m2_logger import Logger
+from base_aux.webs.d3_fastapi.d1_templates.m0_start2_py1_thread import start_2__by_thread
 
 
 # =====================================================================================================================
@@ -57,11 +54,6 @@ def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
 
     # EXAMPLES =======================================================
     pass
-
-    # NOT FOUND ------------------------------------------------------
-    async def NOT_FOUND():
-        pass
-        # by default if not specified on any resuets return - {"detail": "Not Found"}
 
     # ORDER ----------------------------------------------------------
     @app.get("/order")
@@ -468,105 +460,6 @@ def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
 
     # RESULT ------------------------------------------------------------------
     return app
-
-
-# =====================================================================================================================
-def create_app__APIRouter() -> 'APIRouter':
-    pass
-
-    # from fastapi import APIRouter
-    # from starlette import status
-    # from starlette.responses import Response
-
-    # from bot import proceed_release
-    # from models import Body, Actions
-    #
-    # api_router = APIRouter()  # noqa: pylint=invalid-name
-    #
-    # @api_router.post("/release/")
-    # async def release(*,
-    #                   body: Body,
-    #                   chat_id: str = None,
-    #                   release_only: bool = False):
-    #
-    #     if (body.release.draft and not release_only) or body.action == Actions.released:
-    #         res = await proceed_release(body, chat_id)
-    #         return Response(status_code=res.status_code)
-    #     return Response(status_code=status.HTTP_200_OK)
-    #
-    # return api_router
-
-
-# =====================================================================================================================
-pass
-pass
-pass
-pass
-
-
-
-
-
-# =====================================================================================================================
-class ServerFastApi_Thread(Logger, QThread):
-    """
-    WORK IN both LINUX/Win!!!
-    """
-    PORT: int = 80
-    HOST: str = "0.0.0.0"
-    # HOST: str = "localhost"
-    """
-    HOST SETTINGS RULES
-    localhost - CANT ACCESS BY HOST_IP! only
-        http://localhost/ - OK!
-        http://127.0.0.1/ - OK!
-        http://192.168.75.140/ - FAIL!!!
-    
-    0.0.0.0 - ALL ARE OK!!!
-        http://localhost/ - OK!
-        http://127.0.0.1/ - OK!
-        http://192.168.75.140/ - OK!!!
-    """
-
-    data: Any = None
-    create_app: Callable[[Any], FastAPI] = create_app__FastApi
-
-    @property
-    def ROOT(self) -> str:
-        return Url().resolve(host=self.HOST, port=self.PORT)
-
-    def __init__(self, app: FastAPI = None, data: Any = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if data is None:
-            data = self.data
-
-        if app is None:
-            app = self.create_app(data=data)
-        self.app = app
-        self.data = app.data
-
-    def run(self):
-        self.LOGGER.debug("run")
-        uvicorn.run(self.app, host=self.HOST, port=self.PORT)
-
-    def start(self, *args, **kwargs):
-        super().start()
-        time.sleep(1)
-
-
-def start_2__by_thread(app: FastAPI = None) -> Never:
-    server = ServerFastApi_Thread(app)
-    # server.run()
-    server.start()
-    server.wait()
-
-
-# =====================================================================================================================
-def start_3__by_asyncio(app: FastAPI) -> Never:
-    pass
-
-    # async uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 # =====================================================================================================================

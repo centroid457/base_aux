@@ -1,7 +1,7 @@
 import requests
 
 from base_aux.webs.d1_clients.m1_requests import Client_RequestItem, ResponseMethod, Client_RequestsStack
-from base_aux.webs.d3_fastapi.d1_templates.m1_responces import ServerFastApi_Thread
+from base_aux.webs.d3_fastapi.d1_templates.m0_start2_py1_thread import ServerFastApi_Thread
 
 
 # =====================================================================================================================

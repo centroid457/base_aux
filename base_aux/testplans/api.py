@@ -2,6 +2,7 @@ from base_aux.webs.d2_aiohttp.m1_aiohttp import *
 from base_aux.webs.d3_fastapi.d1_templates.m1_responces import *
 
 from .models import *
+from ..webs.d3_fastapi.d1_templates.m0_start2_py1_thread import ServerFastApi_Thread
 
 
 # =====================================================================================================================
