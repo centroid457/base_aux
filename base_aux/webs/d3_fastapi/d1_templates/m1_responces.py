@@ -2,17 +2,15 @@ from typing import *
 from enum import Enum
 from PyQt5.QtCore import QThread
 import time
-
-from base_aux.webs.d0_url.m0_url import Url
+import uvicorn
 
 from fastapi import FastAPI, Query, Body
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from pydantic import BaseModel
-import uvicorn
-
 from starlette.responses import Response
 
+from base_aux.webs.d0_url.m0_url import Url
 from base_aux.loggers.m2_logger import Logger
 
 
@@ -21,28 +19,8 @@ class DataExample:
     INT = 1
     FLOAT = 1.2
     STR = "string"
-    list = [1, "2"]
-    dict = {1: "2", "22": 11}       # by FastAPI return={"1":"2","22":11}
-
-
-# =====================================================================================================================
-def _minimal():
-    import uvicorn
-    from fastapi import FastAPI, Response
-    from fastapi.responses import RedirectResponse
-
-    app = FastAPI()
-
-    @app.get("/")
-    async def redirect() -> Response:
-        return RedirectResponse(url="/docs")
-
-    @app.get("/{path}")
-    async def hello(path):
-        print(path)
-        return path
-
-    uvicorn.run(app, host="localhost", port=80)
+    LIST = [1, "2"]
+    DICT = {1: "2", "22": 11}       # by FastAPI return={"1":"2","22":11}
 
 
 # =====================================================================================================================
@@ -526,15 +504,7 @@ pass
 pass
 
 
-def start_1__by_terminal(app: FastAPI) -> None:
-    """
-    uvicorn main:app
-    uvicorn main:app --reload
 
-    2=FROM PYTHON CODE
-    https://stackoverflow.com/questions/62856818/how-can-i-run-the-fast-api-server-using-pycharm
-    """
-    pass
 
 
 # =====================================================================================================================

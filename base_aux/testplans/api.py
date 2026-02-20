@@ -1,5 +1,5 @@
 from base_aux.webs.d2_aiohttp.m1_aiohttp import *
-from base_aux.webs.d3_fastapi.m1_fastapi import *
+from base_aux.webs.d3_fastapi.d1_templates.m1_responces import *
 
 from .models import *
 

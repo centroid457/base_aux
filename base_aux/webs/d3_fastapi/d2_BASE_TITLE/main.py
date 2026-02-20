@@ -19,7 +19,7 @@ class ServiceDetails:
     SERVICE_NAME: str = "TitleHeader"
     SERVICE_DESCRIPTION: str = "gen/place a universal title header into any project"
     SERVICE_AUTHOR: str = "Andrey Starichenko"
-    SERVICE_FRAMEWORK: str = "FastAPI"
+    SERVICE_FRAMEWORK: str = "FastAPI+js"
 
     def __post_init__(self):
         self.SERVICE_INFO: dict[str, str] = {
@@ -150,9 +150,10 @@ templates = Jinja2Templates(directory="templates")
 async def html__index(request: Request):
     return templates.TemplateResponse("index.html", {
         "request": request,
+
         "service_name": service_details.SERVICE_NAME,
         "service_description": service_details.SERVICE_DESCRIPTION,
-        # "any other": "123",
+        "any other": "123",
     })
 
 
@@ -177,7 +178,7 @@ async def api__clock():
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", port=8000, reload=True)
 
 
 # =====================================================================================================================
