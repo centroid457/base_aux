@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from base_aux.loggers.m2_logger import Logger
 from base_aux.webs.d0_url.m0_url import Url
-from base_aux.webs.d3_fastapi.d1_templates.m1_responces import create_app__FastApi
+from base_aux.webs.d3_fastapi.d1_templates.m2_responces import create_app__FastApi_on_object
 
 
 # =====================================================================================================================
@@ -32,7 +32,7 @@ class ServerFastApi_Thread(Logger, QThread):
     """
 
     data: Any = None
-    create_app: Callable[[Any], FastAPI] = create_app__FastApi
+    create_app: Callable[[Any], FastAPI] = create_app__FastApi_on_object
 
     @property
     def ROOT(self) -> str:

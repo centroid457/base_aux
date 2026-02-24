@@ -1,6 +1,7 @@
 from typing import *
 from enum import Enum
 
+import uvicorn
 from fastapi import FastAPI, Query, Body
 from fastapi.responses import JSONResponse, RedirectResponse
 
@@ -8,7 +9,6 @@ from pydantic import BaseModel
 from starlette.responses import Response
 
 from base_aux.loggers.m2_logger import Logger
-from base_aux.webs.d3_fastapi.d1_templates.m0_start2_py1_thread import start_2__by_thread
 
 
 # =====================================================================================================================
@@ -21,7 +21,7 @@ class DataExample:
 
 
 # =====================================================================================================================
-def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
+def create_app__FastApi_on_object(self: Any = None, data: Any = None) -> FastAPI:
     class Item(BaseModel):
         value: int
 
@@ -41,8 +41,8 @@ def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
     @app.post("/post/dict")
     async def post(item: Item):
         app.LOGGER.debug(item)
-        data.dict.update(item)
-        print(data.dict)
+        app.data.DICT.update(item)
+        print(app.data.DICT)
         return item
 
     pass
@@ -490,7 +490,7 @@ def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
 #         super().__init__(*args, **kwargs)
 #
 #     @classmethod
-#     def add_routs(cls):               # will not create pathes
+#     def add_routs(cls):               # will not create paths
 #         @cls.app.get("/data/{attr}")
 #         async def hello(attr):
 #             return getattr(cls.DATA, attr)
@@ -501,7 +501,8 @@ def create_app__FastApi(self: Any = None, data: Any = None) -> FastAPI:
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    start_2__by_thread()
+    app = create_app__FastApi_on_object()
+    uvicorn.run(app, host="localhost", port=80)
 
 
 # =====================================================================================================================
