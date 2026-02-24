@@ -13,7 +13,7 @@ from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
-class AbcUser_CmdTerminal(ABC):
+class AbcConn_CmdTerminal(ABC):
     _conn: Any | None
     EOL_SEND: str = "\n"
 
@@ -77,7 +77,7 @@ class AbcUser_CmdTerminal(ABC):
 
 
 # =====================================================================================================================
-class Abc_CmdTerminal(AbcUser_CmdTerminal):
+class AbcBg_CmdTerminal(AbcConn_CmdTerminal):
     _bg_tasks: list
     id: str
     id_index: int = 0
@@ -168,7 +168,7 @@ class Abc_CmdTerminal(AbcUser_CmdTerminal):
 
 
 # =====================================================================================================================
-class Base_CmdTerminalSync(Abc_CmdTerminal):
+class BaseSync_CmdTerminal(AbcBg_CmdTerminal):
     pass
     _bg_tasks: list[threading.Thread]
 
@@ -356,7 +356,7 @@ class Base_CmdTerminalSync(Abc_CmdTerminal):
 
 
 # =====================================================================================================================
-class Base_CmdTerminalAio(Abc_CmdTerminal):
+class BaseAio_CmdTerminal(AbcBg_CmdTerminal):
     pass
     _bg_tasks: list[asyncio.Task]
 

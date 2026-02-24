@@ -9,7 +9,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_Serial(Abc_CmdTerminal):
+class CmdTerminal_Serial(AbcBg_CmdTerminal):
     # FIXME: need fool ref!!!
     # FIXME: need fool ref!!!
     # FIXME: need fool ref!!!

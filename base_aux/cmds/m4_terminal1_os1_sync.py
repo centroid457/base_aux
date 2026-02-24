@@ -10,7 +10,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_OsSync(Base_CmdTerminalSync):
+class CmdTerminal_OsSync(BaseSync_CmdTerminal):
     """
     GOAL
     ----

@@ -9,11 +9,11 @@
    2. Abc_* - interface! or where we have BLANK methods!
         where we have at least one method as abstract (not realised logic! - return raise NotImplementedError())
    3. AbcUser_* - interface! separated methods/params used to define in final classes
-      AbcUser_CmdTerminal
-      -> Abc_CmdTerminal
+      AbcConn_CmdTerminal
+      -> AbcBg_CmdTerminal
         -> [
-            Base_CmdTerminalSync -> CmdTerminal_OsSync finalUser
-            Base_CmdTerminalAio -> CmdTerminal_OsAio finalUser
+            BaseSync_CmdTerminal -> CmdTerminal_OsSync finalUser
+            BaseAio_CmdTerminal -> CmdTerminal_OsAio finalUser
            ]
    4. Base_* - base class for realising final objects - where we have finished methods and it could be (or not) redefine!
         all methods have coded logic!

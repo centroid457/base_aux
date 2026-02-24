@@ -5,7 +5,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_OsAio(Base_CmdTerminalAio):
+class CmdTerminal_OsAio(BaseAio_CmdTerminal):
     """
     Асинхронная версия CmdTerminal_OsSync на asyncio.subprocess.
     """
