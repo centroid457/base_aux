@@ -9,7 +9,7 @@ from base_aux.cmds.m4_terminal0_base import *
 
 
 # =====================================================================================================================
-class CmdTerminal_Serial(AbcBg_CmdTerminal):
+class CmdTerminal_SerialSync(BaseSync_CmdTerminal):
     # FIXME: need fool ref!!!
     # FIXME: need fool ref!!!
     # FIXME: need fool ref!!!
@@ -180,7 +180,7 @@ def _explore__serial_basic():
     port_name = ports[0].device
     print(f"Используем порт: {port_name}")
 
-    with CmdTerminal_Serial(
+    with CmdTerminal_SerialSync(
             port=port_name,
             baudrate=115200,
             timeout=1.0,
@@ -203,7 +203,7 @@ def _explore__serial_basic():
 
 def _explore__serial_custom():
     """Пример с ручным указанием порта и скорости"""
-    with CmdTerminal_Serial(
+    with CmdTerminal_SerialSync(
             port="COM3",
             baudrate=9600,
             timeout=2.0,

@@ -77,7 +77,7 @@ class AbcConn_CmdTerminal(ABC):
 
 
 # =====================================================================================================================
-class AbcBg_CmdTerminal(AbcConn_CmdTerminal):
+class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     _bg_tasks: list
     id: str
     id_index: int = 0
@@ -168,7 +168,7 @@ class AbcBg_CmdTerminal(AbcConn_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseSync_CmdTerminal(AbcBg_CmdTerminal):
+class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
     pass
     _bg_tasks: list[threading.Thread]
 
@@ -356,7 +356,7 @@ class BaseSync_CmdTerminal(AbcBg_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseAio_CmdTerminal(AbcBg_CmdTerminal):
+class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     pass
     _bg_tasks: list[asyncio.Task]
 

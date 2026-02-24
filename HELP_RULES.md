@@ -8,9 +8,9 @@
         use only with no attrs/meth!
    2. Abc_* - interface! or where we have BLANK methods!
         where we have at least one method as abstract (not realised logic! - return raise NotImplementedError())
-   3. AbcUser_* - interface! separated methods/params used to define in final classes
+   3. AbcConn_* - interface! separated methods/params used to define in final classes
       AbcConn_CmdTerminal
-      -> AbcBg_CmdTerminal
+      -> AbcParadigm_CmdTerminal separating Execution Model
         -> [
             BaseSync_CmdTerminal -> CmdTerminal_OsSync finalUser
             BaseAio_CmdTerminal -> CmdTerminal_OsAio finalUser
