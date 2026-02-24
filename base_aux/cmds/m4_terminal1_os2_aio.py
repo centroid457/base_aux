@@ -102,11 +102,14 @@ class CmdTerminal_OsAio(Base_CmdTerminalAio):
             self,
             cmd: str,
             timeout_start: float | None = None,
-            timeout_finish: float | None = None
+            timeout_finish: float | None = None,
+            eol: str | None = None,
     ) -> CmdResult:
+        EOL: str = eol if eol is not None else self.EOL_SEND
+
         self.history.add_data__stdin(cmd)
         try:
-            self._conn.stdin.write(f"{cmd}\n".encode(self._encoding))
+            self._conn.stdin.write(f"{cmd}{EOL}".encode(self._encoding))
             await self._conn.stdin.drain()
 
             if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):

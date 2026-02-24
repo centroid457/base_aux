@@ -10,6 +10,12 @@ from base_aux.cmds.m4_terminal0_base import *
 
 # =====================================================================================================================
 class CmdTerminal_Serial(Abc_CmdTerminal):
+    # FIXME: need fool ref!!!
+    # FIXME: need fool ref!!!
+    # FIXME: need fool ref!!!
+    # FIXME: need fool ref!!!
+    # FIXME: need fool ref!!!
+
     def __init__(
             self,
             *,
@@ -109,13 +115,18 @@ class CmdTerminal_Serial(Abc_CmdTerminal):
                 break
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(self, cmd: str, timeout_start: float | None = None, timeout_finish: float | None = None) -> CmdResult:
+    def send_command(
+            self,
+            cmd: str,
+            timeout_start: float | None = None,
+            timeout_finish: float | None = None,
+            eol: str | None = None,
+    ) -> CmdResult:
         """
         Отправляет команду в последовательный порт.
         По умолчанию добавляет self.eol (например, '\n').
         """
-        print()
-        print(f"--->{cmd}")
+        EOL: str = eol if eol is not None else self.EOL_SEND
 
         self.history.add_data__stdin(cmd)
         try:

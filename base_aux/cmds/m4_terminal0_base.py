@@ -71,6 +71,7 @@ class AbcUser_CmdTerminal(ABC):
             cmd: str,
             timeout_start: float | None = None,
             timeout_finish: float | None = None,
+            eol: str | None = None,
     ) -> CmdResult:
         raise NotImplementedError()
 
@@ -78,6 +79,9 @@ class AbcUser_CmdTerminal(ABC):
 # =====================================================================================================================
 class Abc_CmdTerminal(AbcUser_CmdTerminal):
     _bg_tasks: list
+    id: str
+    id_index: int = 0
+    _id_index__last: int = 0
 
     def __init__(
             self,
@@ -106,9 +110,23 @@ class Abc_CmdTerminal(AbcUser_CmdTerminal):
 
         self.cwd: str | None = cwd
 
-        self.id: str = id or str(uuid.uuid4())
+        self.set_id(id)
 
     # -----------------------------------------------------------------------------------------------------------------
+    def set_id(self, id: str | None = None) -> None:
+        """
+        GOAL
+        ----
+        set id name for instance specific or gen default with indexing
+        """
+        if id is not None:
+            self.id = id
+        else:
+            self.id_index = self.__class__._id_index__last
+            self.__class__._id_index__last += 1
+
+            self.id = f"[{self.id_index}]{self.get_name()}"
+
     @classmethod
     def get_name(cls) -> str:
         """
