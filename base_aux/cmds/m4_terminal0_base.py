@@ -13,6 +13,29 @@ from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
+@dataclass
+class Timeout:
+    WRITE: float | None = None
+    READ_START: float | None = None
+    READ_FINISH: float | None = None
+
+
+@dataclass
+class CmdCondition:
+    """
+    GOAL
+    ----
+    define exact cmd with timeout value
+    """
+    LINE: TYPING__CMD_LINE
+    TIMEOUT: Timeout | None = None
+
+
+TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | None]]
+TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITION]]
+
+
+# =====================================================================================================================
 class AbcConn_CmdTerminal(ABC):
     _conn: Any | None
     EOL_SEND: str = "\n"
@@ -169,7 +192,7 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     @abstractmethod
     def send_successfully(
             self,
-            cmds: list[CmdCondition | str],
+            cmds: list[str],
     ) -> bool:
         """
         GOAL
@@ -406,17 +429,20 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
     def send_successfully(
             self,
-            cmds: list[CmdCondition | str],
+            cmds: list[str],
     ) -> bool:
-        pass
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
+        for cmd in cmds:
+            result = self.send_command(cmd)
+            if result.check__fail():
+                return False
+
+        return True
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
 
 
 # =====================================================================================================================
@@ -604,17 +630,20 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
 
     async def send_successfully(
             self,
-            cmds: list[CmdCondition | str],
+            cmds: list[str],
     ) -> bool:
-        pass
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
-        # TODO: FINISH!
+        for cmd in cmds:
+            result = await self.send_command(cmd)
+            if result.check__fail():
+                return False
+
+        return True
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
+        # TODO: add timeout!
 
 
 # =====================================================================================================================

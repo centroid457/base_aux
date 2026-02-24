@@ -14,22 +14,6 @@ TYPING__CMD_LINES_DRAFT = TYPING__CMD_LINE | TYPING__CMD_LINES
 
 # =====================================================================================================================
 @dataclass
-class CmdCondition:
-    """
-    GOAL
-    ----
-    define exact cmd with timeout value
-    """
-    LINE: TYPING__CMD_LINE
-    TIMEOUT: float | None = None
-
-
-TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | int | None]]
-TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITION]]
-
-
-# =====================================================================================================================
-@dataclass
 class CmdResult:
     """
     GOAL
