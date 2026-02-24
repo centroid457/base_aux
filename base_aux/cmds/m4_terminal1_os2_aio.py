@@ -10,6 +10,7 @@ class CmdTerminal_OsAio(Base_CmdTerminalAio):
     Асинхронная версия CmdTerminal_OsSync на asyncio.subprocess.
     """
     _conn: asyncio.subprocess.Process | None
+    EOL_SEND: str = "\n"
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:

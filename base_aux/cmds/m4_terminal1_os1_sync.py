@@ -17,6 +17,7 @@ class CmdTerminal_OsSync(Base_CmdTerminalSync):
     access to terminal with continuous connection - keeping state!
     """
     _conn: subprocess.Popen | None
+    EOL_SEND: str = "\n"
 
     # -----------------------------------------------------------------------------------------------------------------
     def _create_conn(self) -> None | NoReturn:
@@ -130,7 +131,7 @@ class CmdTerminal_OsSync(Base_CmdTerminalSync):
     def send_command(self, cmd: str, timeout_start: float | None = None, timeout_finish: float | None = None) -> CmdResult:
         self.history.add_data__stdin(cmd)
         try:
-            self._conn.stdin.write(f"{cmd}\n")
+            self._conn.stdin.write(f"{cmd}{self.EOL_SEND}")
             self._conn.stdin.flush()
             if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
                 _finished_status = EnumAdj_FinishedStatus.CORRECT

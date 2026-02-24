@@ -4,6 +4,7 @@ import os
 import uuid
 import threading
 import asyncio
+from abc import ABC, abstractmethod
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m2_history import CmdHistory
@@ -12,10 +13,12 @@ from base_aux.base_values.m3_exceptions import *
 
 
 # =====================================================================================================================
-class AbcUser_CmdTerminal:
+class AbcUser_CmdTerminal(ABC):
     _conn: Any | None
+    EOL_SEND: str = "\n"
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def _create_conn(self) -> None | NoReturn:
         """
         GOAL
@@ -24,6 +27,7 @@ class AbcUser_CmdTerminal:
         """
         raise NotImplementedError()
 
+    @abstractmethod
     def _create_tasks(self) -> None:
         """
         GOAL
@@ -33,6 +37,7 @@ class AbcUser_CmdTerminal:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def _del_conn(self) -> None:
         """
         GOAL
@@ -41,6 +46,7 @@ class AbcUser_CmdTerminal:
         """
         raise NotImplementedError()
 
+    @abstractmethod
     def _del_tasks(self) -> None:
         """
         GOAL
@@ -50,6 +56,7 @@ class AbcUser_CmdTerminal:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def _read_byte_with_timeout(
             self,
             timeout: float = 0.05,
@@ -58,6 +65,7 @@ class AbcUser_CmdTerminal:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def send_command(
             self,
             cmd: str,
@@ -69,6 +77,8 @@ class AbcUser_CmdTerminal:
 
 # =====================================================================================================================
 class Abc_CmdTerminal(AbcUser_CmdTerminal):
+    _bg_tasks: list
+
     def __init__(
             self,
             *,
@@ -87,8 +97,8 @@ class Abc_CmdTerminal(AbcUser_CmdTerminal):
 
         self._last_byte_time: float = 0.0   # время последнего полученного байта
         self._stop_reading: bool = False
-        self._conn: Any | None = None
-        self._bg_tasks: list[Any] = []
+        self._conn = None
+        self._bg_tasks = []
 
         self.timeout_start: float = timeout_start
         self.timeout_finish: float = timeout_finish
@@ -117,16 +127,20 @@ class Abc_CmdTerminal(AbcUser_CmdTerminal):
         self.history.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def connect(self) -> None:
         raise NotImplementedError()
 
+    @abstractmethod
     def disconnect(self) -> None:
         raise NotImplementedError()
 
+    @abstractmethod
     def reconnect(self) -> None:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def _wait__finish_executing_cmd(
             self,
             timeout_start: float | None = None,
