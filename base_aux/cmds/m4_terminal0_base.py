@@ -6,7 +6,7 @@ import threading
 import asyncio
 from abc import ABC, abstractmethod
 
-from base_aux.cmds.m1_result import CmdResult
+from base_aux.cmds.m1_result import *
 from base_aux.cmds.m2_history import CmdHistory
 from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_values.m3_exceptions import *
@@ -66,13 +66,11 @@ class AbcConn_CmdTerminal(ABC):
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
-    def send_command(
+    def _write_line(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
             eol: str | None = None,
-    ) -> CmdResult:
+    ) -> None | NoReturn:
         raise NotImplementedError()
 
 
@@ -155,6 +153,33 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
 
     @abstractmethod
     def reconnect(self) -> None:
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
+    def send_command(
+            self,
+            cmd: str,
+            timeout_start: float | None = None,
+            timeout_finish: float | None = None,
+            eol: str | None = None,
+    ) -> CmdResult:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def send_successfully(
+            self,
+            cmds: list[CmdCondition | str],
+    ) -> bool:
+        """
+        GOAL
+        ----
+        send some cmds to check that all results are ok
+        when you dont mind to check exact response line but want to be sure
+        - no bad retcode
+        - no data in stderr
+        - no timed out
+        """
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -354,6 +379,45 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
         return data_received
 
+    # -----------------------------------------------------------------------------------------------------------------
+    def send_command(
+            self,
+            cmd: str,
+            timeout_start: float | None = None,
+            timeout_finish: float | None = None,
+            eol: str | None = None,
+    ) -> CmdResult:
+
+        self.history.add_data__stdin(cmd)
+        try:
+            self._write_line(cmd=cmd, eol=eol)
+
+            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
+                _finished_status = EnumAdj_FinishedStatus.CORRECT
+            else:
+                _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
+        except Exception as exc:
+            print(f"{exc!r}")
+            self.history.add_data__stderr(f"{exc!r}")
+            _finished_status = EnumAdj_FinishedStatus.EXCEPTION
+
+        self.history.set_finished(status=_finished_status)
+        return self.history.last_result
+
+    def send_successfully(
+            self,
+            cmds: list[CmdCondition | str],
+    ) -> bool:
+        pass
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+
 
 # =====================================================================================================================
 class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
@@ -513,6 +577,44 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
+    async def send_command(
+            self,
+            cmd: str,
+            timeout_start: float | None = None,
+            timeout_finish: float | None = None,
+            eol: str | None = None,
+    ) -> CmdResult:
+        EOL: str = eol if eol is not None else self.EOL_SEND
+
+        self.history.add_data__stdin(cmd)
+        try:
+            await self._write_line(cmd=cmd, eol=eol)
+
+            if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):
+                finished_status = EnumAdj_FinishedStatus.CORRECT
+            else:
+                finished_status = EnumAdj_FinishedStatus.TIMED_OUT
+        except Exception as exc:
+            print(f"{exc!r}")
+            self.history.add_data__stderr(f"{exc!r}")
+            finished_status = EnumAdj_FinishedStatus.EXCEPTION
+
+        self.history.set_finished(status=finished_status)
+        return self.history.last_result
+
+    async def send_successfully(
+            self,
+            cmds: list[CmdCondition | str],
+    ) -> bool:
+        pass
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
+        # TODO: FINISH!
 
 
 # =====================================================================================================================

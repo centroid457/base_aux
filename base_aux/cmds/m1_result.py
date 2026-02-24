@@ -21,7 +21,7 @@ class CmdCondition:
     define exact cmd with timeout value
     """
     LINE: TYPING__CMD_LINE
-    TIMEOUT: float | int | None = None
+    TIMEOUT: float | None = None
 
 
 TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | int | None]]

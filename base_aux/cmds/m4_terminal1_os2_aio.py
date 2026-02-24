@@ -98,31 +98,15 @@ class CmdTerminal_OsAio(BaseAio_CmdTerminal):
             raise Exc__UnDefined(f"{exc!r}")
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def send_command(
+    async def _write_line(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
             eol: str | None = None,
-    ) -> CmdResult:
+    ) -> None | NoReturn:
         EOL: str = eol if eol is not None else self.EOL_SEND
 
-        self.history.add_data__stdin(cmd)
-        try:
-            self._conn.stdin.write(f"{cmd}{EOL}".encode(self._encoding))
-            await self._conn.stdin.drain()
-
-            if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):
-                finished_status = EnumAdj_FinishedStatus.CORRECT
-            else:
-                finished_status = EnumAdj_FinishedStatus.TIMED_OUT
-        except Exception as exc:
-            print(f"{exc!r}")
-            self.history.add_data__stderr(f"{exc!r}")
-            finished_status = EnumAdj_FinishedStatus.EXCEPTION
-
-        self.history.set_finished(status=finished_status)
-        return self.history.last_result
+        self._conn.stdin.write(f"{cmd}{EOL}".encode(self._encoding))
+        await self._conn.stdin.drain()
 
 
 # =====================================================================================================================

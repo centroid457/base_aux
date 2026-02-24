@@ -128,30 +128,15 @@ class CmdTerminal_OsSync(BaseSync_CmdTerminal):
                 raise Exc__UnDefined(f"{exc!r}")
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(
+    def _write_line(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
             eol: str | None = None,
-    ) -> CmdResult:
+    ) -> None | NoReturn:
         EOL: str = eol if eol is not None else self.EOL_SEND
 
-        self.history.add_data__stdin(cmd)
-        try:
-            self._conn.stdin.write(f"{cmd}{EOL}")
-            self._conn.stdin.flush()
-            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
-                _finished_status = EnumAdj_FinishedStatus.CORRECT
-            else:
-                _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
-        except Exception as exc:
-            print(f"{exc!r}")
-            self.history.add_data__stderr(f"{exc!r}")
-            _finished_status = EnumAdj_FinishedStatus.EXCEPTION
-
-        self.history.set_finished(status=_finished_status)
-        return self.history.last_result
+        self._conn.stdin.write(f"{cmd}{EOL}")
+        self._conn.stdin.flush()
 
     # -----------------------------------------------------------------------------------------------------------------
     def _send_ctrl_c(self):
