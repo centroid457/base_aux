@@ -8,21 +8,23 @@
         use only with no attrs/meth!
    2. Abc_* - interface! or where we have BLANK methods!
         where we have at least one method as abstract (not realised logic! - return raise NotImplementedError())
-   3. AbcConn_* - interface! separated methods/params used to define in final classes
-      AbcConn_CmdTerminal
-      -> AbcParadigm_CmdTerminal separating Execution Model
-        -> [
-            BaseSync_CmdTerminal -> CmdTerminal_OsSync finalUser
-            BaseAio_CmdTerminal -> CmdTerminal_OsAio finalUser
-           ]
-   4. Base_* - base class for realising final objects - where we have finished methods and it could be (or not) redefine!
+      - AbcConn_* - interface! separated methods/params used to define in final classes
+         AbcConn_CmdTerminal
+      - AbcParadigm_*
+            AbcParadigm_CmdTerminal separating Execution Model
+              -> [
+                  BaseSync_CmdTerminal -> CmdTerminal_OsSync finalUser
+                  BaseAio_CmdTerminal -> CmdTerminal_OsAio finalUser
+                 ]
+   3. Base_* - base class for realising final objects - where we have finished methods and it could be (or not) redefine!
         all methods have coded logic!
-   5. Nest*_* - middle class for adding specific universal logic in any other class
+      - BaseUser_* - separate all user settings from all AbcBase Levels
+   4. Nest*_* - middle class for adding specific universal logic in any other class
       - NestMeth_*
       - NestInit_*
       - NestStr_*
-   6. Meta*_* - class is metaCls!!!
-   7. Template_* - somtimes you cant apply Class as universal baseClass! so in such case this class created only as template.  
+   5. Meta*_* - class is metaCls!!!
+   6. Template_* - somtimes you cant apply Class as universal baseClass! so in such case this class created only as template.  
 and you should use it as template for creating your own class.  
 
 2. SPECIFIC parent/statics  

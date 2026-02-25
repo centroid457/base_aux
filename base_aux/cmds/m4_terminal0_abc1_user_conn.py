@@ -26,7 +26,7 @@ TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITIO
 
 
 # =====================================================================================================================
-class AbcUser_CmdTerminal(ABC):
+class BaseUser_CmdTerminal(ABC):
     """
     GOAL
     ----
@@ -105,7 +105,7 @@ class AbcUser_CmdTerminal(ABC):
 
 
 # =====================================================================================================================
-class AbcConn_CmdTerminal(AbcUser_CmdTerminal):
+class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
     _conn: Any | None
 
     def __init__(

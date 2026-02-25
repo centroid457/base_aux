@@ -16,15 +16,6 @@ class CmdSession_old:
     RAISE: Optional[bool] = None
 
     # init ------------------------------------------------------------------------------------------------------------
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.history = CmdHistory()
-
-        if not self.check__cmds_required():
-            msg = f"CLI not available"
-            raise Exc__NotAvailable(msg)
-
     def check__cmds_required(self) -> bool:
         """
         GOAL

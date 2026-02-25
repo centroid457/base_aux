@@ -18,6 +18,9 @@ class Test:
         victim = CmdTerminal_OsSync()
         assert victim.connect()
 
+        time.sleep(0.3)
+        assert len(victim.history) == 1
+
         assert victim.send_command(CMD_PING_1, timeout_read_start=1)
 
         assert victim.history.last_input == CMD_PING_1
@@ -28,6 +31,9 @@ class Test:
 
         assert victim.history.last_stdout_buff
         assert not victim.history.last_stderr_buff
+
+        assert len(victim.history) == 2
+
 
 
 
