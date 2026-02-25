@@ -7,6 +7,7 @@ from base_aux.loggers.m1_print import *
 from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m2_history import *
 from base_aux.base_enums.m2_enum1_adj import *
+from base_aux.cmds.m4_terminal0_abc1_user_conn import *
 
 
 # =====================================================================================================================

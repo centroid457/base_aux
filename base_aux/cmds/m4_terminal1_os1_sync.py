@@ -1,12 +1,10 @@
-from typing import *
 import subprocess
 import threading
-import os
 import time
 import errno
 
-from base_aux.cmds.m2_history import *
-from base_aux.cmds.m4_terminal0_base import *
+from base_aux.cmds.m4_terminal0_abc1_user_conn import *
+from base_aux.cmds.m4_terminal0_abc2_paradigm import BaseSync_CmdTerminal
 
 
 # =====================================================================================================================
@@ -133,7 +131,7 @@ class CmdTerminal_OsSync(BaseSync_CmdTerminal):
             cmd: str,
             timeout: float | None = None,
             eol: str | None = None,
-    ) -> None | NoReturn:
+    ) -> None | NoReturn | Exc__IoTimeout:
         EOL: str = eol if eol is not None else self.EOL_SEND
 
         self._conn.stdin.write(f"{cmd}{EOL}")

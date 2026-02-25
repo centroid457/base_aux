@@ -4,8 +4,8 @@ import time
 import serial
 import serial.tools.list_ports
 
-from base_aux.cmds.m2_history import *
-from base_aux.cmds.m4_terminal0_base import *
+from base_aux.cmds.m4_terminal0_abc1_user_conn import *
+from base_aux.cmds.m4_terminal0_abc2_paradigm import BaseSync_CmdTerminal
 
 
 # =====================================================================================================================
