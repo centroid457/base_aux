@@ -116,7 +116,7 @@ async def explore__ping():
         # for i in range(3):
         #     await term.send_command(f"echo final {i}")
 
-        await term.send_command("echo finish!")
+        await term.send_cmd("echo finish!")
         await asyncio.sleep(10)
 
     await asyncio.sleep(0.5)
@@ -137,7 +137,7 @@ async def explore__cd():
             "echo привет!!!"
         ]
         for cmd in commands:
-            await term.send_command(cmd)
+            await term.send_cmd(cmd)
 
     await asyncio.sleep(0.5)
 
@@ -148,8 +148,8 @@ async def explore__cd_reconnect():
             return
 
         for _ in range(3):
-            await term.send_command("cd ../..")
-            await term.send_command("cd")
+            await term.send_cmd("cd ../..")
+            await term.send_cmd("cd")
             await term.reconnect()
 
     await asyncio.sleep(0.5)
@@ -157,8 +157,8 @@ async def explore__cd_reconnect():
 
 async def explore__smth():
     async with CmdTerminal_OsAio() as term:
-        await term.send_command("echo start!")
-        await term.send_command("echo finish!")
+        await term.send_cmd("echo start!")
+        await term.send_cmd("echo finish!")
         await asyncio.sleep(2)
 
     await asyncio.sleep(0.5)

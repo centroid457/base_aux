@@ -603,7 +603,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
             if cmd == '/reconnect':
                 await item.reconnect()
             else:
-                await item.send_command(cmd)
+                await item.send_cmd(cmd)
     except WebSocketDisconnect:
         pass
     finally:

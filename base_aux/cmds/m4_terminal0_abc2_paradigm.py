@@ -39,7 +39,7 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
-    def send_command(
+    def send_cmd(
             self,
             cmd: str,
             timeout_write: float | None = None,
@@ -50,13 +50,15 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
         raise NotImplementedError()
 
     @abstractmethod
-    def send_successfully(
+    def send_cmds__all_success(
             self,
             cmds: list[str],
     ) -> bool:
         """
         GOAL
         ----
+        detect exact cmd which will not get fail
+
         send some cmds to check that all results are ok
         when you dont mind to check exact response line but want to be sure
         - no bad retcode
@@ -64,6 +66,30 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
         - no timed out
         """
         raise NotImplementedError()
+
+    # @abstractmethod
+    # def send_cmds__till_first_fail(
+    #         self,
+    #         cmds: list[str],
+    # ) -> bool:
+    #     """
+    #     GOAL
+    #     ----
+    #     detect exact cmd which will get fail
+    #     """
+    #     raise NotImplementedError()
+    #
+    # @abstractmethod
+    # def send_cmds__till_first_success(
+    #         self,
+    #         cmds: list[str],
+    # ) -> bool:
+    #     """
+    #     GOAL
+    #     ----
+    #     detect exact cmd which will not get fail
+    #     """
+    #     raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -266,7 +292,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         return data_received
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(
+    def send_cmd(
             self,
             cmd: str,
             timeout_write: float | None = None,
@@ -293,12 +319,12 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         self.history.set_finished(status=_finished_status)
         return self.history.last_result
 
-    def send_successfully(
+    def send_cmds__all_success(
             self,
             cmds: list[str],
     ) -> bool:
         for cmd in cmds:
-            result = self.send_command(cmd)
+            result = self.send_cmd(cmd)
             if result.check__fail():
                 return False
 
@@ -469,7 +495,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         return False
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def send_command(
+    async def send_cmd(
             self,
             cmd: str,
             timeout_write: float | None = None,
@@ -496,12 +522,12 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         self.history.set_finished(status=finished_status)
         return self.history.last_result
 
-    async def send_successfully(
+    async def send_cmds__all_success(
             self,
             cmds: list[str],
     ) -> bool:
         for cmd in cmds:
-            result = await self.send_command(cmd)
+            result = await self.send_cmd(cmd)
             if result.check__fail():
                 return False
 

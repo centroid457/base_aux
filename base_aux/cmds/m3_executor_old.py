@@ -12,51 +12,7 @@ from base_aux.cmds.m4_terminal0_abc1_user_conn import *
 
 # =====================================================================================================================
 class CmdSession_old:
-    TIMEOUT_DEF: Optional[float] = 2
-    RAISE: Optional[bool] = None
-
-    # init ------------------------------------------------------------------------------------------------------------
-    def check__cmds_required(self) -> bool:
-        """
-        GOAL
-        ----
-        check list of commands which will show that further work will executable and your environment is ready.
-
-        Useful because commands uwually depends on installed programs and OS.
-        so if you want to be sure of it on start point - run it!
-        """
-        for cmd, error_msg in self.CMDS_REQUIRED.items():
-            if not self.send_single(cmd, _raise=False):
-                Print(f"cmd NOT available [{cmd=}/{error_msg=}]")
-                self.history.print_io()
-                return False
-        return True
-
     # SEND ------------------------------------------------------------------------------------------------------------
-    def send_single(
-            self,
-            cmd: TYPING__CMD_CONDITION,
-            timeout: Optional[float] = None,
-            _raise: Optional[bool] = None,
-    ) -> bool:
-        pass
-
-    def send_batch(
-            self,
-            cmds: TYPING__CMDS_CONDITIONS,
-            type_iteration: EnumAdj_TypeIteration = EnumAdj_TypeIteration.ALL,
-            timeout_full: Optional[float] = None,
-            _raise: Optional[bool] = None,
-    ) -> bool:
-        pass
-
-
-
-
-
-
-
-
     def send(
             self,
             cmd: TYPING__CMDS_CONDITIONS,

@@ -199,15 +199,15 @@ class CmdTerminal_OsSync(Mark_CmdTerminal_Os, BaseSync_CmdTerminal):
 # =====================================================================================================================
 def _explore__ping():
     with CmdTerminal_OsSync() as term:
-        term.send_command("ping ya.ru -n 2", timeout_read_finish=1.1)
+        term.send_cmd("ping ya.ru -n 2", timeout_read_finish=1.1)
 
         # ObjectInfo(term._conn).print()
         # print(f"{term._send_ctrl_c()=}")
         # print(f"{term.reconnect()=}")
         for index in range(3):
-            term.send_command(f"echo final {index}")
+            term.send_cmd(f"echo final {index}")
 
-        term.send_command("echo finish!")
+        term.send_cmd("echo finish!")
 
     time.sleep(0.5)
 
@@ -232,7 +232,7 @@ def _explore__cd():
             # "pwd",
             # "ls -la",
         ]:
-            term.send_command(cmd)
+            term.send_cmd(cmd)
 
     time.sleep(0.5)
 
@@ -243,8 +243,8 @@ def _explore__cd_reconnect():
             return
 
         for _ in range(3):
-            term.send_command("cd ../..")
-            term.send_command("cd")
+            term.send_cmd("cd ../..")
+            term.send_cmd("cd")
             term.reconnect()
 
     time.sleep(0.5)
@@ -252,8 +252,8 @@ def _explore__cd_reconnect():
 
 def explore__smth():
     with CmdTerminal_OsSync() as term:
-        term.send_command("echo start")
-        term.send_command("echo finish!")
+        term.send_cmd("echo start")
+        term.send_cmd("echo finish!")
         time.sleep(2)
 
         term.history.print_io()

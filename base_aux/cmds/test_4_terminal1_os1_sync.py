@@ -21,7 +21,7 @@ class Test:
         time.sleep(0.3)
         assert len(victim.history) == 1
 
-        assert victim.send_command(CMD_PING_1, timeout_read_start=1)
+        assert victim.send_cmd(CMD_PING_1, timeout_read_start=1)
 
         assert victim.history.last_input == CMD_PING_1
         assert victim.history.check_finished() is True

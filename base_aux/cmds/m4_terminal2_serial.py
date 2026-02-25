@@ -115,7 +115,7 @@ class CmdTerminal_SerialSync(BaseSync_CmdTerminal):
                 break
 
     # -----------------------------------------------------------------------------------------------------------------
-    def send_command(
+    def send_cmd(
             self,
             cmd: str,
             timeout_write: float | None = None,
@@ -192,9 +192,9 @@ def _explore__serial_basic():
             return
 
         # Пример команд для типичного терминала
-        term.send_command("help", timeout_read_finish=2.0)
-        term.send_command("?", timeout_read_finish=1.0)
-        term.send_command("version", timeout_read_finish=1.0)
+        term.send_cmd("help", timeout_read_finish=2.0)
+        term.send_cmd("?", timeout_read_finish=1.0)
+        term.send_cmd("version", timeout_read_finish=1.0)
 
         # Прерывание текущей команды (если зависло)
         # term.send_ctrl_c()
@@ -214,9 +214,9 @@ def _explore__serial_custom():
         if not term.connect():
             return
 
-        term.send_command("AT", timeout_read_finish=2.0)
-        term.send_command("ATI", timeout_read_finish=2.0)
-        term.send_command("AT+CSQ", timeout_read_finish=2.0)
+        term.send_cmd("AT", timeout_read_finish=2.0)
+        term.send_cmd("ATI", timeout_read_finish=2.0)
+        term.send_cmd("AT+CSQ", timeout_read_finish=2.0)
 
 
 # =====================================================================================================================
