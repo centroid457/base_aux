@@ -1,11 +1,11 @@
-from typing import *
 import pathlib
 import re
 import sys
+from typing import *
 
 from base_aux.aux_text.m1_text_aux import TextAux
 from base_aux.base_types.m1_type_aux import TypeAux
-from base_aux.cmds.m3_executor_old import CmdSession_old
+from base_aux.cmds.m4_cmd_executor import CmdExecutor
 from base_aux.versions.m2_version import Version
 
 
@@ -74,7 +74,7 @@ class Packages:
 
     ]
     PY_PATH: str = sys.executable
-    cli: CmdSession_old
+    cli: CmdExecutor
 
     # FILENAME_457: str = "requirements__centoid457.txt"      # FILE WILL NOT GO WITHING MODULE AS PART!
     # FILEPATH_457: pathlib.Path = pathlib.Path(__file__).parent.joinpath(FILENAME_457)
@@ -92,7 +92,7 @@ class Packages:
         if py_path is not None:
             self.PY_PATH = py_path
 
-        self.cli = CmdSession_old()
+        self.cli = CmdExecutor()
 
     # =================================================================================================================
     def install(self, modules: Union[str, list[str]]) -> bool:
@@ -105,7 +105,7 @@ class Packages:
         cmd = CmdPattern.INSTALL__MODULE % (self.PY_PATH, modules)
         self.cli.send(cmd, timeout=60 * 2, print_all_states=False)
 
-        return self.cli.history.last_result.check__finished_and_success()
+        return self.cli.last_finished_success
 
     def reinstall(self, module: str) -> None:
         """
@@ -133,6 +133,7 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.347492
 self.last_finished=True
+self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -158,6 +159,7 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade singleton-meta'
 self.last_duration=1.39782
 self.last_finished=True
+self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -179,6 +181,7 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade requirements-checker'
 self.last_duration=1.367846
 self.last_finished=True
+self.last_finished_success=True
 self.last_retcode=0
 --------------------------------------------------
 self.last_stdout=
@@ -208,6 +211,7 @@ self.counter=1
 self.last_cmd='python -m pip install --upgrade privates'
 self.last_duration=1.392156
 self.last_finished=True
+self.last_finished_success=False
 self.last_retcode=1
 --------------------------------------------------
 self.last_stdout=
@@ -278,6 +282,7 @@ self.counter=3
 self.last_cmd='python -m build --sdist -n'
 self.last_duration=0.593
 self.last_finished=True
+self.last_finished_success=False
 self.last_retcode=1
 --------------------------------------------------
 self.last_stdout=
@@ -378,7 +383,7 @@ self.last_exc_timeout=None
 
         # FINISH ===================================================
         print(text_cum)
-        return self.cli.history.last_result.check__finished_and_success()
+        return self.cli.last_finished_success
 
     def upgrade_pip(self) -> bool:
         """

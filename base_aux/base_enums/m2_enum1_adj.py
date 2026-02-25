@@ -224,7 +224,7 @@ class EnumAdj_TypeIteration(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
     ---------------------
-    CmdSession_old
+    CmdExecutor
     """
     ALL = None
     TILL_FIRST_FAIL = 1

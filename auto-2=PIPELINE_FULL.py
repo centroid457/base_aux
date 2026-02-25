@@ -8,7 +8,7 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 # =====================================================================================================================
 from PROJECT import PROJECT
 from base_aux.aux_modules.m1_pkgs import Packages
-from base_aux.cmds.m3_executor_old import CmdSession_old
+from base_aux.cmds.m4_cmd_executor import CmdExecutor
 from base_aux.base_values.m3_exceptions import *
 
 
@@ -29,7 +29,7 @@ if len(PROJECT.VERSION) > 3:
 
 
 # =====================================================================================================================
-cli = CmdSession_old()
+cli = CmdExecutor()
 
 if not Packages().check_prj_installed_latest(PROJECT):
     print(f"NEED BUILD+PUBLISH+UPGRADE --> START PROCESS")

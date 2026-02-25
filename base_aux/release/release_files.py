@@ -1,4 +1,4 @@
-from base_aux.cmds.m3_executor_old import *
+from base_aux.cmds.m4_cmd_executor import *
 from base_aux.versions.m2_version import *
 from base_aux.aux_datetime.m2_datetime import *
 
@@ -360,7 +360,7 @@ def release_files__update(project: type['PROJECT']) -> None | NoReturn:
         Warn(msg)
 
     pass
-    CmdSession_old().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
+    CmdExecutor().send("python -m pip freeze > requirements_release_freezed.txt", timeout=10)
     ReleaseReadme(project).generate()
     ReleaseHistory(project).generate()
 
