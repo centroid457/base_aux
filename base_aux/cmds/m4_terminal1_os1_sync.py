@@ -131,6 +131,7 @@ class CmdTerminal_OsSync(BaseSync_CmdTerminal):
     def _write_line(
             self,
             cmd: str,
+            timeout: float | None = None,
             eol: str | None = None,
     ) -> None | NoReturn:
         EOL: str = eol if eol is not None else self.EOL_SEND
@@ -204,7 +205,7 @@ class CmdTerminal_OsSync(BaseSync_CmdTerminal):
 # =====================================================================================================================
 def _explore__ping():
     with CmdTerminal_OsSync() as term:
-        term.send_command("ping ya.ru -n 2", timeout_finish=1.1)
+        term.send_command("ping ya.ru -n 2", timeout_read_finish=1.1)
 
         # ObjectInfo(term._conn).print()
         # print(f"{term._send_ctrl_c()=}")

@@ -118,8 +118,9 @@ class CmdTerminal_SerialSync(BaseSync_CmdTerminal):
     def send_command(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
+            timeout_write: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
         """
@@ -136,7 +137,7 @@ class CmdTerminal_SerialSync(BaseSync_CmdTerminal):
             self._conn.flush()
 
             # Ожидание завершения вывода
-            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if self._wait__finish_executing_cmd(timeout_read_start, timeout_read_finish):
                 _finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
@@ -191,9 +192,9 @@ def _explore__serial_basic():
             return
 
         # Пример команд для типичного терминала
-        term.send_command("help", timeout_finish=2.0)
-        term.send_command("?", timeout_finish=1.0)
-        term.send_command("version", timeout_finish=1.0)
+        term.send_command("help", timeout_read_finish=2.0)
+        term.send_command("?", timeout_read_finish=1.0)
+        term.send_command("version", timeout_read_finish=1.0)
 
         # Прерывание текущей команды (если зависло)
         # term.send_ctrl_c()
@@ -213,9 +214,9 @@ def _explore__serial_custom():
         if not term.connect():
             return
 
-        term.send_command("AT", timeout_finish=2.0)
-        term.send_command("ATI", timeout_finish=2.0)
-        term.send_command("AT+CSQ", timeout_finish=2.0)
+        term.send_command("AT", timeout_read_finish=2.0)
+        term.send_command("ATI", timeout_read_finish=2.0)
+        term.send_command("AT+CSQ", timeout_read_finish=2.0)
 
 
 # =====================================================================================================================

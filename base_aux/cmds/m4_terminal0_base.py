@@ -15,33 +15,61 @@ from base_aux.base_values.m3_exceptions import *
 
 # =====================================================================================================================
 @dataclass
-class Timeout:
+class TimeoutDef:
     """
     GOAL
     ----
     keep default set of values for timeout
     and get updated final state
     """
-    WRITE: float | None = None
-    READ_START: float | None = None
-    READ_FINISH: float | None = None    # specially for cmds like ping with pauses between msg pack
+    WRITE: float | None
+    READ_START: float | None
+    READ_FINISH: float | None    # specially for cmds like ping with pauses between msg pack
 
-    def get_merged_copy(
+    def change(
             self,
             write: float | None = None,
             read_start: float | None = None,
             read_finish: float | None = None,
-    ) -> Self:
+    ) -> None:
         """
         GOAL
         ----
-        get updated object from default state
+        update object from default state
         """
-        result = Timeout(
-            WRITE=write if write is not None else self.WRITE,
-            READ_START=read_start if read_start is not None else self.READ_START,
-            READ_FINISH=read_finish if read_finish is not None else self.READ_FINISH)
-        return result
+        if write is not None:
+            self.WRITE = write
+        if read_start is not None:
+            self.READ_START = read_start
+        if read_finish is not None:
+            self.READ_FINISH = read_finish
+
+    def get_active__write(
+            self,
+            other: float | None = None,
+    ) -> float:
+        if other is not None:
+            return other
+        else:
+            return self.WRITE
+
+    def get_active__read_start(
+            self,
+            other: float | None = None,
+    ) -> float:
+        if other is not None:
+            return other
+        else:
+            return self.READ_START
+
+    def get_active__read_finish(
+            self,
+            other: float | None = None,
+    ) -> float:
+        if other is not None:
+            return other
+        else:
+            return self.READ_FINISH
 
 
 # =====================================================================================================================
@@ -53,7 +81,7 @@ class CmdCondition:
     define exact cmd with timeout value
     """
     LINE: TYPING__CMD_LINE
-    TIMEOUT: Timeout | None = None
+    TIMEOUT: TimeoutDef | None = None
 
 
 TYPING__CMD_CONDITION = Union[TYPING__CMD_LINE, tuple[TYPING__CMD_LINE, float | None]]
@@ -62,36 +90,49 @@ TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITIO
 
 # =====================================================================================================================
 class AbcUser_CmdTerminal(ABC):
+    """
+    GOAL
+    ----
+    separate/collect all settings from all abc levels
+    and some more common ones
+    """
     EOL_SEND: str = "\n"
 
     id: str
     id_index: int = 0
     _id_index__last: int = 0
 
+    history: CmdHistory
+    timeout_def: TimeoutDef = TimeoutDef(1, 1, 0.1)
+
     def __init__(
             self,
             *,
             id: str | None = None,
+            eol_send: str | None = None,
 
-            timeout_start: float = 1,
-            timeout_finish: float = 0.1,
+            timeout_write: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
 
             cwd: str | None = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
 
-        self.history: CmdHistory = CmdHistory()
+        # user setup -----------------------
+        self.set_id(id)
+        if eol_send is not None:
+            self.EOL_SEND = eol_send
 
+        self.cwd: str | None = cwd
+        self.timeout_def.change(timeout_write, timeout_read_start, timeout_read_finish)
+
+        # other bg --------------------
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
-        self.timeout_start: float = timeout_start
-        self.timeout_finish: float = timeout_finish
-
-        self.cwd: str | None = cwd
-
-        self.set_id(id)
+        self.history = CmdHistory()
 
     # -----------------------------------------------------------------------------------------------------------------
     def set_id(self, id: str | None = None) -> None:
@@ -193,6 +234,7 @@ class AbcConn_CmdTerminal(AbcUser_CmdTerminal):
     def _write_line(
             self,
             cmd: str,
+            timeout: float | None = None,
             eol: str | None = None,
     ) -> None | NoReturn:
         raise NotImplementedError()
@@ -229,8 +271,9 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     def send_command(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
+            timeout_write: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
         raise NotImplementedError()
@@ -255,8 +298,8 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     @abstractmethod
     def _wait__finish_executing_cmd(
             self,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
     ) -> bool:
         raise NotImplementedError()
 
@@ -327,8 +370,8 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
     def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
-        - timeout_start – ожидание первого байта строки.
-        - timeout_finish – ожидание последующих байтов.
+        - timeout_read_start – ожидание первого байта строки.
+        - timeout_read_finish – ожидание последующих байтов.
         - Любой EOL (\r или \n) завершает текущую строку, последующие EOL игнорируются.
         - По таймауту строка также завершается.
         - Добавление в историю через append_method.
@@ -375,7 +418,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         # BUFFER -------------------
         while not self._stop_reading and self._conn is not None:
             bytes_accumulated = bytearray()
-            timeout_active = self.timeout_start
+            timeout_active = self.timeout_def.READ_START
             try:
                 while True:
                     try:
@@ -387,7 +430,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
                         return
 
                     self._last_byte_time = time.time()
-                    timeout_active = self.timeout_finish
+                    timeout_active = self.timeout_def.READ_FINISH
 
                     if new_byte == b'':  # EOF
                         return
@@ -421,30 +464,30 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         self._bg_reading_buffer(EnumAdj_BufferType.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _wait__finish_executing_cmd(self, timeout_start: float | None = None, timeout_finish: float | None = None) -> bool:
+    def _wait__finish_executing_cmd(self, timeout_read_start: float | None = None, timeout_read_finish: float | None = None) -> bool:
         """
         GOAL
         ----
         ensure finishing any buffer activity
-        1. wait long timeout_start for start activity
+        1. wait long timeout_read_start for start activity
         2. wait short timeout2 for close waiting any new line!
         """
-        timeout_start = timeout_start or self.timeout_start
-        timeout_finish = timeout_finish or self.timeout_finish
+        timeout_read_start = self.timeout_def.get_active__read_start(timeout_read_start)
+        timeout_read_finish = self.timeout_def.get_active__read_finish(timeout_read_finish)
 
         data_received: bool = False
         last_duration: float = self.history.last_result.duration
 
-        timeout_active = timeout_start
+        timeout_active = timeout_read_start
         time_start = time.time()
         while time.time() - time_start < timeout_active:
             if last_duration != self.history.last_result.duration:
                 data_received = True
                 last_duration = self.history.last_result.duration
                 time_start = time.time()
-                timeout_active = timeout_finish
+                timeout_active = timeout_read_finish
             else:
-                time.sleep(timeout_finish / 3)   # at least we need to execute last check
+                time.sleep(timeout_read_finish / 3)   # at least we need to execute last check
 
         return data_received
 
@@ -452,16 +495,17 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
     def send_command(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
+            timeout_write: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
 
         self.history.add_data__stdin(cmd)
         try:
-            self._write_line(cmd=cmd, eol=eol)
+            self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
 
-            if self._wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if self._wait__finish_executing_cmd(timeout_read_start, timeout_read_finish):
                 _finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 _finished_status = EnumAdj_FinishedStatus.TIMED_OUT
@@ -547,8 +591,8 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     async def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
-        - timeout_start – ожидание первого байта строки.
-        - timeout_finish – ожидание последующих байтов.
+        - timeout_read_start – ожидание первого байта строки.
+        - timeout_read_finish – ожидание последующих байтов.
         - Любой EOL (\r или \n) завершает текущую строку, последующие EOL игнорируются.
         - По таймауту строка также завершается.
         - Добавление в историю через append_method.
@@ -574,7 +618,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         # BUFFER -------------------
         while not self._stop_reading and self._conn is not None:
             bytes_accumulated = bytearray()
-            timeout_active = self.timeout_start
+            timeout_active = self.timeout_def.READ_START
             try:
                 while True:
                     try:
@@ -586,7 +630,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
                         return
 
                     self._last_byte_time = asyncio.get_event_loop().time()
-                    timeout_active = self.timeout_finish
+                    timeout_active = self.timeout_def.READ_FINISH
 
                     if new_byte == b'':  # EOF
                         return
@@ -624,21 +668,21 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
             self,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None
     ) -> bool:
         """Ожидание завершения вывода команды по таймаутам."""
-        timeout_start = timeout_start or self.timeout_start
-        timeout_finish = timeout_finish or self.timeout_finish
+        timeout_read_start = self.timeout_def.get_active__read_start(timeout_read_start)
+        timeout_read_finish = self.timeout_def.get_active__read_finish(timeout_read_finish)
 
         start_wait = asyncio.get_event_loop().time()
-        while asyncio.get_event_loop().time() - start_wait < timeout_start:
+        while asyncio.get_event_loop().time() - start_wait < timeout_read_start:
             # Если процесс завершился, сразу выходим
             if self._conn is not None and self._conn.returncode is not None:
                 return True
             if self._last_byte_time > start_wait:
                 quiet_start = asyncio.get_event_loop().time()
-                while asyncio.get_event_loop().time() - quiet_start < timeout_finish:
+                while asyncio.get_event_loop().time() - quiet_start < timeout_read_finish:
                     if self._conn is not None and self._conn.returncode is not None:
                         return True
                     if self._last_byte_time > quiet_start:
@@ -652,17 +696,18 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     async def send_command(
             self,
             cmd: str,
-            timeout_start: float | None = None,
-            timeout_finish: float | None = None,
+            timeout_write: float | None = None,
+            timeout_read_start: float | None = None,
+            timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
         EOL: str = eol if eol is not None else self.EOL_SEND
 
         self.history.add_data__stdin(cmd)
         try:
-            await self._write_line(cmd=cmd, eol=eol)
+            await self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
 
-            if await self._wait__finish_executing_cmd(timeout_start, timeout_finish):
+            if await self._wait__finish_executing_cmd(timeout_read_start, timeout_read_finish):
                 finished_status = EnumAdj_FinishedStatus.CORRECT
             else:
                 finished_status = EnumAdj_FinishedStatus.TIMED_OUT

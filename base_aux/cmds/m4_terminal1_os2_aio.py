@@ -101,6 +101,7 @@ class CmdTerminal_OsAio(BaseAio_CmdTerminal):
     async def _write_line(
             self,
             cmd: str,
+            timeout: float | None = None,
             eol: str | None = None,
     ) -> None | NoReturn:
         EOL: str = eol if eol is not None else self.EOL_SEND
@@ -112,7 +113,7 @@ class CmdTerminal_OsAio(BaseAio_CmdTerminal):
 # =====================================================================================================================
 async def explore__ping():
     async with CmdTerminal_OsAio() as term:
-        # await term.send_command("ping ya.ru -n 2", timeout_finish=1.1)
+        # await term.send_command("ping ya.ru -n 2", timeout_read_finish=1.1)
 
         # for i in range(3):
         #     await term.send_command(f"echo final {i}")
