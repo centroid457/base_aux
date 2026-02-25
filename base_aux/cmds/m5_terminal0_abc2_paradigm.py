@@ -8,7 +8,7 @@ from base_aux.base_enums.m2_enum1_adj import EnumAdj_BufferType, EnumAdj_Finishe
 from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
-from base_aux.cmds.m4_terminal0_abc1_user_conn import AbcConn_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc1_user_conn import AbcConn_CmdTerminal
 
 
 # =====================================================================================================================

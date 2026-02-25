@@ -1,4 +1,4 @@
-from base_aux.cmds.m4_terminal0_abc2_paradigm import AbcParadigm_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc2_paradigm import AbcParadigm_CmdTerminal
 
 
 # =====================================================================================================================
