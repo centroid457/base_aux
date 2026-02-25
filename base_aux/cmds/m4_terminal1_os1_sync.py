@@ -1,21 +1,17 @@
+from typing import *
 import subprocess
 import threading
 import time
 import errno
 
 from base_aux.cmds.m4_terminal0_abc1_user_conn import *
+from base_aux.cmds.m4_terminal1_os0_mark import *
 from base_aux.cmds.m4_terminal0_abc2_paradigm import BaseSync_CmdTerminal
 
 
 # =====================================================================================================================
-class CmdTerminal_OsSync(BaseSync_CmdTerminal):
-    """
-    GOAL
-    ----
-    access to terminal with continuous connection - keeping state!
-    """
+class CmdTerminal_OsSync(Mark_CmdTerminal_Os, BaseSync_CmdTerminal):
     _conn: subprocess.Popen | None
-    EOL_SEND: str = "\n"
 
     # -----------------------------------------------------------------------------------------------------------------
     def _create_conn(self) -> None | NoReturn:

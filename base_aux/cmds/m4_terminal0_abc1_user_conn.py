@@ -40,7 +40,7 @@ class AbcUser_CmdTerminal(ABC):
     _id_index__last: int = 0
 
     history: CmdHistory
-    timeout_def: TimeoutDef = TimeoutDef(1, 1, 0.1)
+    timeout_def: TimeoutDef = TimeoutDef(2, 1, 0.1)
 
     def __init__(
             self,

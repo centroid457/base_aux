@@ -1,16 +1,14 @@
+from typing import *
 import asyncio
 
 from base_aux.cmds.m4_terminal0_abc1_user_conn import *
+from base_aux.cmds.m4_terminal1_os0_mark import *
 from base_aux.cmds.m4_terminal0_abc2_paradigm import BaseAio_CmdTerminal
 
 
 # =====================================================================================================================
-class CmdTerminal_OsAio(BaseAio_CmdTerminal):
-    """
-    Асинхронная версия CmdTerminal_OsSync на asyncio.subprocess.
-    """
+class CmdTerminal_OsAio(Mark_CmdTerminal_Os, BaseAio_CmdTerminal):
     _conn: asyncio.subprocess.Process | None
-    EOL_SEND: str = "\n"
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
