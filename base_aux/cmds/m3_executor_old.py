@@ -15,14 +15,11 @@ class CmdSession_old:
     TIMEOUT_DEF: Optional[float] = 2
     RAISE: Optional[bool] = None
 
-    CMDS_REQUIRED: dict[str, Optional[str]] | None = None
-
     # init ------------------------------------------------------------------------------------------------------------
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.history = CmdHistory()
-        self.CMDS_REQUIRED = self.CMDS_REQUIRED or {}
 
         if not self.check__cmds_required():
             msg = f"CLI not available"

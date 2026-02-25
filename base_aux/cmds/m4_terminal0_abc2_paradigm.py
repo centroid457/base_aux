@@ -5,7 +5,7 @@ from abc import abstractmethod
 from typing import Never, IO
 
 from base_aux.base_enums.m2_enum1_adj import EnumAdj_BufferType, EnumAdj_FinishedStatus
-from base_aux.base_values.m3_exceptions import Exc__WrongUsage, Exc__IoTimeout, Exc__IoConnection
+from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m4_terminal0_abc1_user_conn import AbcConn_CmdTerminal
@@ -274,6 +274,8 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
+        if self._conn is None:
+            raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
         self.history.add_data__stdin(cmd)
         try:
@@ -475,7 +477,8 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
             timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
-        EOL: str = eol if eol is not None else self.EOL_SEND
+        if self._conn is None:
+            raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
         self.history.add_data__stdin(cmd)
         try:

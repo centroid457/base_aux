@@ -275,6 +275,13 @@ class CmdHistory:
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
+    def last_retcode(self) -> int | None:
+        try:
+            return self.last_result.retcode
+        except:
+            return None
+
+    @property
     def last_input(self) -> TYPING__CMD_LINE:
         try:
             return self.last_result.INPUT

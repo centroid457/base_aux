@@ -1,6 +1,6 @@
 from base_aux.aux_argskwargs.m4_kwargs_eq_expect import *
 
-from base_aux.cmds.m3_executor_old import *
+from base_aux.cmds.m4_terminal1_os1_sync import *
 
 
 # =====================================================================================================================
@@ -13,22 +13,31 @@ else:
 
 
 # =====================================================================================================================
-# @pytest.mark.skip
 class Test:
     def test__ok(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
+        assert victim.connect()
 
-        assert victim.send(CMD_PING_1, timeout=2)
-        assert victim.last_cmd == CMD_PING_1
-        assert victim.last_finished is True
+        assert victim.send_command(CMD_PING_1, timeout_read_start=1)
 
-        assert victim.last_exc_timeout is None
-        assert victim.last_stdout
-        assert not victim.last_stderr
-        assert victim.last_retcode == 0
+        assert victim.history.last_input == CMD_PING_1
+        assert victim.history.check_finished() is True
+        assert victim.history.check_all_success() is True
+        assert victim.history.check_any_fail() is False
+        assert victim.history.last_retcode is None
+
+        assert victim.history.last_stdout_buff
+        assert not victim.history.last_stderr_buff
+
+
+
+
+
+
+
 
     def test__list(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert not victim.send([CMD_PING_1, CMD_PING_2, CMD_PING_2], timeout=2)
@@ -42,7 +51,7 @@ class Test:
         assert victim.last_retcode == 0
 
     def test__list_not_passed_timeout(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=0.1)
         assert victim.send([CMD_PING_1, CMD_PING_2])
 
@@ -68,11 +77,11 @@ class Test:
         ]
     )
     def test__tuple(self, cmds, timeout_def, _EXPECTED):
-        func_link = CmdSession_old().send(cmd=cmds, timeout=timeout_def)
+        func_link = CmdTerminal_OsSync().send(cmd=cmds, timeout=timeout_def)
         Lambda(func_link).check_expected__assert(_EXPECTED)
 
     def test__list__till_first_true(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
 
         assert not victim.send([CMD_PING_1, CMD_PING_2], timeout=1)
         assert victim.send([CMD_PING_1, CMD_PING_2], timeout=1, till_first_true=True)
@@ -86,7 +95,7 @@ class Test:
         assert victim.last_retcode == 0
 
     def test__exc_timeout(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
 
         assert not victim.send(CMD_PING_2, timeout=0.1)
         assert victim.last_cmd == CMD_PING_2
@@ -98,7 +107,7 @@ class Test:
         assert victim.last_retcode is None
 
     def test__exc_not_exists(self):
-        victim = CmdSession_old()
+        victim = CmdTerminal_OsSync()
 
         cmd_line = "ping123"
         assert not victim.send(cmd_line, timeout=10)
@@ -112,7 +121,7 @@ class Test:
 
     def test__exc_cli_available(self):
         # one cmd ------------------------------------------------
-        class CliUserForAvailable(CmdSession_old):
+        class CliUserForAvailable(CmdTerminal_OsSync):
             CMDS_REQUIRED = {"ping123": None, }
 
         try:
@@ -121,7 +130,7 @@ class Test:
             assert isinstance(exc, Exc__NotAvailable)
 
         # two cmd ------------------------------------------------
-        class CliUserForAvailable(CmdSession_old):
+        class CliUserForAvailable(CmdTerminal_OsSync):
             CMDS_REQUIRED = {CMD_PING_1: None, }
 
         victim = CliUserForAvailable()

@@ -94,7 +94,9 @@ class Base_Exc(
     ---------------------
     classes.VALID if
     """
-    PREFIX: str = "[EXC]"
+    @property
+    def PREFIX(self) -> str:
+        return f"[EXC.{self.__class__.__name__}]"
 
 
 # =====================================================================================================================
