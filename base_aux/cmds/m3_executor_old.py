@@ -7,12 +7,120 @@ from base_aux.loggers.m1_print import *
 from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m2_history import *
 from base_aux.base_enums.m2_enum1_adj import *
-from base_aux.cmds.m4_terminal0_abc1_user_conn import *
+
+
+# TODO: need get it back to use separately working SubProcess conn!!!
 
 
 # =====================================================================================================================
 class CmdSession_old:
+    """
+    GOAL
+    ----
+    send commands into OS terminal
+
+    "check if cmds commands are accessible (special utilities is installed)",
+    "access to standard parts of result in a simple ready-to-use form (stdout/stderr/_retcode/full state)",
+    "use batch timeout for list",
+    "till_first_true",
+
+    :ivar TIMEOUT_DEF: default timeout for execution process
+        if timeout expired and process still not finished - raise exc
+    :ivar _last_sp: Popen object
+    :ivar CMDS_REQUIRED: commands for cli_check_available
+        dict with NAME - exact commands which will send into terminal in order to check some utility is installed,
+        VALUE - message if command get any error
+
+        RECOMMENDATIONS
+        --------------
+        1. --HELP never works as expected! always timed_out!!!!
+            [#####################ERROR#####################]
+            self.last_cmd='STM32_Programmer_CLI --help'
+            self.last_duration=2.029675
+            self.last_retcode=None
+            --------------------------------------------------
+            self.last_stdout=
+            --------------------------------------------------
+            self.last_stderr=
+            --------------------------------------------------
+            self._last_exc_timeout=TimeoutError("TimeoutExpired('STM32_Programmer_CLI --help', 2)")
+            ==================================================
+            [ERROR] cmd NOT available [STM32_Programmer_CLI --help]
+            ==================================================
+
+        2. DIRECT SIMPLE CLI COMMAND AS UTILITY_NAME.EXE without any parameter MAY NOT WORK!!! may timed_out! implied the same as HELP parameter!
+            [#####################ERROR#####################]
+            self.last_cmd='STM32_Programmer_CLI'
+            self.last_duration=2.022585
+            self.last_retcode=None
+            --------------------------------------------------
+            self.last_stdout=
+            --------------------------------------------------
+            self.last_stderr=
+            --------------------------------------------------
+            self._last_exc_timeout=TimeoutError("TimeoutExpired('STM32_Programmer_CLI', 2)")
+            ==================================================
+
+        3. use --VERSION! instead! - seems work fine always!
+    """
+    # SETTINGS ------------------------------------
+    TIMEOUT_DEF: Optional[float] = 2
+    RAISE: Optional[bool] = None
+
+    CMDS_REQUIRED: dict[str, Optional[str]] | None = None
+
+    # init ------------------------------------------------------------------------------------------------------------
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.history = CmdHistory()
+        self.CMDS_REQUIRED = self.CMDS_REQUIRED or {}
+
+        if not self.check__cmds_required():
+            msg = f"CLI not available"
+            raise Exc__NotAvailable(msg)
+
+    def check__cmds_required(self) -> bool:
+        """
+        GOAL
+        ----
+        check list of commands which will show that further work will executable and your environment is ready.
+
+        Useful because commands uwually depends on installed programs and OS.
+        so if you want to be sure of it on start point - run it!
+        """
+        for cmd, error_msg in self.CMDS_REQUIRED.items():
+            if not self.send_single(cmd, _raise=False):
+                Print(f"cmd NOT available [{cmd=}/{error_msg=}]")
+                self.history.print_io()
+                return False
+        return True
+
     # SEND ------------------------------------------------------------------------------------------------------------
+    def send_single(
+            self,
+            cmd: TYPING__CMD_CONDITION,
+            timeout: Optional[float] = None,
+            _raise: Optional[bool] = None,
+    ) -> bool:
+        pass
+
+    def send_batch(
+            self,
+            cmds: TYPING__CMDS_CONDITIONS,
+            type_iteration: EnumAdj_TypeIteration = EnumAdj_TypeIteration.ALL,
+            timeout_full: Optional[float] = None,
+            _raise: Optional[bool] = None,
+    ) -> bool:
+        pass
+
+
+
+
+
+
+
+
     def send(
             self,
             cmd: TYPING__CMDS_CONDITIONS,
