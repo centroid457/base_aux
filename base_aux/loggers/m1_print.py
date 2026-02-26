@@ -25,16 +25,17 @@ class Print:
     EOL: str = "\n"
     MSG_LINES: tuple[str, ...]
 
-    def __init__(self, *lines, prefix: str = None, **kwargs) -> None:
+    def __init__(self, *lines, prefix: str | None = None, noprint: bool | None = None, **kwargs) -> None:
+        self.MSG_LINES = lines
         if prefix is not None:
             self.PREFIX = prefix
 
-        self.MSG_LINES = lines
-        print(self, file=self.OUTPUT)
+        if not noprint:
+            print(self, file=self.OUTPUT)
 
-        if self.OUTPUT == sys.stderr:
-            # additional print - cause of stderr prints not in same
-            print(self, file=sys.stdout)
+            if self.OUTPUT == sys.stderr:
+                # additional print - cause of stderr prints not in same
+                print(self, file=sys.stdout)
 
         super().__init__(**kwargs)
 

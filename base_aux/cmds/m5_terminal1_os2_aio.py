@@ -89,7 +89,7 @@ class CmdTerminal_OsAio(Mark_CmdTerminal_Os, BaseAio_CmdTerminal):
         except asyncio.CancelledError:
             raise
         except asyncio.TimeoutError as exc:
-            raise Exc__IoTimeout(f"{exc!r}")
+            raise Exc__IoTimeout(f"{timeout=}/{exc!r}", noprint=True)
         except (BrokenPipeError, ConnectionResetError) as exc:
             raise Exc__IoConnection(f"{exc!r}")
         except BaseException as exc:

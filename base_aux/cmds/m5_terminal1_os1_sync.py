@@ -107,7 +107,7 @@ class CmdTerminal_OsSync(Mark_CmdTerminal_Os, BaseSync_CmdTerminal):
                     break
                 # Проверяем, истёк ли таймаут
                 if time.monotonic() - start >= timeout:
-                    raise Exc__IoTimeout(f"{timeout=}/{exc!r}")  # сигнализирует об окончании ожидания строки
+                    raise Exc__IoTimeout(f"{timeout=}/{exc!r}", noprint=True)  # сигнализирует об окончании ожидания строки
                 # Небольшая пауза, чтобы не грузить процессор
                 time.sleep(0.05)
             except OSError as exc:
