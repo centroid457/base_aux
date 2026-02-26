@@ -6,11 +6,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from base_aux.webs.d3_fastapi.d2_base_title.m0_details import ServiceDetails
+from base_aux.webs.d3_fastapi.d2_base_title.m0_system_info import *
 
 
 # =====================================================================================================================
-service_details = ServiceDetails()
+service_details = SystemInfo()
 
 
 # =====================================================================================================================
@@ -41,7 +41,8 @@ async def html__service_details(request: Request):
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/api/info")
 async def api__info(request: Request):
-    data = service_details.get(request)
+    data = service_details.get_all()
+    data["CLIENT"] = get_client(request)
     return data
 
 
