@@ -18,19 +18,16 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 class ObjectManager:
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
-    _last_index: int = 0
 
     def __init__(self):
         self.items = {}
 
-    async def create_item(self, id: str | None = None) -> str:
-        if id is None:
-            self._last_index += 1
-            id = f"[{self._last_index}]{self.ITEM_CLASS.get_name()}"
-        if id not in self.items:
-            new_item = self.ITEM_CLASS(id=id)
-            self.items[id] = new_item
-        return id
+    async def create_item(self) -> str:
+        new_item = self.ITEM_CLASS()
+        item_id = new_item.id
+        print(f"create_item:{item_id=}")
+        self.items[item_id] = new_item
+        return item_id
 
     async def get_item(self, id: str) -> CmdTerminal_OsAio | None:
         return self.items.get(id)
@@ -480,14 +477,13 @@ async def lifespan(app: FastAPI):
     first_id = await object_manager.create_item()
     first_item = object_manager.items.get(first_id)
     if first_item:
-        print(f"FastApi.Startup: {first_id=}")
         await first_item.connect()
     # ------------------------------------------------------------------
 
     yield  # <-- здесь сервер работает и обрабатывает запросы
 
     # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
-    for item_id, item in list(object_manager.items.items()):
+    for item_id, item in object_manager.items.items():
         print(f"FastApi.Shutdown: {item_id=}")
         await item.disconnect()
 
