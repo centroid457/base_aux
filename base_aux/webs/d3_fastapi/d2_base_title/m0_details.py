@@ -1,27 +1,26 @@
+from typing import *
 import os
 import platform
-import time
-from datetime import datetime
-from typing import Dict, Any
 from dataclasses import dataclass
+from datetime import datetime
 
 import psutil
-import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from starlette.requests import Request
 
 
 # =====================================================================================================================
 @dataclass
 class ServiceDetails:
     SERVICE_NAME: str = "TitleHeader"
-    SERVICE_DESCRIPTION: str = "gen/place a universal title header into any project"
+    SERVICE_DESCRIPTION: str = "universal title header for any project"
     SERVICE_AUTHOR: str = "Andrey Starichenko"
     SERVICE_FRAMEWORK: str = "FastAPI+js"
 
+    # -----------------------------------------------------------------------------------------------------------------
     def __post_init__(self):
+        self._load_static()
+
+    def _load_static(self) -> None:
         self.SERVICE_INFO: dict[str, str] = {
             "service__start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "name": self.SERVICE_NAME,
@@ -39,19 +38,30 @@ class ServiceDetails:
             **self.get__user_info(),
         }
 
+    # -----------------------------------------------------------------------------------------------------------------
     def get(self, request: Request | None = None) -> dict[str, dict[str, Any | str | int | float | None]]:
+        result = {}
+        result.update(**self.get_static(request))
+        result['DINAMIC'] = self.get_dinamic()
+        return result
+
+    def get_static(self, request: Request | None = None) -> dict[str, dict[str, Any | str | int | float | None]]:
         result = {
             "SERVICE_INFO": self.SERVICE_INFO,
             "OS_INFO": self.OS_INFO,
-            "RUNTIME": {
-                "CPU_LOAD": self.get__system_load(),
-                "MEMORY": self.get__memory_info(),
-                "DISK": self.get__disk_info(),
-            },
             "CLIENT": self.get__client_info(request),
         }
         return result
 
+    def get_dinamic(self) -> dict[str, dict[str, Any | str | int | float | None]]:
+        result = {
+            "CPU_LOAD": self.get__system_load(),
+            "MEMORY": self.get__memory_info(),
+            "DISK": self.get__disk_info(),
+        }
+        return result
+
+    # -----------------------------------------------------------------------------------------------------------------
     def get__client_info(self, request: Request | None = None) -> dict:
         result = {}
 
@@ -74,12 +84,13 @@ class ServiceDetails:
 
         return result
 
+    # -----------------------------------------------------------------------------------------------------------------
     def get__boot_time(self) -> str:
         try:
             boot_timestamp = psutil.boot_time()
             return datetime.fromtimestamp(boot_timestamp).strftime("%Y-%m-%d %H:%M:%S")
-        except Exception:
-            return "N/A"
+        except BaseException as exc:
+            return f"{exc!r}"
 
     def get__user_info(self) -> dict[str, Any]:
         try:
@@ -89,9 +100,9 @@ class ServiceDetails:
             else:
                 is_admin = os.geteuid() == 0
 
-            username = os.getlogin() if hasattr(os, 'getlogin') else os.environ.get('USER', 'Unknown')
-        except Exception:
-            username = "Unknown"
+            username = os.getlogin()
+        except BaseException as exc:
+            username = f"{exc!r}"
             is_admin = False
 
         return {
@@ -107,8 +118,8 @@ class ServiceDetails:
                 "load_5min": round(load_avg[1], 2),
                 "load_15min": round(load_avg[2], 2),
             }
-        except Exception:
-            return {}
+        except BaseException as exc:
+            return {"error": f"{exc!r}"}
 
     def get__memory_info(self) -> dict[str, Any]:
         try:
@@ -119,8 +130,8 @@ class ServiceDetails:
                 "used": f"{mem.used / (1024**3):.2f} GB",
                 "percent": f"{mem.percent}%"
             }
-        except Exception:
-            return {"error": "N/A"}
+        except BaseException as exc:
+            return {"error": f"{exc!r}"}
 
     def get__disk_info(self) -> dict[str, Any]:
         try:
@@ -131,54 +142,8 @@ class ServiceDetails:
                 "free": f"{disk.free / (1024**3):.2f} GB",
                 "percent": f"{disk.percent}%"
             }
-        except Exception:
-            return {"error": "N/A"}
-
-
-# =====================================================================================================================
-service_details = ServiceDetails()
-
-
-# =====================================================================================================================
-app = FastAPI(title=service_details.SERVICE_NAME, description=service_details.SERVICE_DESCRIPTION)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-
-# =====================================================================================================================
-@app.get("/", response_class=HTMLResponse)
-async def html__index(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-
-        "service_name": service_details.SERVICE_NAME,
-        "service_description": service_details.SERVICE_DESCRIPTION,
-        "any other": "123",
-    })
-
-
-@app.get("/service_details", response_class=HTMLResponse)
-async def html__service_details(request: Request):
-    return templates.TemplateResponse("service_details.html", {
-        "request": request
-    })
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@app.get("/api/info")
-async def api__info(request: Request):
-    data = service_details.get(request)
-    return data
-
-
-@app.get("/api/clock")
-async def api__clock():
-    return {"server_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-
-
-# =====================================================================================================================
-if __name__ == "__main__":
-    uvicorn.run("main:app", port=8000, reload=True)
+        except BaseException as exc:
+            return {"error": f"{exc!r}"}
 
 
 # =====================================================================================================================
