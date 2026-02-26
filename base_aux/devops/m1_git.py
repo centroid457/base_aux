@@ -27,7 +27,7 @@ class Git(DirAux):
     noraise
     """
     DIRPATH: TYPING.PATH_FINAL
-    _repo: git.Repo = None                   # real object/only existed
+    _repo: git.Repo = None                          # real object/only existed
     _root_path: TYPING.PATH_FINAL | None = None
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -66,57 +66,63 @@ class Git(DirAux):
             except BaseException as exc:
                 print(f"[git.WARN] _root_path unexpected {exc!r}")
 
-    def get__repo_urls(self) -> list[str]:
+    # -----------------------------------------------------------------------------------------------------------------
+    def git_mark__get(self) -> str:
         """
-        GOAL
-        ----
-        origin only - what does it mean?
-        Получаем URL удаленного репозитория
-
-        usually it gives one value
-        ['https://github.com/centroid457/base_aux.git']
+        EXAMPLE
+        -------
+        git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
         """
-        result = []
-        if self._repo.remotes:
-            for remote in self._repo.remotes:
-                if remote.name == 'origin' and remote.urls:
-                    result.extend(remote.urls)
+        if self.check__repo_detected():
+            dirty = "!DIRTY!" if self.DIRTY else ""
+            untrachked = "!UNTR!" if self.UNTRACKED_FILES else ""
+            branch = TextAux(self.BRANCH).shortcut(15)
+            summary = TextAux(self.SUMMARY).shortcut(15)
+            dt = TextAux(self.DATETIME).shortcut_nosub(19)
 
-        return result
+            result = f"{dirty}{untrachked}{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
 
-    def get__repo_url(self) -> str | None:
-        """
-        'https://github.com/centroid457/base_aux.git'
-        """
-        try:
-            pass
-            return self.get__repo_urls()[0]
-        except:
-            return None
+        else:
+            result = f"вероятно GIT не установлен"
 
-    def get__repo_name(self) -> str | None:
-        """
-        GOAL
-        ----
-        two variants - from:
-        1/ remote url
-        2/ root dirpath - if have no remotes! only local repo!
-        """
-        result = None
+        git_mark = f"[git_mark//{result}]"
+        print(f"{git_mark=}")
+        return git_mark
 
-        # 1 -----------------------------
-        repo_url = self.get__repo_url()  # 'https://github.com/centroid457/base_aux.git'
+    def get__full_info(self, printout: bool | None = None) -> dict[str, Any]:
+        result = {}
 
-        try:
-            if repo_url:
-                result = repo_url.rsplit("/")[-1]
-                result = result.rsplit(".")[0]
-        except:
-            pass
+        git_installed = self.check__git_installed()
+        result["git_installed"] = git_installed
 
-        # 2 -----------------------------
-        if not result:
-            result = self._root_path.name
+        if not git_installed:
+            return result
+
+        # ----------------------
+        result["git_mark__get"] = self.git_mark__get()
+        result["check__repo_detected"] = self.check__repo_detected()
+        result["get__repo_name"] = self.get__repo_name()
+        result["WORKING_DIR"] = self.WORKING_DIR
+        result["get__repo_urls"] = self.get__repo_urls()
+        result["get__repo_url"] = self.get__repo_url()
+        result["check__repo_status"] = self.check__repo_status()
+        result["DIRTY"] = self.DIRTY
+        result["UNTRACKED_FILES"] = self.UNTRACKED_FILES
+        result["BRANCHES"] = self.BRANCHES
+        result["BRANCH"] = self.BRANCH
+
+        # COMMIT
+        result["SUMMARY"] = self.SUMMARY
+        result["HEXSHA"] = self.HEXSHA
+        result["HEXSHA8"] = self.HEXSHA8
+        result["DATETIME"] = self.DATETIME
+        # result["list_commits"] = self.list_commits()
+        # result["list_commits"] = self.list_commits()
+
+        if printout:
+            print()
+            for key, value in result.items():
+                print(f"{key}\t:{value}")
 
         return result
 
@@ -154,6 +160,61 @@ class Git(DirAux):
             return False
 
     # -----------------------------------------------------------------------------------------------------------------
+    def get__repo_name(self) -> str | None:
+        """
+        GOAL
+        ----
+        two variants - from:
+        1/ remote url
+        2/ root dirpath - if have no remotes! only local repo!
+        """
+        result = None
+
+        # 1 -----------------------------
+        repo_url = self.get__repo_url()  # 'https://github.com/centroid457/base_aux.git'
+
+        try:
+            if repo_url:
+                result = repo_url.rsplit("/")[-1]
+                result = result.rsplit(".")[0]
+        except:
+            pass
+
+        # 2 -----------------------------
+        if not result:
+            result = self._root_path.name
+
+        return result
+
+    def get__repo_urls(self) -> list[str]:
+        """
+        GOAL
+        ----
+        origin only - what does it mean?
+        Получаем URL удаленного репозитория
+
+        usually it gives one value
+        ['https://github.com/centroid457/base_aux.git']
+        """
+        result = []
+        if self._repo.remotes:
+            for remote in self._repo.remotes:
+                if remote.name == 'origin' and remote.urls:
+                    result.extend(remote.urls)
+
+        return result
+
+    def get__repo_url(self) -> str | None:
+        """
+        'https://github.com/centroid457/base_aux.git'
+        """
+        try:
+            pass
+            return self.get__repo_urls()[0]
+        except:
+            return None
+
+    # -----------------------------------------------------------------------------------------------------------------
     def check__repo_status(self) -> bool:
         """
         GOAL
@@ -183,9 +244,18 @@ class Git(DirAux):
         if self.check__repo_detected():
             return self._repo.untracked_files
 
+    @property
+    def WORKING_DIR(self) -> str:
+        """
+        GOAL
+        ----
+        get all branch names
+        """
+        return self._repo.working_dir
+
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def LIST_BRANCHES(self) -> list[git.Head]:
+    def BRANCHES(self) -> list[git.Head]:
         """
         GOAL
         ----
@@ -193,25 +263,7 @@ class Git(DirAux):
         """
         return [*self._repo.branches]
 
-    def list_commits(self, branch_name: str, limit: int = 10) -> list[git.Head]:
-        """
-        GOAL
-        ----
-        get all branch names
-        """
-        return [branch for branch in self._repo.branches]
-
     # -----------------------------------------------------------------------------------------------------------------
-    @property
-    def COMMITTER(self) -> str | None:
-        """
-        EXAMPLE
-        -------
-        ndrei Starichenko
-        """
-        if self.check__repo_detected():
-            return self._repo.head.object.committer
-
     @property
     def BRANCH(self) -> str | None:
         """
@@ -227,6 +279,16 @@ class Git(DirAux):
                 print(msg)
                 result = "*DETACHED_HEAD*"
             return result
+
+    @property
+    def COMMITTER(self) -> str | None:
+        """
+        EXAMPLE
+        -------
+        ndrei Starichenko
+        """
+        if self.check__repo_detected():
+            return self._repo.head.object.committer
 
     @property
     def SUMMARY(self) -> str | None:
@@ -279,35 +341,24 @@ class Git(DirAux):
             return self._repo.head.object.committed_datetime
 
     # -----------------------------------------------------------------------------------------------------------------
-    def git_mark__get(self) -> str:
-        """
-        EXAMPLE
-        -------
-        git_mark='[git_mark//main/zero/Andrei Starichenko/ce5c3148/2024-12-04 18:39:10]'
-        """
-        if self.check__repo_detected():
-            dirty = "!DIRTY!" if self.DIRTY else ""
-            untrachked = "!UNTR!" if self.UNTRACKED_FILES else ""
-            branch = TextAux(self.BRANCH).shortcut(15)
-            summary = TextAux(self.SUMMARY).shortcut(15)
-            dt = TextAux(self.DATETIME).shortcut_nosub(19)
-
-            result = f"{dirty}{untrachked}{branch}/{summary}/{self.COMMITTER}/{self.HEXSHA8}/{dt}"
-
-        else:
-            result = f"вероятно GIT не установлен"
-
-        git_mark = f"[git_mark//{result}]"
-        print(f"{git_mark=}")
-        return git_mark
-
-    # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------
     # fixme: ref and implement below code!
+
+    def list_commits(   # fixme: finish
+            self,
+            branch: str,
+            limit: int = 10,
+    ) -> list[git.Head]:
+        """
+        GOAL
+        ----
+        get all branch names
+        """
+        return [branch for branch in self._repo.branches]
 
     def is_commit_latest(self) -> bool:
         """
@@ -342,8 +393,7 @@ class Git(DirAux):
         except git.GitCommandError:
             return []
 
-    def get_current_state(self) -> Dict[str, str]:
-        """Получает текущее состояние репозитория"""
+    def get_current_state(self) -> dict[str, str]:
         state = {}
 
         # Текущая ветка
@@ -370,7 +420,7 @@ class Git(DirAux):
 
         return state
 
-    def _get_detailed_status(self) -> Dict[str, List[str]]:
+    def _get_detailed_status(self) -> dict[str, List[str]]:
         """Получает детальную информацию о состоянии файлов"""
         changed_files = [item.a_path for item in self._repo.index.diff(None)]  # Неиндексированные
         staged_files = [item.a_path for item in self._repo.index.diff('HEAD')]  # Индексированные
@@ -402,8 +452,9 @@ if __name__ == '__main__':
     victim = Git()
     print()
     # print(victim.git_mark__get())
-    print(victim.get__repo_name())
-    # ObjectInfo(victim._repo).print()
+    # print(victim.get__repo_name())
+    # victim.get__full_info(True)
+    ObjectInfo(victim._repo).print()
 
 
 # =====================================================================================================================
