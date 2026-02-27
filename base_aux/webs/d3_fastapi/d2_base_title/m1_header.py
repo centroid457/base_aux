@@ -30,7 +30,7 @@ async def html__index(request: Request):
 
         "service_name": service_details.SERVICE_NAME,
         "service_description": service_details.SERVICE_DESCRIPTION,
-        "any other": "123",
+        "any_other": "123",
     })
 
 

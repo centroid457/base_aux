@@ -1,7 +1,7 @@
 (function() {
-    // Встроенные стили (можно вынести в отдельный CSS, но для автономности оставим здесь)
-    const txt_styles_new = `
-        .info-bar {
+    // внедряем стили --------------------
+    const txt__header_styles = `
+        .cls__header_line {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -14,20 +14,20 @@
             position: relative;
             z-index: 1000;
         }
-        .info-item {
+        .cls__header_item {
             display: flex;
             align-items: center;
             gap: 3px;
             white-space: nowrap;
         }
-        .label {
+        .cls__header_label {
             font-weight: bold;
             color: #aaa;
         }
-        .value {
+        .cls__header_value {
             color: #fff;
         }
-        .info-toggle {
+        .cls__header_btn_info {
             background: none;
             border: none;
             color: #fff;
@@ -38,47 +38,45 @@
             line-height: 1;
             text-decoration: none;
         }
-        .info-toggle:hover {
+        .cls__header_btn_info:hover {
             color: #0af;
         }
     `;
 
-    const txt_header = `
-        <div class="info-item">
-            <span class="label">Сервис:</span>
-            <span class="value" id="id__service_name">Загрузка...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Описание:</span>
-            <span class="value" id="id__service_description">Загрузка...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Ваш IP:</span>
-            <span class="value" id="id__client_ip">...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">URL:</span>
-            <span class="value" id="id__current_url>...</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Серверное время:</span>
-            <span class="value" id="id__server_clock">...</span>
-        </div>
-        <a href="/service_details" class="info-toggle" title="Подробная информация">ⓘ</a>
-    `;
-
-
-    // Добавляем стили в head
     const el_styles_new = document.createElement('style');
-    el_styles_new.textContent = txt_styles_new;
+    el_styles_new.textContent = txt__header_styles;
     document.head.appendChild(el_styles_new);
 
-    // Создаём хедер
-    const el_header = document.createElement('header');
-    el_header.className = 'info-bar';
-    el_header.innerHTML = txt_header
+    // внедряем элементы ---------------------------------
+    const txt__header_elements = `
+        <div class="cls__header_item">
+            <span class="cls__header_label">Сервис:</span>
+            <span class="cls__header_value" id="id__service_name">...</span>
+        </div>
+        <div class="cls__header_item">
+            <span class="cls__header_label">Описание:</span>
+            <span class="cls__header_value" id="id__service_description">...</span>
+        </div>
+        <div class="cls__header_item">
+            <span class="cls__header_label">Ваш IP:</span>
+            <span class="cls__header_value" id="id__client_ip">...</span>
+        </div>
+        <div class="cls__header_item">
+            <span class="cls__header_label">URL:</span>
+            <span class="cls__header_value" id="id__current_url">...</span>
+        </div>
+        <div class="cls__header_item">
+            <span class="cls__header_label">Серверное время:</span>
+            <span class="cls__header_value" id="id__server_clock">...</span>
+        </div>
+        <a href="/service_details" class="cls__header_btn_info" title="Подробная информация">ⓘ</a>
+    `;
 
-    // Вставляем хедер в самое начало body
+    const el_header = document.createElement('header');
+    el_header.className = 'cls__header_line';
+    el_header.innerHTML = txt__header_elements
+
+    // Вставляем хедер в самое начало body --------------
     document.body.insertBefore(el_header, document.body.firstChild);
 
     // Получаем ссылки на элементы
@@ -92,13 +90,13 @@
     el__current_url.textContent = window.location.href;
 
     // Функция загрузки данных с сервера
-    async function fetchHeaderInfo() {
+    async function loadHeaderInfo() {
         try {
             const response = await fetch('/api/info');
             const data = await response.json();
-            el__service_name.textContent = data.SERVICE.name;
-            el__service_description.textContent = data.SERVICE.description;
-            el__client_ip.textContent = data.NETWORK.client_ip;
+            el__service_name.textContent = data.static.SERVICE_INFO.name;
+            el__service_description.textContent = data.static.SERVICE_INFO.description;
+            el__client_ip.textContent = data.static.NETWORK.client_ip;
         } catch (error) {
             console.error('Ошибка загрузки данных хедера:', error);
             el__service_name.textContent = 'Ошибка';
@@ -119,7 +117,7 @@
     }
 
     // Запускаем
-    fetchHeaderInfo();
+    loadHeaderInfo();
     updateClock();
     setInterval(updateClock, 1000);
 })();
