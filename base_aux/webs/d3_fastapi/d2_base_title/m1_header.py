@@ -1,17 +1,15 @@
-from datetime import datetime
-
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from base_aux.webs.d3_fastapi.d2_base_title.m0_system_info import *
+from base_aux.devops.m0_system_info import *
 
 
 # =====================================================================================================================
 service_details = SystemInfo(
-    SERVICE_NAME="TitleHeader",
+    SERVICE_NAME="BaseTitleHeader",
     SERVICE_DESCRIPTION="universal title header for any project",
     SERVICE_AUTHOR="Andrey Starichenko",
     SERVICE_FRAMEWORK="FastAPI+js",
