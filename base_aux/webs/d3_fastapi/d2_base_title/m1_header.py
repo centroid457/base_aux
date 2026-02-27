@@ -31,6 +31,7 @@ async def html__index(request: Request):
         "service_name": service_details.SERVICE_NAME,
         "service_description": service_details.SERVICE_DESCRIPTION,
         "any_other": "123",
+        "____not_existed": "ERRORRRRRRR",
     })
 
 

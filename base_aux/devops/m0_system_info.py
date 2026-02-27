@@ -150,23 +150,23 @@ class SystemInfo:
     def get_dynamic(self) -> dict[str, Any]:
         """Возвращает актуальную динамическую информацию."""
         return {
+            "uptime_os": self._get_uptime__os(),
+            "uptime_os_str": self._get_uptime__os(True),
             "cpu": self._get_dynamic__cpu(),
             "memory": self._get_dynamic__memory(),
             "swap": self._get_dynamic__swap(),
             "disk": self._get_dynamic__disk(),
             "network": self._get_dynamic__network_stats(),
             "processes": self._get_process_count(),
-            "uptime": self._get_uptime(),
-            "uptime_str": self._get_uptime(True),
         }
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
     def _get_dynamic__cpu() -> dict[str, Any]:
-        """Загрузка CPU и информация о ядрах."""
+        """CPU и информация о ядрах."""
         result = {}
         try:
-            # Загрузка в процентах за последний интервал (блокирующий вызов)
+            # в процентах за последний интервал (блокирующий вызов)
             result["percent_total"] = psutil.cpu_percent(interval=0.1)
             result["percent_per_cpu"] = psutil.cpu_percent(interval=0.1, percpu=True)
 
@@ -296,7 +296,7 @@ class SystemInfo:
             return -1
 
     @staticmethod
-    def _get_uptime(as_string: bool | None = None) -> float | str:
+    def _get_uptime__os(as_string: bool | None = None) -> float | str:
         try:
             uptime_seconds = time.time() - psutil.boot_time()
             if as_string:
@@ -335,8 +335,8 @@ def get_client(request: Request | None = None) -> dict:
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    print(SystemInfo._get_uptime())
-    print(SystemInfo._get_uptime(True))
+    print(SystemInfo._get_uptime__os())
+    print(SystemInfo._get_uptime__os(True))
 
 
 # =====================================================================================================================
