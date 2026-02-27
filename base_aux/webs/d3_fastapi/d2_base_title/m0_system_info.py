@@ -1,9 +1,10 @@
 from typing import *
 import os
 import sys
+import time
 import platform
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import psutil
 from starlette.requests import Request
@@ -88,7 +89,8 @@ class SystemInfo:
             "processor": platform.processor(),
         }
 
-    def _get_static__user(self) -> dict[str, Any]:
+    @staticmethod
+    def _get_static__user() -> dict[str, Any]:
         """Информация о пользователе, запустившем сервис."""
         try:
             username = os.getlogin()
@@ -106,7 +108,8 @@ class SystemInfo:
             "is_admin": is_admin,
         }
 
-    def _get_static__network(self) -> dict[str, Any]:
+    @staticmethod
+    def _get_static__network() -> dict[str, Any]:
         """Список сетевых интерфейсов с MAC и IP адресами."""
         interfaces = {}
         try:
@@ -154,10 +157,12 @@ class SystemInfo:
             "network": self._get_dynamic__network_stats(),
             "processes": self._get_process_count(),
             "uptime": self._get_uptime(),
+            "uptime_str": self._get_uptime(True),
         }
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _get_dynamic__cpu(self) -> dict[str, Any]:
+    @staticmethod
+    def _get_dynamic__cpu() -> dict[str, Any]:
         """Загрузка CPU и информация о ядрах."""
         result = {}
         try:
@@ -197,28 +202,30 @@ class SystemInfo:
 
         return result
 
-    def _get_dynamic__memory(self) -> dict[str, Any]:
+    @classmethod
+    def _get_dynamic__memory(cls) -> dict[str, Any]:
         """Использование оперативной памяти (числа в байтах -> Гб)."""
         try:
             mem = psutil.virtual_memory()
             return {
-                "total": self.calc_gb(mem.total),
-                "used": self.calc_gb(mem.used),
-                "available": self.calc_gb(mem.available),
-                "free": self.calc_gb(mem.free),
+                "total": cls.calc_gb(mem.total),
+                "used": cls.calc_gb(mem.used),
+                "available": cls.calc_gb(mem.available),
+                "free": cls.calc_gb(mem.free),
                 "percent": mem.percent,
             }
         except Exception as exc:
             return {"error": f"{exc!r}"}
 
-    def _get_dynamic__swap(self) -> dict[str, Any]:
+    @classmethod
+    def _get_dynamic__swap(cls) -> dict[str, Any]:
         """Использование swap (числа в байтах)."""
         try:
             swap = psutil.swap_memory()
             return {
-                "total": self.calc_gb(swap.total),
-                "used": self.calc_gb(swap.used),
-                "free": self.calc_gb(swap.free),
+                "total": cls.calc_gb(swap.total),
+                "used": cls.calc_gb(swap.used),
+                "free": cls.calc_gb(swap.free),
                 "percent": swap.percent,
                 "sin": swap.sin,
                 "sout": swap.sout,
@@ -226,7 +233,8 @@ class SystemInfo:
         except Exception as exc:
             return {"error": f"{exc!r}"}
 
-    def _get_dynamic__disk(self) -> dict[str, Any]:
+    @classmethod
+    def _get_dynamic__disk(cls) -> dict[str, Any]:
         """Использование дисков по разделам."""
         result = {}
         try:
@@ -239,9 +247,9 @@ class SystemInfo:
                         "device": part.device,
                         "fstype": part.fstype,
 
-                        "total": self.calc_gb(usage.total),
-                        "used": self.calc_gb(usage.used),
-                        "free": self.calc_gb(usage.free),
+                        "total": cls.calc_gb(usage.total),
+                        "used": cls.calc_gb(usage.used),
+                        "free": cls.calc_gb(usage.free),
 
                         "percent": usage.percent,
                     }
@@ -259,13 +267,14 @@ class SystemInfo:
             result["error"] = f"{exc!r}"
         return result
 
-    def _get_dynamic__network_stats(self) -> dict[str, Any]:
+    @classmethod
+    def _get_dynamic__network_stats(cls) -> dict[str, Any]:
         """Сетевая статистика (байты, пакеты, ошибки)."""
         try:
             net = psutil.net_io_counters()
             return {
-                "bytes_sent": self.calc_gb(net.bytes_sent),
-                "bytes_recv": self.calc_gb(net.bytes_recv),
+                "bytes_sent": cls.calc_gb(net.bytes_sent),
+                "bytes_recv": cls.calc_gb(net.bytes_recv),
 
                 "packets_sent": net.packets_sent,
                 "packets_recv": net.packets_recv,
@@ -278,19 +287,24 @@ class SystemInfo:
         except Exception as exc:
             return {"error": str(exc)}
 
-    def _get_process_count(self) -> int:
+    @staticmethod
+    def _get_process_count() -> int:
         """Количество запущенных процессов."""
         try:
             return len(psutil.pids())
         except Exception as exc:
             return -1
 
-    def _get_uptime(self) -> Optional[float]:
+    @staticmethod
+    def _get_uptime(as_string: bool | None = None) -> float | str:
         """Время работы системы в секундах с момента загрузки."""
         try:
-            return psutil.time() - psutil.boot_time()
+            uptime_seconds = time.time() - psutil.boot_time()
+            if as_string:
+                return str(timedelta(seconds=uptime_seconds))
+            return uptime_seconds
         except Exception as exc:
-            return None
+            return f"{exc!r}"
 
 
 # =====================================================================================================================
@@ -318,6 +332,12 @@ def get_client(request: Request | None = None) -> dict:
         result["user_agent"] = request.headers.get("user-agent")
 
     return result
+
+
+# =====================================================================================================================
+if __name__ == "__main__":
+    print(SystemInfo._get_uptime())
+    print(SystemInfo._get_uptime(True))
 
 
 # =====================================================================================================================
