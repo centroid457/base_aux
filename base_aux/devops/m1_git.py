@@ -53,10 +53,10 @@ class Git(DirAux):
                     # search_parent_directories=True,   # DONT use here, cause wont get correct _root_path!
                 )
                 self._root_path = self.DIRPATH
-                print(f"[git.INFO] _root_path detected {self._root_path=}")
+                # print(f"[git.INFO] _root_path detected {self._root_path=}")
                 return self._root_path
             except git.InvalidGitRepositoryError:
-                print(f"[git.WARN] _root_path wrong {self.DIRPATH=}")
+                # print(f"[git.WARN] _root_path wrong {self.DIRPATH=}")
                 parent = self.DIRPATH.parent
                 if parent == self.DIRPATH:
                     return

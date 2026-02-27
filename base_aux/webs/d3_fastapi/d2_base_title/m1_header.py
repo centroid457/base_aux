@@ -10,7 +10,12 @@ from base_aux.webs.d3_fastapi.d2_base_title.m0_system_info import *
 
 
 # =====================================================================================================================
-service_details = SystemInfo()
+service_details = SystemInfo(
+    SERVICE_NAME="TitleHeader",
+    SERVICE_DESCRIPTION="universal title header for any project",
+    SERVICE_AUTHOR="Andrey Starichenko",
+    SERVICE_FRAMEWORK="FastAPI+js",
+)
 
 
 # =====================================================================================================================

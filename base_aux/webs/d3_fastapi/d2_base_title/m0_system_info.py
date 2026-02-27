@@ -18,10 +18,10 @@ from base_aux.devops.m1_git import Git
 # =====================================================================================================================
 @dataclass
 class SystemInfo:
-    SERVICE_NAME: str = "TitleHeader"
-    SERVICE_DESCRIPTION: str = "universal title header for any project"
-    SERVICE_AUTHOR: str = "Andrey Starichenko"
-    SERVICE_FRAMEWORK: str = "FastAPI+js"
+    SERVICE_NAME: str = "SERVICE_NAME"
+    SERVICE_DESCRIPTION: str = "SERVICE_DESCRIPTION"
+    SERVICE_AUTHOR: str = "SERVICE_AUTHOR"
+    SERVICE_FRAMEWORK: str = "SERVICE_FRAMEWORK"
 
     def __post_init__(self):
         self._static_cache: dict[str, Any] = {}
@@ -297,7 +297,6 @@ class SystemInfo:
 
     @staticmethod
     def _get_uptime(as_string: bool | None = None) -> float | str:
-        """Время работы системы в секундах с момента загрузки."""
         try:
             uptime_seconds = time.time() - psutil.boot_time()
             if as_string:
