@@ -92,8 +92,8 @@
         try {
             const response = await fetch('/api/info');
             const data = await response.json();
-            el__service_name.textContent = data.static.SERVICE_INFO.name;
-            el__service_description.textContent = data.static.SERVICE_INFO.description;
+            el__service_name.textContent = data.static.INFO_SERVICE.name;
+            el__service_description.textContent = data.static.INFO_SERVICE.description;
 //            el__client_ip.textContent = data.static.NETWORK.client_ip;
         } catch (error) {
             console.error('Ошибка загрузки данных хедера:', error);

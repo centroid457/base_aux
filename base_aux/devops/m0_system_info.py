@@ -16,6 +16,10 @@ from base_aux.devops.m1_git import Git
 
 
 # =====================================================================================================================
+TIME__IMPORT_MODULE = time.time()
+
+
+# =====================================================================================================================
 @dataclass
 class SystemInfo:
     SERVICE_NAME: str = "SERVICE_NAME"
@@ -47,11 +51,11 @@ class SystemInfo:
 
     # -----------------------------------------------------------------------------------------------------------------
     def _load_static(self) -> None:
-        self._static_cache["SERVICE_INFO"] = self._get_static__service()
-        self._static_cache["OS_INFO"] = self._get_static__os()
-        self._static_cache["USER_INFO"] = self._get_static__user()
-        self._static_cache["NETWORK_INFO"] = self._get_static__network()
-        self._static_cache["GIT_INFO"] = Git().get__full_info()
+        self._static_cache["INFO_SERVICE"] = self._get_static__service()
+        self._static_cache["INFO_OS"] = self._get_static__os()
+        self._static_cache["INFO_USER"] = self._get_static__user()
+        self._static_cache["INFO_GIT"] = Git().get__full_info()
+        self._static_cache["INFO_NETWORK"] = self._get_static__network()
         # self._static_cache["ENVIRON"] = os.environ  # DANGER=not safe!
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -68,6 +72,7 @@ class SystemInfo:
         return {
             "start_time": datetime.now().isoformat(timespec="seconds"),
             # "start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+
             "name": self.SERVICE_NAME,
             "description": self.SERVICE_DESCRIPTION,
             "author": self.SERVICE_AUTHOR,
@@ -80,6 +85,7 @@ class SystemInfo:
     def _get_static__os(self) -> dict[str, str]:
         return {
             "boot_time": self._get__boot_time(),
+
             "system": platform.system(),
             "release": platform.release(),
             "version": platform.version(),
@@ -150,8 +156,11 @@ class SystemInfo:
     def get_dynamic(self) -> dict[str, Any]:
         """Возвращает актуальную динамическую информацию."""
         return {
-            "uptime_os": self._get_uptime__os(),
-            "uptime_os_str": self._get_uptime__os(True),
+            "uptime_os": self._get_dynamic__uptime_os(),
+            "uptime_os_str": self._get_dynamic__uptime_os(True),
+            "uptime_service": self._get_dynamic__uptime_service(),
+            "uptime_service_str": self._get_dynamic__uptime_service(True),
+
             "cpu": self._get_dynamic__cpu(),
             "memory": self._get_dynamic__memory(),
             "swap": self._get_dynamic__swap(),
@@ -159,6 +168,27 @@ class SystemInfo:
             "network": self._get_dynamic__network_stats(),
             "processes": self._get_process_count(),
         }
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def _get_dynamic__uptime_os(as_string: bool | None = None) -> float | str:
+        try:
+            uptime_seconds = time.time() - psutil.boot_time()
+            if as_string:
+                return str(timedelta(seconds=uptime_seconds))
+            return uptime_seconds
+        except Exception as exc:
+            return f"{exc!r}"
+
+    @staticmethod
+    def _get_dynamic__uptime_service(as_string: bool | None = None) -> float | str:
+        try:
+            uptime_seconds = time.time() - TIME__IMPORT_MODULE
+            if as_string:
+                return str(timedelta(seconds=uptime_seconds))
+            return uptime_seconds
+        except Exception as exc:
+            return f"{exc!r}"
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -295,16 +325,6 @@ class SystemInfo:
         except Exception as exc:
             return -1
 
-    @staticmethod
-    def _get_uptime__os(as_string: bool | None = None) -> float | str:
-        try:
-            uptime_seconds = time.time() - psutil.boot_time()
-            if as_string:
-                return str(timedelta(seconds=uptime_seconds))
-            return uptime_seconds
-        except Exception as exc:
-            return f"{exc!r}"
-
 
 # =====================================================================================================================
 def get_client(request: Request | None = None) -> dict:
@@ -335,8 +355,9 @@ def get_client(request: Request | None = None) -> dict:
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    print(SystemInfo._get_uptime__os())
-    print(SystemInfo._get_uptime__os(True))
+    pass
+    # print(SystemInfo._get_dynamic__uptime_os())
+    # print(SystemInfo._get_dynamic__uptime_os(True))
 
 
 # =====================================================================================================================

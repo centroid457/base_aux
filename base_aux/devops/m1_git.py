@@ -255,13 +255,13 @@ class Git(DirAux):
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
-    def BRANCHES(self) -> list[git.Head]:
+    def BRANCHES(self) -> list[str]:   # -> list[git.Head]:
         """
         GOAL
         ----
         get all branch names
         """
-        return [*self._repo.branches]
+        return [branch.name for branch in self._repo.branches]
 
     # -----------------------------------------------------------------------------------------------------------------
     @property
