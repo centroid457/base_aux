@@ -86,8 +86,10 @@
     const el__current_url = document.getElementById('id__current_url');
     const el__server_clock = document.getElementById('id__server_clock');
 
+    // ---------------------------
     el__current_url.textContent = window.location.href;
 
+    // ---------------------------
     async function loadHeaderInfo() {
         try {
             const response = await fetch('/api/info');
@@ -103,7 +105,7 @@
         }
     }
 
-    // Функция обновления часов
+    // ---------------------------
     async function updateClock() {
         try {
             const response = await fetch('/api/clock');
@@ -114,8 +116,9 @@
         }
     }
 
-    // Запускаем
+    // Запуск ---------------------------------------------------------------------------
     loadHeaderInfo();
     updateClock();
+
     setInterval(updateClock, 1000);
 })();

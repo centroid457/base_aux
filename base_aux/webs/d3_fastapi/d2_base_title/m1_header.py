@@ -12,7 +12,7 @@ service_details = SystemInfo(
     SERVICE_NAME="BaseTitleHeader",
     SERVICE_DESCRIPTION="universal title header for any project",
     SERVICE_AUTHOR="Andrey Starichenko",
-    SERVICE_FRAMEWORK="FastAPI+js",
+    SERVICE_FRAMEWORK="FastAPI+JS",
 )
 
 
