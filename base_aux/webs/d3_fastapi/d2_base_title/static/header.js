@@ -41,6 +41,14 @@
         .cls__header_btn_info:hover {
             color: #0af;
         }
+
+        .cls__details_panel {
+            margin: 10px 8px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     `;
 
     const el_header_styles = document.createElement('style');

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const detailsContent = document.getElementById('service_details-content');
-    if (!detailsContent) return;
+    const el__service_details_content = document.getElementById('id__details_content');
+    if (!el__service_details_content) return;
 
     function getClientInfo() {
         const ua = navigator.userAgent;
@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 user_agent: clientInfo.user_agent
             };
 
-            renderDetails(serverData, detailsContent);
+            renderDetails(serverData, el__service_details_content);
         } catch (error) {
             console.error(error);
-            detailsContent.innerHTML = `Ошибка: ${error.message}`;
+            el__service_details_content.innerHTML = `Ошибка: ${error.message}`;
         }
     }
 

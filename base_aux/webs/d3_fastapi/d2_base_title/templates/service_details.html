@@ -4,21 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Детальная информация</title>
-    <!-- Можно добавить общие стили, если они не в header.js -->
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5; }
-        .service_details-panel { margin: 10px 8px; padding: 12px; background: white; border: 1px solid #ccc; border-radius: 4px; }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Хедер будет вставлен сюда скриптом header.js -->
-    <div id="service_details-panel" class="service_details-panel">
-        <div id="service_details-content">Загрузка...</div>
+    <div id="id__details_panel" class="cls__details_panel">
+        <div id="id__details_content">...</div>
     </div>
 
-    <!-- Подключаем универсальный хедер -->
-    <script src="/static/header.js" data-comment="place to last position right before bodyTag closing"></script>
-    <!-- Подключаем скрипт для загрузки и отображения деталей -->
-    <script src="/static/service_details.js"></script>
+    <script src="/static/header.js?v=<?= filemtime('/static/header.js') ?>" data-comment="place to last position right before bodyTag closing"></script>
+    <script src="/static/service_details.js?v=<?= filemtime('/static/service_details.js') ?>"></script>
 </body>
 </html>
