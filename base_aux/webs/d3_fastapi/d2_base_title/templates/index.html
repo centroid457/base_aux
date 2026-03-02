@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ service_name }}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>ПРИМЕР страницы</h1>
@@ -12,6 +12,6 @@
     <p>service_description={{ service_description }}</p>
     <p>any_other={{ any_other }}</p>
 
-    <script src="/static/js/header.js?v=<?= filemtime('/static/js/header.js') ?>" data-comment="place to last position right before bodyTag closing"></script>
+    <script src="/static/header.js?v=<?= filemtime('/static/header.js') ?>" data-comment="place to last position right before bodyTag closing"></script>
 </body>
 </html>
