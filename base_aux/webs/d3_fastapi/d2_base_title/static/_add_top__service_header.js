@@ -14,6 +14,10 @@
             position: relative;
             z-index: 1000;
         }
+        .cls__header_line.disconnected {
+            background-color: red;
+        }
+
         .cls__header_item {
             display: flex;
             align-items: center;
@@ -101,19 +105,40 @@
     // ---------------------------
     el__current_url.textContent = window.location.href;
 
+    // Состояние соединения и функции управления фоном
+    let ServiceIsConnected = true;
+    const headerLine = document.querySelector('.cls__header_line');
+
+    function setConnectedStatus(status = true) {
+        if (status && !ServiceIsConnected) {
+            headerLine.classList.remove('disconnected');
+        } else if (!status && ServiceIsConnected) {
+            headerLine.classList.add('disconnected');
+        }
+        ServiceIsConnected = status;
+    }
+
     // ---------------------------
     async function loadHeaderInfo() {
         try {
             const response = await fetch('/json/info');
-            const data = await response.json();
+            if (response.ok) {
+                const data = await response.json();
 
-            el__service_name.textContent = data.static.INFO_SERVICE.name;
-            el__service_description.textContent = data.static.INFO_SERVICE.description;
-            el__git_mark.textContent = data.static.INFO_GIT.git_mark;
+                el__service_name.textContent = data.static.INFO_SERVICE.name;
+                el__service_description.textContent = data.static.INFO_SERVICE.description;
+                el__git_mark.textContent = data.static.INFO_GIT.git_mark;
+                setConnectedStatus();
+            } else {
+                el__service_name.textContent = 'HTTP ' + response.status;
+                el__service_description.textContent = 'Ошибка';
+                // не меняем статус связи, т.к. сервер ответил
+            }
         } catch (error) {
             console.error('Ошибка загрузки данных хедера:', error);
-            el__service_name.textContent = error;
+            el__service_name.textContent = 'нет связи';
             el__service_description.textContent = 'Ошибка';
+            setConnectedStatus(false);
         }
     }
 
@@ -121,10 +146,17 @@
     async function updateClock() {
         try {
             const response = await fetch('/json/clock');
-            const data = await response.json();
-            el__server_clock.textContent = data.server_time;
+            if (response.ok) {
+                const data = await response.json();
+                el__server_clock.textContent = data.server_time;
+                setConnectedStatus();
+            } else {
+                el__server_clock.textContent = 'ошибка HTTP';
+                // не меняем статус связи
+            }
         } catch (error) {
-            el__server_clock.textContent = 'ошибка';
+            el__server_clock.textContent = 'нет связи';
+            setConnectedStatus(false);
         }
     }
 
