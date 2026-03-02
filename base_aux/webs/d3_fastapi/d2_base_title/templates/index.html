@@ -12,6 +12,6 @@
     <p>service_description={{ service_description }}</p>
     <p>any_other={{ any_other }}</p>
 
-    <script src="/static/js/header.js" data-comment="place to last position right before bodyTag closing"></script>
+    <script src="/static/js/header.js?v=<?= filemtime('/static/js/header.js') ?>" data-comment="place to last position right before bodyTag closing"></script>
 </body>
 </html>
