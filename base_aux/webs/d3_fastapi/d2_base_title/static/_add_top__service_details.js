@@ -1,6 +1,15 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const el__service_details_content = document.getElementById('id__details_content');
-    if (!el__service_details_content) return;
+(function() {
+    const el__service_details_content = document.createElement('div');
+    el__service_details_content.className = 'cls__details_panel';
+
+    // Вставляем после заголовка (если он уже есть)
+    const header = document.querySelector('.cls__header_line');
+    if (header) {
+        header.insertAdjacentElement('afterend', el__service_details_content);
+    } else {
+        // fallback, если header вдруг отсутствует
+        document.body.insertBefore(el__service_details_content, document.body.firstChild);
+    }
 
     function getClientInfo() {
         const ua = navigator.userAgent;
@@ -70,4 +79,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadDetails();
-});
+})();
