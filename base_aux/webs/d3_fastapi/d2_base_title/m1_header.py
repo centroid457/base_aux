@@ -49,7 +49,9 @@ async def api__info(request: Request):
     data = service_details.get_all()
     data["CLIENT"] = get_client(request)
 
-    ObjectInfo(app.routes).print()
+    # ObjectInfo(app.routes).print()
+    for route in app.routes:
+        print(route)
 
     return data
 

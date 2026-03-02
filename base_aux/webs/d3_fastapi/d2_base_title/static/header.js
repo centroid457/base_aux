@@ -87,7 +87,6 @@
 
     const el__service_name = document.getElementById('id__service_name');
     const el__service_description = document.getElementById('id__service_description');
-//    const el__client_ip = document.getElementById('id__client_ip');
     const el__git_mark = document.getElementById('id__git_mark');
     const el__server_clock = document.getElementById('id__server_clock');
 
@@ -103,12 +102,10 @@
             el__service_name.textContent = data.static.INFO_SERVICE.name;
             el__service_description.textContent = data.static.INFO_SERVICE.description;
             el__git_mark.textContent = data.static.INFO_GIT.git_mark;
-//            el__client_ip.textContent = data.static.NETWORK.client_ip;
         } catch (error) {
             console.error('Ошибка загрузки данных хедера:', error);
             el__service_name.textContent = error;
             el__service_description.textContent = 'Ошибка';
-            el__client_ip.textContent = 'Ошибка';
         }
     }
 
