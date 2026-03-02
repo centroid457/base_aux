@@ -10,6 +10,8 @@ import psutil
 from starlette.requests import Request
 
 from base_aux.devops.m1_git import Git
+from base_aux.base_types.m2_info import ObjectInfo
+
 
 # FIXME
 #   add multiton with singleton static??
@@ -166,7 +168,7 @@ class SystemInfo:
             "swap": self._get_dynamic__swap(),
             "disk": self._get_dynamic__disk(),
             "network": self._get_dynamic__network_stats(),
-            "processes": self._get_process_count(),
+            "processes": self._get_dynamic__process_count(),
         }
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -318,7 +320,7 @@ class SystemInfo:
             return {"error": str(exc)}
 
     @staticmethod
-    def _get_process_count() -> int:
+    def _get_dynamic__process_count() -> int:
         """Количество запущенных процессов."""
         try:
             return len(psutil.pids())
@@ -327,16 +329,18 @@ class SystemInfo:
 
 
 # =====================================================================================================================
-def get_client(request: Request | None = None) -> dict:
+def get_client_info(request: Request | None = None) -> dict:
+    # ObjectInfo(request).print()
     result = {}
 
-    # CLIENT будет заполнен на фронтенде в JS
-    result["ip"] = "—"
-    result["browser"] = "—"
-    result["os"] = "—"
-    result["local_time"] = "—"
+    result["base_url"] = "—"
+    result["client_ip"] = "—"
+    result["hostname_srv"] = "—"
     result["user_agent"] = "—"
-    result["url"] = "—"
+
+    # result["browser"] = "—"
+    # result["os"] = "—"
+    # result["local_time"] = "—"
 
     if request is not None:
         client_ip = request.client.host
@@ -344,10 +348,9 @@ def get_client(request: Request | None = None) -> dict:
             if "x-forwarded-for" in request.headers:
                 client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
 
+        result["base_url"] = str(request.base_url)        # str(request.url)
         result["client_ip"] = client_ip
-        result["host_domain"] = request.url.hostname
-        result["url"] = str(request.url)
-        result["ip"] = request.client.host if request.client else None
+        result["hostname_srv"] = request.url.hostname
         result["user_agent"] = request.headers.get("user-agent")
 
     return result

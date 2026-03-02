@@ -47,11 +47,24 @@ async def html__service_details(request: Request):
 @app.get("/api/info")
 async def api__info(request: Request):
     data = service_details.get_all()
-    data["CLIENT"] = get_client(request)
+    data["CLIENT_PY"] = get_client_info(request)
 
     # ObjectInfo(app.routes).print()
-    for route in app.routes:
-        print(route)
+    # for route in app.routes:
+    #     print(route)
+    """
+Route(path='/openapi.json', name='openapi', methods=['GET', 'HEAD'])
+Route(path='/docs', name='swagger_ui_html', methods=['GET', 'HEAD'])
+Route(path='/docs/oauth2-redirect', name='swagger_ui_redirect', methods=['GET', 'HEAD'])
+Route(path='/redoc', name='redoc_html', methods=['GET', 'HEAD'])
+Mount(path='/static', name='static', app=<starlette.staticfiles.StaticFiles object at 0x000001927A5D90D0>)
+APIRoute(path='/', name='html__index', methods=['GET'])
+APIRoute(path='/service_details', name='html__service_details', methods=['GET'])
+APIRoute(path='/api/info', name='api__info', methods=['GET'])
+APIRoute(path='/api/clock', name='api__clock', methods=['GET'])
+    """
+    #
+    # ObjectInfo(route).print()
 
     return data
 

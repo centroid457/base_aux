@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const serverData = await response.json();
 
             const clientInfo = getClientInfo();
-            serverData.CLIENT = {
+            serverData.CLIENT_JS = {
                 ip: serverData.NETWORK?.client_ip || 'N/A',
                 browser: clientInfo.browser,
                 os: clientInfo.os,
