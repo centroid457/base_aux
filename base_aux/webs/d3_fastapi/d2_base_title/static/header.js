@@ -50,6 +50,11 @@
     // внедряем элементы ---------------------------------
     const txt__header_elements = `
         <div class="cls__header_item">
+            <span class="cls__header_label">URL:</span>
+            <span class="cls__header_value" id="id__current_url">...</span>
+        </div>
+
+        <div class="cls__header_item">
             <span class="cls__header_label">ServName:</span>
             <span class="cls__header_value" id="id__service_name">...</span>
         </div>
@@ -58,17 +63,15 @@
             <span class="cls__header_value" id="id__service_description">...</span>
         </div>
         <div class="cls__header_item">
-            <span class="cls__header_label">YourIP:</span>
-            <span class="cls__header_value" id="id__client_ip">...</span>
+            <span class="cls__header_label">GitMark:</span>
+            <span class="cls__header_value" id="id__git_mark">...</span>
         </div>
-        <div class="cls__header_item">
-            <span class="cls__header_label">URL:</span>
-            <span class="cls__header_value" id="id__current_url">...</span>
-        </div>
+
         <div class="cls__header_item">
             <span class="cls__header_label">ServTime:</span>
             <span class="cls__header_value" id="id__server_clock">...</span>
         </div>
+
         <a href="/service_details" class="cls__header_btn_info" title="Подробная информация">ⓘ</a>
     `;
 
@@ -80,10 +83,12 @@
     document.body.insertBefore(el_header_line, document.body.firstChild);
 
     // заполняем элементы -------------------------------------------
+    const el__current_url = document.getElementById('id__current_url');
+
     const el__service_name = document.getElementById('id__service_name');
     const el__service_description = document.getElementById('id__service_description');
-    const el__client_ip = document.getElementById('id__client_ip');
-    const el__current_url = document.getElementById('id__current_url');
+//    const el__client_ip = document.getElementById('id__client_ip');
+    const el__git_mark = document.getElementById('id__git_mark');
     const el__server_clock = document.getElementById('id__server_clock');
 
     // ---------------------------
@@ -94,8 +99,10 @@
         try {
             const response = await fetch('/api/info');
             const data = await response.json();
+
             el__service_name.textContent = data.static.INFO_SERVICE.name;
             el__service_description.textContent = data.static.INFO_SERVICE.description;
+            el__git_mark.textContent = data.static.INFO_GIT.git_mark;
 //            el__client_ip.textContent = data.static.NETWORK.client_ip;
         } catch (error) {
             console.error('Ошибка загрузки данных хедера:', error);

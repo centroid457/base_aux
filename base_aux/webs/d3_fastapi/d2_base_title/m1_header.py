@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from base_aux.devops.m0_system_info import *
+from base_aux.base_types.m2_info import ObjectInfo
 
 
 # =====================================================================================================================
@@ -47,6 +48,9 @@ async def html__service_details(request: Request):
 async def api__info(request: Request):
     data = service_details.get_all()
     data["CLIENT"] = get_client(request)
+
+    ObjectInfo(app.routes).print()
+
     return data
 
 

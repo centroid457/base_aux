@@ -99,13 +99,13 @@ class Git(DirAux):
             return result
 
         # ----------------------
-        result["git_mark__get"] = self.git_mark__get()
-        result["check__repo_detected"] = self.check__repo_detected()
-        result["get__repo_name"] = self.get__repo_name()
+        result["git_mark"] = self.git_mark__get()
+        result["repo_detected"] = self.check__repo_detected()
+        result["repo_name"] = self.get__repo_name()
         result["WORKING_DIR"] = self.WORKING_DIR
-        result["get__repo_urls"] = self.get__repo_urls()
-        result["get__repo_url"] = self.get__repo_url()
-        result["check__repo_status"] = self.check__repo_status()
+        result["repo_urls"] = self.get__repo_urls()
+        result["repo_url"] = self.get__repo_url()
+        result["repo_status"] = self.check__repo_status()
         result["DIRTY"] = self.DIRTY
         result["UNTRACKED_FILES"] = self.UNTRACKED_FILES
         result["BRANCHES"] = self.BRANCHES
