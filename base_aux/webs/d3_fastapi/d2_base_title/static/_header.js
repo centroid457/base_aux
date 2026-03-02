@@ -80,7 +80,7 @@
             <span class="cls__header_value" id="id__server_clock">...</span>
         </div>
 
-        <a href="/service_details" class="cls__header_btn_info" title="Подробная информация">ⓘ</a>
+        <a href="/html/_service_details" class="cls__header_btn_info" title="Подробная информация">ⓘ</a>
     `;
 
     const el_header_line = document.createElement('header');
@@ -104,7 +104,7 @@
     // ---------------------------
     async function loadHeaderInfo() {
         try {
-            const response = await fetch('/api/info');
+            const response = await fetch('/json/info');
             const data = await response.json();
 
             el__service_name.textContent = data.static.INFO_SERVICE.name;
@@ -120,7 +120,7 @@
     // ---------------------------
     async function updateClock() {
         try {
-            const response = await fetch('/api/clock');
+            const response = await fetch('/json/clock');
             const data = await response.json();
             el__server_clock.textContent = data.server_time;
         } catch (error) {

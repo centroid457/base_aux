@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadDetails() {
         try {
-            const response = await fetch('/api/info');
+            const response = await fetch('/json/info');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const serverData = await response.json();
 

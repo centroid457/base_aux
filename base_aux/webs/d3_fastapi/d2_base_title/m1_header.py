@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 from base_aux.devops.m0_system_info import *
 from base_aux.base_types.m2_info import ObjectInfo
+from base_aux.webs.d3_fastapi.d0_info.m0_info import *
 
 
 # =====================================================================================================================
@@ -36,47 +37,50 @@ async def html__index(request: Request):
     })
 
 
-@app.get("/service_details", response_class=HTMLResponse)
+@app.get("/html/_service_details", response_class=HTMLResponse)
 async def html__service_details(request: Request):
-    return templates.TemplateResponse("service_details.html", {
+    return templates.TemplateResponse("_service_details.html", {
         "request": request
     })
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.get("/api/info")
-async def api__info(request: Request):
-    data = service_details.get_all()
+@app.get("/json/info")
+async def json__info(request: Request):
+    data = dict()
+    data["ROUTES"] = FastApiAux(app).get_routes()
+    data.update(**service_details.get_all())
     data["CLIENT_PY"] = get_client_info(request)
 
+    # ObjectInfo(app).print()
     # ObjectInfo(app.routes).print()
     # for route in app.routes:
     #     print(route)
-    """
-Route(path='/openapi.json', name='openapi', methods=['GET', 'HEAD'])
-Route(path='/docs', name='swagger_ui_html', methods=['GET', 'HEAD'])
-Route(path='/docs/oauth2-redirect', name='swagger_ui_redirect', methods=['GET', 'HEAD'])
-Route(path='/redoc', name='redoc_html', methods=['GET', 'HEAD'])
-Mount(path='/static', name='static', app=<starlette.staticfiles.StaticFiles object at 0x000001927A5D90D0>)
-APIRoute(path='/', name='html__index', methods=['GET'])
-APIRoute(path='/service_details', name='html__service_details', methods=['GET'])
-APIRoute(path='/api/info', name='api__info', methods=['GET'])
-APIRoute(path='/api/clock', name='api__clock', methods=['GET'])
-    """
+#     """
+# Route(path='/openapi.json', name='openapi', methods=['GET', 'HEAD'])
+# Route(path='/docs', name='swagger_ui_html', methods=['GET', 'HEAD'])
+# Route(path='/docs/oauth2-redirect', name='swagger_ui_redirect', methods=['GET', 'HEAD'])
+# Route(path='/redoc', name='redoc_html', methods=['GET', 'HEAD'])
+# Mount(path='/static', name='static', app=<starlette.staticfiles.StaticFiles object at 0x000001927A5D90D0>)
+# APIRoute(path='/', name='html__index', methods=['GET'])
+# APIRoute(path='/html/_service_details', name='html__service_details', methods=['GET'])
+# APIRoute(path='/json/info', name='json__info', methods=['GET'])
+# APIRoute(path='/json/clock', name='json__clock', methods=['GET'])
+#     """
     #
     # ObjectInfo(route).print()
 
     return data
 
 
-@app.get("/api/clock")
-async def api__clock():
+@app.get("/json/clock")
+async def json__clock():
     return {"server_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    uvicorn.run("m1_header:app", port=8000, reload=True)
+    uvicorn.run("m1_header:app", port=80, reload=True)
 
 
 # =====================================================================================================================

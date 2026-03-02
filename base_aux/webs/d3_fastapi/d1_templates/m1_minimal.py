@@ -4,12 +4,12 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from starlette.exceptions import HTTPException
 
 
-# app = FastAPI()
+# =====================================================================================================================
 app = FastAPI(title="MinimalCode FastApi")
 
 
 @app.get("/")
-async def redirect() -> Response:
+async def html__redirect_docs() -> Response:
     return RedirectResponse(url="/docs")
 
 

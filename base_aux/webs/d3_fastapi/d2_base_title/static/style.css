@@ -9,31 +9,3 @@ body {
 .hidden {
     display: none;
 }
-
-/* Стили для структурированного вывода */
-.details-group {
-    margin-bottom: 15px;
-}
-.details-group h3 {
-    margin: 0 0 5px 0;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-}
-.details-table {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 4px 12px;
-}
-.details-row {
-    display: contents;
-}
-.details-key {
-    font-weight: bold;
-    color: #555;
-    white-space: nowrap;
-}
-.details-value {
-    color: #000;
-    word-break: break-word;
-}
