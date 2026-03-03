@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FastAPI Header Widget — Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0c; color: #e8e8f0; font-family: 'IBM Plex Mono', monospace; min-height: 100vh; }
+  .fapi-widget { position: relative; background: #0d0d0f; border-bottom: 1px solid #2a2a32; box-shadow: 0 4px 32px rgba(0,0,0,.6); overflow: hidden; }
+  .fapi-bar { display: flex; align-items: center; height: 40px; padding: 0 14px; gap: 0; overflow: hidden; }
+  .fapi-logo { display: flex; align-items: center; gap: 7px; margin-right: 16px; flex-shrink: 0; }
+  .fapi-logo-icon { width: 20px; height: 20px; background: #00d4aa; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .fapi-logo-icon svg { width: 12px; height: 12px; fill: #000; }
+  .fapi-svc { font-size: 13px; font-weight: 600; color: #e8e8f0; letter-spacing: -.3px; white-space: nowrap; }
+  .fapi-div { width: 1px; height: 20px; background: #2a2a32; margin: 0 12px; flex-shrink: 0; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: 4px; background: #1e1e26; border: 1px solid #2a2a32; color: #9494aa; font-size: 11px; white-space: nowrap; flex-shrink: 0; margin-right: 6px; letter-spacing: .2px; font-family: 'IBM Plex Mono', monospace; }
+  .pill.accent { background: rgba(0,212,170,.08); border-color: #00d4aa44; color: #00d4aa; }
+  .pill.env-dev { background: #1a2a1a; color: #4ade80; border-color: #22c55e44; font-weight: 500; text-transform: uppercase; letter-spacing: .7px; }
+  .pill.env-stg { background: #2a2210; color: #fbbf24; border-color: #f59e0b44; font-weight: 500; text-transform: uppercase; letter-spacing: .7px; }
+  .pill.env-prd { background: #1a1020; color: #c084fc; border-color: #a855f744; font-weight: 500; text-transform: uppercase; letter-spacing: .7px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .dot.green { background: #22c55e; animation: pulse 2.5s infinite; }
+  .dot.yellow { background: #f59e0b; animation: pulse 2s infinite; }
+  .dot.purple { background: #a855f7; animation: pulse 2s infinite; }
+  .dot.err { background: #ef4444; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+  .uptime-blocks { display: flex; gap: 2px; }
+  .ub { width: 5px; height: 14px; border-radius: 1.5px; background: #22c55e; opacity: .9; }
+  .ub.miss { background: #ef4444; opacity: .7; }
+  .spacer { flex: 1; }
+  .fapi-link { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 4px; background: rgba(0,212,170,.08); border: 1px solid #00d4aa55; color: #00d4aa; font-size: 11px; font-weight: 500; text-decoration: none; cursor: pointer; margin-left: 6px; font-family: 'IBM Plex Mono', monospace; transition: background .15s; flex-shrink: 0; }
+  .fapi-link:hover { background: #00d4aa22; border-color: #00d4aa; }
+  .toggle-btn { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 4px; border: 1px solid #2a2a32; background: #1e1e26; color: #6b6b80; cursor: pointer; margin-left: 8px; transition: background .15s; flex-shrink: 0; }
+  .toggle-btn:hover { background: #17171b; color: #e8e8f0; }
+  .routes-panel { background: #17171b; border-top: 1px solid #2a2a32; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .route-tag { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 8px; border-radius: 3px; font-size: 10.5px; background: #1e1e26; border: 1px solid #2a2a32; color: #9494aa; font-family: 'IBM Plex Mono', monospace; }
+  .method { font-size: 9.5px; font-weight: 600; letter-spacing: .5px; padding: 1px 4px; border-radius: 2px; }
+  .GET    { background: #0d3321; color: #4ade80; }
+  .POST   { background: #1e2a3a; color: #60a5fa; }
+  .PUT    { background: #2a1e0d; color: #fbbf24; }
+  .DELETE { background: #2a0d0d; color: #f87171; }
+  .PATCH  { background: #1e1a2a; color: #c084fc; }
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 24px; }
+  .section-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #4a4a5a; margin-bottom: 20px; padding-left: 2px; }
+  .code-block { background: #111116; border: 1px solid #2a2a32; border-radius: 8px; padding: 20px 22px; margin-bottom: 24px; position: relative; font-size: 12.5px; line-height: 1.7; color: #9494aa; }
+  .code-block .comment { color: #4a4a5a; }
+  .code-block .tag { color: #60a5fa; }
+  .code-block .attr { color: #c084fc; }
+  .code-block .str { color: #4ade80; }
+  .copy-btn { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 4px; background: #1e1e26; border: 1px solid #2a2a32; color: #6b6b80; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: color .15s; }
+  .copy-btn:hover { color: #00d4aa; border-color: #00d4aa55; }
+  .copy-btn.copied { color: #22c55e; border-color: #22c55e55; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; align-items: center; }
+  .ctrl-label { font-size: 10px; text-transform: uppercase; letter-spacing: .8px; color: #6b6b80; margin-right: 4px; }
+  .seg { display: flex; border: 1px solid #2a2a32; border-radius: 6px; overflow: hidden; }
+  .seg-btn { padding: 6px 12px; font-size: 11px; color: #6b6b80; cursor: pointer; font-family: 'IBM Plex Mono', monospace; background: #1e1e26; border: none; transition: background .15s, color .15s; }
+  .seg-btn:not(:last-child) { border-right: 1px solid #2a2a32; }
+  .seg-btn.active { background: #2a2a3a; color: #e8e8f0; }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; letter-spacing: -.5px; }
+  p.sub { color: #6b6b80; font-size: 12px; margin-bottom: 40px; line-height: 1.6; font-family: 'IBM Plex Sans', sans-serif; }
+  .features { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-bottom: 40px; }
+  .feat { background: #111116; border: 1px solid #2a2a32; border-radius: 8px; padding: 14px 16px; }
+  .feat-icon { font-size: 16px; margin-bottom: 8px; }
+  .feat-title { font-size: 12px; font-weight: 500; color: #e8e8f0; margin-bottom: 4px; }
+  .feat-desc { font-size: 11px; color: #6b6b80; line-height: 1.5; font-family: 'IBM Plex Sans', sans-serif; }
+  .tag-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 500; letter-spacing: .5px; }
+  .tag-badge.green { background: #0d3321; color: #4ade80; }
+  .tag-badge.blue  { background: #1e2a3a; color: #60a5fa; }
+  hr { border: none; border-top: 1px solid #1e1e26; margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<div class="fapi-widget" id="widget">
+  <div class="fapi-bar">
+    <div class="fapi-logo">
+      <div class="fapi-logo-icon">
+        <svg viewBox="0 0 16 16"><path d="M9.5 2L4 9h5l-1 5 5.5-7H9l.5-5z"/></svg>
+      </div>
+      <span class="fapi-svc" id="svc-name">inventory-service</span>
+    </div>
+    <div class="fapi-div"></div>
+    <div class="pill accent">v2.4.1</div>
+    <div class="pill env-dev" id="env-pill">
+      <span class="dot yellow" id="env-dot"></span>
+      <span id="env-text">development</span>
+    </div>
+    <div class="fapi-div"></div>
+    <div class="pill">
+      <span class="dot green" id="status-dot"></span>
+      <span id="status-text">healthy</span>
+    </div>
+    <div class="pill" id="routes-toggle" style="cursor:pointer" title="Toggle routes">
+      <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="10" y2="8"/><line x1="2" y1="12" x2="7" y2="12"/></svg>
+      7 routes
+    </div>
+    <div class="pill">
+      <div class="uptime-blocks">
+        <div class="ub"></div><div class="ub"></div><div class="ub"></div>
+        <div class="ub miss"></div><div class="ub"></div><div class="ub"></div>
+        <div class="ub"></div><div class="ub"></div><div class="ub miss"></div>
+        <div class="ub"></div><div class="ub"></div><div class="ub"></div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <span style="color:#4a4a5a;font-size:10px;letter-spacing:.5px;margin-right:8px;">Inventory &amp; stock API</span>
+    <a class="fapi-link" href="#" title="Swagger UI">docs</a>
+    <a class="fapi-link" href="#" title="ReDoc">redoc</a>
+    <div class="toggle-btn" id="collapse-btn" title="Alt+H">
+      <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,10 8,6 12,10"/></svg>
+    </div>
+  </div>
+  <div id="routes-panel" class="routes-panel" style="display:none">
+    <div class="route-tag"><span class="method GET">GET</span>/items</div>
+    <div class="route-tag"><span class="method GET">GET</span>/items/{id}</div>
+    <div class="route-tag"><span class="method POST">POST</span>/items</div>
+    <div class="route-tag"><span class="method PUT">PUT</span>/items/{id}</div>
+    <div class="route-tag"><span class="method DELETE">DELETE</span>/items/{id}</div>
+    <div class="route-tag"><span class="method GET">GET</span>/health</div>
+    <div class="route-tag"><span class="method PATCH">PATCH</span>/items/{id}/stock</div>
+  </div>
+</div>
+
+<div class="page">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+    <h1>FastAPI Header Widget</h1>
+    <span class="tag-badge green">v1.0</span>
+    <span class="tag-badge blue">zero deps</span>
+  </div>
+  <p class="sub">One &lt;script&gt; tag. Auto-reads /openapi.json and renders a sticky service header — no build step, no dependencies, works in any FastAPI project.</p>
+
+  <p class="section-label">// play with the widget above</p>
+  <div class="controls">
+    <span class="ctrl-label">env</span>
+    <div class="seg">
+      <button class="seg-btn active" onclick="setEnv('development',this)">dev</button>
+      <button class="seg-btn" onclick="setEnv('staging',this)">staging</button>
+      <button class="seg-btn" onclick="setEnv('production',this)">prod</button>
+    </div>
+    <div style="width:16px"></div>
+    <span class="ctrl-label">status</span>
+    <div class="seg">
+      <button class="seg-btn active" onclick="setStatus('healthy',this)">healthy</button>
+      <button class="seg-btn" onclick="setStatus('unreachable',this)">down</button>
+    </div>
+    <div style="width:16px"></div>
+    <span class="ctrl-label">service</span>
+    <div class="seg">
+      <button class="seg-btn active" onclick="setSvc('inventory-service',this)">inventory</button>
+      <button class="seg-btn" onclick="setSvc('auth-service',this)">auth</button>
+      <button class="seg-btn" onclick="setSvc('gateway-api',this)">gateway</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <p class="section-label">// minimal usage</p>
+  <div class="code-block" id="code-basic">
+    <button class="copy-btn" onclick="copyCode('code-basic', this)">copy</button>
+    <span class="comment">&lt;!-- In your Jinja template or any HTML --&gt;</span><br>
+    <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="str">"/static/fastapi-header.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  </div>
+
+  <p class="section-label">// with options</p>
+  <div class="code-block" id="code-options">
+    <button class="copy-btn" onclick="copyCode('code-options', this)">copy</button>
+    <span class="tag">&lt;script</span><br>
+    &nbsp;&nbsp;<span class="attr">src</span>=<span class="str">"/static/fastapi-header.js"</span><br>
+    &nbsp;&nbsp;<span class="attr">data-env</span>=<span class="str">"production"</span><br>
+    &nbsp;&nbsp;<span class="attr">data-theme</span>=<span class="str">"dark"</span><br>
+    &nbsp;&nbsp;<span class="attr">data-position</span>=<span class="str">"top"</span><br>
+    &nbsp;&nbsp;<span class="attr">data-collapsed</span>=<span class="str">"false"</span><br>
+    <span class="tag">&gt;&lt;/script&gt;</span>
+  </div>
+
+  <p class="section-label">// fastapi static mount</p>
+  <div class="code-block" id="code-py">
+    <button class="copy-btn" onclick="copyCode('code-py', this)">copy</button>
+    <span class="comment"># main.py</span><br>
+    <span class="tag">from</span> fastapi <span class="tag">import</span> FastAPI<br>
+    <span class="tag">from</span> fastapi.staticfiles <span class="tag">import</span> StaticFiles<br><br>
+    app = FastAPI()<br>
+    app.mount(<span class="str">"/static"</span>, StaticFiles(directory=<span class="str">"static"</span>), name=<span class="str">"static"</span>)<br>
+    <span class="comment"># Put fastapi-header.js inside ./static/</span>
+  </div>
+
+  <hr>
+
+  <p class="section-label">// features</p>
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Auto-reads /openapi.json</div>
+      <div class="feat-desc">Picks up service name, version, description, and all routes automatically.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🩺</div>
+      <div class="feat-title">Health check</div>
+      <div class="feat-desc">Pings /health on load. Falls back gracefully if the endpoint is missing.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🌍</div>
+      <div class="feat-title">Env detection</div>
+      <div class="feat-desc">Auto-detects dev / staging / prod from hostname, or override via data-env.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">Route explorer</div>
+      <div class="feat-desc">Click the routes pill to expand all endpoints with color-coded method badges.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔗</div>
+      <div class="feat-title">Docs links</div>
+      <div class="feat-desc">One-click to /docs (Swagger) and /redoc — always in reach.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⌨️</div>
+      <div class="feat-title">Alt+H shortcut</div>
+      <div class="feat-desc">Keyboard toggle to collapse/expand the header without touching the mouse.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ENV_MAP = {
+    development: { cls: 'pill env-dev', dotCls: 'dot yellow', label: 'development' },
+    staging:     { cls: 'pill env-stg', dotCls: 'dot yellow', label: 'staging' },
+    production:  { cls: 'pill env-prd', dotCls: 'dot purple', label: 'production' },
+  };
+
+  function setEnv(env, btn) {
+    const s = ENV_MAP[env];
+    document.getElementById('env-pill').className = s.cls;
+    document.getElementById('env-dot').className = s.dotCls;
+    document.getElementById('env-text').textContent = s.label;
+    btn.closest('.seg').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function setStatus(status, btn) {
+    const dot = document.getElementById('status-dot');
+    const txt = document.getElementById('status-text');
+    dot.className = status === 'healthy' ? 'dot green' : 'dot err';
+    txt.textContent = status === 'healthy' ? 'healthy' : 'unreachable';
+    btn.closest('.seg').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function setSvc(name, btn) {
+    document.getElementById('svc-name').textContent = name;
+    btn.closest('.seg').querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  document.getElementById('routes-toggle').addEventListener('click', () => {
+    const p = document.getElementById('routes-panel');
+    p.style.display = p.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  let collapsed = false;
+  document.getElementById('collapse-btn').addEventListener('click', () => {
+    collapsed = !collapsed;
+    const w = document.getElementById('widget');
+    w.style.transform = collapsed ? 'translateY(-100%)' : '';
+    w.style.transition = 'transform .25s cubic-bezier(.4,0,.2,1)';
+    document.getElementById('collapse-btn').innerHTML = collapsed
+      ? '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,6 8,10 12,6"/></svg>'
+      : '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,10 8,6 12,10"/></svg>';
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.altKey && e.key === 'h') document.getElementById('collapse-btn').click();
+  });
+
+  function copyCode(id, btn) {
+    const block = document.getElementById(id);
+    const text = block.innerText.replace(/^copy\n/, '').trim();
+    navigator.clipboard.writeText(text);
+    btn.textContent = '✓ copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1800);
+  }
+</script>
+</body>
+</html>
