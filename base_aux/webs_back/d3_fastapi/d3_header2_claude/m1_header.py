@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 from base_aux.devops.m0_system_info import *
 from base_aux.base_types.m2_info import ObjectInfo
-from base_aux.webs.d3_fastapi.d0_info.m0_info import *
+from base_aux.webs_back.d3_fastapi.d0_info.m0_info import *
 
 
 # =====================================================================================================================

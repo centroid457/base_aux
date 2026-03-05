@@ -1,5 +1,5 @@
 import uvicorn
-from base_aux.webs.d3_fastapi.d1_templates.m1_minimal import app
+from base_aux.webs_back.d3_fastapi.d1_templates.m1_minimal import app
 
 
 # =====================================================================================================================

@@ -1,6 +1,6 @@
 from base_aux.versions.m3_derivatives import *
 from base_aux.testplans.tp_manager import *
-from base_aux.webs.d1_clients.m1_requests import *
+from base_aux.webs_back.d1_clients.m1_requests import *
 
 from TESTPLANS.stands import Stands
 

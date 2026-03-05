@@ -2,7 +2,7 @@
 
 from PyQt5.QtCore import pyqtSignal
 
-from base_aux.webs.d1_clients.m1_requests import *
+from base_aux.webs_back.d1_clients.m1_requests import *
 from base_aux.loggers.m2_logger import *
 from base_aux.aux_datetime.m2_datetime import *
 
