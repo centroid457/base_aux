@@ -1,4 +1,7 @@
 (function() {
+    // TODO: add connection speed? +speed to Ya.Ru/Google/LocalSevises
+    //      service uptime/StartUp
+
     // внедряем стили --------------------
     const txt__header_styles = `
         .cls__header_line {
