@@ -29,7 +29,7 @@ class ObjectManager:
         self.items[item_id] = new_item
         return item_id
 
-    async def get_item(self, id: str) -> CmdTerminal_OsAio | None:
+    def get_item(self, id: str) -> CmdTerminal_OsAio | None:
         return self.items.get(id)
 
     async def del_item(self, id: str) -> None:
@@ -199,8 +199,6 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         const itemsManager = {
             items: new Map(),   // its a DICT=.set(itemId, itemUI)
-            container_items: document.getElementById('div_items_container__id'),
-            btn_AddItem: document.getElementById('btn_add_item__id'),
             socket_HealthCheck: null,
             
             async init() {
@@ -217,7 +215,7 @@ HTML_TEMPLATE = """
                     await this.createNewItem();
                 }
 
-                this.btn_AddItem.addEventListener('click', () => this.createNewItem());
+                btn_add_item__id.addEventListener('click', () => this.createNewItem());
                 
                 this.initHealthCheck();                   // <-- вызов после всего
             },
@@ -247,9 +245,12 @@ HTML_TEMPLATE = """
             async get_IdsServer() {
                 try {
                     const resp = await fetch('/items');
+                    console.log(resp);
                     const data = await resp.json();
+                    console.log(data);
                     return data.items || [];
-                } catch {
+                } catch (exc) {
+                    console.log(exc);
                     return [];
                 }
             },
@@ -276,8 +277,8 @@ HTML_TEMPLATE = """
 
             addItemBlock(itemId, isNew) {
                 if (this.items.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, this.container_items, isNew);
-                // this.container_items.appendChild(itemUI.element_ItemBox); - так нельзя!!!!
+                const itemUI = new ItemUI(itemId, isNew);
+                // div_items_container__id.appendChild(itemUI.element_ItemBox);   // так нельзя!!!!
                 this.items.set(itemId, itemUI);
                 itemUI.init();
             },
@@ -304,9 +305,8 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, container_items, isNew) {
+            constructor(itemId, isNew) {
                 this.itemId = itemId;
-                this.container_items = container_items; 
                 this.isNew = isNew;
                 
                 this.socket = null;
@@ -379,7 +379,8 @@ HTML_TEMPLATE = """
                 div_itembox.appendChild(div_input);
                 
                 this.element_ItemBox = div_itembox;
-                this.container_items.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
+                
+                div_items_container__id.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
 
                 input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
@@ -400,7 +401,9 @@ HTML_TEMPLATE = """
 
                 this.socket.onopen = () => {
                     this.element_Status.textContent = '✅';
-                    if (!this.isNew) {
+                    //this.loadHistory();
+                    
+                    if (this.element_OutputBox && this.element_OutputBox.innerHTML == "") {
                         this.loadHistory();
                     }
                 };
@@ -475,7 +478,7 @@ async def lifespan(app: FastAPI):
     # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
     print(f"FastApi.Startup: START")
     first_id = await object_manager.create_item()
-    first_item = object_manager.items.get(first_id)
+    first_item = object_manager.get_item(first_id)
     if first_item:
         await first_item.connect()
     # ------------------------------------------------------------------
@@ -520,17 +523,16 @@ async def del_item(id: str):
 
 @app.get("/items/{id}")
 async def get_item(id: str):
-    exists = id in object_manager.items
-    if exists:
+    if id in object_manager.items:
         return {"id": id, "active": True}
-    raise HTTPException(status_code=404, detail=f"{id=}Item not found")
+    raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
 
 
 @app.get("/items/{id}/history")
 async def get_item_history(id: str):
-    item = await object_manager.get_item(id)
+    item = object_manager.get_item(id)
     if not item:
-        raise HTTPException(status_code=404, detail=f"{id=}Item not found")
+        raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
 
     history_data: list[dict] = []
     for result in item.history:
@@ -560,7 +562,7 @@ async def websocket_ping(websocket: WebSocket):
 
 @app.websocket("/ws/{id}")
 async def websocket_endpoint(websocket: WebSocket, id: str):
-    item = await object_manager.get_item(id)
+    item = object_manager.get_item(id)
     if not item:
         await websocket.close(code=1008, reason=f"{id=}/Invalid")
         return
