@@ -198,7 +198,7 @@ HTML_TEMPLATE = """
         // Глобальный менеджер обьектов
         // --------------------------------------------------------------
         const itemsManager = {
-            items: new Map(),   // its a DICT=.set(itemId, itemUI)
+            items_map: new Map(),   // its a DICT=.set(itemId, itemUI)
             socket_HealthCheck: null,
             
             async init() {
@@ -211,7 +211,7 @@ HTML_TEMPLATE = """
                     this.addItemBlock(id, false);
                 }
 
-                if (this.items.size === 0) {
+                if (this.items_map.size === 0) {
                     await this.createNewItem();
                 }
 
@@ -276,10 +276,10 @@ HTML_TEMPLATE = """
             },
 
             addItemBlock(itemId, isNew) {
-                if (this.items.has(itemId)) return;
+                if (this.items_map.has(itemId)) return;
                 const itemUI = new ItemUI(itemId, isNew);
                 // div_items_container__id.appendChild(itemUI.element_ItemBox);   // так нельзя!!!!
-                this.items.set(itemId, itemUI);
+                this.items_map.set(itemId, itemUI);
                 itemUI.init();
             },
 
@@ -289,13 +289,13 @@ HTML_TEMPLATE = """
                 const updated = stored.filter(id => id !== itemId);
                 this.set_IdsClient(updated);
                 
-                const itemUI = this.items.get(itemId);
+                const itemUI = this.items_map.get(itemId);
                 if (itemUI) {
                     itemUI.destroy();
-                    this.items.delete(itemId);
+                    this.items_map.delete(itemId);
                 }
 
-                if (this.items.size === 0) {
+                if (this.items_map.size === 0) {
                     await this.createNewItem();
                 }
             }
@@ -463,7 +463,7 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
-            itemsManager.items.forEach(s => s.socket?.close());
+            itemsManager.items_map.forEach(s => s.socket?.close());
             if (itemsManager.socket_HealthCheck) itemsManager.socket_HealthCheck.close();
         };
     </script>
