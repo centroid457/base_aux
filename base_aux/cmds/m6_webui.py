@@ -203,11 +203,8 @@ HTML_TEMPLATE = """
             
             async init() {
                 const serverIds = await this.get_IdsServer();
-                let storedIds = this.get_IdsClient();
-                storedIds = storedIds.filter(id => serverIds.includes(id));
-                this.set_IdsClient(storedIds);
 
-                for (const id of storedIds) {
+                for (const id of serverIds) {
                     this.addItemBlock(id, false);
                 }
 
@@ -245,12 +242,9 @@ HTML_TEMPLATE = """
             async get_IdsServer() {
                 try {
                     const resp = await fetch('/items');
-                    console.log(resp);
                     const data = await resp.json();
-                    console.log(data);
                     return data.items || [];
                 } catch (exc) {
-                    console.log(exc);
                     return [];
                 }
             },
