@@ -37,6 +37,11 @@ class ObjectManager:
         if item:
             await item.disconnect()
 
+    def clear_history(self, id: str) -> None:
+        item = self.items.get(id)
+        if item:
+            item.history.clear()
+
 
 # -----------------------------------------------------------------------------------------------------------------
 object_manager = ObjectManager()
@@ -44,6 +49,7 @@ object_manager = ObjectManager()
 # TODO:
 #  separate js into file
 #  create full html in js
+
 
 # =====================================================================================================================
 HTML_TEMPLATE = """
@@ -426,7 +432,7 @@ HTML_TEMPLATE = """
                 // Очищаем окно перед загрузкой, чтобы избежать дублей
                 this.element_OutputBox.innerHTML = '';
                 try {
-                    const resp = await fetch(`/items/${this.itemId}/history`);
+                    const resp = await fetch(`/items/history/${this.itemId}`);
                     const history = await resp.json();
                     history.forEach(cmd => {
                         if (cmd.input) this.addHistoryLine('msg_stdin__style', `→ ${cmd.input}`);
@@ -506,6 +512,7 @@ async def list_items():
     return {"items": ids}
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @app.post("/items")
 async def create_item():
     id = await object_manager.create_item()
@@ -525,8 +532,15 @@ async def get_item(id: str):
     raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
 
 
-@app.get("/items/{id}/history")
-async def get_item_history(id: str):
+# ---------------------------------------------------------------------------------------------------------------------
+@app.delete("/items/history/{id}")
+async def del_history(id: str):
+    object_manager.clear_history(id)
+    return {"status": "closed"}
+
+
+@app.get("/items/history/{id}")
+async def get_history(id: str):
     item = object_manager.get_item(id)
     if not item:
         raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
@@ -546,6 +560,7 @@ async def get_item_history(id: str):
     return history_data
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/ping")
 async def websocket_ping(websocket: WebSocket):
     await websocket.accept()
