@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagMargin</title>
+    <style>
+        /* Контейнер — флекс, чтобы разместить элементы в ряд */
+        .div_termheader__style {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f0f2f5;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: system-ui, 'Segoe UI', sans-serif;
+        }
+
+        /* Левая кнопка — просто первый элемент */
+        /* Блок с текстом — растягивается и центрирует содержимое */
+        .center-text {
+            flex: 1;                 /* занимает всё свободное пространство между левой кнопкой и правой группой */
+            text-align: center;      /* текст ровно посередине этого пространства */
+            font-weight: 500;
+            color: #1a5d7a;
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 40px;
+            white-space: nowrap;     /* чтобы текст не переносился (при узком экране будет скролл) */
+        }
+
+        /* Группа правых кнопок */
+        .right-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Базовые стили для кнопок (сохраняем ваши классы, добавляем единообразие) */
+        .btn_common__style, .btn_close__style {
+            border: none;
+            background: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.1s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .btn_common__style:hover, .btn_close__style:hover {
+            background: #e2e6ea;
+            transform: translateY(-1px);
+        }
+        .btn_close__style {
+            background: #ffe6e6;
+            color: #b00020;
+        }
+        .btn_close__style:hover {
+            background: #ffc4c4;
+        }
+
+        /* Адаптив: если экран слишком узкий, разрешаем скролл контейнера, чтобы структура не ломалась */
+        @media (max-width: 550px) {
+            .div_termheader__style {
+                overflow-x: auto;
+                min-width: 400px;
+            }
+            .center-text {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="div_termheader__style">
+        <!-- Левая кнопка -->
+        <button class="btn_common__style" title="ClearHistory">clear</button>
+
+        <!-- Текст между группами – будет ровно по середине между левой кнопкой и правой группой -->
+        <span class="center-text">✨ между группами ✨</span>
+
+        <!-- Правая группа: две кнопки -->
+        <div class="right-group">
+            <button class="btn_common__style" title="Reconnect">🔄</button>
+            <button class="btn_close__style" title="Закрыть">×</button>
+        </div>
+    </div>
+
+    <!-- Небольшой пояснительный блок (по желанию, можно удалить) -->
+    <div style="margin-top: 20px; font-family: sans-serif; color: #2c3e50; text-align: center; font-size: 14px;">
+        ✅ Левая кнопка «clear» &nbsp;|&nbsp;
+        <strong>текст ровно посередине</strong> &nbsp;|&nbsp;
+        две правые кнопки «🔄» и «×»
+    </div>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Web Terminal</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            margin: 0;
+        }
+        #div_app_header__id {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        #div_app_header__id.disconnected {
+            background-color: #8b0000;      /* тёмно-красный */
+            transition: background-color 0.3s;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #fff;
+        }
+        #btn_add_item__id {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #btn_add_item__id:hover { background: #1177bb; }
+
+        #div_items_container__id {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .div_itembox__style {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .div_termheader__style {
+            background: #3c3c3c;
+            padding: 8px 12px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            display: flex;
+            justify-content: flex-start;  /* flex-start=по порядку/ space-between=равномерно*/
+            align-items: center;
+            gap: 8px;                     /* отступы между всеми детьми */
+            border-bottom: 1px solid #555;
+        }
+        .span_itemid__style {
+            font-weight: bold;
+            color: #9cdcfe;
+            font-size: 14px;
+        }
+
+        .btn_common__style {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            margin-left: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: auto;        /* прижимает эту кнопку вправо вместе с последующими элементами*/
+        }
+        .btn_common__style:hover { background: #1177bb; }
+
+        .btn_close__style {
+            background: transparent;
+            border: none;
+            color: #f48771;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+        .btn_close__style:hover {
+            background: #f48771;
+            color: #1e1e1e;
+        }
+
+        .div_output__style {
+            background: #1e1e1e;
+            padding: 12px;
+            height: 300px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            border-bottom: 1px solid #444;
+        }
+        .msg_stdin__style  { color: #ffffff; }
+        .msg_stdout__style { color: #b5cea8; }
+        .msg_stderr__style { color: #f48771; }
+        .msg_debug__style { color: #569cd6; font-style: italic; }
+
+        .div_input__style {
+            display: flex;
+            padding: 10px;
+            background: #2d2d2d;
+        }
+        .input_item__style{
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            background: #3c3c3c;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .input_item__style:focus {
+            outline: none;
+            border-color: #0e639c;
+        }
+        .span_status__style {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="div_app_header__id">
+        <h1>🔌 Web Terminal</h1>
+        <button id="btn_add_item__id">➕ Новый объект</button>
+    </div>
+    <div id="div_items_container__id"></div>
+</body>
+</html>

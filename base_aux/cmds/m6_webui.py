@@ -46,6 +46,7 @@ class ObjectManager:
 # -----------------------------------------------------------------------------------------------------------------
 object_manager = ObjectManager()
 
+
 # TODO:
 #  separate js into file
 #  create full html in js
@@ -127,7 +128,7 @@ HTML_TEMPLATE = """
             font-size: 14px;
         }
         
-        .btn_reconnect__style {
+        .btn_common__style {
             background: #0e639c;
             color: white;
             border: none;
@@ -138,7 +139,7 @@ HTML_TEMPLATE = """
             font-size: 12px;
             margin-left: auto;        /* прижимает эту кнопку вправо вместе с последующими элементами*/
         }
-        .btn_reconnect__style:hover { background: #1177bb; }
+        .btn_common__style:hover { background: #1177bb; }
         
         .btn_close__style {
             background: transparent;
@@ -343,10 +344,16 @@ HTML_TEMPLATE = """
                 span_itemid.className = 'span_itemid__style';
                 span_itemid.textContent = `${this.itemId}`;
                 
+                const btn_clear_history = document.createElement('button');
+                btn_clear_history.className = 'btn_common__style';
+                btn_clear_history.textContent = 'clear';
+                btn_clear_history.title = 'ClearHistory';
+                btn_clear_history.onclick = () => this.sendDelHistory();
+                
                 const btn_reconnect = document.createElement('button');
-                btn_reconnect.className = 'btn_reconnect__style';
+                btn_reconnect.className = 'btn_common__style';
                 btn_reconnect.textContent = '🔄';
-                btn_reconnect.title = 'Переподключиться';
+                btn_reconnect.title = 'Reconnect';
                 btn_reconnect.onclick = () => this.sendReconnect();
                 
                 const btn_close = document.createElement('button');
@@ -357,6 +364,7 @@ HTML_TEMPLATE = """
                 
                 div_itemheader.appendChild(span_status);
                 div_itemheader.appendChild(span_itemid);
+                div_itemheader.appendChild(btn_clear_history);
                 div_itemheader.appendChild(btn_reconnect);
                 div_itemheader.appendChild(btn_close);
 
@@ -424,7 +432,15 @@ HTML_TEMPLATE = """
 
             sendReconnect() {
                 if (this.socket?.readyState === WebSocket.OPEN) {
-                    this.socket.send('/reconnect');
+                    this.socket.send('cmd_reconnect');
+                }
+            }
+            
+            sendDelHistory() {
+                this.element_OutputBox.innerHTML = '';
+            
+                if (this.socket?.readyState === WebSocket.OPEN) {
+                    this.socket.send('cmd_sendDelHistory');
                 }
             }
 
@@ -610,7 +626,7 @@ async def websocket_endpoint(websocket: WebSocket, id: str):
         await websocket.accept()
         while True:
             cmd = await websocket.receive_text()
-            if cmd == '/reconnect':
+            if cmd == 'cmd_reconnect':
                 await item.reconnect()
             else:
                 await item.send_cmd(cmd)
