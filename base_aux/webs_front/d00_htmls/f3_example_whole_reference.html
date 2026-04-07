@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Интерактивный справочник HTML: примеры и тонкости тегов</title>
+    <title>HTML справочник визуальный</title>
     <style>
         * {
             margin: 0;
@@ -232,7 +232,7 @@
             margin: 1rem 0;
         }
 
-        /* СТИЛИ ДЛЯ ВКЛАДОК (ТАБОВ) — новая секция */
+        /* СТИЛИ ДЛЯ ВКЛАДОК (ТАБОВ)*/
         .tabs-container {
             background: #fff;
             border-radius: 1rem;
@@ -294,8 +294,14 @@
     </style>
 </head>
 <body>
+<script>
+let body_bg_color__old = document.body.style.background;
+document.body.style.background = 'yellow';
+setTimeout(() => document.body.style.background = body_bg_color__old, 100);
+</script>
+
 <div class="container">
-    <h1>📘 HTML · визуальный справочник</h1>
+    <h1>📘 HTML · справочник визуальный</h1>
     <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
 
     <!-- навигация по разделам -->
@@ -628,7 +634,7 @@
                     </div>
                 </div>
 
-                <script>
+                <script defer>
                     // синхронизация progress / meter со слайдером и спиннером
                     const progressSlider = document.getElementById('progressSlider');
                     const progressNumber = document.getElementById('progressNumber');
@@ -887,13 +893,14 @@
             </div>
         </div>
 
+        <!-- ====================== FOOTER ====================== -->
         <footer>
             🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
         </footer>
     </div>
 </div>
 
-<script>
+<script defer>
     // плавная прокрутка для якорей (доп. комфорт)
     document.querySelectorAll('.nav-tags a, a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
