@@ -327,16 +327,12 @@
                             <h4>h4 — второстепенный</h4>
                             <h5>h5 — мелкий</h5>
                             <h6>h6 — самый мелкий</h6>
-                        </div>
-                        <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
-                    </div>
-                    <div class="demo-box">
-                        <div class="demo-title">разрывы строк</div>
-                        <div class="demo-view">
+
                             <hr>
                             <p>Горизонтальная линия <code>&lt;hr&gt;</code> — тематический разделитель.</p>
+
                         </div>
-                        <div class="demo-note">🧠 blockquote: обычно используется для длинных цитат, cite-атрибут для ссылки на источник.</div>
+                        <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
                     </div>
                 </div>
             </div>
@@ -556,13 +552,50 @@
                 </div>
 
                 <div class="demo-box">
-                    <div class="demo-title">Прогресс и meter (HTML5)</div>
+                    <div class="demo-title">📊 progress vs meter + спиннеры (числовые поля)</div>
                     <div class="demo-view">
-                        <label>PROGRESS: </label><progress value="70" max="100"></progress><br>
-                        <label>METER: </label><meter value="0.6" min="0" max="1"></meter>
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div>
+                                <label><strong>progress</strong> (загрузка файла):</label>
+                                <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+                                <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+                                <div style="margin-top: 0.5rem;">
+                                    <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
+                                    <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
+                                </div>
+                                <div class="demo-note" style="margin-top: 0.5rem; background: transparent; border: none; padding: 0;">
+                                    💡 Используется для задач с неизвестной длительностью. Меняйте значение – полоса заполняется.
+                                    <br>
+                                    🟢 <strong>Зоны:</strong> <code>low="0.3"</code> <code>high="0.8"</code> – значение ниже 0.3 = красный, 0.3–0.8 = жёлтый, выше 0.8 = зелёный (если optimum выше high). Попробуйте изменить – цвет полоски меняется.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="demo-note">progress — динамический прогресс, meter — статическое значение в диапазоне (например, уровень заряда).</div>
+                    <div class="demo-note">
+                        🧠 <strong>Ключевое отличие:</strong> <code>progress</code> показывает <em>ход выполнения</em>, <code>meter</code> показывает <em>значение в шкале</em>
+                    </div>
                 </div>
+
+                <script>
+                    // синхронизация progress / meter со слайдером и спиннером
+                    const progressSlider = document.getElementById('progressSlider');
+                    const progressNumber = document.getElementById('progressNumber');
+                    const demoProgress = document.getElementById('demoProgress');
+                    const demoMeter = document.getElementById('demoMeter');
+
+                    progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                    progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+
+                    function updateProgressMeter(value) {
+                        let v = parseFloat(value);
+                        if (isNaN(v)) v = 0;
+                        v = Math.min(1, Math.max(0, v));
+                        demoMeter.value = v;
+                        demoProgress.value = v;
+                        progressSlider.value = v;
+                        progressNumber.value = v;
+                    }
+                </script>
             </div>
         </div>
 
