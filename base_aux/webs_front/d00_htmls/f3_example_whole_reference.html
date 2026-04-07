@@ -433,20 +433,40 @@
         <div class="card-section" id="format">
             <div class="section-header"><h2>✨ Смысловое и визуальное форматирование</h2></div>
             <div class="section-content">
-                <div class="demo-box">
-                    <div class="demo-title">strong / em / b / i / mark / small / del / ins / sub / sup</div>
-                    <div class="demo-view">
-                        <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
-                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
-                        <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
-                        <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
-                        <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
-                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
-                        <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
-                        <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
-                        <p>Нажми <kbd>Ctrl</kbd>+<kbd>C</kbd> — тег kbd для клавиш. <code>code</code> — для фрагментов кода.</p>
+                <div class="several_columns__class">
+                    <div class="demo-box">
+                        <div class="demo-title">strong / em / b / i / mark / small / del / ins / sub / sup</div>
+                        <div class="demo-view">
+                            <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
+                            <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
+                            <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
+                            <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
+                            <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
+                            <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
+                            <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
+                            <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
+
+                            <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
+                        </div>
+                        <div class="demo-note">🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</div>
                     </div>
-                    <div class="demo-note">🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</div>
+                    <div class="demo-box">
+                        <div class="demo-title">⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</div>
+                        <div class="demo-view">
+                            <p>
+                                Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
+                                Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
+                                Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
+                                Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
+                                Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
+                                Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
+                            </p>
+                        </div>
+                        <div class="demo-note">
+                            📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> (или стрелка <code>→</code>) — обычный текст. Это улучшает доступность и семантику.
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
