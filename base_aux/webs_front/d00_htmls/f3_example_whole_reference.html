@@ -463,6 +463,39 @@
                     </div>
                     <div class="demo-note">🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</div>
                 </div>
+
+                <!-- Числовое поле с кнопками вверх/вниз (спиннер) -->
+                <div class="demo-box">
+                    <div class="demo-title">🔢 Числовое поле: input type="number" + кнопки-стрелки</div>
+                    <div class="demo-view">
+                        <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
+                            <div class="form-group">
+                                <label>Количество:</label>
+                                <input type="number" name="quantity" value="5" min="1" max="20" step="1">
+                                <small style="margin-left: 0.5rem; color: #4b5563;">▲▼ (кликните или используйте стрелки)</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Шаг 0.5:</label>
+                                <input type="number" step="0.5" value="2.5" min="0" max="10">
+                            </div>
+                            <div class="form-group">
+                                <label>Проценты:</label>
+                                <input type="number" value="75" min="0" max="100" step="5">
+                            </div>
+                            <button type="submit">Показать значение</button>
+                        </form>
+                    </div>
+                    <div class="demo-note">
+                        🧩 <strong>Тонкости type="number":</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+                            <li>Атрибуты: <code>min</code>, <code>max</code>, <code>step</code> (по умолчанию step="1").</li>
+                            <li>В браузерах появляются стрелки (спиннер), можно кликать или использовать клавиши ↑/↓.</li>
+                            <li>⚠️ <strong>Важно:</strong> при отправке формы значение передаётся как число, но в некоторых локалях десятичный разделитель — запятая (зависит от браузера). Для надёжности используйте <code>step="any"</code> или валидацию на сервере.</li>
+                            <li>Стилизовать стрелки сложно, но можно скрыть их через CSS (<code>input[type=number]::-webkit-inner-spin-button</code>).</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="demo-box">
                     <div class="demo-title">Прогресс и meter (HTML5)</div>
                     <div class="demo-view">
