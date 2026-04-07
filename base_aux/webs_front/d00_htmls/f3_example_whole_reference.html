@@ -396,6 +396,35 @@
                         </div>
                         <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
                     </div>
+                    <div class="demo-box">
+                        <div class="demo-title">✍️ Абзацы vs переносы строк (правильное использование)</div>
+                        <div class="demo-view">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="flex: 1;">
+                                    <h4>✅ Три абзаца &lt;p&gt;</h4>
+                                    <p>Абзац 1: Законченная мысль. После него будет отступ.</p>
+                                    <p>Абзац 2: Другая мысль. Скринридер сделает паузу.</p>
+                                    <p>Абзац 3: Удобно читать и стилизовать.</p>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4>✅ Один абзац + &lt;br&gt;</h4>
+                                    <p>
+                                        С уважением,<br>
+                                        Команда поддержки<br>
+                                        Тел: 8-800-555-35-35
+                                    </p>
+                                    <p style="margin-top: 1rem;">Стихи:<br>
+                                        В лесу родилась ёлочка,<br>
+                                        В лесу она росла.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="demo-note">
+                            📖 <strong>Правило:</strong> <code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
+                            <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
