@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Интерактивный справочник HTML: примеры и тонкости тегов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f4f8;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #1e2a3e;
+            padding: 2rem 1.5rem;
+        }
+
+        /* главный контейнер */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2rem 2rem 2.5rem 2rem;
+        }
+
+        /* заголовки и навигация */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            font-size: 1.1rem;
+            color: #2c3e66;
+            border-left: 4px solid #2a73ff;
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* быстрые ссылки (якоря) */
+        .nav-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .nav-tags a {
+            background: #eef2ff;
+            color: #1e40af;
+            text-decoration: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-tags a:hover {
+            background: #2a73ff;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* сетка для карточек разделов */
+        .section-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .card-section {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9edf2;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .card-section:hover {
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-header {
+            background: #fafcff;
+            padding: 1rem 1.8rem;
+            border-bottom: 2px solid #eef2ff;
+        }
+
+        .section-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: #0f2b4d;
+            display: inline-block;
+            background: #eef2ff;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 1.25rem;
+        }
+
+        .section-content {
+            padding: 1.5rem 1.8rem;
+        }
+
+        /* блок примера */
+        .demo-box {
+            background: #fefefe;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #edf2f7;
+            overflow: hidden;
+        }
+
+        .demo-title {
+            font-weight: 600;
+            background: #f8fafc;
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2d3e6e;
+        }
+
+        .demo-view {
+            padding: 1.2rem;
+            background: white;
+        }
+
+        .demo-note {
+            background: #fef9e3;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            border-top: 1px solid #ffe6b3;
+            color: #8a6e2b;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .demo-note code, .inline-code {
+            background: #edf2f7;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        /* вспомогательная сетка для мелких примеров */
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* таблицы */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .simple-table th, .simple-table td {
+            border: 1px solid #dce3ec;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .simple-table th {
+            background: #eef2ff;
+            font-weight: 600;
+        }
+
+        /* формы */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: inline-block;
+            width: 110px;
+            font-weight: 500;
+        }
+        input, select, textarea, button {
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+        }
+        button {
+            background: #2a73ff;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        button:hover {
+            background: #1a5ad9;
+        }
+
+        /* семантическая демо-зона */
+        .semantic-demo {
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+        .semantic-demo header, .semantic-demo nav, .semantic-demo main, .semantic-demo aside, .semantic-demo footer {
+            background: white;
+            margin: 0.6rem 0;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            border-left: 4px solid #2a73ff;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 1rem;
+            }
+            .section-content {
+                padding: 1rem;
+            }
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📘 HTML · визуальный справочник</h1>
+    <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
+
+    <!-- навигация по разделам -->
+    <div class="nav-tags">
+        <a href="#text">📄 Текст</a>
+        <a href="#format">✨ Форматирование</a>
+        <a href="#lists">📋 Списки</a>
+        <a href="#tables">📊 Таблицы</a>
+        <a href="#forms">📝 Формы</a>
+        <a href="#media">🎬 Медиа</a>
+        <a href="#semantic">🏛️ Семантика</a>
+        <a href="#interact">⚡ Интерактив</a>
+        <a href="#links">🔗 Ссылки</a>
+    </div>
+
+    <div class="section-grid">
+        <!-- ====================== ТЕКСТОВЫЕ ТЕГИ ====================== -->
+        <div class="card-section" id="text">
+            <div class="section-header"><h2>📌 Текст & заголовки</h2></div>
+            <div class="section-content">
+                <div class="two-columns">
+                    <div class="demo-box">
+                        <div class="demo-title">Заголовки h1–h6 (иерархия)</div>
+                        <div class="demo-view">
+                            <h1>h1 — главный заголовок</h1>
+                            <h2>h2 — раздел</h2>
+                            <h3>h3 — подраздел</h3>
+                            <h4>h4 — второстепенный</h4>
+                            <h5>h5 — мелкий</h5>
+                            <h6>h6 — самый мелкий</h6>
+                        </div>
+                        <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Абзац & разрывы строк</div>
+                        <div class="demo-view">
+                            <p>Обычный абзац с текстом. <br>Тег &lt;br&gt; создаёт перенос строки без нового абзаца.</p>
+                            <hr>
+                            <p>Горизонтальная линия <code>&lt;hr&gt;</code> — тематический разделитель.</p>
+                            <blockquote>Цитата (blockquote) — добавляет отступы и визуально выделяет.</blockquote>
+                            <pre>Тег &lt;pre&gt; сохраняет   пробелы
+и переносы — удобно для кода.</pre>
+                        </div>
+                        <div class="demo-note">🧠 blockquote: обычно используется для длинных цитат, cite-атрибут для ссылки на источник.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ФОРМАТИРОВАНИЕ СИМВОЛОВ ====================== -->
+        <div class="card-section" id="format">
+            <div class="section-header"><h2>✨ Смысловое и визуальное форматирование</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">strong / em / b / i / mark / small / del / ins / sub / sup</div>
+                    <div class="demo-view">
+                        <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
+                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
+                        <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
+                        <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
+                        <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
+                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
+                        <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
+                        <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
+                        <p>Нажми <kbd>Ctrl</kbd>+<kbd>C</kbd> — тег kbd для клавиш. <code>code</code> — для фрагментов кода.</p>
+                    </div>
+                    <div class="demo-note">🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== СПИСКИ ====================== -->
+        <div class="card-section" id="lists">
+            <div class="section-header"><h2>📋 Списки (ul, ol, dl)</h2></div>
+            <div class="section-content">
+                <div class="two-columns">
+                    <div class="demo-box">
+                        <div class="demo-title">Маркированный (ul)</div>
+                        <div class="demo-view">
+                            <ul>
+                                <li>Элемент списка</li>
+                                <li>Можно вкладывать
+                                    <ul><li>Вложенный пункт</li><li>Глубина любая</li></ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Нумерованный (ol)</div>
+                        <div class="demo-view">
+                            <ol start="3" type="A">
+                                <li>Первый пункт (с атрибутами start="3", type="A")</li>
+                                <li>Второй пункт
+                                    <ol><li>подпункт a</li></ol>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="demo-note">⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</div>
+                    </div>
+                </div>
+                <div class="demo-box">
+                    <div class="demo-title">Список описаний (dl / dt / dd)</div>
+                    <div class="demo-view">
+                        <dl>
+                            <dt>HTML</dt>
+                            <dd>Язык гипертекстовой разметки, структура страницы.</dd>
+                            <dt>CSS</dt>
+                            <dd>Каскадные таблицы стилей — оформление.</dd>
+                            <dt>JavaScript</dt>
+                            <dd>Динамика и интерактивность.</dd>
+                        </dl>
+                    </div>
+                    <div class="demo-note">📖 Применяется для глоссариев, метаданных, пар "термин-описание".</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ТАБЛИЦЫ ====================== -->
+        <div class="card-section" id="tables">
+            <div class="section-header"><h2>📊 Таблицы: &lt;table&gt; и компания</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Базовая таблица + объединение ячеек (colspan / rowspan)</div>
+                    <div class="demo-view">
+                        <table class="simple-table">
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td rowspan="2">Команда</td><td>Бэкенд</td><td>5 лет</td></tr>
+                                <tr><td>DevOps</td><td>2 года</td></tr>
+                                <tr><td colspan="2">Итого специалистов</td><td>3+</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="demo-note">🧩 thead/tbody/tfoot — для семантической группировки. Colspan объединяет столбцы, rowspan — строки.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ФОРМЫ (важнейшие элементы) ====================== -->
+        <div class="card-section" id="forms">
+            <div class="section-header"><h2>📝 Формы и поля ввода</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Типовые элементы: text, radio, checkbox, select, textarea, кнопки</div>
+                    <div class="demo-view">
+                        <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
+                            <div class="form-group"><label>Текст:</label> <input type="text" placeholder="Ваше имя" required></div>
+                            <div class="form-group"><label>Email:</label> <input type="email" value="hello@example.com"></div>
+                            <div class="form-group"><label>Пароль:</label> <input type="password" placeholder="****"></div>
+                            <div class="form-group"><label>Радио:</label>
+                                <input type="radio" name="gender" id="m"> <label for="m">Муж</label>
+                                <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
+                            </div>
+                            <div class="form-group"><label>Чекбокс:</label> <input type="checkbox"> Согласие</div>
+                            <div class="form-group"><label>Выбор:</label>
+                                <select><option>HTML</option><option>CSS</option><option selected>JS</option></select>
+                            </div>
+                            <div class="form-group"><label>Комментарий:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
+                            <div class="form-group"><button type="submit">Отправить</button> <button type="reset">Сброс</button></div>
+                        </form>
+                    </div>
+                    <div class="demo-note">🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</div>
+                </div>
+                <div class="demo-box">
+                    <div class="demo-title">Прогресс и meter (HTML5)</div>
+                    <div class="demo-view">
+                        <label>Загрузка: </label><progress value="70" max="100">70%</progress><br>
+                        <label>Использование диска: </label><meter value="0.6" min="0" max="1">60%</meter>
+                    </div>
+                    <div class="demo-note">progress — динамический прогресс, meter — статическое значение в диапазоне (например, уровень заряда).</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== МЕДИА (img, video, audio, iframe) ====================== -->
+        <div class="card-section" id="media">
+            <div class="section-header"><h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2></div>
+            <div class="section-content">
+                <div class="two-columns">
+                    <div class="demo-box">
+                        <div class="demo-title">Изображение & figure</div>
+                        <div class="demo-view">
+                            <figure>
+                                <img src="https://picsum.photos/id/104/200/120" alt="Пример пейзажа" style="border-radius: 12px; max-width:100%">
+                                <figcaption>figcaption — подпись к изображению (семантически связывает)</figcaption>
+                            </figure>
+                        </div>
+                        <div class="demo-note">⚠️ alt — обязательный атрибут для доступности. figure/figcaption группируют медиа с подписью.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Видео / Аудио (HTML5)</div>
+                        <div class="demo-view">
+                            <video controls width="100%" style="max-width:260px" poster="https://picsum.photos/id/20/300/150">
+                                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает видео.
+                            </video>
+                            <audio controls style="width:100%; margin-top: 8px;">
+                                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                        <div class="demo-note">🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</div>
+                    </div>
+                </div>
+                <div class="demo-box">
+                    <div class="demo-title">iframe — встраивание контента (YouTube)</div>
+                    <div class="demo-view">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== СЕМАНТИЧЕСКАЯ РАЗМЕТКА ====================== -->
+        <div class="card-section" id="semantic">
+            <div class="section-header"><h2>🏛️ Семантические блоки (header, nav, main, section, article, aside, footer)</h2></div>
+            <div class="section-content">
+                <div class="semantic-demo">
+                    <header>🧭 Шапка (header) — логотип, навигация</header>
+                    <nav>🔗 Навигация (nav) — ссылки меню</nav>
+                    <main>
+                        <section>📌 Секция (section) — тематическая группа</section>
+                        <article>📰 Статья (article) — независимый контент (пост, новость)</article>
+                        <aside>📌 Боковая панель (aside) — доп. информация, реклама</aside>
+                    </main>
+                    <footer>📆 Футер (footer) — контакты, копирайт</footer>
+                </div>
+                <div class="demo-note" style="margin-top: 12px;">🧠 Семантика улучшает SEO и доступность. Не используйте div для всего — header, main, footer дают структуру.</div>
+            </div>
+        </div>
+
+        <!-- ====================== ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ====================== -->
+        <div class="card-section" id="interact">
+            <div class="section-header"><h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2></div>
+            <div class="section-content">
+                <div class="two-columns">
+                    <div class="demo-box">
+                        <div class="demo-title">details + summary (спойлер)</div>
+                        <div class="demo-view">
+                            <details>
+                                <summary>📖 Нажмите, чтобы узнать тонкость</summary>
+                                <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
+                            </details>
+                            <details open>
+                                <summary>Пример открытого блока</summary>
+                                <p>Здесь дополнительная информация всегда видна.</p>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Тег dialog (экспериментальный, но полезный)</div>
+                        <div class="demo-view">
+                            <dialog id="demoDialog">
+                                <p>Это модальное окно (dialog).</p>
+                                <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
+                            </dialog>
+                            <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
+                        </div>
+                        <div class="demo-note">💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ССЫЛКИ И НАВИГАЦИЯ ====================== -->
+        <div class="card-section" id="links">
+            <div class="section-header"><h2>🔗 Гиперссылки & якоря</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Ссылки: target, якоря, относительные пути</div>
+                    <div class="demo-view">
+                        <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
+                        <p><a href="#text">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
+                        <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
+                        <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
+                        <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
+                    </div>
+                    <div class="demo-note">🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- дополнительный блок с глобальными атрибутами и data-* -->
+        <div class="card-section">
+            <div class="section-header"><h2>🧰 Дополнительно: глобальные атрибуты & data-*</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Атрибуты class, id, style, hidden, title, data-*</div>
+                    <div class="demo-view">
+                        <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
+                        <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
+                        <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
+                        <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
+                    </div>
+                    <div class="demo-note">💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
+        </footer>
+    </div>
+</div>
+
+<script>
+    // плавная прокрутка для якорей (доп. комфорт)
+    document.querySelectorAll('.nav-tags a, a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href !== '#' && href.startsWith('#')) {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
