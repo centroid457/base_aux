@@ -161,8 +161,8 @@
             color: #c7254e;
         }
 
-        /* вспомогательная сетка для мелких примеров */
-        .two-columns {
+        /* вспомогательная сетка */
+        .several_columns__class {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.2rem;
@@ -317,7 +317,7 @@
         <div class="card-section" id="text">
             <div class="section-header"><h2>📌 Текст & заголовки</h2></div>
             <div class="section-content">
-                <div class="two-columns">
+                <div class="several_columns__class">
                     <div class="demo-box">
                         <div class="demo-title">Заголовки h1–h6 (иерархия)</div>
                         <div class="demo-view">
@@ -331,16 +331,74 @@
                         <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
                     </div>
                     <div class="demo-box">
-                        <div class="demo-title">Абзац & разрывы строк</div>
+                        <div class="demo-title">разрывы строк</div>
                         <div class="demo-view">
-                            <p>Обычный абзац с текстом. <br>Тег &lt;br&gt; создаёт перенос строки без нового абзаца.</p>
                             <hr>
                             <p>Горизонтальная линия <code>&lt;hr&gt;</code> — тематический разделитель.</p>
-                            <blockquote>Цитата (blockquote) — добавляет отступы и визуально выделяет.</blockquote>
-                            <pre>Тег &lt;pre&gt; сохраняет   пробелы
-и переносы — удобно для кода.</pre>
                         </div>
                         <div class="demo-note">🧠 blockquote: обычно используется для длинных цитат, cite-атрибут для ссылки на источник.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ: fieldset, blockquote, вставка кода, абзацы ====================== -->
+        <div class="card-section" id="visual-blocks">
+            <div class="section-header"><h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
+                    <!-- левая колонка -->
+                    <div class="demo-box">
+                        <div class="demo-title">📦 Fieldset + legend (группировка полей)</div>
+                        <div class="demo-view">
+                            <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+                                <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
+                                <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
+                                <label>Email: <input type="email" placeholder="user@example.com"></label>
+                            </fieldset>
+                            <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
+                                <legend>🔒 Заблокированная группа</legend>
+                                <input type="text" value="Неактивно">
+                            </fieldset>
+                        </div>
+                        <div class="demo-note">✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</div>
+                    </div>
+
+                    <!-- правая колонка -->
+                    <div class="demo-box">
+                        <div class="demo-title">📜 Blockquote — цитата с атрибутом cite</div>
+                        <div class="demo-view">
+                            <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
+                                <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
+                                <footer>— MDN Web Docs</footer>
+                            </blockquote>
+                        </div>
+                        <div class="demo-note">📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</div>
+                        <div class="demo-view">
+                            <pre>Тег &lt;pre&gt; сохраняет   пробелы
+                               и переносы — удобно для кода.</pre>
+                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
+            &lt;div class="container"&gt;
+                &lt;h1&gt;Привет, мир!&lt;/h1&gt;
+                &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
+            &lt;/div&gt;</code></pre>
+                            <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
+                        </div>
+                        <div class="demo-note">🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">📄 Абзац &lt;p&gt; и его стилизация</div>
+                        <div class="demo-view">
+                            <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
+                            <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
+                            <p>Абзац с <br> переносом строки внутри.</p>
+                        </div>
+                        <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
                     </div>
                 </div>
             </div>
@@ -372,7 +430,7 @@
         <div class="card-section" id="lists">
             <div class="section-header"><h2>📋 Списки (ul, ol, dl)</h2></div>
             <div class="section-content">
-                <div class="two-columns">
+                <div class="several_columns__class">
                     <div class="demo-box">
                         <div class="demo-title">Маркированный (ul)</div>
                         <div class="demo-view">
@@ -396,21 +454,22 @@
                         </div>
                         <div class="demo-note">⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</div>
                     </div>
-                </div>
-                <div class="demo-box">
-                    <div class="demo-title">Список описаний (dl / dt / dd)</div>
-                    <div class="demo-view">
-                        <dl>
-                            <dt>HTML</dt>
-                            <dd>Язык гипертекстовой разметки, структура страницы.</dd>
-                            <dt>CSS</dt>
-                            <dd>Каскадные таблицы стилей — оформление.</dd>
-                            <dt>JavaScript</dt>
-                            <dd>Динамика и интерактивность.</dd>
-                        </dl>
+                    <div class="demo-box">
+                        <div class="demo-title">Список описаний (dl / dt / dd)</div>
+                        <div class="demo-view">
+                            <dl>
+                                <dt>HTML</dt>
+                                <dd>Язык гипертекстовой разметки, структура страницы.</dd>
+                                <dt>CSS</dt>
+                                <dd>Каскадные таблицы стилей — оформление.</dd>
+                                <dt>JavaScript</dt>
+                                <dd>Динамика и интерактивность.</dd>
+                            </dl>
+                        </div>
+                        <div class="demo-note">📖 Применяется для глоссариев, метаданных, пар "термин-описание".</div>
                     </div>
-                    <div class="demo-note">📖 Применяется для глоссариев, метаданных, пар "термин-описание".</div>
                 </div>
+
             </div>
         </div>
 
@@ -499,8 +558,8 @@
                 <div class="demo-box">
                     <div class="demo-title">Прогресс и meter (HTML5)</div>
                     <div class="demo-view">
-                        <label>Загрузка: </label><progress value="70" max="100">70%</progress><br>
-                        <label>Использование диска: </label><meter value="0.6" min="0" max="1">60%</meter>
+                        <label>PROGRESS: </label><progress value="70" max="100"></progress><br>
+                        <label>METER: </label><meter value="0.6" min="0" max="1"></meter>
                     </div>
                     <div class="demo-note">progress — динамический прогресс, meter — статическое значение в диапазоне (например, уровень заряда).</div>
                 </div>
@@ -511,7 +570,7 @@
         <div class="card-section" id="media">
             <div class="section-header"><h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2></div>
             <div class="section-content">
-                <div class="two-columns">
+                <div class="several_columns__class">
                     <div class="demo-box">
                         <div class="demo-title">Изображение & figure</div>
                         <div class="demo-view">
@@ -535,15 +594,15 @@
                         </div>
                         <div class="demo-note">🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</div>
                     </div>
-                </div>
-                <div class="demo-box">
-                    <div class="demo-title">iframe — встраивание контента (YouTube)</div>
-                    <div class="demo-view">
-                        <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="demo-box">
+                        <div class="demo-title">iframe — встраивание контента</div>
+                        <div class="demo-view">
+                            <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
                     </div>
-                    <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
                 </div>
             </div>
         </div>
@@ -570,16 +629,16 @@
         <div class="card-section" id="interact">
             <div class="section-header"><h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2></div>
             <div class="section-content">
-                <div class="two-columns">
+                <div class="several_columns__class">
                     <div class="demo-box">
                         <div class="demo-title">details + summary (спойлер)</div>
                         <div class="demo-view">
                             <details>
-                                <summary>📖 Нажмите, чтобы узнать тонкость</summary>
+                                <summary>📖Блок СКРЫТЫЙ</summary>
                                 <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
                             </details>
                             <details open>
-                                <summary>Пример открытого блока</summary>
+                                <summary>Блок ОТКРЫТЫЙ</summary>
                                 <p>Здесь дополнительная информация всегда видна.</p>
                             </details>
                         </div>
