@@ -232,6 +232,49 @@
             margin: 1rem 0;
         }
 
+        /* СТИЛИ ДЛЯ ВКЛАДОК (ТАБОВ) — новая секция */
+        .tabs-container {
+            background: #fff;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid #e9edf2;
+        }
+        .tabs-buttons {
+            display: flex;
+            gap: 0.25rem;
+            background: #f8fafc;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 500;
+            border-radius: 1rem 1rem 0 0;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #2a73ff;
+            border-bottom: 2px solid #2a73ff;
+            margin-bottom: -1px;
+        }
+        .tabs-content {
+            padding: 1.2rem;
+            background: white;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        /* конец стилей табов */
+
         @media (max-width: 700px) {
             .container {
                 padding: 1rem;
@@ -266,6 +309,7 @@
         <a href="#semantic">🏛️ Семантика</a>
         <a href="#interact">⚡ Интерактив</a>
         <a href="#links">🔗 Ссылки</a>
+        <a href="#tabs">📑 Вкладки</a>
     </div>
 
     <div class="section-grid">
@@ -462,7 +506,9 @@
                 <div class="demo-box">
                     <div class="demo-title">iframe — встраивание контента (YouTube)</div>
                     <div class="demo-view">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
                 </div>
@@ -555,6 +601,115 @@
             </div>
         </div>
 
+        <!-- ====================== ВКЛАДКИ / ТАБЫ ====================== -->
+        <div class="card-section" id="tabs">
+            <div class="section-header"><h2>📑 Вкладки (табы) — живой компонент</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Переключение панелей: только одна активная вкладка</div>
+                    <div class="demo-view">
+                        <div class="tabs-container">
+                            <div class="tabs-buttons">
+                                <button class="tab-btn active" data-tab="tab1">📄 Что такое табы?</button>
+                                <button class="tab-btn" data-tab="tab2">⚙️ Как это сделано</button>
+                                <button class="tab-btn" data-tab="tab3">💡 Нюансы и доступность</button>
+                            </div>
+                            <div class="tabs-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <p><strong>Вкладки (tabs)</strong> — это элемент интерфейса, который позволяет переключаться между несколькими панелями с контентом, не перезагружая страницу.</p>
+                                    <p>В чистом HTML <strong>нет специального тега</strong> для табов, но их легко реализовать с помощью CSS и JavaScript (или только CSS с радиокнопками).</p>
+                                    <p>✔️ Экономит место на странице<br>✔️ Улучшает навигацию по группам информации</p>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <pre style="background:#1e2a3a; color:#e2e8f0; padding:0.75rem; border-radius:12px; overflow-x:auto; font-size:0.8rem;">
+&lt;div class="tabs-buttons"&gt;
+  &lt;button class="tab-btn active" data-tab="tab1"&gt;Вкладка 1&lt;/button&gt;
+  &lt;button class="tab-btn" data-tab="tab2"&gt;Вкладка 2&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class="tabs-content"&gt;
+  &lt;div class="tab-pane active" id="tab1"&gt;...&lt;/div&gt;
+  &lt;div class="tab-pane" id="tab2"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+// JS: при клике добавляем/удаляем класс .active
+                                    </pre>
+                                    <p>В этом примере используется простой JavaScript: при клике на кнопку активируется соответствующий <code>.tab-pane</code> и меняется стиль кнопки.</p>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <ul>
+                                        <li>⚠️ Важно добавлять атрибуты <code>role="tablist"</code>, <code>aria-selected</code> для скринридеров (в учебном примере опущено для краткости, но в реальном проекте используйте).</li>
+                                        <li>🧩 Можно сделать и на чистом CSS: <code>&lt;input type="radio"&gt;</code> + <code>:checked</code>, но JS даёт больше контроля и динамики.</li>
+                                        <li>🎨 Активная вкладка должна быть визуально выделена (цвет, подчёркивание).</li>
+                                        <li>📱 На мобильных устройствах табы удобно превращать в аккордеон (но это уже продвинутый вариант).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-note">🧩 <strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS. Попробуйте переключать вкладки выше — содержимое меняется, но страница не перезагружается.</div>
+                </div>
+                <div class="demo-box">
+                    <div class="demo-title">Альтернатива — CSS-табы на радиокнопках (без JS)</div>
+                    <div class="demo-view">
+                        <style>
+                            .css-tabs {
+                                display: flex;
+                                flex-direction: column;
+                            }
+                            .css-tabs-input {
+                                display: none;
+                            }
+                            .css-tabs-labels {
+                                display: flex;
+                                gap: 0.5rem;
+                                border-bottom: 1px solid #ccc;
+                            }
+                            .css-tabs-labels label {
+                                padding: 0.5rem 1rem;
+                                cursor: pointer;
+                                background: #f1f5f9;
+                                border-radius: 8px 8px 0 0;
+                            }
+                            .css-tab-pane {
+                                display: none;
+                                padding: 1rem;
+                                border: 1px solid #e2e8f0;
+                                border-top: none;
+                            }
+                            #tabRadio1:checked ~ .css-tabs-content #pane1,
+                            #tabRadio2:checked ~ .css-tabs-content #pane2,
+                            #tabRadio3:checked ~ .css-tabs-content #pane3 {
+                                display: block;
+                            }
+                            #tabRadio1:checked ~ .css-tabs-labels label[for="tabRadio1"],
+                            #tabRadio2:checked ~ .css-tabs-labels label[for="tabRadio2"],
+                            #tabRadio3:checked ~ .css-tabs-labels label[for="tabRadio3"] {
+                                background: white;
+                                border-bottom: 2px solid #2a73ff;
+                                font-weight: bold;
+                            }
+                        </style>
+                        <div class="css-tabs">
+                            <input type="radio" name="cssTab" id="tabRadio1" class="css-tabs-input" checked>
+                            <input type="radio" name="cssTab" id="tabRadio2" class="css-tabs-input">
+                            <input type="radio" name="cssTab" id="tabRadio3" class="css-tabs-input">
+                            <div class="css-tabs-labels">
+                                <label for="tabRadio1">Без JS</label>
+                                <label for="tabRadio2">Как это?</label>
+                                <label for="tabRadio3">Плюсы/минусы</label>
+                            </div>
+                            <div class="css-tabs-content">
+                                <div class="css-tab-pane" id="pane1">✨ Это вкладки без единой строчки JavaScript! Используются <code>&lt;input type="radio"&gt;</code> и CSS-селектор <code>:checked ~ ...</code>.</div>
+                                <div class="css-tab-pane" id="pane2">🧠 Приём: скрытые радиокнопки, лейблы как кнопки, а содержимое переключается через общий контейнер и <code>display: none/block</code>.</div>
+                                <div class="css-tab-pane" id="pane3">✔️ Минус: сложнее управлять динамическим добавлением вкладок. Плюс: работает без JS, очень легковесно.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-note">📌 Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически. Выше приведён работающий пример.</div>
+                </div>
+            </div>
+        </div>
+
         <footer>
             🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
         </footer>
@@ -573,6 +728,23 @@
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
+        });
+    });
+
+    // реализация вкладок - для JS варианта
+    document.querySelectorAll('.tabs-container').forEach(container => {
+        const btns = container.querySelectorAll('.tab-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                // Убираем active у всех кнопок и панелей внутри этого контейнера
+                container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                // Активируем текущие
+                this.classList.add('active');
+                const activePane = container.querySelector(`#${tabId}`);
+                if (activePane) activePane.classList.add('active');
+            });
         });
     });
 </script>
