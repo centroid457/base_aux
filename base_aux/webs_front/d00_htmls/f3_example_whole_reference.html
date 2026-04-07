@@ -893,6 +893,141 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
             </div>
         </div>
 
+        <!-- ====================== КОМПОНОВКА И ВЫРАВНИВАНИЕ (FLEXBOX) ====================== -->
+        <div class="card-section" id="layout">
+            <div class="section-header"><h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</div>
+                    <div class="demo-view">
+                        <style>
+                            .layout-demo {
+                                background: #f8fafc;
+                                border-radius: 1rem;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+                            }
+                            .flex-row {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                gap: 1rem;
+                            }
+                            .flex-left {
+                                display: flex;
+                                gap: 0.5rem;
+                                align-items: center;
+                            }
+                            .flex-center {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                            }
+                            .flex-right {
+                                display: flex;
+                                gap: 0.75rem;
+                                align-items: center;
+                            }
+                            .demo-chip {
+                                background: white;
+                                padding: 0.4rem 0.8rem;
+                                border-radius: 2rem;
+                                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                                border: 1px solid #e2e8f0;
+                            }
+                            .demo-logo {
+                                font-weight: bold;
+                                font-size: 1.2rem;
+                                background: #2a73ff;
+                                color: white;
+                                padding: 0.3rem 0.8rem;
+                                border-radius: 2rem;
+                            }
+                        </style>
+
+                        <!-- Пример 1: реальная навигация -->
+                        <div class="layout-demo">
+                            <div class="flex-row">
+                                <div class="flex-left">
+                                    <div class="demo-logo">Лого</div>
+                                </div>
+                                <div class="flex-center">
+                                    <span class="demo-chip">Главная</span>
+                                    <span class="demo-chip">Каталог</span>
+                                    <span class="demo-chip">О нас</span>
+                                    <span class="demo-chip">Контакты</span>
+                                </div>
+                                <div class="flex-right">
+                                    <span class="demo-chip">🔍</span>
+                                    <span class="demo-chip">👤</span>
+                                    <span class="demo-chip">🛒</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Пример 2: чисто выравнивание без лишних стилей -->
+                        <div class="layout-demo">
+                            <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
+                                <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <span>Центр 1</span>
+                                    <span>Центр 2</span>
+                                    <span>Центр 3</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Пояснение с кодом -->
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            🧠 <strong>Как это работает (Flexbox):</strong>
+                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 0.75rem; border-radius: 12px; margin-top: 0.5rem; overflow-x: auto;">
+        &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
+            &lt;div&gt;Левый элемент&lt;/div&gt;
+            &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
+            &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
+        &lt;/div&gt;</pre>
+                            ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
+                            ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
+                            ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
+                            ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">📌 Другие варианты: только левый + правый, или равномерное распределение</div>
+                    <div class="demo-view">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>🏠 Логотип</span>
+                                <span>⚙️ Иконка настроек</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-evenly; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>Равномерно</span>
+                                <span>Равномерно</span>
+                                <span>Равномерно</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 2rem; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>По центру</span>
+                                <span>По центру</span>
+                            </div>
+                        </div>
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            💡 <code>justify-content: space-between</code> — крайние элементы прижаты к краям, остальное пространство между ними.<br>
+                            💡 <code>space-evenly</code> — равные отступы между всеми элементами и от краёв.<br>
+                            💡 <code>center</code> — всё группируется по центру.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ====================== FOOTER ====================== -->
         <footer>
             🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
