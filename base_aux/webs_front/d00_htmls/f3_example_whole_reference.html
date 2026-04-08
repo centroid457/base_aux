@@ -330,59 +330,58 @@
         <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ ====================== -->
         <div class="card__cls" id="visualBlocksId">
             <div class="section-header"><h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2></div>
-            <div class="section-content">
-                <div class="several_columns__class">
-                    <div class="demo-box">
-                        <div class="demo-title">📦 Fieldset + legend (группировка полей)</div>
-                        <div class="demo-view">
-                            <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
-                                <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
-                                <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
-                                <label>Email: <input type="email" placeholder="user@example.com"></label>
-                            </fieldset>
-                            <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
-                                <legend>🔒 Заблокированная группа</legend>
-                                <input type="text" value="Неактивно">
-                            </fieldset>
-                        </div>
-                        <div class="demo-note">✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</div>
+            <div class="section-content, several_columns__class">
+                <div class="demo-box">
+                    <div class="demo-title">📦 Fieldset + legend (группировка полей)</div>
+                    <div class="demo-view">
+                        <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+                            <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
+                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
+                            <label>Email: <input type="email" placeholder="user@example.com"></label>
+                        </fieldset>
+                        <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
+                            <legend>🔒 Заблокированная группа</legend>
+                            <input type="text" value="Неактивно">
+                        </fieldset>
                     </div>
+                    <div class="demo-note">✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</div>
+                </div>
 
-                    <div class="demo-box">
-                        <div class="demo-title">📜 Blockquote — цитата с атрибутом cite</div>
-                        <div class="demo-view">
-                            <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
-                                <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
-                                <footer>— MDN Web Docs</footer>
-                            </blockquote>
-                        </div>
-                        <div class="demo-note">📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</div>
+                <div class="demo-box">
+                    <div class="demo-title">📜 Blockquote — цитата с атрибутом cite</div>
+                    <div class="demo-view">
+                        <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
+                            <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
+                            <footer>— MDN Web Docs</footer>
+                        </blockquote>
                     </div>
+                    <div class="demo-note">📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</div>
+                </div>
 
-                    <div class="demo-box">
-                        <div class="demo-title">💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</div>
-                        <div class="demo-view">
-                            <pre>Тег &lt;pre&gt; сохраняет   пробелы
-                           и переносы — удобно для кода.</pre>
-                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
-        &lt;div class="root_div__cls"&gt;
-            &lt;h1&gt;Привет, мир!&lt;/h1&gt;
-            &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
-        &lt;/div&gt;</code></pre>
-                            <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
-                        </div>
-                        <div class="demo-note">🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</div>
+                <div class="demo-box">
+                    <div class="demo-title">💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</div>
+                    <div class="demo-view">
+                        <pre>Тег &lt;pre&gt; сохраняет   пробелы
+                       и переносы — удобно для кода.</pre>
+                        <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
+    &lt;div class="root_div__cls"&gt;
+        &lt;h1&gt;Привет, мир!&lt;/h1&gt;
+        &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
+    &lt;/div&gt;</code></pre>
+                        <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
                     </div>
+                    <div class="demo-note">🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</div>
+                </div>
 
-                    <div class="demo-box">
-                        <div class="demo-title">📄 Абзац &lt;p&gt; и его стилизация</div>
-                        <div class="demo-view">
-                            <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
-                            <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
-                            <p>Абзац с <br> переносом строки внутри.</p>
-                        </div>
-                        <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
+                <div class="demo-box">
+                    <div class="demo-title">📄 Абзац &lt;p&gt; и его стилизация</div>
+                    <div class="demo-view">
+                        <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
+                        <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
+                        <p>Абзац с <br> переносом строки внутри.</p>
                     </div>
+                    <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
+                </div>
                     <div class="demo-box">
                         <div class="demo-title">✍️ Абзацы vs переносы строк (правильное использование)</div>
                         <div class="demo-view">
@@ -412,7 +411,6 @@
                             <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.
                         </div>
                     </div>
-                </div>
             </div>
         </div>
 
