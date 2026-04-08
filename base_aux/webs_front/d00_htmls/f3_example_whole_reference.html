@@ -50,7 +50,7 @@
         }
 
         /* быстрые ссылки (якоря) */
-        .nav-tags {
+        #nav_links__id {
             display: flex;
             flex-wrap: wrap;
             gap: 0.6rem;
@@ -59,7 +59,7 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        .nav-tags a {
+        #nav_links__id a {
             background: #eef2ff;
             color: #1e40af;
             text-decoration: none;
@@ -70,7 +70,7 @@
             transition: all 0.2s;
         }
 
-        .nav-tags a:hover {
+        #nav_links__id a:hover {
             background: #2a73ff;
             color: white;
             transform: translateY(-2px);
@@ -83,7 +83,7 @@
             gap: 2.5rem;
         }
 
-        .card-section {
+        .card__cls {
             background: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -92,7 +92,7 @@
             transition: box-shadow 0.2s;
         }
 
-        .card-section:hover {
+        .card__cls:hover {
             box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
         }
 
@@ -294,18 +294,12 @@
     </style>
 </head>
 <body>
-<script>
-let body_bg_color__old = document.body.style.background;
-document.body.style.background = 'yellow';
-setTimeout(() => document.body.style.background = body_bg_color__old, 100);
-</script>
-
 <div class="container">
     <h1>📘 HTML · справочник визуальный</h1>
     <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
 
     <!-- навигация по разделам -->
-    <div class="nav-tags">
+    <div id="nav_links__id">
         <a href="#text">📄 Текст</a>
         <a href="#format">✨ Форматирование</a>
         <a href="#lists">📋 Списки</a>
@@ -320,7 +314,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
 
     <div class="section-grid">
         <!-- ====================== ТЕКСТОВЫЕ ТЕГИ ====================== -->
-        <div class="card-section" id="text">
+        <div class="card__cls" id="text">
             <div class="section-header"><h2>📌 Текст & заголовки</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -345,7 +339,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ: fieldset, blockquote, вставка кода, абзацы ====================== -->
-        <div class="card-section" id="visual-blocks">
+        <div class="card__cls" id="visual-blocks">
             <div class="section-header"><h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -436,7 +430,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ФОРМАТИРОВАНИЕ СИМВОЛОВ ====================== -->
-        <div class="card-section" id="format">
+        <div class="card__cls" id="format">
             <div class="section-header"><h2>✨ Смысловое и визуальное форматирование</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -478,7 +472,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== СПИСКИ ====================== -->
-        <div class="card-section" id="lists">
+        <div class="card__cls" id="lists">
             <div class="section-header"><h2>📋 Списки (ul, ol, dl)</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -525,7 +519,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ТАБЛИЦЫ ====================== -->
-        <div class="card-section" id="tables">
+        <div class="card__cls" id="tables">
             <div class="section-header"><h2>📊 Таблицы: &lt;table&gt; и компания</h2></div>
             <div class="section-content">
                 <div class="demo-box">
@@ -549,7 +543,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ФОРМЫ (важнейшие элементы) ====================== -->
-        <div class="card-section" id="forms">
+        <div class="card__cls" id="forms">
             <div class="section-header"><h2>📝 Формы и поля ввода</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -658,7 +652,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== МЕДИА (img, video, audio, iframe) ====================== -->
-        <div class="card-section" id="media">
+        <div class="card__cls" id="media">
             <div class="section-header"><h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -699,8 +693,8 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== СЕМАНТИЧЕСКАЯ РАЗМЕТКА ====================== -->
-        <div class="card-section" id="semantic">
-            <div class="section-header"><h2>🏛️ Семантические блоки (header, nav, main, section, article, aside, footer)</h2></div>
+        <div class="card__cls" id="semantic">
+            <div class="section-header"><h2>🏛️ Семантические блоки (глобальные+локальные)</h2></div>
             <div class="section-content">
                 <div class="semantic-demo">
                     <header>🧭 Шапка (header) — логотип, навигация</header>
@@ -717,7 +711,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ====================== -->
-        <div class="card-section" id="interact">
+        <div class="card__cls" id="interact">
             <div class="section-header"><h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2></div>
             <div class="section-content">
                 <div class="several_columns__class">
@@ -750,7 +744,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ССЫЛКИ И НАВИГАЦИЯ ====================== -->
-        <div class="card-section" id="links">
+        <div class="card__cls" id="links">
             <div class="section-header"><h2>🔗 Гиперссылки & якоря</h2></div>
             <div class="section-content">
                 <div class="demo-box">
@@ -768,7 +762,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- дополнительный блок с глобальными атрибутами и data-* -->
-        <div class="card-section">
+        <div class="card__cls">
             <div class="section-header"><h2>🧰 Дополнительно: глобальные атрибуты & data-*</h2></div>
             <div class="section-content">
                 <div class="demo-box">
@@ -785,7 +779,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== ВКЛАДКИ / ТАБЫ ====================== -->
-        <div class="card-section" id="tabs">
+        <div class="card__cls" id="tabs">
             <div class="section-header"><h2>📑 Вкладки (табы) — живой компонент</h2></div>
             <div class="section-content">
                 <div class="demo-box">
@@ -894,7 +888,7 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
         </div>
 
         <!-- ====================== КОМПОНОВКА И ВЫРАВНИВАНИЕ (FLEXBOX) ====================== -->
-        <div class="card-section" id="layout">
+        <div class="card__cls" id="layout">
             <div class="section-header"><h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2></div>
             <div class="section-content">
                 <div class="demo-box">
@@ -1028,6 +1022,218 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
             </div>
         </div>
 
+        <!-- ====================== РАЗМНОЖЕНИЕ БЛОКОВ СТИЛЯМИ БЕЗ JS ====================== -->
+        <div class="card__cls" id="multiply-blocks">
+            <div class="section-header"><h2>♻️ Размножение блока: один набор элементов, разные стили</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧬 Один и тот же набор из трёх span — три варианта оформления</div>
+                    <div class="demo-view">
+                        <style>
+                            /* Базовые стили для всех экземпляров блока */
+                            .demo-triple {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                margin-bottom: 1.5rem;
+                                padding: 1rem;
+                                border-radius: 1rem;
+                                transition: all 0.2s;
+                            }
+                            .demo-triple span {
+                                padding: 0.5rem 1rem;
+                                border-radius: 2rem;
+                                font-weight: 500;
+                                transition: 0.2s;
+                            }
+                            /* Вариант 1: нейтральный (серый) */
+                            .demo-triple--gray span {
+                                background: #e2e8f0;
+                                color: #1e293b;
+                            }
+                            /* Вариант 2: цветной градиент */
+                            .demo-triple--gradient span {
+                                background: linear-gradient(135deg, #667eea, #764ba2);
+                                color: white;
+                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                            }
+                            /* Вариант 3: контурные (outline) */
+                            .demo-triple--outline span {
+                                background: transparent;
+                                border: 2px solid #2a73ff;
+                                color: #2a73ff;
+                            }
+                            /* Вариант 4: тень + анимация при наведении */
+                            .demo-triple--shadow span {
+                                background: #fef9c3;
+                                color: #854d0e;
+                                box-shadow: 0 4px 6px -2px rgba(0,0,0,0.1);
+                            }
+                            .demo-triple--shadow span:hover {
+                                transform: translateY(-3px);
+                                background: #fde047;
+                            }
+                        </style>
+
+                        <!-- ОДИН И ТОТ ЖЕ НАБОР ЭЛЕМЕНТОВ (три span) повторяется 4 раза -->
+                        <div class="demo-triple demo-triple--gray">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+
+                        <div class="demo-triple demo-triple--gradient">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+
+                        <div class="demo-triple demo-triple--outline">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+
+                        <div class="demo-triple demo-triple--shadow">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            💡 <strong>Суть подхода:</strong> HTML-код блока (три <code>&lt;span&gt;</code>) копируется, но каждый раз обёрнут в контейнер с разным классом-модификатором (<code>demo-triple--gray</code>, <code>demo-triple--gradient</code> и т.д.).<br>
+                            🧠 Все стили заданы через CSS один раз. Чтобы добавить новый вариант, не нужно трогать структуру — достаточно написать новый класс и применить его к контейнеру.<br>
+                            ⚠️ Без JS полностью избежать дублирования HTML <strong>невозможно</strong>, но этот способ делает дублирование минимальным и очень удобным для переиспользования.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">⚙️ Альтернатива: CSS-переменные (кастомные свойства)</div>
+                    <div class="demo-view">
+                        <style>
+                            .var-triple {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                margin-bottom: 1rem;
+                            }
+                            .var-triple span {
+                                background: var(--bg, #e2e8f0);
+                                color: var(--color, #1e293b);
+                                padding: 0.5rem 1rem;
+                                border-radius: 2rem;
+                                font-weight: 500;
+                                transition: 0.2s;
+                                border: var(--border, none);
+                            }
+                            .var-triple--blue {
+                                --bg: #3b82f6;
+                                --color: white;
+                            }
+                            .var-triple--red {
+                                --bg: #ef4444;
+                                --color: white;
+                                --border: 2px solid #b91c1c;
+                            }
+                            .var-triple--green {
+                                --bg: #10b981;
+                                --color: #064e3b;
+                            }
+                        </style>
+                        <div class="var-triple var-triple--blue">
+                            <span>Синий</span><span>Синий</span><span>Синий</span>
+                        </div>
+                        <div class="var-triple var-triple--red">
+                            <span>Красный</span><span>Красный</span><span>Красный</span>
+                        </div>
+                        <div class="var-triple var-triple--green">
+                            <span>Зелёный</span><span>Зелёный</span><span>Зелёный</span>
+                        </div>
+                        <div class="demo-note">
+                            🎨 Здесь CSS-переменные (<code>--bg</code>, <code>--color</code>) переопределяются в каждом модификаторе. Сами <code>span</code> не меняются, стили берутся из переменных.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ====================== JS-РАЗМНОЖИТЕЛЬ ЭЛЕМЕНТОВ ====================== -->
+        <div class="card__cls" id="js_cloner__id">
+            <div class="section-header"><h2>♻️ JS-размножитель: один шаблон → много стилей</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧬 Блок-шаблон (id="cloneTemplate_id")</div>
+                    <div class="demo-view">
+                        <!-- ОРИГИНАЛ (шаблон) — он останется на месте -->
+                        <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
+                            <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">
+                                🎨 Элемент с динамическим стилем
+                            </div>
+                        </div>
+
+                        <!-- Сюда будут вставлены клоны -->
+                        <div id="cloneContainer"></div>
+                    </div>
+                    <div class="demo-note">
+                        🧠 <strong>Принцип:</strong> нажимаете кнопку — скрипт клонирует блок <code>#cloneTemplate_id</code>, меняет у внутреннего элемента <code>.clone-inner</code> свойство <code>color</code> (или любое другое) на заданные значения, и вставляет копии после оригинала.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /**
+             * Универсальный размножитель
+             * @param {string} templateId - id элемента-шаблона (оригинал)
+             * @param {string} targetSelector - селектор элемента внутри клона, у которого меняем стиль
+             * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor')
+             * @param {Array} styleValues - массив значений для этого свойства (например, ['red', 'blue', 'green'])
+             */
+            function cloneWithStyles(
+                templateId = "cloneTemplate_id",
+                targetSelector,
+                styleProperty,
+                styleValues,
+            ) {
+                const original = document.getElementById(templateId);
+                if (!original) {
+                    console.error(`Элемент с id "${templateId}" не найден`);
+                    return;
+                }
+
+                for (let value of styleValues) {
+                    // Глубокое клонирование (true = со всем содержимым)
+                    const clone = original.cloneNode(true);
+                    // Находим внутри клона целевой элемент
+                    const targetElem = clone.querySelector(targetSelector);
+                    if (targetElem) {
+                        // Меняем стиль (инлайн — работает надёжно)
+                        targetElem.style[styleProperty] = value;
+                        // Добавляем небольшой индикатор значения (опционально)
+                        const note = document.createElement('small');
+                        note.textContent = ` (${value})`;
+                        note.style.display = 'block';
+                        note.style.fontSize = '0.7rem';
+                        note.style.opacity = '0.7';
+                        targetElem.appendChild(note);
+                    } else {
+                        console.warn(`В клоне не найден селектор "${targetSelector}"`);
+                    }
+                    original.insertAdjacentElement('afterend', clone);
+                }
+            }
+
+            // Запускаем размножение: меняем цвет текста у .clone-inner
+            cloneWithStyles(
+                'cloneTemplate_id',
+                '.clone-inner',
+                'color',
+                ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400'],
+            );
+        </script>
+
         <!-- ====================== FOOTER ====================== -->
         <footer>
             🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
@@ -1036,8 +1242,13 @@ setTimeout(() => document.body.style.background = body_bg_color__old, 100);
 </div>
 
 <script defer>
+    // bg color on refresh
+    let body_bg_color__old = document.body.style.background;
+    document.body.style.background = 'yellow';
+    setTimeout(() => document.body.style.background = body_bg_color__old, 100);
+
     // плавная прокрутка для якорей (доп. комфорт)
-    document.querySelectorAll('.nav-tags a, a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('#nav_links__id a, a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href && href !== '#' && href.startsWith('#')) {
