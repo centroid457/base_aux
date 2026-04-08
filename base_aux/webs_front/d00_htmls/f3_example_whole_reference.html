@@ -20,7 +20,7 @@
         }
 
         /* главный контейнер */
-        .container {
+        .root_div__cls {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
@@ -276,7 +276,7 @@
         /* конец стилей табов */
 
         @media (max-width: 700px) {
-            .container {
+            .root_div__cls {
                 padding: 1rem;
             }
             .section-content {
@@ -295,7 +295,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="root_div__cls">
     <!-- Глобальный header -->
     <header id="root_header__id">
         <h1>📘 HTML · справочник визуальный</h1>
@@ -303,18 +303,7 @@
     </header>
 
     <!-- Глобальная навигация -->
-    <nav id="root_nav__id">
-        <a href="#text">📄 Текст</a>
-        <a href="#format">✨ Форматирование</a>
-        <a href="#lists">📋 Списки</a>
-        <a href="#tables">📊 Таблицы</a>
-        <a href="#forms">📝 Формы</a>
-        <a href="#media">🎬 Медиа</a>
-        <a href="#semantic">🏛️ Семантика</a>
-        <a href="#interact">⚡ Интерактив</a>
-        <a href="#links">🔗 Ссылки</a>
-        <a href="#tabs">📑 Вкладки</a>
-    </nav>
+    <nav id="root_nav__id"></nav>
 
     <!-- Основное содержание -->
     <main id="root_main__id">
@@ -380,7 +369,7 @@
                                 <pre>Тег &lt;pre&gt; сохраняет   пробелы
                                и переносы — удобно для кода.</pre>
                                 <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
-            &lt;div class="container"&gt;
+            &lt;div class="root_div__cls"&gt;
                 &lt;h1&gt;Привет, мир!&lt;/h1&gt;
                 &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
             &lt;/div&gt;</code></pre>
@@ -1174,10 +1163,60 @@
 </div>
 
 <script>
-    // bg color on refresh
-    let body_bg_color__old = document.body.style.background;
-    document.body.style.background = 'yellow';
-    setTimeout(() => document.body.style.background = body_bg_color__old, 100);
+    (function bgColorOnLoad() {
+        let body_bg_color__old = document.body.style.background;
+        document.body.style.background = 'yellow';
+        setTimeout(() => document.body.style.background = body_bg_color__old, 100);
+    })();
+
+    // Генерация навигации: текст кнопки = id блока, title = заголовок блока
+    (function generateNavRoot() {
+        const navContainer = document.getElementById('root_nav__id');
+        if (!navContainer) {
+            console.error('Элемент #root_nav__id не найден');
+            return;
+        }
+
+        // Очищаем контейнер (на случай, если там что-то есть)
+        navContainer.innerHTML = '';
+
+        // Находим все секции-карточки с id
+        const sections = document.querySelectorAll('.card__cls[id]');
+
+        sections.forEach(section => {
+            const sectionId = section.id;
+            if (!sectionId) return;
+
+            // Получаем заголовок блока из .section-header h2
+            let titleText = '';
+            const headerH2 = section.querySelector('.section-header h2');
+            if (headerH2) {
+                titleText = headerH2.innerText.trim();
+            }
+            // Если заголовка нет, используем id как fallback
+            if (!titleText) {
+                titleText = sectionId;
+            }
+
+            // Создаём ссылку
+            const link = document.createElement('a');
+            link.href = `#${sectionId}`;
+            link.textContent = sectionId;          // текст кнопки = id (например, "text")
+            link.title = titleText;                // всплывающая подсказка = заголовок
+            link.setAttribute('data-section-title', titleText);
+
+            // Плавная прокрутка
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+
+            navContainer.appendChild(link);
+        });
+    }) ();
 
     // плавная прокрутка для якорей
     document.querySelectorAll('#root_nav__id a, a[href^="#"]').forEach(anchor => {
