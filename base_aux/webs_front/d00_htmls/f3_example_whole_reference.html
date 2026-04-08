@@ -77,7 +77,7 @@
         }
 
         /* сетка для карточек разделов */
-        .section-grid {
+        #root_main__id {
             display: flex;
             flex-direction: column;
             gap: 2.5rem;
@@ -296,873 +296,874 @@
 </head>
 <body>
 <div class="root_div__cls">
-    <!-- Глобальный header -->
     <header id="root_header__id">
         <h1>📘 HTML · справочник визуальный</h1>
         <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
-    <!-- Глобальная навигация -->
     <nav id="root_nav__id"></nav>
 
-    <!-- Основное содержание -->
     <main id="root_main__id">
-        <div class="section-grid">
-            <!-- ====================== ТЕКСТОВЫЕ ТЕГИ ====================== -->
-            <div class="card__cls" id="text">
-                <div class="section-header"><h2>📌 Текст & заголовки</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">Заголовки h1–h6 (иерархия)</div>
-                            <div class="demo-view">
-                                <h1>h1 — главный заголовок</h1>
-                                <h2>h2 — раздел</h2>
-                                <h3>h3 — подраздел</h3>
-                                <h4>h4 — второстепенный</h4>
-                                <h5>h5 — мелкий</h5>
-                                <h6>h6 — самый мелкий</h6>
-                                <hr>
-                                <p>Горизонтальная линия <code>&lt;hr&gt;</code> — тематический разделитель.</p>
-                            </div>
-                            <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ ====================== -->
-            <div class="card__cls" id="visual-blocks">
-                <div class="section-header"><h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">📦 Fieldset + legend (группировка полей)</div>
-                            <div class="demo-view">
-                                <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
-                                    <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
-                                    <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
-                                    <label>Email: <input type="email" placeholder="user@example.com"></label>
-                                </fieldset>
-                                <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
-                                    <legend>🔒 Заблокированная группа</legend>
-                                    <input type="text" value="Неактивно">
-                                </fieldset>
-                            </div>
-                            <div class="demo-note">✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</div>
-                        </div>
-
-                        <div class="demo-box">
-                            <div class="demo-title">📜 Blockquote — цитата с атрибутом cite</div>
-                            <div class="demo-view">
-                                <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
-                                    <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
-                                    <footer>— MDN Web Docs</footer>
-                                </blockquote>
-                            </div>
-                            <div class="demo-note">📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</div>
-                        </div>
-
-                        <div class="demo-box">
-                            <div class="demo-title">💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</div>
-                            <div class="demo-view">
-                                <pre>Тег &lt;pre&gt; сохраняет   пробелы
-                               и переносы — удобно для кода.</pre>
-                                <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
-            &lt;div class="root_div__cls"&gt;
-                &lt;h1&gt;Привет, мир!&lt;/h1&gt;
-                &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
-            &lt;/div&gt;</code></pre>
-                                <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
-                            </div>
-                            <div class="demo-note">🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</div>
-                        </div>
-
-                        <div class="demo-box">
-                            <div class="demo-title">📄 Абзац &lt;p&gt; и его стилизация</div>
-                            <div class="demo-view">
-                                <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
-                                <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
-                                <p>Абзац с <br> переносом строки внутри.</p>
-                            </div>
-                            <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">✍️ Абзацы vs переносы строк (правильное использование)</div>
-                            <div class="demo-view">
-                                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                                    <div style="flex: 1;">
-                                        <h4>✅ Три абзаца &lt;p&gt;</h4>
-                                        <p>Абзац 1: Законченная мысль. После него будет отступ.</p>
-                                        <p>Абзац 2: Другая мысль. Скринридер сделает паузу.</p>
-                                        <p>Абзац 3: Удобно читать и стилизовать.</p>
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <h4>✅ Один абзац + &lt;br&gt;</h4>
-                                        <p>
-                                            С уважением,<br>
-                                            Команда поддержки<br>
-                                            Тел: 8-800-555-35-35
-                                        </p>
-                                        <p style="margin-top: 1rem;">Стихи:<br>
-                                            В лесу родилась ёлочка,<br>
-                                            В лесу она росла.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="demo-note">
-                                📖 <strong>Правило:</strong> <code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
-                                <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== ФОРМАТИРОВАНИЕ СИМВОЛОВ ====================== -->
-            <div class="card__cls" id="format">
-                <div class="section-header"><h2>✨ Смысловое и визуальное форматирование</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">strong / em / b / i / mark / small / del / ins / sub / sup</div>
-                            <div class="demo-view">
-                                <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
-                                <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
-                                <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
-                                <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
-                                <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
-                                <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
-                                <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
-                                <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
-                                <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
-                            </div>
-                            <div class="demo-note">🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</div>
-                            <div class="demo-view">
-                                <p>
-                                    Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
-                                    Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
-                                    Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
-                                    Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
-                                    Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
-                                    Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
-                                </p>
-                            </div>
-                            <div class="demo-note">
-                                📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> (или стрелка <code>→</code>) — обычный текст. Это улучшает доступность и семантику.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== СПИСКИ ====================== -->
-            <div class="card__cls" id="lists">
-                <div class="section-header"><h2>📋 Списки (ul, ol, dl)</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">Маркированный (ul)</div>
-                            <div class="demo-view">
-                                <ul>
-                                    <li>Элемент списка</li>
-                                    <li>Можно вкладывать
-                                        <ul><li>Вложенный пункт</li><li>Глубина любая</li></ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">Нумерованный (ol)</div>
-                            <div class="demo-view">
-                                <ol start="3" type="A">
-                                    <li>Первый пункт (с атрибутами start="3", type="A")</li>
-                                    <li>Второй пункт
-                                        <ol><li>подпункт a</li></ol>
-                                    </li>
-                                </ol>
-                            </div>
-                            <div class="demo-note">⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">Список описаний (dl / dt / dd)</div>
-                            <div class="demo-view">
-                                <dl>
-                                    <dt>HTML</dt>
-                                    <dd>Язык гипертекстовой разметки, структура страницы.</dd>
-                                    <dt>CSS</dt>
-                                    <dd>Каскадные таблицы стилей — оформление.</dd>
-                                    <dt>JavaScript</dt>
-                                    <dd>Динамика и интерактивность.</dd>
-                                </dl>
-                            </div>
-                            <div class="demo-note">📖 Применяется для глоссариев, метаданных, пар "термин-описание".</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== ТАБЛИЦЫ ====================== -->
-            <div class="card__cls" id="tables">
-                <div class="section-header"><h2>📊 Таблицы: &lt;table&gt; и компания</h2></div>
-                <div class="section-content">
+        <!-- ====================== ТЕКСТОВЫЕ ТЕГИ ====================== -->
+        <div class="card__cls" id="textId">
+            <div class="section-header"><h2>📌 Текст & заголовки</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
                     <div class="demo-box">
-                        <div class="demo-title">Базовая таблица + объединение ячеек (colspan / rowspan)</div>
+                        <div class="demo-title">Заголовки h1–h6 (иерархия)</div>
                         <div class="demo-view">
-                            <table class="simple-table">
-                                <thead>
-                                    <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
-                                    <tr><td rowspan="2">Команда</td><td>Бэкенд</td><td>5 лет</td></tr>
-                                    <tr><td>DevOps</td><td>2 года</td></tr>
-                                    <tr><td colspan="2">Итого специалистов</td><td>3+</td></tr>
-                                </tbody>
-                            </table>
+                            <h1>h1 — главный заголовок</h1>
+                            <h2>h2 — раздел</h2>
+                            <h3>h3 — подраздел</h3>
+                            <h4>h4 — второстепенный</h4>
+                            <h5>h5 — мелкий</h5>
+                            <h6>h6 — самый мелкий</h6>
+                            <hr>
+                            <p>Горизонтальная линия <code>&lt;hr&gt;</code> — тематический разделитель.</p>
                         </div>
-                        <div class="demo-note">🧩 thead/tbody/tfoot — для семантической группировки. Colspan объединяет столбцы, rowspan — строки.</div>
+                        <div class="demo-note">💡 Нюанс: h1 на странице обычно один. Браузеры добавляют margin, стилизуйте осознанно.</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- ====================== ФОРМЫ ====================== -->
-            <div class="card__cls" id="forms">
-                <div class="section-header"><h2>📝 Формы и поля ввода</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">Типовые элементы: text, radio, checkbox, select, textarea, кнопки</div>
-                            <div class="demo-view">
-                                <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
-                                    <div class="form-group"><label>Текст:</label> <input type="text" placeholder="Ваше имя" required></div>
-                                    <div class="form-group"><label>Email:</label> <input type="email" value="hello@example.com"></div>
-                                    <div class="form-group"><label>Пароль:</label> <input type="password" placeholder="****"></div>
-                                    <div class="form-group"><label>Радио:</label>
-                                        <input type="radio" name="gender" id="m"> <label for="m">Муж</label>
-                                        <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
-                                    </div>
-                                    <div class="form-group"><label>Чекбокс:</label> <input type="checkbox"> Согласие</div>
-                                    <div class="form-group"><label>Выбор:</label>
-                                        <select><option>HTML</option><option>CSS</option><option selected>JS</option></select>
-                                    </div>
-                                    <div class="form-group"><label>Комментарий:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
-                                    <div class="form-group"><button type="submit">Отправить</button> <button type="reset">Сброс</button></div>
-                                </form>
-                            </div>
-                            <div class="demo-note">🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</div>
+        <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ ====================== -->
+        <div class="card__cls" id="visualBlocksId">
+            <div class="section-header"><h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
+                    <div class="demo-box">
+                        <div class="demo-title">📦 Fieldset + legend (группировка полей)</div>
+                        <div class="demo-view">
+                            <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+                                <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
+                                <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
+                                <label>Email: <input type="email" placeholder="user@example.com"></label>
+                            </fieldset>
+                            <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
+                                <legend>🔒 Заблокированная группа</legend>
+                                <input type="text" value="Неактивно">
+                            </fieldset>
                         </div>
+                        <div class="demo-note">✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</div>
+                    </div>
 
-                        <div class="demo-box">
-                            <div class="demo-title">🔢 Числовое поле: input type="number" + кнопки-стрелки</div>
-                            <div class="demo-view">
-                                <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
-                                    <div class="form-group">
-                                        <label>Количество:</label>
-                                        <input type="number" name="quantity" value="5" min="1" max="20" step="1">
-                                        <small style="margin-left: 0.5rem; color: #4b5563;">▲▼ (кликните или используйте стрелки)</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Шаг 0.5:</label>
-                                        <input type="number" step="0.5" value="2.5" min="0" max="10">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Проценты:</label>
-                                        <input type="number" value="75" min="0" max="100" step="5">
-                                    </div>
-                                    <button type="submit">Показать значение</button>
-                                </form>
-                            </div>
-                            <div class="demo-note">
-                                🧩 <strong>Тонкости type="number":</strong>
-                                <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
-                                    <li>Атрибуты: <code>min</code>, <code>max</code>, <code>step</code> (по умолчанию step="1").</li>
-                                    <li>В браузерах появляются стрелки (спиннер), можно кликать или использовать клавиши ↑/↓.</li>
-                                    <li>⚠️ <strong>Важно:</strong> при отправке формы значение передаётся как число, но в некоторых локалях десятичный разделитель — запятая (зависит от браузера). Для надёжности используйте <code>step="any"</code> или валидацию на сервере.</li>
-                                    <li>Стилизовать стрелки сложно, но можно скрыть их через CSS (<code>input[type=number]::-webkit-inner-spin-button</code>).</li>
-                                </ul>
-                            </div>
+                    <div class="demo-box">
+                        <div class="demo-title">📜 Blockquote — цитата с атрибутом cite</div>
+                        <div class="demo-view">
+                            <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
+                                <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
+                                <footer>— MDN Web Docs</footer>
+                            </blockquote>
                         </div>
+                        <div class="demo-note">📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</div>
+                    </div>
 
-                        <div class="demo-box">
-                            <div class="demo-title">📊 progress vs meter + спиннеры (числовые поля)</div>
-                            <div class="demo-view">
-                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                                    <div>
-                                        <label><strong>progress</strong> (загрузка файла):</label>
-                                        <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
-                                        <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
-                                        <div style="margin-top: 0.5rem;">
-                                            <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
-                                            <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
-                                        </div>
-                                        <div class="demo-note" style="margin-top: 0.5rem; background: transparent; border: none; padding: 0;">
-                                            💡 Используется для задач с неизвестной длительностью. Меняйте значение – полоса заполняется.
-                                            <br>
-                                            🟢 <strong>Зоны:</strong> <code>low="0.3"</code> <code>high="0.8"</code> – значение ниже 0.3 = красный, 0.3–0.8 = жёлтый, выше 0.8 = зелёный (если optimum выше high). Попробуйте изменить – цвет полоски меняется.
-                                        </div>
-                                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</div>
+                        <div class="demo-view">
+                            <pre>Тег &lt;pre&gt; сохраняет   пробелы
+                           и переносы — удобно для кода.</pre>
+                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
+        &lt;div class="root_div__cls"&gt;
+            &lt;h1&gt;Привет, мир!&lt;/h1&gt;
+            &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
+        &lt;/div&gt;</code></pre>
+                            <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
+                        </div>
+                        <div class="demo-note">🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">📄 Абзац &lt;p&gt; и его стилизация</div>
+                        <div class="demo-view">
+                            <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
+                            <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
+                            <p>Абзац с <br> переносом строки внутри.</p>
+                        </div>
+                        <div class="demo-note">🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">✍️ Абзацы vs переносы строк (правильное использование)</div>
+                        <div class="demo-view">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="flex: 1;">
+                                    <h4>✅ Три абзаца &lt;p&gt;</h4>
+                                    <p>Абзац 1: Законченная мысль. После него будет отступ.</p>
+                                    <p>Абзац 2: Другая мысль. Скринридер сделает паузу.</p>
+                                    <p>Абзац 3: Удобно читать и стилизовать.</p>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4>✅ Один абзац + &lt;br&gt;</h4>
+                                    <p>
+                                        С уважением,<br>
+                                        Команда поддержки<br>
+                                        Тел: 8-800-555-35-35
+                                    </p>
+                                    <p style="margin-top: 1rem;">Стихи:<br>
+                                        В лесу родилась ёлочка,<br>
+                                        В лесу она росла.
+                                    </p>
                                 </div>
                             </div>
-                            <div class="demo-note">
-                                🧠 <strong>Ключевое отличие:</strong> <code>progress</code> показывает <em>ход выполнения</em>, <code>meter</code> показывает <em>значение в шкале</em>
-                            </div>
+                        </div>
+                        <div class="demo-note">
+                            📖 <strong>Правило:</strong> <code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
+                            <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ФОРМАТИРОВАНИЕ СИМВОЛОВ ====================== -->
+        <div class="card__cls" id="formatId">
+            <div class="section-header"><h2>✨ Смысловое и визуальное форматирование</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
+                    <div class="demo-box">
+                        <div class="demo-title">strong / em / b / i / mark / small / del / ins / sub / sup</div>
+                        <div class="demo-view">
+                            <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
+                            <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
+                            <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
+                            <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
+                            <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
+                            <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
+                            <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
+                            <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
+                            <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
+                        </div>
+                        <div class="demo-note">🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</div>
+                        <div class="demo-view">
+                            <p>
+                                Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
+                                Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
+                                Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
+                                Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
+                                Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
+                                Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
+                            </p>
+                        </div>
+                        <div class="demo-note">
+                            📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> (или стрелка <code>→</code>) — обычный текст. Это улучшает доступность и семантику.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== СПИСКИ ====================== -->
+        <div class="card__cls" id="listsId">
+            <div class="section-header"><h2>📋 Списки (ul, ol, dl)</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
+                    <div class="demo-box">
+                        <div class="demo-title">Маркированный (ul)</div>
+                        <div class="demo-view">
+                            <ul>
+                                <li>Элемент списка</li>
+                                <li>Можно вкладывать
+                                    <ul><li>Вложенный пункт</li><li>Глубина любая</li></ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Нумерованный (ol)</div>
+                        <div class="demo-view">
+                            <ol start="3" type="A">
+                                <li>Первый пункт (с атрибутами start="3", type="A")</li>
+                                <li>Второй пункт
+                                    <ol><li>подпункт a</li></ol>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="demo-note">⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Список описаний (dl / dt / dd)</div>
+                        <div class="demo-view">
+                            <dl>
+                                <dt>HTML</dt>
+                                <dd>Язык гипертекстовой разметки, структура страницы.</dd>
+                                <dt>CSS</dt>
+                                <dd>Каскадные таблицы стилей — оформление.</dd>
+                                <dt>JavaScript</dt>
+                                <dd>Динамика и интерактивность.</dd>
+                            </dl>
+                        </div>
+                        <div class="demo-note">📖 Применяется для глоссариев, метаданных, пар "термин-описание".</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ТАБЛИЦЫ ====================== -->
+        <div class="card__cls" id="tablesId">
+            <div class="section-header"><h2>📊 Таблицы: &lt;table&gt; и компания</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Базовая таблица + объединение ячеек (colspan / rowspan)</div>
+                    <div class="demo-view">
+                        <table class="simple-table">
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td rowspan="2">Команда</td><td>Бэкенд</td><td>5 лет</td></tr>
+                                <tr><td>DevOps</td><td>2 года</td></tr>
+                                <tr><td colspan="2">Итого специалистов</td><td>3+</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="demo-note">🧩 thead/tbody/tfoot — для семантической группировки. Colspan объединяет столбцы, rowspan — строки.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ФОРМЫ ====================== -->
+        <div class="card__cls" id="formsId">
+            <div class="section-header"><h2>📝 Формы и поля ввода</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
+                    <div class="demo-box">
+                        <div class="demo-title">Типовые элементы</div>
+                        <div class="demo-view">
+                            <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
+                                <div class="form-group"><label>input text:</label> <input type="text" placeholder="Ваше имя" required></div>
+                                <div class="form-group"><label>input email:</label> <input type="email" value="hello@example.com"></div>
+                                <div class="form-group"><label>input password:</label> <input type="password" placeholder="****"></div>
+                                <div class="form-group"><label>input radio:</label>
+                                    <input type="radio" name="gender" id="m"> <label for="m">Муж</label>
+                                    <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
+                                </div>
+                                <div class="form-group"><label>input checkbox:</label> <input type="checkbox"> Согласие</div>
+                                <div class="form-group"><label>select option:</label>
+                                    <select>
+                                        <option>HTML</option>
+                                        <option>CSS</option>
+                                        <option selected>JS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label>textarea:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
+                                <div class="form-group">
+                                    <button type="submit">Отправить</button>
+                                    <button type="reset">Сброс</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="demo-note">🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">🔢 Числовое поле: input type="number" + кнопки-стрелки</div>
+                        <div class="demo-view">
+                            <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
+                                <div class="form-group">
+                                    <label>input number:</label>
+                                    <input type="number" name="quantity" value="5" min="1" max="20" step="1">
+                                    <small style="margin-left: 0.5rem; color: #4b5563;">▲▼ (кликните или используйте стрелки)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>input number Шаг 0.5:</label>
+                                    <input type="number" step="0.5" value="2.5" min="0" max="10">
+                                </div>
+                                <div class="form-group">
+                                    <label>input number Проценты:</label>
+                                    <input type="number" value="75" min="0" max="100" step="5">
+                                </div>
+                                <button type="submit">Показать значение</button>
+                            </form>
+                        </div>
+                        <div class="demo-note">
+                            🧩 <strong>Тонкости type="number":</strong>
+                            <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
+                                <li>Атрибуты: <code>min</code>, <code>max</code>, <code>step</code> (по умолчанию step="1").</li>
+                                <li>В браузерах появляются стрелки (спиннер), можно кликать или использовать клавиши ↑/↓.</li>
+                                <li>⚠️ <strong>Важно:</strong> при отправке формы значение передаётся как число, но в некоторых локалях десятичный разделитель — запятая (зависит от браузера). Для надёжности используйте <code>step="any"</code> или валидацию на сервере.</li>
+                                <li>Стилизовать стрелки сложно, но можно скрыть их через CSS (<code>input[type=number]::-webkit-inner-spin-button</code>).</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <script defer>
-                        // синхронизация progress / meter со слайдером и спиннером
-                        const progressSlider = document.getElementById('progressSlider');
-                        const progressNumber = document.getElementById('progressNumber');
-                        const demoProgress = document.getElementById('demoProgress');
-                        const demoMeter = document.getElementById('demoMeter');
+                    <div class="demo-box">
+                        <div class="demo-title">📊 progress vs meter + спиннеры (числовые поля)</div>
+                        <div class="demo-view">
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <div>
+                                    <label>progress/meter:</label>
+                                    <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+                                    <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+                                    <div style="margin-top: 0.5rem;">
+                                        <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
+                                        <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
+                                    </div>
+                                    <div class="demo-note" style="margin-top: 0.5rem; background: transparent; border: none; padding: 0;">
+                                        💡 Используется для задач с неизвестной длительностью. Меняйте значение – полоса заполняется.
+                                        <br>
+                                        🟢 <strong>Зоны:</strong> <code>low="0.3"</code> <code>high="0.8"</code> – значение ниже 0.3 = красный, 0.3–0.8 = жёлтый, выше 0.8 = зелёный (если optimum выше high). Попробуйте изменить – цвет полоски меняется.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="demo-note">
+                            🧠 <strong>Ключевое отличие:</strong> <code>progress</code> показывает <em>ход выполнения</em>, <code>meter</code> показывает <em>значение в шкале</em>
+                        </div>
+                    </div>
+                </div>
 
-                        if (progressSlider && progressNumber && demoProgress && demoMeter) {
-                            function updateProgressMeter(value) {
-                                let v = parseFloat(value);
-                                if (isNaN(v)) v = 0;
-                                v = Math.min(1, Math.max(0, v));
-                                demoMeter.value = v;
-                                demoProgress.value = v;
-                                progressSlider.value = v;
-                                progressNumber.value = v;
-                            }
-                            progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
-                            progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                <script defer>
+                    // синхронизация progress / meter со слайдером и спиннером
+                    const progressSlider = document.getElementById('progressSlider');
+                    const progressNumber = document.getElementById('progressNumber');
+                    const demoProgress = document.getElementById('demoProgress');
+                    const demoMeter = document.getElementById('demoMeter');
+
+                    if (progressSlider && progressNumber && demoProgress && demoMeter) {
+                        function updateProgressMeter(value) {
+                            let v = parseFloat(value);
+                            if (isNaN(v)) v = 0;
+                            v = Math.min(1, Math.max(0, v));
+                            demoMeter.value = v;
+                            demoProgress.value = v;
+                            progressSlider.value = v;
+                            progressNumber.value = v;
                         }
-                    </script>
-                </div>
+                        progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                        progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                    }
+                </script>
             </div>
+        </div>
 
-            <!-- ====================== МЕДИА ====================== -->
-            <div class="card__cls" id="media">
-                <div class="section-header"><h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">Изображение & figure</div>
-                            <div class="demo-view">
-                                <figure>
-                                    <img src="https://picsum.photos/id/104/200/120" alt="Пример пейзажа" style="border-radius: 12px; max-width:100%">
-                                    <figcaption>figcaption — подпись к изображению (семантически связывает)</figcaption>
-                                </figure>
-                            </div>
-                            <div class="demo-note">⚠️ alt — обязательный атрибут для доступности. figure/figcaption группируют медиа с подписью.</div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">Видео / Аудио (HTML5)</div>
-                            <div class="demo-view">
-                                <video controls width="100%" style="max-width:260px" poster="https://picsum.photos/id/20/300/150">
-                                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                                    Ваш браузер не поддерживает видео.
-                                </video>
-                                <audio controls style="width:100%; margin-top: 8px;">
-                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                                </audio>
-                            </div>
-                            <div class="demo-note">🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">iframe — встраивание контента</div>
-                            <div class="demo-view">
-                                <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== СЕМАНТИЧЕСКАЯ РАЗМЕТКА ====================== -->
-            <div class="card__cls" id="semantic">
-                <div class="section-header"><h2>🏛️ Семантические блоки (глобальные+локальные)</h2></div>
-                <div class="section-content">
-                    <div class="semantic-demo">
-                        <header>🧭 Шапка (header) — логотип, навигация</header>
-                        <nav>🔗 Навигация (nav) — ссылки меню</nav>
-                        <main>
-                            <section>📌 Секция (section) — тематическая группа</section>
-                            <article>📰 Статья (article) — независимый контент (пост, новость)</article>
-                            <aside>📌 Боковая панель (aside) — доп. информация, реклама</aside>
-                        </main>
-                        <footer>📆 Футер (footer) — контакты, копирайт</footer>
-                    </div>
-                    <div class="demo-note" style="margin-top: 12px;">🧠 Семантика улучшает SEO и доступность. Не используйте div для всего — header, main, footer дают структуру.</div>
-                </div>
-            </div>
-
-            <!-- ====================== ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ====================== -->
-            <div class="card__cls" id="interact">
-                <div class="section-header"><h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2></div>
-                <div class="section-content">
-                    <div class="several_columns__class">
-                        <div class="demo-box">
-                            <div class="demo-title">details + summary (спойлер)</div>
-                            <div class="demo-view">
-                                <details>
-                                    <summary>📖Блок СКРЫТЫЙ</summary>
-                                    <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
-                                </details>
-                                <details open>
-                                    <summary>Блок ОТКРЫТЫЙ</summary>
-                                    <p>Здесь дополнительная информация всегда видна.</p>
-                                </details>
-                            </div>
-                        </div>
-                        <div class="demo-box">
-                            <div class="demo-title">Тег dialog (экспериментальный, но полезный)</div>
-                            <div class="demo-view">
-                                <dialog id="demoDialog">
-                                    <p>Это модальное окно (dialog).</p>
-                                    <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
-                                </dialog>
-                                <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
-                            </div>
-                            <div class="demo-note">💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================== ССЫЛКИ И НАВИГАЦИЯ ====================== -->
-            <div class="card__cls" id="links">
-                <div class="section-header"><h2>🔗 Гиперссылки & якоря</h2></div>
-                <div class="section-content">
+        <!-- ====================== МЕДИА ====================== -->
+        <div class="card__cls" id="mediaId">
+            <div class="section-header"><h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
                     <div class="demo-box">
-                        <div class="demo-title">Ссылки: target, якоря, относительные пути</div>
+                        <div class="demo-title">Изображение & figure</div>
                         <div class="demo-view">
-                            <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
-                            <p><a href="#text">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
-                            <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
-                            <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
-                            <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
+                            <figure>
+                                <img src="https://picsum.photos/id/104/200/120" alt="Пример пейзажа" style="border-radius: 12px; max-width:100%">
+                                <figcaption>figcaption — подпись к изображению (семантически связывает)</figcaption>
+                            </figure>
                         </div>
-                        <div class="demo-note">🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</div>
+                        <div class="demo-note">⚠️ alt — обязательный атрибут для доступности. figure/figcaption группируют медиа с подписью.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Видео / Аудио (HTML5)</div>
+                        <div class="demo-view">
+                            <video controls width="100%" style="max-width:260px" poster="https://picsum.photos/id/20/300/150">
+                                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает видео.
+                            </video>
+                            <audio controls style="width:100%; margin-top: 8px;">
+                                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                        <div class="demo-note">🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">iframe — встраивание контента</div>
+                        <div class="demo-view">
+                            <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="demo-note">📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- дополнительный блок с глобальными атрибутами и data-* -->
-            <div class="card__cls">
-                <div class="section-header"><h2>🧰 Дополнительно: глобальные атрибуты & data-*</h2></div>
-                <div class="section-content">
+        <!-- ====================== СЕМАНТИЧЕСКАЯ РАЗМЕТКА ====================== -->
+        <div class="card__cls" id="semanticId">
+            <div class="section-header"><h2>🏛️ Семантические блоки (глобальные+локальные)</h2></div>
+            <div class="section-content">
+                <div class="semantic-demo">
+                    <header>🧭 Шапка (header) — логотип, навигация</header>
+                    <nav>🔗 Навигация (nav) — ссылки меню</nav>
+                    <main>
+                        <section>📌 Секция (section) — тематическая группа</section>
+                        <article>📰 Статья (article) — независимый контент (пост, новость)</article>
+                        <aside>📌 Боковая панель (aside) — доп. информация, реклама</aside>
+                    </main>
+                    <footer>📆 Футер (footer) — контакты, копирайт</footer>
+                </div>
+                <div class="demo-note" style="margin-top: 12px;">🧠 Семантика улучшает SEO и доступность. Не используйте div для всего — header, main, footer дают структуру.</div>
+            </div>
+        </div>
+
+        <!-- ====================== ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ====================== -->
+        <div class="card__cls" id="interactId">
+            <div class="section-header"><h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2></div>
+            <div class="section-content">
+                <div class="several_columns__class">
                     <div class="demo-box">
-                        <div class="demo-title">Атрибуты class, id, style, hidden, title, data-*</div>
+                        <div class="demo-title">details + summary (спойлер)</div>
                         <div class="demo-view">
-                            <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
-                            <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
-                            <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
-                            <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
+                            <details>
+                                <summary>📖Блок СКРЫТЫЙ</summary>
+                                <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
+                            </details>
+                            <details open>
+                                <summary>Блок ОТКРЫТЫЙ</summary>
+                                <p>Здесь дополнительная информация всегда видна.</p>
+                            </details>
                         </div>
-                        <div class="demo-note">💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</div>
+                    </div>
+                    <div class="demo-box">
+                        <div class="demo-title">Тег dialog (экспериментальный, но полезный)</div>
+                        <div class="demo-view">
+                            <dialog id="demoDialog">
+                                <p>Это модальное окно (dialog).</p>
+                                <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
+                            </dialog>
+                            <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
+                        </div>
+                        <div class="demo-note">💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- ====================== ВКЛАДКИ / ТАБЫ ====================== -->
-            <div class="card__cls" id="tabs">
-                <div class="section-header"><h2>📑 Вкладки (табы) — живой компонент</h2></div>
-                <div class="section-content">
-                    <div class="demo-box">
-                        <div class="demo-title">Переключение панелей: только одна активная вкладка</div>
-                        <div class="demo-view">
-                            <div class="tabs-container">
-                                <div class="tabs-buttons">
-                                    <button class="tab-btn active" data-tab="tab1">📄 Что такое табы?</button>
-                                    <button class="tab-btn" data-tab="tab2">⚙️ Как это сделано</button>
-                                    <button class="tab-btn" data-tab="tab3">💡 Нюансы и доступность</button>
+        <!-- ====================== ССЫЛКИ И НАВИГАЦИЯ ====================== -->
+        <div class="card__cls" id="linksId">
+            <div class="section-header"><h2>🔗 Гиперссылки & якоря</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Ссылки: target, якоря, относительные пути</div>
+                    <div class="demo-view">
+                        <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
+                        <p><a href="#text">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
+                        <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
+                        <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
+                        <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
+                    </div>
+                    <div class="demo-note">🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- дополнительный блок с глобальными атрибутами и data-* -->
+        <div class="card__cls" id="globalAttrsId">
+            <div class="section-header"><h2>🧰 глобальные атрибуты & data-*</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Атрибуты class, id, style, hidden, title, data-*</div>
+                    <div class="demo-view">
+                        <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
+                        <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
+                        <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
+                        <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
+                    </div>
+                    <div class="demo-note">💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== ВКЛАДКИ / ТАБЫ ====================== -->
+        <div class="card__cls" id="tabsId">
+            <div class="section-header"><h2>📑 Вкладки (табы) — живой компонент</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">Переключение панелей: только одна активная вкладка</div>
+                    <div class="demo-view">
+                        <div class="tabs-container">
+                            <div class="tabs-buttons">
+                                <button class="tab-btn active" data-tab="tab1">📄 Что такое табы?</button>
+                                <button class="tab-btn" data-tab="tab2">⚙️ Как это сделано</button>
+                                <button class="tab-btn" data-tab="tab3">💡 Нюансы и доступность</button>
+                            </div>
+                            <div class="tabs-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <p><strong>Вкладки (tabs)</strong> — это элемент интерфейса, который позволяет переключаться между несколькими панелями с контентом, не перезагружая страницу.</p>
+                                    <p>В чистом HTML <strong>нет специального тега</strong> для табов, но их легко реализовать с помощью CSS и JavaScript (или только CSS с радиокнопками).</p>
+                                    <p>✔️ Экономит место на странице<br>✔️ Улучшает навигацию по группам информации</p>
                                 </div>
-                                <div class="tabs-content">
-                                    <div class="tab-pane active" id="tab1">
-                                        <p><strong>Вкладки (tabs)</strong> — это элемент интерфейса, который позволяет переключаться между несколькими панелями с контентом, не перезагружая страницу.</p>
-                                        <p>В чистом HTML <strong>нет специального тега</strong> для табов, но их легко реализовать с помощью CSS и JavaScript (или только CSS с радиокнопками).</p>
-                                        <p>✔️ Экономит место на странице<br>✔️ Улучшает навигацию по группам информации</p>
-                                    </div>
-                                    <div class="tab-pane" id="tab2">
-                                        <pre style="background:#1e2a3a; color:#e2e8f0; padding:0.75rem; border-radius:12px; overflow-x:auto; font-size:0.8rem;">
+                                <div class="tab-pane" id="tab2">
+                                    <pre style="background:#1e2a3a; color:#e2e8f0; padding:0.75rem; border-radius:12px; overflow-x:auto; font-size:0.8rem;">
 &lt;div class="tabs-buttons"&gt;
-  &lt;button class="tab-btn active" data-tab="tab1"&gt;Вкладка 1&lt;/button&gt;
-  &lt;button class="tab-btn" data-tab="tab2"&gt;Вкладка 2&lt;/button&gt;
+&lt;button class="tab-btn active" data-tab="tab1"&gt;Вкладка 1&lt;/button&gt;
+&lt;button class="tab-btn" data-tab="tab2"&gt;Вкладка 2&lt;/button&gt;
 &lt;/div&gt;
 &lt;div class="tabs-content"&gt;
-  &lt;div class="tab-pane active" id="tab1"&gt;...&lt;/div&gt;
-  &lt;div class="tab-pane" id="tab2"&gt;...&lt;/div&gt;
+&lt;div class="tab-pane active" id="tab1"&gt;...&lt;/div&gt;
+&lt;div class="tab-pane" id="tab2"&gt;...&lt;/div&gt;
 &lt;/div&gt;
 
 // JS: при клике добавляем/удаляем класс .active
-                                        </pre>
-                                        <p>В этом примере используется простой JavaScript: при клике на кнопку активируется соответствующий <code>.tab-pane</code> и меняется стиль кнопки.</p>
-                                    </div>
-                                    <div class="tab-pane" id="tab3">
-                                        <ul>
-                                            <li>⚠️ Важно добавлять атрибуты <code>role="tablist"</code>, <code>aria-selected</code> для скринридеров (в учебном примере опущено для краткости, но в реальном проекте используйте).</li>
-                                            <li>🧩 Можно сделать и на чистом CSS: <code>&lt;input type="radio"&gt;</code> + <code>:checked</code>, но JS даёт больше контроля и динамики.</li>
-                                            <li>🎨 Активная вкладка должна быть визуально выделена (цвет, подчёркивание).</li>
-                                            <li>📱 На мобильных устройствах табы удобно превращать в аккордеон (но это уже продвинутый вариант).</li>
-                                        </ul>
-                                    </div>
+                                    </pre>
+                                    <p>В этом примере используется простой JavaScript: при клике на кнопку активируется соответствующий <code>.tab-pane</code> и меняется стиль кнопки.</p>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <ul>
+                                        <li>⚠️ Важно добавлять атрибуты <code>role="tablist"</code>, <code>aria-selected</code> для скринридеров (в учебном примере опущено для краткости, но в реальном проекте используйте).</li>
+                                        <li>🧩 Можно сделать и на чистом CSS: <code>&lt;input type="radio"&gt;</code> + <code>:checked</code>, но JS даёт больше контроля и динамики.</li>
+                                        <li>🎨 Активная вкладка должна быть визуально выделена (цвет, подчёркивание).</li>
+                                        <li>📱 На мобильных устройствах табы удобно превращать в аккордеон (но это уже продвинутый вариант).</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="demo-note">🧩 <strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS. Попробуйте переключать вкладки выше — содержимое меняется, но страница не перезагружается.</div>
                     </div>
-                    <div class="demo-box">
-                        <div class="demo-title">Альтернатива — CSS-табы на радиокнопках (без JS)</div>
-                        <div class="demo-view">
-                            <style>
-                                .css-tabs {
-                                    display: flex;
-                                    flex-direction: column;
-                                }
-                                .css-tabs-input {
-                                    display: none;
-                                }
-                                .css-tabs-labels {
-                                    display: flex;
-                                    gap: 0.5rem;
-                                    border-bottom: 1px solid #ccc;
-                                }
-                                .css-tabs-labels label {
-                                    padding: 0.5rem 1rem;
-                                    cursor: pointer;
-                                    background: #f1f5f9;
-                                    border-radius: 8px 8px 0 0;
-                                }
-                                .css-tab-pane {
-                                    display: none;
-                                    padding: 1rem;
-                                    border: 1px solid #e2e8f0;
-                                    border-top: none;
-                                }
-                                #tabRadio1:checked ~ .css-tabs-content #pane1,
-                                #tabRadio2:checked ~ .css-tabs-content #pane2,
-                                #tabRadio3:checked ~ .css-tabs-content #pane3 {
-                                    display: block;
-                                }
-                                #tabRadio1:checked ~ .css-tabs-labels label[for="tabRadio1"],
-                                #tabRadio2:checked ~ .css-tabs-labels label[for="tabRadio2"],
-                                #tabRadio3:checked ~ .css-tabs-labels label[for="tabRadio3"] {
-                                    background: white;
-                                    border-bottom: 2px solid #2a73ff;
-                                    font-weight: bold;
-                                }
-                            </style>
-                            <div class="css-tabs">
-                                <input type="radio" name="cssTab" id="tabRadio1" class="css-tabs-input" checked>
-                                <input type="radio" name="cssTab" id="tabRadio2" class="css-tabs-input">
-                                <input type="radio" name="cssTab" id="tabRadio3" class="css-tabs-input">
-                                <div class="css-tabs-labels">
-                                    <label for="tabRadio1">Без JS</label>
-                                    <label for="tabRadio2">Как это?</label>
-                                    <label for="tabRadio3">Плюсы/минусы</label>
-                                </div>
-                                <div class="css-tabs-content">
-                                    <div class="css-tab-pane" id="pane1">✨ Это вкладки без единой строчки JavaScript! Используются <code>&lt;input type="radio"&gt;</code> и CSS-селектор <code>:checked ~ ...</code>.</div>
-                                    <div class="css-tab-pane" id="pane2">🧠 Приём: скрытые радиокнопки, лейблы как кнопки, а содержимое переключается через общий контейнер и <code>display: none/block</code>.</div>
-                                    <div class="css-tab-pane" id="pane3">✔️ Минус: сложнее управлять динамическим добавлением вкладок. Плюс: работает без JS, очень легковесно.</div>
-                                </div>
+                    <div class="demo-note">🧩 <strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS. Попробуйте переключать вкладки выше — содержимое меняется, но страница не перезагружается.</div>
+                </div>
+                <div class="demo-box">
+                    <div class="demo-title">Альтернатива — CSS-табы на радиокнопках (без JS)</div>
+                    <div class="demo-view">
+                        <style>
+                            .css-tabs {
+                                display: flex;
+                                flex-direction: column;
+                            }
+                            .css-tabs-input {
+                                display: none;
+                            }
+                            .css-tabs-labels {
+                                display: flex;
+                                gap: 0.5rem;
+                                border-bottom: 1px solid #ccc;
+                            }
+                            .css-tabs-labels label {
+                                padding: 0.5rem 1rem;
+                                cursor: pointer;
+                                background: #f1f5f9;
+                                border-radius: 8px 8px 0 0;
+                            }
+                            .css-tab-pane {
+                                display: none;
+                                padding: 1rem;
+                                border: 1px solid #e2e8f0;
+                                border-top: none;
+                            }
+                            #tabRadio1:checked ~ .css-tabs-content #pane1,
+                            #tabRadio2:checked ~ .css-tabs-content #pane2,
+                            #tabRadio3:checked ~ .css-tabs-content #pane3 {
+                                display: block;
+                            }
+                            #tabRadio1:checked ~ .css-tabs-labels label[for="tabRadio1"],
+                            #tabRadio2:checked ~ .css-tabs-labels label[for="tabRadio2"],
+                            #tabRadio3:checked ~ .css-tabs-labels label[for="tabRadio3"] {
+                                background: white;
+                                border-bottom: 2px solid #2a73ff;
+                                font-weight: bold;
+                            }
+                        </style>
+                        <div class="css-tabs">
+                            <input type="radio" name="cssTab" id="tabRadio1" class="css-tabs-input" checked>
+                            <input type="radio" name="cssTab" id="tabRadio2" class="css-tabs-input">
+                            <input type="radio" name="cssTab" id="tabRadio3" class="css-tabs-input">
+                            <div class="css-tabs-labels">
+                                <label for="tabRadio1">Без JS</label>
+                                <label for="tabRadio2">Как это?</label>
+                                <label for="tabRadio3">Плюсы/минусы</label>
+                            </div>
+                            <div class="css-tabs-content">
+                                <div class="css-tab-pane" id="pane1">✨ Это вкладки без единой строчки JavaScript! Используются <code>&lt;input type="radio"&gt;</code> и CSS-селектор <code>:checked ~ ...</code>.</div>
+                                <div class="css-tab-pane" id="pane2">🧠 Приём: скрытые радиокнопки, лейблы как кнопки, а содержимое переключается через общий контейнер и <code>display: none/block</code>.</div>
+                                <div class="css-tab-pane" id="pane3">✔️ Минус: сложнее управлять динамическим добавлением вкладок. Плюс: работает без JS, очень легковесно.</div>
                             </div>
                         </div>
-                        <div class="demo-note">📌 Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически. Выше приведён работающий пример.</div>
                     </div>
+                    <div class="demo-note">📌 Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически. Выше приведён работающий пример.</div>
                 </div>
             </div>
+        </div>
 
-            <!-- ====================== КОМПОНОВКА И ВЫРАВНИВАНИЕ (FLEXBOX) ====================== -->
-            <div class="card__cls" id="layout">
-                <div class="section-header"><h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2></div>
-                <div class="section-content">
-                    <div class="demo-box">
-                        <div class="demo-title">🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</div>
-                        <div class="demo-view">
-                            <style>
-                                .layout-demo {
-                                    background: #f8fafc;
-                                    border-radius: 1rem;
-                                    padding: 1rem;
-                                    margin-bottom: 1rem;
-                                }
-                                .flex-row {
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                    flex-wrap: wrap;
-                                    gap: 1rem;
-                                }
-                                .flex-left {
-                                    display: flex;
-                                    gap: 0.5rem;
-                                    align-items: center;
-                                }
-                                .flex-center {
-                                    display: flex;
-                                    gap: 1rem;
-                                    justify-content: center;
-                                    flex-wrap: wrap;
-                                }
-                                .flex-right {
-                                    display: flex;
-                                    gap: 0.75rem;
-                                    align-items: center;
-                                }
-                                .demo-chip {
-                                    background: white;
-                                    padding: 0.4rem 0.8rem;
-                                    border-radius: 2rem;
-                                    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-                                    border: 1px solid #e2e8f0;
-                                }
-                                .demo-logo {
-                                    font-weight: bold;
-                                    font-size: 1.2rem;
-                                    background: #2a73ff;
-                                    color: white;
-                                    padding: 0.3rem 0.8rem;
-                                    border-radius: 2rem;
-                                }
-                            </style>
+        <!-- ====================== КОМПОНОВКА И ВЫРАВНИВАНИЕ (FLEXBOX) ====================== -->
+        <div class="card__cls" id="layoutId">
+            <div class="section-header"><h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</div>
+                    <div class="demo-view">
+                        <style>
+                            .layout-demo {
+                                background: #f8fafc;
+                                border-radius: 1rem;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+                            }
+                            .flex-row {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                gap: 1rem;
+                            }
+                            .flex-left {
+                                display: flex;
+                                gap: 0.5rem;
+                                align-items: center;
+                            }
+                            .flex-center {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                            }
+                            .flex-right {
+                                display: flex;
+                                gap: 0.75rem;
+                                align-items: center;
+                            }
+                            .demo-chip {
+                                background: white;
+                                padding: 0.4rem 0.8rem;
+                                border-radius: 2rem;
+                                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                                border: 1px solid #e2e8f0;
+                            }
+                            .demo-logo {
+                                font-weight: bold;
+                                font-size: 1.2rem;
+                                background: #2a73ff;
+                                color: white;
+                                padding: 0.3rem 0.8rem;
+                                border-radius: 2rem;
+                            }
+                        </style>
 
-                            <div class="layout-demo">
-                                <div class="flex-row">
-                                    <div class="flex-left">
-                                        <div class="demo-logo">Лого</div>
-                                    </div>
-                                    <div class="flex-center">
-                                        <span class="demo-chip">Главная</span>
-                                        <span class="demo-chip">Каталог</span>
-                                        <span class="demo-chip">О нас</span>
-                                        <span class="demo-chip">Контакты</span>
-                                    </div>
-                                    <div class="flex-right">
-                                        <span class="demo-chip">🔍</span>
-                                        <span class="demo-chip">👤</span>
-                                        <span class="demo-chip">🛒</span>
-                                    </div>
+                        <div class="layout-demo">
+                            <div class="flex-row">
+                                <div class="flex-left">
+                                    <div class="demo-logo">Лого</div>
                                 </div>
-                            </div>
-
-                            <div class="layout-demo">
-                                <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
-                                    <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
-                                    <div style="display: flex; gap: 1rem;">
-                                        <span>Центр 1</span>
-                                        <span>Центр 2</span>
-                                        <span>Центр 3</span>
-                                    </div>
-                                    <div style="display: flex; gap: 0.5rem;">
-                                        <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
-                                        <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
-                                    </div>
+                                <div class="flex-center">
+                                    <span class="demo-chip">Главная</span>
+                                    <span class="demo-chip">Каталог</span>
+                                    <span class="demo-chip">О нас</span>
+                                    <span class="demo-chip">Контакты</span>
                                 </div>
-                            </div>
-
-                            <div class="demo-note" style="margin-top: 1rem;">
-                                🧠 <strong>Как это работает (Flexbox):</strong>
-                                <pre style="background: #1e2a3a; color: #e2e8f0; padding: 0.75rem; border-radius: 12px; margin-top: 0.5rem; overflow-x: auto;">
-        &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
-            &lt;div&gt;Левый элемент&lt;/div&gt;
-            &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
-            &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
-        &lt;/div&gt;</pre>
-                                ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
-                                ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
-                                ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
-                                ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
+                                <div class="flex-right">
+                                    <span class="demo-chip">🔍</span>
+                                    <span class="demo-chip">👤</span>
+                                    <span class="demo-chip">🛒</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="demo-box">
-                        <div class="demo-title">📌 Другие варианты: только левый + правый, или равномерное распределение</div>
-                        <div class="demo-view">
-                            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
-                                    <span>🏠 Логотип</span>
-                                    <span>⚙️ Иконка настроек</span>
+                        <div class="layout-demo">
+                            <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
+                                <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <span>Центр 1</span>
+                                    <span>Центр 2</span>
+                                    <span>Центр 3</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-evenly; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
-                                    <span>Равномерно</span>
-                                    <span>Равномерно</span>
-                                    <span>Равномерно</span>
-                                </div>
-                                <div style="display: flex; justify-content: center; gap: 2rem; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
-                                    <span>По центру</span>
-                                    <span>По центру</span>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
                                 </div>
                             </div>
-                            <div class="demo-note" style="margin-top: 1rem;">
-                                💡 <code>justify-content: space-between</code> — крайние элементы прижаты к краям, остальное пространство между ними.<br>
-                                💡 <code>space-evenly</code> — равные отступы между всеми элементами и от краёв.<br>
-                                💡 <code>center</code> — всё группируется по центру.
-                            </div>
+                        </div>
+
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            🧠 <strong>Как это работает (Flexbox):</strong>
+                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 0.75rem; border-radius: 12px; margin-top: 0.5rem; overflow-x: auto;">
+    &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
+        &lt;div&gt;Левый элемент&lt;/div&gt;
+        &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
+        &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
+    &lt;/div&gt;</pre>
+                            ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
+                            ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
+                            ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
+                            ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ====================== РАЗМНОЖЕНИЕ БЛОКОВ СТИЛЯМИ БЕЗ JS ====================== -->
-            <div class="card__cls" id="multiply-blocks">
-                <div class="section-header"><h2>♻️ Размножение блока: один набор элементов, разные стили</h2></div>
-                <div class="section-content">
-                    <div class="demo-box">
-                        <div class="demo-title">🧬 Один и тот же набор из трёх span — три варианта оформления</div>
-                        <div class="demo-view">
-                            <style>
-                                .demo-triple {
-                                    display: flex;
-                                    gap: 1rem;
-                                    justify-content: center;
-                                    margin-bottom: 1.5rem;
-                                    padding: 1rem;
-                                    border-radius: 1rem;
-                                    transition: all 0.2s;
-                                }
-                                .demo-triple span {
-                                    padding: 0.5rem 1rem;
-                                    border-radius: 2rem;
-                                    font-weight: 500;
-                                    transition: 0.2s;
-                                }
-                                .demo-triple--gray span {
-                                    background: #e2e8f0;
-                                    color: #1e293b;
-                                }
-                                .demo-triple--gradient span {
-                                    background: linear-gradient(135deg, #667eea, #764ba2);
-                                    color: white;
-                                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                                }
-                                .demo-triple--outline span {
-                                    background: transparent;
-                                    border: 2px solid #2a73ff;
-                                    color: #2a73ff;
-                                }
-                                .demo-triple--shadow span {
-                                    background: #fef9c3;
-                                    color: #854d0e;
-                                    box-shadow: 0 4px 6px -2px rgba(0,0,0,0.1);
-                                }
-                                .demo-triple--shadow span:hover {
-                                    transform: translateY(-3px);
-                                    background: #fde047;
-                                }
-                            </style>
-
-                            <div class="demo-triple demo-triple--gray">
-                                <span>Элемент 1</span>
-                                <span>Элемент 2</span>
-                                <span>Элемент 3</span>
+                <div class="demo-box">
+                    <div class="demo-title">📌 Другие варианты: только левый + правый, или равномерное распределение</div>
+                    <div class="demo-view">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>🏠 Логотип</span>
+                                <span>⚙️ Иконка настроек</span>
                             </div>
-                            <div class="demo-triple demo-triple--gradient">
-                                <span>Элемент 1</span>
-                                <span>Элемент 2</span>
-                                <span>Элемент 3</span>
+                            <div style="display: flex; justify-content: space-evenly; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>Равномерно</span>
+                                <span>Равномерно</span>
+                                <span>Равномерно</span>
                             </div>
-                            <div class="demo-triple demo-triple--outline">
-                                <span>Элемент 1</span>
-                                <span>Элемент 2</span>
-                                <span>Элемент 3</span>
-                            </div>
-                            <div class="demo-triple demo-triple--shadow">
-                                <span>Элемент 1</span>
-                                <span>Элемент 2</span>
-                                <span>Элемент 3</span>
-                            </div>
-
-                            <div class="demo-note" style="margin-top: 1rem;">
-                                💡 <strong>Суть подхода:</strong> HTML-код блока (три <code>&lt;span&gt;</code>) копируется, но каждый раз обёрнут в контейнер с разным классом-модификатором.<br>
-                                🧠 Все стили заданы через CSS один раз. Чтобы добавить новый вариант, не нужно трогать структуру — достаточно написать новый класс и применить его к контейнеру.<br>
-                                ⚠️ Без JS полностью избежать дублирования HTML <strong>невозможно</strong>, но этот способ делает дублирование минимальным и очень удобным для переиспользования.
+                            <div style="display: flex; justify-content: center; gap: 2rem; background: #f1f5f9; padding: 0.5rem; border-radius: 0.75rem;">
+                                <span>По центру</span>
+                                <span>По центру</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="demo-box">
-                        <div class="demo-title">⚙️ Альтернатива: CSS-переменные (кастомные свойства)</div>
-                        <div class="demo-view">
-                            <style>
-                                .var-triple {
-                                    display: flex;
-                                    gap: 1rem;
-                                    justify-content: center;
-                                    margin-bottom: 1rem;
-                                }
-                                .var-triple span {
-                                    background: var(--bg, #e2e8f0);
-                                    color: var(--color, #1e293b);
-                                    padding: 0.5rem 1rem;
-                                    border-radius: 2rem;
-                                    font-weight: 500;
-                                    transition: 0.2s;
-                                    border: var(--border, none);
-                                }
-                                .var-triple--blue {
-                                    --bg: #3b82f6;
-                                    --color: white;
-                                }
-                                .var-triple--red {
-                                    --bg: #ef4444;
-                                    --color: white;
-                                    --border: 2px solid #b91c1c;
-                                }
-                                .var-triple--green {
-                                    --bg: #10b981;
-                                    --color: #064e3b;
-                                }
-                            </style>
-                            <div class="var-triple var-triple--blue">
-                                <span>Синий</span><span>Синий</span><span>Синий</span>
-                            </div>
-                            <div class="var-triple var-triple--red">
-                                <span>Красный</span><span>Красный</span><span>Красный</span>
-                            </div>
-                            <div class="var-triple var-triple--green">
-                                <span>Зелёный</span><span>Зелёный</span><span>Зелёный</span>
-                            </div>
-                            <div class="demo-note">
-                                🎨 Здесь CSS-переменные (<code>--bg</code>, <code>--color</code>) переопределяются в каждом модификаторе. Сами <code>span</code> не меняются, стили берутся из переменных.
-                            </div>
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            💡 <code>justify-content: space-between</code> — крайние элементы прижаты к краям, остальное пространство между ними.<br>
+                            💡 <code>space-evenly</code> — равные отступы между всеми элементами и от краёв.<br>
+                            💡 <code>center</code> — всё группируется по центру.
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- ====================== JS-РАЗМНОЖИТЕЛЬ ЭЛЕМЕНТОВ ====================== -->
-            <div class="card__cls" id="js_cloner__id">
-                <div class="section-header"><h2>♻️ JS-размножитель: один шаблон → много стилей</h2></div>
-                <div class="section-content">
-                    <div class="demo-box">
-                        <div class="demo-title">🧬 Блок-шаблон (id="cloneTemplate_id")</div>
-                        <div class="demo-view">
-                            <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
-                                <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">
-                                    🎨 Элемент с динамическим стилем
-                                </div>
-                            </div>
-                            <div id="cloneContainer"></div>
+        <!-- ====================== РАЗМНОЖЕНИЕ БЛОКОВ СТИЛЯМИ БЕЗ JS ====================== -->
+        <div class="card__cls" id="multiplyBlocksId">
+            <div class="section-header"><h2>♻️ Размножение блока: один набор элементов, разные стили</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧬 Один и тот же набор из трёх span — три варианта оформления</div>
+                    <div class="demo-view">
+                        <style>
+                            .demo-triple {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                margin-bottom: 1.5rem;
+                                padding: 1rem;
+                                border-radius: 1rem;
+                                transition: all 0.2s;
+                            }
+                            .demo-triple span {
+                                padding: 0.5rem 1rem;
+                                border-radius: 2rem;
+                                font-weight: 500;
+                                transition: 0.2s;
+                            }
+                            .demo-triple--gray span {
+                                background: #e2e8f0;
+                                color: #1e293b;
+                            }
+                            .demo-triple--gradient span {
+                                background: linear-gradient(135deg, #667eea, #764ba2);
+                                color: white;
+                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                            }
+                            .demo-triple--outline span {
+                                background: transparent;
+                                border: 2px solid #2a73ff;
+                                color: #2a73ff;
+                            }
+                            .demo-triple--shadow span {
+                                background: #fef9c3;
+                                color: #854d0e;
+                                box-shadow: 0 4px 6px -2px rgba(0,0,0,0.1);
+                            }
+                            .demo-triple--shadow span:hover {
+                                transform: translateY(-3px);
+                                background: #fde047;
+                            }
+                        </style>
+
+                        <div class="demo-triple demo-triple--gray">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+                        <div class="demo-triple demo-triple--gradient">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+                        <div class="demo-triple demo-triple--outline">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+                        <div class="demo-triple demo-triple--shadow">
+                            <span>Элемент 1</span>
+                            <span>Элемент 2</span>
+                            <span>Элемент 3</span>
+                        </div>
+
+                        <div class="demo-note" style="margin-top: 1rem;">
+                            💡 <strong>Суть подхода:</strong> HTML-код блока (три <code>&lt;span&gt;</code>) копируется, но каждый раз обёрнут в контейнер с разным классом-модификатором.<br>
+                            🧠 Все стили заданы через CSS один раз. Чтобы добавить новый вариант, не нужно трогать структуру — достаточно написать новый класс и применить его к контейнеру.<br>
+                            ⚠️ Без JS полностью избежать дублирования HTML <strong>невозможно</strong>, но этот способ делает дублирование минимальным и очень удобным для переиспользования.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">⚙️ Альтернатива: CSS-переменные (кастомные свойства)</div>
+                    <div class="demo-view">
+                        <style>
+                            .var-triple {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                margin-bottom: 1rem;
+                            }
+                            .var-triple span {
+                                background: var(--bg, #e2e8f0);
+                                color: var(--color, #1e293b);
+                                padding: 0.5rem 1rem;
+                                border-radius: 2rem;
+                                font-weight: 500;
+                                transition: 0.2s;
+                                border: var(--border, none);
+                            }
+                            .var-triple--blue {
+                                --bg: #3b82f6;
+                                --color: white;
+                            }
+                            .var-triple--red {
+                                --bg: #ef4444;
+                                --color: white;
+                                --border: 2px solid #b91c1c;
+                            }
+                            .var-triple--green {
+                                --bg: #10b981;
+                                --color: #064e3b;
+                            }
+                        </style>
+                        <div class="var-triple var-triple--blue">
+                            <span>Синий</span><span>Синий</span><span>Синий</span>
+                        </div>
+                        <div class="var-triple var-triple--red">
+                            <span>Красный</span><span>Красный</span><span>Красный</span>
+                        </div>
+                        <div class="var-triple var-triple--green">
+                            <span>Зелёный</span><span>Зелёный</span><span>Зелёный</span>
                         </div>
                         <div class="demo-note">
-                            🧠 <strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.
+                            🎨 Здесь CSS-переменные (<code>--bg</code>, <code>--color</code>) переопределяются в каждом модификаторе. Сами <code>span</code> не меняются, стили берутся из переменных.
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================== JS-РАЗМНОЖИТЕЛЬ ЭЛЕМЕНТОВ ====================== -->
+        <div class="card__cls" id="js_cloner__id">
+            <div class="section-header"><h2>♻️ JS-размножитель</h2></div>
+            <div class="section-content">
+                <div class="demo-box">
+                    <div class="demo-title">🧬 Блок-шаблон (id="cloneTemplate_id")</div>
+                    <div class="demo-view">
+                        <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
+                            <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">
+                                🎨 Элемент с динамическим стилем
+                            </div>
+                        </div>
+                        <div id="cloneContainer"></div>
+                    </div>
+                    <div class="demo-note">
+                        🧠 <strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Глобальный footer -->
     <footer id="root_footer__id">
         🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
     </footer>
 </div>
 
-<script>
+<script id="root_footer_script__id">
     (function bgColorOnLoad() {
         let body_bg_color__old = document.body.style.background;
         document.body.style.background = 'yellow';
@@ -1296,5 +1297,6 @@
         ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400'],
     );
 </script>
+
 </body>
 </html>
