@@ -100,6 +100,7 @@
             font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
+            line-height: 1;
         }
         #root_nav__id a:hover {
             background: #2a73ff;
@@ -286,7 +287,7 @@
         }
         /* конец стилей табов */
 
-        /* -------------------- TABS --------------------*/
+        /* -------------------- smth --------------------*/
         @media (max-width: 700px) {
             #root_div__id {
                 padding: 1rem;
@@ -1036,20 +1037,28 @@
         setTimeout(() => document.body.style.background = body_bg_color__old, 100);
     })();
 
-    // Генерация навигации: текст кнопки = id блока, title = заголовок блока
     (function generateNavRoot() {
         const navContainer = document.getElementById('root_nav__id');
-
         if (!navContainer) return;
         navContainer.innerHTML = '';
 
-        // Находим все секции-карточки с id
+        // ========== КНОПКА "НАВЕРХ" (в начало навигации) ==========
+        const topLink = document.createElement('a');
+        topLink.href = '#';
+        topLink.innerHTML = '⬆️';          // иконка вверх
+        topLink.title = 'Наверх страницы';
+        topLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        navContainer.appendChild(topLink);
+
+        // ========== ССЫЛКИ НА СЕКЦИИ ==========
         const sections = document.querySelectorAll('section.section__cls[id]');
         sections.forEach(section => {
             const sectionId = section.id;
             if (!sectionId) return;
             let titleText = '';
-
             const headerH2 = section.querySelector(':scope > h2');
             if (headerH2) titleText = headerH2.innerText.trim();
             if (!titleText) titleText = sectionId;
@@ -1066,6 +1075,17 @@
             });
             navContainer.appendChild(link);
         });
+
+        // ========== КНОПКА "ВНИЗ" (в конец навигации) ==========
+        const bottomLink = document.createElement('a');
+        bottomLink.href = '#';
+        bottomLink.innerHTML = '⬇️';        // иконка вниз
+        bottomLink.title = 'Вниз страницы';
+        bottomLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+        navContainer.appendChild(bottomLink);
     })();
 
     // плавная прокрутка для всех якорей (включая сгенерированные)
