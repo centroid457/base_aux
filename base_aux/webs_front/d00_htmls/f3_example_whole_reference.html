@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HTML справочник визуальный</title>
+    <link rel="stylesheet" href="global.css">
     <style>
         /* -------------------- BUILDINS --------------------*/
         * {
@@ -20,15 +21,6 @@
             padding: 2rem 1.5rem;
         }
 
-        code {
-            background: #edf2f7;
-            padding: 0.2rem 0.4rem;
-            border-radius: 8px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: #c7254e;
-        }
-
         hr {
             margin: 1rem 0;
         }
@@ -43,6 +35,56 @@
         }
         button:hover {
             background: #1a5ad9;
+        }
+
+        /* -------------------- CODE --------------------*/
+        code, kbd, pre, samp {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+            font-size: 0.875em; /* относительный размер, подстраивается под контекст */
+        }
+
+        /* ===== Инлайн-код (внутри текста) ===== */
+        code:not(pre code) {
+            background: #f0f2f5;
+            color: #c7254e;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            white-space: nowrap;      /* не переносить длинные строки в тексте */
+            font-size: 0.85em;
+        }
+
+        /* ===== Блок pre (обёртка для кода) ===== */
+        pre {
+            background: #1e2a3a;      /* тёмный фон как на GitHub */
+            color: #e2e8f0;           /* светлый текст */
+            padding: 1rem;
+            border-radius: 12px;
+            overflow-x: auto;          /* горизонтальная прокрутка для длинных строк */
+            margin: 1rem 0;
+            line-height: 1.45;
+        }
+
+        /* Стили для code внутри pre — отменяем инлайн-оформление */
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            white-space: pre;         /* сохраняем пробелы и переносы */
+            font-size: inherit;
+        }
+
+        /* ===== Дополнительно: улучшенный скроллбар для pre (опционально) ===== */
+        pre::-webkit-scrollbar {
+            height: 8px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: #2d3e50;
+            border-radius: 4px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: #5a6e8c;
+            border-radius: 4px;
         }
 
         /* -------------------- ROOT BLOCKS --------------------*/
@@ -367,12 +409,12 @@
                     <div class="demo-view">
                         <pre>Тег &lt;pre&gt; сохраняет   пробелы
                        и переносы — удобно для кода.</pre>
-                        <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
+                        <pre><code>&lt;!-- Пример HTML-кода --&gt;
     &lt;div id="root_div__id"&gt;
         &lt;h1&gt;Привет, мир!&lt;/h1&gt;
         &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
     &lt;/div&gt;</code></pre>
-                        <pre style="background: #fef9e3; color: #5e4b1a; padding: 0.75rem; border-radius: 12px;"><code>console.log("JavaScript внутри pre/code");</code></pre>
+                        <pre><code>console.log("JavaScript внутри pre/code");</code></pre>
                     </div>
                     <footer>🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</footer>
                 </article>
@@ -753,7 +795,7 @@
                                     <p>✔️ Экономит место на странице<br>✔️ Улучшает навигацию по группам информации</p>
                                 </div>
                                 <div class="tab-pane" id="tab2">
-                                    <pre style="background:#1e2a3a; color:#e2e8f0; padding:0.75rem; border-radius:12px; overflow-x:auto; font-size:0.8rem;">
+                                    <pre>
 &lt;div class="tabs-buttons"&gt;
   &lt;button class="tab-btn active" data-tab="tab1"&gt;Вкладка 1&lt;/button&gt;
   &lt;button class="tab-btn" data-tab="tab2"&gt;Вкладка 2&lt;/button&gt;
@@ -923,7 +965,7 @@
                         </div>
                         <div>
                             🧠 <strong>Как это работает (Flexbox):</strong>
-                            <pre style="background: #1e2a3a; color: #e2e8f0; padding: 0.75rem; border-radius: 12px; margin-top: 0.5rem; overflow-x: auto;">
+                            <pre>
     &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
         &lt;div&gt;Левый элемент&lt;/div&gt;
         &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
