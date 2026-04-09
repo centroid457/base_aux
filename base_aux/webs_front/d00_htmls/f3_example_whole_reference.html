@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HTML справочник визуальный</title>
     <style>
+        /* -------------------- BUILDINS --------------------*/
         * {
             margin: 0;
             padding: 0;
@@ -19,8 +20,33 @@
             padding: 2rem 1.5rem;
         }
 
-        /* главный контейнер */
-        .root_div__cls {
+        code {
+            background: #edf2f7;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        button {
+            background: #2a73ff;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        button:hover {
+            background: #1a5ad9;
+        }
+
+        /* -------------------- ROOT BLOCKS --------------------*/
+        #root_div__id {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
@@ -30,7 +56,6 @@
             padding: 2rem 2rem 2.5rem 2rem;
         }
 
-        /* глобальный header */
         #root_header__id {
             margin-bottom: 0.5rem;
         }
@@ -51,7 +76,6 @@
             margin-bottom: 2rem;
         }
 
-        /* глобальная навигация */
         #root_nav__id {
             /* stick top */
             position: sticky;
@@ -67,7 +91,6 @@
             padding-bottom: 0.8rem;
             border-bottom: 2px solid #e2e8f0;
         }
-
         #root_nav__id a {
             background: #eef2ff;
             color: #1e40af;
@@ -84,15 +107,23 @@
             transform: translateY(-2px);
         }
 
-        /* главное содержимое — сетка из section */
         #root_main__id {
             display: flex;
             flex-direction: column;
             gap: 2.5rem;
         }
 
-        /* каждая секция-карточка */
-        .card__cls {
+        #root_footer__id {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+
+        /* -------------------- SECTION --------------------*/
+        .section__cls {
             background: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -100,12 +131,10 @@
             overflow: hidden;
             transition: box-shadow 0.2s;
         }
-        .card__cls:hover {
+        .section__cls:hover {
             box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
         }
-
-        /* заголовок секции — прямой h2 внутри section */
-        .card__cls > h2 {
+        .section__cls > h2 {
             background: #fafcff;
             padding: 1rem 1.8rem;
             border-bottom: 2px solid #eef2ff;
@@ -119,13 +148,12 @@
             border-radius: 60px;
             margin: 1rem 1.8rem 0;
         }
-
         .section_main__cls {
             padding: 1.5rem 1.8rem;
         }
 
-        /* статья-пример */
-        .demo-box {
+        /* -------------------- ARTICLE --------------------*/
+        .article__cls {
             background: #fefefe;
             border-radius: 1rem;
             margin-bottom: 1.5rem;
@@ -134,7 +162,7 @@
             display: flex;
             flex-direction: column;
         }
-        .demo-box > header {
+        .article__cls > header {
             font-weight: 600;
             background: #f8fafc;
             padding: 0.6rem 1rem;
@@ -144,12 +172,13 @@
             letter-spacing: 0.5px;
             color: #2d3e6e;
         }
-        .demo-view {
+
+        .article_main__cls {
             padding: 1.2rem;
             background: white;
             flex: 1;
         }
-        .demo-box > footer {
+        .article__cls > footer {
             background: #fef9e3;
             padding: 0.75rem 1rem;
             font-size: 0.85rem;
@@ -158,23 +187,14 @@
             font-family: 'SF Mono', monospace;
         }
 
-        .demo-note code, .inline-code {
-            background: #edf2f7;
-            padding: 0.2rem 0.4rem;
-            border-radius: 8px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: #c7254e;
-        }
-
-        /* вспомогательная сетка */
-        .several_columns__class {
+        /* -------------------- AUX --------------------*/
+        .grid_auto__cls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.2rem;
         }
 
-        /* таблицы */
+        /* -------------------- TABLE --------------------*/
         .simple-table {
             width: 100%;
             border-collapse: collapse;
@@ -193,7 +213,7 @@
             font-weight: 600;
         }
 
-        /* формы */
+        /* -------------------- FORMS --------------------*/
         .form-group {
             margin-bottom: 1rem;
         }
@@ -207,17 +227,6 @@
             border-radius: 12px;
             border: 1px solid #cbd5e1;
             font-family: inherit;
-        }
-        button {
-            background: #2a73ff;
-            color: white;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        button:hover {
-            background: #1a5ad9;
         }
 
         /* семантическая демо-зона (локальные header/footer и пр.) */
@@ -234,11 +243,7 @@
             border-left: 4px solid #2a73ff;
         }
 
-        hr {
-            margin: 1rem 0;
-        }
-
-        /* СТИЛИ ДЛЯ ВКЛАДОК (ТАБОВ)*/
+        /* -------------------- TABS --------------------*/
         .tabs-container {
             background: #fff;
             border-radius: 1rem;
@@ -281,28 +286,20 @@
         }
         /* конец стилей табов */
 
+        /* -------------------- TABS --------------------*/
         @media (max-width: 700px) {
-            .root_div__cls {
+            #root_div__id {
                 padding: 1rem;
             }
             .section_main__cls {
                 padding: 1rem;
             }
         }
-        /* глобальный footer */
-        #root_footer__id {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #5b6e8c;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 1.5rem;
-        }
     </style>
 </head>
 <body>
 
-<div class="root_div__cls">
+<div id="root_div__id">
     <nav id="root_nav__id"></nav>
 
     <header id="root_header__id">
@@ -313,9 +310,9 @@
 
     <main id="root_main__id">
         <!-- ====================== ТЕКСТОВЫЕ ТЕГИ ====================== -->
-        <section class="card__cls" id="textId">
+        <section class="section__cls" id="textId">
             <h2>📌 Текст & заголовки</h2>
-            <div class="section_main__cls several_columns__class">
+            <div class="section_main__cls grid_auto__cls">
                 <article>
                     <header>Заголовки h1–h6 (иерархия)</header>
                     <div class="demo-view">
@@ -334,10 +331,10 @@
         </section>
 
         <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ ====================== -->
-        <section class="card__cls" id="visualBlocksId">
+        <section class="section__cls" id="visualBlocksId">
             <h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>📦 Fieldset + legend (группировка полей)</header>
                     <div class="demo-view">
                         <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
@@ -353,7 +350,7 @@
                     <footer>✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>📜 Blockquote — цитата с атрибутом cite</header>
                     <div class="demo-view">
                         <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
@@ -364,13 +361,13 @@
                     <footer>📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</header>
                     <div class="demo-view">
                         <pre>Тег &lt;pre&gt; сохраняет   пробелы
                        и переносы — удобно для кода.</pre>
                         <pre style="background: #1e2a3a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow-x: auto;"><code>&lt;!-- Пример HTML-кода --&gt;
-    &lt;div class="root_div__cls"&gt;
+    &lt;div id="root_div__id"&gt;
         &lt;h1&gt;Привет, мир!&lt;/h1&gt;
         &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
     &lt;/div&gt;</code></pre>
@@ -379,7 +376,7 @@
                     <footer>🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>📄 Абзац &lt;p&gt; и его стилизация</header>
                     <div class="demo-view">
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
@@ -389,7 +386,7 @@
                     <footer>🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>✍️ Абзацы vs переносы строк (правильное использование)</header>
                     <div class="demo-view">
                         <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
@@ -421,10 +418,10 @@
         </section>
 
         <!-- ====================== ФОРМАТИРОВАНИЕ СИМВОЛОВ ====================== -->
-        <section class="card__cls" id="formatId">
+        <section class="section__cls" id="formatId">
             <h2>✨ Смысловое и визуальное форматирование</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>strong / em / b / i / mark / small / del / ins / sub / sup</header>
                     <div class="demo-view">
                         <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
@@ -440,7 +437,7 @@
                     <footer>🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</header>
                     <div class="demo-view">
                         <p>
@@ -458,10 +455,10 @@
         </section>
 
         <!-- ====================== СПИСКИ ====================== -->
-        <section class="card__cls" id="listsId">
+        <section class="section__cls" id="listsId">
             <h2>📋 Списки (ul, ol, dl)</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Маркированный (ul)</header>
                     <div class="demo-view">
                         <ul>
@@ -473,7 +470,7 @@
                     </div>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>Нумерованный (ol)</header>
                     <div class="demo-view">
                         <ol start="3" type="A">
@@ -486,7 +483,7 @@
                     <footer>⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>Список описаний (dl / dt / dd)</header>
                     <div class="demo-view">
                         <dl>
@@ -504,10 +501,10 @@
         </section>
 
         <!-- ====================== ТАБЛИЦЫ ====================== -->
-        <section class="card__cls" id="tablesId">
+        <section class="section__cls" id="tablesId">
             <h2>📊 Таблицы: &lt;table&gt; и компания</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Базовая таблица + объединение ячеек (colspan / rowspan)</header>
                     <div class="demo-view">
                         <table class="simple-table">
@@ -528,10 +525,10 @@
         </section>
 
         <!-- ====================== ФОРМЫ ====================== -->
-        <section class="card__cls" id="formsId">
+        <section class="section__cls" id="formsId">
             <h2>📝 Формы и поля ввода</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Типовые элементы</header>
                     <div class="demo-view">
                         <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
@@ -560,7 +557,7 @@
                     <footer>🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>🔢 Числовое поле: input type="number" + кнопки-стрелки</header>
                     <div class="demo-view">
                         <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
@@ -583,7 +580,7 @@
                     <footer>🧩 <strong>Тонкости type="number":</strong> атрибуты <code>min</code>, <code>max</code>, <code>step</code>; стрелки (спиннер) в браузере; осторожно с десятичными разделителями.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>📊 progress vs meter + спиннеры (числовые поля)</header>
                     <div class="demo-view">
                         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -607,10 +604,10 @@
         </section>
 
         <!-- ====================== МЕДИА ====================== -->
-        <section class="card__cls" id="mediaId">
+        <section class="section__cls" id="mediaId">
             <h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Изображение & figure</header>
                     <div class="demo-view">
                         <figure>
@@ -621,7 +618,7 @@
                     <footer>⚠️ alt — обязательный атрибут для доступности. figure/figcaption группируют медиа с подписью.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>Видео / Аудио (HTML5)</header>
                     <div class="demo-view">
                         <video controls width="100%" style="max-width:260px" poster="https://picsum.photos/id/20/300/150">
@@ -635,7 +632,7 @@
                     <footer>🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>iframe — встраивание контента</header>
                     <div class="demo-view">
                         <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -648,10 +645,10 @@
         </section>
 
         <!-- ====================== СЕМАНТИЧЕСКАЯ РАЗМЕТКА ====================== -->
-        <section class="card__cls" id="semanticId">
+        <section class="section__cls" id="semanticId">
             <h2>🏛️ Семантические блоки (глобальные+локальные)</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Пример локальной семантики</header>
                     <div class="demo-view semantic-demo">
                         <header>🧭 Шапка (header) — логотип, навигация</header>
@@ -669,10 +666,10 @@
         </section>
 
         <!-- ====================== ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ====================== -->
-        <section class="card__cls" id="interactId">
+        <section class="section__cls" id="interactId">
             <h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>details + summary (спойлер)</header>
                     <div class="demo-view">
                         <details>
@@ -686,7 +683,7 @@
                     </div>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>Тег dialog (экспериментальный, но полезный)</header>
                     <div class="demo-view">
                         <dialog id="demoDialog">
@@ -701,10 +698,10 @@
         </section>
 
         <!-- ====================== ССЫЛКИ И НАВИГАЦИЯ ====================== -->
-        <section class="card__cls" id="linksId">
+        <section class="section__cls" id="linksId">
             <h2>🔗 Гиперссылки & якоря</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Ссылки: target, якоря, относительные пути</header>
                     <div class="demo-view">
                         <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
@@ -719,10 +716,10 @@
         </section>
 
         <!-- дополнительный блок с глобальными атрибутами и data-* -->
-        <section class="card__cls" id="globalAttrsId">
+        <section class="section__cls" id="globalAttrsId">
             <h2>🧰 глобальные атрибуты & data-*</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Атрибуты class, id, style, hidden, title, data-*</header>
                     <div class="demo-view">
                         <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
@@ -736,10 +733,10 @@
         </section>
 
         <!-- ====================== ВКЛАДКИ / ТАБЫ ====================== -->
-        <section class="card__cls" id="tabsId">
+        <section class="section__cls" id="tabsId">
             <h2>📑 Вкладки (табы) — живой компонент</h2>
-            <div class="section_main__cls several_columns__class">
-                <article class="demo-box">
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
                     <header>Переключение панелей: только одна активная вкладка</header>
                     <div class="demo-view">
                         <div class="tabs-container">
@@ -782,7 +779,7 @@
                     <footer>🧩 <strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>Альтернатива — CSS-табы на радиокнопках (без JS)</header>
                     <div class="demo-view">
                         <style>
@@ -845,10 +842,10 @@
         </section>
 
         <!-- ====================== КОМПОНОВКА И ВЫРАВНИВАНИЕ (FLEXBOX) ====================== -->
-        <section class="card__cls" id="layoutId">
+        <section class="section__cls" id="layoutId">
             <h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2>
             <div class="section_main__cls">
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="demo-view">
                         <style>
@@ -923,7 +920,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="demo-note" style="margin-top: 1rem;">
+                        <div>
                             🧠 <strong>Как это работает (Flexbox):</strong>
                             <pre style="background: #1e2a3a; color: #e2e8f0; padding: 0.75rem; border-radius: 12px; margin-top: 0.5rem; overflow-x: auto;">
     &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
@@ -943,10 +940,10 @@
         </section>
 
         <!-- ====================== РАЗМНОЖЕНИЕ БЛОКОВ СТИЛЯМИ БЕЗ JS ====================== -->
-        <section class="card__cls" id="multiplyBlocksId">
+        <section class="section__cls" id="multiplyBlocksId">
             <h2>♻️ Размножение блока: один набор элементов, разные стили</h2>
             <div class="section_main__cls">
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>🧬 Один и тот же набор из трёх span — три варианта оформления</header>
                     <div class="demo-view">
                         <style>
@@ -978,7 +975,7 @@
                     <footer>💡 <strong>Суть:</strong> HTML-код блока копируется, стили меняются через классы-модификаторы.</footer>
                 </article>
 
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>⚙️ Альтернатива: CSS-переменные (кастомные свойства)</header>
                     <div class="demo-view">
                         <style>
@@ -1010,10 +1007,10 @@
         </section>
 
         <!-- ====================== JS-РАЗМНОЖИТЕЛЬ ЭЛЕМЕНТОВ ====================== -->
-        <section class="card__cls" id="js_cloner__id">
+        <section class="section__cls" id="js_cloner__id">
             <h2>♻️ JS-размножитель</h2>
             <div class="section_main__cls">
-                <article class="demo-box">
+                <article class="article__cls">
                     <header>🧬 Блок-шаблон (id="cloneTemplate_id")</header>
                     <div class="demo-view">
                         <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
@@ -1042,21 +1039,26 @@
     // Генерация навигации: текст кнопки = id блока, title = заголовок блока
     (function generateNavRoot() {
         const navContainer = document.getElementById('root_nav__id');
+
         if (!navContainer) return;
         navContainer.innerHTML = '';
+
         // Находим все секции-карточки с id
-        const sections = document.querySelectorAll('section.card__cls[id]');
+        const sections = document.querySelectorAll('section.section__cls[id]');
         sections.forEach(section => {
             const sectionId = section.id;
             if (!sectionId) return;
             let titleText = '';
+
             const headerH2 = section.querySelector(':scope > h2');
             if (headerH2) titleText = headerH2.innerText.trim();
             if (!titleText) titleText = sectionId;
+
             const link = document.createElement('a');
             link.href = `#${sectionId}`;
             link.textContent = sectionId;
             link.title = titleText;
+
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
