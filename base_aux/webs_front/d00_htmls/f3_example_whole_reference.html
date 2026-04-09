@@ -37,7 +37,74 @@
             background: #1a5ad9;
         }
 
-        /* -------------------- CODE --------------------*/
+        /* -------------------- QUOTES --------------------*/
+        /* ===== Блочные цитаты ===== */
+        blockquote {
+            margin: 1.5rem 0;
+            padding: 0.75rem 1.5rem;
+            background: #f8fafc;          /* светлый фон, как у комментариев */
+            border-left: 4px solid #2a73ff; /* акцентная линия слева */
+            border-radius: 0 1rem 1rem 0;   /* скругление только с правой стороны */
+            color: #1e2a3e;
+            font-style: normal;            /* обычно цитаты не курсивом (хотя можно) */
+            line-height: 1.5;
+        }
+
+        /* Для вложенных цитат (цитата в цитате) — чуть меньше отступ */
+        blockquote blockquote {
+            margin: 0.75rem 0;
+            background: #f1f5f9;
+            border-left-color: #5b8cff;
+        }
+
+        /* Автор цитаты (тег <footer> внутри blockquote) */
+        blockquote > footer,
+        blockquote cite {
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            font-style: normal;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 0.5rem;
+        }
+
+        /* Стиль для самого текста цитаты (необязательно) */
+        blockquote p {
+            margin: 0 0 0.5rem 0;
+        }
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== Короткие строчные цитаты (тег <q>) ===== */
+        q {
+            quotes: "«" "»" "„" "“";      /* русские типографские кавычки */
+            font-style: italic;
+            color: #2c3e66;
+        }
+        q::before {
+            content: open-quote;
+        }
+        q::after {
+            content: close-quote;
+        }
+
+        /* ===== Источник (cite) в подписи к цитате ===== */
+        cite {
+            font-style: normal;
+            font-weight: 500;
+            color: #2a73ff;
+        }
+
+        /* ===== Альтернативный вариант: цитата с тенью и градиентом (для акцента) ===== */
+        blockquote.highlight {
+            background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+            border-left: 4px solid #ff8c42;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* -------------------- CODE+PRE+KBD --------------------*/
         code, kbd, pre, samp {
             font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
             font-size: 0.875em; /* относительный размер, подстраивается под контекст */
@@ -382,7 +449,7 @@
 
         <!-- ====================== ВИЗУАЛЬНЫЕ БЛОКИ ====================== -->
         <section class="section__cls" id="visualBlocksId">
-            <h2>🧩 Визуальные блоки: fieldset, legend, blockquote, pre/code, p</h2>
+            <h2>🧩 Визуальные блоки</h2>
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>📦 Fieldset + legend (группировка полей)</header>
@@ -397,22 +464,31 @@
                             <input type="text" value="Неактивно">
                         </fieldset>
                     </div>
-                    <footer>✨ <code>fieldset</code> группирует элементы формы, <code>legend</code> задаёт заголовок группы. Атрибут <code>disabled</code> отключает все поля внутри.</footer>
+                    <footer>
+                        <code>fieldset</code> группирует элементы формы,<br>
+                        <code>legend</code> задаёт заголовок группы.<br>
+                        Атрибут <code>disabled</code> отключает все поля внутри.
+                    </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>📜 Blockquote — цитата с атрибутом cite</header>
+                    <header>📜 QUOTES</header>
                     <div class="article_main__cls">
+                        <p><q>qqq</q> text example text example text example text example text example </p>
+
                         <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
-                            <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
-                            <footer>— MDN Web Docs</footer>
+                            <p>BLOCKQUOTE <q>qqq</q> text example text example text example text example text example </p>
+                            <footer>— MDN Web Docs <q>qqq</q> </footer>
                         </blockquote>
                     </div>
-                    <footer>📌 <code>blockquote</code> — длинная цитата. Браузер добавляет отступы. Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).</footer>
+                    <footer>
+                        <code>blockquote</code> — длинная цитата. <q>qqq</q> Браузер добавляет отступы.<br>
+                        Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).
+                    </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</header>
+                    <header>💻 PRE / CODE</header>
                     <div class="article_main__cls">
                         <pre>PRE &lt;pre&gt; сохраняет   пробелы
                        и переносы — удобно для кода.</pre>
@@ -425,7 +501,7 @@
                     <footer>
                         <code>pre</code> сохраняет пробелы и переносы строк,<br>
                         <code>code</code> обозначает фрагмент кода. Комбинация,<br>
-                        <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.
+                        <code>&lt;pre&gt;&lt;code&gt;</code> — стандарт для вставки листингов.
                     </footer>
                 </article>
 
