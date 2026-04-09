@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HTML справочник визуальный</title>
-    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="-----global.css">
     <style>
         /* -------------------- BUILDINS --------------------*/
         * {
@@ -41,6 +41,13 @@
         code, kbd, pre, samp {
             font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
             font-size: 0.875em; /* относительный размер, подстраивается под контекст */
+        }
+        kbd {
+            background: #eef2ff;
+            border-radius: 4px;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.85em;
+            box-shadow: inset 0 -1px 0 #cbd5e1;
         }
 
         /* ===== Инлайн-код (внутри текста) ===== */
@@ -356,9 +363,9 @@
         <section class="section__cls" id="textId">
             <h2>📌 Текст & заголовки</h2>
             <div class="section_main__cls grid_auto__cls">
-                <article>
+                <article class="article__cls">
                     <header>Заголовки h1–h6 (иерархия)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <h1>h1 — главный заголовок</h1>
                         <h2>h2 — раздел</h2>
                         <h3>h3 — подраздел</h3>
@@ -379,7 +386,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>📦 Fieldset + legend (группировка полей)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
                             <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
                             <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
@@ -395,7 +402,7 @@
 
                 <article class="article__cls">
                     <header>📜 Blockquote — цитата с атрибутом cite</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
                             <p>«HTML (HyperText Markup Language) — это язык разметки, используемый для создания веб-страниц.»</p>
                             <footer>— MDN Web Docs</footer>
@@ -406,22 +413,25 @@
 
                 <article class="article__cls">
                     <header>💻 Вставка исходного кода: &lt;pre&gt; + &lt;code&gt;</header>
-                    <div class="demo-view">
-                        <pre>Тег &lt;pre&gt; сохраняет   пробелы
+                    <div class="article_main__cls">
+                        <pre>PRE &lt;pre&gt; сохраняет   пробелы
                        и переносы — удобно для кода.</pre>
-                        <pre><code>&lt;!-- Пример HTML-кода --&gt;
+                        <pre><code>&lt;!-- PRE+CODE --&gt;
     &lt;div id="root_div__id"&gt;
         &lt;h1&gt;Привет, мир!&lt;/h1&gt;
         &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
     &lt;/div&gt;</code></pre>
-                        <pre><code>console.log("JavaScript внутри pre/code");</code></pre>
                     </div>
-                    <footer>🧠 <code>pre</code> сохраняет пробелы и переносы строк. <code>code</code> обозначает фрагмент кода. Комбинация <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.</footer>
+                    <footer>
+                        <code>pre</code> сохраняет пробелы и переносы строк,<br>
+                        <code>code</code> обозначает фрагмент кода. Комбинация,<br>
+                        <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> — стандарт для вставки листингов.
+                    </footer>
                 </article>
 
                 <article class="article__cls">
                     <header>📄 Абзац &lt;p&gt; и его стилизация</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
                         <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
                         <p>Абзац с <br> переносом строки внутри.</p>
@@ -431,7 +441,7 @@
 
                 <article class="article__cls">
                     <header>✍️ Абзацы vs переносы строк (правильное использование)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
                             <div style="flex: 1;">
                                 <h4>✅ Три абзаца &lt;p&gt;</h4>
@@ -466,7 +476,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>strong / em / b / i / mark / small / del / ins / sub / sup</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
                         <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
                         <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
@@ -482,7 +492,7 @@
 
                 <article class="article__cls">
                     <header>⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <p>
                             Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
                             Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
@@ -503,7 +513,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Маркированный (ul)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <ul>
                             <li>Элемент списка</li>
                             <li>Можно вкладывать
@@ -515,7 +525,7 @@
 
                 <article class="article__cls">
                     <header>Нумерованный (ol)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <ol start="3" type="A">
                             <li>Первый пункт (с атрибутами start="3", type="A")</li>
                             <li>Второй пункт
@@ -528,7 +538,7 @@
 
                 <article class="article__cls">
                     <header>Список описаний (dl / dt / dd)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <dl>
                             <dt>HTML</dt>
                             <dd>Язык гипертекстовой разметки, структура страницы.</dd>
@@ -549,7 +559,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Базовая таблица + объединение ячеек (colspan / rowspan)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <table class="simple-table">
                             <thead>
                                 <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
@@ -573,7 +583,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Типовые элементы</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
                             <div class="form-group"><label>input text:</label> <input type="text" placeholder="Ваше имя" required></div>
                             <div class="form-group"><label>input email:</label> <input type="email" value="hello@example.com"></div>
@@ -602,7 +612,7 @@
 
                 <article class="article__cls">
                     <header>🔢 Числовое поле: input type="number" + кнопки-стрелки</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
                             <div class="form-group">
                                 <label>input number:</label>
@@ -625,7 +635,7 @@
 
                 <article class="article__cls">
                     <header>📊 progress vs meter + спиннеры (числовые поля)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                             <div>
                                 <label>progress/meter:</label>
@@ -652,7 +662,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Изображение & figure</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <figure>
                             <img src="https://picsum.photos/id/104/200/120" alt="Пример пейзажа" style="border-radius: 12px; max-width:100%">
                             <figcaption>figcaption — подпись к изображению (семантически связывает)</figcaption>
@@ -663,7 +673,7 @@
 
                 <article class="article__cls">
                     <header>Видео / Аудио (HTML5)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <video controls width="100%" style="max-width:260px" poster="https://picsum.photos/id/20/300/150">
                             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                             Ваш браузер не поддерживает видео.
@@ -677,7 +687,7 @@
 
                 <article class="article__cls">
                     <header>iframe — встраивание контента</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -693,7 +703,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Пример локальной семантики</header>
-                    <div class="demo-view semantic-demo">
+                    <div class="article_main__cls semantic-demo">
                         <header>🧭 Шапка (header) — логотип, навигация</header>
                         <nav>🔗 Навигация (nav) — ссылки меню</nav>
                         <main>
@@ -714,7 +724,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>details + summary (спойлер)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <details>
                             <summary>📖Блок СКРЫТЫЙ</summary>
                             <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
@@ -728,7 +738,7 @@
 
                 <article class="article__cls">
                     <header>Тег dialog (экспериментальный, но полезный)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <dialog id="demoDialog">
                             <p>Это модальное окно (dialog).</p>
                             <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
@@ -746,7 +756,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Ссылки: target, якоря, относительные пути</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
                         <p><a href="#textId">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
                         <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
@@ -764,7 +774,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Атрибуты class, id, style, hidden, title, data-*</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
                         <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
                         <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
@@ -781,7 +791,7 @@
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Переключение панелей: только одна активная вкладка</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <div class="tabs-container">
                             <div class="tabs-buttons">
                                 <button class="tab-btn active" data-tab="tab1">📄 Что такое табы?</button>
@@ -824,7 +834,7 @@
 
                 <article class="article__cls">
                     <header>Альтернатива — CSS-табы на радиокнопках (без JS)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <style>
                             .css-tabs {
                                 display: flex;
@@ -890,7 +900,7 @@
             <div class="section_main__cls">
                 <article class="article__cls">
                     <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <style>
                             .layout-demo {
                                 background: #f8fafc;
@@ -988,7 +998,7 @@
             <div class="section_main__cls">
                 <article class="article__cls">
                     <header>🧬 Один и тот же набор из трёх span — три варианта оформления</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <style>
                             .demo-triple {
                                 display: flex;
@@ -1020,7 +1030,7 @@
 
                 <article class="article__cls">
                     <header>⚙️ Альтернатива: CSS-переменные (кастомные свойства)</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <style>
                             .var-triple {
                                 display: flex;
@@ -1055,7 +1065,7 @@
             <div class="section_main__cls">
                 <article class="article__cls">
                     <header>🧬 Блок-шаблон (id="cloneTemplate_id")</header>
-                    <div class="demo-view">
+                    <div class="article_main__cls">
                         <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
                             <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">🎨 Элемент с динамическим стилем</div>
                         </div>
