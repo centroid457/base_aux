@@ -6,7 +6,7 @@
     <title>HTML справочник визуальный</title>
     <link rel="stylesheet" href="-----global.css">
     <style>
-        /* -------------------- BUILDINS --------------------*/
+        /* -------------------- BUILDIN ------------------------------------------------------------------------------*/
         * {
             margin: 0;
             padding: 0;
@@ -37,7 +37,13 @@
             background: #1a5ad9;
         }
 
-        /* -------------------- QUOTES --------------------*/
+        p.highlight__cls {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        /* -------------------- QUOTES -------------------------------------------------------------------------------*/
         /* ===== Блочные цитаты ===== */
         blockquote {
             margin: 1.5rem 0;
@@ -98,13 +104,13 @@
         }
 
         /* ===== Альтернативный вариант: цитата с тенью и градиентом (для акцента) ===== */
-        blockquote.highlight {
+        blockquote.highlight__cls {
             background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
             border-left: 4px solid #ff8c42;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        /* -------------------- CODE+PRE+KBD --------------------*/
+        /* -------------------- PRE+CODE+KBD -------------------------------------------------------------------------*/
         code, kbd, pre, samp {
             font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
             font-size: 0.875em; /* относительный размер, подстраивается под контекст */
@@ -161,8 +167,8 @@
             border-radius: 4px;
         }
 
-        /* -------------------- ROOT BLOCKS --------------------*/
-        #root_div__id {
+        /* -------------------- ROOT BLOCKS -------------------------------------------------------------------------*/
+        #ROOT_DIV__ID {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
@@ -172,10 +178,10 @@
             padding: 2rem 2rem 2.5rem 2rem;
         }
 
-        #root_header__id {
+        #ROOT_HEADER__ID {
             margin-bottom: 0.5rem;
         }
-        #root_header__id h1 {
+        #ROOT_HEADER__ID h1 {
             font-size: 2.2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
@@ -192,7 +198,7 @@
             margin-bottom: 2rem;
         }
 
-        #root_nav__id {
+        #ROOT_NAV__ID {
             /* stick top */
             position: sticky;
             top: 0;
@@ -207,7 +213,7 @@
             padding-bottom: 0.8rem;
             border-bottom: 2px solid #e2e8f0;
         }
-        #root_nav__id a {
+        #ROOT_NAV__ID a {
             background: #eef2ff;
             color: #1e40af;
             text-decoration: none;
@@ -218,19 +224,19 @@
             transition: all 0.2s;
             line-height: 1;
         }
-        #root_nav__id a:hover {
+        #ROOT_NAV__ID a:hover {
             background: #2a73ff;
             color: white;
             transform: translateY(-2px);
         }
 
-        #root_main__id {
+        #ROOT_MAIN__ID {
             display: flex;
             flex-direction: column;
             gap: 2.5rem;
         }
 
-        #root_footer__id {
+        #ROOT_FOOTER__ID {
             margin-top: 2rem;
             text-align: center;
             font-size: 0.8rem;
@@ -338,6 +344,7 @@
             display: inline-block;
             width: 110px;
             font-weight: 500;
+
         }
         input, select, textarea, button {
             padding: 0.5rem 0.8rem;
@@ -405,7 +412,7 @@
 
         /* -------------------- smth --------------------*/
         @media (max-width: 700px) {
-            #root_div__id {
+            #ROOT_DIV__ID {
                 padding: 1rem;
             }
             .section_main__cls {
@@ -416,18 +423,17 @@
 </head>
 <body>
 
-<div id="root_div__id">
-    <nav id="root_nav__id"></nav>
+<div id="ROOT_DIV__ID">
+    <nav id="ROOT_NAV__ID"></nav>
 
-    <header id="root_header__id">
+    <header id="ROOT_HEADER__ID">
         <h1>📘 HTML · справочник визуальный</h1>
         <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
-
-    <main id="root_main__id">
+    <main id="ROOT_MAIN__ID">
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="textId">
+        <section class="section__cls" id="structId">
             <h2>📌 СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -465,91 +471,67 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="visualBlocksId">
-            <h2>🧩 Визуальные блоки</h2>
+        <section class="section__cls" id="textInlineId">
+            <h2>✨ ТЕКСТ - внутристрочный</h2>
             <div class="section_main__cls grid_auto__cls">
+
                 <article class="article__cls">
-                    <header>📦 Fieldset+legend(группировка полей)</header>
+                    <header>типовые</header>
                     <div class="article_main__cls">
-                        <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
-                            <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
-                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
-                            <label>Email: <input type="email" placeholder="user@example.com"></label>
-                        </fieldset>
-                        <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
-                            <legend>🔒 Заблокированная группа</legend>
-                            <input type="text" value="Неактивно">
-                        </fieldset>
+                        <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
+                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
+                        <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
+                        <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
+                        <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
+                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
+                        <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
+                        <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
+                        <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
                     </div>
-                    <footer>
-                        <code>fieldset</code> группирует элементы формы,<br>
-                        <code>legend</code> задаёт заголовок группы.<br>
-                        Атрибут <code>disabled</code> отключает все поля внутри.
-                    </footer>
+                    <footer>🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</footer>
                 </article>
 
-                <article class="article__cls">
-                    <header>📜 QUOTES</header>
+               <article class="article__cls">
+                    <header>⌨️ KBD</header>
                     <div class="article_main__cls">
-
-                        <p><q>qqq</q> text example text example text example text example text example </p>
-
-                        <blockquote cite="https://developer.mozilla.org/ru/docs/Web/HTML/Element/blockquote">
-                            <p>BLOCKQUOTE <q>qqq</q> с атрибутом CITE example text example text example text example </p>
-                            <footer>— MDN Web Docs <q>qqq</q> </footer>
-                        </blockquote>
-
-                        <blockquote>
-                            <p>BLOCKQUOTE без атрибута CITE</p>
-                            <cite>CITE тег</cite>
-                        </blockquote>
-
-                        <blockquote class="highlight">
-                            <p>BLOCKQUOTE highlighted</p>
-                            <cite>CITE тег</cite>
-                        </blockquote>
-                        <cite>CITE тег чистый</cite>
-
+                        <p>
+                            Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
+                            Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
+                            Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
+                            Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
+                            Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
+                            Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
+                        </p>
                     </div>
-                    <footer>
-                        <code>blockquote</code> — длинная цитата. <q>qqq</q> Браузер добавляет отступы.<br>
-                        Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).
-                    </footer>
+                    <footer>📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> — обычный текст. Это улучшает доступность и семантику.</footer>
                 </article>
 
-                <article class="article__cls">
-                    <header>💻 PRE / CODE</header>
-                    <div class="article_main__cls">
-                        <code>CODE ONLY</code>
+            </div>
+        </section>
 
-                        <pre>PRE &lt;pre&gt; сохраняет   пробелы
-                       и переносы — удобно для кода.</pre>
 
-                        <pre><code>&lt;!-- PRE+CODE --&gt;
-    &lt;div id="root_div__id"&gt;
-        &lt;h1&gt;Привет, мир!&lt;/h1&gt;
-        &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
-    &lt;/div&gt;</code></pre>
-                    </div>
-                    <footer>
-                        <code>pre</code> сохраняет пробелы и переносы строк,<br>
-                        <code>code</code> обозначает фрагмент кода. Комбинация,<br>
-                        <code>&lt;pre&gt;&lt;code&gt;</code> — стандарт для вставки листингов.
-                    </footer>
-                </article>
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="textBlocksId">
+            <h2>🧩 ТЕКСТ - БЛОКИ</h2>
+            <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>📄 Абзац &lt;p&gt; и его стилизация</header>
+                    <header>📄 Абзац P</header>
                     <div class="article_main__cls">
+
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
-                        <p style="background: #f0f9ff; padding: 12px; border-radius: 12px;">Абзац с кастомными стилями (фон, отступы, скругление). Удобно для заметок.</p>
-                        <p>Абзац с <br> переносом строки внутри.</p>
+
+                        <p style="background: #f0f9ff; padding: 10px; border-radius: 12px;">Абзац с кастомными стилями. Text example. Text example. Text example. Text example.</p>
+
+                        <p class="highlight__cls">Абзац с highlight__cls. Text example. Text example. Text example. Text example.</p>
+
+                        <p>Абзац с BR[<br>] переносом строки внутри.</p>
                     </div>
-                    <footer>🔤 <code>&lt;p&gt;</code> — блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</footer>
+                    <footer>P - блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>✍️ Абзацы vs переносы строк (правильное использование)</header>
+                    <header>✍️ Абзацы vs переносы строк</header>
                     <div class="article_main__cls">
                         <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
                             <div style="flex: 1;">
@@ -572,47 +554,72 @@
                             </div>
                         </div>
                     </div>
-                    <footer>📖 <strong>Правило:</strong> <code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
+                    <footer><code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
                         <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.
                     </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>⌨️ Тег &lt;kbd&gt; — клавиши клавиатуры</header>
+                    <header>📜 QUOTES</header>
                     <div class="article_main__cls">
-                        <p>
-                            Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
-                            Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
-                            Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
-                            Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
-                            Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
-                            Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
-                        </p>
-                    </div>
-                    <footer>📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> — обычный текст. Это улучшает доступность и семантику.</footer>
-                </article>
-            </div>
-        </section>
 
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="formatId">
-            <h2>✨ Смысловое и визуальное форматирование</h2>
-            <div class="section_main__cls grid_auto__cls">
-                <article class="article__cls">
-                    <header>strong / em / b / i / mark / small / del / ins / sub / sup</header>
-                    <div class="article_main__cls">
-                        <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
-                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
-                        <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
-                        <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
-                        <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
-                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
-                        <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
-                        <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
-                        <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
+                        <p><q>qqq</q> text example text example text example text example text example </p>
+
+                        <blockquote cite="https://ya.ru/">
+                            <p>BLOCKQUOTE <q>qqq</q> с атрибутом CITE. text example. text example. text example. </p>
+                            <footer>— FOOTER tag<q>qqq</q> </footer>
+                        </blockquote>
+
+                        <blockquote>
+                            <p>BLOCKQUOTE CITE+FOOTER</p>
+                            <cite>CITE тег</cite>
+                            <footer>— FOOTER tag<q>qqq</q> </footer>
+                        </blockquote>
+
+                        <blockquote>
+                            <p>BLOCKQUOTE only</p>
+                        </blockquote>
+
+                        <blockquote>
+                            <p>BLOCKQUOTE без атрибута CITE</p>
+                            <cite>CITE тег</cite>
+                        </blockquote>
+
+                        <blockquote class="highlight__cls">
+                            <p>BLOCKQUOTE highlight__cls</p>
+                            <cite>CITE тег</cite>
+                        </blockquote>
+
+                        <cite>CITE тег чистый</cite>
+
                     </div>
-                    <footer>🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</footer>
+                    <footer>
+                        <code>blockquote</code> — длинная цитата. <q>qqq</q> Браузер добавляет отступы.<br>
+                        Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).
+                    </footer>
                 </article>
+
+                <article class="article__cls">
+                    <header>💻 PRE / CODE</header>
+                    <div class="article_main__cls">
+                        <code>CODE ONLY</code>
+
+                        <pre>PRE ONLY - сохраняет   пробелы
+                       и переносы — удобно для кода.</pre>
+
+                        <pre><code>PRE+CODE
+    &lt;div&gt;
+        &lt;h1&gt;Привет, мир!&lt;/h1&gt;
+        &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
+    &lt;/div&gt;</code></pre>
+                    </div>
+                    <footer>
+                        <code>pre</code> сохраняет пробелы и переносы строк,<br>
+                        <code>code</code> обозначает фрагмент кода. Комбинация,<br>
+                        <code>&lt;pre&gt;&lt;code&gt;</code> — стандарт для вставки листингов.
+                    </footer>
+                </article>
+
             </div>
         </section>
 
@@ -621,7 +628,7 @@
             <h2>📋 Списки (ul, ol, dl)</h2>
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
-                    <header>Маркированный (ul)</header>
+                    <header>UL-Маркированный</header>
                     <div class="article_main__cls">
                         <ul>
                             <li>Элемент списка</li>
@@ -633,7 +640,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>Нумерованный (ol)</header>
+                    <header>OL-Нумерованный</header>
                     <div class="article_main__cls">
                         <ol start="3" type="A">
                             <li>Первый пункт (с атрибутами start="3", type="A")</li>
@@ -687,9 +694,37 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="formsId">
-            <h2>📝 Формы и поля ввода</h2>
+        <section class="section__cls" id="interactId">
+            <h2>📝 Интерактив</h2>
             <div class="section_main__cls grid_auto__cls">
+
+
+                <article class="article__cls">
+                    <header>details + summary (спойлер)</header>
+                    <div class="article_main__cls">
+                        <details>
+                            <summary>📖Блок СКРЫТЫЙ</summary>
+                            <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
+                        </details>
+                        <details open>
+                            <summary>Блок ОТКРЫТЫЙ</summary>
+                            <p>Здесь дополнительная информация всегда видна.</p>
+                        </details>
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>Тег dialog</header>
+                    <div class="article_main__cls">
+                        <dialog id="demoDialog">
+                            <p>Это модальное окно (dialog).</p>
+                            <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
+                        </dialog>
+                        <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
+                    </div>
+                    <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
+                </article>
+
                 <article class="article__cls">
                     <header>Типовые элементы</header>
                     <div class="article_main__cls">
@@ -720,24 +755,30 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>🔢 Числовое поле: input type="number" + кнопки-стрелки</header>
+                    <header>🔢 input type=number</header>
                     <div class="article_main__cls">
+
                         <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
+
                             <div class="form-group">
                                 <label>input number:</label>
                                 <input type="number" name="quantity" value="5" min="1" max="20" step="1">
                                 <small style="margin-left: 0.5rem; color: #4b5563;">▲▼ (кликните или используйте стрелки)</small>
                             </div>
+
                             <div class="form-group">
-                                <label>input number Шаг 0.5:</label>
+                                <label>input number step0.5:</label>
                                 <input type="number" step="0.5" value="2.5" min="0" max="10">
                             </div>
+
                             <div class="form-group">
-                                <label>input number Проценты:</label>
+                                <label>input number %:</label>
                                 <input type="number" value="75" min="0" max="100" step="5">
                             </div>
+
                             <button type="submit">Показать значение</button>
                         </form>
+
                     </div>
                     <footer>🧩 <strong>Тонкости type="number":</strong> атрибуты <code>min</code>, <code>max</code>, <code>step</code>; стрелки (спиннер) в браузере; осторожно с десятичными разделителями.</footer>
                 </article>
@@ -748,19 +789,85 @@
                         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                             <div>
                                 <label>progress/meter:</label>
+
                                 <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+
                                 <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+
                                 <div style="margin-top: 0.5rem;">
                                     <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
                                     <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
                                 </div>
-                                <div style="margin-top: 0.5rem; background: transparent; border: none; padding: 0;">
-                                    💡 progress — ход выполнения, meter — значение в шкале с зонами (<code>low="0.3" high="0.8"</code>).
-                                </div>
+
+                                <p>low="0.3" high="0.8"</p>
+
                             </div>
                         </div>
                     </div>
-                    <footer>🧠 <strong>Ключевое отличие:</strong> <code>progress</code> показывает <em>ход выполнения</em>, <code>meter</code> показывает <em>значение в шкале</em> с цветовыми зонами.</footer>
+                    <footer>
+                        <code>progress</code> - ход выполнения,<br>
+                        <code>meter</code>-значение с цветовыми зонами.
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>📦 Fieldset+legend(группировка полей)</header>
+                    <div class="article_main__cls">
+
+                        <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+                            <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
+                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
+                            <label>Email: <input type="email" placeholder="user@example.com"></label>
+                        </fieldset>
+
+                        <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
+                            <legend>🔒 Заблокированная группа</legend>
+                            <input type="text" value="Неактивно">
+                        </fieldset>
+
+                    </div>
+                    <footer>
+                        <code>fieldset</code> группирует элементы формы,<br>
+                        <code>legend</code> задаёт заголовок группы.<br>
+                        Атрибут <code>disabled</code> отключает все поля внутри.
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="linksId">
+            <h2>🔗 Гиперссылки & якоря</h2>
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
+                    <header>Ссылки: target, якоря, относительные пути</header>
+                    <div class="article_main__cls">
+                        <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
+                        <p><a href="#textId">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
+                        <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
+                        <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
+                        <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
+                    </div>
+                    <footer>🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</footer>
+                </article>
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <!-- дополнительный блок с глобальными атрибутами и data-* -->
+        <section class="section__cls" id="globalAttrsId">
+            <h2>🧰 глобальные атрибуты & data-*</h2>
+            <div class="section_main__cls grid_auto__cls">
+                <article class="article__cls">
+                    <header>Атрибуты class, id, style, hidden, title, data-*</header>
+                    <div class="article_main__cls">
+                        <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
+                        <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
+                        <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
+                        <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
+                    </div>
+                    <footer>💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</footer>
                 </article>
             </div>
         </section>
@@ -802,73 +909,6 @@
                         <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     <footer>📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
-                </article>
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="interactId">
-            <h2>⚡ Интерактив: details/summary, диалог (простой пример)</h2>
-            <div class="section_main__cls grid_auto__cls">
-                <article class="article__cls">
-                    <header>details + summary (спойлер)</header>
-                    <div class="article_main__cls">
-                        <details>
-                            <summary>📖Блок СКРЫТЫЙ</summary>
-                            <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
-                        </details>
-                        <details open>
-                            <summary>Блок ОТКРЫТЫЙ</summary>
-                            <p>Здесь дополнительная информация всегда видна.</p>
-                        </details>
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>Тег dialog (экспериментальный, но полезный)</header>
-                    <div class="article_main__cls">
-                        <dialog id="demoDialog">
-                            <p>Это модальное окно (dialog).</p>
-                            <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
-                        </dialog>
-                        <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
-                    </div>
-                    <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
-                </article>
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="linksId">
-            <h2>🔗 Гиперссылки & якоря</h2>
-            <div class="section_main__cls grid_auto__cls">
-                <article class="article__cls">
-                    <header>Ссылки: target, якоря, относительные пути</header>
-                    <div class="article_main__cls">
-                        <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
-                        <p><a href="#textId">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
-                        <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
-                        <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
-                        <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
-                    </div>
-                    <footer>🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</footer>
-                </article>
-            </div>
-        </section>
-
-        <!-- дополнительный блок с глобальными атрибутами и data-* -->
-        <section class="section__cls" id="globalAttrsId">
-            <h2>🧰 глобальные атрибуты & data-*</h2>
-            <div class="section_main__cls grid_auto__cls">
-                <article class="article__cls">
-                    <header>Атрибуты class, id, style, hidden, title, data-*</header>
-                    <div class="article_main__cls">
-                        <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
-                        <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
-                        <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
-                        <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
-                    </div>
-                    <footer>💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</footer>
                 </article>
             </div>
         </section>
@@ -1148,7 +1188,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="js_cloner__id">
+        <section class="section__cls" id="JS_CLONER__ID">
             <h2>♻️ JS-размножитель</h2>
             <div class="section_main__cls">
                 <article class="article__cls">
@@ -1165,12 +1205,12 @@
         </section>
     </main>
 
-    <footer id="root_footer__id">
+    <footer id="ROOT_FOOTER__ID">
         🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
     </footer>
 </div>
 
-<script id="root_footer_script__id">
+<script id="ROOT_FOOTER_SCRIPT__ID">
     (function bgColorOnLoad() {
         let body_bg_color__old = document.body.style.background;
         document.body.style.background = 'yellow';
@@ -1178,7 +1218,7 @@
     })();
 
     (function generateNavRoot() {
-        const navContainer = document.getElementById('root_nav__id');
+        const navContainer = document.getElementById('ROOT_NAV__ID');
         if (!navContainer) return;
         navContainer.innerHTML = '';
 
