@@ -167,6 +167,114 @@
             border-radius: 4px;
         }
 
+        /* -------------------- LISTS -------------------------------------------------------------------------------*/
+        /* ===== Базовые сбросы для списков ===== */
+        ul, ol, dl {
+            margin: 1rem 0;
+            padding-left: 1.5rem;  /* стандартный отступ для маркеров/цифр */
+        }
+
+        /* ===== 1. Маркированные списки (ul) ===== */
+        ul {
+            list-style-type: disc;  /* диск •, можно circle, square */
+        }
+        ul ul {
+            list-style-type: circle;
+        }
+        ul ul ul {
+            list-style-type: square;
+        }
+
+        /* Кастомные маркеры через псевдоэлементы (более гибко) */
+        .ul_custom__cls {
+            list-style: none;   /*1*/
+            padding-left: 0;
+        }
+        .ul_custom__cls li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .ul_custom__cls li::before {
+            content: "▹";           /*2=любой символ или иконка */
+            position: absolute;
+            left: 0;
+            color: #2a73ff;
+            font-weight: bold;
+        }
+
+        /* ===== 2. Нумерованные списки (ol) ===== */
+        ol {
+            list-style-type: decimal; /* 1, 2, 3... */
+        }
+        ol ol {
+            list-style-type: lower-alpha; /* a, b, c... */
+        }
+        ol ol ol {
+            list-style-type: lower-roman; /* i, ii, iii... */
+        }
+
+        /* Кастомная нумерация счётчиком CSS */
+        .ol_custom__cls {
+            list-style: none;
+            counter-reset: custom-counter;
+            padding-left: 0;
+        }
+        .ol_custom__cls li {
+            counter-increment: custom-counter;
+            margin-bottom: 0.5rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+        .ol_custom__cls li::before {
+            content: counter(custom-counter) ".";
+            position: absolute;
+            left: 0;
+            color: #2a73ff;
+            font-weight: bold;
+        }
+
+        /* ===== 3. Списки описаний (dl) ===== */
+        dl {
+            padding-left: 0;
+        }
+        dt {
+            font-weight: 600;
+            margin-top: 0.75rem;
+            color: #0f2b4d;
+        }
+        dd {
+            margin-left: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #334155;
+        }
+
+        /* Горизонтальный dl (термин и описание в одной строке) */
+        .dl_horizontal__cls {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            align-items: baseline;
+        }
+        .dl_horizontal__cls dt {
+            margin-top: 0;
+            white-space: nowrap;
+        }
+        .dl_horizontal__cls dd {
+            margin-left: 0;
+        }
+
+        /* ===== 4. Адаптивность и отступы ===== */
+        @media (max-width: 640px) {
+            .dl_horizontal__cls {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+            .dl_horizontal__cls dt {
+                margin-top: 0.5rem;
+            }
+        }
+
         /* -------------------- ROOT BLOCKS -------------------------------------------------------------------------*/
         #ROOT_DIV__ID {
             max-width: 1400px;
@@ -486,7 +594,8 @@
                         <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
                         <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
                         <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
-                        <br>
+
+                        <hr>
                         <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
                         <p><q>цитата</q></p>
                     </div>
@@ -636,45 +745,102 @@
         <section class="section__cls" id="listsId">
             <h2>📋 Списки (ul, ol, dl)</h2>
             <div class="section_main__cls grid_auto__cls">
+
+                <!-- Стандартные маркированные списки -->
                 <article class="article__cls">
-                    <header>UL-Маркированный</header>
+                    <header>📌 UL - Маркированный</header>
                     <div class="article_main__cls">
+
                         <ul>
-                            <li>Элемент списка</li>
-                            <li>Можно вкладывать
-                                <ul><li>Вложенный пункт</li><li>Глубина любая</li></ul>
+                            <li>level1 disc</li>
+                            <li>level1
+                                <ul>
+                                    <li>level2 circle</li>
+                                    <li>level2
+                                        <ul><li>level3 square</li></ul>
+                                    </li>
+                                </ul>
                             </li>
+                            <li>Используйте list-style-type или псевдоэлементы</li>
                         </ul>
+
+                        <hr>
+                        <ul class="ul_custom__cls">
+                            <li>CUSTOM Можно использовать любые символы: → • ✓ ❯</li>
+                            <li>Легко менять цвет, размер, анимацию</li>
+                            <li>Иконки из FontAwesome / Material Icons тоже работают</li>
+                        </ul>
+
                     </div>
+                    <footer>💡 <code>list-style-type: disc / circle / square</code> — стандарт. Для кастомных иконок — <code>::before</code>.</footer>
                 </article>
 
+                <!-- Нумерованные списки с разными типами -->
                 <article class="article__cls">
-                    <header>OL-Нумерованный</header>
+                    <header>🔢 OL - Нумерованный</header>
                     <div class="article_main__cls">
-                        <ol start="3" type="A">
-                            <li>Первый пункт (с атрибутами start="3", type="A")</li>
-                            <li>Второй пункт
-                                <ol><li>подпункт a</li></ol>
+
+                        <ol>
+                            <li>level1 decimal</li>
+                            <li>level1
+                                <ol>
+                                    <li>level2 lower-alpha
+                                    <li>level2
+                                        <ol type="I">
+                                            <li>level3 lower-roman</li>
+                                            <li>level3</li>
+                                        </ol>
+                                    </li>
+                                    <li>level2
+                                        <ol style="list-style-type: upper-roman">
+                                            <li>level3 style list-style-type: upper-roman</li>
+                                            <li>level3</li>
+                                        </ol>
+                                    </li>
+                                </ol>
                             </li>
                         </ol>
+
+                        <hr>
+                        <ol class="ol_custom__cls">
+                            <li>Своя нумерация счётчиком CSS</li>
+                            <li>Стиль <code>counter()</code> даёт полный контроль</li>
+                            <li>Можно добавить точки, скобки, префиксы</li>
+                        </ol>
                     </div>
-                    <footer>⚙️ Атрибуты: reversed, start, type (1, A, a, I, i) меняют нумерацию.</footer>
+
+                    <footer>⚙️ Атрибуты <code>start</code>, <code>reversed</code>, <code>type</code> и CSS-свойство <code>list-style-type</code> (decimal, lower-alpha, upper-roman и др.).</footer>
                 </article>
 
+                <!-- Список описаний (dl) -->
                 <article class="article__cls">
-                    <header>Список описаний (dl / dt / dd)</header>
+                    <header>📖 DL=dt/dd - описания</header>
                     <div class="article_main__cls">
+                        <h4>стандартный - ломается вертикально</h4>
                         <dl>
                             <dt>HTML</dt>
-                            <dd>Язык гипертекстовой разметки, структура страницы.</dd>
+                            <dd>Язык разметки для структуры документа.</dd>
                             <dt>CSS</dt>
                             <dd>Каскадные таблицы стилей — оформление.</dd>
                             <dt>JavaScript</dt>
-                            <dd>Динамика и интерактивность.</dd>
+                            <dd>Язык программирования для интерактива.</dd>
                         </dl>
+
+                        <hr>
+                        <h4>dl_horizontal__cls</h4>
+                        <dl class="dl_horizontal__cls">
+                            <dt>URL</dt>
+                            <dd>https://example.com</dd>
+                            <dt>Метод</dt>
+                            <dd>POST / GET</dd>
+                            <dt>Код ответа</dt>
+                            <dd>200 OK</dd>
+                        </dl>
+
                     </div>
-                    <footer>📖 Применяется для глоссариев, метаданных, пар "термин-описание".</footer>
+                    <footer>📌 <code>&lt;dl&gt;</code> — контейнер, <code>&lt;dt&gt;</code> — термин, <code>&lt;dd&gt;</code> — описание. Идеально для глоссариев.</footer>
                 </article>
+
             </div>
         </section>
 
