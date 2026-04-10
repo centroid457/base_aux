@@ -275,6 +275,88 @@
             }
         }
 
+        /* -------------------- TABLES ------------------------------------------------------------------------------*/
+        /* ===== с границами ===== */
+        table,
+        table th,
+        table td {
+            border: 1px solid #dce3ec;
+        }
+
+        /* ===== общие стили ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;    /* убираем двойные границы */
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+            __border-radius: 1rem;    /*лучше без нее!!! скругляет углы и убирает почемуто наружный контур!*/
+            overflow: hidden;             /* чтобы скругление работало */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Заголовок таблицы */
+        thead th {
+            background: #f1f5f9;
+            color: #0f2b4d;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Ячейки тела таблицы */
+        tbody td {
+            padding: 0.75rem 1rem;
+            color: #1e2a3e;
+            __white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+        tbody td:hover {
+            background: #f2f2ff;
+        }
+
+        /* ===== zebra ===== */
+        .table_zebra__cls tbody tr:nth-child(odd) {
+            background: #f8fafc;
+        }
+        .table_zebra__cls tbody tr:hover {
+            background: #f1f5f9;    /*делается темнее чем при обычном наведении*/
+        }
+
+        /* ===== Компактная таблица ===== */
+        .table_compact__cls th,
+        .table_compact__cls td {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* ===== Горизонтальная прокрутка для маленьких экранов ===== */
+        .div_hscroller__cls {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .div_hscroller__cls table {
+            margin: 0;
+            __min-width: 10px;
+        }
+
+        /* ===== Специфичные классы для ваших примеров ===== */
+        .table_custom__cls {
+            /* наследует все базовые стили, можно добавить свои */
+        }
+        .table_custom__cls thead th {
+            background: #2a73ff;
+            color: white;
+        }
+        .table_custom__cls tbody tr:nth-child(even) {
+            background: #f0f9ff;
+        }
+
         /* -------------------- ROOT BLOCKS -------------------------------------------------------------------------*/
         #ROOT_DIV__ID {
             max-width: 1400px;
@@ -418,30 +500,11 @@
             font-family: 'SF Mono', monospace;
         }
 
-        /* -------------------- AUX --------------------*/
+        /* -------------------- GRID+FLEX --------------------*/
         .grid_auto__cls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.2rem;
-        }
-
-        /* -------------------- TABLE --------------------*/
-        .simple-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .simple-table th, .simple-table td {
-            border: 1px solid #dce3ec;
-            padding: 8px 12px;
-            text-align: left;
-        }
-        .simple-table th {
-            background: #eef2ff;
-            font-weight: 600;
         }
 
         /* -------------------- FORMS --------------------*/
@@ -743,7 +806,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="listsId">
-            <h2>📋 Списки (ul, ol, dl)</h2>
+            <h2>📋 LISTS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- Стандартные маркированные списки -->
@@ -816,7 +879,7 @@
                 <article class="article__cls">
                     <header>📖 DL=dt/dd - описания</header>
                     <div class="article_main__cls">
-                        <h4>стандартный - ломается вертикально</h4>
+                        <h4>BASE - ломается вертикально</h4>
                         <dl>
                             <dt>HTML</dt>
                             <dd>Язык разметки для структуры документа.</dd>
@@ -846,25 +909,193 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="tablesId">
-            <h2>📊 Таблицы: &lt;table&gt; и компания</h2>
+            <h2>📊 TABLES — best practice</h2>
             <div class="section_main__cls grid_auto__cls">
+
                 <article class="article__cls">
-                    <header>Базовая таблица + объединение ячеек (colspan / rowspan)</header>
+                    <header>варианты</header>
                     <div class="article_main__cls">
-                        <table class="simple-table">
+
+                        <h4>base</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>table_zebra__cls</h4>
+                        <table class="table_zebra__cls">
+                            <thead>
+                                <tr><th>Проект</th><th>Участники</th><th>Статус</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td rowspan="2">Веб-сайт</td><td>Дизайнер</td><td>Активен</td></tr>
+                                <tr><td>Разработчик</td><td>Активен</td></tr>
+                                <tr><td colspan="2">Мобильное приложение</td><td>Завершён</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>table_compact__cls</h4>
+                        <table class="table_compact__cls">
                             <thead>
                                 <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
                             </thead>
                             <tbody>
                                 <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
-                                <tr><td rowspan="2">Команда</td><td>Бэкенд</td><td>5 лет</td></tr>
-                                <tr><td>DevOps</td><td>2 года</td></tr>
-                                <tr><td colspan="2">Итого специалистов</td><td>3+</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
                             </tbody>
                         </table>
+
                     </div>
-                    <footer>🧩 thead/tbody/tfoot — для семантической группировки. Colspan объединяет столбцы, rowspan — строки.</footer>
+                    <footer>
+                        <code>border-collapse: collapse</code>,<br>
+                        hover-строкой<br>
+
+                        <code>colspan</code> объединяет колонки,<br>
+                        <code>rowspan</code> — строки.<br>
+
+                        <code>.table_compact__cls</code> — уменьшенные отступы.<br>
+                    </footer>
                 </article>
+
+                <article class="article__cls">
+                    <header>text-align RIGHT</header>
+                    <div class="article_main__cls">
+
+                        <h4>base</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>TABLE full</h4>
+                        <table style="text-align: right;">
+                            <thead>
+                                <tr><th>Имя</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Анна</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>diff BLOCKS</h4>
+                        <table>
+                            <thead style="text-align: right;">
+                                <tr><th>THEAD full</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody style="text-align: right;">
+                                <tr><td>TBODY full</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td>Иван</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>diff INNERS</h4>
+                        <table>
+                            <thead>
+                                <tr style="text-align: right;"><th>TR full</th><th>Должность</th><th>Опыт</th></tr>
+                                <tr><th style="text-align: right;">TH only</th><th>Должность</th><th>Опыт</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr style="text-align: right;"><td>TR full</td><td>Frontend</td><td>3 года</td></tr>
+                                <tr><td style="text-align: right;">TD only</td><td>Backend</td><td>5 лет</td></tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <footer>
+                        THEAD=HEADER нельзя выставить свое выравнивание!!!
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🎨 Кастомная таблица (свой класс)</header>
+                    <div class="article_main__cls">
+
+                        <table class="table_custom__cls">
+                            <thead>
+                                <tr><th>Технология</th><th>Рейтинг</th><th>Год</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>HTML5</td><td>⭐⭐⭐⭐⭐</td><td>2014</td></tr>
+                                <tr><td>CSS3</td><td>⭐⭐⭐⭐⭐</td><td>2011</td></tr>
+                                <tr><td>JavaScript</td><td>⭐⭐⭐⭐⭐</td><td>1995</td></tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <footer>💡 Можно переопределять цвета фона заголовка и чётных строк — как в <code>.table_custom__cls</code>.</footer>
+                </article>
+
+                <article class="article__cls" style="width: 200px;">
+                    <header>ПРОКРУТКА</header>
+                    <div class="article_main__cls">
+
+                         <h4>div_hscroller__cls нет вообще</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Параметр</th><th>Значение</th><th>Единица</th><th>Примечание</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Ширина</td><td>100%</td><td>—</td><td>Относительно родителя</td></tr>
+                                <tr><td>Высота</td><td>auto</td><td>—</td><td>Подстраивается под контент</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>div_hscroller__cls на TABLE</h4>
+                        <table class="div_hscroller__cls">
+                            <thead>
+                                <tr><th>Параметр</th><th>Значение</th><th>Единица</th><th>Примечание</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Ширина</td><td>100%</td><td>—</td><td>Относительно родителя</td></tr>
+                                <tr><td>Высота</td><td>auto</td><td>—</td><td>Подстраивается под контент</td></tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+                        <h4>div_hscroller__cls на DIV</h4>
+                        <div class="div_hscroller__cls">
+                            <table>
+                                <thead>
+                                    <tr><th>Параметр</th><th>Значение</th><th>Единица</th><th>Примечание</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Ширина</td><td>100%</td><td>—</td><td>Относительно родителя</td></tr>
+                                    <tr><td>Высота</td><td>auto</td><td>—</td><td>Подстраивается под контент</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <footer>📌 Обёртка <code>.div_hscroller__cls</code> с <code>overflow-x: auto</code> спасает на узких экранах.</footer>
+
+                </article>
+
             </div>
         </section>
 
