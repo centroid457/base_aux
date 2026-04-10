@@ -43,6 +43,76 @@
             border-radius: 12px;
         }
 
+        /* -------------------- LINKS --------------------------------------------------------------------------------*/
+        /* ===== Базовые стили ссылок ===== */
+        a {
+            color: #2a73ff;
+            text-decoration: none;
+            transition: color 0.2s, background-color 0.2s;
+            cursor: pointer;
+        }
+        a:hover {
+            color: #1a5ad9;
+            text-decoration: underline;
+        }
+        a:focus-visible {
+            outline: 2px solid #2a73ff;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* ===== Внешние ссылки (иконка дополнительная) ===== */
+        a[target="_blank"]::after {
+            content: "↗";
+            display: inline-block;
+            margin-left: 0.2rem;
+            font-size: 0.75em;
+            vertical-align: top;
+        }
+
+        /* ===== Якоря (плавная прокрутка) ===== */
+        html {
+            scroll-behavior: smooth;  /* глобальная плавная прокрутка */
+        }
+        /* Отступ для фиксированной навигации (если есть sticky) */
+        :target {
+            scroll-margin-top: 80px;
+        }
+
+        /* ===== Ссылки-кнопки ===== */
+        .a_button__cls {
+            display: inline-block;
+            background: #2a73ff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .a_button__cls:hover {
+            background: #1a5ad9;
+            text-decoration: none;
+        }
+
+        /* ===== навигация ===== */
+        .div_a_nav__cls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+            padding: 0;
+        }
+        .div_a_nav__cls a {
+            background: #eef2ff;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+        }
+        .div_a_nav__cls a:hover {
+            background: #2a73ff;
+            color: white;
+            text-decoration: none;
+        }
+
         /* -------------------- QUOTES -------------------------------------------------------------------------------*/
         /* ===== Блочные цитаты ===== */
         blockquote {
@@ -642,6 +712,119 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="linksId">
+            <h2>LINKS</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>ВАРИАНТЫ</header>
+                    <div class="article_main__cls">
+
+                        <p><a href="f0_demo_download.txt"></a> - без тела не отобразится вообще ничего!</p>
+
+                        <p><a href="#">локальная ссылка - внутри страницы - якорь</a></p>
+                        <p><a href="f0_demo_download.txt">локальная ссылка - внутри сервера ---просто имя файла!!!</a></p>
+                        <p><a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">Внешняя ссылка - откроется в новой вкладке)</a> — добавляется иконка ↗</p>
+
+                        <hr>
+                        <h4>якоря</h4>
+                        <p><a href="#">#</a> — возвращает наверх страницы (иногда нежелательно)</p>
+                        <p><a href="#top">#top</a></p>
+                        <p><a href="#bottom">#bottom</a> - нет такого!</p>
+                        <p><a href="#linksId">#linksId</a> - по ID блока</p>
+                        <p><a href="#linksId13123">#linksId13123</a> - несуществующий ничего не откроет</p>
+
+                        <hr>
+                        <h4>файлы - указание имени</h4>
+                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - работает</p>
+                        <p><a href="/f3_example_whole_reference.html">/f3_example_whole_reference.html</a> - НЕ работает - файл не обнаружен!</p>
+                        <p><a href="./f3_example_whole_reference.html">./f3_example_whole_reference.html</a> - работает</p>
+
+                        <hr>
+                        <h4>файлы - открытие типов</h4>
+                        <p><a href="f0_demo_download.txt">f0_demo_download.txt"</a> - откроет все как есть</p>
+                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - откроет все как есть</p>
+
+                        <hr>
+                        <h4>разное</h4>
+                        <p><a href="javascript:alert(1)">href=javascript:CODE</a> — запуск кода не рекомендуют.</p>
+                        <p><a role="button" tabindex="0">role="button" NO_HREF</a> Ссылка без href — лучше заменить на button</p>
+
+                        <hr>
+                        <h4>contacts схемы</h4>
+                        <p><a href="mailto:info@example.com">href="mailto:info@example.com"</a> — откроет почтовый клиент</p>
+                        <p><a href="tel:+71234567890">href="tel:+71234567890"</a> — на мобильных откроет набор номера, на десктопе - предложится выбор приложения!</p>
+                    </div>
+                    <footer>
+                        Для внешних ссылок используйте <code>target="_blank"</code> + <code>rel="noopener noreferrer"</code> для безопасности. Иконка через псевдоэлемент <code>::after</code>.<br>
+                        Если ссылка не ведёт на другую страницу/якорь, используйте <code>&lt;button&gt;</code> вместо <code>&lt;a&gt;</code>. Это семантически правильно.<br>
+                        Якоря ссылаются на <code>id</code> элемента. Для плавной прокрутки используйте <code>scroll-behavior: smooth</code> и <code>scroll-margin-top</code> для фиксированной навигации.<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>DOWNLOAD file</header>
+                    <div class="article_main__cls">
+
+                        <h4>CТАТИЧЕСКИЙ файл</h4>
+                        <a href="f0_demo_download.txt" download>Скачать этот файл'</a>
+                        <p>скачает только то что браузер не умеет отображать (например, .zip, .exe, .bin, .docx — хотя .docx может открыть Office Online, но обычно скачивается).</p>
+
+                        <hr>
+                        <h4>JS ДИНАМИЧЕСКИ сгенерированный файл - качает всегда!</h4>
+                        <p><a id="demoDownloadLink__id" href="#">Скачать сгенерированный HTML-файл</a></p>
+                        <script>
+                            document.getElementById('demoDownloadLink__id')?.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const content = `<!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"><title>Скачанный файл</title></head>
+        <body>
+        <h1>Пример скачанного файла</h1>
+        <p>Этот файл был создан динамически через JavaScript и blob.</p>
+        </body>
+        </html>`;
+                                const blob = new Blob([content], { type: 'application/octet-stream' }); //'application/octet-stream' / 'text/html' вроде не важно!!! все работает!
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'demo_downloaded_file.html';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            });
+                        </script>
+
+                    </div>
+                    <footer><code>download</code> только имя для сохранения! работает только для файлов на том же origin (или blob/data-URI). В этом примере файл создаётся на лету через JavaScript.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>КНОПОЧНЫЕ</header>
+                    <div class="article_main__cls">
+
+                        <h4>навигационные - div_a_nav__cls</h4>
+                        <div class="div_a_nav__cls">
+                            <a href="#textId">#textId</a>
+                            <a href="#listsId">#listsId</a>
+                        </div>
+
+                        <hr>
+                        <h4>стилизация под button - a_button__cls</h4>
+                        <a href="#" class="a_button__cls">ссылка</a>
+                        <a href="#" class="a_button__cls" style="background: #1e2a3a;">ссылка Dark</a>
+                    </div>
+                    <footer>
+                        <code>.a_button__cls</code> для стилизации ссылки как кнопки.
+                        Не путайте с <code>&lt;button&gt;</code>, который предназначен для действий на странице.
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="textInlineId">
             <h2>✨ ТЕКСТ - внутристрочный</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -1120,12 +1303,26 @@
                 </article>
 
                 <article class="article__cls">
+                    <header>FILES</header>
+                    <div class="article_main__cls">
+
+                        <h4>LINKS скачать</h4>
+                        <p>см отдельно</p>
+
+                    </div>
+                    <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
+                </article>
+
+                <article class="article__cls">
                     <header>Тег dialog</header>
                     <div class="article_main__cls">
+
+                        <h4>DIALOG</h4>
                         <dialog id="demoDialog">
                             <p>Это модальное окно (dialog).</p>
                             <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
                         </dialog>
+
                         <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
                     </div>
                     <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
@@ -1239,24 +1436,6 @@
                     </footer>
                 </article>
 
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="linksId">
-            <h2>🔗 Гиперссылки & якоря</h2>
-            <div class="section_main__cls grid_auto__cls">
-                <article class="article__cls">
-                    <header>Ссылки: target, якоря, относительные пути</header>
-                    <div class="article_main__cls">
-                        <p><a href="https://developer.mozilla.org/ru/" target="_blank">Абсолютная ссылка (MDN) — открыть в новой вкладке</a></p>
-                        <p><a href="#textId">Якорь на раздел "Текст" (плавная прокрутка)</a> — внутри страницы</p>
-                        <p><a href="mailto:example@domain.com">Email-ссылка (mailto)</a> | <a href="tel:+123456789">Телефонная ссылка (tel)</a></p>
-                        <p><a href="#" download>Атрибут download (предлагает скачать)</a> — обычно для файлов.</p>
-                        <p><a href="#top">↑ Наверх (используем пустой якорь #top)</a></p>
-                    </div>
-                    <footer>🔐 rel="noopener noreferrer" для безопасности при target="_blank". Ссылки-якоря работают с id элемента.</footer>
-                </article>
             </div>
         </section>
 
@@ -1674,7 +1853,7 @@
         navContainer.appendChild(bottomLink);
     })();
 
-    // плавная прокрутка для всех якорей (включая сгенерированные)
+    // плавная прокрутка для всех якорей - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
