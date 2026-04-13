@@ -43,6 +43,34 @@
             border-radius: 12px;
         }
 
+        /* -------------------- TEXT inline --------------------------------------------------------------------------*/
+        abbr {
+            cursor: help;
+        }
+        dfn {
+            //font-style: normal;
+            font-weight: 500;
+        }
+        /* Переменная — курсив + лёгкий серый фон (по желанию) */
+        var {
+            font-style: italic;
+            background: #f0f0f0;     /* или #f8f8f8, но не обязательно */
+            padding: 0.1rem 0.2rem;
+            border-radius: 4px;
+            font-family: monospace;   /* если переменная из кода */
+        }
+
+        /* Вывод программы — моноширинный + тёмный фон (как консоль) */
+        samp {
+            font-family: monospace;
+            background: #e0e0e0;
+            //background: #1e2a3a;
+            //color: #e2e8f0;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
         /* -------------------- LINKS --------------------------------------------------------------------------------*/
         /* ===== Базовые стили ссылок ===== */
         a {
@@ -427,7 +455,7 @@
             background: #f0f9ff;
         }
 
-        /* -------------------- ROOT BLOCKS -------------------------------------------------------------------------*/
+        /* -------------------- ROOT IDS -----------------------------------------------------------------------------*/
         #ROOT_DIV__ID {
             max-width: 1400px;
             margin: 0 auto;
@@ -505,6 +533,7 @@
             padding-top: 1.5rem;
         }
 
+        /* -----------------------------------------------------------------------------------------------------------*/
         /* -------------------- SECTION --------------------*/
         .section__cls {
             background: #ffffff;
@@ -651,7 +680,7 @@
         }
         /* конец стилей табов */
 
-        /* -------------------- smth --------------------*/
+        /* -----------------------------------------------------------------------------------------------------------*/
         @media (max-width: 700px) {
             #ROOT_DIV__ID {
                 padding: 1rem;
@@ -763,7 +792,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>DOWNLOAD file</header>
+                    <header>DOWNLOAD</header>
                     <div class="article_main__cls">
 
                         <h4>CТАТИЧЕСКИЙ файл</h4>
@@ -801,19 +830,19 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>КНОПОЧНЫЕ</header>
+                    <header>КНОПОЧНАЯ СТИЛИЗАЦИЯ</header>
                     <div class="article_main__cls">
 
                         <h4>навигационные - div_a_nav__cls</h4>
                         <div class="div_a_nav__cls">
-                            <a href="#textId">#textId</a>
-                            <a href="#listsId">#listsId</a>
+                            <a href="#linksId">#linksId</a>
+                            <a href="#linksId">#linksId</a>
                         </div>
 
                         <hr>
                         <h4>стилизация под button - a_button__cls</h4>
-                        <a href="#" class="a_button__cls">ссылка</a>
-                        <a href="#" class="a_button__cls" style="background: #1e2a3a;">ссылка Dark</a>
+                        <a href="#linksId" class="a_button__cls">#linksId</a>
+                        <a href="#linksId" class="a_button__cls" style="background: #1e2a3a;">#linksId Black</a>
                     </div>
                     <footer>
                         <code>.a_button__cls</code> для стилизации ссылки как кнопки.
@@ -826,41 +855,54 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textInlineId">
-            <h2>✨ ТЕКСТ - внутристрочный</h2>
+            <h2>ТЕКСТ - внутристрочный</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
                     <header>типовые</header>
                     <div class="article_main__cls">
+
                         <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
-                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
                         <p><b>b</b> — просто жирный, без дополнительной важности (визуально).</p>
-                        <p><i>i</i> — просто курсив (технический термин, иноязычие).</p>
-                        <p><mark>mark</mark> — выделенный цветом (как маркер).</p>
-                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
-                        <p><del>удалённый текст</del> и <ins>вставленный</ins> (обычно используется в редактурах).</p>
-                        <p>H<sub>2</sub>O — подстрочный (sub), E = mc<sup>2</sup> — надстрочный (sup).</p>
+
+                        <p><em>em</em> — акцентирование (курсив + логическое ударение).</p>
+                        <p><i>i</i> — просто курсив, без дополнительной важности (визуально)</p>
 
                         <hr>
-                        <p><code>code example</code> — для фрагментов кода внутри текста и в сочетании с PRE.</p>
-                        <p><q>цитата</q></p>
-                    </div>
-                    <footer>🔍 Тонкость: strong/em важны для скринридеров, b/i — только стиль. Выбирайте по смыслу.</footer>
-                </article>
+                        <p><small>small</small> — мелкий примечательный текст (лицензия, сноска).</p>
+                        <p><sub>sub</sub>(H<sub>2</sub>O) — подстрочный</p>
+                        <p><sup>sup</sup>(E = mc<sup>2</sup>) — надстрочный</p>
 
-               <article class="article__cls">
-                    <header>⌨️ KBD</header>
-                    <div class="article_main__cls">
-                        <p>
-                            Скопировать: <kbd>Ctrl</kbd>+<kbd>C</kbd><br>
-                            Вставить: <kbd>Ctrl</kbd>+<kbd>V</kbd><br>
-                            Вырезать: <kbd>Ctrl</kbd>+<kbd>X</kbd><br>
-                            Сохранить: <kbd>Ctrl</kbd>+<kbd>S</kbd><br>
-                            Перезагрузка (Windows): <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd><br>
-                            Переключение раскладки: <kbd>Win</kbd>+<kbd>Space</kbd>
-                        </p>
+                        <hr>
+                        <p><del>DEL</del> - зачеркнутый "удаленный" (обычно используется в редактурах)</p>
+                        <p><ins>INS</ins> - подчеркнутый "вставленный" (обычно используется в редактурах)</p>
+                        <p><u>U</u> - Подчёркнутый - смысловое ударение (используйте осторожно, не путайте с ссылками).</p>
+                        <p><q>Q</q> - цитата внутристрочная (добавляет кавычки)</p>
+
+                        <hr>
+                        <p><mark>mark</mark> — выделенный цветом (как маркер, без выбора цвета)</p>
+                        <p><code>code</code> — фрагмент кода внутристрочный, для имён переменных, путей файлов, коротких фрагментов кода</p>
+
+                        <p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>
+                        <p><kbd>Win</kbd>+<kbd>Space</kbd></p>
+                        <p><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd></p>
+                        <p><samp><kbd>Ctrl</kbd>+<kbd>C</kbd></samp> - комбинация SAMP+KBD</p>
+
+                        <p><var>VAR</var> = <var>a</var> + <var>b</var> — переменные.</p>
+                        <p><samp>SAMP</samp>(<samp>ls -la</samp>)(<samp>Error 404: Not Found</samp>) — (sample) вывод команды.</p>
+
+                        <hr>
+                        <p><abbr title="Аббревиатура / акроним">ABBR</abbr> — аббревиатура (подсказка по наведению) всегда добавляйте title для расшифровки.</p>
+                        <p><dfn>DFN</dfn> — (definition) определение термина при первом использовании, значение тегов для машин и людей.</p>
+
+                        <p style="width: 150px; border:1px dashed gray;">(WBR)Длинноесловодляпереноса<wbr>Возможное место переноса строки (word break opportunity)</p>
+                        <p><span style="background: #ffe6b3;">SPAN</span> Универсальный контейнер для стилизации CSS (без смысловой нагрузки вместо DIV)</p>
+
                     </div>
-                    <footer>📌 <strong>Правило:</strong> каждая физическая клавиша — в отдельный <code>&lt;kbd&gt;</code>, символ <code>+</code> — обычный текст. Это улучшает доступность и семантику.</footer>
+                    <footer>
+                        strong/em важны для скринридеров (скринридеры меняют интонацию), b/i — только стиль. <br>
+                        ins и del — для отслеживания изменений (могут иметь атрибуты datetime, cite)<br>
+                    </footer>
                 </article>
 
             </div>
@@ -873,7 +915,7 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>📄 Абзац P</header>
+                    <header>Абзац P</header>
                     <div class="article_main__cls">
 
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
@@ -884,47 +926,43 @@
 
                         <p>Абзац с BR[<br>] простым НЕСЕМАНТИЧЕСКИМ переносом строки внутри.</p>
 
-                    </div>
-                    <footer>P - блочный элемент для текста. Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.).</footer>
-                </article>
+                        <hr>
+                        <h4>✅ правильный P+BR</h4>
+                        <p>
+                            Стихи:<br>
+                            В лесу родилась ёлочка,<br>
+                            В лесу она росла.
+                        </p>
 
-                <article class="article__cls">
-                    <header>✍️ P vs BR</header>
-                    <div class="article_main__cls">
-                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                        <p>
+                            С уважением,<br>
+                            Команда поддержки<br>
+                            Тел: 8-800-555-35-35
+                        </p>
 
-                            <div style="flex: 1;">
-                                <h4>✅ Три абзаца P</h4>
-                                <p>Абзац 1: Законченная мысль. После него будет отступ.</p>
-                                <p>Абзац 2: Другая мысль. Скринридер сделает паузу.</p>
-                                <p>Абзац 3: Удобно читать и стилизовать.</p>
-                            </div>
-
-                            <div style="flex: 1;">
-                                <h4>✅ Один абзац P+BR</h4>
-                                <p>
-                                    С уважением,<br>
-                                    Команда поддержки<br>
-                                    Тел: 8-800-555-35-35
-                                </p>
-                                <p style="margin-top: 1rem;">Стихи:<br>
-                                    В лесу родилась ёлочка,<br>
-                                    В лесу она росла.
-                                </p>
-                            </div>
-
-                        </div>
+                        <hr>
+                        <h4>✅ P+P+P</h4>
+                        <p>P1: Законченная мысль. После него будет отступ.</p>
+                        <p>P2: Другая мысль. Скринридер сделает паузу.</p>
+                        <p>P3: Удобно читать и стилизовать.</p>
+                        <hr>
+                        отступы
+                        <p style="margin-top: 1rem;">
+                            отступы ----ДОБАВИТЬ ВСЕ ВАРИАНТЫ!!!!
+                        </p>
                     </div>
                     <footer>
+                        P - блочный элемент для текста. <br>
+                        Не вкладывайте блочные элементы внутрь <code>p</code>, только строчные (<code>span</code>, <code>a</code>, <code>strong</code> и т.д.)<br>
                         <code>&lt;p&gt;</code> — для смыслового разделения мыслей (блочный элемент с отступами). <br>
                         <code>&lt;br&gt;</code> — для переноса внутри одного абзаца (строчный разрыв). Не используйте <code>&lt;br&gt;</code> для создания пустых мест или разделения разных идей.<br>
-                        Не используйте <br> для разделения пунктов — это просто разрыв строки без логической структуры.<br>
-                        Не смешивайте <p> и <br> для имитации списка — это антипаттерн.
+                        BR - просто разрыв строки без логической структуры.<br>
+                        p+br для имитации списка — антипаттерн.
                     </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>📜 QUOTES</header>
+                    <header>QUOTES</header>
                     <div class="article_main__cls">
 
                         <p><q>qqq</q> text example text example text example text example text example </p>
