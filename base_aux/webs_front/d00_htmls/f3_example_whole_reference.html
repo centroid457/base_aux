@@ -739,6 +739,60 @@
         /* конец стилей табов */
 
         /* -----------------------------------------------------------------------------------------------------------*/
+        /* ===== Базовые стили для details/summary ===== */
+        details {
+            border: 1px solid #cbd5e1;
+            margin: 0.75rem 0;
+            padding: 0.5rem 0.75rem;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        /* Заголовок спойлера */
+        summary {
+            font-weight: 600;
+            cursor: pointer;    /*курсор на pointer*/
+            padding: 0.25rem 0;
+            user-select: none;          /* убирает выделение текста при клике */
+        }
+        summary:focus-visible {
+            outline: 2px solid #2a73ff;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Скрытый контент */
+        details > :not(summary) {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Открытый спойлер — можно слегка выделить */
+        details[open] {
+            background: #fafcff;
+            border-color: #2a73ff;
+        }
+
+        /* Кастомный маркер (убираем стандартный треугольник) */
+        .details_custom__cls summary {
+            list-style: none;           /* убираем треугольник в Chrome/Edge */
+        }
+        .details_custom__cls summary::-webkit-details-marker {
+            display: none;              /* убираем треугольник в Safari/WebKit */
+        }
+        .details_custom__cls summary::before {
+            content: '>';
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .details_custom__cls[open] summary::before {
+            content: 'v';
+        }
+
+        /* -----------------------------------------------------------------------------------------------------------*/
         @media (max-width: 700px) {
             #ROOT_DIV__ID {
                 padding: 1rem;
@@ -966,7 +1020,6 @@
             </div>
         </section>
 
-
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textBlocksId">
             <h2>🧩 ТЕКСТ - БЛОКИ</h2>
@@ -1085,7 +1138,6 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <!-- ====================== ПОЗИЦИОНИРОВАНИЕ ====================== -->
         <section class="section__cls" id="positioningId">
             <h2>📌 Позиционирование (CSS position)</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -1187,6 +1239,7 @@
 
             </div>
         </section>
+
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="listsId">
             <h2>📋 LISTS</h2>
@@ -1482,23 +1535,81 @@
         </section>
 
         <!-- ====================================================================================================== -->
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="interactId">
-            <h2>📝 Интерактив</h2>
+            <h2>Интерактив</h2>
             <div class="section_main__cls grid_auto__cls">
 
+                <article class="article__cls">
+                    <header>DATAILS - спойлер</header>
+                    <div class="article_main__cls">
+
+                        <summary>SUMMARY only - семантическая ошибка но все отображает</summary>
+
+                        <details>
+                            <summary>Закрытый спойлер (open=false)</summary>
+                            <p>Этот контент скрыт по умолчанию. Нажмите на заголовок, чтобы раскрыть.</p>
+                        </details>
+
+                        <details open>
+                            <summary>Открытый спойлер (open=true)</summary>
+                            <p>Этот контент виден сразу. Атрибут <code>open</code> делает блок раскрытым при загрузке.</p>
+                        </details>
+
+                        <hr>
+                        <details open>
+                            <summary>main ВЛОЖЕННЫЕ</summary>
+                            <p>main txt</p>
+                            <details open>
+                                <summary>sub Подраздел (nested)</summary>
+                                <p>sub txt</p>
+                            </details>
+                        </details>
+
+                        <details class="details_custom__cls">
+                            <summary>замена маркера details_custom__cls</summary>
+                            <p>Секрет: кастомные маркеры делаются через <code>::before</code> и убирание стандартного маркера.</p>
+                        </details>
+
+                        <details>
+                            <summary>пример с формой</summary>
+                            <div style="margin-top: 0.5rem;">
+                                <label><input type="checkbox"> Опция 1</label><br>
+                                <label><input type="text" placeholder="Введите значение"></label><br>
+                                <button>Применить</button>
+                            </div>
+                        </details>
+
+                    </div>
+                    <footer></footer>
+                </article>
 
                 <article class="article__cls">
-                    <header>details + summary (спойлер)</header>
+                    <header>📊 progress vs meter</header>
                     <div class="article_main__cls">
-                        <details>
-                            <summary>📖Блок СКРЫТЫЙ</summary>
-                            <p>Атрибут <code>open</code> делает блок развёрнутым по умолчанию. Можно вкладывать любые теги.</p>
-                        </details>
-                        <details open>
-                            <summary>Блок ОТКРЫТЫЙ</summary>
-                            <p>Здесь дополнительная информация всегда видна.</p>
-                        </details>
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div>
+                                <label>progress/meter:</label>
+
+                                <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+
+                                <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+
+                                <div style="margin-top: 0.5rem;">
+                                    <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
+                                    <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
+                                </div>
+
+                                <p>low="0.3" high="0.8"</p>
+
+                            </div>
+                        </div>
                     </div>
+                    <footer>
+                        <code>progress</code> - ход выполнения,<br>
+                        <code>meter</code>-значение с цветовыми зонами.
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -1583,33 +1694,6 @@
 
                     </div>
                     <footer>🧩 <strong>Тонкости type="number":</strong> атрибуты <code>min</code>, <code>max</code>, <code>step</code>; стрелки (спиннер) в браузере; осторожно с десятичными разделителями.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>📊 progress vs meter + спиннеры (числовые поля)</header>
-                    <div class="article_main__cls">
-                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                            <div>
-                                <label>progress/meter:</label>
-
-                                <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
-
-                                <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
-
-                                <div style="margin-top: 0.5rem;">
-                                    <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4" style="width: 70%;">
-                                    <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
-                                </div>
-
-                                <p>low="0.3" high="0.8"</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <footer>
-                        <code>progress</code> - ход выполнения,<br>
-                        <code>meter</code>-значение с цветовыми зонами.
-                    </footer>
                 </article>
 
                 <article class="article__cls">
