@@ -534,6 +534,64 @@
         }
 
         /* -----------------------------------------------------------------------------------------------------------*/
+        /* ===== Базовые стили для демонстрации позиционирования ===== */
+        .pos-demo-container {
+            position: relative;   /* контейнер для absolute-блоков */
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 0;     /* без скругления — чёткие границы */
+            padding: 1rem;
+            margin: 1rem 0;
+            min-height: 200px;
+        }
+        .pos-demo-box {
+            width: 100px;
+            height: 60px;
+            background: #2a73ff;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+            font-weight: bold;
+            margin: 0.5rem;
+        }
+        .pos-demo-relative {
+            background: #16a085;
+        }
+        .pos-demo-absolute {
+            background: #e67e22;
+        }
+        .pos-demo-fixed {
+            background: #8e44ad;
+        }
+        .pos-demo-sticky {
+            background: #c0392b;
+        }
+        /* Стили для демонстрации z-index */
+        .z-demo {
+            position: relative;
+            width: 150px;
+            height: 100px;
+            background: #3498db;
+            margin: 0.5rem;
+            display: inline-block;
+            text-align: center;
+            line-height: 100px;
+            color: white;
+        }
+        .z-demo:nth-child(2) {
+            background: #e67e22;
+            top: 30px;
+            left: -30px;
+            z-index: 10;
+        }
+        .z-demo:nth-child(3) {
+            background: #2c3e50;
+            top: -30px;
+            left: -60px;
+            z-index: 5;
+        }
+
+        /* -----------------------------------------------------------------------------------------------------------*/
         /* -------------------- SECTION --------------------*/
         .section__cls {
             background: #ffffff;
@@ -1026,6 +1084,109 @@
             </div>
         </section>
 
+        <!-- ====================================================================================================== -->
+        <!-- ====================== ПОЗИЦИОНИРОВАНИЕ ====================== -->
+        <section class="section__cls" id="positioningId">
+            <h2>📌 Позиционирование (CSS position)</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- 1. static (по умолчанию) -->
+                <article class="article__cls">
+                    <header>📌 static (по умолчанию)</header>
+                    <div class="article_main__cls">
+                        <div class="pos-demo-container">
+                            <div class="pos-demo-box">Блок 1</div>
+                            <div class="pos-demo-box">Блок 2</div>
+                            <div class="pos-demo-box">Блок 3</div>
+                        </div>
+                        <p>Элементы идут в потоке друг за другом. Свойства <code>top/left/right/bottom</code> не работают.</p>
+                    </div>
+                    <footer>Значение по умолчанию для всех элементов. Не вырывает из потока.</footer>
+                </article>
+
+                <!-- 2. relative -->
+                <article class="article__cls">
+                    <header>🔁 relative — сдвиг относительно себя</header>
+                    <div class="article_main__cls">
+                        <div class="pos-demo-container">
+                            <div class="pos-demo-box">Блок 1</div>
+                            <div class="pos-demo-box pos-demo-relative" style="position: relative; top: 20px; left: 20px;">relative (+20px/+20px)</div>
+                            <div class="pos-demo-box">Блок 3</div>
+                        </div>
+                        <p>Элемент смещается, но его исходное место остаётся пустым (другие элементы его не занимают).</p>
+                    </div>
+                    <footer>Используется для тонкой настройки или как якорь для absolute-вложенных элементов.</footer>
+                </article>
+
+                <!-- 3. absolute -->
+                <article class="article__cls">
+                    <header>🎯 absolute — привязка к ближайшему позиционированному предку</header>
+                    <div class="article_main__cls">
+                        <div class="pos-demo-container" style="position: relative; min-height: 200px;">
+                            <div class="pos-demo-box">Блок в потоке</div>
+                            <div class="pos-demo-box pos-demo-absolute" style="position: absolute; bottom: 10px; right: 10px;">absolute</div>
+                        </div>
+                        <p>Элемент вырывается из потока и позиционируется относительно ближайшего предка с <code>position: relative/absolute/fixed/sticky</code>.</p>
+                    </div>
+                    <footer>
+                        Если нет позиционированного предка — относительно <code>&lt;body&gt;</code>. Часто используется для выпадающих меню, тултипов.<br>
+                        Всегда ставьте position: relative на родительский контейнер, если внутри используете absolute.
+                    </footer>
+                </article>
+
+                <!-- 4. fixed -->
+                <article class="article__cls">
+                    <header>📌 fixed — привязка к окну браузера</header>
+                    <div class="article_main__cls">
+                        <div class="pos-demo-container" style="position: relative;">
+                            <div class="pos-demo-box pos-demo-fixed" style="position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
+                                fixed
+                            </div>
+                        </div>
+                        <p><strong>Внимание:</strong> fixed-элемент привязан к окну браузера. В этом примере он будет плавать в правом нижнем углу <strong>всего окна</strong>, а не только контейнера.</p>
+                        <p>Обычно используется для «плавающих» кнопок, шапок, баннеров.</p>
+                    </div>
+                    <footer>
+                        Fixed-элемент игнорирует родителя с <code>overflow: hidden</code> и не прокручивается вместе со страницей.<br>
+                        fixed внутри элемента с transform или will-change может привязываться к этому элементу, а не к окну (особенность браузеров).
+                    </footer>
+                </article>
+
+                <!-- 5. sticky -->
+                <article class="article__cls">
+                    <header>🧲 sticky — прилипает при прокрутке</header>
+                    <div class="article_main__cls">
+                        <div style="height: 150px; overflow-y: auto; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            <div style="height: 50px; background: #eef2ff; margin-bottom: 0.5rem;">Прокрутите вниз →</div>
+                            <div class="pos-demo-sticky" style="position: sticky; top: 0; background: #c0392b; color: white; padding: 0.5rem; text-align: center;">
+                                🧲 Я прилипаю к верху контейнера
+                            </div>
+                            <div style="height: 300px; background: #f1f5f9; margin-top: 0.5rem;">Контент, который прокручивается...</div>
+                        </div>
+                        <p>Элемент ведёт себя как <code>relative</code>, пока не достигнет указанной позиции (<code>top: 0</code>), затем прилипает.</p>
+                    </div>
+                    <footer>
+                        Отлично подходит для шапок таблиц, боковых меню, заголовков секций.<br>
+                         обязательно указывать top/left/right/bottom, иначе не прилипнет.
+                    </footer>
+                </article>
+
+                <!-- 6. z-index (наложение) -->
+                <article class="article__cls">
+                    <header>🎚️ z-index — порядок наложения</header>
+                    <div class="article_main__cls">
+                        <div style="position: relative; min-height: 150px; background: #f8fafc; border: 1px solid #cbd5e1; margin: 1rem 0;">
+                            <div class="z-demo" style="position: relative; z-index: 1;">z-index: 1</div>
+                            <div class="z-demo" style="position: relative; top: -40px; left: 20px; z-index: 10;">z-index: 10</div>
+                            <div class="z-demo" style="position: relative; top: -80px; left: 40px; z-index: 5;">z-index: 5</div>
+                        </div>
+                        <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
+                    </div>
+                    <footer>⚠️ z-index работает в контексте родительского stacking context. Не злоупотребляйте большими значениями (используйте 1,2,3…).</footer>
+                </article>
+
+            </div>
+        </section>
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="listsId">
             <h2>📋 LISTS</h2>
