@@ -716,6 +716,38 @@
             padding: 1.5rem 1.8rem;
         }
 
+
+/* ===== Управление секциями (аккордеон) ===== */
+.section__cls {
+    transition: all 0.2s;
+}
+.section__cls > h2 {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 2rem;
+}
+.section__cls > h2::after {
+    content: "▼";
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: #2a73ff;
+    transition: transform 0.2s;
+}
+.section__cls.collapsed > h2::after {
+    transform: translateY(-50%) rotate(-90deg);
+}
+.section__cls.collapsed > .section_main__cls {
+    display: none;
+}
+/* Плавное появление (опционально) */
+.section__cls > .section_main__cls {
+    transition: opacity 0.2s;
+}
+
         /* -------------------- ARTICLE --------------------*/
         .article__cls {
             background: #fefefe;
@@ -900,6 +932,13 @@
 <body>
 
 <div id="ROOT_DIV__ID">
+    <div class="accordion-controls" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <button id="collapseAllBtn" class="button_blue_outline__cls">📁 Скрыть все секции</button>
+        <button id="expandAllBtn" class="button_blue_outline__cls">📂 Раскрыть все секции</button>
+        <button id="accordionModeBtn" class="button_blue_outline__cls">🔁 Режим аккордеона (вкл/выкл)</button>
+        <span id="accordionStatus" style="margin-left: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></span>
+    </div>
+
     <nav id="ROOT_NAV__ID"></nav>
 
     <header id="ROOT_HEADER__ID">
@@ -910,7 +949,7 @@
     <main id="ROOT_MAIN__ID">
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="structId">
-            <h2>📌 СТРУКТУРЫ</h2>
+            <h2>1=СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -941,118 +980,6 @@
                         <footer>📆 Футер (footer) — контакты, копирайт</footer>
                     </div>
                     <footer>🧠 Семантика улучшает SEO и доступность. Не используйте div для всего — header, main, footer дают структуру.</footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="linksId">
-            <h2>LINKS</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <article class="article__cls">
-                    <header>ВАРИАНТЫ</header>
-                    <div class="article_main__cls">
-
-                        <p><a href="f0_demo_download.txt"></a> - без тела не отобразится вообще ничего!</p>
-
-                        <p><a href="#">локальная ссылка - внутри страницы - якорь</a></p>
-                        <p><a href="f0_demo_download.txt">локальная ссылка - внутри сервера ---просто имя файла!!!</a></p>
-                        <p><a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">Внешняя ссылка - откроется в новой вкладке)</a> — добавляется иконка ↗</p>
-
-                        <hr>
-                        <h4>якоря</h4>
-                        <p><a href="#">#</a> — возвращает наверх страницы (иногда нежелательно)</p>
-                        <p><a href="#top">#top</a></p>
-                        <p><a href="#bottom">#bottom</a> - нет такого!</p>
-                        <p><a href="#linksId">#linksId</a> - по ID блока</p>
-                        <p><a href="#linksId13123">#linksId13123</a> - несуществующий ничего не откроет</p>
-
-                        <hr>
-                        <h4>файлы - указание имени</h4>
-                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - работает</p>
-                        <p><a href="/f3_example_whole_reference.html">/f3_example_whole_reference.html</a> - НЕ работает - файл не обнаружен!</p>
-                        <p><a href="./f3_example_whole_reference.html">./f3_example_whole_reference.html</a> - работает</p>
-
-                        <hr>
-                        <h4>файлы - открытие типов</h4>
-                        <p><a href="f0_demo_download.txt">f0_demo_download.txt"</a> - откроет все как есть</p>
-                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - откроет все как есть</p>
-
-                        <hr>
-                        <h4>разное</h4>
-                        <p><a href="javascript:alert(1)">href=javascript:CODE</a> — запуск кода не рекомендуют.</p>
-                        <p><a role="button" tabindex="0">role="button" NO_HREF</a> Ссылка без href — лучше заменить на button</p>
-
-                        <hr>
-                        <h4>contacts схемы</h4>
-                        <p><a href="mailto:info@example.com">href="mailto:info@example.com"</a> — откроет почтовый клиент</p>
-                        <p><a href="tel:+71234567890">href="tel:+71234567890"</a> — на мобильных откроет набор номера, на десктопе - предложится выбор приложения!</p>
-                    </div>
-                    <footer>
-                        Для внешних ссылок используйте <code>target="_blank"</code> + <code>rel="noopener noreferrer"</code> для безопасности. Иконка через псевдоэлемент <code>::after</code>.<br>
-                        Если ссылка не ведёт на другую страницу/якорь, используйте <code>&lt;button&gt;</code> вместо <code>&lt;a&gt;</code>. Это семантически правильно.<br>
-                        Якоря ссылаются на <code>id</code> элемента. Для плавной прокрутки используйте <code>scroll-behavior: smooth</code> и <code>scroll-margin-top</code> для фиксированной навигации.<br>
-                    </footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>DOWNLOAD</header>
-                    <div class="article_main__cls">
-
-                        <h4>CТАТИЧЕСКИЙ файл</h4>
-                        <a href="f0_demo_download.txt" download>Скачать этот файл'</a>
-                        <p>скачает только то что браузер не умеет отображать (например, .zip, .exe, .bin, .docx — хотя .docx может открыть Office Online, но обычно скачивается).</p>
-
-                        <hr>
-                        <h4>JS ДИНАМИЧЕСКИ сгенерированный файл - качает всегда!</h4>
-                        <p><a id="demoDownloadLink__id" href="#">Скачать сгенерированный HTML-файл</a></p>
-                        <script>
-                            document.getElementById('demoDownloadLink__id')?.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                const content = `<!DOCTYPE html>
-        <html>
-        <head><meta charset="utf-8"><title>Скачанный файл</title></head>
-        <body>
-        <h1>Пример скачанного файла</h1>
-        <p>Этот файл был создан динамически через JavaScript и blob.</p>
-        </body>
-        </html>`;
-                                const blob = new Blob([content], { type: 'application/octet-stream' }); //'application/octet-stream' / 'text/html' вроде не важно!!! все работает!
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = 'demo_downloaded_file.html';
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                                URL.revokeObjectURL(url);
-                            });
-                        </script>
-
-                    </div>
-                    <footer><code>download</code> только имя для сохранения! работает только для файлов на том же origin (или blob/data-URI). В этом примере файл создаётся на лету через JavaScript.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>КНОПОЧНАЯ СТИЛИЗАЦИЯ</header>
-                    <div class="article_main__cls">
-
-                        <h4>навигационные - div_a_nav__cls</h4>
-                        <div class="div_a_nav__cls">
-                            <a href="#linksId">#linksId</a>
-                            <a href="#linksId">#linksId</a>
-                        </div>
-
-                        <hr>
-                        <h4>стилизация под button - a_as_button__cls</h4>
-                        <a href="#linksId" class="a_as_button__cls">#linksId</a>
-                        <a href="#linksId" class="a_as_button__cls" style="background: #1e2a3a;">#linksId Black</a>
-                    </div>
-                    <footer>
-                        Не путайте с <code>&lt;button&gt;</code>, который предназначен для действий на странице.
-                    </footer>
                 </article>
 
             </div>
@@ -1231,110 +1158,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="positioningId">
-            <h2>📌 Позиционирование (CSS position)</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <!-- 1. static (по умолчанию) -->
-                <article class="article__cls">
-                    <header>📌 static (по умолчанию)</header>
-                    <div class="article_main__cls">
-                        <div class="demo__pos_container__cls">
-                            <div>Блок 1</div>
-                            <div>Блок 2</div>
-                            <div>Блок 3</div>
-                        </div>
-                        <p>Элементы идут в потоке друг за другом. Свойства <code>top/left/right/bottom</code> не работают.</p>
-                    </div>
-                    <footer>Значение по умолчанию для всех элементов. Не вырывает из потока.</footer>
-                </article>
-
-                <!-- 2. relative -->
-                <article class="article__cls">
-                    <header>🔁 relative — сдвиг относительно себя</header>
-                    <div class="article_main__cls">
-                        <div class="demo__pos_container__cls">
-                            <div>Блок 1</div>
-                            <div style="background: #16a085; position: relative; top: 20px; left: 20px;">relative (+20px/+20px)</div>
-                            <div>Блок 3</div>
-                        </div>
-                        <p>Элемент смещается, но его исходное место остаётся пустым (другие элементы его не занимают).</p>
-                    </div>
-                    <footer>Используется для тонкой настройки или как якорь для absolute-вложенных элементов.</footer>
-                </article>
-
-                <!-- 3. absolute -->
-                <article class="article__cls">
-                    <header>🎯 absolute — привязка к ближайшему позиционированному предку</header>
-                    <div class="article_main__cls">
-                        <div class="demo__pos_container__cls" style="position: relative; min-height: 200px;">
-                            <div>Блок в потоке</div>
-                            <div style="background: #e67e22; position: absolute; bottom: 10px; right: 10px;">absolute</div>
-                        </div>
-                        <p>Элемент вырывается из потока и позиционируется относительно ближайшего предка с <code>position: relative/absolute/fixed/sticky</code>.</p>
-                    </div>
-                    <footer>
-                        Если нет позиционированного предка — относительно <code>&lt;body&gt;</code>. Часто используется для выпадающих меню, тултипов.<br>
-                        Всегда ставьте position: relative на родительский контейнер, если внутри используете absolute.
-                    </footer>
-                </article>
-
-                <!-- 4. fixed -->
-                <article class="article__cls">
-                    <header>📌 fixed — привязка к окну браузера</header>
-                    <div class="article_main__cls">
-                        <div class="demo__pos_container__cls" style="position: relative;">
-                            <div style="background: #8e44ad; position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
-                                fixed HELLO 1212
-                            </div>
-                        </div>
-                        <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера. в правом нижнем углу <strong>всего окна</strong>, а не контейнера.</p>
-                        <p>Обычно используется для «плавающих» кнопок, шапок, баннеров.</p>
-                    </div>
-                    <footer>
-                        Fixed-элемент игнорирует родителя с <code>overflow: hidden</code> и не прокручивается вместе со страницей.<br>
-                        fixed внутри элемента с transform или will-change может привязываться к этому элементу, а не к окну (особенность браузеров).
-                    </footer>
-                </article>
-
-                <!-- 5. sticky -->
-                <article class="article__cls">
-                    <header>🧲 sticky — прилипает при прокрутке</header>
-                    <div class="article_main__cls">
-                        <div style="height: 150px; overflow-y: auto; border: 1px solid #cbd5e1; padding: 0.5rem;">
-                            <div style="height: 50px; background: #eef2ff; margin-bottom: 0.5rem;">Прокрутите вниз →</div>
-                            <div style="background: #c0392b; position: sticky; top: 0; background: #c0392b; color: white; padding: 0.5rem; text-align: center;">
-                                🧲 Я прилипаю к верху контейнера
-                            </div>
-                            <div style="height: 300px; background: #f1f5f9; margin-top: 0.5rem;">Контент, который прокручивается...</div>
-                        </div>
-                        <p>Элемент ведёт себя как <code>relative</code>, пока не достигнет указанной позиции (<code>top: 0</code>), затем прилипает.</p>
-                    </div>
-                    <footer>
-                        Отлично подходит для шапок таблиц, боковых меню, заголовков секций.<br>
-                         обязательно указывать top/left/right/bottom, иначе не прилипнет.
-                    </footer>
-                </article>
-
-                <!-- 6. z-index (наложение) -->
-                <article class="article__cls">
-                    <header>🎚️ z-index — порядок наложения</header>
-                    <div class="article_main__cls">
-                        <div style="position: relative; min-height: 150px; background: #f8fafc; border: 1px solid #cbd5e1; margin: 1rem 0;">
-                            <div class="z-demo" style="position: relative; z-index: 1;">z-index: 1</div>
-                            <div class="z-demo" style="position: relative; top: -40px; left: 20px; z-index: 10;">z-index: 10</div>
-                            <div class="z-demo" style="position: relative; top: -80px; left: 40px; z-index: 5;">z-index: 5</div>
-                        </div>
-                        <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
-                    </div>
-                    <footer>⚠️ z-index работает в контексте родительского stacking context. Не злоупотребляйте большими значениями (используйте 1,2,3…).</footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="listsId">
+        <section class="section__cls" id="listId">
             <h2>📋 LISTS</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -1437,7 +1261,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="tablesId">
+        <section class="section__cls" id="tableId">
             <h2>📊 TABLES — best practice</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -1628,33 +1452,111 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="stylesId">
-            <h2>STYLES</h2>
+        <section class="section__cls" id="linkId">
+            <h2>2=LINKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>🔄 Сброс стилей до браузерного вида</header>
+                    <header>ВАРИАНТЫ</header>
                     <div class="article_main__cls">
 
-                        <p><button style="all: unset ;">all: unset </button></p>
-                        <p><button style="all: initial;">all: initial</button></p>
-                        <p><button style="all: revert;">all: revert</button> - возвращает браузерные стили (не для старых браузеров)</p>
-                        <div style="all: revert">
-                            <button>Нативная кнопка</button> - обертка в div не помогает!
+                        <p><a href="f0_demo_download.txt"></a> - без тела не отобразится вообще ничего!</p>
+
+                        <p><a href="#">локальная ссылка - внутри страницы - якорь</a></p>
+                        <p><a href="f0_demo_download.txt">локальная ссылка - внутри сервера ---просто имя файла!!!</a></p>
+                        <p><a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">Внешняя ссылка - откроется в новой вкладке)</a> — добавляется иконка ↗</p>
+
+                        <hr>
+                        <h4>якоря</h4>
+                        <p><a href="#">#</a> — возвращает наверх страницы (иногда нежелательно)</p>
+                        <p><a href="#top">#top</a></p>
+                        <p><a href="#bottom">#bottom</a> - нет такого!</p>
+                        <p><a href="#linksId">#linksId</a> - по ID блока</p>
+                        <p><a href="#linksId13123">#linksId13123</a> - несуществующий ничего не откроет</p>
+
+                        <hr>
+                        <h4>файлы - указание имени</h4>
+                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - работает</p>
+                        <p><a href="/f3_example_whole_reference.html">/f3_example_whole_reference.html</a> - НЕ работает - файл не обнаружен!</p>
+                        <p><a href="./f3_example_whole_reference.html">./f3_example_whole_reference.html</a> - работает</p>
+
+                        <hr>
+                        <h4>файлы - открытие типов</h4>
+                        <p><a href="f0_demo_download.txt">f0_demo_download.txt"</a> - откроет все как есть</p>
+                        <p><a href="f3_example_whole_reference.html">f3_example_whole_reference.html</a> - откроет все как есть</p>
+
+                        <hr>
+                        <h4>разное</h4>
+                        <p><a href="javascript:alert(1)">href=javascript:CODE</a> — запуск кода не рекомендуют.</p>
+                        <p><a role="button" tabindex="0">role="button" NO_HREF</a> Ссылка без href — лучше заменить на button</p>
+
+                        <hr>
+                        <h4>contacts схемы</h4>
+                        <p><a href="mailto:info@example.com">href="mailto:info@example.com"</a> — откроет почтовый клиент</p>
+                        <p><a href="tel:+71234567890">href="tel:+71234567890"</a> — на мобильных откроет набор номера, на десктопе - предложится выбор приложения!</p>
+                    </div>
+                    <footer>
+                        Для внешних ссылок используйте <code>target="_blank"</code> + <code>rel="noopener noreferrer"</code> для безопасности. Иконка через псевдоэлемент <code>::after</code>.<br>
+                        Если ссылка не ведёт на другую страницу/якорь, используйте <code>&lt;button&gt;</code> вместо <code>&lt;a&gt;</code>. Это семантически правильно.<br>
+                        Якоря ссылаются на <code>id</code> элемента. Для плавной прокрутки используйте <code>scroll-behavior: smooth</code> и <code>scroll-margin-top</code> для фиксированной навигации.<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>DOWNLOAD</header>
+                    <div class="article_main__cls">
+
+                        <h4>CТАТИЧЕСКИЙ файл</h4>
+                        <a href="f0_demo_download.txt" download>Скачать этот файл'</a>
+                        <p>скачает только то что браузер не умеет отображать (например, .zip, .exe, .bin, .docx — хотя .docx может открыть Office Online, но обычно скачивается).</p>
+
+                        <hr>
+                        <h4>JS ДИНАМИЧЕСКИ сгенерированный файл - качает всегда!</h4>
+                        <p><a id="demoDownloadLink__id" href="#">Скачать сгенерированный HTML-файл</a></p>
+                        <script>
+                            document.getElementById('demoDownloadLink__id')?.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const content = `<!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"><title>Скачанный файл</title></head>
+        <body>
+        <h1>Пример скачанного файла</h1>
+        <p>Этот файл был создан динамически через JavaScript и blob.</p>
+        </body>
+        </html>`;
+                                const blob = new Blob([content], { type: 'application/octet-stream' }); //'application/octet-stream' / 'text/html' вроде не важно!!! все работает!
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'demo_downloaded_file.html';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            });
+                        </script>
+
+                    </div>
+                    <footer><code>download</code> только имя для сохранения! работает только для файлов на том же origin (или blob/data-URI). В этом примере файл создаётся на лету через JavaScript.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>КНОПОЧНАЯ СТИЛИЗАЦИЯ</header>
+                    <div class="article_main__cls">
+
+                        <h4>навигационные - div_a_nav__cls</h4>
+                        <div class="div_a_nav__cls">
+                            <a href="#linksId">#linksId</a>
+                            <a href="#linksId">#linksId</a>
                         </div>
 
                         <hr>
-                        <p>Обычная (глобально стилизованная) кнопка: <button>Стилизованная</button></p>
-                        <p>Изолированная кнопка без глобальных стилей: ----НЕ РАБОТАЕТ!!!</p>
-                        <div style="all: initial;">
-                            <button>Нативная</button>
-                        </div>
-                        <p><em>Примечание: полный сброс до идеального браузерного вида — сложная задача, проще отказаться от глобальных стилей для кнопок или использовать утилиты.</em></p>
+                        <h4>стилизация под button - a_as_button__cls</h4>
+                        <a href="#linksId" class="a_as_button__cls">#linksId</a>
+                        <a href="#linksId" class="a_as_button__cls" style="background: #1e2a3a;">#linksId Black</a>
                     </div>
                     <footer>
-                        Лучший способ получить нативную кнопку — не применять к ней CSS вообще. Если глобальные стили есть, сбросить их без потери интерактивности сложно.<br>
-                        Используйте <code>all: revert</code> или изолируйте элемент.<br>
-                        Наиболее практичный совет: не применяйте глобальные стили кнопок, если вам нужны нативные варианты; используйте классы для стилизации и оставляйте базовые кнопки без классов нетронутыми.<br>
+                        Не путайте с <code>&lt;button&gt;</code>, который предназначен для действий на странице.
                     </footer>
                 </article>
 
@@ -1662,11 +1564,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="interactId">
-            <h2>Интерактив</h2>
+        <section class="section__cls" id="actionId">
+            <h2>ACTION</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1876,19 +1775,11 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>FILES</header>
+                    <header>Тег dialog + download</header>
                     <div class="article_main__cls">
 
                         <h4>LINKS скачать</h4>
                         <p>см отдельно</p>
-
-                    </div>
-                    <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>Тег dialog</header>
-                    <div class="article_main__cls">
 
                         <h4>DIALOG</h4>
                         <dialog id="demoDialog">
@@ -1900,6 +1791,14 @@
                     </div>
                     <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
                 </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="inputId">
+            <h2>INPUT</h2>
+            <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
                     <header>ВВОД</header>
@@ -1939,7 +1838,6 @@
                             <div class="form-group">
                                 <label>input number:</label>
                                 <input type="number" name="quantity" value="5" min="1" max="20" step="1">
-                                <small style="margin-left: 0.5rem; color: #4b5563;">▲▼ (кликните или используйте стрелки)</small>
                             </div>
 
                             <div class="form-group">
@@ -1982,8 +1880,401 @@
                     </footer>
                 </article>
 
+                <!-- Range (ползунок) + output -->
+                <article class="article__cls">
+                    <header>🎚️ input type="range" + output</header>
+                    <div class="article_main__cls">
+
+                        <form>
+                            <div class="form-group">
+                                <label>Громкость: </label>
+                                <input type="range" id="volume" name="volume" min="0" max="100" value="50" step="1">
+                                <output for="volume" id="volumeValue">50</output>
+                            </div>
+                            <div class="form-group">
+                                <label>Яркость: </label>
+                                <input type="range" id="brightness" min="0" max="100" value="75">
+                                <output for="brightness" id="brightnessValue">75</output>
+                            </div>
+                        </form>
+
+                        <script>
+                            (function() {
+                                const vol = document.getElementById('volume');
+                                const volOut = document.getElementById('volumeValue');
+                                if (vol && volOut) vol.addEventListener('input', () => volOut.value = vol.value);
+
+                                const bright = document.getElementById('brightness');
+                                const brightOut = document.getElementById('brightnessValue');
+                                if (bright && brightOut) bright.addEventListener('input', () => brightOut.value = bright.value);
+                            })();
+                        </script>
+
+                    </div>
+                    <footer>🎛️ <code>type="range"</code> — ползунок. <code>&lt;output&gt;</code> отображает текущее значение. Атрибуты <code>min</code>, <code>max</code>, <code>step</code>.</footer>
+                </article>
+
+                <!-- Дата и время -->
+                <article class="article__cls">
+                    <header>📅 Поля даты и времени</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Демо'); return false;">
+                            <div class="form-group"><label>date:</label> <input type="date" value="2025-01-01"></div>
+                            <div class="form-group"><label>time:</label> <input type="time" value="12:30"></div>
+                            <div class="form-group"><label>datetime-local:</label> <input type="datetime-local" value="2025-01-01T12:30"></div>
+                            <div class="form-group"><label>month:</label> <input type="month" value="2025-01"></div>
+                            <div class="form-group"><label>week:</label> <input type="week" value="2025-W01"></div>
+                            <button type="submit">Показать значения</button>
+                        </form>
+                    </div>
+                    <footer>📆 Браузеры отображают удобные виджеты выбора. Формат значения — ISO (YYYY-MM-DD и т.д.).</footer>
+                </article>
+
+                <!-- Color -->
+                <article class="article__cls">
+                    <header>🎨 input type="color"</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="return false;">
+                            <div class="form-group"><label>Выберите цвет:</label> <input type="color" id="colorPicker" value="#2a73ff"></div>
+                            <div class="form-group"><label>HEX:</label> <output id="colorValue">#2a73ff</output></div>
+                        </form>
+                        <script>
+                            const picker = document.getElementById('colorPicker');
+                            const colorVal = document.getElementById('colorValue');
+                            if (picker && colorVal) picker.addEventListener('input', () => colorVal.value = picker.value);
+                        </script>
+                    </div>
+                    <footer>🎨 Открывает системную палитру. Возвращает HEX-значение (например, <code>#2a73ff</code>).</footer>
+                </article>
+
+                <!-- tel, url, search -->
+                <article class="article__cls">
+                    <header>📞 Специализированные поля: tel, url, search</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Демо'); return false;">
+                            <div class="form-group"><label>tel:</label> <input type="tel" placeholder="+7-123-456-78-90" pattern="[\+0-9\-]+"></div>
+                            <div class="form-group"><label>url:</label> <input type="url" placeholder="https://example.com"></div>
+                            <div class="form-group"><label>search:</label> <input type="search" placeholder="Поиск..."></div>
+                            <button type="submit">Проверить</button>
+                        </form>
+                    </div>
+                    <footer>📌 <code>tel</code> и <code>url</code> имеют встроенную валидацию (но не блокируют отправку). <code>search</code> добавляет кнопку очистки.</footer>
+                </article>
+
+                <!-- File -->
+                <article class="article__cls">
+                    <header>📁 input type="file"</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Выбрано файлов: ' + this.myfile.files.length); return false;">
+                            <div class="form-group"><label>Одиночный файл:</label> <input type="file" name="myfile"></div>
+                            <div class="form-group"><label>Несколько файлов:</label> <input type="file" multiple accept="image/*,text/plain"></div>
+                            <button type="submit">Показать количество</button>
+                        </form>
+                    </div>
+                    <footer>📎 <code>multiple</code> — выбор нескольких файлов. <code>accept</code> — фильтр типов (MIME или расширения).</footer>
+                </article>
+
+                <!-- Datalist (автодополнение) -->
+                <article class="article__cls">
+                    <header>📋 datalist (автодополнение для input)</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Выбрано: ' + this.browser.value); return false;">
+                            <div class="form-group">
+                                <label>Выберите браузер:</label>
+                                <input list="browsers" name="browser" placeholder="Начните вводить...">
+                                <datalist id="browsers">
+                                    <option value="Chrome">
+                                    <option value="Firefox">
+                                    <option value="Edge">
+                                    <option value="Safari">
+                                    <option value="Opera">
+                                </datalist>
+                            </div>
+                            <button type="submit">Показать</button>
+                        </form>
+                    </div>
+                    <footer>🧠 <code>&lt;datalist&gt;</code> предлагает варианты при вводе, но не ограничивает ими. Отличие от <code>&lt;select&gt;</code> — можно вписать своё значение.</footer>
+                </article>
+
+                <!-- Состояния readonly и disabled -->
+                <article class="article__cls">
+                    <header>🔒 Состояния: readonly и disabled</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="return false;">
+                            <div class="form-group"><label>readonly:</label> <input type="text" value="Нельзя изменить" readonly></div>
+                            <div class="form-group"><label>disabled:</label> <input type="text" value="Полностью отключено" disabled></div>
+                            <div class="form-group"><label>disabled checkbox:</label> <input type="checkbox" checked disabled></div>
+                            <div class="form-group"><label>readonly textarea:</label> <textarea readonly>Только для чтения</textarea></div>
+                        </form>
+                    </div>
+                    <footer>🔐 <code>readonly</code> — значение нельзя изменить, но поле отправляется. <code>disabled</code> — неактивно, не отправляется, не получает фокус.</footer>
+                </article>
+
+                <!-- Поля с валидацией (pattern, required) -->
+                <article class="article__cls">
+                    <header>✅ Валидация: required, pattern</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Валидация пройдена'); return false;">
+                            <div class="form-group"><label>required:</label> <input type="text" required placeholder="Обязательное поле"></div>
+                            <div class="form-group"><label>pattern (только буквы):</label> <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="Только буквы" title="Введите только буквы"></div>
+                            <div class="form-group"><label>minlength / maxlength:</label> <input type="text" minlength="3" maxlength="10" placeholder="3–10 символов"></div>
+                            <button type="submit">Проверить</button>
+                        </form>
+                    </div>
+                    <footer>🔍 Атрибуты <code>required</code>, <code>pattern</code>, <code>minlength</code>/<code>maxlength</code> — встроенная валидация браузером.</footer>
+                </article>
+
+                <!-- Скрытое поле (hidden) -->
+                <article class="article__cls">
+                    <header>🕵️ input type="hidden"</header>
+                    <div class="article_main__cls">
+                        <form onsubmit="alert('Скрытое поле отправляется: ' + this.hiddenField.value); return false;">
+                            <input type="hidden" name="hiddenField" value="secret123">
+                            <button type="submit">Отправить (показать значение скрытого поля)</button>
+                        </form>
+                    </div>
+                    <footer>👻 <code>type="hidden"</code> не отображается, но передаёт данные на сервер. Используется для идентификаторов, токенов.</footer>
+                </article>
+
             </div>
         </section>
+
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="styleCommonId">
+            <h2>STYLES</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>🔄 Сброс стилей до браузерного вида</header>
+                    <div class="article_main__cls">
+
+                        <p><button style="all: unset ;">all: unset </button></p>
+                        <p><button style="all: initial;">all: initial</button></p>
+                        <p><button style="all: revert;">all: revert</button> - возвращает браузерные стили (не для старых браузеров)</p>
+                        <div style="all: revert">
+                            <button>Нативная кнопка</button> - обертка в div не помогает!
+                        </div>
+
+                        <hr>
+                        <p>Обычная (глобально стилизованная) кнопка: <button>Стилизованная</button></p>
+                        <p>Изолированная кнопка без глобальных стилей: ----НЕ РАБОТАЕТ!!!</p>
+                        <div style="all: initial;">
+                            <button>Нативная</button>
+                        </div>
+                        <p><em>Примечание: полный сброс до идеального браузерного вида — сложная задача, проще отказаться от глобальных стилей для кнопок или использовать утилиты.</em></p>
+                    </div>
+                    <footer>
+                        Лучший способ получить нативную кнопку — не применять к ней CSS вообще. Если глобальные стили есть, сбросить их без потери интерактивности сложно.<br>
+                        Используйте <code>all: revert</code> или изолируйте элемент.<br>
+                        Наиболее практичный совет: не применяйте глобальные стили кнопок, если вам нужны нативные варианты; используйте классы для стилизации и оставляйте базовые кнопки без классов нетронутыми.<br>
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="stylePosId">
+            <h2>STYLES Позиционирование</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- 1. static (по умолчанию) -->
+                <article class="article__cls">
+                    <header>📌 static (по умолчанию)</header>
+                    <div class="article_main__cls">
+                        <div class="demo__pos_container__cls">
+                            <div>Блок 1</div>
+                            <div>Блок 2</div>
+                            <div>Блок 3</div>
+                        </div>
+                        <p>Элементы идут в потоке друг за другом. Свойства <code>top/left/right/bottom</code> не работают.</p>
+                    </div>
+                    <footer>Значение по умолчанию для всех элементов. Не вырывает из потока.</footer>
+                </article>
+
+                <!-- 2. relative -->
+                <article class="article__cls">
+                    <header>🔁 relative — сдвиг относительно себя</header>
+                    <div class="article_main__cls">
+                        <div class="demo__pos_container__cls">
+                            <div>Блок 1</div>
+                            <div style="background: #16a085; position: relative; top: 20px; left: 20px;">relative (+20px/+20px)</div>
+                            <div>Блок 3</div>
+                        </div>
+                        <p>Элемент смещается, но его исходное место остаётся пустым (другие элементы его не занимают).</p>
+                    </div>
+                    <footer>Используется для тонкой настройки или как якорь для absolute-вложенных элементов.</footer>
+                </article>
+
+                <!-- 3. absolute -->
+                <article class="article__cls">
+                    <header>🎯 absolute — привязка к ближайшему позиционированному предку</header>
+                    <div class="article_main__cls">
+                        <div class="demo__pos_container__cls" style="position: relative; min-height: 200px;">
+                            <div>Блок в потоке</div>
+                            <div style="background: #e67e22; position: absolute; bottom: 10px; right: 10px;">absolute</div>
+                        </div>
+                        <p>Элемент вырывается из потока и позиционируется относительно ближайшего предка с <code>position: relative/absolute/fixed/sticky</code>.</p>
+                    </div>
+                    <footer>
+                        Если нет позиционированного предка — относительно <code>&lt;body&gt;</code>. Часто используется для выпадающих меню, тултипов.<br>
+                        Всегда ставьте position: relative на родительский контейнер, если внутри используете absolute.
+                    </footer>
+                </article>
+
+                <!-- 4. fixed -->
+                <article class="article__cls">
+                    <header>📌 fixed — привязка к окну браузера</header>
+                    <div class="article_main__cls">
+                        <div class="demo__pos_container__cls" style="position: relative;">
+                            <div style="background: #8e44ad; position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
+                                fixed HELLO 1212
+                            </div>
+                        </div>
+                        <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера. в правом нижнем углу <strong>всего окна</strong>, а не контейнера.</p>
+                        <p>Обычно используется для «плавающих» кнопок, шапок, баннеров.</p>
+                    </div>
+                    <footer>
+                        Fixed-элемент игнорирует родителя с <code>overflow: hidden</code> и не прокручивается вместе со страницей.<br>
+                        fixed внутри элемента с transform или will-change может привязываться к этому элементу, а не к окну (особенность браузеров).
+                    </footer>
+                </article>
+
+                <!-- 5. sticky -->
+                <article class="article__cls">
+                    <header>🧲 sticky — прилипает при прокрутке</header>
+                    <div class="article_main__cls">
+                        <div style="height: 150px; overflow-y: auto; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            <div style="height: 50px; background: #eef2ff; margin-bottom: 0.5rem;">Прокрутите вниз →</div>
+                            <div style="background: #c0392b; position: sticky; top: 0; background: #c0392b; color: white; padding: 0.5rem; text-align: center;">
+                                🧲 Я прилипаю к верху контейнера
+                            </div>
+                            <div style="height: 300px; background: #f1f5f9; margin-top: 0.5rem;">Контент, который прокручивается...</div>
+                        </div>
+                        <p>Элемент ведёт себя как <code>relative</code>, пока не достигнет указанной позиции (<code>top: 0</code>), затем прилипает.</p>
+                    </div>
+                    <footer>
+                        Отлично подходит для шапок таблиц, боковых меню, заголовков секций.<br>
+                         обязательно указывать top/left/right/bottom, иначе не прилипнет.
+                    </footer>
+                </article>
+
+                <!-- 6. z-index (наложение) -->
+                <article class="article__cls">
+                    <header>🎚️ z-index — порядок наложения</header>
+                    <div class="article_main__cls">
+                        <div style="position: relative; min-height: 150px; background: #f8fafc; border: 1px solid #cbd5e1; margin: 1rem 0;">
+                            <div class="z-demo" style="position: relative; z-index: 1;">z-index: 1</div>
+                            <div class="z-demo" style="position: relative; top: -40px; left: 20px; z-index: 10;">z-index: 10</div>
+                            <div class="z-demo" style="position: relative; top: -80px; left: 40px; z-index: 5;">z-index: 5</div>
+                        </div>
+                        <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
+                    </div>
+                    <footer>⚠️ z-index работает в контексте родительского stacking context. Не злоупотребляйте большими значениями (используйте 1,2,3…).</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="styleLayoutId">
+            <h2>STYLES Компоновка</h2>
+            <div class="section_main__cls">
+                <article class="article__cls">
+                    <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .layout-demo {
+                                background: #f8fafc;
+                                border-radius: 1rem;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+                            }
+                            .flex-row {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                gap: 1rem;
+                            }
+                            .flex-left {
+                                display: flex;
+                                gap: 0.5rem;
+                                align-items: center;
+                            }
+                            .flex-center {
+                                display: flex;
+                                gap: 1rem;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                            }
+                            .flex-right {
+                                display: flex;
+                                gap: 0.75rem;
+                                align-items: center;
+                            }
+                            .demo-chip {
+                                background: white;
+                                padding: 0.4rem 0.8rem;
+                                border-radius: 2rem;
+                                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                                border: 1px solid #e2e8f0;
+                            }
+                            .demo-logo {
+                                font-weight: bold;
+                                font-size: 1.2rem;
+                                background: #2a73ff;
+                                color: white;
+                                padding: 0.3rem 0.8rem;
+                                border-radius: 2rem;
+                            }
+                        </style>
+                        <div class="layout-demo">
+                            <div class="flex-row">
+                                <div class="flex-left"><div class="demo-logo">Лого</div></div>
+                                <div class="flex-center">
+                                    <span class="demo-chip">Главная</span>
+                                    <span class="demo-chip">Каталог</span>
+                                    <span class="demo-chip">О нас</span>
+                                    <span class="demo-chip">Контакты</span>
+                                </div>
+                                <div class="flex-right">
+                                    <span class="demo-chip">🔍</span>
+                                    <span class="demo-chip">👤</span>
+                                    <span class="demo-chip">🛒</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layout-demo">
+                            <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
+                                <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
+                                <div style="display: flex; gap: 1rem;"><span>Центр 1</span><span>Центр 2</span><span>Центр 3</span></div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
+                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            🧠 <strong>Как это работает (Flexbox):</strong>
+                            <pre>
+    &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
+        &lt;div&gt;Левый элемент&lt;/div&gt;
+        &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
+        &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
+    &lt;/div&gt;</pre>
+                            ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
+                            ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
+                            ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
+                            ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
+                        </div>
+                    </div>
+                    <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
+                </article>
+            </div>
+        </section>
+
 
         <!-- ====================================================================================================== -->
         <!-- дополнительный блок с глобальными атрибутами и data-* -->
@@ -2149,104 +2440,6 @@
                         </div>
                     </div>
                     <footer>📌 Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически.</footer>
-                </article>
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="layoutId">
-            <h2>📐 Компоновка: левый, центр, правый блок (flexbox)</h2>
-            <div class="section_main__cls">
-                <article class="article__cls">
-                    <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
-                    <div class="article_main__cls">
-                        <style>
-                            .layout-demo {
-                                background: #f8fafc;
-                                border-radius: 1rem;
-                                padding: 1rem;
-                                margin-bottom: 1rem;
-                            }
-                            .flex-row {
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                flex-wrap: wrap;
-                                gap: 1rem;
-                            }
-                            .flex-left {
-                                display: flex;
-                                gap: 0.5rem;
-                                align-items: center;
-                            }
-                            .flex-center {
-                                display: flex;
-                                gap: 1rem;
-                                justify-content: center;
-                                flex-wrap: wrap;
-                            }
-                            .flex-right {
-                                display: flex;
-                                gap: 0.75rem;
-                                align-items: center;
-                            }
-                            .demo-chip {
-                                background: white;
-                                padding: 0.4rem 0.8rem;
-                                border-radius: 2rem;
-                                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-                                border: 1px solid #e2e8f0;
-                            }
-                            .demo-logo {
-                                font-weight: bold;
-                                font-size: 1.2rem;
-                                background: #2a73ff;
-                                color: white;
-                                padding: 0.3rem 0.8rem;
-                                border-radius: 2rem;
-                            }
-                        </style>
-                        <div class="layout-demo">
-                            <div class="flex-row">
-                                <div class="flex-left"><div class="demo-logo">Лого</div></div>
-                                <div class="flex-center">
-                                    <span class="demo-chip">Главная</span>
-                                    <span class="demo-chip">Каталог</span>
-                                    <span class="demo-chip">О нас</span>
-                                    <span class="demo-chip">Контакты</span>
-                                </div>
-                                <div class="flex-right">
-                                    <span class="demo-chip">🔍</span>
-                                    <span class="demo-chip">👤</span>
-                                    <span class="demo-chip">🛒</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layout-demo">
-                            <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
-                                <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
-                                <div style="display: flex; gap: 1rem;"><span>Центр 1</span><span>Центр 2</span><span>Центр 3</span></div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
-                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            🧠 <strong>Как это работает (Flexbox):</strong>
-                            <pre>
-    &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
-        &lt;div&gt;Левый элемент&lt;/div&gt;
-        &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
-        &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
-    &lt;/div&gt;</pre>
-                            ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
-                            ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
-                            ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
-                            ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
-                        </div>
-                    </div>
-                    <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
                 </article>
             </div>
         </section>
@@ -2472,6 +2665,130 @@
         original.style.display = 'none'; // скрываем оригинал-шаблон
     }
     cloneWithStyles('cloneTemplate_id', '.clone-inner', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
+
+    // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (АККОРДЕОН) ==========
+    (function() {
+        // Находим все секции
+        const sections = document.querySelectorAll('section.section__cls');
+        if (!sections.length) return;
+
+        // Функция закрыть секцию
+        function collapseSection(section) {
+            section.classList.add('collapsed');
+        }
+        // Функция открыть секцию
+        function expandSection(section) {
+            section.classList.remove('collapsed');
+        }
+        // Проверка, открыта ли секция
+        function isExpanded(section) {
+            return !section.classList.contains('collapsed');
+        }
+
+        // Закрыть все секции
+        function collapseAll() {
+            sections.forEach(section => collapseSection(section));
+        }
+        // Открыть все секции
+        function expandAll() {
+            sections.forEach(section => expandSection(section));
+        }
+
+        // Режим аккордеона (переменная)
+        let accordionMode = false;
+        const statusSpan = document.getElementById('accordionStatus');
+        function updateAccordionStatus() {
+            if (statusSpan) {
+                statusSpan.textContent = accordionMode ? ' (аккордеон: открыта только одна)' : '';
+            }
+        }
+
+        // Обработчик клика по заголовку секции
+        sections.forEach(section => {
+            const header = section.querySelector(':scope > h2');
+            if (!header) return;
+
+            header.addEventListener('click', (e) => {
+                // Если клик на ссылку внутри заголовка — не сворачиваем (якорь)
+                if (e.target.closest('a')) return;
+
+                if (accordionMode) {
+                    // Режим аккордеона: закрываем все, потом открываем текущую
+                    sections.forEach(s => collapseSection(s));
+                    expandSection(section);
+                } else {
+                    // Обычный режим: просто переключаем текущую
+                    if (isExpanded(section)) {
+                        collapseSection(section);
+                    } else {
+                        expandSection(section);
+                    }
+                }
+            });
+        });
+
+        // Кнопки управления
+        const collapseBtn = document.getElementById('collapseAllBtn');
+        const expandBtn = document.getElementById('expandAllBtn');
+        const accordionBtn = document.getElementById('accordionModeBtn');
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', () => {
+                collapseAll();
+                if (accordionMode) accordionMode = false; // отключаем аккордеон при ручном скрытии всех
+                updateAccordionStatus();
+            });
+        }
+        if (expandBtn) {
+            expandBtn.addEventListener('click', () => {
+                expandAll();
+                if (accordionMode) accordionMode = false;
+                updateAccordionStatus();
+            });
+        }
+        if (accordionBtn) {
+            accordionBtn.addEventListener('click', () => {
+                accordionMode = !accordionMode;
+                if (accordionMode) {
+                    // При включении режима аккордеона оставляем открытой только первую видимую (или любую)
+                    let anyOpen = false;
+                    sections.forEach(section => {
+                        if (!anyOpen && isExpanded(section)) {
+                            anyOpen = true;
+                        } else {
+                            collapseSection(section);
+                        }
+                    });
+                    if (!anyOpen && sections.length) {
+                        expandSection(sections[0]);
+                    }
+                } else {
+                    // При выключении ничего не меняем
+                }
+                updateAccordionStatus();
+            });
+        }
+        updateAccordionStatus();
+
+        // Обработка якорей: если перешли по ссылке #sectionId, нужно раскрыть секцию
+        function handleHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const targetSection = document.getElementById(hash);
+                if (targetSection && targetSection.classList.contains('section__cls')) {
+                    expandSection(targetSection);
+                    if (accordionMode) {
+                        sections.forEach(s => {
+                            if (s !== targetSection) collapseSection(s);
+                        });
+                    }
+                    // Прокрутка уже есть в глобальном скрипте
+                }
+            }
+        }
+        window.addEventListener('hashchange', handleHash);
+        handleHash();
+    })();
 </script>
 </body>
 </html>
