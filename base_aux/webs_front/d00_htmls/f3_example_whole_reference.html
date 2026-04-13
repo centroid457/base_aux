@@ -2337,8 +2337,9 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="tabsId">
-            <h2>📑 Вкладки (табы) — живой компонент</h2>
+            <h2>TABS</h2>
             <div class="section_main__cls grid_auto__cls">
+
                 <article class="article__cls">
                     <header>Переключение панелей: только одна активная вкладка</header>
                     <div class="article_main__cls">
@@ -2439,18 +2440,20 @@
                             </div>
                         </div>
                     </div>
-                    <footer>📌 Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически.</footer>
+                    <footer>Чисто CSS-вкладки — хороший вариант для статичных страниц, где не нужно добавлять вкладки динамически.</footer>
                 </article>
             </div>
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="multiplyBlocksId">
-            <h2>♻️ Размножение блока: один набор элементов, разные стили</h2>
+        <section class="section__cls" id="MULTIPLY_CSS__ID">
+            <h2>Multiply by CSS</h2>
             <div class="section_main__cls">
+
                 <article class="article__cls">
                     <header>🧬 Один и тот же набор из трёх span — три варианта оформления</header>
                     <div class="article_main__cls">
+
                         <style>
                             .demo-triple {
                                 display: flex;
@@ -2472,10 +2475,12 @@
                             .demo-triple--shadow span { background: #fef9c3; color: #854d0e; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.1); }
                             .demo-triple--shadow span:hover { transform: translateY(-3px); background: #fde047; }
                         </style>
+
                         <div class="demo-triple demo-triple--gray"><span>Элемент 1</span><span>Элемент 2</span><span>Элемент 3</span></div>
                         <div class="demo-triple demo-triple--gradient"><span>Элемент 1</span><span>Элемент 2</span><span>Элемент 3</span></div>
                         <div class="demo-triple demo-triple--outline"><span>Элемент 1</span><span>Элемент 2</span><span>Элемент 3</span></div>
                         <div class="demo-triple demo-triple--shadow"><span>Элемент 1</span><span>Элемент 2</span><span>Элемент 3</span></div>
+
                     </div>
                     <footer>💡 <strong>Суть:</strong> HTML-код блока копируется, стили меняются через классы-модификаторы.</footer>
                 </article>
@@ -2483,6 +2488,7 @@
                 <article class="article__cls">
                     <header>⚙️ Альтернатива: CSS-переменные (кастомные свойства)</header>
                     <div class="article_main__cls">
+
                         <style>
                             .var-triple {
                                 display: flex;
@@ -2502,31 +2508,40 @@
                             .var-triple--red { --bg: #ef4444; --color: white; --border: 2px solid #b91c1c; }
                             .var-triple--green { --bg: #10b981; --color: #064e3b; }
                         </style>
+
                         <div class="var-triple var-triple--blue"><span>Синий</span><span>Синий</span><span>Синий</span></div>
                         <div class="var-triple var-triple--red"><span>Красный</span><span>Красный</span><span>Красный</span></div>
                         <div class="var-triple var-triple--green"><span>Зелёный</span><span>Зелёный</span><span>Зелёный</span></div>
+
                     </div>
-                    <footer>🎨 CSS-переменные переопределяются в модификаторе, сами элементы не меняются.</footer>
+
+                    <footer>CSS-переменные переопределяются в модификаторе, сами элементы не меняются.</footer>
+
                 </article>
             </div>
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="JS_CLONER__ID">
-            <h2>♻️ JS-размножитель</h2>
+        <section class="section__cls" id="MULTIPLY_JS__ID">
+            <h2>Multiply by JS</h2>
             <div class="section_main__cls">
                 <article class="article__cls">
+
                     <header>🧬 Блок-шаблон (id="cloneTemplate_id")</header>
                     <div class="article_main__cls">
                         <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
                             <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">🎨 Элемент с динамическим стилем</div>
                         </div>
+
                         <div id="cloneContainer"></div>
+
                     </div>
                     <footer>🧠 <strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.</footer>
                 </article>
             </div>
         </section>
+
+        <!-- ====================================================================================================== -->
     </main>
 
     <footer id="ROOT_FOOTER__ID">
