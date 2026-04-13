@@ -25,6 +25,13 @@
             margin: 1rem 0;
         }
 
+        p.highlight__cls {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        /* -------------------- BUTTONS ------------------------------------------------------------------------------*/
         button {
             background: #2a73ff;
             color: white;
@@ -37,10 +44,92 @@
             background: #1a5ad9;
         }
 
-        p.highlight__cls {
-            background: #f0f9ff;
-            padding: 10px;
-            border-radius: 12px;
+        /* ===== Базовые стили для кнопок ===== */
+        button {
+<!--            display: inline-block;-->
+<!--            padding: 0.5rem 1rem;-->
+<!--            font-family: inherit;-->
+<!--            font-size: 0.9rem;-->
+<!--            font-weight: 500;-->
+<!--            text-align: center;-->
+<!--            text-decoration: none;-->
+<!--            border: 1px solid transparent;-->
+<!--            border-radius: 0.5rem;-->
+<!--            background: #e2e8f0;-->
+<!--            color: #1e2a3e;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.2s;-->
+        }
+        button:hover {
+            background: #cbd5e1;
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        button:focus-visible {
+            outline: 2px solid #2a73ff;
+            outline-offset: 2px;
+        }
+        button:disabled,
+        button[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ===== Цветные кнопки ===== */
+        .button_primary__cls {
+            background: #2a73ff;
+            color: white;
+        }
+        .button_primary__cls:hover {
+            background: #1a5ad9;
+        }
+        .button_success__cls {
+            background: #10b981;
+            color: white;
+        }
+        .button_success__cls:hover {
+            background: #0e9f6e;
+        }
+        .button_danger__cls {
+            background: #ef4444;
+            color: white;
+        }
+        .button_danger__cls:hover {
+            background: #dc2626;
+        }
+        .button_outline__cls {
+            background: transparent;
+            border-color: #2a73ff;
+            color: #2a73ff;
+        }
+        .button_outline__cls:hover {
+            background: #2a73ff;
+            color: white;
+        }
+
+        /* ===== Размеры ===== */
+        .button_small__cls {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        .button_large__cls {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        /* ===== Кнопка-ссылка (стиль как ссылка) ===== */
+        .button_as_a__cls {
+            background: none;
+            border: none;
+            color: #2a73ff;
+            text-decoration: underline;
+            padding: 0;
+        }
+        .button_as_a__cls:hover {
+            color: #1a5ad9;
+            background: none;
         }
 
         /* -------------------- TEXT inline --------------------------------------------------------------------------*/
@@ -108,7 +197,7 @@
         }
 
         /* ===== Ссылки-кнопки ===== */
-        .a_button__cls {
+        .a_as_button__cls {
             display: inline-block;
             background: #2a73ff;
             color: white;
@@ -117,7 +206,7 @@
             text-decoration: none;
             transition: background 0.2s;
         }
-        .a_button__cls:hover {
+        .a_as_button__cls:hover {
             background: #1a5ad9;
             text-decoration: none;
         }
@@ -535,7 +624,7 @@
 
         /* -----------------------------------------------------------------------------------------------------------*/
         /* ===== Базовые стили для демонстрации позиционирования ===== */
-        .pos-demo-container {
+        .demo__pos_container__cls {
             position: relative;   /* контейнер для absolute-блоков */
             background: #f8fafc;
             border: 2px solid #cbd5e1;
@@ -544,7 +633,7 @@
             margin: 1rem 0;
             min-height: 200px;
         }
-        .pos-demo-box {
+        .demo__pos_container__cls div {
             width: 100px;
             height: 60px;
             background: #2a73ff;
@@ -554,18 +643,7 @@
             font-weight: bold;
             margin: 0.5rem;
         }
-        .pos-demo-relative {
-            background: #16a085;
-        }
-        .pos-demo-absolute {
-            background: #e67e22;
-        }
-        .pos-demo-fixed {
-            background: #8e44ad;
-        }
-        .pos-demo-sticky {
-            background: #c0392b;
-        }
+
         /* Стили для демонстрации z-index */
         .z-demo {
             position: relative;
@@ -952,12 +1030,11 @@
                         </div>
 
                         <hr>
-                        <h4>стилизация под button - a_button__cls</h4>
-                        <a href="#linksId" class="a_button__cls">#linksId</a>
-                        <a href="#linksId" class="a_button__cls" style="background: #1e2a3a;">#linksId Black</a>
+                        <h4>стилизация под button - a_as_button__cls</h4>
+                        <a href="#linksId" class="a_as_button__cls">#linksId</a>
+                        <a href="#linksId" class="a_as_button__cls" style="background: #1e2a3a;">#linksId Black</a>
                     </div>
                     <footer>
-                        <code>.a_button__cls</code> для стилизации ссылки как кнопки.
                         Не путайте с <code>&lt;button&gt;</code>, который предназначен для действий на странице.
                     </footer>
                 </article>
@@ -1146,10 +1223,10 @@
                 <article class="article__cls">
                     <header>📌 static (по умолчанию)</header>
                     <div class="article_main__cls">
-                        <div class="pos-demo-container">
-                            <div class="pos-demo-box">Блок 1</div>
-                            <div class="pos-demo-box">Блок 2</div>
-                            <div class="pos-demo-box">Блок 3</div>
+                        <div class="demo__pos_container__cls">
+                            <div>Блок 1</div>
+                            <div>Блок 2</div>
+                            <div>Блок 3</div>
                         </div>
                         <p>Элементы идут в потоке друг за другом. Свойства <code>top/left/right/bottom</code> не работают.</p>
                     </div>
@@ -1160,10 +1237,10 @@
                 <article class="article__cls">
                     <header>🔁 relative — сдвиг относительно себя</header>
                     <div class="article_main__cls">
-                        <div class="pos-demo-container">
-                            <div class="pos-demo-box">Блок 1</div>
-                            <div class="pos-demo-box pos-demo-relative" style="position: relative; top: 20px; left: 20px;">relative (+20px/+20px)</div>
-                            <div class="pos-demo-box">Блок 3</div>
+                        <div class="demo__pos_container__cls">
+                            <div>Блок 1</div>
+                            <div style="background: #16a085; position: relative; top: 20px; left: 20px;">relative (+20px/+20px)</div>
+                            <div>Блок 3</div>
                         </div>
                         <p>Элемент смещается, но его исходное место остаётся пустым (другие элементы его не занимают).</p>
                     </div>
@@ -1174,9 +1251,9 @@
                 <article class="article__cls">
                     <header>🎯 absolute — привязка к ближайшему позиционированному предку</header>
                     <div class="article_main__cls">
-                        <div class="pos-demo-container" style="position: relative; min-height: 200px;">
-                            <div class="pos-demo-box">Блок в потоке</div>
-                            <div class="pos-demo-box pos-demo-absolute" style="position: absolute; bottom: 10px; right: 10px;">absolute</div>
+                        <div class="demo__pos_container__cls" style="position: relative; min-height: 200px;">
+                            <div>Блок в потоке</div>
+                            <div style="background: #e67e22; position: absolute; bottom: 10px; right: 10px;">absolute</div>
                         </div>
                         <p>Элемент вырывается из потока и позиционируется относительно ближайшего предка с <code>position: relative/absolute/fixed/sticky</code>.</p>
                     </div>
@@ -1190,12 +1267,12 @@
                 <article class="article__cls">
                     <header>📌 fixed — привязка к окну браузера</header>
                     <div class="article_main__cls">
-                        <div class="pos-demo-container" style="position: relative;">
-                            <div class="pos-demo-box pos-demo-fixed" style="position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
-                                fixed
+                        <div class="demo__pos_container__cls" style="position: relative;">
+                            <div style="background: #8e44ad; position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
+                                fixed HELLO 1212
                             </div>
                         </div>
-                        <p><strong>Внимание:</strong> fixed-элемент привязан к окну браузера. В этом примере он будет плавать в правом нижнем углу <strong>всего окна</strong>, а не только контейнера.</p>
+                        <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера. в правом нижнем углу <strong>всего окна</strong>, а не контейнера.</p>
                         <p>Обычно используется для «плавающих» кнопок, шапок, баннеров.</p>
                     </div>
                     <footer>
@@ -1210,7 +1287,7 @@
                     <div class="article_main__cls">
                         <div style="height: 150px; overflow-y: auto; border: 1px solid #cbd5e1; padding: 0.5rem;">
                             <div style="height: 50px; background: #eef2ff; margin-bottom: 0.5rem;">Прокрутите вниз →</div>
-                            <div class="pos-demo-sticky" style="position: sticky; top: 0; background: #c0392b; color: white; padding: 0.5rem; text-align: center;">
+                            <div style="background: #c0392b; position: sticky; top: 0; background: #c0392b; color: white; padding: 0.5rem; text-align: center;">
                                 🧲 Я прилипаю к верху контейнера
                             </div>
                             <div style="height: 300px; background: #f1f5f9; margin-top: 0.5rem;">Контент, который прокручивается...</div>
@@ -1535,6 +1612,136 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="stylesId">
+            <h2>STYLES</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>🔄 Сброс стилей до браузерного вида</header>
+                    <div class="article_main__cls">
+
+                        <p><button style="all: unset ;">all: unset </button></p>
+                        <p><button style="all: initial;">all: initial</button></p>
+                        <p><button style="all: revert;">all: revert</button> - возвращает браузерные стили (не для старых браузеров)</p>
+                        <div style="all: revert">
+                            <button>Нативная кнопка</button> - обертка в div не помогает!
+                        </div>
+
+                        <hr>
+                        <p>Обычная (глобально стилизованная) кнопка: <button>Стилизованная</button></p>
+                        <p>Изолированная кнопка без глобальных стилей:</p>
+                        <div style="all: initial;">
+                            <button>Нативная</button>
+                        </div>
+                        <p><em>Примечание: полный сброс до идеального браузерного вида — сложная задача, проще отказаться от глобальных стилей для кнопок или использовать утилиты.</em></p>
+                    </div>
+                    <footer>
+                        Лучший способ получить нативную кнопку — не применять к ней CSS вообще. Если глобальные стили есть, сбросить их без потери интерактивности сложно.<br>
+                        Используйте <code>all: revert</code> или изолируйте элемент.<br>
+                        Наиболее практичный совет: не применяйте глобальные стили кнопок, если вам нужны нативные варианты; используйте классы для стилизации и оставляйте базовые кнопки без классов нетронутыми.<br>
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <!-- ====================== КНОПКИ ====================== -->
+        <section class="section__cls" id="buttonsId">
+            <h2>🔘 Кнопки (button) — типы, состояния, стили</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- 1. Базовые кнопки и состояния -->
+                <article class="article__cls">
+                    <header>Базовые кнопки и состояния</header>
+                    <div class="article_main__cls">
+                        <p><button style="all: revert;">all: revert</button> - no style</p>
+
+                        <p><button>Обычная кнопка</button></p>
+                        <p><button disabled>Отключённая (disabled)</button></p>
+                        <p><button type="button">Кнопка с type="button" (по умолчанию)</button></p>
+                        <p><button type="submit">type="submit" — отправка формы</button></p>
+                        <p><button type="reset">type="reset" — сброс формы</button></p>
+                    </div>
+                    <footer>💡 Атрибут <code>type</code> важен внутри форм: <code>submit</code> отправляет, <code>reset</code> сбрасывает, <code>button</code> ничего не делает (по умолчанию). <code>disabled</code> блокирует кнопку.</footer>
+                </article>
+
+                <!-- 2. Цветные кнопки (визуальные классы) -->
+                <article class="article__cls">
+                    <header>🎨 Цветовые классы (primary, success, danger)</header>
+                    <div class="article_main__cls">
+                        <p><button class="button_primary__cls">Primary</button>
+                        <button class="button_success__cls">Success</button>
+                        <button class="button_danger__cls">Danger</button></p>
+                        <p><button class="button_outline__cls">Outline</button></p>
+                    </div>
+                    <footer>Используйте классы для обозначения действий: <code>.button_primary__cls</code> — главное, <code>.button_danger__cls</code> — опасное/удаление.</footer>
+                </article>
+
+                <!-- 3. Размеры кнопок -->
+                <article class="article__cls">
+                    <header>📏 Размеры (small / large)</header>
+                    <div class="article_main__cls">
+                        <p><button class="button_small__cls">Маленькая</button>
+                        <button>Стандартная</button>
+                        <button class="button_large__cls">Большая</button></p>
+                    </div>
+                    <footer>Используйте модификаторы размера для иерархии: <code>.button_small__cls</code> для второстепенных, <code>.button_large__cls</code> для акцентных.</footer>
+                </article>
+
+                <!-- 4. Кнопка как ссылка (стилизация) -->
+                <article class="article__cls">
+                    <header>🔗 Кнопка в стиле ссылки</header>
+                    <div class="article_main__cls">
+                        <p><button class="button_as_a__cls">Стилизация под ссылку button_as_a__cls</button></p>
+                    </div>
+                    <footer>Если вам нужен внешний вид ссылки, но поведение кнопки (действие на странице, а не переход) — используйте этот класс. Не путайте с <code>&lt;a&gt;</code>.</footer>
+                </article>
+
+                <!-- 5. Кнопка с иконкой -->
+                <article class="article__cls">
+                    <header>🖼️ Кнопка с иконкой (текст + символ)</header>
+                    <div class="article_main__cls">
+                        <p><button class="button_primary__cls">⭐ Избранное</button></p>
+                        <p><button class="button_success__cls">📥 Скачать</button></p>
+                    </div>
+                    <footer>Иконки можно добавлять через текст или <code>&lt;span&gt;</code>. Для доступности используйте <code>aria-label</code>, если иконка без текста.</footer>
+                </article>
+
+                <!-- 6. Кнопка с полной шириной -->
+                <article class="article__cls">
+                    <header>📱 Блочная кнопка (full width)</header>
+                    <div class="article_main__cls">
+                        <p><button style="width: 100%;" class="button_primary__cls">Отправить</button></p>
+                    </div>
+                    <footer>Часто используется в формах на мобильных. Установите <code>width: 100%</code> и при необходимости <code>display: block</code>.</footer>
+                </article>
+
+                <!-- 7. Группа кнопок -->
+                <article class="article__cls">
+                    <header>🧩 Группа кнопок (рядом)</header>
+                    <div class="article_main__cls">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="button_primary__cls">Сохранить</button>
+                            <button>Отмена</button>
+                            <button class="button_danger__cls">Удалить</button>
+                        </div>
+                    </div>
+                    <footer>Используйте <code>display: flex; gap: 0.5rem;</code> для группировки. Не забывайте про отступы на мобильных.</footer>
+                </article>
+
+                <!-- 8. Доступность (атрибуты aria) -->
+                <article class="article__cls">
+                    <header>♿ Доступность (aria-label)</header>
+                    <div class="article_main__cls">
+                        <p><button aria-label="Закрыть окно">❌</button></p>
+                        <p><button aria-label="Добавить в корзину">🛒</button></p>
+                    </div>
+                    <footer>Если кнопка содержит только иконку, обязательно добавьте <code>aria-label</code> с текстовым описанием для скринридеров.</footer>
+                </article>
+
+            </div>
+        </section>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="interactId">
