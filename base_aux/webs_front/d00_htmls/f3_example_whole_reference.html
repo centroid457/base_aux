@@ -39,14 +39,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: 0.15s;
-        }
-        button:hover {
-            background: #1a5ad9;
-        }
-
-        /* ===== Базовые стили для кнопок ===== */
-        button {
-<!--            display: inline-block;-->
+            /*display: inline-block;-->
 <!--            padding: 0.5rem 1rem;-->
 <!--            font-family: inherit;-->
 <!--            font-size: 0.9rem;-->
@@ -58,13 +51,14 @@
 <!--            background: #e2e8f0;-->
 <!--            color: #1e2a3e;-->
 <!--            cursor: pointer;-->
-<!--            transition: all 0.2s;-->
+<!--            transition: all 0.2s;-->*/
         }
         button:hover {
-            background: #cbd5e1;
+            background: #1a5ad9;  //base cbd5e1
         }
+
         button:active {
-            transform: translateY(1px);
+            transform: translateY(3px);
         }
         button:focus-visible {
             outline: 2px solid #2a73ff;
@@ -77,39 +71,61 @@
             pointer-events: none;
         }
 
-        /* ===== Цветные кнопки ===== */
-        .button_primary__cls {
+        /* ----------------------------------------- */
+        .button_blue__cls {     //just for schema!
             background: #2a73ff;
             color: white;
         }
-        .button_primary__cls:hover {
+        .button_blue__cls:hover {
             background: #1a5ad9;
         }
-        .button_success__cls {
-            background: #10b981;
-            color: white;
-        }
-        .button_success__cls:hover {
-            background: #0e9f6e;
-        }
-        .button_danger__cls {
-            background: #ef4444;
-            color: white;
-        }
-        .button_danger__cls:hover {
-            background: #dc2626;
-        }
-        .button_outline__cls {
+        .button_blue_outline__cls {
             background: transparent;
             border-color: #2a73ff;
             color: #2a73ff;
         }
-        .button_outline__cls:hover {
+        .button_blue_outline__cls:hover {
             background: #2a73ff;
             color: white;
         }
 
-        /* ===== Размеры ===== */
+        /* ----------------------------------------- */
+        .button_green__cls {
+            background: #10b981;
+            color: white;
+        }
+        .button_green__cls:hover {
+            background: #0e9f6e;
+        }
+        .button_green_outline__cls {
+            background: transparent;
+            border-color: #10b981;
+            color: #10b981;
+        }
+        .button_green_outline__cls:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* ----------------------------------------- */
+        .button_red__cls {
+            background: #ef4444;
+            color: white;
+        }
+        .button_red__cls:hover {
+            background: #dc2626;
+        }
+        .button_red_outline__cls {
+            background: transparent;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        .button_red_outline__cls:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* ----------------------------------------- */
         .button_small__cls {
             padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
@@ -119,7 +135,7 @@
             font-size: 1rem;
         }
 
-        /* ===== Кнопка-ссылка (стиль как ссылка) ===== */
+        /* ----------------------------------------- */
         .button_as_a__cls {
             background: none;
             border: none;
@@ -1629,7 +1645,7 @@
 
                         <hr>
                         <p>Обычная (глобально стилизованная) кнопка: <button>Стилизованная</button></p>
-                        <p>Изолированная кнопка без глобальных стилей:</p>
+                        <p>Изолированная кнопка без глобальных стилей: ----НЕ РАБОТАЕТ!!!</p>
                         <div style="all: initial;">
                             <button>Нативная</button>
                         </div>
@@ -1646,107 +1662,149 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <!-- ====================== КНОПКИ ====================== -->
-        <section class="section__cls" id="buttonsId">
-            <h2>🔘 Кнопки (button) — типы, состояния, стили</h2>
-            <div class="section_main__cls grid_auto__cls">
 
-                <!-- 1. Базовые кнопки и состояния -->
-                <article class="article__cls">
-                    <header>Базовые кнопки и состояния</header>
-                    <div class="article_main__cls">
-                        <p><button style="all: revert;">all: revert</button> - no style</p>
-
-                        <p><button>Обычная кнопка</button></p>
-                        <p><button disabled>Отключённая (disabled)</button></p>
-                        <p><button type="button">Кнопка с type="button" (по умолчанию)</button></p>
-                        <p><button type="submit">type="submit" — отправка формы</button></p>
-                        <p><button type="reset">type="reset" — сброс формы</button></p>
-                    </div>
-                    <footer>💡 Атрибут <code>type</code> важен внутри форм: <code>submit</code> отправляет, <code>reset</code> сбрасывает, <code>button</code> ничего не делает (по умолчанию). <code>disabled</code> блокирует кнопку.</footer>
-                </article>
-
-                <!-- 2. Цветные кнопки (визуальные классы) -->
-                <article class="article__cls">
-                    <header>🎨 Цветовые классы (primary, success, danger)</header>
-                    <div class="article_main__cls">
-                        <p><button class="button_primary__cls">Primary</button>
-                        <button class="button_success__cls">Success</button>
-                        <button class="button_danger__cls">Danger</button></p>
-                        <p><button class="button_outline__cls">Outline</button></p>
-                    </div>
-                    <footer>Используйте классы для обозначения действий: <code>.button_primary__cls</code> — главное, <code>.button_danger__cls</code> — опасное/удаление.</footer>
-                </article>
-
-                <!-- 3. Размеры кнопок -->
-                <article class="article__cls">
-                    <header>📏 Размеры (small / large)</header>
-                    <div class="article_main__cls">
-                        <p><button class="button_small__cls">Маленькая</button>
-                        <button>Стандартная</button>
-                        <button class="button_large__cls">Большая</button></p>
-                    </div>
-                    <footer>Используйте модификаторы размера для иерархии: <code>.button_small__cls</code> для второстепенных, <code>.button_large__cls</code> для акцентных.</footer>
-                </article>
-
-                <!-- 4. Кнопка как ссылка (стилизация) -->
-                <article class="article__cls">
-                    <header>🔗 Кнопка в стиле ссылки</header>
-                    <div class="article_main__cls">
-                        <p><button class="button_as_a__cls">Стилизация под ссылку button_as_a__cls</button></p>
-                    </div>
-                    <footer>Если вам нужен внешний вид ссылки, но поведение кнопки (действие на странице, а не переход) — используйте этот класс. Не путайте с <code>&lt;a&gt;</code>.</footer>
-                </article>
-
-                <!-- 5. Кнопка с иконкой -->
-                <article class="article__cls">
-                    <header>🖼️ Кнопка с иконкой (текст + символ)</header>
-                    <div class="article_main__cls">
-                        <p><button class="button_primary__cls">⭐ Избранное</button></p>
-                        <p><button class="button_success__cls">📥 Скачать</button></p>
-                    </div>
-                    <footer>Иконки можно добавлять через текст или <code>&lt;span&gt;</code>. Для доступности используйте <code>aria-label</code>, если иконка без текста.</footer>
-                </article>
-
-                <!-- 6. Кнопка с полной шириной -->
-                <article class="article__cls">
-                    <header>📱 Блочная кнопка (full width)</header>
-                    <div class="article_main__cls">
-                        <p><button style="width: 100%;" class="button_primary__cls">Отправить</button></p>
-                    </div>
-                    <footer>Часто используется в формах на мобильных. Установите <code>width: 100%</code> и при необходимости <code>display: block</code>.</footer>
-                </article>
-
-                <!-- 7. Группа кнопок -->
-                <article class="article__cls">
-                    <header>🧩 Группа кнопок (рядом)</header>
-                    <div class="article_main__cls">
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <button class="button_primary__cls">Сохранить</button>
-                            <button>Отмена</button>
-                            <button class="button_danger__cls">Удалить</button>
-                        </div>
-                    </div>
-                    <footer>Используйте <code>display: flex; gap: 0.5rem;</code> для группировки. Не забывайте про отступы на мобильных.</footer>
-                </article>
-
-                <!-- 8. Доступность (атрибуты aria) -->
-                <article class="article__cls">
-                    <header>♿ Доступность (aria-label)</header>
-                    <div class="article_main__cls">
-                        <p><button aria-label="Закрыть окно">❌</button></p>
-                        <p><button aria-label="Добавить в корзину">🛒</button></p>
-                    </div>
-                    <footer>Если кнопка содержит только иконку, обязательно добавьте <code>aria-label</code> с текстовым описанием для скринридеров.</footer>
-                </article>
-
-            </div>
-        </section>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="interactId">
             <h2>Интерактив</h2>
             <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>BUTTONS</header>
+                    <div class="article_main__cls">
+                        <p>
+                            <button style="all: revert;">all: revert</button>
+                            <button style="all: revert;" disabled>all: revert disabled</button>
+                            - NO STYLE
+                        </p>
+                        <p>
+                            <button>GLOBAL</button>
+                            <button disabled>GLOBAL disabled</button>
+                            - base для страницы - из CSS
+                        </p>
+
+                        <hr>
+                        <p>
+                            <button class="button_small__cls">button_small__cls</button>
+                            <button>button</button>
+                            <button class="button_large__cls">button_large__cls</button>
+                        </p>
+
+                        <p><button style="width: 100%;">style="width: 100%;</button></p>
+                        на мобильных. Установите <code>width: 100%</code> и при необходимости <code>display: block</code>
+
+                        <hr>
+                        Стилизация под ссылку (действие на странице, а не переход)
+                        <p><button class="button_as_a__cls">button_as_a__cls</button></p>
+                        <p><button class="button_as_a__cls" disabled>disabled</button></p>
+
+                        <hr>
+                        <p>
+                            <button>⭐ Избранное</button>
+                            <button>📥 Скачать</button>
+                        </p>
+                        иконка через текст или <code>&lt;span&gt;</code>.
+
+                        <p>
+                            <button aria-label="Закрыть окно">❌</button>
+                            <button aria-label="Добавить в корзину">🛒</button>
+                        </p>
+                        Если кнопка содержит только иконку, обязательно добавьте <code>aria-label</code> с текстовым описанием для скринридеров.
+
+                        <hr>
+                        <code>display: flex; gap: 0.5rem;</code> для группировки
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button>Button1</button>
+                            <button>Button2</button>
+                            <button>Button3</button>
+                        </div>
+
+                        <hr>
+                        ЦВЕТОВЫЕ СХЕМЫ
+                        <p>
+                            <button class="button_blue__cls">button_blue__cls</button>
+                            <button class="button_green__cls">button_green__cls</button>
+                            <button class="button_red__cls">button_red__cls</button><br>
+
+                            <button class="button_blue__cls" disabled>button_blue__cls</button>
+                            <button class="button_green__cls" disabled>button_green__cls</button>
+                            <button class="button_red__cls" disabled>button_red__cls</button>
+                        </p>
+                        <p>
+                            <button class="button_blue_outline__cls">button_blue_outline__cls</button>
+                            <button class="button_green_outline__cls">button_green_outline__cls</button>
+                            <button class="button_red_outline__cls">button_red_outline__cls</button><br>
+
+                            <button class="button_blue_outline__cls" disabled>button_blue_outline__cls</button>
+                            <button class="button_green_outline__cls" disabled>button_green_outline__cls</button>
+                            <button class="button_red_outline__cls" disabled>button_red_outline__cls</button>
+                        </p>
+
+                        <hr>
+                        <h4>📋 Форма с кнопками submit, reset, button</h4>
+
+                        <code>type</code> важен внутри форм:<br>
+                        <p><button type="button">type="button" нет действия ФОРМЫ (по умолчанию)</button></p>
+                        <p><button type="submit">type="submit" — отправка формы</button></p>
+                        <p><button type="reset">type="reset" — сброс формы</button></p>
+
+                        <form id="demo_form_types__id" style="border: 1px solid #dce3ec; padding: 1rem; margin: 0.5rem 0;">
+                            <div style="margin-bottom: 0.75rem;">
+                                <label for="fieldName" style="display: inline-block; width: 100px;">Имя:</label>
+                                <input type="text" id="fieldName" name="name" placeholder="Введите имя" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label for="fieldEmail" style="display: inline-block; width: 100px;">Email:</label>
+                                <input type="email" id="fieldEmail" name="email" placeholder="user@example.com" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <button type="submit" class="button_green__cls">✅ Отправить (submit)</button>
+                                <button type="reset" class="button_red_outline__cls" style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
+                                <button type="button" id="customButton" class="button_blue_outline__cls" style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
+                            </div>
+                            <div id="customMessage" style="margin-top: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></div>
+                        </form>
+
+                        <script>
+                            (function() {
+                                const form = document.getElementById('demo_form_types__id');
+                                if (!form) return;
+
+                                // submit — перехватываем отправку для демонстрации
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    alert('Форма отправлена (демо).\nИмя: ' + document.getElementById('fieldName').value + '\nEmail: ' + document.getElementById('fieldEmail').value);
+                                });
+
+                                // button — своё действие
+                                const customBtn = document.getElementById('customButton');
+                                const msgDiv = document.getElementById('customMessage');
+                                customBtn.addEventListener('click', function() {
+                                    const name = document.getElementById('fieldName').value || 'не указано';
+                                    const email = document.getElementById('fieldEmail').value || 'не указано';
+                                    msgDiv.innerHTML = `🔧 Вы нажали "button". Текущие значения: имя = "${name}", email = "${email}". (Форма не отправлена и не сброшена)`;
+                                });
+
+                                // reset сработает автоматически, но можно добавить дополнительное уведомление
+                                form.addEventListener('reset', function() {
+                                    setTimeout(() => {
+                                        msgDiv.innerHTML = '🔄 Форма сброшена (reset). Поля очищены.';
+                                    }, 10);
+                                });
+                            })();
+                        </script>
+
+                        <p><strong>Пояснение:</strong></p>
+                        <ul>
+                            <li><code>type="submit"</code> — отправляет форму (здесь мы перехватили отправку через JS, чтобы показать данные).</li>
+                            <li><code>type="reset"</code> — возвращает поля к исходному состоянию (без JS).</li>
+                            <li><code>type="button"</code> — любое действие кроме отправки! (проверка, расчёт, показ сообщения).</li>
+                        </ul>
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
 
                 <article class="article__cls">
                     <header>DATAILS - спойлер</header>
@@ -1779,7 +1837,7 @@
                             <p>Секрет: кастомные маркеры делаются через <code>::before</code> и убирание стандартного маркера.</p>
                         </details>
 
-                        <details>
+                        <details open>
                             <summary>пример с формой</summary>
                             <div style="margin-top: 0.5rem;">
                                 <label><input type="checkbox"> Опция 1</label><br>
