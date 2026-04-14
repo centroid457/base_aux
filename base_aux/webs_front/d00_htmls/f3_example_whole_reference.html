@@ -2285,19 +2285,36 @@
 
         <!-- ====================================================================================================== -->
         <!-- дополнительный блок с глобальными атрибутами и data-* -->
-        <section class="section__cls" id="globalAttrsId">
-            <h2>🧰 глобальные атрибуты & data-*</h2>
+        <section class="section__cls" id="attrsId">
+            <h2>ATTRS</h2>
             <div class="section_main__cls grid_auto__cls">
+
                 <article class="article__cls">
-                    <header>Атрибуты class, id, style, hidden, title, data-*</header>
+                    <header>GLOBAL</header>
                     <div class="article_main__cls">
-                        <p title="Всплывающая подсказка (title)">Наведи на меня — появится подсказка.</p>
-                        <p hidden>Этот абзац скрыт через hidden (не отображается).</p>
-                        <p data-user-id="12345" style="background: #f0f9ff; padding: 0.3rem;">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
-                        <p contenteditable="true" style="border:1px dashed #aaa; padding:6px;">Атрибут contenteditable — этот текст можно редактировать прямо в браузере!</p>
+
+                        <p title="TITLE text">TITLE</p>
+                        <p style="border:1px dashed">STYLE</p>
+                        <p class="mark">CLASS mark</p>
+
+                        <hr>
+                        BOOL
+                        <p>здесь HIDDEN span[
+                            <span hidden>
+                                Этот абзац скрыт через hidden (не отображается).
+                            </span>
+                            ]не будет отображаться
+                        </p>
+                        <p contenteditable style="border:1px dashed">CONTENTEDITABLE— этот текст можно редактировать прямо в браузере!</p>
+
+                        <hr>
+                        USER
+                        <p data-user-id="12345">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
+
                     </div>
                     <footer>💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</footer>
                 </article>
+
             </div>
         </section>
 
@@ -2563,6 +2580,92 @@
         document.body.style.background = 'yellow';
         setTimeout(() => document.body.style.background = body_bg_color__old, 100);
     })();
+
+    // ----------------------------------------------------------------------------------------------------------------
+    /** НЕ РАБОТАЕТ!!!
+     * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
+     * @param {string|HTMLElement} container - CSS-селектор или DOM-элемент.
+     * @param {Object} options - Настройки.
+     * @param {boolean} [options.use_h1=false] - Нумеровать ли h1.
+     * @param {string} [options.sep='.'] - Разделитель уровней.
+     * @param {boolean} [options.keep_nesting=true] - Показывать полный путь (1.2.3) или только последний номер (3).
+     */
+    function numberHeadings(container, options = {}) {
+        const {
+            show_h1 = false,
+            sep = '.',
+            keep_nesting = true
+        } = options;
+
+        const root = typeof container === 'string'
+            ? document.querySelector(container)
+            : container;
+        if (!root) {
+            console.error(`Контейнер "${container}" не найден`);
+            return;
+        }
+
+        // Счётчики для уровней 1..6
+        const counters = [0, 0, 0, 0, 0, 0];
+        let lastLevel = 0;
+
+        const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+        for (const heading of headings) {
+            const level = parseInt(heading.tagName[1], 10);
+            const idx = level - 1;
+
+            // --- Обновление счётчиков ---
+            if (level > lastLevel) {
+                // Обнуляем промежуточные уровни
+                for (let i = lastLevel; i < level; i++) {
+                    if (i !== idx) counters[i] = 0;
+                }
+                counters[idx]++;
+            } else {
+                counters[idx]++;
+                // Обнуляем все более глубокие уровни
+                for (let i = idx + 1; i < 6; i++) counters[i] = 0;
+            }
+            lastLevel = level;
+
+            // --- Формирование номера ---
+            let numberParts = [];
+            if (keep_nesting) {
+                for (let i = 0; i < level; i++) {
+                    numberParts.push(counters[i] === 0 ? '' : counters[i]);
+                }
+            } else {
+                numberParts.push(counters[idx]);
+            }
+
+            let numberStr = numberParts.join(sep);
+            numberStr = numberStr.replace(new RegExp(`^${sep}+|${sep}+$`, 'g'), '');
+
+            const showThisNumber = (level === 1) ? show_h1 : true;
+            let prefix = '';
+            if (showThisNumber && numberStr !== '') {
+                prefix = numberStr + sep + ' ';
+            }
+
+            // Удаляем старый номер (если есть) – ищем в начале строки цифры, разделители и пробел
+            const oldNumberPattern = /^[\d\.]+\s+/;
+            let newHTML = heading.innerHTML;
+            if (oldNumberPattern.test(newHTML)) {
+                newHTML = newHTML.replace(oldNumberPattern, '');
+            }
+            // Вставляем новый префикс
+            heading.innerHTML = prefix + newHTML;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        numberHeadings('#ROOT_MAIN__ID', {
+            show_h1: false,
+            sep: '.',
+            keep_nesting: true
+        });
+    });
 
     // ----------------------------------------------------------------------------------------------------------------
     (function generateNavRoot() {
