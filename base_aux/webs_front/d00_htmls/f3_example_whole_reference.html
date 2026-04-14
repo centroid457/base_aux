@@ -716,36 +716,43 @@
             padding: 1.5rem 1.8rem;
         }
 
-
-/* ===== Управление секциями (аккордеон) ===== */
-.section__cls {
-    transition: all 0.2s;
-}
+/* Заголовок секции — убираем курсор-pointer */
 .section__cls > h2 {
-    cursor: pointer;
-    user-select: none;
+    cursor: default;
     position: relative;
-    padding-right: 2rem;
+    padding-left: 2rem;   /* место для символа */
 }
-.section__cls > h2::after {
-    content: "▼";
+
+/* Кнопка-символ (абсолютно позиционированная) */
+.section__toggle {
     position: absolute;
-    right: 0.5rem;
+    left: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.8rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
     color: #2a73ff;
-    transition: transform 0.2s;
+    user-select: none;
+    background: transparent;
+    border: none;
+    padding: 0;
 }
-.section__cls.collapsed > h2::after {
-    transform: translateY(-50%) rotate(-90deg);
+/* Стрелка в зависимости от состояния */
+.section__cls.collapsed .section__toggle::before {
+    content: "▶";
 }
+.section__cls:not(.collapsed) .section__toggle::before {
+    content: "▼";
+}
+
+/* Скрываем контент */
 .section__cls.collapsed > .section_main__cls {
     display: none;
-}
-/* Плавное появление (опционально) */
-.section__cls > .section_main__cls {
-    transition: opacity 0.2s;
 }
 
         /* -------------------- ARTICLE --------------------*/
@@ -949,7 +956,7 @@
     <main id="ROOT_MAIN__ID">
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="structId">
-            <h2>1=СТРУКТУРЫ</h2>
+            <h2>СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1453,7 +1460,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="linkId">
-            <h2>2=LINKS</h2>
+            <h2>LINKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2550,12 +2557,14 @@
 </div>
 
 <script id="ROOT_FOOTER_SCRIPT__ID">
+    // ----------------------------------------------------------------------------------------------------------------
     (function bgColorOnLoad() {
         let body_bg_color__old = document.body.style.background;
         document.body.style.background = 'yellow';
         setTimeout(() => document.body.style.background = body_bg_color__old, 100);
     })();
 
+    // ----------------------------------------------------------------------------------------------------------------
     (function generateNavRoot() {
         const navContainer = document.getElementById('ROOT_NAV__ID');
         if (!navContainer) return;
@@ -2607,6 +2616,7 @@
         navContainer.appendChild(bottomLink);
     })();
 
+    // ----------------------------------------------------------------------------------------------------------------
     // плавная прокрутка для всех якорей - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -2621,6 +2631,7 @@
         });
     });
 
+    // ----------------------------------------------------------------------------------------------------------------
     // реализация вкладок - для JS варианта
     document.querySelectorAll('.tabs-container').forEach(container => {
         const btns = container.querySelectorAll('.tab-btn');
@@ -2636,6 +2647,7 @@
         });
     });
 
+    // ----------------------------------------------------------------------------------------------------------------
     // синхронизация progress / meter со слайдером и спиннером
     const progressSlider = document.getElementById('progressSlider');
     const progressNumber = document.getElementById('progressNumber');
@@ -2656,6 +2668,7 @@
         progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
     // Размножитель для блока-шаблона
     function cloneWithStyles(templateId, targetSelector, styleProperty, styleValues) {
         const original = document.getElementById(templateId);
@@ -2681,6 +2694,7 @@
     }
     cloneWithStyles('cloneTemplate_id', '.clone-inner', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
 
+    // ----------------------------------------------------------------------------------------------------------------
     // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (АККОРДЕОН) ==========
     (function() {
         // Находим все секции
