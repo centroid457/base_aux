@@ -373,7 +373,6 @@
         /* -------------------- LISTS -------------------------------------------------------------------------------*/
         /* ===== Базовые сбросы для списков ===== */
         ul, ol, dl {
-            margin: 1rem 0;
             padding-left: 1.5rem;  /* стандартный отступ для маркеров/цифр */
         }
 
@@ -1057,6 +1056,8 @@
                     <div class="article_main__cls">
 
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
+
+                        <p style="background: #f0f0f0">style="background</p>
 
                         <p style="background: #f0f9ff; padding: 10px; border-radius: 12px;">Абзац с кастомными стилями. Text example. Text example. Text example. Text example.</p>
 
@@ -2290,29 +2291,150 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>GLOBAL</header>
+                    <header>global VALUES</header>
                     <div class="article_main__cls">
 
-                        <p title="TITLE text">TITLE</p>
-                        <p style="border:1px dashed">STYLE</p>
+                        <p><code>id/class</code> — используются повсеместно.</p>
                         <p class="mark">CLASS mark</p>
+                        <p title="TITLE text">TITLE</p>
+                        <p style="border:1px dashed">STYLE border</p>
 
-                        <hr>
-                        BOOL
+                        <p lang="fr">Bonjour! (атрибут lang="fr")</p>
+                        <p dir="rtl">DIR=rtl=справа налево</p>
+                        <p><a href="#" accesskey="h">A+accesskey="h"</a> - Alt+H/Alt+Shift+H в зависимости от ОС.</p>
+
+                        <div>TABINDEX принудительный фокус переключением по TAB (стиль обводки — по умолчанию) - странно работает!
+                            <p tabindex="2">tabindex=2</p>
+                            <p tabindex="1">tabindex=1</p>
+                            <p tabindex="3">tabindex=3</p>
+                        </div>
+
+                    </div>
+                    <footer>💡 Глобальные атрибуты: id, class, style, title, lang, dir, accesskey, tabindex, hidden, contenteditable, draggable, spellcheck, translate и другие.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>global BOOL</header>
+                    <div class="article_main__cls">
+
+                        <p><input type="checkbox" checked>InputCheckbox+<code>checked</code></p>
+                        <p><input type="text" readonly value="readonly">INPUT+<code>readonly</code></p>
+                        <p><input type="text" required placeholder="required">INPUT+<code>required</code></p>
+                        <p><input type="text" disabled value="disabled">INPUT+<code>disabled</code></p>
+
+                        <a href="#" disabled>A+<code>disabled</code> - markup DoNothing</a>
+                        <p disabled>P+<code>disabled</code> - markup DoNothing</p>
+
+                        <p>
+                            SELECT+<code>multiple</code>
+                            <select multiple size="2"> <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option> </select>
+                        </p>
+                        <p contenteditable style="border:1px dashed">CONTENTEDITABLE<code>contenteditable="true"</code> — этот текст можно редактировать прямо в браузере!</p>
+
                         <p>здесь HIDDEN span[
                             <span hidden>
                                 Этот абзац скрыт через hidden (не отображается).
                             </span>
                             ]не будет отображаться
                         </p>
-                        <p contenteditable style="border:1px dashed">CONTENTEDITABLE— этот текст можно редактировать прямо в браузере!</p>
-
-                        <hr>
-                        USER
-                        <p data-user-id="12345">data-атрибут: data-user-id="12345" — хранит данные для JS.</p>
 
                     </div>
-                    <footer>💡 Глобальные атрибуты работают почти со всеми тегами: id (уникальный), class (группы), style (inline-CSS), data-* — для пользовательских данных.</footer>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>USER (data-*)</header>
+                    <div class="article_main__cls">
+                        <p data-user-selected>data-атрибуты: data-* данные для JS.</p>
+
+                        <p data-user-selected data-role="admin" data-active="true">
+                            data-user-selected<br>
+                            data-role="admin"<br>
+                            data-active="true"<br>
+                        </p>
+                        <p data-user-selected data_role="admin" data_active="true" disabled>
+                            data-user-selected <br>
+                            data_role="admin" <br>
+                            data_active="true" disabled<br>
+                        </p>
+
+                        <script>
+                            (function(selector = "[data-user-selected]") {
+                                const elements = document.querySelectorAll(selector);
+
+                                elements.forEach(el => {
+                                    // Внешний список
+                                    const outerUl = document.createElement('ul');
+                                    outerUl.style.background = '#f0f0f0';
+                                    outerUl.style.fontSize = '0.7rem'; // уменьшенный шрифт
+
+                                    // 1. Пункт "attributes" с вложенным списком
+                                    const attrLi = document.createElement('li');
+                                    attrLi.textContent = 'el.attributes';
+                                    const attrUl = document.createElement('ul');
+                                    const attributes = el.attributes;
+                                    for (let i = 0; i < attributes.length; i++) {
+                                        const attr = attributes[i];
+                                        const li = document.createElement('li');
+                                        li.textContent = `${attr.name} = "${attr.value}"`;
+                                        attrUl.appendChild(li);
+                                    }
+                                    attrLi.appendChild(attrUl);
+                                    outerUl.appendChild(attrLi);
+
+                                    // 2. Пункт "dataset" с вложенным списком
+                                    const datasetLi = document.createElement('li');
+                                    datasetLi.textContent = 'el.dataset';
+                                    const datasetUl = document.createElement('ul');
+                                    const dataset = el.dataset;
+                                    if (Object.keys(dataset).length === 0) {
+                                        const li = document.createElement('li');
+                                        li.textContent = '(нет data-* атрибутов)';
+                                        datasetUl.appendChild(li);
+                                    } else {
+                                        for (const [key, value] of Object.entries(dataset)) {
+                                            const li = document.createElement('li');
+                                            // Восстанавливаем оригинальное имя data-* атрибута
+                                            li.textContent = `data-${key} = "${value}"`;
+                                            datasetUl.appendChild(li);
+                                        }
+                                    }
+                                    datasetLi.appendChild(datasetUl);
+                                    outerUl.appendChild(datasetLi);
+
+                                    // Вставляем внешний список после текущего элемента
+                                    el.insertAdjacentElement('afterend', outerUl);
+                                });
+                            })();
+                        </script>
+
+                    </div>
+                    <footer>
+                        для валидного HTML5 пользовательские атрибуты должны иметь префикс <code>data-*</code><br>
+                        Без префикса страница пройдёт, но валидатор покажет ошибку.<br>
+                        Для работы с <code>data-*</code> используйте <code>element.dataset</code> (автоматически преобразует kebab-case в camelCase).<br>
+                        <code>data-name</code>-><code>data-name</code><br>
+                        <code>data-name-name</code>-><code>data-nameName</code><br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>ATTRS apply CSS</header>
+                    <div class="article_main__cls">
+                        <style>
+                            [data-status="active"] {
+                                background: #d1fae5;
+                                border-left: 4px solid #10b981;
+                            }
+                            [data-status="inactive"] {
+                                background: #fee2e2;
+                                border-left: 4px solid #ef4444;
+                            }
+                        </style>
+                        <div data-status="active">Элемент с <code>data-status="active"</code> — зелёный фон</div>
+                        <div data-status="inactive">Элемент с <code>data-status="inactive"</code> — красный фон</div>
+                    </div>
+                    <footer>🎨 CSS позволяет выбирать элементы по любым атрибутам: <code>[data-status="active"]</code>, <code>[data_counter_break]</code> и т.д. Префикс <code>data-*</code> не обязателен для стилизации, но рекомендуется для семантики и валидности.</footer>
                 </article>
 
             </div>
