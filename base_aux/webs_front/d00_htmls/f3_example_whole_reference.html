@@ -31,7 +31,7 @@
             border-radius: 12px;
         }
 
-        /* -------------------- UNIVERSAL ATTRS ----------------------------------------------------------------------*/
+        /* -------------------- USER ATTRS ---------------------------------------------------------------------------*/
         /* Фоновые цвета */
         [data-bg_grey] { background: #f0f0f0; }
         [data-bg_yellow] { background: #fff3cd; }
@@ -71,6 +71,28 @@
         [data-hidden]       { display: none; }
 
         section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
+
+        /* -------------------- ИКОНКИ ЧЕРЕЗ data-АТРИБУТЫ -------------------- */
+        [data-icon_process_blank]::before { content: "⚪"; }
+        [data-icon_process_wait]::before { content: "🟡"; }
+        [data-icon_process_ok]::before { content: "🟢"; }
+        [data-icon_process_bad]::before { content: "🔴"; }
+
+        [data-icon_attention]::before { content: "⚠️"; }
+
+        [data-icon_result_ok]::before { content: "✅"; }
+        [data-icon_result_bad]::before { content: "❌"; }
+
+        /* Селекторы по значению атрибута data-icon --- ЭТО ИМЕННО ДЛЯ ЗНАЧЕНИЯ А НЕ ДЛЯ ИМЕНИ!!! */
+        .demo_attr_wildcards__cls[data-icon^="proc"] {
+            background: #f0f0f0; /* красный фон */
+        }
+        .demo_attr_wildcards__cls[data-icon$="ok"] {
+            text-decoration: underline; /* подчёркивание */
+        }
+        .demo_attr_wildcards__cls[data-icon*="bad"] {
+            text-decoration: line-through; /* зачёркивание */
+        }
 
         /* -------------------- BUTTONS ------------------------------------------------------------------------------*/
         button {
@@ -666,7 +688,7 @@
         #ROOT_MAIN__ID {
             display: flex;
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 0.50rem;
         }
 
         #ROOT_FOOTER__ID {
@@ -739,38 +761,12 @@
             box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
         }
 
-        .section_main__cls {
-            padding: 1.5rem 1.8rem;
-        }
-
         /* Иконка слева от заголовка секции */
         .section__cls > h2 {
             background: #fafcff;
             position: relative;
             padding-left: 2rem;   /* место для символа */
             cursor: default;   /* курсор не меняем */
-        }
-
-        /* Иконка для развёрнутой секции (нет атрибута data-collapsed) */
-        .section__cls:not([data-collapsed]) > h2::before {
-            content: "▼";
-            position: absolute;
-            left: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
-            color: #2a73ff;
-        }
-
-        /* Иконка для свёрнутой секции (есть атрибут data-collapsed) */
-        .section__cls[data-collapsed] > h2::before {
-            content: "▶";
-            position: absolute;
-            left: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
-            color: #2a73ff;
         }
 
         /* -------------------- ARTICLE --------------------*/
@@ -972,7 +968,7 @@
     <main id="ROOT_MAIN__ID">
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="structId" data-collapsed>
-            <h2>СТРУКТУРЫ</h2>
+            <h2 data-icon_process_ok>СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1010,7 +1006,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textInlineId" data-collapsed>
-            <h2>TEXT - inline</h2>
+            <h2 data-icon_process_ok>TEXT - inline</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1063,8 +1059,8 @@
             </div>
         </section>
 
-        <section class="section__cls" id="textUnicodeId">
-            <h2>TEXT - Unicode</h2>
+        <section class="section__cls" id="textUnicodeId" data-collapsed>
+            <h2 data-icon_process_ok>TEXT - Unicode</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- Примеры вставки иконок в текст и смена цвета -->
@@ -1237,7 +1233,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textBlocksId" data-collapsed>
-            <h2>TEXT - BLOCKS</h2>
+            <h2 data-icon_process_wait>TEXT - BLOCKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1355,8 +1351,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="listId">
-            <h2>LISTS</h2>
+        <section class="section__cls" id="listId" data-collapsed>
+            <h2 data-icon_process_ok>LISTS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- Стандартные маркированные списки -->
@@ -1458,8 +1454,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="tableId">
-            <h2>TABLES</h2>
+        <section class="section__cls" id="tableId" data-collapsed>
+            <h2 data-icon_process_ok>TABLES</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1649,8 +1645,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="linkId">
-            <h2>LINKS</h2>
+        <section class="section__cls" id="linkId" data-collapsed>
+            <h2 data-icon_process_ok>LINKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1761,8 +1757,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="actionId">
-            <h2>ACTION</h2>
+        <section class="section__cls" id="actionId" data-collapsed>
+            <h2 data-icon_process_ok>ACTION</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1994,7 +1990,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="inputId">
-            <h2>INPUT</h2>
+            <h2 data-icon_process_wait>INPUT</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2242,9 +2238,11 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>global VALUES</header>
+                    <header>GLOBAL</header>
                     <div class="article_main__cls">
 
+                        <hr>
+                        VALUES
                         <p><code>id/class</code> — используются повсеместно.</p>
                         <p class="mark" >CLASS mark</p>
                         <p title="TITLE text">TITLE</p>
@@ -2260,14 +2258,8 @@
                             <p tabindex="3">tabindex=3</p>
                         </div>
 
-                    </div>
-                    <footer>💡 Глобальные атрибуты: id, class, style, title, lang, dir, accesskey, tabindex, hidden, contenteditable, draggable, spellcheck, translate и другие.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>global BOOL</header>
-                    <div class="article_main__cls">
-
+                        <hr>
+                        BOOLS
                         <p><input type="checkbox" checked>InputCheckbox+<code>checked</code></p>
                         <p><input type="text" readonly value="readonly">INPUT+<code>readonly</code></p>
                         <p><input type="text" required placeholder="required">INPUT+<code>required</code></p>
@@ -2290,7 +2282,7 @@
                         </p>
 
                     </div>
-                    <footer></footer>
+                    <footer>💡 Глобальные атрибуты: id, class, style, title, lang, dir, accesskey, tabindex, hidden, contenteditable, draggable, spellcheck, translate и другие.</footer>
                 </article>
 
                 <article class="article__cls">
@@ -2431,11 +2423,50 @@
 
                     </div>
                     <footer>Селекторы <code>[data-status="active"]</code> - конкретное значение, <code>[data_counter_break]</code><br>
-                        ⚠️Для стилизации - не совсем корректно!<br>
+                        Для стилизации - не совсем корректно!<br>
                         Для production-проектов лучше использовать классы (например, .bg-red, .p-2, .rounded).<br>
                         Атрибуты data-* предназначены для хранения данных, а не для стилизации.<br>
                         Но в учебных целях, прототипах и маленьких проектах такой подход вполне допустим и даже популярен (например, в некоторых CSS-фреймворках для прототипирования).
                     </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>ICONS</header>
+                    <div class="article_main__cls">
+
+                        <hr>
+                        <p data-icon_process_blank>data-icon_process_blank</p>
+                        <p data-icon_process_wait>data-icon_process_wait</p>
+                        <p data-icon_process_ok>data-icon_process_ok</p>
+                        <p data-icon_process_bad>data-icon_process_bad</p>
+
+                        <hr>
+                        <p data-icon_attention>data-icon_attention</p>
+
+                        <hr>
+                        <p data-icon_result_ok>data-icon_result_ok</p>
+                        <p data-icon_result_bad>data-icon_result_bad</p>
+
+
+                        <hr>
+                        <h4>🎯 ATTR WILDCARDS — поиск по значению атрибута не по имени!!!</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <p class="demo_attr_wildcards__cls" data-icon="proc_blank">data-icon="proc_blank" → начинается с "proc" (красный фон)</p>
+                            <p class="demo_attr_wildcards__cls" data-icon="proc_wait">data-icon="proc_wait" → начинается с "proc" (красный фон)</p>
+                            <p class="demo_attr_wildcards__cls" data-icon="proc_ok">data-icon="proc_ok" → начинается с "proc" + заканчивается на "ok" (красный фон + подчёркивание)</p>
+                            <p class="demo_attr_wildcards__cls" data-icon="proc_bad">data-icon="proc_bad" → начинается с "proc" + содержит "bad" (красный фон + зачёркивание)</p>
+                            <p class="demo_attr_wildcards__cls" data-icon="other_value">data-icon="other_value" — ни одно правило не сработало</p>
+                        </div>
+                        <footer>
+                            💡 <strong>Как работают селекторы:</strong><br>
+                            <code>[data-icon^="proc"]</code> — значение атрибута <strong>начинается</strong> с "proc" → красный фон.<br>
+                            <code>[data-icon$="ok"]</code> — значение <strong>заканчивается</strong> на "ok" → подчёркивание.<br>
+                            <code>[data-icon*="bad"]</code> — значение <strong>содержит</strong> "bad" → зачёркивание.<br>
+                            Все правила применяются одновременно, если условия выполнены.
+                        </footer>
+
+                    </div>
+                    <footer>💡 Иконка вставляется через <code>::before</code> на основе атрибута. Не нужно добавлять лишние классы или вручную писать символы.</footer>
                 </article>
 
             </div>
@@ -2444,7 +2475,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="styleCommonId">
-            <h2>STYLES</h2>
+            <h2 data-icon_process_blank>STYLES</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2478,7 +2509,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="stylePosId">
-            <h2>STYLES Позиционирование</h2>
+            <h2 data-icon_process_wait>STYLES Позиционирование</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- 1. static (по умолчанию) -->
@@ -2581,7 +2612,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="styleLayoutId">
-            <h2>STYLES Компоновка</h2>
+            <h2 data-icon_process_wait>STYLES Компоновка</h2>
             <div class="section_main__cls">
                 <article class="article__cls">
                     <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
@@ -2680,7 +2711,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="mediaId">
-            <h2>MEDIA</h2>
+            <h2 data-icon_process_blank>MEDIA</h2>
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Изображение & figure</header>
@@ -2721,7 +2752,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="tabsId">
-            <h2>TABS</h2>
+            <h2 data-icon_process_blank>TABS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
