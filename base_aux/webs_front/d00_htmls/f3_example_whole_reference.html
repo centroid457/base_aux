@@ -66,8 +66,11 @@
         [data-rounded_large] { border-radius: 1rem; }
 
         /* Отображение */
-        [data-hidden]       { display: none; }
         [data-inline]       { display: inline-block; }
+
+        [data-hidden]       { display: none; }
+
+        section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
 
         /* -------------------- BUTTONS ------------------------------------------------------------------------------*/
         button {
@@ -735,61 +738,39 @@
         .section__cls:hover {
             box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
         }
-        .section__cls > h2 {
-            background: #fafcff;
-            padding: 1rem 1.8rem;
-            border-bottom: 2px solid #eef2ff;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            color: #0f2b4d;
-            display: inline-block;
-            background: #eef2ff;
-            padding: 0.2rem 1rem;
-            border-radius: 60px;
-            margin: 1rem 1.8rem 0;
-        }
+
         .section_main__cls {
             padding: 1.5rem 1.8rem;
         }
 
-        /* Заголовок секции — убираем курсор-pointer */
+        /* Иконка слева от заголовка секции */
         .section__cls > h2 {
-            cursor: default;
+            background: #fafcff;
             position: relative;
             padding-left: 2rem;   /* место для символа */
+            cursor: default;   /* курсор не меняем */
         }
 
-        /* Кнопка-символ (абсолютно позиционированная) */
-        .section__toggle {
+        /* Иконка для развёрнутой секции (нет атрибута data-collapsed) */
+        .section__cls:not([data-collapsed]) > h2::before {
+            content: "▼";
             position: absolute;
             left: 0.5rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 1.2rem;
-            height: 1.2rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #2a73ff;
-            user-select: none;
-            background: transparent;
-            border: none;
-            padding: 0;
-        }
-        /* Стрелка в зависимости от состояния */
-        .section__cls.collapsed .section__toggle::before {
-            content: "▶";
-        }
-        .section__cls:not(.collapsed) .section__toggle::before {
-            content: "▼";
         }
 
-        /* Скрываем контент */
-        .section__cls.collapsed > .section_main__cls {
-            display: none;
+        /* Иконка для свёрнутой секции (есть атрибут data-collapsed) */
+        .section__cls[data-collapsed] > h2::before {
+            content: "▶";
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: #2a73ff;
         }
 
         /* -------------------- ARTICLE --------------------*/
@@ -977,10 +958,8 @@
 
 <div id="ROOT_DIV__ID">
     <div class="accordion-controls" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-        <button id="collapseAllBtn" class="button_blue_outline__cls">📁 Скрыть все секции</button>
-        <button id="expandAllBtn" class="button_blue_outline__cls">📂 Раскрыть все секции</button>
-        <button id="accordionModeBtn" class="button_blue_outline__cls">🔁 Режим аккордеона (вкл/выкл)</button>
-        <span id="accordionStatus" style="margin-left: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></span>
+        <button id="collapseAllBtn" class="button_blue_outline__cls">Скрыть все</button>
+        <button id="expandAllBtn" class="button_blue_outline__cls">Раскрыть все</button>
     </div>
 
     <nav id="ROOT_NAV__ID"></nav>
@@ -992,7 +971,7 @@
 
     <main id="ROOT_MAIN__ID">
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="structId">
+        <section class="section__cls" id="structId" data-collapsed>
             <h2>СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -1030,8 +1009,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="textInlineId">
-            <h2>ТЕКСТ - внутристрочный</h2>
+        <section class="section__cls" id="textInlineId" data-collapsed>
+            <h2>TEXT - inline</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1086,7 +1065,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textBlocksId">
-            <h2>ТЕКСТ - БЛОКИ</h2>
+            <h2>TEXT - BLOCKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1210,7 +1189,7 @@
 
                 <!-- Стандартные маркированные списки -->
                 <article class="article__cls">
-                    <header>📌 UL - Маркированный</header>
+                    <header>UL - Маркированный</header>
                     <div class="article_main__cls">
 
                         <ul>
@@ -1239,7 +1218,7 @@
 
                 <!-- Нумерованные списки с разными типами -->
                 <article class="article__cls">
-                    <header>🔢 OL - Нумерованный</header>
+                    <header>OL - Нумерованный</header>
                     <div class="article_main__cls">
 
                         <ol>
@@ -1276,7 +1255,7 @@
 
                 <!-- Список описаний (dl) -->
                 <article class="article__cls">
-                    <header>📖 DL=dt/dd - описания</header>
+                    <header>DL=dt/dd - описания</header>
                     <div class="article_main__cls">
                         <h4>BASE - ломается вертикально</h4>
                         <dl>
@@ -1300,7 +1279,7 @@
                         </dl>
 
                     </div>
-                    <footer>📌 <code>&lt;dl&gt;</code> — контейнер, <code>&lt;dt&gt;</code> — термин, <code>&lt;dd&gt;</code> — описание. Идеально для глоссариев.</footer>
+                    <footer><code>&lt;dl&gt;</code> — контейнер, <code>&lt;dt&gt;</code> — термин, <code>&lt;dd&gt;</code> — описание. Идеально для глоссариев.</footer>
                 </article>
 
             </div>
@@ -1430,7 +1409,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>🎨 Кастомная таблица (свой класс)</header>
+                    <header>Кастомная таблица (свой класс)</header>
                     <div class="article_main__cls">
 
                         <table class="table_custom__cls">
@@ -1978,7 +1957,7 @@
 
                 <!-- Color -->
                 <article class="article__cls">
-                    <header>🎨 input type="color"</header>
+                    <header>input type="color"</header>
                     <div class="article_main__cls">
                         <form onsubmit="return false;">
                             <div class="form-group"><label>Выберите цвет:</label> <input type="color" id="colorPicker" value="#2a73ff"></div>
@@ -1990,7 +1969,7 @@
                             if (picker && colorVal) picker.addEventListener('input', () => colorVal.value = picker.value);
                         </script>
                     </div>
-                    <footer>🎨 Открывает системную палитру. Возвращает HEX-значение (например, <code>#2a73ff</code>).</footer>
+                    <footer>Открывает системную палитру. Возвращает HEX-значение (например, <code>#2a73ff</code>).</footer>
                 </article>
 
                 <!-- tel, url, search -->
@@ -2257,7 +2236,11 @@
                         <p data-font_large>data-font_large</p>
 
                         <p>[<span data-hidden data-bg_grey>data-hidden</span>] - span+data-hidden</p>
-                        <p data-inline data-bg_grey>data-inline</p>
+
+                        <hr>
+                        INLINE<br>
+                        превращает блочный элемент (например, div-p) в строчно-блочный — он встаёт в строку с соседними элементами, но при этом сохраняет возможность задавать ширину, высоту, отступы.
+                        <p data-inline data-bg_grey>data-inline p1</p><p data-inline data-bg_yellow>data-inline p2</p>
 
                         <hr>
                         разные значения
@@ -2525,7 +2508,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="mediaId">
-            <h2>🎬 Мультимедиа: картинки, видео, аудио, YouTube</h2>
+            <h2>MEDIA</h2>
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Изображение & figure</header>
@@ -2600,16 +2583,16 @@
                                 </div>
                                 <div class="tab-pane" id="tab3">
                                     <ul>
-                                        <li>⚠️ Важно добавлять атрибуты <code>role="tablist"</code>, <code>aria-selected</code> для скринридеров (в учебном примере опущено для краткости, но в реальном проекте используйте).</li>
-                                        <li>🧩 Можно сделать и на чистом CSS: <code>&lt;input type="radio"&gt;</code> + <code>:checked</code>, но JS даёт больше контроля и динамики.</li>
-                                        <li>🎨 Активная вкладка должна быть визуально выделена (цвет, подчёркивание).</li>
-                                        <li>📱 На мобильных устройствах табы удобно превращать в аккордеон (но это уже продвинутый вариант).</li>
+                                        <li>Важно добавлять атрибуты <code>role="tablist"</code>, <code>aria-selected</code> для скринридеров (в учебном примере опущено для краткости, но в реальном проекте используйте).</li>
+                                        <li>Можно сделать и на чистом CSS: <code>&lt;input type="radio"&gt;</code> + <code>:checked</code>, но JS даёт больше контроля и динамики.</li>
+                                        <li>Активная вкладка должна быть визуально выделена (цвет, подчёркивание).</li>
+                                        <li>На мобильных устройствах табы удобно превращать в аккордеон (но это уже продвинутый вариант).</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <footer>🧩 <strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS.</footer>
+                    <footer><strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS.</footer>
                 </article>
 
                 <article class="article__cls">
@@ -2759,13 +2742,13 @@
                     <header>🧬 Блок-шаблон (id="cloneTemplate_id")</header>
                     <div class="article_main__cls">
                         <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
-                            <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">🎨 Элемент с динамическим стилем</div>
+                            <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">Элемент с динамическим стилем</div>
                         </div>
 
                         <div id="cloneContainer"></div>
 
                     </div>
-                    <footer>🧠 <strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.</footer>
+                    <footer><strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.</footer>
                 </article>
             </div>
         </section>
@@ -2925,7 +2908,7 @@
     })();
 
     // ----------------------------------------------------------------------------------------------------------------
-    // плавная прокрутка для всех якорей - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
+    // LINKS=SCROLL Smooth - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -2940,7 +2923,7 @@
     });
 
     // ----------------------------------------------------------------------------------------------------------------
-    // реализация вкладок - для JS варианта
+    // TABS=JS
     document.querySelectorAll('.tabs-container').forEach(container => {
         const btns = container.querySelectorAll('.tab-btn');
         btns.forEach(btn => {
@@ -3003,123 +2986,60 @@
     cloneWithStyles('cloneTemplate_id', '.clone-inner', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
 
     // ----------------------------------------------------------------------------------------------------------------
-    // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (АККОРДЕОН) ==========
+    // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
     (function() {
-        // Находим все секции
         const sections = document.querySelectorAll('section.section__cls');
         if (!sections.length) return;
 
-        // Функция закрыть секцию
-        function collapseSection(section) {
-            section.classList.add('collapsed');
-        }
-        // Функция открыть секцию
-        function expandSection(section) {
-            section.classList.remove('collapsed');
-        }
-        // Проверка, открыта ли секция
-        function isExpanded(section) {
-            return !section.classList.contains('collapsed');
-        }
-
-        // Закрыть все секции
+        // Функция: скрыть все секции (добавить атрибут data-collapsed)
         function collapseAll() {
-            sections.forEach(section => collapseSection(section));
+            sections.forEach(section => {
+                section.setAttribute('data-collapsed', '');
+            });
         }
-        // Открыть все секции
+
+        // Функция: раскрыть все секции (удалить атрибут data-collapsed)
         function expandAll() {
-            sections.forEach(section => expandSection(section));
+            sections.forEach(section => {
+                section.removeAttribute('data-collapsed');
+            });
         }
 
-        // Режим аккордеона (переменная)
-        let accordionMode = false;
-        const statusSpan = document.getElementById('accordionStatus');
-        function updateAccordionStatus() {
-            if (statusSpan) {
-                statusSpan.textContent = accordionMode ? ' (аккордеон: открыта только одна)' : '';
-            }
-        }
-
-        // Обработчик клика по заголовку секции
+        // Обработчики кликов по заголовкам секций
         sections.forEach(section => {
             const header = section.querySelector(':scope > h2');
             if (!header) return;
 
             header.addEventListener('click', (e) => {
-                // Если клик на ссылку внутри заголовка — не сворачиваем (якорь)
+                // Если клик на ссылку внутри заголовка — не сворачиваем (чтобы не мешать якорям)
                 if (e.target.closest('a')) return;
 
-                if (accordionMode) {
-                    // Режим аккордеона: закрываем все, потом открываем текущую
-                    sections.forEach(s => collapseSection(s));
-                    expandSection(section);
+                if (section.hasAttribute('data-collapsed')) {
+                    section.removeAttribute('data-collapsed');
                 } else {
-                    // Обычный режим: просто переключаем текущую
-                    if (isExpanded(section)) {
-                        collapseSection(section);
-                    } else {
-                        expandSection(section);
-                    }
+                    section.setAttribute('data-collapsed', '');
                 }
             });
         });
 
-        // Кнопки управления
+        // Кнопки управления (находим по ID)
         const collapseBtn = document.getElementById('collapseAllBtn');
         const expandBtn = document.getElementById('expandAllBtn');
-        const accordionBtn = document.getElementById('accordionModeBtn');
 
         if (collapseBtn) {
-            collapseBtn.addEventListener('click', () => {
-                collapseAll();
-                if (accordionMode) accordionMode = false; // отключаем аккордеон при ручном скрытии всех
-                updateAccordionStatus();
-            });
+            collapseBtn.addEventListener('click', collapseAll);
         }
         if (expandBtn) {
-            expandBtn.addEventListener('click', () => {
-                expandAll();
-                if (accordionMode) accordionMode = false;
-                updateAccordionStatus();
-            });
+            expandBtn.addEventListener('click', expandAll);
         }
-        if (accordionBtn) {
-            accordionBtn.addEventListener('click', () => {
-                accordionMode = !accordionMode;
-                if (accordionMode) {
-                    // При включении режима аккордеона оставляем открытой только первую видимую (или любую)
-                    let anyOpen = false;
-                    sections.forEach(section => {
-                        if (!anyOpen && isExpanded(section)) {
-                            anyOpen = true;
-                        } else {
-                            collapseSection(section);
-                        }
-                    });
-                    if (!anyOpen && sections.length) {
-                        expandSection(sections[0]);
-                    }
-                } else {
-                    // При выключении ничего не меняем
-                }
-                updateAccordionStatus();
-            });
-        }
-        updateAccordionStatus();
 
-        // Обработка якорей: если перешли по ссылке #sectionId, нужно раскрыть секцию
+        // Обработка якорей: если перешли по ссылке #sectionId, раскрываем секцию
         function handleHash() {
             const hash = window.location.hash.substring(1);
             if (hash) {
                 const targetSection = document.getElementById(hash);
                 if (targetSection && targetSection.classList.contains('section__cls')) {
-                    expandSection(targetSection);
-                    if (accordionMode) {
-                        sections.forEach(s => {
-                            if (s !== targetSection) collapseSection(s);
-                        });
-                    }
-                    // Прокрутка уже есть в глобальном скрипте
+                    targetSection.removeAttribute('data-collapsed');
                 }
             }
         }
