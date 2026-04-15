@@ -31,6 +31,14 @@
             border-radius: 12px;
         }
 
+        /* -------------------- UNIVERSAL ATTRS ----------------------------------------------------------------------*/
+        [data-bg_grey] {
+            background: #f0f0f0;
+        }
+        [data-bg_yellow] {
+            background: #fff3cd;
+        }
+
         /* -------------------- BUTTONS ------------------------------------------------------------------------------*/
         button {
             background: #2a73ff;
@@ -715,44 +723,44 @@
             padding: 1.5rem 1.8rem;
         }
 
-/* Заголовок секции — убираем курсор-pointer */
-.section__cls > h2 {
-    cursor: default;
-    position: relative;
-    padding-left: 2rem;   /* место для символа */
-}
+        /* Заголовок секции — убираем курсор-pointer */
+        .section__cls > h2 {
+            cursor: default;
+            position: relative;
+            padding-left: 2rem;   /* место для символа */
+        }
 
-/* Кнопка-символ (абсолютно позиционированная) */
-.section__toggle {
-    position: absolute;
-    left: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1.2rem;
-    height: 1.2rem;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    color: #2a73ff;
-    user-select: none;
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-/* Стрелка в зависимости от состояния */
-.section__cls.collapsed .section__toggle::before {
-    content: "▶";
-}
-.section__cls:not(.collapsed) .section__toggle::before {
-    content: "▼";
-}
+        /* Кнопка-символ (абсолютно позиционированная) */
+        .section__toggle {
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #2a73ff;
+            user-select: none;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        /* Стрелка в зависимости от состояния */
+        .section__cls.collapsed .section__toggle::before {
+            content: "▶";
+        }
+        .section__cls:not(.collapsed) .section__toggle::before {
+            content: "▼";
+        }
 
-/* Скрываем контент */
-.section__cls.collapsed > .section_main__cls {
-    display: none;
-}
+        /* Скрываем контент */
+        .section__cls.collapsed > .section_main__cls {
+            display: none;
+        }
 
         /* -------------------- ARTICLE --------------------*/
         .article__cls {
@@ -1048,7 +1056,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textBlocksId">
-            <h2>🧩 ТЕКСТ - БЛОКИ</h2>
+            <h2>ТЕКСТ - БЛОКИ</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -1167,7 +1175,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="listId">
-            <h2>📋 LISTS</h2>
+            <h2>LISTS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- Стандартные маркированные списки -->
@@ -1270,7 +1278,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="tableId">
-            <h2>📊 TABLES — best practice</h2>
+            <h2>TABLES</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2047,6 +2055,162 @@
             </div>
         </section>
 
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="attrsId">
+            <h2>ATTRS</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>global VALUES</header>
+                    <div class="article_main__cls">
+
+                        <p><code>id/class</code> — используются повсеместно.</p>
+                        <p class="mark" >CLASS mark</p>
+                        <p title="TITLE text">TITLE</p>
+                        <p style="border:1px dashed">STYLE border</p>
+
+                        <p lang="fr">Bonjour! (атрибут lang="fr")</p>
+                        <p dir="rtl">DIR=rtl=справа налево</p>
+                        <p><a href="#" accesskey="h">A+accesskey="h"</a> - Alt+H/Alt+Shift+H в зависимости от ОС.</p>
+
+                        <div>TABINDEX принудительный фокус переключением по TAB (стиль обводки — по умолчанию) - странно работает!
+                            <p tabindex="2">tabindex=2</p>
+                            <p tabindex="1">tabindex=1</p>
+                            <p tabindex="3">tabindex=3</p>
+                        </div>
+
+                    </div>
+                    <footer>💡 Глобальные атрибуты: id, class, style, title, lang, dir, accesskey, tabindex, hidden, contenteditable, draggable, spellcheck, translate и другие.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>global BOOL</header>
+                    <div class="article_main__cls">
+
+                        <p><input type="checkbox" checked>InputCheckbox+<code>checked</code></p>
+                        <p><input type="text" readonly value="readonly">INPUT+<code>readonly</code></p>
+                        <p><input type="text" required placeholder="required">INPUT+<code>required</code></p>
+                        <p><input type="text" disabled value="disabled">INPUT+<code>disabled</code></p>
+
+                        <a href="#" disabled>A+<code>disabled</code> - markup DoNothing</a>
+                        <p disabled>P+<code>disabled</code> - markup DoNothing</p>
+
+                        <p>
+                            SELECT+<code>multiple</code>
+                            <select multiple size="2"> <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option> </select>
+                        </p>
+                        <p contenteditable style="border:1px dashed">CONTENTEDITABLE<code>contenteditable="true"</code> — этот текст можно редактировать прямо в браузере!</p>
+
+                        <p>здесь HIDDEN span[
+                            <span hidden>
+                                Этот абзац скрыт через hidden (не отображается).
+                            </span>
+                            ]не будет отображаться
+                        </p>
+
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>USER (data-*)</header>
+                    <div class="article_main__cls">
+                        <p data-user_selected>data-атрибуты: data-* данные для JS.</p>
+
+                        <p data-user_selected data-role="admin" data-active="true">
+                            data-user_selected<br>
+                            data-role="admin"<br>
+                            data-active="true"<br>
+                        </p>
+                        <p data-user_selected data_role="admin" data_active="true" disabled>
+                            data-user_selected <br>
+                            data_role="admin" <br>
+                            data_active="true" disabled<br>
+                        </p>
+
+                        <script>
+                            (function(selector = "[data-user_selected]") {
+                                const elements = document.querySelectorAll(selector);
+
+                                elements.forEach(el => {
+                                    // Внешний список
+                                    const outerUl = document.createElement('ul');
+                                    //outerUl.style.background = '#f0f0f0';
+                                    outerUl.style.fontSize = '0.7rem'; // уменьшенный шрифт
+                                    outerUl.setAttribute('data-bg_grey', '');
+
+                                    // 1. Пункт "attributes" с вложенным списком
+                                    const attrLi = document.createElement('li');
+                                    attrLi.textContent = 'el.attributes';
+                                    const attrUl = document.createElement('ul');
+                                    const attributes = el.attributes;
+                                    for (let i = 0; i < attributes.length; i++) {
+                                        const attr = attributes[i];
+                                        const li = document.createElement('li');
+                                        li.textContent = `${attr.name} = "${attr.value}"`;
+                                        attrUl.appendChild(li);
+                                    }
+                                    attrLi.appendChild(attrUl);
+                                    outerUl.appendChild(attrLi);
+
+                                    // 2. Пункт "dataset" с вложенным списком
+                                    const datasetLi = document.createElement('li');
+                                    datasetLi.textContent = 'el.dataset';
+                                    const datasetUl = document.createElement('ul');
+                                    const dataset = el.dataset;
+                                    if (Object.keys(dataset).length === 0) {
+                                        const li = document.createElement('li');
+                                        li.textContent = '(нет data-* атрибутов)';
+                                        datasetUl.appendChild(li);
+                                    } else {
+                                        for (const [key, value] of Object.entries(dataset)) {
+                                            const li = document.createElement('li');
+                                            // Восстанавливаем оригинальное имя data-* атрибута
+                                            li.textContent = `data-${key} = "${value}"`;
+                                            datasetUl.appendChild(li);
+                                        }
+                                    }
+                                    datasetLi.appendChild(datasetUl);
+                                    outerUl.appendChild(datasetLi);
+
+                                    // Вставляем внешний список после текущего элемента
+                                    el.insertAdjacentElement('afterend', outerUl);
+                                });
+                            })();
+                        </script>
+
+                    </div>
+                    <footer>
+                        для валидного HTML5 пользовательские атрибуты должны иметь префикс <code>data-*</code><br>
+                        Без префикса страница пройдёт, но валидатор покажет ошибку.<br>
+                        Для работы с <code>data-*</code> используйте <code>element.dataset</code> (автоматически преобразует kebab-case в camelCase).<br>
+                        <code>data-name</code>-><code>data-name</code><br>
+                        <code>data-name-name</code>-><code>data-nameName</code><br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>ATTRS apply CSS</header>
+                    <div class="article_main__cls">
+                        <style>
+                            [data-status="active"] {
+                                background: #d1fae5;
+                                border-left: 4px solid #10b981;
+                            }
+                            [data-status="inactive"] {
+                                background: #fee2e2;
+                                border-left: 4px solid #ef4444;
+                            }
+                        </style>
+                        <div data-status="active">Элемент с <code>data-status="active"</code> — зелёный фон</div>
+                        <div data-status="inactive">Элемент с <code>data-status="inactive"</code> — красный фон</div>
+                    </div>
+                    <footer>🎨 CSS позволяет выбирать элементы по любым атрибутам: <code>[data-status="active"]</code>, <code>[data_counter_break]</code> и т.д. Префикс <code>data-*</code> не обязателен для стилизации, но рекомендуется для семантики и валидности.</footer>
+                </article>
+
+            </div>
+        </section>
+
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="styleCommonId">
@@ -2283,162 +2447,6 @@
             </div>
         </section>
 
-
-        <!-- ====================================================================================================== -->
-        <!-- дополнительный блок с глобальными атрибутами и data-* -->
-        <section class="section__cls" id="attrsId">
-            <h2>ATTRS</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <article class="article__cls">
-                    <header>global VALUES</header>
-                    <div class="article_main__cls">
-
-                        <p><code>id/class</code> — используются повсеместно.</p>
-                        <p class="mark">CLASS mark</p>
-                        <p title="TITLE text">TITLE</p>
-                        <p style="border:1px dashed">STYLE border</p>
-
-                        <p lang="fr">Bonjour! (атрибут lang="fr")</p>
-                        <p dir="rtl">DIR=rtl=справа налево</p>
-                        <p><a href="#" accesskey="h">A+accesskey="h"</a> - Alt+H/Alt+Shift+H в зависимости от ОС.</p>
-
-                        <div>TABINDEX принудительный фокус переключением по TAB (стиль обводки — по умолчанию) - странно работает!
-                            <p tabindex="2">tabindex=2</p>
-                            <p tabindex="1">tabindex=1</p>
-                            <p tabindex="3">tabindex=3</p>
-                        </div>
-
-                    </div>
-                    <footer>💡 Глобальные атрибуты: id, class, style, title, lang, dir, accesskey, tabindex, hidden, contenteditable, draggable, spellcheck, translate и другие.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>global BOOL</header>
-                    <div class="article_main__cls">
-
-                        <p><input type="checkbox" checked>InputCheckbox+<code>checked</code></p>
-                        <p><input type="text" readonly value="readonly">INPUT+<code>readonly</code></p>
-                        <p><input type="text" required placeholder="required">INPUT+<code>required</code></p>
-                        <p><input type="text" disabled value="disabled">INPUT+<code>disabled</code></p>
-
-                        <a href="#" disabled>A+<code>disabled</code> - markup DoNothing</a>
-                        <p disabled>P+<code>disabled</code> - markup DoNothing</p>
-
-                        <p>
-                            SELECT+<code>multiple</code>
-                            <select multiple size="2"> <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option> </select>
-                        </p>
-                        <p contenteditable style="border:1px dashed">CONTENTEDITABLE<code>contenteditable="true"</code> — этот текст можно редактировать прямо в браузере!</p>
-
-                        <p>здесь HIDDEN span[
-                            <span hidden>
-                                Этот абзац скрыт через hidden (не отображается).
-                            </span>
-                            ]не будет отображаться
-                        </p>
-
-                    </div>
-                    <footer></footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>USER (data-*)</header>
-                    <div class="article_main__cls">
-                        <p data-user-selected>data-атрибуты: data-* данные для JS.</p>
-
-                        <p data-user-selected data-role="admin" data-active="true">
-                            data-user-selected<br>
-                            data-role="admin"<br>
-                            data-active="true"<br>
-                        </p>
-                        <p data-user-selected data_role="admin" data_active="true" disabled>
-                            data-user-selected <br>
-                            data_role="admin" <br>
-                            data_active="true" disabled<br>
-                        </p>
-
-                        <script>
-                            (function(selector = "[data-user-selected]") {
-                                const elements = document.querySelectorAll(selector);
-
-                                elements.forEach(el => {
-                                    // Внешний список
-                                    const outerUl = document.createElement('ul');
-                                    outerUl.style.background = '#f0f0f0';
-                                    outerUl.style.fontSize = '0.7rem'; // уменьшенный шрифт
-
-                                    // 1. Пункт "attributes" с вложенным списком
-                                    const attrLi = document.createElement('li');
-                                    attrLi.textContent = 'el.attributes';
-                                    const attrUl = document.createElement('ul');
-                                    const attributes = el.attributes;
-                                    for (let i = 0; i < attributes.length; i++) {
-                                        const attr = attributes[i];
-                                        const li = document.createElement('li');
-                                        li.textContent = `${attr.name} = "${attr.value}"`;
-                                        attrUl.appendChild(li);
-                                    }
-                                    attrLi.appendChild(attrUl);
-                                    outerUl.appendChild(attrLi);
-
-                                    // 2. Пункт "dataset" с вложенным списком
-                                    const datasetLi = document.createElement('li');
-                                    datasetLi.textContent = 'el.dataset';
-                                    const datasetUl = document.createElement('ul');
-                                    const dataset = el.dataset;
-                                    if (Object.keys(dataset).length === 0) {
-                                        const li = document.createElement('li');
-                                        li.textContent = '(нет data-* атрибутов)';
-                                        datasetUl.appendChild(li);
-                                    } else {
-                                        for (const [key, value] of Object.entries(dataset)) {
-                                            const li = document.createElement('li');
-                                            // Восстанавливаем оригинальное имя data-* атрибута
-                                            li.textContent = `data-${key} = "${value}"`;
-                                            datasetUl.appendChild(li);
-                                        }
-                                    }
-                                    datasetLi.appendChild(datasetUl);
-                                    outerUl.appendChild(datasetLi);
-
-                                    // Вставляем внешний список после текущего элемента
-                                    el.insertAdjacentElement('afterend', outerUl);
-                                });
-                            })();
-                        </script>
-
-                    </div>
-                    <footer>
-                        для валидного HTML5 пользовательские атрибуты должны иметь префикс <code>data-*</code><br>
-                        Без префикса страница пройдёт, но валидатор покажет ошибку.<br>
-                        Для работы с <code>data-*</code> используйте <code>element.dataset</code> (автоматически преобразует kebab-case в camelCase).<br>
-                        <code>data-name</code>-><code>data-name</code><br>
-                        <code>data-name-name</code>-><code>data-nameName</code><br>
-                    </footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>ATTRS apply CSS</header>
-                    <div class="article_main__cls">
-                        <style>
-                            [data-status="active"] {
-                                background: #d1fae5;
-                                border-left: 4px solid #10b981;
-                            }
-                            [data-status="inactive"] {
-                                background: #fee2e2;
-                                border-left: 4px solid #ef4444;
-                            }
-                        </style>
-                        <div data-status="active">Элемент с <code>data-status="active"</code> — зелёный фон</div>
-                        <div data-status="inactive">Элемент с <code>data-status="inactive"</code> — красный фон</div>
-                    </div>
-                    <footer>🎨 CSS позволяет выбирать элементы по любым атрибутам: <code>[data-status="active"]</code>, <code>[data_counter_break]</code> и т.д. Префикс <code>data-*</code> не обязателен для стилизации, но рекомендуется для семантики и валидности.</footer>
-                </article>
-
-            </div>
-        </section>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="mediaId">
