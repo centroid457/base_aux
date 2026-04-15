@@ -1063,8 +1063,121 @@
             </div>
         </section>
 
+        <section class="section__cls" id="textUnicodeId" data-collapsed>
+            <h2>TEXT - Unicode</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- Примеры вставки иконок в текст и смена цвета -->
+                <article class="article__cls">
+                    <header>КОД+ЦВЕТ+селекторы</header>
+                    <div class="article_main__cls">
+                        U+FE0E и U+FE0F
+                        Эти специальные символы называются селекторами вариантов (Variation Selectors)<br>
+                        используются для принудительного изменения отображения предыдущего символа<br>
+
+                        U+FE0E (VS-15): Принудительно переводит emoji в текстовый (монохромный) стиль. Он как бы говорит браузеру: «покажи этот символ как обычный черно-белый значок».<br>
+                        U+FE0F (VS-16): Принудительно переводит символ в emoji-стиль (с цветом). Заставляет браузер отобразить красочную, часто анимированную версию символа.<br>
+
+                        подходят символы, у которых есть как текстовая, так и emoji-версия, например, универсальный символ предупреждения ⚠️<br>
+
+                        <hr>
+                        КОДОМ
+                        <p><code>&amp;#x26A0;</code>&#x26A0; BASE</p>
+                        <p style="color: #ff0000;"><code>&amp;#x26A0; +style="color: #ff0000;"</code>&#x26A0; +CSS</p>
+                        <p style="color: #00ff00;"><code>&amp;#x26A0; +style="color: #00ff00;"</code>&#x26A0;</p>
+                        <p style="color: #0000ff;"><code>&amp;#x26A0; +style="color: #0000ff;"</code>&#x26A0;</p>
+
+                        <p><code>&amp;#x26A0;&amp;#xFE0F;</code>&#x26A0;&#xFE0F;</p>
+                        <p style="color: #ff0000;"><code>&amp;#x26A0;&amp;#xFE0F; +style="color: #ff0000;"</code>&#x26A0;&#xFE0F; </p>
+                        <p><code>&amp;#x26A0;&amp;#xFE0E;</code>&#x26A0;&#xFE0E;</p>
+                        <p style="color: #ff0000;"><code>&amp;#x26A0;&amp;#xFE0E; +style="color: #ff0000;"</code>&#x26A0;&#xFE0E; </p>
+
+                        <hr>
+                        <p><code>&amp;#x2714;</code>&#x2714;</p>
+                        <p><code>&amp;#x2714;&amp;#xFE0F;</code>&#x2714;&#xFE0F; - СТИЛЬ ЭМОДЗИ!</p>
+                        <p><code>&amp;#x2714;&amp;#xFE0E;</code>&#x2714;&#xFE0E; - ПУСТОЙ СТИЛЬ</p>
+
+                        <hr>
+                        ЧИСТАЯ ИКОНКА
+                        <p><span style="color: #ff0000;">⚠️+style="color: #ff0000;</span>цветная не меняется!</p>
+                        <p><span style="color: #ff0000;">⚠+style="color: #ff0000;</span>монохром меняется</p>
+
+                        <p><span style="color: #ff0000;">✅+style="color: #ff0000;</span>цветная не меняется!</p>
+                        <p><span style="color: #ff0000;">✓+style="color: #ff0000;</span>монохром меняется</p>
+
+                    </div>
+                    <footer>Для изменения цвета оберните их в <code>&lt;span style="color: ..."&gt;</code>. Суффиксы <code>&amp;#xFE0E;</code> и <code>&amp;#xFE0F;</code> управляют текстовым/эмодзи-стилем, но работают не везде.</footer>
+                </article>
+
+                <!-- Информация, предупреждения, опасность -->
+                <article class="article__cls">
+                    <header>наборы</header>
+                    <div class="article_main__cls">
+
+                        <hr>
+                        Информация / Предупреждение / Опасность
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ℹ️ <code>&amp;#x2139;</code> ⓘ <code>&amp;#x24D8;</code>
+                            📌 <code>&amp;#x1F4CC;</code> 🔔 <code>&amp;#x1F514;</code>
+                            ⚠️ <code>&amp;#x26A0;</code> ⚠ <code>&amp;#x26A0;</code>
+                            ❗ <code>&amp;#x2757;</code> ❕ <code>&amp;#x2755;</code>
+                            ℹ<code>ДОБАВИТЬ;</code>
+                            🔴 <code>&amp;#x1F534;</code> 🟡 <code>&amp;#x1F7E1;</code>
+                            🟢 <code>&amp;#x1F7E2;</code> 🔵 <code>&amp;#x1F535;</code>
+                        </div>
+
+                        <hr>
+                        Успех / Ошибка / Галочки
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ✅ <code>&amp;#x2705;</code> ✔️ <code>&amp;#x2714;</code>
+                            ☑️ <code>&amp;#x2611;</code> ✓ <code>&amp;#x2713;</code>
+                            ❌ <code>&amp;#x274C;</code> ❎ <code>&amp;#x274E;</code>
+                            ✖️ <code>&amp;#x2716;</code> 🗸 <code>&amp;#x1F5F8;</code>
+                        </div>
+
+                        <hr>
+                        Стрелки (навигация, раскрытие)
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ⬅️ <code>&amp;#x2B05;</code> ➡️ <code>&amp;#x27A1;</code>
+                            ⬆️ <code>&amp;#x2B06;</code> ⬇️ <code>&amp;#x2B07;</code>
+                            ◀ <code>&amp;#x25C0;</code> ▶ <code>&amp;#x25B6;</code>
+                            ▲ <code>&amp;#x25B2;</code> ▼ <code>&amp;#x25BC;</code>
+                            ↗ <code>&amp;#x2197;</code> ↘ <code>&amp;#x2198;</code>
+                            → <code>&amp;#x2192;</code> ← <code>&amp;#x2190;</code>
+                        </div>
+
+                        <hr>
+                        Звёзды / Сердца / Популярное
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ⭐ <code>&amp;#x2B50;</code> 🌟 <code>&amp;#x1F31F;</code>
+                            ❤️ <code>&amp;#x2764;</code> 🧡 <code>&amp;#x1F9E1;</code>
+                            💚 <code>&amp;#x1F49A;</code> 💙 <code>&amp;#x1F499;</code>
+                            👍 <code>&amp;#x1F44D;</code> 👎 <code>&amp;#x1F44E;</code>
+                            🔥 <code>&amp;#x1F525;</code> 💡 <code>&amp;#x1F4A1;</code>
+                        </div>
+
+                        <hr>
+                        Файлы / Папки / Замки / Часы
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            📁 <code>&amp;#x1F4C1;</code> 📂 <code>&amp;#x1F4C2;</code>
+                            📄 <code>&amp;#x1F4C4;</code> 🔒 <code>&amp;#x1F512;</code>
+                            🔓 <code>&amp;#x1F513;</code> ⏱️ <code>&amp;#x23F1;</code>
+                            ⏰ <code>&amp;#x23F0;</code> 🔄 <code>&amp;#x1F504;</code>
+                        </div>
+
+                    </div>
+                </article>
+
+            </div>
+            <div class="section_main__cls" style="padding-top: 0;">
+                <div class="demo-note" style="background: #fef9e3; padding: 0.75rem; border-radius: 0.5rem;">
+                    эти символы можно вставлять напрямую. Для изменения цвета используйте <code>&lt;span style="color: red;"&gt;⚠️&lt;/span&gt;</code>.
+                </div>
+            </div>
+        </section>
+
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="textBlocksId">
+        <section class="section__cls" id="textBlocksId" data-collapsed>
             <h2>TEXT - BLOCKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -2199,7 +2312,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>ATTRS+CSS=стилизация через атрибуты</header>
+                    <header>User SETs=ATTRS+CSS=стилизация через атрибуты</header>
                     <div class="article_main__cls">
 
                         <hr>
