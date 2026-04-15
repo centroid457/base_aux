@@ -1063,7 +1063,7 @@
             </div>
         </section>
 
-        <section class="section__cls" id="textUnicodeId" data-collapsed>
+        <section class="section__cls" id="textUnicodeId">
             <h2>TEXT - Unicode</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -1105,6 +1105,33 @@
                         <p><span style="color: #ff0000;">✅+style="color: #ff0000;</span>цветная не меняется!</p>
                         <p><span style="color: #ff0000;">✓+style="color: #ff0000;</span>монохром меняется</p>
 
+                        <hr>
+                        вариации цветов через style="color: colorName;"
+                        <div>
+                            ▶ <code>&amp;#x25B6;</code> →
+                            <span style="color: green;">▶</span> ·
+                            <span style="color: gold;">▶</span> ·
+                            <span style="color: red;">▶</span> ·
+                            <span style="color: blue;">▶</span> ·
+                            ▶
+                        </div>
+                        <div>
+                            ⓘ <code>&amp;#x24D8;</code> →
+                            <span style="color: green;">ⓘ</span> ·
+                            <span style="color: gold;">ⓘ</span> ·
+                            <span style="color: red;">ⓘ</span> ·
+                            <span style="color: blue;">ⓘ</span> ·
+                            ⓘ
+                        </div>
+                        <div>
+                            🟢 <code>&amp;#x1F7E2;</code> →
+                            <span style="color: green;">🟢</span> ·
+                            <span style="color: gold;">🟢</span> ·
+                            <span style="color: red;">🟢</span> ·
+                            <span style="color: blue;">🟢</span> ·
+                            🟢 не сработает
+                        </div>
+
                     </div>
                     <footer>Для изменения цвета оберните их в <code>&lt;span style="color: ..."&gt;</code>. Суффиксы <code>&amp;#xFE0E;</code> и <code>&amp;#xFE0F;</code> управляют текстовым/эмодзи-стилем, но работают не везде.</footer>
                 </article>
@@ -1115,35 +1142,67 @@
                     <div class="article_main__cls">
 
                         <hr>
+                        КРУГИ
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ⚪ <code>&amp;#26AA;</code> ⚫ <code>&amp;#26AB;</code>
+                            🔴 <code>&amp;#1F534;</code> 🟠 <code>&amp;#1F7E0;</code>
+                            🟢 <code>&amp;#1F7E2;</code> 🟡 <code>&amp;#x1F7E1;</code>
+                            🟣 <code>&amp;#1F7E3;</code> 🔵 <code>&amp;#x1F535;</code>
+                        </div>
+
+                        <hr>
+                        <h4>ЦВЕТНЫЕ КВАДРАТЫ (эмодзи)</h4>
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            🟥 <code>&amp;#x1F7E5;</code> 🟧 <code>&amp;#x1F7E7;</code>
+                            🟨 <code>&amp;#x1F7E8;</code> 🟩 <code>&amp;#x1F7E9;</code>
+                            🟦 <code>&amp;#x1F7E6;</code> 🟪 <code>&amp;#x1F7EA;</code>
+                            ⬛ <code>&amp;#x2B1B;</code> ⬜ <code>&amp;#x2B1C;</code>
+                        </div>
+
+                        <hr>
+                        <h4>МОНОХРОМНЫЕ КВАДРАТЫ (геометрические, можно раскрасить через CSS)</h4>
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ◼️ <code>&amp;#x25FC;</code> ◻️ <code>&amp;#x25FB;</code>
+                            ▪️ <code>&amp;#x25AA;</code> ▫️ <code>&amp;#x25AB;</code>
+                            ▢ <code>&amp;#x25A2;</code> ⬛ <code>&amp;#x2B1B;</code>
+                            ⬜ <code>&amp;#x2B1C;</code>
+                        </div>
+
+                        <hr>
+                        ГАЛКИ+КРЕСТЫ
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ✅ <code>&amp;#x2705;</code> ☑ <code>&amp;#2611;</code>
+                            ✅ <code>&amp;#x2705;</code> ☑️ <code>&amp;#x2611;</code>
+                            ✓ <code>&amp;#x2713;</code> ✔️ <code>&amp;#x2714;</code>
+                            🗸 <code>&amp;#x1F5F8;</code>
+
+                            ☒ <code>&amp;#2612;</code> ❎ <code>&amp;#x274E;</code>
+                            ❌ <code>&amp;#x274C;</code> ✖️ <code>&amp;#x2716;</code>
+                        </div>
+
+                         <hr>
+                        СТРЕЛКИ+ТРЕУГОЛЬНИКИ
+                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            ◀ <code>&amp;#x25C0;</code> ▶ <code>&amp;#x25B6;</code>
+                            ▲ <code>&amp;#x25B2;</code> ▼ <code>&amp;#x25BC;</code>
+                            △ <code>&amp;#x25B3;</code> ▷ <code>&amp;#25B7;</code>
+
+                            ⬅️ <code>&amp;#x2B05;</code> ➡️ <code>&amp;#x27A1;</code>
+                            ⬆️ <code>&amp;#x2B06;</code> ⬇️ <code>&amp;#x2B07;</code>
+
+                            ↗ <code>&amp;#x2197;</code> ↘ <code>&amp;#x2198;</code>
+                            → <code>&amp;#x2192;</code> ← <code>&amp;#x2190;</code>
+                        </div>
+
+                        <hr>
                         Информация / Предупреждение / Опасность
                         <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
                             ℹ️ <code>&amp;#x2139;</code> ⓘ <code>&amp;#x24D8;</code>
                             📌 <code>&amp;#x1F4CC;</code> 🔔 <code>&amp;#x1F514;</code>
+
                             ⚠️ <code>&amp;#x26A0;</code> ⚠ <code>&amp;#x26A0;</code>
                             ❗ <code>&amp;#x2757;</code> ❕ <code>&amp;#x2755;</code>
                             ℹ<code>ДОБАВИТЬ;</code>
-                            🔴 <code>&amp;#x1F534;</code> 🟡 <code>&amp;#x1F7E1;</code>
-                            🟢 <code>&amp;#x1F7E2;</code> 🔵 <code>&amp;#x1F535;</code>
-                        </div>
-
-                        <hr>
-                        Успех / Ошибка / Галочки
-                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
-                            ✅ <code>&amp;#x2705;</code> ✔️ <code>&amp;#x2714;</code>
-                            ☑️ <code>&amp;#x2611;</code> ✓ <code>&amp;#x2713;</code>
-                            ❌ <code>&amp;#x274C;</code> ❎ <code>&amp;#x274E;</code>
-                            ✖️ <code>&amp;#x2716;</code> 🗸 <code>&amp;#x1F5F8;</code>
-                        </div>
-
-                        <hr>
-                        Стрелки (навигация, раскрытие)
-                        <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
-                            ⬅️ <code>&amp;#x2B05;</code> ➡️ <code>&amp;#x27A1;</code>
-                            ⬆️ <code>&amp;#x2B06;</code> ⬇️ <code>&amp;#x2B07;</code>
-                            ◀ <code>&amp;#x25C0;</code> ▶ <code>&amp;#x25B6;</code>
-                            ▲ <code>&amp;#x25B2;</code> ▼ <code>&amp;#x25BC;</code>
-                            ↗ <code>&amp;#x2197;</code> ↘ <code>&amp;#x2198;</code>
-                            → <code>&amp;#x2192;</code> ← <code>&amp;#x2190;</code>
                         </div>
 
                         <hr>
@@ -1196,7 +1255,7 @@
                         <p>Абзац с BR[<br>] простым НЕСЕМАНТИЧЕСКИМ переносом строки внутри.</p>
 
                         <hr>
-                        <h4>✅ правильный P+BR</h4>
+                        <h4>правильный P+BR</h4>
                         <p>
                             Стихи:<br>
                             В лесу родилась ёлочка,<br>
@@ -1210,7 +1269,7 @@
                         </p>
 
                         <hr>
-                        <h4>✅ P+P+P</h4>
+                        <h4>P+P+P</h4>
                         <p>P1: Законченная мысль. После него будет отступ.</p>
                         <p>P2: Другая мысль. Скринридер сделает паузу.</p>
                         <p>P3: Удобно читать и стилизовать.</p>
