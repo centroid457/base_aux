@@ -32,12 +32,42 @@
         }
 
         /* -------------------- UNIVERSAL ATTRS ----------------------------------------------------------------------*/
-        [data-bg_grey] {
-            background: #f0f0f0;
-        }
-        [data-bg_yellow] {
-            background: #fff3cd;
-        }
+        /* Фоновые цвета */
+        [data-bg_grey] { background: #f0f0f0; }
+        [data-bg_yellow] { background: #fff3cd; }
+        [data-bg_red]   { background: #fee2e2; }
+        [data-bg_green] { background: #d1fae5; }
+        [data-bg_blue]  { background: #dbeafe; }
+
+        /* Рамки и тени */
+        [data-border]       { border: 1px solid #cbd5e1; }
+        [data-border_top]   { border-top: 1px solid #cbd5e1; }
+        [data-shadow]       { box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        [data-shadow_hover]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+
+        /* Курсор */
+        [data-clickable]    { cursor: pointer; }
+
+        /* Отступы и выравнивание */
+        [data-padding]      { padding: 0.5rem 1rem; }
+        [data-padding_small] { padding: 0.25rem 0.5rem; }
+        [data-margin]       { margin: 0.5rem 0; }
+        [data-align_center]  { text-align: center; }
+        [data-align_right]   { text-align: right; }
+
+        [data-text_bold]    { font-weight: 600; }
+
+        /* Размер шрифта */
+        [data-font_small]   { font-size: 0.85rem; }
+        [data-font_large]   { font-size: 1.2rem; }
+
+        /* Скругления */
+        [data-rounded]      { border-radius: 0.5rem; }
+        [data-rounded_large] { border-radius: 1rem; }
+
+        /* Отображение */
+        [data-hidden]       { display: none; }
+        [data-inline]       { display: inline-block; }
 
         /* -------------------- BUTTONS ------------------------------------------------------------------------------*/
         button {
@@ -2113,7 +2143,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>USER (data-*)</header>
+                    <header>USER (data-*) суть</header>
                     <div class="article_main__cls">
                         <p data-user_selected>data-атрибуты: data-* данные для JS.</p>
 
@@ -2190,8 +2220,47 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>ATTRS apply CSS</header>
+                    <header>ATTRS+CSS=стилизация через атрибуты</header>
                     <div class="article_main__cls">
+
+                        <hr>
+                        COLORS
+                        <p data-bg_grey>data-bg_grey</p>
+                        <p data-bg_yellow>data-bg_yellow</p>
+                        <p data-bg_red>data-bg_red</p>
+                        <p data-bg_green>data-bg_green</p>
+                        <p data-bg_blue>data-bg_blue</p>
+
+                        <hr>
+                        COVERS
+                        <p data-border>data-border</p>
+                        <p data-border_top>data-border_top</p>
+                        <p data-shadow>data-shadow</p>
+                        <p data-shadow_hover>data-shadow_hover</p>
+
+                        <p data-rounded data-bg_grey>data-rounded</p>
+                        <p data-rounded_large data-bg_grey>data-rounded_large</p>
+                        <p data-clickable>data-clickable</p>
+
+                        <hr>
+                        <p data-padding>data-padding</p>
+                        <p data-padding_small>data-padding_small</p>
+                        <p data-margin>data-margin</p>
+
+                        <hr>
+                        <p data-align_center>data-align_center</p>
+                        <p data-align_right>data-align_right</p>
+
+                        <hr>
+                        <p data-text_bold>data-text_bold</p>
+                        <p data-font_small>data-font_small</p>
+                        <p data-font_large>data-font_large</p>
+
+                        <p>[<span data-hidden data-bg_grey>data-hidden</span>] - span+data-hidden</p>
+                        <p data-inline data-bg_grey>data-inline</p>
+
+                        <hr>
+                        разные значения
                         <style>
                             [data-status="active"] {
                                 background: #d1fae5;
@@ -2202,10 +2271,16 @@
                                 border-left: 4px solid #ef4444;
                             }
                         </style>
-                        <div data-status="active">Элемент с <code>data-status="active"</code> — зелёный фон</div>
-                        <div data-status="inactive">Элемент с <code>data-status="inactive"</code> — красный фон</div>
+                        <div data-status="active">data-status="active"</div>
+                        <div data-status="inactive">data-status="inactive"</div>
+
                     </div>
-                    <footer>🎨 CSS позволяет выбирать элементы по любым атрибутам: <code>[data-status="active"]</code>, <code>[data_counter_break]</code> и т.д. Префикс <code>data-*</code> не обязателен для стилизации, но рекомендуется для семантики и валидности.</footer>
+                    <footer>Селекторы <code>[data-status="active"]</code> - конкретное значение, <code>[data_counter_break]</code><br>
+                        ⚠️Для стилизации - не совсем корректно!<br>
+                        Для production-проектов лучше использовать классы (например, .bg-red, .p-2, .rounded).<br>
+                        Атрибуты data-* предназначены для хранения данных, а не для стилизации.<br>
+                        Но в учебных целях, прототипах и маленьких проектах такой подход вполне допустим и даже популярен (например, в некоторых CSS-фреймворках для прототипирования).
+                    </footer>
                 </article>
 
             </div>
@@ -2495,7 +2570,7 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>Переключение панелей: только одна активная вкладка</header>
+                    <header>JS-табы</header>
                     <div class="article_main__cls">
                         <div class="tabs-container">
                             <div class="tabs-buttons">
@@ -2538,7 +2613,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>Альтернатива — CSS-табы на радиокнопках (без JS)</header>
+                    <header>CSS-табы (на радиокнопках без JS)</header>
                     <div class="article_main__cls">
                         <style>
                             .css-tabs {
