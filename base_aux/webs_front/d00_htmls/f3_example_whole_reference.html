@@ -25,13 +25,27 @@
             margin: 1rem 0;
         }
 
-        p.highlight__cls {
-            background: #f0f9ff;
+        /* -------------------- ATTRS UNIVERSAL ----------------------------------------------------------------------*/
+        [disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* -------------------- ATTRS USER ---------------------------------------------------------------------------*/
+        /* highlited = bg + graphic -------------------------*/
+        p[data-highlighted] {
+            background: #f8fafc;
             padding: 10px;
             border-radius: 12px;
         }
 
-        /* -------------------- USER ATTRS ---------------------------------------------------------------------------*/
+        blockquote[data-highlighted] {
+            background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+            border-left: 4px solid #ff8c42;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
         /* Фоновые цвета */
         [data-bg_grey] { background: #f0f0f0; }
         [data-bg_yellow] { background: #fff3cd; }
@@ -126,12 +140,6 @@
         button:focus-visible {
             outline: 2px solid #2a73ff;
             outline-offset: 2px;
-        }
-        button:disabled,
-        button[disabled] {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
         }
 
         /* ----------------------------------------- */
@@ -367,13 +375,6 @@
             font-style: normal;
             font-weight: 500;
             color: #2a73ff;
-        }
-
-        /* ===== Альтернативный вариант: цитата с тенью и градиентом (для акцента) ===== */
-        blockquote.highlight__cls {
-            background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
-            border-left: 4px solid #ff8c42;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         /* -------------------- PRE+CODE+KBD -------------------------------------------------------------------------*/
@@ -760,8 +761,6 @@
         .section__cls:hover {
             box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
         }
-
-        /* Иконка слева от заголовка секции */
         .section__cls > h2 {
             background: #fafcff;
             position: relative;
@@ -804,22 +803,11 @@
             font-family: 'SF Mono', monospace;
         }
 
-        /* -------------------- GRID+FLEX --------------------*/
-        .grid_auto__cls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
-
+        /* -----------------------------------------------------------------------------------------------------------*/
         /* -------------------- FORMS --------------------*/
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
+        form div label {
             display: inline-block;
             width: 110px;
-            font-weight: 500;
-
         }
         input, select, textarea, button {
             padding: 0.5rem 0.8rem;
@@ -840,6 +828,14 @@
             padding: 0.6rem 1rem;
             border-radius: 12px;
             border-left: 4px solid #2a73ff;
+        }
+
+        /* -----------------------------------------------------------------------------------------------------------*/
+        /* -------------------- GRID+FLEX --------------------*/
+        .grid_auto__cls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
         }
 
         /* -------------------- TABS --------------------*/
@@ -1242,11 +1238,8 @@
 
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
 
-                        <p style="background: #f0f0f0">style="background</p>
-
-                        <p style="background: #f0f9ff; padding: 10px; border-radius: 12px;">Абзац с кастомными стилями. Text example. Text example. Text example. Text example.</p>
-
-                        <p class="highlight__cls">Абзац с highlight__cls. Text example. Text example. Text example. Text example.</p>
+                        <p data-bg_grey>data-bg_grey</p>
+                        <p data-highlighted>data-highlighted</p>
 
                         <p>Абзац с BR[<br>] простым НЕСЕМАНТИЧЕСКИМ переносом строки внутри.</p>
 
@@ -1311,8 +1304,8 @@
                             <cite>CITE тег</cite>
                         </blockquote>
 
-                        <blockquote class="highlight__cls">
-                            <p>BLOCKQUOTE highlight__cls</p>
+                        <blockquote data-highlighted>
+                            <p>BLOCKQUOTE data-highlighted</p>
                             <cite>CITE тег</cite>
                         </blockquote>
 
@@ -1994,73 +1987,44 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>ВВОД</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
-                            <div class="form-group"><label>input text:</label> <input type="text" placeholder="Ваше имя" required></div>
-                            <div class="form-group"><label>input email:</label> <input type="email" value="hello@example.com"></div>
-                            <div class="form-group"><label>input password:</label> <input type="password" placeholder="****"></div>
-                            <div class="form-group"><label>input radio:</label>
-                                <input type="radio" name="gender" id="m"> <label for="m">Муж</label>
-                                <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
-                            </div>
-                            <div class="form-group"><label>input checkbox:</label> <input type="checkbox"> Согласие</div>
-                            <div class="form-group"><label>select option:</label>
-                                <select>
-                                    <option>HTML</option>
-                                    <option>CSS</option>
-                                    <option selected>JS</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label>textarea:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
-                            <div class="form-group">
-                                <button type="submit">Отправить</button>
-                                <button type="reset">Сброс</button>
-                            </div>
-                        </form>
-                    </div>
-                    <footer>🎯 Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>🔢 input type=number</header>
+                    <header>INPUT</header>
                     <div class="article_main__cls">
 
-                        <form onsubmit="alert('Значение: ' + this.quantity.value); return false;">
+                        <hr>
+                        input type=number
+                        <form onsubmit="alert('Поле inputFormName формы имеет значение:' + this.inputFormName.value); return false;" data-bg_grey data-rounded>
 
-                            <div class="form-group">
-                                <label>input number:</label>
-                                <input type="number" name="quantity" value="5" min="1" max="20" step="1">
+                            <div>
+                                <label>input=number:</label>
+                                <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
                             </div>
 
-                            <div class="form-group">
-                                <label>input number step0.5:</label>
-                                <input type="number" step="0.5" value="2.5" min="0" max="10">
-                            </div>
-
-                            <div class="form-group">
-                                <label>input number %:</label>
-                                <input type="number" value="75" min="0" max="100" step="5">
-                            </div>
-
-                            <button type="submit">Показать значение</button>
+                            <button type="submit">Alert value</button>
                         </form>
 
                     </div>
-                    <footer>🧩 <strong>Тонкости type="number":</strong> атрибуты <code>min</code>, <code>max</code>, <code>step</code>; стрелки (спиннер) в браузере; осторожно с десятичными разделителями.</footer>
+                    <footer></footer>
                 </article>
 
+
+
+
+
+
+
                 <article class="article__cls">
-                    <header>📦 Fieldset+legend(группировка полей)</header>
+                    <header>Fieldset+legend(группировка визуальная)</header>
                     <div class="article_main__cls">
 
                         <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+
                             <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
-                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br><br>
+                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br>
                             <label>Email: <input type="email" placeholder="user@example.com"></label>
+
                         </fieldset>
 
-                        <fieldset disabled style="margin-top: 1rem; opacity: 0.6;">
+                        <fieldset disabled>
                             <legend>🔒 Заблокированная группа</legend>
                             <input type="text" value="Неактивно">
                         </fieldset>
@@ -2073,18 +2037,61 @@
                     </footer>
                 </article>
 
+                <article class="article__cls">
+                    <header>FORM - спец блок с вадным функционалом отправки на сервер</header>
+                    <div class="article_main__cls">
+
+                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+
+                        <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
+                            <div><label>input text:</label> <input type="text" placeholder="Ваше имя" required></div>
+                            <div><label>input email:</label> <input type="email" value="hello@example.com"></div>
+                            <div class="div_in_form__cls"><label>input password:</label> <input type="password" placeholder="****"></div>
+                            <div class="div_in_form__cls"><label>input radio:</label>
+                                <input type="radio" name="gender" id="m"> <label for="m">Муж</label>
+                                <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
+                            </div>
+                            <div class="div_in_form__cls"><label>input checkbox:</label> <input type="checkbox"> Согласие</div>
+                            <div class="div_in_form__cls"><label>select option:</label>
+                                <select>
+                                    <option>HTML</option>
+                                    <option>CSS</option>
+                                    <option selected>JS</option>
+                                </select>
+                            </div>
+                            <div class="div_in_form__cls"><label>textarea:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
+                            <div class="div_in_form__cls">
+                                <button type="submit">Отправить</button>
+                                <button type="reset">Сброс</button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <footer>Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</footer>
+                </article>
+
+
+
+
+
+
+
                 <!-- Range (ползунок) + output -->
                 <article class="article__cls">
-                    <header>🎚️ input type="range" + output</header>
+                    <header>input type="range" + output</header>
                     <div class="article_main__cls">
 
                         <form>
-                            <div class="form-group">
+                            <div class="div_in_form__cls">
                                 <label>Громкость: </label>
                                 <input type="range" id="volume" name="volume" min="0" max="100" value="50" step="1">
                                 <output for="volume" id="volumeValue">50</output>
                             </div>
-                            <div class="form-group">
+                            <div class="div_in_form__cls">
                                 <label>Яркость: </label>
                                 <input type="range" id="brightness" min="0" max="100" value="75">
                                 <output for="brightness" id="brightnessValue">75</output>
@@ -2111,12 +2118,13 @@
                 <article class="article__cls">
                     <header>📅 Поля даты и времени</header>
                     <div class="article_main__cls">
+
                         <form onsubmit="alert('Демо'); return false;">
-                            <div class="form-group"><label>date:</label> <input type="date" value="2025-01-01"></div>
-                            <div class="form-group"><label>time:</label> <input type="time" value="12:30"></div>
-                            <div class="form-group"><label>datetime-local:</label> <input type="datetime-local" value="2025-01-01T12:30"></div>
-                            <div class="form-group"><label>month:</label> <input type="month" value="2025-01"></div>
-                            <div class="form-group"><label>week:</label> <input type="week" value="2025-W01"></div>
+                            <div class="div_in_form__cls"><label>date:</label> <input type="date" value="2025-01-01"></div>
+                            <div class="div_in_form__cls"><label>time:</label> <input type="time" value="12:30"></div>
+                            <div class="div_in_form__cls"><label>datetime-local:</label> <input type="datetime-local" value="2025-01-01T12:30"></div>
+                            <div class="div_in_form__cls"><label>month:</label> <input type="month" value="2025-01"></div>
+                            <div class="div_in_form__cls"><label>week:</label> <input type="week" value="2025-W01"></div>
                             <button type="submit">Показать значения</button>
                         </form>
                     </div>
@@ -2128,8 +2136,8 @@
                     <header>input type="color"</header>
                     <div class="article_main__cls">
                         <form onsubmit="return false;">
-                            <div class="form-group"><label>Выберите цвет:</label> <input type="color" id="colorPicker" value="#2a73ff"></div>
-                            <div class="form-group"><label>HEX:</label> <output id="colorValue">#2a73ff</output></div>
+                            <div class="div_in_form__cls"><label>Выберите цвет:</label> <input type="color" id="colorPicker" value="#2a73ff"></div>
+                            <div class="div_in_form__cls"><label>HEX:</label> <output id="colorValue">#2a73ff</output></div>
                         </form>
                         <script>
                             const picker = document.getElementById('colorPicker');
@@ -2145,9 +2153,9 @@
                     <header>📞 Специализированные поля: tel, url, search</header>
                     <div class="article_main__cls">
                         <form onsubmit="alert('Демо'); return false;">
-                            <div class="form-group"><label>tel:</label> <input type="tel" placeholder="+7-123-456-78-90" pattern="[\+0-9\-]+"></div>
-                            <div class="form-group"><label>url:</label> <input type="url" placeholder="https://example.com"></div>
-                            <div class="form-group"><label>search:</label> <input type="search" placeholder="Поиск..."></div>
+                            <div class="div_in_form__cls"><label>tel:</label> <input type="tel" placeholder="+7-123-456-78-90" pattern="[\+0-9\-]+"></div>
+                            <div class="div_in_form__cls"><label>url:</label> <input type="url" placeholder="https://example.com"></div>
+                            <div class="div_in_form__cls"><label>search:</label> <input type="search" placeholder="Поиск..."></div>
                             <button type="submit">Проверить</button>
                         </form>
                     </div>
@@ -2159,8 +2167,8 @@
                     <header>📁 input type="file"</header>
                     <div class="article_main__cls">
                         <form onsubmit="alert('Выбрано файлов: ' + this.myfile.files.length); return false;">
-                            <div class="form-group"><label>Одиночный файл:</label> <input type="file" name="myfile"></div>
-                            <div class="form-group"><label>Несколько файлов:</label> <input type="file" multiple accept="image/*,text/plain"></div>
+                            <div class="div_in_form__cls"><label>Одиночный файл:</label> <input type="file" name="myfile"></div>
+                            <div class="div_in_form__cls"><label>Несколько файлов:</label> <input type="file" multiple accept="image/*,text/plain"></div>
                             <button type="submit">Показать количество</button>
                         </form>
                     </div>
@@ -2172,7 +2180,7 @@
                     <header>📋 datalist (автодополнение для input)</header>
                     <div class="article_main__cls">
                         <form onsubmit="alert('Выбрано: ' + this.browser.value); return false;">
-                            <div class="form-group">
+                            <div class="div_in_form__cls">
                                 <label>Выберите браузер:</label>
                                 <input list="browsers" name="browser" placeholder="Начните вводить...">
                                 <datalist id="browsers">
@@ -2194,10 +2202,10 @@
                     <header>🔒 Состояния: readonly и disabled</header>
                     <div class="article_main__cls">
                         <form onsubmit="return false;">
-                            <div class="form-group"><label>readonly:</label> <input type="text" value="Нельзя изменить" readonly></div>
-                            <div class="form-group"><label>disabled:</label> <input type="text" value="Полностью отключено" disabled></div>
-                            <div class="form-group"><label>disabled checkbox:</label> <input type="checkbox" checked disabled></div>
-                            <div class="form-group"><label>readonly textarea:</label> <textarea readonly>Только для чтения</textarea></div>
+                            <div class="div_in_form__cls"><label>readonly:</label> <input type="text" value="Нельзя изменить" readonly></div>
+                            <div class="div_in_form__cls"><label>disabled:</label> <input type="text" value="Полностью отключено" disabled></div>
+                            <div class="div_in_form__cls"><label>disabled checkbox:</label> <input type="checkbox" checked disabled></div>
+                            <div class="div_in_form__cls"><label>readonly textarea:</label> <textarea readonly>Только для чтения</textarea></div>
                         </form>
                     </div>
                     <footer>🔐 <code>readonly</code> — значение нельзя изменить, но поле отправляется. <code>disabled</code> — неактивно, не отправляется, не получает фокус.</footer>
@@ -2208,9 +2216,9 @@
                     <header>✅ Валидация: required, pattern</header>
                     <div class="article_main__cls">
                         <form onsubmit="alert('Валидация пройдена'); return false;">
-                            <div class="form-group"><label>required:</label> <input type="text" required placeholder="Обязательное поле"></div>
-                            <div class="form-group"><label>pattern (только буквы):</label> <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="Только буквы" title="Введите только буквы"></div>
-                            <div class="form-group"><label>minlength / maxlength:</label> <input type="text" minlength="3" maxlength="10" placeholder="3–10 символов"></div>
+                            <div class="div_in_form__cls"><label>required:</label> <input type="text" required placeholder="Обязательное поле"></div>
+                            <div class="div_in_form__cls"><label>pattern (только буквы):</label> <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="Только буквы" title="Введите только буквы"></div>
+                            <div class="div_in_form__cls"><label>minlength / maxlength:</label> <input type="text" minlength="3" maxlength="10" placeholder="3–10 символов"></div>
                             <button type="submit">Проверить</button>
                         </form>
                     </div>
@@ -2233,8 +2241,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="attrsId">
-            <h2>ATTRS</h2>
+        <section class="section__cls" id="attrsId" data-collapsed>
+            <h2 data-icon_process_ok>ATTRS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2447,9 +2455,8 @@
                         <p data-icon_result_ok>data-icon_result_ok</p>
                         <p data-icon_result_bad>data-icon_result_bad</p>
 
-
                         <hr>
-                        <h4>🎯 ATTR WILDCARDS — поиск по значению атрибута не по имени!!!</h4>
+                        <h4>ATTR WILDCARDS — поиск по значению атрибута не по имени!!!</h4>
                         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                             <p class="demo_attr_wildcards__cls" data-icon="proc_blank">data-icon="proc_blank" → начинается с "proc" (красный фон)</p>
                             <p class="demo_attr_wildcards__cls" data-icon="proc_wait">data-icon="proc_wait" → начинается с "proc" (красный фон)</p>
@@ -2458,7 +2465,7 @@
                             <p class="demo_attr_wildcards__cls" data-icon="other_value">data-icon="other_value" — ни одно правило не сработало</p>
                         </div>
                         <footer>
-                            💡 <strong>Как работают селекторы:</strong><br>
+                            💡 Как работают селекторы<br>
                             <code>[data-icon^="proc"]</code> — значение атрибута <strong>начинается</strong> с "proc" → красный фон.<br>
                             <code>[data-icon$="ok"]</code> — значение <strong>заканчивается</strong> на "ok" → подчёркивание.<br>
                             <code>[data-icon*="bad"]</code> — значение <strong>содержит</strong> "bad" → зачёркивание.<br>
@@ -2479,7 +2486,7 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>🔄 Сброс стилей до браузерного вида</header>
+                    <header>Сброс стилей до браузерного вида</header>
                     <div class="article_main__cls">
 
                         <p><button style="all: unset ;">all: unset </button></p>
