@@ -1990,21 +1990,51 @@
                     <header>INPUT</header>
                     <div class="article_main__cls">
 
-                        <hr>
-                        input type=number
-                        <form onsubmit="alert('Поле inputFormName формы имеет значение:' + this.inputFormName.value); return false;" data-bg_grey data-rounded>
+                        <p>
+                            input type=number
+                            <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
+                        </p>
 
-                            <div>
-                                <label>input=number:</label>
-                                <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
-                            </div>
 
-                            <button type="submit">Alert value</button>
-                        </form>
+                        <p>
+                            input type=range
+                            <input type="range" value="2.5" min="0" max="10" step="0.5">
+                        </p>
+
+                        <p>
+                            input type=number
+                            <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
+                        </p>
+
+
+                        <label>Громкость: </label>
+                        <input type="range" id="volume" name="volume" min="0" max="100" value="50" step="1">
+                        <output for="volume" id="volumeValue">50</output>
+                        <label>Яркость: </label>
+                        <input type="range" id="brightness" min="0" max="100" value="75">
+                        <output for="brightness" id="brightnessValue">75</output>
+
+                        <script>
+                            (function() {
+                                const vol = document.getElementById('volume');
+                                const volOut = document.getElementById('volumeValue');
+                                if (vol && volOut) vol.addEventListener('input', () => volOut.value = vol.value);
+
+                                const bright = document.getElementById('brightness');
+                                const brightOut = document.getElementById('brightnessValue');
+                                if (bright && brightOut) bright.addEventListener('input', () => brightOut.value = bright.value);
+                            })();
+                        </script>
 
                     </div>
                     <footer></footer>
                 </article>
+
+
+
+
+
+
 
 
 
@@ -2047,6 +2077,18 @@
                         ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
                         ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
 
+                        <hr>
+                        FORM input type=number
+                        <form onsubmit="alert('Поле inputFormName формы имеет значение:' + this.inputFormName.value); return false;" data-bg_grey data-rounded>
+
+                            <div>
+                                <label>input=number:</label>
+                                <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
+                            </div>
+
+                            <button type="submit">Alert value</button>
+                        </form>
+
                         <form onsubmit="alert('Демо-отправка: данные не уходят'); return false;">
                             <div><label>input text:</label> <input type="text" placeholder="Ваше имя" required></div>
                             <div><label>input email:</label> <input type="email" value="hello@example.com"></div>
@@ -2080,39 +2122,33 @@
 
 
 
-                <!-- Range (ползунок) + output -->
-                <article class="article__cls">
-                    <header>input type="range" + output</header>
-                    <div class="article_main__cls">
 
-                        <form>
-                            <div class="div_in_form__cls">
-                                <label>Громкость: </label>
-                                <input type="range" id="volume" name="volume" min="0" max="100" value="50" step="1">
-                                <output for="volume" id="volumeValue">50</output>
-                            </div>
-                            <div class="div_in_form__cls">
-                                <label>Яркость: </label>
-                                <input type="range" id="brightness" min="0" max="100" value="75">
-                                <output for="brightness" id="brightnessValue">75</output>
-                            </div>
-                        </form>
 
-                        <script>
-                            (function() {
-                                const vol = document.getElementById('volume');
-                                const volOut = document.getElementById('volumeValue');
-                                if (vol && volOut) vol.addEventListener('input', () => volOut.value = vol.value);
 
-                                const bright = document.getElementById('brightness');
-                                const brightOut = document.getElementById('brightnessValue');
-                                if (bright && brightOut) bright.addEventListener('input', () => brightOut.value = bright.value);
-                            })();
-                        </script>
 
-                    </div>
-                    <footer>🎛️ <code>type="range"</code> — ползунок. <code>&lt;output&gt;</code> отображает текущее значение. Атрибуты <code>min</code>, <code>max</code>, <code>step</code>.</footer>
-                </article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <!-- Дата и время -->
                 <article class="article__cls">
