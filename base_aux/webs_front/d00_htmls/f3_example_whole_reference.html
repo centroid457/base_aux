@@ -25,6 +25,30 @@
             margin: 1rem 0;
         }
 
+        /* -----------------------------------------------------------------------------------------------------------*/
+        /* -------------------- INPUT --------------------*/
+        input,
+        select,
+        textarea,
+        button {
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+        }
+        input:hover,
+        select:hover,
+        textarea:hover,
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        /* -------------------- FORMS --------------------*/
+        form div label {
+            display: inline-block;
+            width: 110px;
+        }
+
         /* -------------------- ATTRS UNIVERSAL ----------------------------------------------------------------------*/
         [disabled] {
             opacity: 0.5;
@@ -804,17 +828,13 @@
         }
 
         /* -----------------------------------------------------------------------------------------------------------*/
-        /* -------------------- FORMS --------------------*/
-        form div label {
-            display: inline-block;
-            width: 110px;
-        }
-        input, select, textarea, button {
-            padding: 0.5rem 0.8rem;
-            border-radius: 12px;
-            border: 1px solid #cbd5e1;
-            font-family: inherit;
-        }
+
+
+
+
+
+
+
 
         /* семантическая демо-зона (локальные header/footer и пр.) */
         .semantic-demo {
@@ -1990,49 +2010,118 @@
                     <header>INPUT</header>
                     <div class="article_main__cls">
 
+                        <hr>
+                        <h4>TEXT</h4>
+                        <p>
+                            input type=search<input type="search" placeholder="Поиск...">
+                        </p>
+
+                        <hr>
+                        <h4>ACTION</h4>
+                        <p>
+                            input type=TEL<input type="tel" placeholder="+7-123-456-78-90" pattern="[\+0-9\-]+">
+                        </p>
+                        <p>
+                            input type=url<input type="url" placeholder="https://example.com">
+                        </p>
+
+                        <hr>
+                        <h4>NUMBER</h4>
                         <p>
                             input type=number
-                            <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
+                            <input type="number"
+                                   value="2.5" min="0" max="10" step="0.5"
+                            >
                         </p>
 
+                        <hr>
+                        <h4>DATE+TIME</h4>
+                        <p>date<input type="date" value="2025-01-01"></p>
+                        <p>time<input type="time" value="12:30"></p>
+                        <p>datetime-local<input type="datetime-local" value="2025-01-01T12:30"></p>
+                        <p>month<input type="month" value="2025-01"></p>
+                        <p>week<input type="week" value="2025-W01"></p>
+                        📆 Браузеры отображают удобные виджеты выбора. Формат значения — ISO (YYYY-MM-DD и т.д.).
+
+                        <hr>
+                        <h4>GRAPH</h4>
+                        <p>
+                            input type="range"
+                            <input type="range" id="demo_volume__id" name="demo_volume__name" min="0" max="100" value="50" step="1">
+                            <output for="demo_volume__name" id="demo_volume_out__id">50</output>
+                            <script>
+                                (function() {
+                                    const demo_volume__el = document.getElementById('demo_volume__id');
+                                    const demo_volume_out__el = document.getElementById('demo_volume_out__id');
+                                    if (demo_volume__el && demo_volume_out__el) demo_volume__el.addEventListener('input', () => demo_volume_out__el.value = demo_volume__el.value);
+                                })();
+                            </script>
+                        </p>
 
                         <p>
-                            input type=range
-                            <input type="range" value="2.5" min="0" max="10" step="0.5">
+
+                            input type="color" => HexColor
+                            <input type="color" id="demo_color_picker__id" value="#2a73ff">
+                            <output id="demo_color_value__id">#2a73ff</output>
+                            <script>
+                                const color_picker__el = document.getElementById('demo_color_picker__id');
+                                const color_val__el = document.getElementById('demo_color_value__id');
+                                if (color_picker__el && color_val__el) color_picker__el.addEventListener('input', () => color_val__el.value = color_picker__el.value);
+                            </script>
                         </p>
 
-                        <p>
-                            input type=number
-                            <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
-                        </p>
-
-
-                        <label>Громкость: </label>
-                        <input type="range" id="volume" name="volume" min="0" max="100" value="50" step="1">
-                        <output for="volume" id="volumeValue">50</output>
-                        <label>Яркость: </label>
-                        <input type="range" id="brightness" min="0" max="100" value="75">
-                        <output for="brightness" id="brightnessValue">75</output>
-
-                        <script>
-                            (function() {
-                                const vol = document.getElementById('volume');
-                                const volOut = document.getElementById('volumeValue');
-                                if (vol && volOut) vol.addEventListener('input', () => volOut.value = vol.value);
-
-                                const bright = document.getElementById('brightness');
-                                const brightOut = document.getElementById('brightnessValue');
-                                if (bright && brightOut) bright.addEventListener('input', () => brightOut.value = bright.value);
-                            })();
-                        </script>
+                        <hr>
+                        <h4>OTHER</h4>
+                        <output for="volume">50</output>
+                        <output for="brightness">75</output>
 
                     </div>
                     <footer></footer>
                 </article>
 
 
+                <article class="article__cls">
+                    <header>ОСОБОЕ</header>
+                    <div class="article_main__cls">
 
+                        <hr>
+                        <h4>input type=file</h4>
 
+                        <form onsubmit="alert('Выбрано файлов: ' + this.demo_input_file__name.files.length + ' + ' + this.demo_input_fileS__name.files.length); return false;">
+                            Одиночный файл<input type="file" name="demo_input_file__name"><br>
+                            Несколько файлов<input type="file" multiple accept="image/*,text/plain" name="demo_input_fileS__name">
+                            <button type="submit">Показать количество</button>
+                        </form>
+                        <code>multiple</code> — выбор нескольких файлов. <code>accept</code> — фильтр типов (MIME или расширения).
+
+                        <hr>
+                        <h4>select+option</h4>
+                        <p>
+                            <select>
+                                <option>HTML</option>
+                                <option>CSS</option>
+                                <option selected>JS</option>
+                            </select>
+                        </p>
+
+                        <hr>
+                        <h4>input list=datalist (автодополнение)</h4>
+                        <form onsubmit="alert('Ведено: ' + this.demo_browser__name.value); return false;">
+                            <input list="demo_browsers__id" name="demo_browser__name" placeholder="Начните вводить...">
+                            <datalist id="demo_browsers__id">
+                                <option value="Chrome">
+                                <option value="Firefox">
+                                <option value="Edge">
+                                <option value="Safari">
+                                <option value="Opera">
+                            </datalist>
+                            <button type="submit">Alert value</button><br>
+                            <code>&lt;datalist&gt;</code> предлагает варианты при вводе, но не обязывает.
+                        </form>
+
+                    </div>
+                    <footer></footer>
+                </article>
 
 
 
@@ -2068,7 +2157,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>FORM - спец блок с вадным функционалом отправки на сервер</header>
+                    <header>FORM - спец блок с функционалом отправки на сервер</header>
                     <div class="article_main__cls">
 
                         ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
@@ -2079,11 +2168,11 @@
 
                         <hr>
                         FORM input type=number
-                        <form onsubmit="alert('Поле inputFormName формы имеет значение:' + this.inputFormName.value); return false;" data-bg_grey data-rounded>
+                        <form onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;" data-bg_grey data-rounded>
 
                             <div>
                                 <label>input=number:</label>
-                                <input type="number" value="2.5" min="0" max="10" step="0.5" name="inputFormName">
+                                <input type="number" value="2.5" min="0" max="10" step="0.5" name="demo_input_1__name">
                             </div>
 
                             <button type="submit">Alert value</button>
@@ -2098,13 +2187,6 @@
                                 <input type="radio" name="gender" id="f"> <label for="f">Жен</label>
                             </div>
                             <div class="div_in_form__cls"><label>input checkbox:</label> <input type="checkbox"> Согласие</div>
-                            <div class="div_in_form__cls"><label>select option:</label>
-                                <select>
-                                    <option>HTML</option>
-                                    <option>CSS</option>
-                                    <option selected>JS</option>
-                                </select>
-                            </div>
                             <div class="div_in_form__cls"><label>textarea:</label> <textarea rows="2" cols="30">текст по умолчанию</textarea></div>
                             <div class="div_in_form__cls">
                                 <button type="submit">Отправить</button>
@@ -2113,7 +2195,11 @@
                         </form>
 
                     </div>
-                    <footer>Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером. Тег label улучшает доступность.</footer>
+                    <footer>
+                        Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером.<br>
+                        Тег label улучшает доступность.<br>
+                        любой Enter в любом Input (кроме textaria) запускает Submit!!! - тоесть сама кнопка не обязательна!!!
+                    </footer>
                 </article>
 
 
@@ -2137,101 +2223,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- Дата и время -->
-                <article class="article__cls">
-                    <header>📅 Поля даты и времени</header>
-                    <div class="article_main__cls">
-
-                        <form onsubmit="alert('Демо'); return false;">
-                            <div class="div_in_form__cls"><label>date:</label> <input type="date" value="2025-01-01"></div>
-                            <div class="div_in_form__cls"><label>time:</label> <input type="time" value="12:30"></div>
-                            <div class="div_in_form__cls"><label>datetime-local:</label> <input type="datetime-local" value="2025-01-01T12:30"></div>
-                            <div class="div_in_form__cls"><label>month:</label> <input type="month" value="2025-01"></div>
-                            <div class="div_in_form__cls"><label>week:</label> <input type="week" value="2025-W01"></div>
-                            <button type="submit">Показать значения</button>
-                        </form>
-                    </div>
-                    <footer>📆 Браузеры отображают удобные виджеты выбора. Формат значения — ISO (YYYY-MM-DD и т.д.).</footer>
-                </article>
-
-                <!-- Color -->
-                <article class="article__cls">
-                    <header>input type="color"</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="return false;">
-                            <div class="div_in_form__cls"><label>Выберите цвет:</label> <input type="color" id="colorPicker" value="#2a73ff"></div>
-                            <div class="div_in_form__cls"><label>HEX:</label> <output id="colorValue">#2a73ff</output></div>
-                        </form>
-                        <script>
-                            const picker = document.getElementById('colorPicker');
-                            const colorVal = document.getElementById('colorValue');
-                            if (picker && colorVal) picker.addEventListener('input', () => colorVal.value = picker.value);
-                        </script>
-                    </div>
-                    <footer>Открывает системную палитру. Возвращает HEX-значение (например, <code>#2a73ff</code>).</footer>
-                </article>
-
-                <!-- tel, url, search -->
-                <article class="article__cls">
-                    <header>📞 Специализированные поля: tel, url, search</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Демо'); return false;">
-                            <div class="div_in_form__cls"><label>tel:</label> <input type="tel" placeholder="+7-123-456-78-90" pattern="[\+0-9\-]+"></div>
-                            <div class="div_in_form__cls"><label>url:</label> <input type="url" placeholder="https://example.com"></div>
-                            <div class="div_in_form__cls"><label>search:</label> <input type="search" placeholder="Поиск..."></div>
-                            <button type="submit">Проверить</button>
-                        </form>
-                    </div>
-                    <footer>📌 <code>tel</code> и <code>url</code> имеют встроенную валидацию (но не блокируют отправку). <code>search</code> добавляет кнопку очистки.</footer>
-                </article>
-
-                <!-- File -->
-                <article class="article__cls">
-                    <header>📁 input type="file"</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Выбрано файлов: ' + this.myfile.files.length); return false;">
-                            <div class="div_in_form__cls"><label>Одиночный файл:</label> <input type="file" name="myfile"></div>
-                            <div class="div_in_form__cls"><label>Несколько файлов:</label> <input type="file" multiple accept="image/*,text/plain"></div>
-                            <button type="submit">Показать количество</button>
-                        </form>
-                    </div>
-                    <footer>📎 <code>multiple</code> — выбор нескольких файлов. <code>accept</code> — фильтр типов (MIME или расширения).</footer>
-                </article>
-
-                <!-- Datalist (автодополнение) -->
-                <article class="article__cls">
-                    <header>📋 datalist (автодополнение для input)</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Выбрано: ' + this.browser.value); return false;">
-                            <div class="div_in_form__cls">
-                                <label>Выберите браузер:</label>
-                                <input list="browsers" name="browser" placeholder="Начните вводить...">
-                                <datalist id="browsers">
-                                    <option value="Chrome">
-                                    <option value="Firefox">
-                                    <option value="Edge">
-                                    <option value="Safari">
-                                    <option value="Opera">
-                                </datalist>
-                            </div>
-                            <button type="submit">Показать</button>
-                        </form>
-                    </div>
-                    <footer>🧠 <code>&lt;datalist&gt;</code> предлагает варианты при вводе, но не ограничивает ими. Отличие от <code>&lt;select&gt;</code> — можно вписать своё значение.</footer>
-                </article>
 
                 <!-- Состояния readonly и disabled -->
                 <article class="article__cls">
