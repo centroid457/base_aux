@@ -1,0 +1,27 @@
+                        <hr>
+                        <h4>NAME</h4>
+
+                        <form id="form_calc1__id">
+                            <input type="number" name="a__name" id="a__id" value="5">
+                            <input type="number" name="b__name" id="b__id" value="3">
+                            <output name="result1__name" for="a__id b__id">0</output>
+                        </form>
+                        <script>
+                            (function () {
+                                const form = document.getElementById('form_calc1__id');
+                                const output = form.elements['result1__name']; // безопасный доступ по name
+                                const aField = document.getElementById('a__id');
+                                const bField = document.getElementById('b__id');
+
+                                function update() {
+                                    output.value = Number(aField.value) + Number(bField.value);
+                                    console.log(aField.value);
+                                    console.log(bField.value);
+                                }
+
+                                aField.addEventListener('input', update);
+                                bField.addEventListener('input', update);
+
+                                update();
+                            })();
+                        </script>

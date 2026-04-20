@@ -136,7 +136,6 @@
         button {
             background: #2a73ff;
             color: white;
-            border: none;
             font-weight: 500;
             cursor: pointer;
             transition: 0.15s;
@@ -157,7 +156,6 @@
         button:hover {
             background: #1a5ad9;  //base cbd5e1
         }
-
         button:active {
             transform: translateY(3px);
         }
@@ -1845,67 +1843,6 @@
                             <button class="button_red_outline__cls" disabled>button_red_outline__cls</button>
                         </p>
 
-                        <hr>
-                        <h4>📋 Форма с кнопками submit, reset, button</h4>
-
-                        <code>type</code> важен внутри форм:<br>
-                        <p><button type="button">type="button" нет действия ФОРМЫ (по умолчанию)</button></p>
-                        <p><button type="submit">type="submit" — отправка формы</button></p>
-                        <p><button type="reset">type="reset" — сброс формы</button></p>
-
-                        <form id="demo_form_types__id" style="border: 1px solid #dce3ec; padding: 1rem; margin: 0.5rem 0;">
-                            <div style="margin-bottom: 0.75rem;">
-                                <label for="fieldName" style="display: inline-block; width: 100px;">Имя:</label>
-                                <input type="text" id="fieldName" name="name" placeholder="Введите имя" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
-                            </div>
-                            <div style="margin-bottom: 0.75rem;">
-                                <label for="fieldEmail" style="display: inline-block; width: 100px;">Email:</label>
-                                <input type="email" id="fieldEmail" name="email" placeholder="user@example.com" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
-                            </div>
-                            <div>
-                                <button type="submit" class="button_green__cls">✅ Отправить (submit)</button>
-                                <button type="reset" class="button_red_outline__cls" style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
-                                <button type="button" id="customButton" class="button_blue_outline__cls" style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
-                            </div>
-                            <div id="customMessage" style="margin-top: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></div>
-                        </form>
-
-                        <script>
-                            (function() {
-                                const form = document.getElementById('demo_form_types__id');
-                                if (!form) return;
-
-                                // submit — перехватываем отправку для демонстрации
-                                form.addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    alert('Форма отправлена (демо).\nИмя: ' + document.getElementById('fieldName').value + '\nEmail: ' + document.getElementById('fieldEmail').value);
-                                });
-
-                                // button — своё действие
-                                const customBtn = document.getElementById('customButton');
-                                const msgDiv = document.getElementById('customMessage');
-                                customBtn.addEventListener('click', function() {
-                                    const name = document.getElementById('fieldName').value || 'не указано';
-                                    const email = document.getElementById('fieldEmail').value || 'не указано';
-                                    msgDiv.innerHTML = `🔧 Вы нажали "button". Текущие значения: имя = "${name}", email = "${email}". (Форма не отправлена и не сброшена)`;
-                                });
-
-                                // reset сработает автоматически, но можно добавить дополнительное уведомление
-                                form.addEventListener('reset', function() {
-                                    setTimeout(() => {
-                                        msgDiv.innerHTML = '🔄 Форма сброшена (reset). Поля очищены.';
-                                    }, 10);
-                                });
-                            })();
-                        </script>
-
-                        <p><strong>Пояснение:</strong></p>
-                        <ul>
-                            <li><code>type="submit"</code> — отправляет форму (здесь мы перехватили отправку через JS, чтобы показать данные).</li>
-                            <li><code>type="reset"</code> — возвращает поля к исходному состоянию (без JS).</li>
-                            <li><code>type="button"</code> — любое действие кроме отправки! (проверка, расчёт, показ сообщения).</li>
-                        </ul>
-
                     </div>
                     <footer>
                     </footer>
@@ -2007,14 +1944,80 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
+                    <header>OUTPUT</header>
+                    <div class="article_main__cls">
+
+                        для отображения результата вычисления или пользовательского ввода<br>
+                        OUTPUT вместо обычного SPAN/DIV для результатов – это улучшает доступность (скринридеры объявляют «результат»).<br>
+                        ЭТО ВСЕ ТОЛЬКО СЕМАНТИКА! работает строго на JS!!!<br>
+                        for - Список id элементов, влияющих на результат (через пробел) - не обязательно!!!<br>
+                        form - id формы, к которой принадлежит output (если находится вне формы)<br>
+                        name - Имя для отправки на сервер (если output в форме)<br>
+
+                        <hr>
+                        <h4>пустые</h4>
+                        <output for="volume">50</output>
+                        <output for="brightness">75</output>
+
+                        <hr>
+                        <h4>одиночная зависимость</h4>
+                        <input type="range" id="demo_input1__id" min="0" max="100" value="50" step="1">
+                        <output for="demo_input__name" id="demo_output1__id">50</output>
+                        <script>
+                            (function() {
+                                const demo_input__el = document.getElementById('demo_input1__id');
+                                const demo_output__el = document.getElementById('demo_output1__id');
+                                if (demo_input__el && demo_output__el) demo_input__el.addEventListener('input', () => demo_output__el.value = demo_input__el.value);
+                            })();
+                        </script>
+
+                        <hr>
+                        <h4>множественная зависимость</h4>
+                        <label>A:<input type="number" id="a" value="5"></label><br>
+                        <label>B:<input type="number" id="b" value="3"></label>
+                        <p>SUM: <output for="a b" id="sum">8</output></p>
+
+                        <script>
+                            (function() {
+                                const a = document.getElementById('a');
+                                const b = document.getElementById('b');
+                                const sumOut = document.getElementById('sum');
+                                function updateSum() {
+                                    sumOut.value = Number(a.value) + Number(b.value);
+                                }
+                                a.addEventListener('input', updateSum);
+                                b.addEventListener('input', updateSum);
+                                updateSum();
+                            })();
+                        </script>
+
+                        <hr>
+                        <h4>Random</h4>
+                        <div>
+                            <button id="randomBtn">Случайное число</button>
+                            <output id="randomOut">0</output>
+                        </div>
+
+                        <script>
+                            // Random
+                            const randBtn = document.getElementById('randomBtn');
+                            const randOut = document.getElementById('randomOut');
+                            randBtn.addEventListener('click', () => randOut.value = Math.floor(Math.random() * 100) + 1);
+                        </script>
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
                     <header>INPUT</header>
                     <div class="article_main__cls">
 
                         <hr>
                         <h4>TEXT</h4>
-                        <p>
-                            input type=search<input type="search" placeholder="Поиск...">
-                        </p>
+                        input type=search<input type="search" placeholder="Поиск..."><br>
+                        tag TEXTAREA<textarea>tag TEXTAREA</textarea>
 
                         <hr>
                         <h4>ACTION</h4>
@@ -2047,38 +2050,37 @@
                         <h4>GRAPH</h4>
                         <p>
                             input type="range"
-                            <input type="range" id="demo_volume__id" name="demo_volume__name" min="0" max="100" value="50" step="1">
-                            <output for="demo_volume__name" id="demo_volume_out__id">50</output>
+                            <input type="range" id="demo_input__id" name="demo_input__name" min="0" max="100" value="50" step="1">
+                            <output for="demo_input__name" id="demo_output__id">50</output>
                             <script>
-                                (function() {
-                                    const demo_volume__el = document.getElementById('demo_volume__id');
-                                    const demo_volume_out__el = document.getElementById('demo_volume_out__id');
-                                    if (demo_volume__el && demo_volume_out__el) demo_volume__el.addEventListener('input', () => demo_volume_out__el.value = demo_volume__el.value);
-                                })();
+                                const demo_input__el = document.getElementById('demo_input__id');
+                                const demo_output__el = document.getElementById('demo_output__id');
+                                if (demo_input__el && demo_output__el) demo_input__el.addEventListener('input', () => demo_output__el.value = demo_input__el.value);
                             </script>
                         </p>
 
                         <p>
-
                             input type="color" => HexColor
-                            <input type="color" id="demo_color_picker__id" value="#2a73ff">
-                            <output id="demo_color_value__id">#2a73ff</output>
+                            <input type="color" id="demo_input_color__id" value="#2a73ff">
+                            <output id="demo_output_color__id" for="demo_input_color__id">#2a73ff</output>
                             <script>
-                                const color_picker__el = document.getElementById('demo_color_picker__id');
-                                const color_val__el = document.getElementById('demo_color_value__id');
-                                if (color_picker__el && color_val__el) color_picker__el.addEventListener('input', () => color_val__el.value = color_picker__el.value);
+                                const color_input__el = document.getElementById('demo_input_color__id');
+                                const color_val__el = document.getElementById('demo_output_color__id');
+                                if (color_input__el && color_val__el) color_input__el.addEventListener('input', () => color_val__el.value = color_input__el.value);
                             </script>
                         </p>
 
                         <hr>
-                        <h4>OTHER</h4>
-                        <output for="volume">50</output>
-                        <output for="brightness">75</output>
+                        <h4>type=HIDDEN</h4>
+                        <code>type="hidden"</code> не отображается, но передаёт данные на сервер. Используется для идентификаторов, токенов.
+                        <form onsubmit="alert('Скрытое поле отправляется: ' + this.hiddenField.value); return false;">
+                            <input type="hidden" name="hiddenField" value="secret123">
+                            <button type="submit">Отправить (показать значение скрытого поля)</button>
+                        </form>
 
                     </div>
                     <footer></footer>
                 </article>
-
 
                 <article class="article__cls">
                     <header>ОСОБОЕ</header>
@@ -2088,8 +2090,8 @@
                         <h4>input type=file</h4>
 
                         <form onsubmit="alert('Выбрано файлов: ' + this.demo_input_file__name.files.length + ' + ' + this.demo_input_fileS__name.files.length); return false;">
-                            Одиночный файл<input type="file" name="demo_input_file__name"><br>
-                            Несколько файлов<input type="file" multiple accept="image/*,text/plain" name="demo_input_fileS__name">
+                            Один<input type="file" name="demo_input_file__name"><br>
+                            Несколько<input type="file" multiple accept="image/*,text/plain" name="demo_input_fileS__name">
                             <button type="submit">Показать количество</button>
                         </form>
                         <code>multiple</code> — выбор нескольких файлов. <code>accept</code> — фильтр типов (MIME или расширения).
@@ -2123,13 +2125,135 @@
                     <footer></footer>
                 </article>
 
+                <article class="article__cls">
+                    <header>RADIO+CHECKBOX+NAME</header>
+                    <div class="article_main__cls">
 
+                        <hr>
+                        <form id="orderForm">
+                            <fieldset>
+                                <legend>radio</legend>
+                                <label><input type="radio" name="drink" value="Чай" id="drinkTea">Чай</label>
+                                <label><input type="radio" name="drink" value="Кофе" id="drinkCoffee">Кофе</label>
+                                <label><input type="radio" name="drink" value="Какао" id="drinkCocoa">Какао</label>
+                            </fieldset>
 
+                            <fieldset>
+                                <legend>checkbox</legend>
+                                <label><input type="checkbox" name="addons" value="Сахар" id="addSugar">Сахар</label>
+                                <label><input type="checkbox" name="addons" value="Лимон" id="addLemon">Лимон</label>
+                                <label><input type="checkbox" name="addons" value="Молоко" id="addMilk">Молоко</label>
+                            </fieldset>
 
+                            <p>
+                                ВЫБРАНО:
+                                <output name="result" for="drinkTea drinkCoffee drinkCocoa addSugar addLemon addMilk" id="orderOutput">
+                                    (не выбран)
+                                </output>
+                            </p>
+                        </form>
 
+                        <script>
+                            const form = document.getElementById('orderForm');
+                            const outputEl = form.elements['result']; // доступ по name
 
+                            function updateOrder() {
+                                // Получаем выбранный radio (drink)
+                                let drinkValue = '';
+                                const drinkRadios = form.elements['drink'];
+                                for (let radio of drinkRadios) {
+                                    if (radio.checked) {
+                                        drinkValue = radio.value;
+                                        break;
+                                    }
+                                }
 
+                                // Получаем все выбранные checkbox (addons)
+                                const addonsValues = [];
+                                const addonsCheckboxes = form.querySelectorAll('input[name="addons"]');
+                                addonsCheckboxes.forEach(cb => {
+                                    if (cb.checked) addonsValues.push(cb.value);
+                                });
 
+                                if (!drinkValue && addonsValues.length === 0) {
+                                    outputEl.value = '(ничего не выбрано)';
+                                } else {
+                                    const addonsText = addonsValues.length ? ` + ${addonsValues.join(', ')}` : '';
+                                    outputEl.value = drinkValue + addonsText;
+                                }
+                            }
+
+                            // Вешаем обработчики на все radio и checkbox внутри формы
+                            form.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                                input.addEventListener('change', updateOrder);
+                            });
+                            updateOrder(); // начальное состояние
+                        </script>
+
+                        <hr>
+                        <h4>NAME</h4>
+
+                        <form id="form_calc1__id">
+                            <input type="number" name="a__name" id="a__id" value="5">
+                            <input type="number" name="b__name" id="b__id" value="3">
+                            <output name="result1__name" for="a__id b__id">0</output>
+                        </form>
+                        <script>
+                            (function () {
+                                const form = document.getElementById('form_calc1__id');
+                                const output = form.elements['result1__name']; // безопасный доступ по name
+                                const aField = document.getElementById('a__id');
+                                const bField = document.getElementById('b__id');
+
+                                function update() {
+                                    output.value = Number(aField.value) + Number(bField.value);
+                                    console.log(aField.value, bField.value, output.value);
+                                }
+
+                                aField.addEventListener('change', update);
+                                bField.addEventListener('input', update);
+
+                                update();
+                            })();
+                        </script>
+
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>ATTRS</header>
+                    <div class="article_main__cls">
+
+                        <hr>
+                        <h4>READONLY+DISABLED</h4>
+
+                        <code>readonly</code> — значение нельзя изменить, но поле отправляется.<br>
+                        <code>disabled</code> — неактивно, не отправляется, не получает фокус.<br>
+
+                        <form onsubmit="return false;">
+                            <input type="text" value="readonly" readonly><br>
+                            <input type="text" value="disabled" disabled><br>
+                            <input type="checkbox" value="disabled" disabled>
+                            <input type="checkbox" value="disabled" disabled>
+                            <input type="checkbox" value="disabled" disabled><br>
+                        </form>
+
+                        <hr>
+                        <h4>required+pattern</h4>
+                        <code>required</code>, <code>pattern</code>, <code>minlength</code>/<code>maxlength</code> — встроенная валидация браузером.
+                        <form onsubmit="alert('Валидация пройдена'); return false;">
+                            <input type="text" required placeholder="required"><br>
+                            <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="[A-Za-zА-Яа-я]+=Только буквы" title="Введите только буквы"><br>
+                            <input type="text" minlength="3" maxlength="10" placeholder="minlength/maxlength=3–10 символов"><br>
+                            <button type="submit">Проверить+отправить</button>
+                        </form>
+
+                    </div>
+                    <footer>
+                        Для type="email"/"tel" — валидация браузером.<br>
+                    </footer>
+                </article>
 
                 <article class="article__cls">
                     <header>Fieldset+legend(группировка визуальная)</header>
@@ -2160,12 +2284,71 @@
                     <header>FORM - спец блок с функционалом отправки на сервер</header>
                     <div class="article_main__cls">
 
-                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
-                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
-                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
-                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
-                        ВЗЯТЬ ИЗ ДРУГОГО МЕСТА!!!<br>
+                        <hr>
+                        <h4>📋 Форма с кнопками submit, reset, button</h4>
 
+                        <code>type</code> важен внутри форм:<br>
+                        <p><button type="button">type="button" нет действия ФОРМЫ (по умолчанию)</button></p>
+                        <p><button type="submit">type="submit" — отправка формы</button></p>
+                        <p><button type="reset">type="reset" — сброс формы</button></p>
+
+                        <form id="demo_form_types__id" style="border: 1px solid #dce3ec; padding: 1rem; margin: 0.5rem 0;">
+                            <div style="margin-bottom: 0.75rem;">
+                                <label for="fieldName" style="display: inline-block; width: 100px;">Имя:</label>
+                                <input type="text" id="fieldName" name="name" placeholder="Введите имя" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label for="fieldEmail" style="display: inline-block; width: 100px;">Email:</label>
+                                <input type="email" id="fieldEmail" name="email" placeholder="user@example.com" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <button type="submit" class="button_green__cls">✅ Отправить (submit)</button>
+                                <button type="reset" class="button_red_outline__cls" style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
+                                <button type="button" id="customButton" class="button_blue_outline__cls" style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
+                            </div>
+                            <div id="customMessage" style="margin-top: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></div>
+                        </form>
+
+                        <script>
+                            (function() {
+                                const form = document.getElementById('demo_form_types__id');
+                                if (!form) return;
+
+                                // submit — перехватываем отправку для демонстрации
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    alert('Форма отправлена (демо).\nИмя: ' + document.getElementById('fieldName').value + '\nEmail: ' + document.getElementById('fieldEmail').value);
+                                });
+
+                                // button — своё действие
+                                const customBtn = document.getElementById('customButton');
+                                const msgDiv = document.getElementById('customMessage');
+                                customBtn.addEventListener('click', function() {
+                                    const name = document.getElementById('fieldName').value || 'не указано';
+                                    const email = document.getElementById('fieldEmail').value || 'не указано';
+                                    msgDiv.innerHTML = `🔧 Вы нажали "button". Текущие значения: имя = "${name}", email = "${email}". (Форма не отправлена и не сброшена)`;
+                                });
+
+                                // reset сработает автоматически, но можно добавить дополнительное уведомление
+                                form.addEventListener('reset', function() {
+                                    setTimeout(() => {
+                                        msgDiv.innerHTML = '🔄 Форма сброшена (reset). Поля очищены.';
+                                    }, 10);
+                                });
+                            })();
+                        </script>
+
+                        <p><strong>Пояснение:</strong></p>
+                        <ul>
+                            <li><code>type="submit"</code> — отправляет форму (здесь мы перехватили отправку через JS, чтобы показать данные).</li>
+                            <li><code>type="reset"</code> — возвращает поля к исходному состоянию (без JS).</li>
+                            <li><code>type="button"</code> — любое действие кроме отправки! (проверка, расчёт, показ сообщения).</li>
+                        </ul>
+
+                        <hr>
+                        <hr>
+                        <hr>
+                        <hr>
                         <hr>
                         FORM input type=number
                         <form onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;" data-bg_grey data-rounded>
@@ -2196,72 +2379,9 @@
 
                     </div>
                     <footer>
-                        Атрибуты: placeholder, required, disabled, readonly, checked. Для type="email"/"tel" — валидация браузером.<br>
                         Тег label улучшает доступность.<br>
-                        любой Enter в любом Input (кроме textaria) запускает Submit!!! - тоесть сама кнопка не обязательна!!!
+                        любой Enter в любом Input (кроме textaria) запускает Submit!!! - тоесть сама кнопка не обязательна!!!<br>
                     </footer>
-                </article>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- Состояния readonly и disabled -->
-                <article class="article__cls">
-                    <header>🔒 Состояния: readonly и disabled</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="return false;">
-                            <div class="div_in_form__cls"><label>readonly:</label> <input type="text" value="Нельзя изменить" readonly></div>
-                            <div class="div_in_form__cls"><label>disabled:</label> <input type="text" value="Полностью отключено" disabled></div>
-                            <div class="div_in_form__cls"><label>disabled checkbox:</label> <input type="checkbox" checked disabled></div>
-                            <div class="div_in_form__cls"><label>readonly textarea:</label> <textarea readonly>Только для чтения</textarea></div>
-                        </form>
-                    </div>
-                    <footer>🔐 <code>readonly</code> — значение нельзя изменить, но поле отправляется. <code>disabled</code> — неактивно, не отправляется, не получает фокус.</footer>
-                </article>
-
-                <!-- Поля с валидацией (pattern, required) -->
-                <article class="article__cls">
-                    <header>✅ Валидация: required, pattern</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Валидация пройдена'); return false;">
-                            <div class="div_in_form__cls"><label>required:</label> <input type="text" required placeholder="Обязательное поле"></div>
-                            <div class="div_in_form__cls"><label>pattern (только буквы):</label> <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="Только буквы" title="Введите только буквы"></div>
-                            <div class="div_in_form__cls"><label>minlength / maxlength:</label> <input type="text" minlength="3" maxlength="10" placeholder="3–10 символов"></div>
-                            <button type="submit">Проверить</button>
-                        </form>
-                    </div>
-                    <footer>🔍 Атрибуты <code>required</code>, <code>pattern</code>, <code>minlength</code>/<code>maxlength</code> — встроенная валидация браузером.</footer>
-                </article>
-
-                <!-- Скрытое поле (hidden) -->
-                <article class="article__cls">
-                    <header>🕵️ input type="hidden"</header>
-                    <div class="article_main__cls">
-                        <form onsubmit="alert('Скрытое поле отправляется: ' + this.hiddenField.value); return false;">
-                            <input type="hidden" name="hiddenField" value="secret123">
-                            <button type="submit">Отправить (показать значение скрытого поля)</button>
-                        </form>
-                    </div>
-                    <footer>👻 <code>type="hidden"</code> не отображается, но передаёт данные на сервер. Используется для идентификаторов, токенов.</footer>
                 </article>
 
             </div>
