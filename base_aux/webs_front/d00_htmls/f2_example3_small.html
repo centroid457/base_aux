@@ -1,27 +1,32 @@
                         <hr>
-                        <h4>NAME</h4>
-
-                        <form id="form_calc1__id">
-                            <input type="number" name="a__name" id="a__id" value="5">
-                            <input type="number" name="b__name" id="b__id" value="3">
-                            <output name="result1__name" for="a__id b__id">0</output>
+                        <h4>Кастомное сообщение об ошибке (JavaScript)</h4>
+                        <form id="customValidityForm" onsubmit="return false;">
+                            <label>Пароль (минимум 6 символов):
+                                <input type="password" id="passwordField" required>
+                            </label>
+                            <div id="passwordError" style="color: #ef4444; font-size: 0.85rem;"></div>
+                            <button type="submit">Проверить</button>
                         </form>
                         <script>
-                            (function () {
-                                const form = document.getElementById('form_calc1__id');
-                                const output = form.elements['result1__name']; // безопасный доступ по name
-                                const aField = document.getElementById('a__id');
-                                const bField = document.getElementById('b__id');
+                            const passwordField = document.getElementById('passwordField');
+                            const form = document.getElementById('customValidityForm');
 
-                                function update() {
-                                    output.value = Number(aField.value) + Number(bField.value);
-                                    console.log(aField.value);
-                                    console.log(bField.value);
+                            passwordField.addEventListener('input', function() {
+                                if (this.value.length < 6) {
+                                    this.setCustomValidity('Пароль должен содержать минимум 6 символов');
+                                    document.getElementById('passwordError').textContent = this.validationMessage;
+                                } else {
+                                    this.setCustomValidity('');
+                                    document.getElementById('passwordError').textContent = '';
                                 }
+                            });
 
-                                aField.addEventListener('input', update);
-                                bField.addEventListener('input', update);
-
-                                update();
-                            })();
+                            form.addEventListener('submit', function(e) {
+                                if (!passwordField.checkValidity()) {
+                                    e.preventDefault();
+                                    alert(passwordField.validationMessage);
+                                } else {
+                                    alert('Пароль принят');
+                                }
+                            });
                         </script>

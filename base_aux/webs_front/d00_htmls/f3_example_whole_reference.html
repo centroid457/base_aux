@@ -49,6 +49,85 @@
             width: 110px;
         }
 
+        /* -------------------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------------------- */
+        /* Базовые стили для всех текстовых полей, select и textarea */
+        input:not([type="checkbox"]):not([type="radio"]),
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #1e2a3e;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* Состояние фокуса */
+        input:not([type="checkbox"]):not([type="radio"]):focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2a73ff;
+            box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
+        }
+
+        /* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
+        input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
+        select:invalid:not(:placeholder-shown),
+        textarea:invalid:not(:placeholder-shown) {
+            border-color: #ef4444;
+        }
+        input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
+        select:invalid:focus,
+        textarea:invalid:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Валидное поле (опционально) */
+        input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
+        select:valid,
+        textarea:valid {
+            border-color: #10b981;
+        }
+
+        /* Отключённые поля */
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Чекбоксы и радио – современный accent-color */
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: #2a73ff;
+            cursor: pointer;
+            vertical-align: middle;
+            margin-right: 0.3rem;
+        }
+
+        /* Метки для чекбоксов и радио */
+        label:has(input[type="checkbox"]),
+        label:has(input[type="radio"]) {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* placeholder стиль */
+        ::placeholder {
+            color: #94a3b8;
+            opacity: 1;
+        }
+
         /* -------------------- ATTRS UNIVERSAL ----------------------------------------------------------------------*/
         [disabled] {
             opacity: 0.5;
@@ -2017,6 +2096,8 @@
                         <hr>
                         <h4>TEXT</h4>
                         input type=search<input type="search" placeholder="Поиск..."><br>
+                        input type="password"<input type="password"><br>
+
                         tag TEXTAREA<textarea>tag TEXTAREA</textarea>
 
                         <hr>
@@ -2239,19 +2320,95 @@
                             <input type="checkbox" value="disabled" disabled><br>
                         </form>
 
-                        <hr>
-                        <h4>required+pattern</h4>
-                        <code>required</code>, <code>pattern</code>, <code>minlength</code>/<code>maxlength</code> — встроенная валидация браузером.
-                        <form onsubmit="alert('Валидация пройдена'); return false;">
-                            <input type="text" required placeholder="required"><br>
-                            <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="[A-Za-zА-Яа-я]+=Только буквы" title="Введите только буквы"><br>
-                            <input type="text" minlength="3" maxlength="10" placeholder="minlength/maxlength=3–10 символов"><br>
-                            <button type="submit">Проверить+отправить</button>
-                        </form>
-
                     </div>
                     <footer>
                         Для type="email"/"tel" — валидация браузером.<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>VALIDATION</header>
+                    <div class="article_main__cls">
+
+                        <hr>
+                        <h4>ВСТРОЕННАЯ валидация email / url // tel (только с паттерном)</h4>
+                        <form onsubmit="alert('Данные корректны'); return false;">
+                            <label>input type="email"<input type="email" required placeholder="user@example.com"></label><br>
+                            <label>input type="url"<input type="url" placeholder="https://example.com"></label><br>
+
+                            <label>input type="tel" ТОЛЬКО С ПАТТЕРНОМ!!!<input type="tel" pattern="[0-9+\-\(\)\s]+" placeholder="+7-123-456-78-90"></label><br>
+
+                            <button type="submit">Отправить</button>
+                        </form>
+
+                        <hr>
+                        <h4>USER </h4>
+                        <form onsubmit="alert('Валидация пройдена'); return false;">
+                            <input type="number" min="18" max="99" step="0.3" value="25"><br>
+                            <input type="text" minlength="3" maxlength="10" placeholder="minlength/maxlength=3–10 символов"><br>
+                            <input type="text" pattern="[A-Za-zА-Яа-я]+" placeholder="pattern=[A-Za-zА-Яа-я]+=Только буквы" title="Введите только буквы"><br>
+                            <button type="submit">Проверить+отправить</button>
+                        </form>
+
+                        <hr>
+                        <h4>required</h4>
+                        <form onsubmit="alert('Валидация пройдена'); return false;">
+                            <input type="text" required placeholder="required"><br>
+                            <button type="submit">Проверить+отправить</button>
+                        </form>
+
+                        <hr>
+                        <h4>Кастомная валидация (JavaScript)</h4>
+                        <form id="customValidityForm__id" onsubmit="return false;">
+                            <label>Пароль (минимум 6 символов):
+                                <input type="password" id="password__id" required>
+                            </label>
+                            <div id="passwordError" style="color: #ef4444; font-size: 0.85rem;"></div>
+                            <button type="submit">Проверить</button>
+                        </form>
+                        <script>
+                            const password__el = document.getElementById('password__id');
+                            const customValidityForm__el = document.getElementById('customValidityForm__id');
+
+                            password__el.addEventListener('input', function() {
+                                if (this.value.length < 6) {
+                                    this.setCustomValidity('MSG1=Пароль должен содержать минимум 6 символов');
+                                    document.getElementById('passwordError').textContent = this.validationMessage;
+                                } else {
+                                    this.setCustomValidity('');
+                                    document.getElementById('passwordError').textContent = '';
+                                }
+                            });
+
+                            customValidityForm__el.addEventListener('submit', function(e) {
+                                if (!password__el.checkValidity()) {
+                                    e.preventDefault();
+                                    alert(password__el.validationMessage);
+                                } else {
+                                    alert('MSG2=Пароль принят');
+                                }
+                            });
+                        </script>
+
+                        <hr>
+                        <h4>Программная проверка валидности</h4>
+                        <form id="reportForm">
+                            <label>Email: <input type="email" id="reportEmail" required></label><br>
+                            <label>Возраст: <input type="number" id="reportAge" min="18" max="99" required></label><br>
+                            <button type="button" id="checkBtn">Проверить и показать ошибки</button>
+                            <button type="submit">Обычная отправка (с валидацией)</button>
+                        </form>
+                        <script>
+                            const checkBtn = document.getElementById('checkBtn');
+                            const reportForm = document.getElementById('reportForm');
+                            checkBtn.addEventListener('click', () => {
+                                const isValid = reportForm.reportValidity(); // показать ошибки без отправки
+                                if (isValid) alert('Форма заполнена корректно');
+                            });
+                        </script>
+
+                    </div>
+                    <footer>
                     </footer>
                 </article>
 
