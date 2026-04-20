@@ -136,6 +136,15 @@
         }
 
         /* -------------------- ATTRS USER ---------------------------------------------------------------------------*/
+        /*  */
+        .cover_box__cls {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
         /* highlited = bg + graphic -------------------------*/
         p[data-highlighted] {
             background: #f8fafc;
@@ -803,6 +812,15 @@
         }
 
         /* -----------------------------------------------------------------------------------------------------------*/
+        /*ЭЛЕМЕНТЫ ДЛЯ опытов*/
+        .demo_item__cls {
+            background: #2a73ff;
+            color: white;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
         /* ===== Базовые стили для демонстрации позиционирования ===== */
         .demo__pos_container__cls {
             position: relative;   /* контейнер для absolute-блоков */
@@ -2922,9 +2940,104 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="styleLayoutId" data-collapsed>
+        <section class="section__cls" id="styleLayoutId">
             <h2 data-icon_process_wait>STYLES Компоновка</h2>
             <div class="section_main__cls">
+
+                <article class="article__cls">
+                    <header>Flexbox – одномерная компоновка</header>
+                    <div class="article_main__cls">
+
+                        <style>
+                            .flex-row {
+                                display: flex;
+                                gap: 0.75rem;
+                                flex-wrap: wrap;
+                                align-items: center;
+                            }
+                        </style>
+
+                        <h4>Горизонтальный ряд с отступами (gap)</h4>
+                        <div class="cover_box__cls flex-row">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+
+                        <h4>Распределение пространства (space-between)</h4>
+                        <div class="cover_box__cls" style="display: flex; justify-content: space-between;">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">2</div>
+                        </div>
+
+                        <h4>Вертикальное и горизонтальное центрирование (одна строка)</h4>
+                        <div class="cover_box__cls" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem;">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">2</div>
+                        </div>
+
+                        <h4>Перенос строк (flex-wrap) – адаптив</h4>
+                        <div class="cover_box__cls flex-row" style="justify-content: space-between;">
+                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________1</div>
+                        </div>
+                        <p><small>При сужении окна элементы переносятся на новую строку благодаря <code>flex-wrap: wrap</code> и <code>gap</code>.</small></p>
+                    </div>
+                    <footer>💡 Flexbox управляет распределением вдоль одной оси. Используйте <code>gap</code> вместо <code>margin-right</code> для отступов между элементами.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Grid – двумерная сетка</header>
+                    <div class="article_main__cls">
+
+                        <h4>Адаптивная сетка карточек (auto-fill / minmax)</h4>
+                        <div class="cover_box__cls" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem;">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                            <div class="demo_item__cls">4</div>
+                            <div class="demo_item__cls">4</div>
+                        </div>
+
+                        <h4>Фиксированные колонки + резиновая (2fr / 1fr)</h4>
+                        <div class="cover_box__cls" style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem;">
+                            <div class="demo_item__cls">Боковая панель (1fr)</div>
+                            <div class="demo_item__cls">Основной контент (2fr)</div>
+                        </div>
+
+                        <h4>Именованные области (header / main / sidebar / footer)</h4>
+                        <style>
+                            .grid-areas {
+                                display: grid;
+                                grid-template-areas:
+                                    "header header"
+                                    "sidebar main"
+                                    "footer footer";
+                                grid-template-columns: 1fr 2fr;
+                                gap: 0.75rem;
+                            }
+                            .grid-areas > .header { grid-area: header; background: #2a73ff; }
+                            .grid-areas > .sidebar { grid-area: sidebar; background: #8e44ad; }
+                            .grid-areas > .main { grid-area: main; background: #16a085; }
+                            .grid-areas > .footer { grid-area: footer; background: #c0392b; }
+                            .grid-areas > div { color: white; padding: 0.5rem; text-align: center; border-radius: 0.5rem; }
+                        </style>
+                        <div class="grid-areas cover_box__cls">
+                            <div class="header">Шапка (header)</div>
+                            <div class="sidebar">Боковая панель</div>
+                            <div class="main">Основной контент</div>
+                            <div class="footer">Футер</div>
+                        </div>
+                    </div>
+                    <footer>💡 Grid даёт полный контроль над строками и колонками. <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек.</footer>
+                </article>
+
                 <article class="article__cls">
                     <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="article_main__cls">
@@ -3016,6 +3129,7 @@
                     </div>
                     <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
                 </article>
+
             </div>
         </section>
 
