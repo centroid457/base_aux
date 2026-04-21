@@ -1577,10 +1577,21 @@
                         <dl class="dl_horizontal__cls">
                             <dt>URL</dt>
                             <dd>https://example.com</dd>
-                            <dt>Метод</dt>
+                            <dt>METH</dt>
                             <dd>POST / GET</dd>
-                            <dt>Код ответа</dt>
+                            <dt>RESP</dt>
                             <dd>200 OK</dd>
+                        </dl>
+
+                        <hr>
+                        <h4>dl_horizontal__cls LONG DIFF</h4>
+                        <dl class="dl_horizontal__cls">
+                            <dt>______________1</dt>
+                            <dd>===1/dd>
+                            <dt>_2</dt>
+                            <dd>===============2</dd>
+                            <dt>3</dt>
+                            <dd>3</dd>
                         </dl>
 
                     </div>
@@ -2019,7 +2030,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>📊 progress+meter</header>
+                    <header>progress+meter</header>
                     <div class="article_main__cls">
                         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                             <div>
@@ -2033,6 +2044,32 @@
                                 <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
 
                                 <p>low="0.3" high="0.8"</p>
+
+                                <script>
+                                    // --------------------------------------------------------------------------------
+                                    // синхронизация progress / meter со слайдером и спиннером
+                                    (function demo_slider_connect() {
+
+                                        const progressSlider = document.getElementById('progressSlider');
+                                        const progressNumber = document.getElementById('progressNumber');
+                                        const demoProgress = document.getElementById('demoProgress');
+                                        const demoMeter = document.getElementById('demoMeter');
+
+                                        if (progressSlider && progressNumber && demoProgress && demoMeter) {
+                                            function updateProgressMeter(value) {
+                                                let v = parseFloat(value);
+                                                if (isNaN(v)) v = 0;
+                                                v = Math.min(1, Math.max(0, v));
+                                                demoMeter.value = v;
+                                                demoProgress.value = v;
+                                                progressSlider.value = v;
+                                                progressNumber.value = v;
+                                            }
+                                            progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                                            progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                                        };
+                                    })();
+                                </script>
 
                             </div>
                         </div>
@@ -2065,7 +2102,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="inputId" data-collapsed>
+        <section class="section__cls" id="inputId">
             <h2 data-icon_process_ok>INPUT</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -3052,7 +3089,7 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
+                    <header>FLEX=Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="article_main__cls">
 
                         flex, justify-content, gap
@@ -3323,16 +3360,13 @@
             <div class="section_main__cls">
                 <article class="article__cls">
 
-                    <header>🧬 Блок-шаблон (id="cloneTemplate_id")</header>
+                    <header>пример id="clone_styles__id1"</header>
                     <div class="article_main__cls">
-                        <div id="cloneTemplate_id" style="border: 1px solid #cbd5e1; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
-                            <div class="clone-inner" style="font-weight: bold; text-align: center; padding: 0.5rem;">Элемент с динамическим стилем</div>
-                        </div>
 
-                        <div id="cloneContainer"></div>
+                        <span id="clone_styles__id1">Элемент для размножения</span>
 
                     </div>
-                    <footer><strong>Принцип:</strong> скрипт клонирует <code>#cloneTemplate_id</code>, меняет у <code>.clone-inner</code> свойство <code>color</code> на заданные значения и вставляет копии в контейнер.</footer>
+                    <footer></footer>
                 </article>
             </div>
         </section>
@@ -3523,51 +3557,65 @@
     });
 
     // ----------------------------------------------------------------------------------------------------------------
-    // синхронизация progress / meter со слайдером и спиннером
-    const progressSlider = document.getElementById('progressSlider');
-    const progressNumber = document.getElementById('progressNumber');
-    const demoProgress = document.getElementById('demoProgress');
-    const demoMeter = document.getElementById('demoMeter');
-
-    if (progressSlider && progressNumber && demoProgress && demoMeter) {
-        function updateProgressMeter(value) {
-            let v = parseFloat(value);
-            if (isNaN(v)) v = 0;
-            v = Math.min(1, Math.max(0, v));
-            demoMeter.value = v;
-            demoProgress.value = v;
-            progressSlider.value = v;
-            progressNumber.value = v;
-        }
-        progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
-        progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
-    }
-
-    // ----------------------------------------------------------------------------------------------------------------
     // Размножитель для блока-шаблона
-    function cloneWithStyles(templateId, targetSelector, styleProperty, styleValues) {
-        const original = document.getElementById(templateId);
-        if (!original) return;
-        const container = document.getElementById('cloneContainer');
-        if (!container) return;
-        container.innerHTML = '';
-        for (let value of styleValues) {
-            const clone = original.cloneNode(true);
-            const targetElem = clone.querySelector(targetSelector);
-            if (targetElem) {
-                targetElem.style[styleProperty] = value;
-                const note = document.createElement('small');
-                note.textContent = ` (${value})`;
-                note.style.display = 'block';
-                note.style.fontSize = '0.7rem';
-                note.style.opacity = '0.7';
-                targetElem.appendChild(note);
-            }
-            container.appendChild(clone);
+    /**
+     * Заменяет элемент на список dl с его клонами, демонстрирующими разные значения CSS-свойства.
+     * @param {string} originalId - ID элемента-оригинала (шаблона).
+     * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor').
+     * @param {string[]} styleValues - Массив значений для этого свойства (первое значение будет применено к оригиналу).
+     */
+    function clone_element_with_styles__by_dl(originalId, styleProperty, styleValues) {
+        const original = document.getElementById(originalId);
+        if (!original) {
+            console.error(`Элемент с id "${originalId}" не найден`);
+            return;
         }
-        original.style.display = 'none'; // скрываем оригинал-шаблон
+
+        // Создаём контейнер dl с классом для горизонтального отображения
+        const dl = document.createElement('dl');
+        dl.className = 'dl_horizontal__cls';
+        dl.style.padding = '0.5rem';
+        dl.style.border = '1px solid #e2e8f0';
+        dl.style.borderRadius = '0.5rem';
+        dl.style.backgroundColor = '#f8fafc';
+
+        // Вспомогательная функция: создаёт пару dt/dd и добавляет в dl
+        function addEntry(label, clonedElement) {
+            const dt = document.createElement('dt');
+            dt.textContent = label;
+            dl.appendChild(dt);
+
+            const dd = document.createElement('dd');
+            dd.appendChild(clonedElement);
+            dl.appendChild(dd);
+        }
+
+        // 1. Обрабатываем оригинал (применяем первое значение из массива, если оно задано)
+        const originalValue = styleValues[0] || '';
+        if (originalValue) {
+            original.style[styleProperty] = originalValue;
+        }
+        // Добавляем подпись к оригиналу, чтобы было понятно, что это исходный элемент
+        const originalLabel = `*${styleProperty}: ${originalValue}`;
+        // Клонируем оригинал, чтобы не перемещать его, а вставить копию в dd
+        const originalClone = original.cloneNode(true);
+        addEntry(originalLabel, originalClone);
+
+        // 2. Создаём клоны для остальных значений (начиная со второго, если есть)
+        for (let i = 1; i < styleValues.length; i++) {
+            const value = styleValues[i];
+            const clone = original.cloneNode(true);
+            clone.style[styleProperty] = value;
+
+            const label = `${styleProperty}: ${value}`;
+            addEntry(label, clone);
+        }
+
+        // 3. Заменяем оригинал на созданный dl
+        original.replaceWith(dl);
     }
-    cloneWithStyles('cloneTemplate_id', '.clone-inner', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
+
+    clone_element_with_styles__by_dl('clone_styles__id1', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
 
     // ----------------------------------------------------------------------------------------------------------------
     // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
