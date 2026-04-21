@@ -49,6 +49,17 @@
             width: 110px;
         }
 
+        /* -------------------- FORMS --------------------*/
+        .fieldset_style1__cls {
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 1rem;
+        }
+        .fieldset_style1__cls legend{
+            padding: 0 0.5rem;
+            font-weight: 600;
+        }
+
         /* -------------------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------------------- */
         /* Базовые стили для всех текстовых полей, select и textarea */
         input:not([type="checkbox"]):not([type="radio"]),
@@ -1199,6 +1210,7 @@
             </div>
         </section>
 
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="textUnicodeId" data-collapsed>
             <h2 data-icon_process_ok>TEXT - Unicode</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -1476,6 +1488,62 @@
         &lt;h1&gt;Привет, мир!&lt;/h1&gt;
         &lt;p&gt;Это пример вставки кода.&lt;/p&gt;
     &lt;/div&gt;</code></pre>
+                    </div>
+                    <footer>
+                        <code>pre</code> сохраняет пробелы и переносы строк,<br>
+                        <code>code</code> обозначает фрагмент кода. Комбинация,<br>
+                        <code>&lt;pre&gt;&lt;code&gt;</code> — стандарт для вставки листингов.
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>FIELDSET</header>
+                    <div class="article_main__cls">
+
+                        BLANK full
+                        <fieldset>
+                        </fieldset>
+
+                        <fieldset>
+                            NO LEGEND
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>LEGEND only</legend>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Дефолтный</legend>
+                            <label>Name: <input type="text" placeholder="Введите имя"></label>
+                            <label>Email: <input type="email" placeholder="user@example.com"></label>
+
+                            <hr>
+                            Experimental
+                            <input type="email" placeholder="user@example.com">
+                            text
+                            text
+                            <span>span</span>
+                            <button>button</button>
+                            <p>ppp</p>
+                        </fieldset>
+
+                        <hr>
+                        <fieldset class="fieldset_style1__cls">
+
+                            <legend>👤 fieldset_style1__cls</legend>
+                            <label>Name: <input type="text" placeholder="Введите имя"></label>
+                            <label>Email: <input type="email" placeholder="user@example.com"></label>
+
+                            <hr>
+                            Experimental
+                            <input type="email" placeholder="user@example.com">
+                            text
+                            text
+                            <span>span</span>
+                            <button>button</button>
+                            <p>ppp</p>
+                        </fieldset>
+
                     </div>
                     <footer>
                         <code>pre</code> сохраняет пробелы и переносы строк,<br>
@@ -2500,12 +2568,20 @@
                     <header>Fieldset+legend(группировка визуальная)</header>
                     <div class="article_main__cls">
 
-                        <fieldset style="border: 2px solid #cbd5e1; border-radius: 16px; padding: 1rem;">
+                        <fieldset class="fieldset_style1__cls">
 
-                            <legend style="padding: 0 0.5rem; font-weight: 600;">👤 Личные данные</legend>
-                            <label>Имя: <input type="text" placeholder="Введите имя"></label><br>
+                            <legend>👤 Личные данные</legend>
+                            <label>Имя: <input type="text" placeholder="Введите имя"></label>
                             <label>Email: <input type="email" placeholder="user@example.com"></label>
 
+                            <hr>
+                            Experimental
+                            <input type="email" placeholder="user@example.com">
+                            text
+                            text
+                            <span>span</span>
+                            <button>button</button>
+                            <p>ppp</p>
                         </fieldset>
 
                         <fieldset disabled>
