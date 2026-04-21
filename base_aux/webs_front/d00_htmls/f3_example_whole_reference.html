@@ -949,29 +949,34 @@
         /* -------------------- FLEX --------------------*/
         .flex_row0 {
             display: flex;
-            gap: 1rem;  /* минимальное расстояние */
+            gap: 1rem;  /* расстояние между внутренними блоками */
             flex-wrap: wrap;
-            justify-content: space-between; /* распределение промежуточного пространства  - обьекты любые */
-            align-items: center;
+            justify-content: space-between;
+                /*
+                    center=собрать все внутренние элементы вместе в центре - без растягивания пространства промежуточного - тоесть строгие GAPS!
+                    space-between=!=распределение только ПРОМЕЖУТОЧНОГО пространства - обьекты любые хоть инлайн SPACE хоть DIV
+                    space-evenly=распределение ПРОМЕЖУТОЧНОГО+НАРУЖНОГО - тоесть всех свободных пространств
+                */
+            align-items: center;  /* если не указать то заполнит все свободное пространство до границ отдела */
         }
         .flex_row1_left {
             display: flex;  /* обязателен внутри */
             gap: 0.25rem;   /* отдельное разделение */
-            align-items: center;
+            __align-items: center;
             __justify-content: center;
             __flex-wrap: wrap;
         }
         .flex_row2_center {
             display: flex;
             gap: 0.5rem;
-            align-items: center;
+            __align-items: center;
             __justify-content: center;
             __flex-wrap: wrap;
         }
         .flex_row3_right {
             display: flex;
             gap: 0.25rem;
-            align-items: center;
+            __align-items: center;
             __justify-content: center;
             __flex-wrap: wrap;
         }
