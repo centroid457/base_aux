@@ -818,7 +818,7 @@
             color: white;
             text-align: center;
             padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
+            border-radius: 2rem;
         }
 
         /* ===== Базовые стили для демонстрации позиционирования ===== */
@@ -924,13 +924,6 @@
 
         /* -----------------------------------------------------------------------------------------------------------*/
 
-
-
-
-
-
-
-
         /* семантическая демо-зона (локальные header/footer и пр.) */
         .semantic-demo {
             background: #f1f5f9;
@@ -946,13 +939,44 @@
         }
 
         /* -----------------------------------------------------------------------------------------------------------*/
-        /* -------------------- GRID+FLEX --------------------*/
+        /* -------------------- GRID --------------------*/
         .grid_auto__cls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.2rem;
         }
 
+        /* -------------------- FLEX --------------------*/
+        .flex_row0 {
+            display: flex;
+            gap: 1rem;  /* минимальное расстояние */
+            flex-wrap: wrap;
+            justify-content: space-between; /* распределение промежуточного пространства  - обьекты любые */
+            align-items: center;
+        }
+        .flex_row1_left {
+            display: flex;  /* обязателен внутри */
+            gap: 0.25rem;   /* отдельное разделение */
+            align-items: center;
+            __justify-content: center;
+            __flex-wrap: wrap;
+        }
+        .flex_row2_center {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            __justify-content: center;
+            __flex-wrap: wrap;
+        }
+        .flex_row3_right {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            __justify-content: center;
+            __flex-wrap: wrap;
+        }
+
+        /* -----------------------------------------------------------------------------------------------------------*/
         /* -------------------- TABS --------------------*/
         .tabs-container {
             background: #fff;
@@ -2942,50 +2966,34 @@
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="styleLayoutId">
             <h2 data-icon_process_wait>STYLES Компоновка</h2>
-            <div class="section_main__cls">
+            <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
                     <header>Flexbox – одномерная компоновка</header>
                     <div class="article_main__cls">
 
-                        <style>
-                            .flex-row {
-                                display: flex;
-                                gap: 0.75rem;
-                                flex-wrap: wrap;
-                                align-items: center;
-                            }
-                        </style>
-
                         <h4>Горизонтальный ряд с отступами (gap)</h4>
-                        <div class="cover_box__cls flex-row">
+                        <div class="cover_box__cls flex_row0">
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
-                        </div>
-
-                        <h4>Распределение пространства (space-between)</h4>
-                        <div class="cover_box__cls" style="display: flex; justify-content: space-between;">
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">2</div>
                         </div>
 
                         <h4>Вертикальное и горизонтальное центрирование (одна строка)</h4>
                         <div class="cover_box__cls" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem;">
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
                         </div>
 
                         <h4>Перенос строк (flex-wrap) – адаптив</h4>
-                        <div class="cover_box__cls flex-row" style="justify-content: space-between;">
+                        <div class="cover_box__cls flex_row0" style="justify-content: space-between;">
                             <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________1</div>
+                            <div class="demo_item__cls">_________2</div>
+                            <div class="demo_item__cls">_________3</div>
+                            <div class="demo_item__cls">_________4</div>
+                            <div class="demo_item__cls">_________5</div>
+                            <div class="demo_item__cls">_________6</div>
                         </div>
                         <p><small>При сужении окна элементы переносятся на новую строку благодаря <code>flex-wrap: wrap</code> и <code>gap</code>.</small></p>
                     </div>
@@ -3002,7 +3010,7 @@
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
                             <div class="demo_item__cls">4</div>
-                            <div class="demo_item__cls">4</div>
+                            <div class="demo_item__cls">5</div>
                         </div>
 
                         <h4>Фиксированные колонки + резиновая (2fr / 1fr)</h4>
@@ -3039,92 +3047,35 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>🧩 Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
+                    <header>Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="article_main__cls">
-                        <style>
-                            .layout-demo {
-                                background: #f8fafc;
-                                border-radius: 1rem;
-                                padding: 1rem;
-                                margin-bottom: 1rem;
-                            }
-                            .flex-row {
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                flex-wrap: wrap;
-                                gap: 1rem;
-                            }
-                            .flex-left {
-                                display: flex;
-                                gap: 0.5rem;
-                                align-items: center;
-                            }
-                            .flex-center {
-                                display: flex;
-                                gap: 1rem;
-                                justify-content: center;
-                                flex-wrap: wrap;
-                            }
-                            .flex-right {
-                                display: flex;
-                                gap: 0.75rem;
-                                align-items: center;
-                            }
-                            .demo-chip {
-                                background: white;
-                                padding: 0.4rem 0.8rem;
-                                border-radius: 2rem;
-                                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-                                border: 1px solid #e2e8f0;
-                            }
-                            .demo-logo {
-                                font-weight: bold;
-                                font-size: 1.2rem;
-                                background: #2a73ff;
-                                color: white;
-                                padding: 0.3rem 0.8rem;
-                                border-radius: 2rem;
-                            }
-                        </style>
-                        <div class="layout-demo">
-                            <div class="flex-row">
-                                <div class="flex-left"><div class="demo-logo">Лого</div></div>
-                                <div class="flex-center">
-                                    <span class="demo-chip">Главная</span>
-                                    <span class="demo-chip">Каталог</span>
-                                    <span class="demo-chip">О нас</span>
-                                    <span class="demo-chip">Контакты</span>
+
+                        flex, justify-content, gap
+                        <div class="cover_box__cls">
+                            <div class="flex_row0">
+                                <div class="flex_row1_left">
+                                    <span class="demo_item__cls">#</span>
                                 </div>
-                                <div class="flex-right">
-                                    <span class="demo-chip">🔍</span>
-                                    <span class="demo-chip">👤</span>
-                                    <span class="demo-chip">🛒</span>
+                                <div class="flex_row2_center">
+                                    <span class="demo_item__cls">1<br>1</span>
+                                    <span class="demo_item__cls">2</span>
+                                </div>
+                                <div class="flex_row2_center" hidden>
+                                    <span class="demo_item__cls">1</span>
+                                    <span class="demo_item__cls">2</span>
+                                </div>
+                                <div class="flex_row3_right">
+                                    <span class="demo_item__cls">.</span>
+                                    <span class="demo_item__cls">!</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="layout-demo">
-                            <div class="flex-row" style="border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 1rem;">
-                                <div style="background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 0.5rem;">🔹 Элемент слева</div>
-                                <div style="display: flex; gap: 1rem;"><span>Центр 1</span><span>Центр 2</span><span>Центр 3</span></div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 1</button>
-                                    <button style="background: #2a73ff; color: white; border: none; padding: 0.2rem 0.8rem;">Кнопка 2</button>
-                                </div>
-                            </div>
-                        </div>
+
                         <div>
-                            🧠 <strong>Как это работает (Flexbox):</strong>
-                            <pre>
-    &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
-        &lt;div&gt;Левый элемент&lt;/div&gt;
-        &lt;div style="display: flex; gap: 1rem;"&gt;Центральные элементы&lt;/div&gt;
-        &lt;div style="display: flex; gap: 0.5rem;"&gt;Правые элементы&lt;/div&gt;
-    &lt;/div&gt;</pre>
-                            ✔️ <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
-                            ✔️ Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
-                            ✔️ <code>gap</code> задаёт отступы между элементами внутри группы.<br>
-                            ✔️ <code>align-items: center</code> — вертикальное выравнивание по центру.
+                            <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
+                            Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
+                            <code>gap</code> задаёт отступы между элементами внутри группы.<br>
+                            <code>align-items: center</code> — вертикальное выравнивание по центру.
                         </div>
                     </div>
                     <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
