@@ -152,8 +152,8 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
+            padding: 0.25rem;
+            __margin-bottom: 1rem;
         }
 
         /* highlited = bg + graphic -------------------------*/
@@ -627,12 +627,12 @@
         }
         dt {
             font-weight: 600;
-            margin-top: 0.75rem;
+            __margin-top: 0.75rem;
             color: #0f2b4d;
         }
         dd {
             margin-left: 1.2rem;
-            margin-bottom: 0.5rem;
+            __margin-bottom: 0.5rem;
             color: #334155;
         }
 
@@ -640,15 +640,18 @@
         .dl_horizontal__cls {
             display: grid;
             grid-template-columns: auto 1fr;
-            gap: 0.5rem 1rem;
+            gap: 0.5rem 0.5rem;
             align-items: baseline;
         }
         .dl_horizontal__cls dt {
             margin-top: 0;
+            margin-bottom: 0;
             white-space: nowrap;
         }
         .dl_horizontal__cls dd {
             margin-left: 0;
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         /* ===== 4. Адаптивность и отступы ===== */
@@ -2170,7 +2173,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="inputId">
+        <section class="section__cls" id="inputId" data-collapsed>
             <h2 data-icon_process_ok>INPUT</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -3087,17 +3090,16 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>Flexbox – одномерная компоновка</header>
+                    <header>FLEX – одномерная компоновка</header>
                     <div class="article_main__cls">
 
-                        <h4>Горизонтальный ряд с отступами (gap)</h4>
-                        <div class="cover_box__cls flex_row0">
+                        <div class="cover_box__cls flex_row0" data-clone_style_params='justify-content:[center, space-between, space-evenly]'>
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
                         </div>
 
-                        <h4>Вертикальное и горизонтальное центрирование (одна строка)</h4>
+                        <h4>align-items: center</h4>
                         <div class="cover_box__cls" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem;">
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
@@ -3169,23 +3171,21 @@
                     <div class="article_main__cls">
 
                         flex, justify-content, gap
-                        <div class="cover_box__cls">
-                            <div class="flex_row0">
-                                <div class="flex_row1_left">
-                                    <span class="demo_item__cls">#</span>
-                                </div>
-                                <div class="flex_row2_center">
-                                    <span class="demo_item__cls">1<br>1</span>
-                                    <span class="demo_item__cls">2</span>
-                                </div>
-                                <div class="flex_row2_center" hidden>
-                                    <span class="demo_item__cls">1</span>
-                                    <span class="demo_item__cls">2</span>
-                                </div>
-                                <div class="flex_row3_right">
-                                    <span class="demo_item__cls">.</span>
-                                    <span class="demo_item__cls">!</span>
-                                </div>
+                        <div class="flex_row0 cover_box__cls">
+                            <div class="flex_row1_left">
+                                <span class="demo_item__cls">#</span>
+                            </div>
+                            <div class="flex_row2_center">
+                                <span class="demo_item__cls">1<br>1</span>
+                                <span class="demo_item__cls">2</span>
+                            </div>
+                            <div class="flex_row2_center" hidden>
+                                <span class="demo_item__cls">1</span>
+                                <span class="demo_item__cls">2</span>
+                            </div>
+                            <div class="flex_row3_right">
+                                <span class="demo_item__cls">.</span>
+                                <span class="demo_item__cls">!</span>
                             </div>
                         </div>
 
@@ -3436,10 +3436,10 @@
             <div class="section_main__cls">
                 <article class="article__cls">
 
-                    <header>пример id="clone_styles__id1"</header>
+                    <header>пример для COLOR</header>
                     <div class="article_main__cls">
 
-                        <span id="clone_styles__id1">Элемент для размножения</span>
+                        <span data-clone_style_params='color:[#c0392b, #2c3e50, #16a085, #8e44ad, #d35400]'>Элемент для размножения</span>
 
                     </div>
                     <footer></footer>
@@ -3633,65 +3633,94 @@
     });
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Размножитель для блока-шаблона
+    // Размножитель элемента со стилями
     /**
      * Заменяет элемент на список dl с его клонами, демонстрирующими разные значения CSS-свойства.
-     * @param {string} originalId - ID элемента-оригинала (шаблона).
+     * @param {string} original__el.
      * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor').
-     * @param {string[]} styleValues - Массив значений для этого свойства (первое значение будет применено к оригиналу).
+     * @param {string[]} style_values - Массив значений для этого свойства (первое значение будет применено к оригиналу).
      */
-    function clone_element_with_styles__by_dl(originalId, styleProperty, styleValues) {
-        const original = document.getElementById(originalId);
-        if (!original) {
-            console.error(`Элемент с id "${originalId}" не найден`);
-            return;
-        }
+    function clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
+        style_values.unshift(undefined);
+        style_values.unshift(original__el.style[styleProperty]);
 
-        // Создаём контейнер dl с классом для горизонтального отображения
-        const dl = document.createElement('dl');
-        dl.className = 'dl_horizontal__cls';
-        dl.style.padding = '0.5rem';
-        dl.style.border = '1px solid #e2e8f0';
-        dl.style.borderRadius = '0.5rem';
-        dl.style.backgroundColor = '#f8fafc';
+        // 1. Создаём контейнер dl с классом для горизонтального отображения
+        const dl__el = document.createElement('dl');
+        dl__el.className = 'dl_horizontal__cls';
 
         // Вспомогательная функция: создаёт пару dt/dd и добавляет в dl
-        function addEntry(label, clonedElement) {
-            const dt = document.createElement('dt');
-            dt.textContent = label;
-            dl.appendChild(dt);
+        function addEntry(label_text, clonedElement) {
+            const dt__el = document.createElement('dt');
+            dt__el.textContent = label_text;
+            dl__el.appendChild(dt__el);
 
             const dd = document.createElement('dd');
             dd.appendChild(clonedElement);
-            dl.appendChild(dd);
+            dl__el.appendChild(dd);
         }
 
-        // 1. Обрабатываем оригинал (применяем первое значение из массива, если оно задано)
-        const originalValue = styleValues[0] || '';
-        if (originalValue) {
-            original.style[styleProperty] = originalValue;
-        }
-        // Добавляем подпись к оригиналу, чтобы было понятно, что это исходный элемент
-        const originalLabel = `*${styleProperty}: ${originalValue}`;
-        // Клонируем оригинал, чтобы не перемещать его, а вставить копию в dd
-        const originalClone = original.cloneNode(true);
-        addEntry(originalLabel, originalClone);
+        // 2. ITEMS
+        for (let i = 0; i < style_values.length; i++) {
+            const style_value = style_values[i];
+            const clone__el = original__el.cloneNode(true);
+            clone__el.style[styleProperty] = style_value;
 
-        // 2. Создаём клоны для остальных значений (начиная со второго, если есть)
-        for (let i = 1; i < styleValues.length; i++) {
-            const value = styleValues[i];
-            const clone = original.cloneNode(true);
-            clone.style[styleProperty] = value;
-
-            const label = `${styleProperty}: ${value}`;
-            addEntry(label, clone);
+            const label_text = `${style_value}`;
+            addEntry(label_text, clone__el);
         }
 
-        // 3. Заменяем оригинал на созданный dl
-        original.replaceWith(dl);
+        // 3. FILEDSET
+        const fieldset__el = document.createElement('fieldset');
+        const fieldset_legend__el = document.createElement('legend');
+        fieldset_legend__el.textContent = `CLONE:${styleProperty}`;
+        fieldset__el.appendChild(fieldset_legend__el);
+        fieldset__el.appendChild(dl__el);
+
+        // 4. Заменяем оригинал
+        original__el.replaceWith(fieldset__el);
     }
 
-    clone_element_with_styles__by_dl('clone_styles__id1', 'color', ['#c0392b', '#2c3e50', '#16a085', '#8e44ad', '#d35400']);
+    // парсинг параметризации - Поддерживаемые форматы:
+    // 1. "color:#c0392b,#2c3e50,#16a085"
+    // 2. "color-other:[#c0392b, #2c3e50, #16a085]"
+    function parse_style_parametrisation(source) {
+        // Ищем первую двоеточие
+        const colonIndex = source.indexOf(':');
+        if (colonIndex === -1) {
+            console.error('Неверный формат: отсутствует двоеточие', source);
+            return null;
+        }
+        const property = source.substring(0, colonIndex).trim();
+        let valuesStr = source.substring(colonIndex + 1).trim();
+
+        // Удаляем квадратные скобки, если они есть
+        if (valuesStr.startsWith('[') && valuesStr.endsWith(']')) {
+            valuesStr = valuesStr.slice(1, -1);
+        }
+        // Разбиваем по запятым и чистим пробелы
+        let values = valuesStr.split(',').map(v => v.trim()).filter(v => v);
+        if (values.length === 0) {
+            console.error('Не найдено значений', source);
+            return null;
+        }
+        return { property, values };
+    }
+
+    // Автоматическая обработка элементов с data-clone_style_params
+    // Поддерживаемые форматы:
+    // 1. data-clone_style_params="color:#c0392b,#2c3e50,#16a085"
+    // 2. data-clone_style_params="color-other:[#c0392b, #2c3e50, #16a085]"
+    (function clone_elements__parametrisation() {
+        // Находим все элементы с атрибутом data-clone_style_params
+        const elements = document.querySelectorAll('[data-clone_style_params]');
+        elements.forEach(el => {
+            const parametrisation_line = el.getAttribute('data-clone_style_params');
+            const parsed = parse_style_parametrisation(parametrisation_line);
+            if (!parsed) return;
+            const { property, values } = parsed;
+            clone_element_with_styles__by_dl(el, property, values);
+        });
+    })();
 
     // ----------------------------------------------------------------------------------------------------------------
     // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
