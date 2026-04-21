@@ -3642,7 +3642,7 @@
      */
     function clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
         style_values.unshift(undefined);
-        style_values.unshift(original__el.style[styleProperty]);
+        //style_values.unshift(original__el.style[styleProperty]);
 
         // 1. Создаём контейнер dl с классом для горизонтального отображения
         const dl__el = document.createElement('dl');
@@ -3665,7 +3665,7 @@
             const clone__el = original__el.cloneNode(true);
             clone__el.style[styleProperty] = style_value;
 
-            const label_text = `${style_value}`;
+            const label_text = typeof(style_value) == "string" ? `${style_value}` : `#${style_value}`;
             addEntry(label_text, clone__el);
         }
 
