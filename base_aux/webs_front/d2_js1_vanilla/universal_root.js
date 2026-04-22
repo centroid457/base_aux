@@ -168,6 +168,9 @@ document.addEventListener('DOMContentLoaded', function() {
  * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor').
  * @param {string[]} style_values - Массив значений для этого свойства (первое значение будет применено к оригиналу).
  */
+
+const CLONE_ATTR_NAME = "data-clone_style_params";
+
 function _clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
     style_values.unshift(undefined);
     //style_values.unshift(original__el.style[styleProperty]);
@@ -200,7 +203,7 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
     // 3. FILEDSET
     const fieldset__el = document.createElement('fieldset');
     const fieldset_legend__el = document.createElement('legend');
-    fieldset_legend__el.textContent = `CLONE:${styleProperty}`;
+    fieldset_legend__el.textContent = `${CLONE_ATTR_NAME}[${styleProperty}]`;
     fieldset__el.appendChild(fieldset_legend__el);
     fieldset__el.appendChild(dl__el);
 
@@ -209,8 +212,9 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
 }
 
 // парсинг параметризации - Поддерживаемые форматы:
-// 1. "color:#c0392b,#2c3e50,#16a085"
-// 2. "color-other:[#c0392b, #2c3e50, #16a085]"
+// 1. "color:#c0392b;#2c3e50;#16a085"               --->; as separator
+// 2. "color-other:[#c0392b; #2c3e50; #16a085]"     --->[] brackets available
+// 3. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]"  ---> sophisticated values available!
 function parse_style_parametrisation(source) {
     // Ищем первую двоеточие
     const colonIndex = source.indexOf(':');
@@ -226,7 +230,7 @@ function parse_style_parametrisation(source) {
         valuesStr = valuesStr.slice(1, -1);
     }
     // Разбиваем по запятым и чистим пробелы
-    let values = valuesStr.split(',').map(v => v.trim()).filter(v => v);
+    let values = valuesStr.split(';').map(v => v.trim()).filter(v => v);
     if (values.length === 0) {
         console.error('Не найдено значений', source);
         return null;
@@ -234,15 +238,14 @@ function parse_style_parametrisation(source) {
     return { property, values };
 }
 
-// Автоматическая обработка элементов с data-clone_style_params
+// Автоматическое клонирование
 // Поддерживаемые форматы:
-// 1. data-clone_style_params="color:#c0392b,#2c3e50,#16a085"
-// 2. data-clone_style_params="color-other:[#c0392b, #2c3e50, #16a085]"
+// 1. data-clone_style_params="color:#c0392b;#2c3e50;#16a085"
+// 2. data-clone_style_params="color-other:[#c0392b; #2c3e50; #16a085]"
 (function clone_elements__parametrisation() {
-    // Находим все элементы с атрибутом data-clone_style_params
-    const elements = document.querySelectorAll('[data-clone_style_params]');
+    const elements = document.querySelectorAll(`[${CLONE_ATTR_NAME}]`);
     elements.forEach(el => {
-        const parametrisation_line = el.getAttribute('data-clone_style_params');
+        const parametrisation_line = el.getAttribute(CLONE_ATTR_NAME);
         const parsed = parse_style_parametrisation(parametrisation_line);
         if (!parsed) return;
         const { property, values } = parsed;
