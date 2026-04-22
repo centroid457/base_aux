@@ -203,7 +203,7 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
     // 3. FILEDSET
     const fieldset__el = document.createElement('fieldset');
     const fieldset_legend__el = document.createElement('legend');
-    fieldset_legend__el.textContent = `${CLONE_ATTR_NAME}[${styleProperty}]`;
+    fieldset_legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b>${styleProperty}</b>]`;
     fieldset__el.appendChild(fieldset_legend__el);
     fieldset__el.appendChild(dl__el);
 
