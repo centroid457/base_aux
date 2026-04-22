@@ -70,12 +70,12 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="textInlineId" data-collapsed>
-            <h2 data-icon_process_ok>TEXT - inline</h2>
+        <section class="section__cls" id="textFormateId" data-collapsed_not>
+            <h2 data-icon_process_ok>TEXT - FORMATTING</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>типовые</header>
+                    <header>TAGs inline</header>
                     <div class="article_main__cls">
 
                         <p><strong>strong</strong> — важный текст (жирный + смысловая важность).</p>
@@ -119,6 +119,151 @@
                         strong/em важны для скринридеров (скринридеры меняют интонацию), b/i — только стиль. <br>
                         ins и del — для отслеживания изменений (могут иметь атрибуты datetime, cite)<br>
                     </footer>
+                </article>
+
+                <!-- ====================== ЦВЕТ ТЕКСТА ====================== -->
+                <article class="article__cls">
+                    <header>🌈 color – цвет текста</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="color:black;#2c3e50;#c0392b;#16a085;#8e44ad;#d35400"
+                             style="font-size: 1rem; padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Цвет текста
+                        </div>
+                    </div>
+                    <footer>💡 Значения: именованные цвета, HEX, RGB, HSL, RGBA, HSLA. Примеры выше – чёрный, тёмно-синий, красный, зелёный, фиолетовый, оранжевый.</footer>
+                </article>
+
+                <!-- ====================== РАЗМЕР ШРИФТА ====================== -->
+                <article class="article__cls">
+                    <header>font-size</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="font-size:[
+                                xxx-small;xx-small;x-small;small;medium;large;x-large;xx-large;xxx-large;
+                                5px; 8px; 12px;16px;24px;
+                                0.8rem;1rem;1.5rem;2rem;
+                                0.5em; 1em;1.2em;
+                                50%; 100%; 150%;
+                                1vw; 3vw;
+                                1;5;10;100;
+                             ]">
+                            Размер шрифта
+                        </div>
+                    </div>
+                    <footer>
+                        📌 <strong>Единицы измерения:</strong><br>
+                        <code>px</code> – пиксели (фиксированный)<br>
+                        <code>em</code> – относительно размера шрифта родителя<br>
+                        <code>rem</code> – относительно размера шрифта корневого элемента (&lt;html&gt;)<br>
+                        <code>%</code> – проценты от родителя<br>
+                        <code>vw/vh</code> – 1% ширины/высоты окна браузера<br>
+                        <code>xx-small … xxx-large</code> – абсолютные ключевые слова (зависят от браузера)
+                    </footer>
+                </article>
+
+                <!-- ====================== НАЧЕРТАНИЕ (ЖИРНОСТЬ) ====================== -->
+                <article class="article__cls">
+                    <header>🔥 font-weight – жирность шрифта</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="font-weight:normal;bold;bolder;lighter;100;200;300;400;500;600;700;800;900"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Жирность текста
+                        </div>
+                    </div>
+                    <footer>💡 <code>normal</code> = 400, <code>bold</code> = 700. <code>bolder/lighter</code> – относительно родителя. Цифры от 100 до 900 с шагом 100.</footer>
+                </article>
+
+                <!-- ====================== КУРСИВ ====================== -->
+                <article class="article__cls">
+                    <header>✍️ font-style – курсив</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="font-style:normal;italic;oblique"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Курсив
+                        </div>
+                    </div>
+                    <footer>📌 <code>normal</code> – обычный, <code>italic</code> – курсив, <code>oblique</code> – наклонный (похож на курсив, но используется реже).</footer>
+                </article>
+
+                <!-- ====================== ТРАНСФОРМАЦИЯ РЕГИСТРА ====================== -->
+                <article class="article__cls">
+                    <header>🔠 text-transform – регистр букв</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="text-transform:none;uppercase;lowercase;capitalize"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            пример текста для трансформации
+                        </div>
+                    </div>
+                    <footer>💡 <code>uppercase</code> – все заглавные, <code>lowercase</code> – все строчные, <code>capitalize</code> – каждое слово с заглавной буквы.</footer>
+                </article>
+
+                <!-- ====================== ДЕКОРИРОВАНИЕ ====================== -->
+                <article class="article__cls">
+                    <header>✨ text-decoration – подчёркивание, зачёркивание и др.</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="text-decoration:none;underline;overline;line-through;underline wavy red;overline double blue"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Декорированный текст
+                        </div>
+                    </div>
+                    <footer>📌 Можно комбинировать тип линии (<code>underline</code>, <code>overline</code>, <code>line-through</code>), стиль (<code>solid</code>, <code>wavy</code>, <code>double</code>) и цвет.</footer>
+                </article>
+
+                <!-- ====================== МЕЖБУКВЕННЫЙ ИНТЕРВАЛ ====================== -->
+                <article class="article__cls">
+                    <header>🔤 letter-spacing – расстояние между буквами</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="letter-spacing:normal;0.05rem;0.1rem;0.2rem;-0.02rem"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Межбуквенный интервал
+                        </div>
+                    </div>
+                    <footer>💡 Отрицательные значения сближают буквы, положительные – раздвигают.</footer>
+                </article>
+
+                <!-- ====================== МЕЖСТРОЧНЫЙ ИНТЕРВАЛ ====================== -->
+                <article class="article__cls">
+                    <header>📄 line-height – высота строки</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="line-height:1;1.2;1.5;2"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem; width: 200px;">
+                            Межстрочный интервал<br>Вторая строка для наглядности
+                        </div>
+                    </div>
+                    <footer>🔢 Значение без единиц (1, 1.2) умножается на текущий размер шрифта. Рекомендуется для доступности – не менее 1.5.</footer>
+                </article>
+
+                <!-- ====================== ТЕНЬ ТЕКСТА ====================== -->
+                <article class="article__cls">
+                    <header>💎 text-shadow – тень текста</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="text-shadow:none;2px 2px 4px rgba(0,0,0,0.3);0 0 5px #ff0000;1px 1px 0 #aaa;2px 2px 0px #888,-2px -2px 0px #ccc"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem; font-size: 1.2rem;">
+                            Тень текста
+                        </div>
+                    </div>
+                    <footer>📐 Синтаксис: <code>сдвигX сдвигY размытие цвет</code>. Можно указывать несколько теней через запятую.</footer>
+                </article>
+
+                <!-- ====================== ДОПОЛНИТЕЛЬНО: font-family ====================== -->
+                <article class="article__cls">
+                    <header>🖋️ font-family – гарнитура шрифта</header>
+                    <div class="article_main__cls">
+                        <div class="demo-text-block"
+                             data-clone_style_params="font-family:serif;sans-serif;monospace;cursive;fantasy;'Segoe UI',Roboto;'Courier New',monospace"
+                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                            Пример текста
+                        </div>
+                    </div>
+                    <footer>💡 Всегда указывайте несколько альтернативных шрифтов (например, <code>'Segoe UI', Roboto, Arial, sans-serif</code>).</footer>
                 </article>
 
             </div>
@@ -2067,10 +2212,10 @@
                     <header>align-items — выравнивание по поперечной/ВЕРТИКАЛЬНОЙ оси</header>
                     <div class="article_main__cls">
                         <div class="cover_box__cls flex_row0"
-                             data-clone_style_params="align-items:stretch;flex-start;center;flex-end;baseline"
-                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; height:120px;">
-                            <div class="demo_item__cls" style="height:40px;">1</div>
-                            <div class="demo_item__cls" style="height:60px;">2</div>
+                             data-clone_style_params="align-items:[stretch;flex-start;center;flex-end;baseline]"
+                             style="height:50px;">
+                            <div class="demo_item__cls" style="height:10px;">1</div>
+                            <div class="demo_item__cls" style="height:20px;">2</div>
                             <div class="demo_item__cls" style="height:30px;">3</div>
                         </div>
                         <p><small><code>stretch</code> (по умолчанию) – растягивает элементы на высоту контейнера; <code>baseline</code> выравнивает по базовой линии текста.</small></p>
