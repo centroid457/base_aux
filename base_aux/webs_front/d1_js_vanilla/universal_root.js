@@ -145,34 +145,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ----------------------------------------------------------------------------------------------------------------
 // LINKS=SCROLL Smooth - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href && href !== '#') {
-            const target = document.querySelector(href);
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+(function linksSmoothScroll_forOldBrausers() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
-        }
-    });
-});
-
-// ----------------------------------------------------------------------------------------------------------------
-// TABS=JS
-document.querySelectorAll('.tabs-container').forEach(container => {
-    const btns = container.querySelectorAll('.tab-btn');
-    btns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const tabId = this.getAttribute('data-tab');
-            container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            container.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-            this.classList.add('active');
-            const activePane = container.querySelector(`#${tabId}`);
-            if (activePane) activePane.classList.add('active');
         });
     });
-});
+})();
 
 // ----------------------------------------------------------------------------------------------------------------
 // Размножитель элемента со стилями
@@ -182,7 +168,7 @@ document.querySelectorAll('.tabs-container').forEach(container => {
  * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor').
  * @param {string[]} style_values - Массив значений для этого свойства (первое значение будет применено к оригиналу).
  */
-function clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
+function _clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
     style_values.unshift(undefined);
     //style_values.unshift(original__el.style[styleProperty]);
 
@@ -260,7 +246,7 @@ function parse_style_parametrisation(source) {
         const parsed = parse_style_parametrisation(parametrisation_line);
         if (!parsed) return;
         const { property, values } = parsed;
-        clone_element_with_styles__by_dl(el, property, values);
+        _clone_element_with_styles__by_dl(el, property, values);
     });
 })();
 
@@ -325,3 +311,4 @@ function parse_style_parametrisation(source) {
     window.addEventListener('hashchange', handleHash);
     handleHash();
 })();
+// ----------------------------------------------------------------------------------------------------------------

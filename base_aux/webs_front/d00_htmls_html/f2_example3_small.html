@@ -1,32 +1,25 @@
-                        <hr>
-                        <h4>Кастомное сообщение об ошибке (JavaScript)</h4>
-                        <form id="customValidityForm" onsubmit="return false;">
-                            <label>Пароль (минимум 6 символов):
-                                <input type="password" id="passwordField" required>
-                            </label>
-                            <div id="passwordError" style="color: #ef4444; font-size: 0.85rem;"></div>
-                            <button type="submit">Проверить</button>
-                        </form>
-                        <script>
-                            const passwordField = document.getElementById('passwordField');
-                            const form = document.getElementById('customValidityForm');
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+echo "<!-- PHP работает, время: " . date('H:i:s') . " -->\n";
+?>
 
-                            passwordField.addEventListener('input', function() {
-                                if (this.value.length < 6) {
-                                    this.setCustomValidity('Пароль должен содержать минимум 6 символов');
-                                    document.getElementById('passwordError').textContent = this.validationMessage;
-                                } else {
-                                    this.setCustomValidity('');
-                                    document.getElementById('passwordError').textContent = '';
-                                }
-                            });
+<hr>
+<h4>CHECK PHP EXECUTION</h4>
 
-                            form.addEventListener('submit', function(e) {
-                                if (!passwordField.checkValidity()) {
-                                    e.preventDefault();
-                                    alert(passwordField.validationMessage);
-                                } else {
-                                    alert('Пароль принят');
-                                }
-                            });
-                        </script>
+<hr>
+<h4><?php echo "PHP работает"; ?></h4>
+<h4>"<?php echo "PHP работает"; ?>"</h4>
+
+<hr>
+<h4><?= filepath_with_timestamp('universal_root.js') ?></h4>
+<h4>"<?= filepath_with_timestamp('universal_root.js') ?>"</h4>
+
+<hr>
+<h4><?= filemtime('universal_root.js') ?></h4>
+<h4>"<?= filemtime('universal_root.js') ?>"</h4>
+
+<hr>
+<script>
+console.log("<?= filemtime('universal_root.js') ?>");
+</script>
