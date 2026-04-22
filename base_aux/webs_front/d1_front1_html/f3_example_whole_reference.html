@@ -2336,18 +2336,57 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="MULTIPLY_CSS__ID">
-            <h2>Multiply Elements</h2>
+        <section class="section__cls" id="cloneColorBgId" data-collapsed>
+            <h2 data-icon_process_ok>clone COLORS BACKGROUND</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>JS пример для COLOR</header>
+                    <header>clone</header>
                     <div class="article_main__cls">
 
-                        <span data-clone_style_params='color:[#c0392b; #2c3e50; #16a085; #8e44ad; #d35400]'>Элемент для размножения</span>
+                        <!-- Простые цвета (имена, hex, rgb, hsl) -->
+                        <div style="padding: 1rem; text-align: center; font-weight: bold;"
+                             data-clone_style_params="background:lightblue;#2ecc71;rgb(231, 76, 60);hsl(240, 100%, 50%);rgba(0,0,0,0.7);hsla(84, 100%, 59%, 0.8)">
+                            🌈 Цвета
+                        </div>
+
+                        <!-- Градиенты линейные -->
+                        <div style="padding: 2rem; text-align: center; font-weight: bold; color: white; text-shadow: 0 0 4px black;"
+                             data-clone_style_params="background:linear-gradient(135deg, #667eea, #764ba2);linear-gradient(45deg, #ff6b6b, #feca57);linear-gradient(90deg, #1e9600, #fff200, #ff0000);linear-gradient(0deg, #4facfe, #00f2fe)">
+                            🎨 Линейные градиенты
+                        </div>
+
+                        <!-- Радиальные градиенты -->
+                        <div style="padding: 2rem; text-align: center; font-weight: bold; color: white;"
+                             data-clone_style_params="background:radial-gradient(circle, #f0f, #0ff);radial-gradient(ellipse at top, #ff9a9e, #fad0c4);radial-gradient(circle at 20% 40%, #f6d365, #fda085)">
+                            🔵 Радиальные градиенты
+                        </div>
+
+                        <!-- Повторяющиеся градиенты -->
+                        <div style="padding: 1.5rem; text-align: center; font-weight: bold;"
+                             data-clone_style_params="background:repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);repeating-radial-gradient(circle at 20% 30%, #ff9999, #ff9999 10px, #ffcccc 10px, #ffcccc 20px)">
+                            🔁 Повторяющиеся градиенты
+                        </div>
+
+                        <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
+                        <div style="padding: 1.5rem; text-align: center; font-weight: bold; color: white;"
+                             data-clone_style_params="background:linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;radial-gradient(circle at 10% 20%, #ff9a9e, #fad0c4), url('https://picsum.photos/id/20/300/200')">
+                            🖼️ Фоны с изображениями и наложениями
+                        </div>
+
+                        <!-- Эффект стекла (glassmorphism) -->
+                        <div style="background: #aaaaaa; padding: 1.5rem; text-align: center; font-weight: bold; backdrop-filter: blur(4px);"
+                             data-clone_style_params="background:rgba(200, 200, 200, 0.5);linear-gradient(120deg, rgba(200,200,200,0.9), rgba(200,200,255,0.1));radial-gradient(circle, rgba(200,200,200,0.9), rgba(255,255,255,0.1))">
+                            🥂 Стеклянные эффекты
+                        </div>
+
+                        <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
+                        <div style="padding: 1.5rem; text-align: center; font-weight: bold;"
+                             data-clone_style_params="background:conic-gradient(#ff8c00, #ff0080, #ff8c00);repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);linear-gradient(45deg, #fbda61, #ff5acd)">
+                            🌀 Конические градиенты
+                        </div>
 
                     </div>
-                    <footer></footer>
                 </article>
 
             </div>
@@ -2362,7 +2401,6 @@
 </div>
 
 <script id="ROOT_FOOTER_SCRIPT__ID" data-comment="call universal funcs from universal loaded script">
-
 </script>
 
 </body>
