@@ -639,6 +639,9 @@ dd {
     margin-top: 0;
     margin-bottom: 0;
     white-space: nowrap;
+
+    user-select: all;    /* при клике выделяется весь текст элемента */
+    cursor: pointer;     /* показывает, что элемент можно выделить (необязательно) */
 }
 .dl_horizontal__cls dd {
     margin-left: 0;

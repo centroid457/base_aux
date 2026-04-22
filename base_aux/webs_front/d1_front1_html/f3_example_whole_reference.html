@@ -2045,40 +2045,145 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="styleLayoutId">
-            <h2 data-icon_process_wait>STYLES Компоновка</h2>
+        <section class="section__cls" id="compose1FlexId">
+            <h2 data-icon_process_wait>Compose-1=FLEX</h2>
             <div class="section_main__cls grid_auto__cls">
 
+                <!-- ========== justify-content ========== -->
                 <article class="article__cls">
-                    <header>FLEX – одномерная компоновка</header>
+                    <header>justify-content — распределение по главной/ГОРИЗОНТАЛЬНОЙ оси</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls flex_row0"
+                             data-clone_style_params="justify-content:[flex-start;center;flex-end;space-between;space-around;space-evenly]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ========== align-items ========== -->
+                <article class="article__cls">
+                    <header>align-items — выравнивание по поперечной/ВЕРТИКАЛЬНОЙ оси</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls flex_row0"
+                             data-clone_style_params="align-items:stretch;flex-start;center;flex-end;baseline"
+                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; height:120px;">
+                            <div class="demo_item__cls" style="height:40px;">1</div>
+                            <div class="demo_item__cls" style="height:60px;">2</div>
+                            <div class="demo_item__cls" style="height:30px;">3</div>
+                        </div>
+                        <p><small><code>stretch</code> (по умолчанию) – растягивает элементы на высоту контейнера; <code>baseline</code> выравнивает по базовой линии текста.</small></p>
+                    </div>
+                    <footer>Для работы <code>stretch</code> у элементов не должна быть задана явная высота.</footer>
+                </article>
+
+                <!-- ========== flex-direction ========== -->
+                <article class="article__cls">
+                    <header>🔄 flex-direction — направление главной оси</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls"
+                             data-clone_style_params="flex-direction:row;row-reverse;column;column-reverse"
+                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; display:flex; gap:0.5rem;">
+                            <div class="demo_item__cls">A</div>
+                            <div class="demo_item__cls">B</div>
+                            <div class="demo_item__cls">C</div>
+                        </div>
+                        <p><small><code>row</code> (по умолчанию), <code>row-reverse</code>, <code>column</code>, <code>column-reverse</code>.</small></p>
+                    </div>
+                    <footer>⚠️ При <code>column</code> ширина контейнера ограничена, элементы могут выходить за пределы.</footer>
+                </article>
+
+                <!-- ========== flex-wrap ========== -->
+                <article class="article__cls">
+                    <header>📦 flex-wrap — перенос элементов на новую строку</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls"
+                             data-clone_style_params="flex-wrap:nowrap;wrap;wrap-reverse"
+                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; width:200px; display:flex;">
+                            <div class="demo_item__cls" style="width:80px;">1</div>
+                            <div class="demo_item__cls" style="width:80px;">2</div>
+                            <div class="demo_item__cls" style="width:80px;">3</div>
+                            <div class="demo_item__cls" style="width:80px;">4</div>
+                        </div>
+                        <p><small><code>nowrap</code> (по умолчанию) – элементы не переносятся, сжимаются; <code>wrap</code> – перенос; <code>wrap-reverse</code> – перенос в обратном порядке.</small></p>
+                    </div>
+                    <footer>🧩 Для демонстрации ширина контейнера ограничена 200px.</footer>
+                </article>
+
+                <!-- ========== gap ========== -->
+                <article class="article__cls">
+                    <header>📏 gap — расстояние между элементами</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls"
+                             data-clone_style_params="gap:0;0.5rem;1rem;2rem"
+                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; display:flex;">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small><code>gap</code> работает и для flex, и для grid. Заменяет классические <code>margin</code> между элементами.</small></p>
+                    </div>
+                    <footer>✨ <code>gap</code> проще и надёжнее: не нужно обнулять отступы у первого/последнего элемента.</footer>
+                </article>
+
+                <!-- ========== align-content ========== -->
+                <article class="article__cls">
+                    <header>📐 align-content — выравнивание строк при переносе</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls"
+                             data-clone_style_params="align-content:stretch;flex-start;center;flex-end;space-between"
+                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; height:180px; display:flex; flex-wrap:wrap; width:200px;">
+                            <div class="demo_item__cls" style="width:60px;">1</div>
+                            <div class="demo_item__cls" style="width:60px;">2</div>
+                            <div class="demo_item__cls" style="width:60px;">3</div>
+                            <div class="demo_item__cls" style="width:60px;">4</div>
+                        </div>
+                        <p><small>Работает только при <code>flex-wrap: wrap</code> и наличии нескольких строк. <code>stretch</code> растягивает строки по высоте.</small></p>
+                    </div>
+                    <footer>💡 <code>align-content</code> управляет расстоянием между строками, а не внутри строки.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>FLEX=Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="article_main__cls">
 
-                        <div class="cover_box__cls flex_row0" data-clone_style_params='justify-content:[center; space-between; space-evenly]'>
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
+                        flex, justify-content, gap
+                        <div class="flex_row0 cover_box__cls">
+                            <div class="flex_row1_left">
+                                <span class="demo_item__cls">#</span>
+                            </div>
+                            <div class="flex_row2_center">
+                                <span class="demo_item__cls">1<br>1</span>
+                                <span class="demo_item__cls">2</span>
+                            </div>
+                            <div class="flex_row2_center" hidden>
+                                <span class="demo_item__cls">1</span>
+                                <span class="demo_item__cls">2</span>
+                            </div>
+                            <div class="flex_row3_right">
+                                <span class="demo_item__cls">.</span>
+                                <span class="demo_item__cls">!</span>
+                            </div>
                         </div>
 
-                        <h4>align-items</h4>
-                        <div class="cover_box__cls flex_row0" data-clone_style_params='align-items:[center; ]'>
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
+                        <div>
+                            <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
+                            Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
+                            <code>gap</code> задаёт отступы между элементами внутри группы.<br>
+                            <code>align-items: center</code> — вертикальное выравнивание по центру.
                         </div>
-
-                        <h4>Перенос строк (flex-wrap) – адаптив</h4>
-                        <div class="cover_box__cls flex_row0" style="justify-content: space-between;">
-                            <div class="demo_item__cls">_________1</div>
-                            <div class="demo_item__cls">_________2</div>
-                            <div class="demo_item__cls">_________3</div>
-                            <div class="demo_item__cls">_________4</div>
-                            <div class="demo_item__cls">_________5</div>
-                            <div class="demo_item__cls">_________6</div>
-                        </div>
-                        <p><small>При сужении окна элементы переносятся на новую строку благодаря <code>flex-wrap: wrap</code> и <code>gap</code>.</small></p>
                     </div>
-                    <footer>💡 Flexbox управляет распределением вдоль одной оси. Используйте <code>gap</code> вместо <code>margin-right</code> для отступов между элементами.</footer>
+                    <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
                 </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="compose2GridId" data-collapsed>
+            <h2 data-icon_process_blank>Compose-2=GRID</h2>
+            <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
                     <header>Grid – двумерная сетка</header>
@@ -2126,46 +2231,12 @@
                     <footer>💡 Grid даёт полный контроль над строками и колонками. <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек.</footer>
                 </article>
 
-                <article class="article__cls">
-                    <header>FLEX=Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
-                    <div class="article_main__cls">
-
-                        flex, justify-content, gap
-                        <div class="flex_row0 cover_box__cls">
-                            <div class="flex_row1_left">
-                                <span class="demo_item__cls">#</span>
-                            </div>
-                            <div class="flex_row2_center">
-                                <span class="demo_item__cls">1<br>1</span>
-                                <span class="demo_item__cls">2</span>
-                            </div>
-                            <div class="flex_row2_center" hidden>
-                                <span class="demo_item__cls">1</span>
-                                <span class="demo_item__cls">2</span>
-                            </div>
-                            <div class="flex_row3_right">
-                                <span class="demo_item__cls">.</span>
-                                <span class="demo_item__cls">!</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <code>justify-content: space-between</code> — распределяет всё пространство, прижимая левый и правый блоки к краям, а центр — ровно посередине.<br>
-                            Внутри каждой группы — свой <code>flex</code> или просто блочные элементы.<br>
-                            <code>gap</code> задаёт отступы между элементами внутри группы.<br>
-                            <code>align-items: center</code> — вертикальное выравнивание по центру.
-                        </div>
-                    </div>
-                    <footer>💡 <code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
-                </article>
-
             </div>
         </section>
 
-
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="mediaId" data-collapsed>
-            <h2 data-icon_process_blank>MEDIA</h2>
+            <h2 data-icon_process_bad>MEDIA</h2>
             <div class="section_main__cls grid_auto__cls">
                 <article class="article__cls">
                     <header>Изображение & figure</header>
@@ -2199,7 +2270,7 @@
                         <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
-                    <footer>📌 iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
+                    <footer>iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
                 </article>
             </div>
         </section>
