@@ -1,0 +1,1098 @@
+/* -------------------- BUILDIN ------------------------------------------------------------------------------*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f1f4f8;
+    font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+    color: #1e2a3e;
+    padding: 2rem 1.5rem;
+}
+
+hr {
+    margin: 1rem 0;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/* -------------------- INPUT --------------------*/
+input,
+select,
+textarea,
+button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+}
+input:hover,
+select:hover,
+textarea:hover,
+button:hover {
+    transform: translateY(-1px);
+}
+
+/* -------------------- FORMS --------------------*/
+form div label {
+    display: inline-block;
+    width: 110px;
+}
+
+/* -------------------- FORMS --------------------*/
+.fieldset_style1__cls {
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 1rem;
+}
+.fieldset_style1__cls legend{
+    padding: 0 0.5rem;
+    font-weight: 600;
+}
+
+/* -------------------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------------------- */
+/* Базовые стили для всех текстовых полей, select и textarea */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #1e2a3e;
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Состояние фокуса */
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2a73ff;
+    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
+}
+
+/* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
+input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+}
+input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
+select:invalid:focus,
+textarea:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Валидное поле (опционально) */
+input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
+select:valid,
+textarea:valid {
+    border-color: #10b981;
+}
+
+/* Отключённые поля */
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Чекбоксы и радио – современный accent-color */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #2a73ff;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 0.3rem;
+}
+
+/* Метки для чекбоксов и радио */
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]) {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* placeholder стиль */
+::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+/* -------------------- ATTRS UNIVERSAL ----------------------------------------------------------------------*/
+[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* -------------------- ATTRS USER ---------------------------------------------------------------------------*/
+/*  */
+.cover_box__cls {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    __margin-bottom: 1rem;
+}
+
+/* highlited = bg + graphic -------------------------*/
+p[data-highlighted] {
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+blockquote[data-highlighted] {
+    background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+    border-left: 4px solid #ff8c42;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Фоновые цвета */
+[data-bg_grey] { background: #f0f0f0; }
+[data-bg_yellow] { background: #fff3cd; }
+[data-bg_red]   { background: #fee2e2; }
+[data-bg_green] { background: #d1fae5; }
+[data-bg_blue]  { background: #dbeafe; }
+
+/* Рамки и тени */
+[data-border]       { border: 1px solid #cbd5e1; }
+[data-border_top]   { border-top: 1px solid #cbd5e1; }
+[data-shadow]       { box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+[data-shadow_hover]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+
+/* Курсор */
+[data-clickable]    { cursor: pointer; }
+
+/* Отступы и выравнивание */
+[data-padding]          { padding: 0.5rem 1rem; }
+[data-padding_small]    { padding: 0.25rem 0.5rem; }
+[data-margin]           { margin: 0.5rem 0; }
+[data-align_center]     { text-align: center; }
+[data-align_right]      { text-align: right; }
+
+[data-text_bold]    { font-weight: 600; }
+
+/* Размер шрифта */
+[data-font_small]   { font-size: 0.85rem; }
+[data-font_large]   { font-size: 1.2rem; }
+
+/* Скругления */
+[data-rounded]      { border-radius: 0.5rem; }
+[data-rounded_large] { border-radius: 1rem; }
+
+/* Отображение */
+[data-inline]       { display: inline-block; }      /* преобразует в строчный блок а не контейнерный */
+
+[data-hidden]       { display: none; }
+
+section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
+
+/* -------------------- ИКОНКИ ЧЕРЕЗ data-АТРИБУТЫ -------------------- */
+[data-icon_process_blank]::before { content: "⚪"; }
+[data-icon_process_wait]::before { content: "🟡"; }
+[data-icon_process_ok]::before { content: "🟢"; }
+[data-icon_process_bad]::before { content: "🔴"; }
+
+[data-icon_attention]::before { content: "⚠️"; }
+
+[data-icon_result_ok]::before { content: "✅"; }
+[data-icon_result_bad]::before { content: "❌"; }
+
+/* Селекторы по значению атрибута data-icon --- ЭТО ИМЕННО ДЛЯ ЗНАЧЕНИЯ А НЕ ДЛЯ ИМЕНИ!!! */
+.demo_attr_wildcards__cls[data-icon^="proc"] {
+    background: #f0f0f0; /* красный фон */
+}
+.demo_attr_wildcards__cls[data-icon$="ok"] {
+    text-decoration: underline; /* подчёркивание */
+}
+.demo_attr_wildcards__cls[data-icon*="bad"] {
+    text-decoration: line-through; /* зачёркивание */
+}
+
+/* -------------------- BUTTONS ------------------------------------------------------------------------------*/
+button {
+    background: #2a73ff;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.15s;
+    /*display: inline-block;-->
+<!--            padding: 0.5rem 1rem;-->
+<!--            font-family: inherit;-->
+<!--            font-size: 0.9rem;-->
+<!--            font-weight: 500;-->
+<!--            text-align: center;-->
+<!--            text-decoration: none;-->
+<!--            border: 1px solid transparent;-->
+<!--            border-radius: 0.5rem;-->
+<!--            background: #e2e8f0;-->
+<!--            color: #1e2a3e;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.2s;-->*/
+}
+button:hover {
+    background: #1a5ad9;  //base cbd5e1
+}
+button:active {
+    transform: translateY(3px);
+}
+button:focus-visible {
+    outline: 2px solid #2a73ff;
+    outline-offset: 2px;
+}
+
+/* ----------------------------------------- */
+.button_blue__cls {     //just for schema!
+    background: #2a73ff;
+    color: white;
+}
+.button_blue__cls:hover {
+    background: #1a5ad9;
+}
+.button_blue_outline__cls {
+    background: transparent;
+    border-color: #2a73ff;
+    color: #2a73ff;
+}
+.button_blue_outline__cls:hover {
+    background: #2a73ff;
+    color: white;
+}
+
+/* ----------------------------------------- */
+.button_green__cls {
+    background: #10b981;
+    color: white;
+}
+.button_green__cls:hover {
+    background: #0e9f6e;
+}
+.button_green_outline__cls {
+    background: transparent;
+    border-color: #10b981;
+    color: #10b981;
+}
+.button_green_outline__cls:hover {
+    background: #10b981;
+    color: white;
+}
+
+/* ----------------------------------------- */
+.button_red__cls {
+    background: #ef4444;
+    color: white;
+}
+.button_red__cls:hover {
+    background: #dc2626;
+}
+.button_red_outline__cls {
+    background: transparent;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.button_red_outline__cls:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* ----------------------------------------- */
+.button_small__cls {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+.button_large__cls {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* ----------------------------------------- */
+.button_as_a__cls {
+    background: none;
+    border: none;
+    color: #2a73ff;
+    text-decoration: underline;
+    padding: 0;
+}
+.button_as_a__cls:hover {
+    color: #1a5ad9;
+    background: none;
+}
+
+/* -------------------- TEXT inline --------------------------------------------------------------------------*/
+abbr {
+    cursor: help;
+}
+dfn {
+    //font-style: normal;
+    font-weight: 500;
+}
+/* Переменная — курсив + лёгкий серый фон (по желанию) */
+var {
+    font-style: italic;
+    background: #f0f0f0;     /* или #f8f8f8, но не обязательно */
+    padding: 0.1rem 0.2rem;
+    border-radius: 4px;
+    font-family: monospace;   /* если переменная из кода */
+}
+
+/* Вывод программы — моноширинный + тёмный фон (как консоль) */
+samp {
+    font-family: monospace;
+    background: #e0e0e0;
+    //background: #1e2a3a;
+    //color: #e2e8f0;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* -------------------- LINKS --------------------------------------------------------------------------------*/
+/* ===== Базовые стили ссылок ===== */
+a {
+    color: #2a73ff;
+    text-decoration: none;
+    transition: color 0.2s, background-color 0.2s;
+    cursor: pointer;
+}
+a:hover {
+    color: #1a5ad9;
+    text-decoration: underline;
+}
+a:focus-visible {
+    outline: 2px solid #2a73ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ===== Внешние ссылки (иконка дополнительная) ===== */
+a[target="_blank"]::after {
+    content: "↗";
+    display: inline-block;
+    margin-left: 0.2rem;
+    font-size: 0.75em;
+    vertical-align: top;
+}
+
+/* ===== Якоря (плавная прокрутка) ===== */
+html {
+    scroll-behavior: smooth;  /* глобальная плавная прокрутка */
+}
+/* Отступ для фиксированной навигации (если есть sticky) */
+:target {
+    scroll-margin-top: 80px;
+}
+
+/* ===== Ссылки-кнопки ===== */
+.a_as_button__cls {
+    display: inline-block;
+    background: #2a73ff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.a_as_button__cls:hover {
+    background: #1a5ad9;
+    text-decoration: none;
+}
+
+/* ===== навигация ===== */
+.div_a_nav__cls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+}
+.div_a_nav__cls a {
+    background: #eef2ff;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+}
+.div_a_nav__cls a:hover {
+    background: #2a73ff;
+    color: white;
+    text-decoration: none;
+}
+
+/* -------------------- QUOTES -------------------------------------------------------------------------------*/
+/* ===== Блочные цитаты ===== */
+blockquote {
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.5rem;
+    background: #f8fafc;          /* светлый фон, как у комментариев */
+    border-left: 4px solid #2a73ff; /* акцентная линия слева */
+    border-radius: 0 1rem 1rem 0;   /* скругление только с правой стороны */
+    color: #1e2a3e;
+    font-style: normal;            /* обычно цитаты не курсивом (хотя можно) */
+    line-height: 1.5;
+}
+
+/* Для вложенных цитат (цитата в цитате) — чуть меньше отступ */
+blockquote blockquote {
+    margin: 0.75rem 0;
+    background: #f1f5f9;
+    border-left-color: #5b8cff;
+}
+
+/* Автор цитаты (тег <footer> внутри blockquote) */
+blockquote > footer,
+blockquote cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #5b6e8c;
+    font-style: normal;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.5rem;
+}
+
+/* Стиль для самого текста цитаты (необязательно) */
+blockquote p {
+    margin: 0 0 0.5rem 0;
+}
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== Короткие строчные цитаты (тег <q>) ===== */
+q {
+    quotes: "«" "»" "„" "“";      /* русские типографские кавычки */
+    font-style: italic;
+    color: #2c3e66;
+}
+q::before {
+    content: open-quote;
+}
+q::after {
+    content: close-quote;
+}
+
+/* ===== Источник (cite) в подписи к цитате ===== */
+cite {
+    font-style: normal;
+    font-weight: 500;
+    color: #2a73ff;
+}
+
+/* -------------------- PRE+CODE+KBD -------------------------------------------------------------------------*/
+code, kbd, pre, samp {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    font-size: 0.875em; /* относительный размер, подстраивается под контекст */
+}
+kbd {
+    background: #eef2ff;
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.85em;
+    box-shadow: inset 0 -1px 0 #cbd5e1;
+}
+
+/* ===== Инлайн-код (внутри текста) ===== */
+code:not(pre code) {
+    background: #f0f2f5;
+    color: #c7254e;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    white-space: nowrap;      /* не переносить длинные строки в тексте */
+    font-size: 0.85em;
+}
+
+/* ===== Блок pre (обёртка для кода) ===== */
+pre {
+    background: #1e2a3a;      /* тёмный фон как на GitHub */
+    color: #e2e8f0;           /* светлый текст */
+    padding: 1rem;
+    border-radius: 12px;
+    overflow-x: auto;          /* горизонтальная прокрутка для длинных строк */
+    margin: 1rem 0;
+    line-height: 1.45;
+}
+
+/* Стили для code внутри pre — отменяем инлайн-оформление */
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    white-space: pre;         /* сохраняем пробелы и переносы */
+    font-size: inherit;
+}
+
+/* ===== просто улучшенный скроллбар ===== */
+pre::-webkit-scrollbar {
+    height: 8px;
+}
+pre::-webkit-scrollbar-track {
+    background: #2d3e50;
+    border-radius: 4px;
+}
+pre::-webkit-scrollbar-thumb {
+    background: #5a6e8c;
+    border-radius: 4px;
+}
+
+/* -------------------- LISTS -------------------------------------------------------------------------------*/
+/* ===== Базовые сбросы для списков ===== */
+ul, ol, dl {
+    padding-left: 1.5rem;  /* стандартный отступ для маркеров/цифр */
+}
+
+/* ===== 1. Маркированные списки (ul) ===== */
+ul {
+    list-style-type: disc;  /* диск •, можно circle, square */
+}
+ul ul {
+    list-style-type: circle;
+}
+ul ul ul {
+    list-style-type: square;
+}
+
+/* Кастомные маркеры через псевдоэлементы (более гибко) */
+.ul_custom__cls {
+    list-style: none;   /*1*/
+    padding-left: 0;
+}
+.ul_custom__cls li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.ul_custom__cls li::before {
+    content: "▹";           /*2=любой символ или иконка */
+    position: absolute;
+    left: 0;
+    color: #2a73ff;
+    font-weight: bold;
+}
+
+/* ===== 2. Нумерованные списки (ol) ===== */
+ol {
+    list-style-type: decimal; /* 1, 2, 3... */
+}
+ol ol {
+    list-style-type: lower-alpha; /* a, b, c... */
+}
+ol ol ol {
+    list-style-type: lower-roman; /* i, ii, iii... */
+}
+
+/* Кастомная нумерация счётчиком CSS */
+.ol_custom__cls {
+    list-style: none;
+    counter-reset: custom-counter;
+    padding-left: 0;
+}
+.ol_custom__cls li {
+    counter-increment: custom-counter;
+    margin-bottom: 0.5rem;
+    padding-left: 1.8rem;
+    position: relative;
+}
+.ol_custom__cls li::before {
+    content: counter(custom-counter) ".";
+    position: absolute;
+    left: 0;
+    color: #2a73ff;
+    font-weight: bold;
+}
+
+/* ===== 3. Списки описаний (dl) ===== */
+dl {
+    padding-left: 0;
+}
+dt {
+    font-weight: 600;
+    __margin-top: 0.75rem;
+    color: #0f2b4d;
+}
+dd {
+    margin-left: 1.2rem;
+    __margin-bottom: 0.5rem;
+    color: #334155;
+}
+
+/* Горизонтальный dl (термин и описание в одной строке) */
+.dl_horizontal__cls {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 0.5rem;
+    align-items: baseline;
+}
+.dl_horizontal__cls dt {
+    margin-top: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+.dl_horizontal__cls dd {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ===== 4. Адаптивность и отступы ===== */
+@media (max-width: 640px) {
+    .dl_horizontal__cls {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+    .dl_horizontal__cls dt {
+        margin-top: 0.5rem;
+    }
+}
+
+/* -------------------- TABLES ------------------------------------------------------------------------------*/
+/* ===== с границами ===== */
+table,
+table th,
+table td {
+    border: 1px solid #dce3ec;
+}
+
+/* ===== общие стили ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;    /* убираем двойные границы */
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+    __border-radius: 1rem;    /*лучше без нее!!! скругляет углы и убирает почемуто наружный контур!*/
+    overflow: hidden;             /* чтобы скругление работало */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Заголовок таблицы */
+thead th {
+    background: #f1f5f9;
+    color: #0f2b4d;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Ячейки тела таблицы */
+tbody td {
+    padding: 0.75rem 1rem;
+    color: #1e2a3e;
+    __white-space: nowrap;
+}
+
+tbody tr:hover {
+    background: #fafcff;
+}
+tbody td:hover {
+    background: #f2f2ff;
+}
+
+/* ===== zebra ===== */
+.table_zebra__cls tbody tr:nth-child(odd) {
+    background: #f8fafc;
+}
+.table_zebra__cls tbody tr:hover {
+    background: #f1f5f9;    /*делается темнее чем при обычном наведении*/
+}
+
+/* ===== Компактная таблица ===== */
+.table_compact__cls th,
+.table_compact__cls td {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+/* ===== Горизонтальная прокрутка для маленьких экранов ===== */
+.div_hscroller__cls {
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+.div_hscroller__cls table {
+    margin: 0;
+    __min-width: 10px;
+}
+
+/* ===== Специфичные классы для ваших примеров ===== */
+.table_custom__cls {
+    /* наследует все базовые стили, можно добавить свои */
+}
+.table_custom__cls thead th {
+    background: #2a73ff;
+    color: white;
+}
+.table_custom__cls tbody tr:nth-child(even) {
+    background: #f0f9ff;
+}
+
+/* -------------------- ROOT IDS -----------------------------------------------------------------------------*/
+#ROOT_DIV__ID {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+    //overflow: hidden;
+    padding: 2rem 2rem 2.5rem 2rem;
+}
+
+#ROOT_HEADER__ID {
+    margin-bottom: 0.5rem;
+}
+#ROOT_HEADER__ID h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+}
+.subhead {
+    font-size: 1.1rem;
+    color: #2c3e66;
+    border-left: 4px solid #2a73ff;
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+}
+
+#ROOT_NAV__ID {
+    /* stick top */
+    position: sticky;
+    top: 0;
+    background: white;  /* нужно, чтобы не просвечивало содержимое */
+    z-index: 100;
+
+    /* other */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+#ROOT_NAV__ID a {
+    background: #eef2ff;
+    color: #1e40af;
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    line-height: 1;
+}
+#ROOT_NAV__ID a:hover {
+    background: #2a73ff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+#ROOT_MAIN__ID {
+    display: flex;
+    flex-direction: column;
+    gap: 0.50rem;
+}
+
+#ROOT_FOOTER__ID {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5b6e8c;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/*ЭЛЕМЕНТЫ ДЛЯ опытов*/
+.demo_item__cls {
+    background: #2a73ff;
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+}
+
+/* ===== Базовые стили для демонстрации позиционирования ===== */
+.demo__pos_container__cls {
+    position: relative;   /* контейнер для absolute-блоков */
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 0;     /* без скругления — чёткие границы */
+    padding: 1rem;
+    margin: 1rem 0;
+    min-height: 200px;
+}
+.demo__pos_container__cls div {
+    width: 100px;
+    height: 60px;
+    background: #2a73ff;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    font-weight: bold;
+    margin: 0.5rem;
+}
+
+/* Стили для демонстрации z-index */
+.z-demo {
+    position: relative;
+    width: 150px;
+    height: 100px;
+    background: #3498db;
+    margin: 0.5rem;
+    display: inline-block;
+    text-align: center;
+    line-height: 100px;
+    color: white;
+}
+.z-demo:nth-child(2) {
+    background: #e67e22;
+    top: 30px;
+    left: -30px;
+    z-index: 10;
+}
+.z-demo:nth-child(3) {
+    background: #2c3e50;
+    top: -30px;
+    left: -60px;
+    z-index: 5;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/* -------------------- SECTION --------------------*/
+.section__cls {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9edf2;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+.section__cls:hover {
+    box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
+}
+.section__cls > h2 {
+    background: #fafcff;
+    position: relative;
+    padding-left: 2rem;   /* место для символа */
+    cursor: default;   /* курсор не меняем */
+}
+
+/* -------------------- ARTICLE --------------------*/
+.article__cls {
+    background: #fefefe;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #edf2f7;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.article__cls > header {
+    font-weight: 600;
+    background: #f8fafc;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #2d3e6e;
+}
+
+.article_main__cls {
+    padding: 1.2rem;
+    background: white;
+    flex: 1;
+}
+.article__cls > footer {
+    background: #fef9e3;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    border-top: 1px solid #ffe6b3;
+    color: #8a6e2b;
+    font-family: 'SF Mono', monospace;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+
+/* семантическая демо-зона (локальные header/footer и пр.) */
+.semantic-demo {
+    background: #f1f5f9;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+.semantic-demo header, .semantic-demo nav, .semantic-demo main, .semantic-demo aside, .semantic-demo footer {
+    background: white;
+    margin: 0.6rem 0;
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    border-left: 4px solid #2a73ff;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/* -------------------- GRID --------------------*/
+.grid_auto__cls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+}
+
+/* -------------------- FLEX --------------------*/
+.flex_row0 {
+    display: flex;
+    gap: 1rem;  /* расстояние между внутренними блоками */
+    flex-wrap: wrap;
+    justify-content: space-between;
+        /*
+            center=собрать все внутренние элементы вместе в центре - без растягивания пространства промежуточного - тоесть строгие GAPS!
+            space-between=!=распределение только ПРОМЕЖУТОЧНОГО пространства - обьекты любые хоть инлайн SPACE хоть DIV
+            space-evenly=распределение ПРОМЕЖУТОЧНОГО+НАРУЖНОГО - тоесть всех свободных пространств
+        */
+    align-items: center;  /* если не указать то заполнит все свободное пространство до границ отдела */
+}
+.flex_row1_left {
+    display: flex;  /* обязателен внутри */
+    gap: 0.25rem;   /* отдельное разделение */
+    __align-items: center;
+    __justify-content: center;
+    __flex-wrap: wrap;
+}
+.flex_row2_center {
+    display: flex;
+    gap: 0.5rem;
+    __align-items: center;
+    __justify-content: center;
+    __flex-wrap: wrap;
+}
+.flex_row3_right {
+    display: flex;
+    gap: 0.25rem;
+    __align-items: center;
+    __justify-content: center;
+    __flex-wrap: wrap;
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/* -------------------- TABS --------------------*/
+.tabs-container {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid #e9edf2;
+}
+.tabs-buttons {
+    display: flex;
+    gap: 0.25rem;
+    background: #f8fafc;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    border-radius: 1rem 1rem 0 0;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #334155;
+    font-size: 0.9rem;
+}
+.tab-btn.active {
+    background: white;
+    color: #2a73ff;
+    border-bottom: 2px solid #2a73ff;
+    margin-bottom: -1px;
+}
+.tabs-content {
+    padding: 1.2rem;
+    background: white;
+}
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: block;
+}
+/* конец стилей табов */
+
+/* -----------------------------------------------------------------------------------------------------------*/
+/* ===== Базовые стили для details/summary ===== */
+details {
+    border: 1px solid #cbd5e1;
+    margin: 0.75rem 0;
+    padding: 0.5rem 0.75rem;
+    background: white;
+    transition: all 0.2s;
+}
+
+/* Заголовок спойлера */
+summary {
+    font-weight: 600;
+    cursor: pointer;    /*курсор на pointer*/
+    padding: 0.25rem 0;
+    user-select: none;          /* убирает выделение текста при клике */
+}
+summary:focus-visible {
+    outline: 2px solid #2a73ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Скрытый контент */
+details > :not(summary) {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Открытый спойлер — можно слегка выделить */
+details[open] {
+    background: #fafcff;
+    border-color: #2a73ff;
+}
+
+/* Кастомный маркер (убираем стандартный треугольник) */
+.details_custom__cls summary {
+    list-style: none;           /* убираем треугольник в Chrome/Edge */
+}
+.details_custom__cls summary::-webkit-details-marker {
+    display: none;              /* убираем треугольник в Safari/WebKit */
+}
+.details_custom__cls summary::before {
+    content: '>';
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+}
+.details_custom__cls[open] summary::before {
+    content: 'v';
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
+@media (max-width: 700px) {
+    #ROOT_DIV__ID {
+        padding: 1rem;
+    }
+    .section_main__cls {
+        padding: 1rem;
+    }
+}
+
+/* -----------------------------------------------------------------------------------------------------------*/
