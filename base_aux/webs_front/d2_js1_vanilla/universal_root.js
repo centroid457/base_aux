@@ -180,9 +180,15 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
     dl__el.className = 'dl_horizontal__cls';
 
     // Вспомогательная функция: создаёт пару dt/dd и добавляет в dl
-    function addEntry(label_text, clonedElement) {
+    function addEntry(label_data, clonedElement) {
         const dt__el = document.createElement('dt');
-        dt__el.textContent = label_text;
+        dt__el.textContent = `${label_data}`;
+        dt__el.style["font-size"] = "xx-small";
+
+        if (typeof(label_data) != "string") {
+            dt__el.style["font-style"] = "italic";
+            dt__el.style["text-decoration"] = "underline";
+        };
         dl__el.appendChild(dt__el);
 
         const dd = document.createElement('dd');
@@ -195,9 +201,7 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
         const style_value = style_values[i];
         const clone__el = original__el.cloneNode(true);
         clone__el.style[styleProperty] = style_value;
-
-        const label_text = typeof(style_value) == "string" ? `${style_value}` : `#${style_value}`;
-        addEntry(label_text, clone__el);
+        addEntry(style_value, clone__el);
     }
 
     // 3. FILEDSET
@@ -229,7 +233,7 @@ function parse_style_parametrisation(source) {
     if (valuesStr.startsWith('[') && valuesStr.endsWith(']')) {
         valuesStr = valuesStr.slice(1, -1);
     }
-    // Разбиваем по запятым и чистим пробелы
+    // Разбиваем варианты и чистим пробелы
     let values = valuesStr.split(';').map(v => v.trim()).filter(v => v);
     if (values.length === 0) {
         console.error('Не найдено значений', source);
