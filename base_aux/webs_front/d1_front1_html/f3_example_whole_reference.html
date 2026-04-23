@@ -123,15 +123,34 @@
 
                 <!-- ====================== ЦВЕТ ТЕКСТА ====================== -->
                 <article class="article__cls">
-                    <header>🌈 color – цвет текста</header>
+                    <header>🌈 color</header>
                     <div class="article_main__cls">
                         <div class="demo-text-block"
-                             data-clone_style_params="color:black;#2c3e50;#c0392b;#16a085;#8e44ad;#d35400"
-                             style="font-size: 1rem; padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
+                             data-clone_style_params="color:
+                             black;green;
+                             #0F0;#00FF00;
+                             #FF000030;#FF000070;rgb(255,0,0);rgba(255,0,0,0.5);
+                             hsl(0,100%,50%);hsla(0,100%,50%,0.5);hwb(0,0%,0%);lab(50%,100%,0%);lch(50%,100%,0deg);color-mix(in srgb, red, blue);color(display-p3 1 0 0);
+                             light-dark(black, white);light-dark(red, white);
+                             transparent;
+                             currentColor;rebeccapurple;tomato;gold;mediumseagreen;dodgerblue;crimson;indigo;hotpink"
+                             style="background: #eee;">
                             Цвет текста
                         </div>
                     </div>
-                    <footer>💡 Значения: именованные цвета, HEX, RGB, HSL, RGBA, HSLA. Примеры выше – чёрный, тёмно-синий, красный, зелёный, фиолетовый, оранжевый.</footer>
+                    <footer>
+                        HEX (3/6/8 цифр)<br>
+                        rgbA - Alpha channel<br>
+                        HSL/HSLA=hsl(0,100%,50%) Hue, Saturation, Lightness<br>
+                        HWB (современный) - hwb(0,0%,0%) Hue, Whiteness, Blackness – интуитивнее для подбора оттенков<br>
+                        LAB, LCH=lab(50%,100%,0%), lch(50%,100%,0deg) - Цветовые пространства, приближенные к восприятию человека<br>
+                        color-mix() - color-mix(in srgb, red, blue) - Смешивание двух цветов (поддержка современная)<br>
+                        color(display-p3 1 0 0) - Широкий цветовой охват P3<br>
+                        light-dark() - Адаптивный цвет (светлая/тёмная тема)<br>
+                        currentColor, transparent - служебные<br>
+
+                        Некоторые современные функции (LAB, LCH, color-mix) поддерживаются не во всех браузерах, но полезны для изучения.<br>
+                    </footer>
                 </article>
 
                 <!-- ====================== РАЗМЕР ШРИФТА ====================== -->
@@ -409,17 +428,17 @@
 
                             ⚠️ <code>&amp;#x26A0;</code> ⚠ <code>&amp;#x26A0;</code>
                             ❗ <code>&amp;#x2757;</code> ❕ <code>&amp;#x2755;</code>
-                            ℹ<code>ДОБАВИТЬ;</code>
+                            ℹ<code>ДОБАВИТЬ;</code> 💡 <code>&amp;#x1F4A1;</code>
                         </div>
 
                         <hr>
                         Звёзды / Сердца / Популярное
                         <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
+                            🔥 <code>&amp;#x1F525;</code>✨ <code>&amp;#2728;</code>
                             ⭐ <code>&amp;#x2B50;</code> 🌟 <code>&amp;#x1F31F;</code>
                             ❤️ <code>&amp;#x2764;</code> 🧡 <code>&amp;#x1F9E1;</code>
                             💚 <code>&amp;#x1F49A;</code> 💙 <code>&amp;#x1F499;</code>
                             👍 <code>&amp;#x1F44D;</code> 👎 <code>&amp;#x1F44E;</code>
-                            🔥 <code>&amp;#x1F525;</code> 💡 <code>&amp;#x1F4A1;</code>
                         </div>
 
                         <hr>
