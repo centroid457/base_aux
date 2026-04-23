@@ -160,35 +160,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 })();
 
-// ----------------------------------------------------------------------------------------------------------------
-// Размножитель элемента со стилями
-/**
- * Заменяет элемент на список dl с его клонами, демонстрирующими разные значения CSS-свойства.
- * @param {string} original__el.
- * @param {string} styleProperty - CSS-свойство (например, 'color', 'backgroundColor').
- * @param {string[]} style_values - Массив значений для этого свойства (первое значение будет применено к оригиналу).
- */
-
+// --------------------------------------------------------------------------------
+// Размножитель элемента со стилями (поддержка entries вида "prop:value")
+// --------------------------------------------------------------------------------
 const CLONE_ATTR_NAME = "data-clone_style_params";
 
-function _clone_element_with_styles__by_dl(original__el, styleProperty, style_values) {
+/**
+ * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
+ * @param {HTMLElement} original__el - оригинальный элемент.
+ * @param {string} defaultProperty - CSS-свойство по умолчанию (для простых значений).
+ * @param {string[]} style_values - массив записей: простые значения или строки "свойство:значение".
+ */
+function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_values) {
+    // Если первого элемента нет, добавим маркер "оригинал без изменений"
     style_values.unshift(undefined);
-    //style_values.unshift(original__el.style[styleProperty]);
+    style_values.unshift("");
 
     // 1. Создаём контейнер dl с классом для горизонтального отображения
     const dl__el = document.createElement('dl');
     dl__el.className = 'dl_horizontal__cls';
 
-    // Вспомогательная функция: создаёт пару dt/dd и добавляет в dl
-    function addEntry(label_data, clonedElement) {
-        const dt__el = document.createElement('dt');
-        dt__el.textContent = `${label_data}`;
-        dt__el.style["font-size"] = "xx-small";
-
-        if (typeof(label_data) != "string") {
-            dt__el.style["font-style"] = "italic";
-            dt__el.style["text-decoration"] = "underline";
+    function addEntry(label_value, clonedElement) {
+        let label_str = `${label_value}`;
+        if (label_str.length == 0) {
+            label_str = '\"\"';
         };
+
+        const dt__el = document.createElement('dt');
+        if (typeof label_value !== 'string') {
+            dt__el.style.fontStyle = 'italic';
+            dt__el.style.textDecoration = 'underline';
+        };
+        dt__el.textContent = label_str;
+        dt__el.style.fontSize = 'xx-small';
         dl__el.appendChild(dt__el);
 
         const dd = document.createElement('dd');
@@ -200,15 +204,27 @@ function _clone_element_with_styles__by_dl(original__el, styleProperty, style_va
     for (let i = 0; i < style_values.length; i++) {
         const style_value = style_values[i];
         const clone__el = original__el.cloneNode(true);
-        clone__el.style[styleProperty] = style_value;
+
+        // Проверяем, является ли style_value самостоятельной парой "свойство:значение"
+        if (typeof style_value === 'string' && /^[a-z-]+:/i.test(style_value)) {
+            const colonPos = style_value.indexOf(':');
+            const prop = style_value.substring(0, colonPos).trim();
+            let value = style_value.substring(colonPos + 1).trim();
+            clone__el.style[prop] = value;
+            // console.log(1111, prop, value);
+        } else {
+            clone__el.style[defaultProperty] = style_value;
+            // console.log(2, defaultProperty, style_value);
+        }
+
         addEntry(style_value, clone__el);
     }
 
-    // 3. FILEDSET
+    // Оборачиваем в fieldset
     const fieldset__el = document.createElement('fieldset');
-    const fieldset_legend__el = document.createElement('legend');
-    fieldset_legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b>${styleProperty}</b>]`;
-    fieldset__el.appendChild(fieldset_legend__el);
+    const legend__el = document.createElement('legend');
+    legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b>${defaultProperty}</b>]`;
+    fieldset__el.appendChild(legend__el);
     fieldset__el.appendChild(dl__el);
 
     // 4. Заменяем оригинал
@@ -249,8 +265,8 @@ function parse_style_parametrisation(source) {
 (function clone_elements__parametrisation() {
     const elements = document.querySelectorAll(`[${CLONE_ATTR_NAME}]`);
     elements.forEach(el => {
-        const parametrisation_line = el.getAttribute(CLONE_ATTR_NAME);
-        const parsed = parse_style_parametrisation(parametrisation_line);
+        const paramLine = el.getAttribute(CLONE_ATTR_NAME);
+        const parsed = parse_style_parametrisation(paramLine);
         if (!parsed) return;
         const { property, values } = parsed;
         _clone_element_with_styles__by_dl(el, property, values);
