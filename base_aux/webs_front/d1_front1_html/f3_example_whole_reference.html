@@ -125,17 +125,17 @@
                 <article class="article__cls">
                     <header>🌈 color</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="color:
-                             black;green;
-                             #0F0;#00FF00;
-                             #FF000030;#FF000070;rgb(255,0,0);rgba(255,0,0,0.5);
-                             hsl(0,100%,50%);hsla(0,100%,50%,0.5);hwb(0,0%,0%);lab(50%,100%,0%);lch(50%,100%,0deg);color-mix(in srgb, red, blue);color(display-p3 1 0 0);
-                             light-dark(black, white);light-dark(red, white);
-                             transparent;
-                             currentColor;rebeccapurple;tomato;gold;mediumseagreen;dodgerblue;crimson;indigo;hotpink"
-                             style="background: #eee;">
-                            Цвет текста
+                        <div data-bg_grey
+                             data-clone_style_params="color:[
+                                 black;green;
+                                 #0F0;#00FF00;
+                                 #FF000030;#FF000070;rgb(255,0,0);rgba(255,0,0,0.5);
+                                 hsl(0,100%,50%);hsla(0,100%,50%,0.5);hwb(0,0%,0%);lab(50%,100%,0%);lch(50%,100%,0deg);color-mix(in srgb, red, blue);color(display-p3 1 0 0);
+                                 light-dark(black, white);light-dark(red, white);
+                                 transparent;
+                                 currentColor;rebeccapurple;tomato;gold;mediumseagreen;dodgerblue;crimson;indigo;hotpink
+                             ]">
+                            color
                         </div>
                     </div>
                     <footer>
@@ -157,7 +157,7 @@
                 <article class="article__cls">
                     <header>font-size</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
+                        <div
                              data-clone_style_params="font-size:[
                                 xxx-small;xx-small;x-small;small;medium;large;x-large;xx-large;xxx-large;
                                 5px; 8px; 12px;16px;24px;
@@ -167,7 +167,7 @@
                                 1vw; 3vw;
                                 1;5;10;100;
                              ]">
-                            Размер шрифта
+                            font-size
                         </div>
                     </div>
                     <footer>
@@ -183,103 +183,160 @@
 
                 <!-- ====================== НАЧЕРТАНИЕ (ЖИРНОСТЬ) ====================== -->
                 <article class="article__cls">
-                    <header>🔥 font-weight – жирность шрифта</header>
+                    <header>font-weight</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="font-weight:normal;bold;bolder;lighter;100;200;300;400;500;600;700;800;900"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            Жирность текста
+                        <div
+                             data-clone_style_params="font-weight:[
+                                 normal;
+                                 bold;bolder;
+                                 light;lighter;
+                                 0;100;300;500;800;1000;1500;2000;
+                             ]">
+                            font-weight
                         </div>
                     </div>
-                    <footer>💡 <code>normal</code> = 400, <code>bold</code> = 700. <code>bolder/lighter</code> – относительно родителя. Цифры от 100 до 900 с шагом 100.</footer>
+                    <footer><code>normal</code> = 400, <code>bold</code> = 700. <code>bolder/lighter</code> – относительно родителя. Цифры от 100 до 900 с шагом 100.</footer>
                 </article>
 
-                <!-- ====================== КУРСИВ ====================== -->
+                <!-- ====================== FONT-STYLE И НАКЛОН ====================== -->
                 <article class="article__cls">
-                    <header>✍️ font-style – курсив</header>
+                    <header>font-style: углы наклона</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="font-style:normal;italic;oblique"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            Курсив
+                        <div
+                             data-clone_style_params="font-style:[
+                                 normal;
+                                 italic;
+                                 oblique;oblique 0deg;oblique 1deg;oblique 10deg;oblique 20deg;oblique 30deg;oblique 90deg;oblique 120deg;
+                             ]">
+                            font-style
                         </div>
                     </div>
-                    <footer>📌 <code>normal</code> – обычный, <code>italic</code> – курсив, <code>oblique</code> – наклонный (похож на курсив, но используется реже).</footer>
+                    <footer>
+                        <code>normal</code> – обычный (без наклона)<br>
+                        <code>italic</code> – курсив (обычно специально разработанный начертание шрифта)<br>
+                        <code>oblique</code> – наклонный (браузер механически наклоняет обычный шрифт)<br>
+                        <code>oblique 10deg</code> … <code>30deg</code> – угол наклона (поддерживается современными браузерами)<br>
+                        <strong>Важно:</strong> разница между italic и oblique заметна не для всех шрифтов.
+                    </footer>
                 </article>
 
                 <!-- ====================== ТРАНСФОРМАЦИЯ РЕГИСТРА ====================== -->
                 <article class="article__cls">
-                    <header>🔠 text-transform – регистр букв</header>
+                    <header>text-transform – регистр букв</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="text-transform:none;uppercase;lowercase;capitalize"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            пример текста для трансформации
+                        <div
+                             data-clone_style_params="text-transform:[
+                                none;
+                                uppercase;lowercase;capitalize;
+                                full-width;full-size-kana;
+                             ]">
+                            Привет мир! Hello-world!.,11ｶﾅ22
                         </div>
                     </div>
-                    <footer>💡 <code>uppercase</code> – все заглавные, <code>lowercase</code> – все строчные, <code>capitalize</code> – каждое слово с заглавной буквы.</footer>
+                    <footer>
+                        <code>none</code> – без изменений<br>
+                        <code>uppercase</code> – все заглавные буквы<br>
+                        <code>lowercase</code> – все строчные буквы<br>
+                        <code>capitalize</code> – каждое слово начинается с заглавной<br>
+
+                        <code>full-width</code> и <code>full-size-kana</code> для восточноазиатских шрифтов/иероглифов .
+                        <code>full-width</code> – иероглифы заменяет на полноширинные аналоги (для выравнивания с идеографическими шрифтами)<br>
+                        <code>full-size-kana</code> – маленькие знаки катаканы (японский) заменяет на полноразмерные=работает только с японской катаканой (например, ｶﾅ → カナ).<br>
+                    </footer>
                 </article>
 
                 <!-- ====================== ДЕКОРИРОВАНИЕ ====================== -->
                 <article class="article__cls">
-                    <header>✨ text-decoration – подчёркивание, зачёркивание и др.</header>
+                    <header>text-decoration – доп линия</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="text-decoration:none;underline;overline;line-through;underline wavy red;overline double blue"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            Декорированный текст
+                        <div
+                             data-clone_style_params="text-decoration:[
+                                blink;
+                                none;underline;overline;line-through; underline overline line-through;
+                                underline solid red;underline wavy red;underline double red;underline dotted red;underline dashed red;
+                                line-through auto blue;line-through 1px blue;line-through 2px blue;line-through 5px blue;line-through 10px blue;line-through 20px blue;
+                                underline 10px blue;
+                                underline wavy 3px purple;underline wavy red 2px;
+
+                                text-decoration-thickness:2px;
+                                text-decoration-color:hotpink;
+                                text-decoration-skip-ink:auto;
+                                text-decoration-skip-ink:none;
+                                text-underline-offset:2px;
+                                text-underline-offset:0.5em;
+                             ]">
+                            text-decoration
                         </div>
                     </div>
-                    <footer>📌 Можно комбинировать тип линии (<code>underline</code>, <code>overline</code>, <code>line-through</code>), стиль (<code>solid</code>, <code>wavy</code>, <code>double</code>) и цвет.</footer>
+                    <footer>
+                        <code>blink</code> – мигание (устарело, не работает в большинстве браузеров)<br><br>
+
+                        <strong>4. Толщина линии (<code>text-decoration-thickness</code>)</strong><br>
+                        <code>auto</code> – по умолчанию (зависит от шрифта)<br>
+                        <code>1px</code>, <code>2px</code>, <code>0.1em</code> – фиксированная толщина<br><br>
+
+                        <strong>5. Смещение линии (<code>text-underline-offset</code>)</strong><br>
+                        Задаёт расстояние от текста до линии: <code>2px</code>, <code>0.5em</code>, <code>auto</code><br><br>
+
+                        <strong>6. Поведение линии (<code>text-decoration-skip-ink</code>)</strong><br>
+                        <code>auto</code> – линия прерывается на выносных элементах букв (по умолчанию)<br>
+                        <code>none</code> – линия рисуется сплошной, без разрывов<br><br>
+
+                        ⚠️ <strong>Примечание:</strong> <code>text-decoration</code> – shorthand, позволяет задать всё сразу: <code>underline wavy red 2px</code>. Отдельные свойства (<code>text-decoration-thickness</code>, <code>text-decoration-color</code>, <code>text-underline-offset</code>) можно задавать независимо.
+                    </footer>
                 </article>
 
                 <!-- ====================== МЕЖБУКВЕННЫЙ ИНТЕРВАЛ ====================== -->
                 <article class="article__cls">
-                    <header>🔤 letter-spacing – расстояние между буквами</header>
+                    <header>letter-spacing – расстояние между буквами</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="letter-spacing:normal;0.05rem;0.1rem;0.2rem;-0.02rem"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            Межбуквенный интервал
+                        <div
+                             data-clone_style_params="letter-spacing:normal;-0.5rem;-0.2rem;0;0.05rem;0.1rem;0.5rem;1rem;">
+                            letter-spacing=Межбукв интерв
                         </div>
                     </div>
-                    <footer>💡 Отрицательные значения сближают буквы, положительные – раздвигают.</footer>
+                    <footer>Отрицательные доступны</footer>
                 </article>
 
                 <!-- ====================== МЕЖСТРОЧНЫЙ ИНТЕРВАЛ ====================== -->
                 <article class="article__cls">
-                    <header>📄 line-height – высота строки</header>
+                    <header>line-height – высота строки</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="line-height:1;1.2;1.5;2"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem; width: 200px;">
-                            Межстрочный интервал<br>Вторая строка для наглядности
+                        <div data-bg_grey
+                             data-clone_style_params="line-height:-1;-0.5;0;0.1;0.5;1;1.2;1.5;2;">
+                            line-height=Межстроч инт<br>line-height line2
                         </div>
                     </div>
-                    <footer>🔢 Значение без единиц (1, 1.2) умножается на текущий размер шрифта. Рекомендуется для доступности – не менее 1.5.</footer>
+                    <footer>Значение без единиц (1, 1.2) умножается на текущий размер шрифта. Рекомендуется для доступности – не менее 1.5.</footer>
                 </article>
 
                 <!-- ====================== ТЕНЬ ТЕКСТА ====================== -->
                 <article class="article__cls">
-                    <header>💎 text-shadow – тень текста</header>
+                    <header>text-shadow – тень текста</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="text-shadow:none;2px 2px 4px rgba(0,0,0,0.3);0 0 5px #ff0000;1px 1px 0 #aaa;2px 2px 0px #888,-2px -2px 0px #ccc"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem; font-size: 1.2rem;">
-                            Тень текста
+                        <div data-bg_grey
+                             data-clone_style_params="text-shadow:[
+                                none;
+                                0 0 0px #f00;0 0 1px #f00;0 0 5px #f00;0 0 10px #f00;
+                                -3px -3px 1px #000;2px 2px 2px rgba(0,0,0,0.3);
+                                3px 3px 0px #222,6px 6px 0px #555,9px 9px 0px #777;
+                             ]">
+                            text-shadow
                         </div>
                     </div>
-                    <footer>📐 Синтаксис: <code>сдвигX сдвигY размытие цвет</code>. Можно указывать несколько теней через запятую.</footer>
+                    <footer><code>сдвигX сдвигY размытие цвет</code>. Можно указывать несколько теней через запятую.</footer>
                 </article>
 
                 <!-- ====================== ДОПОЛНИТЕЛЬНО: font-family ====================== -->
                 <article class="article__cls">
-                    <header>🖋️ font-family – гарнитура шрифта</header>
+                    <header>font-family – гарнитура шрифта</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="font-family:serif;sans-serif;monospace;cursive;fantasy;'Segoe UI',Roboto;'Courier New',monospace"
-                             style="padding: 0.5rem; background: #f8fafc; border-radius: 0.5rem;">
-                            Пример текста
+                        <div
+                            data-clone_style_params="font-family:[
+                                serif;sans-serif;monospace;cursive;fantasy;
+                                'Segoe UI',Roboto;'Courier New',monospace
+                            ]">
+                            font-family
                         </div>
                     </div>
                     <footer>💡 Всегда указывайте несколько альтернативных шрифтов (например, <code>'Segoe UI', Roboto, Arial, sans-serif</code>).</footer>
@@ -432,13 +489,14 @@
                         </div>
 
                         <hr>
-                        Звёзды / Сердца / Популярное
+                        Звёзды / Сердца / Популярное / ЭМОЦИИ
                         <div style="display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 0.5rem 1rem; align-items: center;">
                             🔥 <code>&amp;#x1F525;</code>✨ <code>&amp;#2728;</code>
                             ⭐ <code>&amp;#x2B50;</code> 🌟 <code>&amp;#x1F31F;</code>
                             ❤️ <code>&amp;#x2764;</code> 🧡 <code>&amp;#x1F9E1;</code>
                             💚 <code>&amp;#x1F49A;</code> 💙 <code>&amp;#x1F499;</code>
                             👍 <code>&amp;#x1F44D;</code> 👎 <code>&amp;#x1F44E;</code>
+                            💎 <code>&amp;#128142</code>
                         </div>
 
                         <hr>

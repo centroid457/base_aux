@@ -162,7 +162,7 @@ blockquote[data-highlighted] {
 }
 
 /* Фоновые цвета */
-[data-bg_grey] { background: #f0f0f0; }
+[data-bg_grey] { background: #eee; }
 [data-bg_yellow] { background: #fff3cd; }
 [data-bg_red]   { background: #fee2e2; }
 [data-bg_green] { background: #d1fae5; }
