@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <footer>
-                        📌 <strong>Единицы измерения:</strong><br>
+                        <strong>Единицы измерения:</strong><br>
                         <code>px</code> – пиксели (фиксированный)<br>
                         <code>em</code> – относительно размера шрифта родителя<br>
                         <code>rem</code> – относительно размера шрифта корневого элемента (&lt;html&gt;)<br>
@@ -196,6 +196,21 @@
                         </div>
                     </div>
                     <footer><code>normal</code> = 400, <code>bold</code> = 700. <code>bolder/lighter</code> – относительно родителя. Цифры от 100 до 900 с шагом 100.</footer>
+                </article>
+
+                <!-- ====================== ДОПОЛНИТЕЛЬНО: font-family ====================== -->
+                <article class="article__cls">
+                    <header>font-family – гарнитура шрифта</header>
+                    <div class="article_main__cls">
+                        <div
+                            data-clone_style_params="font-family:[
+                                serif;sans-serif;monospace;cursive;fantasy;
+                                'Segoe UI',Roboto;'Courier New',monospace
+                            ]">
+                            font-family
+                        </div>
+                    </div>
+                    <footer>💡 Всегда указывайте несколько альтернативных шрифтов (например, <code>'Segoe UI', Roboto, Arial, sans-serif</code>).</footer>
                 </article>
 
                 <!-- ====================== FONT-STYLE И НАКЛОН ====================== -->
@@ -230,7 +245,7 @@
                                 uppercase;lowercase;capitalize;
                                 full-width;full-size-kana;
                              ]">
-                            Привет мир! Hello-world!.,11ｶﾅ22
+                            Привет мир! Hello-world!.,11ｶﾅカナ22
                         </div>
                     </div>
                     <footer>
@@ -250,7 +265,8 @@
                     <header>text-decoration – доп линия</header>
                     <div class="article_main__cls">
                         <div
-                             data-clone_style_params="text-decoration:[
+                            style="text-decoration: line-through"
+                            data-clone_style_params="text-decoration:[
                                 blink;
                                 none;underline;overline;line-through; underline overline line-through;
                                 underline solid red;underline wavy red;underline double red;underline dotted red;underline dashed red;
@@ -262,9 +278,9 @@
                                 text-decoration-color:hotpink;
                                 text-decoration-skip-ink:auto;
                                 text-decoration-skip-ink:none;
-                                text-underline-offset:2px;
+                                text-underline-offset:5px;
                                 text-underline-offset:0.5em;
-                             ]">
+                            ]">
                             text-decoration
                         </div>
                     </div>
@@ -327,19 +343,290 @@
                     <footer><code>сдвигX сдвигY размытие цвет</code>. Можно указывать несколько теней через запятую.</footer>
                 </article>
 
-                <!-- ====================== ДОПОЛНИТЕЛЬНО: font-family ====================== -->
+                <!-- ====================== ТЕНЬ БЛОКА ====================== -->
                 <article class="article__cls">
-                    <header>font-family – гарнитура шрифта</header>
+                    <header>📦 box-shadow – тень элемента</header>
                     <div class="article_main__cls">
                         <div
-                            data-clone_style_params="font-family:[
-                                serif;sans-serif;monospace;cursive;fantasy;
-                                'Segoe UI',Roboto;'Courier New',monospace
-                            ]">
-                            font-family
+                             data-clone_style_params="box-shadow:[
+                                none;
+                                2px 2px 5px rgba(0,0,0,0.3);
+                                5px 5px 10px rgba(0,0,0,0.5);
+                                10px 10px 20px rgba(0,0,0,0.2);
+                                -5px -5px 10px rgba(0,0,0,0.1);
+                                0px 0px 10px red;
+                                0px 0px 20px blue;
+                                0px 0px 30px green;
+                                inset 0px 0px 10px rgba(0,0,0,0.5);
+                                inset 2px 2px 5px rgba(255,255,255,0.8), 5px 5px 10px rgba(0,0,0,0.2);
+                                0px 10px 20px -5px rgba(0,0,0,0.3);
+                                0px 15px 25px rgba(0,0,0,0.2), 0px -5px 10px rgba(0,0,0,0.1);
+                                2px 2px 5px red, -2px -2px 5px blue;
+                                3px 3px 0px black;
+                                0 0 0 2px red, 0 0 0 4px blue, 0 0 0 6px green;
+                                inset 0 0 0 2px white, 0 0 0 4px black;
+                                drop-shadow(2px 2px 5px rgba(0,0,0,0.5))
+                             ]">
+                            box-shadow
                         </div>
                     </div>
-                    <footer>💡 Всегда указывайте несколько альтернативных шрифтов (например, <code>'Segoe UI', Roboto, Arial, sans-serif</code>).</footer>
+                    <footer>
+                        📌 <strong>Синтаксис:</strong> <code>offsetX offsetY blurRadius spreadRadius color</code><br>
+                        — <code>inset</code> – внутренняя тень<br>
+                        — Можно задавать несколько теней через запятую<br>
+                        — <code>drop-shadow(...)</code> – фильтр (работает для содержимого, не для блока), приведён как альтернатива<br>
+                        🧪 Экспериментируйте со значениями смещения, размытия, распространения и цвета.
+                    </footer>
+                </article>
+
+                <!-- ====================== word-spacing ====================== -->
+                <article class="article__cls">
+                    <header>word-spacing – расстояние между словами</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="word-spacing:normal;-0.2rem;0;0.2rem;0.5rem;1rem;2rem">
+                            word-spacing: эти слова разнесены
+                        </div>
+                    </div>
+                    <footer>Отрицательные значения сближают слова, положительные – раздвигают. <code>normal</code> = 0.</footer>
+                </article>
+
+                <!-- ====================== white-space ====================== -->
+                <article class="article__cls">
+                    <header>white-space – обработка пробелов и переносов</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="white-space:normal;nowrap;pre;pre-wrap;pre-line;break-spaces"
+                             style="width: 200px; border:1px solid #ccc; padding:0.5rem;">
+                            Этот   текст   содержит   множественные   пробелы
+                            и переносы строк.
+                        </div>
+                    </div>
+                    <footer>
+                        <code>normal</code> – схлопывает пробелы, переносит по словам;<br>
+                        <code>nowrap</code> – схлопывает, но не переносит;<br>
+                        <code>pre</code> – сохраняет все пробелы и переносы;<br>
+                        <code>pre-wrap</code> – сохраняет, но переносит при необходимости;<br>
+                        <code>pre-line</code> – схлопывает пробелы, но сохраняет переносы;<br>
+                        <code>break-spaces</code> – похоже на pre-wrap, но любые пробелы переносятся.
+                    </footer>
+                </article>
+
+                <!-- ====================== overflow-wrap / word-wrap ====================== -->
+                <article class="article__cls">
+                    <header>overflow-wrap (word-wrap) – перенос длинных слов</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="overflow-wrap:normal;break-word;anywhere"
+                             style="width: 150px; border:1px solid #ccc; padding:0.5rem;">
+                            Supercalifragilisticexpialidocious
+                        </div>
+                    </div>
+                    <footer>
+                        <code>normal</code> – перенос только в разрешённых местах;<br>
+                        <code>break-word</code> – разрывает длинные слова, чтобы избежать переполнения;<br>
+                        <code>anywhere</code> – разрешает разрыв в любом месте.
+                    </footer>
+                </article>
+
+                <!-- ====================== text-overflow ====================== -->
+                <article class="article__cls">
+                    <header>text-overflow – обрезка переполненного текста</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="text-overflow:clip;ellipsis"
+                             style="white-space: nowrap; width: 150px; overflow: hidden; border:1px solid #ccc; padding:0.5rem;">
+                            Очень длинный текст, который не помещается в контейнер.
+                        </div>
+                    </div>
+                    <footer>Требует <code>overflow: hidden</code> и <code>white-space: nowrap</code>.</footer>
+                </article>
+
+                <!-- ====================== word-break ====================== -->
+                <article class="article__cls">
+                    <header>word-break – правила переноса внутри слов</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="word-break:normal;break-all;keep-all;break-word"
+                             style="width: 150px; border:1px solid #ccc; padding:0.5rem;">
+                            РазрывСловИКитайский中文
+                        </div>
+                    </div>
+                    <footer>
+                        <code>normal</code> – стандартные правила;<br>
+                        <code>break-all</code> – можно разрывать любые символы (кроме C/J/K);<br>
+                        <code>keep-all</code> – запрещает разрыв в китайском/японском/корейском;<br>
+                        <code>break-word</code> – устаревшее, аналогично overflow-wrap.
+                    </footer>
+                </article>
+
+                <!-- ====================== text-align ====================== -->
+                <article class="article__cls">
+                    <header>text-align – выравнивание текста</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="text-align:left;center;right;justify;start;end;match-parent"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            Текст для демонстрации выравнивания.
+                        </div>
+                    </div>
+                    <footer>
+                        <code>left/right/center/justify</code> – классика;<br>
+                        <code>start/end</code> – зависят от направления текста (LTR/RTL);<br>
+                        <code>match-parent</code> – наследует и уважает направление.
+                    </footer>
+                </article>
+
+                <!-- ====================== text-indent ====================== -->
+                <article class="article__cls">
+                    <header>text-indent – отступ первой строки</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="text-indent:0;1em;2em;3em;-1em"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            Это абзац с отступом первой строки. Отрицательные значения создают "выступающий" отступ.
+                        </div>
+                    </div>
+                    <footer>Значения могут быть в любых единицах (<code>px</code>, <code>em</code>, <code>rem</code>, <code>%</code>).</footer>
+                </article>
+
+                <!-- ====================== vertical-align ====================== -->
+                <article class="article__cls">
+                    <header>vertical-align – вертикальное выравнивание (inline/inline-block)</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="vertical-align:baseline;sub;super;top;text-top;middle;bottom;text-bottom"
+                             style="line-height: 3; border:1px solid #ccc; padding:0.5rem;">
+                            Текст с <span style="display:inline-block; width:30px; height:30px; background:lightblue;"></span> элементом.
+                        </div>
+                    </div>
+                    <footer>Работает для строчных и строчно-блочных элементов, ячеек таблиц.</footer>
+                </article>
+
+                <!-- ====================== writing-mode ====================== -->
+                <article class="article__cls">
+                    <header>writing-mode – направление текста (вертикальное/горизонтальное)</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey style="height: 30px;width: 30px"
+                            data-clone_style_params="
+                                writing-mode:[
+                                horizontal-tb;horizontal-bt;
+                                horizontal-rl;horizontal-lr;
+                                vertical-rl;vertical-lr;
+                                sideways-rl;sideways-lr
+                        ]">
+                            12
+                        </div>
+                    </div>
+                    <footer>Используется для кириллицы, азиатских языков, креативного дизайна.</footer>
+                </article>
+
+                <!-- ====================== text-orientation ====================== -->
+                <article class="article__cls">
+                    <header>text-orientation – ориентация символов в вертикальном тексте</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey style="height: 30px;width: 30px; writing-mode: vertical-rl; "
+                             data-clone_style_params="
+                                text-orientation:[
+                                    mixed;upright;upleft;sideways;
+                                ]">
+                            111 222
+                        </div>
+                    </div>
+                    <footer>Работает в паре с <code>writing-mode</code>. <code>mixed</code> – латиница повёрнута, иероглифы прямо; <code>upright</code> – все символы прямо; <code>sideways</code> – все повёрнуты.</footer>
+                </article>
+
+                <!-- ====================== direction / unicode-bidi ====================== -->
+                <article class="article__cls">
+                    <header>direction + unicode-bidi – направление письма</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="direction:ltr;rtl"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            نص عربي (арабский текст слева направо)
+                        </div>
+                        <div data-bg_grey
+                             data-clone_style_params="unicode-bidi:bidi-override;isolate;isolate-override;plaintext"
+                             style="border:1px solid #ccc; padding:0.5rem; margin-top:0.5rem;">
+                            a <bdo dir="rtl">перевернутый</bdo> текст
+                        </div>
+                    </div>
+                    <footer><code>direction</code> задаёт поток; <code>unicode-bidi</code> управляет встраиванием. <code>bdo</code> – отдельный тег для переопределения направления.</footer>
+                </article>
+
+                <!-- ====================== font-variant ====================== -->
+                <article class="article__cls">
+                    <header>font-variant – типографские варианты (капитель и др.)</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="font-variant:normal;small-caps;all-small-caps;unicase;titling-caps"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            Пример текста
+                        </div>
+                    </div>
+                    <footer>
+                        <code>small-caps</code> – строчные буквы заменяются уменьшенными заглавными.<br>
+                        <code>all-small-caps</code> – все буквы становятся заглавными уменьшенного размера.<br>
+                        <code>unicase/titling-caps</code> – редкие варианты.
+                    </footer>
+                </article>
+
+                <!-- ====================== font-stretch ====================== -->
+                <article class="article__cls">
+                    <header>font-stretch – ширина символов (узкие/широкие)</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="font-stretch:normal;condensed;expanded;extra-condensed;extra-expanded;50%;150%"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            Ширина шрифта
+                        </div>
+                    </div>
+                    <footer>Зависит от наличия соответствующих начертаний в шрифте. Можно использовать проценты (50%..200%).</footer>
+                </article>
+
+                <!-- ====================== font-kerning ====================== -->
+                <article class="article__cls">
+                    <header>font-kerning – кернинг пар символов</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="font-kerning:auto;normal;none"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            VA WA To Ta (кернинг влияет на интервалы между конкретными парами)
+                        </div>
+                    </div>
+                    <footer><code>auto</code> – по усмотрению браузера, <code>normal</code> – включить таблицы кернинга шрифта, <code>none</code> – отключить.</footer>
+                </article>
+
+                <!-- ====================== font-synthesis ====================== -->
+                <article class="article__cls">
+                    <header>font-synthesis – искусственное создание начертаний</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="font-synthesis:auto;none;weight;style;small-caps;weight style"
+                             style="border:1px solid #ccc; padding:0.5rem;">
+                            Жирный и курсив (если нет в шрифте)
+                        </div>
+                    </div>
+                    <footer>Определяет, может ли браузер самостоятельно создавать жирное/курсивное/капительное начертание, если они отсутствуют в шрифте.</footer>
+                </article>
+
+                <!-- ====================== line-break ====================== -->
+                <article class="article__cls">
+                    <header>📏 line-break – правила разрыва строк для китайского/японского/корейского</header>
+                    <div class="article_main__cls">
+                        <div data-bg_grey
+                             data-clone_style_params="line-break:auto;loose;normal;strict;anywhere"
+                             style="width: 200px; border:1px solid #ccc; padding:0.5rem;">
+                            これは日本語のテキストです。これは日本語のテキストです。
+                        </div>
+                    </div>
+                    <footer>
+                        <code>auto</code> – по умолчанию;<br>
+                        <code>loose</code> – наименее жёсткие правила;<br>
+                        <code>normal</code> – стандарт;<br>
+                        <code>strict</code> – строгие правила (запрещает разрывы в некоторых местах);<br>
+                        <code>anywhere</code> – разрешает разрывы всегда.
+                    </footer>
                 </article>
 
             </div>
@@ -506,6 +793,8 @@
                             📄 <code>&amp;#x1F4C4;</code> 🔒 <code>&amp;#x1F512;</code>
                             🔓 <code>&amp;#x1F513;</code> ⏱️ <code>&amp;#x23F1;</code>
                             ⏰ <code>&amp;#x23F0;</code> 🔄 <code>&amp;#x1F504;</code>
+
+                            🔄 … ✂️ 🛠️
                         </div>
 
                     </div>
