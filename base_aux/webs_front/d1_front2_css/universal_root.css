@@ -415,13 +415,13 @@ html {
 .div_a_nav__cls {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    __gap: 0.5rem;
     list-style: none;
     padding: 0;
 }
 .div_a_nav__cls a {
-    background: #eef2ff;
-    padding: 0.4rem 1rem;
+    background: #eef;
+    padding: 0.5rem 0.6rem;
     border-radius: 2rem;
 }
 .div_a_nav__cls a:hover {
@@ -783,26 +783,8 @@ tbody td:hover {
     /* other */
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
     border-bottom: 2px solid #e2e8f0;
-}
-#ROOT_NAV__ID a {
-    background: #eef2ff;
-    color: #1e40af;
-    text-decoration: none;
-    padding: 0.4rem 1rem;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    line-height: 1;
-}
-#ROOT_NAV__ID a:hover {
-    background: #2a73ff;
-    color: white;
-    transform: translateY(-2px);
 }
 
 #ROOT_MAIN__ID {

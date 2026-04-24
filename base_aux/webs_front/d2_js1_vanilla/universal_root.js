@@ -95,12 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
 (function generateNavRoot() {
     const navContainer = document.getElementById('ROOT_NAV__ID');
     if (!navContainer) return;
-    navContainer.innerHTML = '';
+    //navContainer.innerHTML = '';
 
     // ========== КНОПКА "НАВЕРХ" (в начало навигации) ==========
     const topLink = document.createElement('a');
     topLink.href = '#';
-    topLink.innerHTML = '⬆️';          // иконка вверх
+    topLink.innerHTML = '⬆️';
     topLink.title = 'Наверх страницы';
     topLink.addEventListener('click', function(e) {
         e.preventDefault();
