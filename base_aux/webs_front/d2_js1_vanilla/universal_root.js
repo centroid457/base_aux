@@ -196,6 +196,8 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
         dl__el.appendChild(dt__el);
 
         const dd = document.createElement('dd');
+        dd.setAttribute("data-border", "")
+        //dd.setAttribute("data-bg_grey", "")
         dd.appendChild(clonedElement);
         dl__el.appendChild(dd);
     }

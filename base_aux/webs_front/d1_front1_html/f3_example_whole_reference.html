@@ -745,14 +745,52 @@
                 <article class="article__cls">
                     <header>vertical-align – ВЕРТИК выравнивание (inline/inline-block)</header>
                     <div class="article_main__cls">
-                        <div data-bg_grey
+                        <div data-bg_grey style="height:40px;"
                              data-clone_style_params="vertical-align:[
-                             baseline;sub;super;top;text-top;middle;bottom;text-bottom;
+                             baseline;
+                             sub;super;
+                             top;text-top;
+                             middle;
+                             bottom;text-bottom;
+                             -10px;10px;
                              ]">
-                            Текст с <span style="display:inline-block; width:25px; height:25px; background:lightblue;"></span> элементом.
+                            DIVinnerText <span style="display:inline-block; width:25px; height:25px; background:lightblue;"></span> элементом.
                         </div>
+                        <hr>
+                        ВЫРАВНИВАЕТСЯ ТЕКСТ ОТНОСИТЕЛЬНО другого обьекта
+                        <div style="line-height: 2; border:1px solid #ccc">
+                            <span data-bg_red style="height:40px;line-height:5rem;"
+                                 data-clone_style_params="vertical-align:[
+                                 baseline;
+                                 sub;super;
+                                 top;text-top;
+                                 middle;
+                                 bottom;text-bottom;
+                                 -10px;10px;
+                                 ]">
+                                SPAN
+                            </span>
+                        </div>
+
+                        <hr>
+                        ручная вставкка стилей
+                        <div style="background: #f8fafc; padding: 0.5rem; line-height: 2; border:1px solid #ccc">
+                            <span style="vertical-align: baseline;">baseline</span>
+                            <span style="vertical-align: sub;">sub</span>
+                            <span style="vertical-align: super;">super</span>
+                            <span style="vertical-align: top;">top</span>
+                            <span style="vertical-align: middle;">middle</span>
+                            <span style="vertical-align: bottom;">bottom</span>
+                            <span style="vertical-align: 10px;">10px</span>
+                        </div>
+
                     </div>
-                    <footer>Работает для строчных и строчно-блочных элементов, ячеек таблиц.</footer>
+                    <footer>
+                        Работает для строчных и строчно-блочных элементов, ячеек таблиц.<br>
+                                💡 <code>vertical-align</code> работает для <code>inline</code>, <code>inline-block</code>, <code>table-cell</code>.<br>
+        В примере свойство применяется к <code>&lt;span&gt;</code> (синий квадрат), который позиционируется относительно строки текста.<br>
+        Значения: <code>baseline</code> (по умолчанию), <code>sub/super</code> (под/над строкой), <code>top/middle/bottom</code> и числовые значения (сдвиг в пикселях).
+                    </footer>
                 </article>
 
                 <!-- ====================== text-indent ====================== -->

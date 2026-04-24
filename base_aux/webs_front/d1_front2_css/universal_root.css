@@ -169,7 +169,7 @@ blockquote[data-highlighted] {
 [data-bg_blue]  { background: #dbeafe; }
 
 /* Рамки и тени */
-[data-border]       { border: 1px solid #cbd5e1; }
+[data-border]       { border: 1px solid #ccc; }
 [data-border_top]   { border-top: 1px solid #cbd5e1; }
 [data-shadow]       { box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 [data-shadow_hover]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
