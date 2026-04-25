@@ -1205,7 +1205,23 @@
                         </fieldset>
 
                         <fieldset>
-                            NO LEGEND
+                            NO_LEGEND +BARE_TEXT
+                            <p>PPP</p>
+                            <div>DIV1</div>
+                            <div>DIV2</div>
+                            <span>SPAN1</span>
+                            <span>SPAN2</span>
+                            +BARE_TEXT
+                        </fieldset>
+
+                        <fieldset style="display: flex">
+                            NO LEGEND +BARE TEXT
+                            <p>PPP</p>
+                            <div>DIV1</div>
+                            <div>DIV2</div>
+                            <span>SPAN1</span>
+                            <span>SPAN2</span>
+                            +BARE_TEXT
                         </fieldset>
 
                         <fieldset>
@@ -2825,6 +2841,55 @@
                         <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
                     </div>
                     <footer>z-index работает в контексте родительского stacking context. Не злоупотребляйте большими значениями (используйте 1,2,3…).</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="compose0DisplayId">
+            <h2>🖼️ display – все режимы отображения (блочный, строчный, флекс, грид, таблицы…)</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>display – ключевые значения</header>
+                    <div class="article_main__cls">
+
+                        <div class="demo-block"
+                             style="border: 2px solid #2a73ff; background: #f8fafc; padding: 0.5rem; margin: 0.5rem 0;"
+                             data-clone_style_params="display:[
+                                 inherit;initial;unset;revertж
+                                 none;
+                                 block;inline;inline-block;
+
+                                 flex;inline-flex;
+                                 grid;inline-grid;
+
+                                 table;inline-table;table-row;table-cell;table-caption;
+                                 list-item;
+                                 contents;
+                                 run-in;
+                             ]">
+                            <strong>1️⃣</strong> Блок <span style="background:lightblue;">A</span>
+                            <span style="background:lightgreen;">B</span>
+                            <div style="background:lightcoral;">C</div>
+                            <span style="background:lightgoldenrodyellow;">D</span>
+                        </div>
+                    </div>
+                    <footer>
+                        📌 <strong>Краткая справка по значениям:</strong><br>
+                        <code>block</code> – блочный элемент (занимает всю ширину)<br>
+                        <code>inline</code> – строчный (не переносит, ширина по содержимому)<br>
+                        <code>inline-block</code> – строчный блок (можно задавать ширину/высоту)<br>
+                        <code>flex</code> / <code>inline-flex</code> – флекс-контейнер<br>
+                        <code>grid</code> / <code>inline-grid</code> – грид-контейнер<br>
+                        <code>table</code>, <code>table-row</code>, <code>table-cell</code> – табличная модель<br>
+                        <code>list-item</code> – добавляет маркер (как у <code>li</code>)<br>
+                        <code>contents</code> – элементы-обёртки исчезают, дочерние поднимаются наверх<br>
+                        <code>none</code> – элемент не отображается = невидимый<br>
+                        <code>inherit/initial/unset/revert</code> – глобальные ключевые слова
+                        run-in – устаревшее значение, добавлено для полноты (может не работать в современных браузерах).
+                    </footer>
                 </article>
 
             </div>
