@@ -294,63 +294,45 @@
 
                 <!-- ====================== font-family – подробно ====================== -->
                 <article class="article__cls">
-                    <header>🖋️ font-family – гарнитуры и стеки</header>
+                    <header>font-family – гарнитуры и стеки</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-clone_style_params="font-family:[
-                                serif;
-                                sans-serif;
+                                unset;initial;inherit;
+                                NOTEXISTS;'NOTEXISTS';
+
                                 monospace;
+                                serif;sans-serif;
                                 cursive;
                                 fantasy;
-                                'Times New Roman', serif;
-                                'Arial', sans-serif;
-                                'Courier New', monospace;
-                                'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-                                -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                                'Roboto Flex', sans-serif;
-                                'Inter', sans-serif;
-                                'Fira Code', monospace;
-                                'Comic Sans MS', cursive;
-                                'Impact', fantasy;
-                                inherit;
-                                initial;
-                                unset
+
+                                'Times New Roman';'Arial';'Courier New';
+                                'Segoe UI';
+                                'Roboto';'Roboto Flex';
+
+                                'Helvetica Neue';
+                                -apple-system;
+                                BlinkMacSystemFont;
+                                'Inter';
+                                'Fira Code';
+                                'Comic Sans MS';
+                                'Impact';
+
+                                'Segoe UI',Roboto;'Courier New',monospace;
                              ]">
-                            Пример текста
+                            Пример Example.,!?0123
                         </div>
                     </div>
                     <footer>
-                        📌 <strong>Практические советы:</strong><br>
+                        ! Всегда указывайте несколько альтернативных шрифтов<br>
+                        ! Всегда заканчивайте стек общим семейством (<code>serif/sans-serif/monospace/cursive/fantasy</code>).<br>
+                        ТАК ОН ЖЕ И ТАК ВОЗЬМЕТ ПО УМОЛЧАНИЮ!!!!<br>
+
                         – Системный стек (<code>-apple-system, BlinkMacSystemFont, ...</code>) – идеален для нативных приложений.<br>
-                        – Всегда заканчивайте стек общим семейством (<code>serif/sans-serif/monospace/cursive/fantasy</code>).<br>
                         – <code>inherit/initial/unset</code> показывают принудительное наследование/сброс шрифта.<br>
                         – Вариативные шрифты (Roboto Flex, Inter) позволяют тонко настраивать начертания.
                     </footer>
                 </article>
-
-                <!-- ====================== font-family ====================== -->
-                <article class="article__cls">
-                    <header>font-family – гарнитура шрифта</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                            data-clone_style_params="font-family:[
-                            serif;sans-serif;
-                            monospace;
-                            cursive;fantasy;
-                            'Segoe UI',Roboto;'Courier New',monospace;
-                            ]">
-                            font-family
-                        </div>
-                    </div>
-                    <footer>Всегда указывайте несколько альтернативных шрифтов (например, <code>'Segoe UI', Roboto, Arial, sans-serif</code>).</footer>
-                </article>
-
-
-
-
-
-
 
                 <!-- ====================== font-optical-sizing ====================== -->
 <article class="article__cls">
