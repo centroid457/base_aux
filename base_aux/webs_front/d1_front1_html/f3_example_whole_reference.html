@@ -499,7 +499,7 @@
                                 3px 3px 0px black;
                                 0 0 0 2px red, 0 0 0 4px blue, 0 0 0 6px green;
                                 inset 0 0 0 2px white, 0 0 0 4px black;
-                                drop-shadow(2px 2px 5px rgba(0,0,0,0.5))
+                                drop-shadow(2px 2px 5px rgba(0,0,0,0.5));
                              ]">
                             box-shadow
                         </div>
@@ -812,14 +812,33 @@
 
                 <!-- ====================== font-stretch ====================== -->
                 <article class="article__cls">
-                    <header>font-stretch – ширина символов (узкие/широкие)</header>
+                    <header>font-stretch – ширина символов</header>
                     <div class="article_main__cls">
+
+                        стандартный шрифт не поддерживает!
+
                         <div data-bg_grey
                              data-clone_style_params="font-stretch:[
-                             normal;condensed;expanded;extra-condensed;extra-expanded;50%;150%;
+                             normal;
+                             condensed;expanded;
+                             extra-condensed;extra-expanded;
+                             10%;100%;500%;1000%;
                              ]">
-                            Ширина шрифта
+                            стандартный шрифт
                         </div>
+
+                        <hr>
+                        применение поддерживаемого шрифта
+                        <div data-bg_grey style="font-family: 'Roboto Flex', sans-serif;"
+                             data-clone_style_params="font-stretch:[
+                             normal;
+                             condensed;expanded;
+                             extra-condensed;extra-expanded;
+                             10%;100%;500%;1000%;
+                             ]">
+                            Roboto Flex
+                        </div>
+
                     </div>
                     <footer>Зависит от наличия соответствующих начертаний в шрифте. Можно использовать проценты (50%..200%).</footer>
                 </article>
@@ -932,7 +951,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="textBlocksId" data-collapsed>
-            <h2 data-icon_process_ok>TEXT - BLOCKS</h2>
+            <h2 data-icon_process_ok>TEXT-BLOCKS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2681,12 +2700,50 @@
             <h2 data-icon_process_wait>Compose-1=FLEX</h2>
             <div class="section_main__cls grid_auto__cls">
 
+                <!-- ========== flex-direction ========== -->
+                <article class="article__cls">
+                    <header>flex-direction — направление главной оси=НАПРАВЛЕНИЕ РАСТЯЖКИ</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls" style="display:flex;"
+                             data-clone_style_params="flex-direction:[
+                             row;row-reverse;
+                             column;column-reverse
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small><code>row</code> (по умолчанию), <code>row-reverse</code>, <code>column</code>, <code>column-reverse</code>.</small></p>
+                    </div>
+                    <footer>При <code>column</code> ширина контейнера ограничена, элементы могут выходить за пределы.</footer>
+                </article>
+
+                <!-- ========== gap ========== -->
+                <article class="article__cls">
+                    <header>gap — расстояние между элементами</header>
+                    <div class="article_main__cls">
+                        <div class="cover_box__cls" style="display:flex;"
+                             data-clone_style_params="gap:[
+                             0;0.5rem;1rem;2rem;
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small><code>gap</code> работает и для flex, и для grid. Заменяет классические <code>margin</code> между элементами.</small></p>
+                    </div>
+                    <footer>✨ <code>gap</code> проще и надёжнее: не нужно обнулять отступы у первого/последнего элемента.</footer>
+                </article>
+
                 <!-- ========== justify-content ========== -->
                 <article class="article__cls">
                     <header>justify-content — распределение по главной/ГОРИЗОНТАЛЬНОЙ оси</header>
                     <div class="article_main__cls">
-                        <div class="cover_box__cls flex_row0"
-                             data-clone_style_params="justify-content:[flex-start;center;flex-end;space-between;space-around;space-evenly]">
+                        <div class="cover_box__cls" style="display:flex;"
+                             data-clone_style_params="justify-content:[
+                             flex-start;center;flex-end;
+                             space-between;space-around;space-evenly;
+                             ]">
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
@@ -2698,9 +2755,12 @@
                 <article class="article__cls">
                     <header>align-items — выравнивание по поперечной/ВЕРТИКАЛЬНОЙ оси</header>
                     <div class="article_main__cls">
-                        <div class="cover_box__cls flex_row0"
-                             data-clone_style_params="align-items:[stretch;flex-start;center;flex-end;baseline]"
-                             style="height:50px;">
+                        <div class="cover_box__cls"  style="display:flex; height:50px;"
+                             data-clone_style_params="align-items:[
+                             baseline;
+                             stretch;
+                             flex-start;center;flex-end;
+                             ]">
                             <div class="demo_item__cls" style="height:10px;">1</div>
                             <div class="demo_item__cls" style="height:20px;">2</div>
                             <div class="demo_item__cls" style="height:30px;">3</div>
@@ -2710,21 +2770,9 @@
                     <footer>Для работы <code>stretch</code> у элементов не должна быть задана явная высота.</footer>
                 </article>
 
-                <!-- ========== flex-direction ========== -->
-                <article class="article__cls">
-                    <header>🔄 flex-direction — направление главной оси</header>
-                    <div class="article_main__cls">
-                        <div class="cover_box__cls"
-                             data-clone_style_params="flex-direction:row;row-reverse;column;column-reverse"
-                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; display:flex; gap:0.5rem;">
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
-                        </div>
-                        <p><small><code>row</code> (по умолчанию), <code>row-reverse</code>, <code>column</code>, <code>column-reverse</code>.</small></p>
-                    </div>
-                    <footer>⚠️ При <code>column</code> ширина контейнера ограничена, элементы могут выходить за пределы.</footer>
-                </article>
+
+
+
 
                 <!-- ========== flex-wrap ========== -->
                 <article class="article__cls">
@@ -2741,22 +2789,6 @@
                         <p><small><code>nowrap</code> (по умолчанию) – элементы не переносятся, сжимаются; <code>wrap</code> – перенос; <code>wrap-reverse</code> – перенос в обратном порядке.</small></p>
                     </div>
                     <footer>🧩 Для демонстрации ширина контейнера ограничена 200px.</footer>
-                </article>
-
-                <!-- ========== gap ========== -->
-                <article class="article__cls">
-                    <header>📏 gap — расстояние между элементами</header>
-                    <div class="article_main__cls">
-                        <div class="cover_box__cls"
-                             data-clone_style_params="gap:0;0.5rem;1rem;2rem"
-                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; display:flex;">
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
-                        </div>
-                        <p><small><code>gap</code> работает и для flex, и для grid. Заменяет классические <code>margin</code> между элементами.</small></p>
-                    </div>
-                    <footer>✨ <code>gap</code> проще и надёжнее: не нужно обнулять отступы у первого/последнего элемента.</footer>
                 </article>
 
                 <!-- ========== align-content ========== -->
