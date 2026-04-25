@@ -612,13 +612,18 @@ dd {
 /* Горизонтальный dl (термин и описание в одной строке) */
 .dl_horizontal__cls {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr 2fr;  /* dt – 25%, dd – 75% (можно менять пропорции) */
+    __grid-template-columns: auto 1fr;  /* для указания ограничения */
     align-items: baseline;
 }
 .dl_horizontal__cls dt {
+    __max-width: 30%; /*не работает!!! */
+
     margin-top: 0;
     margin-bottom: 0;
-    white-space: wrap;
+
+    white-space: normal;          /* разрешаем перенос текста */
+    word-break: break-word;       /* длинные слова переносим */
 
     user-select: all;    /* при клике выделяется весь текст элемента */
     cursor: pointer;     /* показывает, что элемент можно выделить (необязательно) */
@@ -630,6 +635,7 @@ dd {
 }
 
 /* ===== 4. Адаптивность и отступы ===== */
+/* Адаптивность: на узких экранах колонка в строку */
 @media (max-width: 640px) {
     .dl_horizontal__cls {
         grid-template-columns: 1fr;
@@ -653,8 +659,6 @@ table {
     width: 100%;
     border-collapse: collapse;    /* убираем двойные границы */
     margin: 1rem 0;
-    font-size: 0.9rem;
-    font-family: inherit;
     background: white;
     __border-radius: 1rem;    /*лучше без нее!!! скругляет углы и убирает почемуто наружный контур!*/
     overflow: hidden;             /* чтобы скругление работало */
