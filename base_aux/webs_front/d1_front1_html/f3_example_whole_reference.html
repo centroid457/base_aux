@@ -2704,7 +2704,9 @@
                 <article class="article__cls">
                     <header>flex-direction — направление главной оси=НАПРАВЛЕНИЕ РАСТЯЖКИ</header>
                     <div class="article_main__cls">
-                        <div class="cover_box__cls" style="display:flex;"
+
+                        height:50px
+                        <div class="cover_box__cls" style="display:flex; height: 50px"
                              data-clone_style_params="flex-direction:[
                              row;row-reverse;
                              column;column-reverse
@@ -2713,6 +2715,19 @@
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
                         </div>
+
+                        <hr>
+                        width: 50px
+                        <div class="cover_box__cls" style="display:flex; width: 50px"
+                             data-clone_style_params="flex-direction:[
+                             row;row-reverse;
+                             column;column-reverse
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+
                         <p><small><code>row</code> (по умолчанию), <code>row-reverse</code>, <code>column</code>, <code>column-reverse</code>.</small></p>
                     </div>
                     <footer>При <code>column</code> ширина контейнера ограничена, элементы могут выходить за пределы.</footer>
@@ -2724,12 +2739,25 @@
                     <div class="article_main__cls">
                         <div class="cover_box__cls" style="display:flex;"
                              data-clone_style_params="gap:[
-                             0;0.5rem;1rem;2rem;
+                             -2rem;-1rem;
+                             0;
+                             1rem;2rem;
                              ]">
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
                         </div>
+
+                        <div class="cover_box__cls" style="display:flex;flex-direction: column"
+                             data-clone_style_params="gap:[
+                             0;
+                             1rem;
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+
                         <p><small><code>gap</code> работает и для flex, и для grid. Заменяет классические <code>margin</code> между элементами.</small></p>
                     </div>
                     <footer>✨ <code>gap</code> проще и надёжнее: не нужно обнулять отступы у первого/последнего элемента.</footer>
@@ -2770,21 +2798,20 @@
                     <footer>Для работы <code>stretch</code> у элементов не должна быть задана явная высота.</footer>
                 </article>
 
-
-
-
-
                 <!-- ========== flex-wrap ========== -->
                 <article class="article__cls">
                     <header>📦 flex-wrap — перенос элементов на новую строку</header>
                     <div class="article_main__cls">
-                        <div class="cover_box__cls"
-                             data-clone_style_params="flex-wrap:nowrap;wrap;wrap-reverse"
-                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; width:200px; display:flex;">
-                            <div class="demo_item__cls" style="width:80px;">1</div>
-                            <div class="demo_item__cls" style="width:80px;">2</div>
-                            <div class="demo_item__cls" style="width:80px;">3</div>
-                            <div class="demo_item__cls" style="width:80px;">4</div>
+                        <div class="cover_box__cls" style="display:flex; width:80px;"
+                             data-clone_style_params="flex-wrap:[
+                             nowrap;
+                             wrap;
+                             wrap-reverse
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                            <div class="demo_item__cls">4</div>
                         </div>
                         <p><small><code>nowrap</code> (по умолчанию) – элементы не переносятся, сжимаются; <code>wrap</code> – перенос; <code>wrap-reverse</code> – перенос в обратном порядке.</small></p>
                     </div>
@@ -2795,19 +2822,23 @@
                 <article class="article__cls">
                     <header>📐 align-content — выравнивание строк при переносе</header>
                     <div class="article_main__cls">
-                        <div class="cover_box__cls"
-                             data-clone_style_params="align-content:stretch;flex-start;center;flex-end;space-between"
-                             style="background:#f8fafc; border:1px solid #ddd; padding:0.5rem; height:180px; display:flex; flex-wrap:wrap; width:200px;">
-                            <div class="demo_item__cls" style="width:60px;">1</div>
-                            <div class="demo_item__cls" style="width:60px;">2</div>
-                            <div class="demo_item__cls" style="width:60px;">3</div>
-                            <div class="demo_item__cls" style="width:60px;">4</div>
+                        <div class="cover_box__cls" style="display:flex; flex-wrap:wrap; width:80px; height:100px;"
+                             data-clone_style_params="align-content:[
+                             stretch;
+                             flex-start;center;flex-end;
+                             space-between
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                            <div class="demo_item__cls">4</div>
                         </div>
                         <p><small>Работает только при <code>flex-wrap: wrap</code> и наличии нескольких строк. <code>stretch</code> растягивает строки по высоте.</small></p>
                     </div>
                     <footer>💡 <code>align-content</code> управляет расстоянием между строками, а не внутри строки.</footer>
                 </article>
 
+                <!-- ========== header pattern ========== -->
                 <article class="article__cls">
                     <header>FLEX=Паттерн "шапка сайта" — слева логотип, по центру меню, справа иконки</header>
                     <div class="article_main__cls">
