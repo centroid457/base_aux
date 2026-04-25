@@ -118,7 +118,7 @@ form div label {
 .fieldset_style1__cls {
     border: 2px solid #cbd5e1;
     border-radius: 16px;
-    padding: 1rem;
+    padding: 1rem; /*dont delete!!!*/
 }
 .fieldset_style1__cls legend{
     padding: 0 0.5rem;
@@ -604,12 +604,10 @@ dl {
 }
 dt {
     font-weight: 600;
-    __margin-top: 0.75rem;
     color: #0f2b4d;
 }
 dd {
     margin-left: 1.2rem;
-    __margin-bottom: 0.5rem;
     color: #334155;
 }
 
@@ -617,7 +615,6 @@ dd {
 .dl_horizontal__cls {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem 0.5rem;
     align-items: baseline;
 }
 .dl_horizontal__cls dt {
