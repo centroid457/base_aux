@@ -604,11 +604,9 @@ dl {
 }
 dt {
     font-weight: 600;
-    color: #0f2b4d;
 }
 dd {
     margin-left: 1.2rem;
-    color: #334155;
 }
 
 /* Горизонтальный dl (термин и описание в одной строке) */
@@ -620,7 +618,7 @@ dd {
 .dl_horizontal__cls dt {
     margin-top: 0;
     margin-bottom: 0;
-    white-space: nowrap;
+    white-space: wrap;
 
     user-select: all;    /* при клике выделяется весь текст элемента */
     cursor: pointer;     /* показывает, что элемент можно выделить (необязательно) */
