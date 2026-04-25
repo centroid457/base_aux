@@ -133,6 +133,12 @@ form div label {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
+[data-cover__border_bg] {
+    background: #ddd;
+    border: 1px solid #aaa;
+    border-radius: 0.5rem;
+}
+
 /* highlited = bg + graphic -------------------------*/
 p[data-highlighted] {
     background: #f8fafc;
@@ -144,12 +150,6 @@ blockquote[data-highlighted] {
     background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
     border-left: 4px solid #ff8c42;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-[data-cover__border_bg] {
-    background: #ddd;
-    border: 1px solid #aaa;
-    border-radius: 0.5rem;
 }
 
 /* Фоновые цвета */
@@ -177,18 +177,12 @@ blockquote[data-highlighted] {
 
 [data-text_bold]    { font-weight: 600; }
 
-/* Размер шрифта */
-[data-font_small]   { font-size: 0.85rem; }
-[data-font_large]   { font-size: 1.2rem; }
-
 /* Скругления */
 [data-rounded]      { border-radius: 0.5rem; }
 [data-rounded_large] { border-radius: 1rem; }
 
 /* Отображение */
 [data-inline]       { display: inline-block; }      /* преобразует в строчный блок а не контейнерный */
-
-[data-hidden]       { display: none; }
 
 section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
 
