@@ -133,13 +133,6 @@ form div label {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
-/*  */
-.cover_box__cls {
-    background: #ddd;
-    border: 1px solid #aaa;
-    border-radius: 0.5rem;
-}
-
 /* highlited = bg + graphic -------------------------*/
 p[data-highlighted] {
     background: #f8fafc;
@@ -151,6 +144,12 @@ blockquote[data-highlighted] {
     background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
     border-left: 4px solid #ff8c42;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-cover__border_bg] {
+    background: #ddd;
+    border: 1px solid #aaa;
+    border-radius: 0.5rem;
 }
 
 /* Фоновые цвета */
