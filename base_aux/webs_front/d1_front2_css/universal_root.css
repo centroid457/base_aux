@@ -137,6 +137,9 @@ fieldset {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
+[data-border]      { border: 1px solid #aaa; }
+[data-border_radius05rem]      { border-radius: 0.5rem; }
+
 [data-cover__border_bg] {
     background: #ddd;
     border: 1px solid #aaa;
@@ -185,10 +188,6 @@ blockquote[data-highlighted] {
 [data-align_right]      { text-align: right; }
 
 [data-text_bold]    { font-weight: 600; }
-
-/* Скругления */
-[data-rounded]      { border-radius: 0.5rem; }
-[data-rounded_large] { border-radius: 1rem; }
 
 /* Отображение */
 [data-inline]       { display: inline-block; }      /* преобразует в строчный блок а не контейнерный */

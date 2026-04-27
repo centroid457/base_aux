@@ -128,7 +128,10 @@
                     <header>наборы</header>
                     <div class="article_main__cls">
 
-                        <fieldset data-flex_wrap data-icons__show_unicode_values>
+                        <fieldset
+                                data-flex_wrap
+                                data-icons__show_unicode_values
+                        >
                             <legend>просто все для примера</legend>
                             привет HEllo
                             A B C 123
@@ -215,7 +218,7 @@
                             ⏱️⏰
                             🔄🔄
 
-                            … ✂️ 🛠️📆🌈🎨🧲
+                            … ✂️ 🛠️📆🌈🎨🧲🔍
                         </fieldset>
 
                     </div>
@@ -264,10 +267,15 @@
 
                 <!-- ====================== font-size-adjust ====================== -->
                 <article class="article__cls">
-                    <header>📏 font-size-adjust – сохраняем читаемость при смене шрифта</header>
+                    <header>font-size-adjust</header>
                     <div class="article_main__cls">
-                        <div class="demo-text-block"
-                             data-clone_style_params="font-size-adjust:[none;0.5;0.6;0.7;0.8;0.9;1;1.1;1.2]">
+                        <div data-cover__border_bg
+                             data-clone_style_params="font-size-adjust:[
+                             none;
+                             -2;-1;-0.5;
+                             0;
+                             0.5;1;2;
+                             ]">
                             xXx пример
                         </div>
                     </div>
@@ -275,6 +283,21 @@
                         Меняет размер шрифта, чтобы высота строчных букв (x-height) оставалась постоянной.<br>
                         Полезно, когда запасной шрифт имеет другую пропорцию, а читаемость критична.
                     </footer>
+                </article>
+
+                <!-- ====================== font-optical-sizing ====================== -->
+                <article class="article__cls">
+                    <header>font-optical-sizing – оптическое масштабирование (вариативные шрифты)</header>
+                    <div class="article_main__cls">
+
+                        <div data-cover__border_bg
+                                style="font-family: 'Roboto Flex', sans-serif;"
+                                data-clone_style_params="font-optical-sizing:[auto;none]">
+                            Размер шрифта: 20px (пример)
+                        </div>
+
+                    </div>
+                    <footer>Для вариативных шрифтов <code>auto</code> подбирает оптический размер (opsz), <code>none</code> отключает.</footer>
                 </article>
 
                 <!-- ====================== НАЧЕРТАНИЕ (ЖИРНОСТЬ) ====================== -->
@@ -336,19 +359,6 @@
                     </footer>
                 </article>
 
-                <!-- ====================== font-optical-sizing ====================== -->
-<article class="article__cls">
-    <header>🔍 font-optical-sizing – оптическое масштабирование (вариативные шрифты)</header>
-    <div class="article_main__cls">
-        <div style="font-family: 'Roboto Flex', sans-serif;"
-             data-clone_style_params="font-optical-sizing:[auto;none]">
-            Размер шрифта: 20px (пример)
-        </div>
-    </div>
-    <footer>Для вариативных шрифтов <code>auto</code> подбирает оптический размер (opsz), <code>none</code> отключает.</footer>
-</article>
-
-
                 <!-- ====================== FONT-STYLE И НАКЛОН ====================== -->
                 <article class="article__cls">
                     <header>font-style: углы наклона</header>
@@ -396,64 +406,42 @@
                     </footer>
                 </article>
 
-                <!-- ====================== font-variant ====================== -->
+                <!-- ====================== font-variant (caps, numbers) ====================== -->
                 <article class="article__cls">
                     <header>font-variant – типографские варианты (капитель и др.)</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-clone_style_params="
-                                font-variant:[
-                                    normal;small-caps;all-small-caps;
-                                    unicase;titling-caps;
+                             data-clone_style_params="font-variant:[
+                                unicase;
+                                all-small-caps;
+                                diagonal-fractions;
+                                oldstyle-nums;
+
+                                normal;
+                                small-caps;titling-caps;petite-caps;
+
+                                lining-nums;
+                                proportional-nums;
+                                tabular-nums;
+                                stacked-fractions;
+                                ordinal;
+                                slashed-zero;
+                                jis78;jis83;jis90;jis04;
+                                simplified;traditional
                              ]">
-                            Пример текста
+                            ПрМр ExPe 0120 1/2 1//3 0,040 0.050 !@#$%^&*()_+ []{}=- !"№;%:?*()./,
                         </div>
                     </div>
                     <footer>
+                        Управляет отображением капители, цифр, дробей, ординалов.<br>
+                        <code>small-caps</code> – маленькие заглавные, <code>lining-nums</code> – однострочные цифры, <code>tabular-nums</code> – моноширинные для таблиц.<br>
+                        Работает для OpenType-шрифтов.
+
                         <code>small-caps</code> – строчные буквы заменяются уменьшенными заглавными.<br>
                         <code>all-small-caps</code> – все буквы становятся заглавными уменьшенного размера.<br>
                         <code>unicase/titling-caps</code> – редкие варианты.
                     </footer>
                 </article>
-
-<!-- ====================== font-variant (caps, numbers) ====================== -->
-<article class="article__cls">
-    <header>🔠 font-variant – капитель, цифровые варианты</header>
-    <div class="article_main__cls">
-        <div class="demo-text-block"
-             data-clone_style_params="font-variant:[
-                 normal;
-                 small-caps;
-                 all-small-caps;
-                 titling-caps;
-                 unicase;
-                 petite-caps;
-                 lining-nums;
-                 oldstyle-nums;
-                 proportional-nums;
-                 tabular-nums;
-                 diagonal-fractions;
-                 stacked-fractions;
-                 ordinal;
-                 slashed-zero;
-                 jis78;jis83;jis90;jis04;
-                 simplified;traditional
-             ]">
-            Пример текста 01234 1/2
-        </div>
-    </div>
-    <footer>
-        💡 Управляет отображением капители, цифр, дробей, ординалов.<br>
-        <code>small-caps</code> – маленькие заглавные, <code>lining-nums</code> – однострочные цифры, <code>tabular-nums</code> – моноширинные для таблиц.<br>
-        Работает для OpenType-шрифтов.
-    </footer>
-</article>
-
-
-
-
-
-
 
             </div>
         </section>
@@ -832,6 +820,23 @@
                 <article class="article__cls">
                     <header>vertical-align – ВЕРТИК выравнивание (inline/inline-block)</header>
                     <div class="article_main__cls">
+
+                        <hr>
+                        ручная вставкка стилей
+                        <div data-cover__border_bg
+                             style="line-height: 2;"
+                        >
+                            <span style="vertical-align: baseline;">baseline</span>
+                            <span style="vertical-align: sub;">sub</span>
+                            <span style="vertical-align: super;">super</span>
+                            <span style="vertical-align: top;">top</span>
+                            <span style="vertical-align: middle;">middle</span>
+                            <span style="vertical-align: bottom;">bottom</span>
+                            <span style="vertical-align: 10px;">10px</span>
+                        </div>
+
+                        <hr>
+                        с блоком не сработает
                         <div data-cover__border_bg
                              style="height:40px;"
                              data-clone_style_params="vertical-align:[
@@ -844,9 +849,10 @@
                              ]">
                             DIVinnerText <span style="display:inline-block; width:25px; height:25px; background:lightblue;"></span> элементом.
                         </div>
+
                         <hr>
                         ВЫРАВНИВАЕТСЯ ТЕКСТ ОТНОСИТЕЛЬНО другого обьекта
-                        <div style="line-height:2; border:1px solid #ccc">
+                        <div style="line-height:2;">
                             <span data-bg_red style="height:40px;line-height:5rem;"
                                  data-clone_style_params="vertical-align:[
                                  baseline;
@@ -858,18 +864,6 @@
                                  ]">
                                 SPAN
                             </span>
-                        </div>
-
-                        <hr>
-                        ручная вставкка стилей
-                        <div data-cover__border_bg style="line-height: 2;">
-                            <span style="vertical-align: baseline;">baseline</span>
-                            <span style="vertical-align: sub;">sub</span>
-                            <span style="vertical-align: super;">super</span>
-                            <span style="vertical-align: top;">top</span>
-                            <span style="vertical-align: middle;">middle</span>
-                            <span style="vertical-align: bottom;">bottom</span>
-                            <span style="vertical-align: 10px;">10px</span>
                         </div>
 
                     </div>
@@ -1028,24 +1022,6 @@
                     <footer><code>auto</code> – по усмотрению браузера, <code>normal</code> – включить таблицы кернинга шрифта, <code>none</code> – отключить.</footer>
                 </article>
 
-<!-- ====================== font-kerning ====================== -->
-<article class="article__cls">
-    <header>🔤 font-kerning – межбуквенный кернинг</header>
-    <div class="article_main__cls">
-        <div class="demo-text-block" style="font-size: 1.5rem;"
-             data-clone_style_params="font-kerning:[auto;normal;none]">
-            VAWA Дано
-        </div>
-    </div>
-    <footer>
-        <code>normal</code> – использовать кернинг из шрифта, <code>none</code> – отключить, <code>auto</code> – браузер решает.<br>
-        Особенно заметно на больших размерах для пар букв вроде VA, AW, To.
-    </footer>
-</article>
-
-
-
-
                 <!-- ====================== font-synthesis ====================== -->
                 <article class="article__cls">
                     <header>font-synthesis – искусственное создание начертаний</header>
@@ -1058,29 +1034,44 @@
                     <footer>Определяет, может ли браузер самостоятельно создавать жирное/курсивное/капительное начертание, если они отсутствуют в шрифте.</footer>
                 </article>
 
-<!-- ====================== font-synthesis ====================== -->
-<article class="article__cls">
-    <header>⚙️ font-synthesis – синтез недостающих начертаний</header>
-    <div class="article_main__cls">
-        <div style="font-style: italic; font-weight: bold;"
-             data-clone_style_params="font-synthesis:[
-                 none;
-                 weight;
-                 style;
-                 weight style;
-                 small-caps
-             ]">
-            Жирный курсив
-        </div>
-    </div>
-    <footer>
-        Если у шрифта нет жирного или курсивного начертания, браузер может синтезировать их искусственно.<br>
-        <code>font-synthesis: none</code> – запрещает искусственное начертание (используется только то, что есть в шрифте).
-    </footer>
-</article>
+                <!-- ====================== font-synthesis ====================== -->
+                <article class="article__cls">
+                    <header>⚙️ font-synthesis – синтез недостающих начертаний</header>
+                    <div class="article_main__cls">
 
+                        <div data-cover__border_bg
+                             style="font-style: italic; font-weight: bold;"
+                             data-clone_style_params="font-synthesis:[
+                                 none;
+                                 weight;
+                                 style;
+                                 weight style;
+                                 small-caps
+                             ]">
+                            Жирный курсив
+                        </div>
+                    </div>
+                    <footer>
+                        Если у шрифта нет жирного или курсивного начертания, браузер может синтезировать их искусственно.<br>
+                        <code>font-synthesis: none</code> – запрещает искусственное начертание (используется только то, что есть в шрифте).
+                    </footer>
+                </article>
 
-
+                <!-- ====================== font-kerning ====================== -->
+                <article class="article__cls">
+                    <header>🔤 font-kerning – межбуквенный кернинг</header>
+                    <div class="article_main__cls">
+                            <div data-cover__border_bg
+                                style="font-size: 1.5rem;"
+                                data-clone_style_params="font-kerning:[auto;normal;none]">
+                            VAWA Дано
+                        </div>
+                    </div>
+                    <footer>
+                        <code>normal</code> – использовать кернинг из шрифта, <code>none</code> – отключить, <code>auto</code> – браузер решает.<br>
+                        Особенно заметно на больших размерах для пар букв вроде VA, AW, To.
+                    </footer>
+                </article>
 
             </div>
         </section>
@@ -2395,9 +2386,9 @@
                         <hr>
                         FORM input type=number
                         <form
-                                onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;"
                                 data-bg_grey
-                                data-rounded>
+                                data-border_radius05rem
+                                onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;">
 
                             <div>
                                 <label>input=number:</label>
@@ -2582,8 +2573,6 @@
                         <p data-shadow>data-shadow</p>
                         <p data-shadow_hover>data-shadow_hover</p>
 
-                        <p data-rounded data-bg_grey>data-rounded</p>
-                        <p data-rounded_large data-bg_grey>data-rounded_large</p>
                         <p data-clickable>data-clickable</p>
 
                         <hr>
