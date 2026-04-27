@@ -218,7 +218,7 @@
                             ⏱️⏰
                             🔄🔄
 
-                            … ✂️ 🛠️📆🌈🎨🧲🔍
+                            … ✂️ 🛠️📆🌈🎨🧲🔍🧱🖼️👁️
                         </fieldset>
 
                     </div>
@@ -534,8 +534,13 @@
                         <div data-cover__border_bg
                              data-clone_style_params="text-shadow:[
                                 none;
-                                0 0 0px #f00;0 0 1px #f00;0 0 5px #f00;0 0 10px #f00;
-                                -3px -3px 1px #000;2px 2px 2px rgba(0,0,0,0.3);
+                                0 0 0px #f00;
+                                0 0 1px #f00;
+                                0 0 5px #f00;
+                                0 0 10px #f00;
+
+                                -3px -3px 1px #000;
+                                2px 2px 2px rgba(0,0,0,0.3);
                                 3px 3px 0px #222,6px 6px 0px #555,9px 9px 0px #777;
                              ]">
                             text-shadow
@@ -546,18 +551,22 @@
 
                 <!-- ====================== ТЕНЬ БЛОКА ====================== -->
                 <article class="article__cls">
-                    <header>📦 box-shadow – тень элемента</header>
+                    <header>box-shadow – тень элемента</header>
                     <div class="article_main__cls">
                         <div
-                             data-clone_style_params="box-shadow:[
+                                style="gap"
+                                data-clone_style_params="box-shadow:[
                                 none;
+
+                                0px 0px 10px green;
+                                0px 0px 20px green;
+                                0px 0px 30px green;
+
                                 2px 2px 5px rgba(0,0,0,0.3);
                                 5px 5px 10px rgba(0,0,0,0.5);
                                 10px 10px 20px rgba(0,0,0,0.2);
                                 -5px -5px 10px rgba(0,0,0,0.1);
-                                0px 0px 10px red;
-                                0px 0px 20px blue;
-                                0px 0px 30px green;
+
                                 inset 0px 0px 10px rgba(0,0,0,0.5);
                                 inset 2px 2px 5px rgba(255,255,255,0.8), 5px 5px 10px rgba(0,0,0,0.2);
                                 0px 10px 20px -5px rgba(0,0,0,0.3);
@@ -567,7 +576,7 @@
                                 0 0 0 2px red, 0 0 0 4px blue, 0 0 0 6px green;
                                 inset 0 0 0 2px white, 0 0 0 4px black;
                                 drop-shadow(2px 2px 5px rgba(0,0,0,0.5));
-                             ]">
+                                ]">
                             box-shadow
                         </div>
                     </div>
@@ -1258,6 +1267,307 @@
                         <code>pre</code> сохраняет пробелы и переносы строк,<br>
                         <code>code</code> обозначает фрагмент кода. Комбинация,<br>
                         <code>&lt;pre&gt;&lt;code&gt;</code> — стандарт для вставки листингов.
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksId">
+            <h2 data-icon_process_ok>BLOCKS</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== width ========== -->
+                <article class="article__cls">
+                    <header>width – ширина блока</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="width:[
+                                auto;
+                                -50%;0%;50%;100%;
+                                -10px;0px;10px;100px;
+                                1vw;2vw;5vw;
+                                min-content;max-content;fit-content;
+                             ]">
+                            width
+                        </div>
+                    </div>
+                    <footer><code>auto</code>, <code>50%</code>, <code>200px</code>, <code>20vw</code>, <code>min-content</code>, <code>max-content</code>, <code>fit-content</code>.</footer>
+                </article>
+
+                <!-- ========== height ========== -->
+                <article class="article__cls">
+                    <header>height – высота блока</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="height:[
+                                auto;
+                                -50%;0%;50%;100%;
+                                -10px;0px;10px;100px;
+                                1vw;2vw;5vw;
+                                min-content;max-content;fit-content;
+                             ]">
+                            height
+                        </div>
+                    </div>
+                    <footer>Абсолютные (<code>px</code>, <code>vh</code>) и относительные (<code>auto</code>, <code>min-content</code>, <code>max-content</code>) значения.</footer>
+                </article>
+
+                <!-- ========== COORDINATE schema ========== -->
+                <article class="article__cls">
+                    <header>COORDINATE schema</header>
+                    <div class="article_main__cls">
+                        1_ALL<br>
+                        1_VERTIC+2_HORIZ<br>
+                        1_UP+2_HORIZ+3_DOWN<br>
+                        1_UP+2_RIGHT+3_DOWN+4_LEFT<br>
+                        <div data-cover__border_bg
+                             data-clone_style_params="margin:[
+                             0;
+                             0 5px;
+                             0 5px 10px;
+                             0 5px 10px 20px;
+                             ]">
+                            example on margin
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ========== margin ========== -->
+                <article class="article__cls">
+                    <header>margin – НАРУЖНЫЕ отступы</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="margin:[
+                             auto;
+
+                             -10px;0;10px;20px;
+
+                             0 20px;20px 0;
+
+                             auto auto;
+
+                             -10px auto;
+                             10px auto;
+                             auto 10px;
+                             auto -10px;
+
+                             0;
+                             0 5px;
+                             0 5px 10px;
+                             0 5px 10px 20px;
+                             ]">
+                            margin
+                        </div>
+                    </div>
+                    <footer>Отрицательные значения. Соседние отступы схлопываются.</footer>
+                </article>
+
+                <!-- ========== padding ========== -->
+                <article class="article__cls">
+                    <header>padding – ВНУТРЕННИЕ отступы</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="padding:[
+                             -10px;0;10px;20px;
+
+                             0 10px;
+                             10px 0;
+
+                             0;
+                             0 5px;
+                             0 5px 10px;
+                             0 5px 10px 20px;
+                             ]">
+                            padding
+                        </div>
+                    </div>
+                    <footer>Не бывает отрицательных. Влияет на размер блока при стандартном <code>box-sizing: content-box</code>.</footer>
+                </article>
+
+                <!-- ========== box-sizing ========== -->
+                <article class="article__cls">
+                    <header>box-sizing – модель размера</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="width: 200px; border: 5px solid #2a73ff; padding: 20px;"
+                             data-comment="НЕ УДАЛЯТЬ СТИЛИ!!! важны!"
+                             data-clone_style_params="box-sizing:[
+                             content-box;
+                             border-box;
+                             ]">
+                            box-sizing=Ширина 200px + граница 5px + padding 20px
+                        </div>
+                    </div>
+                    <footer><code>content-box</code> – размер без границы/отступа, <code>border-box</code> – включает их.</footer>
+                </article>
+
+                <!-- ========== overflow (видимость переполнения) ========== -->
+                <article class="article__cls">
+                    <header>overflow – обработка переполнения</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="width: 50px; height: 50px;"
+                             data-comment="важно 4 строки на 50px!!!"
+                             data-clone_style_params="overflow:[
+                             visible;hidden;scroll;auto;
+                             ]">
+                            overflow
+                            1111111111
+                            2222222222
+                            3333333333
+                        </div>
+                    </div>
+                    <footer>
+                        <code>visible</code> – видно за пределами,<br>
+                        <code>hidden</code> – обрезается,<br>
+                        <code>scroll</code> – всегда полосы,<br>
+                        <code>auto</code> – полосы при необходимости.<br>
+                    </footer>
+                </article>
+
+                <!-- ========== visibility ========== -->
+                <article class="article__cls">
+                    <header>visibility – видимость (сохраняет место)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="visibility:[
+                             none;
+
+                             visible;
+                             hidden;
+                             collapse;
+                             ]">
+                            Видимый или скрытый текст (скрытый занимает место)
+                        </div>
+                    </div>
+                    <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
+                </article>
+
+                <!-- ========== opacity ========== -->
+                <article class="article__cls">
+                    <header>🌀 opacity – прозрачность (0…1)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="opacity:[1;0.7;0.5;0.3;0.1;0]"
+                             style="background: #2a73ff; color: white; padding: 0.5rem; border-radius: 0.5rem;">
+                            Прозрачность
+                        </div>
+                    </div>
+                    <footer>Влияет на весь элемент и его потомков. <code>0</code> – полностью прозрачен (но кликабелен).</footer>
+                </article>
+
+                <!-- ========== border / border-radius ========== -->
+                <article class="article__cls">
+                    <header>🖌️ border / border-radius – рамка и скругление</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+
+                             data-clone_style_params="border:[none;2px solid red;4px dotted green;8px double blue]"
+                             style="background: #eef2ff; padding: 0.5rem;">
+                            Рамка
+                        </div>
+                        <div data-cover__border_bg
+                             data-clone_style_params="border-radius:[0;8px;16px;50%;30px 10px]"
+                             style="background: #eef2ff; border: 2px solid #2a73ff; padding: 0.5rem;">
+                            Скругление углов
+                        </div>
+                    </div>
+                    <footer>border: ширина стиль цвет. border-radius: пиксели, проценты, один или четыре угла.</footer>
+                </article>
+
+                <!-- ========== box-shadow ========== -->
+                <article class="article__cls">
+                    <header>✨ box-shadow – тень блока</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="box-shadow:[none;2px 2px 5px rgba(0,0,0,0.3);5px 5px 10px rgba(0,0,0,0.2);inset 2px 2px 5px rgba(0,0,0,0.2);0 0 0 4px red, 0 0 0 8px blue]"
+                             style="background: #fff; padding: 0.5rem; border-radius: 8px;">
+                            Тень
+                        </div>
+                    </div>
+                    <footer>СдвигX сдвигY размытие цвет; inset – внутренняя; можно несколько через запятую.</footer>
+                </article>
+
+                <!-- ========== outline ========== -->
+                <article class="article__cls">
+                    <header>🔲 outline – внешний контур (не влияет на размер)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="outline:[none;2px solid red;4px dotted green;6px double blue]"
+                             style="background: #eef2ff; padding: 0.5rem;">
+                            Контур
+                        </div>
+                    </div>
+                    <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
+                </article>
+
+                <!-- ========== cursor ========== -->
+                <article class="article__cls">
+                    <header>🖱️ cursor – вид курсора</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="cursor:[default;pointer;wait;help;crosshair;move;not-allowed;zoom-in]"
+                             style="background: #eef2ff; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            Наведи меня
+                        </div>
+                    </div>
+                    <footer>Меняет внешний вид курсора при наведении.</footer>
+                </article>
+
+                <!-- ========== resize ========== -->
+                <article class="article__cls">
+                    <header>🔄 resize – изменение размера пользователем</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="resize:[none;both;horizontal;vertical]"
+                             style="overflow: auto; width: 200px; height: 100px; background: #eef2ff; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            Потяни за правый нижний угол (если разрешено)
+                        </div>
+                    </div>
+                    <footer>Работает при <code>overflow: auto/scroll</code>. Пользователь может менять размер.</footer>
+                </article>
+
+                <!-- ====================== background-clip ====================== -->
+                <article class="article__cls">
+                    <header>background-clip – где виден фон (border, padding, content, текст)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="background: linear-gradient(135deg, #2a73ff, #ff8c42); border: 8px dashed #ccc; padding: 1rem; font-size: 2rem; font-weight: bold;"
+                             data-clone_style_params="background-clip:[
+                             border-box;padding-box;content-box;
+                             text;
+                             ]">
+                            [🎨 BARETEXT]
+                            [<span style="color:transparent;">color:transparent</span>]
+                            [<span style="color:rgba(0,0,0,0.3);">color:rgba(0,0,0,0.3)</span>]
+                        </div>
+                    </div>
+                    <footer>
+                        <strong>Значения:</strong> <code>border-box</code> – фон заходит под границу (по умолчанию)<br>
+                        <code>padding-box</code> – фон до внутреннего края границы (без под границу)<br>
+                        <code>content-box</code> – фон только под содержимым<br>
+                        <code>text</code> – фон обрезается по форме текста (при этом текст должен быть <code>color: transparent</code>; в демо полупрозрачный для наглядности, но эффект виден)
+                    </footer>
+                </article>
+
+                <!-- ====================== background-origin ====================== -->
+                <article class="article__cls">
+                    <header>📌 background-origin – отступ для позиции фона (border, padding, content)</header>
+                    <div class="article_main__cls">
+                        <div class="demo-styled-block"
+                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
+                             style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
+                        >
+                            ██ градиентный квадрат
+                        </div>
+                    </div>
+                    <footer>
+                        <code>border-box</code> – позиция от верхнего левого угла рамки<br>
+                        <code>padding-box</code> – от внутреннего края рамки (между рамкой и контентом)<br>
+                        <code>content-box</code> – от края контента (внутри паддингов)<br>
+                        ⚡ Меняет только начальную точку фона, не влияет на обрезку (<code>background-clip</code>).
                     </footer>
                 </article>
 
@@ -2839,7 +3149,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="compose0DisplayId">
-            <h2>🖼️ display – все режимы отображения (блочный, строчный, флекс, грид, таблицы…)</h2>
+            <h2>display – все режимы отображения</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -2849,8 +3159,8 @@
                         <div class="demo-block"
                              style="border: 2px solid #2a73ff; background: #f8fafc; padding: 0.5rem; margin: 0.5rem 0;"
                              data-clone_style_params="display:[
-                                 inherit;initial;unset;revertж
-                                 none;
+                                 inherit;initial;unset;revert;
+                                 none;hidden;
                                  block;inline;inline-block;
 
                                  flex;inline-flex;
@@ -2868,7 +3178,7 @@
                         </div>
                     </div>
                     <footer>
-                        📌 <strong>Краткая справка по значениям:</strong><br>
+                        <strong>Краткая справка по значениям:</strong><br>
                         <code>block</code> – блочный элемент (занимает всю ширину)<br>
                         <code>inline</code> – строчный (не переносит, ширина по содержимому)<br>
                         <code>inline-block</code> – строчный блок (можно задавать ширину/высоту)<br>
