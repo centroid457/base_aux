@@ -260,6 +260,7 @@ const CLONE_ATTR_NAME = "data-clone_style_params";
 function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_values) {
     // Если первого элемента нет, добавим маркер "оригинал без изменений"
     style_values.unshift(undefined);
+    style_values.unshift("WRONG_VAL");
     style_values.unshift("");
 
     // 1. Создаём контейнер dl с классом для горизонтального отображения
