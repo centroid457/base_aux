@@ -115,6 +115,10 @@ form div label {
 }
 
 /* ------------------ FIELDSET  ------------------*/
+fieldset {
+    border-radius: 0.5rem;
+}
+
 .fieldset_style1__cls {
     border: 2px solid #cbd5e1;
     border-radius: 16px;
@@ -135,6 +139,11 @@ form div label {
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
 [data-cover__border_bg] {
     background: #ddd;
+    border: 1px solid #aaa;
+    border-radius: 0.5rem;
+}
+
+[data-cover__border_radius] {
     border: 1px solid #aaa;
     border-radius: 0.5rem;
 }
@@ -924,10 +933,15 @@ tbody td:hover {
 }
 
 /* -------------------- FLEX --------------------*/
+[data-flex_wrap] {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .flex_row0 {
     display: flex;
-    gap: 1rem;  /* расстояние между внутренними блоками */
     flex-wrap: wrap;
+    gap: 1rem;  /* расстояние между внутренними блоками */
     justify-content: space-between;
         /*
             center=собрать все внутренние элементы вместе в центре - без растягивания пространства промежуточного - тоесть строгие GAPS!

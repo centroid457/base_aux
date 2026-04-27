@@ -1,11 +1,11 @@
-// ----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 (function bgColorOnLoad() {
     let body_bg_color__old = document.body.style.background;
     document.body.style.background = 'yellow';
     setTimeout(() => document.body.style.background = body_bg_color__old, 100);
 })();
 
-// ----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 /** НЕ РАБОТАЕТ!!!
  * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
  * @param {string|HTMLElement} container - CSS-селектор или DOM-элемент.
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 (function generateNavRoot() {
     const navContainer = document.getElementById('ROOT_NAV__ID');
     if (!navContainer) return;
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     navContainer.appendChild(bottomLink);
 })();
 
-// ----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 // LINKS=SCROLL Smooth - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
 (function linksSmoothScroll_forOldBrausers() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -160,6 +160,92 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 })();
 
+// =====================================================================================================================
+// CLONES
+// ---------------------------------------------------------------------------------------------------------------------
+function isIconChar(ch) {
+    const code = ch.codePointAt(0);
+    return (
+        // Специальные символы пунктуации (…, •, — и т.д.)
+        (code === 0x2026) || // …
+        (code === 0x2022) || // •
+        (code === 0x2014) || // —
+        (code === 0x2013) || // –
+
+        (code >= 0x2190 && code <= 0x21FF) || // стрелки (←↑→↓↔↕↖↗↘↙)
+        (code >= 0x2300 && code <= 0x23FF) || // технические
+        (code >= 0x24EA && code <= 0x24FF) || // Числовые символы в кружках
+        (code >= 0x25A0 && code <= 0x25FF) || // геометрические фигуры
+        (code >= 0x2600 && code <= 0x26FF) || // разное (погода, звёзды)
+        (code >= 0x2700 && code <= 0x27BF) || // Дингбаты (галочки, крестики, лампочки)
+        (code >= 0x2B00 && code <= 0x2BFF) || // стрелки дополнительные
+        (code >= 0x1F300 && code <= 0x1F9FF) || // эмодзи основные
+        (code >= 0x1F900 && code <= 0x1FADF) || // эмодзи дополнительные
+
+        // Отдельные иконки
+        code === 0x24D8 || code === 0x2139 || code === 0x00A9 || code === 0x00AE || code === 0x2122
+    );
+}
+
+(function _icons_show_code() {
+    function processTextNode(node) {
+        const text = node.nodeValue;
+        if (!text) return;
+        const chars = Array.from(text);
+        let resultNodes = [];
+        let currentPlain = '';
+        for (const ch of chars) {
+            if (isIconChar(ch)) {
+                if (currentPlain) {
+                    resultNodes.push(document.createTextNode(currentPlain));
+                    currentPlain = '';
+                }
+                const codePoint = ch.codePointAt(0);
+                const hex = codePoint.toString(16).toUpperCase();
+
+                const span = document.createElement('span');
+                span.setAttribute("data-cover__border_radius", "")
+                span.innerHTML = `${ch} <code>&amp;#x${hex};</code>`;
+                resultNodes.push(span);
+            } else {
+                currentPlain += ch;
+            }
+        }
+        if (currentPlain) resultNodes.push(document.createTextNode(currentPlain));
+        if (resultNodes.length) {
+            const parent = node.parentNode;
+            const next = node.nextSibling;
+            for (const newNode of resultNodes) parent.insertBefore(newNode, next);
+            parent.removeChild(node);
+        }
+    }
+
+    function processElements(element) {
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: (node) => {
+                    if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('icon-unicode-item')) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) textNodes.push(node);
+        textNodes.forEach(processTextNode);
+    }
+
+    const elements = document.querySelectorAll('[data-icons__show_unicode_values]');
+    elements.forEach(element => {
+        processElements(element);
+    });
+})();
+
+// ---------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------
 // Размножитель элемента со стилями (поддержка entries вида "prop:value")
 // --------------------------------------------------------------------------------
@@ -275,7 +361,8 @@ function parse_style_parametrisation(source) {
     });
 })();
 
-// ----------------------------------------------------------------------------------------------------------------
+// =====================================================================================================================
+// ---------------------------------------------------------------------------------------------------------------------
 // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
 (function() {
     const sections = document.querySelectorAll('section.section__cls');
@@ -336,4 +423,5 @@ function parse_style_parametrisation(source) {
     window.addEventListener('hashchange', handleHash);
     handleHash();
 })();
-// ----------------------------------------------------------------------------------------------------------------
+
+// =====================================================================================================================
