@@ -271,7 +271,6 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-clone_style_params="font-size-adjust:[
-                             none;
                              -2;-1;-0.5;
                              0;
                              0.5;1;2;
@@ -324,7 +323,6 @@
                         <div data-cover__border_bg
                              data-clone_style_params="font-family:[
                                 unset;initial;inherit;
-                                NOTEXISTS;'NOTEXISTS';
 
                                 monospace;
                                 serif;sans-serif;
@@ -387,7 +385,6 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-clone_style_params="text-transform:[
-                                none;
                                 uppercase;lowercase;capitalize;
                                 full-width;full-size-kana;
                              ]">
@@ -493,7 +490,7 @@
                             style="text-decoration: line-through"
                             data-clone_style_params="text-decoration:[
                                 blink;
-                                none;underline;overline;line-through; underline overline line-through;
+                                underline;overline;line-through; underline overline line-through;
                                 underline solid red;underline wavy red;underline double red;underline dotted red;underline dashed red;
                                 line-through auto blue;line-through 1px blue;line-through 2px blue;line-through 5px blue;line-through 10px blue;line-through 20px blue;
                                 underline 10px blue;
@@ -533,7 +530,6 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-clone_style_params="text-shadow:[
-                                none;
                                 0 0 0px #f00;
                                 0 0 1px #f00;
                                 0 0 5px #f00;
@@ -556,8 +552,6 @@
                         <div
                                 style="gap"
                                 data-clone_style_params="box-shadow:[
-                                none;
-
                                 0px 0px 10px green;
                                 0px 0px 20px green;
                                 0px 0px 30px green;
@@ -705,8 +699,8 @@
                         </div>
 
                         <span data-cover__border_bg>123 span 123</span> - ORIGINAL<br>
-                        <span dir="rtl" data-bg_grey>123 span dir="rtl" 123</span> - не работает <br>
-                        <bdo dir="rtl" data-bg_grey>123 bdo dir="rtl" 123</bdo> - РАБОТАЕТ<br>
+                        <span dir="rtl" data-bg_grey_eee>123 span dir="rtl" 123</span> - не работает <br>
+                        <bdo dir="rtl" data-bg_grey_eee>123 bdo dir="rtl" 123</bdo> - РАБОТАЕТ<br>
 
                     </div>
                     <footer><code>direction</code> задаёт поток; <code>unicode-bidi</code> управляет встраиванием. <code>bdo</code> – отдельный тег для переопределения направления.</footer>
@@ -1096,7 +1090,7 @@
 
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
 
-                        <p data-bg_grey>data-bg_grey</p>
+                        <p data-bg_grey_eee>data-bg_grey_eee</p>
                         <p data-highlighted>data-highlighted</p>
 
                         <p>Абзац с BR[<br>] простым НЕСЕМАНТИЧЕСКИМ переносом строки внутри.</p>
@@ -1274,6 +1268,144 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksBorderId" data-collapsed_not>
+            <h2 data-icon_process_wait>BLOCKS-BORDER</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== border ========== -->
+                <article class="article__cls">
+                    <header>border – рамка</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="border:[
+                             2px solid red;
+                             4px dotted green;
+                             8px double blue;
+                             ]">
+                            border
+                        </div>
+                    </div>
+                    <footer>border: ширина стиль цвет.</footer>
+                </article>
+
+                <!-- ==========  border-radius ========== -->
+                <article class="article__cls">
+                    <header>border-radius – скругление</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="border-radius:[0;8px;16px;50%;30px 10px]"
+                             style="background: #eef2ff; border: 2px solid #2a73ff;">
+                            Скругление углов
+                        </div>
+                    </div>
+                    <footer>border-radius: пиксели, проценты, один или четыре угла.</footer>
+                </article>
+
+                <!-- ========== box-shadow ========== -->
+                <article class="article__cls">
+                    <header>box-shadow – тень блока</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="box-shadow:[none;2px 2px 5px rgba(0,0,0,0.3);5px 5px 10px rgba(0,0,0,0.2);inset 2px 2px 5px rgba(0,0,0,0.2);0 0 0 4px red, 0 0 0 8px blue]"
+                             style="background: #fff; border-radius: 8px;">
+                            Тень
+                        </div>
+                    </div>
+                    <footer>СдвигX сдвигY размытие цвет; inset – внутренняя; можно несколько через запятую.</footer>
+                </article>
+
+                <!-- ========== outline ========== -->
+                <article class="article__cls">
+                    <header>outline – внешний контур (не влияет на размер)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+
+                             data-clone_style_params="outline:[none;2px solid red;4px dotted green;6px double blue]"
+                             style="background: #eef2ff;">
+                            Контур
+                        </div>
+                    </div>
+                    <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksBgId" data-collapsed_not>
+            <h2 data-icon_process_wait>BLOCKS-BG</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== opacity ========== -->
+                <article class="article__cls">
+                    <header>opacity – прозрачность (0…1)</header>
+                    Округление снизу до 0 и сверху до 1
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             style="background:#2a73ff; color:white;"
+                             data-clone_style_params="opacity:[
+                             -10;-1;
+                             0;
+                             0.1;0.3;0.5;0.7;1;
+                             10;
+                             ]">
+                            opacity
+                        </div>
+                    </div>
+                    <footer>Влияет на весь элемент и его потомков. <code>0</code> – полностью прозрачен (но кликабелен).</footer>
+                </article>
+
+                <!-- ====================== background-clip ====================== -->
+                <article class="article__cls">
+                    <header>background-clip – где виден фон (border, padding, content, текст)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="background: linear-gradient(135deg, #2a73ff, #ff8c42); border: 8px dashed #ccc; padding: 1rem; font-size: 2rem; font-weight: bold;"
+                             data-clone_style_params="background-clip:[
+                             border-box;padding-box;content-box;
+                             text;
+                             ]">
+                            [🎨 BARETEXT]
+                            [<span style="color:transparent;">color:transparent</span>]
+                            [<span style="color:rgba(0,0,0,0.3);">color:rgba(0,0,0,0.3)</span>]
+                        </div>
+                    </div>
+                    <footer>
+                        <strong>Значения:</strong> <code>border-box</code> – фон заходит под границу (по умолчанию)<br>
+                        <code>padding-box</code> – фон до внутреннего края границы (без под границу)<br>
+                        <code>content-box</code> – фон только под содержимым<br>
+                        <code>text</code> – фон обрезается по форме текста (при этом текст должен быть <code>color: transparent</code>; в демо полупрозрачный для наглядности, но эффект виден)
+                    </footer>
+                </article>
+
+                <!-- ====================== background-origin ====================== -->
+                <article class="article__cls">
+                    <header>background-origin – отступ для позиции фона (border, padding, content)</header>
+                    <div class="article_main__cls">
+                        <div class="demo-styled-block"
+                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
+                             style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
+                        >
+                            ██ градиентный квадрат
+                        </div>
+                    </div>
+                    <footer>
+                        <code>border-box</code> – позиция от верхнего левого угла рамки<br>
+                        <code>padding-box</code> – от внутреннего края рамки (между рамкой и контентом)<br>
+                        <code>content-box</code> – от края контента (внутри паддингов)<br>
+                        ⚡ Меняет только начальную точку фона, не влияет на обрезку (<code>background-clip</code>).
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="blocksId">
             <h2 data-icon_process_ok>BLOCKS</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -1433,74 +1565,14 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-clone_style_params="visibility:[
-                             none;
-
                              visible;
                              hidden;
                              collapse;
                              ]">
-                            Видимый или скрытый текст (скрытый занимает место)
+                            visibility
                         </div>
                     </div>
                     <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
-                </article>
-
-                <!-- ========== opacity ========== -->
-                <article class="article__cls">
-                    <header>🌀 opacity – прозрачность (0…1)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-clone_style_params="opacity:[1;0.7;0.5;0.3;0.1;0]"
-                             style="background: #2a73ff; color: white; padding: 0.5rem; border-radius: 0.5rem;">
-                            Прозрачность
-                        </div>
-                    </div>
-                    <footer>Влияет на весь элемент и его потомков. <code>0</code> – полностью прозрачен (но кликабелен).</footer>
-                </article>
-
-                <!-- ========== border / border-radius ========== -->
-                <article class="article__cls">
-                    <header>🖌️ border / border-radius – рамка и скругление</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-
-                             data-clone_style_params="border:[none;2px solid red;4px dotted green;8px double blue]"
-                             style="background: #eef2ff; padding: 0.5rem;">
-                            Рамка
-                        </div>
-                        <div data-cover__border_bg
-                             data-clone_style_params="border-radius:[0;8px;16px;50%;30px 10px]"
-                             style="background: #eef2ff; border: 2px solid #2a73ff; padding: 0.5rem;">
-                            Скругление углов
-                        </div>
-                    </div>
-                    <footer>border: ширина стиль цвет. border-radius: пиксели, проценты, один или четыре угла.</footer>
-                </article>
-
-                <!-- ========== box-shadow ========== -->
-                <article class="article__cls">
-                    <header>✨ box-shadow – тень блока</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-clone_style_params="box-shadow:[none;2px 2px 5px rgba(0,0,0,0.3);5px 5px 10px rgba(0,0,0,0.2);inset 2px 2px 5px rgba(0,0,0,0.2);0 0 0 4px red, 0 0 0 8px blue]"
-                             style="background: #fff; padding: 0.5rem; border-radius: 8px;">
-                            Тень
-                        </div>
-                    </div>
-                    <footer>СдвигX сдвигY размытие цвет; inset – внутренняя; можно несколько через запятую.</footer>
-                </article>
-
-                <!-- ========== outline ========== -->
-                <article class="article__cls">
-                    <header>🔲 outline – внешний контур (не влияет на размер)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-clone_style_params="outline:[none;2px solid red;4px dotted green;6px double blue]"
-                             style="background: #eef2ff; padding: 0.5rem;">
-                            Контур
-                        </div>
-                    </div>
-                    <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
                 </article>
 
                 <!-- ========== cursor ========== -->
@@ -1508,8 +1580,10 @@
                     <header>🖱️ cursor – вид курсора</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
+                             data-padding05rem
+
                              data-clone_style_params="cursor:[default;pointer;wait;help;crosshair;move;not-allowed;zoom-in]"
-                             style="background: #eef2ff; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                             style="background: #eef2ff; border: 1px solid #cbd5e1;">
                             Наведи меня
                         </div>
                     </div>
@@ -1521,54 +1595,14 @@
                     <header>🔄 resize – изменение размера пользователем</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-clone_style_params="resize:[none;both;horizontal;vertical]"
-                             style="overflow: auto; width: 200px; height: 100px; background: #eef2ff; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                             data-padding05rem
+
+                             data-clone_style_params="resize:[both;horizontal;vertical]"
+                             style="overflow: auto; width: 200px; height: 100px; background: #eef2ff; border: 1px solid #cbd5e1;">
                             Потяни за правый нижний угол (если разрешено)
                         </div>
                     </div>
                     <footer>Работает при <code>overflow: auto/scroll</code>. Пользователь может менять размер.</footer>
-                </article>
-
-                <!-- ====================== background-clip ====================== -->
-                <article class="article__cls">
-                    <header>background-clip – где виден фон (border, padding, content, текст)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             style="background: linear-gradient(135deg, #2a73ff, #ff8c42); border: 8px dashed #ccc; padding: 1rem; font-size: 2rem; font-weight: bold;"
-                             data-clone_style_params="background-clip:[
-                             border-box;padding-box;content-box;
-                             text;
-                             ]">
-                            [🎨 BARETEXT]
-                            [<span style="color:transparent;">color:transparent</span>]
-                            [<span style="color:rgba(0,0,0,0.3);">color:rgba(0,0,0,0.3)</span>]
-                        </div>
-                    </div>
-                    <footer>
-                        <strong>Значения:</strong> <code>border-box</code> – фон заходит под границу (по умолчанию)<br>
-                        <code>padding-box</code> – фон до внутреннего края границы (без под границу)<br>
-                        <code>content-box</code> – фон только под содержимым<br>
-                        <code>text</code> – фон обрезается по форме текста (при этом текст должен быть <code>color: transparent</code>; в демо полупрозрачный для наглядности, но эффект виден)
-                    </footer>
-                </article>
-
-                <!-- ====================== background-origin ====================== -->
-                <article class="article__cls">
-                    <header>📌 background-origin – отступ для позиции фона (border, padding, content)</header>
-                    <div class="article_main__cls">
-                        <div class="demo-styled-block"
-                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
-                             style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
-                        >
-                            ██ градиентный квадрат
-                        </div>
-                    </div>
-                    <footer>
-                        <code>border-box</code> – позиция от верхнего левого угла рамки<br>
-                        <code>padding-box</code> – от внутреннего края рамки (между рамкой и контентом)<br>
-                        <code>content-box</code> – от края контента (внутри паддингов)<br>
-                        ⚡ Меняет только начальную точку фона, не влияет на обрезку (<code>background-clip</code>).
-                    </footer>
                 </article>
 
             </div>
@@ -2119,47 +2153,110 @@
                 <article class="article__cls">
                     <header>progress+meter</header>
                     <div class="article_main__cls">
-                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                            <div>
-                                <label>progress/meter:</label>
 
-                                <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+                        <div data-flex_column>
+                            <label>progress/meter:</label>
+                            <progress value="0.4" max="1"></progress>
+                            <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+                            <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
 
-                                <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+                            <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4">
+                            <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
 
-                                <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4">
-                                <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
+                            <p>low="0.3" high="0.8"</p>
 
-                                <p>low="0.3" high="0.8"</p>
+                            <script>
+                                // --------------------------------------------------------------------------------
+                                // синхронизация progress / meter со слайдером и спиннером
+                                (function demo_slider_connect() {
 
-                                <script>
-                                    // --------------------------------------------------------------------------------
-                                    // синхронизация progress / meter со слайдером и спиннером
-                                    (function demo_slider_connect() {
+                                    const progressSlider = document.getElementById('progressSlider');
+                                    const progressNumber = document.getElementById('progressNumber');
+                                    const demoProgress = document.getElementById('demoProgress');
+                                    const demoMeter = document.getElementById('demoMeter');
 
-                                        const progressSlider = document.getElementById('progressSlider');
-                                        const progressNumber = document.getElementById('progressNumber');
-                                        const demoProgress = document.getElementById('demoProgress');
-                                        const demoMeter = document.getElementById('demoMeter');
+                                    if (progressSlider && progressNumber && demoProgress && demoMeter) {
+                                        function updateProgressMeter(value) {
+                                            let v = parseFloat(value);
+                                            if (isNaN(v)) v = 0;
+                                            v = Math.min(1, Math.max(0, v));
+                                            demoMeter.value = v;
+                                            demoProgress.value = v;
+                                            progressSlider.value = v;
+                                            progressNumber.value = v;
+                                        }
+                                        progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                                        progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
+                                    };
+                                })();
+                            </script>
 
-                                        if (progressSlider && progressNumber && demoProgress && demoMeter) {
-                                            function updateProgressMeter(value) {
-                                                let v = parseFloat(value);
-                                                if (isNaN(v)) v = 0;
-                                                v = Math.min(1, Math.max(0, v));
-                                                demoMeter.value = v;
-                                                demoProgress.value = v;
-                                                progressSlider.value = v;
-                                                progressNumber.value = v;
-                                            }
-                                            progressSlider.addEventListener('input', (e) => updateProgressMeter(e.target.value));
-                                            progressNumber.addEventListener('input', (e) => updateProgressMeter(e.target.value));
-                                        };
-                                    })();
-                                </script>
-
-                            </div>
                         </div>
+
+                        <hr>
+                        <div data-flex_column>
+                            <input type="range" id="controlRange" min="0" max="1" step="0.01" value="0.4">
+                            <input type="number" id="controlNumber" step="0.01" min="0" max="1" value="0.4" style="width: 80px;">
+
+                            <hr>
+                            <p>Progress (простой):</p>
+                            <progress name="demoControlProgress" value="0.4" max="1"></progress>
+
+                            <p>Progress с высотой 20px:</p>
+                            <progress name="demoControlProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+
+                            <p>Meter (low=0.3, high=0.8):</p>
+                            <meter name="demoControlProgress" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+
+                            <p>Meter другой цветовой оттенок (минимум 0.2, максимум 0.9):</p>
+                            <meter name="demoControlProgress" value="0.65" min="0" max="1" low="0.2" high="0.9" optimum="0.8" style="width: 100%; height: 20px;"></meter>
+
+                            <p>Progress значения 0.25 и max 0.8 (нестандартный max):</p>
+                            <progress name="demoControlProgress" value="0.25" max="0.8" style="width: 100%; height: 20px;"></progress>
+
+                            <p>Примечание: зоны meter: low=0.3, high=0.8 (влияют на цвет)</p>
+                        </div>
+
+                        <script>
+                            (function() {
+                                // Находим все элементы с name="demoControlProgress"
+                                const groupName = 'demoControlProgress';
+                                const rangeInput = document.getElementById('controlRange');
+                                const numberInput = document.getElementById('controlNumber');
+
+                                if (!rangeInput || !numberInput) return;
+
+                                // Функция обновления всех progress/meter
+                                function updateGroup(value) {
+                                    let v = parseFloat(value);
+                                    if (isNaN(v)) v = 0;
+                                    // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
+                                    v = Math.min(1, Math.max(0, v));
+                                    // Обновляем все элементы с нужным name
+                                    const elements = document.querySelectorAll(`[name="${groupName}"]`);
+                                    elements.forEach(el => {
+                                        if (el.tagName === 'PROGRESS' || el.tagName === 'METER') {
+                                            // Учитываем возможный max (по умолчанию 1)
+                                            const max = parseFloat(el.getAttribute('max')) || 1;
+                                            let scaledValue = v * max;
+                                            scaledValue = Math.min(max, Math.max(0, scaledValue));
+                                            el.value = scaledValue;
+                                        }
+                                    });
+                                    // Синхронизируем управляющие элементы
+                                    rangeInput.value = v;
+                                    numberInput.value = v;
+                                }
+
+                                // События для слайдера и числа
+                                rangeInput.addEventListener('input', (e) => updateGroup(e.target.value));
+                                numberInput.addEventListener('input', (e) => updateGroup(e.target.value));
+
+                                // Установим начальное состояние (из значения ползунка)
+                                updateGroup(rangeInput.value);
+                            })();
+                        </script>
+
                     </div>
                     <footer>
                         <code>progress</code> - ход выполнения,<br>
@@ -2696,8 +2793,8 @@
                         <hr>
                         FORM input type=number
                         <form
-                                data-bg_grey
-                                data-border_radius05rem
+                                data-bg_grey_eee
+                                data-radius05rem
                                 onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;">
 
                             <div>
@@ -2813,7 +2910,7 @@
                                     const outerUl = document.createElement('ul');
                                     //outerUl.style.background = '#f0f0f0';
                                     outerUl.style.fontSize = '0.7rem'; // уменьшенный шрифт
-                                    outerUl.setAttribute('data-bg_grey', '');
+                                    outerUl.setAttribute('data-bg_grey_eee', '');
 
                                     // 1. Пункт "attributes" с вложенным списком
                                     const attrLi = document.createElement('li');
@@ -2871,7 +2968,7 @@
 
                         <hr>
                         COLORS
-                        <p data-bg_grey>data-bg_grey</p>
+                        <p data-bg_grey_eee>data-bg_grey_eee</p>
                         <p data-bg_yellow>data-bg_yellow</p>
                         <p data-bg_red>data-bg_red</p>
                         <p data-bg_green>data-bg_green</p>
@@ -2880,27 +2977,18 @@
                         <hr>
                         COVERS
                         <p data-border>data-border</p>
-                        <p data-shadow>data-shadow</p>
                         <p data-shadow_hover>data-shadow_hover</p>
 
                         <p data-clickable>data-clickable</p>
-
-                        <hr>
-                        <p data-padding>data-padding</p>
-                        <p data-padding_small>data-padding_small</p>
-                        <p data-margin>data-margin</p>
 
                         <hr>
                         <p data-align_center>data-align_center</p>
                         <p data-align_right>data-align_right</p>
 
                         <hr>
-                        <p data-text_bold>data-text_bold</p>
-
-                        <hr>
                         INLINE<br>
                         превращает блочный элемент (например, div-p) в строчно-блочный — он встаёт в строку с соседними элементами, но при этом сохраняет возможность задавать ширину, высоту, отступы.
-                        <p data-inline data-bg_grey>data-inline p1</p><p data-inline data-bg_yellow>data-inline p2</p>
+                        <p data-inline data-bg_grey_eee>data-inline p1</p><p data-inline data-bg_yellow>data-inline p2</p>
 
                         <hr>
                         разные значения
@@ -3160,7 +3248,7 @@
                              style="border: 2px solid #2a73ff; background: #f8fafc; padding: 0.5rem; margin: 0.5rem 0;"
                              data-clone_style_params="display:[
                                  inherit;initial;unset;revert;
-                                 none;hidden;
+                                 hidden;
                                  block;inline;inline-block;
 
                                  flex;inline-flex;
@@ -3625,6 +3713,11 @@
                         <div style="padding: 2rem; text-align: center; color: black; text-shadow: 0 0 10px white;"
                              data-clone_style_params="background:[
                              lightblue;
+
+                             #eef2ff;
+                             #eef2f2;
+                             #eeffff;
+
                              #000;#555;#aaa;#ccc;#eee;#fff;
                              #2ecc71;
                              rgb(231, 76, 60);hsl(240,100%,50%);

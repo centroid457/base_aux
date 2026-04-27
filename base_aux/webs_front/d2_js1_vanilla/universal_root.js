@@ -204,7 +204,8 @@ function isIconChar(ch) {
                 const hex = codePoint.toString(16).toUpperCase();
 
                 const span = document.createElement('span');
-                span.setAttribute("data-cover__border_radius", "")
+                span.setAttribute("data-border", "")
+                span.setAttribute("data-radius05rem", "")
                 span.innerHTML = `${ch} <code>&amp;#x${hex};</code>`;
                 resultNodes.push(span);
             } else {
@@ -261,6 +262,7 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
     // Если первого элемента нет, добавим маркер "оригинал без изменений"
     style_values.unshift(undefined);
     style_values.unshift("WRONG_VAL");
+    if (!style_values.includes("none")) {style_values.unshift("none");}
     style_values.unshift("");
 
     // 1. Создаём контейнер dl с классом для горизонтального отображения
@@ -284,7 +286,7 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
 
         const dd = document.createElement('dd');
         dd.setAttribute("data-border", "")
-        //dd.setAttribute("data-bg_grey", "")
+        //dd.setAttribute("data-bg_grey_eee", "")
         dd.appendChild(clonedElement);
         dl__el.appendChild(dd);
     }
