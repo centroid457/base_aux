@@ -1291,16 +1291,32 @@
 
                 <!-- ==========  border-radius ========== -->
                 <article class="article__cls">
+                    % - берет % от ширины соседних сторон!!!<br>
+                    100% - начинает скруглять с противоположного угла!<br>
+                    50% - начинает скруглять с середины!<br>
+
                     <header>border-radius – скругление</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-padding05rem
-                             data-clone_style_params="border-radius:[0;8px;16px;50%;30px 10px]"
-                             style="background: #eef2ff; border: 2px solid #2a73ff;">
-                            Скругление углов
+                             style="background: #eef2ff; border: 2px solid #2a73ff;"
+                             data-clone_style_params="border-radius:[
+                             0;5px;10px;50px;100px;1000px;
+                             0 10px;
+                             0 10px 20px;
+                             0 10px 20px 50px;
+
+                             10%;20%;30%;50%;75%;100%;200%;
+                             0 10%; 0 20%; 0 30%; 0 50%; 0 70%; 0 100%; 0 200%;
+
+                             0 20%;
+                             0 20% 50%;
+                             0 20% 50% 100%;
+                             ]">
+                            border-radius
                         </div>
                     </div>
-                    <footer>border-radius: пиксели, проценты, один или четыре угла.</footer>
+                    <footer></footer>
                 </article>
 
                 <!-- ========== box-shadow ========== -->
