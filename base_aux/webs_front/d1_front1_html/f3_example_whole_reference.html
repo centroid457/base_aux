@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HTML справочник визуальный</title>
+    <title>HTML/CSS справочник визуальный</title>
     <link rel="stylesheet" href="-----global.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Fira+Code&display=swap" rel="stylesheet">
     <script defer src="../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>" data-comment="WorkingGood!"></script>
@@ -25,7 +25,7 @@
     </nav>
 
     <header id="ROOT_HEADER__ID">
-        <h1>📘 HTML · справочник визуальный</h1>
+        <h1>📘 HTML/CSS · справочник визуальный</h1>
         <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
@@ -55,7 +55,7 @@
                     <header>СЕМАНТИКА</header>
                     <div class="article_main__cls semantic-demo">
                         <header>Шапка (header) — логотип, навигация</header>
-                        <nav>🔗 Навигация (nav) — ссылки меню</nav>
+                        <nav>Навигация (nav) — ссылки меню</nav>
                         <main>
                             <section>Секция (section) — тематическая группа</section>
                             <article>Статья (article) — независимый контент (пост, новость)</article>
@@ -655,7 +655,8 @@
                     <header>text-orientation – ориентация символов в вертикальном тексте</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="height: 30px;width: 30px; writing-mode: vertical-rl; "
+                             data-box_40x40
+                             style="writing-mode: vertical-rl; "
                              data-clone_style_params="
                                 text-orientation:[
                                     mixed;upright;upleft;sideways;
@@ -671,14 +672,14 @@
                     <header>writing-mode – направление текста (вертикальное/горизонтальное)</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="height: 30px;width: 30px"
+                            data-box_40x40
                             data-clone_style_params="
                                 writing-mode:[
                                 horizontal-tb;horizontal-bt;
                                 horizontal-rl;horizontal-lr;
                                 vertical-rl;vertical-lr;
-                                sideways-rl;sideways-lr
-                        ]">
+                                sideways-rl;sideways-lr;
+                                ]">
                             123 456
                         </div>
                     </div>
@@ -694,7 +695,11 @@
                             نص عربي (арабский текст слева направо)
                         </div>
                         <div data-cover__border_bg
-                             data-clone_style_params="unicode-bidi:bidi-override;isolate;isolate-override;plaintext">
+                             data-clone_style_params="unicode-bidi:[
+                             bidi-override;
+                             isolate;isolate-override;
+                             plaintext;
+                             ]">
                             <bdo dir="rtl">123 перевернутый текст 123</bdo>
                         </div>
 
@@ -719,8 +724,12 @@
                     <header>text-overflow – обрезка переполненния</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width:40px; overflow:hidden; white-space:nowrap; "
-                             data-clone_style_params="text-overflow:clip;ellipsis">
+                             data-box_40x40
+                             style="overflow:hidden; white-space:nowrap;"
+                             data-clone_style_params="text-overflow:[
+                             clip;
+                             ellipsis;
+                             ]">
                             111_222 333
                         </div>
                     </div>
@@ -731,19 +740,27 @@
                 <article class="article__cls">
                     <header>overflow-wrap (word-wrap) – перенос слов</header>
                     <div class="article_main__cls">
+
                         <div data-cover__border_bg
-                             style="width:40px;"
-                             data-clone_style_params="overflow-wrap:normal;break-word;anywhere">
+                             data-box_width_40
+                             data-clone_style_params="overflow-wrap:[
+                             normal;
+                             break-word;
+                             anywhere;
+                             ]">
+                            111_222 333-444
+                        </div>
+                        <div data-cover__border_bg
+                             data-box_width_40
+                             data-clone_style_params="word-wrap:[
+                             normal;
+                             break-word;
+                             anywhere;
+                             ]">
                             111_222 333-444
                         </div>
                     </div>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             style="width:40px;"
-                             data-clone_style_params="word-wrap:normal;break-word;anywhere">
-                            111_222 333-444
-                        </div>
-                    </div>
+
                     <footer>
                         <code>normal</code> – перенос только в разрешённых местах;<br>
                         <code>break-word</code> – разрывает длинные слова, чтобы избежать переполнения;<br>
@@ -756,8 +773,12 @@
                     <header>word-break – перенос внутри слов</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width:40px;"
-                             data-clone_style_params="word-break:normal;break-all;keep-all;break-word">
+                             data-box_width_40
+                             data-clone_style_params="word-break:[
+                             normal;
+                             break-all;keep-all;
+                             break-word;
+                             ]">
                             111_222 333-444
                         </div>
                     </div>
@@ -774,8 +795,14 @@
                     <header>line-break – правила разрыва строк для китайского/японского/корейского</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 200px;"
-                             data-clone_style_params="line-break:auto;loose;normal;strict;anywhere">
+                             data-box_width_80
+                             data-clone_style_params="line-break:[
+                             auto;
+                             loose;
+                             normal;
+                             strict;
+                             anywhere;
+                             ]">
                             これは日本語のテキストです。これは日本語のテキストです。
                         </div>
                     </div>
@@ -801,7 +828,7 @@
                     <header>text-align – ГОРИЗ выравнивание</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 80px"
+                             data-box_width_80
                              data-clone_style_params="text-align:[
                              left;center;right;
                              justify;
@@ -827,8 +854,7 @@
                         <hr>
                         ручная вставкка стилей
                         <div data-cover__border_bg
-                             style="line-height: 2;"
-                        >
+                             style="line-height: 2;">
                             <span style="vertical-align: baseline;">baseline</span>
                             <span style="vertical-align: sub;">sub</span>
                             <span style="vertical-align: super;">super</span>
@@ -883,7 +909,7 @@
                     <header>text-indent – отступ первой строки</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 30px"
+                             data-box_width_30
                              data-clone_style_params="text-indent:[
                              normal;
                              -2rem;-1rem;
@@ -935,7 +961,7 @@
                     <header>white-space – обработка пробелов и переносов</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 200px;"
+                             data-box_width_200
                              data-clone_style_params="white-space:[
                              normal;nowrap;
                              pre;pre-wrap;pre-line;
@@ -1001,8 +1027,8 @@
                         <p><abbr title="Аббревиатура / акроним">ABBR</abbr> — аббревиатура (подсказка по наведению) всегда добавляйте title для расшифровки.</p>
                         <p><dfn>DFN</dfn> — (definition) определение термина при первом использовании, значение тегов для машин и людей.</p>
 
-                        <p style="width: 150px; border:1px dashed gray;">(WBR)Длинноесловодляпереноса<wbr>Возможное место переноса строки (word break opportunity)</p>
-                        <p><span style="background: #ffe6b3;">SPAN</span> Универсальный контейнер для стилизации CSS (без смысловой нагрузки вместо DIV)</p>
+                        <p data-box_width_40 data-border>11111WBR[<wbr>]22222222 333 444</p>
+                        <p><span style="background: #fee;">SPAN</span>inline контейнер для стилизации CSS (без смысловой нагрузки, вместо контейнерного DIV)</p>
 
                     </div>
                     <footer>
@@ -1427,8 +1453,24 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="blocksBgId" data-collapsed_not>
-            <h2 data-icon_process_wait>BLOCKS-BG</h2>
+            <h2 data-icon_process_ok>BLOCKS-BG</h2>
             <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== visibility ========== -->
+                <article class="article__cls">
+                    <header>visibility – видимость (сохраняет место)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="visibility:[
+                             visible;
+                             hidden;
+                             collapse;
+                             ]">
+                            visibility
+                        </div>
+                    </div>
+                    <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
+                </article>
 
                 <!-- ========== opacity ========== -->
                 <article class="article__cls">
@@ -1496,8 +1538,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="blocksId">
-            <h2 data-icon_process_ok>BLOCKS</h2>
+        <section class="section__cls" id="blocksSizeId">
+            <h2 data-icon_process_ok>BLOCKS-SIZE</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- ========== width ========== -->
@@ -1613,7 +1655,8 @@
                     <header>box-sizing – модель размера</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 200px; border: 5px solid #2a73ff; padding: 20px;"
+                             data-box_width_200=""
+                             style="border: 5px solid #2a73ff; padding: 20px;"
                              data-comment="НЕ УДАЛЯТЬ СТИЛИ!!! важны!"
                              data-clone_style_params="box-sizing:[
                              content-box;
@@ -1630,15 +1673,17 @@
                     <header>overflow – обработка переполнения</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="width: 50px; height: 50px;"
-                             data-comment="важно 4 строки на 50px!!!"
+                             data-box_80x80
                              data-clone_style_params="overflow:[
-                             visible;hidden;scroll;auto;
+                             visible;
+                             hidden;
+
+                             scroll;
+                             auto;
                              ]">
                             overflow
-                            1111111111
-                            2222222222
-                            3333333333
+                            11111111111111
+                            22222222222222
                         </div>
                     </div>
                     <footer>
@@ -1649,50 +1694,53 @@
                     </footer>
                 </article>
 
-                <!-- ========== visibility ========== -->
-                <article class="article__cls">
-                    <header>visibility – видимость (сохраняет место)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-clone_style_params="visibility:[
-                             visible;
-                             hidden;
-                             collapse;
-                             ]">
-                            visibility
-                        </div>
-                    </div>
-                    <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
-                </article>
-
-                <!-- ========== cursor ========== -->
-                <article class="article__cls">
-                    <header>🖱️ cursor – вид курсора</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-padding05rem
-
-                             data-clone_style_params="cursor:[default;pointer;wait;help;crosshair;move;not-allowed;zoom-in]"
-                             style="background: #eef2ff; border: 1px solid #cbd5e1;">
-                            Наведи меня
-                        </div>
-                    </div>
-                    <footer>Меняет внешний вид курсора при наведении.</footer>
-                </article>
-
                 <!-- ========== resize ========== -->
                 <article class="article__cls">
-                    <header>🔄 resize – изменение размера пользователем</header>
+                    <header>resize – изменение размера пользователем</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-padding05rem
-
-                             data-clone_style_params="resize:[both;horizontal;vertical]"
-                             style="overflow: auto; width: 200px; height: 100px; background: #eef2ff; border: 1px solid #cbd5e1;">
-                            Потяни за правый нижний угол (если разрешено)
+                             data-box_80x80
+                             style="overflow: auto;"
+                             data-clone_style_params="resize:[
+                             both;
+                             horizontal;
+                             vertical;
+                             ]">
+                            resize 1234567890
                         </div>
                     </div>
                     <footer>Работает при <code>overflow: auto/scroll</code>. Пользователь может менять размер.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksOtherId" data-collapsed_not>
+            <h2 data-icon_process_ok>BLOCKS-OTHER</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== cursor ========== -->
+                <article class="article__cls">
+                    <header>cursor – курсор при наведении</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="cursor:[
+                             default;
+                             pointer;
+                             wait;
+                             help;
+                             crosshair;
+                             move;
+                             not-allowed;
+                             zoom-in;
+                             ]">
+                            cursor
+                        </div>
+                    </div>
+                    <footer>Меняет внешний вид курсора при наведении.</footer>
                 </article>
 
             </div>
@@ -3277,7 +3325,8 @@
                     <div class="article_main__cls">
                         <div class="demo__pos_container__cls" style="position: relative;">
                             <div style="background: #8e44ad; position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
-                                fixed HELLO 1212
+                                position:fixed<br>
+                                DownLeftCORNER Brauser
                             </div>
                         </div>
                         <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера. в правом нижнем углу <strong>всего окна</strong>, а не контейнера.</p>
@@ -3509,7 +3558,8 @@
                     <header>align-content — выравнивание строк при переносе</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             style="display:flex; flex-wrap:wrap; width:80px; height:100px;"
+                             data-flex_wrap
+                             style="width:80px; height:100px;"
                              data-clone_style_params="align-content:[
                              stretch;
                              flex-start;center;flex-end;

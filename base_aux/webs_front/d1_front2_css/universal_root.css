@@ -137,6 +137,16 @@ fieldset {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
+/* -------------------- BOXES -------------------- */
+[data-box_width_30]     { width: 30px; }
+[data-box_width_40]     { width: 40px; }
+[data-box_width_80]     { width: 80px; }
+[data-box_width_200]     { width: 200px; }
+
+[data-box_40x40]     { height: 40px; width: 40px; }
+[data-box_80x80]     { height: 80px; width: 80px; }
+
+/* --------------------  -------------------- */
 [data-border]           { border: 1px solid #aaa; }
 [data-radius05rem]      { border-radius: 0.5rem; }
 [data-padding05rem]     { padding:0.5rem; }
@@ -901,7 +911,6 @@ tbody td:hover {
 .semantic-demo {
     background: #f1f5f9;
     border-radius: 1rem;
-    padding: 1rem;
 }
 .semantic-demo header, .semantic-demo nav, .semantic-demo main, .semantic-demo aside, .semantic-demo footer {
     background: white;
