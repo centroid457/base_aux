@@ -146,7 +146,7 @@ fieldset {
 [data-box_40x40]     { height: 40px; width: 40px; }
 [data-box_80x80]     { height: 80px; width: 80px; }
 
-/* --------------------  -------------------- */
+/* -------------------- BORDERS ------------------- */
 [data-border]           { border: 1px solid #aaa; }
 [data-radius05rem]      { border-radius: 0.5rem; }
 [data-padding05rem]     { padding:0.5rem; }
@@ -157,7 +157,10 @@ fieldset {
     border-radius: 0.5rem;
 }
 
-/* highlited = bg + graphic -------------------------*/
+/* ---------------- SELECTIONS -------------------- */
+[data-mouse_select_all] { user-select: all; }
+
+/* highlited = bg + graphic ------------------------*/
 p[data-highlighted] {
     background: #f8fafc;
     padding: 10px;

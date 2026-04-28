@@ -291,7 +291,9 @@
 
                         <div data-cover__border_bg
                                 style="font-family: 'Roboto Flex', sans-serif;"
-                                data-clone_style_params="font-optical-sizing:[auto;none]">
+                                data-clone_style_params="font-optical-sizing:[
+                                auto;none
+                                ]">
                             Размер шрифта: 20px (пример)
                         </div>
 
@@ -619,10 +621,11 @@
                         <div data-cover__border_bg
                              data-box_40x40
                              style="writing-mode: vertical-rl; "
-                             data-clone_style_params="
-                                text-orientation:[
-                                    mixed;upright;upleft;sideways;
-                                ]">
+                             data-clone_style_params="text-orientation:[
+                             mixed;
+                             upright;upleft;
+                             sideways;
+                             ]">
                             123 456
                         </div>
                     </div>
@@ -635,8 +638,7 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                             data-box_40x40
-                            data-clone_style_params="
-                                writing-mode:[
+                            data-clone_style_params="writing-mode:[
                                 horizontal-tb;horizontal-bt;
                                 horizontal-rl;horizontal-lr;
                                 vertical-rl;vertical-lr;
@@ -653,7 +655,10 @@
                     <header>direction + unicode-bidi – направление письма</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-clone_style_params="direction:ltr;rtl">
+                             data-clone_style_params="direction:[
+                             ltr;
+                             rtl;
+                             ]">
                             نص عربي (арабский текст слева направо)
                         </div>
                         <div data-cover__border_bg
@@ -1018,7 +1023,13 @@
                     <header>font-synthesis – искусственное создание начертаний</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-clone_style_params="font-synthesis:auto;none;weight;style;small-caps;weight style">
+                             data-clone_style_params="font-synthesis:[
+                             auto;none;
+                             weight;
+                             style;
+                             small-caps;
+                             weight style;
+                             ]">
                             Жирный и курсив (если нет в шрифте)
                         </div>
                     </div>
@@ -1054,7 +1065,9 @@
                     <div class="article_main__cls">
                             <div data-cover__border_bg
                                 style="font-size: 1.5rem;"
-                                data-clone_style_params="font-kerning:[auto;normal;none]">
+                                data-clone_style_params="font-kerning:[
+                                auto;normal;none
+                                ]">
                             VAWA Дано
                         </div>
                     </div>
@@ -1390,7 +1403,7 @@
                     <header>box-sizing – модель размера</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_200=""
+                             data-box_width_200
                              style="border: 5px solid #2a73ff; padding: 20px;"
                              data-comment="НЕ УДАЛЯТЬ СТИЛИ!!! важны!"
                              data-clone_style_params="box-sizing:[
@@ -1520,7 +1533,11 @@
                     <header>background-origin – отступ для позиции фона (border, padding, content)</header>
                     <div class="article_main__cls">
                         <div class="demo-styled-block"
-                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
+                             data-clone_style_params="background-origin:[
+                             border-box;
+                             padding-box;
+                             content-box;
+                             ]"
                              style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
                         >
                             ██ градиентный квадрат
@@ -2316,34 +2333,46 @@
 
                         <hr>
                         <div data-flex_column>
-                            <input type="range" id="controlRange" min="0" max="1" step="0.01" value="0.4">
-                            <input type="number" id="controlNumber" step="0.01" min="0" max="1" value="0.4" style="width: 80px;">
+                            <input type="range" id="controlInpRange" min="0" max="1" step="0.1" value="0.1">
+                            <input type="number" id="controlInpNumber" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
 
                             <hr>
                             <p>Progress (простой):</p>
-                            <progress name="demoControlProgress" value="0.4" max="1"></progress>
+                            <progress
+                                    name="demoControlProgress"
+                                    value="0.4"></progress>
 
                             <p>Progress с высотой 20px:</p>
-                            <progress name="demoControlProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
+                            <progress
+                                    name="demoControlProgress"
+                                    style="width: 100%; height: 20px;"
+                                    value="0.4" max="1"></progress>
 
                             <p>Meter (low=0.3, high=0.8):</p>
-                            <meter name="demoControlProgress" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
+                            <meter
+                                    name="demoControlProgress"
+                                    style="width: 100%; height: 20px;"
+                                    value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9"></meter>
 
                             <p>Meter другой цветовой оттенок (минимум 0.2, максимум 0.9):</p>
-                            <meter name="demoControlProgress" value="0.65" min="0" max="1" low="0.2" high="0.9" optimum="0.8" style="width: 100%; height: 20px;"></meter>
+                            <meter
+                                    name="demoControlProgress"
+                                    style="width: 100%; height: 20px;"
+                                    value="0.65" min="0" max="1" low="0.2" high="0.9" optimum="0.8"></meter>
 
                             <p>Progress значения 0.25 и max 0.8 (нестандартный max):</p>
-                            <progress name="demoControlProgress" value="0.25" max="0.8" style="width: 100%; height: 20px;"></progress>
-
-                            <p>Примечание: зоны meter: low=0.3, high=0.8 (влияют на цвет)</p>
+                            <progress
+                                    name="demoControlProgress"
+                                    style="width: 100%; height: 20px;"
+                                    value="0.25" max="0.8"></progress>
                         </div>
 
                         <script>
                             (function() {
                                 // Находим все элементы с name="demoControlProgress"
                                 const groupName = 'demoControlProgress';
-                                const rangeInput = document.getElementById('controlRange');
-                                const numberInput = document.getElementById('controlNumber');
+                                const rangeInput = document.getElementById('controlInpRange');
+                                const numberInput = document.getElementById('controlInpNumber');
 
                                 if (!rangeInput || !numberInput) return;
 
@@ -2381,7 +2410,7 @@
                     </div>
                     <footer>
                         <code>progress</code> - ход выполнения,<br>
-                        <code>meter</code>-значение с цветовыми зонами.
+                        <code>meter</code>-значение с цветовыми зонами - low=0.3, high=0.8 (влияют на цвет)<br>
                     </footer>
                 </article>
 
@@ -2400,7 +2429,7 @@
 
                         <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
                     </div>
-                    <footer>💬 .showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
+                    <footer>.showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
                 </article>
 
             </div>

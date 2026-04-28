@@ -315,7 +315,7 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
     // Оборачиваем в fieldset
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b>${defaultProperty}</b>]`;
+    legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b data-mouse_select_all>${defaultProperty}</b>]`;
     fieldset__el.appendChild(legend__el);
     fieldset__el.appendChild(dl__el);
 
@@ -331,7 +331,7 @@ function parse_style_parametrisation(source) {
     // Ищем первую двоеточие
     const colonIndex = source.indexOf(':');
     if (colonIndex === -1) {
-        console.error('Неверный формат: отсутствует двоеточие', source);
+        console.error('Неверный формат: отсутствует двоеточие - ', source);
         return null;
     }
     const property = source.substring(0, colonIndex).trim();
@@ -340,6 +340,9 @@ function parse_style_parametrisation(source) {
     // Удаляем квадратные скобки, если они есть
     if (valuesStr.startsWith('[') && valuesStr.endsWith(']')) {
         valuesStr = valuesStr.slice(1, -1);
+    } else {
+        console.error('Неверный формат: отсутствуют скобки - ', source);
+        return null;
     }
     // Разбиваем варианты и чистим пробелы
     let values = valuesStr.split(';').map(v => v.trim()).filter(v => v);
