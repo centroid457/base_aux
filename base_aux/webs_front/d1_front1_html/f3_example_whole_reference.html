@@ -1196,6 +1196,23 @@
                     <header>FIELDSET</header>
                     <div class="article_main__cls">
 
+                        <hr>
+                        <fieldset style="all: revert">
+                            <legend>REVERTED</legend>
+                            <label>Name: <input type="text" placeholder="Введите имя"></label>
+                            <label>Email: <input type="email" placeholder="user@example.com"></label>
+
+                            <hr>
+                            Experimental
+                            <input type="email" placeholder="user@example.com">
+                            text
+                            text
+                            <span>span</span>
+                            <button>button</button>
+                            <p>ppp</p>
+                        </fieldset>
+
+                        <hr>
                         BLANK full
                         <fieldset>
                         </fieldset>
@@ -1269,7 +1286,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="blocksBorderId" data-collapsed_not>
-            <h2 data-icon_process_wait>BLOCKS-BORDER</h2>
+            <h2 data-icon_process_ok>BLOCKS-BORDER</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- ========== border ========== -->
@@ -1279,9 +1296,15 @@
                         <div data-cover__border_bg
                              data-padding05rem
                              data-clone_style_params="border:[
-                             2px solid red;
-                             4px dotted green;
-                             8px double blue;
+                             1px;5px;
+                             solid;dotted;
+                             green;blue;
+                             1px solid;5px solid;10px solid;
+
+                             5px solid red;
+                             5px double red;
+                             5px dotted red;
+                             5px dashed red;
                              ]">
                             border
                         </div>
@@ -1292,11 +1315,10 @@
                 <!-- ==========  border-radius ========== -->
                 <article class="article__cls">
                     <header>border-radius – скругление</header>
-                    Форма всегда занимает максимальный размер! тоесть всегда касается границ!
+                    Форма всегда занимает максимальный размер! тоесть всегда касается границ!<br>
 
-
-                    PX - КРУГ и 45град!!!
-                    % - ЭЛЛИПС!!!
+                    PX - КРУГ/45град!!!<br>
+                    % - ЭЛЛИПС!!!<br>
 
                     % - берет % от ширины соседних сторон!!!<br>
                     100% - начинает скруглять с противоположного угла!<br>
@@ -1333,7 +1355,7 @@
                     <div class="article_main__cls">
                         <div
                              data-padding05rem
-                             style="margin:10px;"
+                             style="margin:10px; border: 1px dotted red; border-radius: 0 50%;"
                              data-clone_style_params="box-shadow:[
 
                              0 0 0 1px red;
@@ -1377,11 +1399,25 @@
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-padding05rem
-
-                             data-clone_style_params="outline:[none;2px solid red;4px dotted green;6px double blue]"
-                             style="background: #eef2ff;">
-                            Контур
+                             data-clone_style_params="outline:[
+                             5px solid black;
+                             5px dotted green;
+                             5px double blue;
+                             ]">
+                            outline
                         </div>
+
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             style="border: 2px dotted red; border-radius: 10px 30px;"
+                             data-clone_style_params="outline:[
+                             5px solid black;
+                             5px dotted green;
+                             5px double blue;
+                             ]">
+                            outline
+                        </div>
+
                     </div>
                     <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
                 </article>
