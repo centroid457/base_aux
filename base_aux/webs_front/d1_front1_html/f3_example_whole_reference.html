@@ -2455,7 +2455,7 @@
                     <div class="article_main__cls">
 
                         для отображения результата вычисления или пользовательского ввода<br>
-                        OUTPUT вместо обычного SPAN/DIV для результатов – это улучшает доступность (скринридеры объявляют «результат»).<br>
+                        <code>OUTPUT</code> вместо обычного SPAN/DIV для результатов – это улучшает доступность (скринридеры объявляют «результат»).<br>
                         ЭТО ВСЕ ТОЛЬКО СЕМАНТИКА! работает строго на JS!!!<br>
                         for - Список id элементов, влияющих на результат (через пробел) - не обязательно!!!<br>
                         form - id формы, к которой принадлежит output (если находится вне формы)<br>
@@ -2611,16 +2611,6 @@
                         <code>multiple</code> — выбор нескольких файлов. <code>accept</code> — фильтр типов (MIME или расширения).
 
                         <hr>
-                        <h4>select+option</h4>
-                        <p>
-                            <select>
-                                <option>HTML</option>
-                                <option>CSS</option>
-                                <option selected>JS</option>
-                            </select>
-                        </p>
-
-                        <hr>
                         <h4>input list=datalist (автодополнение)</h4>
                         <form onsubmit="alert('Ведено: ' + this.demo_browser__name.value); return false;">
                             <input list="demo_browsers__id" name="demo_browser__name" placeholder="Начните вводить...">
@@ -2634,6 +2624,72 @@
                             <button type="submit">Alert value</button><br>
                             <code>&lt;datalist&gt;</code> предлагает варианты при вводе, но не обязывает.
                         </form>
+
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>select+option</header>
+                    <div class="article_main__cls">
+
+                        просто текст внутри - не отобразится!<br>
+                        NOT SELECTED - shown first<br>
+                        <select>
+                            NOT selected - ЭТО НЕ ОТОБРАЗИТСЯ ВООБЩЕ!!!
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+
+                        SELECTED 3<br>
+                        <select>
+                            <option>1</option>
+                            <option>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED 2+3=3<br>
+                        <select>
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED multiple 2+3=2+3<br>
+                        <select multiple>
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED multiple 2+3=2+3 +SIZE=1<br>
+                        <select multiple size="1">
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED multiple 2+3=2+3 +SIZE=2<br>
+                        <select multiple size="2">
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED multiple 2+3=2+3 +SIZE=2<br>
+                        <select multiple size="2" aria-readonly>
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
+
+                        SELECTED multiple 2+3=2+3 +SIZE=2<br>
+                        <select multiple size="2" disabled>
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option selected>3</option>
+                        </select>
 
                     </div>
                     <footer></footer>
@@ -3035,10 +3091,6 @@
                         <a href="#" disabled>A+<code>disabled</code> - markup DoNothing</a>
                         <p disabled>P+<code>disabled</code> - markup DoNothing</p>
 
-                        <p>
-                            SELECT+<code>multiple</code>
-                            <select multiple size="2"> <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option> </select>
-                        </p>
                         <p contenteditable style="border:1px dashed">CONTENTEDITABLE<code>contenteditable="true"</code> — этот текст можно редактировать прямо в браузере!</p>
 
                         <p>здесь HIDDEN span[
