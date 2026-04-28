@@ -1291,16 +1291,24 @@
 
                 <!-- ==========  border-radius ========== -->
                 <article class="article__cls">
+                    <header>border-radius – скругление</header>
+                    Форма всегда занимает максимальный размер! тоесть всегда касается границ!
+
+
+                    PX - КРУГ и 45град!!!
+                    % - ЭЛЛИПС!!!
+
                     % - берет % от ширины соседних сторон!!!<br>
                     100% - начинает скруглять с противоположного угла!<br>
                     50% - начинает скруглять с середины!<br>
 
-                    <header>border-radius – скругление</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              data-padding05rem
                              style="background: #eef2ff; border: 2px solid #2a73ff;"
                              data-clone_style_params="border-radius:[
+                             revert;
+
                              0;5px;10px;50px;100px;1000px;
                              0 10px;
                              0 10px 20px;
@@ -1323,14 +1331,44 @@
                 <article class="article__cls">
                     <header>box-shadow – тень блока</header>
                     <div class="article_main__cls">
-                        <div data-cover__border_bg
+                        <div
                              data-padding05rem
-                             data-clone_style_params="box-shadow:[none;2px 2px 5px rgba(0,0,0,0.3);5px 5px 10px rgba(0,0,0,0.2);inset 2px 2px 5px rgba(0,0,0,0.2);0 0 0 4px red, 0 0 0 8px blue]"
-                             style="background: #fff; border-radius: 8px;">
-                            Тень
+                             style="margin:10px;"
+                             data-clone_style_params="box-shadow:[
+
+                             0 0 0 1px red;
+                             0 0 0 5px red;
+                             0 0 0 10px red;
+
+                             0 0 0 5px green;
+                             0 0 1px 5px green;
+                             0 0 5px 5px green;
+                             0 0 10px 5px green;
+                             0 0 50px 5px green;
+
+                             2px 2px 5px rgba(0,0,0,0.3);
+                             5px 10px 10px rgba(0,0,0,0.2);
+
+                             inset 20px 10px 0px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 5px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 10px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 0 5px rgba(0,0,0,0.5);
+                             inset 20px 10px 0 10px rgba(0,0,0,0.5);
+                             inset 20px 10px 0 10px #ccc;
+
+                             0 0 0 4px red, 0 0 0 8px lightgreen, 0 0 0 12px blue;
+
+                             -10px -10px 0 2px red, 10px 10px 0 2px lightgreen, 10px -10px 0 2px blue, 10px -10px 0 2px green;
+                             ]">
+                            box-shadow
                         </div>
                     </div>
-                    <footer>СдвигX сдвигY размытие цвет; inset – внутренняя; можно несколько через запятую.</footer>
+                    <footer>СдвигX сдвигY размытие цвет<br>
+                        inset – ВНУТРЕННЯЯ/отображается в границах блока поверх него!<br>
+                        иначе - ВНЕШНЯЯ!!! отображение за блоком (блок накладывается поверх нее!)<br>
+                        несколько через запятую  - последний на заднем плане!<br>
+                        (НЕ БОЛЬШЕ ТРЕХ!) - лишние просто не отображаются
+                    </footer>
                 </article>
 
                 <!-- ========== outline ========== -->

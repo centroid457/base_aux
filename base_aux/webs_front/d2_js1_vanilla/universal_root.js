@@ -264,6 +264,7 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
     style_values.unshift("WRONG_VAL");
     if (!style_values.includes("none")) {style_values.unshift("none");}
     style_values.unshift("");
+    //style_values.unshift("revert");
 
     // 1. Создаём контейнер dl с классом для горизонтального отображения
     const dl__el = document.createElement('dl');
