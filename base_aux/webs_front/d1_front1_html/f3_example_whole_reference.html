@@ -53,7 +53,7 @@
 
                 <article class="article__cls">
                     <header>СЕМАНТИКА</header>
-                    <div class="article_main__cls demo_box_semantic">
+                    <div class="article_main__cls demo_box__semantic">
                         <header>Шапка (header) — логотип, навигация</header>
                         <nav>Навигация (nav) — ссылки меню</nav>
                         <main>
@@ -3871,18 +3871,16 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="cloneColorBgId" data-collapsed_not>
+        <section class="section__cls" id="colorBgId" data-collapsed_not>
             <h2 data-icon_process_ok>COLORS BACKGROUND BG</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>COLOR</header>
                     <div class="article_main__cls">
 
                         <!-- Простые цвета (имена, hex, rgb, hsl) -->
-                        <div
-                                data-padding1rem
-                                style="text-align: center; color: black; text-shadow: 0 0 10px white;"
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
                              lightblue;
 
@@ -3895,88 +3893,72 @@
                              rgb(231, 76, 60);hsl(240,100%,50%);
                              rgba(0,0,0,0.7);hsla(84,100%,59%,0.8);
                              ]">
-                            Цвета
+                            colors
                         </div>
 
                     </div>
                 </article>
 
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>LINEAR</header>
                     <div class="article_main__cls">
 
                         <!-- Градиенты линейные -->
-                        <div
-                                data-padding1rem
-                                style="text-align: center; color: black; text-shadow: 0 0 10px white;"
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
                              linear-gradient(135deg, #667eea, #764ba2);
                              linear-gradient(45deg, #ff6b6b, #feca57);
                              linear-gradient(90deg, #1e9600, #fff200, #ff0000);
                              linear-gradient(0deg, #4facfe, #00f2fe);
+                             linear-gradient(45deg, #fbda61, #ff5acd);
+                             repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);
                              ]">
-                            Линейные градиенты
+                            linear-gradient
                         </div>
 
                     </div>
                 </article>
 
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>RADIAL</header>
                     <div class="article_main__cls">
 
                         <!-- Радиальные градиенты -->
-                        <div style="padding: 2rem; text-align: center; color: black; text-shadow: 0 0 10px white;"
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
                              radial-gradient(circle, #f0f, #0ff);
                              radial-gradient(ellipse at top, #ff9a9e, #fad0c4);
                              radial-gradient(circle at 20% 40%, #f6d365, #fda085);
-                             ]">
-                            Радиальные градиенты
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>BACKGROUND</header>
-                    <div class="article_main__cls">
-
-                        <!-- Повторяющиеся градиенты -->
-                        <div style="padding: 2rem; text-align: center; color: black; text-shadow: 0 0 10px white;"
-                             data-clone_style_params="background:[
-                             repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);
                              repeating-radial-gradient(circle at 20% 30%, #ff9999, #ff9999 10px, #ffcccc 10px, #ffcccc 20px);
                              ]">
-                            Повторяющиеся градиенты
+                            radial-gradient
                         </div>
 
                     </div>
                 </article>
 
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>CONIC</header>
                     <div class="article_main__cls">
 
-                        <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
-                        <div style="padding: 2rem; text-align: center; color: black; text-shadow: 0 0 10px white;"
+                        <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
-                             linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
-                             linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;
-                             radial-gradient(circle at 10% 20%, #ff9a9e, #fad0c4), url('https://picsum.photos/id/20/300/200');
+                             conic-gradient(#ff8c00, #ff0080, #ff8c00);
+                             repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);
                              ]">
-                            Фоны с изображениями и наложениями
+                            conic
                         </div>
 
                     </div>
                 </article>
 
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>GLASS-effect</header>
                     <div class="article_main__cls">
 
                         <!-- Эффект стекла (glassmorphism) -->
-                        <div style="background: #aaaaaa; padding: 1.5rem; text-align: center; font-weight: bold; backdrop-filter: blur(4px);"
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
                              rgba(200, 200, 200, 0.5);
                              linear-gradient(120deg, rgba(200,200,200,0.9), rgba(200,200,255,0.1));
@@ -3987,18 +3969,20 @@
 
                     </div>
                 </article>
+
                 <article class="article__cls">
-                    <header>BACKGROUND</header>
+                    <header>URL-PICS</header>
                     <div class="article_main__cls">
 
-                        <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
-                        <div style="padding: 2rem; text-align: center; color: black; text-shadow: 0 0 10px white;"
+                        TODO: ДОДЕТАТЬ
+                        <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
+                        <div class="demo_box__bg_color"
                              data-clone_style_params="background:[
-                             conic-gradient(#ff8c00, #ff0080, #ff8c00);
-                             repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);
-                             linear-gradient(45deg, #fbda61, #ff5acd);
+                             linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
+                             linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;
+                             radial-gradient(circle at 10% 20%, #ff9a9e, #fad0c4), url('https://picsum.photos/id/20/300/200');
                              ]">
-                            Конические градиенты
+                            Фоны с изображениями и наложениями
                         </div>
 
                     </div>
