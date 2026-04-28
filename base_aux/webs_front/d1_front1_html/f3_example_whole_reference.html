@@ -545,44 +545,6 @@
                     <footer><code>сдвигX сдвигY размытие цвет</code>. Можно указывать несколько теней через запятую.</footer>
                 </article>
 
-                <!-- ====================== ТЕНЬ БЛОКА ====================== -->
-                <article class="article__cls">
-                    <header>box-shadow – тень элемента</header>
-                    <div class="article_main__cls">
-                        <div
-                                style="gap"
-                                data-clone_style_params="box-shadow:[
-                                0px 0px 10px green;
-                                0px 0px 20px green;
-                                0px 0px 30px green;
-
-                                2px 2px 5px rgba(0,0,0,0.3);
-                                5px 5px 10px rgba(0,0,0,0.5);
-                                10px 10px 20px rgba(0,0,0,0.2);
-                                -5px -5px 10px rgba(0,0,0,0.1);
-
-                                inset 0px 0px 10px rgba(0,0,0,0.5);
-                                inset 2px 2px 5px rgba(255,255,255,0.8), 5px 5px 10px rgba(0,0,0,0.2);
-                                0px 10px 20px -5px rgba(0,0,0,0.3);
-                                0px 15px 25px rgba(0,0,0,0.2), 0px -5px 10px rgba(0,0,0,0.1);
-                                2px 2px 5px red, -2px -2px 5px blue;
-                                3px 3px 0px black;
-                                0 0 0 2px red, 0 0 0 4px blue, 0 0 0 6px green;
-                                inset 0 0 0 2px white, 0 0 0 4px black;
-                                drop-shadow(2px 2px 5px rgba(0,0,0,0.5));
-                                ]">
-                            box-shadow
-                        </div>
-                    </div>
-                    <footer>
-                        📌 <strong>Синтаксис:</strong> <code>offsetX offsetY blurRadius spreadRadius color</code><br>
-                        — <code>inset</code> – внутренняя тень<br>
-                        — Можно задавать несколько теней через запятую<br>
-                        — <code>drop-shadow(...)</code> – фильтр (работает для содержимого, не для блока), приведён как альтернатива<br>
-                        🧪 Экспериментируйте со значениями смещения, размытия, распространения и цвета.
-                    </footer>
-                </article>
-
             </div>
         </section>
 
@@ -1311,233 +1273,6 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="blocksBorderId" data-collapsed_not>
-            <h2 data-icon_process_ok>BLOCKS-BORDER</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <!-- ========== border ========== -->
-                <article class="article__cls">
-                    <header>border – рамка</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-padding05rem
-                             data-clone_style_params="border:[
-                             1px;5px;
-                             solid;dotted;
-                             green;blue;
-                             1px solid;5px solid;10px solid;
-
-                             5px solid red;
-                             5px double red;
-                             5px dotted red;
-                             5px dashed red;
-                             ]">
-                            border
-                        </div>
-                    </div>
-                    <footer>border: ширина стиль цвет.</footer>
-                </article>
-
-                <!-- ==========  border-radius ========== -->
-                <article class="article__cls">
-                    <header>border-radius – скругление</header>
-                    Форма всегда занимает максимальный размер! тоесть всегда касается границ!<br>
-
-                    PX - КРУГ/45град!!!<br>
-                    % - ЭЛЛИПС!!!<br>
-
-                    % - берет % от ширины соседних сторон!!!<br>
-                    100% - начинает скруглять с противоположного угла!<br>
-                    50% - начинает скруглять с середины!<br>
-
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-padding05rem
-                             style="background: #eef2ff; border: 2px solid #2a73ff;"
-                             data-clone_style_params="border-radius:[
-                             revert;
-
-                             0;5px;10px;50px;100px;1000px;
-                             0 10px;
-                             0 10px 20px;
-                             0 10px 20px 50px;
-
-                             10%;20%;30%;50%;75%;100%;200%;
-                             0 10%; 0 20%; 0 30%; 0 50%; 0 70%; 0 100%; 0 200%;
-
-                             0 20%;
-                             0 20% 50%;
-                             0 20% 50% 100%;
-                             ]">
-                            border-radius
-                        </div>
-                    </div>
-                    <footer></footer>
-                </article>
-
-                <!-- ========== box-shadow ========== -->
-                <article class="article__cls">
-                    <header>box-shadow – тень блока</header>
-                    <div class="article_main__cls">
-                        <div
-                             data-padding05rem
-                             style="margin:10px; border: 1px dotted red; border-radius: 0 50%;"
-                             data-clone_style_params="box-shadow:[
-
-                             0 0 0 1px red;
-                             0 0 0 5px red;
-                             0 0 0 10px red;
-
-                             0 0 0 5px green;
-                             0 0 1px 5px green;
-                             0 0 5px 5px green;
-                             0 0 10px 5px green;
-                             0 0 50px 5px green;
-
-                             2px 2px 5px rgba(0,0,0,0.3);
-                             5px 10px 10px rgba(0,0,0,0.2);
-
-                             inset 20px 10px 0px 0 rgba(0,0,0,0.5);
-                             inset 20px 10px 5px 0 rgba(0,0,0,0.5);
-                             inset 20px 10px 10px 0 rgba(0,0,0,0.5);
-                             inset 20px 10px 0 5px rgba(0,0,0,0.5);
-                             inset 20px 10px 0 10px rgba(0,0,0,0.5);
-                             inset 20px 10px 0 10px #ccc;
-
-                             0 0 0 4px red, 0 0 0 8px lightgreen, 0 0 0 12px blue;
-
-                             -10px -10px 0 2px red, 10px 10px 0 2px lightgreen, 10px -10px 0 2px blue, 10px -10px 0 2px green;
-                             ]">
-                            box-shadow
-                        </div>
-                    </div>
-                    <footer>СдвигX сдвигY размытие цвет<br>
-                        inset – ВНУТРЕННЯЯ/отображается в границах блока поверх него!<br>
-                        иначе - ВНЕШНЯЯ!!! отображение за блоком (блок накладывается поверх нее!)<br>
-                        несколько через запятую  - последний на заднем плане!<br>
-                        (НЕ БОЛЬШЕ ТРЕХ!) - лишние просто не отображаются
-                    </footer>
-                </article>
-
-                <!-- ========== outline ========== -->
-                <article class="article__cls">
-                    <header>outline – внешний контур (не влияет на размер)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-padding05rem
-                             data-clone_style_params="outline:[
-                             5px solid black;
-                             5px dotted green;
-                             5px double blue;
-                             ]">
-                            outline
-                        </div>
-
-                        <div data-cover__border_bg
-                             data-padding05rem
-                             style="border: 2px dotted red; border-radius: 10px 30px;"
-                             data-clone_style_params="outline:[
-                             5px solid black;
-                             5px dotted green;
-                             5px double blue;
-                             ]">
-                            outline
-                        </div>
-
-                    </div>
-                    <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="blocksBgId" data-collapsed_not>
-            <h2 data-icon_process_ok>BLOCKS-BG</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <!-- ========== visibility ========== -->
-                <article class="article__cls">
-                    <header>visibility – видимость (сохраняет место)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-clone_style_params="visibility:[
-                             visible;
-                             hidden;
-                             collapse;
-                             ]">
-                            visibility
-                        </div>
-                    </div>
-                    <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
-                </article>
-
-                <!-- ========== opacity ========== -->
-                <article class="article__cls">
-                    <header>opacity – прозрачность (0…1)</header>
-                    Округление снизу до 0 и сверху до 1
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             data-padding05rem
-                             style="background:#2a73ff; color:white;"
-                             data-clone_style_params="opacity:[
-                             -10;-1;
-                             0;
-                             0.1;0.3;0.5;0.7;1;
-                             10;
-                             ]">
-                            opacity
-                        </div>
-                    </div>
-                    <footer>Влияет на весь элемент и его потомков. <code>0</code> – полностью прозрачен (но кликабелен).</footer>
-                </article>
-
-                <!-- ====================== background-clip ====================== -->
-                <article class="article__cls">
-                    <header>background-clip – где виден фон (border, padding, content, текст)</header>
-                    <div class="article_main__cls">
-                        <div data-cover__border_bg
-                             style="background: linear-gradient(135deg, #2a73ff, #ff8c42); border: 8px dashed #ccc; padding: 1rem; font-size: 2rem; font-weight: bold;"
-                             data-clone_style_params="background-clip:[
-                             border-box;padding-box;content-box;
-                             text;
-                             ]">
-                            [🎨 BARETEXT]
-                            [<span style="color:transparent;">color:transparent</span>]
-                            [<span style="color:rgba(0,0,0,0.3);">color:rgba(0,0,0,0.3)</span>]
-                        </div>
-                    </div>
-                    <footer>
-                        <strong>Значения:</strong> <code>border-box</code> – фон заходит под границу (по умолчанию)<br>
-                        <code>padding-box</code> – фон до внутреннего края границы (без под границу)<br>
-                        <code>content-box</code> – фон только под содержимым<br>
-                        <code>text</code> – фон обрезается по форме текста (при этом текст должен быть <code>color: transparent</code>; в демо полупрозрачный для наглядности, но эффект виден)
-                    </footer>
-                </article>
-
-                <!-- ====================== background-origin ====================== -->
-                <article class="article__cls">
-                    <header>background-origin – отступ для позиции фона (border, padding, content)</header>
-                    <div class="article_main__cls">
-                        <div class="demo-styled-block"
-                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
-                             style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
-                        >
-                            ██ градиентный квадрат
-                        </div>
-                    </div>
-                    <footer>
-                        <code>border-box</code> – позиция от верхнего левого угла рамки<br>
-                        <code>padding-box</code> – от внутреннего края рамки (между рамкой и контентом)<br>
-                        <code>content-box</code> – от края контента (внутри паддингов)<br>
-                        ⚡ Меняет только начальную точку фона, не влияет на обрезку (<code>background-clip</code>).
-                    </footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
         <section class="section__cls" id="blocksSizeId">
             <h2 data-icon_process_ok>BLOCKS-SIZE</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -1711,6 +1446,254 @@
                         </div>
                     </div>
                     <footer>Работает при <code>overflow: auto/scroll</code>. Пользователь может менять размер.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksBgId" data-collapsed_not>
+            <h2 data-icon_process_ok>BLOCKS-BG</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== visibility ========== -->
+                <article class="article__cls">
+                    <header>visibility – видимость (сохраняет место)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-clone_style_params="visibility:[
+                             visible;
+                             hidden;
+                             collapse;
+                             ]">
+                            visibility
+                        </div>
+                    </div>
+                    <footer><code>hidden</code> – элемент не виден, но место занимает. <code>collapse</code> – для таблиц.</footer>
+                </article>
+
+                <!-- ========== opacity ========== -->
+                <article class="article__cls">
+                    <header>opacity – прозрачность (0…1)</header>
+                    Округление снизу до 0 и сверху до 1
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             style="background:#2a73ff; color:white;"
+                             data-clone_style_params="opacity:[
+                             -10;-1;
+                             0;
+                             0.1;0.3;0.5;0.7;1;
+                             10;
+                             ]">
+                            opacity
+                        </div>
+                    </div>
+                    <footer>Влияет на весь элемент и его потомков. <code>0</code> – полностью прозрачен (но кликабелен).</footer>
+                </article>
+
+                <!-- ====================== background-clip ====================== -->
+                <article class="article__cls">
+                    <header>background-clip – где виден фон (border, padding, content, текст)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="background: linear-gradient(135deg, #2a73ff, #ff8c42); border: 8px dashed #ccc; padding: 1rem; font-size: 2rem; font-weight: bold;"
+                             data-clone_style_params="background-clip:[
+                             border-box;padding-box;content-box;
+                             text;
+                             ]">
+                            [🎨 BARETEXT]
+                            [<span style="color:transparent;">color:transparent</span>]
+                            [<span style="color:rgba(0,0,0,0.3);">color:rgba(0,0,0,0.3)</span>]
+                        </div>
+                    </div>
+                    <footer>
+                        <strong>Значения:</strong> <code>border-box</code> – фон заходит под границу (по умолчанию)<br>
+                        <code>padding-box</code> – фон до внутреннего края границы (без под границу)<br>
+                        <code>content-box</code> – фон только под содержимым<br>
+                        <code>text</code> – фон обрезается по форме текста (при этом текст должен быть <code>color: transparent</code>; в демо полупрозрачный для наглядности, но эффект виден)
+                    </footer>
+                </article>
+
+                <!-- ====================== background-origin ====================== -->
+                <article class="article__cls">
+                    <header>background-origin – отступ для позиции фона (border, padding, content)</header>
+                    <div class="article_main__cls">
+                        <div class="demo-styled-block"
+                             data-clone_style_params="background-origin:[border-box;padding-box;content-box]"
+                             style="background: linear-gradient(90deg, #667eea, #764ba2); background-repeat: no-repeat; background-position: 0 0; background-size: 80px 80px; border: 8px dotted #aaa; padding: 1rem;"
+                        >
+                            ██ градиентный квадрат
+                        </div>
+                    </div>
+                    <footer>
+                        <code>border-box</code> – позиция от верхнего левого угла рамки<br>
+                        <code>padding-box</code> – от внутреннего края рамки (между рамкой и контентом)<br>
+                        <code>content-box</code> – от края контента (внутри паддингов)<br>
+                        ⚡ Меняет только начальную точку фона, не влияет на обрезку (<code>background-clip</code>).
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="blocksBorderId" data-collapsed_not>
+            <h2 data-icon_process_ok>BLOCKS-BORDER</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== border ========== -->
+                <article class="article__cls">
+                    <header>border – рамка</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="border:[
+                             1px;5px;
+                             solid;dotted;
+                             green;blue;
+                             1px solid;5px solid;10px solid;
+
+                             5px solid red;
+                             5px double red;
+                             5px dotted red;
+                             5px dashed red;
+                             ]">
+                            border
+                        </div>
+                    </div>
+                    <footer>border: ширина стиль цвет.</footer>
+                </article>
+
+                <!-- ==========  border-radius ========== -->
+                <article class="article__cls">
+                    <header>border-radius – скругление</header>
+                    Форма всегда занимает максимальный размер! тоесть всегда касается границ!<br>
+
+                    PX - КРУГ/45град!!!<br>
+                    % - ЭЛЛИПС!!!<br>
+
+                    % - берет % от ширины соседних сторон!!!<br>
+                    100% - начинает скруглять с противоположного угла!<br>
+                    50% - начинает скруглять с середины!<br>
+
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             style="background: #eef2ff; border: 2px solid #2a73ff;"
+                             data-clone_style_params="border-radius:[
+                             revert;
+
+                             0;5px;10px;50px;100px;1000px;
+                             0 10px;
+                             0 10px 20px;
+                             0 10px 20px 50px;
+
+                             10%;20%;30%;50%;75%;100%;200%;
+                             0 10%; 0 20%; 0 30%; 0 50%; 0 70%; 0 100%; 0 200%;
+
+                             0 20%;
+                             0 20% 50%;
+                             0 20% 50% 100%;
+                             ]">
+                            border-radius
+                        </div>
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <!-- ========== box-shadow ========== -->
+                <article class="article__cls">
+                    <header>box-shadow – тень блока</header>
+                    <div class="article_main__cls">
+                        <div
+                             data-padding05rem
+                             style="margin:10px; border: 1px dotted red; border-radius: 0 50%;"
+                             data-clone_style_params="box-shadow:[
+
+                             0 0 0 -10px red;
+                             0 0 0 1px red;
+                             0 0 0 5px red;
+                             0 0 0 10px red;
+                             0 0 0 20px red;
+                             0 0 0 30px red;
+
+                             0 0 -10px 5px green;
+                             0 0 0 5px green;
+                             0 0 1px 5px green;
+                             0 0 5px 5px green;
+                             0 0 10px 5px green;
+                             0 0 50px 5px green;
+
+                             2px 2px 5px rgba(0,0,0,0.3);
+                             5px 10px 10px rgba(0,0,0,0.2);
+
+                             inset 0 0 10px 10px rgba(0,0,0,0.5);
+                             inset 0 0 -10px 10px rgba(0,0,0,0.5);
+                             inset 0 0 10px -10px rgba(0,0,0,0.5);
+
+                             inset 20px 10px 0px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 5px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 10px 0 rgba(0,0,0,0.5);
+                             inset 20px 10px 0 5px rgba(0,0,0,0.5);
+                             inset 20px 10px 0 10px rgba(0,0,0,0.5);
+                             inset 20px 10px 0 10px #ccc;
+
+                             inset 10px 10px 5px 0 red, 10px 10px 5px 0 green;
+                             inset 10px 10px 5px 0 red, inset -10px -10px 5px 0 green;
+                             -10px -10px 5px 0 red, 10px 10px 5px 0 green;
+                             2px 2px 5px red, -2px -2px 5px blue;
+
+                             0 0 0 4px red, 0 0 0 8px lightgreen, 0 0 0 12px blue;
+                             -10px -10px 0 2px red, 10px 10px 0 2px lightgreen, 10px -10px 0 2px blue, 10px -10px 0 2px green;
+
+                             drop-shadow(2px 2px 5px black);
+                             0px 25px 50px red, 0px -5px 10px red;
+                             ]">
+                            box-shadow
+                        </div>
+                    </div>
+                    <footer>СдвигX сдвигY толщина размытие цвет<br>
+                        inset – ВНУТРЕННЯЯ/отображается в границах блока поверх него!<br>
+                        иначе - ВНЕШНЯЯ!!! отображение за блоком (блок накладывается поверх нее!)<br>
+                        несколько через запятую  - последний на заднем плане!<br>
+                        (НЕ БОЛЬШЕ ТРЕХ!) - лишние просто не отображаются<br>
+
+                        📌 <strong>Синтаксис:</strong> <code>offsetX offsetY blurRadius spreadRadius color</code><br>
+                        — <code>inset</code> – внутренняя тень<br>
+                        — Можно задавать несколько теней через запятую<br>
+                        — <code>drop-shadow(...)</code> – фильтр (работает для содержимого, не для блока), приведён как альтернатива<br>
+                        🧪 Экспериментируйте со значениями смещения, размытия, распространения и цвета.
+                    </footer>
+                </article>
+
+                <!-- ========== outline ========== -->
+                <article class="article__cls">
+                    <header>outline – внешний контур (не влияет на размер)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             data-clone_style_params="outline:[
+                             5px solid black;
+                             5px dotted green;
+                             5px double blue;
+                             ]">
+                            outline
+                        </div>
+
+                        <div data-cover__border_bg
+                             data-padding05rem
+                             style="border: 2px dotted red; border-radius: 10px 30px;"
+                             data-clone_style_params="outline:[
+                             5px solid black;
+                             5px dotted green;
+                             5px double blue;
+                             ]">
+                            outline
+                        </div>
+
+                    </div>
+                    <footer>Отличие от border: не влияет на раскладку, не скругляется border-radius.</footer>
                 </article>
 
             </div>
