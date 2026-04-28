@@ -53,7 +53,7 @@
 
                 <article class="article__cls">
                     <header>СЕМАНТИКА</header>
-                    <div class="article_main__cls demo_box__semantic">
+                    <div class="article_main__cls demo_box__semantic__cls">
                         <header>Шапка (header) — логотип, навигация</header>
                         <nav>Навигация (nav) — ссылки меню</nav>
                         <main>
@@ -3546,6 +3546,7 @@
                 <article class="article__cls">
                     <header>align-items — выравнивание по поперечной/ВЕРТИКАЛЬНОЙ оси</header>
                     <div class="article_main__cls">
+
                         <div data-cover__border_bg
                              style="display:flex; height:50px;"
                              data-clone_style_params="align-items:[
@@ -3553,10 +3554,24 @@
                              stretch;
                              flex-start;center;flex-end;
                              ]">
-                            <div class="demo_item__cls" style="height:10px;">1</div>
-                            <div class="demo_item__cls" style="height:20px;">2</div>
-                            <div class="demo_item__cls" style="height:30px;">3</div>
+                            <div class="demo_item__cls" style="height:10px; background: red">1</div>
+                            <div class="demo_item__cls" style="height:10px; vertical-align: middle;">1</div>
+                            <div class="demo_item__cls" style="height:20px; background: green">2</div>
+                            <div class="demo_item__cls">3</div>
                         </div>
+
+                        <div data-cover__border_bg
+                             style="display:flex; height:50px;"
+                             data-clone_style_params="align-items:[
+                             baseline;
+                             stretch;
+                             flex-start;center;flex-end;
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+
                         <p><small><code>stretch</code> (по умолчанию) – растягивает элементы на высоту контейнера; <code>baseline</code> выравнивает по базовой линии текста.</small></p>
                     </div>
                     <footer>Для работы <code>stretch</code> у элементов не должна быть задана явная высота.</footer>
@@ -3576,7 +3591,6 @@
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
-                            <div class="demo_item__cls">4</div>
                         </div>
                         <p><small><code>nowrap</code> (по умолчанию) – элементы не переносятся, сжимаются; <code>wrap</code> – перенос; <code>wrap-reverse</code> – перенос в обратном порядке.</small></p>
                     </div>
@@ -3598,7 +3612,6 @@
                             <div class="demo_item__cls">1</div>
                             <div class="demo_item__cls">2</div>
                             <div class="demo_item__cls">3</div>
-                            <div class="demo_item__cls">4</div>
                         </div>
                         <p><small>Работает только при <code>flex-wrap: wrap</code> и наличии нескольких строк. <code>stretch</code> растягивает строки по высоте.</small></p>
                     </div>
@@ -3880,7 +3893,7 @@
                     <div class="article_main__cls">
 
                         <!-- Простые цвета (имена, hex, rgb, hsl) -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              lightblue;
 
@@ -3904,7 +3917,7 @@
                     <div class="article_main__cls">
 
                         <!-- Градиенты линейные -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              linear-gradient(135deg, #667eea, #764ba2);
                              linear-gradient(45deg, #ff6b6b, #feca57);
@@ -3924,7 +3937,7 @@
                     <div class="article_main__cls">
 
                         <!-- Радиальные градиенты -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              radial-gradient(circle, #f0f, #0ff);
                              radial-gradient(ellipse at top, #ff9a9e, #fad0c4);
@@ -3942,7 +3955,7 @@
                     <div class="article_main__cls">
 
                         <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              conic-gradient(#ff8c00, #ff0080, #ff8c00);
                              repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);
@@ -3958,7 +3971,7 @@
                     <div class="article_main__cls">
 
                         <!-- Эффект стекла (glassmorphism) -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              rgba(200, 200, 200, 0.5);
                              linear-gradient(120deg, rgba(200,200,200,0.9), rgba(200,200,255,0.1));
@@ -3976,7 +3989,7 @@
 
                         TODO: ДОДЕТАТЬ
                         <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
-                        <div class="demo_box__bg_color"
+                        <div class="demo_box__bg_color__cls"
                              data-clone_style_params="background:[
                              linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
                              linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;

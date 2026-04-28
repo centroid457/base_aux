@@ -1080,11 +1080,11 @@ details[open] {
 
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* семантическая демо-зона (локальные header/footer и пр.) */
-.demo_box__semantic header,
-.demo_box__semantic nav,
-.demo_box__semantic main,
-.demo_box__semantic aside,
-.demo_box__semantic footer {
+.demo_box__semantic__cls header,
+.demo_box__semantic__cls nav,
+.demo_box__semantic__cls main,
+.demo_box__semantic__cls aside,
+.demo_box__semantic__cls footer {
     background: #eee;
     margin: 0.6rem 0;
     padding: 0.6rem 1rem;
@@ -1093,7 +1093,7 @@ details[open] {
     border-left: 4px solid #2a73ff;
 }
 
-.demo_box__bg_color {
+.demo_box__bg_color__cls {
     padding: 1rem;
     text-align: center;
     color: black;
