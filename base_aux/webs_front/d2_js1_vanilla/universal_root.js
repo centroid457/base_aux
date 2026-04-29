@@ -187,7 +187,7 @@ function isIconChar(ch) {
     );
 }
 
-(function _icons_show_code() {
+(function process__icons_show_code() {
     function processTextNode(node) {
         const text = node.nodeValue;
         if (!text) return;
@@ -247,7 +247,9 @@ function isIconChar(ch) {
 })();
 
 // ---------------------------------------------------------------------------------------------------------------------
-const ATTR_NAME__CLONE_CSS_DL = "data-clone_element__with_css__by_dl";
+const ATTR_NAME__CLONE_EL__PARAMS = "data-clone_element__params";
+const ATTR_NAME__CLONE_EL__W_ATTRS = "data-clone_element__w_attrs"; // css(def)/attrs
+const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def)/direct
 
 /**
  * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
@@ -255,7 +257,7 @@ const ATTR_NAME__CLONE_CSS_DL = "data-clone_element__with_css__by_dl";
  * @param {string} def_property_name - CSS-свойство по умолчанию (для простых значений).
  * @param {string[]} value_items - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element__with_css__by_dl(original__el, def_property_name, value_items) {
+function _clone_element__by_dl(original__el, def_property_name, value_items, with_attrs=false) {
     value_items.unshift(undefined);
     value_items.unshift("WRONG_VAL");
     if (!value_items.includes("none")) {value_items.unshift("none");}
@@ -292,13 +294,20 @@ function _clone_element__with_css__by_dl(original__el, def_property_name, value_
     for (const style_value of value_items) {
         const clone__el = original__el.cloneNode(true);
 
-        // если style_value - MAP!
-        if (typeof style_value === 'string') {
-            clone__el.style[def_property_name] = style_value;
-            // console.log(2, def_property_name, style_value);
-        } else if (style_value instanceof Map) {
-            // несколько свойств из Map
-            for (const [name, val] of style_value) {
+        let params_map;
+
+        // define final item_map
+        if (style_value instanceof Map) {
+            params_map = style_value;
+        } else {    //undefined/string
+            params_map = new Map().set(def_property_name, style_value);
+        }
+
+        // apply params
+        for (const [name, val] of params_map) {
+            if (with_attrs) {
+                clone__el.setAttribute(name, val);
+            } else {
                 clone__el.style[name] = val;
             }
         }
@@ -309,7 +318,7 @@ function _clone_element__with_css__by_dl(original__el, def_property_name, value_
     // Оборачиваем в fieldset
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_CSS_DL}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
     fieldset__el.appendChild(legend__el);
     fieldset__el.appendChild(dl__el);
 
@@ -408,13 +417,14 @@ function _parse__parametrisation(source) {
 }
 
 // клонирование - применение
-(function clone_element__with_css__by_dl() {
-    const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_CSS_DL}]`);
+(function process__clone_elements() {
+    const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_EL__PARAMS}]`);
     elements.forEach(el => {
-        const params_source = el.getAttribute(ATTR_NAME__CLONE_CSS_DL);
+        const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
+        const with_attrs = el.hasAttribute(ATTR_NAME__CLONE_EL__W_ATTRS);
         const [ def_property_name, params_parsed ] = _parse__parametrisation(params_source);
         if (!params_parsed) return;
-        _clone_element__with_css__by_dl(el, def_property_name, params_parsed);
+        _clone_element__by_dl(el, def_property_name, params_parsed, with_attrs);
     });
 })();
 
