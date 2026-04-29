@@ -247,24 +247,20 @@ function isIconChar(ch) {
 })();
 
 // ---------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------
-// Размножитель элемента со стилями (поддержка entries вида "prop:value")
-// --------------------------------------------------------------------------------
 const ATTR_NAME__CLONE_CSS_DL = "data-clone_element__with_css__by_dl";
 
 /**
  * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
  * @param {HTMLElement} original__el - оригинальный элемент.
- * @param {string} defaultProperty - CSS-свойство по умолчанию (для простых значений).
- * @param {string[]} style_values - массив записей: простые значения или строки "свойство:значение".
+ * @param {string} def_property_name - CSS-свойство по умолчанию (для простых значений).
+ * @param {string[]} value_items - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element__with_css__by_dl(original__el, defaultProperty, style_values) {
-    // Если первого элемента нет, добавим маркер "оригинал без изменений"
-    style_values.unshift(undefined);
-    style_values.unshift("WRONG_VAL");
-    if (!style_values.includes("none")) {style_values.unshift("none");}
-    style_values.unshift("");
-    //style_values.unshift("revert");
+function _clone_element__with_css__by_dl(original__el, def_property_name, value_items) {
+    value_items.unshift(undefined);
+    value_items.unshift("WRONG_VAL");
+    if (!value_items.includes("none")) {value_items.unshift("none");}
+    value_items.unshift("revert");
+    value_items.unshift("");
 
     // 1. Создаём контейнер dl с классом для горизонтального отображения
     const dl__el = document.createElement('dl');
@@ -293,20 +289,18 @@ function _clone_element__with_css__by_dl(original__el, defaultProperty, style_va
     }
 
     // 2. ITEMS
-    for (let i = 0; i < style_values.length; i++) {
-        const style_value = style_values[i];
+    for (const style_value of value_items) {
         const clone__el = original__el.cloneNode(true);
 
-        // Проверяем, является ли style_value самостоятельной парой "свойство:значение"
-        if (typeof style_value === 'string' && /^[a-z-]+:/i.test(style_value)) {
-            const colonPos = style_value.indexOf(':');
-            const prop = style_value.substring(0, colonPos).trim();
-            let value = style_value.substring(colonPos + 1).trim();
-            clone__el.style[prop] = value;
-            // console.log(1111, prop, value);
-        } else {
-            clone__el.style[defaultProperty] = style_value;
-            // console.log(2, defaultProperty, style_value);
+        // если style_value - MAP!
+        if (typeof style_value === 'string') {
+            clone__el.style[def_property_name] = style_value;
+            // console.log(2, def_property_name, style_value);
+        } else if (style_value instanceof Map) {
+            // несколько свойств из Map
+            for (const [name, val] of style_value) {
+                clone__el.style[name] = val;
+            }
         }
 
         addEntry(style_value, clone__el);
@@ -315,7 +309,7 @@ function _clone_element__with_css__by_dl(original__el, defaultProperty, style_va
     // Оборачиваем в fieldset
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_CSS_DL}</small>[<b data-mouse_select_all>${defaultProperty}</b>]`;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_CSS_DL}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
     fieldset__el.appendChild(legend__el);
     fieldset__el.appendChild(dl__el);
 
@@ -323,46 +317,104 @@ function _clone_element__with_css__by_dl(original__el, defaultProperty, style_va
     original__el.replaceWith(fieldset__el);
 }
 
-// парсинг параметризации - Поддерживаемые форматы:
-// 1. "colorr:[#c0392b; #2c3e50; #16a085]"                                  --->; as separator and [] brackets always!
-// 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]"  ---> sophisticated values available!
-function parse_style_parametrisation(source) {
-    // Ищем первую двоеточие
+// parse string like in STiLE tag into Map
+// n1:v1;n2:v2;; => Map([n1,v1], [n2,v2])
+function _parse__css_style(source) {
+    const result = new Map();
+
+    // Разбиваем по ';', удаляем лишние пробелы по краям, отбрасываем пустые элементы
+    const pairs = source.split(';').map(v => v.trim()).filter(v => v);
+
+    for (const pair of pairs) {
+        // Ищем ПЕРВОЕ двоеточие (ключ:значение)
+        // теоретически может быть двоеточие (например, content:"::before"), поэтому важно брать первое вхождение.
+        const colonIndex = pair.indexOf(':');
+        if (colonIndex !== -1) {
+            const key = pair.slice(0, colonIndex).trim();
+            const value = pair.slice(colonIndex + 1).trim();
+            // Добавляем только если ключ не пуст
+            if (key) result.set(key, value);
+        }
+    };
+    return result;
+}
+
+// парсинг строки параметризации
+// 1. "color:[#c0392b  ; #2c3e50; #16a085 ]"  --->; as separator and [] brackets always! and Space available
+// 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]" ---> sophisticated values available!
+// 3. nameDef:[v1; {n21:v21;n22:v22}; v3;]
+function _parse__parametrisation(source) {
+    const result = [];
+    source = source.trim();
+
+    // 1=parse default_param_name
     const colonIndex = source.indexOf(':');
     if (colonIndex === -1) {
         console.error('Неверный формат: отсутствует двоеточие - ', source);
         return null;
     }
-    const property = source.substring(0, colonIndex).trim();
-    let valuesStr = source.substring(colonIndex + 1).trim();
 
-    // Удаляем квадратные скобки, если они есть
-    if (valuesStr.startsWith('[') && valuesStr.endsWith(']')) {
-        valuesStr = valuesStr.slice(1, -1);
+    const default_param_name = source.slice(0, colonIndex).trim();
+
+    // 2=get all values_str
+    let values_str = source.slice(colonIndex + 1).trim();
+    if (values_str.startsWith('[') && values_str.endsWith(']')) {
+        values_str = values_str.slice(1, -1);
+        values_str = values_str.trim();
     } else {
-        console.error('Неверный формат: отсутствуют скобки - ', source);
+        console.error('Неверный формат: скобки отсутствуют [] - ', source);
         return null;
     }
-    // Разбиваем варианты и чистим пробелы
-    let values = valuesStr.split(';').map(v => v.trim()).filter(v => v);
-    if (values.length === 0) {
-        console.error('Не найдено значений', source);
-        return null;
+
+    // 3=parse variants
+    let data_rest = values_str;
+    while (data_rest.length != 0) {
+        let step_result;
+        let _data_first;
+
+        if (data_rest.startsWith('{')) {
+            const _index = data_rest.indexOf('}');
+            if (_index !== -1) {
+                _data_first = data_rest.slice(0+1, _index).trim();
+                data_rest = data_rest.slice(_index + 1).trim();
+
+                if (_data_first) {
+                    step_result = _parse__css_style(_data_first)
+                }
+
+            } else {
+                console.error('Неверный формат: скобки - нет завершающей } - ', data_rest);
+                return null;
+            }
+        } else {
+            const _index = data_rest.indexOf(';');
+            if (_index !== -1) {
+                _data_first = data_rest.slice(0, _index).trim();
+                data_rest = data_rest.slice(_index + 1).trim();
+            } else {
+                _data_first = data_rest;
+                data_rest = "";
+            }
+
+            if (_data_first) {
+                step_result = _data_first;
+            }
+        }
+
+        result.push(step_result)
     }
-    return { property, values };
+
+    return [ default_param_name, result ];
 }
 
-// Автоматическое клонирование
-// Поддерживаемые форматы:
-// 1. data-clone_element__with_css__by_dl="color:[#c0392b;#2c3e50;#16a085]"
+// клонирование - применение
 (function clone_element__with_css__by_dl() {
     const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_CSS_DL}]`);
     elements.forEach(el => {
-        const paramLine = el.getAttribute(ATTR_NAME__CLONE_CSS_DL);
-        const parsed = parse_style_parametrisation(paramLine);
-        if (!parsed) return;
-        const { property, values } = parsed;
-        _clone_element__with_css__by_dl(el, property, values);
+        const params_source = el.getAttribute(ATTR_NAME__CLONE_CSS_DL);
+        const [ def_property_name, params_parsed ] = _parse__parametrisation(params_source);
+        if (!params_parsed) return;
+        _clone_element__with_css__by_dl(el, def_property_name, params_parsed);
     });
 })();
 
@@ -417,7 +469,7 @@ function parse_style_parametrisation(source) {
 
     // Обработка якорей: если перешли по ссылке #sectionId, раскрываем секцию
     function handleHash() {
-        const hash = window.location.hash.substring(1);
+        const hash = window.location.hash.slice(1);
         if (hash) {
             const targetSection = document.getElementById(hash);
             if (targetSection && targetSection.classList.contains('section__cls')) {
