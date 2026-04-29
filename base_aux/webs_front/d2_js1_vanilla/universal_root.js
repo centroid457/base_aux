@@ -250,7 +250,7 @@ function isIconChar(ch) {
 // --------------------------------------------------------------------------------
 // Размножитель элемента со стилями (поддержка entries вида "prop:value")
 // --------------------------------------------------------------------------------
-const CLONE_ATTR_NAME = "data-clone_style_params";
+const ATTR_NAME__CLONE_CSS_DL = "data-clone_element__with_css__by_dl";
 
 /**
  * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
@@ -258,7 +258,7 @@ const CLONE_ATTR_NAME = "data-clone_style_params";
  * @param {string} defaultProperty - CSS-свойство по умолчанию (для простых значений).
  * @param {string[]} style_values - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_values) {
+function _clone_element__with_css__by_dl(original__el, defaultProperty, style_values) {
     // Если первого элемента нет, добавим маркер "оригинал без изменений"
     style_values.unshift(undefined);
     style_values.unshift("WRONG_VAL");
@@ -315,7 +315,7 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
     // Оборачиваем в fieldset
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${CLONE_ATTR_NAME}</small>[<b data-mouse_select_all>${defaultProperty}</b>]`;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_CSS_DL}</small>[<b data-mouse_select_all>${defaultProperty}</b>]`;
     fieldset__el.appendChild(legend__el);
     fieldset__el.appendChild(dl__el);
 
@@ -324,9 +324,8 @@ function _clone_element_with_styles__by_dl(original__el, defaultProperty, style_
 }
 
 // парсинг параметризации - Поддерживаемые форматы:
-// 1. "color:#c0392b;#2c3e50;#16a085"               --->; as separator
-// 2. "color-other:[#c0392b; #2c3e50; #16a085]"     --->[] brackets available
-// 3. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]"  ---> sophisticated values available!
+// 1. "colorr:[#c0392b; #2c3e50; #16a085]"                                  --->; as separator and [] brackets always!
+// 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]"  ---> sophisticated values available!
 function parse_style_parametrisation(source) {
     // Ищем первую двоеточие
     const colonIndex = source.indexOf(':');
@@ -355,16 +354,15 @@ function parse_style_parametrisation(source) {
 
 // Автоматическое клонирование
 // Поддерживаемые форматы:
-// 1. data-clone_style_params="color:#c0392b;#2c3e50;#16a085"
-// 2. data-clone_style_params="color-other:[#c0392b; #2c3e50; #16a085]"
-(function clone_elements__parametrisation() {
-    const elements = document.querySelectorAll(`[${CLONE_ATTR_NAME}]`);
+// 1. data-clone_element__with_css__by_dl="color:[#c0392b;#2c3e50;#16a085]"
+(function clone_element__with_css__by_dl() {
+    const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_CSS_DL}]`);
     elements.forEach(el => {
-        const paramLine = el.getAttribute(CLONE_ATTR_NAME);
+        const paramLine = el.getAttribute(ATTR_NAME__CLONE_CSS_DL);
         const parsed = parse_style_parametrisation(paramLine);
         if (!parsed) return;
         const { property, values } = parsed;
-        _clone_element_with_styles__by_dl(el, property, values);
+        _clone_element__with_css__by_dl(el, property, values);
     });
 })();
 
