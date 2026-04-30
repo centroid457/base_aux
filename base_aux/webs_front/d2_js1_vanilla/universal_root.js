@@ -460,6 +460,45 @@ function _parse__parametrisation(source) {
 })();
 
 // =====================================================================================================================
+// connect all elements like INPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
+function connect_values_in_group(group_name) {
+    // Функция обновления всех
+    function updateGroup(value) {
+        let v = parseFloat(value);
+        if (isNaN(v)) v = 0;
+        // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
+        v = Math.min(1, Math.max(0, v));
+        // Обновляем все элементы с нужным name
+        const elements = document.querySelectorAll(`[data-group="${group_name}"]`);
+        elements.forEach(el => {
+            if (el.tagName === 'PROGRESS' || el.tagName === 'METER' || el.tagName === 'INPUT') {
+                if (true) {
+                    el.value = v;
+                } else {
+                    // Учитываем возможный max (по умолчанию 1)
+                    const max = parseFloat(el.getAttribute('max')) || 1;
+                    let scaledValue = v * max;
+                    scaledValue = Math.min(max, Math.max(0, scaledValue));
+                    el.value = scaledValue;
+                }
+            }
+        });
+        // Синхронизируем управляющие элементы
+        //_rangeInput.value = v;
+        //_numberInput.value = v;
+    }
+
+    // События для задающих элементов
+    const elements_input = document.querySelectorAll(`input[data-group="${group_name}"]`);
+    elements_input.forEach(el => {
+        el.addEventListener('input', (e) => updateGroup(e.target.value));
+    });
+
+    // Установим начальное состояние (из значения ползунка)
+    //updateGroup(rangeInput.value);
+}
+
+// =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
 // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
 (function() {

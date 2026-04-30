@@ -8,12 +8,14 @@
     <title>HTML/CSS справочник визуальный</title>
     <link rel="stylesheet" href="-----global.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Fira+Code&display=swap" rel="stylesheet">
+
     <script defer src="../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>" data-comment="WorkingGood!"></script>
-    <script defer src="<?= filepath_with_timestamp('universal_root.js') ?>" data-comment="FIXME: NOT WORKING!!!"></script><!--не работает!!!-->
+    <_script defer src="<?= filepath_with_timestamp('universal_root.js') ?>" data-comment="FIXME: NOT WORKING!!!"></_script><!--не работает!!!-->
     <script>
         console.log("<?= filepath_with_timestamp('universal_root.js') ?>");
         console.log("../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>");
     </script>
+
     <link rel="stylesheet" href="../d1_front2_css/universal_root.css?v=<?= filemtime('../d1_front2_css/universal_root.css') ?>" />
 </head>
 <body>
@@ -2398,49 +2400,13 @@
                         </div>
 
                         <fieldset>
-                            <legend>gropInputNum_1</legend>
-                            <input type="range" name="gropInputNum_1" min="0" max="1" step="0.1" value="0.1">
-                            <input type="number" name="gropInputNum_1" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
+                            <legend>groupInputNum_1</legend>
+                            <input type="range" data-group="groupInputNum_1" min="0" max="1" step="0.1" value="0.1">
+                            <input type="number" data-group="groupInputNum_1" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
                             <script>
-                                (function() {
-                                    // Находим все элементы с name="gropInputNum_1"
-                                    const groupName = 'gropInputNum_1';
-
-                                    // Функция обновления всех
-                                    function updateGroup(value) {
-                                        let v = parseFloat(value);
-                                        if (isNaN(v)) v = 0;
-                                        // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
-                                        v = Math.min(1, Math.max(0, v));
-                                        // Обновляем все элементы с нужным name
-                                        const elements = document.querySelectorAll(`[name="${groupName}"]`);
-                                        elements.forEach(el => {
-                                            if (el.tagName === 'PROGRESS' || el.tagName === 'METER' || el.tagName === 'INPUT') {
-                                                if (true) {
-                                                    el.value = v;
-                                                } else {
-                                                    // Учитываем возможный max (по умолчанию 1)
-                                                    const max = parseFloat(el.getAttribute('max')) || 1;
-                                                    let scaledValue = v * max;
-                                                    scaledValue = Math.min(max, Math.max(0, scaledValue));
-                                                    el.value = scaledValue;
-                                                }
-                                            }
-                                        });
-                                        // Синхронизируем управляющие элементы
-                                        //_rangeInput.value = v;
-                                        //_numberInput.value = v;
-                                    }
-
-                                    // События для задающих элементов
-                                    const elements_input = document.querySelectorAll(`input[name="${groupName}"]`);
-                                    elements_input.forEach(el => {
-                                        el.addEventListener('input', (e) => updateGroup(e.target.value));
-                                    });
-
-                                    // Установим начальное состояние (из значения ползунка)
-                                    //updateGroup(rangeInput.value);
-                                })();
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    connect_values_in_group('groupInputNum_1');
+                                });
                             </script>
                         </fieldset>
 
@@ -2452,19 +2418,19 @@
                         НО МОЖНО ПРИМЕНИТЬ особым образом <br>
                         <progress
                                 value="0.3"
-                                name="gropInputNum_1" data-height_20
+                                data-group="groupInputNum_1" data-height_20
                                 style="border: 1px;"></progress><br>
                         <progress
                                 value="0.3"
-                                name="gropInputNum_1" data-height_20
+                                data-group="groupInputNum_1" data-height_20
                                 style="border-radius: 30px;"></progress><br>
                         <meter
                                 value="0.3"
-                                name="gropInputNum_1" data-height_20
+                                data-group="groupInputNum_1" data-height_20
                                 style="border: 1px;"></meter><br>
                         <meter
                                 value="0.3"
-                                name="gropInputNum_1" data-height_20
+                                data-group="groupInputNum_1" data-height_20
                                 style="border-radius: 30px;"></meter><br>
 
                     </div>
@@ -2481,7 +2447,7 @@
                         <hr>
                         <progress
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="SIZE=width/height:[
                                 {width: 20px; height: 20px;};
                                 {width: 100px; height: 100px;};
@@ -2496,7 +2462,7 @@
 
                           <progress
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="height:[
                                 -10px;
                                 0px;
@@ -2514,7 +2480,7 @@
 
                           <progress
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="width:[
                                 -10px;
                                 0px;
@@ -2544,7 +2510,7 @@
                         <hr>
                         <meter
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="SIZE=width/height:[
                                 {width: 20px; height: 20px;};
                                 {width: 100px; height: 100px;};
@@ -2558,7 +2524,7 @@
                                 ]"></meter>
                           <meter
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="height:[
                                 -10px;
                                 0px;
@@ -2576,7 +2542,7 @@
 
                           <meter
                                 value="0.3"
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__params="width:[
                                 -10px;
                                 0px;
@@ -2621,7 +2587,7 @@
                                 ]"></progress>
 
                         <progress
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__w_attrs
                                 data-clone_element__params="max:[
                                 -1;
@@ -2664,7 +2630,7 @@
 
                         <hr>
                         <meter
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 data-clone_element__w_attrs
                                 data-clone_element__params="max:[
                                 -1;
@@ -2703,7 +2669,7 @@
                         3. как исключение - есть только low/high и значения перепутаны местами.<br>
 
                         <meter
-                                name="gropInputNum_1"
+                                data-group="groupInputNum_1"
                                 value="0.3"
                                 data-clone_element__w_attrs
                                 data-clone_element__params="COMBINATIONS:[
@@ -2754,10 +2720,10 @@
                         <output for="brightness">75</output>
 
                         <hr>
-                        <h4>одиночная зависимость</h4>
+                        <h4>одиночная зависимость - по ID</h4>
                         <div>
                             <input type="range" id="demo_input1__id" min="0" max="100" value="50" step="1">
-                            <output for="demo_input__name" id="demo_output1__id">50</output>
+                            <output for="demo_input__name" id="demo_output1__id" data-border>50</output>
                             <script>
                                 (function() {
                                     const demo_input__el = document.getElementById('demo_input1__id');
@@ -2767,6 +2733,11 @@
                             </script>
                         </div>
 
+                        <h4>одиночная зависимость - по имени группы</h4>
+                        <div>
+                            <input type="range" name="demo_input1__id" min="0" max="100" value="50" step="1">
+                            <output for="demo_input__name" name="demo_output1__id" data-border>50</output>
+                        </div>
 
                         <hr>
                         <h4>множественная зависимость</h4>
