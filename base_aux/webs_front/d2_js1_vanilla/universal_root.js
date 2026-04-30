@@ -257,40 +257,17 @@ const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def
  * @param {string} def_property_name - CSS-свойство по умолчанию (для простых значений).
  * @param {string[]} value_items - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element__by_dl(original__el, def_property_name, value_items, with_attrs=false) {
+function _clone_element(original__el, def_property_name, value_items, with_attrs=false, by_direct=false) {
+    // 0=append irrational values
     value_items.unshift(undefined);
     value_items.unshift("WRONG_VAL");
     if (!value_items.includes("none")) {value_items.unshift("none");}
     value_items.unshift("revert");
     value_items.unshift("");
 
-    // 1. Создаём контейнер dl с классом для горизонтального отображения
-    const dl__el = document.createElement('dl');
-    dl__el.className = 'dl_horizontal__cls';
+    // 1=make all clones ---------------------------------------
+    const clones_map = new Map();
 
-    function addEntry(label_value, clonedElement) {
-        let label_str = `${label_value}`;
-        if (label_str.length == 0) {
-            label_str = '\"\"';
-        };
-
-        const dt__el = document.createElement('dt');
-        if (typeof label_value !== 'string') {
-            dt__el.style.fontStyle = 'italic';
-            dt__el.style.textDecoration = 'underline';
-        };
-        dt__el.textContent = label_str;
-        dt__el.style.fontSize = 'xx-small';
-        dl__el.appendChild(dt__el);
-
-        const dd = document.createElement('dd');
-        dd.setAttribute("data-border", "")
-        //dd.setAttribute("data-bg_grey_eee", "")
-        dd.appendChild(clonedElement);
-        dl__el.appendChild(dd);
-    }
-
-    // 2. ITEMS
     for (const style_value of value_items) {
         const clone__el = original__el.cloneNode(true);
 
@@ -312,15 +289,51 @@ function _clone_element__by_dl(original__el, def_property_name, value_items, wit
             }
         }
 
-        addEntry(style_value, clone__el);
+        clones_map.set(style_value, clone__el);
     }
 
-    // Оборачиваем в fieldset
+    // 2=APPLY-1=DIRECT ------------------------------------------
+    if (by_direct) {
+        const clonesArray = Array.from(clones_map.values());
+        original__el.replaceWith(...clonesArray);
+        return;
+    }
+
+    // 2=APPLY-2=DL -----------------------------------------------
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
     legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
     fieldset__el.appendChild(legend__el);
+
+    const dl__el = document.createElement('dl');
+    dl__el.className = 'dl_horizontal__cls';
     fieldset__el.appendChild(dl__el);
+
+    function addEntryDl(label_value, cloned_el) {
+        let label_str = `${label_value}`;
+        if (label_str.length == 0) {
+            label_str = '\"\"';
+        };
+
+        const dt__el = document.createElement('dt');
+        if (typeof label_value !== 'string') {
+            dt__el.style.fontStyle = 'italic';
+            dt__el.style.textDecoration = 'underline';
+        };
+        dt__el.textContent = label_str;
+        dt__el.style.fontSize = 'xx-small';
+        dl__el.appendChild(dt__el);
+
+        const dd = document.createElement('dd');
+        dd.setAttribute("data-border", "")
+        //dd.setAttribute("data-bg_grey_eee", "")
+        dd.appendChild(cloned_el);
+        dl__el.appendChild(dd);
+    }
+
+    for (const [_value, _cloned_el] of clones_map) {
+        addEntryDl(_value, _cloned_el);
+    }
 
     // 4. Заменяем оригинал
     original__el.replaceWith(fieldset__el);
@@ -422,9 +435,10 @@ function _parse__parametrisation(source) {
     elements.forEach(el => {
         const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
         const with_attrs = el.hasAttribute(ATTR_NAME__CLONE_EL__W_ATTRS);
+        const by_direct = el.hasAttribute(ATTR_NAME__CLONE_EL__BY_DIRECT);
         const [ def_property_name, params_parsed ] = _parse__parametrisation(params_source);
         if (!params_parsed) return;
-        _clone_element__by_dl(el, def_property_name, params_parsed, with_attrs);
+        _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
     });
 })();
 
