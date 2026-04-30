@@ -709,7 +709,7 @@
                     <div class="article_main__cls">
 
                         <div data-cover__border_bg
-                             data-box_width_40
+                             data-width_40
                              data-clone_element__params="overflow-wrap:[
                              normal;
                              break-word;
@@ -718,7 +718,7 @@
                             111_222 333-444
                         </div>
                         <div data-cover__border_bg
-                             data-box_width_40
+                             data-width_40
                              data-clone_element__params="word-wrap:[
                              normal;
                              break-word;
@@ -740,7 +740,7 @@
                     <header>word-break – перенос внутри слов</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_40
+                             data-width_40
                              data-clone_element__params="word-break:[
                              normal;
                              break-all;keep-all;
@@ -762,7 +762,7 @@
                     <header>line-break – правила разрыва строк для китайского/японского/корейского</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_80
+                             data-width_80
                              data-clone_element__params="line-break:[
                              auto;
                              loose;
@@ -795,7 +795,7 @@
                     <header>text-align – ГОРИЗ выравнивание</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_80
+                             data-width_80
                              data-clone_element__params="text-align:[
                              left;center;right;
                              justify;
@@ -895,7 +895,7 @@
                     <header>text-indent – отступ первой строки</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_30
+                             data-width_30
                              data-clone_element__params="text-indent:[
                              normal;
                              -2rem;-1rem;
@@ -947,7 +947,7 @@
                     <header>white-space – обработка пробелов и переносов</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_200
+                             data-width_200
                              data-clone_element__params="white-space:[
                              normal;nowrap;
                              pre;pre-wrap;pre-line;
@@ -1013,7 +1013,7 @@
                         <p><abbr title="Аббревиатура / акроним">ABBR</abbr> — аббревиатура (подсказка по наведению) всегда добавляйте title для расшифровки.</p>
                         <p><dfn>DFN</dfn> — (definition) определение термина при первом использовании, значение тегов для машин и людей.</p>
 
-                        <p data-box_width_40 data-border>11111WBR[<wbr>]22222222 333 444</p>
+                        <p data-width_40 data-border>11111WBR[<wbr>]22222222 333 444</p>
                         <p><span style="background: #fee;">SPAN</span>inline контейнер для стилизации CSS (без смысловой нагрузки, вместо контейнерного DIV)</p>
 
                     </div>
@@ -1423,7 +1423,7 @@
                     <header>box-sizing – модель размера</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_200
+                             data-width_200
                              style="border: 5px solid #2a73ff; padding: 20px;"
                              data-comment="НЕ УДАЛЯТЬ СТИЛИ!!! важны!"
                              data-clone_element__params="box-sizing:[
@@ -2348,14 +2348,22 @@
                     <header>control EXAMPLE</header>
                     <div class="article_main__cls">
 
-                        <div data-flex_column>
-                            <label>progress/meter:</label>
-                            <progress value="0.4" max="1"></progress>
+                        progress/meter<br>
+                        <progress value="0.3"></progress><br>
+                        <meter value="0.3"></meter><br>
+
+                        <hr>
+                        Inner Text - never shown<br>
+                        <progress value="0.3">iNNER tEXT - NEVER SHOWN</progress><br>
+                        <meter value="0.3">iNNER tEXT - NEVER SHOWN</meter>
+
+                        <hr>
+                        <div data-cover__border_bg>
                             <progress id="demoProgress" value="0.4" max="1" style="width: 100%; height: 20px;"></progress>
                             <meter id="demoMeter" value="0.65" min="0" max="1" low="0.3" high="0.8" optimum="0.9" style="width: 100%; height: 20px;"></meter>
 
                             <input type="range" id="progressSlider" min="0" max="1" step="0.1" value="0.4">
-                            <input type="number" id="progressNumber" step="0.1" min="0" max="1" value="0.4" style="width: 80px; margin-left: 0.5rem;">
+                            <input type="number" id="progressNumber" step="0.1" min="0" max="1">
 
                             <p>low="0.3" high="0.8"</p>
 
@@ -2384,93 +2392,18 @@
                                     };
                                 })();
                             </script>
-
                         </div>
-                    </div>
-                    <footer>
-                    </footer>
-                </article>
 
-
-                <article class="article__cls">
-                    <header>progress</header>
-                    <div class="article_main__cls">
-
-                        <hr>
-                        <div data-flex_column data-border>
-                            <input type="range" id="controlInpRange" min="0" max="1" step="0.1" value="0.1">
-                            <input type="number" id="controlInpNumber" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
-
-                            <h4>PROGRESS-без параметров</h4>
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__w_attrs
-                                    data-clone_element__params="value:[
-                                    -10;
-                                    0;
-                                    0.5;
-                                    20;
-                                    100;
-
-                                    -50%;
-                                    50%;
-                                    100%;
-                                    200%;
-                                    ]"></progress>
-
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__params="height:[
-                                    -10px;
-                                    0px;
-                                    20px;
-                                    100px;
-
-                                    -50%;
-                                    50%;
-                                    100%;
-                                    200%;
-                                    ]"></progress>
-
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__params="width:[
-                                    -10px;
-                                    0px;
-                                    20px;
-                                    100px;
-
-                                    -50%;
-                                    50%;
-                                    100%;
-                                    200%;
-                                    ]"></progress>
-
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__w_attrs
-                                    data-clone_element__params="max:[
-                                    -1;
-                                    0;
-                                    0.5;
-                                    0,5;
-                                    1;
-                                    10;
-
-                                    50%;
-                                    200%;
-                                    ]"></progress>
-
+                        <fieldset>
+                            <legend>gropInputNum_1</legend>
+                            <input type="range" name="gropInputNum_1" min="0" max="1" step="0.1" value="0.1">
+                            <input type="number" name="gropInputNum_1" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
                             <script>
                                 (function() {
-                                    // Находим все элементы с name="demoControlProgress"
-                                    const groupName = 'demoControlProgress';
-                                    const rangeInput = document.getElementById('controlInpRange');
-                                    const numberInput = document.getElementById('controlInpNumber');
+                                    // Находим все элементы с name="gropInputNum_1"
+                                    const groupName = 'gropInputNum_1';
 
-                                    if (!rangeInput || !numberInput) return;
-
-                                    // Функция обновления всех progress/meter
+                                    // Функция обновления всех
                                     function updateGroup(value) {
                                         let v = parseFloat(value);
                                         if (isNaN(v)) v = 0;
@@ -2492,20 +2425,127 @@
                                             }
                                         });
                                         // Синхронизируем управляющие элементы
-                                        rangeInput.value = v;
-                                        numberInput.value = v;
+                                        //_rangeInput.value = v;
+                                        //_numberInput.value = v;
                                     }
 
-                                    // События для слайдера и числа
-                                    rangeInput.addEventListener('input', (e) => updateGroup(e.target.value));
-                                    numberInput.addEventListener('input', (e) => updateGroup(e.target.value));
+                                    // События для задающих элементов
+                                    const elements_input = document.querySelectorAll(`input[name="${groupName}"]`);
+                                    elements_input.forEach(el => {
+                                        el.addEventListener('input', (e) => updateGroup(e.target.value));
+                                    });
 
                                     // Установим начальное состояние (из значения ползунка)
-                                    updateGroup(rangeInput.value);
+                                    //updateGroup(rangeInput.value);
                                 })();
                             </script>
+                        </fieldset>
 
-                        </div>
+                        <hr>
+                        ПОПЫТКА применить style BORDER или BorderRADIUS ломает элемент!!!<br>
+                        полное заполнение пространства<br>
+                        делает цвет зеленым<br>
+
+                        НО МОЖНО ПРИМЕНИТЬ особым образом <br>
+                        <progress
+                                value="0.3"
+                                name="gropInputNum_1" data-height_20
+                                style="border: 1px;"></progress><br>
+                        <progress
+                                value="0.3"
+                                name="gropInputNum_1" data-height_20
+                                style="border-radius: 30px;"></progress><br>
+                        <meter
+                                value="0.3"
+                                name="gropInputNum_1" data-height_20
+                                style="border: 1px;"></meter><br>
+                        <meter
+                                value="0.3"
+                                name="gropInputNum_1" data-height_20
+                                style="border-radius: 30px;"></meter><br>
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>progress</header>
+                    <div class="article_main__cls">
+
+                        if NO VALUE - ANIMATED<br>
+                        <progress></progress>
+                        <progress style="width: 50px; height: 100px;"></progress>
+                        <progress style="width: 10px; height: 100px;"></progress><br>
+
+                        <hr>
+                        чтобы сделать круг - высоту в 2 раза больше ширины!<br>
+                        <progress
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="BOX=width/height:[
+                                {width: 20px; height: 20px;};
+                                {width: 100px; height: 100px;};
+                                {width: 50px; height: 100px;};
+                                {width: 10px; height: 100px;};
+                                ]"></progress>
+
+                        <progress
+                                data-clone_element__w_attrs
+                                data-clone_element__params="value:[
+                                -10;
+                                0;
+                                0.5;
+                                20;
+                                100;
+
+                                -50%;
+                                50%;
+                                ]"></progress>
+
+                          <progress
+                                value="0.3"
+                                data-clone_element__params="height:[
+                                -10px;
+                                0px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                50%;
+                                100%;
+                                200%;
+                                ]"></progress>
+
+                          <progress
+                                value="0.3"
+                                data-clone_element__params="width:[
+                                -10px;
+                                0px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                50%;
+                                100%;
+                                200%;
+                                ]"></progress>
+
+                        <hr>
+                        <progress
+                                name="gropInputNum_1"
+                                data-clone_element__w_attrs
+                                data-clone_element__params="max:[
+                                -1;
+                                0;
+                                0.5;
+                                0,5;
+                                1;
+                                10;
+
+                                50%;
+                                200%;
+                                ]"></progress>
 
                     </div>
                     <footer>
@@ -2517,65 +2557,96 @@
                     <header>meter</header>
                     <div class="article_main__cls">
 
-                        <div data-flex_column data-border>
-                            <input type="range" id="controlInpRange2" min="0" max="1" step="0.1" value="0.1">
-                            <input type="number" id="controlInpNumber2" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
+                        if NO VALUE - BLANK<br>
+                        <meter></meter>
+                        <meter style="width: 50px; height: 100px;"></meter>
+                        <meter style="width: 10px; height: 100px;"></meter><br>
 
-                            <h4>METER-без параметров</h4>
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__params="height:[
-                                    -10px;
-                                    0px;
-                                    20px;
-                                    100px;
+                        <meter
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="BOX=width/height:[
+                                {width: 20px; height: 20px;};
+                                {width: 100px; height: 100px;};
+                                {width: 50px; height: 100px;};
+                                {width: 10px; height: 100px;};
+                                ]"></meter>
 
-                                    -50%;
-                                    50%;
-                                    100%;
-                                    200%;
-                                    ]"></progress>
 
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__params="width:[
-                                    -10px;
-                                    0px;
-                                    20px;
-                                    100px;
+                        <meter
+                                data-clone_element__w_attrs
+                                data-clone_element__params="value:[
+                                -10;
+                                0;
+                                0.5;
+                                20;
+                                100;
 
-                                    -50%;
-                                    50%;
-                                    100%;
-                                    200%;
-                                    ]"></progress>
+                                -50%;
+                                50%;
+                                ]"></meter>
 
-                            <progress
-                                    name="demoControlProgress"
-                                    data-clone_element__w_attrs
-                                    data-clone_element__params="max:[
-                                    -1;
-                                    0;
-                                    0.5;
-                                    0,5;
-                                    1;
-                                    10;
+                          <meter
+                                value="0.3"
+                                data-clone_element__params="height:[
+                                -10px;
+                                0px;
+                                20px;
+                                100px;
 
-                                    50%;
-                                    200%;
-                                    ]"></progress>
+                                -50%;
+                                50%;
+                                100%;
+                                200%;
+                                ]"></meter>
 
-                            <p>Meter (low/high/opt=0.2/0.8/0.5):</p>
-                            <meter
-                                    name="demoControlProgress"
-                                    value="0.65" min="0" max="1" low="0.2" high="0.8" optimum="0.5"></meter>
+                          <meter
+                                value="0.3"
+                                data-clone_element__params="width:[
+                                -10px;
+                                0px;
+                                20px;
+                                100px;
 
-                            <p>Meter (low/high/opt=0.2/0.5/0.8):</p>
-                            <meter
-                                    name="demoControlProgress"
-                                    value="0.65" min="0" max="1" low="0.2" high="0.5" optimum="0.8"></meter>
+                                -50%;
+                                50%;
+                                100%;
+                                200%;
+                                ]"></meter>
 
-                        </div>
+                        <hr>
+                        <meter
+                                name="gropInputNum_1"
+                                data-clone_element__w_attrs
+                                data-clone_element__params="max:[
+                                -1;
+                                0;
+                                0.5;
+                                0,5;
+                                1;
+                                10;
+
+                                50%;
+                                200%;
+                                ]"></meter>
+
+                        <p>Meter (low/high/opt)</p>
+                        LOW/HIGH - все что внутри - ЗЕЛЕНОЕ, снаружи - ЖЕЛТОЕ<br>
+                        <meter
+                                name="gropInputNum_1"
+                                value="0.3"
+                                data-clone_element__w_attrs
+                                data-clone_element__params="COMBINATIONS:[
+                                {low:0.5;};
+                                {high:0.5;};
+                                {optimum:0.5;};
+
+                                {low:0.2; high:0.8;};
+                                {low:0.8; high:0.2;};
+
+                                {low:0.2; high:0.8; optimum:0.5};
+                                {low:0.2; high:0.5; optimum:0.8};
+                                ]"></meter>
 
                     </div>
                     <footer>
@@ -2699,7 +2770,7 @@
                         <p>datetime-local<input type="datetime-local" value="2025-01-01T12:30"></p>
                         <p>month<input type="month" value="2025-01"></p>
                         <p>week<input type="week" value="2025-W01"></p>
-                        📆 Браузеры отображают удобные виджеты выбора. Формат значения — ISO (YYYY-MM-DD и т.д.).
+                        Браузеры отображают удобные виджеты выбора. Формат значения — ISO (YYYY-MM-DD и т.д.).
 
                         <hr>
                         <h4>GRAPH</h4>
@@ -3799,7 +3870,7 @@
                     <header>flex-wrap — перенос элементов на новую строку</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg
-                             data-box_width_80
+                             data-width_80
                              style="display:flex;"
                              data-clone_element__params="flex-wrap:[
                              nowrap;
