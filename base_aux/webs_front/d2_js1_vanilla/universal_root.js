@@ -260,7 +260,8 @@ const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def
 function _clone_element(original__el, def_property_name, value_items, with_attrs=false, by_direct=false) {
     // 0=append irrational values
     value_items.unshift(undefined);
-    value_items.unshift("WRONG_VAL");
+    value_items.unshift(new Map());
+    //value_items.unshift("WRONG_VAL"); //NOT NEEDED!!!
     if (!value_items.includes("none")) {value_items.unshift("none");}
     value_items.unshift("revert");
     value_items.unshift("");
@@ -310,11 +311,25 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     fieldset__el.appendChild(dl__el);
 
     function addEntryDl(label_value, cloned_el) {
-        let label_str = `${label_value}`;
+        // 1=resolve label_str
+        let label_str;
+
+        if (label_value instanceof Map) {
+            label_str = "Map(";
+            for (const [name, value] of label_value) {
+                if (!label_str.endsWith("(")) { label_str += "; " };
+                label_str += `${name}:${value}`;
+            }
+            label_str += ")" ;
+        } else {
+            label_str = `${label_value}`;
+        }
+
         if (label_str.length == 0) {
             label_str = '\"\"';
         };
 
+        //2=WORK
         const dt__el = document.createElement('dt');
         if (typeof label_value !== 'string') {
             dt__el.style.fontStyle = 'italic';
@@ -401,7 +416,9 @@ function _parse__parametrisation(source) {
                 data_rest = data_rest.slice(_index + 1).trim();
 
                 if (_data_first) {
-                    step_result = _parse__css_style(_data_first)
+                    step_result = _parse__css_style(_data_first);
+                } else {
+                    step_result = new Map();
                 }
 
             } else {
