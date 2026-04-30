@@ -137,13 +137,18 @@ fieldset {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
-
-
 /* -------------------- BOXES -------------------- */
-[data-box_width_30]     { width: 30px; }
-[data-box_width_40]     { width: 40px; }
-[data-box_width_80]     { width: 80px; }
-[data-box_width_200]     { width: 200px; }
+[data-width_20]     { width: 20px; }
+[data-width_30]     { width: 30px; }
+[data-width_40]     { width: 40px; }
+[data-width_80]     { width: 80px; }
+[data-width_200]    { width: 200px; }
+
+[data-height_20]     { height: 20px; }
+[data-height_30]     { height: 30px; }
+[data-height_40]     { height: 40px; }
+[data-height_80]     { height: 80px; }
+[data-height_200]    { height: 200px; }
 
 [data-box_40x40]     { height: 40px; width: 40px; }
 [data-box_80x80]     { height: 80px; width: 80px; }
