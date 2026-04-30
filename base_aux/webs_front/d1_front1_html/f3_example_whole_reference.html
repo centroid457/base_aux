@@ -2348,6 +2348,9 @@
                     <header>control EXAMPLE</header>
                     <div class="article_main__cls">
 
+                        <code>progress</code> - просто ход выполнения<br>
+                        <code>meter</code>-значение с цветовыми зонами<br>
+
                         progress/meter<br>
                         <progress value="0.3"></progress><br>
                         <meter value="0.3"></meter><br>
@@ -2470,7 +2473,132 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>progress</header>
+                    <header>SIZE-progress</header>
+                    <div class="article_main__cls">
+
+                        чтобы сделать круг - высоту в 2 раза больше ширины! максимум 60x120<br>
+
+                        <hr>
+                        <progress
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="SIZE=width/height:[
+                                {width: 20px; height: 20px;};
+                                {width: 100px; height: 100px;};
+
+                                {width: 5px; height: 10px;};
+                                {width: 10px; height: 20px;};
+                                {width: 40px; height: 80px;};
+                                {width: 60px; height: 120px;};
+                                {width: 100px; height: 200px;};
+                                {width: 10px; height: 100px;};
+                                ]"></progress>
+
+                          <progress
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="height:[
+                                -10px;
+                                0px;
+                                1px;
+                                2px;
+                                5px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                0%;
+                                50%;
+                                200%;
+                                ]"></progress>
+
+                          <progress
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="width:[
+                                -10px;
+                                0px;
+                                1px;
+                                2px;
+                                5px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                0%;
+                                50%;
+                                200%;
+                                ]"></progress>
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>SIZE-meter</header>
+                    <div class="article_main__cls">
+
+                        чтобы сделать круг - высоту в 2 раза больше ширины! максимум 40x80<br>
+
+                        <hr>
+                        <meter
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="SIZE=width/height:[
+                                {width: 20px; height: 20px;};
+                                {width: 100px; height: 100px;};
+
+                                {width: 5px; height: 10px;};
+                                {width: 10px; height: 20px;};
+                                {width: 40px; height: 80px;};
+                                {width: 60px; height: 120px;};
+                                {width: 100px; height: 200px;};
+                                {width: 10px; height: 100px;};
+                                ]"></meter>
+                          <meter
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="height:[
+                                -10px;
+                                0px;
+                                1px;
+                                2px;
+                                5px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                0%;
+                                50%;
+                                200%;
+                                ]"></meter>
+
+                          <meter
+                                value="0.3"
+                                name="gropInputNum_1"
+                                data-clone_element__params="width:[
+                                -10px;
+                                0px;
+                                1px;
+                                2px;
+                                5px;
+                                20px;
+                                100px;
+
+                                -50%;
+                                0%;
+                                50%;
+                                200%;
+                                ]"></meter>
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>VALUE-progress</header>
                     <div class="article_main__cls">
 
                         if NO VALUE - ANIMATED<br>
@@ -2479,17 +2607,6 @@
                         <progress style="width: 10px; height: 100px;"></progress><br>
 
                         <hr>
-                        чтобы сделать круг - высоту в 2 раза больше ширины!<br>
-                        <progress
-                                value="0.3"
-                                name="gropInputNum_1"
-                                data-clone_element__params="BOX=width/height:[
-                                {width: 20px; height: 20px;};
-                                {width: 100px; height: 100px;};
-                                {width: 50px; height: 100px;};
-                                {width: 10px; height: 100px;};
-                                ]"></progress>
-
                         <progress
                                 data-clone_element__w_attrs
                                 data-clone_element__params="value:[
@@ -2503,35 +2620,6 @@
                                 50%;
                                 ]"></progress>
 
-                          <progress
-                                value="0.3"
-                                data-clone_element__params="height:[
-                                -10px;
-                                0px;
-                                20px;
-                                100px;
-
-                                -50%;
-                                50%;
-                                100%;
-                                200%;
-                                ]"></progress>
-
-                          <progress
-                                value="0.3"
-                                data-clone_element__params="width:[
-                                -10px;
-                                0px;
-                                20px;
-                                100px;
-
-                                -50%;
-                                50%;
-                                100%;
-                                200%;
-                                ]"></progress>
-
-                        <hr>
                         <progress
                                 name="gropInputNum_1"
                                 data-clone_element__w_attrs
@@ -2549,29 +2637,17 @@
 
                     </div>
                     <footer>
-                        <code>progress</code> - просто ход выполнения,<br>
                     </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>meter</header>
+                    <header>VALUE-meter</header>
                     <div class="article_main__cls">
 
                         if NO VALUE - BLANK<br>
                         <meter></meter>
                         <meter style="width: 50px; height: 100px;"></meter>
                         <meter style="width: 10px; height: 100px;"></meter><br>
-
-                        <meter
-                                value="0.3"
-                                name="gropInputNum_1"
-                                data-clone_element__params="BOX=width/height:[
-                                {width: 20px; height: 20px;};
-                                {width: 100px; height: 100px;};
-                                {width: 50px; height: 100px;};
-                                {width: 10px; height: 100px;};
-                                ]"></meter>
-
 
                         <meter
                                 data-clone_element__w_attrs
@@ -2584,34 +2660,6 @@
 
                                 -50%;
                                 50%;
-                                ]"></meter>
-
-                          <meter
-                                value="0.3"
-                                data-clone_element__params="height:[
-                                -10px;
-                                0px;
-                                20px;
-                                100px;
-
-                                -50%;
-                                50%;
-                                100%;
-                                200%;
-                                ]"></meter>
-
-                          <meter
-                                value="0.3"
-                                data-clone_element__params="width:[
-                                -10px;
-                                0px;
-                                20px;
-                                100px;
-
-                                -50%;
-                                50%;
-                                100%;
-                                200%;
                                 ]"></meter>
 
                         <hr>
@@ -2630,8 +2678,30 @@
                                 200%;
                                 ]"></meter>
 
-                        <p>Meter (low/high/opt)</p>
-                        LOW/HIGH - все что внутри - ЗЕЛЕНОЕ, снаружи - ЖЕЛТОЕ<br>
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>meter=low/high/opt=ЦВЕТА</header>
+                    <div class="article_main__cls">
+                        LOW/HIGH - оба и по отдельности!<br>
+                        все что внутри - ЗЕЛЕНОЕ<br>
+                        снаружи - ЖЕЛТОЕ<br>
+                        если перевернуты - странное поведение<br>
+
+                        <hr>
+                        OPTIMUM - меняет направление цвета - показывает где будет ЗЕЛЕНЫЙ - дальше все делится на уровни, при пересечении каждой новой точки!<br>
+                        2=YELLOW, и крайний=RED<br>
+                        тоесть если он в центре - то как будто его нет!<br>
+
+                        <hr>
+                        Красный появляется только если:<br>
+                        1. есть все три варианта low/high/opt<br>
+                        2. OPTIMUM оказывает на любой крайний<br>
+                        3. как исключение - есть только low/high и значения перепутаны местами.<br>
+
                         <meter
                                 name="gropInputNum_1"
                                 value="0.3"
@@ -2641,16 +2711,21 @@
                                 {high:0.5;};
                                 {optimum:0.5;};
 
-                                {low:0.2; high:0.8;};
-                                {low:0.8; high:0.2;};
+                                {low:0.3; high:0.7;};
+                                {low:0.7; high:0.3;};
 
-                                {low:0.2; high:0.8; optimum:0.5};
-                                {low:0.2; high:0.5; optimum:0.8};
+                                {low:0.5; optimum:0.7;};
+                                {low:0.5; optimum:0.3;};
+                                {high:0.5; optimum:0.7;};
+                                {high:0.5; optimum:0.3;};
+
+                                {low:0.3; high:0.7; optimum:0.2};
+                                {low:0.3; high:0.7; optimum:0.5};
+                                {low:0.3; high:0.7; optimum:0.8};
                                 ]"></meter>
 
                     </div>
                     <footer>
-                        <code>meter</code>-значение с цветовыми зонами - low=0.3, high=0.8 (влияют на цвет)<br>
                     </footer>
                 </article>
 
