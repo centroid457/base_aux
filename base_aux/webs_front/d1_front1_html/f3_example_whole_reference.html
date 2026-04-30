@@ -818,17 +818,36 @@
                     <header>vertical-align – ВЕРТИК выравнивание (inline/inline-block)</header>
                     <div class="article_main__cls">
 
-                        <hr>
                         ручная вставкка стилей
                         <div data-cover__border_bg
                              style="line-height: 2;">
-                            <span style="vertical-align: baseline;">baseline</span>
-                            <span style="vertical-align: sub;">sub</span>
-                            <span style="vertical-align: super;">super</span>
-                            <span style="vertical-align: top;">top</span>
-                            <span style="vertical-align: middle;">middle</span>
-                            <span style="vertical-align: bottom;">bottom</span>
-                            <span style="vertical-align: 10px;">10px</span>
+                            _<span style="vertical-align: baseline;">_baseline</span>
+                            _<span style="vertical-align: sub;">_sub</span>
+                            _<span style="vertical-align: super;">_super</span>
+                            _<span style="vertical-align: top;">_top</span>
+                            _<span style="vertical-align: text-top;">_text-top</span>
+                            _<span style="vertical-align: middle;">_middle</span>
+                            _<span style="vertical-align: bottom;">_bottom</span>
+                            _<span style="vertical-align: text-bottom;">_text-bottom</span>
+                            _<span style="vertical-align: -10px;">_-10px</span>
+                            _<span style="vertical-align: 10px;">_10px</span>
+                        </div>
+
+                        <hr>
+                        автовставка
+                        <div data-cover__border_bg
+                             style="line-height: 3;">
+                            <span
+                                    style="_font-size: 0.5rem;"
+                                    data-clone_element__by_direct
+                                    data-clone_element__params="vertical-align:[
+                                     baseline;
+                                     sub;super;
+                                     top;text-top;
+                                     middle;
+                                     bottom;text-bottom;
+                                     -10px;10px;
+                                     ]">_1</span>
                         </div>
 
                         <hr>
