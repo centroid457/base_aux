@@ -10,7 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Fira+Code&display=swap" rel="stylesheet">
 
     <script defer src="../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>" data-comment="WorkingGood!"></script>
-    <_script defer src="<?= filepath_with_timestamp('universal_root.js') ?>" data-comment="FIXME: NOT WORKING!!!"></_script><!--не работает!!!-->
+    <!--
+    <script defer src="<?= filepath_with_timestamp('universal_root.js') ?>" data-comment="FIXME: NOT WORKING!!!"></script>
+    не работает!!!
+    -->
     <script>
         console.log("<?= filepath_with_timestamp('universal_root.js') ?>");
         console.log("../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>");
@@ -3788,8 +3791,8 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="compose1FlexId">
-            <h2 data-icon_process_ok>Compose-1=FLEX</h2>
+        <section class="section__cls" id="compose1Flex1ContainerId">
+            <h2 data-icon_process_ok>Compose-1=FLEX-1=CONTAINER=свойства контейнера</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- ========== flex-direction ========== -->
@@ -3985,6 +3988,121 @@
                         </div>
                     </div>
                     <footer><code>justify-content: space-between</code>, <code>space-evenly</code>, <code>center</code> — основные приёмы.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="compose1Flex2ItemsId">
+            <h2 data-icon_process_bad>Compose-1=FLEX-2=ITEMS=свойства компонентов ===TODO: НИЧЕГО НЕ РАБОТАЕТ!!! НЕ ПОНЯТНО!!!</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- ========== flex-grow ========== -->
+                <article class="article__cls">
+                    <header>📈 flex-grow – распределение свободного места между элементами</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="display:flex; gap:0.5rem;"
+                             data-clone_element__params="flex:[
+                                 none;
+                                 {flex-grow:1};
+                                 {flex-grow:2;};
+                                 {flex-grow:3;}
+                             ]">
+                            <div class="demo_item__cls" style="flex:1">1</div>
+                            <div class="demo_item__cls" style="flex:1">2</div>
+                            <div class="demo_item__cls" style="flex:1">3</div>
+                        </div>
+                        <p><small>Значение <code>flex-grow</code> – коэффициент. Все элементы с одинаковым значением делят пространство поровну; если одно больше – он получает больше места.</small></p>
+                    </div>
+                    <footer>Сокращённая запись: <code>flex: 1</code> = <code>flex-grow:1; flex-shrink:1; flex-basis:0%</code>.</footer>
+                </article>
+
+                <!-- ========== flex-basis ========== -->
+                <article class="article__cls">
+                    <header>📐 flex-basis – исходный размер элемента</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="display:flex; gap:0.5rem;"
+                             data-clone_element__params="flex-basis:[
+                                 0%; 50px; 100px; 200px;
+                                 {flex-basis:auto; flex-grow:1};
+                                 {flex-basis:50px; flex-grow:1}
+                             ]">
+                            <div class="demo_item__cls" style="flex:1">A</div>
+                            <div class="demo_item__cls" style="flex:1">B</div>
+                            <div class="demo_item__cls" style="flex:1">C</div>
+                        </div>
+                        <p><small><code>flex-basis</code> – желаемый размер до распределения свободного пространства. В сочетании с <code>flex-grow</code> даёт гибкие компоненты.</small></p>
+                    </div>
+                    <footer>Если ни у одного элемента нет <code>flex-grow</code> (или все 0), то <code>flex-basis</code> работает как ширина.</footer>
+                </article>
+
+                <!-- ========== align-self ========== -->
+                <article class="article__cls">
+                    <header>🎯 align-self – индивидуальное выравнивание внутри flex‑контейнера</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="display:flex; align-items:center; height:80px; gap:0.5rem;">
+                            <div class="demo_item__cls" data-clone_element__params="align-self:[
+                                 auto;
+                                 stretch;
+                                 flex-start;
+                                 center;
+                                 flex-end;
+                                 baseline;
+                             ]">
+                                1
+                            </div>
+                            <div class="demo_item__cls" style="height:40px;">2</div>
+                            <div class="demo_item__cls" style="height:60px;">3</div>
+                        </div>
+                        <p><small>Переопределяет <code>align-items</code> для одного элемента. Полезно, когда нужно выделить один блок.</small></p>
+                    </div>
+                    <footer><code>auto</code> – берёт значение из <code>align-items</code> контейнера.</footer>
+                </article>
+
+                <!-- ========== margin: auto внутри flex ========== -->
+                <article class="article__cls">
+                    <header>🔄 margin: auto – прижатие элемента к краю</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="display:flex; gap:0.5rem;"
+                             data-clone_element__params="margin=Auto:[
+                                 {margin-right:auto;};
+                                 {margin-left:auto;};
+                                 {margin:0 auto;};
+                                 {margin-left:auto; margin-right:auto;};
+                             ]">
+                            <div class="demo_item__cls">Слева</div>
+                            <div class="demo_item__cls">Центр</div>
+                            <div class="demo_item__cls">Справа</div>
+                        </div>
+                    </div>
+                    <footer>Если задать <code>margin-left: auto</code> последнему элементу, он прижмётся вправо. <code>margin: 0 auto</code> центрирует блок.</footer>
+                </article>
+
+                <!-- ========== order ========== -->
+                <article class="article__cls">
+                    <header>🔢 order – перестановка элементов визуально</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg
+                             style="display:flex; gap:0.5rem;"
+                             data-clone_element__params="order:[
+                                 0;
+                                 {order:1;};
+                                 {order:2;};
+                                 {order:-1;};
+                                 {order:3; order:1;}
+                             ]">
+                            <div class="demo_item__cls" style="order:0">A (order 0)</div>
+                            <div class="demo_item__cls" style="order:2">B (order 2)</div>
+                            <div class="demo_item__cls" style="order:1">C (order 1)</div>
+                        </div>
+                        <p><small>По умолчанию все элементы имеют <code>order: 0</code>. Элементы с большим порядком располагаются правее/ниже.</small></p>
+                    </div>
+                    <footer>⚠️ Меняет только зрительный порядок, не влияет на DOM.</footer>
                 </article>
 
             </div>
