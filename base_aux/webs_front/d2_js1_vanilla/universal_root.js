@@ -161,6 +161,24 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 
 // =====================================================================================================================
+// STRING
+// ---------------------------------------------------------------------------------------------------------------------
+function toString_Map(source) {
+    if (!(source instanceof Map)) {
+        return ;
+    }
+
+    result = "Map(";
+    for (const [name, value] of source) {
+        if (!result.endsWith("(")) { result += "; " };
+        result += `${name}:${value}`;
+    }
+    result += ")" ;
+    return result;
+}
+
+
+// =====================================================================================================================
 // CLONES
 // ---------------------------------------------------------------------------------------------------------------------
 function isIconChar(ch) {
@@ -315,12 +333,7 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
         let label_str;
 
         if (label_value instanceof Map) {
-            label_str = "Map(";
-            for (const [name, value] of label_value) {
-                if (!label_str.endsWith("(")) { label_str += "; " };
-                label_str += `${name}:${value}`;
-            }
-            label_str += ")" ;
+            label_str = toString_Map(label_value);
         } else {
             label_str = `${label_value}`;
         }
