@@ -160,6 +160,89 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 })();
 
+
+// =====================================================================================================================
+// ERROR
+// ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Пользовательская ошибка для скриптов разметки (клонеры, парсеры и т.п.)
+ * @param {Object} options - параметры ошибки
+ * @param {string} options.node - имя функции, где произошла ошибка
+ * @param {*} options.source - исходные данные (строка, DOM-элемент, что угодно)
+ * @param {string} options.message - сообщение об ошибке
+ * @param {*} [options.params] - дополнительные параметры (объект, примитив)
+ * @param {...*} [options.rest] - любые другие пользовательские атрибуты
+ */
+class ErrorUser extends Error {
+  constructor({ node, source, message, params, ...rest }) {
+    super(message);
+    //this.name = 'ErrorUser';
+    this.node = node;
+    this.source = source;
+    this.params = params;
+
+    // Все дополнительные поля (например, line, column, rawAttr и т.д.)
+    Object.assign(this, rest);
+
+    // Сохраняем стек вызовов без лишних фреймов этого конструктора
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ErrorUser);
+    }
+  }
+
+  // Сериализация в плоский объект (для JSON, копирования в буфер обмена)
+  // @returns {Object}
+  toJSON() {
+    // Безопасно сериализуем source (строку, число, объект – что угодно)
+    let safeSource = this.source;
+    if (typeof this.source === 'object' && this.source !== null) {
+      try {
+        // пытаемся превратить в строку, но не проваливаемся
+        safeSource = JSON.stringify(this.source);
+      } catch {
+        safeSource = String(this.source);
+      }
+    }
+
+    return {
+      name: this.name,
+      node: this.node,
+      source: safeSource,
+      message: this.message,
+      params: this.params,
+      // дополнительные поля (исключаем стандартные, чтобы не дублировать)
+      ...Object.fromEntries(
+        Object.entries(this).filter(([key]) =>
+          !['name', 'node', 'source', 'message', 'params', 'stack'].includes(key)
+        )
+      ),
+      stack: this.stack,
+    };
+  }
+
+  //Краткое строковое представление для консоли
+  toString() {
+    return `[${this.name}/${this.node}]: ${this.message}`;
+  }
+}
+
+/* Пример использования
+try {
+  throw new ErrorUser({
+    node: '_parse_css_style',
+    source: 'color:red;; background:blue',   // строка с ошибкой (двойной ;; )
+    message: 'Некорректный формат CSS-объявления',
+    params: { separator: ';', expectedPairs: true },
+    customField: 'доп. данные',    // произвольное поле – попадёт в rest
+  });
+} catch (err) {
+  console.error(err.toString());                  // ErrorUser: Некорректный формат CSS-объявления [_parse_css_style]
+  console.log(JSON.stringify(err.toJSON(), null, 2));
+  // Теперь можно скопировать этот JSON для анализа
+  // Или скопировать err.message и err.stack
+}
+*/
+
 // =====================================================================================================================
 // STRING
 // ---------------------------------------------------------------------------------------------------------------------
@@ -393,6 +476,10 @@ function _parse__css_style(source) {
 // 1. "color:[#c0392b  ; #2c3e50; #16a085 ]"  --->; as separator and [] brackets always! and Space available
 // 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]" ---> sophisticated values available!
 // 3. nameDef:[v1; {n21:v21;n22:v22}; v3;]
+// 4. RETURN =
+//      GOOD = Array[ defName, Array[variants] ]
+//      BAD1 = Error{} - ERROR level 1 - full error
+//      BAD2 = Error{} - ERROR level 2 - inner element error
 function _parse__parametrisation(source) {
     const result = [];
     source = source.trim();
@@ -400,7 +487,7 @@ function _parse__parametrisation(source) {
     // 1=parse default_param_name
     const colonIndex = source.indexOf(':');
     if (colonIndex === -1) {
-        console.error('Неверный формат: отсутствует двоеточие - ', source);
+        console.error('_parse__parametrisation: отсутствует двоеточие - ', source);
         return null;
     }
 
@@ -412,7 +499,7 @@ function _parse__parametrisation(source) {
         values_str = values_str.slice(1, -1);
         values_str = values_str.trim();
     } else {
-        console.error('Неверный формат: скобки отсутствуют [] - ', source);
+        console.error('_parse__parametrisation: скобки отсутствуют [] - ', source);
         return null;
     }
 
@@ -435,7 +522,7 @@ function _parse__parametrisation(source) {
                 }
 
             } else {
-                console.error('Неверный формат: скобки - нет завершающей } - ', data_rest);
+                console.error('_parse__parametrisation: скобки элемента - нет завершающей } - ', data_rest);
                 return null;
             }
         } else {
