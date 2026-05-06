@@ -1,3 +1,4 @@
+// =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
 (function bgColorOnLoad() {
     let body_bg_color__old = document.body.style.background;
@@ -5,6 +6,7 @@
     setTimeout(() => document.body.style.background = body_bg_color__old, 100);
 })();
 
+// =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
 /** НЕ РАБОТАЕТ!!!
  * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
@@ -260,9 +262,6 @@ function toString_Map(source) {
     return result;
 }
 
-
-// =====================================================================================================================
-// CLONES
 // ---------------------------------------------------------------------------------------------------------------------
 function isIconChar(ch) {
     const code = ch.codePointAt(0);
@@ -288,6 +287,9 @@ function isIconChar(ch) {
     );
 }
 
+// =====================================================================================================================
+// CLONES
+// ---------------------------------------------------------------------------------------------------------------------
 (function process__icons_show_code() {
     function processTextNode(node) {
         const text = node.nodeValue;
@@ -347,11 +349,12 @@ function isIconChar(ch) {
     });
 })();
 
-// ---------------------------------------------------------------------------------------------------------------------
+// =====================================================================================================================
 const ATTR_NAME__CLONE_EL__PARAMS = "data-clone_element__params";
 const ATTR_NAME__CLONE_EL__W_ATTRS = "data-clone_element__w_attrs"; // css(def)/attrs
 const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def)/direct
 
+// ---------------------------------------------------------------------------------------------------------------------
 /**
  * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
  * @param {HTMLElement} original__el - оригинальный элемент.
@@ -450,6 +453,7 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     original__el.replaceWith(fieldset__el);
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 // parse string like in STiLE tag into Map
 // n1:v1;n2:v2;; => Map([n1,v1], [n2,v2])
 function _parse__css_style(source) {
@@ -472,6 +476,7 @@ function _parse__css_style(source) {
     return result;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 // парсинг строки параметризации
 // 1. "color:[#c0392b  ; #2c3e50; #16a085 ]"  --->; as separator and [] brackets always! and Space available
 // 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]" ---> sophisticated values available!
@@ -546,7 +551,7 @@ function _parse__parametrisation(source) {
     return [ default_param_name, result ];
 }
 
-// клонирование - применение
+// ---------------------------------------------------------------------------------------------------------------------
 (function process__clone_elements() {
     const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_EL__PARAMS}]`);
     elements.forEach(el => {
@@ -562,6 +567,7 @@ function _parse__parametrisation(source) {
 // =====================================================================================================================
 const ATTR_NAME__AUTO__CONNECT_VALUES = "data-auto__connect_values";
 
+// ---------------------------------------------------------------------------------------------------------------------
 function auto__connect_values() {
     const processed = new Set();
 
@@ -574,6 +580,7 @@ function auto__connect_values() {
     }
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 // connect all elements like INPUT/OUTPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
 // APPLY CALLING with param in page!!!
 function _connect_values_in_group(group_name) {
@@ -618,6 +625,7 @@ function _connect_values_in_group(group_name) {
     //updateGroup(rangeInput.value);
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function() {
     auto__connect_values();
 });
