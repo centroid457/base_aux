@@ -4151,31 +4151,6 @@
             <h2 data-icon_process_blank>Compose‑2=GRID</h2>
             <div class="section_main__cls grid_auto__cls">
 
-                <article class="article__cls">
-                    <header>Grid – двумерная сетка====РАЗНОЕ-разобрать</header>
-                    <div class="article_main__cls">
-
-                        <h4>Адаптивная сетка карточек (auto-fill/minmax)</h4>
-                        <div data-cover__border_bg
-                             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));">
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
-                            <div class="demo_item__cls">4</div>
-                            <div class="demo_item__cls">5</div>
-                        </div>
-
-                        <h4>Фиксированные колонки + резиновая (2fr/1fr)</h4>
-                        <div data-cover__border_bg
-                             style="display:grid; grid-template-columns: 1fr 2fr;">
-                            <div class="demo_item__cls">Боковая панель (1fr)</div>
-                            <div class="demo_item__cls">Основной контент (2fr)</div>
-                        </div>
-
-                    </div>
-                    <footer>💡 Grid даёт полный контроль над строками и колонками. <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек.</footer>
-                </article>
-
                 <!-- 1. grid-template-columns: разные типы значений -->
                 <article class="article__cls">
                     <header>grid-template-columns – шаблон колонок</header>
@@ -4222,8 +4197,11 @@
                                  repeat(2, 1fr);
                                  repeat(3, 1fr);
                                  repeat(4, 1fr);
+
                                  repeat(2, 1fr) 2fr 1fr;
+
                                  repeat(auto-fill, minmax(80px, 1fr));
+                                 repeat(auto-fill, minmax(120px, 1fr));
 
                                  [col-start] 15px [col-end] 1fr;
                                  [col-start] 15px [col-end] 3px;
@@ -4240,6 +4218,7 @@
                         <code>auto</code> – по содержимому<br>
                         <code>minmax()</code> – гибкий размер,<br>
                         <code>repeat()</code> – повторяющийся паттерн.<br>
+                        <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек=Адаптивная сетка карточек (auto-fill/minmax)<br>
                     </footer>
                 </article>
 
@@ -4425,6 +4404,32 @@
                     <footer>Атрибуты <code>grid-area</code> и именованные линии дают ещё больше контроля.</footer>
                 </article>
 
+                <!-- 8. auto-fit/auto-fill (наглядное сравнение) -->
+                <article class="article__cls">
+                    <header>📱 auto‑fill vs auto‑fit (адаптивные карточки)=====TODO: ДОДЕЛАТЬ!!!! НЕ ПОНЯТНО</header>
+                    <div class="article_main__cls">
+                        <div
+                                data-cover__border_bg
+
+                                data-grid
+                                data-gap1px
+
+                                data-width_80
+                                data-height_200
+
+                             data-clone_element__params="grid-template-columns:[
+                                 repeat(auto-fill, minmax(100px, 1fr));
+                                 repeat(auto-fit, minmax(100px, 1fr));
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small>При <code>auto‑fill</code> пустые колонки остаются, занимая пространство; <code>auto‑fit</code> их схлопывает.</small></p>
+                    </div>
+                    <footer>Идеально для резиновых галерей, карточек товаров.</footer>
+                </article>
+
                 <!-- 7. Пример сложного шаблона (dashboard) -->
                 <article class="article__cls">
                     <header>Дэшборд – именованные области и неявный грид</header>
@@ -4464,7 +4469,8 @@
                                     "sidebar main"
                                     "footer footer";
                                 grid-template-columns: 1fr 2fr;
-                                gap: 0.75rem;
+                                gap: 1px;
+                                padding: 0.5rem;
                             }
                             .grid-areas > .header { grid-area: header; background: #2a73ff; }
                             .grid-areas > .sidebar { grid-area: sidebar; background: #8e44ad; }
@@ -4482,27 +4488,6 @@
 
                     </div>
                     <footer>Именованные области делают макет интуитивно понятным и легко перестраиваемым.</footer>
-                </article>
-
-                <!-- 8. auto-fit/auto-fill (наглядное сравнение) -->
-                <article class="article__cls">
-                    <header>📱 auto‑fill vs auto‑fit (адаптивные карточки)</header>
-                    <div class="article_main__cls">
-                        <div
-                                data-cover__border_bg
-                                data-grid
-                                data-gap1px
-                             data-clone_element__params="grid-template-columns:[
-                                 repeat(auto-fill, minmax(100px, 1fr));
-                                 repeat(auto-fit, minmax(100px, 1fr))
-                             ]">
-                            <div class="demo_item__cls">1</div>
-                            <div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div>
-                        </div>
-                        <p><small>При <code>auto‑fill</code> пустые колонки остаются, занимая пространство; <code>auto‑fit</code> их схлопывает.</small></p>
-                    </div>
-                    <footer>Идеально для резиновых галерей, карточек товаров.</footer>
                 </article>
 
             </div>
@@ -4827,7 +4812,8 @@
     </main>
 
     <footer id="ROOT_FOOTER__ID">
-        🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы. <br>Со временем вы дополните своими заметками прямо в инспекторе кода.
+        🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы.<br>
+        Со временем вы дополните своими заметками прямо в инспекторе кода.<br>
     </footer>
 </div>
 
