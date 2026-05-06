@@ -212,7 +212,7 @@
                             ❤️ 🧡
                             💚💙
                             👍👎
-                            💎
+                            💎🎯
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -4168,6 +4168,8 @@
                 <!-- 1. grid-template-columns: разные типы значений -->
                 <article class="article__cls">
                     <header>grid-template-columns – шаблон колонок</header>
+                    ВСЕ обьекты разделяются на указанное количество колонок!!!<br>
+                    все колонки принимают указанные размеры
                     <div class="article_main__cls">
                         <div data-cover__border_bg
                              style="display:grid; gap:1px;"
@@ -4207,6 +4209,7 @@
                                  repeat(2, 1fr);
                                  repeat(3, 1fr);
                                  repeat(4, 1fr);
+                                 repeat(2, 1fr) 2fr 1fr;
                                  repeat(auto-fill, minmax(80px, 1fr));
 
                                  [col-start] 15px [col-end] 1fr;
@@ -4229,30 +4232,42 @@
 
                 <!-- 2. grid-template-rows + gap -->
                 <article class="article__cls">
-                    <header>grid-template-rows и gap – высота строк и промежутки</header>
+                    <header>grid-template-rows – высота строк</header>
+                    все строки принимают указанные размеры<br>
+                    все неуказанные строки имеют удобную для себя высоту!<br>
                     <div class="article_main__cls">
-                        <div data-cover__border_bg style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;"
+                        <div data-cover__border_bg
+                             style="display:grid; grid-template-columns:1fr 1fr; gap:1px;"
                              data-clone_element__params="grid-template-rows:[
                                  auto;
+
+                                 1fr;
+                                 2fr;
+                                 -20px;
+                                 1px;
+                                 10px;
+                                 10px 10px;
+                                 10px 10px 10px;
                                  50px;
-                                 80px;
-                                 100px;
+                                 50px 50px;
+
                                  minmax(50px, auto);
-                                 repeated: repeat(2, 50px) auto
+                                 repeat(2, 50px) auto;
                              ]">
-                            <div class="demo_item__cls">1</div><div class="demo_item__cls">2</div>
-                            <div class="demo_item__cls">3</div><div class="demo_item__cls">4</div>
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                            <div class="demo_item__cls">4</div>
                         </div>
-                        <p><small>Авто‑высота, пиксели, <code>minmax</code>, повторяющиеся паттерны.</small></p>
                     </div>
                     <footer><code>gap</code> задаёт расстояние между строками и колонками (аналог <code>grid-gap</code>).</footer>
                 </article>
 
                 <!-- 3. justify-items / align-items / place-items -->
                 <article class="article__cls">
-                    <header>🎯 justify-items / align-items – выравнивание ячеек внутри сетки</header>
+                    <header>justify-items / align-items – выравнивание ячеек внутри сетки</header>
                     <div class="article_main__cls">
-                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(2,1fr); gap:0.5rem; height:140px;"
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(2,1fr); gap:1px; height:100px;"
                              data-clone_element__params="justify-items:[
                                  stretch; start; center; end;
                                  {justify-items:center; align-items:center};
