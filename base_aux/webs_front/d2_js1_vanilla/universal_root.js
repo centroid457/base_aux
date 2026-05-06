@@ -560,19 +560,39 @@ function _parse__parametrisation(source) {
 })();
 
 // =====================================================================================================================
-// connect all elements like INPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
-function connect_values_in_group(group_name) {
-    // Функция обновления всех
+const ATTR_NAME__AUTO__CONNECT_VALUES = "data-auto__connect_values";
+
+function auto__connect_values() {
+    const processed = new Set();
+
+    const elements = document.querySelectorAll(`[${ATTR_NAME__AUTO__CONNECT_VALUES}]`);
+    for (let el of elements) {
+        let group_name = el.getAttribute("data-group");
+        if (!group_name || processed.has(group_name)) continue;
+        processed.add(group_name);
+        _connect_values_in_group(group_name);
+    }
+}
+
+// connect all elements like INPUT/OUTPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
+// APPLY CALLING with param in page!!!
+function _connect_values_in_group(group_name) {
+    const schemaStable = true;
+
     function updateGroup(value) {
         let v = parseFloat(value);
         if (isNaN(v)) v = 0;
-        // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
-        v = Math.min(1, Math.max(0, v));
+
+        if (!schemaStable) {
+            // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
+            v = Math.min(1, Math.max(0, v));
+        }
+
         // Обновляем все элементы с нужным name
         const elements = document.querySelectorAll(`[data-group="${group_name}"]`);
         elements.forEach(el => {
-            if (el.tagName === 'PROGRESS' || el.tagName === 'METER' || el.tagName === 'INPUT') {
-                if (true) {
+            if (el.tagName === 'PROGRESS' || el.tagName === 'METER' || el.tagName === 'INPUT' || el.tagName === 'OUTPUT') {
+                if (schemaStable) {
                     el.value = v;
                 } else {
                     // Учитываем возможный max (по умолчанию 1)
@@ -580,7 +600,7 @@ function connect_values_in_group(group_name) {
                     let scaledValue = v * max;
                     scaledValue = Math.min(max, Math.max(0, scaledValue));
                     el.value = scaledValue;
-                }
+                };
             }
         });
         // Синхронизируем управляющие элементы
@@ -597,6 +617,10 @@ function connect_values_in_group(group_name) {
     // Установим начальное состояние (из значения ползунка)
     //updateGroup(rangeInput.value);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    auto__connect_values();
+});
 
 // =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------

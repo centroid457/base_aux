@@ -2404,14 +2404,15 @@
 
                         <fieldset>
                             <legend>groupInputNum_1</legend>
-                            <input type="range" data-group="groupInputNum_1" min="0" max="1" step="0.1" value="0.1">
-                            <input type="number" data-group="groupInputNum_1" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    connect_values_in_group('groupInputNum_1');
-                                });
-                            </script>
-                        </fieldset>
+                            <input
+                                    data-auto__connect_values
+                                    data-group="groupInputNum_1"
+                                    type="range" min="0" max="1" step="0.1" value="0.1">
+                            <input
+                                    data-auto__connect_values
+                                    data-group="groupInputNum_1"
+                                    type="number" min="0" max="1" step="0.1" value="0.9" style="text-align: center">
+                          </fieldset>
 
                         <hr>
                         ПОПЫТКА применить style BORDER или BorderRADIUS ломает элемент!!!<br>
@@ -2420,20 +2421,28 @@
 
                         НО МОЖНО ПРИМЕНИТЬ особым образом <br>
                         <progress
+                                data-auto__connect_values
+                                data-group="groupInputNum_1"
                                 value="0.3"
-                                data-group="groupInputNum_1" data-height_20
+                                data-height_20
                                 style="border: 1px;"></progress><br>
                         <progress
+                                data-auto__connect_values
+                                data-group="groupInputNum_1"
                                 value="0.3"
-                                data-group="groupInputNum_1" data-height_20
+                                data-height_20
                                 style="border-radius: 30px;"></progress><br>
                         <meter
+                                data-auto__connect_values
+                                data-group="groupInputNum_1"
                                 value="0.3"
-                                data-group="groupInputNum_1" data-height_20
+                                data-height_20
                                 style="border: 1px;"></meter><br>
                         <meter
+                                data-auto__connect_values
+                                data-group="groupInputNum_1"
                                 value="0.3"
-                                data-group="groupInputNum_1" data-height_20
+                                data-height_20
                                 style="border-radius: 30px;"></meter><br>
 
                     </div>
@@ -2450,6 +2459,7 @@
                         <hr>
                         <progress
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="SIZE=width/height:[
                                 {width: 20px; height: 20px;};
@@ -2465,6 +2475,7 @@
 
                           <progress
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="height:[
                                 -10px;
@@ -2483,6 +2494,7 @@
 
                           <progress
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="width:[
                                 -10px;
@@ -2513,6 +2525,7 @@
                         <hr>
                         <meter
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="SIZE=width/height:[
                                 {width: 20px; height: 20px;};
@@ -2527,6 +2540,7 @@
                                 ]"></meter>
                           <meter
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="height:[
                                 -10px;
@@ -2545,6 +2559,7 @@
 
                           <meter
                                 value="0.3"
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__params="width:[
                                 -10px;
@@ -2590,6 +2605,7 @@
                                 ]"></progress>
 
                         <progress
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__w_attrs
                                 data-clone_element__params="max:[
@@ -2633,6 +2649,7 @@
 
                         <hr>
                         <meter
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 data-clone_element__w_attrs
                                 data-clone_element__params="max:[
@@ -2672,6 +2689,7 @@
                         3. как исключение - есть только low/high и значения перепутаны местами.<br>
 
                         <meter
+                                data-auto__connect_values
                                 data-group="groupInputNum_1"
                                 value="0.3"
                                 data-clone_element__w_attrs
@@ -2738,8 +2756,14 @@
 
                         <h4>одиночная зависимость - по имени группы</h4>
                         <div>
-                            <input type="range" name="demo_input1__id" min="0" max="100" value="50" step="1">
-                            <output for="demo_input__name" name="demo_output1__id" data-border>50</output>
+                            <input
+                                    data-auto__connect_values
+                                    data-group="groupInputNum_2"
+                                    type="range" min="0" max="100" value="50" step="1">
+                            <output
+                                    data-auto__connect_values
+                                    data-group="groupInputNum_2"
+                                    data-border>50</output>
                         </div>
 
                         <hr>
