@@ -218,13 +218,15 @@
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
                             <legend>РАЗНОЕ</legend>
                             📁 📂
-                            📄
+                            📄🖼️
                             🔒🔓
                             ⏱️⏰
                             🔄🔄
                             📆📊
+                            📐📏
+                            🔍
 
-                            … ✂️ 🛠️🌈🎨🧲🔍🧱🖼️👁️
+                            … ✂️ 🛠️🌈🎨🧲🧱👁️
                         </fieldset>
 
                     </div>
@@ -4134,7 +4136,7 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="compose2Grid2Id">
+        <section class="section__cls" id="compose2GridId">
             <h2 data-icon_process_blank>Compose‑2=GRID</h2>
             <div class="section_main__cls grid_auto__cls">
 
@@ -4165,32 +4167,69 @@
 
                 <!-- 1. grid-template-columns: разные типы значений -->
                 <article class="article__cls">
-                    <header>📐 grid-template-columns – шаблон колонок</header>
+                    <header>grid-template-columns – шаблон колонок</header>
                     <div class="article_main__cls">
-                        <div data-cover__border_bg style="display:grid; gap:4px;"
+                        <div data-cover__border_bg
+                             style="display:grid; gap:1px;"
                              data-clone_element__params="grid-template-columns:[
                                  none;
                                  auto;
+                                 0;
+                                 1;
+                                 2;
+                                 50px;
+                                 1fr;
+                                 2fr;
+
                                  minmax(50px, auto);
+
+                                 auto auto;
+                                 auto 1fr;
+                                 0 1fr;
+                                 1 1fr;
+                                 2 1fr;
+                                 20px 1fr;
+
                                  1fr 1fr;
                                  2fr 1fr;
+                                 2fr 2fr;
+
+                                 1fr 1fr 1fr;
+                                 1fr 1fr 1fr 1fr;
+
+                                 auto 1fr 1fr 1fr;
+                                 1fr 1fr auto 1fr;
+                                 1fr 1fr 1fr auto;
+                                 1fr 1fr auto auto;
+                                 1fr auto auto auto;
+                                 auto auto auto auto;
+
+                                 repeat(2, 1fr);
                                  repeat(3, 1fr);
+                                 repeat(4, 1fr);
                                  repeat(auto-fill, minmax(80px, 1fr));
-                                 [col-start] 100px [col-end] 1fr
+
+                                 [col-start] 15px [col-end] 1fr;
+                                 [col-start] 15px [col-end] 3px;
                              ]">
-                            <div class="demo_item__cls">A</div>
-                            <div class="demo_item__cls">B</div>
-                            <div class="demo_item__cls">C</div>
-                            <div class="demo_item__cls">D</div>
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
                         </div>
-                        <p><small><code>fr</code> – доля свободного места, <code>auto</code> – по содержимому, <code>minmax()</code> – гибкий размер, <code>repeat()</code> – повторяющийся паттерн.</small></p>
+
                     </div>
-                    <footer>Именованные линии (<code>[col-start]</code>) удобны для позиционирования элементов.</footer>
+                    <footer>
+                        Именованные линии (<code>[col-start]</code>) удобны для позиционирования элементов.<br>
+                        <code>fr</code> – доля свободного места,<br>
+                        <code>auto</code> – по содержимому<br>
+                        <code>minmax()</code> – гибкий размер,<br>
+                        <code>repeat()</code> – повторяющийся паттерн.<br>
+                    </footer>
                 </article>
 
                 <!-- 2. grid-template-rows + gap -->
                 <article class="article__cls">
-                    <header>📏 grid-template-rows и gap – высота строк и промежутки</header>
+                    <header>grid-template-rows и gap – высота строк и промежутки</header>
                     <div class="article_main__cls">
                         <div data-cover__border_bg style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;"
                              data-clone_element__params="grid-template-rows:[
