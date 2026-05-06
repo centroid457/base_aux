@@ -222,8 +222,9 @@
                             🔒🔓
                             ⏱️⏰
                             🔄🔄
+                            📆📊
 
-                            … ✂️ 🛠️📆🌈🎨🧲🔍🧱🖼️👁️
+                            … ✂️ 🛠️🌈🎨🧲🔍🧱🖼️👁️
                         </fieldset>
 
                     </div>
@@ -4133,12 +4134,12 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="compose2GridId" data-collapsed_not>
-            <h2 data-icon_process_blank>Compose-2=GRID</h2>
+        <section class="section__cls" id="compose2Grid2Id">
+            <h2 data-icon_process_blank>Compose‑2=GRID</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>Grid – двумерная сетка</header>
+                    <header>Grid – двумерная сетка====РАЗНОЕ-разобрать</header>
                     <div class="article_main__cls">
 
                         <h4>Адаптивная сетка карточек (auto-fill / minmax)</h4>
@@ -4156,6 +4157,158 @@
                              style="display:grid; grid-template-columns: 1fr 2fr;">
                             <div class="demo_item__cls">Боковая панель (1fr)</div>
                             <div class="demo_item__cls">Основной контент (2fr)</div>
+                        </div>
+
+                    </div>
+                    <footer>💡 Grid даёт полный контроль над строками и колонками. <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек.</footer>
+                </article>
+
+                <!-- 1. grid-template-columns: разные типы значений -->
+                <article class="article__cls">
+                    <header>📐 grid-template-columns – шаблон колонок</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; gap:4px;"
+                             data-clone_element__params="grid-template-columns:[
+                                 none;
+                                 auto;
+                                 minmax(50px, auto);
+                                 1fr 1fr;
+                                 2fr 1fr;
+                                 repeat(3, 1fr);
+                                 repeat(auto-fill, minmax(80px, 1fr));
+                                 [col-start] 100px [col-end] 1fr
+                             ]">
+                            <div class="demo_item__cls">A</div>
+                            <div class="demo_item__cls">B</div>
+                            <div class="demo_item__cls">C</div>
+                            <div class="demo_item__cls">D</div>
+                        </div>
+                        <p><small><code>fr</code> – доля свободного места, <code>auto</code> – по содержимому, <code>minmax()</code> – гибкий размер, <code>repeat()</code> – повторяющийся паттерн.</small></p>
+                    </div>
+                    <footer>Именованные линии (<code>[col-start]</code>) удобны для позиционирования элементов.</footer>
+                </article>
+
+                <!-- 2. grid-template-rows + gap -->
+                <article class="article__cls">
+                    <header>📏 grid-template-rows и gap – высота строк и промежутки</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;"
+                             data-clone_element__params="grid-template-rows:[
+                                 auto;
+                                 50px;
+                                 80px;
+                                 100px;
+                                 minmax(50px, auto);
+                                 repeated: repeat(2, 50px) auto
+                             ]">
+                            <div class="demo_item__cls">1</div><div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div><div class="demo_item__cls">4</div>
+                        </div>
+                        <p><small>Авто‑высота, пиксели, <code>minmax</code>, повторяющиеся паттерны.</small></p>
+                    </div>
+                    <footer><code>gap</code> задаёт расстояние между строками и колонками (аналог <code>grid-gap</code>).</footer>
+                </article>
+
+                <!-- 3. justify-items / align-items / place-items -->
+                <article class="article__cls">
+                    <header>🎯 justify-items / align-items – выравнивание ячеек внутри сетки</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(2,1fr); gap:0.5rem; height:140px;"
+                             data-clone_element__params="justify-items:[
+                                 stretch; start; center; end;
+                                 {justify-items:center; align-items:center};
+                                 {justify-items:stretch; align-items:stretch}
+                             ]">
+                            <div class="demo_item__cls" style="width:50px;">A</div>
+                            <div class="demo_item__cls" style="width:50px;">B</div>
+                            <div class="demo_item__cls" style="width:50px;">C</div>
+                            <div class="demo_item__cls" style="width:50px;">D</div>
+                        </div>
+                        <p><small><code>justify-items</code> – горизонталь, <code>align-items</code> – вертикаль. <code>place-items</code> = оба сразу.</small></p>
+                    </div>
+                    <footer>По умолчанию <code>stretch</code> (элемент растягивается на всю ячейку).</footer>
+                </article>
+
+                <!-- 4. justify-content / align-content – выравнивание всей сетки -->
+                <article class="article__cls">
+                    <header>🧩 justify-content / align-content – позиционирование сетки в контейнере</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(3,80px); grid-template-rows:80px; gap:0.5rem; width:100%; height:150px; background:#f0f0f0;"
+                             data-clone_element__params="justify-content:[
+                                 start; center; end; space-between; space-around; space-evenly
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small>Управляет расположением сетки внутри контейнера, когда сетка уже задана.</small></p>
+                    </div>
+                    <footer>Аналогично flex‑свойствам, но действует на всю сетку (не на ячейки).</footer>
+                </article>
+
+                <!-- 5. grid-auto-flow – автоматическое размещение -->
+                <article class="article__cls">
+                    <header>🌀 grid-auto-flow – направление автоматической расстановки</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem;"
+                             data-clone_element__params="grid-auto-flow:[
+                                 row; column; dense; row dense; column dense
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                            <div class="demo_item__cls">4</div>
+                            <div class="demo_item__cls">5</div>
+                        </div>
+                        <p><small><code>dense</code> – заполняет пустоты, переставляя элементы.</small></p>
+                    </div>
+                    <footer>По умолчанию <code>row</code> (элементы заполняют строки).</footer>
+                </article>
+
+                <!-- 6. Явное позиционирование элементов (grid-column / grid-row) -->
+                <article class="article__cls">
+                    <header>📍 grid-column / grid-row – размещение элементов вручную</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.5rem;">
+                            <div class="demo_item__cls" style="grid-column: span 2;">span 2</div>
+                            <div class="demo_item__cls" style="grid-column: 3 / 5;">3 / 5</div>
+                            <div class="demo_item__cls" style="grid-row: 2 / 4; grid-column: 1 / 3;">row 2-4, col 1-3</div>
+                            <div class="demo_item__cls">обычный</div>
+                            <div class="demo_item__cls">обычный</div>
+                        </div>
+                        <p><small><code>grid-column: start / end</code>, <code>span X</code> – объединение ячеек.</small></p>
+                    </div>
+                    <footer>Атрибуты <code>grid-area</code> и именованные линии дают ещё больше контроля.</footer>
+                </article>
+
+                <!-- 7. Пример сложного шаблона (dashboard) -->
+                <article class="article__cls">
+                    <header>Дэшборд – именованные области и неявный грид</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .dashboard-grid {
+                                display: grid;
+                                grid-template-areas:
+                                    "sidebar header header"
+                                    "sidebar content content"
+                                    "footer footer footer";
+                                grid-template-columns: 200px 1fr 1fr;
+                                grid-template-rows: auto 1fr auto;
+                                gap: 0.5rem;
+                                background: #f1f5f9;
+                                padding: 0.5rem;
+                                border-radius: 8px;
+                            }
+                            .dashboard-grid .header { grid-area: header; background: #2a73ff; color:white; padding:0.5rem; border-radius:6px; }
+                            .dashboard-grid .sidebar { grid-area: sidebar; background: #8e44ad; color:white; padding:0.5rem; border-radius:6px; }
+                            .dashboard-grid .content { grid-area: content; background: #16a085; color:white; padding:0.5rem; border-radius:6px; }
+                            .dashboard-grid .footer { grid-area: footer; background: #c0392b; color:white; padding:0.5rem; border-radius:6px; }
+                        </style>
+                        <div class="dashboard-grid" data-cover__border_bg>
+                            <div class="header">HEADER</div>
+                            <div class="sidebar">SIDEBAR</div>
+                            <div class="content">MAIN CONTENT</div>
+                            <div class="footer">FOOTER</div>
                         </div>
 
                         <h4>Именованные области (header / main / sidebar / footer)</h4>
@@ -4181,8 +4334,28 @@
                             <div class="main">Основной контент</div>
                             <div class="footer">Футер</div>
                         </div>
+
+
                     </div>
-                    <footer>💡 Grid даёт полный контроль над строками и колонками. <code>repeat(auto-fill, minmax(..., ...))</code> – идеален для адаптивных карточек.</footer>
+                    <footer>Именованные области делают макет интуитивно понятным и легко перестраиваемым.</footer>
+                </article>
+
+                <!-- 8. auto-fit / auto-fill (наглядное сравнение) -->
+                <article class="article__cls">
+                    <header>📱 auto‑fill vs auto‑fit (адаптивные карточки)</header>
+                    <div class="article_main__cls">
+                        <div data-cover__border_bg style="display:grid; gap:0.5rem;"
+                             data-clone_element__params="grid-template-columns:[
+                                 repeat(auto-fill, minmax(100px, 1fr));
+                                 repeat(auto-fit, minmax(100px, 1fr))
+                             ]">
+                            <div class="demo_item__cls">1</div>
+                            <div class="demo_item__cls">2</div>
+                            <div class="demo_item__cls">3</div>
+                        </div>
+                        <p><small>При <code>auto‑fill</code> пустые колонки остаются, занимая пространство; <code>auto‑fit</code> их схлопывает.</small></p>
+                    </div>
+                    <footer>Идеально для резиновых галерей, карточек товаров.</footer>
                 </article>
 
             </div>
