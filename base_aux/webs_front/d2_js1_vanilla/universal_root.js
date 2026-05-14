@@ -480,11 +480,10 @@ function _parse__css_style(source) {
 // парсинг строки параметризации
 // 1. "color:[#c0392b  ; #2c3e50; #16a085 ]"  --->; as separator and [] brackets always! and Space available
 // 2. "background:[rgba(0,0,0,0.1);linear-gradient(135deg, #667eea, #764ba2)]" ---> sophisticated values available!
-// 3. nameDef:[v1; {n21:v21;n22:v22}; v3;]
-// 4. RETURN =
-//      GOOD = Array[ defName, Array[variants] ]
-//      BAD1 = Error{} - ERROR level 1 - full error
-//      BAD2 = Error{} - ERROR level 2 - inner element error
+// 3. RETURN =
+//      GOOD = Array[ defName, Array[variants] ] ---> [ nameDef, [v1; {n21:v21;n22:v22}; v3;] ]
+//      BAD1 = level 1 - full error             ---> Error{}
+//      BAD2 = level 2 - inner element error ---> [ nameDef, [Error{}; {n21:v21;n22:v22}; v3;] ]
 function _parse__parametrisation(source) {
     const result = [];
     source = source.trim();
@@ -558,8 +557,13 @@ function _parse__parametrisation(source) {
         const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
         const with_attrs = el.hasAttribute(ATTR_NAME__CLONE_EL__W_ATTRS);
         const by_direct = el.hasAttribute(ATTR_NAME__CLONE_EL__BY_DIRECT);
-        const [ def_property_name, params_parsed ] = _parse__parametrisation(params_source);
+
+        const parsed_object = _parse__parametrisation(params_source);
+        if (!(parsed_object instanceof Array)) return;
+
+        const [ def_property_name, params_parsed ] = parsed_object;
         if (!params_parsed) return;
+
         _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
     });
 })();

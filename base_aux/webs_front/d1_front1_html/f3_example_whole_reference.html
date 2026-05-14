@@ -2102,11 +2102,18 @@
                     <header>ВАРИАНТЫ</header>
                     <div class="article_main__cls">
 
-                        <p><a href="f0_demo_download.txt"></a> - без тела не отобразится вообще ничего!</p>
-
                         <p><a href="#">локальная ссылка - внутри страницы - якорь</a></p>
                         <p><a href="f0_demo_download.txt">локальная ссылка - внутри сервера ---просто имя файла!!!</a></p>
                         <p><a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">Внешняя ссылка - откроется в новой вкладке)</a> — добавляется иконка ↗</p>
+
+                        <hr>
+                        <h4>BLANKS</h4>
+                        <p data-cover__border_bg><a href="f0_demo_download.txt"></a> - BLANK BODY - не отобразится вообще ничего!</p>
+                        <p data-cover__border_bg><a href="">BLANK HREF</a> - go TOP!</p>
+                        <p data-cover__border_bg><a>NO HREF</a> - NO ACTION</p>
+                        <p data-cover__border_bg><a href="WRONG_HREF">WRONG_HREF</a> - 404</p>
+                        <p data-cover__border_bg><a href="#WRONG_HREF">#WRONG_HREF</a> - NO ACTION</p>
+                        <p data-cover__border_bg><a href="##WRONG_HREF">##WRONG_HREF</a> - NO ACTION</p>
 
                         <hr>
                         <h4>якоря</h4>
@@ -4819,21 +4826,34 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>Акции (Apple, NASDAQ)</header>
+                    <header>TV=параметры в ссылке - АДРЕС HTML</header>
                     <div class="article_main__cls">
-                        <div id="tv-chart-stock" style="height:450px;"></div>
-                        <p><small>График AAPL (NASDAQ). Виджет загружается после подключения библиотеки.</small></p>
-                    </div>
-                </article>
+                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_stock&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&locale=ru"
+                                style="width:100%; height:450px; border:0; border-radius:12px;"
+                                allowfullscreen>
+                        </iframe>
+                        <p><small>График AAPL (NASDAQ).</small></p>
 
-                <article class="article__cls">
-                    <header>🪙 Криптовалюта (Bitcoin, Binance)</header>
-                    <div class="article_main__cls">
-                        <div id="tv-chart-crypto" style="height:450px;"></div>
+                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_crypto&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FMoscow&locale=ru"
+                                style="width:100%; height:450px; border:0; border-radius:12px;"
+                                allowfullscreen>
+                        </iframe>
                         <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
                     </div>
                 </article>
 
+                <article class="article__cls">
+                    <header>JS</header>
+                    <div class="article_main__cls">
+                        SEE <a href="https://www.tradingview.com/widget-docs/getting-started/#getting-started">DOCS</a>
+
+                        <div id="tv-chart-stock" style="height:450px;"></div>
+                        <p><small>График AAPL (NASDAQ). Виджет загружается после подключения библиотеки.</small></p>
+
+                        <div id="tv-chart-crypto" style="height:450px;"></div>
+                        <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
+                    </div>
+                </article>
 
                 <!-- Подключаем TradingView один раз в самом низу -->
                 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -4882,31 +4902,6 @@
                         initTradingViewWidgets();
                     });
                 </script>
-
-
-                <article class="article__cls">
-                    <header>📊 Акции (Apple, NASDAQ)</header>
-                    <div class="article_main__cls">
-                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_stock&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&locale=ru"
-                                style="width:100%; height:450px; border:0; border-radius:12px;"
-                                allowfullscreen>
-                        </iframe>
-                        <p><small>График AAPL (NASDAQ).</small></p>
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>🪙 Криптовалюта (Bitcoin, Binance)</header>
-                    <div class="article_main__cls">
-                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_crypto&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FMoscow&locale=ru"
-                                style="width:100%; height:450px; border:0; border-radius:12px;"
-                                allowfullscreen>
-                        </iframe>
-                        <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
-                    </div>
-                <footer>🔧 Параметры iframe можно менять в URL: <code>symbol</code>, <code>interval</code>, <code>theme</code>, <code>timezone</code> и др.</footer>
-                </article>
-
 
             </div>
         </section>
