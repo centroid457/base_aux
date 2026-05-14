@@ -226,7 +226,11 @@
                             📐📏
                             🔍
 
+                            📈 📊
+
                             … ✂️ 🛠️🌈🎨🧲🧱👁️📍
+
+
                         </fieldset>
 
                     </div>
@@ -4515,9 +4519,39 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="mediaId" data-collapsed_not>
-            <h2 data-icon__circle_red>MEDIA</h2>
+        <section class="section__cls" id="mediaIframeId" data-collapsed_not>
+            <h2 data-icon__circle_red>MEDIA=IFRAME</h2>
             <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>iframe — встраивание контента</header>
+                    <div class="article_main__cls">
+                        <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <footer>iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
+                </article>
+
+                <!-- Элемент <object> / <embed> – устаревшие, но иногда нужны -->
+                <article class="article__cls">
+                    <header>📄 <code>&lt;object&gt;</code> и <code>&lt;embed&gt;</code> (доп. контент)</header>
+                    <div class="article_main__cls">
+                        <embed src="https://www.w3schools.com/html/helloworld.swf" width="200" height="100" type="application/x-shockwave-flash" style="border:1px solid #ccc;">
+                        <object data="https://www.w3schools.com/html/helloworld.swf" width="200" height="100" type="application/x-shockwave-flash"></object>
+                        <p><small>Раньше использовались для Flash, PDF. Сегодня чаще применяют <code>&lt;iframe&gt;</code> и <code>&lt;video&gt;</code>/<code>&lt;audio&gt;</code>.</small></p>
+                    </div>
+                    <footer>⚡ <code>object</code>/<code>embed</code> могут быть полезны для встраивания SVG или старых форматов, но современные подходы предпочтительнее.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="mediaPicId" data-collapsed_not>
+            <h2 data-icon__circle_red>MEDIA=PIC</h2>
+            <div class="section_main__cls grid_auto__cls">
+
                 <article class="article__cls">
                     <header>Изображение & figure</header>
                     <div class="article_main__cls">
@@ -4529,6 +4563,104 @@
                     <footer>⚠️ alt — обязательный атрибут для доступности. figure/figcaption группируют медиа с подписью.</footer>
                 </article>
 
+                <!-- Адаптивные изображения (srcset, sizes, picture) -->
+                <article class="article__cls">
+                    <header>🖼️ Адаптивные изображения (srcset + picture)</header>
+                    <div class="article_main__cls">
+                        <figure>
+                            <img src="https://picsum.photos/id/101/400/300"
+                                 srcset="https://picsum.photos/id/101/200/150 200w,
+                                         https://picsum.photos/id/101/400/300 400w,
+                                         https://picsum.photos/id/101/800/600 800w"
+                                 sizes="(max-width: 600px) 200px, (max-width: 1000px) 400px, 800px"
+                                 alt="Адаптивное изображение – меняет размер в зависимости от экрана"
+                                 loading="lazy">
+                            <figcaption>srcset + sizes: браузер сам выбирает подходящее разрешение</figcaption>
+                        </figure>
+                        <hr>
+                        <picture>
+                            <source srcset="https://picsum.photos/id/104/400/300" media="(min-width: 800px)">
+                            <source srcset="https://picsum.photos/id/104/300/200" media="(min-width: 400px)">
+                            <img src="https://picsum.photos/id/104/200/150" alt="Пример picture с медиа‑условиями" loading="lazy">
+                        </picture>
+                        <figcaption>Элемент <code>&lt;picture&gt;</code> позволяет переключать изображения по медиа‑запросам (арт‑дирекшн).</figcaption>
+                    </div>
+                    <footer>📌 <code>srcset</code> и <code>sizes</code> – для адаптивной плотности пикселей и размеров, <code>&lt;picture&gt;</code> – для разных кадрированных версий.</footer>
+                </article>
+
+                <!-- Группа изображений (мини-галерея) -->
+                <article class="article__cls">
+                    <header>🖼️ Группа изображений (галерея)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .mini-gallery {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                                gap: 0.5rem;
+                            }
+                            .mini-gallery figure {
+                                margin: 0;
+                            }
+                            .mini-gallery img {
+                                width: 100%;
+                                height: auto;
+                                border-radius: 8px;
+                            }
+                        </style>
+                        <div class="mini-gallery">
+                            <figure>
+                                <img src="https://picsum.photos/id/20/150/150" alt="Кот" loading="lazy">
+                                <figcaption>Кот</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://picsum.photos/id/21/150/150" alt="Дорога" loading="lazy">
+                                <figcaption>Дорога</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://picsum.photos/id/22/150/150" alt="Птица" loading="lazy">
+                                <figcaption>Птица</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://picsum.photos/id/23/150/150" alt="Горы" loading="lazy">
+                                <figcaption>Горы</figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <footer>💡 Галерея на CSS Grid – компактный адаптивный показ нескольких изображений с подписями.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="mediaAVideoId">
+            <h2 data-icon__circle_yellow>MEDIA=AVIDEO</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- Аудио с плейлистом и визуализацией (HTML5 audio + list) -->
+                <article class="article__cls">
+                    <header>🎵 Аудиоплеер с плейлистом (псевдо JS)</header>
+                    <div class="article_main__cls">
+
+                        <audio controls style="width:100%; margin-top: 8px;">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        </audio>
+
+                        <audio controls id="audioPlayer" style="width: 100%;">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                            <source src="https://www.soundhelix.com/examples/ogg/SoundHelix-Song-1.ogg" type="audio/ogg">
+                            Ваш браузер не поддерживает audio.
+                        </audio>
+                        <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
+                            <li><a href="#" onclick="document.getElementById('audioPlayer').src='https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'; document.getElementById('audioPlayer').play(); return false;">🎵 Песня 1 (MP3)</a></li>
+                            <li><a href="#" onclick="document.getElementById('audioPlayer').src='https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'; document.getElementById('audioPlayer').play(); return false;">🎵 Песня 2</a></li>
+                            <li><a href="#" onclick="document.getElementById('audioPlayer').src='https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'; document.getElementById('audioPlayer').play(); return false;">🎵 Песня 3</a></li>
+                        </ul>
+                        <p><small>Динамическая смена источника через JavaScript (плейлист). Можно и без JS – использовать несколько отдельных аудиоэлементов.</small></p>
+                    </div>
+                    <footer>💡 <code>audio</code> поддерживает форматы MP3, OGG, WAV. Атрибуты: controls, autoplay, loop, muted, preload.</footer>
+                </article>
+
                 <article class="article__cls">
                     <header>Видео//Аудио (HTML5)</header>
                     <div class="article_main__cls">
@@ -4536,22 +4668,246 @@
                             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                             Ваш браузер не поддерживает видео.
                         </video>
-                        <audio controls style="width:100%; margin-top: 8px;">
-                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                        </audio>
                     </div>
                     <footer>🎥 Атрибуты: autoplay, loop, muted, poster. Для максимальной совместимости используйте несколько source.</footer>
                 </article>
 
+                <!-- Продвинутое видео с треками (субтитры) и несколькими источниками -->
                 <article class="article__cls">
-                    <header>iframe — встраивание контента</header>
+                    <header>🎥 Видео с субтитрами (track) и альтернативными форматами</header>
                     <div class="article_main__cls">
-                        <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <video controls width="100%" poster="https://picsum.photos/id/20/300/150">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+                            <track label="Русские" kind="subtitles" src="subtitles_ru.vtt" srclang="ru" default>
+                            <track label="English" kind="subtitles" src="subtitles_en.vtt" srclang="en">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                        <p><small>Атрибуты <code>controls</code>, <code>poster</code>, <code>preload</code>, <code>loop</code>, <code>muted</code>, <code>autoplay</code>. Субтитры – <code>&lt;track&gt;</code> (файлы .vtt).</small></p>
                     </div>
-                    <footer>iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
+                    <footer>📌 Используйте несколько <code>&lt;source&gt;</code> для разных кодеков. Треки повышают доступность.</footer>
                 </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="mediaMapsId">
+            <h2 data-icon__circle_yellow>MEDIA=Карты</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- Встраивание карт (Google Maps, OpenStreetMap) -->
+                <article class="article__cls">
+                    <header>iframe=карты</header>
+                    <div class="article_main__cls">
+                        OpenStreetMap – простой экспортный iframe, можно добавлять маркеры через marker=lat,lng
+
+                        <iframe width="100%" height="100" style="border:0; border-radius:12px;" loading="lazy" allowfullscreen
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=30.307%2C59.934%2C30.367%2C59.964&layer=mapnik&marker=59.949,30.337">
+                        </iframe>
+
+                        <iframe width="160px" height="160px" style="border:0; border-radius:80px;" loading="lazy" allowfullscreen
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=30.307%2C59.934%2C30.367%2C59.964&layer=mapnik&marker=59.949,30.337">
+                        </iframe>
+
+                    </div>
+                    <footer>
+                        <code>&lt;iframe&gt;</code> - карты OpenStreetMap, Встраивание YouTube, карт, документов.<br>
+                        <code>loading="lazy"</code> для отложенной загрузки.<br>
+                        <code>sandbox</code> ограничивает права встроенного документа.<br>
+                    </footer>
+                </article>
+
+                <!-- OpenStreetMap (статичная карта) -->
+                <article class="article__cls">
+                    <header>🌍 OpenStreetMap – встраивание через iframe</header>
+                    <div class="article_main__cls">
+                        <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=30.307%2C59.934%2C30.367%2C59.964&layer=mapnik&marker=59.949,30.337">
+                        </iframe>
+                        <p><small>Прямоугольная карта с маркером (центр СПб). Параметры: <code>bbox=left,bottom,right,top</code>, <code>marker=lat,lng</code>.</small></p>
+                        <p><a href="https://www.openstreetmap.org/?mlat=59.949&mlon=30.337#map=15/59.949/30.337" target="_blank" rel="noopener noreferrer">🗺️ Открыть в OpenStreetMap →</a></p>
+                    </div>
+                    <footer>💡 <code>src</code> формируется через экспортную ссылку. Для маркера используйте <code>&marker=lat,lng</code>.</footer>
+                </article>
+
+                <!-- Яндекс.Карты (простой iframe) -->
+                <article class="article__cls">
+                    <header>🗺️ Яндекс.Карты – встраивание через конструктор</header>
+                    <div class="article_main__cls">
+
+                        Яндекс.Карты – виджет map-widget/v1, параметры ll, z, pt для метки.
+
+                        <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy"
+                            src="https://yandex.ru/map-widget/v1/?ll=30.337%2C59.949&z=15&l=map&pt=30.337,59.949,flag">
+                        </iframe>
+                        <p><small>Координаты центра <code>ll=lon,lat</code>, масштаб <code>z=15</code>, тип карты <code>l=map</code>, метка <code>pt</code>.</small></p>
+                        <p><a href="https://yandex.ru/maps/?ll=30.337%2C59.949&z=15&pt=30.337,59.949,flag&mode=search" target="_blank" rel="noopener noreferrer">🗺️ Открыть в Яндекс.Картах →</a></p>
+                    </div>
+                    <footer>🔧 Для встраивания используйте виджет. Документация: https://yandex.ru/dev/maps/staticapi/</footer>
+                </article>
+
+                <!-- Google Maps (Embed) -->
+                <article class="article__cls">
+                    <header>🗺️ Google Maps – встраивание (embed)</header>
+                    <div class="article_main__cls">
+                        <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy"
+                            src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=Санкт-Петербург,Дворцовая+площадь&zoom=15&maptype=roadmap">
+                        </iframe>
+                        <p><strong>Внимание:</strong> для Google Maps требуется API‑ключ. Пример демонстрирует синтаксис, но реальная карта не загрузится без ключа.</p>
+                        <p><a href="https://www.google.com/maps/place/Дворцовая+площадь,+Санкт-Петербург/@59.939,30.315,15z" target="_blank" rel="noopener noreferrer">🗺️ Открыть в Google Maps →</a></p>
+                    </div>
+                    <footer>🔑 Получить API‑ключ: <a href="https://developers.google.com/maps/documentation/embed/get-api-key" target="_blank" rel="noopener noreferrer">инструкция</a>. Без ключа карта не отобразится.</footer>
+                </article>
+
+                <!-- 2Gis (2ГИС) пример -->
+                <article class="article__cls">
+                    <header>🗺️ 2ГИС – встраивание карты (iframe)</header>
+                    <div class="article_main__cls">
+                        <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy"
+                            src="https://maps.2gis.com/embed?ll=30.337,59.949&zoom=15&layer=base">
+                        </iframe>
+                        <p><small>Параметры: <code>ll=lon,lat</code>, <code>zoom</code>, <code>layer=base</code> (схема) или <code>satellite</code>.</small></p>
+                        <p><a href="https://2gis.ru/spb/firm/4500000000000?m=30.337%2C59.949%2F15" target="_blank" rel="noopener noreferrer">🗺️ Открыть в 2ГИС →</a></p>
+                    </div>
+                    <footer>📌 2ГИС позволяет встраивать карты без ключа, но доступны не все опции. Документация: <a href="https://docs.2gis.com/ru/embed/map" target="_blank" rel="noopener noreferrer">docs.2gis.com</a>.</footer>
+                </article>
+
+                <!-- Статическая карта (OSM static) -->
+                <article class="article__cls">
+                    <header>📷 Статическая карта (изображение) – OSM Static Maps</header>
+                    <div class="article_main__cls">
+                        <img src="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin"
+                             alt="Статическая карта OSM" style="width:100%; border-radius:12px; border:1px solid #ccc;">
+                        <p><small>Статичная карта – просто изображение (без взаимодействия). Параметры: центр, зум, размер, маркер.</small></p>
+                        <p><a href="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin" target="_blank" rel="noopener noreferrer">🗺️ Открыть статическую карту в полном размере →</a></p>
+                    </div>
+                    <footer>💡 Статические карты подходят для писем, печатных версий или быстрых предпросмотров.</footer>
+                </article>
+
+                <!-- GPS координаты: ссылка для навигатора -->
+                <article class="article__cls">
+                    <header>📍 GPS координаты – ссылка для навигатора (geo:)</header>
+                    <div class="article_main__cls">
+                        <p>Ссылка для открытия в навигаторе на мобильных устройствах:</p>
+                        <p><a href="geo:59.949,30.337?z=15" target="_blank">geo:59.949,30.337?z=15</a></p>
+                        <p><small>Схема <code>geo:latitude,longitude</code> открывает приложение карт по умолчанию. Можно добавить <code>?z=zoom</code>.</small></p>
+                        <p><a href="https://www.openstreetmap.org/?mlat=59.949&mlon=30.337#map=15/59.949/30.337" target="_blank" rel="noopener noreferrer">🗺️ Открыть координаты в OSM →</a></p>
+                        <p><a href="https://www.google.com/maps?q=59.949,30.337" target="_blank" rel="noopener noreferrer">🗺️ Открыть в Google Maps →</a></p>
+                    </div>
+                    <footer>📱 Ссылка <code>geo:</code> работает в большинстве современных браузеров на мобильных устройствах.</footer>
+                </article>
+
+                <!-- iframe с кнопкой "открыть на весь экран" -->
+                <article class="article__cls">
+                    <header>🖥️ Полноэкранный режим для iframe</header>
+                    <div class="article_main__cls">
+                        <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy" allowfullscreen
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=30.307%2C59.934%2C30.367%2C59.964&layer=mapnik&marker=59.949,30.337">
+                        </iframe>
+                        <p><small>Атрибут <code>allowfullscreen</code> (или <code>allow="fullscreen"</code>) даёт возможность развернуть карту на весь экран. В большинстве браузеров появляется соответствующая кнопка.</small></p>
+                    </div>
+                    <footer>🧩 Для полноэкранного режима у iframe добавьте <code>allow="fullscreen"</code> (или устаревший <code>allowfullscreen</code>).</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="tradingviewId">
+            <h2>TradingView – НИЧЕГО НЕ РАБОТАЕТ!!!</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>Акции (Apple, NASDAQ)</header>
+                    <div class="article_main__cls">
+                        <div id="tv-chart-stock" style="height:450px;"></div>
+                        <p><small>График AAPL (NASDAQ). Виджет загружается после подключения библиотеки.</small></p>
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>🪙 Криптовалюта (Bitcoin, Binance)</header>
+                    <div class="article_main__cls">
+                        <div id="tv-chart-crypto" style="height:450px;"></div>
+                        <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
+                    </div>
+                </article>
+
+
+                <!-- Подключаем TradingView один раз в самом низу -->
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                    // Ждём загрузку DOM и скрипта
+                    function initTradingViewWidgets() {
+                        console.log(0);
+
+                        if (typeof window.TradingView === 'undefined') {
+                            setTimeout(initTradingViewWidgets, 200);
+                            console.log(111);
+                            return;
+                        }
+                        // Виджет для акций
+                        new TradingView.widget({
+                            "width": "100%",
+                            "height": 450,
+                            "symbol": "NASDAQ:AAPL",
+                            "interval": "D",
+                            "timezone": "Etc/UTC",
+                            "theme": "light",
+                            "style": "1",
+                            "locale": "ru",
+                            "allow_symbol_change": true,
+                            "container_id": "tv-chart-stock"
+                        });
+                        console.log(222);
+
+                        // Виджет для криптовалюты
+                        new TradingView.widget({
+                            "width": "100%",
+                            "height": 450,
+                            "symbol": "BINANCE:BTCUSDT",
+                            "interval": "15",
+                            "timezone": "Europe/Moscow",
+                            "theme": "dark",
+                            "style": "1",
+                            "locale": "ru",
+                            "allow_symbol_change": true,
+                            "container_id": "tv-chart-crypto"
+                        });
+                        console.log(333);
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        initTradingViewWidgets();
+                    });
+                </script>
+
+
+                <article class="article__cls">
+                    <header>📊 Акции (Apple, NASDAQ)</header>
+                    <div class="article_main__cls">
+                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_stock&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&locale=ru"
+                                style="width:100%; height:450px; border:0; border-radius:12px;"
+                                allowfullscreen>
+                        </iframe>
+                        <p><small>График AAPL (NASDAQ).</small></p>
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>🪙 Криптовалюта (Bitcoin, Binance)</header>
+                    <div class="article_main__cls">
+                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_crypto&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FMoscow&locale=ru"
+                                style="width:100%; height:450px; border:0; border-radius:12px;"
+                                allowfullscreen>
+                        </iframe>
+                        <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
+                    </div>
+                <footer>🔧 Параметры iframe можно менять в URL: <code>symbol</code>, <code>interval</code>, <code>theme</code>, <code>timezone</code> и др.</footer>
+                </article>
+
+
             </div>
         </section>
 
