@@ -1791,7 +1791,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="listId" data-collapsed_not>
-            <h2 data-icon__circle_green>LISTS</h2>
+            <h2 data-icon__circle_yellow>LISTS</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- Стандартные маркированные списки -->
@@ -1899,6 +1899,85 @@
                     </div>
                     <footer><code>&lt;dl&gt;</code> — контейнер, <code>&lt;dt&gt;</code> — термин, <code>&lt;dd&gt;</code> — описание. Идеально для глоссариев.</footer>
                 </article>
+
+
+                <!-- ========== list-style-type (разные маркеры) ========== -->
+                <article class="article__cls">
+                    <header>🔘 list-style-type – стили маркеров (через клонер)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .demo-list ul {
+                                margin: 0;
+                                padding-left: 1.5rem;
+                            }
+                        </style>
+                        <div class="demo-list"
+                             data-clone_element__params="list-style-type:[
+                                 disc; circle; square;
+                                 decimal; decimal-leading-zero;
+                                 lower-roman; upper-roman;
+                                 lower-alpha; upper-alpha;
+                                 lower-greek; upper-greek;
+                                 none;
+                                 '✓ '; '→ '
+                             ]">
+                            <ul>
+                                <li>Элемент списка 1</li>
+                                <li>Элемент списка 2</li>
+                                <li>Элемент списка 3</li>
+                            </ul>
+                        </div>
+                        <p><small>Значение <code>none</code> убирает маркер. Для кастомных маркеров можно использовать строку (например, <code>'✓ '</code>), но поддерживается не везде.</small></p>
+                    </div>
+                    <footer>🎨 <code>list-style-type</code> поддерживает десятки значений: <code>disc</code>, <code>circle</code>, <code>square</code>, <code>decimal</code>, <code>lower‑alpha</code>, <code>upper‑roman</code>, греческие символы, и даже строки (в современных браузерах).</footer>
+                </article>
+
+                <!-- ========== list-style-position ========== -->
+                <article class="article__cls">
+                    <header>📌 list-style-position – положение маркера (inside / outside)</header>
+                    <div class="article_main__cls">
+                        <div data-clone_element__params="list-style-position:[outside; inside]">
+                            <ul>
+                                <li>Строка с длинным текстом, чтобы показать разницу в положении маркера. При <code>outside</code> маркер слева от текста, при <code>inside</code> – внутри блока строки, текст обтекает маркер.</li>
+                                <li>Второй элемент списка для наглядности.</li>
+                            </ul>
+                        </div>
+                        <p><small><code>outside</code> (по умолчанию) – маркер за пределами блока текста; <code>inside</code> – маркер внутри блока, текст сдвигается.</small></p>
+                    </div>
+                    <footer>⚙️ Положение маркера влияет на выравнивание и отступы текста. Чаще используют <code>outside</code>.</footer>
+                </article>
+
+                <!-- ========== list-style-image (изображение вместо маркера) ========== -->
+                <article class="article__cls">
+                    <header>🖼️ list-style-image – изображение в качестве маркера</header>
+                    <div class="article_main__cls">
+                        <div data-clone_element__params="list-style-image:[none; url('https://picsum.photos/id/20/16/16')]">
+                            <ul>
+                                <li>Пункт списка 1</li>
+                                <li>Пункт списка 2</li>
+                            </ul>
+                        </div>
+                        <p><small>Изображение масштабируется автоматически. Лучше использовать небольшие иконки (16x16).</small></p>
+                        <p><strong>Альтернатива:</strong> кастомные маркеры через <code>::before</code> (как в <code>.ul_custom__cls</code>) дают больше контроля.</p>
+                    </div>
+                    <footer>💡 <code>list-style-image</code> удобен для единообразных иконок, но гибче использовать <code>::before</code>.</footer>
+                </article>
+
+                <!-- ========== list-style (шорткат) ========== -->
+                <article class="article__cls">
+                    <header>✍️ list-style – сокращённая запись (тип + позиция + изображение)</header>
+                    <div class="article_main__cls">
+                        <div data-clone_element__params="list-style:[square outside; circle inside; '✓ ' none]">
+                            <ul>
+                                <li>Элемент списка</li>
+                                <li>Второй элемент</li>
+                            </ul>
+                        </div>
+                        <p><small>Шорткат: <code>list-style: &lt;type&gt; &lt;position&gt; &lt;image&gt;</code>. Можно опускать части.</small></p>
+                    </div>
+                    <footer>📌 Порядок не важен, но рекомендуется писать тип, позицию, изображение (каждое свойство отдельно или вместе).</footer>
+                </article>
+
 
             </div>
         </section>
@@ -4823,7 +4902,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="tradingviewId">
-            <h2>TradingView – НИЧЕГО НЕ РАБОТАЕТ!!!</h2>
+            <h2 data-icon__circle_red>TradingView – НИЧЕГО НЕ РАБОТАЕТ!!!</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -5183,7 +5262,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="mouseId" data-collapsed_not>
-            <h2 data-icon__circle_green>MOUSE move</h2>
+            <h2 data-icon__circle_red>MOUSE move</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
