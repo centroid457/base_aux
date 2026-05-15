@@ -698,3 +698,34 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 
 // =====================================================================================================================
+// ============================================================
+// Изменение font-size при Ctrl + Wheel на элементах с атрибутом data-auto__scroll__font_size
+// ============================================================
+(function() {
+    // TODO: use event on CTRL??? not wheel! cause of many calls???
+    if (true) { return };
+
+    const STEP = 2;
+    const MIN = 8;
+    const MAX = 48;
+
+    function changeFontSize(el, delta) {
+        let current = parseFloat(getComputedStyle(el).fontSize);
+        let newSize = current + delta;
+        if (newSize < MIN) newSize = MIN;
+        if (newSize > MAX) newSize = MAX;
+        el.style.fontSize = newSize + 'px';
+    }
+
+    document.addEventListener('wheel', function(e) {
+        if (!e.ctrlKey) return;
+        let target = e.target.closest('[data-auto__scroll__font_size]');
+        if (!target) return;
+        e.preventDefault();
+        let delta = e.deltaY > 0 ? -STEP : STEP;
+        changeFontSize(target, delta);
+    });
+})();
+
+
+// =====================================================================================================================
