@@ -2,6 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth@8..144,25..151&display=swap');
 
 /* -------------------------------------------------------------------------------------------------------------------*/
+/* important
+    color: white !important;
+ */
+
 /* -------------------- BUILDIN --------------------*/
 * {
     margin: 0;
@@ -13,6 +17,10 @@ body {
     background: #f1f4f8;
     font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /*с этим чуть лучше! чем дефолтный!!!*/
     padding: 2rem 1.5rem;
+}
+
+body[data-auto__ping_lost="1"] {
+    background-color: #f44336;
 }
 
 hr {

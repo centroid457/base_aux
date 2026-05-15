@@ -7,6 +7,66 @@
 })();
 
 // =====================================================================================================================
+(function() {
+    // Настройки
+    const ATTR = 'data-auto__ping_lost';
+    const LOST_VALUE = '1';      // при потере связи
+    const OK_VALUE = '';        // при наличии связи
+
+    // Функция обновления всех целевых элементов
+    function updateElements(isConnected) {
+        const value = isConnected ? OK_VALUE : LOST_VALUE;
+        document.querySelectorAll(`[${ATTR}]`).forEach(el => {
+            el.setAttribute(ATTR, value);
+        });
+    }
+
+    // Переменные для WebSocket и переподключения
+    let socket = null;
+    let reconnectTimer = null;
+
+    function connect() {
+        if (socket && socket.readyState === WebSocket.OPEN) return;
+
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/ws/ping`;
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = () => {
+            if (reconnectTimer) clearTimeout(reconnectTimer);
+            updateElements(true);   // связь есть → атрибут = "0"
+        };
+
+        socket.onclose = () => {
+            updateElements(false);  // связь потеряна → атрибут = "1"
+            reconnectTimer = setTimeout(connect, 3000);
+        };
+
+        socket.onerror = () => {
+            updateElements(false);
+            socket.close();         // инициируем закрытие, вызовется onclose
+        };
+    }
+
+    // Запуск при загрузке
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', connect);
+    } else {
+        connect();
+    }
+
+    // Опционально: если элементы добавляются динамически после загрузки,
+    // можно перевызвать updateElements при изменении DOM.
+    // Но для простоты оставим так. Если нужно – раскомментируйте:
+    /*
+    new MutationObserver(() => {
+        if (socket && socket.readyState === WebSocket.OPEN) updateElements(true);
+        else updateElements(false);
+    }).observe(document.body, { childList: true, subtree: true });
+    */
+})();
+
+// =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
 /** НЕ РАБОТАЕТ!!!
  * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
@@ -729,3 +789,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // =====================================================================================================================
+

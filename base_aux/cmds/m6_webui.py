@@ -15,15 +15,15 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 
 
 # =====================================================================================================================
-class ObjectManager:
+class InstManager:
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
 
     def __init__(self):
         self.items = {}
 
-    async def create_item(self) -> str:
-        new_item = self.ITEM_CLASS()
+    async def create_item(self, *args, **kwargs) -> str:
+        new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
@@ -44,7 +44,7 @@ class ObjectManager:
 
 
 # -----------------------------------------------------------------------------------------------------------------
-object_manager = ObjectManager()
+object_manager = InstManager()
 
 
 # TODO:
@@ -84,6 +84,9 @@ HTML_TEMPLATE = """
             margin: 0;
             font-size: 24px;
             color: #fff;
+        }
+        [data-auto__ping_lost="1"] {
+            background: #f00;
         }
         #btn_add_item__id {
             background: #0e639c;
@@ -195,9 +198,70 @@ HTML_TEMPLATE = """
             color: #888;
         }
     </style>
+    <script>
+    // =====================================================================================================================
+    (function() {
+        // Настройки
+        const ATTR = 'data-auto__ping_lost';
+        const LOST_VALUE = '1';      // при потере связи
+        const OK_VALUE = '';        // при наличии связи
+    
+        // Функция обновления всех целевых элементов
+        function updateElements(isConnected) {
+            const value = isConnected ? OK_VALUE : LOST_VALUE;
+            document.querySelectorAll(`[${ATTR}]`).forEach(el => {
+                el.setAttribute(ATTR, value);
+            });
+        }
+    
+        // Переменные для WebSocket и переподключения
+        let socket = null;
+        let reconnectTimer = null;
+    
+        function connect() {
+            if (socket && socket.readyState === WebSocket.OPEN) return;
+    
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/ping`;
+            socket = new WebSocket(wsUrl);
+    
+            socket.onopen = () => {
+                if (reconnectTimer) clearTimeout(reconnectTimer);
+                updateElements(true);   // связь есть → атрибут = "0"
+            };
+    
+            socket.onclose = () => {
+                updateElements(false);  // связь потеряна → атрибут = "1"
+                reconnectTimer = setTimeout(connect, 3000);
+            };
+    
+            socket.onerror = () => {
+                updateElements(false);
+                socket.close();         // инициируем закрытие, вызовется onclose
+            };
+        }
+    
+        // Запуск при загрузке
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', connect);
+        } else {
+            connect();
+        }
+    
+        // Опционально: если элементы добавляются динамически после загрузки,
+        // можно перевызвать updateElements при изменении DOM.
+        // Но для простоты оставим так. Если нужно – раскомментируйте:
+        /*
+        new MutationObserver(() => {
+            if (socket && socket.readyState === WebSocket.OPEN) updateElements(true);
+            else updateElements(false);
+        }).observe(document.body, { childList: true, subtree: true });
+        */
+    })();
+    </script>
 </head>
 <body>
-    <div id="div_app_header__id">
+    <div id="div_app_header__id" data-auto__ping_lost>
         <h1>🔌 Web Terminal</h1>
         <button id="btn_add_item__id">➕ Новый объект</button>
     </div>
@@ -209,7 +273,6 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         const itemsManager = {
             items_map: new Map(),   // its a DICT=.set(itemId, itemUI)
-            socket_HealthCheck: null,
             
             async init() {
                 const serverIds = await this.get_IdsServer();
@@ -223,30 +286,6 @@ HTML_TEMPLATE = """
                 }
 
                 btn_add_item__id.addEventListener('click', () => this.createNewItem());
-                
-                this.initHealthCheck();                   // <-- вызов после всего
-            },
-
-            initHealthCheck() {
-                const connect = () => {
-                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                    this.socket_HealthCheck = new WebSocket(`${protocol}//${window.location.host}/ws/ping`);
-                    
-                    this.socket_HealthCheck.onopen = () => {
-                        document.getElementById('div_app_header__id').classList.remove('disconnected');
-                    };
-                    
-                    this.socket_HealthCheck.onclose = () => {
-                        document.getElementById('div_app_header__id').classList.add('disconnected');
-                        setTimeout(() => connect(), 3000);   // переподключаемся через 3 сек
-                    };
-                    
-                    this.socket_HealthCheck.onerror = () => {
-                        document.getElementById('div_app_header__id').classList.add('disconnected');
-                        this.socket_HealthCheck.close();           // инициируем закрытие, вызовется onclose
-                    };
-                };
-                connect();
             },
     
             async get_IdsServer() {
@@ -483,7 +522,6 @@ HTML_TEMPLATE = """
         window.onload = () => itemsManager.init();
         window.onbeforeunload = () => {
             itemsManager.items_map.forEach(s => s.socket?.close());
-            if (itemsManager.socket_HealthCheck) itemsManager.socket_HealthCheck.close();
         };
     </script>
 </body>
@@ -579,7 +617,7 @@ async def get_history(idn: str):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/ping")
-async def websocket_ping(websocket: WebSocket):
+async def ws__ping(websocket: WebSocket):
     await websocket.accept()
     try:
         # Держим соединение открытым, игнорируем входящие сообщения
@@ -590,7 +628,7 @@ async def websocket_ping(websocket: WebSocket):
 
 
 @app.websocket("/ws/{idn}")
-async def websocket_endpoint(websocket: WebSocket, idn: str):
+async def ws__endpoint(websocket: WebSocket, idn: str):
     item = object_manager.get_item(idn)
     if not item:
         await websocket.close(code=1008, reason=f"{idn=}/Invalid")
