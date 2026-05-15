@@ -5182,6 +5182,270 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="mouseId" data-collapsed_not>
+            <h2 data-icon__circle_green>MOUSE move</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>перетаскивание внутри контейнера</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .sortable-list {
+                                list-style: none;
+                                _padding: 0;
+                                _margin: 0;
+                                _background: #f8fafc;
+                                _border: 1px solid #e2e8f0;
+                                _border-radius: 0.75rem;
+                            }
+                            .sortable-list li {
+                                padding: 0.75rem 1rem;
+                                margin: 0;
+                                background: white;
+                                border-bottom: 1px solid #e2e8f0;
+                                cursor: grab;
+                                user-select: none;
+                                transition: background 0.2s;
+                            }
+                            .sortable-list li:last-child {
+                                border-bottom: none;
+                            }
+                            .sortable-list li.dragging {
+                                opacity: 0.5;
+                                cursor: grabbing;
+                            }
+                            .sortable-list li.drag-over {
+                                background: #eef2ff;
+                                border-top: 2px solid #2a73ff;
+                            }
+                        </style>
+
+                        <ul class="sortable-list" id="sortableList">
+                            <li data-id="1">Элемент 1</li>
+                            <li data-id="2">Элемент 2</li>
+                            <li data-id="3">Элемент 3</li>
+                            <li data-id="4">Элемент 4</li>
+                            <li data-id="5">Элемент 5</li>
+                        </ul>
+                    </div>
+                    <footer>
+                        🔧 Реализация через события мыши: <code>dragStart</code>, <code>dragOver</code>, <code>drop</code>. Элемент перемещается внутри списка.
+                    </footer>
+
+                    <script>
+                        (function() {
+                            const list = document.getElementById('sortableList');
+                            let dragItem = null;
+                            let dragOverItem = null;
+
+                            function dragStart(e) {
+                                const target = e.target.closest('li');
+                                if (!target) return;
+                                dragItem = target;
+                                target.classList.add('dragging');
+                                e.dataTransfer?.setData('text/plain', target.dataset.id);
+                            }
+
+                            function dragOver(e) {
+                                e.preventDefault();
+                                const target = e.target.closest('li');
+                                if (!target || target === dragItem) return;
+                                dragOverItem = target;
+                                const rect = target.getBoundingClientRect();
+                                const next = (e.clientY > rect.top + rect.height / 2);
+                                const parent = target.parentNode;
+                                if (next) {
+                                    parent.insertBefore(dragItem, target.nextSibling);
+                                } else {
+                                    parent.insertBefore(dragItem, target);
+                                }
+                            }
+
+                            function dragEnd(e) {
+                                if (dragItem) dragItem.classList.remove('dragging');
+                                dragItem = null;
+                                dragOverItem = null;
+                            }
+
+                            list.addEventListener('dragstart', dragStart);
+                            list.addEventListener('dragover', dragOver);
+                            list.addEventListener('dragend', dragEnd);
+                        })();
+                    </script>
+                </article>
+
+                <article class="article__cls">
+                    <header>📦 Перенос элементов между контейнерами (Drag & Drop)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .drag-container {
+                                display: flex;
+                                gap: 1rem;
+                                flex-wrap: wrap;
+                                margin-bottom: 1rem;
+                            }
+                            .drag-panel {
+                                flex: 1;
+                                background: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 0.75rem;
+                                padding: 0.5rem;
+                                min-height: 200px;
+                            }
+                            .drag-panel h4 {
+                                margin: 0 0 0.5rem 0;
+                                font-size: 1rem;
+                            }
+                            .drag-item {
+                                background: white;
+                                border: 1px solid #cbd5e1;
+                                border-radius: 0.5rem;
+                                padding: 0.5rem;
+                                margin-bottom: 0.5rem;
+                                cursor: grab;
+                                user-select: none;
+                                transition: background 0.2s;
+                            }
+                            .drag-item:active {
+                                cursor: grabbing;
+                            }
+                            .drag-panel.drag-over {
+                                background: #eef2ff;
+                                border-color: #2a73ff;
+                            }
+                        </style>
+
+                        <div class="drag-container">
+                            <div class="drag-panel" id="panel1" data-panel="1">
+                                <h4>Список 1</h4>
+                                <div class="drag-item" draggable="true">Элемент A</div>
+                                <div class="drag-item" draggable="true">Элемент B</div>
+                                <div class="drag-item" draggable="true">Элемент C</div>
+                            </div>
+                            <div class="drag-panel" id="panel2" data-panel="2">
+                                <h4>Список 2</h4>
+                                <div class="drag-item" draggable="true">Элемент X</div>
+                                <div class="drag-item" draggable="true">Элемент Y</div>
+                            </div>
+                        </div>
+                        <p><small>Перетаскивайте элементы из одного списка в другой.</small></p>
+                    </div>
+                    <footer>
+                        💡 Используйте <code>dragstart</code> для сохранения данных, <code>dragover</code> с <code>preventDefault</code>, <code>drop</code> для перемещения.
+                    </footer>
+
+                    <script>
+                        (function() {
+                            const containers = document.querySelectorAll('.drag-panel');
+                            let dragSource = null;
+
+                            // Обработчик начала перетаскивания
+                            document.querySelectorAll('.drag-item').forEach(item => {
+                                item.addEventListener('dragstart', function(e) {
+                                    dragSource = this;
+                                    e.dataTransfer.setData('text/plain', this.textContent);
+                                    this.style.opacity = '0.5';
+                                });
+                                item.addEventListener('dragend', function(e) {
+                                    this.style.opacity = '';
+                                    dragSource = null;
+                                });
+                            });
+
+                            // Разрешить сброс на контейнерах
+                            containers.forEach(container => {
+                                container.addEventListener('dragover', function(e) {
+                                    e.preventDefault();
+                                    this.classList.add('drag-over');
+                                });
+                                container.addEventListener('dragleave', function(e) {
+                                    this.classList.remove('drag-over');
+                                });
+                                container.addEventListener('drop', function(e) {
+                                    e.preventDefault();
+                                    this.classList.remove('drag-over');
+                                    if (!dragSource) return;
+                                    // Клонируем элемент или перемещаем?
+                                    // Перемещаем – просто вставляем в новый контейнер
+                                    this.appendChild(dragSource);
+                                    // Обновляем dragstart/dragend для перемещённого элемента (события сохраняются)
+                                });
+                            });
+                        })();
+                    </script>
+                </article>
+
+                <article class="article__cls">
+                    <header>Перенос элементов между контейнерами (Drag & Drop) через подключенный скрипт</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .drag-container {
+                                display: flex;
+                                gap: 1rem;
+                                flex-wrap: wrap;
+                                margin-bottom: 1rem;
+                            }
+                            .drag-panel {
+                                flex: 1;
+                                background: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 0.75rem;
+                                padding: 0.5rem;
+                                min-height: 200px;
+                            }
+                            .drag-panel h4 {
+                                margin: 0 0 0.5rem 0;
+                                font-size: 1rem;
+                            }
+                            .drag-item {
+                                background: white;
+                                border: 1px solid #cbd5e1;
+                                border-radius: 0.5rem;
+                                padding: 0.5rem;
+                                margin-bottom: 0.5rem;
+                                cursor: grab;
+                                user-select: none;
+                                transition: background 0.2s;
+                            }
+                            .drag-item:active {
+                                cursor: grabbing;
+                            }
+                            .drag-panel.drag-over {
+                                background: #eef2ff;
+                                border-color: #2a73ff;
+                            }
+                        </style>
+
+                        <div class="drag-container">
+                            <div class="drag-panel" id="panel21" data-panel="1">
+                                <h4>Список 1</h4>
+                                <div class="drag-item" draggable="true">Элемент A</div>
+                                <div class="drag-item" draggable="true">Элемент B</div>
+                                <div class="drag-item" draggable="true">Элемент C</div>
+                            </div>
+                            <div class="drag-panel" id="panel22" data-panel="2">
+                                <h4>Список 2</h4>
+                                <div class="drag-item" draggable="true">Элемент X</div>
+                                <div class="drag-item" draggable="true">Элемент Y</div>
+                            </div>
+                        </div>
+                        <p><small>Перетаскивайте элементы из одного списка в другой.</small></p>
+                    </div>
+                    <footer>
+                        💡 Используйте <code>dragstart</code> для сохранения данных, <code>dragover</code> с <code>preventDefault</code>, <code>drop</code> для перемещения.
+                    </footer>
+
+                    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+                    <script>
+                        new Sortable(document.getElementById('panel1'), { group: 'shared', animation: 150 });
+                        new Sortable(document.getElementById('panel2'), { group: 'shared', animation: 150 });
+                    </script>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
     </main>
 
     <footer id="ROOT_FOOTER__ID">
