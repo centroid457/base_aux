@@ -24,21 +24,21 @@ class ObjectManager:
 
     async def create_item(self) -> str:
         new_item = self.ITEM_CLASS()
-        item_id = new_item.id
+        item_id = new_item.idn
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
         return item_id
 
-    def get_item(self, id: str) -> CmdTerminal_OsAio | None:
-        return self.items.get(id)
+    def get_item(self, idn: str) -> CmdTerminal_OsAio | None:
+        return self.items.get(idn)
 
-    async def del_item(self, id: str) -> None:
-        item = self.items.pop(id, None)
+    async def del_item(self, idn: str) -> None:
+        item = self.items.pop(idn, None)
         if item:
             await item.disconnect()
 
-    def clear_history(self, id: str) -> None:
-        item = self.items.get(id)
+    def clear_history(self, idn: str) -> None:
+        item = self.items.get(idn)
         if item:
             item.history.clear()
 
@@ -214,8 +214,8 @@ HTML_TEMPLATE = """
             async init() {
                 const serverIds = await this.get_IdsServer();
 
-                for (const id of serverIds) {
-                    this.addItemBlock(id, false);
+                for (const idn of serverIds) {
+                    this.addItemBlock(idn, false);
                 }
 
                 if (this.items_map.size === 0) {
@@ -271,7 +271,7 @@ HTML_TEMPLATE = """
             async createNewItem() {
                 const resp = await fetch('/items', { method: 'POST' });
                 const data = await resp.json();
-                const itemId = data.id;
+                const itemId = data.idn;
                 const stored = this.get_IdsClient();
                 stored.push(itemId);
                 this.set_IdsClient(stored);
@@ -290,7 +290,7 @@ HTML_TEMPLATE = """
             async closeItem(itemId) {
                 await fetch(`/items/${itemId}`, { method: 'DELETE' });
                 const stored = this.get_IdsClient();
-                const updated = stored.filter(id => id !== itemId);
+                const updated = stored.filter(idn => idn !== itemId);
                 this.set_IdsClient(updated);
                 
                 const itemUI = this.items_map.get(itemId);
@@ -517,6 +517,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Web Terminal", lifespan=lifespan)
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @app.get("/", response_class=HTMLResponse)
 async def get_html():
     return HTML_TEMPLATE
@@ -531,35 +532,35 @@ async def list_items():
 # ---------------------------------------------------------------------------------------------------------------------
 @app.post("/items")
 async def create_item():
-    id = await object_manager.create_item()
-    return {"id": id}
+    idn = await object_manager.create_item()
+    return {"idn": idn}
 
 
-@app.delete("/items/{id}")
-async def del_item(id: str):
-    await object_manager.del_item(id)
+@app.delete("/items/{idn}")
+async def del_item(idn: str):
+    await object_manager.del_item(idn)
     return {"status": "closed"}
 
 
-@app.get("/items/{id}")
-async def get_item(id: str):
-    if id in object_manager.items:
-        return {"id": id, "active": True}
-    raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
+@app.get("/items/{idn}")
+async def get_item(idn: str):
+    if idn in object_manager.items:
+        return {"idn": idn, }
+    raise HTTPException(status_code=404, detail=f"[{idn=}]Item not found")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.delete("/items/history/{id}")
-async def del_history(id: str):
-    object_manager.clear_history(id)
+@app.delete("/items/history/{idn}")
+async def del_history(idn: str):
+    object_manager.clear_history(idn)
     return {"status": "closed"}
 
 
-@app.get("/items/history/{id}")
-async def get_history(id: str):
-    item = object_manager.get_item(id)
+@app.get("/items/history/{idn}")
+async def get_history(idn: str):
+    item = object_manager.get_item(idn)
     if not item:
-        raise HTTPException(status_code=404, detail=f"[{id=}]Item not found")
+        raise HTTPException(status_code=404, detail=f"[{idn=}]Item not found")
 
     history_data: list[dict] = []
     for result in item.history:
@@ -588,11 +589,11 @@ async def websocket_ping(websocket: WebSocket):
         pass
 
 
-@app.websocket("/ws/{id}")
-async def websocket_endpoint(websocket: WebSocket, id: str):
-    item = object_manager.get_item(id)
+@app.websocket("/ws/{idn}")
+async def websocket_endpoint(websocket: WebSocket, idn: str):
+    item = object_manager.get_item(idn)
     if not item:
-        await websocket.close(code=1008, reason=f"{id=}/Invalid")
+        await websocket.close(code=1008, reason=f"{idn=}/Invalid")
         return
 
     # Создаём очередь для этого клиента

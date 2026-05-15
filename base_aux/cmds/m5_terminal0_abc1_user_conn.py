@@ -35,7 +35,7 @@ class BaseUser_CmdTerminal(ABC):
     """
     EOL_SEND: str = "\n"
 
-    id: str
+    idn: str
     id_index: int = 0
     _id_index__last: int = 0
 
@@ -45,7 +45,7 @@ class BaseUser_CmdTerminal(ABC):
     def __init__(
             self,
             *,
-            id: str | None = None,
+            idn: str | None = None,
             eol_send: str | None = None,
 
             timeout_write: float | None = None,
@@ -58,7 +58,7 @@ class BaseUser_CmdTerminal(ABC):
         super().__init__(**kwargs)
 
         # user setup -----------------------
-        self.set_id(id)
+        self.set_id(idn)
         if eol_send is not None:
             self.EOL_SEND = eol_send
 
@@ -72,19 +72,19 @@ class BaseUser_CmdTerminal(ABC):
         self.history = CmdHistory()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def set_id(self, id: str | None = None) -> None:
+    def set_id(self, idn: str | None = None) -> None:
         """
         GOAL
         ----
-        set id name for instance specific or gen default with indexing
+        set idn name for instance specific or gen default with indexing
         """
-        if id is not None:
-            self.id = id
+        if idn is not None:
+            self.idn = idn
         else:
             self.id_index = self.__class__._id_index__last
             self.__class__._id_index__last += 1
 
-            self.id = f"[{self.id_index}]{self.get_name()}"
+            self.idn = f"[{self.id_index}]{self.get_name()}"
 
     @classmethod
     def get_name(cls) -> str:

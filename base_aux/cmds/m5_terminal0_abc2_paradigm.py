@@ -118,11 +118,11 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         if self._conn is not None:
             return True
 
-        print(f"{self.__class__.__name__}({self.id=}).connect")
+        print(f"{self.__class__.__name__}({self.idn=}).connect")
         try:
             self._create_conn()
         except Exception as exc:
-            msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
+            msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
             print(msg)
             self.history.add_data__stderr(msg)
             return False
@@ -144,7 +144,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         self._stop_reading = True
         self._del_tasks()
         self._del_conn()
-        print(f"{self.__class__.__name__}({self.id=}).disconnected")
+        print(f"{self.__class__.__name__}({self.idn=}).disconnected")
 
     def reconnect(self) -> None:
         """
@@ -355,12 +355,12 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         if self._conn is not None:
             return True
 
-        print(f"{self.__class__.__name__}({self.id=}).connect")
+        print(f"{self.__class__.__name__}({self.idn=}).connect")
 
         try:
             await self._create_conn()
         except Exception as exc:
-            msg = f"{self.__class__.__name__}({self.id=}){exc!r}"
+            msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
             print(msg)
             self.history.add_data__stderr(msg)
             return False
@@ -383,7 +383,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
         await self._del_tasks()
         await self._del_conn()
         self.history.add_data__debug("disconnected")
-        print(f"{self.__class__.__name__}({self.id=}).disconnected")
+        print(f"{self.__class__.__name__}({self.idn=}).disconnected")
 
     async def reconnect(self) -> None:
         await self.disconnect()
