@@ -198,99 +198,9 @@ HTML_TEMPLATE = """
             color: #888;
         }
     </style>
-    <script>
-// =====================================================================================================================
-(function() {
-    // Настройки
-    const ATTR__PING_MONITOR = 'data-auto__ping_lost';
-    const VALUE__PING_LOST = '1';
-    const VALUE__PING_OK = '';
-    const TIMEOUT_RECONNECT = 3000;
-
-    // Функция обновления всех целевых элементов
-    function updateElements(isConnected) {
-        const value_new = isConnected ? VALUE__PING_OK : VALUE__PING_LOST;
-        document.querySelectorAll(`[${ATTR__PING_MONITOR}]`).forEach(el => {
-            el.setAttribute(ATTR__PING_MONITOR, value_new);
-        });
-    }
-
-    // Переменные для WebSocket и переподключения
-    let ws_ping = null;
-    let timer__ping_reconnect = null;   // object used reconnection
-
-    function ws_ping__init() {
-        // Уже открыт или пытается открыться? → выходим
-        if (ws_ping && (ws_ping.readyState === WebSocket.OPEN || ws_ping.readyState === WebSocket.CONNECTING)) {
-            return;
-        }
-
-        // Очищаем старый таймер (если есть) — чтобы не было двойного переподключения
-        if (timer__ping_reconnect) {
-            clearTimeout(timer__ping_reconnect);
-            timer__ping_reconnect = null;
-        }
-
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        const ws_url = `${protocol}//${host}/ws/ping`;
-
-        // ОБЯЗАТЕЛЬНО СОЗДАЕМ КАЖДЫЙ РАЗ НОВЫЙ сокет!!!
-        // После закрытия WebSocket его нельзя «переоткрыть» — только создать новый. Это особенность протокола.
-        ws_ping = new WebSocket(ws_url);
-
-        ws_ping.onopen = () => {
-            if (timer__ping_reconnect) clearTimeout(timer__ping_reconnect);
-            updateElements(true);   // связь есть > атрибут = "0"
-            console.log("[ws_ping.onopen]🟢connected");
-        };
-
-        ws_ping.onclose = () => {
-            updateElements(false);  // связь потеряна > атрибут = "1"
-            console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
-            // Запускаем переподключение, только если оно не было инициировано вручную (например, при выгрузке страницы)
-            if (timer__ping_reconnect === null) {
-                timer__ping_reconnect = setTimeout(ws_ping__init, TIMEOUT_RECONNECT);
-            }
-        };
-
-        ws_ping.onerror = () => {
-            console.warn(`[ws_ping.onerror]🟡error (code:${event.code})`);
-            ws_ping.close();   // инициируем закрытие, вызовется onclose
-        };
-    }
-
-    // Чистое завершение (например, при beforeunload)
-    window.addEventListener('beforeunload', () => {
-        if (timer__ping_reconnect) {
-            clearTimeout(timer__ping_reconnect);
-            timer__ping_reconnect = null;
-        }
-        if (ws_ping && ws_ping.readyState === WebSocket.OPEN) {
-            ws_ping.close();
-        }
-    });
-
-    // Запуск при загрузке
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', ws_ping__init);
-    } else {
-        ws_ping__init();
-    }
-
-    // Опционально: если элементы добавляются динамически после загрузки,
-    // можно перевызвать updateElements при изменении DOM.
-    // Но для простоты оставим так. Если нужно – раскомментируйте:
-    /*
-    new MutationObserver(() => {
-        if (ws_ping && ws_ping.readyState === WebSocket.OPEN) updateElements(true);
-        else updateElements(false);
-    }).observe(document.body, { childList: true, subtree: true });
-    */
-})();
-
-// =====================================================================================================================
-    </script>
+    
+    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
+    
 </head>
 <body>
     <div id="div_app_header__id" data-auto__ping_lost>
@@ -585,6 +495,7 @@ async def lifespan(app: FastAPI):
 
 # =====================================================================================================================
 app = FastAPI(title="Web Terminal", lifespan=lifespan)
+app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
 
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -1,13 +1,34 @@
 // =====================================================================================================================
-// ---------------------------------------------------------------------------------------------------------------------
+// Проверка, загружен ли DOM
+//if (document.readyState === 'loading') {
+//    console.error('[universal_root] DOM не загружен! Добавьте атрибут defer к тегу <script> или дождитесь события DOMContentLoaded.');
+//    // Можно также выбросить исключение
+//    throw new Error('Для работы universal_root.js необходимо использовать defer или располагать скрипт перед закрывающим </body>');
+//}
+/* OTHERWISE WE NEED TO DO SMTH LIKE
 (function bgColorOnLoad() {
+    function process() {
+        //
+    }
+
+    // ----------------------------------------------------
+    document.addEventListener('DOMContentLoaded', process);
+})();
+*/
+
+
+// =====================================================================================================================
+// ---------------------------------------------------------------------------------------------------------------------
+function onload__bg_color() {
     let body_bg_color__old = document.body.style.background;
     document.body.style.background = 'yellow';
     setTimeout(() => document.body.style.background = body_bg_color__old, 100);
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__bg_color);
+
 
 // =====================================================================================================================
-(function() {
+function onload__ws_ping() {
     // Настройки
     const ATTR__PING_MONITOR = 'data-auto__ping_lost';
     const VALUE__PING_LOST = '1';
@@ -38,9 +59,9 @@
             timer__ping_reconnect = null;
         }
 
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
-        const ws_url = `${protocol}//${host}/ws/ping`;
+        const ws_url = `${ws_protocol}//${host}/ws/ping`;
 
         // ОБЯЗАТЕЛЬНО СОЗДАЕМ КАЖДЫЙ РАЗ НОВЫЙ сокет!!!
         // После закрытия WebSocket его нельзя «переоткрыть» — только создать новый. Это особенность протокола.
@@ -79,11 +100,7 @@
     });
 
     // Запуск при загрузке
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', ws_ping__init);
-    } else {
-        ws_ping__init();
-    }
+    ws_ping__init();
 
     // Опционально: если элементы добавляются динамически после загрузки,
     // можно перевызвать updateElements при изменении DOM.
@@ -94,7 +111,9 @@
         else updateElements(false);
     }).observe(document.body, { childList: true, subtree: true });
     */
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__ws_ping);
+
 
 // =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
@@ -174,7 +193,6 @@ function numberHeadings(container, options = {}) {
         heading.innerHTML = prefix + newHTML;
     }
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     numberHeadings('#ROOT_MAIN__ID', {
         show_h1: false,
@@ -184,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
-(function generateNavRoot() {
+function onload__generateNavRoot() {
     const navContainer = document.getElementById('ROOT_NAV__ID');
     if (!navContainer) return;
     //navContainer.innerHTML = '';
@@ -233,11 +251,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     });
     navContainer.appendChild(bottomLink);
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__generateNavRoot);
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // LINKS=SCROLL Smooth - ТОЛЬКО ДЛЯ СТАРЫХ БРАУЗЕРОВ!
-(function linksSmoothScroll_forOldBrausers() {
+function onload__linksSmoothScroll_forOldBrausers() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -250,7 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__linksSmoothScroll_forOldBrausers);
 
 
 // =====================================================================================================================
@@ -352,6 +373,7 @@ function toString_Map(source) {
     return result;
 }
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 function isIconChar(ch) {
     const code = ch.codePointAt(0);
@@ -377,10 +399,11 @@ function isIconChar(ch) {
     );
 }
 
+
 // =====================================================================================================================
 // CLONES
 // ---------------------------------------------------------------------------------------------------------------------
-(function process__icons_show_code() {
+function onload__icons_show_code() {
     function processTextNode(node) {
         const text = node.nodeValue;
         if (!text) return;
@@ -437,7 +460,9 @@ function isIconChar(ch) {
     elements.forEach(element => {
         processElements(element);
     });
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__icons_show_code);
+
 
 // =====================================================================================================================
 const ATTR_NAME__CLONE_EL__PARAMS = "data-clone_element__params";
@@ -641,7 +666,7 @@ function _parse__parametrisation(source) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-(function process__clone_elements() {
+function onload__clone_elements() {
     const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_EL__PARAMS}]`);
     elements.forEach(el => {
         const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
@@ -656,23 +681,12 @@ function _parse__parametrisation(source) {
 
         _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
     });
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__clone_elements);
+
 
 // =====================================================================================================================
 const ATTR_NAME__AUTO__CONNECT_VALUES = "data-auto__connect_values";
-
-// ---------------------------------------------------------------------------------------------------------------------
-function auto__connect_values() {
-    const processed = new Set();
-
-    const elements = document.querySelectorAll(`[${ATTR_NAME__AUTO__CONNECT_VALUES}]`);
-    for (let el of elements) {
-        let group_name = el.getAttribute("data-group");
-        if (!group_name || processed.has(group_name)) continue;
-        processed.add(group_name);
-        _connect_values_in_group(group_name);
-    }
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // connect all elements like INPUT/OUTPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
@@ -718,16 +732,25 @@ function _connect_values_in_group(group_name) {
     // Установим начальное состояние (из значения ползунка)
     //updateGroup(rangeInput.value);
 }
-
 // ---------------------------------------------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function() {
-    auto__connect_values();
-});
+function onload__connect_values() {
+    const processed = new Set();
+
+    const elements = document.querySelectorAll(`[${ATTR_NAME__AUTO__CONNECT_VALUES}]`);
+    for (let el of elements) {
+        let group_name = el.getAttribute("data-group");
+        if (!group_name || processed.has(group_name)) continue;
+        processed.add(group_name);
+        _connect_values_in_group(group_name);
+    }
+}
+document.addEventListener('DOMContentLoaded', onload__connect_values);
+
 
 // =====================================================================================================================
 // ---------------------------------------------------------------------------------------------------------------------
 // ========== УПРАВЛЕНИЕ СЕКЦИЯМИ (data-collapsed) ==========
-(function() {
+function onload__sections_collapse_init() {
     const sections = document.querySelectorAll('section.section__cls');
     if (!sections.length) return;
 
@@ -785,13 +808,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     window.addEventListener('hashchange', handleHash);
     handleHash();
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__sections_collapse_init);
+
 
 // =====================================================================================================================
 // ============================================================
 // Изменение font-size при Ctrl + Wheel на элементах с атрибутом data-auto__scroll__font_size
 // ============================================================
-(function() {
+function onload__apply_wheel_textsize() {
     // TODO: use event on CTRL??? not wheel! cause of many calls???
     if (true) { return };
 
@@ -815,7 +840,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let delta = e.deltaY > 0 ? -STEP : STEP;
         changeFontSize(target, delta);
     });
-})();
+}
+document.addEventListener('DOMContentLoaded', onload__apply_wheel_textsize);
 
 
 // =====================================================================================================================
