@@ -18,13 +18,52 @@
 
 
 // =====================================================================================================================
-// ---------------------------------------------------------------------------------------------------------------------
+const OnLoadRunner = {
+    callbacks_queue: [],
+
+    add(fn) {
+        if (typeof fn === 'function') {
+            this.callbacks_queue.push(fn);
+        }
+    },
+
+    run_all() {
+        this.callbacks_queue.forEach(fn => fn());
+    },
+
+    run() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.run_all());
+        } else {
+            this.run_all();
+        }
+    }
+};
+
+
+// =====================================================================================================================
+function log__ready_state() {
+    let msg = "";
+    if (document.readyState === 'loading') {
+        msg += "PAGE🟡"
+    } else {
+        msg += "PAGE🟢"
+    }
+
+    msg += `document.readyState=${document.readyState}`;
+    console.log(msg);
+}
+log__ready_state();
+OnLoadRunner.add(log__ready_state);
+
+
+// =====================================================================================================================
 function onload__bg_color() {
     let body_bg_color__old = document.body.style.background;
     document.body.style.background = 'yellow';
     setTimeout(() => document.body.style.background = body_bg_color__old, 100);
 }
-document.addEventListener('DOMContentLoaded', onload__bg_color);
+OnLoadRunner.add(onload__bg_color);
 
 
 // =====================================================================================================================
@@ -112,7 +151,7 @@ function onload__ws_ping() {
     }).observe(document.body, { childList: true, subtree: true });
     */
 }
-document.addEventListener('DOMContentLoaded', onload__ws_ping);
+OnLoadRunner.add(onload__ws_ping);
 
 
 // =====================================================================================================================
@@ -193,7 +232,7 @@ function numberHeadings(container, options = {}) {
         heading.innerHTML = prefix + newHTML;
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
+OnLoadRunner.add(function() {
     numberHeadings('#ROOT_MAIN__ID', {
         show_h1: false,
         sep: '.',
@@ -252,7 +291,7 @@ function onload__generateNavRoot() {
     });
     navContainer.appendChild(bottomLink);
 }
-document.addEventListener('DOMContentLoaded', onload__generateNavRoot);
+OnLoadRunner.add(onload__generateNavRoot);
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -271,7 +310,7 @@ function onload__linksSmoothScroll_forOldBrausers() {
         });
     });
 }
-document.addEventListener('DOMContentLoaded', onload__linksSmoothScroll_forOldBrausers);
+OnLoadRunner.add(onload__linksSmoothScroll_forOldBrausers);
 
 
 // =====================================================================================================================
@@ -461,7 +500,7 @@ function onload__icons_show_code() {
         processElements(element);
     });
 }
-document.addEventListener('DOMContentLoaded', onload__icons_show_code);
+OnLoadRunner.add(onload__icons_show_code);
 
 
 // =====================================================================================================================
@@ -682,7 +721,7 @@ function onload__clone_elements() {
         _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
     });
 }
-document.addEventListener('DOMContentLoaded', onload__clone_elements);
+OnLoadRunner.add(onload__clone_elements);
 
 
 // =====================================================================================================================
@@ -744,7 +783,7 @@ function onload__connect_values() {
         _connect_values_in_group(group_name);
     }
 }
-document.addEventListener('DOMContentLoaded', onload__connect_values);
+OnLoadRunner.add(onload__connect_values);
 
 
 // =====================================================================================================================
@@ -809,7 +848,7 @@ function onload__sections_collapse_init() {
     window.addEventListener('hashchange', handleHash);
     handleHash();
 }
-document.addEventListener('DOMContentLoaded', onload__sections_collapse_init);
+OnLoadRunner.add(onload__sections_collapse_init);
 
 
 // =====================================================================================================================
@@ -841,8 +880,13 @@ function onload__apply_wheel_textsize() {
         changeFontSize(target, delta);
     });
 }
-document.addEventListener('DOMContentLoaded', onload__apply_wheel_textsize);
+OnLoadRunner.add(onload__apply_wheel_textsize);
 
 
 // =====================================================================================================================
+// FINISH
+// ---------------------------------------------------------------------------------------------------------------------
+OnLoadRunner.run();
 
+
+// =====================================================================================================================
