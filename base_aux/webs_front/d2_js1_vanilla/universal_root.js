@@ -9,50 +9,80 @@
 // =====================================================================================================================
 (function() {
     // Настройки
-    const ATTR = 'data-auto__ping_lost';
-    const LOST_VALUE = '1';      // при потере связи
-    const OK_VALUE = '';        // при наличии связи
+    const ATTR__PING_MONITOR = 'data-auto__ping_lost';
+    const VALUE__PING_LOST = '1';
+    const VALUE__PING_OK = '';
+    const TIMEOUT_RECONNECT = 3000;
 
     // Функция обновления всех целевых элементов
     function updateElements(isConnected) {
-        const value = isConnected ? OK_VALUE : LOST_VALUE;
-        document.querySelectorAll(`[${ATTR}]`).forEach(el => {
-            el.setAttribute(ATTR, value);
+        const value_new = isConnected ? VALUE__PING_OK : VALUE__PING_LOST;
+        document.querySelectorAll(`[${ATTR__PING_MONITOR}]`).forEach(el => {
+            el.setAttribute(ATTR__PING_MONITOR, value_new);
         });
     }
 
     // Переменные для WebSocket и переподключения
-    let socket = null;
-    let reconnectTimer = null;
+    let ws_ping = null;
+    let timer__ping_reconnect = null;   // object used reconnection
 
-    function connect() {
-        if (socket && socket.readyState === WebSocket.OPEN) return;
+    function ws_ping__init() {
+        // Уже открыт или пытается открыться? → выходим
+        if (ws_ping && (ws_ping.readyState === WebSocket.OPEN || ws_ping.readyState === WebSocket.CONNECTING)) {
+            return;
+        }
+
+        // Очищаем старый таймер (если есть) — чтобы не было двойного переподключения
+        if (timer__ping_reconnect) {
+            clearTimeout(timer__ping_reconnect);
+            timer__ping_reconnect = null;
+        }
 
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//${window.location.host}/ws/ping`;
-        socket = new WebSocket(wsUrl);
+        const host = window.location.host;
+        const ws_url = `${protocol}//${host}/ws/ping`;
 
-        socket.onopen = () => {
-            if (reconnectTimer) clearTimeout(reconnectTimer);
-            updateElements(true);   // связь есть → атрибут = "0"
+        // ОБЯЗАТЕЛЬНО СОЗДАЕМ КАЖДЫЙ РАЗ НОВЫЙ сокет!!!
+        // После закрытия WebSocket его нельзя «переоткрыть» — только создать новый. Это особенность протокола.
+        ws_ping = new WebSocket(ws_url);
+
+        ws_ping.onopen = () => {
+            if (timer__ping_reconnect) clearTimeout(timer__ping_reconnect);
+            updateElements(true);   // связь есть > атрибут = "0"
+            console.log("[ws_ping.onopen]🟢connected");
         };
 
-        socket.onclose = () => {
-            updateElements(false);  // связь потеряна → атрибут = "1"
-            reconnectTimer = setTimeout(connect, 3000);
+        ws_ping.onclose = () => {
+            updateElements(false);  // связь потеряна > атрибут = "1"
+            console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
+            // Запускаем переподключение, только если оно не было инициировано вручную (например, при выгрузке страницы)
+            if (timer__ping_reconnect === null) {
+                timer__ping_reconnect = setTimeout(ws_ping__init, TIMEOUT_RECONNECT);
+            }
         };
 
-        socket.onerror = () => {
-            updateElements(false);
-            socket.close();         // инициируем закрытие, вызовется onclose
+        ws_ping.onerror = () => {
+            console.warn(`[ws_ping.onerror]🟡error (code:${event.code})`);
+            ws_ping.close();   // инициируем закрытие, вызовется onclose
         };
     }
 
+    // Чистое завершение (например, при beforeunload)
+    window.addEventListener('beforeunload', () => {
+        if (timer__ping_reconnect) {
+            clearTimeout(timer__ping_reconnect);
+            timer__ping_reconnect = null;
+        }
+        if (ws_ping && ws_ping.readyState === WebSocket.OPEN) {
+            ws_ping.close();
+        }
+    });
+
     // Запуск при загрузке
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', connect);
+        document.addEventListener('DOMContentLoaded', ws_ping__init);
     } else {
-        connect();
+        ws_ping__init();
     }
 
     // Опционально: если элементы добавляются динамически после загрузки,
@@ -60,7 +90,7 @@
     // Но для простоты оставим так. Если нужно – раскомментируйте:
     /*
     new MutationObserver(() => {
-        if (socket && socket.readyState === WebSocket.OPEN) updateElements(true);
+        if (ws_ping && ws_ping.readyState === WebSocket.OPEN) updateElements(true);
         else updateElements(false);
     }).observe(document.body, { childList: true, subtree: true });
     */
