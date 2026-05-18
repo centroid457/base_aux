@@ -199,7 +199,7 @@ HTML_TEMPLATE = """
         }
     </style>
     
-    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
+    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
     
 </head>
 <body>
