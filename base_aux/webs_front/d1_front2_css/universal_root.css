@@ -297,7 +297,6 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 button {
     background: #2a73ff;
     color: white;
-    font-weight: 500;
     cursor: pointer;
     transition: 0.15s;
     /*display: inline-block;-->

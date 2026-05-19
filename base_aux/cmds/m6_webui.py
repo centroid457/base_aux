@@ -58,7 +58,7 @@ HTML_TEMPLATE = """
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Web Terminal</title>
+    <title>WebTerminal</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -105,7 +105,7 @@ HTML_TEMPLATE = """
             flex-direction: column;
             gap: 20px;
         }
-        .div_itembox__style {
+        .div_itembox__cls {
             background: #2d2d2d;
             border: 1px solid #444;
             border-radius: 6px;
@@ -114,7 +114,7 @@ HTML_TEMPLATE = """
             flex-direction: column;
         }
         
-        .div_termheader__style {
+        .div_termheader__cls {
             background: #3c3c3c;
             padding: 8px 12px;
             border-top-left-radius: 6px;
@@ -125,24 +125,30 @@ HTML_TEMPLATE = """
             gap: 8px;                     /* отступы между всеми детьми */
             border-bottom: 1px solid #555;
         }
-        .span_itemid__style {
+        .span_itemid__cls {
             font-weight: bold;
             color: #9cdcfe;
             font-size: 14px;
         }
         
-        .btn_common__style {
+        
+        
+        
+        
+        
+        
+        
+        .btn_common__cls {
             background: #0e639c;
             color: white;
             border: none;
             padding: 4px 10px;
-            margin-left: 8px;
             border-radius: 3px;
             cursor: pointer;
             font-size: 12px;
             margin-left: auto;        /* прижимает эту кнопку вправо вместе с последующими элементами*/
         }
-        .btn_common__style:hover { background: #1177bb; }
+        .btn_common__cls:hover { background: #1177bb; }
         
         .btn_close__style {
             background: transparent;
@@ -199,12 +205,13 @@ HTML_TEMPLATE = """
         }
     </style>
     
+    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css?v=<?= filemtime('/base_aux/webs_front/d1_front2_css/universal_root.css') ?>">
     <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
     
 </head>
 <body>
     <div id="div_app_header__id" data-auto__ping_lost>
-        <h1>🔌 Web Terminal</h1>
+        <h1>WebTerminal</h1>
         <button id="btn_add_item__id">➕ Новый объект</button>
     </div>
     <div id="div_items_container__id"></div>
@@ -309,12 +316,12 @@ HTML_TEMPLATE = """
 
             render() {
                 const div_itembox = document.createElement('div');
-                div_itembox.className = 'div_itembox__style';
+                div_itembox.className = 'div_itembox__cls';
                 div_itembox.dataset.itemId = this.itemId;
 
                 // Header -------------------------------------------
                 const div_itemheader = document.createElement('div');
-                div_itemheader.className = 'div_termheader__style';
+                div_itemheader.className = 'div_termheader__cls';
                 
                 const span_status = document.createElement('span');
                 span_status.className = 'span_status__style';
@@ -322,17 +329,17 @@ HTML_TEMPLATE = """
                 this.element_Status = span_status;
                 
                 const span_itemid = document.createElement('span');
-                span_itemid.className = 'span_itemid__style';
+                span_itemid.className = 'span_itemid__cls';
                 span_itemid.textContent = `${this.itemId}`;
                 
                 const btn_clear_history = document.createElement('button');
-                btn_clear_history.className = 'btn_common__style';
+                btn_clear_history.className = 'btn_common__cls';
                 btn_clear_history.textContent = 'clear';
                 btn_clear_history.title = 'ClearHistory';
                 btn_clear_history.onclick = () => this.sendDelHistory();
                 
                 const btn_reconnect = document.createElement('button');
-                btn_reconnect.className = 'btn_common__style';
+                btn_reconnect.className = 'btn_common__cls';
                 btn_reconnect.textContent = '🔄';
                 btn_reconnect.title = 'Reconnect';
                 btn_reconnect.onclick = () => this.sendReconnect();
@@ -494,13 +501,13 @@ async def lifespan(app: FastAPI):
 
 
 # =====================================================================================================================
-app = FastAPI(title="Web Terminal", lifespan=lifespan)
+app = FastAPI(title="WebTerminal", lifespan=lifespan)
 app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/", response_class=HTMLResponse)
-async def get_html():
+async def html__root():
     return HTML_TEMPLATE
 
 
@@ -558,7 +565,7 @@ async def get_history(idn: str):
     return history_data
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
 @app.websocket("/ws/ping")
 async def ws__ping(websocket: WebSocket):
     await websocket.accept()
@@ -570,6 +577,7 @@ async def ws__ping(websocket: WebSocket):
         pass
 
 
+# ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/{idn}")
 async def ws__endpoint(websocket: WebSocket, idn: str):
     item = object_manager.get_item(idn)
