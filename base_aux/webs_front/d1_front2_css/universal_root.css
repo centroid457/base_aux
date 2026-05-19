@@ -34,7 +34,7 @@ select,
 textarea,
 button {
     padding: 0.5rem 0.8rem;
-    border-radius: 12px;
+    border-radius: 4px;
     border: 1px solid #cbd5e1;
     font-family: inherit;
 }
@@ -42,7 +42,7 @@ input:hover,
 select:hover,
 textarea:hover,
 button:hover {
-    transform: translateY(-1px);
+    transform: translateY(1px);
 }
 
 /* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
@@ -316,14 +316,12 @@ button {
 button:hover {
     background: #1a5ad9;  //base cbd5e1
 }
-button:active {
-    transform: translateY(3px);
-}
 button:focus-visible {
     outline: 2px solid #2a73ff;
     outline-offset: 2px;
 }
 
+/* ----------------------------------------- */
 /* ----------------------------------------- */
 .button_blue__cls {     //just for schema!
     background: #2a73ff;
@@ -331,6 +329,7 @@ button:focus-visible {
 }
 .button_blue__cls:hover {
     background: #1a5ad9;
+    border-color: white;
 }
 .button_blue_outline__cls {
     background: transparent;
@@ -339,6 +338,7 @@ button:focus-visible {
 }
 .button_blue_outline__cls:hover {
     background: #2a73ff;
+    border-color: white;
     color: white;
 }
 
@@ -349,6 +349,7 @@ button:focus-visible {
 }
 .button_green__cls:hover {
     background: #0e9f6e;
+    border-color: white;
 }
 .button_green_outline__cls {
     background: transparent;
@@ -357,6 +358,7 @@ button:focus-visible {
 }
 .button_green_outline__cls:hover {
     background: #10b981;
+    border-color: white;
     color: white;
 }
 
@@ -367,6 +369,7 @@ button:focus-visible {
 }
 .button_red__cls:hover {
     background: #dc2626;
+    border-color: white;
 }
 .button_red_outline__cls {
     background: transparent;
@@ -375,9 +378,50 @@ button:focus-visible {
 }
 .button_red_outline__cls:hover {
     background: #ef4444;
+    border-color: white;
     color: white;
 }
 
+/* ----------------------------------------- */
+.button_white__cls {
+    background: white;
+    color: black;
+}
+.button_white__cls:hover {
+    background: #ddd;
+}
+.button_white_outline__cls {
+    background: transparent;
+    border-color: white;
+    color: white;
+}
+.button_white_outline__cls:hover {
+    background: white;
+    border-color: black;
+    color: black;
+}
+
+/* ----------------------------------------- */
+.button_black__cls {
+    background: black;
+    color: white;
+}
+.button_black__cls:hover {
+    background: #111;
+    border-color: white;
+}
+.button_black_outline__cls {
+    background: transparent;
+    border-color: black;
+    color: black;
+}
+.button_black_outline__cls:hover {
+    background: black;
+    border-color: white;
+    color: white;
+}
+
+/* ----------------------------------------- */
 /* ----------------------------------------- */
 .button_small__cls {
     padding: 0.25rem 0.5rem;

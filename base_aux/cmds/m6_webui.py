@@ -59,6 +59,10 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="utf-8">
     <title>WebTerminal</title>
+    
+    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css?v=<?= filemtime('/base_aux/webs_front/d1_front2_css/universal_root.css') ?>">
+    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
+    
     <style>
         * { box-sizing: border-box; }
         body {
@@ -136,34 +140,7 @@ HTML_TEMPLATE = """
         
         
         
-        
-        
-        .btn_common__cls {
-            background: #0e639c;
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: auto;        /* прижимает эту кнопку вправо вместе с последующими элементами*/
-        }
-        .btn_common__cls:hover { background: #1177bb; }
-        
-        .btn_close__style {
-            background: transparent;
-            border: none;
-            color: #f48771;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 0 6px;
-            border-radius: 4px;
-        }
-        .btn_close__style:hover {
-            background: #f48771;
-            color: #1e1e1e;
-        }
-        
+       
         .div_output__style {
             background: #1e1e1e;
             padding: 12px;
@@ -204,9 +181,6 @@ HTML_TEMPLATE = """
             color: #888;
         }
     </style>
-    
-    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css?v=<?= filemtime('/base_aux/webs_front/d1_front2_css/universal_root.css') ?>">
-    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
     
 </head>
 <body>
@@ -333,19 +307,19 @@ HTML_TEMPLATE = """
                 span_itemid.textContent = `${this.itemId}`;
                 
                 const btn_clear_history = document.createElement('button');
-                btn_clear_history.className = 'btn_common__cls';
+                btn_clear_history.className = 'button_blue_outline__cls';
                 btn_clear_history.textContent = 'clear';
                 btn_clear_history.title = 'ClearHistory';
                 btn_clear_history.onclick = () => this.sendDelHistory();
                 
                 const btn_reconnect = document.createElement('button');
-                btn_reconnect.className = 'btn_common__cls';
+                btn_reconnect.className = 'button_blue_outline__cls';
                 btn_reconnect.textContent = '🔄';
                 btn_reconnect.title = 'Reconnect';
                 btn_reconnect.onclick = () => this.sendReconnect();
                 
                 const btn_close = document.createElement('button');
-                btn_close.className = 'btn_close__style';
+                btn_close.className = 'button_red_outline__cls';
                 btn_close.title = 'Закрыть';
                 btn_close.innerHTML = '&times;';
                 btn_close.onclick = () => itemsManager.closeItem(this.itemId);
