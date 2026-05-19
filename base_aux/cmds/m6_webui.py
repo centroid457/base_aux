@@ -80,29 +80,14 @@ HTML_TEMPLATE = """
             padding-bottom: 10px;
             border-bottom: 1px solid #444;
         }
-        #div_app_header__id.disconnected {
-            background-color: #8b0000;      /* тёмно-красный */
-            transition: background-color 0.3s;
-        }
         h1 {
             margin: 0;
             font-size: 24px;
             color: #fff;
         }
         [data-auto__ping_lost="1"] {
-            background: #f00;
+            background: #f00a;
         }
-        #btn_add_item__id {
-            background: #0e639c;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        #btn_add_item__id:hover { background: #1177bb; }
         
         #div_items_container__id {
             display: flex;
@@ -129,19 +114,18 @@ HTML_TEMPLATE = """
             gap: 8px;                     /* отступы между всеми детьми */
             border-bottom: 1px solid #555;
         }
+        .span_status__style {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #888;
+        }
         .span_itemid__cls {
             font-weight: bold;
             color: #9cdcfe;
             font-size: 14px;
         }
         
-        
-        
-        
-        
-        
-       
-        .div_output__style {
+        .div_output__cls {
             background: #1e1e1e;
             padding: 12px;
             height: 300px;
@@ -154,31 +138,17 @@ HTML_TEMPLATE = """
         .msg_stdin__style  { color: #ffffff; }
         .msg_stdout__style { color: #b5cea8; }
         .msg_stderr__style { color: #f48771; }
-        .msg_debug__style { color: #569cd6; font-style: italic; }
+        .msg_debug__style  { color: #569cd6; font-style: italic; }
         
         .div_input__style {
             display: flex;
             padding: 10px;
-            background: #2d2d2d;
         }
         .input_item__style{
-            flex: 1;
-            padding: 8px;
             font-size: 14px;
-            background: #3c3c3c;
             color: #fff;
             border: 1px solid #555;
-            border-radius: 4px;
             font-family: monospace;
-        }
-        .input_item__style:focus {
-            outline: none;
-            border-color: #0e639c;
-        }
-        .span_status__style {
-            margin-left: 10px;
-            font-size: 12px;
-            color: #888;
         }
     </style>
     
@@ -321,7 +291,7 @@ HTML_TEMPLATE = """
                 const btn_close = document.createElement('button');
                 btn_close.className = 'button_red_outline__cls';
                 btn_close.title = 'Закрыть';
-                btn_close.innerHTML = '&times;';
+                btn_close.textContent = 'X';
                 btn_close.onclick = () => itemsManager.closeItem(this.itemId);
                 
                 div_itemheader.appendChild(span_status);
@@ -332,7 +302,7 @@ HTML_TEMPLATE = """
 
                 // Output -------------------------------------------
                 const div_output = document.createElement('div');
-                div_output.className = 'div_output__style';
+                div_output.className = 'div_output__cls';
                 this.element_OutputBox = div_output;
 
                 // Input area
