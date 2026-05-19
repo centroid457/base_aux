@@ -186,7 +186,7 @@ HTML_TEMPLATE = """
 <body>
     <div id="div_app_header__id" data-auto__ping_lost>
         <h1>WebTerminal</h1>
-        <button id="btn_add_item__id">➕ Новый объект</button>
+        <button id="btn_add_item__id">Новый объект</button>
     </div>
     <div id="div_items_container__id"></div>
 

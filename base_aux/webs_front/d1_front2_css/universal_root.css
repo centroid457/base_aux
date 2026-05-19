@@ -324,20 +324,20 @@ button:focus-visible {
 /* ----------------------------------------- */
 /* ----------------------------------------- */
 .button_blue__cls {     //just for schema!
-    background: #2a73ff;
+    background: #00f5;
     color: white;
 }
 .button_blue__cls:hover {
-    background: #1a5ad9;
+    background: #00f;
     border-color: white;
 }
 .button_blue_outline__cls {
     background: transparent;
-    border-color: #2a73ff;
-    color: #2a73ff;
+    border-color: #00f;
+    color: #00f;
 }
 .button_blue_outline__cls:hover {
-    background: #2a73ff;
+    background: #00f;
     border-color: white;
     color: white;
 }
@@ -364,7 +364,7 @@ button:focus-visible {
 
 /* ----------------------------------------- */
 .button_red__cls {
-    background: #ef4444;
+    background: #f00;
     color: white;
 }
 .button_red__cls:hover {
@@ -373,11 +373,11 @@ button:focus-visible {
 }
 .button_red_outline__cls {
     background: transparent;
-    border-color: #ef4444;
-    color: #ef4444;
+    border-color: #f00;
+    color: #f00;
 }
 .button_red_outline__cls:hover {
-    background: #ef4444;
+    background: #f00;
     border-color: white;
     color: white;
 }
