@@ -35,6 +35,7 @@ textarea,
 button {
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
+    background: #fff3;
     border: 1px solid #cbd5e1;
 }
 input:hover,
@@ -52,9 +53,6 @@ textarea {
     width: 100%;
     padding: 0.6rem 0.75rem;
     line-height: 1.4;
-    background: #fff3;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.5rem;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -86,15 +84,13 @@ textarea:valid {
     border-color: #10b981;
 }
 
-/* Чекбоксы и радио – современный accent-color */
+/* Чекбоксы и радио – современный СТИЛЬ через accent-color */
 input[type="checkbox"],
 input[type="radio"] {
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: #2a73ff;
-    cursor: pointer;
+    __accent-color: #0f09;
     vertical-align: middle;
     margin-right: 0.3rem;
+    cursor: pointer;
 }
 
 /* Метки для чекбоксов и радио */
