@@ -229,12 +229,73 @@
                             📈 📊
 
                             … ✂️ 🛠️🌈🎨🧲🧱👁️📍
-
-
                         </fieldset>
 
                     </div>
                 </article>
+
+                <article class="article__cls">
+                    <header>html-сущности=Мнемоника</header>
+                    <div class="article_main__cls">
+                        🔥 при начале ввода - есть подсказка в IDE PyCharm!!!<br>
+                        и при вводе несуществующего имени - отображает ошибку!!!<br>
+                        <br>
+
+                        times; – это мнемоника для символа<br>
+                        Такие сущности нужны для вставки специальных символов, которые могут конфликтовать с синтаксисом HTML, или для удобства запоминания.<br>
+
+                        В коде примеров – чтобы показать теги без интерпретации: &lt;div&gt; отобразится как div>.<br>
+                        В атрибутах – например, title="10 &amp; 20" даст подсказку "10 & 20".<br>
+                        Для неразрывных пробелов – &nbsp; предотвращает перенос строки.<br>
+                        В математических формулах – &times; для умножения, &divide; для деления.<br>
+
+                        <table>
+                            <thead><tr><th>Мнемоника</th><th>Результат</th><th>Описание</th></tr></thead>
+                            <tbody>
+                                <tr><td><code data-mouse_select_all>&amp;WRNG;</code></td><td>&WRNG;==WRNG</td><td>WRNG</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;;</code></td><td>&;==</td><td>BLANC</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;amp;</code></td><td>&amp;==&</td><td>амперсанд</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;nbsp;</code></td><td>&nbsp;</td><td>неразрывный пробел</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;lt;</code></td><td>&lt;==<</td><td>меньше (less than)</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;gt;</code></td><td>&gt;==></td><td>больше (greater than)</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;quot;</code></td><td>&quot;=="</td><td>двойная кавычка</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;apos;</code></td><td>&apos;=='</td><td>апостроф</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;sect;</code></td><td>&sect;==§</td><td>параграф</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;para;</code></td><td>&para;==¶</td><td>знак абзаца</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;copy;</code></td><td>&copy;==©</td><td>copyright</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;reg;</code></td><td>&reg;==®</td><td>зарегистрированная торговая марка</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;trade;</code></td><td>&trade;==™</td><td>торговая марка</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;times;</code></td><td>&times;==×</td><td>знак умножения (крест)</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;divide;</code></td><td>&divide;==÷</td><td>знак деления</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;plusmn;</code></td><td>&plusmn;==±</td><td>плюс-минус</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;middot;</code></td><td>&middot;==·</td><td>средняя точка</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;deg;</code></td><td>&deg;==°</td><td>градус</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;frac12;</code></td><td>&frac12;==½</td><td>одна вторая</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;frac14;</code></td><td>&frac14;==¼</td><td>одна четверть</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;frac34;</code></td><td>&frac34;==¾</td><td>три четверти</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;euro;</code></td><td>&euro;==€</td><td>евро</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;pound;</code></td><td>&pound;==£</td><td>фунт стерлингов</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;yen;</code></td><td>&yen;==¥</td><td>йена</td></tr>
+
+                                <tr><td><code data-mouse_select_all>&amp;hearts;</code></td><td>&hearts;==♥</td><td>черви</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;spades;</code></td><td>&spades;==♠</td><td>пики</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;clubs;</code></td><td>&clubs;==♣</td><td>трефы</td></tr>
+                                <tr><td><code data-mouse_select_all>&amp;diams;</code></td><td>&diams;==♦</td><td>бубны</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer>
+                        Мнемоники начинаются с амперсанда и заканчиваются точкой с запятой. Позволяют вставлять зарезервированные символы.
+                        Мнемоники удобны: их легче запомнить, чем числовые коды (например, `&amp;hearts;` вместо `&amp;#9829;`).
+                    </footer>
+                </article>
+
 
             </div>
             <div class="section_main__cls" style="padding-top: 0;">
