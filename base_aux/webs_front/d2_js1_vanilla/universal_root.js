@@ -69,7 +69,7 @@ OnLoadRunner.add(onload__bg_color);
 // =====================================================================================================================
 function onload__ws_ping() {
     // Настройки
-    const ATTR__PING_MONITOR = 'data-auto__ping_lost';
+    const ATTR_NAME__PING_MONITOR = 'data-auto__ping_lost';
     const VALUE__PING_LOST = '1';
     const VALUE__PING_OK = '';
     const TIMEOUT_RECONNECT = 3000;
@@ -77,8 +77,8 @@ function onload__ws_ping() {
     // Функция обновления всех целевых элементов
     function updateElements(isConnected) {
         const value_new = isConnected ? VALUE__PING_OK : VALUE__PING_LOST;
-        document.querySelectorAll(`[${ATTR__PING_MONITOR}]`).forEach(el => {
-            el.setAttribute(ATTR__PING_MONITOR, value_new);
+        document.querySelectorAll(`[${ATTR_NAME__PING_MONITOR}]`).forEach(el => {
+            el.setAttribute(ATTR_NAME__PING_MONITOR, value_new);
         });
     }
 
@@ -726,16 +726,17 @@ OnLoadRunner.add(onload__clone_elements);
 
 // =====================================================================================================================
 const ATTR_NAME__AUTO__CONNECT_VALUES = "data-auto__connect_values";
+const ATTR_NAME__GROUP = "data-group";
 
 // ---------------------------------------------------------------------------------------------------------------------
-// connect all elements like INPUT/OUTPUT/OUTPUT/PROGRESS/METER [data-group="${group_name}"] with updating values
+// connect all elements like INPUT/OUTPUT/OUTPUT/PROGRESS/METER [${ATTR_NAME__GROUP}="${group_name}"] with updating values
 // APPLY CALLING with param in page!!!
 function _connect_values_in_group(group_name) {
     const schemaStable = true;
 
     function updateGroup(value) {
         let v = parseFloat(value);
-        if (isNaN(v)) v = 0;
+        if (isNaN(v)) v = value;
 
         if (!schemaStable) {
             // Ограничиваем 0..1 для единообразия (хотя у некоторых max может отличаться)
@@ -743,8 +744,10 @@ function _connect_values_in_group(group_name) {
         }
 
         // Обновляем все элементы с нужным name
-        const elements = document.querySelectorAll(`[data-group="${group_name}"]`);
+        const elements = document.querySelectorAll(`[${ATTR_NAME__GROUP}="${group_name}"]`);
         elements.forEach(el => {
+            if (el.value == v) return;
+
             if (el.tagName === 'PROGRESS' || el.tagName === 'METER' || el.tagName === 'INPUT' || el.tagName === 'OUTPUT') {
                 if (schemaStable) {
                     el.value = v;
@@ -763,7 +766,7 @@ function _connect_values_in_group(group_name) {
     }
 
     // События для задающих элементов
-    const elements_input = document.querySelectorAll(`input[data-group="${group_name}"]`);
+    const elements_input = document.querySelectorAll(`input[${ATTR_NAME__GROUP}="${group_name}"]`);
     elements_input.forEach(el => {
         el.addEventListener('input', (e) => updateGroup(e.target.value));
     });
@@ -773,13 +776,14 @@ function _connect_values_in_group(group_name) {
 }
 // ---------------------------------------------------------------------------------------------------------------------
 function onload__connect_values() {
-    const processed = new Set();
+    // PLACE ATTR_NAME__AUTO__CONNECT_VALUES ONLY IN INPUT!!! and its enough for only ONE!!!
+    const groups_processed = new Set();
 
-    const elements = document.querySelectorAll(`[${ATTR_NAME__AUTO__CONNECT_VALUES}]`);
+    const elements = document.querySelectorAll(`input[${ATTR_NAME__AUTO__CONNECT_VALUES}]`);
     for (let el of elements) {
-        let group_name = el.getAttribute("data-group");
-        if (!group_name || processed.has(group_name)) continue;
-        processed.add(group_name);
+        let group_name = el.getAttribute(ATTR_NAME__GROUP);
+        if (!group_name || groups_processed.has(group_name)) continue;
+        groups_processed.add(group_name);
         _connect_values_in_group(group_name);
     }
 }

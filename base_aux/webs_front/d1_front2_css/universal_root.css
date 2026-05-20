@@ -19,8 +19,8 @@ body {
     padding: 2rem 1.5rem;
 }
 
-body[data-auto__ping_lost="1"] {
-    background-color: #f003;
+[data-auto__ping_lost="1"] {
+    background: #f005;
 }
 
 hr {
@@ -47,7 +47,7 @@ button:hover {
 
 /* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
 /* Базовые стили для всех текстовых полей, select и textarea */
-input:not([type="checkbox"]):not([type="radio"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
 select,
 textarea {
     width: 100%;
@@ -87,7 +87,6 @@ textarea:valid {
 /* Чекбоксы и радио – современный СТИЛЬ через accent-color */
 input[type="checkbox"],
 input[type="radio"] {
-    __accent-color: #0f09;
     vertical-align: middle;
     margin-right: 0.3rem;
     cursor: pointer;
