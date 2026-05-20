@@ -19,10 +19,6 @@ body {
     padding: 2rem 1.5rem;
 }
 
-[data-auto__ping_lost="1"] {
-    background: #f005;
-}
-
 hr {
     margin: 1rem 0;
 }
@@ -136,6 +132,14 @@ fieldset {
 }
 
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
+/* -------------------- AUTO ---------------------- */
+[data-auto__ping_lost="1"] {
+    background: #f005;
+}
+
+/* ---------------- SELECTIONS -------------------- */
+[data-mouse_select_all] { user-select: all; }
+
 /* -------------------- GROUPS -------------------- */
 [data-group] {}     /* just show how to separate elements by groups!!! */
 
@@ -222,22 +226,6 @@ fieldset {
     __align-items: center;
     __justify-content: center;
     __flex-wrap: wrap;
-}
-
-/* ---------------- SELECTIONS -------------------- */
-[data-mouse_select_all] { user-select: all; }
-
-/* highlited = bg + graphic ------------------------*/
-p[data-highlighted] {
-    background: #f8fafc;
-    padding: 10px;
-    border-radius: 12px;
-}
-
-blockquote[data-highlighted] {
-    background: linear-gradient(135deg, #eef2ff 0%, #fff 100%);
-    border-left: 4px solid #ff8c42;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Фоновые цвета */
