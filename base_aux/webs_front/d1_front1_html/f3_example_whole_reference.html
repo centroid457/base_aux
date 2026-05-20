@@ -5355,14 +5355,22 @@
                              rgb(0, 500, 0);
                              rgb(0, 100%, 0%);
 
-                             hsl(240,100%,50%);
-                             hsla(84,100%,59%,0.8);
-
                              rgba(255,0,0,0.0);
                              rgba(255,0,0,0.1);
                              rgba(255,0,0,0.5);
                              rgba(255,0,0,0.9);
                              rgba(255,0,0,1.0);
+
+                             hsl(240,100%,50%);
+                             hsla(84,100%,59%,0.8);
+
+                             #f84;
+                             #f88;
+                             #f44;
+
+                             #ff0;
+                             #f0f;
+                             #0ff;
                              ]">
                             colors
                         </div>
@@ -5458,6 +5466,41 @@
                         </div>
 
                     </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls">
+            <h2 data-icon__circle_green>Генератор цветовой палитры с шагом</h2>
+            <div class="article_main__cls">
+
+                <article class="article__cls">
+
+                    <label>Шаг (десятичное): <input type="number" id="input_palette_step__id" value="50" min="1" max="255" step="1"></label>
+                    <button id="btn_gen_palette__id">Сгенерировать палитру</button>
+                    <div id="palette__id" style="overflow-x: auto;"></div>
+
+                    <script>
+                        const btn_gen_palette__el = document.getElementById('btn_gen_palette__id');
+                        const palette_step__el = document.getElementById('input_palette_step__id');
+
+                        btn_gen_palette__el.addEventListener('click', () => {
+                            let step = parseInt(palette_step__el.value, 10);
+                            if (isNaN(step)) step = 51;
+                            step = Math.min(255, Math.max(1, step));
+                            generateColorPalette('palette__id', step, false);
+                        });
+
+                        //palette_step__el.click();
+                        //OnLoadRunner.add(() => generateColorPalette('palette__id', 51));
+                    </script>
+
+                    <footer>
+                        Шаг 51 даёт 6 значений (0, 51, 102, 153, 204, 255).<br>
+                        Шаг 85 – 4 значения (0, 85, 170, 255).<br>
+                    </footer>
                 </article>
 
             </div>

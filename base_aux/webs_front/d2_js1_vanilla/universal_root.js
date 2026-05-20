@@ -856,6 +856,94 @@ OnLoadRunner.add(onload__sections_collapse_init);
 
 
 // =====================================================================================================================
+/**
+ * Генерирует палитру цветов с равномерным шагом (hex-шагом).
+ * @param {string} containerId - ID элемента, куда вставить таблицу.
+ * @param {number} step - шаг (десятичное число от 1 до 255). Рекомендуемые: 1, 5, 17, 51, 85.
+ * @param {boolean} showHexValue - показывать ли шестнадцатеричный код (true) или только цвет.
+ */
+function generateColorPalette(containerId, step, showHexValue = false) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Элемент с id "${containerId}" не найден`);
+        return;
+    }
+
+    // Получаем массив значений от 0 до 255 с шагом step, включая 255
+    const values = [];
+    for (let i = 0; i <= 255; i += step) {
+        values.push(i);
+    }
+    if (values[values.length - 1] !== 255) values.push(255);
+
+    // Преобразуем в hex-строки (2 символа)
+    const hexValues = values.map(v => v.toString(16).padStart(2, '0').toUpperCase());
+
+    // Создаём таблицу
+    const table = document.createElement('table');
+    table.style.borderCollapse = 'collapse';
+    table.style.width = '100%';
+    table.style.margin = '1rem 0';
+    table.style.fontFamily = 'monospace';
+    table.style.fontSize = '0.8rem';
+
+    // Заголовок: пустая ячейка, затем сочетания (зелёный, синий)
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headerRow.appendChild(document.createElement('th')); // пустая
+    for (const g of hexValues) {
+        for (const b of hexValues) {
+            const th = document.createElement('th');
+            th.textContent = `${g}${b}`;
+            th.style.padding = '4px';
+            th.style.border = '1px solid #ccc';
+            th.style.backgroundColor = '#f0f0f0';
+            headerRow.appendChild(th);
+        }
+    }
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Тело таблицы: строки для каждого красного, внутри ячейки для каждой пары (g,b)
+    const tbody = document.createElement('tbody');
+    for (const r of hexValues) {
+        const row = document.createElement('tr');
+        // Ячейка с красным компонентом
+        const thRow = document.createElement('th');
+        thRow.textContent = r;
+        thRow.style.border = '1px solid #ccc';
+        thRow.style.backgroundColor = '#f0f0f0';
+        thRow.style.padding = '4px';
+        row.appendChild(thRow);
+
+        // Ячейки для всех комбинаций g,b
+        for (const g of hexValues) {
+            for (const b of hexValues) {
+                const hex = `#${r}${g}${b}`;
+                const cell = document.createElement('td');
+                cell.style.border = '1px solid #ccc';
+                cell.style.padding = '8px';
+                cell.style.backgroundColor = hex;
+                cell.style.textAlign = 'center';
+                cell.style.color = (parseInt(r, 16) * 0.299 + parseInt(g, 16) * 0.587 + parseInt(b, 16) * 0.114) > 128 ? '#000' : '#fff';
+                if (showHexValue) {
+                    cell.textContent = hex;
+                }
+                row.appendChild(cell);
+            }
+        }
+        tbody.appendChild(row);
+    }
+    table.appendChild(tbody);
+
+    // Очищаем контейнер и вставляем таблицу
+    container.innerHTML = '';
+    container.appendChild(table);
+}
+OnLoadRunner.add(() => generateColorPalette('palette__id',50));
+// Пример использования: generateColorPalette('paletteContainer', 85);
+
+// =====================================================================================================================
 // ============================================================
 // Изменение font-size при Ctrl + Wheel на элементах с атрибутом data-auto__scroll__font_size
 // ============================================================
