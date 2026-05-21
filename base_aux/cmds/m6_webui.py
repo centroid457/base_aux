@@ -64,66 +64,43 @@ HTML_TEMPLATE = """
     <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
     
     <style>
+        /* ---------------------------------------------------------------------------------------------------------- */
         * { box-sizing: border-box; }
         body {
-            font-family: monospace;
-            background: #1e1e1e;
+            background: #222;
             color: #d4d4d4;
             padding: 20px;
             margin: 0;
         }
-        #div_app_header__id {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #444;
-        }
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #fff;
-        }
-       
+               
         #div_items_container__id {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-        .div_itembox__cls {
-            background: #2d2d2d;
+        /* ------------------------------------ */
+        .div_item__cls {
+            background: #333;
             border: 1px solid #444;
             border-radius: 6px;
             position: relative;
             display: flex;
             flex-direction: column;
         }
-        
-        .div_termheader__cls {
-            background: #3c3c3c;
+        .div_item__cls header {
+            background: #333;
             padding: 8px 12px;
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;
+            
             display: flex;
-            justify-content: flex-start;  /* flex-start=по порядку/ space-between=равномерно*/
+            justify-content: space-between;
             align-items: center;
             gap: 8px;                     /* отступы между всеми детьми */
             border-bottom: 1px solid #555;
         }
-        .span_status__style {
-            margin-left: 10px;
-            font-size: 12px;
-            color: #888;
-        }
-        .span_itemid__cls {
-            font-weight: bold;
-            color: #9cdcfe;
-            font-size: 14px;
-        }
-        
-        .div_output__cls {
-            background: #1e1e1e;
+        .div_item__cls main {
+            background: #222;
             padding: 12px;
             height: 300px;
             overflow-y: scroll;
@@ -132,29 +109,43 @@ HTML_TEMPLATE = """
             font-family: monospace;
             border-bottom: 1px solid #444;
         }
-        .msg_stdin__style  { color: #ffffff; }
-        .msg_stdout__style { color: #b5cea8; }
-        .msg_stderr__style { color: #f48771; }
-        .msg_debug__style  { color: #569cd6; font-style: italic; }
-        
-        .div_input__style {
+        .div_item__cls footer {
             display: flex;
             padding: 10px;
         }
-        .input_item__style{
+        
+        /* ------------------------------------ */
+        .span_item_status__cls {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+        .span_item_id__cls {
+            font-weight: bold;
+            color: #9cdcfe;
+            font-size: 14px;
+        }
+        
+        .msg_stdin__cls  { color: #fff; }
+        .msg_stdout__cls { color: #b5cea8; }
+        .msg_stderr__cls { color: #f48771; }
+        .msg_debug__cls  { color: #569cd6; font-style: italic; }
+        
+        .input_item__cls{
             font-size: 14px;
             color: #fff;
             border: 1px solid #555;
             font-family: monospace;
         }
+        /* ---------------------------------------------------------------------------------------------------------- */
     </style>
     
 </head>
 <body>
-    <div id="div_app_header__id" data-auto__ping_lost>
-        <h1>WebTerminal</h1>
+    <header id="ROOT_HEADER__ID" data-auto__ping_lost>
+        <h1 style="color: #fff">WebTerminal</h1>
         <button id="btn_add_item__id">Новый объект</button>
-    </div>
+    </header>
     <div id="div_items_container__id"></div>
 
     <script>
@@ -257,22 +248,31 @@ HTML_TEMPLATE = """
 
             render() {
                 const div_itembox = document.createElement('div');
-                div_itembox.className = 'div_itembox__cls';
+                div_itembox.className = 'div_item__cls';
                 div_itembox.dataset.itemId = this.itemId;
 
                 // Header -------------------------------------------
-                const div_itemheader = document.createElement('div');
-                div_itemheader.className = 'div_termheader__cls';
+                const div_item_header = document.createElement('header');
+                const div_item_header_div1 = document.createElement('div');
+                const div_item_header_div2 = document.createElement('div');
                 
+                div_item_header.appendChild(div_item_header_div1);
+                div_item_header.appendChild(div_item_header_div2);
+                
+                // -------------------------------------------
                 const span_status = document.createElement('span');
-                span_status.className = 'span_status__style';
+                span_status.className = 'span_item_status__cls';
                 span_status.textContent = '⚡';
                 this.element_Status = span_status;
                 
                 const span_itemid = document.createElement('span');
-                span_itemid.className = 'span_itemid__cls';
+                span_itemid.className = 'span_item_id__cls';
                 span_itemid.textContent = `${this.itemId}`;
                 
+                div_item_header_div1.appendChild(span_status);
+                div_item_header_div1.appendChild(span_itemid);
+                
+                // -------------------------------------------
                 const btn_clear_history = document.createElement('button');
                 btn_clear_history.className = 'button_blue_outline__cls';
                 btn_clear_history.textContent = 'clear';
@@ -290,31 +290,27 @@ HTML_TEMPLATE = """
                 btn_close.title = 'Закрыть';
                 btn_close.textContent = 'X';
                 btn_close.onclick = () => itemsManager.closeItem(this.itemId);
-                
-                div_itemheader.appendChild(span_status);
-                div_itemheader.appendChild(span_itemid);
-                div_itemheader.appendChild(btn_clear_history);
-                div_itemheader.appendChild(btn_reconnect);
-                div_itemheader.appendChild(btn_close);
 
+                div_item_header_div2.appendChild(btn_clear_history);
+                div_item_header_div2.appendChild(btn_reconnect);
+                div_item_header_div2.appendChild(btn_close);
+                
                 // Output -------------------------------------------
-                const div_output = document.createElement('div');
-                div_output.className = 'div_output__cls';
+                const div_output = document.createElement('main');
                 this.element_OutputBox = div_output;
 
                 // Input area
-                const div_input = document.createElement('div');
-                div_input.className = 'div_input__style';
+                const div_input = document.createElement('footer');
                 
                 const input_item = document.createElement('input');
                 input_item.type = 'text';
-                input_item.className = 'input_item__style';
+                input_item.className = 'input_item__cls';
                 input_item.placeholder = 'Введите команду и нажмите Enter';
                 this.element_InputBox = input_item;
 
                 div_input.appendChild(input_item);
 
-                div_itembox.appendChild(div_itemheader);
+                div_itembox.appendChild(div_item_header);
                 div_itembox.appendChild(div_output);
                 div_itembox.appendChild(div_input);
                 
@@ -380,14 +376,14 @@ HTML_TEMPLATE = """
                     const resp = await fetch(`/items/history/${this.itemId}`);
                     const history = await resp.json();
                     history.forEach(cmd => {
-                        if (cmd.input) this.addHistoryLine('msg_stdin__style', `→ ${cmd.input}`);
-                        cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__style', l));
-                        cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__style', l));
-                        cmd.debug?.forEach(l => this.addHistoryLine('msg_debug__style', l));
+                        if (cmd.input) this.addHistoryLine('msg_stdin__cls', `→ ${cmd.input}`);
+                        cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__cls', l));
+                        cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
+                        cmd.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
                     });
-                    this.addHistoryLine('msg_debug__style', '=== HISTORY ===');
+                    this.addHistoryLine('msg_debug__cls', '=== HISTORY ===');
                 } catch (err) {
-                    this.addHistoryLine('msg_stderr__style', `Ошибка loadHistory ${err.message}`);
+                    this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory ${err.message}`);
                 }
             }
 

@@ -68,13 +68,13 @@ class CmdHistory:
 
     def _listeners__notify(self, msg_text: str, buffer_type: EnumAdj_BufferType) -> None:
         if buffer_type == EnumAdj_BufferType.STDIN:
-            msg_style = f"msg_stdin__style"
+            msg_style = f"msg_stdin__cls"
         elif buffer_type == EnumAdj_BufferType.STDOUT:
-            msg_style = f"msg_stdout__style"
+            msg_style = f"msg_stdout__cls"
         elif buffer_type == EnumAdj_BufferType.STDERR:
-            msg_style = f"msg_stderr__style"
+            msg_style = f"msg_stderr__cls"
         elif buffer_type == EnumAdj_BufferType.DEBUG:
-            msg_style = f"msg_debug__style"
+            msg_style = f"msg_debug__cls"
         else:
             raise Exception(f"{buffer_type=}")
 
