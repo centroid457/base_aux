@@ -144,27 +144,27 @@ fieldset {
 [data-group] {}     /* just show how to separate elements by groups!!! */
 
 /* -------------------- BOXES -------------------- */
-[data-width_20]     { width: 20px; }
-[data-width_30]     { width: 30px; }
-[data-width_40]     { width: 40px; }
-[data-width_80]     { width: 80px; }
-[data-width_200]    { width: 200px; }
+[data-width_20]         { width: 20px; }
+[data-width_30]         { width: 30px; }
+[data-width_40]         { width: 40px; }
+[data-width_80]         { width: 80px; }
+[data-width_200]        { width: 200px; }
 
-[data-height_20]     { height: 20px; }
-[data-height_30]     { height: 30px; }
-[data-height_40]     { height: 40px; }
-[data-height_80]     { height: 80px; }
-[data-height_200]    { height: 200px; }
+[data-height_20]        { height: 20px; }
+[data-height_30]        { height: 30px; }
+[data-height_40]        { height: 40px; }
+[data-height_80]        { height: 80px; }
+[data-height_200]       { height: 200px; }
 
-[data-box_40x40]     { height: 40px; width: 40px; }
-[data-box_80x80]     { height: 80px; width: 80px; }
+[data-box_40x40]        { height: 40px; width: 40px; }
+[data-box_80x80]        { height: 80px; width: 80px; }
 
 /* -------------------- BORDERS ------------------- */
 [data-border]           { border: 1px solid #aaa; }
 [data-radius05rem]      { border-radius: 0.5rem; }
 
 [data-padding05rem]     { padding: 0.5rem; }
-[data-padding1rem]     { padding: 1rem; }
+[data-padding1rem]      { padding: 1rem; }
 
 [data-cover__border_bg] {
     background: #ddd;
@@ -172,7 +172,7 @@ fieldset {
     border-radius: 0.5rem;
 }
 
-[data-gap1px]     { gap: 1px; }     /* GRID/FLEX */
+[data-gap1px]           { gap: 1px; }     /* GRID/FLEX */
 
 /* -------------------- GRID/FLEX --------------------*/
 [data-flex] { display: flex; }
@@ -228,7 +228,7 @@ fieldset {
     __flex-wrap: wrap;
 }
 
-/* Фоновые цвета */
+/* -------------------- BG --------------------*/
 [data-bg_grey_eee] { background: #eee; }
 [data-bg_grey_ddd] { background: #ddd; }
 [data-bg_yellow] { background: #fff3cd; }
@@ -261,6 +261,7 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 [data-icon_result_ok]::before { content: "✅"; }
 [data-icon_result_bad]::before { content: "❌"; }
 
+/* TODO: delete and move into final html */
 /* Селекторы по значению атрибута data-icon --- ЭТО ИМЕННО ДЛЯ ЗНАЧЕНИЯ А НЕ ДЛЯ ИМЕНИ!!! */
 .demo_attr_wildcards__cls[data-icon^="proc"] {
     background: #f0f0f0; /* красный фон */
@@ -273,90 +274,104 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 }
 
 /* -------------------- BUTTONS --------------------------------------------------------------------------------------*/
-/* ----------------------------------------- */
+/* 0=ALL ----------------------------------------- */
+button,
+.button_blue__cls,
+.button_green__cls,
+.button_red__cls,
+.button_black__cls
+{
+    color: white;
+}
+button:hover,
+.button_blue__cls:hover,
+.button_green__cls:hover,
+.button_red__cls:hover,
+.button_black__cls:hover
+{
+    border-color: white;
+}
+
+.button_blue_outline__cls,
+.button_green_outline__cls,
+.button_red_outline__cls,
+.button_black_outline__cls
+{
+    background: transparent;
+}
+.button_blue_outline__cls:hover,
+.button_green_outline__cls:hover,
+.button_red_outline__cls:hover,
+.button_black_outline__cls:hover
+{
+    border-color: white;
+    color: white;
+}
+
+/* 1=BLUE----------------------------------------- */
 button,
 .button_blue__cls {
     background: #00fb;
-    color: white;
 }
 button:hover,
 .button_blue__cls:hover {
     background: #00f;
-    border-color: white;
 }
 .button_blue_outline__cls {
-    background: transparent;
     border-color: #00f;
     color: #00f;
 }
 .button_blue_outline__cls:hover {
     background: #00f;
-    border-color: white;
-    color: white;
 }
 
-/* ----------------------------------------- */
+/* 2=GREEN ----------------------------------------- */
 .button_green__cls {
     background: #0c0b;
-    color: white;
 }
 .button_green__cls:hover {
     background: #0c0;
-    border-color: white;
 }
 .button_green_outline__cls {
-    background: transparent;
     border-color: #0c0;
     color: #0c0;
 }
 .button_green_outline__cls:hover {
     background: #0c0;
-    border-color: white;
-    color: white;
 }
 
-/* ----------------------------------------- */
+/* 3=RED----------------------------------------- */
 .button_red__cls {
     background: #f00b;
-    color: white;
 }
 .button_red__cls:hover {
     background: #f00;
-    border-color: white;
 }
 .button_red_outline__cls {
-    background: transparent;
     border-color: #f00;
     color: #f00;
 }
 .button_red_outline__cls:hover {
     background: #f00;
-    border-color: white;
-    color: white;
 }
 
-/* ----------------------------------------- */
+/* 4=BLACK ----------------------------------------- */
 .button_black__cls {
     background: #000b;
-    color: white;
 }
 .button_black__cls:hover {
-    background: black;
-    border-color: white;
+    background: #000;
 }
 .button_black_outline__cls {
-    background: transparent;
-    border-color: black;
-    color: black;
+    border-color: #000;
+    color: #000;
 }
 .button_black_outline__cls:hover {
-    background: black;
-    border-color: white;
-    color: white;
+    background: #000;
 }
 
-/* ----------------------------------------- */
-/* ----------------------------------------- */
+/* ------------------------------------------------- */
+/* 5=WHITE ----------------------------------------- */
 .button_white__cls {
     background: #fffa;
     color: black;
@@ -376,7 +391,7 @@ button:hover,
     color: black;
 }
 
-/* ----------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------ */
 /* ----------------------------------------- */
 .button_small__cls {
     padding: 0.25rem 0.5rem;

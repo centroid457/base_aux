@@ -85,10 +85,7 @@ HTML_TEMPLATE = """
             font-size: 24px;
             color: #fff;
         }
-        [data-auto__ping_lost="1"] {
-            background: #f00a;
-        }
-        
+       
         #div_items_container__id {
             display: flex;
             flex-direction: column;
