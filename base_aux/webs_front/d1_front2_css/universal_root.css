@@ -137,15 +137,15 @@ hr {
 [data-box_80x80]        { height: 80px; width: 80px; }
 
 /* -------------------- BORDERS ------------------- */
-[data-border]           { border: 1px solid #aaa; }
+[data-border]           { border: 1px solid #aaa9; }
 [data-radius05rem]      { border-radius: 0.5rem; }
 
 [data-padding05rem]     { padding: 0.5rem; }
 [data-padding1rem]      { padding: 1rem; }
 
 [data-cover__border_bg] {
-    background: #ddd;
-    border: 1px solid #aaa;
+    background: #aaa3;
+    border: 1px solid #aaa9;
     border-radius: 0.5rem;
 }
 
@@ -206,13 +206,23 @@ hr {
 }
 
 /* -------------------- BG --------------------*/
-[data-bg_grey_eee] { background: #eee; }
-[data-bg_grey_ddd] { background: #ddd; }
-[data-bg_yellow] { background: #fff3cd; }
-[data-bg_red]   { background: #fee2e2; }
-[data-bg_green] { background: #d1fae5; }
-[data-bg_blue]  { background: #dbeafe; }
+[data-bg_a1]        { background: #aaa1; }
+[data-bg_a3]        { background: #aaa3; }
+[data-bg_a5],[data-bg_grey]        { background: #aaa5; }
+[data-bg_a7]        { background: #aaa7; }
+[data-bg_a9]        { background: #aaa9; }
+[data-bg_aB]        { background: #aaaB; }
+[data-bg_aD]        { background: #aaaD; }
 
+[data-bg_red]       { background: #f005; }
+[data-bg_green]     { background: #0f05; }
+[data-bg_blue]      { background: #00f5; }
+
+[data-bg_yellow]    { background: #ff05; }
+[data-bg_magenta]    { background: #f0f5; }
+[data-bg_cian]    { background: #0ff5; }
+
+/* ----------------------------------------- */
 [data-shadow_hover]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
 /* Курсор */
@@ -235,8 +245,8 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 
 [data-icon_attention]::before { content: "⚠️"; }
 
-[data-icon_result_ok]::before { content: "✅"; }
-[data-icon_result_bad]::before { content: "❌"; }
+[data-icon__result_ok]::before { content: "✅"; }
+[data-icon__result_bad]::before { content: "❌"; }
 
 /* TODO: delete and move into final html */
 /* Селекторы по значению атрибута data-icon --- ЭТО ИМЕННО ДЛЯ ЗНАЧЕНИЯ А НЕ ДЛЯ ИМЕНИ!!! */
@@ -1085,25 +1095,14 @@ details[open] {
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* ===== Базовые стили для демонстрации позиционирования ===== */
 .demo__pos_container__cls {
-    position: relative;   /* контейнер для absolute-блоков */
     background: #f8fafc;
-    border: 2px solid #cbd5e1;
-    border-radius: 0;     /* без скругления — чёткие границы */
+    border: 1px solid;
     padding: 1rem;
     margin: 1rem 0;
-    min-height: 200px;
-}
-.demo__pos_container__cls div {
-    width: 100px;
-    height: 60px;
-    background: #2a73ff;
-    color: white;
-    text-align: center;
-    line-height: 60px;
-    font-weight: bold;
-    margin: 0.5rem;
+    min-height: 100px;
 }
 
+/* -------------------------------------------------------------------------------------------------------------------*/
 /* Стили для демонстрации z-index */
 .z-demo {
     position: relative;

@@ -755,8 +755,8 @@
                         </div>
 
                         <span data-cover__border_bg>123 span 123</span> - ORIGINAL<br>
-                        <span dir="rtl" data-bg_grey_eee>123 span dir="rtl" 123</span> - не работает <br>
-                        <bdo dir="rtl" data-bg_grey_eee>123 bdo dir="rtl" 123</bdo> - РАБОТАЕТ<br>
+                        <span dir="rtl" data-bg_a5>123 span dir="rtl" 123</span> - не работает <br>
+                        <bdo dir="rtl" data-bg_a5>123 bdo dir="rtl" 123</bdo> - РАБОТАЕТ<br>
 
                     </div>
                     <footer><code>direction</code> задаёт поток; <code>unicode-bidi</code> управляет встраиванием. <code>bdo</code> – отдельный тег для переопределения направления.</footer>
@@ -1193,7 +1193,7 @@
                     <div class="article_main__cls">
 
                         <p>Обычный абзац текста. Браузер автоматически добавляет отступы сверху и снизу (обычно margin).</p>
-                        <p data-bg_grey_eee>data-bg_grey_eee</p>
+                        <p>SEE USER ATTRS like ata-bg_a5</p>
                         <p>Абзац с BR[<br>] простым НЕСЕМАНТИЧЕСКИМ переносом строки внутри.</p>
 
                         <hr>
@@ -1660,13 +1660,8 @@
                     <header>border – рамка</header>
                     <div class="article_main__cls">
 
-                        INTERESTS
-                        <div data-cover__border_bg>
-                            data-cover__border_bg
-                        </div>
-                        <div data-bg_grey_eee>
-                            data-bg_grey_eee
-                        </div>
+                        INTERESTS<br>
+                        SEE USER ATTRS
                         <div style="background: #eee;
                             border: 1px solid #2a73ff;
                             border-left: 4px solid #2a73ff;">
@@ -2425,9 +2420,9 @@
 
                 <article class="article__cls">
                     <header>Цветовые схемы</header>
-                    <div class="article_main__cls" data-bg_grey_eee="">
+                    <div class="article_main__cls" data-bg_a5="">
 
-                        <p data-bg_grey_eee>
+                        <p data-bg_a5>
                             <button class="button_blue__cls">button_blue__cls</button>
                             <button class="button_green__cls">button_green__cls</button>
                             <button class="button_red__cls">button_red__cls</button>
@@ -2441,7 +2436,7 @@
                             <button class="button_black__cls" disabled>button_black__cls</button>
                             <button class="button_white__cls" disabled>button_white__cls</button>
                         </p>
-                        <p data-bg_grey_eee>
+                        <p data-bg_a5>
                             <button class="button_blue_outline__cls">button_blue_outline__cls</button>
                             <button class="button_green_outline__cls">button_green_outline__cls</button>
                             <button class="button_red_outline__cls">button_red_outline__cls</button>
@@ -3647,7 +3642,7 @@
                         <hr>
                         FORM input type=number
                         <form
-                                data-bg_grey_eee
+                                data-bg_a5
                                 data-radius05rem
                                 onsubmit="alert('Поле demo_input_1__name:' + this.demo_input_1__name.value); return false;">
 
@@ -3760,7 +3755,7 @@
                                     const outerUl = document.createElement('ul');
                                     //outerUl.style.background = '#f0f0f0';
                                     outerUl.style.fontSize = '0.7rem'; // уменьшенный шрифт
-                                    outerUl.setAttribute('data-bg_grey_eee', '');
+                                    outerUl.setAttribute('data-bg_a5', '');
 
                                     // 1. Пункт "attributes" с вложенным списком
                                     const attrLi = document.createElement('li');
@@ -3817,12 +3812,24 @@
                     <div class="article_main__cls">
 
                         <hr>
-                        COLORS
-                        <p data-bg_grey_eee>data-bg_grey_eee</p>
-                        <p data-bg_yellow>data-bg_yellow</p>
+                        BG
+                        <p data-bg_a1>data-bg_a1</p>
+                        <p data-bg_a3>data-bg_a3</p>
+                        <p data-bg_a5>data-bg_a5</p>
+                        <p data-bg_a7>data-bg_a7</p>
+                        <p data-bg_a9>data-bg_a9</p>
+                        <p data-bg_aB>data-bg_aB</p>
+                        <p data-bg_aD>data-bg_aD</p>
+
+                        <p data-bg_grey>data-bg_grey</p>
+
                         <p data-bg_red>data-bg_red</p>
                         <p data-bg_green>data-bg_green</p>
                         <p data-bg_blue>data-bg_blue</p>
+
+                        <p data-bg_yellow>data-bg_yellow</p>
+                        <p data-bg_magenta>data-bg_magenta</p>
+                        <p data-bg_cian>data-bg_cian</p>
 
                         <hr>
                         COVERS
@@ -3838,7 +3845,7 @@
                         <hr>
                         INLINE<br>
                         превращает блочный элемент (например, div-p) в строчно-блочный — он встаёт в строку с соседними элементами, но при этом сохраняет возможность задавать ширину, высоту, отступы.
-                        <p data-inline data-bg_grey_eee>data-inline p1</p><p data-inline data-bg_yellow>data-inline p2</p>
+                        <p data-inline data-bg_a5>data-inline p1</p><p data-inline data-bg_yellow>data-inline p2</p>
 
                         <hr>
                         разные значения
@@ -3878,8 +3885,8 @@
                         <p data-icon_attention>data-icon_attention</p>
 
                         <hr>
-                        <p data-icon_result_ok>data-icon_result_ok</p>
-                        <p data-icon_result_bad>data-icon_result_bad</p>
+                        <p data-icon__result_ok>data-icon__result_ok</p>
+                        <p data-icon__result_bad>data-icon__result_bad</p>
 
                     </div>
                     <footer>💡 Иконка вставляется через <code>::before</code> на основе атрибута. Не нужно добавлять лишние классы или вручную писать символы.</footer>
@@ -3991,11 +3998,13 @@
                 <article class="article__cls">
                     <header>📌 static (по умолчанию)</header>
                     <div class="article_main__cls">
+
                         <div class="demo__pos_container__cls">
-                            <div>Блок 1</div>
-                            <div>Блок 2</div>
-                            <div>Блок 3</div>
+                            <div data-cover__border_bg data-box_40x40>1</div>
+                            <div data-cover__border_bg data-box_40x40>2</div>
+                            <div data-cover__border_bg data-box_40x40>3</div>
                         </div>
+
                         <p>Элементы идут в потоке друг за другом. Свойства <code>top/left/right/bottom</code> не работают.</p>
                     </div>
                     <footer>Значение по умолчанию для всех элементов. Не вырывает из потока.</footer>
@@ -4033,15 +4042,18 @@
 
                 <!-- 4. fixed -->
                 <article class="article__cls">
-                    <header>📌 fixed — привязка к окну браузера</header>
+                    <header>fixed — привязка к окну браузера</header>
                     <div class="article_main__cls">
+
                         <div class="demo__pos_container__cls" style="position: relative;">
-                            <div style="background: #8e44ad; position: fixed; bottom: 20px; right: 20px; width: auto; padding: 0 1rem;">
+                            <div style="background: #84a5; position: fixed; bottom: 20px; right: 20px; height: 200px;">
+                                <hr>
                                 position:fixed<br>
-                                DownLeftCORNER Brauser
+                                DownLeftCORNER Brauser<br>
                             </div>
                         </div>
-                        <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера. в правом нижнем углу <strong>всего окна</strong>, а не контейнера.</p>
+
+                        <p>ИЩИ ВНИЗУ БРАУЗЕРА!!! fixed-элемент привязан к окну браузера (<strong>всего окна</strong>, а не контейнера).</p>
                         <p>Обычно используется для «плавающих» кнопок, шапок, баннеров.</p>
                     </div>
                     <footer>

@@ -594,7 +594,7 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
 
         const dd = document.createElement('dd');
         dd.setAttribute("data-border", "")
-        //dd.setAttribute("data-bg_grey_eee", "")
+        //dd.setAttribute("data-bg_a5", "")
         dd.appendChild(cloned_el);
         dl__el.appendChild(dd);
     }
