@@ -24,6 +24,60 @@ hr {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------*/
+/* -------------------- ROOT IDS -----------------*/
+#ROOT_DIV__ID {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+    //overflow: hidden;
+    padding: 2rem 2rem 2.5rem 2rem;
+}
+
+#ROOT_HEADER__ID {
+    margin-bottom: 0.5rem;
+}
+#ROOT_HEADER__ID h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+#ROOT_NAV__ID {
+    /* stick top */
+    position: sticky;
+    top: 0;
+    background: white;  /* нужно, чтобы не просвечивало содержимое */
+    z-index: 100;
+
+    /* other */
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+#ROOT_MAIN__ID {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#ROOT_FOOTER__ID {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5b6e8c;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+}
+
+/* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- INPUT --------------------*/
 input,
 select,
@@ -142,6 +196,16 @@ fieldset {
 
 /* -------------------- GROUPS -------------------- */
 [data-group] {}     /* just show how to separate elements by groups!!! */
+
+/* ---------------- SIZE -------------------- TODO: del!!! */
+[data-size__small] {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+[data-size__large] {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.5rem;
+}
 
 /* -------------------- BOXES -------------------- */
 [data-width_20]         { width: 20px; }
@@ -392,16 +456,6 @@ button:hover,
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
-/* ----------------------------------------- */
-.button_small__cls {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-}
-.button_large__cls {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-}
-
 /* ----------------------------------------- */
 .button_as_a__cls {
     background: none;
@@ -824,66 +878,6 @@ tbody td:hover {
     background: #f0f9ff;
 }
 
-/* -------------------- ROOT IDS -------------------------------------------------------------------------------------*/
-#ROOT_DIV__ID {
-    max-width: 1400px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 2rem;
-    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
-    //overflow: hidden;
-    padding: 2rem 2rem 2.5rem 2rem;
-}
-
-#ROOT_HEADER__ID {
-    margin-bottom: 0.5rem;
-}
-#ROOT_HEADER__ID h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 0.5rem;
-}
-.subhead {
-    font-size: 1.1rem;
-    color: #2c3e66;
-    border-left: 4px solid #2a73ff;
-    padding-left: 1rem;
-    margin-bottom: 2rem;
-}
-
-#ROOT_NAV__ID {
-    /* stick top */
-    position: sticky;
-    top: 0;
-    background: white;  /* нужно, чтобы не просвечивало содержимое */
-    z-index: 100;
-
-    /* other */
-    display: flex;
-    flex-wrap: wrap;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-#ROOT_MAIN__ID {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-#ROOT_FOOTER__ID {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #5b6e8c;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.5rem;
-}
-
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- SECTION --------------------*/
 .section__cls {
@@ -1048,6 +1042,8 @@ details[open] {
 }
 
 /* ================================================================================================================== */
+/* ================================================================================================================== */
+/* ================================================================================================================== */
 /*ЭЛЕМЕНТЫ ДЛЯ опытов*/
 .demo_item__cls {
     background: #2a73ff;
@@ -1106,20 +1102,6 @@ details[open] {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------*/
-/* семантическая демо-зона (локальные header/footer и пр.) */
-.demo_box__semantic__cls header,
-.demo_box__semantic__cls nav,
-.demo_box__semantic__cls main,
-.demo_box__semantic__cls aside,
-.demo_box__semantic__cls footer {
-    background: #eee;
-    margin: 0.6rem 0;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    border: 1px solid #2a73ff;
-    border-left: 4px solid #2a73ff;
-}
-
 .demo_box__bg_color__cls {
     padding: 1rem;
     text-align: center;

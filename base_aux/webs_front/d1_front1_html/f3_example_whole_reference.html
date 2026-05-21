@@ -31,7 +31,7 @@
 
     <header id="ROOT_HEADER__ID">
         <h1>📘 HTML/CSS · справочник визуальный</h1>
-        <div class="subhead">Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
+        <div>Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
     <main id="ROOT_MAIN__ID">
@@ -58,15 +58,21 @@
 
                 <article class="article__cls">
                     <header>СЕМАНТИКА</header>
-                    <div class="article_main__cls demo_box__semantic__cls">
-                        <header>Шапка (header) — логотип, навигация</header>
-                        <nav>Навигация (nav) — ссылки меню</nav>
-                        <main>
-                            <section>Секция (section) — тематическая группа</section>
-                            <article>Статья (article) — независимый контент (пост, новость)</article>
-                            <aside> Боковая панель (aside) — доп. информация, реклама</aside>
+                    <div class="article_main__cls">
+
+                        <header data-cover__border_bg>Шапка (header) — логотип, навигация</header>
+                        <nav data-cover__border_bg>Навигация (nav) — ссылки меню</nav>
+                        <main
+                                data-cover__border_bg
+                                style="padding: 0.6rem 1rem;"
+                        >
+                            MAIN
+                            <section data-cover__border_bg>Секция (section) — тематическая группа</section>
+                            <article data-cover__border_bg>Статья (article) — независимый контент (пост, новость)</article>
+                            <aside data-cover__border_bg> Боковая панель (aside) — доп. информация, реклама</aside>
                         </main>
-                        <footer>Футер (footer) — контакты, копирайт</footer>
+                        <footer data-cover__border_bg>Футер (footer) — контакты, копирайт</footer>
+
                     </div>
                     <footer>Семантика улучшает SEO и доступность. Не используйте div для всего — header, main, footer дают структуру.</footer>
                 </article>
@@ -1648,6 +1654,29 @@
                 <article class="article__cls">
                     <header>border – рамка</header>
                     <div class="article_main__cls">
+
+                        INTERESTS
+                        <div data-cover__border_bg>
+                            data-cover__border_bg
+                        </div>
+                        <div data-bg_grey_eee>
+                            data-bg_grey_eee
+                        </div>
+                        <div style="background: #eee;
+                            border: 1px solid #2a73ff;
+                            border-left: 4px solid #2a73ff;">
+                            border all+left
+                        </div>
+                        <div style="background: #eee;
+                            margin: 0.6rem 0;
+                            padding: 0.6rem 1rem;
+                            border-radius: 12px;
+                            border: 1px solid #2a73ff;
+                            border-left: 4px solid #2a73ff;">
+                            border all+left +round +marg/padd
+                        </div>
+
+                        <hr>
                         <div data-cover__border_bg
                              data-padding05rem
                              data-clone_element__params="border:[
@@ -1662,15 +1691,6 @@
                              5px dashed red;
                              ]">
                             border
-                        </div>
-
-                        <div style="background: #eee;
-                            margin: 0.6rem 0;
-                            padding: 0.6rem 1rem;
-                            border-radius: 12px;
-                            border: 1px solid #2a73ff;
-                            border-left: 4px solid #2a73ff;">
-                            border combined all+left
                         </div>
 
                     </div>
@@ -2366,9 +2386,9 @@
 
                         <hr>
                         <p>
-                            <button class="button_small__cls">button_small__cls</button>
+                            <button data-size__small>data-size__small</button>
                             <button>button</button>
-                            <button class="button_large__cls">button_large__cls</button>
+                            <button data-size__large>data-size__large</button>
                         </p>
 
                         <p><button style="width: 100%;">style="width: 100%;</button></p>
