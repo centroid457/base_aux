@@ -86,106 +86,10 @@ hr {
 }
 
 /* ================================================================================================================== */
-/* -------------------------------------------------------------------------------------------------------------------*/
-/* -------------------- INPUT --------------------*/
-input,
-select,
-textarea,
-button {
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    background: #fff3;
-    border: 1px solid #cbd5e1;
-}
-input:hover,
-select:hover,
-textarea:hover,
-button:hover {
-    transform: translateY(1px);
-}
-
-/* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
-/* Базовые стили для всех текстовых полей, select и textarea */
-input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
-select,
-textarea {
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    line-height: 1.4;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Состояние фокуса */
-input:not([type="checkbox"]):not([type="radio"]):focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: #2a73ff;
-    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
-}
-
-/* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
-input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
-select:invalid:not(:placeholder-shown),
-textarea:invalid:not(:placeholder-shown) {
-    border-color: #ef4444;
-}
-input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
-select:invalid:focus,
-textarea:invalid:focus {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-}
-
-/* Валидное поле (опционально) */
-input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
-select:valid,
-textarea:valid {
-    border-color: #10b981;
-}
-
-/* Чекбоксы и радио – современный СТИЛЬ через accent-color */
-input[type="checkbox"],
-input[type="radio"] {
-    vertical-align: middle;
-    margin-right: 0.3rem;
-    cursor: pointer;
-}
-
-/* Метки для чекбоксов и радио */
-label:has(input[type="checkbox"]),
-label:has(input[type="radio"]) {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-/* placeholder стиль */
-::placeholder {
-    color: #94a3b8;
-    opacity: 1;
-}
-
-/* -------------------------------------------------------------------------------------------------------------------*/
-/* -------------------- FORMS --------------------*/
-form div label {
-    display: inline-block;
-    width: 110px;
-}
-
-/* ------------------ FIELDSET  ------------------*/
-fieldset {
-    border-radius: 0.5rem;
-}
-
-.fieldset_style1__cls {
-    border: 2px solid #cbd5e1;
-    border-radius: 16px;
-    padding: 1rem; /*dont delete!!!*/
-}
-.fieldset_style1__cls legend{
-    padding: 0 0.5rem;
-    font-weight: 600;
-}
+.msg_stdin__cls  { color: #fff; }
+.msg_stdout__cls { color: #b5cea8; }
+.msg_stderr__cls { color: #f48771; }
+.msg_debug__cls  { color: #569cd6; font-style: italic; }
 
 /* -------------------- ATTRS UNIVERSAL ------------------------------------------------------------------------------*/
 [disabled] {
@@ -889,6 +793,109 @@ tbody td:hover {
     background: #f0f9ff;
 }
 
+/* ================================================================================================================== */
+/* -------------------------------------------------------------------------------------------------------------------*/
+/* -------------------- INPUT --------------------*/
+input,
+select,
+textarea,
+button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    background: #fff3;
+    border: 1px solid #cbd5e1;
+}
+input:hover,
+select:hover,
+textarea:hover,
+button:hover {
+    transform: translateY(1px);
+}
+
+/* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
+/* Базовые стили для всех текстовых полей, select и textarea */
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+select,
+textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    line-height: 1.4;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Состояние фокуса */
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2a73ff;
+    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
+}
+
+/* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
+input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+}
+input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
+select:invalid:focus,
+textarea:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Валидное поле (опционально) */
+input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
+select:valid,
+textarea:valid {
+    border-color: #10b981;
+}
+
+/* Чекбоксы и радио – современный СТИЛЬ через accent-color */
+input[type="checkbox"],
+input[type="radio"] {
+    vertical-align: middle;
+    margin-right: 0.3rem;
+    cursor: pointer;
+}
+
+/* Метки для чекбоксов и радио */
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]) {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* placeholder стиль */
+::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+/* -------------------------------------------------------------------------------------------------------------------*/
+/* -------------------- FORMS --------------------*/
+form div label {
+    display: inline-block;
+    width: 110px;
+}
+
+/* ------------------ FIELDSET  ------------------*/
+fieldset {
+    border-radius: 0.5rem;
+}
+
+.fieldset_style1__cls {
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 1rem; /*dont delete!!!*/
+}
+.fieldset_style1__cls legend{
+    padding: 0 0.5rem;
+    font-weight: 600;
+}
+
+/* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- SECTION --------------------*/
 .section__cls {
@@ -1042,6 +1049,7 @@ details[open] {
     content: 'v';
 }
 
+/* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 @media (max-width: 700px) {
     #ROOT_DIV__ID {

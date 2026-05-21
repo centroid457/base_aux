@@ -125,12 +125,7 @@ HTML_TEMPLATE = """
             color: #9cdcfe;
             font-size: 14px;
         }
-        
-        .msg_stdin__cls  { color: #fff; }
-        .msg_stdout__cls { color: #b5cea8; }
-        .msg_stderr__cls { color: #f48771; }
-        .msg_debug__cls  { color: #569cd6; font-style: italic; }
-        
+
         .input_item__cls{
             font-size: 14px;
             color: #fff;
