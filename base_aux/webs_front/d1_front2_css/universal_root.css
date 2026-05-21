@@ -23,6 +23,12 @@ hr {
     margin: 1rem 0;
 }
 
+[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- ROOT IDS -----------------*/
@@ -86,19 +92,41 @@ hr {
 }
 
 /* ================================================================================================================== */
-.msg_stdin__cls  { color: #fff; }
-.msg_stdout__cls { color: #b5cea8; }
-.msg_stderr__cls { color: #f48771; }
-.msg_debug__cls  { color: #569cd6; font-style: italic; }
-
-/* -------------------- ATTRS UNIVERSAL ------------------------------------------------------------------------------*/
-[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
+/* --------------------COLOT --------------------*/
+[data-color_black]      { color: #000; }
+[data-color_white], .msg_stdin__cls
+                        { color: #fff; }
+
+[data-color_green], .msg_stdout__cls
+                        { color: #ada; }
+[data-color_red], .msg_stderr__cls
+                        { color: #faa; }
+[data-color_blue], .msg_debug__cls
+                        { color: #5af; }
+
+[data-color_yellow]     { color: #ff0; }
+[data-color_magenta]    { color: #f0f; }
+[data-color_cian]       { color: #0ff; }
+
+/* -------------------- BG --------------------*/
+[data-bg_a1]        { background: #aaa1; }
+[data-bg_a3]        { background: #aaa3; }
+[data-bg_a5],
+  [data-bg_grey]    { background: #aaa5; }
+[data-bg_a7]        { background: #aaa7; }
+[data-bg_a9]        { background: #aaa9; }
+[data-bg_aB]        { background: #aaaB; }
+[data-bg_aD]        { background: #aaaD; }
+
+[data-bg_red]       { background: #f005; }
+[data-bg_green]     { background: #0f05; }
+[data-bg_blue]      { background: #00f5; }
+
+[data-bg_yellow]    { background: #ff05; }
+[data-bg_magenta]   { background: #f0f5; }
+[data-bg_cian]      { background: #0ff5; }
+
 /* -------------------- AUTO ---------------------- */
 [data-auto__ping_lost="1"] {
     background: #f005;
@@ -205,23 +233,6 @@ hr {
     __flex-wrap: wrap;
 }
 
-/* -------------------- BG --------------------*/
-[data-bg_a1]        { background: #aaa1; }
-[data-bg_a3]        { background: #aaa3; }
-[data-bg_a5],[data-bg_grey]        { background: #aaa5; }
-[data-bg_a7]        { background: #aaa7; }
-[data-bg_a9]        { background: #aaa9; }
-[data-bg_aB]        { background: #aaaB; }
-[data-bg_aD]        { background: #aaaD; }
-
-[data-bg_red]       { background: #f005; }
-[data-bg_green]     { background: #0f05; }
-[data-bg_blue]      { background: #00f5; }
-
-[data-bg_yellow]    { background: #ff05; }
-[data-bg_magenta]    { background: #f0f5; }
-[data-bg_cian]    { background: #0ff5; }
-
 /* ----------------------------------------- */
 [data-shadow_hover]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
@@ -258,6 +269,108 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 }
 .demo_attr_wildcards__cls[data-icon*="bad"] {
     text-decoration: line-through; /* зачёркивание */
+}
+
+/* ================================================================================================================== */
+/* -------------------------------------------------------------------------------------------------------------------*/
+/* -------------------- INPUT --------------------*/
+input,
+select,
+textarea,
+button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    background: #fff3;
+    border: 1px solid #cbd5e1;
+}
+input:hover,
+select:hover,
+textarea:hover,
+button:hover {
+    transform: translateY(1px);
+}
+
+/* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
+/* Базовые стили для всех текстовых полей, select и textarea */
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+select,
+textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    line-height: 1.4;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Состояние фокуса */
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2a73ff;
+    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
+}
+
+/* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
+input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+}
+input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
+select:invalid:focus,
+textarea:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Валидное поле (опционально) */
+input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
+select:valid,
+textarea:valid {
+    border-color: #10b981;
+}
+
+/* Чекбоксы и радио – современный СТИЛЬ через accent-color */
+input[type="checkbox"],
+input[type="radio"] {
+    vertical-align: middle;
+    margin-right: 0.3rem;
+    cursor: pointer;
+}
+
+/* Метки для чекбоксов и радио */
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]) {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* placeholder стиль */
+::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+/* -------------------------------------------------------------------------------------------------------------------*/
+/* -------------------- FORMS --------------------*/
+form div label {
+    display: inline-block;
+    width: 110px;
+}
+
+/* ------------------ FIELDSET  ------------------*/
+fieldset {
+    border-radius: 0.5rem;
+}
+
+.fieldset_style1__cls {
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 1rem; /*dont delete!!!*/
+}
+.fieldset_style1__cls legend{
+    padding: 0 0.5rem;
+    font-weight: 600;
 }
 
 /* ================================================================================================================== */
@@ -801,108 +914,6 @@ tbody td:hover {
 }
 .table_custom__cls tbody tr:nth-child(even) {
     background: #f0f9ff;
-}
-
-/* ================================================================================================================== */
-/* -------------------------------------------------------------------------------------------------------------------*/
-/* -------------------- INPUT --------------------*/
-input,
-select,
-textarea,
-button {
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    background: #fff3;
-    border: 1px solid #cbd5e1;
-}
-input:hover,
-select:hover,
-textarea:hover,
-button:hover {
-    transform: translateY(1px);
-}
-
-/* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
-/* Базовые стили для всех текстовых полей, select и textarea */
-input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
-select,
-textarea {
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    line-height: 1.4;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Состояние фокуса */
-input:not([type="checkbox"]):not([type="radio"]):focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: #2a73ff;
-    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
-}
-
-/* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
-input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
-select:invalid:not(:placeholder-shown),
-textarea:invalid:not(:placeholder-shown) {
-    border-color: #ef4444;
-}
-input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
-select:invalid:focus,
-textarea:invalid:focus {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-}
-
-/* Валидное поле (опционально) */
-input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
-select:valid,
-textarea:valid {
-    border-color: #10b981;
-}
-
-/* Чекбоксы и радио – современный СТИЛЬ через accent-color */
-input[type="checkbox"],
-input[type="radio"] {
-    vertical-align: middle;
-    margin-right: 0.3rem;
-    cursor: pointer;
-}
-
-/* Метки для чекбоксов и радио */
-label:has(input[type="checkbox"]),
-label:has(input[type="radio"]) {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-/* placeholder стиль */
-::placeholder {
-    color: #94a3b8;
-    opacity: 1;
-}
-
-/* -------------------------------------------------------------------------------------------------------------------*/
-/* -------------------- FORMS --------------------*/
-form div label {
-    display: inline-block;
-    width: 110px;
-}
-
-/* ------------------ FIELDSET  ------------------*/
-fieldset {
-    border-radius: 0.5rem;
-}
-
-.fieldset_style1__cls {
-    border: 2px solid #cbd5e1;
-    border-radius: 16px;
-    padding: 1rem; /*dont delete!!!*/
-}
-.fieldset_style1__cls legend{
-    padding: 0 0.5rem;
-    font-weight: 600;
 }
 
 /* ================================================================================================================== */
