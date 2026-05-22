@@ -359,7 +359,9 @@ select:hover,
 textarea:hover,
 button:hover
 {
-    transform: translateY(1px);
+    /* transform: translateY(1px); */
+    /* transform: scale(1.1); */
+    box-shadow: 0 0 8px #5559;
 }
 
 /* -------- BEST PRACTICE ДЛЯ ПОЛЕЙ ВВОДА -------- */
@@ -465,6 +467,15 @@ fieldset
 /* ================================================================================================================== */
 /* -------------------- BUTTONS --------------------------------------------------------------------------------------*/
 /* 0=ALL ----------------------------------------- */
+button
+{
+    /**/
+}
+button:active
+{
+    transform: scale(0.9);
+}
+
 button,
 .button_blue__cls,
 .button_green__cls,
@@ -500,82 +511,102 @@ button:hover,
 
 /* 1=BLUE----------------------------------------- */
 button,
-.button_blue__cls {
+.button_blue__cls
+{
     background: #00fb;
 }
 button:hover,
-.button_blue__cls:hover {
+.button_blue__cls:hover
+{
     background: #00f;
 }
-.button_blue_outline__cls {
+.button_blue_outline__cls
+{
     border-color: #00f;
     color: #00f;
 }
-.button_blue_outline__cls:hover {
+.button_blue_outline__cls:hover
+{
     background: #00f;
 }
 
 /* 2=GREEN ----------------------------------------- */
-.button_green__cls {
+.button_green__cls
+{
     background: #0c0b;
 }
-.button_green__cls:hover {
+.button_green__cls:hover
+{
     background: #0c0;
 }
-.button_green_outline__cls {
+.button_green_outline__cls
+{
     border-color: #0c0;
     color: #0c0;
 }
-.button_green_outline__cls:hover {
+.button_green_outline__cls:hover
+{
     background: #0c0;
 }
 
 /* 3=RED----------------------------------------- */
-.button_red__cls {
+.button_red__cls
+{
     background: #f00b;
 }
-.button_red__cls:hover {
+.button_red__cls:hover
+{
     background: #f00;
 }
-.button_red_outline__cls {
+.button_red_outline__cls
+{
     border-color: #f00;
     color: #f00;
 }
-.button_red_outline__cls:hover {
+.button_red_outline__cls:hover
+{
     background: #f00;
 }
 
 /* 4=BLACK ----------------------------------------- */
-.button_black__cls {
+.button_black__cls
+{
     background: #000b;
 }
-.button_black__cls:hover {
+.button_black__cls:hover
+{
     background: #000;
 }
-.button_black_outline__cls {
+.button_black_outline__cls
+{
     border-color: #000;
     color: #000;
 }
-.button_black_outline__cls:hover {
+.button_black_outline__cls:hover
+{
     background: #000;
 }
 
 /* ------------------------------------------------- */
 /* 5=WHITE ----------------------------------------- */
-.button_white__cls {
+.button_white__cls
+{
     background: #fffa;
     color: black;
 }
-.button_white__cls:hover {
+.button_white__cls:hover
+{
     background: white;
     border-color: black;
 }
-.button_white_outline__cls {
+.button_white_outline__cls
+{
     background: transparent;
     border-color: white;
     color: white;
 }
-.button_white_outline__cls:hover {
+.button_white_outline__cls:hover
+{
     background: white;
     border-color: black;
     color: black;
@@ -583,14 +614,16 @@ button:hover,
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* ----------------------------------------- */
-.button_as_a__cls {
+.button_as_a__cls
+{
     background: none;
     border: none;
     color: #2a73ff;
     text-decoration: underline;
     padding: 0;
 }
-.button_as_a__cls:hover {
+.button_as_a__cls:hover
+{
     color: #1a5ad9;
     background: none;
 }
