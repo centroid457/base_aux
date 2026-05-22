@@ -38,14 +38,16 @@ html {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------*/
-/* VISUAL SELECTING ALL BLOCKS */
+/* DEBUGGING - VISUAL SELECTING ALL BLOCKS
+ON PRODUCTION - COMMENT OUT!
+*/
 div, p,
 ul, ol, dl,
 section, article,
 header, main, footer,
 body, html
 {
-    border: 1px solid #aaa5;    /* visual debugging - НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
+    border: 1px solid #aaa5;    /* НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
 }
 
 /* ================================================================================================================== */
@@ -112,7 +114,7 @@ body, html
 
 /* ================================================================================================================== */
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
-/* --------------------COLOT --------------------*/
+/* --------------------COLOR --------------------*/
 [data-color_black]      { color: #000; }
 [data-color_white], .msg_stdin__cls
                         { color: #fff; }
@@ -268,15 +270,15 @@ body, html
 section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
 
 /* -------------------- ИКОНКИ ЧЕРЕЗ data-АТРИБУТЫ -------------------- */
-[data-icon__circle_white]::before { content: "⚪"; }
-[data-icon__circle_yellow]::before { content: "🟡"; }
-[data-icon__circle_green]::before { content: "🟢"; }
-[data-icon__circle_red]::before { content: "🔴"; }
+[data-icon__circle_white]::before   { content: "⚪"; }
+[data-icon__circle_yellow]::before  { content: "🟡"; }
+[data-icon__circle_green]::before   { content: "🟢"; }
+[data-icon__circle_red]::before     { content: "🔴"; }
 
-[data-icon_attention]::before { content: "⚠️"; }
+[data-icon_attention]::before       { content: "⚠️"; }
 
-[data-icon__result_ok]::before { content: "✅"; }
-[data-icon__result_bad]::before { content: "❌"; }
+[data-icon__result_ok]::before      { content: "✅"; }
+[data-icon__result_bad]::before     { content: "❌"; }
 
 /* TODO: delete and move into final html */
 /* Селекторы по значению атрибута data-icon --- ЭТО ИМЕННО ДЛЯ ЗНАЧЕНИЯ А НЕ ДЛЯ ИМЕНИ!!! */
@@ -296,7 +298,8 @@ section[data-collapsed] > div { display: none; }    /* настраивать в
 input:not([type="color"]),
 select,
 textarea,
-button {
+button
+{
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
     background: #fff3;
@@ -305,7 +308,8 @@ button {
 input:hover,
 select:hover,
 textarea:hover,
-button:hover {
+button:hover
+{
     transform: translateY(1px);
 }
 
@@ -313,7 +317,8 @@ button:hover {
 /* Базовые стили для всех текстовых полей, select и textarea */
 input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
 select,
-textarea {
+textarea
+{
     width: 100%;
     padding: 0.6rem 0.75rem;
     line-height: 1.4;
@@ -323,7 +328,8 @@ textarea {
 /* Состояние фокуса */
 input:not([type="checkbox"]):not([type="radio"]):focus,
 select:focus,
-textarea:focus {
+textarea:focus
+{
     outline: none;
     border-color: #2a73ff;
     box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.2);
@@ -332,25 +338,29 @@ textarea:focus {
 /* Ошибка (невалидное значение) – но только если поле было изменено или отправлено */
 input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
 select:invalid:not(:placeholder-shown),
-textarea:invalid:not(:placeholder-shown) {
+textarea:invalid:not(:placeholder-shown)
+{
     border-color: #ef4444;
 }
 input:not([type="checkbox"]):not([type="radio"]):invalid:focus,
 select:invalid:focus,
-textarea:invalid:focus {
+textarea:invalid:focus
+{
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
 /* Валидное поле (опционально) */
 input:not([type="checkbox"]):not([type="radio"]):valid:not(:placeholder-shown),
 select:valid,
-textarea:valid {
+textarea:valid
+{
     border-color: #10b981;
 }
 
 /* Чекбоксы и радио – современный СТИЛЬ через accent-color */
 input[type="checkbox"],
-input[type="radio"] {
+input[type="radio"]
+{
     vertical-align: middle;
     margin-right: 0.3rem;
     cursor: pointer;
@@ -358,7 +368,8 @@ input[type="radio"] {
 
 /* Метки для чекбоксов и радио */
 label:has(input[type="checkbox"]),
-label:has(input[type="radio"]) {
+label:has(input[type="radio"])
+{
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -373,19 +384,22 @@ label:has(input[type="radio"]) {
 /* BOXES -------------------------------------------------------------------------------------------------------------*/
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- FORMS --------------------*/
-form {
+form
+{
     background: #aaa3;
     border: 1px solid #aaa5;
     border-radius: 10px;
 }
 
-form div label {
+form div label
+{
     display: inline-block;
     width: 110px;
 }
 
 /* ------------------ FIELDSET  ------------------*/
-fieldset {
+fieldset
+{
     border-radius: 0.5rem;
 }
 
