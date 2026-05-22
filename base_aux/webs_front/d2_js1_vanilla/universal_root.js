@@ -857,27 +857,30 @@ OnLoadRunner.add(onload__sections_collapse_init);
 
 // =====================================================================================================================
 /**
- * Генерирует палитру цветов с равномерным шагом (hex-шагом).
+ * Генерирует палитру цветов с равномерным делением шкалы 0..255.
  * @param {string} containerId - ID элемента, куда вставить таблицу.
- * @param {number} step - шаг (десятичное число от 1 до 255). Рекомендуемые: 1, 5, 17, 51, 85.
+ * @param {number} divisions - количество интервалов (делений) на шкале 0..255. (>=1)
  * @param {boolean} showHexValue - показывать ли шестнадцатеричный код (true) или только цвет.
+ * @param {string} outputId - ID элемента <output> для отображения выбранного цвета (опционально).
  */
-function generateColorPalette(containerId, step, showHexValue = false) {
+function generateColorPalette(containerId, divisions, showHexValue = false, outputId = null) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Элемент с id "${containerId}" не найден`);
         return;
     }
 
-    // Получаем массив значений от 0 до 255 с шагом step, включая 255
+    // Получаем массив значений от 0 до 255 с равномерным делением
     const values = [];
-    for (let i = 0; i <= 255; i += step) {
-        values.push(i);
+    for (let i = 0; i <= divisions; i++) {
+        let v = Math.round(255 * i / divisions);
+        if (i === divisions) v = 255;
+        values.push(v);
     }
-    if (values[values.length - 1] !== 255) values.push(255);
+    const uniqueValues = [...new Set(values)];
 
     // Преобразуем в hex-строки (2 символа)
-    const hexValues = values.map(v => v.toString(16).padStart(2, '0').toUpperCase());
+    const hexValues = uniqueValues.map(v => v.toString(16).padStart(2, '0').toUpperCase());
 
     // Создаём таблицу
     const table = document.createElement('table');
@@ -929,6 +932,23 @@ function generateColorPalette(containerId, step, showHexValue = false) {
                 if (showHexValue) {
                     cell.textContent = hex;
                 }
+                // Добавляем обработчик клика, если указан outputId
+                if (outputId) {
+                    cell.addEventListener('click', (function(color) {
+                        return function() {
+                            const output = document.getElementById(outputId);
+                            if (output) {
+                                // Устанавливаем значение output
+                                if ('value' in output) {
+                                    output.value = color;
+                                } else {
+                                    output.textContent = color;
+                                }
+                            }
+                        };
+                    })(hex));
+                    cell.style.cursor = 'pointer';
+                }
                 row.appendChild(cell);
             }
         }
@@ -940,7 +960,9 @@ function generateColorPalette(containerId, step, showHexValue = false) {
     container.innerHTML = '';
     container.appendChild(table);
 }
-OnLoadRunner.add(() => generateColorPalette('palette__id',50));
+
+// Пример вызова (divisions = 5 → 6 значений по RGB)
+OnLoadRunner.add(() => generateColorPalette('palette__id', 5, false, "output_palette__id"));
 // Пример использования: generateColorPalette('paletteContainer', 85);
 
 // =====================================================================================================================

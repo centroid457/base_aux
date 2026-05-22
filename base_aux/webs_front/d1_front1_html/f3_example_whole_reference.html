@@ -3069,8 +3069,8 @@
 
                         <hr>
                         <h4>GRAPH</h4>
-                        <p>
-                            input type="range"
+                        <p data-cover__border_bg>
+                            input type="range"<br>
                             <input type="range" id="demo_input__id" name="demo_input__name" min="0" max="100" value="50" step="1">
                             <output for="demo_input__name" id="demo_output__id">50</output>
                             <script>
@@ -3081,7 +3081,7 @@
                         </p>
 
                         <p>
-                            input type="color" => HexColor
+                            input type="color" => HexColor<br>
                             <input type="color" id="demo_input_color__id" value="#2a73ff">
                             <output id="demo_output_color__id" for="demo_input_color__id">#2a73ff</output>
                             <script>
@@ -3092,10 +3092,11 @@
                         </p>
 
                         <p>
-                            data-auto__connect_values
+                            data-auto__connect_values<br>
                             <input type="color"
                                    style="all: revert;"
                                    value="#2a73ff"
+
                                    data-auto__connect_values
                                    data-group="groupInputColor_1"
                             >
@@ -5518,28 +5519,35 @@
 
                 <article class="article__cls">
 
-                    <label>Шаг (десятичное): <input type="number" id="input_palette_step__id" value="50" min="1" max="255" step="1"></label>
-                    <button id="btn_gen_palette__id">Сгенерировать палитру</button>
+                    <div data-flex>
+                        <label>количество интервалов:</label>
+                        <input type="number" id="input_palette_intervals__id" value="5" min="1" max="50" step="1">
+                        <button id="btn_gen_palette__id">Сгенерировать палитру</button>
+                        <input type="color"
+                               id="output_palette__id"
+
+                               data-auto__connect_values
+                               data-group="palette"
+                            >
+                        <output
+                                data-group="palette"
+                        >#******</output>
+                    </div>
                     <div id="palette__id" style="overflow-x: auto;"></div>
 
                     <script>
                         const btn_gen_palette__el = document.getElementById('btn_gen_palette__id');
-                        const palette_step__el = document.getElementById('input_palette_step__id');
+                        const palette_intervals__el = document.getElementById('input_palette_intervals__id');
 
                         btn_gen_palette__el.addEventListener('click', () => {
-                            let step = parseInt(palette_step__el.value, 10);
+                            let step = parseInt(palette_intervals__el.value, 10);
                             if (isNaN(step)) step = 51;
                             step = Math.min(255, Math.max(1, step));
-                            generateColorPalette('palette__id', step, false);
+                            generateColorPalette('palette__id', step, false, output_palette__id);
                         });
-
-                        //palette_step__el.click();
-                        //OnLoadRunner.add(() => generateColorPalette('palette__id', 51));
                     </script>
 
                     <footer>
-                        Шаг 51 даёт 6 значений (0, 51, 102, 153, 204, 255).<br>
-                        Шаг 85 – 4 значения (0, 85, 170, 255).<br>
                     </footer>
                 </article>
 
