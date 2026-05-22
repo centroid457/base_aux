@@ -29,6 +29,22 @@ hr {
     pointer-events: none;
 }
 
+html {
+    scroll-behavior: smooth;  /* глобальная плавная прокрутка */
+}
+/* Отступ для фиксированной навигации (если есть sticky) */
+:target {
+    scroll-margin-top: 80px;
+}
+
+/* -------------------------------------------------------------------------------------------------------------------*/
+/* VISUAL SELECTING ALL BLOCKS */
+div, p,
+body, html
+{
+    border: 1px solid #aaa3;    /* visual debugging - НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
+}
+
 /* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- ROOT IDS -----------------*/
@@ -112,7 +128,7 @@ hr {
 /* -------------------- BG --------------------*/
 [data-bg_a1]        { background: #aaa1; }
 [data-bg_a3]        { background: #aaa3; }
-[data-bg_a5],
+[data-bg_a5], output,
   [data-bg_grey]    { background: #aaa5; }
 [data-bg_a7]        { background: #aaa7; }
 [data-bg_a9]        { background: #aaa9; }
@@ -281,7 +297,7 @@ button {
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
     background: #fff3;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #aaa9;
 }
 input:hover,
 select:hover,
@@ -350,9 +366,16 @@ label:has(input[type="radio"]) {
     color: #94a3b8;
     opacity: 1;
 }
-
+/* ================================================================================================================== */
+/* BOXES -------------------------------------------------------------------------------------------------------------*/
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* -------------------- FORMS --------------------*/
+form {
+    background: #aaa3;
+    border: 1px solid #aaa5;
+    border-radius: 10px;
+}
+
 form div label {
     display: inline-block;
     width: 110px;
@@ -562,15 +585,6 @@ a[target="_blank"]::after {
     vertical-align: top;
 }
 
-/* ===== Якоря (плавная прокрутка) ===== */
-html {
-    scroll-behavior: smooth;  /* глобальная плавная прокрутка */
-}
-/* Отступ для фиксированной навигации (если есть sticky) */
-:target {
-    scroll-margin-top: 80px;
-}
-
 /* ===== Ссылки-кнопки ===== */
 .a_as_button__cls {
     text-decoration: none;
@@ -586,7 +600,7 @@ html {
     background: #1a5ad9;
 }
 
-/* ===== навигация ===== */
+/* ===== навигация TODO: DELETE ==== */
 .div_a_nav__cls {
     display: flex;
     flex-wrap: wrap;
