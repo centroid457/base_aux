@@ -607,7 +607,7 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     // 2=APPLY-2=DL -----------------------------------------------
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select__all>${def_property_name}</b>]`;
     fieldset__el.appendChild(legend__el);
 
     const dl__el = document.createElement('dl');

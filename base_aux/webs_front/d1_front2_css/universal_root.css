@@ -141,7 +141,7 @@ body, html
     padding: 1rem;
     text-align: center;
 
-    border: 1px solid #000;
+    border: 1px solid black;
 
     color: black;
     text-shadow: 0 0 3px white;
@@ -155,8 +155,14 @@ body, html
 
 /* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
-[data-hover__transform_revert]:hover { transform: revert !important; }  /* inline styles - имею приоритет!!! поэтому нужно его перебить!!! */
-[data-hover__shadow]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+[data-action_hover__transform_revert]:hover { transform: revert !important; }  /* inline styles - имеют приоритет!!! поэтому нужно его перебить!!! */
+[data-action_hover__shadow]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+
+[data-cursor__clickable]    { cursor: pointer; /* no hover!!!*/ }
+
+/* ---------------- SELECTIONS -------------------- */
+[data-mouse_select__all] { user-select: all; }
+[data-mouse_select__none] { user-select: none; }
 
 /* ================================================================================================================== */
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
@@ -199,20 +205,17 @@ body, html
     background: #f005;
 }
 
-/* ---------------- SELECTIONS -------------------- */
-[data-mouse_select_all] { user-select: all; }
-
 /* -------------------- GROUPS -------------------- */
 [data-group] {}     /* just show how to separate elements by groups!!! */
 
-/* ---------------- SIZE -------------------- TODO: del!!! */
+/* ---------------- SIZE -------------------- TODO: del!!!??? */
 [data-size__small] {
-    padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
 }
 [data-size__large] {
-    padding: 0.75rem 1.5rem;
     font-size: 1.5rem;
+    padding: 0.75rem 1.5rem;
 }
 
 /* -------------------- BOXES -------------------- */
@@ -302,9 +305,6 @@ body, html
 }
 
 /* ----------------------------------------- */
-/* Курсор */
-[data-clickable]    { cursor: pointer; }
-
 /* Отступы и выравнивание */
 [data-align_center]     { text-align: center; }
 [data-align_right]      { text-align: right; }

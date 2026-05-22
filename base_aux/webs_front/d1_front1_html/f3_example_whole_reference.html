@@ -37,6 +37,200 @@
     <main id="ROOT_MAIN__ID">
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls">
+            <h2 data-icon__circle_green>COLOR-1=палитра</h2>
+            <div class="article_main__cls">
+
+                <article class="article__cls">
+
+                    <div data-flex>
+                        <label>количество интервалов:</label>
+                        <input type="number" id="input_palette_intervals__id" value="5" min="1" max="50" step="1">
+                        <button id="btn_gen_palette__id">Сгенерировать палитру</button>
+                        <input type="color"
+                               id="output_palette__id"
+
+                               data-auto__connect_values
+                               data-group="palette"
+                            >
+                        <output
+                                data-group="palette"
+                        >#******</output>
+                    </div>
+                    <div id="palette__id" style="overflow-x: auto;"></div>
+
+                    <script>
+                        const btn_gen_palette__el = document.getElementById('btn_gen_palette__id');
+                        const palette_intervals__el = document.getElementById('input_palette_intervals__id');
+
+                        btn_gen_palette__el.addEventListener('click', () => {
+                            let step = parseInt(palette_intervals__el.value, 10);
+                            if (isNaN(step)) step = 51;
+                            step = Math.min(255, Math.max(1, step));
+                            generateColorPalette('palette__id', step, false, "output_palette__id");
+                        });
+                    </script>
+
+                    <footer>
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="colorBgId" data-collapsed_not>
+            <h2 data-icon__circle_green>COLOR-2=BACKGROUND BG</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>COLOR</header>
+                    <div class="article_main__cls">
+
+                        <!-- Простые цвета (имена, hex, rgb, hsl) -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             lightblue;
+                             green;
+
+                             #eef2ff;
+                             #eef2f2;
+                             #eeffff;
+
+                             #000;
+                             #555;
+                             #aaa;
+                             #ccc;
+                             #eee;
+                             #fff;
+
+                             #f000;
+                             #f005;
+                             #f00a;
+                             #f00f;
+
+                             rgb(0, 100, 0);
+                             rgb(0, 255, 0);
+                             rgb(0, 500, 0);
+                             rgb(0, 100%, 0%);
+
+                             rgba(255,0,0,0.0);
+                             rgba(255,0,0,0.1);
+                             rgba(255,0,0,0.5);
+                             rgba(255,0,0,0.9);
+                             rgba(255,0,0,1.0);
+
+                             hsl(240,100%,50%);
+                             hsla(84,100%,59%,0.8);
+
+                             #f84;
+                             #f88;
+                             #f44;
+
+                             #ff0;
+                             #f0f;
+                             #0ff;
+                             ]">
+                            colors
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>LINEAR</header>
+                    <div class="article_main__cls">
+
+                        <!-- Градиенты линейные -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             linear-gradient(135deg, #667eea, #764ba2);
+                             linear-gradient(45deg, #ff6b6b, #feca57);
+                             linear-gradient(90deg, #1e9600, #fff200, #ff0000);
+                             linear-gradient(0deg, #4facfe, #00f2fe);
+                             linear-gradient(45deg, #fbda61, #ff5acd);
+                             linear-gradient(135deg, #eef2ff 0%, #fff 100%);
+                             repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);
+                             ]">
+                            linear-gradient
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>RADIAL</header>
+                    <div class="article_main__cls">
+
+                        <!-- Радиальные градиенты -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             radial-gradient(circle, #f0f, #0ff);
+                             radial-gradient(ellipse at top, #ff9a9e, #fad0c4);
+                             radial-gradient(circle at 20% 40%, #f6d365, #fda085);
+                             repeating-radial-gradient(circle at 20% 30%, #ff9999, #ff9999 10px, #ffcccc 10px, #ffcccc 20px);
+                             ]">
+                            radial-gradient
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>CONIC</header>
+                    <div class="article_main__cls">
+
+                        <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             conic-gradient(#ff8c00, #ff0080, #ff8c00);
+                             repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);
+                             ]">
+                            conic
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>GLASS-effect</header>
+                    <div class="article_main__cls">
+
+                        <!-- Эффект стекла (glassmorphism) -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             rgba(200, 200, 200, 0.5);
+                             linear-gradient(120deg, rgba(200,200,200,0.9), rgba(200,200,255,0.1));
+                             radial-gradient(circle, rgba(200,200,200,0.9), rgba(255,255,255,0.1));
+                             ]">
+                            Стеклянные эффекты
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>URL-PICS</header>
+                    <div class="article_main__cls">
+
+                        TODO: ДОДЕТАТЬ
+                        <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                             linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
+                             linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;
+                             radial-gradient(circle at 10% 20%, #ff9a9e, #fad0c4), url('https://picsum.photos/id/20/300/200');
+                             ]">
+                            Фоны с изображениями и наложениями
+                        </div>
+
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="structId" data-collapsed_not>
             <h2 data-icon__circle_green>СТРУКТУРЫ</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -263,41 +457,41 @@
                         <table>
                             <thead><tr><th>Мнемоника</th><th>Результат</th><th>Описание</th></tr></thead>
                             <tbody>
-                                <tr><td><code data-mouse_select_all>&amp;WRNG;</code></td><td>&WRNG;==WRNG</td><td>WRNG</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;;</code></td><td>&;==</td><td>BLANC</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;amp;</code></td><td>&amp;==&</td><td>амперсанд</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;nbsp;</code></td><td>&nbsp;</td><td>неразрывный пробел</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;WRNG;</code></td><td>&WRNG;==WRNG</td><td>WRNG</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;;</code></td><td>&;==</td><td>BLANC</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;amp;</code></td><td>&amp;==&</td><td>амперсанд</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;nbsp;</code></td><td>&nbsp;</td><td>неразрывный пробел</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;lt;</code></td><td>&lt;==<</td><td>меньше (less than)</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;gt;</code></td><td>&gt;==></td><td>больше (greater than)</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;quot;</code></td><td>&quot;=="</td><td>двойная кавычка</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;apos;</code></td><td>&apos;=='</td><td>апостроф</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;lt;</code></td><td>&lt;==<</td><td>меньше (less than)</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;gt;</code></td><td>&gt;==></td><td>больше (greater than)</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;quot;</code></td><td>&quot;=="</td><td>двойная кавычка</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;apos;</code></td><td>&apos;=='</td><td>апостроф</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;sect;</code></td><td>&sect;==§</td><td>параграф</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;para;</code></td><td>&para;==¶</td><td>знак абзаца</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;sect;</code></td><td>&sect;==§</td><td>параграф</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;para;</code></td><td>&para;==¶</td><td>знак абзаца</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;copy;</code></td><td>&copy;==©</td><td>copyright</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;reg;</code></td><td>&reg;==®</td><td>зарегистрированная торговая марка</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;trade;</code></td><td>&trade;==™</td><td>торговая марка</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;copy;</code></td><td>&copy;==©</td><td>copyright</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;reg;</code></td><td>&reg;==®</td><td>зарегистрированная торговая марка</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;trade;</code></td><td>&trade;==™</td><td>торговая марка</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;times;</code></td><td>&times;==×</td><td>знак умножения (крест)</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;divide;</code></td><td>&divide;==÷</td><td>знак деления</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;plusmn;</code></td><td>&plusmn;==±</td><td>плюс-минус</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;middot;</code></td><td>&middot;==·</td><td>средняя точка</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;deg;</code></td><td>&deg;==°</td><td>градус</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;times;</code></td><td>&times;==×</td><td>знак умножения (крест)</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;divide;</code></td><td>&divide;==÷</td><td>знак деления</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;plusmn;</code></td><td>&plusmn;==±</td><td>плюс-минус</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;middot;</code></td><td>&middot;==·</td><td>средняя точка</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;deg;</code></td><td>&deg;==°</td><td>градус</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;frac12;</code></td><td>&frac12;==½</td><td>одна вторая</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;frac14;</code></td><td>&frac14;==¼</td><td>одна четверть</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;frac34;</code></td><td>&frac34;==¾</td><td>три четверти</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;frac12;</code></td><td>&frac12;==½</td><td>одна вторая</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;frac14;</code></td><td>&frac14;==¼</td><td>одна четверть</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;frac34;</code></td><td>&frac34;==¾</td><td>три четверти</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;euro;</code></td><td>&euro;==€</td><td>евро</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;pound;</code></td><td>&pound;==£</td><td>фунт стерлингов</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;yen;</code></td><td>&yen;==¥</td><td>йена</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;euro;</code></td><td>&euro;==€</td><td>евро</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;pound;</code></td><td>&pound;==£</td><td>фунт стерлингов</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;yen;</code></td><td>&yen;==¥</td><td>йена</td></tr>
 
-                                <tr><td><code data-mouse_select_all>&amp;hearts;</code></td><td>&hearts;==♥</td><td>черви</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;spades;</code></td><td>&spades;==♠</td><td>пики</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;clubs;</code></td><td>&clubs;==♣</td><td>трефы</td></tr>
-                                <tr><td><code data-mouse_select_all>&amp;diams;</code></td><td>&diams;==♦</td><td>бубны</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;hearts;</code></td><td>&hearts;==♥</td><td>черви</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;spades;</code></td><td>&spades;==♠</td><td>пики</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;clubs;</code></td><td>&clubs;==♣</td><td>трефы</td></tr>
+                                <tr><td><code data-mouse_select__all>&amp;diams;</code></td><td>&diams;==♦</td><td>бубны</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2930,7 +3124,7 @@
                         <div
                                 data-item_square
                                 data-box_50x100
-                                data-hover__transform_revert
+                                data-action_hover__transform_revert
                              data-clone_element__params="transform:[
                                  translateX(20px);
                                  translateY(10px);
@@ -2978,250 +3172,250 @@
             </div>
         </section>
 
-<!-- ====================================================================================================== -->
-<section class="section__cls" id="reactId">
-    <h2 data-icon__circle_green>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
-    <div class="section_main__cls grid_auto__cls">
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="reactId">
+            <h2 data-icon__circle_green>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
+            <div class="section_main__cls grid_auto__cls">
 
-        <!-- :hover – наведение мыши -->
-        <article class="article__cls">
-            <header>🖱️ :hover – наведение курсора</header>
-            <div class="article_main__cls">
-                <style>
-                    .demo-hover {
-                        padding: 0.5rem;
-                        background: #eef2ff;
-                        border-radius: 0.5rem;
-                        transition: all 0.2s;
-                        cursor: pointer;
-                    }
-                    .demo-hover:hover {
-                        background: #2a73ff;
-                        color: white;
-                        transform: scale(1.1);
-                    }
-                </style>
-                <div class="demo-hover">
-                    Наведи на меня (меняется фон, цвет, масштаб)
+                <!-- :hover – наведение мыши -->
+                <article class="article__cls">
+                    <header>🖱️ :hover – наведение курсора</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .demo-hover {
+                                padding: 0.5rem;
+                                background: #eef2ff;
+                                border-radius: 0.5rem;
+                                transition: all 0.2s;
+                                cursor: pointer;
+                            }
+                            .demo-hover:hover {
+                                background: #2a73ff;
+                                color: white;
+                                transform: scale(1.1);
+                            }
+                        </style>
+                        <div class="demo-hover">
+                            Наведи на меня (меняется фон, цвет, масштаб)
+                        </div>
+                        <p><small>Срабатывает при наведении мыши, не зависит от фокуса.</small></p>
+                    </div>
+                    <footer>Используйте <code>:hover</code> для визуальной обратной связи (кнопки, ссылки, карточки).</footer>
+                </article>
+
+                <!-- :active – момент нажатия -->
+                <article class="article__cls">
+                    <header>👇 :active – момент нажатия (клик)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .demo-active {
+                                padding: 0.5rem;
+                                background: #8e44ad;
+                                color: white;
+                                border-radius: 0.5rem;
+                                transition: 0.05s linear;
+                                cursor: pointer;
+                            }
+                            .demo-active:active {
+                                transform: scale(0.97);
+                                background: #5b2c6f;
+                            }
+                        </style>
+                        <div class="demo-active">
+                            Нажми и удержи (эффект нажатия)
+                        </div>
+                        <p><small>Действует в момент зажатой кнопки мыши.</small></p>
+                    </div>
+                    <footer>Классика для кнопок: <code>:active</code> + смещение или затемнение.</footer>
+                </article>
+
+                <!-- :focus / :focus-visible – фокус с клавиатуры -->
+                <article class="article__cls">
+                    <header>⌨️ :focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .demo-focus {
+                                padding: 0.5rem;
+                                border: 2px solid #ccc;
+                                border-radius: 0.5rem;
+                                outline: none;
+                            }
+                            .demo-focus:focus-visible {
+                                border-color: #2a73ff;
+                                box-shadow: 0 0 0 2px rgba(42,115,255,0.4);
+                            }
+                        </style>
+                        <input type="text" class="demo-focus" placeholder="Нажми Tab, чтобы получить фокус">
+                        <p><small><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</small></p>
+                    </div>
+                    <footer>Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.</footer>
+                </article>
+
+                <!-- :target – якорная прокрутка -->
+                <article class="article__cls">
+                    <header>⚓ :target – активный якорь (URL #id)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .target-demo {
+                                background: #f8fafc;
+                                padding: 0.5rem;
+                                border-radius: 0.5rem;
+                                transition: 0.2s;
+                            }
+                            .target-demo:target {
+                                background: #fef9e3;
+                                border-left: 4px solid #ff8c42;
+                            }
+                        </style>
+                        <div class="target-demo" id="targetBlock">
+                            Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
+                        </div>
+                        <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
+                        <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
+                    </div>
+                    <footer>Полезно для выделения раздела, на который только что перешли.</footer>
+                </article>
+
+                <!-- :checked и :disabled (стилизация чекбоксов через соседей) -->
+                <article class="article__cls">
+                    <header>✅ :checked и 🔒 :disabled – состояния элементов форм</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .check-demo {
+                                display: flex;
+                                gap: 1rem;
+                                align-items: center;
+                            }
+                            .check-demo label {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.3rem;
+                            }
+                            /* Стилизация через соседний элемент (не кастомный чекбокс) */
+                            .check-demo input {
+                                accent-color: #2a73ff;
+                            }
+                            .check-demo input:disabled {
+                                opacity: 0.6;
+                                cursor: not-allowed;
+                            }
+                            .custom-check {
+                                position: relative;
+                            }
+                            .custom-check input {
+                                position: absolute;
+                                opacity: 0;
+                            }
+                            .custom-check span {
+                                display: inline-block;
+                                width: 1.2rem;
+                                height: 1.2rem;
+                                background: white;
+                                border: 2px solid #2a73ff;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            }
+                            .custom-check input:checked + span {
+                                background: #2a73ff;
+                                position: relative;
+                            }
+                            .custom-check input:checked + span::after {
+                                content: "✓";
+                                position: absolute;
+                                top: 0;
+                                left: 2px;
+                                color: white;
+                                font-size: 0.9rem;
+                            }
+                        </style>
+                        <div class="check-demo">
+                            <label><input type="checkbox" checked> :checked</label>
+                            <label><input type="checkbox" disabled> :disabled</label>
+                            <label class="custom-check">
+                                <input type="checkbox">
+                                <span></span> кастомный чекбокс (через :checked + span)
+                            </label>
+                        </div>
+                        <p><small><code>:checked</code> управляет стилями выбранных чекбоксов/радио, <code>:disabled</code> – для недоступных полей.</small></p>
+                    </div>
+                    <footer>Позволяют менять внешний вид без JavaScript, используя соседние селекторы (<code>+</code> или <code>~</code>).</footer>
+                </article>
+
+                <!-- ::before / ::after – псевдоэлементы (уже были, но выделим отдельно) -->
+                <article class="article__cls">
+                    <header>✨ ::before и ::after – декоративные элементы</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .before-after-demo {
+                                padding: 0.5rem;
+                                background: #f8fafc;
+                                border-radius: 0.5rem;
+                                text-align: center;
+                            }
+                            .before-after-demo::before {
+                                content: "✋ ";
+                                font-size: 1.2rem;
+                            }
+                            .before-after-demo::after {
+                                content: " 👋";
+                                font-size: 1.2rem;
+                            }
+                            .quote-demo {
+                                quotes: "«" "»";
+                                font-style: italic;
+                            }
+                            .quote-demo::before {
+                                content: open-quote;
+                            }
+                            .quote-demo::after {
+                                content: close-quote;
+                            }
+                        </style>
+                        <div class="before-after-demo">
+                            Добавлены эмодзи через ::before и ::after
+                        </div>
+                        <div class="quote-demo">
+                            Это кавычки через псевдоэлементы и свойство quotes
+                        </div>
+                        <p><small>Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.</small></p>
+                    </div>
+                    <footer>Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.</footer>
+                </article>
+
+                <!-- :empty – стилизация пустых элементов -->
+                <article class="article__cls">
+                    <header>📭 :empty – пустой элемент</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .empty-demo {
+                                background: #f1f5f9;
+                                padding: 0.5rem;
+                                border-radius: 0.5rem;
+                                min-height: 2rem;
+                            }
+                            .empty-demo:empty {
+                                background: #fee2e2;
+                                border: 1px dashed #ef4444;
+                            }
+                            .empty-demo:empty::before {
+                                content: "(пусто)";
+                                color: #c0392b;
+                            }
+                        </style>
+                        <div class="empty-demo">Непустой блок</div>
+                        <div class="empty-demo"></div>
+                        <p><small>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов).</small></p>
+                    </div>
+                    <footer>Полезно для сообщений «Нет данных», для динамических виджетов.</footer>
+                </article>
+
+            </div>
+            <div class="section_main__cls">
+                <div class="demo-note">
+                    💡 <strong>Совет:</strong> всегда проверяйте порядок псевдоклассов в CSS: <code>:link – :visited – :hover – :active</code> (LVHA). Для фокуса лучше <code>:focus-visible</code> вместо <code>:focus</code>.
                 </div>
-                <p><small>Срабатывает при наведении мыши, не зависит от фокуса.</small></p>
             </div>
-            <footer>Используйте <code>:hover</code> для визуальной обратной связи (кнопки, ссылки, карточки).</footer>
-        </article>
-
-        <!-- :active – момент нажатия -->
-        <article class="article__cls">
-            <header>👇 :active – момент нажатия (клик)</header>
-            <div class="article_main__cls">
-                <style>
-                    .demo-active {
-                        padding: 0.5rem;
-                        background: #8e44ad;
-                        color: white;
-                        border-radius: 0.5rem;
-                        transition: 0.05s linear;
-                        cursor: pointer;
-                    }
-                    .demo-active:active {
-                        transform: scale(0.97);
-                        background: #5b2c6f;
-                    }
-                </style>
-                <div class="demo-active">
-                    Нажми и удержи (эффект нажатия)
-                </div>
-                <p><small>Действует в момент зажатой кнопки мыши.</small></p>
-            </div>
-            <footer>Классика для кнопок: <code>:active</code> + смещение или затемнение.</footer>
-        </article>
-
-        <!-- :focus / :focus-visible – фокус с клавиатуры -->
-        <article class="article__cls">
-            <header>⌨️ :focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
-            <div class="article_main__cls">
-                <style>
-                    .demo-focus {
-                        padding: 0.5rem;
-                        border: 2px solid #ccc;
-                        border-radius: 0.5rem;
-                        outline: none;
-                    }
-                    .demo-focus:focus-visible {
-                        border-color: #2a73ff;
-                        box-shadow: 0 0 0 2px rgba(42,115,255,0.4);
-                    }
-                </style>
-                <input type="text" class="demo-focus" placeholder="Нажми Tab, чтобы получить фокус">
-                <p><small><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</small></p>
-            </div>
-            <footer>Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.</footer>
-        </article>
-
-        <!-- :target – якорная прокрутка -->
-        <article class="article__cls">
-            <header>⚓ :target – активный якорь (URL #id)</header>
-            <div class="article_main__cls">
-                <style>
-                    .target-demo {
-                        background: #f8fafc;
-                        padding: 0.5rem;
-                        border-radius: 0.5rem;
-                        transition: 0.2s;
-                    }
-                    .target-demo:target {
-                        background: #fef9e3;
-                        border-left: 4px solid #ff8c42;
-                    }
-                </style>
-                <div class="target-demo" id="targetBlock">
-                    Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
-                </div>
-                <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
-                <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
-            </div>
-            <footer>Полезно для выделения раздела, на который только что перешли.</footer>
-        </article>
-
-        <!-- :checked и :disabled (стилизация чекбоксов через соседей) -->
-        <article class="article__cls">
-            <header>✅ :checked и 🔒 :disabled – состояния элементов форм</header>
-            <div class="article_main__cls">
-                <style>
-                    .check-demo {
-                        display: flex;
-                        gap: 1rem;
-                        align-items: center;
-                    }
-                    .check-demo label {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.3rem;
-                    }
-                    /* Стилизация через соседний элемент (не кастомный чекбокс) */
-                    .check-demo input {
-                        accent-color: #2a73ff;
-                    }
-                    .check-demo input:disabled {
-                        opacity: 0.6;
-                        cursor: not-allowed;
-                    }
-                    .custom-check {
-                        position: relative;
-                    }
-                    .custom-check input {
-                        position: absolute;
-                        opacity: 0;
-                    }
-                    .custom-check span {
-                        display: inline-block;
-                        width: 1.2rem;
-                        height: 1.2rem;
-                        background: white;
-                        border: 2px solid #2a73ff;
-                        border-radius: 4px;
-                        cursor: pointer;
-                    }
-                    .custom-check input:checked + span {
-                        background: #2a73ff;
-                        position: relative;
-                    }
-                    .custom-check input:checked + span::after {
-                        content: "✓";
-                        position: absolute;
-                        top: 0;
-                        left: 2px;
-                        color: white;
-                        font-size: 0.9rem;
-                    }
-                </style>
-                <div class="check-demo">
-                    <label><input type="checkbox" checked> :checked</label>
-                    <label><input type="checkbox" disabled> :disabled</label>
-                    <label class="custom-check">
-                        <input type="checkbox">
-                        <span></span> кастомный чекбокс (через :checked + span)
-                    </label>
-                </div>
-                <p><small><code>:checked</code> управляет стилями выбранных чекбоксов/радио, <code>:disabled</code> – для недоступных полей.</small></p>
-            </div>
-            <footer>Позволяют менять внешний вид без JavaScript, используя соседние селекторы (<code>+</code> или <code>~</code>).</footer>
-        </article>
-
-        <!-- ::before / ::after – псевдоэлементы (уже были, но выделим отдельно) -->
-        <article class="article__cls">
-            <header>✨ ::before и ::after – декоративные элементы</header>
-            <div class="article_main__cls">
-                <style>
-                    .before-after-demo {
-                        padding: 0.5rem;
-                        background: #f8fafc;
-                        border-radius: 0.5rem;
-                        text-align: center;
-                    }
-                    .before-after-demo::before {
-                        content: "✋ ";
-                        font-size: 1.2rem;
-                    }
-                    .before-after-demo::after {
-                        content: " 👋";
-                        font-size: 1.2rem;
-                    }
-                    .quote-demo {
-                        quotes: "«" "»";
-                        font-style: italic;
-                    }
-                    .quote-demo::before {
-                        content: open-quote;
-                    }
-                    .quote-demo::after {
-                        content: close-quote;
-                    }
-                </style>
-                <div class="before-after-demo">
-                    Добавлены эмодзи через ::before и ::after
-                </div>
-                <div class="quote-demo">
-                    Это кавычки через псевдоэлементы и свойство quotes
-                </div>
-                <p><small>Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.</small></p>
-            </div>
-            <footer>Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.</footer>
-        </article>
-
-        <!-- :empty – стилизация пустых элементов -->
-        <article class="article__cls">
-            <header>📭 :empty – пустой элемент</header>
-            <div class="article_main__cls">
-                <style>
-                    .empty-demo {
-                        background: #f1f5f9;
-                        padding: 0.5rem;
-                        border-radius: 0.5rem;
-                        min-height: 2rem;
-                    }
-                    .empty-demo:empty {
-                        background: #fee2e2;
-                        border: 1px dashed #ef4444;
-                    }
-                    .empty-demo:empty::before {
-                        content: "(пусто)";
-                        color: #c0392b;
-                    }
-                </style>
-                <div class="empty-demo">Непустой блок</div>
-                <div class="empty-demo"></div>
-                <p><small>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов).</small></p>
-            </div>
-            <footer>Полезно для сообщений «Нет данных», для динамических виджетов.</footer>
-        </article>
-
-    </div>
-    <div class="section_main__cls">
-        <div class="demo-note">
-            💡 <strong>Совет:</strong> всегда проверяйте порядок псевдоклассов в CSS: <code>:link – :visited – :hover – :active</code> (LVHA). Для фокуса лучше <code>:focus-visible</code> вместо <code>:focus</code>.
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="inputId" data-collapsed_not>
@@ -4142,9 +4336,6 @@
                         <hr>
                         COVERS
                         <p data-border>data-border</p>
-                        <p data-hover__shadow>data-hover__shadow</p>
-
-                        <p data-clickable>data-clickable</p>
 
                         <hr>
                         <p data-align_center>data-align_center</p>
@@ -5661,200 +5852,6 @@
 
                     </div>
                     <footer><strong>Суть:</strong> табы — это не встроенный тег, а популярный паттерн. Здесь показана классическая реализация на JS + CSS.</footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls" id="colorBgId" data-collapsed_not>
-            <h2 data-icon__circle_green>COLORS BACKGROUND BG</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <article class="article__cls">
-                    <header>COLOR</header>
-                    <div class="article_main__cls">
-
-                        <!-- Простые цвета (имена, hex, rgb, hsl) -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             lightblue;
-                             green;
-
-                             #eef2ff;
-                             #eef2f2;
-                             #eeffff;
-
-                             #000;
-                             #555;
-                             #aaa;
-                             #ccc;
-                             #eee;
-                             #fff;
-
-                             #f000;
-                             #f005;
-                             #f00a;
-                             #f00f;
-
-                             rgb(0, 100, 0);
-                             rgb(0, 255, 0);
-                             rgb(0, 500, 0);
-                             rgb(0, 100%, 0%);
-
-                             rgba(255,0,0,0.0);
-                             rgba(255,0,0,0.1);
-                             rgba(255,0,0,0.5);
-                             rgba(255,0,0,0.9);
-                             rgba(255,0,0,1.0);
-
-                             hsl(240,100%,50%);
-                             hsla(84,100%,59%,0.8);
-
-                             #f84;
-                             #f88;
-                             #f44;
-
-                             #ff0;
-                             #f0f;
-                             #0ff;
-                             ]">
-                            colors
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>LINEAR</header>
-                    <div class="article_main__cls">
-
-                        <!-- Градиенты линейные -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             linear-gradient(135deg, #667eea, #764ba2);
-                             linear-gradient(45deg, #ff6b6b, #feca57);
-                             linear-gradient(90deg, #1e9600, #fff200, #ff0000);
-                             linear-gradient(0deg, #4facfe, #00f2fe);
-                             linear-gradient(45deg, #fbda61, #ff5acd);
-                             linear-gradient(135deg, #eef2ff 0%, #fff 100%);
-                             repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);
-                             ]">
-                            linear-gradient
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>RADIAL</header>
-                    <div class="article_main__cls">
-
-                        <!-- Радиальные градиенты -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             radial-gradient(circle, #f0f, #0ff);
-                             radial-gradient(ellipse at top, #ff9a9e, #fad0c4);
-                             radial-gradient(circle at 20% 40%, #f6d365, #fda085);
-                             repeating-radial-gradient(circle at 20% 30%, #ff9999, #ff9999 10px, #ffcccc 10px, #ffcccc 20px);
-                             ]">
-                            radial-gradient
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>CONIC</header>
-                    <div class="article_main__cls">
-
-                        <!-- Необычные приёмы (смешивание, тень, но в данном случае только background) -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             conic-gradient(#ff8c00, #ff0080, #ff8c00);
-                             repeating-conic-gradient(#ffcc33 0deg 10deg, #ff99cc 10deg 20deg);
-                             ]">
-                            conic
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>GLASS-effect</header>
-                    <div class="article_main__cls">
-
-                        <!-- Эффект стекла (glassmorphism) -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             rgba(200, 200, 200, 0.5);
-                             linear-gradient(120deg, rgba(200,200,200,0.9), rgba(200,200,255,0.1));
-                             radial-gradient(circle, rgba(200,200,200,0.9), rgba(255,255,255,0.1));
-                             ]">
-                            Стеклянные эффекты
-                        </div>
-
-                    </div>
-                </article>
-
-                <article class="article__cls">
-                    <header>URL-PICS</header>
-                    <div class="article_main__cls">
-
-                        TODO: ДОДЕТАТЬ
-                        <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
-                        <div data-item_square
-                             data-clone_element__params="background:[
-                             linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
-                             linear-gradient(120deg, #a1c4fd, #c2e9fb), #d4fc79;
-                             radial-gradient(circle at 10% 20%, #ff9a9e, #fad0c4), url('https://picsum.photos/id/20/300/200');
-                             ]">
-                            Фоны с изображениями и наложениями
-                        </div>
-
-                    </div>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
-        <section class="section__cls">
-            <h2 data-icon__circle_green>Генератор цветовой палитры с шагом</h2>
-            <div class="article_main__cls">
-
-                <article class="article__cls">
-
-                    <div data-flex>
-                        <label>количество интервалов:</label>
-                        <input type="number" id="input_palette_intervals__id" value="5" min="1" max="50" step="1">
-                        <button id="btn_gen_palette__id">Сгенерировать палитру</button>
-                        <input type="color"
-                               id="output_palette__id"
-
-                               data-auto__connect_values
-                               data-group="palette"
-                            >
-                        <output
-                                data-group="palette"
-                        >#******</output>
-                    </div>
-                    <div id="palette__id" style="overflow-x: auto;"></div>
-
-                    <script>
-                        const btn_gen_palette__el = document.getElementById('btn_gen_palette__id');
-                        const palette_intervals__el = document.getElementById('input_palette_intervals__id');
-
-                        btn_gen_palette__el.addEventListener('click', () => {
-                            let step = parseInt(palette_intervals__el.value, 10);
-                            if (isNaN(step)) step = 51;
-                            step = Math.min(255, Math.max(1, step));
-                            generateColorPalette('palette__id', step, false, "output_palette__id");
-                        });
-                    </script>
-
-                    <footer>
-                    </footer>
                 </article>
 
             </div>
