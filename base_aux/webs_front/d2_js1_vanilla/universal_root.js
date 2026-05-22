@@ -155,6 +155,51 @@ OnLoadRunner.add(onload__ws_ping);
 
 
 // =====================================================================================================================
+// COUNTERS ------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Добавляет порядковые номера во все элементы, соответствующие селектору.
+ * @param {string} selector - CSS-селектор элементов для нумерации.
+ * @param {Object} options - настройки (необязательно)
+ * @param {number} options.startIndex - номер первого элемента (по умолчанию 1)
+ * @param {string} options.attrName - для стилизации
+ */
+function onload__count_elements(selector, options = {}) {
+    const {
+        startIndex = 1,
+        attrName = 'data-counter_index',
+        attr_skip = 'data-skip',
+    } = options;
+
+    const elements = document.querySelectorAll(selector);
+    if (!elements.length) return;
+
+    // Удаляем старые счетчики, если нужно
+    elements.forEach(el => {
+        const oldSpan = el.querySelector(`span[${attrName}]`);
+        if (oldSpan) oldSpan.remove();
+    });
+
+    let counter_index = startIndex;
+
+    // Проставляем новые номера
+    elements.forEach(el => {
+        if (el.hasAttribute(attr_skip)) return;
+        const span = document.createElement('span');
+        span.setAttribute(attrName, "");
+        span.textContent = counter_index;
+        el.prepend(span);
+        counter_index += 1;
+    });
+}
+
+OnLoadRunner.add(
+    function() {
+        onload__count_elements('.section__cls h2' );
+    }
+);
+
+
 // ---------------------------------------------------------------------------------------------------------------------
 /** НЕ РАБОТАЕТ!!!
  * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
@@ -232,12 +277,13 @@ function numberHeadings(container, options = {}) {
         heading.innerHTML = prefix + newHTML;
     }
 }
-OnLoadRunner.add(function() {
-    numberHeadings('#ROOT_MAIN__ID', {
-        show_h1: false,
-        sep: '.',
-        keep_nesting: true
-    });
+OnLoadRunner.add(
+    function() {
+        numberHeadings('#ROOT_MAIN__ID', {
+            show_h1: false,
+            sep: '.',
+            keep_nesting: true
+        });
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
