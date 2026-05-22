@@ -1487,7 +1487,7 @@
                     <div class="article_main__cls">
 
                         <hr>
-                        <fieldset style="all: revert">
+                        <fieldset data-all_revert>
                             <legend>REVERTED</legend>
                             <label>Name: <input type="text" placeholder="Введите имя"></label>
                             <label>Email: <input type="email" placeholder="user@example.com"></label>
@@ -2568,8 +2568,8 @@
                     <header>BUTTONS</header>
                     <div class="article_main__cls">
                         <p>
-                            <button style="all: revert;">all: revert</button>
-                            <button style="all: revert;" disabled>all: revert disabled</button>
+                            <button data-all_revert>data-all_revert</button>
+                            <button data-all_revert disabled>data-all_revert disabled</button>
                             - NO STYLE
                         </p>
                         <p>
@@ -3113,7 +3113,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="transformId">
-            <h2 data-icon__circle_yellow>transform</h2>
+            <h2 data-icon__circle_green>transform</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -3174,7 +3174,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="reactId">
-            <h2 data-icon__circle_green>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
+            <h2 data-icon__circle_yellow>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- :hover – наведение мыши -->
@@ -3592,11 +3592,10 @@
                         </p>
 
                         <p>
-                            data-auto__connect_values + all: revert;<br>
+                            data-auto__connect_values +data-all_revert<br>
                             <input type="color"
-                                   style="all: revert;"
                                    value="#0055ff"
-
+                                   data-all_revert
                                    data-auto__connect_values
                                    data-group="groupInputColor_1"
                             >
@@ -3882,15 +3881,15 @@
 
                         <hr>
                         ALL_REVERT<br>
-                        <label style="all: revert;"><input style="all: revert;" type="radio" checked>all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="radio" checked disabled>all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="radio">all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="radio" disabled>all: revert;</label><br>
+                        <label data-all_revert><input data-all_revert type="radio" checked>data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="radio" checked disabled>data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="radio">data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="radio" disabled>data-all_revert</label><br>
 
-                        <label style="all: revert;"><input style="all: revert;" type="checkbox" checked>all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="checkbox" checked disabled>all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="checkbox">all: revert;</label><br>
-                        <label style="all: revert;"><input style="all: revert;" type="checkbox" disabled>all: revert;</label><br>
+                        <label data-all_revert><input data-all_revert type="checkbox" checked>data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="checkbox" checked disabled>data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="checkbox">data-all_revert</label><br>
+                        <label data-all_revert><input data-all_revert type="checkbox" disabled>data-all_revert</label><br>
 
                         <hr>
                         accent-color: auto;<br>
@@ -4465,8 +4464,8 @@
 
                         <p><button style="all: unset ;">all: unset </button></p>
                         <p><button style="all: initial;">all: initial</button></p>
-                        <p><button style="all: revert;">all: revert</button> - возвращает браузерные стили (не для старых браузеров)</p>
-                        <div style="all: revert;">
+                        <p><button data-all_revert>data-all_revert</button> - возвращает браузерные стили (не для старых браузеров)</p>
+                        <div data-all_revert>
                             <button>Нативная кнопка</button> - обертка в div не помогает!
                         </div>
 

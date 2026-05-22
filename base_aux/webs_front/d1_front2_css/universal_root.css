@@ -155,7 +155,11 @@ body, html
 
 /* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
-[data-action_hover__transform_revert]:hover { transform: revert !important; }  /* inline styles - имеют приоритет!!! поэтому нужно его перебить!!! */
+/* !IMPORTANT === inline styles - имеют приоритет!!! поэтому нужно его перебить!!! */
+[data-all_revert] { all: revert !important; }
+[data-action_hover__all_revert]:hover { all: revert !important; }
+
+[data-action_hover__transform_revert]:hover { transform: revert !important; }
 [data-action_hover__shadow]:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
 
 [data-cursor__clickable]    { cursor: pointer; /* no hover!!!*/ }
