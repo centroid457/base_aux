@@ -2917,6 +2917,251 @@
             </div>
         </section>
 
+<!-- ====================================================================================================== -->
+<section class="section__cls" id="pseudoId">
+    <h2>🎭 Псевдоклассы (динамика) и псевдоэлементы</h2>
+    <div class="section_main__cls grid_auto__cls">
+
+        <!-- :hover – наведение мыши -->
+        <article class="article__cls">
+            <header>🖱️ :hover – наведение курсора</header>
+            <div class="article_main__cls">
+                <style>
+                    .demo-hover {
+                        padding: 0.5rem;
+                        background: #eef2ff;
+                        border-radius: 0.5rem;
+                        transition: all 0.2s;
+                        cursor: pointer;
+                    }
+                    .demo-hover:hover {
+                        background: #2a73ff;
+                        color: white;
+                        transform: scale(1.1);
+                    }
+                </style>
+                <div class="demo-hover">
+                    Наведи на меня (меняется фон, цвет, масштаб)
+                </div>
+                <p><small>Срабатывает при наведении мыши, не зависит от фокуса.</small></p>
+            </div>
+            <footer>Используйте <code>:hover</code> для визуальной обратной связи (кнопки, ссылки, карточки).</footer>
+        </article>
+
+        <!-- :active – момент нажатия -->
+        <article class="article__cls">
+            <header>👇 :active – момент нажатия (клик)</header>
+            <div class="article_main__cls">
+                <style>
+                    .demo-active {
+                        padding: 0.5rem;
+                        background: #8e44ad;
+                        color: white;
+                        border-radius: 0.5rem;
+                        transition: 0.05s linear;
+                        cursor: pointer;
+                    }
+                    .demo-active:active {
+                        transform: scale(0.97);
+                        background: #5b2c6f;
+                    }
+                </style>
+                <div class="demo-active">
+                    Нажми и удержи (эффект нажатия)
+                </div>
+                <p><small>Действует в момент зажатой кнопки мыши.</small></p>
+            </div>
+            <footer>Классика для кнопок: <code>:active</code> + смещение или затемнение.</footer>
+        </article>
+
+        <!-- :focus / :focus-visible – фокус с клавиатуры -->
+        <article class="article__cls">
+            <header>⌨️ :focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
+            <div class="article_main__cls">
+                <style>
+                    .demo-focus {
+                        padding: 0.5rem;
+                        border: 2px solid #ccc;
+                        border-radius: 0.5rem;
+                        outline: none;
+                    }
+                    .demo-focus:focus-visible {
+                        border-color: #2a73ff;
+                        box-shadow: 0 0 0 2px rgba(42,115,255,0.4);
+                    }
+                </style>
+                <input type="text" class="demo-focus" placeholder="Нажми Tab, чтобы получить фокус">
+                <p><small><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</small></p>
+            </div>
+            <footer>Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.</footer>
+        </article>
+
+        <!-- :target – якорная прокрутка -->
+        <article class="article__cls">
+            <header>⚓ :target – активный якорь (URL #id)</header>
+            <div class="article_main__cls">
+                <style>
+                    .target-demo {
+                        background: #f8fafc;
+                        padding: 0.5rem;
+                        border-radius: 0.5rem;
+                        transition: 0.2s;
+                    }
+                    .target-demo:target {
+                        background: #fef9e3;
+                        border-left: 4px solid #ff8c42;
+                    }
+                </style>
+                <div class="target-demo" id="targetBlock">
+                    Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
+                </div>
+                <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
+                <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
+            </div>
+            <footer>Полезно для выделения раздела, на который только что перешли.</footer>
+        </article>
+
+        <!-- :checked и :disabled (стилизация чекбоксов через соседей) -->
+        <article class="article__cls">
+            <header>✅ :checked и 🔒 :disabled – состояния элементов форм</header>
+            <div class="article_main__cls">
+                <style>
+                    .check-demo {
+                        display: flex;
+                        gap: 1rem;
+                        align-items: center;
+                    }
+                    .check-demo label {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.3rem;
+                    }
+                    /* Стилизация через соседний элемент (не кастомный чекбокс) */
+                    .check-demo input {
+                        accent-color: #2a73ff;
+                    }
+                    .check-demo input:disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+                    .custom-check {
+                        position: relative;
+                    }
+                    .custom-check input {
+                        position: absolute;
+                        opacity: 0;
+                    }
+                    .custom-check span {
+                        display: inline-block;
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        background: white;
+                        border: 2px solid #2a73ff;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+                    .custom-check input:checked + span {
+                        background: #2a73ff;
+                        position: relative;
+                    }
+                    .custom-check input:checked + span::after {
+                        content: "✓";
+                        position: absolute;
+                        top: 0;
+                        left: 2px;
+                        color: white;
+                        font-size: 0.9rem;
+                    }
+                </style>
+                <div class="check-demo">
+                    <label><input type="checkbox" checked> :checked</label>
+                    <label><input type="checkbox" disabled> :disabled</label>
+                    <label class="custom-check">
+                        <input type="checkbox">
+                        <span></span> кастомный чекбокс (через :checked + span)
+                    </label>
+                </div>
+                <p><small><code>:checked</code> управляет стилями выбранных чекбоксов/радио, <code>:disabled</code> – для недоступных полей.</small></p>
+            </div>
+            <footer>Позволяют менять внешний вид без JavaScript, используя соседние селекторы (<code>+</code> или <code>~</code>).</footer>
+        </article>
+
+        <!-- ::before / ::after – псевдоэлементы (уже были, но выделим отдельно) -->
+        <article class="article__cls">
+            <header>✨ ::before и ::after – декоративные элементы</header>
+            <div class="article_main__cls">
+                <style>
+                    .before-after-demo {
+                        padding: 0.5rem;
+                        background: #f8fafc;
+                        border-radius: 0.5rem;
+                        text-align: center;
+                    }
+                    .before-after-demo::before {
+                        content: "✋ ";
+                        font-size: 1.2rem;
+                    }
+                    .before-after-demo::after {
+                        content: " 👋";
+                        font-size: 1.2rem;
+                    }
+                    .quote-demo {
+                        quotes: "«" "»";
+                        font-style: italic;
+                    }
+                    .quote-demo::before {
+                        content: open-quote;
+                    }
+                    .quote-demo::after {
+                        content: close-quote;
+                    }
+                </style>
+                <div class="before-after-demo">
+                    Добавлены эмодзи через ::before и ::after
+                </div>
+                <div class="quote-demo">
+                    Это кавычки через псевдоэлементы и свойство quotes
+                </div>
+                <p><small>Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.</small></p>
+            </div>
+            <footer>Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.</footer>
+        </article>
+
+        <!-- :empty – стилизация пустых элементов -->
+        <article class="article__cls">
+            <header>📭 :empty – пустой элемент</header>
+            <div class="article_main__cls">
+                <style>
+                    .empty-demo {
+                        background: #f1f5f9;
+                        padding: 0.5rem;
+                        border-radius: 0.5rem;
+                        min-height: 2rem;
+                    }
+                    .empty-demo:empty {
+                        background: #fee2e2;
+                        border: 1px dashed #ef4444;
+                    }
+                    .empty-demo:empty::before {
+                        content: "(пусто)";
+                        color: #c0392b;
+                    }
+                </style>
+                <div class="empty-demo">Непустой блок</div>
+                <div class="empty-demo"></div>
+                <p><small>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов).</small></p>
+            </div>
+            <footer>Полезно для сообщений «Нет данных», для динамических виджетов.</footer>
+        </article>
+
+    </div>
+    <div class="section_main__cls">
+        <div class="demo-note">
+            💡 <strong>Совет:</strong> всегда проверяйте порядок псевдоклассов в CSS: <code>:link – :visited – :hover – :active</code> (LVHA). Для фокуса лучше <code>:focus-visible</code> вместо <code>:focus</code>.
+        </div>
+    </div>
+</section>
+
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="inputId" data-collapsed_not>
             <h2 data-icon__circle_green>INPUT</h2>
