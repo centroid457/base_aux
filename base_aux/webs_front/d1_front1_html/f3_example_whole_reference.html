@@ -622,6 +622,7 @@
                             ✂️ 🛠️
                             🔍
                             🧲
+                            💻
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -3592,8 +3593,213 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="eventsId">
-            <h2>EVENTS=События форм и полей ввода</h2>
+        <section class="section__cls" id="eventsMouseId">
+            <h2>EVENTS-1=🖱️ MOUSE</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>MOUSE click, dblclick, contextmenu</header>
+                    <div class="article_main__cls">
+
+                        <div id="demo_click__id"
+                            data-item_square
+                        >demo_click__id</div>
+                        <div id="log_click__id" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; min-width: 200px;"></div>
+
+                        <script>
+                            const btn = document.getElementById('demo_click__id');
+                            const clickLogDiv = document.getElementById('log_click__id');
+                            btn.addEventListener('click', () => addClickLog('🖱️ click'));
+                            btn.addEventListener('dblclick', () => addClickLog('🖱️🖱️ dblclick'));
+                            btn.addEventListener('contextmenu', (e) => {
+                                e.preventDefault();
+                                addClickLog('⚠️ contextmenu (правая кнопка)');
+                            });
+                            function addClickLog(msg) {
+                                const div = document.createElement('div');
+                                div.textContent = msg;
+                                clickLogDiv.appendChild(div);
+                            }
+                        </script>
+                        <p>
+                            <code>dblclick</code> – двойной клик,<br>
+                            <code>contextmenu</code> – открытие контекстного меню.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="article__cls">
+                    <header>click wheel</header>
+                    <div class="article_main__cls">
+
+                        Единого события "middle click" не существует, но его можно отследить с помощью других событий.
+
+Событие auxclick. Это лучшее и самое современное решение. Оно срабатывает при нажатии любой неосновной кнопки мыши (средняя, правая). Событие auxclick создано специально для таких случаев и, в отличие от click, позволяет отличить нажатие колёсика от левой кнопки.
+
+События mousedown / mouseup. Это более старый, но более кросс-браузерный способ. Они срабатывают в момент нажатия/отпускания любой кнопки мыши.
+
+                        <div id="demo_middleClick__id"
+                            data-item_square
+                        >
+                            demo_middleClick__id
+                        </div>
+                        <div id="log_middleClick__id" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; min-height: 50px;">
+                            Лог событий:
+                        </div>
+
+                        <script>
+                            (function() {
+                                const demoDiv = document.getElementById('demo_middleClick__id');
+                                const logDiv = document.getElementById('log_middleClick__id');
+
+                                function log(message) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = message;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+
+                                // Используем событие auxclick, так как оно срабатывает только на неосновные кнопки
+                                demoDiv.addEventListener('auxclick', (e) => {
+                                    if (e.button === 1) {
+                                        log('✅ Событие auxclick: нажатие колёсика!');
+                                        e.preventDefault(); // Отменяем стандартное поведение (например, автопрокрутку)
+                                    }
+                                });
+
+                                // Для демонстрации альтернативного подхода, добавим mousedown.
+                                // Важно: он сработает и на левую, и на правую кнопку, поэтому нужна проверка.
+                                demoDiv.addEventListener('mousedown', (e) => {
+                                    if (e.button === 1) {
+                                        log('🔧 Событие mousedown: обнаружено нажатие колёсика.');
+                                        // e.preventDefault();
+                                    }
+                                });
+                            })();
+                        </script>
+                        <p>
+                            <code>auxclick</code> идеально подходит для этой задачи,<br>
+                            <code>mousedown</code> показывает альтернативный и более старый способ.<br>
+                        </p>
+                    </div>
+                    <footer>💡 Проверяйте <code>e.button === 1</code> в обработчиках <code>auxclick</code> или <code>mousedown</code>.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>wheel/scroll</header>
+                    <div class="article_main__cls">
+
+                        Важно: если элемент не прокручивается, событие всплывает к окну и может прокрутить страницу – используйте preventDefault для кастомного поведения.
+
+                        <div
+                                data-item_square
+                                data-box_50x100
+                                id="demo_wheel__id"
+                        >
+                            demo_wheel__id
+                        </div>
+
+                        <hr>
+                        <div
+                                data-item_square
+                                data-box_50x100
+                                id="demo_scroll__id"
+                                style="overflow-y: scroll; width: 200px"
+                        >
+                            demo_scroll__id<br>
+                            будет работать только если будет фактическая прокрутка!!!<br>
+                            без прокрутки - игнор!!!<br>
+                            01234567890123456789012345678901234567890123456789<br>
+                        </div>
+
+                        <div
+                                id="log_wheel__id"
+                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
+                        ></div>
+
+                        <script>
+                            (function() {
+                                const wheelDiv = document.getElementById('demo_wheel__id');
+                                const scrollDiv = document.getElementById('demo_scroll__id');
+                                const logDiv = document.getElementById('log_wheel__id');
+                                function addWheelLog(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                                wheelDiv.addEventListener('wheel', (e) => {
+                                    e.preventDefault(); // отменяем прокрутку страницы (для демо)
+                                    addWheelLog(`🖱️ wheel: deltaY=${e.deltaY}, deltaX=${e.deltaX}`);
+                                });
+                                scrollDiv.addEventListener('scroll', () => {
+                                    addWheelLog(`📜 scrollTop=${scrollDiv.scrollTop}`);
+                                });
+                            })();
+                        </script>
+
+                        <p>
+                            <code>wheel</code> - срабатывает при вращении колёсика мыши над блоком.<br>
+                            <code>scroll</code> – при прокрутке блока. (требует overflow: auto/scroll) <br>
+                        </p>
+                    </div>
+                    <footer>
+                        <code>wheel</code> полезен для кастомных зумов, слайдеров и т.д.<br>
+                        Не забывайте <code>preventDefault</code>, если не хотите прокрутки страницы.
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>mouseenter, mouseleave</header>
+                    <div class="article_main__cls">
+
+                        Важно: если элемент не прокручивается, событие всплывает к окну и может прокрутить страницу – используйте preventDefault для кастомного поведения.
+
+                        <div
+                                data-item_square
+                                data-width_200
+                                id="demo_hover__id"
+                        >
+                            demo_hover__id
+                        </div>
+
+                        <div
+                                id="log_hover__id"
+                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
+                        ></div>
+
+                        <script>
+                            (function() {
+                                const hoverDiv = document.getElementById('demo_hover__id');
+                                const logDiv = document.getElementById('log_hover__id');
+
+                                function addLog(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                                hoverDiv.addEventListener('mouseenter', () => addLog('🐭 mouseenter'));
+                                hoverDiv.addEventListener('mouseleave', () => addLog('🐭 mouseleave'));
+
+                                hoverDiv.addEventListener('mouseover', () => addLog('mouseover'));
+                                hoverDiv.addEventListener('mouseout', () => addLog('mouseout'));
+                            })();
+                        </script>
+
+                        <p>
+                            <code>mouseenter/leave</code> – при наведении/уходе.<br>
+                            mouseenter / mouseleave – аналогичны mouseover/mouseout, но не всплывают и не срабатывают на дочерних элементах.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsInputKbdId">
+            <h2>EVENTS=INPUT KBD</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
@@ -3668,62 +3874,6 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>📤 События формы: submit и reset</header>
-                    <div class="article_main__cls">
-                        <form id="demoFormEvents" onsubmit="return false;">
-                            <input type="text" name="demo" placeholder="Введи текст">
-                            <button type="submit">Отправить (submit)</button>
-                            <button type="reset">Сбросить (reset)</button>
-                        </form>
-                        <div id="formLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
-                        <script>
-                            const form = document.getElementById('demoFormEvents');
-                            const formLogDiv = document.getElementById('formLog');
-                            form.addEventListener('submit', (e) => {
-                                e.preventDefault();
-                                const formLogEntry = document.createElement('div');
-                                formLogEntry.textContent = `✅ submit (значение: ${form.demo.value})`;
-                                formLogDiv.appendChild(formLogEntry);
-                            });
-                            form.addEventListener('reset', () => {
-                                const formLogEntry = document.createElement('div');
-                                formLogEntry.textContent = `🔄 reset`;
-                                formLogDiv.appendChild(formLogEntry);
-                            });
-                        </script>
-                        <p><small>Событие <code>submit</code> позволяет валидировать форму или отправлять данные через fetch. <code>reset</code> возвращает поля к исходным значениям (можно отменить <code>preventDefault</code>).</small></p>
-                    </div>
-                    <footer>📌 Чтобы отменить отправку, вызовите <code>e.preventDefault()</code> в обработчике <code>submit</code>.</footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>🎯 Другие полезные события (click, dblclick, contextmenu, wheel)</header>
-                    <div class="article_main__cls">
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <button id="clickDemoBtn">Клик / двойной клик</button>
-                            <div id="clickLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; min-width: 200px;"></div>
-                        </div>
-                        <script>
-                            const btn = document.getElementById('clickDemoBtn');
-                            const clickLogDiv = document.getElementById('clickLog');
-                            btn.addEventListener('click', () => addClickLog('🖱️ click'));
-                            btn.addEventListener('dblclick', () => addClickLog('🖱️🖱️ dblclick'));
-                            btn.addEventListener('contextmenu', (e) => {
-                                e.preventDefault();
-                                addClickLog('⚠️ contextmenu (правая кнопка)');
-                            });
-                            function addClickLog(msg) {
-                                const div = document.createElement('div');
-                                div.textContent = msg;
-                                clickLogDiv.appendChild(div);
-                            }
-                        </script>
-                        <p><small><code>dblclick</code> – двойной клик, <code>contextmenu</code> – открытие контекстного меню (можно отменить).</small></p>
-                    </div>
-                    <footer>⚠️ Правый клик вызывает <code>contextmenu</code> – его можно отменить, чтобы показать своё меню.</footer>
-                </article>
-
-                <article class="article__cls">
                     <header>Программная генерация событий</header>
                     <div class="article_main__cls">
                         <p>
@@ -3770,6 +3920,175 @@
                     <footer>
                         Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.
                     </footer>
+                </article>
+
+<article class="article__cls">
+    <header>📋 Полный пример с буфером обмена и клавишей Delete</header>
+    <div class="article_main__cls">
+        <div>
+            <input type="text" id="clipFullDemo" placeholder="Попробуй копировать/вставить" value="Пример текста">
+            <div id="clipFullLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; max-height: 150px; overflow-y: auto;"></div>
+        </div>
+        <script>
+            (function() {
+                const input = document.getElementById('clipFullDemo');
+                const logDiv = document.getElementById('clipFullLog');
+                function log(msg) {
+                    const entry = document.createElement('div');
+                    entry.textContent = msg;
+                    logDiv.appendChild(entry);
+                    logDiv.scrollTop = logDiv.scrollHeight;
+                }
+                // Копирование: можно переопределить данные
+                input.addEventListener('copy', (e) => {
+                    const customText = `Кастомный текст из поля (было: ${input.value})`;
+                    e.clipboardData.setData('text/plain', customText);
+                    e.preventDefault();
+                    log(`📋 скопировано (переопределено): "${customText}"`);
+                });
+                // Вставка: читаем данные
+                input.addEventListener('paste', (e) => {
+                    const pasted = e.clipboardData.getData('text/plain');
+                    log(`📌 вставлено: "${pasted}"`);
+                    // можно модифицировать вставляемый текст
+                    e.preventDefault();
+                    document.execCommand('insertText', false, pasted.toUpperCase());
+                });
+                // Отслеживаем удаление через keydown + input
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Delete') log(`⌨️ нажата Delete (событие keydown)`);
+                    if (e.key === 'Backspace') log(`⌨️ нажата Backspace`);
+                });
+                input.addEventListener('input', (e) => {
+                    log(`🔄 input (новое значение: "${input.value}")`);
+                });
+            })();
+        </script>
+        <p><small>Обратите внимание: в `copy` мы перехватываем данные (запись), в `paste` – читаем и преобразуем в верхний регистр. Удаление показывает `keydown` + `input`.</small></p>
+    </div>
+    <footer>💡 Событие `delete` отсутствует. Используйте `input` для отслеживания изменений и `keydown` для перехвата конкретной клавиши.</footer>
+</article>
+
+
+                <article class="article__cls">
+                    <header>📤 События формы: submit и reset</header>
+                    <div class="article_main__cls">
+                        <form id="demoFormEvents" onsubmit="return false;">
+                            <input type="text" name="demo" placeholder="Введи текст">
+                            <button type="submit">Отправить (submit)</button>
+                            <button type="reset">Сбросить (reset)</button>
+                        </form>
+                        <div id="formLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <script>
+                            const form = document.getElementById('demoFormEvents');
+                            const formLogDiv = document.getElementById('formLog');
+                            form.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const formLogEntry = document.createElement('div');
+                                formLogEntry.textContent = `✅ submit (значение: ${form.demo.value})`;
+                                formLogDiv.appendChild(formLogEntry);
+                            });
+                            form.addEventListener('reset', () => {
+                                const formLogEntry = document.createElement('div');
+                                formLogEntry.textContent = `🔄 reset`;
+                                formLogDiv.appendChild(formLogEntry);
+                            });
+                        </script>
+                        <p><small>Событие <code>submit</code> позволяет валидировать форму или отправлять данные через fetch. <code>reset</code> возвращает поля к исходным значениям (можно отменить <code>preventDefault</code>).</small></p>
+                    </div>
+                    <footer>📌 Чтобы отменить отправку, вызовите <code>e.preventDefault()</code> в обработчике <code>submit</code>.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsBufferId">
+            <h2 data-icon__circle_yellow>EVENTS-=BUFFER</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>События буфера обмена (copy, cut, paste)</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <input type="text" id="clipDemo" placeholder="Попробуй скопировать/вставить текст" value="Пример текста">
+                            <div id="clipLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;"></div>
+                        </div>
+                        <script>
+                            const clipInput = document.getElementById('clipDemo');
+                            const clipLogDiv = document.getElementById('clipLog');
+                            function logClip(msg) {
+                                const entry = document.createElement('div');
+                                entry.textContent = msg;
+                                clipLogDiv.appendChild(entry);
+                            }
+                            clipInput.addEventListener('copy', () => logClip('📋 скопировано'));
+                            clipInput.addEventListener('copy', (e) => logClip(`2📋 скопировано: ${e.clipboardData.getData('text/plain')}`));
+                            clipInput.addEventListener('cut', () => logClip('✂️ вырезано'));
+                            clipInput.addEventListener('cut', (e) => logClip(`2✂️ вырезано: ${e.clipboardData.getData('text/plain')}`));
+                            clipInput.addEventListener('paste', (e) => logClip(`📌 вставлено: ${e.clipboardData.getData('text/plain')}`));
+                        </script>
+                        <p>События <code>copy</code>, <code>cut</code>, <code>paste</code> позволяют перехватывать действия с буфером обмена.</p>
+                    </div>
+                    <footer>⚠️ Доступ к данным буфера через <code>clipboardData</code> (может требовать разрешения в некоторых браузерах).</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsOtherId">
+            <h2>EVENTS=OTHER GLOBAL</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>🌐 Глобальные события (window: resize, load, beforeunload)</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <button id="simulateResizeBtn">Сымитировать изменение размера (для лога)</button>
+                            <div id="globalLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"></div>
+                        </div>
+                        <script>
+                            const globalLogDiv = document.getElementById('globalLog');
+                            function logGlobal(msg) {
+                                const entry = document.createElement('div');
+                                entry.textContent = msg;
+                                globalLogDiv.appendChild(entry);
+                            }
+                            window.addEventListener('resize', () => logGlobal(`🖥️ resize: ${window.innerWidth}x${window.innerHeight}`));
+                            window.addEventListener('load', () => logGlobal('✅ load (страница загружена)'));
+                            // beforeunload лучше не добавлять без необходимости – он мешает тестированию
+                            // но покажем пример (закомментирован)
+                            // window.addEventListener('beforeunload', (e) => { e.preventDefault(); e.returnValue = ''; });
+                        </script>
+                        <p>
+                            <code>resize</code> срабатывает при изменении окна,<br>
+                            <code>load</code> – после полной загрузки страницы.<br>
+                            <code>beforeunload</code> – перед уходом (запросить подтверждение).<br>
+                        </p>
+                    </div>
+                    <footer>📌 <code>beforeunload</code> используйте осторожно, только когда действительно нужно предупредить пользователя.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🖼️ События загрузки изображений (load, error)</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <img id="testImg" src="https://picsum.photos/id/1/200/150" alt="тестовое изображение" style="max-width: 100%; border-radius: 0.5rem;">
+                            <div id="imgLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;"></div>
+                        </div>
+                        <script>
+                            const img = document.getElementById('testImg');
+                            const imgLogDiv = document.getElementById('imgLog');
+                            img.addEventListener('load', () => imgLogDiv.innerHTML = '✅ Изображение загружено');
+                            img.addEventListener('error', () => imgLogDiv.innerHTML = '❌ Ошибка загрузки изображения');
+                        </script>
+                        <p>
+                            <code>load</code> срабатывает после успешной загрузки,для изображений, скриптов, фреймов; для окна – вся страница<br>
+                            <code>error</code> – при ошибке загрузки ресурса (изображение, скрипт) (404, 500 и т.д.).<br>
+                        </p>
+                    </div>
+                    <footer>⚡ Эти события полезны для подстановки заглушек при неудачной загрузке.</footer>
                 </article>
 
             </div>
