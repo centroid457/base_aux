@@ -405,6 +405,69 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="userSelectId">
+            <h2 data-icon__circle_green>🖱user-select – управление выделением текста</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>user-select</header>
+                    <div class="article_main__cls">
+
+                        <!-- Элемент-шаблон для клонирования -->
+                        <div class="demo-text-block"
+                             data-clone_element__params="user-select:[
+                                 auto;
+                                 text;
+                                 none;
+                                 all;
+                                 contain
+                             ]"
+                             style="padding: 0.75rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.5rem;">
+                            123 use-select [222] 🔴🟠🟡🟣🔵
+                        </div>
+
+                        <hr>
+                        <style>
+                            [data-user-select="auto"] { user-select: auto; }
+                            [data-user-select="text"] { user-select: text; }
+                            [data-user-select="none"] { user-select: none; }
+                            [data-user-select="all"]  { user-select: all; }
+                        </style>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <div style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem;" data-user-select="auto">
+                                <strong>auto</strong><br>
+                                По умолчанию (разрешено выделение)
+                            </div>
+                            <div style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem;" data-user-select="text">
+                                <strong>text</strong><br>
+                                Только текст можно выделять (как auto)
+                            </div>
+                            <div style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem;" data-user-select="none">
+                                <strong>none</strong><br>
+                                Выделение запрещено целиком
+                            </div>
+                            <div style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem;" data-user-select="all">
+                                <strong>all</strong><br>
+                                Клик выделяет весь элемент
+                            </div>
+                        </div>
+
+                    </div>
+                    <footer>
+                        💡 <strong>Значения user-select:</strong><br>
+                        <code>auto</code> – браузер сам решает (обычно разрешено выделение).<br>
+                        <code>text</code> – разрешено выделение текста (часто то же, что auto).<br>
+                        <code>none</code> – выделение запрещено (элемент и его содержимое нельзя выделить).<br>
+                        <code>all</code> – при клике выделяется весь элемент (вместе с потомками).<br>
+                        <code>contain</code> – выделение ограничено границами элемента (экспериментальное, поддержка ограничена).<br>
+                        🧠 Полезно для кнопок, иконок, интерактивных элементов, где выделение не нужно, или наоборот – для блоков с кодом, которые удобно копировать.
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="textUnicodeId" data-collapsed_not>
             <h2 data-icon__circle_green>TEXT-Unicode</h2>
             <div class="section_main__cls grid_auto__cls">
