@@ -533,9 +533,11 @@
                             <legend>просто все для примера</legend>
                             привет HEllo
                             A B C 123
-                            ▶ⓘ  🟢⚪✅️️☑⚠️⚠✔️✓❌✖️
+                            ▶ⓘ  ✅️️☑⚠️⚠✔️✓❌✖️
                             🔄 … ✂️
-                            ▶ⓘ🟢⚪✅☑⚠✔✓❌✖⚫🔴🟠🟡🟣🔵🟥🟧🟨🟩🟦🟪⬛⬜◼️◻️▪️▫️▢⬅️➡️⬆️⬇️◀▲▼↗↘→←ℹ️❗❕⭐🌟❤️🧡💚💙👍👎🔥💡📁📂📄🔒🔓⏱️⏰🔄
+                            ⚪⚫🔴🟠🟢🟡🟣🔵
+                            🟥🟧🟨🟩🟦🟪⬛⬜◼️◻️▪️▫️▢
+                            ▶ⓘ✅☑⚠✔✓❌✖⬅️➡️⬆️⬇️◀▲▼↗↘→←ℹ️❗❕⭐🌟❤️🧡💚💙👍👎🔥💡📁📂📄🔒🔓⏱️⏰🔄
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -3038,197 +3040,6 @@
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="actionId" data-collapsed_not>
-            <h2 data-icon__circle_green>ACTION</h2>
-            <div class="section_main__cls grid_auto__cls">
-
-                <article class="article__cls">
-                    <header>BUTTONS</header>
-                    <div class="article_main__cls">
-                        <p>
-                            <button data-all_revert>data-all_revert</button>
-                            <button data-all_revert disabled>data-all_revert disabled</button>
-                            - NO STYLE
-                        </p>
-                        <p>
-                            <button>GLOBAL</button>
-                            <button disabled>GLOBAL disabled</button>
-                            - base для страницы - из CSS
-                        </p>
-
-                        <hr>
-                        <p>
-                            <button data-size__small>data-size__small</button>
-                            <button>button</button>
-                            <button data-size__large>data-size__large</button>
-                        </p>
-
-                        <p><button style="width: 100%;">style="width: 100%;</button></p>
-                        на мобильных. Установите <code>width: 100%</code> и при необходимости <code>display: block</code>
-
-                        <hr>
-                        Стилизация под ссылку (действие на странице, а не переход)
-                        <p><button class="button_as_a__cls">button_as_a__cls</button></p>
-                        <p><button class="button_as_a__cls" disabled>disabled</button></p>
-
-                        <hr>
-                        ИКОНКИ
-                        <p>
-                            <button>⭐ Избранное</button>
-                            <button>📥 Скачать</button>
-                        </p>
-                        иконка через текст или <code>&lt;span&gt;</code>.
-
-                        <p>
-                            <button aria-label="Закрыть окно">❌</button>
-                            <button aria-label="Добавить в корзину">🛒</button>
-                        </p>
-                        Если кнопка содержит только иконку, обязательно добавьте <code>aria-label</code> с текстовым описанием для скринридеров.
-
-                    </div>
-                    <footer>
-                    </footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>Цветовые схемы</header>
-                    <div class="article_main__cls" data-bg_a5="">
-
-                        <button>button</button>
-                        <p data-bg_a5>
-                            <button class="button_blue__cls">button_blue__cls</button>
-                            <button class="button_green__cls">button_green__cls</button>
-                            <button class="button_red__cls">button_red__cls</button>
-                            <button class="button_black__cls">button_black__cls</button>
-                            <button class="button_white__cls">button_white__cls</button>
-                             <br>
-
-                            <button class="button_blue__cls" disabled>button_blue__cls</button>
-                            <button class="button_green__cls" disabled>button_green__cls</button>
-                            <button class="button_red__cls" disabled>button_red__cls</button>
-                            <button class="button_black__cls" disabled>button_black__cls</button>
-                            <button class="button_white__cls" disabled>button_white__cls</button>
-                        </p>
-                        <p data-bg_a5>
-                            <button class="button_blue_outline__cls">button_blue_outline__cls</button>
-                            <button class="button_green_outline__cls">button_green_outline__cls</button>
-                            <button class="button_red_outline__cls">button_red_outline__cls</button>
-                            <button class="button_black_outline__cls">button_black_outline__cls</button>
-                            <button class="button_white_outline__cls">button_white_outline__cls</button>
-                            <br>
-
-                            <button class="button_blue_outline__cls" disabled>button_blue_outline__cls</button>
-                            <button class="button_green_outline__cls" disabled>button_green_outline__cls</button>
-                            <button class="button_red_outline__cls" disabled>button_red_outline__cls</button>
-                            <button class="button_black_outline__cls" disabled>button_black_outline__cls</button>
-                            <button class="button_white_outline__cls" disabled>button_white_outline__cls</button>
-                        </p>
-
-                        <button
-                                data-clone_element__w_attrs
-                                data-clone_element__params="class:[
-                                    button_blue__cls;
-                                    button_green__cls;
-                                    button_red__cls;
-                                    button_black__cls;
-                                    button_white__cls;
-
-                                    button_blue_outline__cls;
-                                    button_green_outline__cls;
-                                    button_red_outline__cls;
-                                    button_black_outline__cls;
-                                    button_white_outline__cls;
-                                ]"
-                        >button</button>
-
-                        <button
-                                disabled
-                                data-clone_element__w_attrs
-                                data-clone_element__params="class:[
-                                    button_blue__cls;
-                                    button_green__cls;
-                                    button_red__cls;
-                                    button_black__cls;
-                                    button_white__cls;
-
-                                    button_blue_outline__cls;
-                                    button_green_outline__cls;
-                                    button_red_outline__cls;
-                                    button_black_outline__cls;
-                                    button_white_outline__cls;
-                                ]"
-                        >button</button>
-
-                    </div>
-                    <footer></footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>DATAILS - спойлер</header>
-                    <div class="article_main__cls">
-
-                        <summary>SUMMARY only - семантическая ошибка но все отображает</summary>
-
-                        <details>
-                            <summary>Закрытый спойлер (open=false)</summary>
-                            <p>Этот контент скрыт по умолчанию. Нажмите на заголовок, чтобы раскрыть.</p>
-                        </details>
-
-                        <details open>
-                            <summary>Открытый спойлер (open=true)</summary>
-                            <p>Этот контент виден сразу. Атрибут <code>open</code> делает блок раскрытым при загрузке.</p>
-                        </details>
-
-                        <hr>
-                        <details open>
-                            <summary>main ВЛОЖЕННЫЕ</summary>
-                            <p>main txt</p>
-                            <details open>
-                                <summary>sub Подраздел (nested)</summary>
-                                <p>sub txt</p>
-                            </details>
-                        </details>
-
-                        <details class="details_custom__cls">
-                            <summary>замена маркера details_custom__cls</summary>
-                            <p>Секрет: кастомные маркеры делаются через <code>::before</code> и убирание стандартного маркера.</p>
-                        </details>
-
-                        <details open>
-                            <summary>пример с формой</summary>
-                            <div style="margin-top: 0.5rem;">
-                                <label><input type="checkbox"> Опция 1</label><br>
-                                <label><input type="text" placeholder="Введите значение"></label><br>
-                                <button>Применить</button>
-                            </div>
-                        </details>
-
-                    </div>
-                    <footer></footer>
-                </article>
-
-                <article class="article__cls">
-                    <header>Тег dialog + download</header>
-                    <div class="article_main__cls">
-
-                        <h4>LINKS скачать</h4>
-                        <p>см отдельно</p>
-
-                        <h4>DIALOG</h4>
-                        <dialog id="demoDialog">
-                            <p>Это модальное окно (dialog).</p>
-                            <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
-                        </dialog>
-
-                        <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
-                    </div>
-                    <footer>.showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- ====================================================================================================== -->
         <section class="section__cls" id="progressId" data-collapsed_not>
             <h2 data-icon__circle_green>PROGRESS/METER</h2>
             <div class="section_main__cls grid_auto__cls">
@@ -3583,6 +3394,381 @@
 
                     </div>
                     <footer>
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="actionId" data-collapsed_not>
+            <h2 data-icon__circle_green>ACTION</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>BUTTONS</header>
+                    <div class="article_main__cls">
+                        <p>
+                            <button data-all_revert>data-all_revert</button>
+                            <button data-all_revert disabled>data-all_revert disabled</button>
+                            - NO STYLE
+                        </p>
+                        <p>
+                            <button>GLOBAL</button>
+                            <button disabled>GLOBAL disabled</button>
+                            - base для страницы - из CSS
+                        </p>
+
+                        <hr>
+                        <p>
+                            <button data-size__small>data-size__small</button>
+                            <button>button</button>
+                            <button data-size__large>data-size__large</button>
+                        </p>
+
+                        <p><button style="width: 100%;">style="width: 100%;</button></p>
+                        на мобильных. Установите <code>width: 100%</code> и при необходимости <code>display: block</code>
+
+                        <hr>
+                        Стилизация под ссылку (действие на странице, а не переход)
+                        <p><button class="button_as_a__cls">button_as_a__cls</button></p>
+                        <p><button class="button_as_a__cls" disabled>disabled</button></p>
+
+                        <hr>
+                        ИКОНКИ
+                        <p>
+                            <button>⭐ Избранное</button>
+                            <button>📥 Скачать</button>
+                        </p>
+                        иконка через текст или <code>&lt;span&gt;</code>.
+
+                        <p>
+                            <button aria-label="Закрыть окно">❌</button>
+                            <button aria-label="Добавить в корзину">🛒</button>
+                        </p>
+                        Если кнопка содержит только иконку, обязательно добавьте <code>aria-label</code> с текстовым описанием для скринридеров.
+
+                    </div>
+                    <footer>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Цветовые схемы</header>
+                    <div class="article_main__cls" data-bg_a5="">
+
+                        <button>button</button>
+                        <p data-bg_a5>
+                            <button class="button_blue__cls">button_blue__cls</button>
+                            <button class="button_green__cls">button_green__cls</button>
+                            <button class="button_red__cls">button_red__cls</button>
+                            <button class="button_black__cls">button_black__cls</button>
+                            <button class="button_white__cls">button_white__cls</button>
+                             <br>
+
+                            <button class="button_blue__cls" disabled>button_blue__cls</button>
+                            <button class="button_green__cls" disabled>button_green__cls</button>
+                            <button class="button_red__cls" disabled>button_red__cls</button>
+                            <button class="button_black__cls" disabled>button_black__cls</button>
+                            <button class="button_white__cls" disabled>button_white__cls</button>
+                        </p>
+                        <p data-bg_a5>
+                            <button class="button_blue_outline__cls">button_blue_outline__cls</button>
+                            <button class="button_green_outline__cls">button_green_outline__cls</button>
+                            <button class="button_red_outline__cls">button_red_outline__cls</button>
+                            <button class="button_black_outline__cls">button_black_outline__cls</button>
+                            <button class="button_white_outline__cls">button_white_outline__cls</button>
+                            <br>
+
+                            <button class="button_blue_outline__cls" disabled>button_blue_outline__cls</button>
+                            <button class="button_green_outline__cls" disabled>button_green_outline__cls</button>
+                            <button class="button_red_outline__cls" disabled>button_red_outline__cls</button>
+                            <button class="button_black_outline__cls" disabled>button_black_outline__cls</button>
+                            <button class="button_white_outline__cls" disabled>button_white_outline__cls</button>
+                        </p>
+
+                        <button
+                                data-clone_element__w_attrs
+                                data-clone_element__params="class:[
+                                    button_blue__cls;
+                                    button_green__cls;
+                                    button_red__cls;
+                                    button_black__cls;
+                                    button_white__cls;
+
+                                    button_blue_outline__cls;
+                                    button_green_outline__cls;
+                                    button_red_outline__cls;
+                                    button_black_outline__cls;
+                                    button_white_outline__cls;
+                                ]"
+                        >button</button>
+
+                        <button
+                                disabled
+                                data-clone_element__w_attrs
+                                data-clone_element__params="class:[
+                                    button_blue__cls;
+                                    button_green__cls;
+                                    button_red__cls;
+                                    button_black__cls;
+                                    button_white__cls;
+
+                                    button_blue_outline__cls;
+                                    button_green_outline__cls;
+                                    button_red_outline__cls;
+                                    button_black_outline__cls;
+                                    button_white_outline__cls;
+                                ]"
+                        >button</button>
+
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>DATAILS - спойлер</header>
+                    <div class="article_main__cls">
+
+                        <summary>SUMMARY only - семантическая ошибка но все отображает</summary>
+
+                        <details>
+                            <summary>Закрытый спойлер (open=false)</summary>
+                            <p>Этот контент скрыт по умолчанию. Нажмите на заголовок, чтобы раскрыть.</p>
+                        </details>
+
+                        <details open>
+                            <summary>Открытый спойлер (open=true)</summary>
+                            <p>Этот контент виден сразу. Атрибут <code>open</code> делает блок раскрытым при загрузке.</p>
+                        </details>
+
+                        <hr>
+                        <details open>
+                            <summary>main ВЛОЖЕННЫЕ</summary>
+                            <p>main txt</p>
+                            <details open>
+                                <summary>sub Подраздел (nested)</summary>
+                                <p>sub txt</p>
+                            </details>
+                        </details>
+
+                        <details class="details_custom__cls">
+                            <summary>замена маркера details_custom__cls</summary>
+                            <p>Секрет: кастомные маркеры делаются через <code>::before</code> и убирание стандартного маркера.</p>
+                        </details>
+
+                        <details open>
+                            <summary>пример с формой</summary>
+                            <div style="margin-top: 0.5rem;">
+                                <label><input type="checkbox"> Опция 1</label><br>
+                                <label><input type="text" placeholder="Введите значение"></label><br>
+                                <button>Применить</button>
+                            </div>
+                        </details>
+
+                    </div>
+                    <footer></footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Тег dialog + download</header>
+                    <div class="article_main__cls">
+
+                        <h4>LINKS скачать</h4>
+                        <p>см отдельно</p>
+
+                        <h4>DIALOG</h4>
+                        <dialog id="demoDialog">
+                            <p>Это модальное окно (dialog).</p>
+                            <button onclick="document.getElementById('demoDialog').close()">Закрыть</button>
+                        </dialog>
+
+                        <button onclick="document.getElementById('demoDialog').showModal()">Показать диалог</button>
+                    </div>
+                    <footer>.showModal() открывает модальное окно с фоном. show() — без фона. Поддержка современных браузеров.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsId">
+            <h2>EVENTS=События форм и полей ввода</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>Стандартные события (input, change, blur, focus)</header>
+                    <div class="article_main__cls">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label>Поле с event‑логом: <input type="text" id="demoEventField" placeholder="Введи что‑нибудь"></label>
+                                <div id="eventLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;">
+                                    События будут здесь
+                                </div>
+                            </div>
+                            <div>
+                                <button id="programmaticChangeBtn">Изменить значение программно</button>
+                                <button id="resetLogBtn">Сбросить лог</button>
+                            </div>
+                        </div>
+                        <script>
+                            (function() {
+                                const field = document.getElementById('demoEventField');
+                                const logDiv = document.getElementById('eventLog');
+                                function addLog(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                                field.addEventListener('input', () => addLog(`🟡input(addChar):[${field.value}]`));
+                                field.addEventListener('change', () => addLog(`🟢change(Enter!):[${field.value}]`));
+                                field.addEventListener('focus', () => addLog('🔵focus'));
+                                field.addEventListener('blur', () => addLog('🔴blur (focus-out)'));
+                                document.getElementById('programmaticChangeBtn').addEventListener('click', () => {
+                                    field.value = 'Программное значение';
+                                    addLog('⚠️ программно установлено значение = ' + field.value);
+                                    // Если нужно, чтобы обработчики input/change тоже сработали – раскомментируйте:
+                                    // field.dispatchEvent(new Event('input', { bubbles: true }));
+                                });
+                                document.getElementById('resetLogBtn').addEventListener('click', () => {
+                                    logDiv.innerHTML = '';
+                                });
+                            })();
+                        </script>
+                        <p><small>Обратите внимание: <code>input</code> и <code>change</code> НЕ срабатывают при программном изменении поля (кнопка внизу).</small></p>
+                    </div>
+                    <footer>💡 Чтобы заставить сработать событие из скрипта, используйте <code>element.dispatchEvent(new Event('input'))</code>.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🎛️ События клавиатуры (keydown, keyup, keypress)</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <label>Поле: <input type="text" id="keyDemoField" placeholder="Нажми любую клавишу"></label>
+                            <div id="keyLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem; max-height: 100px; overflow-y: auto;"></div>
+                        </div>
+                        <script>
+                            const keyField = document.getElementById('keyDemoField');
+                            const keyLog = document.getElementById('keyLog');
+                            function keyLogAdd(msg) {
+                                const div = document.createElement('div');
+                                div.textContent = msg;
+                                keyLog.appendChild(div);
+                                keyLog.scrollTop = keyLog.scrollHeight;
+                            }
+                            keyField.addEventListener('keydown', (e) => keyLogAdd(`keydown: ${e.key} (code: ${e.code})`));
+                            keyField.addEventListener('keyup', (e) => keyLogAdd(`keyup: ${e.key}`));
+                            // keypress устарел, но показываем для информации
+                            keyField.addEventListener('keypress', (e) => keyLogAdd(`keypress: ${e.key} (устарело)`));
+                        </script>
+                        <p><small>События <code>keydown</code> и <code>keyup</code> ловят любые клавиши, <code>keypress</code> – только печатные (не рекомендуется).</small></p>
+                    </div>
+                    <footer>⌨️ <code>keydown</code> часто используют для перехвата Enter, Escape, комбинаций клавиш.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>📤 События формы: submit и reset</header>
+                    <div class="article_main__cls">
+                        <form id="demoFormEvents" onsubmit="return false;">
+                            <input type="text" name="demo" placeholder="Введи текст">
+                            <button type="submit">Отправить (submit)</button>
+                            <button type="reset">Сбросить (reset)</button>
+                        </form>
+                        <div id="formLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <script>
+                            const form = document.getElementById('demoFormEvents');
+                            const formLogDiv = document.getElementById('formLog');
+                            form.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const formLogEntry = document.createElement('div');
+                                formLogEntry.textContent = `✅ submit (значение: ${form.demo.value})`;
+                                formLogDiv.appendChild(formLogEntry);
+                            });
+                            form.addEventListener('reset', () => {
+                                const formLogEntry = document.createElement('div');
+                                formLogEntry.textContent = `🔄 reset`;
+                                formLogDiv.appendChild(formLogEntry);
+                            });
+                        </script>
+                        <p><small>Событие <code>submit</code> позволяет валидировать форму или отправлять данные через fetch. <code>reset</code> возвращает поля к исходным значениям (можно отменить <code>preventDefault</code>).</small></p>
+                    </div>
+                    <footer>📌 Чтобы отменить отправку, вызовите <code>e.preventDefault()</code> в обработчике <code>submit</code>.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🎯 Другие полезные события (click, dblclick, contextmenu, wheel)</header>
+                    <div class="article_main__cls">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button id="clickDemoBtn">Клик / двойной клик</button>
+                            <div id="clickLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; min-width: 200px;"></div>
+                        </div>
+                        <script>
+                            const btn = document.getElementById('clickDemoBtn');
+                            const clickLogDiv = document.getElementById('clickLog');
+                            btn.addEventListener('click', () => addClickLog('🖱️ click'));
+                            btn.addEventListener('dblclick', () => addClickLog('🖱️🖱️ dblclick'));
+                            btn.addEventListener('contextmenu', (e) => {
+                                e.preventDefault();
+                                addClickLog('⚠️ contextmenu (правая кнопка)');
+                            });
+                            function addClickLog(msg) {
+                                const div = document.createElement('div');
+                                div.textContent = msg;
+                                clickLogDiv.appendChild(div);
+                            }
+                        </script>
+                        <p><small><code>dblclick</code> – двойной клик, <code>contextmenu</code> – открытие контекстного меню (можно отменить).</small></p>
+                    </div>
+                    <footer>⚠️ Правый клик вызывает <code>contextmenu</code> – его можно отменить, чтобы показать своё меню.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Программная генерация событий</header>
+                    <div class="article_main__cls">
+                        <p>
+                            В браузерных событиях для полей ввода есть важная деталь: события input, change, blur, focus<br>
+                            не срабатывают при программном изменении .value. Это сделано,<br>
+                            чтобы избежать бесконечных циклов и нежелательных сайд-эффектов.<br>
+                            Если вам нужно отреагировать на скриптовое изменение,<br>
+                            вызывайте нужный обработчик вручную или генерируйте событие через dispatchEvent.
+                        </p>
+
+                        <div>
+                            <input type="text" id="progField" placeholder="Поле">
+                            <button id="progInputBtn">Сгенерировать 'input'</button>
+                            <button id="progChangeBtn">Сгенерировать 'change'</button>
+                        </div>
+                        <div id="progLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <script>
+                            const progField = document.getElementById('progField');
+                            const progLogDiv = document.getElementById('progLog');
+                            progField.addEventListener('input', () => {
+                                const entry = document.createElement('div');
+                                entry.textContent = `input: ${progField.value}`;
+                                progLogDiv.appendChild(entry);
+                            });
+                            progField.addEventListener('change', () => {
+                                const entry = document.createElement('div');
+                                entry.textContent = `change: ${progField.value}`;
+                                progLogDiv.appendChild(entry);
+                            });
+                            document.getElementById('progInputBtn').addEventListener('click', () => {
+                                progField.value = `значение ${Date.now()}`;
+                                progField.dispatchEvent(new Event('input', { bubbles: true }));
+                            });
+                            document.getElementById('progChangeBtn').addEventListener('click', () => {
+                                progField.value = `значение ${Date.now()}`;
+                                progField.dispatchEvent(new Event('change', { bubbles: true }));
+                            });
+                        </script>
+                        <p>
+                            dispatchEvent – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
+                            С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
+                        </p>
+                    </div>
+                    <footer>
+                        Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.
                     </footer>
                 </article>
 
