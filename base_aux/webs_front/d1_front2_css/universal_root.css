@@ -47,7 +47,7 @@ section, article,
 header, main, footer,
 body, html
 {
-    border: 1px solid #aaa5;    /* НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
+    border: 1px dashed #aaa5;    /* НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
 }
 
 /* ================================================================================================================== */
@@ -56,30 +56,25 @@ body, html
 #ROOT_DIV__ID {
     max-width: 1400px;
     margin: 0 auto;
-    background: white;
     border-radius: 2rem;
-    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
-    //overflow: hidden;
     padding: 2rem 2rem 2.5rem 2rem;
+    //overflow: hidden;
+
+    background: white;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
 }
 
 #ROOT_HEADER__ID {
-    margin-bottom: 0.5rem;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+
+    margin-bottom: 1rem;
     border-bottom: 1px solid #444;
 }
 #ROOT_HEADER__ID h1 {
     font-size: 2.2rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
     margin-bottom: 0.5rem;
 }
 
@@ -212,7 +207,18 @@ body, html
 /* -------------------- GROUPS -------------------- */
 [data-group] {}     /* just show how to separate elements by groups!!! */
 
-/* ---------------- SIZE -------------------- TODO: del!!!??? */
+/* ---------------- SIZE -------------------- */
+[data-font__size_2rem] {
+    font-size: 2rem;
+}
+[data-font__weight_800] {
+    font-weight: 800;
+}
+[data-font__weight_1000] {
+    font-weight: 1000;
+}
+
+/* TODO: del!!!??? */
 [data-size__small] {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;

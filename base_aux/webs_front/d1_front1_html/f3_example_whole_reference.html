@@ -30,7 +30,7 @@
     </nav>
 
     <header id="ROOT_HEADER__ID">
-        <h1>📘 HTML/CSS · справочник визуальный</h1>
+        <h1>HTML/CSS · справочник визуальный</h1>
         <div>Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
@@ -84,17 +84,33 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
-                    <header>COLOR</header>
+                    <header>RGB/A</header>
                     <div class="article_main__cls">
 
                         <!-- Простые цвета (имена, hex, rgb, hsl) -->
                         <div data-item_square
                              data-clone_element__params="background:[
-                             lightblue;
-                             green;
+                             #ff0;
+                             #f0f;
+                             #0ff;
 
-                             #eef2ff;
-                             #eef2f2;
+                             #f84;
+
+                             #0F0;
+                             #00FF00;
+
+                             #123456;
+                             #234567;
+                             #345678;
+                             #456789;
+
+                             #123;
+                             #234;
+                             #456;
+                             #567;
+                             #678;
+                             #789;
+
                              #eeffff;
 
                              #000;
@@ -117,24 +133,95 @@
                              rgba(255,0,0,0.0);
                              rgba(255,0,0,0.1);
                              rgba(255,0,0,0.5);
-                             rgba(255,0,0,0.9);
                              rgba(255,0,0,1.0);
-
-                             hsl(240,100%,50%);
-                             hsla(84,100%,59%,0.8);
-
-                             #f84;
-                             #f88;
-                             #f44;
-
-                             #ff0;
-                             #f0f;
-                             #0ff;
+                             rgba(255,0,0,10.0);
                              ]">
-                            colors
+                            RGB/A
                         </div>
 
                     </div>
+                    <footer>
+                        HEX (3/4,6/8 цифр)<br>
+                        rgbA - Alpha channel<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>NAMES</header>
+                    <div class="article_main__cls">
+
+                        <!-- Градиенты линейные -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                                transparent;
+                                currentColor;
+
+                             red;
+                             green;
+                             blue;
+                             yellow;
+                             magenta;
+                             cian;
+
+                             lightred;
+                             lightgreen;
+                             lightblue;
+                             lightyellow;
+                             lightmagenta;
+                             lightcian;
+
+                             rebeccapurple;
+                             tomato;
+                             gold;
+                             mediumseagreen;
+                             dodgerblue;
+                             crimson;
+                             indigo;
+                             hotpink;
+
+                             ]">
+                            names
+                        </div>
+
+                    </div>
+                    <footer>
+                        currentColor, transparent - служебные<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>SPECIAL</header>
+                    <div class="article_main__cls">
+
+                        <!-- Градиенты линейные -->
+                        <div data-item_square
+                             data-clone_element__params="background:[
+                                hsl(240,100%,50%);
+                                hsla(0,100%,50%,0.5);
+
+                                hwb(0,0%,0%);
+                                lab(50%,100%,0%);
+                                lch(50%,100%,0deg);
+                                color-mix(in srgb, red, blue);
+                                color(display-p3 1 0 0);
+
+                                light-dark(black, white);
+                                light-dark(red, white);
+                             ]">
+                            SPECIAL
+                        </div>
+
+                    </div>
+                    <footer>
+                        Некоторые современные функции (LAB, LCH, color-mix) поддерживаются не во всех браузерах, но полезны для изучения.<br>
+
+                        HSL/HSLA=hsl(0,100%,50%) Hue, Saturation, Lightness<br>
+                        HWB (современный) - hwb(0,0%,0%) Hue, Whiteness, Blackness – интуитивнее для подбора оттенков<br>
+                        LAB, LCH=lab(50%,100%,0%), lch(50%,100%,0deg) - Цветовые пространства, приближенные к восприятию человека<br>
+                        color-mix() - color-mix(in srgb, red, blue) - Смешивание двух цветов (поддержка современная)<br>
+                        color(display-p3 1 0 0) - Широкий цветовой охват P3<br>
+                        light-dark() - Адаптивный цвет (светлая/тёмная тема)<br>
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -144,18 +231,47 @@
                         <!-- Градиенты линейные -->
                         <div data-item_square
                              data-clone_element__params="background:[
-                             linear-gradient(135deg, #667eea, #764ba2);
-                             linear-gradient(45deg, #ff6b6b, #feca57);
-                             linear-gradient(90deg, #1e9600, #fff200, #ff0000);
+                             linear-gradient(0deg, #f00, #0f0);
+                             linear-gradient(45deg, #f00, #0f0);
+                             linear-gradient(90deg, #f00, #0f0);
+                             linear-gradient(135deg, #f00, #0f0);
+                             linear-gradient(180deg, #f00, #0f0);
+
+                             linear-gradient(90deg, #f00, #0f0, #00f);
+                             linear-gradient(90deg, #f00, #0f0, #00f, #ff0);
+                             linear-gradient(90deg, #f00, #0f0, #00f, #ff0, #0ff, #f0f);
+
+                             linear-gradient(90deg, #ff0, #ff00);
+                             linear-gradient(90deg, #ff0 10%, #f00 10%);
+                             linear-gradient(90deg, #ff0 0%, #f00);
+                             linear-gradient(90deg, #ff0 10%, #f00);
+                             linear-gradient(90deg, #ff0 50%, #f00);
+                             linear-gradient(90deg, #ff0 90%, #f00);
+                             linear-gradient(90deg, #ff0 100%, #f00);
+
+                             linear-gradient(90deg, #ff0 50%, #f00, #0f0);
+                             linear-gradient(90deg, #ff0, #f00 50%, #0f0);
+                             linear-gradient(90deg, #ff0, #f00, #0f0 50%);
+
+                             linear-gradient(90deg, #ff0 50%, #f00 50%, #0f0);
+                             linear-gradient(90deg, #ff0, #f00 50%, #0f0 50%);
+                             linear-gradient(90deg, #ff0 50%, #f00 50%, #0f0 50%);
+
+                             linear-gradient(90deg, #0ff 10px, #00f);
+                             linear-gradient(90deg, #0ff 10px, #00f 10px);
+
                              linear-gradient(0deg, #4facfe, #00f2fe);
-                             linear-gradient(45deg, #fbda61, #ff5acd);
-                             linear-gradient(135deg, #eef2ff 0%, #fff 100%);
+
+                             repeating-linear-gradient(45deg, #f00 50px, #0f0 100px);
                              repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #ccc 10px, #ccc 20px);
                              ]">
                             linear-gradient
                         </div>
 
                     </div>
+                    <footer>
+
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -174,6 +290,9 @@
                         </div>
 
                     </div>
+                    <footer>
+
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -190,6 +309,9 @@
                         </div>
 
                     </div>
+                    <footer>
+
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -207,6 +329,9 @@
                         </div>
 
                     </div>
+                    <footer>
+
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -730,36 +855,30 @@
 
                 <!-- ====================== ЦВЕТ ТЕКСТА ====================== -->
                 <article class="article__cls">
-                    <header>🌈 color</header>
+                    <header>color</header>
                     <div class="article_main__cls">
-                        <div data-cover__border_bg
+
+                        <div
+                                data-font__size_2rem
+                                data-font__weight_1000
+                                data-cover__border_bg
                              data-clone_element__params="color:[
-                                 black;green;
-                                 #0F0;#00FF00;
-                                 #123456;#234567;#345678;#456789;
-                                 #123;#234;#456;#567;#678;#789;
-                                 #FF000030;#FF000070;rgb(255,0,0);rgba(255,0,0,0.5);
-                                 hsl(0,100%,50%);hsla(0,100%,50%,0.5);hwb(0,0%,0%);lab(50%,100%,0%);lch(50%,100%,0deg);color-mix(in srgb, red, blue);color(display-p3 1 0 0);
-                                 light-dark(black, white);light-dark(red, white);
-                                 transparent;
-                                 currentColor;rebeccapurple;tomato;gold;mediumseagreen;dodgerblue;crimson;indigo;hotpink
+                                {
+                                    background: linear-gradient(0deg, #f00, #0f0);
+                                    background-clip: text;
+                                    color: transparent;
+                                };
+
+                                 #ff0;
+                                 #f0f;
+                                 #0ff;
+
+                                transparent;
                              ]">
                             color
                         </div>
-                    </div>
-                    <footer>
-                        HEX (3/6/8 цифр)<br>
-                        rgbA - Alpha channel<br>
-                        HSL/HSLA=hsl(0,100%,50%) Hue, Saturation, Lightness<br>
-                        HWB (современный) - hwb(0,0%,0%) Hue, Whiteness, Blackness – интуитивнее для подбора оттенков<br>
-                        LAB, LCH=lab(50%,100%,0%), lch(50%,100%,0deg) - Цветовые пространства, приближенные к восприятию человека<br>
-                        color-mix() - color-mix(in srgb, red, blue) - Смешивание двух цветов (поддержка современная)<br>
-                        color(display-p3 1 0 0) - Широкий цветовой охват P3<br>
-                        light-dark() - Адаптивный цвет (светлая/тёмная тема)<br>
-                        currentColor, transparent - служебные<br>
 
-                        Некоторые современные функции (LAB, LCH, color-mix) поддерживаются не во всех браузерах, но полезны для изучения.<br>
-                    </footer>
+                    </div>
                 </article>
 
                 <!-- ====================== ДЕКОРИРОВАНИЕ ====================== -->
