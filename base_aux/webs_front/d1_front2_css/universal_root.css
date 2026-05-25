@@ -207,7 +207,7 @@ body, html
 /* -------------------- GROUPS -------------------- */
 [data-group] {}     /* just show how to separate elements by groups!!! */
 
-/* ---------------- SIZE -------------------- */
+/* ---------------- SIZE -------------------------- */
 [data-font__size_2rem] {
     font-size: 2rem;
 }
@@ -228,6 +228,11 @@ body, html
     padding: 0.75rem 1.5rem;
 }
 
+[data-transform__scale08]         { transform: scale(0.8); }
+[data-transform__scale12]         { transform: scale(1.2); }
+
+[data-transform__scale08]         { transform: scale(0.8); }
+
 /* -------------------- BOXES -------------------- */
 [data-width_20]         { width: 20px; }
 [data-width_30]         { width: 30px; }
@@ -243,7 +248,7 @@ body, html
 
 [data-box_40x40]        { height: 40px; width: 40px; }
 [data-box_80x80]        { height: 80px; width: 80px; }
-[data-box_50x100]        { height: 50px; width: 100px; }
+[data-box_50x100]       { height: 50px; width: 100px; }
 
 /* -------------------- BORDERS ------------------- */
 [data-border]           { border: 1px solid #aaa9; }

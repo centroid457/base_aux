@@ -609,19 +609,29 @@
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
+                            <legend>WAIT/time</legend>
+                            ⏱ ⏱️ ⏰
+
+                        </fieldset>
+
+                        <fieldset data-flex_wrap data-icons__show_unicode_values>
+                            <legend>INSTRUMENTS</legend>
+                            📐📏
+                            ✂️ 🛠️
+                            🔍
+                            🧲
+                        </fieldset>
+
+                        <fieldset data-flex_wrap data-icons__show_unicode_values>
                             <legend>РАЗНОЕ</legend>
                             📁 📂
                             📄🖼️
                             🔒🔓
-                            ⏱️⏰
                             🔄🔄
                             📆📊
-                            📐📏
-                            🔍
 
                             📈 📊
-
-                            … ✂️ 🛠️🌈🎨🧲🧱👁️📍
+                            … 🌈🎨🧱👁️📍
                         </fieldset>
 
                     </div>
@@ -2249,6 +2259,7 @@
                                  translateY(10px);
                                  translate(20px, 10px);
 
+                                 scale(0.8);
                                  scale(1.2);
                                  scaleX(1.5);
                                  scaleY(1.5);
@@ -2298,6 +2309,226 @@
                         — Можно комбинировать (например, <code>translate(10px) rotate(5deg)</code>) – применяются слева направо.<br>
                         ⚠️ Трансформации не влияют на соседние элементы (работают в отдельном слое).
                     </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="transitionId">
+            <h2>transition – плавные переходы</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <!-- 1. Длительность и задержка -->
+                <article class="article__cls">
+                    <header>transition-duration / transition-delay</header>
+                    <div class="article_main__cls">
+
+                        <style>
+                            .demo-transition-block {
+                                transition-property: transform, background;
+                                transition-timing-function: ease;
+                            }
+                            .demo-transition-block:hover {
+                                transform: scale(1.05);
+                                background: #0f0;
+                            }
+                        </style>
+
+                        <div
+                             data-item_square
+                             data-box_50x100
+                             class="demo-transition-block"
+                             data-clone_element__params="transition-duration:[
+                                 0s;
+                                 0.1s;
+                                 0.2s;
+                                 0.5s;
+                                 1s;
+                             ]">
+                            hover DURATION
+                        </div>
+
+                        <div
+                             data-item_square
+                             data-box_50x100
+                             class="demo-transition-block"
+                             data-clone_element__params="transition-delay:[
+                                 0s;
+                                 0.1s;
+                                 0.2s;
+                                 0.5s;
+                                 1s;
+                             ]">
+                            hover DELAY
+                        </div>
+
+                     </div>
+
+                    <footer>
+                        <code>transition-duration</code> – время анимации,<br>
+                        <code>transition-delay</code> – пауза перед началом.
+                    </footer>
+                </article>
+
+                <!-- 2. Функции времени (easing) -->
+                <article class="article__cls">
+                    <header>📈 transition-timing-function – кривые ускорения</header>
+                    <div class="article_main__cls">
+
+                        <style>
+                            .demo-easing-block {
+                                transition-property: transform, background;
+                                transition-duration: 1s;
+                            }
+                            .demo-easing-block:hover {
+                                transform: translateX(30px);
+                                background: #0f0;
+                            }
+                        </style>
+
+                        <div
+                             data-item_square
+                             data-box_50x100
+                                class="demo-easing-block"
+                             data-clone_element__params="transition-timing-function:[
+                                 linear;
+                                 ease;
+                                 ease-in;
+                                 ease-out;
+                                 ease-in-out;
+                                 step-start;
+                                 step-end;
+                                 cubic-bezier(0.25,0.1,0.25,1);
+                                 steps(4, end);
+                             ]">
+                            hover function
+                        </div>
+
+                        <p>
+                            Анимация происходит с разными кривыми:<br>
+                                <code>linear</code> – равномерно,<br>
+                                <code>ease-in</code> – медленно в начале,<br>
+                                <code>steps()</code> – ступенчато.<br>
+                        </p>
+
+                    </div>
+                    <footer>
+                        <code>transition-timing-function</code> управляет скоростью анимации.<br>
+                        <code>cubic-bezier</code> – произвольная кривая,<br>
+                        <code>steps</code> – дискретные шаги.<br>
+                    </footer>
+                </article>
+
+                <!-- 3. Сокращённая запись и множественные свойства -->
+                <article class="article__cls">
+                    <header>несколько свойств</header>
+                    <div class="article_main__cls">
+
+                        <style>
+                            .demo-shorthand-block {
+                                transition: all 0.2s;
+                            }
+                            .demo-shorthand-block:hover {
+                                transform: scale(1.1);
+                                opacity: 0.9;
+                                margin-left: 10px;
+                                width: 140px;
+                                height: 60px;
+
+                                background: #0f0;
+                            }
+                        </style>
+
+                        <div
+                             data-item_square
+                             data-box_50x100
+                                class="demo-shorthand-block"
+                             data-clone_element__params="transition:[
+                                 all 0.2s;
+                                 all 0.3s linear;
+
+                                 background 0.2s;
+                                 transform 0.4s ease;
+
+                                 background 0.1s, transform 0.5s ease-out;
+                                 background 0.2s ease-in, transform 0.4s cubic-bezier(0.42,0,0.58,1), opacity 0.3s;
+                                 margin-left 0.2s, width 0.4s, height 0.4s;
+                             ]">
+                            variants short+combinations
+                        </div>
+                    </div>
+                    <footer>Сокращённо: <code>transition: property duration timing-function delay</code>. Можно перечислить несколько через запятую.</footer>
+                </article>
+
+                <!-- 4. Интерактивное демо (ручной выбор) -->
+                <article class="article__cls">
+                    <header>🧪 Интерактивная настройка transition</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .interactive-demo {
+                                background: #f8fafc;
+                                padding: 1rem;
+                                border-radius: 0.5rem;
+                                text-align: center;
+                            }
+                            .interactive-demo .box {
+                                width: 100px;
+                                height: 100px;
+                                background: #2a73ff;
+                                margin: 1rem auto;
+                                transition: all 0.5s;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                border-radius: 8px;
+                            }
+                            .interactive-demo .box:hover {
+                                transform: scale(1.2);
+                                background: #ff8c42;
+                                border-radius: 50%;
+                            }
+                        </style>
+                        <div class="interactive-demo">
+                            <div class="box">Hover</div>
+                            <p><small>Этот блок анимируется при наведении. Можете изменить параметры в инспекторе.</small></p>
+                            <label>transition-duration: <input type="range" id="durationSlider" min="0" max="2" step="0.1" value="0.5"> <span id="durationVal">0.5</span>s</label>
+                            <br>
+                            <label>transition-delay: <input type="range" id="delaySlider" min="0" max="1" step="0.1" value="0"> <span id="delayVal">0</span>s</label>
+                            <br>
+                            <label>easing:
+                                <select id="easingSelect">
+                                    <option value="ease">ease</option>
+                                    <option value="linear">linear</option>
+                                    <option value="ease-in">ease-in</option>
+                                    <option value="ease-out">ease-out</option>
+                                    <option value="ease-in-out">ease-in-out</option>
+                                    <option value="cubic-bezier(0.25,0.1,0.25,1)">cubic-bezier</option>
+                                </select>
+                            </label>
+                        </div>
+                        <script>
+                            (function() {
+                                const box = document.querySelector('.interactive-demo .box');
+                                const durationSlider = document.getElementById('durationSlider');
+                                const delaySlider = document.getElementById('delaySlider');
+                                const easingSelect = document.getElementById('easingSelect');
+                                const durationVal = document.getElementById('durationVal');
+                                const delayVal = document.getElementById('delayVal');
+                                function updateTransition() {
+                                    box.style.transition = `all ${durationSlider.value}s ${easingSelect.value} ${delaySlider.value}s`;
+                                    durationVal.textContent = durationSlider.value;
+                                    delayVal.textContent = delaySlider.value;
+                                }
+                                durationSlider.addEventListener('input', updateTransition);
+                                delaySlider.addEventListener('input', updateTransition);
+                                easingSelect.addEventListener('change', updateTransition);
+                                updateTransition();
+                            })();
+                        </script>
+                    </div>
+                    <footer>🎚️ Попробуйте изменить параметры, чтобы лучше понять влияние каждого.</footer>
                 </article>
 
             </div>
