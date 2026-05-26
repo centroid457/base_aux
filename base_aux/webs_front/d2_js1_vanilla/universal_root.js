@@ -989,7 +989,8 @@ function generateColorPalette(containerId, divisions, showHexValue = false, outp
                                     output.value = color;
                                 } else {
                                     output.textContent = color;
-                                }
+                                };
+                                output.dispatchEvent(new Event('input', { bubbles: false }));
                             }
                         };
                     })(hex));
