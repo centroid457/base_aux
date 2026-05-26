@@ -164,6 +164,13 @@ body, html
 [data-mouse_select__all] { user-select: all; }
 [data-mouse_select__none] { user-select: none; }
 
+/* ---------------- SCROLLING ----------------------*/
+[data-overflow_auto]
+{
+    overflow: auto;  /* add scroll bars if overflow */
+}
+
+
 /* ================================================================================================================== */
 /* -------------------- ATTRS USER -----------------------------------------------------------------------------------*/
 /* --------------------COLOR --------------------*/
@@ -233,6 +240,11 @@ body, html
 [data-transform__scale12]         { transform: scale(1.2); }
 
 [data-transform__scale08]         { transform: scale(0.8); }
+
+[data-size__max_height_150]
+{
+    max-height: 150px;
+}
 
 /* -------------------- BOXES -------------------- */
 [data-width_20]         { width: 20px; }
@@ -328,7 +340,7 @@ body, html
 /* Отображение */
 [data-inline]       { display: inline-block; }      /* преобразует в строчный блок а не контейнерный */
 
-section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! */
+section[data-collapsed] > div { display: none; }    /* настраивать вручную!!! TODO: MOVE into project */
 
 /* -------------------- ИКОНКИ ЧЕРЕЗ data-АТРИБУТЫ -------------------- */
 [data-icon__circle_white]::before   { content: "⚪"; }

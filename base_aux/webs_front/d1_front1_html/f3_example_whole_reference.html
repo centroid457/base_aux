@@ -1905,6 +1905,7 @@
                 <article class="article__cls">
                     <header>overflow – обработка переполнения</header>
                     <div class="article_main__cls">
+
                         <div data-cover__border_bg
                              data-box_80x80
                              data-clone_element__params="overflow:[
@@ -1914,16 +1915,42 @@
                              scroll;
                              auto;
                              ]">
-                            overflow
                             11111111111111
                             22222222222222
                         </div>
+
+                        <div data-cover__border_bg
+                             data-box_80x80
+                             data-clone_element__params="overflow-x:[
+                             visible;
+                             hidden;
+
+                             scroll;
+                             auto;
+                             ]">
+                            11111111111111
+                            22222222222222
+                        </div>
+                        <div data-cover__border_bg
+                             data-box_40x40
+                             data-clone_element__params="overflow-y:[
+                             visible;
+                             hidden;
+
+                             scroll;
+                             auto;
+                             ]">
+                            1<br>
+                            2<br>
+                            3<br>
+                        </div>
+
                     </div>
                     <footer>
-                        <code>visible</code> – видно за пределами,<br>
-                        <code>hidden</code> – обрезается,<br>
-                        <code>scroll</code> – всегда полосы,<br>
-                        <code>auto</code> – полосы при необходимости.<br>
+                        <code>visible</code> – видно за пределами=все что за областью - ОТКРЫТО!!!<br>
+                        <code>hidden</code> – обрезается=все что за областью - СКРЫТО!!!<br>
+                        <code>scroll</code> – ПРОКРУТКА всегда,<br>
+                        <code>auto</code> – ПРОКРУТКА только по необходимости!<br>
                     </footer>
                 </article>
 
@@ -3611,10 +3638,7 @@
                             demo_hover__id
                         </div>
 
-                        <div
-                                id="log_hover__id"
-                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
-                        ></div>
+                        <div id="log_hover__id" data-height_200 data-overflow_auto></div>
 
                         <script>
                             (function() {
@@ -3635,11 +3659,11 @@
                             })();
                         </script>
 
-                        <p>
-                            <code>mouseenter/leave</code> – при наведении/уходе.<br>
-                            mouseenter / mouseleave – аналогичны mouseover/mouseout, но не всплывают и не срабатывают на дочерних элементах.
-                        </p>
                     </div>
+                    <footer>
+                        <code>mouseenter/leave</code> – при наведении/уходе.<br>
+                        mouseenter / mouseleave – аналогичны mouseover/mouseout, но не всплывают и не срабатывают на дочерних элементах.
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -3649,7 +3673,7 @@
                         <div id="demo_click__id"
                             data-item_square
                         >demo_click__id</div>
-                        <div id="log_click__id" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; min-width: 200px;"></div>
+                        <div id="log_click__id" data-height_200 data-overflow_auto></div>
 
                         <script>
                             const btn = document.getElementById('demo_click__id');
@@ -3664,13 +3688,15 @@
                                 const div = document.createElement('div');
                                 div.textContent = msg;
                                 clickLogDiv.appendChild(div);
+                                clickLogDiv.scrollTop = logDiv.scrollHeight;
                             }
                         </script>
-                        <p>
-                            <code>dblclick</code> – двойной клик,<br>
-                            <code>contextmenu</code> – открытие контекстного меню.
-                        </p>
+
                     </div>
+                    <footer>
+                        <code>dblclick</code> – двойной клик,<br>
+                        <code>contextmenu</code> – открытие контекстного меню.
+                    </footer>
                 </article>
 
                 <article class="article__cls">
@@ -3679,18 +3705,14 @@
 
                         Единого события "middle click" не существует, но его можно отследить с помощью других событий.
 
-Событие auxclick. Это лучшее и самое современное решение. Оно срабатывает при нажатии любой неосновной кнопки мыши (средняя, правая). Событие auxclick создано специально для таких случаев и, в отличие от click, позволяет отличить нажатие колёсика от левой кнопки.
+                        Событие auxclick. Это лучшее и самое современное решение. Оно срабатывает при нажатии любой неосновной кнопки мыши (средняя, правая). Событие auxclick создано специально для таких случаев и, в отличие от click, позволяет отличить нажатие колёсика от левой кнопки.
 
-События mousedown / mouseup. Это более старый, но более кросс-браузерный способ. Они срабатывают в момент нажатия/отпускания любой кнопки мыши.
+                        События mousedown / mouseup. Это более старый, но более кросс-браузерный способ. Они срабатывают в момент нажатия/отпускания любой кнопки мыши.
 
-                        <div id="demo_middleClick__id"
-                            data-item_square
-                        >
+                        <div id="demo_middleClick__id" data-item_square>
                             demo_middleClick__id
                         </div>
-                        <div id="log_middleClick__id" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; min-height: 50px;">
-                            Лог событий:
-                        </div>
+                        <div id="log_middleClick__id" data-height_200 data-overflow_auto></div>
 
                         <script>
                             (function() {
@@ -3716,7 +3738,7 @@
                                 // Важно: он сработает и на левую, и на правую кнопку, поэтому нужна проверка.
                                 demoDiv.addEventListener('mousedown', (e) => {
                                     if (e.button === 1) {
-                                        log('🔧 Событие mousedown: обнаружено нажатие колёсика.');
+                                        log('Событие mousedown: обнаружено нажатие колёсика.');
                                         // e.preventDefault();
                                     }
                                 });
@@ -3757,10 +3779,7 @@
                             01234567890123456789012345678901234567890123456789<br>
                         </div>
 
-                        <div
-                                id="log_wheel__id"
-                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
-                        ></div>
+                        <div id="log_wheel__id" data-overflow_auto data-height_200></div>
 
                         <script>
                             (function() {
@@ -3807,9 +3826,7 @@
                     <div class="article_main__cls">
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                                 <input type="text" id="demoEventField" placeholder="Type AnyThing">
-                                <div id="eventLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;">
-                                   ЛОГ:
-                                </div>
+                                <div id="eventLog" data-height_200></div>
                             <div>
                                 <button id="programmaticChangeBtn">Изменить значение программно</button>
                                 <button id="resetLogBtn">Сбросить лог</button>
@@ -3843,8 +3860,11 @@
                     </div>
 
                     <footer>
-                        <code>input</code> и <code>change</code> НЕ срабатывают при программном изменении поля (кнопка внизу).<br>
-                        💡 Чтобы заставить сработать событие из скрипта, используйте <code>element.dispatchEvent(new Event('input'))</code>.<br>
+                        input - местное ддополнение <br>
+                        change - НАЖАТИЕ ENTER (только в случае отличного значения от предыдущего нажатия!!! или полная замена <br><br>
+
+                        <code>input</code>/<code>change</code> НЕ срабатывают при программном изменении поля (кнопка внизу).<br>
+                        Чтобы заставить сработать событие из скрипта, используйте <code>element.dispatchEvent(new Event('input'))</code>.<br>
                     </footer>
                 </article>
 
@@ -3854,7 +3874,7 @@
                         Нажатия СТРОГО ВНУТРИ активного INPUT
 
                         <input type="text" id="demo_keyField__id" placeholder="Press AnyKey">
-                        <div id="log_keypress1__id" style="max-height: 200px; overflow-y: auto;"></div>
+                        <div id="log_keypress1__id" data-height_200 data-overflow_auto></div>
 
                         <script>
                             (function() {
@@ -3886,9 +3906,7 @@
                     <header>KBD-2=GLOBAL нажатия клавиш(на всем браузере!)</header>
                     <div class="article_main__cls">
 
-                        <div id="log_keypress2__id" style="max-height: 200px; overflow-y: auto;">
-                            ЛОГ:
-                        </div>
+                        <div id="log_keypress2__id" data-height_200 data-overflow_auto></div>
                         <button id="btn_clear__log_keypress2__id">ClearLog</button>
                         <script>
                             (function() {
@@ -3929,6 +3947,7 @@
                                 document.getElementById('btn_clear__log_keypress2__id').addEventListener('click', () => {
                                     logDiv.innerHTML = '';
                                 });
+
                             })();
                         </script>
                         <p><small>В логе отображаются: нажатие и отпускание клавиш, комбинации с Ctrl/Shift/Alt/Meta, а также различие левых/правых модификаторов (CtrlLeft, CtrlRight и т.д.).</small></p>
@@ -3948,21 +3967,25 @@
                             <button type="submit">Отправить (submit)</button>
                             <button type="reset">Сбросить (reset)</button>
                         </form>
-                        <div id="formLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <div id="log_form__id" data-height_200 data-overflow_auto></div>
                         <script>
-                            const form = document.getElementById('demoFormEvents');
-                            const formLogDiv = document.getElementById('formLog');
-                            form.addEventListener('submit', (e) => {
-                                e.preventDefault();
-                                const formLogEntry = document.createElement('div');
-                                formLogEntry.textContent = `✅ submit (значение: ${form.demo.value})`;
-                                formLogDiv.appendChild(formLogEntry);
-                            });
-                            form.addEventListener('reset', () => {
-                                const formLogEntry = document.createElement('div');
-                                formLogEntry.textContent = `🔄 reset`;
-                                formLogDiv.appendChild(formLogEntry);
-                            });
+                            (function() {
+
+                                const form = document.getElementById('demoFormEvents');
+                                const formLogDiv = document.getElementById('log_form__id');
+                                form.addEventListener('submit', (e) => {
+                                    e.preventDefault();
+                                    const formLogEntry = document.createElement('div');
+                                    formLogEntry.textContent = `✅ submit (значение: ${form.demo.value})`;
+                                    formLogDiv.appendChild(formLogEntry);
+                                });
+                                form.addEventListener('reset', () => {
+                                    const formLogEntry = document.createElement('div');
+                                    formLogEntry.textContent = `🔄 reset`;
+                                    formLogDiv.appendChild(formLogEntry);
+                                });
+
+                            })();
                         </script>
                     </div>
                     <footer>
@@ -3992,39 +4015,113 @@
                         </p>
 
                         <div>
-                            <input type="text" id="progField" placeholder="Поле">
-                            <button id="progInputBtn">Сгенерировать 'input'</button>
-                            <button id="progChangeBtn">Сгенерировать 'change'</button>
+                            <input id="input_genEvent__id" type="text" placeholder="input">
+                            <button id="btn_genEvent_input__id">genInput</button>
+                            <button id="btn_genEvent_change__id">genChange</button>
                         </div>
-                        <div id="progLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <div id="progLog" data-height_200 data-overflow_auto></div>
                         <script>
-                            const progField = document.getElementById('progField');
-                            const progLogDiv = document.getElementById('progLog');
-                            progField.addEventListener('input', () => {
-                                const entry = document.createElement('div');
-                                entry.textContent = `input: ${progField.value}`;
-                                progLogDiv.appendChild(entry);
-                            });
-                            progField.addEventListener('change', () => {
-                                const entry = document.createElement('div');
-                                entry.textContent = `change: ${progField.value}`;
-                                progLogDiv.appendChild(entry);
-                            });
-                            document.getElementById('progInputBtn').addEventListener('click', () => {
-                                progField.value = `значение ${Date.now()}`;
-                                progField.dispatchEvent(new Event('input', { bubbles: true }));
-                            });
-                            document.getElementById('progChangeBtn').addEventListener('click', () => {
-                                progField.value = `значение ${Date.now()}`;
-                                progField.dispatchEvent(new Event('change', { bubbles: true }));
-                            });
+                            (function() {
+
+                                const input_genEvent__el = document.getElementById('input_genEvent__id');
+                                const progLogDiv = document.getElementById('progLog');
+
+                                input_genEvent__el.addEventListener('input', () => {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = `input: ${input_genEvent__el.value}`;
+                                    progLogDiv.appendChild(entry);
+                                });
+                                input_genEvent__el.addEventListener('change', () => {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = `change: ${input_genEvent__el.value}`;
+                                    progLogDiv.appendChild(entry);
+                                });
+                                document.getElementById('btn_genEvent_input__id').addEventListener('click', () => {
+                                    //input_genEvent__el.value = `значение ${Date.now()}`;
+                                    input_genEvent__el.dispatchEvent(new Event('input'));
+                                });
+                                document.getElementById('btn_genEvent_change__id').addEventListener('click', () => {
+                                    //input_genEvent__el.value = `значение ${Date.now()}`;
+                                    input_genEvent__el.dispatchEvent(new Event('change', { hello: 222 }));
+                                });
+
+                            })();
                         </script>
+                    </div>
+
+                    <footer>
+                        dispatchEvent – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
+                        С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
+                        Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Программная генерация событий (dispatchEvent)</header>
+                    <div class="article_main__cls">
                         <p>
-                            dispatchEvent – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
-                            С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
+                            В браузере события <code>input</code>, <code>change</code>, <code>blur</code>, <code>focus</code> <strong>не срабатывают</strong> при программном изменении <code>.value</code>.
+                            Это сделано, чтобы избежать бесконечных циклов и нежелательных сайд-эффектов.
+                            Если вам нужно, чтобы обработчики среагировали на скриптовое изменение, вызывайте их вручную или генерируйте события через <code>dispatchEvent</code>.
                         </p>
+
+                        <div>
+                            <input type="text" id="progField" placeholder="Поле ввода">
+                            <button id="progInputCustomBtn">Установить значение и сгенерировать input</button>
+                            <button id="progChangeCustomBtn">Установить значение и сгенерировать change</button>
+                            <button id="progSignalBtn">Сгенерировать пустое событие (сигнал) без изменения значения</button>
+                        </div>
+                        <div id="progLog2" data-height_200 data-overflow_auto></div>
+
+                        <script>
+                            (function() {
+
+                                const progField = document.getElementById('progField');
+                                const progLogDiv = document.getElementById('progLog2');
+
+                                function logEntry(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    progLogDiv.appendChild(entry);
+                                    progLogDiv.scrollTop = progLogDiv.scrollHeight;
+                                }
+
+                                progField.addEventListener('input', () => {
+                                    logEntry(`✅ input: значение = "${progField.value}"`);
+                                });
+                                progField.addEventListener('change', () => {
+                                    logEntry(`✅ change: значение = "${progField.value}"`);
+                                });
+                                progField.addEventListener('focus', () => logEntry(`🔵 focus`));
+                                progField.addEventListener('blur', () => logEntry(`🔴 blur`));
+
+                                // 1. Установка конкретного значения и генерация input
+                                document.getElementById('progInputCustomBtn').addEventListener('click', () => {
+                                    progField.value = 'Пример ввода (input event)';
+                                    progField.dispatchEvent(new Event('input', { bubbles: true }));
+                                });
+
+                                // 2. Установка конкретного значения и генерация change
+                                document.getElementById('progChangeCustomBtn').addEventListener('click', () => {
+                                    progField.value = 'Пример ввода (change event)';
+                                    progField.dispatchEvent(new Event('change', { bubbles: true }));
+                                });
+
+                                // 3. Генерация пустого события (сигнал) без изменения значения
+                                document.getElementById('progSignalBtn').addEventListener('click', () => {
+                                    progField.dispatchEvent(new Event('input', { bubbles: true }));
+                                    logEntry(`🔔 Сгенерирован пустой сигнал 'input' (значение не менялось: "${progField.value}")`);
+                                });
+
+                            })();
+
+                        </script>
+
+                        <p><small>Используйте <code>dispatchEvent(new Event('тип', { bubbles: true }))</code> для имитации события. Пустой сигнал полезен, когда нужно запустить логику обработчика без фактического изменения поля.</small></p>
                     </div>
                     <footer>
+                        💡 <code>dispatchEvent</code> – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
+                        С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
                         Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.
                     </footer>
                 </article>
@@ -4034,7 +4131,7 @@
                     <div class="article_main__cls">
                         <div>
                             <button id="simulateResizeBtn">Сымитировать изменение размера (для лога)</button>
-                            <div id="globalLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"></div>
+                            <div id="globalLog" data-height_200 data-overflow_auto></div>
                         </div>
                         <script>
                             const globalLogDiv = document.getElementById('globalLog');
@@ -4063,7 +4160,7 @@
                     <div class="article_main__cls">
                         <div>
                             <img id="testImg" src="https://picsum.photos/id/1/200/150" alt="тестовое изображение" style="max-width: 100%; border-radius: 0.5rem;">
-                            <div id="imgLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;"></div>
+                            <div id="imgLog" data-height_200 data-overflow_auto></div>
                         </div>
                         <script>
                             const img = document.getElementById('testImg');
@@ -4092,7 +4189,7 @@
                     <div class="article_main__cls">
                         <div>
                             <input type="text" id="clipDemo" placeholder="Попробуй скопировать/вставить текст" value="Пример текста">
-                            <div id="clipLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;"></div>
+                            <div id="clipLog" data-height_200 data-overflow_auto></div>
                         </div>
                         <script>
                             const clipInput = document.getElementById('clipDemo');
@@ -4118,7 +4215,7 @@
                     <div class="article_main__cls">
                         <div>
                             <input type="text" id="clipFullDemo" placeholder="Попробуй копировать/вставить" value="Пример текста">
-                            <div id="clipFullLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; max-height: 150px; overflow-y: auto;"></div>
+                            <div id="clipFullLog" data-height_200 data-overflow_auto></div>
                         </div>
                         <script>
                             (function() {
@@ -6242,9 +6339,7 @@
                                 data-width_100
                                 data-height_200
 
-                             style="grid-template-columns:
-                                 repeat(auto-fill, minmax(100px, 1fr));
-                             ]">
+                             style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));">
                             <div data-item_rounded>1</div>
                             <div data-item_rounded>2</div>
                             <div data-item_rounded>3</div>
@@ -6259,9 +6354,7 @@
                                 data-width_100
                                 data-height_200
 
-                             style="grid-template-columns:
-                                 repeat(auto-fit, minmax(100px, 1fr));
-                             ]">
+                             style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));">
                             <div data-item_rounded>1</div>
                             <div data-item_rounded>2</div>
                             <div data-item_rounded>3</div>
