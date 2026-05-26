@@ -3598,6 +3598,51 @@
             <div class="section_main__cls grid_auto__cls">
 
                 <article class="article__cls">
+                    <header>mouseenter, mouseleave</header>
+                    <div class="article_main__cls">
+
+                        Важно: если элемент не прокручивается, событие всплывает к окну и может прокрутить страницу – используйте preventDefault для кастомного поведения.
+
+                        <div
+                                data-item_square
+                                data-width_200
+                                id="demo_hover__id"
+                        >
+                            demo_hover__id
+                        </div>
+
+                        <div
+                                id="log_hover__id"
+                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
+                        ></div>
+
+                        <script>
+                            (function() {
+                                const hoverDiv = document.getElementById('demo_hover__id');
+                                const logDiv = document.getElementById('log_hover__id');
+
+                                function addLog(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                                hoverDiv.addEventListener('mouseenter', () => addLog('🐭 mouseenter'));
+                                hoverDiv.addEventListener('mouseleave', () => addLog('🐭 mouseleave'));
+
+                                hoverDiv.addEventListener('mouseover', () => addLog('mouseover'));
+                                hoverDiv.addEventListener('mouseout', () => addLog('mouseout'));
+                            })();
+                        </script>
+
+                        <p>
+                            <code>mouseenter/leave</code> – при наведении/уходе.<br>
+                            mouseenter / mouseleave – аналогичны mouseover/mouseout, но не всплывают и не срабатывают на дочерних элементах.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="article__cls">
                     <header>MOUSE click, dblclick, contextmenu</header>
                     <div class="article_main__cls">
 
@@ -3749,51 +3794,6 @@
                     </footer>
                 </article>
 
-                <article class="article__cls">
-                    <header>mouseenter, mouseleave</header>
-                    <div class="article_main__cls">
-
-                        Важно: если элемент не прокручивается, событие всплывает к окну и может прокрутить страницу – используйте preventDefault для кастомного поведения.
-
-                        <div
-                                data-item_square
-                                data-width_200
-                                id="demo_hover__id"
-                        >
-                            demo_hover__id
-                        </div>
-
-                        <div
-                                id="log_hover__id"
-                                style="background: #eef2ff; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; height: 100px; overflow-y: auto;"
-                        ></div>
-
-                        <script>
-                            (function() {
-                                const hoverDiv = document.getElementById('demo_hover__id');
-                                const logDiv = document.getElementById('log_hover__id');
-
-                                function addLog(msg) {
-                                    const entry = document.createElement('div');
-                                    entry.textContent = msg;
-                                    logDiv.appendChild(entry);
-                                    logDiv.scrollTop = logDiv.scrollHeight;
-                                }
-                                hoverDiv.addEventListener('mouseenter', () => addLog('🐭 mouseenter'));
-                                hoverDiv.addEventListener('mouseleave', () => addLog('🐭 mouseleave'));
-
-                                hoverDiv.addEventListener('mouseover', () => addLog('mouseover'));
-                                hoverDiv.addEventListener('mouseout', () => addLog('mouseout'));
-                            })();
-                        </script>
-
-                        <p>
-                            <code>mouseenter/leave</code> – при наведении/уходе.<br>
-                            mouseenter / mouseleave – аналогичны mouseover/mouseout, но не всплывают и не срабатывают на дочерних элементах.
-                        </p>
-                    </div>
-                </article>
-
             </div>
         </section>
 
@@ -3874,103 +3874,6 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>Программная генерация событий</header>
-                    <div class="article_main__cls">
-                        <p>
-                            В браузерных событиях для полей ввода есть важная деталь: события input, change, blur, focus<br>
-                            не срабатывают при программном изменении .value. Это сделано,<br>
-                            чтобы избежать бесконечных циклов и нежелательных сайд-эффектов.<br>
-                            Если вам нужно отреагировать на скриптовое изменение,<br>
-                            вызывайте нужный обработчик вручную или генерируйте событие через dispatchEvent.
-                        </p>
-
-                        <div>
-                            <input type="text" id="progField" placeholder="Поле">
-                            <button id="progInputBtn">Сгенерировать 'input'</button>
-                            <button id="progChangeBtn">Сгенерировать 'change'</button>
-                        </div>
-                        <div id="progLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
-                        <script>
-                            const progField = document.getElementById('progField');
-                            const progLogDiv = document.getElementById('progLog');
-                            progField.addEventListener('input', () => {
-                                const entry = document.createElement('div');
-                                entry.textContent = `input: ${progField.value}`;
-                                progLogDiv.appendChild(entry);
-                            });
-                            progField.addEventListener('change', () => {
-                                const entry = document.createElement('div');
-                                entry.textContent = `change: ${progField.value}`;
-                                progLogDiv.appendChild(entry);
-                            });
-                            document.getElementById('progInputBtn').addEventListener('click', () => {
-                                progField.value = `значение ${Date.now()}`;
-                                progField.dispatchEvent(new Event('input', { bubbles: true }));
-                            });
-                            document.getElementById('progChangeBtn').addEventListener('click', () => {
-                                progField.value = `значение ${Date.now()}`;
-                                progField.dispatchEvent(new Event('change', { bubbles: true }));
-                            });
-                        </script>
-                        <p>
-                            dispatchEvent – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
-                            С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
-                        </p>
-                    </div>
-                    <footer>
-                        Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.
-                    </footer>
-                </article>
-
-<article class="article__cls">
-    <header>📋 Полный пример с буфером обмена и клавишей Delete</header>
-    <div class="article_main__cls">
-        <div>
-            <input type="text" id="clipFullDemo" placeholder="Попробуй копировать/вставить" value="Пример текста">
-            <div id="clipFullLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; max-height: 150px; overflow-y: auto;"></div>
-        </div>
-        <script>
-            (function() {
-                const input = document.getElementById('clipFullDemo');
-                const logDiv = document.getElementById('clipFullLog');
-                function log(msg) {
-                    const entry = document.createElement('div');
-                    entry.textContent = msg;
-                    logDiv.appendChild(entry);
-                    logDiv.scrollTop = logDiv.scrollHeight;
-                }
-                // Копирование: можно переопределить данные
-                input.addEventListener('copy', (e) => {
-                    const customText = `Кастомный текст из поля (было: ${input.value})`;
-                    e.clipboardData.setData('text/plain', customText);
-                    e.preventDefault();
-                    log(`📋 скопировано (переопределено): "${customText}"`);
-                });
-                // Вставка: читаем данные
-                input.addEventListener('paste', (e) => {
-                    const pasted = e.clipboardData.getData('text/plain');
-                    log(`📌 вставлено: "${pasted}"`);
-                    // можно модифицировать вставляемый текст
-                    e.preventDefault();
-                    document.execCommand('insertText', false, pasted.toUpperCase());
-                });
-                // Отслеживаем удаление через keydown + input
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Delete') log(`⌨️ нажата Delete (событие keydown)`);
-                    if (e.key === 'Backspace') log(`⌨️ нажата Backspace`);
-                });
-                input.addEventListener('input', (e) => {
-                    log(`🔄 input (новое значение: "${input.value}")`);
-                });
-            })();
-        </script>
-        <p><small>Обратите внимание: в `copy` мы перехватываем данные (запись), в `paste` – читаем и преобразуем в верхний регистр. Удаление показывает `keydown` + `input`.</small></p>
-    </div>
-    <footer>💡 Событие `delete` отсутствует. Используйте `input` для отслеживания изменений и `keydown` для перехвата конкретной клавиши.</footer>
-</article>
-
-
-                <article class="article__cls">
                     <header>📤 События формы: submit и reset</header>
                     <div class="article_main__cls">
                         <form id="demoFormEvents" onsubmit="return false;">
@@ -4033,6 +3936,53 @@
                     <footer>⚠️ Доступ к данным буфера через <code>clipboardData</code> (может требовать разрешения в некоторых браузерах).</footer>
                 </article>
 
+                <article class="article__cls">
+                    <header>📋 Полный пример с буфером обмена и клавишей Delete</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <input type="text" id="clipFullDemo" placeholder="Попробуй копировать/вставить" value="Пример текста">
+                            <div id="clipFullLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; max-height: 150px; overflow-y: auto;"></div>
+                        </div>
+                        <script>
+                            (function() {
+                                const input = document.getElementById('clipFullDemo');
+                                const logDiv = document.getElementById('clipFullLog');
+                                function log(msg) {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = msg;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                }
+                                // Копирование: можно переопределить данные
+                                input.addEventListener('copy', (e) => {
+                                    const customText = `Кастомный текст из поля (было: ${input.value})`;
+                                    e.clipboardData.setData('text/plain', customText);
+                                    e.preventDefault();
+                                    log(`📋 скопировано (переопределено): "${customText}"`);
+                                });
+                                // Вставка: читаем данные
+                                input.addEventListener('paste', (e) => {
+                                    const pasted = e.clipboardData.getData('text/plain');
+                                    log(`📌 вставлено: "${pasted}"`);
+                                    // можно модифицировать вставляемый текст
+                                    e.preventDefault();
+                                    document.execCommand('insertText', false, pasted.toUpperCase());
+                                });
+                                // Отслеживаем удаление через keydown + input
+                                input.addEventListener('keydown', (e) => {
+                                    if (e.key === 'Delete') log(`⌨️ нажата Delete (событие keydown)`);
+                                    if (e.key === 'Backspace') log(`⌨️ нажата Backspace`);
+                                });
+                                input.addEventListener('input', (e) => {
+                                    log(`🔄 input (новое значение: "${input.value}")`);
+                                });
+                            })();
+                        </script>
+                        <p><small>Обратите внимание: в `copy` мы перехватываем данные (запись), в `paste` – читаем и преобразуем в верхний регистр. Удаление показывает `keydown` + `input`.</small></p>
+                    </div>
+                    <footer>💡 Событие `delete` отсутствует. Используйте `input` для отслеживания изменений и `keydown` для перехвата конкретной клавиши.</footer>
+                </article>
+
             </div>
         </section>
 
@@ -4040,6 +3990,55 @@
         <section class="section__cls" id="eventsOtherId">
             <h2>EVENTS=OTHER GLOBAL</h2>
             <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>Программная генерация событий</header>
+                    <div class="article_main__cls">
+                        <p>
+                            В браузерных событиях для полей ввода есть важная деталь: события input, change, blur, focus<br>
+                            не срабатывают при программном изменении .value. Это сделано,<br>
+                            чтобы избежать бесконечных циклов и нежелательных сайд-эффектов.<br>
+                            Если вам нужно отреагировать на скриптовое изменение,<br>
+                            вызывайте нужный обработчик вручную или генерируйте событие через dispatchEvent.
+                        </p>
+
+                        <div>
+                            <input type="text" id="progField" placeholder="Поле">
+                            <button id="progInputBtn">Сгенерировать 'input'</button>
+                            <button id="progChangeBtn">Сгенерировать 'change'</button>
+                        </div>
+                        <div id="progLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                        <script>
+                            const progField = document.getElementById('progField');
+                            const progLogDiv = document.getElementById('progLog');
+                            progField.addEventListener('input', () => {
+                                const entry = document.createElement('div');
+                                entry.textContent = `input: ${progField.value}`;
+                                progLogDiv.appendChild(entry);
+                            });
+                            progField.addEventListener('change', () => {
+                                const entry = document.createElement('div');
+                                entry.textContent = `change: ${progField.value}`;
+                                progLogDiv.appendChild(entry);
+                            });
+                            document.getElementById('progInputBtn').addEventListener('click', () => {
+                                progField.value = `значение ${Date.now()}`;
+                                progField.dispatchEvent(new Event('input', { bubbles: true }));
+                            });
+                            document.getElementById('progChangeBtn').addEventListener('click', () => {
+                                progField.value = `значение ${Date.now()}`;
+                                progField.dispatchEvent(new Event('change', { bubbles: true }));
+                            });
+                        </script>
+                        <p>
+                            dispatchEvent – мощный инструмент, но не злоупотребляйте им, если можно обойтись прямым вызовом обработчика.<br>
+                            С помощью <code>dispatchEvent</code> можно вручную вызывать любые события, даже после программного изменения значения.<br>
+                        </p>
+                    </div>
+                    <footer>
+                        Пригодится, если вы обновляете поле через скрипт и хотите синхронизировать другие обработчики.
+                    </footer>
+                </article>
 
                 <article class="article__cls">
                     <header>🌐 Глобальные события (window: resize, load, beforeunload)</header>
