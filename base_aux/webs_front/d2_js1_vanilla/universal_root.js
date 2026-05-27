@@ -559,59 +559,53 @@ const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def
  * @param {string} def_property_name - CSS-свойство по умолчанию (для простых значений).
  * @param {string[]} value_items - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element(original__el, def_property_name, value_items, with_attrs = false, by_direct = false) {
-    // Добавляем стандартные варианты (можно оставить как есть)
+function _clone_element(original__el, def_property_name, value_items, with_attrs=false, by_direct=false) {
+    // 0=append irrational values
     value_items.unshift(undefined);
     value_items.unshift(new Map());
-    if (!value_items.includes("none")) value_items.unshift("none");
+    //value_items.unshift("WRONG_VAL"); //NOT NEEDED!!!
+    if (!value_items.includes("none")) {value_items.unshift("none");}
     value_items.unshift("revert");
     value_items.unshift("");
 
+    // 1=make all clones ---------------------------------------
     const clones_map = new Map();
 
     for (const style_value of value_items) {
         const clone__el = original__el.cloneNode(true);
+
         let params_map;
 
+        // define final item_map
         if (style_value instanceof Map) {
             params_map = style_value;
-        } else if (typeof style_value === 'string' || style_value === undefined) {
-            // Специальный случай: пустое имя свойства → режим атрибутов
-            if (def_property_name === '') {
-                // Строка – это имя булевого атрибута (значение пусто)
-                params_map = new Map().set(style_value, '');
-            } else {
-                // Обычный CSS‑стиль
-                params_map = new Map().set(def_property_name, style_value);
-            }
-        } else {
-            // fallback (не должно случаться)
-            params_map = new Map();
+        } else {    //undefined/string
+            params_map = new Map().set(def_property_name, style_value);
         }
 
-        // Применяем параметры
+        // apply params
         for (const [name, val] of params_map) {
-            if (def_property_name === '' || with_attrs) {
-                // Для булевых атрибутов или если явно запрошены атрибуты
+            if (with_attrs) {
                 clone__el.setAttribute(name, val);
             } else {
                 clone__el.style[name] = val;
             }
         }
+
         clones_map.set(style_value, clone__el);
     }
 
+    // 2=APPLY-1=DIRECT ------------------------------------------
     if (by_direct) {
         const clonesArray = Array.from(clones_map.values());
         original__el.replaceWith(...clonesArray);
         return;
     }
 
+    // 2=APPLY-2=DL -----------------------------------------------
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    // Если имя свойства пусто, показываем [attributes]
-    const displayName = def_property_name === '' ? 'attributes' : def_property_name;
-    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select__all>${displayName}</b>]`;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
     fieldset__el.appendChild(legend__el);
 
     const dl__el = document.createElement('dl');
@@ -619,23 +613,32 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     fieldset__el.appendChild(dl__el);
 
     function addEntryDl(label_value, cloned_el) {
+        // 1=resolve label_str
         let label_str;
+
         if (label_value instanceof Map) {
             label_str = toString_Map(label_value);
         } else {
-            label_str = String(label_value);
+            label_str = `${label_value}`;
         }
-        if (label_str.length === 0) label_str = '""';
+
+        if (label_str.length === 0) {
+            label_str = '""';
+        };
+
+        //2=WORK
         const dt__el = document.createElement('dt');
         if (typeof label_value !== 'string') {
             dt__el.style.fontStyle = 'italic';
             dt__el.style.textDecoration = 'underline';
-        }
+        };
         dt__el.textContent = label_str;
         dt__el.style.fontSize = 'xx-small';
         dl__el.appendChild(dt__el);
+
         const dd = document.createElement('dd');
-        dd.setAttribute('data-border', '');
+        dd.setAttribute("data-border", "")
+        //dd.setAttribute("data-bg_a5", "")
         dd.appendChild(cloned_el);
         dl__el.appendChild(dd);
     }
@@ -643,6 +646,8 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     for (const [_value, _cloned_el] of clones_map) {
         addEntryDl(_value, _cloned_el);
     }
+
+    // 4. Заменяем оригинал
     original__el.replaceWith(fieldset__el);
 }
 

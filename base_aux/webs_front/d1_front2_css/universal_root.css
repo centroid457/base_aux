@@ -305,15 +305,17 @@ body, html
 }
 
 [data-gap1px]           { gap: 1px; }     /* GRID/FLEX */
+[data-gap1rem]          { gap: 1rem; }
 
 /* -------------------- GRID/FLEX --------------------*/
 [data-flex] { display: flex; }
 [data-grid] { display: grid; }
 
-.grid_auto__cls {
+[data-grid_autofit_min250]
+{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
 }
 
 [data-flex_column] {
