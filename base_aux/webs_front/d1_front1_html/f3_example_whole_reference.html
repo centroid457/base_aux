@@ -56,7 +56,7 @@
                         <output
                                 data-group="palette"
                                 data-width_10rem
-                                data-align_center__text
+                                data-align_center
                         >#******</output>
                     </div>
                     <div id="palette__id" style="overflow-x: auto;"></div>
@@ -799,6 +799,40 @@
                     <footer><code>normal</code> = 400, <code>bold</code> = 700. <code>bolder/lighter</code> – относительно родителя. Цифры от 100 до 900 с шагом 100.</footer>
                 </article>
 
+                <!-- ====================== font-stretch ====================== -->
+                <article class="article__cls">
+                    <header>font-stretch – ширина символов</header>
+                    <div class="article_main__cls">
+
+                        стандартный шрифт не поддерживает!
+
+                        <div data-cover__border_bg
+                             data-clone_element__params="font-stretch:[
+                             normal;
+                             condensed;expanded;
+                             extra-condensed;extra-expanded;
+                             10%;100%;500%;1000%;
+                             ]">
+                            стандартный шрифт
+                        </div>
+
+                        <hr>
+                        применение поддерживаемого шрифта
+                        <div data-cover__border_bg
+                             style="font-family: 'Roboto Flex', sans-serif;"
+                             data-clone_element__params="font-stretch:[
+                             normal;
+                             condensed;expanded;
+                             extra-condensed;extra-expanded;
+                             10%;100%;500%;1000%;
+                             ]">
+                            Roboto Flex
+                        </div>
+
+                    </div>
+                    <footer>Зависит от наличия соответствующих начертаний в шрифте. Можно использовать проценты (50%..200%).</footer>
+                </article>
+
                 <!-- ====================== font-family – подробно ====================== -->
                 <article class="article__cls">
                     <header>font-family – гарнитуры и стеки</header>
@@ -1379,6 +1413,39 @@
                     </footer>
                 </article>
 
+                <!-- =========================================== -->
+                <article class="article__cls">
+                    <header>ВЫРАВНИВАНИЕ ПОЛНОЕ=Вертикальное и горизонтальное</header>
+                    <div class="article_main__cls">
+
+                        <div data-bg_a5 data-box_100x200 style="display: flex; align-items: center; justify-content: center;">
+                            flex<br>line2
+                        </div>
+                        <div data-bg_a5 data-box_100x200 style="display: grid; place-items: center;">
+                            grid<br>line2
+                        </div>
+                        <div data-bg_a5 data-box_100x200 style="display: table-cell; vertical-align: middle; text-align: center;">
+                            table-cell<br>line2
+                        </div>
+                        <p>Все три способа центрируют текст по горизонтали и вертикали внутри блоков.</p>
+
+                        <hr>
+                        <div data-align_center data-bg_a5 data-box_100x200>
+                            data-align_center<br>line2
+                        </div>
+                        <div data-align_center data-bg_a5 data-box_200x200>
+                            <div data-item_square data-box_40x40>1</div>
+                            data-align_center<br>line2
+                            <div data-item_square data-box_40x40>3</div>
+                        </div>
+
+                    </div>
+                    <footer>
+                        💡 <strong>Лучший современный способ</strong> – <code>display: flex; align-items: center; justify-content: center;</code>.<br>
+                        🔍 Свойство <code>vertical-align</code> работает только для <code>inline</code>, <code>inline-block</code> и ячеек таблиц, но не для блочных элементов.
+                    </footer>
+                </article>
+
                 <!-- ====================== text-indent ====================== -->
                 <article class="article__cls">
                     <header>text-indent – отступ первой строки</header>
@@ -1395,40 +1462,6 @@
                         BR - не создает новый отступ - работает как обычный перенос!
                     </div>
                     <footer>Значения могут быть в любых единицах (<code>px</code>, <code>em</code>, <code>rem</code>, <code>%</code>).</footer>
-                </article>
-
-                <!-- ====================== font-stretch ====================== -->
-                <article class="article__cls">
-                    <header>font-stretch – ширина символов</header>
-                    <div class="article_main__cls">
-
-                        стандартный шрифт не поддерживает!
-
-                        <div data-cover__border_bg
-                             data-clone_element__params="font-stretch:[
-                             normal;
-                             condensed;expanded;
-                             extra-condensed;extra-expanded;
-                             10%;100%;500%;1000%;
-                             ]">
-                            стандартный шрифт
-                        </div>
-
-                        <hr>
-                        применение поддерживаемого шрифта
-                        <div data-cover__border_bg
-                             style="font-family: 'Roboto Flex', sans-serif;"
-                             data-clone_element__params="font-stretch:[
-                             normal;
-                             condensed;expanded;
-                             extra-condensed;extra-expanded;
-                             10%;100%;500%;1000%;
-                             ]">
-                            Roboto Flex
-                        </div>
-
-                    </div>
-                    <footer>Зависит от наличия соответствующих начертаний в шрифте. Можно использовать проценты (50%..200%).</footer>
                 </article>
 
                 <!-- ====================== white-space ====================== -->

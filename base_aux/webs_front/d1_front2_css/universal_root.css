@@ -171,10 +171,15 @@ body, html
 }
 
 /* ---------------- ALIGN ----------------------*/
-[data-align_center__text]
+[data-align_center]   /* applicable for text and blocks! */
 {
-    text-align: center;
-    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center; /* страховка для вложенных строк */
 }
 
 /* ================================================================================================================== */
@@ -277,8 +282,14 @@ body, html
 [data-box_40x40]        { height: 40px; width: 40px; }
 [data-box_40x80]        { height: 40px; width: 80px; }
 [data-box_80x80]        { height: 80px; width: 80px; }
+
+[data-box_50x50]        { height: 50px; width: 50px; }
 [data-box_50x100]       { height: 50px; width: 100px; }
+[data-box_50x200]       { height: 50px; width: 200px; }
+
 [data-box_100x100]      { height: 100px; width: 100px; }
+[data-box_100x200]      { height: 100px; width: 200px; }
+[data-box_200x200]      { height: 200px; width: 200px; }
 
 /* -------------------- BORDERS ------------------- */
 [data-border]           { border: 1px solid #aaa9; }
