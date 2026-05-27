@@ -4143,7 +4143,84 @@
                 </article>
 
                 <article class="article__cls">
-                    <header>🌐 Глобальные события (window: resize, load, beforeunload)</header>
+                    <header >gen+Event параметры</header>
+                    <div class="article_main__cls">
+
+                        <p>🫧 Параметры bubbles и cancelable при создании событий<br>
+При программной генерации события через new Event(type, options) можно задать два важных флага:<br>
+
+bubbles (по умолчанию false) – определяет, будет ли событие всплывать вверх по DOM-дереву (от целевого элемента к родителям, до document).<br>
+
+cancelable (по умолчанию false) – определяет, можно ли отменить действие по умолчанию для этого события с помощью event.preventDefault().<br>
+
+Эти параметры позволяют имитировать поведение настоящих браузерных событий.<br>
+
+📌 Где это полезно?<br>
+bubbles: true – если вы хотите, чтобы событие обрабатывалось родительскими элементами (например, делегирование событий).<br>
+
+cancelable: true – если вы хотите дать возможность обработчикам отменить действие, которое должно было произойти (например, предотвратить отправку формы, переход по ссылке).<br>
+                        </p>
+
+                        <div id="parent" style="padding: 1rem; background: #eef2ff;">
+                            Родитель
+                            <button id="demoButton">Нажми меня</button>
+                        </div>
+                        <div id="log_event_params__id" data-height_200 data-overflow_auto></div>
+
+                        <script>
+                            (function() {
+
+                                const parent = document.getElementById('parent');
+                                const button = document.getElementById('demoButton');
+                                const logDiv = document.getElementById('log_event_params__id');
+
+                                function logEntry(msg) {
+                                    const p = document.createElement('div');
+                                    p.textContent = msg;
+                                    logDiv.appendChild(p);
+                                }
+
+                                // Обработчик на родителе (сработает, если событие всплывает)
+                                parent.addEventListener('myCustomEvent', () => logEntry('Родитель поймал всплывающее событие'));
+
+                                // Генерация события с bubbles = true
+                                const bubblingEvent = new Event('myCustomEvent', { bubbles: true, cancelable: false });
+                                button.dispatchEvent(bubblingEvent); // Родитель получит событие
+
+                                // Генерация события без всплытия (bubbles = false)
+                                const nonBubblingEvent = new Event('myCustomEvent', { bubbles: false });
+                                button.dispatchEvent(nonBubblingEvent); // Родитель НЕ получит событие
+
+                                // Пример cancelable: эмуляция клика, который можно отменить
+                                const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+                                button.addEventListener('click', (e) => {
+                                    logEntry('Клик перехвачен, отменяем стандартное действие');
+                                    e.preventDefault(); // отменяет действие по умолчанию (например, переход по ссылке)
+                                });
+                                const wasPrevented = !button.dispatchEvent(clickEvent);
+                                logEntry(`Стандартное действие было отменено? ${wasPrevented}`);
+
+                            })();
+                        </script>
+
+                    </div>
+                    <footer>
+                        🧠 Пояснение<br>
+bubbles: true – событие «поднимется» от кнопки к её родителю, затем к body и т.д. Это позволяет обрабатывать события на уровне контейнера.<br>
+
+bubbles: false – событие дойдёт только до самого элемента (и его обработчиков), родители не узнают о нём.<br>
+
+cancelable: true – внутри обработчика можно вызвать e.preventDefault(), и dispatchEvent вернёт false, показывая, что действие по умолчанию было отменено. Это используется, например, в системах отмены отправки формы.<br>
+
+⚠️ Важно<br>
+Для стандартных браузерных событий (например, click, submit) cancelable часто уже равен true. При создании кастомных событий вы сами решаете.<br>
+
+Некоторые события не могут быть cancelable – это зависит от их типа (mousemove, mouseenter и др.).<br>
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>Глобальные события (window: resize, load, beforeunload)</header>
                     <div class="article_main__cls">
                         <div>
                             <button id="simulateResizeBtn">Сымитировать изменение размера (для лога)</button>
