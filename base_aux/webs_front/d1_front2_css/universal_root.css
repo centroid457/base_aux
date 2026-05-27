@@ -361,10 +361,6 @@ body, html
 }
 
 /* ----------------------------------------- */
-/* Отступы и выравнивание */
-[data-align_center]     { text-align: center; }
-[data-align_right]      { text-align: right; }
-
 /* Отображение */
 [data-inline]       { display: inline-block; }      /* преобразует в строчный блок а не контейнерный */
 
