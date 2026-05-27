@@ -579,13 +579,24 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
         // define final item_map
         if (style_value instanceof Map) {
             params_map = style_value;
-        } else {    //undefined/string
-            params_map = new Map().set(def_property_name, style_value);
+        } else if (typeof style_value === 'string' || style_value === undefined) {
+            // Специальный случай: пустое имя свойства → режим атрибутов
+            if (def_property_name === '') {
+                // Строка – это имя булевого атрибута (значение пусто)
+                params_map = new Map().set(style_value, '');
+            } else {
+                // Обычный CSS‑стиль
+                params_map = new Map().set(def_property_name, style_value);
+            }
+        } else {
+            // fallback (не должно случаться)
+            params_map = new Map();
         }
 
         // apply params
         for (const [name, val] of params_map) {
-            if (with_attrs) {
+            if (def_property_name === '' || with_attrs) {
+                // Для булевых атрибутов или если явно запрошены атрибуты
                 clone__el.setAttribute(name, val);
             } else {
                 clone__el.style[name] = val;
@@ -605,7 +616,9 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
     // 2=APPLY-2=DL -----------------------------------------------
     const fieldset__el = document.createElement('fieldset');
     const legend__el = document.createElement('legend');
-    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select_all>${def_property_name}</b>]`;
+    // Если имя свойства пусто, показываем [attributes]
+    const displayName = def_property_name === '' ? 'attributes' : def_property_name;
+    legend__el.innerHTML = `<small>${ATTR_NAME__CLONE_EL__PARAMS}</small>[<b data-mouse_select__all>${displayName}</b>]`;
     fieldset__el.appendChild(legend__el);
 
     const dl__el = document.createElement('dl');
@@ -619,12 +632,10 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
         if (label_value instanceof Map) {
             label_str = toString_Map(label_value);
         } else {
-            label_str = `${label_value}`;
+            label_str = String(label_value);
         }
 
-        if (label_str.length === 0) {
-            label_str = '""';
-        };
+        if (label_str.length === 0) label_str = '""';
 
         //2=WORK
         const dt__el = document.createElement('dt');
@@ -767,17 +778,22 @@ function _parse__parametrisation(source) {
 function onload__clone_elements() {
     const elements = document.querySelectorAll(`[${ATTR_NAME__CLONE_EL__PARAMS}]`);
     elements.forEach(el => {
-        const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
-        const with_attrs = el.hasAttribute(ATTR_NAME__CLONE_EL__W_ATTRS);
-        const by_direct = el.hasAttribute(ATTR_NAME__CLONE_EL__BY_DIRECT);
+        try {
+            const params_source = el.getAttribute(ATTR_NAME__CLONE_EL__PARAMS);
+            const with_attrs = el.hasAttribute(ATTR_NAME__CLONE_EL__W_ATTRS);
+            const by_direct = el.hasAttribute(ATTR_NAME__CLONE_EL__BY_DIRECT);
 
-        const parsed_object = _parse__parametrisation(params_source);
-        if (!(parsed_object instanceof Array)) return;
+            const parsed_object = _parse__parametrisation(params_source);
+            if (!(parsed_object instanceof Array)) return;
 
-        const [ def_property_name, params_parsed ] = parsed_object;
-        if (!params_parsed) return;
+            const [ def_property_name, params_parsed ] = parsed_object;
+            if (!params_parsed) return;
 
-        _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
+            _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
+        } catch (err) {
+            console.error(err.toString());
+        };
+
     });
 }
 OnLoadRunner.add(onload__clone_elements);
