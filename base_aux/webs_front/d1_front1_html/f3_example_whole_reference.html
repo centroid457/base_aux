@@ -5719,13 +5719,26 @@ cancelable: true – внутри обработчика можно вызват
                             <div data-item_square data-box_70x70>6</div>
                         </div>
 
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                        <div style="display: flex; flex-wrap: wrap;">
                             <button id="scrollUpBtn">⬆️ Вверх (на 30px)</button>
                             <button id="scrollDownBtn">⬇️ Вниз (на 30px)</button>
+
                             <button id="scrollToTopBtn">🔝 Наверх</button>
                             <button id="scrollToBottomBtn">🔻 Вниз (в конец)</button>
                             <button id="scrollToElementBtn">🎯 К оранжевому элементу</button>
                             <button id="scrollSmoothToggle">🌀 Плавно (toggle)</button>
+                        </div>
+
+                        <div style="display: flex; flex-wrap: wrap;">
+                            <button id="scrollByUp10">⬆️ scrollBy -10px</button>
+                            <button id="scrollByDown10">⬇️ scrollBy +10px</button>
+                            <button id="scrollByUp30">⬆️ scrollBy -30px</button>
+                            <button id="scrollByDown30">⬇️ scrollBy +30px</button>
+
+                            <button id="scrollToTopBtn2">🔝 scrollTo(0)</button>
+                            <button id="scrollToBottomBtn2">🔻 scrollTo(bottom)</button>
+                            <button id="scrollToElementBtn2">🎯 scrollIntoView</button>
+                            <button id="scrollSmoothToggle2">🌀 Плавно (toggle)</button>
                         </div>
 
                         <div id="scrollStatus" style="margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; background: #f8fafc; padding: 0.25rem 0.5rem; border-radius: 0.5rem;">
@@ -5785,14 +5798,93 @@ cancelable: true – внутри обработчика можно вызват
                                 });
                             })();
                         </script>
-                        <p><small>Контейнер имеет ограниченную высоту (250px) и прокрутку. Кнопки управляют положением прокрутки. Плавность можно включить.</small></p>
+                        <script>
+                            (function() {
+                                const container = document.getElementById('scrollDemoContainer');
+                                const statusDiv = document.getElementById('scrollStatus');
+                                let smooth = false;
+
+                                function updateStatus() {
+                                    statusDiv.textContent = `scrollTop = ${container.scrollTop} px (макс. ${container.scrollHeight - container.clientHeight} px)`;
+                                }
+
+                                function scrollWithBehavior(options, method = 'scrollTo') {
+                                    if (method === 'scrollTo') {
+                                        if (options.behavior === undefined) options.behavior = smooth ? 'smooth' : 'auto';
+                                        container.scrollTo(options);
+                                    } else if (method === 'scrollBy') {
+                                        if (options.behavior === undefined) options.behavior = smooth ? 'smooth' : 'auto';
+                                        container.scrollBy(options);
+                                    }
+                                    setTimeout(updateStatus, smooth ? 200 : 0);
+                                }
+
+                                container.addEventListener('scroll', updateStatus);
+                                updateStatus();
+
+                                // scrollBy относительные перемещения
+                                document.getElementById('scrollByUp10').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: -10 }, 'scrollBy');
+                                });
+                                document.getElementById('scrollByDown10').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: 10 }, 'scrollBy');
+                                });
+                                document.getElementById('scrollByUp30').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: -30 }, 'scrollBy');
+                                });
+                                document.getElementById('scrollByDown30').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: 30 }, 'scrollBy');
+                                });
+                                // scrollTo абсолютные
+                                document.getElementById('scrollToTopBtn2').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: 0 }, 'scrollTo');
+                                });
+                                document.getElementById('scrollToBottomBtn2').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: container.scrollHeight }, 'scrollTo');
+                                });
+                                // scrollIntoView
+                                document.getElementById('scrollToElementBtn2').addEventListener('click', () => {
+                                    const target = document.getElementById('scrollTarget');
+                                    target.scrollIntoView({
+                                        behavior: smooth ? 'smooth' : 'auto',
+                                        block: 'center'
+                                    });
+                                    setTimeout(updateStatus, smooth ? 200 : 0);
+                                });
+                                // Переключение плавности
+                                const toggleBtn = document.getElementById('scrollSmoothToggle2');
+                                toggleBtn.addEventListener('click', () => {
+                                    smooth = !smooth;
+                                    toggleBtn.style.background = smooth ? '#10b981' : '';
+                                    toggleBtn.textContent = smooth ? '🌀 Плавно (вкл)' : '🌀 Плавно (выкл)';
+                                });
+                            })();
+                        </script>
+
+                        <p><small>Контейнер имеет ограниченную высоту (250px) и прокрутку. Кнопки демонстрируют <code>scrollTo</code> (абсолютная позиция), <code>scrollBy</code> (относительный сдвиг) и <code>scrollIntoView</code> (прокрутка до элемента).</small></p>
                     </div>
                     <footer>
-                        💡 <strong>Полезные методы</strong>: <code>scrollTo</code> (абсолютная позиция), <code>scrollBy</code> (относительная), <code>scrollIntoView</code> (показать элемент).<br>
-                        📌 Свойство <code>scrollHeight</code> – полная высота содержимого, <code>clientHeight</code> – видимая высота.<br>
+                        метод:<br>
+                        <code>scrollTo</code> (абсолютная позиция),<br>
+                        <code>scrollBy</code> (относительная),<br>
+                        <code>scrollIntoView</code> (показать элемент).<br>
+                        📌 Свойство<br>
+                        <code>scrollHeight</code> – полная высота содержимого,<br>
+                        <code>clientHeight</code> – видимая высота.<br>
                         ⚙️ Для плавности используйте <code>behavior: 'smooth'</code> в объекте опций.
+
+
+
+                        💡 <strong>Методы управления прокруткой</strong>:<br>
+        <code>element.scrollTo(x, y)</code> или <code>scrollTo({ top, left, behavior })</code> – прокрутка к абсолютным координатам.<br>
+        <code>element.scrollBy(dx, dy)</code> или <code>scrollBy({ top, left, behavior })</code> – прокрутка относительно текущего положения.<br>
+        <code>element.scrollIntoView({ behavior, block, inline })</code> – прокрутка контейнера так, чтобы элемент стал видимым.<br>
+        📌 Свойства <code>scrollHeight</code> (полная высота), <code>clientHeight</code> (видимая высота), <code>scrollTop</code> (текущая прокрутка).<br>
+        ⚙️ Для плавности используйте <code>behavior: 'smooth'</code>.
                     </footer>
                 </article>
+
+
 
             </div>
         </section>
