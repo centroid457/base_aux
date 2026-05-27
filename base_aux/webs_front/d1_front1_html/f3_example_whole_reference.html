@@ -5593,7 +5593,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="positionId" data-collapsed_not>
-            <h2 data-icon__circle_green>position=Позиционирование</h2>
+            <h2 data-icon__circle_green>POSITION=Позиционирование</h2>
             <div class="section_main__cls grid_auto__cls">
 
                 <!-- 1. static (по умолчанию) -->
@@ -5619,7 +5619,7 @@
 
                         <div data-cover__border_bg>
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="position: relative; top:20px; left:20px;">relative=top:10px; left:20px</div>
+                            <div data-item_square data-box_40x80 style="position: relative; top:20px; left:20px;">relative<br>top:10px; left:20px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
@@ -5635,27 +5635,27 @@
 
                         <div data-cover__border_bg data-height_30 style="position: relative; margin-bottom: 80px;">
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:20px;">absolute=bottom:10px; right:20px</div>
+                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:21px;">absolute<br>bottom:10px; right:21px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
                         <div data-cover__border_bg data-height_50 style="position: relative; margin-bottom: 50px;">
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:20px;">absolute=bottom:10px; right:20px</div>
+                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:22px;">absolute<br>bottom:10px; right:22px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
                         <div data-cover__border_bg data-height_100 style="position: relative;">
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:20px;">absolute=bottom:10px; right:20px</div>
+                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:23px;">absolute<br>bottom:10px; right:23px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
                         <hr>
-                        обязательно наличие ВНЕШНЕГО DIV с style="position: relative;" - ИНАЧЕ НЕ ОТОБРАЗИТСЯ ВООБЩЕ!!!
+                        обязательно наличие ВНЕШНЕГО DIV с style="position: relative;" - ИНАЧЕ УЙДЕТ НЕПОНЯТНО КУДА! ищи на странице по содержанию!!!
                         <div data-cover__border_bg data-height_100>
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:20px;">absolute=bottom:10px; right:20px</div>
+                            <div data-item_square data-box_40x80 style="position: absolute; bottom:10px; right:24px;">absolute<br>bottom:10px; right:24px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
@@ -5673,9 +5673,9 @@
                     <div class="article_main__cls">
 
                         <div data-cover__border_bg data-height_80>
-                            <div data-item_square style="position: fixed; bottom: 20px; right: 20px;">
+                            <div data-item_square style="position: fixed; bottom:10px; right:20px;">
                                 position:fixed<br>
-                                DownLeftCORNER Brauser<br>
+                                bottom:10px; right:20px<br>
                             </div>
                         </div>
 
@@ -5723,31 +5723,39 @@
                 <article class="article__cls">
                     <header data-icon__circle_yellow>z-index — порядок наложения</header>
                     <div class="article_main__cls">
+                        <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
 
                         <style>
                             /* Стили для демонстрации z-index */
-                            .z-demo {
+                            .z-demo
+                            {
+                                background: #f00;
+
                                 position: relative;
                                 width: 150px;
                                 height: 100px;
-                                background: #3498db;
                                 margin: 0.5rem;
                                 display: inline-block;
                                 text-align: center;
                                 line-height: 100px;
                                 color: white;
                             }
-                            .z-demo:nth-child(2) {
-                                background: #e67e22;
+                            .z-demo:nth-child(2)
+                            {
+                                background: #0f0;
+                                z-index: 10;
+
                                 top: 30px;
                                 left: -30px;
-                                z-index: 10;
                             }
-                            .z-demo:nth-child(3) {
-                                background: #2c3e50;
+                            .z-demo:nth-child(3)
+                            {
+                                background: #00f;
+                                z-index: 5;
+
                                 top: -30px;
                                 left: -60px;
-                                z-index: 5;
+                            }
                         </style>
 
                         <div data-height_100 style="position: relative;">
@@ -5756,7 +5764,6 @@
                             <div class="z-demo" style="position: relative; top: -80px; left: 40px; z-index: 5;">z-index: 5</div>
                         </div>
 
-                        <p>Чем больше <code>z-index</code>, тем выше элемент. Работает только для позиционированных элементов (<code>position</code> не <code>static</code>).</p>
                     </div>
                     <footer>z-index работает в контексте родительского stacking context. Не злоупотребляйте большими значениями (используйте 1,2,3…).</footer>
                 </article>
