@@ -7033,8 +7033,10 @@ cancelable: true – внутри обработчика можно вызват
                         <video controls width="100%" poster="https://picsum.photos/id/20/300/150">
                             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                             <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
-                            <track label="Русские" kind="subtitles" src="subtitles_ru.vtt" srclang="ru" default>
+                            <!--  RU не находит!!! EN находит!-->
+<!--                            <track label="Русские" kind="subtitles" src="subtitles_ru.vtt" srclang="ru" default>-->
                             <track label="English" kind="subtitles" src="subtitles_en.vtt" srclang="en">
+
                             Ваш браузер не поддерживает видео.
                         </video>
                         <p><small>Атрибуты <code>controls</code>, <code>poster</code>, <code>preload</code>, <code>loop</code>, <code>muted</code>, <code>autoplay</code>. Субтитры – <code>&lt;track&gt;</code> (файлы .vtt).</small></p>
@@ -7124,13 +7126,16 @@ cancelable: true – внутри обработчика можно вызват
                         <p><small>Параметры: <code>ll=lon,lat</code>, <code>zoom</code>, <code>layer=base</code> (схема) или <code>satellite</code>.</small></p>
                         <p><a href="https://2gis.ru/spb/firm/4500000000000?m=30.337%2C59.949%2F15" target="_blank" rel="noopener noreferrer">🗺️ Открыть в 2ГИС →</a></p>
                     </div>
-                    <footer>📌 2ГИС позволяет встраивать карты без ключа, но доступны не все опции. Документация: <a href="https://docs.2gis.com/ru/embed/map" target="_blank" rel="noopener noreferrer">docs.2gis.com</a>.</footer>
+                    <footer>2ГИС позволяет встраивать карты без ключа, но доступны не все опции. Документация: <a href="https://docs.2gis.com/ru/embed/map" target="_blank" rel="noopener noreferrer">docs.2gis.com</a>.</footer>
                 </article>
 
                 <!-- Статическая карта (OSM static) -->
-                <article class="article__cls">
-                    <header>📷 Статическая карта (изображение) – OSM Static Maps</header>
-                    <div class="article_main__cls">
+                <article class="article__cls" data-bg_red>
+                    <header data-bg_red>Статическая карта (изображение) – OSM Static Maps</header>
+                    <div class="article_main__cls" data-bg_red>
+
+                        ❌СТАТИЧЕСКАЯ БОЛЬШЕ НЕ РАБОТАЕТ!!!
+
                         <img src="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin"
                              alt="Статическая карта OSM" style="width:100%; border-radius:12px; border:1px solid #ccc;">
                         <p><small>Статичная карта – просто изображение (без взаимодействия). Параметры: центр, зум, размер, маркер.</small></p>

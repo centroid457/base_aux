@@ -83,6 +83,8 @@ function onload__ws_ping() {
     }
 
     // Переменные для WebSocket и переподключения
+    let ping_used = null;
+
     let ws_ping = null;
     let timer__ping_reconnect = null;   // object used reconnection
 
@@ -98,6 +100,11 @@ function onload__ws_ping() {
             timer__ping_reconnect = null;
         }
 
+        // если не было инициализации успешной
+        if (ping_used === false) {
+            return;
+        }
+
         const ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
         const ws_url = `${ws_protocol}//${host}/ws/ping`;
@@ -107,6 +114,11 @@ function onload__ws_ping() {
         ws_ping = new WebSocket(ws_url);
 
         ws_ping.onopen = () => {
+            if (ping_used === null) {
+                ping_used = true;
+                console.log("[ws_ping.ping_used]🟢MONITORING is ON");
+            }
+
             if (timer__ping_reconnect) clearTimeout(timer__ping_reconnect);
             updateElements(true);   // связь есть > атрибут = "0"
             console.log("[ws_ping.onopen]🟢connected");
@@ -114,7 +126,7 @@ function onload__ws_ping() {
 
         ws_ping.onclose = () => {
             updateElements(false);  // связь потеряна > атрибут = "1"
-            console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
+            if (ping_used) console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
             // Запускаем переподключение, только если оно не было инициировано вручную (например, при выгрузке страницы)
             if (timer__ping_reconnect === null) {
                 timer__ping_reconnect = setTimeout(ws_ping__init, TIMEOUT_RECONNECT);
@@ -122,7 +134,13 @@ function onload__ws_ping() {
         };
 
         ws_ping.onerror = () => {
-            console.warn(`[ws_ping.onerror]🟡error (code:${event.code})`);
+            if (ping_used === null) {
+                ping_used = false;
+                console.log("[ws_ping.ping_used]🟡MONITORING is OFF");
+            } else {
+                console.warn(`[ws_ping.onerror]🟡error (code:${event.code})`);
+            }
+
             ws_ping.close();   // инициируем закрытие, вызовется onclose
         };
     }
@@ -791,7 +809,8 @@ function onload__clone_elements() {
 
             _clone_element(el, def_property_name, params_parsed, with_attrs, by_direct);
         } catch (err) {
-            console.error(err.toString());
+            const msg = `el=${el}/err=${err}`
+            console.error(msg);
         };
 
     });
