@@ -143,7 +143,7 @@ HTML_TEMPLATE = """
     
             async get_IdsServer() {
                 try {
-                    const resp = await fetch('/items');
+                    const resp = await fetch('/item/list');
                     const data = await resp.json();
                     return data.items || [];
                 } catch (exc) {
@@ -161,7 +161,7 @@ HTML_TEMPLATE = """
             },
 
             async createNewItem() {
-                const resp = await fetch('/items', { method: 'POST' });
+                const resp = await fetch('/item/create', { method: 'POST' });
                 const data = await resp.json();
                 const itemId = data.idn;
                 const stored = this.get_IdsClient();
@@ -181,7 +181,7 @@ HTML_TEMPLATE = """
             },
 
             async delItem(itemId) {
-                await fetch(`/items/${itemId}`, { method: 'DELETE' });
+                await fetch(`/item/del/${itemId}`, { method: 'DELETE' });
                 const stored = this.get_IdsClient();
                 const updated = stored.filter(idn => idn !== itemId);
                 this.set_IdsClient(updated);
@@ -342,7 +342,7 @@ HTML_TEMPLATE = """
                 // Очищаем окно перед загрузкой, чтобы избежать дублей
                 this.element_OutputBox.innerHTML = '';
                 try {
-                    const resp = await fetch(`/items/history/${this.itemId}`);
+                    const resp = await fetch(`/item/history/get/${this.itemId}`);
                     const history = await resp.json();
                     history.forEach(cmd => {
                         if (cmd.input) this.addHistoryLine('msg_stdin__cls', `→ ${cmd.input}`);
@@ -417,26 +417,33 @@ async def html__root():
     return HTML_TEMPLATE
 
 
-@app.get("/items")
+@app.get("/item/list")
 async def list_items():
     ids = list(object_manager.items)
     return {"items": ids}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.post("/items")
-async def create_item():
+@app.post("/item/create")
+async def create_item(idn: str = None):
+    # print(f"{idn=}")
+    # if idn is not None:
+    #     idn = await object_manager.create_item(idn=idn)
+    # else:
+    #     idn = await object_manager.create_item()
+
     idn = await object_manager.create_item()
+
     return {"idn": idn}
 
 
-@app.delete("/items/{idn}")
+@app.delete("/item/del/{idn}")
 async def del_item(idn: str):
     await object_manager.del_item(idn)
     return {"status": "closed"}
 
 
-@app.get("/items/{idn}")
+@app.get("/item/{idn}")
 async def get_item(idn: str):
     if idn in object_manager.items:
         return {"idn": idn, }
@@ -444,13 +451,13 @@ async def get_item(idn: str):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.delete("/items/history/{idn}")
+@app.delete("/item/history/del/{idn}")
 async def del_history(idn: str):
     object_manager.clear_history(idn)
     return {"status": "closed"}
 
 
-@app.get("/items/history/{idn}")
+@app.get("/item/history/get/{idn}")
 async def get_history(idn: str):
     item = object_manager.get_item(idn)
     if not item:
