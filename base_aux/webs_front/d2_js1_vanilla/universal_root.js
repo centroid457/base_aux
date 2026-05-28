@@ -464,7 +464,7 @@ try {
 // ---------------------------------------------------------------------------------------------------------------------
 function toString_Map(source) {
     if (!(source instanceof Map)) {
-        return String(source);
+        return String(source);  // FIXME: return null???
     }
 
     const entries = [];
@@ -475,6 +475,54 @@ function toString_Map(source) {
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Возвращает строковое описание DOM-элемента: тег, ключевые атрибуты, инлайн-стили.
+ * @param {Element} source - целевой элемент
+ * @returns {string} описание в формате "Element(tagname:...; attrs:{...}; style:{...})"
+ */
+function toString_Element(source) {     // TODO: ref!!! its just the beginning!
+    if (!(source instanceof Element)) {
+        return String(source);  // FIXME: return null???
+    }
+
+    const tag = source.tagName.toLowerCase();
+
+    // Список атрибутов, которые считаем «важными» для отображения
+    const importantAttrs = [
+        'id', 'class', 'type', 'href', 'src', 'name', 'value',
+        'disabled', 'checked', 'readonly', 'target', 'rel',
+        'alt', 'title', 'role', 'aria-label', 'data-group'
+    ];
+
+    const attrs = {};
+    for (const attr of importantAttrs) {
+        const val = source.getAttribute(attr);
+        if (val !== null && val !== '') {
+            attrs[attr] = val;
+        }
+    }
+
+    // Инлайн-стили (то, что в атрибуте style)
+    const inlineStyle = source.style.cssText.trim();
+
+    // Формируем строку
+    let result = `Element(tagname:${tag}`;
+
+    if (Object.keys(attrs).length) {
+        const attrsStr = Object.entries(attrs)
+            .map(([k, v]) => `${k}:${v}`)
+            .join('; ');
+        result += `; attrs:{${attrsStr}}`;
+    }
+
+    if (inlineStyle) {
+        result += `; style:{${inlineStyle}}`;
+    }
+
+    result += ')';
+    return result;
+}
 // ---------------------------------------------------------------------------------------------------------------------
 function isIconChar(ch) {
     const code = ch.codePointAt(0);
