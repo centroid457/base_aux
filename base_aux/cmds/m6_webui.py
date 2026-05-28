@@ -68,38 +68,29 @@ HTML_TEMPLATE = """
         * { box-sizing: border-box; }
         body {
             background: #222;
-            color: #d4d4d4;
-            padding: 20px;
-            margin: 0;
+            color: #ddd;
         }
-               
-        #div_items_container__id {
+
+        /* ------------------------------------ */
+        .item__cls {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-        }
-        /* ------------------------------------ */
-        .div_item__cls {
+            
             background: #333;
             border: 1px solid #444;
             border-radius: 6px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
         }
-        .div_item__cls header {
+        .item__cls header {
             background: #333;
-            padding: 8px 12px;
+            padding: 2px;
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;
             
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;                     /* отступы между всеми детьми */
-            border-bottom: 1px solid #555;
         }
-        .div_item__cls main {
+        .item__cls main {
             background: #222;
             padding: 12px;
             height: 300px;
@@ -107,22 +98,12 @@ HTML_TEMPLATE = """
             white-space: pre-wrap;
             word-wrap: break-word;
             font-family: monospace;
-            border-bottom: 1px solid #444;
-        }
-        .div_item__cls footer {
-            display: flex;
-            padding: 10px;
         }
         
         /* ------------------------------------ */
-        .span_item_status__cls {
-            margin-left: 10px;
-            font-size: 12px;
-            color: #888;
-        }
         .span_item_id__cls {
             font-weight: bold;
-            color: #9cdcfe;
+            color: #9ee;
             font-size: 14px;
         }
 
@@ -141,7 +122,7 @@ HTML_TEMPLATE = """
         <h1 style="color: #fff">WebTerminal</h1>
         <button id="btn_add_item__id">Новый объект</button>
     </header>
-    <div id="div_items_container__id"></div>
+    <main id="items_container__id" data-flex_column data-gap1rem></main>
 
     <script>
         // --------------------------------------------------------------
@@ -194,7 +175,7 @@ HTML_TEMPLATE = """
                 if (this.items_map.has(itemId)) return;
                 
                 const item_new = new ItemUI(itemId);
-                // div_items_container__id.appendChild(item_new.element_ItemBox);   // так нельзя!!!!
+                // items_container__id.appendChild(item_new.element_ItemBox);   // так нельзя!!!!
                 this.items_map.set(itemId, item_new);
                 item_new.init();
             },
@@ -238,7 +219,7 @@ HTML_TEMPLATE = """
 
             render() {
                 const div_itembox = document.createElement('div');
-                div_itembox.className = 'div_item__cls';
+                div_itembox.className = 'item__cls';
 
                 // Header -------------------------------------------
                 const div_item_header = document.createElement('header');
@@ -250,7 +231,6 @@ HTML_TEMPLATE = """
                 
                 // -------------------------------------------
                 const span_status = document.createElement('span');
-                span_status.className = 'span_item_status__cls';
                 span_status.textContent = '⚡';
                 this.element_Status = span_status;
                 
@@ -305,7 +285,7 @@ HTML_TEMPLATE = """
                 
                 this.element_ItemBox = div_itembox;
                 
-                div_items_container__id.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
+                items_container__id.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
 
                 input_item.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {

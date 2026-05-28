@@ -41,6 +41,7 @@ html {
 /* DEBUGGING - VISUAL SELECTING ALL BLOCKS
 ON PRODUCTION - COMMENT OUT!
 */
+span,
 div, p,
 form,
 ul, ol, dl,
