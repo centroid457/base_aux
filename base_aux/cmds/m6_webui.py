@@ -148,17 +148,13 @@ HTML_TEMPLATE = """
         // Глобальный менеджер обьектов
         // --------------------------------------------------------------
         const itemsManager = {
-            items_map: new Map(),   // its a DICT=.set(itemId, itemUI)
+            items_map: new Map(),
             
             async init() {
                 const serverIds = await this.get_IdsServer();
 
                 for (const idn of serverIds) {
-                    this.addItemBlock(idn, false);
-                }
-
-                if (this.items_map.size === 0) {
-                    await this.createNewItem();
+                    this.addItem(idn);
                 }
 
                 btn_add_item__id.addEventListener('click', () => this.createNewItem());
@@ -190,19 +186,20 @@ HTML_TEMPLATE = """
                 const stored = this.get_IdsClient();
                 stored.push(itemId);
                 this.set_IdsClient(stored);
-                this.addItemBlock(itemId, true);
+                this.addItem(itemId);
                 return itemId;
             },
 
-            addItemBlock(itemId, isNew) {
+            addItem(itemId) {
                 if (this.items_map.has(itemId)) return;
-                const itemUI = new ItemUI(itemId, isNew);
-                // div_items_container__id.appendChild(itemUI.element_ItemBox);   // так нельзя!!!!
-                this.items_map.set(itemId, itemUI);
-                itemUI.init();
+                
+                const item_new = new ItemUI(itemId);
+                // div_items_container__id.appendChild(item_new.element_ItemBox);   // так нельзя!!!!
+                this.items_map.set(itemId, item_new);
+                item_new.init();
             },
 
-            async closeItem(itemId) {
+            async delItem(itemId) {
                 await fetch(`/items/${itemId}`, { method: 'DELETE' });
                 const stored = this.get_IdsClient();
                 const updated = stored.filter(idn => idn !== itemId);
@@ -224,10 +221,8 @@ HTML_TEMPLATE = """
         // Класс одного item
         // --------------------------------------------------------------
         class ItemUI {
-            constructor(itemId, isNew) {
+            constructor(itemId) {
                 this.itemId = itemId;
-                this.isNew = isNew;
-                
                 this.socket = null;
                 
                 this.element_ItemBox = null;
@@ -244,7 +239,6 @@ HTML_TEMPLATE = """
             render() {
                 const div_itembox = document.createElement('div');
                 div_itembox.className = 'div_item__cls';
-                div_itembox.dataset.itemId = this.itemId;
 
                 // Header -------------------------------------------
                 const div_item_header = document.createElement('header');
@@ -284,7 +278,7 @@ HTML_TEMPLATE = """
                 btn_close.className = 'button_red_outline__cls';
                 btn_close.title = 'Закрыть';
                 btn_close.textContent = 'X';
-                btn_close.onclick = () => itemsManager.closeItem(this.itemId);
+                btn_close.onclick = () => itemsManager.delItem(this.itemId);
 
                 div_item_header_div2.appendChild(btn_clear_history);
                 div_item_header_div2.appendChild(btn_reconnect);
@@ -346,7 +340,7 @@ HTML_TEMPLATE = """
                     this.element_Status.textContent = '❌';
                 };
                 this.socket.onerror = () => {
-                    this.element_Status.textContent = '⚠️';
+                    //this.element_Status.textContent = '⚠️';
                 };
             }
 
