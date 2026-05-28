@@ -103,7 +103,6 @@ HTML_TEMPLATE = """
         /* ------------------------------------ */
         .span_item_id__cls {
             font-weight: bold;
-            color: #9ee;
             font-size: 14px;
         }
 
