@@ -575,36 +575,36 @@ const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def
  * Заменяет элемент на список dl с клонами, демонстрирующими разные стили.
  * @param {HTMLElement} original__el - оригинальный элемент.
  * @param {string} def_property_name - CSS-свойство по умолчанию (для простых значений).
- * @param {string[]} value_items - массив записей: простые значения или строки "свойство:значение".
+ * @param {string[]} variants - массив записей: простые значения или строки "свойство:значение".
  */
-function _clone_element(original__el, def_property_name, value_items, with_attrs=false, by_direct=false) {
+function _clone_element(original__el, def_property_name, variants, with_attrs=false, by_direct=false) {
     // 0=append irrational values
-    value_items.unshift(undefined);
-    value_items.unshift(new Map());
-    //value_items.unshift("WRONG_VAL"); //NOT NEEDED!!!
-    if (!value_items.includes("none")) {value_items.unshift("none");}
-    value_items.unshift("revert");
-    value_items.unshift("");
+    variants.unshift(undefined);
+    variants.unshift(new Map());
+    //variants.unshift("WRONG_VAL"); //NOT NEEDED!!!
+    if (!variants.includes("none")) {variants.unshift("none");}
+    variants.unshift("revert");
+    variants.unshift("");
 
     // 1=make all clones ---------------------------------------
     const clones_map = new Map();
 
-    for (const style_value of value_items) {
+    for (const variant of variants) {
         const clone__el = original__el.cloneNode(true);
 
         let params_map;
 
         // define final item_map
-        if (style_value instanceof Map) {
-            params_map = style_value;
-        } else if (typeof style_value === 'string' || style_value === undefined) {
+        if (variant instanceof Map) {
+            params_map = variant;
+        } else if (typeof variant === 'string' || variant === undefined) {
             // Специальный случай: пустое имя свойства → режим атрибутов
             if (def_property_name === '') {
                 // Строка – это имя булевого атрибута (значение пусто)
-                params_map = new Map().set(style_value, '');
+                params_map = new Map().set(variant, '');
             } else {
                 // Обычный CSS‑стиль
-                params_map = new Map().set(def_property_name, style_value);
+                params_map = new Map().set(def_property_name, variant);
             }
         } else {
             // fallback (не должно случаться)
@@ -621,7 +621,7 @@ function _clone_element(original__el, def_property_name, value_items, with_attrs
             }
         }
 
-        clones_map.set(style_value, clone__el);
+        clones_map.set(variant, clone__el);
     }
 
     // 2=APPLY-1=DIRECT ------------------------------------------
@@ -742,7 +742,7 @@ function _parse__parametrisation(source) {
         values_str = values_str.slice(1, -1);
         values_str = values_str.trim();
     } else {
-        console.error(`_parse__parametrisation: скобки отсутствуют []=[source=${source}]`);
+        console.error(`_parse__parametrisation: отсутствуют скобки []=[source=${source}]`);
         return null;
     }
 
@@ -753,7 +753,7 @@ function _parse__parametrisation(source) {
         let _data_first;
 
         if (data_rest.startsWith('{')) {
-            // 1=get MAP first
+            // 1=first=get MAP
             const _index = data_rest.indexOf('}');
             if (_index !== -1) {
                 _data_first = data_rest.slice(0+1, _index).trim();
@@ -766,12 +766,12 @@ function _parse__parametrisation(source) {
                 }
 
             } else {
-                console.error(`_parse__parametrisation: скобки элемента - нет завершающей } =[data_rest=${data_rest}]`);
+                console.error(`_parse__parametrisation: скобки - нет завершающей } =[data_rest=${data_rest}]`);
                 return null;
             }
 
         } else {
-            // 2=get separated values
+            // 2=next=get separated values
             const _index = data_rest.indexOf(';');
             if (_index !== -1) {
                 _data_first = data_rest.slice(0, _index).trim();
