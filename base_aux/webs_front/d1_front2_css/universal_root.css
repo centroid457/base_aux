@@ -46,6 +46,7 @@ form,
 ul, ol, dl,
 section, article,
 header, main, footer,
+blockquote, cite,
 body, html
 {
     border: 1px dashed #aaa5;    /* НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */

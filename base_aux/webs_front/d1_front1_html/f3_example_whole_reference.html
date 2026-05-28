@@ -1712,39 +1712,64 @@
                     <header>QUOTES</header>
                     <div class="article_main__cls">
 
-                        <p><q>qqq</q> text example text example text example text example text example </p>
+                        <p><q>tagQ</q>line1</p>
 
-                        <blockquote cite="https://ya.ru/">
-                            <p>BLOCKQUOTE <q>qqq</q> с атрибутом CITE. text example. text example. text example. </p>
-                            <footer>— FOOTER tag<q>qqq</q> </footer>
+                        <hr>
+                        BLOCKQUOTE BLANK
+                        <blockquote>
                         </blockquote>
 
                         <blockquote>
-                            <p>BLOCKQUOTE CITE+FOOTER</p>
-                            <cite>CITE тег</cite>
-                            <footer>— FOOTER tag<q>qqq</q> </footer>
+                            BLOCKQUOTE only
+                        </blockquote>
+
+                        <hr>
+                        CITEtag BLANK<br>
+                        <cite></cite><br>
+                        <cite>CITEtag Only</cite><br>
+
+                        <hr>
+                        FOOTERtag BLANK
+                        <footer></footer>
+                        <footer>FOOTERtag Only</footer>
+
+                        <hr>
+                        <blockquote>
+                            <p>BLOCKQUOTE +CITEtag</p>
+                            <cite>CITEtag</cite>
                         </blockquote>
 
                         <blockquote>
-                            <p>BLOCKQUOTE only</p>
+                            <p>BLOCKQUOTE +FOOTERtag</p>
+                            <footer>FOOTERtag<q>tagQ</q></footer>
                         </blockquote>
 
                         <blockquote>
-                            <p>BLOCKQUOTE без атрибута CITE</p>
-                            <cite>CITE тег</cite>
+                            <p>BLOCKQUOTE +CITEtag +FOOTERtag</p>
+                            <cite>CITEtag</cite>
+                            <footer>FOOTERtag<q>tagQ</q></footer>
                         </blockquote>
 
-                        <cite>CITE тег чистый</cite>
+                        <hr>
+                        <blockquote cite="https://yandex.ru/">
+                            <p>BLOCKQUOTE +CITEattr +CITEtag +FOOTERtag<br>
+                                <q>tagQ</q><br>
+                                line1<br>
+                                line2<br>
+                            </p>
+                            <cite>CITEtag</cite>
+                            <footer>— FOOTERtag<q>tagQ</q> </footer>
+                        </blockquote>
 
                     </div>
                     <footer>
-                        <code>blockquote</code> — длинная цитата. <q>qqq</q> Браузер добавляет отступы.<br>
+                        <code>blockquote</code> — длинная цитата. <q>tagQ</q> Браузер добавляет отступы.<br>
                         Атрибут <code>cite</code> указывает источник (не отображается, но полезен для SEO).
                     </footer>
                 </article>
 
                 <article class="article__cls">
-                    <header>💻 PRE/CODE</header>
+                    <header>PRE/CODE</header>
                     <div class="article_main__cls">
 
                         <code>CODE ONLY</code>
