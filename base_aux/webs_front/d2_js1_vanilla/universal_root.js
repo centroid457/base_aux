@@ -83,7 +83,7 @@ function onload__ws_ping() {
     }
 
     // Переменные для WebSocket и переподключения
-    let ping_used = null;
+    let ping__enabled = null;
 
     let ws_ping = null;
     let timer__ping_reconnect = null;   // object used reconnection
@@ -101,7 +101,7 @@ function onload__ws_ping() {
         }
 
         // если не было инициализации успешной
-        if (ping_used === false) {
+        if (ping__enabled === false) {
             return;
         }
 
@@ -114,9 +114,9 @@ function onload__ws_ping() {
         ws_ping = new WebSocket(ws_url);
 
         ws_ping.onopen = () => {
-            if (ping_used === null) {
-                ping_used = true;
-                console.log("[ws_ping.ping_used]🟢MONITORING is ON");
+            if (ping__enabled === null) {
+                ping__enabled = true;
+                console.log("[ws_ping.ping__enabled]🟢MONITORING is ON");
             }
 
             if (timer__ping_reconnect) clearTimeout(timer__ping_reconnect);
@@ -126,7 +126,7 @@ function onload__ws_ping() {
 
         ws_ping.onclose = () => {
             updateElements(false);  // связь потеряна > атрибут = "1"
-            if (ping_used) console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
+            if (ping__enabled) console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
             // Запускаем переподключение, только если оно не было инициировано вручную (например, при выгрузке страницы)
             if (timer__ping_reconnect === null) {
                 timer__ping_reconnect = setTimeout(ws_ping__init, TIMEOUT_RECONNECT);
@@ -134,9 +134,9 @@ function onload__ws_ping() {
         };
 
         ws_ping.onerror = () => {
-            if (ping_used === null) {
-                ping_used = false;
-                console.log("[ws_ping.ping_used]🟡MONITORING is OFF");
+            if (ping__enabled === null) {
+                ping__enabled = false;
+                console.log("[ws_ping.ping__enabled]🟡MONITORING is OFF");
             } else {
                 console.warn(`[ws_ping.onerror]🟡error (code:${event.code})`);
             }

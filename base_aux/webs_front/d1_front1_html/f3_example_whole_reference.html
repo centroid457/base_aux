@@ -381,6 +381,7 @@
 
                         TODO: ДОДЕТАТЬ
                         <!-- Множественные фоны (разделитель внутри значений — запятая, но т.к. разделитель для списка — точка с запятой, проблем нет) -->
+<!--                        TODO: need fix all https://picsum.photos-->
                         <div data-item_square
                              data-clone_element__params="background:[
                              linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/id/104/300/200');
@@ -6906,8 +6907,10 @@ cancelable: true – внутри обработчика можно вызват
                     <header>iframe — встраивание контента</header>
                     <div class="article_main__cls">
                         <iframe width="100%" height="100" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        ❌ https://ya.ru/ - NOT ACCESSED<br>
+<!--                        <iframe width="100%" height="100" src="https://ya.ru/" title="yaru" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
+                        ❌ https://www.google.com/ - NOT ACCESSED<br>
+<!--                        <iframe width="100%" height="100" src="https://www.google.com/" title="google" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
                     </div>
                     <footer>iframe осторожно: атрибуты loading="lazy" для производительности, sandbox для безопасности.</footer>
                 </article>
@@ -7132,9 +7135,15 @@ cancelable: true – внутри обработчика можно вызват
                 <article class="article__cls">
                     <header>🗺️ Google Maps – встраивание (embed)</header>
                     <div class="article_main__cls">
+
+                        ❌ https://www.google.com/ - NOT ACCESSED<br>
+
+                        <!--
                         <iframe width="100%" height="200" style="border:1px solid #ccc; border-radius:12px;" loading="lazy"
                             src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=Санкт-Петербург,Дворцовая+площадь&zoom=15&maptype=roadmap">
                         </iframe>
+                        -->
+
                         <p><strong>Внимание:</strong> для Google Maps требуется API‑ключ. Пример демонстрирует синтаксис, но реальная карта не загрузится без ключа.</p>
                         <p><a href="https://www.google.com/maps/place/Дворцовая+площадь,+Санкт-Петербург/@59.939,30.315,15z" target="_blank" rel="noopener noreferrer">🗺️ Открыть в Google Maps →</a></p>
                     </div>
@@ -7159,10 +7168,10 @@ cancelable: true – внутри обработчика можно вызват
                     <header data-bg_red>Статическая карта (изображение) – OSM Static Maps</header>
                     <div class="article_main__cls" data-bg_red>
 
-                        ❌СТАТИЧЕСКАЯ БОЛЬШЕ НЕ РАБОТАЕТ!!!
+                        ❌СТАТИЧЕСКАЯ - НЕ РАБОТАЕТ!!!
 
-                        <img src="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin"
-                             alt="Статическая карта OSM" style="width:100%; border-radius:12px; border:1px solid #ccc;">
+<!--                        <img src="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin"-->
+<!--                             alt="Статическая карта OSM" style="width:100%; border-radius:12px; border:1px solid #ccc;">-->
                         <p><small>Статичная карта – просто изображение (без взаимодействия). Параметры: центр, зум, размер, маркер.</small></p>
                         <p><a href="https://staticmap.openstreetmap.de/staticmap.php?center=59.949,30.337&zoom=14&size=600x300&maptype=mapnik&markers=59.949,30.337,red-pushpin" target="_blank" rel="noopener noreferrer">🗺️ Открыть статическую карту в полном размере →</a></p>
                     </div>
@@ -7205,16 +7214,19 @@ cancelable: true – внутри обработчика можно вызват
                 <article class="article__cls">
                     <header>TV=параметры в ссылке - АДРЕС HTML</header>
                     <div class="article_main__cls">
-                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_stock&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&locale=ru"
-                                style="width:100%; height:450px; border:0; border-radius:12px;"
-                                allowfullscreen>
-                        </iframe>
-                        <p><small>График AAPL (NASDAQ).</small></p>
 
-                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_crypto&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FMoscow&locale=ru"
-                                style="width:100%; height:450px; border:0; border-radius:12px;"
-                                allowfullscreen>
-                        </iframe>
+                        ❌ tradingview не работает!!!
+
+<!--                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_stock&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=light&style=1&timezone=Etc%2FUTC&locale=ru"-->
+<!--                                style="width:100%; height:450px;"-->
+<!--                                allowfullscreen>-->
+<!--                        </iframe>-->
+                        <p>График AAPL (NASDAQ).</p>
+
+<!--                        <iframe src="https://www.tradingview.com/widgetembed/?frame_id=tv_crypto&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Europe%2FMoscow&locale=ru"-->
+<!--                                style="width:100%; height:450px;"-->
+<!--                                allowfullscreen>-->
+<!--                        </iframe>-->
                         <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
                     </div>
                 </article>
@@ -7225,15 +7237,15 @@ cancelable: true – внутри обработчика можно вызват
                         SEE <a href="https://www.tradingview.com/widget-docs/getting-started/#getting-started">DOCS</a>
 
                         <div id="tv-chart-stock" style="height:450px;"></div>
-                        <p><small>График AAPL (NASDAQ). Виджет загружается после подключения библиотеки.</small></p>
+                        <p>График AAPL (NASDAQ). Виджет загружается после подключения библиотеки.</p>
 
                         <div id="tv-chart-crypto" style="height:450px;"></div>
-                        <p><small>График BTCUSDT с 15-минутным интервалом.</small></p>
+                        <p>График BTCUSDT с 15-минутным интервалом.</p>
                     </div>
                 </article>
 
                 <!-- Подключаем TradingView один раз в самом низу -->
-                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<!--                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
                 <script type="text/javascript">
                     // Ждём загрузку DOM и скрипта
                     function initTradingViewWidgets() {
@@ -7279,6 +7291,8 @@ cancelable: true – внутри обработчика можно вызват
                         initTradingViewWidgets();
                     });
                 </script>
+-->
+
 
             </div>
         </section>
