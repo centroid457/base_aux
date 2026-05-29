@@ -617,6 +617,7 @@ OnLoadRunner.add(onload__icons_show_code);
 const ATTR_NAME__CLONE_EL__PARAMS = "data-clone_element__params";
 const ATTR_NAME__CLONE_EL__W_ATTRS = "data-clone_element__w_attrs"; // css(def)/attrs
 const ATTR_NAME__CLONE_EL__BY_DIRECT = "data-clone_element__by_direct"; //dl(def)/direct
+const ATTR_NAME__DELETE_ON_PROCESS = "data-attr__delete_on_process";
 
 // ---------------------------------------------------------------------------------------------------------------------
 /**
@@ -668,6 +669,8 @@ function _clone_element(original__el, def_property_name, variants, with_attrs=fa
                 clone__el.style[name] = val;
             }
         }
+
+        if (clone__el.hasAttribute(ATTR_NAME__DELETE_ON_PROCESS)) clone__el.removeAttribute(ATTR_NAME__DELETE_ON_PROCESS);
 
         clones_map.set(variant, clone__el);
     }

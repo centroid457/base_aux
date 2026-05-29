@@ -43,13 +43,15 @@
                 <article class="article__cls">
                     <header>test1=</header>
 
-                    <div data-item_square
-                         data-clone_element__params="background:[
-                         #f00;
-                         #0f0;
-                         { background:#00f; };
-                         { background:#00f5; color: white;;;};
-                         ]">
+                    <div
+                            data-attr__delete_on_process
+                            data-item_square
+                            data-clone_element__params="background:[
+                             #f00;
+                             #0f0;
+                             { background:#00f; };
+                             { background:#00f5; color: white;;;};
+                             ]">
                         RGB
                     </div>
 
@@ -61,8 +63,14 @@
                     <header>test2=</header>
 
                         <div
+                                data-attr__delete_on_process
                                 data-clone_element__w_attrs
-                                data-clone_element__params=":[disabled; data-role:admin; hidden; aria-label:test]">
+                                data-clone_element__params=":[
+                                disabled;
+                                data-role:admin;
+                                hidden;
+                                aria-label:test;
+                                ]">
                             Контент
                         </div>
 
@@ -4676,41 +4684,75 @@ cancelable: true – внутри обработчика можно вызват
                 <article class="article__cls">
                     <header>✨ ::before и ::after – декоративные элементы</header>
                     <div class="article_main__cls">
+
+                        <hr>
+                        <div style="content: 123">
+                            style="content: 123" - DIRECT CONTENT НЕ РАБОТАЕТ!!!
+                        </div>
+
+                        <hr>
                         <style>
-                            .before-after-demo {
+                            .before_after__cls {
                                 padding: 0.5rem;
                                 background: #f8fafc;
                                 border-radius: 0.5rem;
                                 text-align: center;
                             }
-                            .before-after-demo::before {
+                            .before_after__cls::before {
                                 content: "✋ ";
                                 font-size: 1.2rem;
                             }
-                            .before-after-demo::after {
+                            .before_after__cls::after {
                                 content: " 👋";
                                 font-size: 1.2rem;
                             }
-                            .quote-demo {
+                        </style>
+                        <div class="before_after__cls">
+                            Добавлены эмодзи через ::before и ::after
+                        </div>
+
+                        <hr>
+                        ПСЕВДО КАВЫЧКИ
+                        <style>
+                            .cover_before_after__cls1
+                            {
                                 quotes: "«" "»";
                                 font-style: italic;
                             }
-                            .quote-demo::before {
+                            .cover_before_after__cls2
+                            {
+                                quotes: "<<<start[<<<" ">>>]end>>>";
+                                font-style: italic;
+                            }
+                            .cover_before_after__cls0::before,
+                            .cover_before_after__cls1::before,
+                            .cover_before_after__cls2::before
+                            {
                                 content: open-quote;
                             }
-                            .quote-demo::after {
+                            .cover_before_after__cls0::after,
+                            .cover_before_after__cls1::after,
+                            .cover_before_after__cls2::after
+                            {
                                 content: close-quote;
                             }
                         </style>
-                        <div class="before-after-demo">
-                            Добавлены эмодзи через ::before и ::after
+                        <div class="cover_before_after__cls0">
+                            cover_before_after__cls0 кавычки по умолчанию!
                         </div>
-                        <div class="quote-demo">
-                            Это кавычки через псевдоэлементы и свойство quotes
+                        <div class="cover_before_after__cls1">
+                            cover_before_after__cls1
                         </div>
-                        <p><small>Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.</small></p>
+                        <div class="cover_before_after__cls2">
+                            cover_before_after__cls2
+                        </div>
+
                     </div>
-                    <footer>Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.</footer>
+                    <footer>
+                        1=Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.<br>
+                        2=НЕЛЬЗЯ ВЫДЕЛИТЬ МЫШЬЮ!!!<br>
+                        Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.<br>
+                    </footer>
                 </article>
 
                 <!-- :empty – стилизация пустых элементов -->
