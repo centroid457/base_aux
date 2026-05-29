@@ -4518,60 +4518,41 @@ cancelable: true – внутри обработчика можно вызват
 
                 <!-- :hover – наведение мыши -->
                 <article class="article__cls">
-                    <header>🖱️ :hover – наведение курсора</header>
+                    <header>:hover/active – наведение/нажатие</header>
                     <div class="article_main__cls">
-                        <style>
-                            .demo-hover {
-                                padding: 0.5rem;
-                                background: #eef2ff;
-                                border-radius: 0.5rem;
-                                transition: all 0.2s;
-                                cursor: pointer;
-                            }
-                            .demo-hover:hover {
-                                background: #2a73ff;
-                                color: white;
-                                transform: scale(1.1);
-                            }
-                        </style>
-                        <div class="demo-hover">
-                            Наведи на меня (меняется фон, цвет, масштаб)
-                        </div>
-                        <p><small>Срабатывает при наведении мыши, не зависит от фокуса.</small></p>
-                    </div>
-                    <footer>Используйте <code>:hover</code> для визуальной обратной связи (кнопки, ссылки, карточки).</footer>
-                </article>
 
-                <!-- :active – момент нажатия -->
-                <article class="article__cls">
-                    <header>👇 :active – момент нажатия (клик)</header>
-                    <div class="article_main__cls">
+                        <p>не зависит от фокуса.</p>
                         <style>
-                            .demo-active {
-                                padding: 0.5rem;
-                                background: #8e44ad;
+                            .demo-hover:hover {
+                                background: #00f;
                                 color: white;
-                                border-radius: 0.5rem;
-                                transition: 0.05s linear;
-                                cursor: pointer;
-                            }
-                            .demo-active:active {
-                                transform: scale(0.97);
-                                background: #5b2c6f;
+                                transform: scale(0.8);
                             }
                         </style>
-                        <div class="demo-active">
-                            Нажми и удержи (эффект нажатия)
+                        <div class="demo-hover" data-item_rounded>
+                            :HOVER
                         </div>
-                        <p><small>Действует в момент зажатой кнопки мыши.</small></p>
+
+                        <hr>
+                        <style>
+                            .demo-active:active {
+                                background: #00f;
+                                color: white;
+                                transform: scale(0.8);
+                            }
+                        </style>
+                        <div class="demo-active" data-item_rounded>
+                            :ACTIVE
+                        </div>
+
                     </div>
-                    <footer>Классика для кнопок: <code>:active</code> + смещение или затемнение.</footer>
                 </article>
 
                 <!-- :focus / :focus-visible – фокус с клавиатуры -->
                 <article class="article__cls">
-                    <header>⌨️ :focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
+                    <header>:focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
                     <div class="article_main__cls">
+
                         <style>
                             .demo-focus {
                                 padding: 0.5rem;
@@ -4585,7 +4566,8 @@ cancelable: true – внутри обработчика можно вызват
                             }
                         </style>
                         <input type="text" class="demo-focus" placeholder="Нажми Tab, чтобы получить фокус">
-                        <p><small><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</small></p>
+
+                        <p><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</p>
                     </div>
                     <footer>Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.</footer>
                 </article>
