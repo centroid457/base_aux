@@ -6,6 +6,7 @@
     color: white !important;
  */
 
+/* ================================================================================================================== */
 /* -------------------- BUILDIN --------------------*/
 * {
     margin: 0;
@@ -17,6 +18,14 @@ body {
     background: #f1f4f8;
     font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /*с этим чуть лучше! чем дефолтный!!!*/
     padding: 2rem 1.5rem;
+
+    max-width: 1400px;
+    margin: 0 auto;
+    border-radius: 2rem;
+    padding: 2rem 2rem 2.5rem 2rem;
+    //overflow: hidden;
+
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
 }
 
 hr {
@@ -37,6 +46,51 @@ html {
     scroll-margin-top: 80px;
 }
 
+/* -------------------- ROOT -----------------*/
+body > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #444;
+}
+body > header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+body > nav {
+    /* stick top */
+    position: sticky;
+    top: 0;
+    background: white;  /* нужно, чтобы не просвечивало содержимое */
+    z-index: 100;
+
+    /* other */
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+body > main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+body > footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5b6e8c;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+}
+
+/* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 /* DEBUGGING - VISUAL SELECTING ALL BLOCKS
 ON PRODUCTION - COMMENT OUT!
@@ -51,63 +105,6 @@ blockquote, cite,
 body, html
 {
     border: 1px dashed #aaa5;    /* НЕЛЬЗЯ СТАВИТЬ ВООБЩЕ НА ВСЕ!!! сломаются как минимум ProgressMeter!!! */
-}
-
-/* ================================================================================================================== */
-/* -------------------------------------------------------------------------------------------------------------------*/
-/* -------------------- ROOT IDS -----------------*/
-#ROOT_DIV__ID {
-    max-width: 1400px;
-    margin: 0 auto;
-    border-radius: 2rem;
-    padding: 2rem 2rem 2.5rem 2rem;
-    //overflow: hidden;
-
-    background: white;
-    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
-}
-
-#ROOT_HEADER__ID {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #444;
-}
-#ROOT_HEADER__ID h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-#ROOT_NAV__ID {
-    /* stick top */
-    position: sticky;
-    top: 0;
-    background: white;  /* нужно, чтобы не просвечивало содержимое */
-    z-index: 100;
-
-    /* other */
-    display: flex;
-    flex-wrap: wrap;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-#ROOT_MAIN__ID {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-#ROOT_FOOTER__ID {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #5b6e8c;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.5rem;
 }
 
 /* ================================================================================================================== */
@@ -1238,7 +1235,7 @@ details[open] {
 /* ================================================================================================================== */
 /* -------------------------------------------------------------------------------------------------------------------*/
 @media (max-width: 700px) {
-    #ROOT_DIV__ID {
+    body {
         padding: 1rem;
     }
     .section_main__cls {

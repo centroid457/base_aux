@@ -65,7 +65,9 @@ HTML_TEMPLATE = """
     
     <style>
         /* ---------------------------------------------------------------------------------------------------------- */
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box;
+        }
         body {
             background: #222;
             color: #ddd;
@@ -79,6 +81,9 @@ HTML_TEMPLATE = """
             background: #333;
             border: 1px solid #444;
             border-radius: 6px;
+            
+            overflow: auto;
+            resize: both;
         }
         .item__cls header {
             background: #333;
@@ -87,14 +92,15 @@ HTML_TEMPLATE = """
             border-top-right-radius: 6px;
             
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
         .item__cls main {
             background: #222;
             padding: 12px;
-            height: 300px;
+            _min-height: 300px;
             overflow-y: scroll;
+            
             white-space: pre-wrap;
             word-wrap: break-word;
             font-family: monospace;
@@ -117,7 +123,7 @@ HTML_TEMPLATE = """
     
 </head>
 <body>
-    <header id="ROOT_HEADER__ID" data-auto__ping_lost>
+    <header data-auto__ping_lost>
         <h1 style="color: #fff">WebTerminal</h1>
         <button id="btn_add_item__id">Новый объект</button>
     </header>

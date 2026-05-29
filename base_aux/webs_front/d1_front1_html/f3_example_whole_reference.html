@@ -1,7 +1,7 @@
 <?php require_once 'universal_root.php'; ?><!--не работает!!!-->
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-auto__ping_lost>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -21,20 +21,19 @@
     </script>
 
 </head>
-<body data-auto__ping_lost>
+<body>
 
-<div id="ROOT_DIV__ID">
-    <nav id="ROOT_NAV__ID" class="div_a_nav__cls" style="font-size: xx-small;">
+    <nav class="div_a_nav__cls" style="font-size: xx-small;">
         <button id="collapseAllBtn" class="button_blue_outline__cls">Скрыть все</button>
         <button id="expandAllBtn" class="button_blue_outline__cls">Раскрыть все</button>
     </nav>
 
-    <header id="ROOT_HEADER__ID">
+    <header>
         <h1>HTML/CSS · справочник визуальный</h1>
         <div>Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 
-    <main id="ROOT_MAIN__ID">
+    <main>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="testId" data-collapsed_not>
@@ -563,9 +562,9 @@
                     <footer>Для изменения цвета оберните их в <code>&lt;span style="color: ..."&gt;</code>. Суффиксы <code>&amp;#xFE0E;</code> и <code>&amp;#xFE0F;</code> управляют текстовым/эмодзи-стилем, но работают не везде.</footer>
                 </article>
 
-                <!-- Информация, предупреждения, опасность -->
+                <!-- НАБОРЫ -->
                 <article class="article__cls">
-                    <header>наборы</header>
+                    <header>НАБОРЫ</header>
                     <div class="article_main__cls">
 
                         <fieldset
@@ -644,12 +643,11 @@
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
                             <legend>Звёзды/Сердца/Популярное/ЭМОЦИИ</legend>
-                            🔥✨
-                            ⭐🌟
-                            ❤️ 🧡
-                            💚💙
+                            🔥 💯🎯🚀
+                            ⭐🌟✨
+                            ❤️ 🧡 💚💙
                             👍👎
-                            💎🎯
+                            💎
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -677,6 +675,7 @@
 
                             📈 📊
                             … 🌈🎨🧱👁️📍
+                            ⛔
                         </fieldset>
 
                     </div>
@@ -2020,6 +2019,7 @@
                     <header>overflow – обработка переполнения</header>
                     <div class="article_main__cls">
 
+                        ТАКЖЕ ЕСТЬ overflow-x/y
                         <div data-cover__border_bg
                              data-box_80x80
                              data-clone_element__params="overflow:[
@@ -2070,8 +2070,9 @@
 
                 <!-- ========== resize ========== -->
                 <article class="article__cls">
-                    <header>resize – изменение размера пользователем</header>
+                    <header>resize-1=изменение размера пользователем</header>
                     <div class="article_main__cls">
+
                         <div data-cover__border_bg
                              data-padding05rem
                              data-box_80x80
@@ -2083,8 +2084,37 @@
                              ]">
                             resize 1234567890
                         </div>
+
                     </div>
-                    <footer>Работает при <code>overflow: auto/scroll</code>. Пользователь может менять размер.</footer>
+                    <footer>
+                        Работает ❗ТОЛЬКО при <code>overflow: auto/scroll/hidden</code>.
+                    </footer>
+                </article>
+
+                <!-- ========== resize=BOTH +overflow ========== -->
+                <article class="article__cls">
+                    <header>resize-2=на разных overflow</header>
+                    <div class="article_main__cls">
+
+                        Работает ❗ТОЛЬКО при <code>overflow: auto/scroll/hidden</code>.
+
+                        <div data-item_rounded
+                             data-box_80x80
+                             style="resize: both;"
+                             data-clone_element__params="overflow:[
+                             visible;
+                             hidden;
+
+                             scroll;
+                             auto;
+                             ]">
+                            resize: both
+                        </div>
+
+                    </div>
+                    <footer>
+                        Работает ❗ТОЛЬКО при <code>overflow: auto/scroll</code>. Пользователь может менять размер.
+                    </footer>
                 </article>
 
             </div>
@@ -7712,13 +7742,12 @@ cancelable: true – внутри обработчика можно вызват
         <!-- ====================================================================================================== -->
     </main>
 
-    <footer id="ROOT_FOOTER__ID">
+    <footer>
         🧪 Интерактивный справочник — каждый пример рабочий. Используйте как шпаргалку, чтобы увидеть реальный рендеринг и нюансы.<br>
         Со временем вы дополните своими заметками прямо в инспекторе кода.<br>
     </footer>
-</div>
 
-<script id="ROOT_FOOTER_SCRIPT__ID" data-comment="call universal funcs from universal loaded script">
+    <script data-comment="call universal funcs from universal loaded script">
 </script>
 
 </body>

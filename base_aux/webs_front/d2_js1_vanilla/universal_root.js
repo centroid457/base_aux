@@ -297,7 +297,7 @@ function numberHeadings(container, options = {}) {
 }
 OnLoadRunner.add(
     function() {
-        numberHeadings('#ROOT_MAIN__ID', {
+        numberHeadings('body > main', {
             show_h1: false,
             sep: '.',
             keep_nesting: true
@@ -306,7 +306,7 @@ OnLoadRunner.add(
 
 // ---------------------------------------------------------------------------------------------------------------------
 function onload__generateNavRoot() {
-    const navContainer = document.getElementById('ROOT_NAV__ID');
+    const navContainer = document.querySelector('body > nav');
     if (!navContainer) return;
     //navContainer.innerHTML = '';
 
