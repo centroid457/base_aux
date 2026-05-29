@@ -4516,33 +4516,35 @@ cancelable: true – внутри обработчика можно вызват
             <h2 data-icon__circle_yellow>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
+                <style>
+                     .demo_hover__cls:hover,
+                     .demo_active__cls:active,
+
+                     .demo_focus__cls:focus,
+                     .demo_focus_visible__cls:focus-visible,
+
+                     .target-demo:target
+                     {
+                        background: #00f;
+                        color: white;
+                        transform: scale(0.8);
+                    }
+                </style>
+
                 <!-- :hover – наведение мыши -->
                 <article class="article__cls">
                     <header>:hover/active – наведение/нажатие</header>
                     <div class="article_main__cls">
 
                         <p>не зависит от фокуса.</p>
-                        <style>
-                            .demo-hover:hover {
-                                background: #00f;
-                                color: white;
-                                transform: scale(0.8);
-                            }
-                        </style>
-                        <div class="demo-hover" data-item_rounded>
-                            :HOVER
+
+                        <div class="demo_hover__cls" data-item_rounded>
+                            :HOVER demo_hover__cls
                         </div>
 
                         <hr>
-                        <style>
-                            .demo-active:active {
-                                background: #00f;
-                                color: white;
-                                transform: scale(0.8);
-                            }
-                        </style>
-                        <div class="demo-active" data-item_rounded>
-                            :ACTIVE
+                        <div class="demo_active__cls" data-item_rounded>
+                            :ACTIVE demo_active__cls
                         </div>
 
                     </div>
@@ -4550,56 +4552,45 @@ cancelable: true – внутри обработчика можно вызват
 
                 <!-- :focus / :focus-visible – фокус с клавиатуры -->
                 <article class="article__cls">
-                    <header>:focus-visible – фокус с клавиатуры (лучше, чем :focus)</header>
+                    <header>:focus/focus-visible – фокус готовности ввода с клавиатуры</header>
                     <div class="article_main__cls">
 
-                        <style>
-                            .demo-focus {
-                                padding: 0.5rem;
-                                border: 2px solid #ccc;
-                                border-radius: 0.5rem;
-                                outline: none;
-                            }
-                            .demo-focus:focus-visible {
-                                border-color: #2a73ff;
-                                box-shadow: 0 0 0 2px rgba(42,115,255,0.4);
-                            }
-                        </style>
-                        <input type="text" class="demo-focus" placeholder="Нажми Tab, чтобы получить фокус">
+                        <hr>
+                        <input type="text" placeholder="простой (для старта отсчета)">
 
-                        <p><code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.</p>
+                        <hr>
+                        FOCUS
+                        <input type="text" class="demo_focus__cls" placeholder="demo_focus__cls">
+
+                        FOCUS-VISIBLE - ВСЕ РАБОТАЮТ ОДИНАКОВО!!!
+                        <input type="text" class="demo_focus_visible__cls" placeholder="demo_focus_visible__cls=Tab">
+
                     </div>
-                    <footer>Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.</footer>
+                    <footer>
+                        ПО ФАКТУ ВСЕ ОДИНАКОВО!!!!<br>
+                        Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.<br>
+                        <code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.<br>
+                    </footer>
                 </article>
 
                 <!-- :target – якорная прокрутка -->
                 <article class="article__cls">
-                    <header>⚓ :target – активный якорь (URL #id)</header>
+                    <header>:target – активный якорь (URL #id)</header>
                     <div class="article_main__cls">
-                        <style>
-                            .target-demo {
-                                background: #f8fafc;
-                                padding: 0.5rem;
-                                border-radius: 0.5rem;
-                                transition: 0.2s;
-                            }
-                            .target-demo:target {
-                                background: #fef9e3;
-                                border-left: 4px solid #ff8c42;
-                            }
-                        </style>
+
                         <div class="target-demo" id="targetBlock">
                             Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
                         </div>
                         <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
                         <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
+
                     </div>
                     <footer>Полезно для выделения раздела, на который только что перешли.</footer>
                 </article>
 
                 <!-- :checked и :disabled (стилизация чекбоксов через соседей) -->
                 <article class="article__cls">
-                    <header>✅ :checked и 🔒 :disabled – состояния элементов форм</header>
+                    <header>:checked/disabled – состояния элементов форм</header>
                     <div class="article_main__cls">
                         <style>
                             .check-demo {
@@ -4664,7 +4655,7 @@ cancelable: true – внутри обработчика можно вызват
 
                 <!-- ::before / ::after – псевдоэлементы (уже были, но выделим отдельно) -->
                 <article class="article__cls">
-                    <header>✨ ::before и ::after – декоративные элементы</header>
+                    <header>::before и ::after – декоративные элементы</header>
                     <div class="article_main__cls">
 
                         <hr>
@@ -4674,17 +4665,13 @@ cancelable: true – внутри обработчика можно вызват
 
                         <hr>
                         <style>
-                            .before_after__cls {
-                                padding: 0.5rem;
-                                background: #f8fafc;
-                                border-radius: 0.5rem;
-                                text-align: center;
-                            }
-                            .before_after__cls::before {
+                            .before_after__cls::before
+                            {
                                 content: "✋ ";
                                 font-size: 1.2rem;
                             }
-                            .before_after__cls::after {
+                            .before_after__cls::after
+                            {
                                 content: " 👋";
                                 font-size: 1.2rem;
                             }
@@ -4699,12 +4686,10 @@ cancelable: true – внутри обработчика можно вызват
                             .cover_before_after__cls1
                             {
                                 quotes: "«" "»";
-                                font-style: italic;
                             }
                             .cover_before_after__cls2
                             {
                                 quotes: "<<<start[<<<" ">>>]end>>>";
-                                font-style: italic;
                             }
                             .cover_before_after__cls0::before,
                             .cover_before_after__cls1::before,
@@ -4739,27 +4724,37 @@ cancelable: true – внутри обработчика можно вызват
 
                 <!-- :empty – стилизация пустых элементов -->
                 <article class="article__cls">
-                    <header>📭 :empty – пустой элемент</header>
+                    <header>:empty – пустой элемент</header>
                     <div class="article_main__cls">
+
                         <style>
-                            .empty-demo {
-                                background: #f1f5f9;
-                                padding: 0.5rem;
-                                border-radius: 0.5rem;
-                                min-height: 2rem;
+                            .demo_empty__cls
+                            {
+                                background: #0f05;
+                                border: 1px solid;
+                                min-width: 20px;
+                                min-height: 1rem;
                             }
-                            .empty-demo:empty {
-                                background: #fee2e2;
-                                border: 1px dashed #ef4444;
+                            .demo_empty__cls:empty
+                            {
+                                background: #f005;
+                                border: 1px dashed #f00;
                             }
-                            .empty-demo:empty::before {
-                                content: "(пусто)";
-                                color: #c0392b;
+                            .demo_empty__cls:empty::before
+                            {
+                                content: "::before=(пусто)";
+                                color: #f00;
                             }
                         </style>
-                        <div class="empty-demo">Непустой блок</div>
-                        <div class="empty-demo"></div>
+                        <div class="demo_empty__cls"></div> - FULL BLANK<br>
+                        <div class="demo_empty__cls">internalTEXT</div> - only text<br>
+                        <div class="demo_empty__cls"> </div> - only SPACE<br>
+                        <div class="demo_empty__cls"><br></div> - only brTag blank<br>
+                        <div class="demo_empty__cls"><span></span></div> - only spanTag blank<br>
+                        <div class="demo_empty__cls"><div></div></div> - only divTag blank<br>
+
                         <p><small>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов).</small></p>
+
                     </div>
                     <footer>Полезно для сообщений «Нет данных», для динамических виджетов.</footer>
                 </article>
