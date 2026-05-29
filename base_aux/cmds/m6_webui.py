@@ -83,7 +83,7 @@ HTML_TEMPLATE = """
             border-radius: 6px;
             
             overflow: auto;
-            resize: both;
+            _resize: vertical;
         }
         .item__cls header {
             background: #333;
@@ -98,7 +98,9 @@ HTML_TEMPLATE = """
         .item__cls main {
             background: #222;
             padding: 12px;
+            height: 300px;
             _min-height: 300px;
+            _max-height: 800px;
             overflow-y: scroll;
             
             white-space: pre-wrap;

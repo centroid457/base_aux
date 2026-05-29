@@ -229,7 +229,7 @@ class CmdHistory:
             print(f"[{buffer_type.name}]--->{data}")
 
             self._add_result(CmdResult(data))
-            self._listeners__notify(msg_text=f"→{data}", buffer_type=buffer_type)
+            self._listeners__notify(msg_text=f"{data}", buffer_type=buffer_type)
             return
 
         # OUTPUT ------------
