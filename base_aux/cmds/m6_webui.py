@@ -277,6 +277,12 @@ HTML_TEMPLATE = """
                         const stored = itemsManager.get_IdsClient();
                         const updated = stored.filter(id => id !== delId);
                         itemsManager.set_IdsClient(updated);
+                    } else if (msg.data.subtype === "history_clear") {
+                        const itemId = msg.data.item_id;
+                        const ui = itemsManager.items_map.get(itemId);
+                        if (ui) {
+                            ui.element_OutputBox.innerHTML = '';
+                        }
                     }
                 } else if (msg.type === "system") {
                     console.log(msg.data.text);
@@ -364,7 +370,6 @@ HTML_TEMPLATE = """
                 header.appendChild(rightDiv);
     
                 const spanStatus = document.createElement('span');
-                spanStatus.textContent = '⚡';
                 this.element_Status = spanStatus;
                 const spanId = document.createElement('span');
                 spanId.className = 'span_item_id__cls';
@@ -553,6 +558,14 @@ async def get_item(idn: str):
 @app.delete("/item/history/del/{idn}")
 async def del_history(idn: str):
     object_manager.clear_history(idn)
+    # Оповещаем всех клиентов об очистке истории
+    await client_manager.broadcast({
+        "type": "control",
+        "data": {
+            "subtype": "history_clear",
+            "item_id": idn
+        }
+    })
     return {"status": "closed"}
 
 
@@ -621,11 +634,14 @@ async def ws_client(websocket: WebSocket):
             elif cmd == "clear_history":
                 item_id = data["item_id"]
                 object_manager.clear_history(item_id)
-                # Можно отправить подтверждение
-                await websocket.send_json({
+                # Рассылаем всем клиентам
+                await client_manager.broadcast({
+                    "type": "control",
                     "item_id": item_id,
-                    "type": "system",
-                    "data": {"subtype": "info", "text": "History cleared"}
+                    "data": {
+                        "subtype": "history_clear",
+                        "item_id": item_id
+                    }
                 })
             elif cmd == "reconnect":
                 item_id = data["item_id"]
