@@ -647,23 +647,43 @@ async def ws__ping(websocket: WebSocket):
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/client")
-async def ws_client(websocket: WebSocket):
+async def ws__client(websocket: WebSocket):
+    # client_id = str(uuid.uuid4())
+    # await websocket.accept()
+    #
+    # client_queue = asyncio.Queue()
+    # await client_manager.register_client(client_id, client_queue)
+    #
+    # # перенаправляем все события/сообщения из очереди в WebSocket
+    # try:
+    #     while True:
+    #         msg = await client_queue.get()
+    #         await websocket.send_json(msg)
+    # except asyncio.CancelledError:
+    #     pass
+    # except WebSocketDisconnect:
+    #     pass
+    # finally:
+    #     await client_manager.unregister_client(client_id)
+
     client_id = str(uuid.uuid4())
     await websocket.accept()
-    queue = asyncio.Queue()
-    await client_manager.register_client(client_id, queue)
 
-    # Задача отправки сообщений из очереди в WebSocket
+    client_queue = asyncio.Queue()
+    await client_manager.register_client(client_id, client_queue)
+
+    # задача перенаправления событий из очереди в WebSocket
     async def sender():
         try:
             while True:
-                msg = await queue.get()
+                msg = await client_queue.get()
                 await websocket.send_json(msg)
         except asyncio.CancelledError:
             pass
 
     send_task = asyncio.create_task(sender())
 
+    # --------------------------------------------
     try:
         while True:
             data = await websocket.receive_json()
