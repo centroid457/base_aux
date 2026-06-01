@@ -279,6 +279,7 @@ HTML_TEMPLATE = """
                 
                 // MAIN -------------------------------------------
                 const item_main = document.createElement('main');
+                item_main.setAttribute("data-scrollbar__dark", "");
                 this.element_OutputBox = item_main;
 
                 // FOOTER -----------------------------------------

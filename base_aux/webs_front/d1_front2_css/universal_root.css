@@ -910,17 +910,24 @@ pre code {
 }
 
 /* ===== просто улучшенный скроллбар ===== */
-pre::-webkit-scrollbar {
-    height: 8px;    /* высота строго для горизонтального */
-    width: 8px;     /* ширина строго для вертикального */
+[data-scrollbar__dark]::-webkit-scrollbar,
+pre::-webkit-scrollbar
+{
+    /* почемуто это обязательно нужно указать иначе работать не будет */
+    height: 1rem;    /* высота строго для горизонтального */
+    width: 1rem;     /* ширина строго для вертикального */
 }
-pre::-webkit-scrollbar-track {
+[data-scrollbar__dark]::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track
+{
     background: #2d3e50;
-    border-radius: 4px;
+    border-radius: 1rem;
 }
-pre::-webkit-scrollbar-thumb {
+[data-scrollbar__dark]::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb
+{
     background: #5a6e8c;
-    border-radius: 4px;
+    border-radius: 1rem;
 }
 
 /* -------------------- LISTS ----------------------------------------------------------------------------------------*/
