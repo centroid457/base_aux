@@ -59,12 +59,6 @@ class InstManager:
 
     # new ------
     async def create_item(self, *args, **kwargs) -> str:
-        # new_item = self.ITEM_CLASS(*args, **kwargs)
-        # item_id = new_item.idn
-        # print(f"create_item:{item_id=}")
-        # self.items[item_id] = new_item
-        # return item_id
-
         new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
         print(f"create_item:{item_id=}")
@@ -229,6 +223,11 @@ HTML_TEMPLATE = """
     <main id="items_container__id" data-gap1rem></main>
     <footer>footer</footer>
     <script>
+    
+    
+        // --------------------------------------------------------------
+        // WebSocket
+        // --------------------------------------------------------------
         // Глобальный WebSocket
         let globalSocket = null;
     
@@ -236,9 +235,9 @@ HTML_TEMPLATE = """
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             globalSocket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
     
-            globalSocket.onopen = () => {
+            globalSocket.onopen = async () => {
                 console.log("Global WebSocket connected");
-                itemsManager.init();
+                await syncWithServer();   // синхронизация после восстановления
             };
     
             globalSocket.onmessage = (e) => {
@@ -295,18 +294,50 @@ HTML_TEMPLATE = """
             };
         }
     
+        // --------------------------------------------------------------
+        // Синхронизация после переподключения сокета
+        // --------------------------------------------------------------
+        async function syncWithServer() {
+            const serverIds = await itemsManager.get_IdsServer();
+            const localIds = Array.from(itemsManager.items_map.keys());
+        
+            // 1. Удаляем локальные терминалы, которых нет на сервере
+            for (const id of localIds) {
+                if (!serverIds.includes(id)) {
+                    const ui = itemsManager.items_map.get(id);
+                    if (ui) ui.destroy();
+                    itemsManager.items_map.delete(id);
+                }
+            }
+        
+            // 2. Добавляем терминалы, которые есть на сервере, но отсутствуют локально
+            for (const id of serverIds) {
+                if (!itemsManager.items_map.has(id)) {
+                    itemsManager.addItem(id);
+                }
+            }
+        
+            // 3. Обновляем localStorage
+            itemsManager.set_IdsClient(serverIds);
+        }
+
+        // --------------------------------------------------------------
+        // Глобальный менеджер объектов
+        // --------------------------------------------------------------
         const itemsManager = {
             items_map: new Map(),
             
-            async init() {
+            // Инициализация UI через REST (вызывается один раз при загрузке страницы)
+            async initUI() {
                 const serverIds = await this.get_IdsServer();
                 this.set_IdsClient(serverIds);
                 for (const idn of serverIds) {
                     this.addItem(idn);
                 }
+                // 🔽 Добавить обработчик кнопки
                 document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
             },
-    
+        
             async get_IdsServer() {
                 try {
                     const resp = await fetch('/item/list');
@@ -479,8 +510,12 @@ HTML_TEMPLATE = """
             }
         }
     
-        window.onload = () => {
-            connectGlobalWebSocket();
+        // --------------------------------------------------------------
+        // Запуск
+        // --------------------------------------------------------------
+        window.onload = async () => {
+            await itemsManager.initUI();   // первичная загрузка через REST
+            connectGlobalWebSocket();      // открываем сокет
         };
     </script>
 </body>
