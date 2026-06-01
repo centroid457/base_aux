@@ -15,7 +15,7 @@
 }
 
 body {
-    background: #f1f4f8;
+    background: #fff;
     font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /*с этим чуть лучше! чем дефолтный!!!*/
     padding: 1.2rem;
 
@@ -51,8 +51,9 @@ body > header {
     justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 1rem;
+    /* separator */
     border-bottom: 1px solid #444;
+    margin-bottom: 1rem;
 }
 body > header h1 {
     font-size: 2.2rem;
@@ -70,23 +71,30 @@ body > nav {
     /* other */
     display: flex;
     flex-wrap: wrap;
+
+    /* separator */
+    border-bottom: 1px solid #444;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e2e8f0;
 }
 
 body > main {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    /* separator */
+    /* NO */
 }
 
 body > footer {
-    margin-top: 2rem;
     text-align: center;
     font-size: 0.8rem;
     color: #5b6e8c;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.5rem;
+
+    /* separator */
+    border-top: 1px solid #444;
+    margin-top: 1rem;
+    _padding-top: 0.5rem;
 }
 
 /* ================================================================================================================== */

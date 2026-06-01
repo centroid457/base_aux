@@ -69,12 +69,13 @@ HTML_TEMPLATE = """
             box-sizing: border-box;
         }
         body {
-            background: #222;
+            background: #111;
             color: #ddd;
         }
 
         /* ------------------------------------ */
-        .item__cls {
+        .item__cls
+        {
             display: flex;
             flex-direction: column;
             
@@ -85,7 +86,8 @@ HTML_TEMPLATE = """
             overflow: auto;
             _resize: vertical;
         }
-        .item__cls header {
+        .item__cls header
+        {
             background: #333;
             padding: 2px;
             border-top-left-radius: 6px;
@@ -95,7 +97,8 @@ HTML_TEMPLATE = """
             align-items: center;
             justify-content: space-between;
         }
-        .item__cls main {
+        .item__cls main
+        {
             background: #222;
             padding: 12px;
             height: 300px;
@@ -108,18 +111,20 @@ HTML_TEMPLATE = """
             font-family: monospace;
         }
         
+        .item__cls input
+        {
+            font-size: 14px;
+            color: #fff;
+            border: 1px solid #555;
+            font-family: monospace;
+        }
+        
         /* ------------------------------------ */
         .span_item_id__cls {
             font-weight: bold;
             font-size: 14px;
         }
 
-        .input_item__cls{
-            font-size: 14px;
-            color: #fff;
-            border: 1px solid #555;
-            font-family: monospace;
-        }
         /* ---------------------------------------------------------------------------------------------------------- */
     </style>
     
@@ -129,7 +134,8 @@ HTML_TEMPLATE = """
         <h1 style="color: #fff">WebTerminal</h1>
         <button id="btn_add_item__id">Новый объект</button>
     </header>
-    <main id="items_container__id" data-flex_column data-gap1rem></main>
+    <main id="items_container__id" data-gap1rem></main>
+    <footer>footer</footer>
 
     <script>
         // --------------------------------------------------------------
@@ -228,13 +234,13 @@ HTML_TEMPLATE = """
                 const div_itembox = document.createElement('div');
                 div_itembox.className = 'item__cls';
 
-                // Header -------------------------------------------
-                const div_item_header = document.createElement('header');
-                const div_item_header_div1 = document.createElement('div');
-                const div_item_header_div2 = document.createElement('div');
+                // HEADER -------------------------------------------
+                const item_header = document.createElement('header');
+                const item_header_div1 = document.createElement('div');
+                const item_header_div2 = document.createElement('div');
                 
-                div_item_header.appendChild(div_item_header_div1);
-                div_item_header.appendChild(div_item_header_div2);
+                item_header.appendChild(item_header_div1);
+                item_header.appendChild(item_header_div2);
                 
                 // -------------------------------------------
                 const span_status = document.createElement('span');
@@ -245,8 +251,8 @@ HTML_TEMPLATE = """
                 span_itemid.className = 'span_item_id__cls';
                 span_itemid.textContent = `${this.itemId}`;
                 
-                div_item_header_div1.appendChild(span_status);
-                div_item_header_div1.appendChild(span_itemid);
+                item_header_div1.appendChild(span_status);
+                item_header_div1.appendChild(span_itemid);
                 
                 // -------------------------------------------
                 const btn_clear_history = document.createElement('button');
@@ -267,34 +273,33 @@ HTML_TEMPLATE = """
                 btn_close.textContent = 'X';
                 btn_close.onclick = () => itemsManager.delItem(this.itemId);
 
-                div_item_header_div2.appendChild(btn_clear_history);
-                div_item_header_div2.appendChild(btn_reconnect);
-                div_item_header_div2.appendChild(btn_close);
+                item_header_div2.appendChild(btn_clear_history);
+                item_header_div2.appendChild(btn_reconnect);
+                item_header_div2.appendChild(btn_close);
                 
-                // Output -------------------------------------------
-                const div_output = document.createElement('main');
-                this.element_OutputBox = div_output;
+                // MAIN -------------------------------------------
+                const item_main = document.createElement('main');
+                this.element_OutputBox = item_main;
 
-                // Input area
-                const div_input = document.createElement('footer');
+                // FOOTER -----------------------------------------
+                const item_footer = document.createElement('footer');
                 
-                const input_item = document.createElement('input');
-                input_item.type = 'text';
-                input_item.className = 'input_item__cls';
-                input_item.placeholder = 'Введите команду и нажмите Enter';
-                this.element_InputBox = input_item;
+                const item_input = document.createElement('input');
+                item_input.type = 'text';
+                item_input.placeholder = 'Введите команду и нажмите Enter';
+                this.element_InputBox = item_input;
 
-                div_input.appendChild(input_item);
+                item_footer.appendChild(item_input);
 
-                div_itembox.appendChild(div_item_header);
-                div_itembox.appendChild(div_output);
-                div_itembox.appendChild(div_input);
+                div_itembox.appendChild(item_header);
+                div_itembox.appendChild(item_main);
+                div_itembox.appendChild(item_footer);
                 
                 this.element_ItemBox = div_itembox;
                 
                 items_container__id.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
 
-                input_item.addEventListener('keydown', (e) => {
+                item_input.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
                         const cmd = e.target.value.trim();
                         if (cmd) {
