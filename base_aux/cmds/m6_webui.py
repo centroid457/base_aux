@@ -512,11 +512,11 @@ async def ws__endpoint(websocket: WebSocket, idn: str):
         return
 
     # Создаём очередь для этого клиента
-    client_output_queue = asyncio.Queue()
+    client_queue = asyncio.Queue()
 
     # Создаём слушателя, который будет класть сообщения в очередь
     def listener(msg_style, msg_text):
-        asyncio.create_task(client_output_queue.put((msg_style, msg_text)))
+        asyncio.create_task(client_queue.put((msg_style, msg_text)))
 
     item.history.listener__add(listener)
 
@@ -528,7 +528,7 @@ async def ws__endpoint(websocket: WebSocket, idn: str):
     async def send_output():
         try:
             while True:
-                msg_style, msg_text = await client_output_queue.get()
+                msg_style, msg_text = await client_queue.get()
                 try:
                     await websocket.send_json({"msg_style": msg_style, "msg_text": msg_text})
                 except (WebSocketDisconnect, RuntimeError):
