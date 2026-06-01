@@ -228,8 +228,6 @@ HTML_TEMPLATE = """
     <main id="items_container__id" data-gap1rem></main>
     <footer>footer</footer>
     <script>
-    
-    
         // --------------------------------------------------------------
         // WebSocket
         // --------------------------------------------------------------
@@ -237,16 +235,19 @@ HTML_TEMPLATE = """
         let globalSocket = null;
     
         function connectGlobalWebSocket() {
+            console.log("[WsClient]🟡try connect");
+            
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             globalSocket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
     
             globalSocket.onopen = async () => {
-                console.log("Global WebSocket connected");
+                console.log("[WsClient]🟢connected");
                 await syncWithServer();   // синхронизация после восстановления
             };
     
             globalSocket.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
+                
                 if (msg.type === "history") {
                     const ui = itemsManager.items_map.get(msg.item_id);
                     if (ui) {
@@ -260,6 +261,7 @@ HTML_TEMPLATE = """
                         else style = 'msg_debug__cls';
                         ui.addHistoryLine(style, text);
                     }
+                    
                 } else if (msg.type === "control") {
                     if (msg.data.subtype === "create") {
                         const newId = msg.data.item_id;
@@ -288,13 +290,14 @@ HTML_TEMPLATE = """
                             ui.element_OutputBox.innerHTML = '';
                         }
                     }
+                    
                 } else if (msg.type === "system") {
                     console.log(msg.data.text);
                 }
             };
     
             globalSocket.onclose = () => {
-                console.log("Global WebSocket closed, reconnecting in 3s...");
+                console.log("[WsClient]🔴closed, reconnecting in 3s...");
                 setTimeout(connectGlobalWebSocket, 3000);
             };
         }
