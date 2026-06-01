@@ -21,8 +21,10 @@ class ClientManager:
     def __init__(self):
         self._queues: dict[str, asyncio.Queue] = {}
 
-    async def register_client(self, client_id: str, queue: asyncio.Queue):
-        self._queues[client_id] = queue
+    async def register_client(self, client_id: str) -> asyncio.Queue:
+        client_queue = asyncio.Queue()
+        self._queues[client_id] = client_queue
+        return client_queue
 
     async def unregister_client(self, client_id: str):
         self._queues.pop(client_id, None)
@@ -669,8 +671,7 @@ async def ws__client(websocket: WebSocket):
     client_id = str(uuid.uuid4())
     await websocket.accept()
 
-    client_queue = asyncio.Queue()
-    await client_manager.register_client(client_id, client_queue)
+    client_queue = await client_manager.register_client(client_id)
 
     # задача перенаправления событий из очереди в WebSocket
     async def sender():
@@ -688,13 +689,15 @@ async def ws__client(websocket: WebSocket):
         while True:
             data = await websocket.receive_json()
             cmd = data.get("cmd")
-            if cmd == "send_command":
+
+            if cmd == "send_command":   # keep here
                 item_id = data["item_id"]
                 command = data["data"]
                 item = object_manager.get_item(item_id)
                 if item:
                     asyncio.create_task(item.send_cmd(command))
-            elif cmd == "clear_history":
+
+            elif cmd == "clear_history":    # FIXME: move to POST??
                 item_id = data["item_id"]
                 object_manager.clear_history(item_id)
                 # Рассылаем всем клиентам
@@ -706,17 +709,21 @@ async def ws__client(websocket: WebSocket):
                         "item_id": item_id
                     }
                 })
-            elif cmd == "reconnect":
+
+            elif cmd == "reconnect":    # FIXME: move to POST??
                 item_id = data["item_id"]
                 item = object_manager.get_item(item_id)
                 if item:
                     asyncio.create_task(item.reconnect())
-            elif cmd == "create_item":
+
+            elif cmd == "create_item":    # FIXME: move to POST??
                 # Создание терминала через WebSocket (альтернатива REST)
                 await object_manager.create_item()
-            elif cmd == "delete_item":
+
+            elif cmd == "delete_item":    # FIXME: move to POST??
                 item_id = data["item_id"]
                 await object_manager.del_item(item_id)
+
     except WebSocketDisconnect:
         pass
     finally:
