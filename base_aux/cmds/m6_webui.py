@@ -70,6 +70,9 @@ class InstManager:
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
 
+        # Запускаем процесс терминала
+        await new_item.connect()
+
         # Глобальный слушатель – отправляет все события терминала всем клиентам
         def global_listener(msg_style, msg_text):
             # Преобразуем в единый формат: (item_id, type, data)
@@ -225,26 +228,21 @@ HTML_TEMPLATE = """
     </header>
     <main id="items_container__id" data-gap1rem></main>
     <footer>footer</footer>
-
     <script>
-        // NEW ---------------
         // Глобальный WebSocket
         let globalSocket = null;
-        let clientId = null; // если нужно
-        
+    
         function connectGlobalWebSocket() {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             globalSocket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
-        
+    
             globalSocket.onopen = () => {
                 console.log("Global WebSocket connected");
-                // После соединения можно запросить начальный список терминалов через REST (как и раньше)
-                itemsManager.init(); // но init уже должен быть вызван один раз
+                itemsManager.init();
             };
-        
+    
             globalSocket.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
-                // msg = { item_id, type, data }
                 if (msg.type === "history") {
                     const ui = itemsManager.items_map.get(msg.item_id);
                     if (ui) {
@@ -261,6 +259,11 @@ HTML_TEMPLATE = """
                 } else if (msg.type === "control") {
                     if (msg.data.subtype === "create") {
                         const newId = msg.data.item_id;
+                        const stored = itemsManager.get_IdsClient();
+                        if (!stored.includes(newId)) {
+                            stored.push(newId);
+                            itemsManager.set_IdsClient(stored);
+                        }
                         if (!itemsManager.items_map.has(newId)) {
                             itemsManager.addItem(newId);
                         }
@@ -271,35 +274,31 @@ HTML_TEMPLATE = """
                             ui.destroy();
                             itemsManager.items_map.delete(delId);
                         }
+                        const stored = itemsManager.get_IdsClient();
+                        const updated = stored.filter(id => id !== delId);
+                        itemsManager.set_IdsClient(updated);
                     }
                 } else if (msg.type === "system") {
-                    // например, подтверждение очистки истории
                     console.log(msg.data.text);
                 }
             };
-        
+    
             globalSocket.onclose = () => {
                 console.log("Global WebSocket closed, reconnecting in 3s...");
                 setTimeout(connectGlobalWebSocket, 3000);
             };
         }
     
-    
-    
-        // --------------------------------------------------------------
-        // Глобальный менеджер обьектов
-        // --------------------------------------------------------------
         const itemsManager = {
             items_map: new Map(),
             
             async init() {
                 const serverIds = await this.get_IdsServer();
-
+                this.set_IdsClient(serverIds);
                 for (const idn of serverIds) {
                     this.addItem(idn);
                 }
-
-                btn_add_item__id.addEventListener('click', () => this.createNewItem());
+                document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
             },
     
             async get_IdsServer() {
@@ -307,189 +306,126 @@ HTML_TEMPLATE = """
                     const resp = await fetch('/item/list');
                     const data = await resp.json();
                     return data.items || [];
-                } catch (exc) {
+                } catch {
                     return [];
                 }
             },
-
+    
             get_IdsClient() {
                 const stored = localStorage.getItem('terminal_session_ids');
                 return stored ? JSON.parse(stored) : [];
             },
-
+    
             set_IdsClient(ids) {
                 localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
             },
-
+    
             async createNewItem() {
-                const resp = await fetch('/item/create', { method: 'POST' });
-                const data = await resp.json();
-                const itemId = data.idn;
-                const stored = this.get_IdsClient();
-                stored.push(itemId);
-                this.set_IdsClient(stored);
-                this.addItem(itemId);
-                return itemId;
+                await fetch('/item/create', { method: 'POST' });
+                // Не создаём UI – ждём события от сервера
             },
-
+    
             addItem(itemId) {
                 if (this.items_map.has(itemId)) return;
-                
-                const item_new = new ItemUI(itemId);
-                // items_container__id.appendChild(item_new.element_ItemBox);   // так нельзя!!!!
-                this.items_map.set(itemId, item_new);
-                item_new.init();
+                const itemUI = new ItemUI(itemId);
+                this.items_map.set(itemId, itemUI);
+                itemUI.init();
             },
-
+    
             async delItem(itemId) {
                 await fetch(`/item/del/${itemId}`, { method: 'DELETE' });
-                const stored = this.get_IdsClient();
-                const updated = stored.filter(idn => idn !== itemId);
-                this.set_IdsClient(updated);
-                
-                const itemUI = this.items_map.get(itemId);
-                if (itemUI) {
-                    itemUI.destroy();
-                    this.items_map.delete(itemId);
-                }
-
-                if (this.items_map.size === 0) {
-                    await this.createNewItem();
-                }
+                // Сервер разошлёт событие delete, UI удалится в обработчике
             }
         };
-
-        // --------------------------------------------------------------
-        // Класс одного item
-        // --------------------------------------------------------------
+    
         class ItemUI {
             constructor(itemId) {
                 this.itemId = itemId;
-                // this.socket = null; // больше не требуется!
                 this.element_ItemBox = null;
                 this.element_OutputBox = null;
                 this.element_InputBox = null;
                 this.element_Status = null;
             }
-
+    
             init() {
                 this.render();
-                this.connectWebSocket();
+                this.loadHistory();
             }
-
+    
             render() {
                 const div_itembox = document.createElement('div');
                 div_itembox.className = 'item__cls';
-
-                // HEADER -------------------------------------------
-                const item_header = document.createElement('header');
-                const item_header_div1 = document.createElement('div');
-                const item_header_div2 = document.createElement('div');
-                
-                item_header.appendChild(item_header_div1);
-                item_header.appendChild(item_header_div2);
-                
-                // -------------------------------------------
-                const span_status = document.createElement('span');
-                span_status.textContent = '⚡';
-                this.element_Status = span_status;
-                
-                const span_itemid = document.createElement('span');
-                span_itemid.className = 'span_item_id__cls';
-                span_itemid.textContent = `${this.itemId}`;
-                
-                item_header_div1.appendChild(span_status);
-                item_header_div1.appendChild(span_itemid);
-                
-                // -------------------------------------------
-                const btn_clear_history = document.createElement('button');
-                btn_clear_history.className = 'button_blue_outline__cls';
-                btn_clear_history.textContent = 'clear';
-                btn_clear_history.title = 'ClearHistory';
-                btn_clear_history.onclick = () => this.sendDelHistory();
-                
-                const btn_reconnect = document.createElement('button');
-                btn_reconnect.className = 'button_blue_outline__cls';
-                btn_reconnect.textContent = '🔄';
-                btn_reconnect.title = 'Reconnect';
-                btn_reconnect.onclick = () => this.sendReconnect();
-                
-                const btn_close = document.createElement('button');
-                btn_close.className = 'button_red_outline__cls';
-                btn_close.title = 'Закрыть';
-                btn_close.textContent = 'X';
-                btn_close.onclick = () => itemsManager.delItem(this.itemId);
-
-                item_header_div2.appendChild(btn_clear_history);
-                item_header_div2.appendChild(btn_reconnect);
-                item_header_div2.appendChild(btn_close);
-                
-                // MAIN -------------------------------------------
-                const item_main = document.createElement('main');
-                item_main.setAttribute("data-scrollbar__dark", "");
-                this.element_OutputBox = item_main;
-
-                // FOOTER -----------------------------------------
-                const item_footer = document.createElement('footer');
-                
-                const item_input = document.createElement('input');
-                item_input.type = 'text';
-                item_input.placeholder = 'Введите команду и нажмите Enter';
-                this.element_InputBox = item_input;
-
-                item_footer.appendChild(item_input);
-
-                div_itembox.appendChild(item_header);
-                div_itembox.appendChild(item_main);
-                div_itembox.appendChild(item_footer);
-                
+    
+                // Header
+                const header = document.createElement('header');
+                const leftDiv = document.createElement('div');
+                const rightDiv = document.createElement('div');
+                header.appendChild(leftDiv);
+                header.appendChild(rightDiv);
+    
+                const spanStatus = document.createElement('span');
+                spanStatus.textContent = '⚡';
+                this.element_Status = spanStatus;
+                const spanId = document.createElement('span');
+                spanId.className = 'span_item_id__cls';
+                spanId.textContent = this.itemId;
+                leftDiv.appendChild(spanStatus);
+                leftDiv.appendChild(spanId);
+    
+                const btnClear = document.createElement('button');
+                btnClear.className = 'button_blue_outline__cls';
+                btnClear.textContent = 'clear';
+                btnClear.title = 'Clear History';
+                btnClear.onclick = () => this.sendDelHistory();
+                const btnReconnect = document.createElement('button');
+                btnReconnect.className = 'button_blue_outline__cls';
+                btnReconnect.textContent = '🔄';
+                btnReconnect.title = 'Reconnect';
+                btnReconnect.onclick = () => this.sendReconnect();
+                const btnClose = document.createElement('button');
+                btnClose.className = 'button_red_outline__cls';
+                btnClose.textContent = 'X';
+                btnClose.title = 'Close';
+                btnClose.onclick = () => itemsManager.delItem(this.itemId);
+                rightDiv.appendChild(btnClear);
+                rightDiv.appendChild(btnReconnect);
+                rightDiv.appendChild(btnClose);
+    
+                // Output area
+                const output = document.createElement('main');
+                output.setAttribute('data-scrollbar__dark', '');
+                this.element_OutputBox = output;
+    
+                // Input area
+                const footer = document.createElement('footer');
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Введите команду и нажмите Enter';
+                this.element_InputBox = input;
+                footer.appendChild(input);
+    
+                div_itembox.appendChild(header);
+                div_itembox.appendChild(output);
+                div_itembox.appendChild(footer);
                 this.element_ItemBox = div_itembox;
-                
-                items_container__id.appendChild(this.element_ItemBox); // добавляем в DOM! нельзя вынести вверх!!!!
-
-
-                //item_input.addEventListener('keydown', (e) => {
-                //    if (e.key === 'Enter' && this.socket?.readyState === WebSocket.OPEN) {
-                //        const cmd = e.target.value.trim();
-                //        if (cmd) {
-                //           this.socket.send(cmd);
-                //           e.target.value = '';
-                //       }
-                //    }
-                //});
-            }
-
-            connectWebSocket() {
-                if (this.socket) this.socket.close();
-                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-                const wsUrl = `${protocol}//${window.location.host}/ws/${this.itemId}`;
-                this.socket = new WebSocket(wsUrl);
-
-                this.socket.onopen = () => {
-                    this.element_Status.textContent = '✅';
-                    //this.loadHistory();
-                    
-                    if (this.element_OutputBox && this.element_OutputBox.innerHTML == "") {
-                        this.loadHistory();
+                document.getElementById('items_container__id').appendChild(div_itembox);
+    
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && globalSocket?.readyState === WebSocket.OPEN) {
+                        const cmd = e.target.value.trim();
+                        if (cmd) {
+                            globalSocket.send(JSON.stringify({
+                                cmd: "send_command",
+                                item_id: this.itemId,
+                                data: cmd
+                            }));
+                            e.target.value = '';
+                        }
                     }
-                };
-                this.socket.onmessage = (e) => {
-                    const msg = JSON.parse(e.data);
-                    this.addHistoryLine(msg.msg_style, msg.msg_text);
-                };
-                this.socket.onclose = () => {
-                    this.element_Status.textContent = '❌';
-                };
-                this.socket.onerror = () => {
-                    //this.element_Status.textContent = '⚠️';
-                };
+                });
             }
-
+    
             sendReconnect() {
-                //if (this.socket?.readyState === WebSocket.OPEN) {
-                //    this.socket.send('cmd_reconnect');
-                //}
-                
                 if (globalSocket?.readyState === WebSocket.OPEN) {
                     globalSocket.send(JSON.stringify({
                         cmd: "reconnect",
@@ -497,14 +433,8 @@ HTML_TEMPLATE = """
                     }));
                 }
             }
-            
+    
             sendDelHistory() {
-                //this.element_OutputBox.innerHTML = '';
-                //
-                //if (this.socket?.readyState === WebSocket.OPEN) {
-                //    this.socket.send('cmd_sendDelHistory');
-                //}
-                
                 this.element_OutputBox.innerHTML = '';
                 if (globalSocket?.readyState === WebSocket.OPEN) {
                     globalSocket.send(JSON.stringify({
@@ -513,9 +443,8 @@ HTML_TEMPLATE = """
                     }));
                 }
             }
-
+    
             async loadHistory() {
-                // Очищаем окно перед загрузкой, чтобы избежать дублей
                 this.element_OutputBox.innerHTML = '';
                 try {
                     const resp = await fetch(`/item/history/get/${this.itemId}`);
@@ -528,40 +457,26 @@ HTML_TEMPLATE = """
                     });
                     this.addHistoryLine('msg_debug__cls', '=== HISTORY ===');
                 } catch (err) {
-                    this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory ${err.message}`);
+                    this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
                 }
             }
-
-            addHistoryLine(msg_style, msg_text) {
-                const div_msg_line = document.createElement('div');
-                div_msg_line.className = msg_style;
-                div_msg_line.textContent = msg_text;
-                
-                this.element_OutputBox.appendChild(div_msg_line);
+    
+            addHistoryLine(style, text) {
+                const line = document.createElement('div');
+                line.className = style;
+                line.textContent = text;
+                this.element_OutputBox.appendChild(line);
                 this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
             }
-
+    
             destroy() {
-                this.socket?.close();
                 this.element_ItemBox?.remove();
             }
         }
-
-        // --------------------------------------------------------------
-        // Запуск
-        // --------------------------------------------------------------
-        //window.onload = () => itemsManager.init();
-        //window.onbeforeunload = () => {
-        //    itemsManager.items_map.forEach(s => s.socket?.close());
-        //};
-        
+    
         window.onload = () => {
             connectGlobalWebSocket();
-            // Дождёмся открытия сокета? Можно сначала получить список через REST, а сокет использовать для событий
-            // Но инициализацию itemsManager лучше запустить после получения списка
-            itemsManager.init(); // теперь внутри init будет только REST-запрос /item/list и создание UI
         };
-        
     </script>
 </body>
 </html>
@@ -729,57 +644,6 @@ async def ws_client(websocket: WebSocket):
         send_task.cancel()
         await send_task
         await client_manager.unregister_client(client_id)
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@app.websocket("/ws/{idn}")
-async def ws__endpoint(websocket: WebSocket, idn: str):
-    item = object_manager.get_item(idn)
-    if not item:
-        await websocket.close(code=1008, reason=f"{idn=}/Invalid")
-        return
-
-    # Создаём очередь для этого клиента
-    client_queue = asyncio.Queue()
-
-    # Создаём слушателя, который будет класть сообщения в очередь
-    def listener(msg_style, msg_text):
-        asyncio.create_task(client_queue.put((msg_style, msg_text)))
-
-    item.history.listener__add(listener)
-
-    # Подключаем процесс, если ещё не подключён (теперь слушатель уже есть)
-    if not item._conn:
-        await item.connect()
-
-    # Задача отправки из очереди в WebSocket
-    async def send_output():
-        try:
-            while True:
-                msg_style, msg_text = await client_queue.get()
-                try:
-                    await websocket.send_json({"msg_style": msg_style, "msg_text": msg_text})
-                except (WebSocketDisconnect, RuntimeError):
-                    break
-        except asyncio.CancelledError:
-            pass
-
-    send_task = asyncio.create_task(send_output())
-
-    try:
-        await websocket.accept()
-        while True:
-            cmd = await websocket.receive_text()
-            if cmd == 'cmd_reconnect':
-                await item.reconnect()
-            else:
-                await item.send_cmd(cmd)
-    except WebSocketDisconnect:
-        pass
-    finally:
-        send_task.cancel()
-        await send_task
-        item.history.listener__del(listener)
 
 
 # =====================================================================================================================
