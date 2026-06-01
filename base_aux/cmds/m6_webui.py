@@ -218,7 +218,10 @@ HTML_TEMPLATE = """
 <body>
     <header data-auto__ping_lost>
         <h1 style="color: #fff">WebTerminal</h1>
-        <button id="btn_add_item__id">Новый объект</button>
+        <div>
+            <button id="btn_resync__id">resync</button>
+            <button id="btn_add_item__id">Новый объект</button>
+        </div>
     </header>
     <main id="items_container__id" data-gap1rem></main>
     <footer>footer</footer>
@@ -320,6 +323,8 @@ HTML_TEMPLATE = """
             // 3. Обновляем localStorage
             itemsManager.set_IdsClient(serverIds);
         }
+        
+        document.getElementById('btn_resync__id').addEventListener('click', () => syncWithServer());
 
         // --------------------------------------------------------------
         // Глобальный менеджер объектов
@@ -374,7 +379,10 @@ HTML_TEMPLATE = """
                 // Сервер разошлёт событие delete, UI удалится в обработчике
             }
         };
-    
+
+        // --------------------------------------------------------------
+        // объект
+        // --------------------------------------------------------------
         class ItemUI {
             constructor(itemId) {
                 this.itemId = itemId;
