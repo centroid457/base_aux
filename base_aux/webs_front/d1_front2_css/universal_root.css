@@ -848,11 +848,16 @@ cite {
 }
 
 /* -------------------- PRE+CODE+KBD ---------------------------------------------------------------------------------*/
-code, kbd, pre, samp {
+code,
+kbd,
+pre,
+samp
+{
     font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
-    font-size: 0.875em; /* относительный размер, подстраивается под контекст */
+    font-size: 0.8rem;
 }
-kbd {
+kbd
+{
     background: #eef2ff;
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
@@ -861,7 +866,8 @@ kbd {
 }
 
 /* ===== Инлайн-код (внутри текста) ===== */
-code:not(pre code) {
+code:not(pre code)
+{
     background: #f0f2f5;
     color: #c7254e;
     padding: 0.2rem 0.4rem;
@@ -871,29 +877,28 @@ code:not(pre code) {
 }
 
 /* ===== Блок pre (обёртка для кода) ===== */
-pre {
+pre
+{
     background: #1e2a3a;      /* тёмный фон как на GitHub */
     color: #e2e8f0;           /* светлый текст */
     padding: 1rem;
     border-radius: 12px;
     overflow-x: auto;          /* горизонтальная прокрутка для длинных строк */
     margin: 1rem 0;
-    line-height: 1.45;
 }
 
 /* Стили для code внутри pre — отменяем инлайн-оформление */
 pre code {
     background: transparent;
-    color: inherit;
     padding: 0;
     border-radius: 0;
     white-space: pre;         /* сохраняем пробелы и переносы */
-    font-size: inherit;
 }
 
 /* ===== просто улучшенный скроллбар ===== */
 pre::-webkit-scrollbar {
-    height: 8px;
+    height: 8px;    /* высота строго для горизонтального */
+    width: 8px;     /* ширина строго для вертикального */
 }
 pre::-webkit-scrollbar-track {
     background: #2d3e50;
