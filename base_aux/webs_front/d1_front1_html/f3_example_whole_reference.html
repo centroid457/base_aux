@@ -105,7 +105,7 @@
                                 data-align_center
                         >#******</output>
                     </div>
-                    <div id="palette__id" style="overflow-x: auto;"></div>
+                    <div id="palette__id" data-overflow_auto></div>
 
                     <script>
                         const btn_gen_palette__el = document.getElementById('btn_gen_palette__id');
@@ -626,17 +626,23 @@
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
-                            <legend>СТРЕЛКИ+ТРЕУГОЛЬНИКИ</legend>
+                            <legend>СТРЕЛКИ</legend>
                             ДОБАВИТЬ ЦВЕТНЫЕ!!!
-                            ◀▶
-                            ▲ ▼
-                            △ ▷
-
                             ⬅️➡️
                             ⬆️⬇️
+                            ▶ ◀
 
                             ↗ ↘
                             → ←
+                        </fieldset>
+
+                        <fieldset data-flex_wrap data-icons__show_unicode_values>
+                            <legend>ТРЕУГОЛЬНИКИ</legend>
+                            ДОБАВИТЬ ЦВЕТНЫЕ!!!
+                            ◀ ▶  ▲ ▼
+                            ◁ ▷  ▽ △
+                            ◅ ▻ ∆
+                            🔺🔻
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -665,10 +671,14 @@
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
+                            <legend>SEARCH</legend>
+                            🔍🎮
+                        </fieldset>
+
+                        <fieldset data-flex_wrap data-icons__show_unicode_values>
                             <legend>INSTRUMENTS</legend>
                             📐📏
                             ✂️ 🛠️
-                            🔍
                             🧲
                             💻
                         </fieldset>
@@ -2144,7 +2154,7 @@
                         <div data-cover__border_bg
                              data-padding05rem
                              data-box_80x80
-                             style="overflow: auto;"
+                             data-overflow_auto
                              data-clone_element__params="resize:[
                              both;
                              horizontal;
@@ -5899,9 +5909,14 @@ cancelable: true – внутри обработчика можно вызват
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <article class="article__cls">
-                    <header>🎮 Программное управление прокруткой контейнера</header>
+                    <header>Программное управление прокруткой контейнера</header>
                     <div class="article_main__cls">
-                        <div id="scrollDemoContainer" data-cover__border_bg data-overflow_auto style="height: 250px; padding: 0.5rem;">
+
+                        <div id="scrollStatus" data-cover__border_bg>
+                            scrollTop = 0
+                        </div>
+
+                        <div id="scrollDemoContainer" data-cover__border_bg data-overflow_auto data-height_200>
                             <div data-item_square data-box_50x100>1</div>
                             <div data-item_square data-box_40x80>2</div>
                             <div data-item_square data-box_80x80>3</div>
@@ -5911,31 +5926,36 @@ cancelable: true – внутри обработчика можно вызват
                             <div data-item_square data-box_70x70>6</div>
                         </div>
 
+                        SCROLL TO <code>scrollTo</code>-абсолютная позиция
                         <div style="display: flex; flex-wrap: wrap;">
-                            <button id="scrollUpBtn">⬆️ Вверх (на 30px)</button>
-                            <button id="scrollDownBtn">⬇️ Вниз (на 30px)</button>
-
-                            <button id="scrollToTopBtn">🔝 Наверх</button>
-                            <button id="scrollToBottomBtn">🔻 Вниз (в конец)</button>
-                            <button id="scrollToElementBtn">🎯 К оранжевому элементу</button>
                             <button id="scrollSmoothToggle">🌀 Плавно (toggle)</button>
+
+                            <button id="scrollToTopBtn">TOP</button>
+                            <button id="scrollToBottomBtn">BOTTOM</button>
+
+                            <button id="scrollUpBtn">⬆️UP+30px</button>
+                            <button id="scrollDownBtn">⬇️DOWN-30px</button>
+
+                            <button id="scrollToElementBtn">🎯scrollIntoView</button>
                         </div>
 
+                        <hr>
+                        SCROLL BY <code>scrollBy</code>-относительный сдвиг
                         <div style="display: flex; flex-wrap: wrap;">
+                            <button id="scrollSmoothToggle2">🌀 Плавно (toggle)</button>
+
+                            <button id="scrollToTopBtn2">TOP=scrollTo(0)</button>
+                            <button id="scrollToBottomBtn2">BOTTOM=scrollTo(bottom)</button>
+
                             <button id="scrollByUp10">⬆️ scrollBy -10px</button>
                             <button id="scrollByDown10">⬇️ scrollBy +10px</button>
                             <button id="scrollByUp30">⬆️ scrollBy -30px</button>
                             <button id="scrollByDown30">⬇️ scrollBy +30px</button>
 
-                            <button id="scrollToTopBtn2">🔝 scrollTo(0)</button>
-                            <button id="scrollToBottomBtn2">🔻 scrollTo(bottom)</button>
-                            <button id="scrollToElementBtn2">🎯 scrollIntoView</button>
-                            <button id="scrollSmoothToggle2">🌀 Плавно (toggle)</button>
+                            <button id="scrollToElementBtn2">🎯scrollIntoView</button>
                         </div>
 
-                        <div id="scrollStatus" style="margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem; background: #f8fafc; padding: 0.25rem 0.5rem; border-radius: 0.5rem;">
-                            scrollTop = 0
-                        </div>
+                        <code>scrollIntoView</code> (прокрутка до элемента)
 
                         <script>
                             (function() {
@@ -6053,7 +6073,6 @@ cancelable: true – внутри обработчика можно вызват
                             })();
                         </script>
 
-                        <p><small>Контейнер имеет ограниченную высоту (250px) и прокрутку. Кнопки демонстрируют <code>scrollTo</code> (абсолютная позиция), <code>scrollBy</code> (относительный сдвиг) и <code>scrollIntoView</code> (прокрутка до элемента).</small></p>
                     </div>
                     <footer>
                         метод:<br>
@@ -6068,15 +6087,122 @@ cancelable: true – внутри обработчика можно вызват
 
 
                         💡 <strong>Методы управления прокруткой</strong>:<br>
-        <code>element.scrollTo(x, y)</code> или <code>scrollTo({ top, left, behavior })</code> – прокрутка к абсолютным координатам.<br>
-        <code>element.scrollBy(dx, dy)</code> или <code>scrollBy({ top, left, behavior })</code> – прокрутка относительно текущего положения.<br>
-        <code>element.scrollIntoView({ behavior, block, inline })</code> – прокрутка контейнера так, чтобы элемент стал видимым.<br>
-        📌 Свойства <code>scrollHeight</code> (полная высота), <code>clientHeight</code> (видимая высота), <code>scrollTop</code> (текущая прокрутка).<br>
-        ⚙️ Для плавности используйте <code>behavior: 'smooth'</code>.
+                        <code>element.scrollTo(x, y)</code> или <code>scrollTo({ top, left, behavior })</code> – прокрутка к абсолютным координатам.<br>
+                        <code>element.scrollBy(dx, dy)</code> или <code>scrollBy({ top, left, behavior })</code> – прокрутка относительно текущего положения.<br>
+                        <code>element.scrollIntoView({ behavior, block, inline })</code> – прокрутка контейнера так, чтобы элемент стал видимым.<br>
+                        📌 Свойства <code>scrollHeight</code> (полная высота), <code>clientHeight</code> (видимая высота), <code>scrollTop</code> (текущая прокрутка).<br>
+                        ⚙️ Для плавности используйте <code>behavior: 'smooth'</code>.
                     </footer>
                 </article>
 
+                <article class="article__cls">
+                    <header>window.scroll – прокрутка всей страницы +EVENTS</header>
+                    <div class="article_main__cls">
 
+                        <div data-cover__border_bg>
+                            <div>Текущая прокрутка: <strong id="globalScrollY">0</strong> px</div>
+                            <div>Высота документа: <strong id="globalDocHeight">0</strong> px (видимая: <span id="globalWinHeight">0</span> px)</div>
+                            <progress id="globalScrollProgress" value="0" max="100" style="width: 100%; height: 8px;"></progress>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <button id="globalScrollTopBtn">🔝 Наверх</button>
+                            <button id="globalScrollBottomBtn">🔻 Вниз</button>
+                            <button id="globalScrollByUp30">⬆️ Вверх на 30px</button>
+                            <button id="globalScrollByDown30">⬇️ Вниз на 30px</button>
+                            <button id="globalScrollSmoothToggle">🌀 Плавно (toggle)</button>
+                            <button id="globalScrollToExampleBtn">🎯 К этому блоку</button>
+                        </div>
+                        <div id="globalScrollLog" data-cover__border_bg data-height_200 data-overflow_auto>
+                            Лог прокрутки:
+                        </div>
+                        <script>
+                            (function() {
+                                let smooth = false;
+                                const scrollYSpan = document.getElementById('globalScrollY');
+                                const docHeightSpan = document.getElementById('globalDocHeight');
+                                const winHeightSpan = document.getElementById('globalWinHeight');
+                                const progressBar = document.getElementById('globalScrollProgress');
+                                const logDiv = document.getElementById('globalScrollLog');
+
+                                function updateGlobalInfo() {
+                                    const scrollY = window.scrollY;
+                                    const docHeight = document.documentElement.scrollHeight;
+                                    const winHeight = window.innerHeight;
+                                    scrollYSpan.textContent = Math.round(scrollY);
+                                    docHeightSpan.textContent = Math.round(docHeight);
+                                    winHeightSpan.textContent = Math.round(winHeight);
+                                    const percent = (scrollY / (docHeight - winHeight)) * 100;
+                                    progressBar.value = isNaN(percent) ? 0 : percent;
+                                }
+
+                                function logScrollEvent() {
+                                    const entry = document.createElement('div');
+                                    entry.textContent = `🔄 scroll: ${Math.round(window.scrollY)}px`;
+                                    logDiv.appendChild(entry);
+                                    logDiv.scrollTop = logDiv.scrollHeight;
+                                    // Ограничим количество записей
+                                    while (logDiv.children.length > 20) logDiv.removeChild(logDiv.firstChild);
+                                }
+
+                                function scrollWithBehavior(options, method = 'scrollTo') {
+                                    if (options.behavior === undefined) {
+                                        options.behavior = smooth ? 'smooth' : 'auto';
+                                    }
+                                    if (method === 'scrollTo') window.scrollTo(options);
+                                    else if (method === 'scrollBy') window.scrollBy(options);
+                                    setTimeout(updateGlobalInfo, smooth ? 200 : 0);
+                                }
+
+                                window.addEventListener('scroll', () => {
+                                    updateGlobalInfo();
+                                    logScrollEvent();
+                                });
+                                window.addEventListener('resize', updateGlobalInfo);
+                                updateGlobalInfo();
+
+                                // Кнопки
+                                document.getElementById('globalScrollTopBtn').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: 0 });
+                                });
+                                document.getElementById('globalScrollBottomBtn').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: document.documentElement.scrollHeight });
+                                });
+                                document.getElementById('globalScrollByUp30').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: -30 }, 'scrollBy');
+                                });
+                                document.getElementById('globalScrollByDown30').addEventListener('click', () => {
+                                    scrollWithBehavior({ top: 30 }, 'scrollBy');
+                                });
+                                document.getElementById('globalScrollToExampleBtn').addEventListener('click', () => {
+                                    const target = document.getElementById('scrollId');
+                                    if (target) {
+                                        target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+                                        setTimeout(updateGlobalInfo, smooth ? 200 : 0);
+                                    } else {
+                                        alert('Блок #scrollId не найден');
+                                    }
+                                });
+                                const toggleBtn = document.getElementById('globalScrollSmoothToggle');
+                                toggleBtn.addEventListener('click', () => {
+                                    smooth = !smooth;
+                                    toggleBtn.style.background = smooth ? '#10b981' : '';
+                                    toggleBtn.textContent = smooth ? '🌀 Плавно (вкл)' : '🌀 Плавно (выкл)';
+                                });
+                            })();
+                        </script>
+                        <p><small>Событие <code>scroll</code> на <code>window</code> отслеживает прокрутку всей страницы. Методы <code>window.scrollTo</code>, <code>window.scrollBy</code>, <code>element.scrollIntoView</code> работают аналогично контейнерным.</small></p>
+                    </div>
+                    <footer>
+                        💡 <strong>Особенности прокрутки окна:</strong><br>
+                        – <code>window.scrollY</code> – текущая прокрутка по вертикали (px).<br>
+                        – <code>document.documentElement.scrollHeight</code> – полная высота документа.<br>
+                        – <code>window.innerHeight</code> – высота видимой области.<br>
+                        – <code>window.scrollTo({ top, behavior })</code> – абсолютная прокрутка.<br>
+                        – <code>window.scrollBy({ top, behavior })</code> – относительная прокрутка.<br>
+                        – <code>element.scrollIntoView()</code> – прокручивает окно так, чтобы элемент стал видимым.<br>
+                        ⚠️ Для плавности используйте <code>behavior: 'smooth'</code> (работает в современных браузерах).
+                    </footer>
+                </article>
 
             </div>
         </section>
@@ -6111,7 +6237,7 @@ cancelable: true – внутри обработчика можно вызват
 
                         <div data-cover__border_bg>
                             <div data-item_square data-box_40x40>1</div>
-                            <div data-item_square data-box_40x80 style="background: #0f0; position: relative; top:20px; left:20px;">relative<br>top:10px; left:20px</div>
+                            <div data-item_square data-box_40x80 style="background: #0f0; position: relative; top:10px; left:20px;">relative<br>top:10px; left:20px</div>
                             <div data-item_square data-box_40x40>3</div>
                         </div>
 
