@@ -51,12 +51,21 @@ class InstManager:
     def get_item(self, idn: str) -> CmdTerminal_OsAio | None:
         return self.items.get(idn)
 
-    def clear_history(self, idn: str) -> None:
+    # CMDS ----------------------------------------------
+    async def clear_history(self, idn: str) -> None:
         item = self.items.get(idn)
-        if item:
-            item.history.clear()
+        if not item:
+            return
 
-    # new ------
+        item.history.clear()
+        await client_manager.broadcast({
+            "item_id": idn,
+            "type": "item_control",
+            "data": {
+                "subtype": "clear_history",
+            }
+        })
+
     async def create_item(self, *args, **kwargs) -> str:
         new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
@@ -80,7 +89,7 @@ class InstManager:
             subtype = subtype_map.get(msg_style, 'unknown')
             asyncio.create_task(client_manager.broadcast({
                 "item_id": item_id,
-                "type": "history",
+                "type": "history_log",
                 "data": {
                     "subtype": subtype,
                     "text": msg_text
@@ -96,7 +105,7 @@ class InstManager:
         # Оповещаем всех клиентов о создании нового терминала
         await client_manager.broadcast({
             "item_id": item_id,
-            "type": "control",
+            "type": "item_control",
             "data": {
                 "subtype": "create",
             }
@@ -114,7 +123,7 @@ class InstManager:
             # Оповещаем всех клиентов об удалении
             await client_manager.broadcast({
                 "item_id": idn,
-                "type": "control",
+                "type": "item_control",
                 "data": {
                     "subtype": "delete",
                 }
@@ -237,22 +246,22 @@ HTML_TEMPLATE = """
                 const msg__type = msg.type;
                 const msg__data = msg.data;
                 
-                const msg__subtype = msg__data.subtype;
+                const msg__subtype = msg__data?.subtype;
+                const msg__text = msg__data?.text;
                 
-                if (msg__type === "history") {
+                if (msg__type === "history_log") {
                     const ui = itemsManager.items_map.get(msg__itemid);
                     if (ui) {
-                        const text = msg.data.text;
                         let style = '';
                         if (msg__subtype === 'stdout') style = 'msg_stdout__cls';
                         else if (msg__subtype === 'stderr') style = 'msg_stderr__cls';
                         else if (msg__subtype === 'stdin') style = 'msg_stdin__cls';
                         else if (msg__subtype === 'system') style = 'msg_system__cls';
                         else style = 'msg_debug__cls';
-                        ui.addHistoryLine(style, text);
+                        ui.addHistoryLine(style, msg__text);
                     }
                     
-                } else if (msg__type === "control") {
+                } else if (msg__type === "item_control") {
                 
                     if (msg__subtype === "create") {
                         const stored = itemsManager.get_IdsClient();
@@ -282,7 +291,7 @@ HTML_TEMPLATE = """
                     }
                     
                 } else if (msg__type === "system") {
-                    console.log(msg.data.text);
+                    console.log(msg__text);
                 }
             };
     
@@ -463,7 +472,7 @@ HTML_TEMPLATE = """
                     if (io_line) {
                         ws_client.send(JSON.stringify({
                             item_id: this.itemId,
-                            type: "history",
+                            type: "history_log",
                             data: {
                                 subtype: "stdin",  // FIXME: or just stdin/msg_stdin__cls
                                 text: io_line,
@@ -478,7 +487,7 @@ HTML_TEMPLATE = """
                 if (ws_client?.readyState === WebSocket.OPEN) {
                     ws_client.send(JSON.stringify({
                         item_id: this.itemId,
-                        type: "control",
+                        type: "item_control",
                         data: {
                             subtype: "reconnect_item",
                         },
@@ -490,7 +499,7 @@ HTML_TEMPLATE = """
                 if (ws_client?.readyState === WebSocket.OPEN) {
                     ws_client.send(JSON.stringify({
                         item_id: this.itemId,
-                        type: "control",
+                        type: "item_control",
                         data: {
                             subtype: "clear_history",
                         },
@@ -515,9 +524,9 @@ HTML_TEMPLATE = """
                 }
             }
     
-            addHistoryLine(style, text) {
+            addHistoryLine(style_cls, text) {
                 const line = document.createElement('div');
-                line.className = style;
+                line.className = style_cls;
                 line.textContent = text;
                 this.element_OutputBox.appendChild(line);
                 this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
@@ -613,15 +622,7 @@ async def get_item(idn: str):
 # ---------------------------------------------------------------------------------------------------------------------
 @app.delete("/item/history/del/{idn}")
 async def del_history(idn: str):
-    object_manager.clear_history(idn)
-    # Оповещаем всех клиентов об очистке истории
-    await client_manager.broadcast({
-        "type": "control",
-        "item_id": idn,
-        "data": {
-            "subtype": "clear_history",
-        }
-    })
+    await object_manager.clear_history(idn)
     return {"status": "closed"}
 
 
@@ -700,28 +701,27 @@ async def ws__client(websocket: WebSocket):
                 msg__text = None
 
             # ----------------------------------------------
-            if msg__type == "history":   # keep here
+            if msg__type == "history_log":   # keep here
 
                 item = object_manager.get_item(msg__itemid)
                 if item and msg__text:
                     asyncio.create_task(item.send_cmd(msg__text))
 
-            elif msg__type == "control" and msg__data:
-                if msg__subtype == "clear_history":    # FIXME: move to POST??
-                    object_manager.clear_history(msg__itemid)
-                    await client_manager.broadcast(msg)
+            elif msg__type == "item_control" and msg__data:     # FIXME: move to POST??
+                if msg__subtype == "clear_history":
+                    asyncio.create_task(object_manager.clear_history(msg__itemid))
 
-                elif msg__subtype == "reconnect_item":    # FIXME: move to POST??
+                elif msg__subtype == "reconnect_item":
                     item = object_manager.get_item(msg__itemid)
-                    if item:
-                        asyncio.create_task(item.reconnect())
+                    asyncio.create_task(item.reconnect())
 
-                elif msg__subtype == "create_item":    # FIXME: move to POST??
+                elif msg__subtype == "create_item":
                     await object_manager.create_item()
 
-                elif msg__subtype == "delete_item":    # FIXME: move to POST??
+                elif msg__subtype == "delete_item":
                     await object_manager.del_item(msg__itemid)
 
+        # --------------------------------------------
     except WebSocketDisconnect:
         pass
     finally:
