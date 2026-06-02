@@ -6215,40 +6215,46 @@ cancelable: true – внутри обработчика можно вызват
                 <article class="article__cls">
                     <header>🔁 Методы перезагрузки (JavaScript)</header>
                     <div class="article_main__cls">
-                        <button id="reloadLocation" data-btn_blue>location.reload()</button>
-                        <button id="reloadLocationTrue" data-btn_blue_outline>location.reload(true)</button><br>
 
-                        <button id="reloadHref" data-btn_green>location.href = location.href</button>
-                        <button id="reloadReplace" data-btn_green_outline>location.replace(location.href)</button><br>
-
-                        <button id="reloadHistory" data-btn_red_outline>history.go(0)</button>
-                        <button id="reloadForce" data-btn_red>Принудительная (с параметром _t)</button>
-
-                        <div id="reloadLog">
+                        <div id="reloadLog" data-cover__border_bg>
                             ⚠️ Нажмите на любую кнопку – страница перезагрузится.
                         </div>
-                    </div>
-                    <footer>
-                        💡 <strong>Способы перезагрузки:</strong><br>
-                        <code>location.reload()</code> – обычная перезагрузка (с учётом кеша).<br>
-                        <code>location.reload(true)</code> – принудительная (без кеша, но параметр устарел).<br>
 
-                        <code>location.href = location.href</code> – альтернатива, может не сработать в некоторых браузерах.<br>
+                        <hr>
+                        <button id="reloadLocation" data-btn_blue>location.reload()</button>откроет ТЕКУЩЕЕ<br>
+                        <code>location.reload()</code> – обычная перезагрузка (с учётом кеша - сохраняется).<br>
+
+                        <hr>
+                        <button id="reloadLocationTrue" data-btn_blue_outline>location.reload(true)</button>откроет ТЕКУЩЕЕ<br>
+                        <code>location.reload(true)</code> – принудительная (без кеша, но параметр устарел) - видимо не работает больше!<br>
+
+                        <hr>
+                        <button id="reloadHref" data-btn_green>location.href = location.href</button>откроет TOP<br>
+                        УСТАРЕЛ?<code>location.href = location.href</code> – альтернатива, может не сработать в некоторых браузерах.<br>
+
+                        <hr>
+                        <button id="reloadReplace" data-btn_green_outline>location.replace(location.href)</button>откроет TOP<br>
                         <code>location.replace(location.href)</code> – перезагрузка без добавления записи в историю.<br>
 
+                        <hr>
+                        <button id="reloadHistory" data-btn_red_outline>history.go(0)</button>откроет ТЕКУЩЕЕ<br>
                         <code>history.go(0)</code> – имитирует нажатие кнопки "Обновить".<br>
-                        <code>принудительная (с параметром)</code> – добавляет <code>?_t=timestamp</code>, всегда загружает с сервера.
+                        Совместимость со старыми браузерами
 
-                    </footer>
+                        <hr>
+                        <button id="reloadForce" data-btn_red>СБРОС КЕША (с параметром _t)</button>откроет TOP<br>
+                        добавляет параметр<code>?_t=timestamp</code>, всегда загружает СНОВА ПОЛНОСТЬЮ с сервера.<br>
+
+                    </div>
                 </article>
 
                 <article class="article__cls">
                     <header>⚙️ Дополнительные методы</header>
                     <div class="article_main__cls">
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                            <button id="reloadMetaExample" data-btn_black_outline>meta refresh (демо)</button>
-                            <button id="reloadWithDelay" data-btn_black>Отложенная перезагрузка (3 сек)</button>
-                        </div>
+
+                        <button id="reloadMetaExample" data-btn_black_outline>meta ТЕГ на странице</button>
+                        <button id="reloadWithDelay" data-btn_black>Отложенная перезагрузка (3 сек)</button>
+
                         <div id="reloadExtrasLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
                             Здесь будет информация.
                         </div>
@@ -6271,7 +6277,7 @@ cancelable: true – внутри обработчика можно вызват
                     if (logDiv) {
                         logDiv.innerHTML = `🔄 ${message} – страница будет перезагружена...`;
                     }
-                    setTimeout(reloadFn, 50);
+                    setTimeout(reloadFn, 2000);
                 }
 
                 // Кнопки основной секции
