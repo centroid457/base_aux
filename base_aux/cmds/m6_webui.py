@@ -231,21 +231,16 @@ HTML_TEMPLATE = """
         // --------------------------------------------------------------
         // WebSocket
         // --------------------------------------------------------------
-        // Глобальный WebSocket
-        let globalSocket = null;
+        let ws_client = null;
     
-        function connectGlobalWebSocket() {
+        function ws_client__connect() {
             console.log("[WsClient]🟡try connect");
             
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            globalSocket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
-    
-            globalSocket.onopen = async () => {
-                console.log("[WsClient]🟢connected");
-                await syncWithServer();   // синхронизация после восстановления
-            };
-    
-            globalSocket.onmessage = (e) => {
+            ws_client = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
+        
+            // ---------------------------------------------------
+            ws_client.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
                 
                 if (msg.type === "history") {
@@ -271,7 +266,7 @@ HTML_TEMPLATE = """
                             itemsManager.set_IdsClient(stored);
                         }
                         if (!itemsManager.items_map.has(newId)) {
-                            itemsManager.addItem(newId);
+                            itemsManager.addItemElement(newId);
                         }
                     } else if (msg.data.subtype === "delete") {
                         const delId = msg.data.item_id;
@@ -296,9 +291,15 @@ HTML_TEMPLATE = """
                 }
             };
     
-            globalSocket.onclose = () => {
+            // ---------------------------------------------------
+            ws_client.onopen = async () => {
+                console.log("[WsClient]🟢connected");
+                await syncWithServer();   // синхронизация после восстановления
+            };
+    
+            ws_client.onclose = () => {
                 console.log("[WsClient]🔴closed, reconnecting in 3s...");
-                setTimeout(connectGlobalWebSocket, 3000);
+                setTimeout(ws_client__connect, 3000);
             };
         }
     
@@ -321,7 +322,7 @@ HTML_TEMPLATE = """
             // 2. Добавляем терминалы, которые есть на сервере, но отсутствуют локально
             for (const id of serverIds) {
                 if (!itemsManager.items_map.has(id)) {
-                    itemsManager.addItem(id);
+                    itemsManager.addItemElement(id);
                 }
             }
         
@@ -342,12 +343,19 @@ HTML_TEMPLATE = """
                 const serverIds = await this.get_IdsServer();
                 this.set_IdsClient(serverIds);
                 for (const idn of serverIds) {
-                    this.addItem(idn);
+                    this.addItemElement(idn);
                 }
-                // 🔽 Добавить обработчик кнопки
                 document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
             },
-        
+            
+            addItemElement(itemId) {
+                if (this.items_map.has(itemId)) return;
+                const itemUI = new ItemUI(itemId);
+                this.items_map.set(itemId, itemUI);
+                itemUI.init();
+            },
+            
+            // ---------------------------------------------------
             async get_IdsServer() {
                 try {
                     const resp = await fetch('/item/list');
@@ -367,21 +375,13 @@ HTML_TEMPLATE = """
                 localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
             },
     
+            // ---------------------------------------------------
             async createNewItem() {
                 await fetch('/item/create', { method: 'POST' });
-                // Не создаём UI – ждём события от сервера
-            },
-    
-            addItem(itemId) {
-                if (this.items_map.has(itemId)) return;
-                const itemUI = new ItemUI(itemId);
-                this.items_map.set(itemId, itemUI);
-                itemUI.init();
             },
     
             async delItem(itemId) {
                 await fetch(`/item/del/${itemId}`, { method: 'DELETE' });
-                // Сервер разошлёт событие delete, UI удалится в обработчике
             }
         };
 
@@ -459,24 +459,27 @@ HTML_TEMPLATE = """
                 this.element_ItemBox = div_itembox;
                 document.getElementById('items_container__id').appendChild(div_itembox);
     
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && globalSocket?.readyState === WebSocket.OPEN) {
-                        const cmd = e.target.value.trim();
-                        if (cmd) {
-                            globalSocket.send(JSON.stringify({
-                                cmd: "send_command",
-                                item_id: this.itemId,
-                                data: cmd
-                            }));
-                            e.target.value = '';
-                        }
-                    }
-                });
+                input.addEventListener('change', () => this.sendInput());
             }
     
+            // ---------------------------------------------------
+            sendInput() {
+                if (ws_client?.readyState === WebSocket.OPEN) {
+                    const cmd = this.element_InputBox.value.trim();
+                    if (cmd) {
+                        ws_client.send(JSON.stringify({
+                            cmd: "send_command",
+                            item_id: this.itemId,
+                            data: cmd,
+                        }));
+                        this.element_InputBox.value = '';
+                    }
+                }
+            }
+            
             sendReconnect() {
-                if (globalSocket?.readyState === WebSocket.OPEN) {
-                    globalSocket.send(JSON.stringify({
+                if (ws_client?.readyState === WebSocket.OPEN) {
+                    ws_client.send(JSON.stringify({
                         cmd: "reconnect",
                         item_id: this.itemId
                     }));
@@ -484,15 +487,15 @@ HTML_TEMPLATE = """
             }
     
             sendDelHistory() {
-                this.element_OutputBox.innerHTML = '';
-                if (globalSocket?.readyState === WebSocket.OPEN) {
-                    globalSocket.send(JSON.stringify({
+                if (ws_client?.readyState === WebSocket.OPEN) {
+                    ws_client.send(JSON.stringify({
                         cmd: "clear_history",
                         item_id: this.itemId
                     }));
                 }
             }
     
+            // ---------------------------------------------------
             async loadHistory() {
                 this.element_OutputBox.innerHTML = '';
                 try {
@@ -518,6 +521,7 @@ HTML_TEMPLATE = """
                 this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
             }
     
+            // ---------------------------------------------------
             destroy() {
                 this.element_ItemBox?.remove();
             }
@@ -527,8 +531,8 @@ HTML_TEMPLATE = """
         // Запуск
         // --------------------------------------------------------------
         window.onload = async () => {
-            await itemsManager.initUI();   // первичная загрузка через REST
-            connectGlobalWebSocket();      // открываем сокет
+            await itemsManager.initUI();    // первичная загрузка через REST
+            ws_client__connect();           // запуск коннетка сокета
         };
     </script>
 </body>

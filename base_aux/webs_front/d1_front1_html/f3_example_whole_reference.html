@@ -4013,7 +4013,7 @@
                             01234567890123456789012345678901234567890123456789<br>
                         </div>
 
-                        <div id="log_wheel__id" data-overflow_auto data-height_200></div>
+                        <div id="log_wheel__id" data-height_200 data-overflow_auto></div>
 
                         <script>
                             (function() {
@@ -4060,7 +4060,7 @@
                     <div class="article_main__cls">
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                                 <input type="text" id="demoEventField" placeholder="Type AnyThing">
-                                <div id="eventLog" data-height_200></div>
+                                <div id="eventLog" data-height_200 data-overflow_auto></div>
                             <div>
                                 <button id="programmaticChangeBtn">Изменить значение программно</button>
                                 <button id="resetLogBtn">Сбросить лог</button>
@@ -4094,8 +4094,8 @@
                     </div>
 
                     <footer>
-                        input - местное ддополнение <br>
-                        change - НАЖАТИЕ ENTER (только в случае отличного значения от предыдущего нажатия!!! или полная замена <br><br>
+                        input - любое единичное изменение! (дополнение/удаление символа)<br>
+                        change - НАЖАТИЕ ENTER (только в случае если значение отличается от предыдущего нажатия!!! или полная замена<br><br>
 
                         <code>input</code>/<code>change</code> НЕ срабатывают при программном изменении поля (кнопка внизу).<br>
                         Чтобы заставить сработать событие из скрипта, используйте <code>element.dispatchEvent(new Event('input'))</code>.<br>
