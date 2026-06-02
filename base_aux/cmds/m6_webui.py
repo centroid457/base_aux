@@ -21,23 +21,19 @@ class ClientManager:
     def __init__(self):
         self._queues: dict[str, asyncio.Queue] = {}
 
-    async def register_client(self, client_id: str) -> asyncio.Queue:
+    async def register_client(self) -> tuple[str, asyncio.Queue]:
+        client_id = str(uuid.uuid4())
         client_queue = asyncio.Queue()
         self._queues[client_id] = client_queue
-        return client_queue
+        return client_id, client_queue
 
     async def unregister_client(self, client_id: str):
         self._queues.pop(client_id, None)
 
-    async def broadcast(self, message: dict):
+    async def broadcast(self, msg: dict):
         """Отправить сообщение всем клиентам."""
         for q in self._queues.values():
-            await q.put(message)
-
-    async def send_to_client(self, client_id: str, message: dict):
-        q = self._queues.get(client_id)
-        if q:
-            await q.put(message)
+            await q.put(msg)
 
 
 client_manager = ClientManager()
@@ -66,7 +62,6 @@ class InstManager:
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
 
-        # Запускаем процесс терминала
         await new_item.connect()
 
         # Глобальный слушатель – отправляет все события терминала всем клиентам
@@ -103,16 +98,11 @@ class InstManager:
             "type": "control",
             "data": {
                 "subtype": "create",
-                "item_id": item_id
             }
         })
         return item_id
 
     async def del_item(self, idn: str) -> None:
-        # item = self.items.pop(idn, None)
-        # if item:
-        #     await item.disconnect()
-
         item = self.items.pop(idn, None)
         if item:
             # Удаляем глобальных слушателей
@@ -126,7 +116,6 @@ class InstManager:
                 "type": "control",
                 "data": {
                     "subtype": "delete",
-                    "item_id": idn
                 }
             })
 
@@ -243,50 +232,55 @@ HTML_TEMPLATE = """
             ws_client.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
                 
-                if (msg.type === "history") {
-                    const ui = itemsManager.items_map.get(msg.item_id);
+                const msg__itemid = msg.item_id;
+                const msg__type = msg.type;
+                const msg__data = msg.data;
+                
+                const msg__subtype = msg__data.subtype;
+                
+                if (msg__type === "history") {
+                    const ui = itemsManager.items_map.get(msg__itemid);
                     if (ui) {
-                        const subtype = msg.data.subtype;
                         const text = msg.data.text;
                         let style = '';
-                        if (subtype === 'stdout') style = 'msg_stdout__cls';
-                        else if (subtype === 'stderr') style = 'msg_stderr__cls';
-                        else if (subtype === 'stdin') style = 'msg_stdin__cls';
-                        else if (subtype === 'system') style = 'msg_system__cls';
+                        if (msg__subtype === 'stdout') style = 'msg_stdout__cls';
+                        else if (msg__subtype === 'stderr') style = 'msg_stderr__cls';
+                        else if (msg__subtype === 'stdin') style = 'msg_stdin__cls';
+                        else if (msg__subtype === 'system') style = 'msg_system__cls';
                         else style = 'msg_debug__cls';
                         ui.addHistoryLine(style, text);
                     }
                     
-                } else if (msg.type === "control") {
-                    if (msg.data.subtype === "create") {
-                        const newId = msg.data.item_id;
+                } else if (msg__type === "control") {
+                
+                    if (msg__subtype === "create") {
                         const stored = itemsManager.get_IdsClient();
-                        if (!stored.includes(newId)) {
-                            stored.push(newId);
+                        if (!stored.includes(msg__itemid)) {
+                            stored.push(msg__itemid);
                             itemsManager.set_IdsClient(stored);
                         }
-                        if (!itemsManager.items_map.has(newId)) {
-                            itemsManager.addItemElement(newId);
+                        if (!itemsManager.items_map.has(msg__itemid)) {
+                            itemsManager.addItemElement(msg__itemid);
                         }
-                    } else if (msg.data.subtype === "delete") {
-                        const delId = msg.data.item_id;
-                        const ui = itemsManager.items_map.get(delId);
+                        
+                    } else if (msg__subtype === "delete") {
+                        const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.destroy();
-                            itemsManager.items_map.delete(delId);
+                            itemsManager.items_map.delete(msg__itemid);
                         }
                         const stored = itemsManager.get_IdsClient();
-                        const updated = stored.filter(id => id !== delId);
+                        const updated = stored.filter(id => id !== msg__itemid);
                         itemsManager.set_IdsClient(updated);
-                    } else if (msg.data.subtype === "history_clear") {
-                        const itemId = msg.data.item_id;
-                        const ui = itemsManager.items_map.get(itemId);
+                        
+                    } else if (msg__subtype === "history_clear") {
+                        const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.element_OutputBox.innerHTML = '';
                         }
                     }
                     
-                } else if (msg.type === "system") {
+                } else if (msg__type === "system") {
                     console.log(msg.data.text);
                 }
             };
@@ -394,7 +388,6 @@ HTML_TEMPLATE = """
                 this.element_ItemBox = null;
                 this.element_OutputBox = null;
                 this.element_InputBox = null;
-                this.element_Status = null;
             }
     
             init() {
@@ -408,18 +401,15 @@ HTML_TEMPLATE = """
     
                 // Header
                 const header = document.createElement('header');
-                const leftDiv = document.createElement('div');
-                const rightDiv = document.createElement('div');
-                header.appendChild(leftDiv);
-                header.appendChild(rightDiv);
+                const header_div1 = document.createElement('div');
+                const header_div2 = document.createElement('div');
+                header.appendChild(header_div1);
+                header.appendChild(header_div2);
     
-                const spanStatus = document.createElement('span');
-                this.element_Status = spanStatus;
                 const spanId = document.createElement('span');
                 spanId.className = 'span_item_id__cls';
                 spanId.textContent = this.itemId;
-                leftDiv.appendChild(spanStatus);
-                leftDiv.appendChild(spanId);
+                header_div1.appendChild(spanId);
     
                 const btnClear = document.createElement('button');
                 btnClear.className = 'button_blue_outline__cls';
@@ -436,9 +426,9 @@ HTML_TEMPLATE = """
                 btnClose.textContent = 'X';
                 btnClose.title = 'Close';
                 btnClose.onclick = () => itemsManager.delItem(this.itemId);
-                rightDiv.appendChild(btnClear);
-                rightDiv.appendChild(btnReconnect);
-                rightDiv.appendChild(btnClose);
+                header_div2.appendChild(btnClear);
+                header_div2.appendChild(btnReconnect);
+                header_div2.appendChild(btnClose);
     
                 // Output area
                 const output = document.createElement('main');
@@ -507,7 +497,6 @@ HTML_TEMPLATE = """
                         cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
                         cmd.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
                     });
-                    this.addHistoryLine('msg_debug__cls', '=== HISTORY ===');
                 } catch (err) {
                     this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
                 }
@@ -613,9 +602,9 @@ async def del_history(idn: str):
     # Оповещаем всех клиентов об очистке истории
     await client_manager.broadcast({
         "type": "control",
+        "item_id": idn,
         "data": {
             "subtype": "history_clear",
-            "item_id": idn
         }
     })
     return {"status": "closed"}
@@ -657,28 +646,9 @@ async def ws__ping(websocket: WebSocket):
 # ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/client")
 async def ws__client(websocket: WebSocket):
-    # client_id = str(uuid.uuid4())
-    # await websocket.accept()
-    #
-    # client_queue = asyncio.Queue()
-    # await client_manager.register_client(client_id, client_queue)
-    #
-    # # перенаправляем все события/сообщения из очереди в WebSocket
-    # try:
-    #     while True:
-    #         msg = await client_queue.get()
-    #         await websocket.send_json(msg)
-    # except asyncio.CancelledError:
-    #     pass
-    # except WebSocketDisconnect:
-    #     pass
-    # finally:
-    #     await client_manager.unregister_client(client_id)
-
-    client_id = str(uuid.uuid4())
     await websocket.accept()
 
-    client_queue = await client_manager.register_client(client_id)
+    client_id, client_queue = await client_manager.register_client()
 
     # задача перенаправления событий из очереди в WebSocket
     async def sender():
@@ -713,7 +683,6 @@ async def ws__client(websocket: WebSocket):
                     "item_id": item_id,
                     "data": {
                         "subtype": "history_clear",
-                        "item_id": item_id
                     }
                 })
 
