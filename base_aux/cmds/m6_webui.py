@@ -416,16 +416,19 @@ HTML_TEMPLATE = """
                 btnClear.textContent = 'clear';
                 btnClear.title = 'Clear History';
                 btnClear.onclick = () => this.sendDelHistory();
+                
                 const btnReconnect = document.createElement('button');
                 btnReconnect.setAttribute('data-btn_blue_outline', "");
                 btnReconnect.textContent = '🔄';
                 btnReconnect.title = 'Reconnect';
                 btnReconnect.onclick = () => this.sendReconnect();
+                
                 const btnClose = document.createElement('button');
-                btnClose.setAttrubute('data-btn_red_outline', "");
+                btnClose.setAttribute('data-btn_red_outline', "");
                 btnClose.textContent = 'X';
                 btnClose.title = 'Close';
                 btnClose.onclick = () => itemsManager.delItem(this.itemId);
+                
                 header_div2.appendChild(btnClear);
                 header_div2.appendChild(btnReconnect);
                 header_div2.appendChild(btnClose);
