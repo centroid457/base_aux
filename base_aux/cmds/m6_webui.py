@@ -273,7 +273,7 @@ HTML_TEMPLATE = """
                         const updated = stored.filter(id => id !== msg__itemid);
                         itemsManager.set_IdsClient(updated);
                         
-                    } else if (msg__subtype === "history_clear") {
+                    } else if (msg__subtype === "clear_history") {
                         const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.element_OutputBox.innerHTML = '';
@@ -455,12 +455,15 @@ HTML_TEMPLATE = """
             // ---------------------------------------------------
             sendInput() {
                 if (ws_client?.readyState === WebSocket.OPEN) {
-                    const cmd = this.element_InputBox.value.trim();
-                    if (cmd) {
+                    const io_line = this.element_InputBox.value.trim();
+                    if (io_line) {
                         ws_client.send(JSON.stringify({
-                            cmd: "send_command",
                             item_id: this.itemId,
-                            data: cmd,
+                            type: "history",
+                            data: {
+                                subtype: "stdin",  // FIXME: or just stdin/msg_stdin__cls
+                                text: io_line,
+                            }
                         }));
                         this.element_InputBox.value = '';
                     }
@@ -470,8 +473,11 @@ HTML_TEMPLATE = """
             sendReconnect() {
                 if (ws_client?.readyState === WebSocket.OPEN) {
                     ws_client.send(JSON.stringify({
-                        cmd: "reconnect",
-                        item_id: this.itemId
+                        item_id: this.itemId,
+                        type: "control",
+                        data: {
+                            subtype: "reconnect_item",
+                        },
                     }));
                 }
             }
@@ -479,8 +485,11 @@ HTML_TEMPLATE = """
             sendDelHistory() {
                 if (ws_client?.readyState === WebSocket.OPEN) {
                     ws_client.send(JSON.stringify({
-                        cmd: "clear_history",
-                        item_id: this.itemId
+                        item_id: this.itemId,
+                        type: "control",
+                        data: {
+                            subtype: "clear_history",
+                        },
                     }));
                 }
             }
@@ -491,11 +500,11 @@ HTML_TEMPLATE = """
                 try {
                     const resp = await fetch(`/item/history/get/${this.itemId}`);
                     const history = await resp.json();
-                    history.forEach(cmd => {
-                        if (cmd.input) this.addHistoryLine('msg_stdin__cls', `→ ${cmd.input}`);
-                        cmd.stdout?.forEach(l => this.addHistoryLine('msg_stdout__cls', l));
-                        cmd.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
-                        cmd.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
+                    history.forEach(log_line => {
+                        if (log_line.input) this.addHistoryLine('msg_stdin__cls', `→ ${log_line.input}`);
+                        log_line.stdout?.forEach(l => this.addHistoryLine('msg_stdout__cls', l));
+                        log_line.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
+                        log_line.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
                     });
                 } catch (err) {
                     this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
@@ -604,7 +613,7 @@ async def del_history(idn: str):
         "type": "control",
         "item_id": idn,
         "data": {
-            "subtype": "history_clear",
+            "subtype": "clear_history",
         }
     })
     return {"status": "closed"}
@@ -650,8 +659,9 @@ async def ws__client(websocket: WebSocket):
 
     client_id, client_queue = await client_manager.register_client()
 
-    # задача перенаправления событий из очереди в WebSocket
-    async def sender():
+    # --------------------------------------------
+    # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
+    async def ws_sender():
         try:
             while True:
                 msg = await client_queue.get()
@@ -659,46 +669,47 @@ async def ws__client(websocket: WebSocket):
         except asyncio.CancelledError:
             pass
 
-    send_task = asyncio.create_task(sender())
+    send_task = asyncio.create_task(ws_sender())
 
     # --------------------------------------------
+    # WS-2=READER
     try:
         while True:
-            data = await websocket.receive_json()
-            cmd = data.get("cmd")
+            msg = await websocket.receive_json()
 
-            if cmd == "send_command":   # keep here
-                item_id = data["item_id"]
-                command = data["data"]
-                item = object_manager.get_item(item_id)
-                if item:
-                    asyncio.create_task(item.send_cmd(command))
+            msg__type = msg.get("type")
+            msg__itemid = msg.get("item_id")
+            msg__data = msg.get("data")
 
-            elif cmd == "clear_history":    # FIXME: move to POST??
-                item_id = data["item_id"]
-                object_manager.clear_history(item_id)
-                # Рассылаем всем клиентам
-                await client_manager.broadcast({
-                    "type": "control",
-                    "item_id": item_id,
-                    "data": {
-                        "subtype": "history_clear",
-                    }
-                })
+            if msg__data:
+                msg__subtype = msg__data.get("subtype")
+                msg__text = msg__data.get("text")
+            else:
+                msg__subtype = None
+                msg__text = None
 
-            elif cmd == "reconnect":    # FIXME: move to POST??
-                item_id = data["item_id"]
-                item = object_manager.get_item(item_id)
-                if item:
-                    asyncio.create_task(item.reconnect())
+            # ----------------------------------------------
+            if msg__type == "history":   # keep here
 
-            elif cmd == "create_item":    # FIXME: move to POST??
-                # Создание терминала через WebSocket (альтернатива REST)
-                await object_manager.create_item()
+                item = object_manager.get_item(msg__itemid)
+                if item and msg__text:
+                    asyncio.create_task(item.send_cmd(msg__text))
 
-            elif cmd == "delete_item":    # FIXME: move to POST??
-                item_id = data["item_id"]
-                await object_manager.del_item(item_id)
+            elif msg__type == "control" and msg__data:
+                if msg__subtype == "clear_history":    # FIXME: move to POST??
+                    object_manager.clear_history(msg__itemid)
+                    await client_manager.broadcast(msg)
+
+                elif msg__subtype == "reconnect_item":    # FIXME: move to POST??
+                    item = object_manager.get_item(msg__itemid)
+                    if item:
+                        asyncio.create_task(item.reconnect())
+
+                elif msg__subtype == "create_item":    # FIXME: move to POST??
+                    await object_manager.create_item()
+
+                elif msg__subtype == "delete_item":    # FIXME: move to POST??
+                    await object_manager.del_item(msg__itemid)
 
     except WebSocketDisconnect:
         pass
