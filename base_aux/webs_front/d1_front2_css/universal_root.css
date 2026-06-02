@@ -560,33 +560,33 @@ button:active
 }
 
 button,
-.button_blue__cls,
-.button_green__cls,
-.button_red__cls,
-.button_black__cls
+[data-btn_blue],
+[data-btn_green],
+[data-btn_red],
+[data-btn_black]
 {
     color: white;
 }
 button:hover,
-.button_blue__cls:hover,
-.button_green__cls:hover,
-.button_red__cls:hover,
-.button_black__cls:hover
+[data-btn_blue]:hover,
+[data-btn_green]:hover,
+[data-btn_red]:hover,
+[data-btn_black]:hover
 {
     border-color: white;
 }
 
-.button_blue_outline__cls,
-.button_green_outline__cls,
-.button_red_outline__cls,
-.button_black_outline__cls
+[data-btn_blue_outline],
+[data-btn_green_outline],
+[data-btn_red_outline],
+[data-btn_black_outline]
 {
     background: transparent;
 }
-.button_blue_outline__cls:hover,
-.button_green_outline__cls:hover,
-.button_red_outline__cls:hover,
-.button_black_outline__cls:hover
+[data-btn_blue_outline]:hover,
+[data-btn_green_outline]:hover,
+[data-btn_red_outline]:hover,
+[data-btn_black_outline]:hover
 {
     border-color: white;
     color: white;
@@ -594,101 +594,101 @@ button:hover,
 
 /* 1=BLUE----------------------------------------- */
 button,
-.button_blue__cls
+[data-btn_blue]
 {
     background: #00fb;
 }
 button:hover,
-.button_blue__cls:hover
+[data-btn_blue]:hover
 {
     background: #00f;
 }
-.button_blue_outline__cls
+[data-btn_blue_outline]
 {
     border-color: #00f;
     color: #00f;
 }
-.button_blue_outline__cls:hover
+[data-btn_blue_outline]:hover
 {
     background: #00f;
 }
 
 /* 2=GREEN ----------------------------------------- */
-.button_green__cls
+[data-btn_green]
 {
     background: #0c0b;
 }
-.button_green__cls:hover
+[data-btn_green]:hover
 {
     background: #0c0;
 }
-.button_green_outline__cls
+[data-btn_green_outline]
 {
     border-color: #0c0;
     color: #0c0;
 }
-.button_green_outline__cls:hover
+[data-btn_green_outline]:hover
 {
     background: #0c0;
 }
 
 /* 3=RED----------------------------------------- */
-.button_red__cls
+[data-btn_red]
 {
     background: #f00b;
 }
-.button_red__cls:hover
+[data-btn_red]:hover
 {
     background: #f00;
 }
-.button_red_outline__cls
+[data-btn_red_outline]
 {
     border-color: #f00;
     color: #f00;
 }
-.button_red_outline__cls:hover
+[data-btn_red_outline]:hover
 {
     background: #f00;
 }
 
 /* 4=BLACK ----------------------------------------- */
-.button_black__cls
+[data-btn_black]
 {
     background: #000b;
 }
-.button_black__cls:hover
+[data-btn_black]:hover
 {
     background: #000;
 }
-.button_black_outline__cls
+[data-btn_black_outline]
 {
     border-color: #000;
     color: #000;
 }
-.button_black_outline__cls:hover
+[data-btn_black_outline]:hover
 {
     background: #000;
 }
 
 /* ------------------------------------------------- */
 /* 5=WHITE ----------------------------------------- */
-.button_white__cls
+[data-btn_white]
 {
     background: #fffa;
     color: black;
 }
-.button_white__cls:hover
+[data-btn_white]:hover
 {
     background: white;
     border-color: black;
 }
-.button_white_outline__cls
+[data-btn_white_outline]
 {
     background: transparent;
     border-color: white;
     color: white;
 }
-.button_white_outline__cls:hover
+[data-btn_white_outline]:hover
 {
     background: white;
     border-color: black;

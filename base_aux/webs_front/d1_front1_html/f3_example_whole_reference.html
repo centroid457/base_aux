@@ -24,8 +24,8 @@
 <body>
 
     <nav class="div_a_nav__cls" style="font-size: xx-small;">
-        <button id="collapseAllBtn" class="button_blue_outline__cls">Скрыть все</button>
-        <button id="expandAllBtn" class="button_blue_outline__cls">Раскрыть все</button>
+        <button id="collapseAllBtn" data-btn_blue_outline>Скрыть все</button>
+        <button id="expandAllBtn" data-btn_blue_outline>Раскрыть все</button>
     </nav>
 
     <header>
@@ -3731,66 +3731,66 @@
 
                         <button>button</button>
                         <p data-bg_a5>
-                            <button class="button_blue__cls">button_blue__cls</button>
-                            <button class="button_green__cls">button_green__cls</button>
-                            <button class="button_red__cls">button_red__cls</button>
-                            <button class="button_black__cls">button_black__cls</button>
-                            <button class="button_white__cls">button_white__cls</button>
+                            <button data-btn_blue>data-btn_blue</button>
+                            <button data-btn_green>data-btn_green</button>
+                            <button data-btn_red>data-btn_red</button>
+                            <button data-btn_black>data-btn_black</button>
+                            <button data-btn_white>data-btn_white</button>
                              <br>
 
-                            <button class="button_blue__cls" disabled>button_blue__cls</button>
-                            <button class="button_green__cls" disabled>button_green__cls</button>
-                            <button class="button_red__cls" disabled>button_red__cls</button>
-                            <button class="button_black__cls" disabled>button_black__cls</button>
-                            <button class="button_white__cls" disabled>button_white__cls</button>
+                            <button data-btn_blue disabled>data-btn_blue</button>
+                            <button data-btn_green disabled>data-btn_green</button>
+                            <button data-btn_red disabled>data-btn_red</button>
+                            <button data-btn_black disabled>data-btn_black</button>
+                            <button data-btn_white disabled>data-btn_white</button>
                         </p>
                         <p data-bg_a5>
-                            <button class="button_blue_outline__cls">button_blue_outline__cls</button>
-                            <button class="button_green_outline__cls">button_green_outline__cls</button>
-                            <button class="button_red_outline__cls">button_red_outline__cls</button>
-                            <button class="button_black_outline__cls">button_black_outline__cls</button>
-                            <button class="button_white_outline__cls">button_white_outline__cls</button>
+                            <button data-btn_blue_outline>data-btn_blue_outline</button>
+                            <button data-btn_green_outline>data-btn_green_outline</button>
+                            <button data-btn_red_outline>data-btn_red_outline</button>
+                            <button data-btn_black_outline>data-btn_black_outline</button>
+                            <button data-btn_white_outline>data-btn_white_outline</button>
                             <br>
 
-                            <button class="button_blue_outline__cls" disabled>button_blue_outline__cls</button>
-                            <button class="button_green_outline__cls" disabled>button_green_outline__cls</button>
-                            <button class="button_red_outline__cls" disabled>button_red_outline__cls</button>
-                            <button class="button_black_outline__cls" disabled>button_black_outline__cls</button>
-                            <button class="button_white_outline__cls" disabled>button_white_outline__cls</button>
+                            <button data-btn_blue_outline disabled>data-btn_blue_outline</button>
+                            <button data-btn_green_outline disabled>data-btn_green_outline</button>
+                            <button data-btn_red_outline disabled>data-btn_red_outline</button>
+                            <button data-btn_black_outline disabled>data-btn_black_outline</button>
+                            <button data-btn_white_outline disabled>data-btn_white_outline</button>
                         </p>
 
                         <button
                                 data-clone_element__w_attrs
-                                data-clone_element__params="class:[
-                                    button_blue__cls;
-                                    button_green__cls;
-                                    button_red__cls;
-                                    button_black__cls;
-                                    button_white__cls;
+                                data-clone_element__params=":[
+                                    data-btn_blue;
+                                    data-btn_green;
+                                    data-btn_red;
+                                    data-btn_black;
+                                    data-btn_white;
 
-                                    button_blue_outline__cls;
-                                    button_green_outline__cls;
-                                    button_red_outline__cls;
-                                    button_black_outline__cls;
-                                    button_white_outline__cls;
+                                    data-btn_blue_outline;
+                                    data-btn_green_outline;
+                                    data-btn_red_outline;
+                                    data-btn_black_outline;
+                                    data-btn_white_outline;
                                 ]"
                         >button</button>
 
                         <button
                                 disabled
                                 data-clone_element__w_attrs
-                                data-clone_element__params="class:[
-                                    button_blue__cls;
-                                    button_green__cls;
-                                    button_red__cls;
-                                    button_black__cls;
-                                    button_white__cls;
+                                data-clone_element__params=":[
+                                    data-btn_blue;
+                                    data-btn_green;
+                                    data-btn_red;
+                                    data-btn_black;
+                                    data-btn_white;
 
-                                    button_blue_outline__cls;
-                                    button_green_outline__cls;
-                                    button_red_outline__cls;
-                                    button_black_outline__cls;
-                                    button_white_outline__cls;
+                                    data-btn_blue_outline;
+                                    data-btn_green_outline;
+                                    data-btn_red_outline;
+                                    data-btn_black_outline;
+                                    data-btn_white_outline;
                                 ]"
                         >button</button>
 
@@ -5513,9 +5513,9 @@ cancelable: true – внутри обработчика можно вызват
                                 <input type="email" id="fieldEmail" name="email" placeholder="user@example.com" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
                             </div>
                             <div>
-                                <button type="submit" class="button_green__cls">✅ Отправить (submit)</button>
-                                <button type="reset" class="button_red_outline__cls" style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
-                                <button type="button" id="customButton" class="button_blue_outline__cls" style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
+                                <button type="submit" data-btn_green>✅ Отправить (submit)</button>
+                                <button type="reset" data-btn_red_outline style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
+                                <button type="button" id="customButton" data-btn_blue_outline style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
                             </div>
                             <div id="customMessage" style="margin-top: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></div>
 
@@ -6206,6 +6206,123 @@ cancelable: true – внутри обработчика можно вызват
 
             </div>
         </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="reloadId">
+            <h2 data-icon__circle_yellow>Перезагрузка страницы</h2>
+            <div class="section_main__cls grid_auto__cls" data-grid_autofit_min250>
+
+                <article class="article__cls">
+                    <header>🔁 Методы перезагрузки (JavaScript)</header>
+                    <div class="article_main__cls">
+                        <button id="reloadLocation" data-btn_blue>location.reload()</button>
+                        <button id="reloadLocationTrue" data-btn_blue_outline>location.reload(true)</button><br>
+
+                        <button id="reloadHref" data-btn_green>location.href = location.href</button>
+                        <button id="reloadReplace" data-btn_green_outline>location.replace(location.href)</button><br>
+
+                        <button id="reloadHistory" data-btn_red_outline>history.go(0)</button>
+                        <button id="reloadForce" data-btn_red>Принудительная (с параметром _t)</button>
+
+                        <div id="reloadLog">
+                            ⚠️ Нажмите на любую кнопку – страница перезагрузится.
+                        </div>
+                    </div>
+                    <footer>
+                        💡 <strong>Способы перезагрузки:</strong><br>
+                        <code>location.reload()</code> – обычная перезагрузка (с учётом кеша).<br>
+                        <code>location.reload(true)</code> – принудительная (без кеша, но параметр устарел).<br>
+
+                        <code>location.href = location.href</code> – альтернатива, может не сработать в некоторых браузерах.<br>
+                        <code>location.replace(location.href)</code> – перезагрузка без добавления записи в историю.<br>
+
+                        <code>history.go(0)</code> – имитирует нажатие кнопки "Обновить".<br>
+                        <code>принудительная (с параметром)</code> – добавляет <code>?_t=timestamp</code>, всегда загружает с сервера.
+
+                    </footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>⚙️ Дополнительные методы</header>
+                    <div class="article_main__cls">
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <button id="reloadMetaExample" data-btn_black_outline>meta refresh (демо)</button>
+                            <button id="reloadWithDelay" data-btn_black>Отложенная перезагрузка (3 сек)</button>
+                        </div>
+                        <div id="reloadExtrasLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+                            Здесь будет информация.
+                        </div>
+                        <p><small>Кнопка "meta refresh" показывает, как работает тег, но не применяет его. Отложенная перезагрузка – пример использования <code>setTimeout</code>.</small></p>
+                    </div>
+                    <footer>
+                        📌 HTML-мета-тег: <code>&lt;meta http-equiv="refresh" content="5"&gt;</code> – обновляет страницу через указанное количество секунд.<br>
+                        ⏱️ Отложенную перезагрузку можно сделать с <code>setTimeout(() => location.reload(), 3000)</code>.
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <script>
+            (function() {
+                // Функция для логирования перед перезагрузкой (чтобы увидеть, что нажали)
+                function logAndReload(message, reloadFn) {
+                    const logDiv = document.getElementById('reloadLog');
+                    if (logDiv) {
+                        logDiv.innerHTML = `🔄 ${message} – страница будет перезагружена...`;
+                    }
+                    setTimeout(reloadFn, 50);
+                }
+
+                // Кнопки основной секции
+                const btn1 = document.getElementById('reloadLocation');
+                const btn2 = document.getElementById('reloadLocationTrue');
+                const btn3 = document.getElementById('reloadHref');
+                const btn4 = document.getElementById('reloadReplace');
+                const btn5 = document.getElementById('reloadHistory');
+                const btn6 = document.getElementById('reloadForce');
+
+                if (btn1) btn1.addEventListener('click', () => logAndReload('location.reload()', () => location.reload()));
+                if (btn2) btn2.addEventListener('click', () => logAndReload('location.reload(true)', () => location.reload(true)));
+                if (btn3) btn3.addEventListener('click', () => logAndReload('location.href = location.href', () => { location.href = location.href; }));
+                if (btn4) btn4.addEventListener('click', () => logAndReload('location.replace(location.href)', () => location.replace(location.href)));
+                if (btn5) btn5.addEventListener('click', () => logAndReload('history.go(0)', () => history.go(0)));
+                if (btn6) btn6.addEventListener('click', () => {
+                    logAndReload('Принудительная перезагрузка (с параметром _t)', () => {
+                        const url = new URL(location.href);
+                        url.searchParams.set('_t', Date.now());
+                        location.href = url.toString();
+                    });
+                });
+
+                // Дополнительная секция
+                const metaBtn = document.getElementById('reloadMetaExample');
+                const delayBtn = document.getElementById('reloadWithDelay');
+                const extrasLog = document.getElementById('reloadExtrasLog');
+
+                if (metaBtn) {
+                    metaBtn.addEventListener('click', () => {
+                        if (extrasLog) extrasLog.innerHTML = '⏸️ Демонстрация: <code>&lt;meta http-equiv="refresh" content="5"&gt;</code> перезагрузит страницу через 5 секунд. (Не применяется, просто информация)';
+                        else alert('Пример мета-тега: <meta http-equiv="refresh" content="5">');
+                    });
+                }
+                if (delayBtn) {
+                    delayBtn.addEventListener('click', () => {
+                        if (extrasLog) extrasLog.innerHTML = '⏳ Перезагрузка через 3 секунды... (нажмите "Остановить", если передумали)';
+                        const timeoutId = setTimeout(() => location.reload(), 3000);
+                        const stopBtn = document.createElement('button');
+                        stopBtn.textContent = 'Остановить';
+                        stopBtn.style.marginLeft = '0.5rem';
+                        stopBtn.onclick = () => {
+                            clearTimeout(timeoutId);
+                            extrasLog.innerHTML = '❌ Отложенная перезагрузка отменена.';
+                            stopBtn.remove();
+                        };
+                        extrasLog.appendChild(stopBtn);
+                    });
+                }
+            })();
+        </script>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="positionId" data-collapsed_not>
