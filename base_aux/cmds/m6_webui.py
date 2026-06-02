@@ -5,6 +5,7 @@ from datetime import datetime
 from enum import Enum
 from dataclasses import dataclass, field
 import uuid
+import json
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
@@ -567,6 +568,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="WebTerminal", lifespan=lifespan)
 app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
 
+# Уникальный идентификатор сервера: можно использовать время запуска
+server_id = str(int(asyncio.get_event_loop().time()))
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/", response_class=HTMLResponse)
@@ -647,10 +650,15 @@ async def get_history(idn: str):
 @app.websocket("/ws/ping")
 async def ws__ping(websocket: WebSocket):
     await websocket.accept()
+
+    # При подключении отправляем клиенту идентификатор сервера
+    await websocket.send_text(json.dumps({"type": "server-id", "id": server_id}))
+
     try:
         # Держим соединение открытым, игнорируем входящие сообщения
         while True:
             await websocket.receive_text()
+
     except WebSocketDisconnect:
         pass
 

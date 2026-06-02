@@ -88,6 +88,8 @@ function onload__ws_ping() {
     let ws_ping = null;
     let timer__ping_reconnect = null;   // object used reconnection
 
+    let currentServerId = null;
+
     function ws_ping__init() {
         // Уже открыт или пытается открыться? → выходим
         if (ws_ping && (ws_ping.readyState === WebSocket.OPEN || ws_ping.readyState === WebSocket.CONNECTING)) {
@@ -142,6 +144,27 @@ function onload__ws_ping() {
             }
 
             ws_ping.close();   // инициируем закрытие, вызовется onclose
+        };
+
+        ws_ping.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'server-id') {
+                    const newServerId = data.id;
+                    if (currentServerId === null) {
+                        // Первое подключение, сохраняем ID
+                        currentServerId = newServerId;
+                        console.log(`[ws_ping.onmessage]ServerId=${currentServerId}`);
+                    } else if (currentServerId !== newServerId) {
+                        // ID не совпадает, значит сервер был перезапущен и возможны изменения
+                        console.warn(`[ws_ping.onmessage]🟡ServerId changed=(currentServerId=${currentServerId}/newServerId=${newServerId})`);
+                        console.warn("[ws_ping.onmessage]🟡reload");
+                        location.reload();
+                    }
+                }
+            } catch (error) {
+                console.warn('[ws_ping.onmessage]🟡Ошибка при обработке сообщения:', error);
+            }
         };
     }
 
@@ -1011,7 +1034,7 @@ OnLoadRunner.add(onload__sections_collapse_init);
 function generateColorPalette(containerId, divisions, showHexValue = false, outputId = null) {
     const container = document.getElementById(containerId);
     if (!container) {
-        console.error(`Элемент с id "${containerId}" не найден`);
+        console.log(`Элемент с id "${containerId}" не найден`);
         return;
     }
 
