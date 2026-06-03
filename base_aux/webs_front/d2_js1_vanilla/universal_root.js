@@ -67,6 +67,13 @@ OnLoadRunner.add(onload__bg_color);
 
 
 // =====================================================================================================================
+function page_reload_force(msg) {
+    console.warn("[page_reload_force]🟡", msg);
+    location.reload();    // TODO: if not enough - try next!
+//    history.go(0);
+}
+
+
 function onload__ws_ping() {
     // Настройки
     const ATTR_NAME__PING_MONITOR = 'data-auto__ping_lost';
@@ -154,16 +161,16 @@ function onload__ws_ping() {
                     if (currentServerId === null) {
                         // Первое подключение, сохраняем ID
                         currentServerId = newServerId;
-                        console.log(`[ws_ping.onmessage]ServerId=${currentServerId}`);
+                        console.log(`[ws_ping.onmessage]ServerId NEW=${currentServerId}`);
                     } else if (currentServerId !== newServerId) {
                         // ID не совпадает, значит сервер был перезапущен и возможны изменения
                         console.warn(`[ws_ping.onmessage]🟡ServerId changed=(currentServerId=${currentServerId}/newServerId=${newServerId})`);
-                        console.warn("[ws_ping.onmessage]🟡reload");
-                        location.reload();
+                        page_reload_force("ServerId changed");
                     }
                 }
             } catch (error) {
                 console.warn('[ws_ping.onmessage]🟡Ошибка при обработке сообщения:', error);
+                page_reload_force("ServerId check error");
             }
         };
     }

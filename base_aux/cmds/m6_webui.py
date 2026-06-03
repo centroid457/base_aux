@@ -5,7 +5,6 @@ from datetime import datetime
 from enum import Enum
 from dataclasses import dataclass, field
 import uuid
-import json
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
@@ -607,15 +606,6 @@ async def list_items():
     ids = list(object_manager.items)
     return {"items": ids}
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-@app.get("/item/{idn}")
-async def get_item(idn: str):
-    if idn in object_manager.items:
-        return {"idn": idn, }
-    raise HTTPException(status_code=404, detail=f"[{idn=}]Item not found")
-
-
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/item/history/get/{idn}")
 async def get_history(idn: str):
@@ -644,7 +634,7 @@ async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
     # При подключении отправляем клиенту идентификатор сервера
-    await websocket.send_text(json.dumps({"type": "server_id", "id": server_id}))
+    await websocket.send_json({"type": "server_id", "id": server_id})
 
     try:
         # Держим соединение открытым, игнорируем входящие сообщения
@@ -698,7 +688,7 @@ async def ws__client(websocket: WebSocket):
                 if item and msg__text:
                     asyncio.create_task(item.send_cmd(msg__text))
 
-            elif msg__type == "item_control" and msg__data:     # FIXME: move to POST??
+            elif msg__type == "item_control" and msg__data:
                 if msg__subtype == "clear_history":
                     asyncio.create_task(object_manager.clear_history(msg__itemid))
 
@@ -707,10 +697,10 @@ async def ws__client(websocket: WebSocket):
                     asyncio.create_task(item.reconnect())
 
                 elif msg__subtype == "create_item":
-                    await object_manager.create_item()
+                    asyncio.create_task(object_manager.create_item())
 
                 elif msg__subtype == "delete_item":
-                    await object_manager.del_item(msg__itemid)
+                    asyncio.create_task(object_manager.del_item(msg__itemid))
 
         # --------------------------------------------
     except WebSocketDisconnect:
