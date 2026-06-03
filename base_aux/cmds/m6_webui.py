@@ -381,11 +381,26 @@ HTML_TEMPLATE = """
     
             // ---------------------------------------------------
             async createNewItem() {
-                await fetch('/item/create', { method: 'POST' });
+                if (ws_client?.readyState !== WebSocket.OPEN) return;
+
+                ws_client.send(JSON.stringify({
+                    type: "item_control",
+                    data: {
+                        subtype: "create_item",
+                    },
+                }));
             },
     
             async delItem(itemId) {
-                await fetch(`/item/del/${itemId}`, { method: 'DELETE' });
+                if (ws_client?.readyState !== WebSocket.OPEN) return;
+
+                ws_client.send(JSON.stringify({
+                    item_id: itemId,
+                    type: "item_control",
+                    data: {
+                        subtype: "delete_item",
+                    },
+                }));
             }
         };
 
@@ -580,6 +595,7 @@ app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
 # Уникальный идентификатор сервера: можно использовать время запуска
 server_id = str(int(asyncio.get_event_loop().time()))
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/", response_class=HTMLResponse)
 async def html__root():
@@ -593,18 +609,6 @@ async def list_items():
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.post("/item/create")
-async def create_item():
-    idn = await object_manager.create_item()
-    return {"idn": idn}
-
-
-@app.delete("/item/del/{idn}")
-async def del_item(idn: str):
-    await object_manager.del_item(idn)
-    return {"status": "closed"}
-
-
 @app.get("/item/{idn}")
 async def get_item(idn: str):
     if idn in object_manager.items:
