@@ -467,44 +467,44 @@ HTML_TEMPLATE = """
     
             // ---------------------------------------------------
             sendInput() {
-                if (ws_client?.readyState === WebSocket.OPEN) {
-                    const io_line = this.element_InputBox.value.trim();
-                    if (io_line) {
-                        ws_client.send(JSON.stringify({
-                            item_id: this.itemId,
-                            type: "history_log",
-                            data: {
-                                subtype: "stdin",  // FIXME: or just stdin/msg_stdin__cls
-                                text: io_line,
-                            }
-                        }));
-                        this.element_InputBox.value = '';
-                    }
+                if (ws_client?.readyState !== WebSocket.OPEN) return;
+                
+                const io_line = this.element_InputBox.value.trim();
+                if (io_line) {
+                    ws_client.send(JSON.stringify({
+                        item_id: this.itemId,
+                        type: "history_log",
+                        data: {
+                            subtype: "stdin",  // FIXME: or just stdin/msg_stdin__cls
+                            text: io_line,
+                        }
+                    }));
+                    this.element_InputBox.value = '';
                 }
             }
             
             sendReconnect() {
-                if (ws_client?.readyState === WebSocket.OPEN) {
-                    ws_client.send(JSON.stringify({
-                        item_id: this.itemId,
-                        type: "item_control",
-                        data: {
-                            subtype: "reconnect_item",
-                        },
-                    }));
-                }
+                if (ws_client?.readyState !== WebSocket.OPEN) return;
+                
+                ws_client.send(JSON.stringify({
+                    item_id: this.itemId,
+                    type: "item_control",
+                    data: {
+                        subtype: "reconnect_item",
+                    },
+                }));
             }
     
             sendDelHistory() {
-                if (ws_client?.readyState === WebSocket.OPEN) {
-                    ws_client.send(JSON.stringify({
-                        item_id: this.itemId,
-                        type: "item_control",
-                        data: {
-                            subtype: "clear_history",
-                        },
-                    }));
-                }
+                if (ws_client?.readyState !== WebSocket.OPEN) return;
+
+                ws_client.send(JSON.stringify({
+                    item_id: this.itemId,
+                    type: "item_control",
+                    data: {
+                        subtype: "clear_history",
+                    },
+                }));
             }
     
             // ---------------------------------------------------
@@ -594,15 +594,8 @@ async def list_items():
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.post("/item/create")
-async def create_item(idn: str = None):
-    # print(f"{idn=}")
-    # if idn is not None:
-    #     idn = await object_manager.create_item(idn=idn)
-    # else:
-    #     idn = await object_manager.create_item()
-
+async def create_item():
     idn = await object_manager.create_item()
-
     return {"idn": idn}
 
 
@@ -620,12 +613,6 @@ async def get_item(idn: str):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.delete("/item/history/del/{idn}")
-async def del_history(idn: str):
-    await object_manager.clear_history(idn)
-    return {"status": "closed"}
-
-
 @app.get("/item/history/get/{idn}")
 async def get_history(idn: str):
     item = object_manager.get_item(idn)
@@ -653,7 +640,7 @@ async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
     # При подключении отправляем клиенту идентификатор сервера
-    await websocket.send_text(json.dumps({"type": "server-id", "id": server_id}))
+    await websocket.send_text(json.dumps({"type": "server_id", "id": server_id}))
 
     try:
         # Держим соединение открытым, игнорируем входящие сообщения

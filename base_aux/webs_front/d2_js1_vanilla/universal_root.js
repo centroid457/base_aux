@@ -149,7 +149,7 @@ function onload__ws_ping() {
         ws_ping.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data.type === 'server-id') {
+                if (data.type === 'server_id') {
                     const newServerId = data.id;
                     if (currentServerId === null) {
                         // Первое подключение, сохраняем ID
