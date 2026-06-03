@@ -106,7 +106,7 @@ class InstManager:
             "item_id": item_id,
             "type": "item_control",
             "data": {
-                "subtype": "create",
+                "subtype": "create_item",
             }
         })
         return item_id
@@ -124,7 +124,7 @@ class InstManager:
                 "item_id": idn,
                 "type": "item_control",
                 "data": {
-                    "subtype": "delete",
+                    "subtype": "delete_item",
                 }
             })
 
@@ -262,7 +262,7 @@ HTML_TEMPLATE = """
                     
                 } else if (msg__type === "item_control") {
                 
-                    if (msg__subtype === "create") {
+                    if (msg__subtype === "create_item") {
                         const stored = itemsManager.get_IdsClient();
                         if (!stored.includes(msg__itemid)) {
                             stored.push(msg__itemid);
@@ -272,7 +272,7 @@ HTML_TEMPLATE = """
                             itemsManager.addItemElement(msg__itemid);
                         }
                         
-                    } else if (msg__subtype === "delete") {
+                    } else if (msg__subtype === "delete_item") {
                         const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.destroy();
