@@ -4582,8 +4582,8 @@ cancelable: true – внутри обработчика можно вызват
         </section>
 
         <!-- ====================================================================================================== -->
-        <section class="section__cls" id="reactId">
-            <h2 data-icon__circle_yellow>REACT=Псевдоклассы (динамика) и псевдоэлементы</h2>
+        <section class="section__cls" id="pseudo1Id">
+            <h2 data-icon__circle_yellow>PseudoCls-1=DYNAMIC=Псевдоклассы (динамика) и псевдоэлементы</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <style>
@@ -4626,7 +4626,7 @@ cancelable: true – внутри обработчика можно вызват
                     <div class="article_main__cls">
 
                         <hr>
-                        <input type="text" placeholder="простой (для старта отсчета)">
+                        <input type="text" placeholder="BASE">
 
                         <hr>
                         FOCUS
@@ -4638,30 +4638,16 @@ cancelable: true – внутри обработчика можно вызват
                     </div>
                     <footer>
                         ПО ФАКТУ ВСЕ ОДИНАКОВО!!!!<br>
-                        Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний.<br>
+                        Рекомендуют использовать <code>:focus-visible</code> вместо <code>:focus</code> – меньше ложных срабатываний. НО ПОЧЕМУ НЕ ПОНЯТНО<br>
                         <code>:focus-visible</code> показывает стиль только при фокусе с клавиатуры (Tab). Мышь не вызывает.<br>
                     </footer>
-                </article>
-
-                <!-- :target – якорная прокрутка -->
-                <article class="article__cls">
-                    <header>:target – активный якорь (URL #id)</header>
-                    <div class="article_main__cls">
-
-                        <div class="target-demo" id="targetBlock">
-                            Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
-                        </div>
-                        <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
-                        <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
-
-                    </div>
-                    <footer>Полезно для выделения раздела, на который только что перешли.</footer>
                 </article>
 
                 <!-- :checked и :disabled (стилизация чекбоксов через соседей) -->
                 <article class="article__cls">
                     <header>:checked/disabled – состояния элементов форм</header>
                     <div class="article_main__cls">
+
                         <style>
                             .check-demo {
                                 display: flex;
@@ -4673,6 +4659,7 @@ cancelable: true – внутри обработчика можно вызват
                                 align-items: center;
                                 gap: 0.3rem;
                             }
+
                             /* Стилизация через соседний элемент (не кастомный чекбокс) */
                             .check-demo input {
                                 accent-color: #2a73ff;
@@ -4681,6 +4668,8 @@ cancelable: true – внутри обработчика можно вызват
                                 opacity: 0.6;
                                 cursor: not-allowed;
                             }
+
+
                             .custom-check {
                                 position: relative;
                             }
@@ -4702,7 +4691,7 @@ cancelable: true – внутри обработчика можно вызват
                                 position: relative;
                             }
                             .custom-check input:checked + span::after {
-                                content: "✓";
+                                content: "821";
                                 position: absolute;
                                 top: 0;
                                 left: 2px;
@@ -4710,6 +4699,10 @@ cancelable: true – внутри обработчика можно вызват
                                 font-size: 0.9rem;
                             }
                         </style>
+
+                        <div data-cover__border_bg><input type="checkbox" checked style="width: 30px"></div>
+
+                        <hr>
                         <div class="check-demo">
                             <label><input type="checkbox" checked> :checked</label>
                             <label><input type="checkbox" disabled> :disabled</label>
@@ -4718,10 +4711,40 @@ cancelable: true – внутри обработчика можно вызват
                                 <span></span> кастомный чекбокс (через :checked + span)
                             </label>
                         </div>
-                        <p><small><code>:checked</code> управляет стилями выбранных чекбоксов/радио, <code>:disabled</code> – для недоступных полей.</small></p>
+                        <p><code>:checked</code> управляет стилями выбранных чекбоксов/радио</p>
                     </div>
-                    <footer>Позволяют менять внешний вид без JavaScript, используя соседние селекторы (<code>+</code> или <code>~</code>).</footer>
+                    <footer>
+                        Позволяют менять внешний вид без JavaScript, используя соседние селекторы (<code>+</code> или <code>~</code>).
+                    </footer>
                 </article>
+
+                <!-- :target – якорная прокрутка -->
+                <article class="article__cls">
+                    <header>:target – активный якорь (URL #id)</header>
+                    <div class="article_main__cls">
+
+                        <div class="target-demo" id="targetBlock">
+                            Этот блок подсветится, если перейти по ссылке <code>#targetBlock</code>.
+                        </div>
+                        <a href="#targetBlock">Перейти к блоку (:target)</a> | <a href="#">Очистить</a>
+                        <p><small>Псевдокласс <code>:target</code> срабатывает на элемент, чей id совпадает с хешем URL.</small></p>
+
+                    </div>
+                    <footer>Полезно для выделения раздела, на который только что перешли.</footer>
+                </article>
+
+            </div>
+
+            <p>
+                Всегда проверяйте порядок псевдоклассов в CSS: <code>:link – :visited – :hover – :active</code> (LVHA).
+            </p>
+
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="pseudo2Id">
+            <h2 data-icon__circle_green>PseudoCls-2=STATIC</h2>
+            <div class="section_main__cls" data-grid_autofit_min250>
 
                 <!-- ::before / ::after – псевдоэлементы (уже были, но выделим отдельно) -->
                 <article class="article__cls">
@@ -4785,11 +4808,13 @@ cancelable: true – внутри обработчика можно вызват
                         </div>
 
                     </div>
+
                     <footer>
                         1=Псевдоэлементы создают «виртуальные» дочерние элементы, не присутствующие в DOM.<br>
                         2=НЕЛЬЗЯ ВЫДЕЛИТЬ МЫШЬЮ!!!<br>
                         Используйте для иконок, декоративных линий, кавычек, кастомных маркеров списков.<br>
                     </footer>
+
                 </article>
 
                 <!-- :empty – стилизация пустых элементов -->
@@ -4823,17 +4848,12 @@ cancelable: true – внутри обработчика можно вызват
                         <div class="demo_empty__cls"><span></span></div> - only spanTag blank<br>
                         <div class="demo_empty__cls"><div></div></div> - only divTag blank<br>
 
-                        <p><small>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов).</small></p>
+                        <p>Стилизация для элементов, у которых нет дочерних узлов (текста или тегов)</p>
 
                     </div>
                     <footer>Полезно для сообщений «Нет данных», для динамических виджетов.</footer>
                 </article>
 
-            </div>
-            <div class="section_main__cls">
-                <div class="demo-note">
-                    💡 <strong>Совет:</strong> всегда проверяйте порядок псевдоклассов в CSS: <code>:link – :visited – :hover – :active</code> (LVHA). Для фокуса лучше <code>:focus-visible</code> вместо <code>:focus</code>.
-                </div>
             </div>
         </section>
 
