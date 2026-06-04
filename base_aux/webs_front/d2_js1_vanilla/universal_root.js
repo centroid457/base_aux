@@ -69,8 +69,8 @@ OnLoadRunner.add(onload__bg_color);
 // =====================================================================================================================
 function page_reload_force(msg) {
     console.warn("[page_reload_force]🟡", msg);
-//    location.reload();    // TODO: if not enough - try next! NOT ENOUGH!!!
-    history.go(0);
+    location.reload();
+//    history.go(0);
 }
 
 
@@ -156,15 +156,16 @@ function onload__ws_ping() {
         ws_ping.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data.type === 'server_id') {
+                if (data.event === 'server_id') {
                     const newServerId = data.id;
+                    console.log(`[ws_ping.onmessage.server_id](currentServerId=${currentServerId}/newServerId=${newServerId})`);
                     if (currentServerId === null) {
                         // Первое подключение, сохраняем ID
                         currentServerId = newServerId;
-                        console.log(`[ws_ping.onmessage]ServerId NEW=${currentServerId}`);
+                        console.log(`[ws_ping.onmessage.server_id]NEW=${currentServerId}`);
                     } else if (currentServerId !== newServerId) {
                         // ID не совпадает, значит сервер был перезапущен и возможны изменения
-                        console.warn(`[ws_ping.onmessage]🟡ServerId changed=(currentServerId=${currentServerId}/newServerId=${newServerId})`);
+                        console.warn(`[ws_ping.onmessage.server_id]🟡changed=(currentServerId=${currentServerId}/newServerId=${newServerId})`);
                         page_reload_force("ServerId changed");
                     }
                 }
