@@ -69,8 +69,8 @@ OnLoadRunner.add(onload__bg_color);
 // =====================================================================================================================
 function page_reload_force(msg) {
     console.warn("[page_reload_force]🟡", msg);
-    location.reload();    // TODO: if not enough - try next!
-//    history.go(0);
+//    location.reload();    // TODO: if not enough - try next! NOT ENOUGH!!!
+    history.go(0);
 }
 
 

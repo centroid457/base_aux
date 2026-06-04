@@ -58,10 +58,10 @@ class InstManager:
 
         item.history.clear()
         await client_manager.broadcast({
-            "item_id": idn,
-            "type": "item_control",
-            "data": {
-                "subtype": "clear_history",
+            "item_id": idn,                 # FILTER
+            "event": "item_control",        # EVENT
+            "load": {                           # LOAD
+                "action": "clear_history",     # ACTION
             }
         })
 
@@ -75,22 +75,22 @@ class InstManager:
 
         # Глобальный слушатель – отправляет все события терминала всем клиентам
         def global_listener(msg_style, msg_text):
-            # Преобразуем в единый формат: (item_id, type, data)
+            # Преобразуем в единый формат: (item_id, event, load)
             # msg_style может быть 'msg_stdout__cls', 'msg_stderr__cls', 'msg_stdin__cls', 'msg_system__cls' и т.д.
-            # Определяем subtype
-            subtype_map = {
+            # Определяем action
+            action_map = {
                 'msg_stdout__cls': 'stdout',
                 'msg_stderr__cls': 'stderr',
                 'msg_stdin__cls': 'stdin',
                 'msg_system__cls': 'system',
                 'msg_debug__cls': 'debug',
             }
-            subtype = subtype_map.get(msg_style, 'unknown')
+            action = action_map.get(msg_style, 'unknown')
             asyncio.create_task(client_manager.broadcast({
                 "item_id": item_id,
-                "type": "history_log",
-                "data": {
-                    "subtype": subtype,
+                "event": "history_log",
+                "load": {
+                    "action": action,
                     "text": msg_text
                 }
             }))
@@ -104,9 +104,9 @@ class InstManager:
         # Оповещаем всех клиентов о создании нового терминала
         await client_manager.broadcast({
             "item_id": item_id,
-            "type": "item_control",
-            "data": {
-                "subtype": "create_item",
+            "event": "item_control",
+            "load": {
+                "action": "create_item",
             }
         })
         return item_id
@@ -122,9 +122,9 @@ class InstManager:
             # Оповещаем всех клиентов об удалении
             await client_manager.broadcast({
                 "item_id": idn,
-                "type": "item_control",
-                "data": {
-                    "subtype": "delete_item",
+                "event": "item_control",
+                "load": {
+                    "action": "delete_item",
                 }
             })
 
@@ -242,27 +242,27 @@ HTML_TEMPLATE = """
                 const msg = JSON.parse(e.data);
                 
                 const msg__itemid = msg.item_id;
-                const msg__type = msg.type;
-                const msg__data = msg.data;
+                const msg__event = msg.event;
+                const msg__data = msg.load;
                 
-                const msg__subtype = msg__data?.subtype;
+                const msg__action = msg__data?.action;
                 const msg__text = msg__data?.text;
                 
-                if (msg__type === "history_log") {
+                if (msg__event === "history_log") {
                     const ui = itemsManager.items_map.get(msg__itemid);
                     if (ui) {
                         let style = '';
-                        if (msg__subtype === 'stdout') style = 'msg_stdout__cls';
-                        else if (msg__subtype === 'stderr') style = 'msg_stderr__cls';
-                        else if (msg__subtype === 'stdin') style = 'msg_stdin__cls';
-                        else if (msg__subtype === 'system') style = 'msg_system__cls';
+                        if (msg__action === 'stdout') style = 'msg_stdout__cls';
+                        else if (msg__action === 'stderr') style = 'msg_stderr__cls';
+                        else if (msg__action === 'stdin') style = 'msg_stdin__cls';
+                        else if (msg__action === 'system') style = 'msg_system__cls';
                         else style = 'msg_debug__cls';
                         ui.addHistoryLine(style, msg__text);
                     }
                     
-                } else if (msg__type === "item_control") {
+                } else if (msg__event === "item_control") {
                 
-                    if (msg__subtype === "create_item") {
+                    if (msg__action === "create_item") {
                         const stored = itemsManager.get_IdsClient();
                         if (!stored.includes(msg__itemid)) {
                             stored.push(msg__itemid);
@@ -272,7 +272,7 @@ HTML_TEMPLATE = """
                             itemsManager.addItemElement(msg__itemid);
                         }
                         
-                    } else if (msg__subtype === "delete_item") {
+                    } else if (msg__action === "delete_item") {
                         const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.destroy();
@@ -282,14 +282,14 @@ HTML_TEMPLATE = """
                         const updated = stored.filter(id => id !== msg__itemid);
                         itemsManager.set_IdsClient(updated);
                         
-                    } else if (msg__subtype === "clear_history") {
+                    } else if (msg__action === "clear_history") {
                         const ui = itemsManager.items_map.get(msg__itemid);
                         if (ui) {
                             ui.element_OutputBox.innerHTML = '';
                         }
                     }
                     
-                } else if (msg__type === "system") {
+                } else if (msg__event === "system") {
                     console.log(msg__text);
                 }
             };
@@ -383,9 +383,9 @@ HTML_TEMPLATE = """
                 if (ws_client?.readyState !== WebSocket.OPEN) return;
 
                 ws_client.send(JSON.stringify({
-                    type: "item_control",
-                    data: {
-                        subtype: "create_item",
+                    event: "item_control",
+                    load: {
+                        action: "create_item",
                     },
                 }));
             },
@@ -395,9 +395,9 @@ HTML_TEMPLATE = """
 
                 ws_client.send(JSON.stringify({
                     item_id: itemId,
-                    type: "item_control",
-                    data: {
-                        subtype: "delete_item",
+                    event: "item_control",
+                    load: {
+                        action: "delete_item",
                     },
                 }));
             }
@@ -487,9 +487,9 @@ HTML_TEMPLATE = """
                 if (io_line) {
                     ws_client.send(JSON.stringify({
                         item_id: this.itemId,
-                        type: "history_log",
-                        data: {
-                            subtype: "stdin",  // FIXME: or just stdin/msg_stdin__cls
+                        event: "history_log",
+                        load: {
+                            action: "stdin",  // FIXME: or just stdin/msg_stdin__cls
                             text: io_line,
                         }
                     }));
@@ -502,9 +502,9 @@ HTML_TEMPLATE = """
                 
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
-                    type: "item_control",
-                    data: {
-                        subtype: "reconnect_item",
+                    event: "item_control",
+                    load: {
+                        action: "reconnect_item",
                     },
                 }));
             }
@@ -514,9 +514,9 @@ HTML_TEMPLATE = """
 
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
-                    type: "item_control",
-                    data: {
-                        subtype: "clear_history",
+                    event: "item_control",
+                    load: {
+                        action: "clear_history",
                     },
                 }));
             }
@@ -634,7 +634,7 @@ async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
     # При подключении отправляем клиенту идентификатор сервера
-    await websocket.send_json({"type": "server_id", "id": server_id})
+    await websocket.send_json({"event": "server_id", "id": server_id})
 
     try:
         # Держим соединение открытым, игнорируем входящие сообщения
@@ -670,36 +670,36 @@ async def ws__client(websocket: WebSocket):
         while True:
             msg = await websocket.receive_json()
 
-            msg__type = msg.get("type")
+            msg__event = msg.get("event")
             msg__itemid = msg.get("item_id")
-            msg__data = msg.get("data")
+            msg__data = msg.get("load")
 
             if msg__data:
-                msg__subtype = msg__data.get("subtype")
+                msg__action = msg__data.get("action")
                 msg__text = msg__data.get("text")
             else:
-                msg__subtype = None
+                msg__action = None
                 msg__text = None
 
             # ----------------------------------------------
-            if msg__type == "history_log":   # keep here
+            if msg__event == "history_log":   # keep here
 
                 item = object_manager.get_item(msg__itemid)
                 if item and msg__text:
                     asyncio.create_task(item.send_cmd(msg__text))
 
-            elif msg__type == "item_control" and msg__data:
-                if msg__subtype == "clear_history":
+            elif msg__event == "item_control" and msg__data:
+                if msg__action == "clear_history":
                     asyncio.create_task(object_manager.clear_history(msg__itemid))
 
-                elif msg__subtype == "reconnect_item":
+                elif msg__action == "reconnect_item":
                     item = object_manager.get_item(msg__itemid)
                     asyncio.create_task(item.reconnect())
 
-                elif msg__subtype == "create_item":
+                elif msg__action == "create_item":
                     asyncio.create_task(object_manager.create_item())
 
-                elif msg__subtype == "delete_item":
+                elif msg__action == "delete_item":
                     asyncio.create_task(object_manager.del_item(msg__itemid))
 
         # --------------------------------------------
