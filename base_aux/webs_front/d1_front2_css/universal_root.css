@@ -567,6 +567,7 @@ button:active
     transform: scale(0.9);
 }
 
+/* 0=ALL DARK----------------------------------------- */
 button,
 [data-btn_blue],
 [data-btn_green],
@@ -579,6 +580,7 @@ button:hover,
 [data-btn_blue]:hover,
 [data-btn_green]:hover,
 [data-btn_red]:hover,
+[data-btn_yellow]:hover,
 [data-btn_black]:hover
 {
     border-color: white;
@@ -587,6 +589,7 @@ button:hover,
 [data-btn_blue_outline],
 [data-btn_green_outline],
 [data-btn_red_outline],
+[data-btn_yellow_outline],
 [data-btn_black_outline]
 {
     background: transparent;
@@ -594,6 +597,7 @@ button:hover,
 [data-btn_blue_outline]:hover,
 [data-btn_green_outline]:hover,
 [data-btn_red_outline]:hover,
+[data-btn_yellow_outline]:hover,
 [data-btn_black_outline]:hover
 {
     border-color: white;
@@ -678,29 +682,66 @@ button:hover,
     background: #000;
 }
 
-/* ------------------------------------------------- */
-/* 5=WHITE ----------------------------------------- */
+/* 0=ALL LIGHT ----------------------------------------- */
+[data-btn_white],
+[data-btn_yellow]
+{
+    color: black;
+}
+[data-btn_white]:hover,
+[data-btn_yellow]:hover
+{
+    border-color: black;
+}
+
+[data-btn_white_outline],
+[data-btn_yellow_outline]
+{
+    background: transparent;
+}
+[data-btn_white_outline]:hover,
+[data-btn_yellow_outline]:hover
+{
+    border-color: black;
+    color: black;
+}
+
+/* 1=WHITE ----------------------------------------- */
 [data-btn_white]
 {
-    background: #fffa;
-    color: black;
+    background: #fffa;  /* A opacity for light colors!!! */
 }
 [data-btn_white]:hover
 {
     background: white;
-    border-color: black;
 }
 [data-btn_white_outline]
 {
-    background: transparent;
     border-color: white;
     color: white;
 }
 [data-btn_white_outline]:hover
 {
     background: white;
-    border-color: black;
-    color: black;
+}
+
+/* 2=YELLOW ----------------------------------------- */
+[data-btn_yellow]
+{
+    background: #ff0a;
+}
+[data-btn_yellow]:hover
+{
+    background: #ff0;
+}
+[data-btn_yellow_outline]
+{
+    border-color: #ff0;
+    color: #ff0;
+}
+[data-btn_yellow_outline]:hover
+{
+    background: #ff0;
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */

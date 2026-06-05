@@ -126,7 +126,7 @@ function onload__replace_with__btn_hard_reset() {
     btn.title = 'Перезагрузить страницу и принудительно обновить все ресурсы (CSS, JS)';
 
     // Добавляем атрибуты для стилизации (если используются ваши классы)
-    btn.setAttribute('data-btn_blue_outline', '');
+    btn.setAttribute('data-btn_yellow_outline', '');
 
     // Обработчик клика
     btn.addEventListener('click', () => {
