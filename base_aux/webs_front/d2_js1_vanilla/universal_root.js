@@ -58,6 +58,61 @@ OnLoadRunner.add(log__ready_state);
 
 
 // =====================================================================================================================
+function uncache_loading__all_files_without_cache() {
+    // USAGE!
+    // ! ПЕРЕЗАПУСКА СЕРВЕРА НЕ ТРЕБУЕТСЯ!!! - сохрани и обнови страницу!!!
+    // 1. ПОМЕСТИNM ПРЯМЫМ КОДОМ после подгружаемых скриптов, желательно в HEAD!!!
+    //      <script>uncache_loading__all_files_without_cache();</script>
+    //      Я ПОМЕСТИЛ В САМУЮ ПЕРВУЮ СТРОКУ HEAD, даже перед всеми загрузками - все работает!!!
+    // 2. закинуть в universal_root.js не получится!
+
+    // Генерируем уникальную версию (например, timestamp)
+    const version = Date.now();
+
+    // Функция добавления параметра к URL
+    function addVersionToUrl(url) {
+        if (!url || url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('javascript:')) return url;
+        const separator = url.includes('?') ? '&' : '?';
+        return url + separator + 'v=' + version;
+    }
+
+    // 1. Обрабатываем все link[rel="stylesheet"]
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const original = link.getAttribute('href');
+        if (original) {
+            link.setAttribute('href', addVersionToUrl(original));
+        }
+    });
+
+    // 2. Обрабатываем все script[src]
+    document.querySelectorAll('script[src]').forEach(script => {
+        const original = script.getAttribute('src');
+        if (original) {
+            script.setAttribute('src', addVersionToUrl(original));
+        }
+    });
+
+    // 3. (Опционально) Обрабатываем изображения
+    document.querySelectorAll('img').forEach(img => {
+        const original = img.getAttribute('src');
+        if (original) {
+            img.setAttribute('src', addVersionToUrl(original));
+        }
+    });
+
+    // 4. (Опционально) Обрабатываем iframe
+    document.querySelectorAll('iframe').forEach(iframe => {
+        const original = iframe.getAttribute('src');
+        if (original) {
+            iframe.setAttribute('src', addVersionToUrl(original));
+        }
+    });
+
+    // 5. (Опционально) Для объектов с фоном в CSS – это сложнее, не требуется в вашем случае.
+}
+
+
+// =====================================================================================================================
 function onload__bg_color() {
     let body_bg_color__old = document.body.style.background;
     document.body.style.background = 'yellow';

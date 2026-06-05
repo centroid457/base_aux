@@ -143,17 +143,16 @@ HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
+    <script>uncache_loading__all_files_without_cache();</script>
+    
     <meta charset="utf-8">
     <title>WebTerminal</title>
     
-    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css?v=<?= filemtime('/base_aux/webs_front/d1_front2_css/universal_root.css') ?>">
-    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js?v=<?= filemtime('/base_aux/webs_front/d2_js1_vanilla/universal_root.js') ?>"></script>
+    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css">
+    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
     
     <style>
         /* ---------------------------------------------------------------------------------------------------------- */
-        * { 
-            box-sizing: border-box;
-        }
         body {
             background: #111;
             color: #ddd;
@@ -213,7 +212,7 @@ HTML_TEMPLATE = """
 
         /* ---------------------------------------------------------------------------------------------------------- */
     </style>
-    
+        
 </head>
 <body>
     <header data-auto__ping_lost>
