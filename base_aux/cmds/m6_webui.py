@@ -220,6 +220,7 @@ HTML_TEMPLATE = """
         <div>
             <button id="btn_resync__id">resync</button>
             <button id="btn_add_item__id">Новый объект</button>
+            <span data-auto__replace_with__btn_hard_reset></span>
         </div>
     </header>
     <main id="items_container__id" data-gap1rem></main>
@@ -442,7 +443,7 @@ HTML_TEMPLATE = """
                 
                 const btnReconnect = document.createElement('button');
                 btnReconnect.setAttribute('data-btn_blue_outline', "");
-                btnReconnect.textContent = '🔄';
+                btnReconnect.textContent = 'Reconnect';
                 btnReconnect.title = 'Reconnect';
                 btnReconnect.onclick = () => this.sendReconnect();
                 

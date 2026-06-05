@@ -58,6 +58,8 @@ OnLoadRunner.add(log__ready_state);
 
 
 // =====================================================================================================================
+// UNCACHE -------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 function uncache_loading__all_files_without_cache() {
     // USAGE!
     // ! ПЕРЕЗАПУСКА СЕРВЕРА НЕ ТРЕБУЕТСЯ!!! - сохрани и обнови страницу!!!
@@ -110,6 +112,34 @@ function uncache_loading__all_files_without_cache() {
 
     // 5. (Опционально) Для объектов с фоном в CSS – это сложнее, не требуется в вашем случае.
 }
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Добавляет кнопку жёсткой перезагрузки (сброс кеша) замещая элемент с атрибутом data-auto__replace_with__btn_hard_reset
+function onload__replace_with__btn_hard_reset() {
+    const target = document.querySelector('[data-auto__replace_with__btn_hard_reset]');
+    if (!target) return;
+
+    // Создаём кнопку
+    const btn = document.createElement('button');
+    btn.textContent = 'hardReset(unCache)';
+    btn.title = 'Перезагрузить страницу и принудительно обновить все ресурсы (CSS, JS)';
+
+    // Добавляем атрибуты для стилизации (если используются ваши классы)
+    btn.setAttribute('data-btn_blue_outline', '');
+
+    // Обработчик клика
+    btn.addEventListener('click', () => {
+        // Добавляем случайный параметр к URL, чтобы браузер не использовал кеш
+        const url = new URL(window.location.href);
+        url.searchParams.set('_t', Date.now());
+        window.location.href = url.toString();
+    });
+
+    target.replaceWith(btn);
+}
+
+OnLoadRunner.add(onload__replace_with__btn_hard_reset);
 
 
 // =====================================================================================================================
