@@ -14,12 +14,18 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    overflow-y: auto;   /* вертикальная прокрутка только при необходимости */
+
+    scroll-behavior: smooth;  /* глобальная плавная прокрутка */
+}
+
 body {
     background: #fff;
     font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; /*с этим чуть лучше! чем дефолтный!!!*/
-    padding: 1.2rem;
+    padding: 1.0rem;
 
-    max-width: 1400px;
     margin: 0 auto;
     border-radius: 2rem;
     //overflow: hidden;
@@ -28,7 +34,12 @@ body {
 
     display: flex;
     flex-direction: column;
-    min-height: 100vh;          /* вся высота окна браузера */
+
+    /* SIZE */
+    max-width: 1400px;
+
+    height: auto;                /* авто, растягивается по содержимому */
+    min-height: 100%;          /* 100vh вся высота окна браузера */
 }
 
 hr {
@@ -41,9 +52,6 @@ hr {
     pointer-events: none;
 }
 
-html {
-    scroll-behavior: smooth;  /* глобальная плавная прокрутка */
-}
 /* Отступ для фиксированной навигации (если есть sticky) */
 :target {
     scroll-margin-top: 80px;
