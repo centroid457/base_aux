@@ -3741,7 +3741,10 @@
                     <header>Цветовые схемы</header>
                     <div class="article_main__cls" data-bg_a5="">
 
-                        <button>button</button>
+                        <button>button BLANK</button>
+
+                        <hr>
+                        MANUALS
                         <p data-bg_a5>
                             <button data-btn_blue>data-btn_blue</button>
                             <button data-btn_green>data-btn_green</button>
@@ -3775,6 +3778,8 @@
                             <button data-btn_yellow_outline disabled>data-btn_yellow_outline</button>
                         </p>
 
+                        <hr>
+                        CLONER<br>
                         <button
                                 data-clone_element__w_attrs
                                 data-clone_element__params=":[
@@ -3794,6 +3799,7 @@
                                 ]"
                         >button</button>
 
+                        <hr>
                         <button
                                 disabled
                                 data-clone_element__w_attrs
@@ -5872,32 +5878,58 @@ cancelable: true – внутри обработчика можно вызват
                 </article>
 
                 <article class="article__cls">
-                    <header>ATTR параметризация (CSS-переменные параметризация)</header>
+                    <header>VAR=CSS-переменные (ATTR параметризация/parametrisation)</header>
                     <div class="article_main__cls">
 
+                        <hr>
+                        CLASSES - не совсем правильно!!! это базовый пример!<br>
+                        требует использования двух классов!<br>
+                        !обязательно указывать и основной класс и параметризированный!<br>
+
                         <style>
-                            .var-triple {
-                                display: flex;
-                                gap: 1rem;
-                                justify-content: center;
-                                margin-bottom: 1rem;
+                            .var__cls {
                             }
-                            .var-triple span {
+                            .var__cls span {
+                                width: 200px;
+
                                 background: var(--bg, #e2e8f0);
                                 color: var(--color, #1e293b);
-                                padding: 0.5rem 1rem;
-                                border-radius: 2rem;
-                                font-weight: 500;
                                 border: var(--border, none);
                             }
-                            .var-triple--blue { --bg: #3b82f6; --color: white; }
-                            .var-triple--red { --bg: #ef4444; --color: white; --border: 2px solid #b91c1c; }
-                            .var-triple--green { --bg: #10b981; --color: #064e3b; }
+                            .var__cls__blue { --bg: #3b82f6; --color: white; }
+                            .var__cls__red { --bg: #ef4444; --color: white; --border: 2px solid #b91c1c; }
+                            .var__cls__green { --bg: #10b981; --color: #064e3b; }
                         </style>
 
-                        <div class="var-triple var-triple--blue"><span>Синий</span><span>Синий</span><span>Синий</span></div>
-                        <div class="var-triple var-triple--red"><span>Красный</span><span>Красный</span><span>Красный</span></div>
-                        <div class="var-triple var-triple--green"><span>Зелёный</span><span>Зелёный</span><span>Зелёный</span></div>
+                        <div class="var__cls"><span>ONLY var__cls</span></div>
+                        <div class="var__cls__blue"><span>ONLY var__cls__blue</span></div>
+
+                        <div class="var__cls var__cls__blue"><span>var__cls var__cls__blue</span></div>
+                        <div class="var__cls var__cls__red"><span>var__cls var__cls__red</span></div>
+                        <div class="var__cls var__cls__green"><span>var__cls var__cls__green</span></div>
+
+                        <hr>
+                        АТРИБУТЫ
+                        <style>
+                            [data-var__attr] {
+                            }
+                            [data-var__attr] span {
+                                width: 200px;
+
+                                background: var(--bg, #e2e8f0);
+                                color: var(--color, #1e293b);
+                                border: var(--border, none);
+                            }
+                            [data-var__attr="blue"]  { --bg: #3b82f6; --color: white; }
+                            [data-var__attr="red"]   { --bg: #ef4444; --color: white; --border: 2px solid #b91c1c; }
+                            [data-var__attr="green"] { --bg: #10b981; --color: #064e3b; }
+                        </style>
+
+                        <div data-var__attr><span>ONLY data-var__attr NO VALUE</span></div>
+
+                        <div data-var__attr="blue"><span>data-var__attr="blue"</span></div>
+                        <div data-var__attr="red"><span>data-var__attr="red"</span></div>
+                        <div data-var__attr="green"><span>data-var__attr="green"</span></div>
 
                     </div>
                     <footer>CSS-переменные переопределяются в модификаторе, сами элементы не меняются.</footer>
