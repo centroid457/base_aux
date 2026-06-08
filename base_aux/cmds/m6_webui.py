@@ -16,7 +16,7 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 
 
 # =====================================================================================================================
-class ClientManager:
+class ManagerClient:
     """Управляет подключениями клиентов и рассылкой событий."""
     def __init__(self):
         self._queues: dict[str, asyncio.Queue] = {}
@@ -36,11 +36,11 @@ class ClientManager:
             await q.put(msg)
 
 
-client_manager = ClientManager()
+client_manager = ManagerClient()
 
 
 # =====================================================================================================================
-class InstManager:
+class ManagerInstance:
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
 
@@ -130,7 +130,7 @@ class InstManager:
 
 
 # -----------------------------------------------------------------------------------------------------------------
-object_manager = InstManager()
+object_manager = ManagerInstance()
 
 
 # TODO:
