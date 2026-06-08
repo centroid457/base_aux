@@ -5877,8 +5877,16 @@ cancelable: true – внутри обработчика можно вызват
                     <footer></footer>
                 </article>
 
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="varId">
+            <h2>VARS=CSS-переменные(офиц название custom properties)</h2>
+            <div class="section_main__cls" data-grid_autofit_min250>
+
                 <article class="article__cls">
-                    <header>VAR=CSS-переменные (ATTR параметризация/parametrisation)</header>
+                    <header>VAR=CSS-переменные(ATTR параметризация/parametrisation)</header>
                     <div class="article_main__cls">
 
                         <hr>
@@ -5935,9 +5943,160 @@ cancelable: true – внутри обработчика можно вызват
                     <footer>CSS-переменные переопределяются в модификаторе, сами элементы не меняются.</footer>
                 </article>
 
+                <article class="article__cls">
+                    <header>📦 Объявление и использование</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .vars-demo1 {
+                                --main-color: #2a73ff;
+                                --padding: 1rem;
+                                background: var(--main-color);
+                                color: white;
+                                padding: var(--padding);
+                                border-radius: 8px;
+                            }
+                        </style>
+                        <div class="vars-demo1">
+                            фон и отступы взяты из переменных <code>--main-color</code> и <code>--padding</code>
+                        </div>
+                        <p><small>Переменные объявляются внутри селектора и действуют на него и его потомков.</small></p>
+                    </div>
+                    <footer>💡 Синтаксис: <code>--имя: значение;</code> → использовать <code>var(--имя)</code>.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🌍 Глобальные переменные (:root)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            :root {
+                                --global-bg: #eef2ff;
+                                --global-text: #1e2a3e;
+                            }
+                            .global-demo {
+                                background: var(--global-bg);
+                                color: var(--global-text);
+                                padding: 0.5rem;
+                                border-radius: 8px;
+                            }
+                        </style>
+                        <div class="global-demo">
+                            Цвет фона и текста взяты из глобальных переменных (:root)
+                        </div>
+                        <p><small>Переменные в <code>:root</code> доступны на всей странице.</small></p>
+                    </div>
+                    <footer>🌐 <code>:root</code> – псевдокласс, соответствующий <code>&lt;html&gt;</code>, идеален для глобальных переменных.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🔄 Наследование и переопределение</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .parent-var {
+                                --box-color: #16a085;
+                                padding: 0.5rem;
+                                border: 1px solid #ccc;
+                            }
+                            .parent-var .child {
+                                background: var(--box-color);
+                                padding: 0.5rem;
+                                color: white;
+                                margin-top: 0.5rem;
+                            }
+                            .parent-var .override {
+                                --box-color: #c0392b;
+                            }
+                        </style>
+                        <div class="parent-var">
+                            Родитель (--box-color = #16a085)
+                            <div class="child">Ребёнок наследует --box-color</div>
+                            <div class="child override">Ребёнок с переопределённой переменной (--box-color = #c0392b)</div>
+                        </div>
+                        <p><small>Дочерний элемент может переопределить переменную, и она применится только к нему и его потомкам.</small></p>
+                    </div>
+                    <footer>🧬 Переменные наследуются, как обычные CSS-свойства.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🛡️ Резервное значение (fallback)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .fallback-demo {
+                                background: var(--undefined-color, #f39c12);
+                                padding: 0.5rem;
+                                color: white;
+                                border-radius: 8px;
+                            }
+                        </style>
+                        <div class="fallback-demo">
+                            Переменная <code>--undefined-color</code> не определена, поэтому используется fallback <code>#f39c12</code>
+                        </div>
+                        <p><small>Второй аргумент <code>var(--переменная, значение_по_умолчанию)</code> используется, если переменная не найдена.</small></p>
+                    </div>
+                    <footer>⚠️ Fallback может быть любым корректным значением (цвет, длина, строка).</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🧮 Использование в calc()</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .calc-demo {
+                                --base-size: 1rem;
+                                padding: calc(var(--base-size) * 1.5);
+                                background: #2c3e50;
+                                color: white;
+                                border-radius: 8px;
+                            }
+                        </style>
+                        <div class="calc-demo">
+                            Отступ вычислен как <code>calc(var(--base-size) * 1.5)</code>
+                        </div>
+                        <p><small>Переменные можно использовать внутри <code>calc()</code>.</small></p>
+                    </div>
+                    <footer>📐 <code>calc(var(--a) + var(--b))</code> – мощный инструмент для адаптивной вёрстки.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>⚡ Динамическое изменение через JavaScript</header>
+                    <div class="article_main__cls">
+                        <style>
+                            .js-demo {
+                                --dynamic-color: #3498db;
+                                background: var(--dynamic-color);
+                                color: white;
+                                padding: 0.5rem;
+                                border-radius: 8px;
+                                transition: background 0.2s;
+                            }
+                        </style>
+                        <div class="js-demo" id="dynamicVarBlock">
+                            Этот блок меняет цвет через JS (переменная --dynamic-color)
+                        </div>
+                        <div style="margin-top: 0.5rem;">
+                            <button id="changeColorBtn" data-btn="blue">Сменить цвет (от синего)</button>
+                            <button id="resetColorBtn" data-btn="red">Сбросить</button>
+                        </div>
+                        <script>
+                            (function() {
+                                const block = document.getElementById('dynamicVarBlock');
+                                const changeBtn = document.getElementById('changeColorBtn');
+                                const resetBtn = document.getElementById('resetColorBtn');
+                                if (block) {
+                                    changeBtn?.addEventListener('click', () => {
+                                        block.style.setProperty('--dynamic-color', '#e67e22');
+                                    });
+                                    resetBtn?.addEventListener('click', () => {
+                                        block.style.removeProperty('--dynamic-color');
+                                    });
+                                }
+                            })();
+                        </script>
+                        <p><small>JS может читать (<code>getComputedStyle</code>) и менять (<code>setProperty</code>) переменные в реальном времени.</small></p>
+                    </div>
+                    <footer>🛠️ <code>element.style.setProperty('--my-var', 'new value')</code> – обновление переменной на лету.</footer>
+                </article>
+
             </div>
         </section>
-
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="styleCommonId" data-collapsed_not>
