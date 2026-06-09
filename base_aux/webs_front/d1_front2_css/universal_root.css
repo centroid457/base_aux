@@ -774,63 +774,66 @@ button:hover,
 }
 
 /* --------------------------------------------------------------- */
-/* Темные цвета (белый текст) */
+/* dark/light themes */
+/* 1=DARK */
+[data-btn="black"], [data-btn_outline="black"],
+[data-btn="blue"], [data-btn_outline="blue"],
+[data-btn="red"], [data-btn_outline="red"],
+[data-btn="green"], [data-btn_outline="green"]
+{
+    --color_contrast: #fff;
+    --color_contrast_light: #fffa;
+}
+/* 2=LIGHT */
+[data-btn="white"], [data-btn_outline="white"],
+[data-btn="yellow"], [data-btn_outline="yellow"],
+[data-btn="cian"], [data-btn_outline="cian"],
+[data-btn="magenta"], [data-btn_outline="magenta"]
+{
+    --color_contrast: #000;
+    --color_contrast_light: #000a;
+}
+
+/* --------------------------------------------------------------- */
 [data-btn="blue"], [data-btn_outline="blue"]
 {
     --color_base: #00f;
     --color_light: #00fb;
-    --color_contrast: #fff;
-    --color_contrast_light: #fffa;
 }
 [data-btn="green"], [data-btn_outline="green"]
 {
-    --color_base: #0d0;
-    --color_light: #0d0b;
-    --color_contrast: #fff;
-    --color_contrast_light: #fffa;
+    --color_base: #0c0;
+    --color_light: #0c0b;
 }
 [data-btn="red"], [data-btn_outline="red"]
 {
-    --color_base: #f00;
-    --color_light: #f00b;
-    --color_contrast: #fff;
-    --color_contrast_light: #fffa;
+    --color_base: #d00;
+    --color_light: #d00b;
 }
 [data-btn="black"], [data-btn_outline="black"]
 {
     --color_base: #000;
     --color_light: #000b;
-    --color_contrast: #fff;
-    --color_contrast_light: #fffa;
 }
-/* Светлые цвета (черный текст) */
 [data-btn="white"], [data-btn_outline="white"]
 {
     --color_base: #fff;
     --color_light: #fffa;
-    --color_contrast: #000;
-    --color_contrast_light: #000a;
 }
 [data-btn="yellow"], [data-btn_outline="yellow"]
 {
     --color_base: #ff0;
     --color_light: #ff0a;
-    --color_contrast: #000;
-    --color_contrast_light: #000a;
 }
 [data-btn="cian"], [data-btn_outline="cian"]
 {
     --color_base: #0ff;
     --color_light: #0ffa;
-    --color_contrast: #000;
-    --color_contrast_light: #000a;
 }
 [data-btn="magenta"], [data-btn_outline="magenta"]
 {
-    --color_base: #f0f;
-    --color_light: #f0fa;
-    --color_contrast: #000;
-    --color_contrast_light: #000a;
+    --color_base: #f9f;
+    --color_light: #f9fa;
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
