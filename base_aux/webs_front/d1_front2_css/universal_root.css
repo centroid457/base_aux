@@ -466,7 +466,7 @@ textarea
     width: 100%;
     padding: 0.6rem 0.75rem;
     line-height: 1.4;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.3s;
 }
 
 /* Состояние фокуса */
@@ -565,7 +565,7 @@ button
 {
     /**/
     font-weight: 500;
-    transition: all 0.2s;
+    _transition: all 0.2s;
 }
 button:active
 {
@@ -751,105 +751,87 @@ button:hover,
 
 /* ================================================================================================================== */
 /* -------------------- ПАРАМЕТРИЗОВАННЫЕ КНОПКИ -------------------- */
-/* Базовый стиль для всех кнопок с атрибутом data-btn */
-[data-btn] {
+[data-btn]
+{
     background: var(--color_light);
     color: var(--color_contrast);
-    border-color: var(--btn-border);
+    border-color: var(--color_contrast_light);
 }
-[data-btn]:active {
-    transform: scale(0.9);
-}
-[data-btn]:hover {
-    background: var(--btn-bg-hover);
-    border-color: var(--btn-border-hover, white);
-    color: var(--btn-color-hover);
+[data-btn]:hover,
+[data-btn_outline]:hover /* полностью обычная кнопка! */
+{
+    background: var(--color_base);
+    color: var(--color_contrast);
+    border-color: var(--color_contrast);
+    box-shadow: 0 0 3px var(--color_contrast);
 }
 
-/* Outline вариант (прозрачный фон) */
-[data-btn-outline] {
+[data-btn_outline]
+{
     background: transparent;
-    color: var(--btn-border);
-}
-[data-btn-outline]:hover {
-    background: var(--btn-bg-hover);
-    color: var(--btn-color-hover);
-    border-color: var(--btn-border-hover, white);
+    color: var(--color_base);
+    border-color: var(--color_base);
 }
 
 /* --------------------------------------------------------------- */
 /* Темные цвета (белый текст) */
-[data-btn="blue"] {
+[data-btn="blue"], [data-btn_outline="blue"]
+{
     --color_base: #00f;
     --color_light: #00fb;
-    --color_contrast: white;
+    --color_contrast: #fff;
+    --color_contrast_light: #fffa;
 }
-[data-btn="green"] {
-    --btn-bg: #0c0b;
-    --btn-bg-hover: #0c0;
-    --btn-color: white;
-    --btn-color-hover: white;
-    --btn-border: #0c0;
-    --btn-border-hover: white;
+[data-btn="green"], [data-btn_outline="green"]
+{
+    --color_base: #0d0;
+    --color_light: #0d0b;
+    --color_contrast: #fff;
+    --color_contrast_light: #fffa;
 }
-[data-btn="red"] {
-    --btn-bg: #f00b;
-    --btn-bg-hover: #f00;
-    --btn-color: white;
-    --btn-color-hover: white;
-    --btn-border: #f00;
-    --btn-border-hover: white;
+[data-btn="red"], [data-btn_outline="red"]
+{
+    --color_base: #f00;
+    --color_light: #f00b;
+    --color_contrast: #fff;
+    --color_contrast_light: #fffa;
 }
-[data-btn="black"] {
-    --btn-bg: #000b;
-    --btn-bg-hover: #000;
-    --btn-color: white;
-    --btn-color-hover: white;
-    --btn-border: #000;
-    --btn-border-hover: white;
+[data-btn="black"], [data-btn_outline="black"]
+{
+    --color_base: #000;
+    --color_light: #000b;
+    --color_contrast: #fff;
+    --color_contrast_light: #fffa;
 }
-
 /* Светлые цвета (черный текст) */
-[data-btn="white"] {
-    --btn-bg: #fffa;
-    --btn-bg-hover: white;
-    --btn-color: black;
-    --btn-color-hover: black;
-    --btn-border: #fff;
-    --btn-border-hover: black;
+[data-btn="white"], [data-btn_outline="white"]
+{
+    --color_base: #fff;
+    --color_light: #fffa;
+    --color_contrast: #000;
+    --color_contrast_light: #000a;
 }
-[data-btn="yellow"] {
-    --btn-bg: #ff0a;
-    --btn-bg-hover: #ff0;
-    --btn-color: black;
-    --btn-color-hover: black;
-    --btn-border: #ff0;
-    --btn-border-hover: black;
+[data-btn="yellow"], [data-btn_outline="yellow"]
+{
+    --color_base: #ff0;
+    --color_light: #ff0a;
+    --color_contrast: #000;
+    --color_contrast_light: #000a;
 }
-[data-btn="cyan"] {
-    --btn-bg: #0ffa;
-    --btn-bg-hover: #0ff;
-    --btn-color: black;
-    --btn-color-hover: black;
-    --btn-border: #0ff;
-    --btn-border-hover: black;
+[data-btn="cian"], [data-btn_outline="cian"]
+{
+    --color_base: #0ff;
+    --color_light: #0ffa;
+    --color_contrast: #000;
+    --color_contrast_light: #000a;
 }
-[data-btn="magenta"] {
-    --btn-bg: #f0fa;
-    --btn-bg-hover: #f0f;
-    --btn-color: black;
-    --btn-color-hover: black;
-    --btn-border: #f0f;
-    --btn-border-hover: black;
+[data-btn="magenta"], [data-btn_outline="magenta"]
+{
+    --color_base: #f0f;
+    --color_light: #f0fa;
+    --color_contrast: #000;
+    --color_contrast_light: #000a;
 }
-
-
-
-
-
-
-
-
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* ----------------------------------------- */
@@ -901,7 +883,7 @@ samp {
 a {
     color: #2a73ff;
     text-decoration: none;
-    transition: color 0.2s, background-color 0.2s;
+    transition: all 0.3s;
     cursor: pointer;
 }
 a:hover {
@@ -931,7 +913,7 @@ a[target="_blank"]::after {
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
-    transition: background 0.2s;
+    transition: all 0.3s;
 }
 .a_as_button__cls:hover {
     text-decoration: none;
@@ -1289,7 +1271,7 @@ tbody td:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
     border: 1px solid #e9edf2;
     overflow: hidden;
-    transition: box-shadow 0.2s;
+    transition: all 0.3s;
 }
 .section__cls:hover {
     box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
