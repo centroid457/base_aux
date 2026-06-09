@@ -6162,28 +6162,28 @@ cancelable: true – внутри обработчика можно вызват
                     <header>🖱️ :is() для состояний (hover, focus)</header>
                     <div class="article_main__cls">
                         <style>
-                            /* Без :is(): button:hover, a:hover, .btn:hover, input:hover */
-                            :is(button, a, .btn, input):hover {
+                            /* Без :is(): .btn1:hover, .inpt1:hover */
+                            :is(.btn1, .inpt1):hover {
                                 transform: scale(1.02);
                                 transition: transform 0.1s;
                             }
                         </style>
-                        <button>Кнопка</button>
-                        <a href="#">Ссылка</a>
-                        <div class="btn" style="display:inline-block; padding:0.2rem 0.5rem; background:#eee;">.btn</div>
-                        <input type="text" placeholder="Поле ввода" style="width:auto;">
-                        <p><small>Наведите на любой элемент – все увеличиваются.</small></p>
+                        <p>Наведите на любой элемент – все увеличиваются.</p>
+                        <div class="btn1" style="display:inline-block; padding:0.2rem 0.5rem; background:#eee;">.btn1</div>
+                        <input class="inpt1" type="text" placeholder=".inpt1" style="width:auto;">
                     </div>
-                    <footer>🧠 <code>:is(button, a, .btn, input):hover</code> – одно правило вместо четырёх.</footer>
+                    <footer>
+                        <code>:is(.btn1, .inpt1):hover</code> – одно правило вместо нескольких.
+                    </footer>
                 </article>
 
                 <!-- Пример 3: :where() – нулевая специфичность для легкости переопределения -->
                 <article class="article__cls">
-                    <header>🧹 :where() – нулевая специфичность</header>
+                    <header>:where() – нулевая специфичность</header>
                     <div class="article_main__cls">
                         <style>
                             /* Сброс (нулевая специфичность) – легко перебить */
-                            :where(footer, .footer, [data-footer]) p {
+                            :where(.ftr1, [data-footer]) p {
                                 margin: 0;
                                 color: gray;
                             }
@@ -6192,36 +6192,54 @@ cancelable: true – внутри обработчика можно вызват
                                 color: #2a73ff;
                             }
                         </style>
-                        <footer><p>Футер с серым текстом (от :where)</p></footer>
+                        <footer class="ftr1"><p>ftr1=Футер с серым текстом (от :where)</p></footer>
                         <div class="custom-footer"><p>Футер с синим текстом (переопределён классом)</p></div>
-                        <p><small><code>:where()</code> имеет специфичность 0, поэтому класс <code>.custom-footer p</code> легко его перебивает.</small></p>
+                        <p><code>:where()</code> имеет специфичность 0, поэтому класс <code>.custom-footer p</code> легко его перебивает.</p>
                     </div>
-                    <footer>🔧 Используйте <code>:where()</code> для базовых стилей, которые должны легко переопределяться.</footer>
+                    <footer>Используйте <code>:where()</code> для базовых стилей, которые должны легко переопределяться.</footer>
                 </article>
 
                 <!-- Пример 4: Комбинация :is() и :where() -->
                 <article class="article__cls">
-                    <header>🏆 Комбо: :is() для группировки, :where() для сбросов</header>
+                    <header>🏆 Комбо: :is() + :where() на изолированных классах</header>
                     <div class="article_main__cls">
                         <style>
-                            /* Базовые стили для всех кнопок, ссылок и инпутов в любом контейнере */
-                            :is(header, main, footer) :where(button, a, input[type="submit"]) {
+                            /* ВСЕ СТИЛИ ОГРАНИЧЕНЫ КЛАССАМИ ЭТОГО ПРИМЕРА */
+                            .demo-iswhere :is(.demo-header, .demo-main, .demo-footer) :where(.demo-btn, .demo-link, .demo-submit) {
                                 border-radius: 0.5rem;
                                 padding: 0.25rem 0.5rem;
                                 background: #eef2ff;
+                                display: inline-block;
+                                margin: 0.25rem;
+                                text-decoration: none;
+                                color: #000;
+                                border: none;
+                                cursor: pointer;
                             }
-                            /* Легко переопределить */
-                            .special button {
+                            .demo-iswhere .special .demo-btn {
                                 background: #2a73ff;
                                 color: white;
                             }
                         </style>
-                        <header><button>Кнопка в header</button> <a href="#">ссылка</a></header>
-                        <main><button>Кнопка в main</button></main>
-                        <div class="special"><button>Особая кнопка (переопределена)</button></div>
-                        <p><small><code>:is(header, main, footer) :where(button, a, ...)</code> – компактно задаёт стили сразу для нескольких контейнеров и типов элементов, с возможностью лёгкого переопределения.</small></p>
+                        <div class="demo-iswhere">
+                            <div class="demo-header">
+                                <span class="demo-btn">Кнопка в header</span>
+                                <a href="#" class="demo-link">ссылка</a>
+                            </div>
+                            <div class="demo-main">
+                                <span class="demo-btn">Кнопка в main</span>
+                                <input type="submit" class="demo-submit" value="Submit">
+                            </div>
+                            <div class="demo-footer">
+                                <span class="demo-btn">Кнопка в footer</span>
+                            </div>
+                            <div class="special">
+                                <span class="demo-btn">Особая кнопка (переопределена)</span>
+                            </div>
+                        </div>
+                        <p><small>Все стили ограничены классом <code>.demo-iswhere</code>. Никакого влияния на глобальные теги (<code>header, main, button</code>) нет.</small></p>
                     </div>
-                    <footer>✨ Комбинируйте <code>:is()</code> (группировка контекстов) и <code>:where()</code> (группировка целевых элементов) для максимально гибких систем.</footer>
+                    <footer>✨ Используйте <code>:is()</code> для группировки родительских контейнеров, <code>:where()</code> — для группировки целевых элементов. И всегда изолируйте демо‑примеры уникальными классами.</footer>
                 </article>
 
             </div>
