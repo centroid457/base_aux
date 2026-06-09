@@ -811,7 +811,11 @@ function _clone_element(original__el, def_property_name, variants, with_attrs=fa
         for (const [name, val] of params_map) {
             if (def_property_name === '' || with_attrs) {
                 // Для булевых атрибутов или если явно запрошены атрибуты
-                clone__el.setAttribute(name, val);
+                if (name){
+                    clone__el.setAttribute(name, val);
+                } else {
+                    console.warn(`[_clone_element] blank name [name=${name}/value=${val}]`);
+                }
             } else {
                 clone__el.style[name] = val;
             }
