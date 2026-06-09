@@ -666,7 +666,7 @@
                             ⭐🌟✨
                             ❤️ 🧡 💚💙
                             👍👎
-                            💎
+                            💎🏆
                         </fieldset>
 
                         <fieldset data-flex_wrap data-icons__show_unicode_values>
@@ -6126,6 +6126,102 @@ cancelable: true – внутри обработчика можно вызват
                         Используйте <code>all: revert</code> или изолируйте элемент.<br>
                         Наиболее практичный совет: не применяйте глобальные стили кнопок, если вам нужны нативные варианты; используйте классы для стилизации и оставляйте базовые кнопки без классов нетронутыми.<br>
                     </footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="isWhereId" data-collapsed_not>
+            <h2 data-icon__circle_white>SELECTORS/СЕЛЕКТОРЫ=группировка :is() и :where()</h2>
+            <div class="section_main__cls" data-grid_autofit_min250>
+
+                <!-- Пример 1: :is() сокращает вложенные селекторы -->
+                <article class="article__cls">
+                    <header>📌 :is() – короткая запись для вложенных селекторов</header>
+                    <div class="article_main__cls">
+                        <style>
+                            /* Без :is() пришлось бы писать: */
+                            /* article h1, article h2, article h3, .post h1, .post h2, .post h3, #main h1, #main h2, #main h3 */
+                            /* С :is() – компактно: */
+                            :is(article, .post, #main) :is(h1, h2, h3) {
+                                margin-top: 1rem;
+                                color: #2c3e50;
+                            }
+                        </style>
+                        <article><h2>Заголовок внутри article</h2></article>
+                        <div class="post"><h3>Заголовок внутри .post</h3></div>
+                        <div id="main"><h1>Заголовок внутри #main</h1></div>
+                        <p><small>Все заголовки получили стиль через один короткий селектор <code>:is(article, .post, #main) :is(h1, h2, h3)</code>.</small></p>
+                    </div>
+                    <footer>💡 <code>:is()</code> группирует разные типы селекторов (теги, классы, id) и их сочетания.</footer>
+                </article>
+
+                <!-- Пример 2: :is() для состояний (:hover, :focus) -->
+                <article class="article__cls">
+                    <header>🖱️ :is() для состояний (hover, focus)</header>
+                    <div class="article_main__cls">
+                        <style>
+                            /* Без :is(): button:hover, a:hover, .btn:hover, input:hover */
+                            :is(button, a, .btn, input):hover {
+                                transform: scale(1.02);
+                                transition: transform 0.1s;
+                            }
+                        </style>
+                        <button>Кнопка</button>
+                        <a href="#">Ссылка</a>
+                        <div class="btn" style="display:inline-block; padding:0.2rem 0.5rem; background:#eee;">.btn</div>
+                        <input type="text" placeholder="Поле ввода" style="width:auto;">
+                        <p><small>Наведите на любой элемент – все увеличиваются.</small></p>
+                    </div>
+                    <footer>🧠 <code>:is(button, a, .btn, input):hover</code> – одно правило вместо четырёх.</footer>
+                </article>
+
+                <!-- Пример 3: :where() – нулевая специфичность для легкости переопределения -->
+                <article class="article__cls">
+                    <header>🧹 :where() – нулевая специфичность</header>
+                    <div class="article_main__cls">
+                        <style>
+                            /* Сброс (нулевая специфичность) – легко перебить */
+                            :where(footer, .footer, [data-footer]) p {
+                                margin: 0;
+                                color: gray;
+                            }
+                            /* Переопределяем цвет без !important */
+                            .custom-footer p {
+                                color: #2a73ff;
+                            }
+                        </style>
+                        <footer><p>Футер с серым текстом (от :where)</p></footer>
+                        <div class="custom-footer"><p>Футер с синим текстом (переопределён классом)</p></div>
+                        <p><small><code>:where()</code> имеет специфичность 0, поэтому класс <code>.custom-footer p</code> легко его перебивает.</small></p>
+                    </div>
+                    <footer>🔧 Используйте <code>:where()</code> для базовых стилей, которые должны легко переопределяться.</footer>
+                </article>
+
+                <!-- Пример 4: Комбинация :is() и :where() -->
+                <article class="article__cls">
+                    <header>🏆 Комбо: :is() для группировки, :where() для сбросов</header>
+                    <div class="article_main__cls">
+                        <style>
+                            /* Базовые стили для всех кнопок, ссылок и инпутов в любом контейнере */
+                            :is(header, main, footer) :where(button, a, input[type="submit"]) {
+                                border-radius: 0.5rem;
+                                padding: 0.25rem 0.5rem;
+                                background: #eef2ff;
+                            }
+                            /* Легко переопределить */
+                            .special button {
+                                background: #2a73ff;
+                                color: white;
+                            }
+                        </style>
+                        <header><button>Кнопка в header</button> <a href="#">ссылка</a></header>
+                        <main><button>Кнопка в main</button></main>
+                        <div class="special"><button>Особая кнопка (переопределена)</button></div>
+                        <p><small><code>:is(header, main, footer) :where(button, a, ...)</code> – компактно задаёт стили сразу для нескольких контейнеров и типов элементов, с возможностью лёгкого переопределения.</small></p>
+                    </div>
+                    <footer>✨ Комбинируйте <code>:is()</code> (группировка контекстов) и <code>:where()</code> (группировка целевых элементов) для максимально гибких систем.</footer>
                 </article>
 
             </div>
