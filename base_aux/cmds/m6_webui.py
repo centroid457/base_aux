@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
-from base_aux.qeues.m1_event_broadcaster import EventBroadcaster
+from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
 # =====================================================================================================================
@@ -29,23 +29,14 @@ class ManagerInstance:
         new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
 
+        if isinstance(new_item, Nest_EventBroadcasterImplemented):
+            new_item.event_broadcaster__setup(event_broadcaster)
+
         # 2=WORK -----------------------
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
 
         await new_item.connect()
-
-        def history_log__broadcust(msg_style, msg_text):
-            asyncio.create_task(event_broadcaster.broadcast({
-                "item_id": item_id,
-                "event": "history_log",
-                "load": {
-                    "action": msg_style,
-                    "text": msg_text
-                }
-            }))
-
-        new_item.history.listener__add(history_log__broadcust)
 
         # 3=broadcust -----------------------
         await event_broadcaster.broadcast({

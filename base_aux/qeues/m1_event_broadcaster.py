@@ -71,6 +71,7 @@ class Nest_EventBroadcasterImplemented:
     _event_broadcaster: EventBroadcaster | None = None
 
     def __init__(self, *args, **kwargs):
+        # DONT USE ANYTHING HERE!
         super().__init__(*args, **kwargs)
 
     @abstractmethod

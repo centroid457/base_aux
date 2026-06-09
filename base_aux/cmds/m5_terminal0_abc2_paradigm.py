@@ -9,6 +9,7 @@ from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m5_terminal0_abc1_user_conn import AbcConn_CmdTerminal
+from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
 # =====================================================================================================================
@@ -341,6 +342,10 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     pass
     _bg_tasks: list[asyncio.Task]
+
+    # -----------------------------------------------------------------------------------------------------------------
+    def event_broadcaster__setup(self, eb: EventBroadcaster) -> None:
+        self._event_broadcaster = eb
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self):
