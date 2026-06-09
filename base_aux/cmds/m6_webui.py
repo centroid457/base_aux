@@ -18,7 +18,7 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 # =====================================================================================================================
 class ClientBroadcuster:
     """
-    Управляет подключениями клиентов (подписчиков/слушателей).
+    Управляет подключениями клиентов (подписчиков/слушателей) к основной очереди.
     распределяет от основной очереди сообщения на всех клиентов.
     """
 
@@ -41,7 +41,7 @@ class ClientBroadcuster:
     # -----------------------------------------------------------------------------------------------------------------
     async def _broadcasting(self):
         """
-        GOAL: постоянное перенаправление сообщений из основной очерези на всех клиентов
+        GOAL: постоянное перенаправление сообщений из основной очереди на всех клиентов
         """
         while True:
             try:
@@ -69,7 +69,9 @@ class ClientBroadcuster:
 
     # -----------------------------------------------------------------------------------------------------------------
     async def broadcast(self, msg: dict):
-        """Отправить сообщение всем клиентам."""
+        """Отправить сообщение всем клиентам.
+        можно взять main_queue и напрямую посылать!
+        """
         await self.main_queue.put(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -91,6 +93,7 @@ class ManagerInstance:
 
     # CMDS ----------------------------------------------
     async def create_item(self, *args, **kwargs) -> str:
+        # 1=detect --------------------------
         new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
 
@@ -100,8 +103,7 @@ class ManagerInstance:
 
         await new_item.connect()
 
-        # Глобальный слушатель – отправляет все события терминала всем клиентам
-        def global_listener(msg_style, msg_text):
+        def history_log__broadcust(msg_style, msg_text):
             asyncio.create_task(client_broadcuster.broadcast({
                 "item_id": item_id,
                 "event": "history_log",
@@ -111,12 +113,7 @@ class ManagerInstance:
                 }
             }))
 
-        new_item.history.listener__add(global_listener)
-
-        # Сохраняем слушателя, чтобы потом удалить при удалении терминала
-        if not hasattr(new_item, '_global_listeners'):
-            new_item._global_listeners = []
-        new_item._global_listeners.append(global_listener)
+        new_item.history.listener__add(history_log__broadcust)
 
         # 3=broadcust -----------------------
         await client_broadcuster.broadcast({
@@ -133,11 +130,6 @@ class ManagerInstance:
         item = self.items.pop(idn, None)
         if item:
             # 2=WORK ----------------------------
-            # Удаляем глобальных слушателей
-            if hasattr(item, '_global_listeners'):
-                for listener in item._global_listeners:
-                    item.history.listener__del(listener)
-
             await item.disconnect()
 
             # 3=broadcust -----------------------
@@ -294,8 +286,8 @@ HTML_TEMPLATE = """
                         if (msg__action === 'stdout') style = 'msg_stdout__cls';
                         else if (msg__action === 'stderr') style = 'msg_stderr__cls';
                         else if (msg__action === 'stdin') style = 'msg_stdin__cls';
-                        else if (msg__action === 'system') style = 'msg_system__cls';
                         else style = 'msg_debug__cls';
+                        
                         ui.addHistoryLine(style, msg__text);
                     }
                     
@@ -694,7 +686,7 @@ async def ws__client(websocket: WebSocket):
 
     # --------------------------------------------
     # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
-    async def ws_sender():
+    async def queue_to_ws__translator():
         """
         GOAL: resend all msgs from clientQueue to clientWS
         """
@@ -705,7 +697,7 @@ async def ws__client(websocket: WebSocket):
         except asyncio.CancelledError:
             pass
 
-    send_task = asyncio.create_task(ws_sender())
+    queue_to_ws__task = asyncio.create_task(queue_to_ws__translator())
 
     # --------------------------------------------
     # WS-2=READER
@@ -749,8 +741,8 @@ async def ws__client(websocket: WebSocket):
     except WebSocketDisconnect:
         pass
     finally:
-        send_task.cancel()
-        await send_task
+        queue_to_ws__task.cancel()
+        await queue_to_ws__task
         await client_broadcuster.unregister_client(client_id)
 
 
