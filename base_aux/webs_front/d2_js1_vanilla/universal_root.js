@@ -665,6 +665,37 @@ function isIconChar(ch) {
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+function get_num__direct_or_by_id(source, defaultValue = null) {
+    if (typeof source === 'number') return source;
+    if (typeof source === 'string') {
+        let trimmed = source.trim();
+        // Нормализуем десятичный разделитель (заменяем первую запятую на точку)
+        let normalized = trimmed.replace(',', '.');
+        // Проверяем, что после нормализации строка является валидным числом (целым или десятичным)
+        // Допустимы: цифры, одна точка, знак минус в начале
+        const validNumberPattern = /^-?\d+(\.\d+)?$/;
+        if (validNumberPattern.test(normalized)) {
+            let num = parseFloat(normalized);
+            if (!isNaN(num)) return num;
+        }
+        // Если не число, пробуем найти элемент с таким ID
+        const el = document.getElementById(source);
+        if (el) {
+            let rawValue = (el.value !== undefined) ? el.value : (el.textContent || el.innerText);
+            if (rawValue != null) {
+                let rawNorm = String(rawValue).trim();
+                if (validNumberPattern.test(rawNorm)) {
+                    let num = parseFloat(rawNorm);
+                    if (!isNaN(num)) return num;
+                }
+            }
+        }
+    }
+    console.warn(`[get_value__direct_or_by_id] Не удалось получить число из "${source}", используем значение по умолчанию: ${defaultValue}`);
+    return defaultValue;
+}
+
 // =====================================================================================================================
 // CLONES
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1120,11 +1151,12 @@ OnLoadRunner.add(onload__sections_collapse_init);
 /**
  * Генерирует палитру цветов с равномерным делением шкалы 0..255.
  * @param {string} containerId - ID элемента, куда вставить таблицу.
- * @param {number} divisions - количество интервалов (делений) на шкале 0..255. (>=1)
+ * @param {number} intervals - количество интервалов (делений) на шкале 0..255. (>=1)
  * @param {boolean} showHexValue - показывать ли шестнадцатеричный код (true) или только цвет.
  * @param {string} outputId - ID элемента <output> для отображения выбранного цвета (опционально).
  */
-function generateColorPalette(containerId, divisions, showHexValue = false, outputId = null) {
+function generateColorPalette(containerId, intervals, showHexValue = false, outputId = null) {
+    const DIVISIONS_DEF = 3;
     const container = document.getElementById(containerId);
     if (!container) {
         console.log(`Элемент с id "${containerId}" не найден`);
@@ -1133,9 +1165,11 @@ function generateColorPalette(containerId, divisions, showHexValue = false, outp
 
     // Получаем массив значений от 0 до 255 с равномерным делением
     const values = [];
-    for (let i = 0; i <= divisions; i++) {
-        let v = Math.round(255 * i / divisions);
-        if (i === divisions) v = 255;
+    intervals = get_num__direct_or_by_id(intervals);
+    if (intervals === null) intervals = DIVISIONS_DEF;
+    for (let i = 0; i <= intervals; i++) {
+        let v = Math.round(255 * i / intervals);
+        if (i === intervals) v = 255;
         values.push(v);
     }
     const uniqueValues = [...new Set(values)];
@@ -1223,9 +1257,7 @@ function generateColorPalette(containerId, divisions, showHexValue = false, outp
     container.appendChild(table);
 }
 
-// Пример вызова (divisions = 5 → 6 значений по RGB)
-OnLoadRunner.add(() => generateColorPalette('palette__id', 3, false, "output_palette__id"));
-// Пример использования: generateColorPalette('paletteContainer', 85);
+OnLoadRunner.add(() => generateColorPalette('palette__id', null, false, "output_palette__id"));
 
 // =====================================================================================================================
 // ============================================================
