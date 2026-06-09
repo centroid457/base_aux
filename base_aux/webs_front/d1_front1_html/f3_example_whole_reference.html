@@ -26,8 +26,8 @@
 <body>
 
     <nav class="div_a_nav__cls" style="font-size: xx-small;">
-        <button id="collapseAllBtn" data-btn_blue_outline>Скрыть все</button>
-        <button id="expandAllBtn" data-btn_blue_outline>Раскрыть все</button>
+        <button id="collapseAllBtn" data-btn_outline="blue">Скрыть все</button>
+        <button id="expandAllBtn" data-btn_outline="blue">Раскрыть все</button>
     </nav>
 
     <header>
@@ -3747,41 +3747,6 @@
                         <button>button BLANK</button>
 
                         <hr>
-                        MANUALS
-                        <p data-bg_a5>
-                            <button data-btn_blue>data-btn_blue</button>
-                            <button data-btn_green>data-btn_green</button>
-                            <button data-btn_red>data-btn_red</button>
-                            <button data-btn_black>data-btn_black</button>
-                            <button data-btn_white>data-btn_white</button>
-                            <button data-btn_yellow>data-btn_yellow</button>
-                             <br>
-
-                            <button data-btn_blue disabled>data-btn_blue</button>
-                            <button data-btn_green disabled>data-btn_green</button>
-                            <button data-btn_red disabled>data-btn_red</button>
-                            <button data-btn_black disabled>data-btn_black</button>
-                            <button data-btn_white disabled>data-btn_white</button>
-                            <button data-btn_yellow disabled>data-btn_yellow</button>
-                        </p>
-                        <p data-bg_a5>
-                            <button data-btn_blue_outline>data-btn_blue_outline</button>
-                            <button data-btn_green_outline>data-btn_green_outline</button>
-                            <button data-btn_red_outline>data-btn_red_outline</button>
-                            <button data-btn_black_outline>data-btn_black_outline</button>
-                            <button data-btn_white_outline>data-btn_white_outline</button>
-                            <button data-btn_yellow_outline>data-btn_yellow_outline</button>
-                            <br>
-
-                            <button data-btn_blue_outline disabled>data-btn_blue_outline</button>
-                            <button data-btn_green_outline disabled>data-btn_green_outline</button>
-                            <button data-btn_red_outline disabled>data-btn_red_outline</button>
-                            <button data-btn_black_outline disabled>data-btn_black_outline</button>
-                            <button data-btn_white_outline disabled>data-btn_white_outline</button>
-                            <button data-btn_yellow_outline disabled>data-btn_yellow_outline</button>
-                        </p>
-
-                        <hr>
                         CLONER<br>
                         <div data-cover__border_bg>
                             <button
@@ -5556,9 +5521,9 @@ cancelable: true – внутри обработчика можно вызват
                                 <input type="email" id="fieldEmail" name="email" placeholder="user@example.com" style="padding: 0.3rem; border: 1px solid #cbd5e1;">
                             </div>
                             <div>
-                                <button type="submit" data-btn_green>✅ Отправить (submit)</button>
-                                <button type="reset" data-btn_red_outline style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
-                                <button type="button" id="customButton" data-btn_blue_outline style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
+                                <button type="submit" data-btn="green">✅ Отправить (submit)</button>
+                                <button type="reset" data-btn_outline="red" style="margin-left: 0.5rem;">⟳ Сбросить (reset)</button>
+                                <button type="button" id="customButton" data-btn_outline="blue" style="margin-left: 0.5rem;">⚙️ Выполнить действие (button)</button>
                             </div>
                             <div id="customMessage" style="margin-top: 0.5rem; font-size: 0.85rem; color: #2a73ff;"></div>
 
@@ -6563,28 +6528,28 @@ cancelable: true – внутри обработчика можно вызват
                         </div>
 
                         <hr>
-                        <button id="reloadLocation" data-btn_blue>location.reload()</button>откроет ТЕКУЩЕЕ<br>
+                        <button id="reloadLocation">location.reload()</button>откроет ТЕКУЩЕЕ<br>
                         <code>location.reload()</code> – обычная перезагрузка (с учётом кеша - сохраняется).<br>
 
                         <hr>
-                        <button id="reloadLocationTrue" data-btn_blue_outline>location.reload(true)</button>откроет ТЕКУЩЕЕ<br>
+                        <button id="reloadLocationTrue" data-btn_outline="blue">location.reload(true)</button>откроет ТЕКУЩЕЕ<br>
                         <code>location.reload(true)</code> – принудительная (без кеша, но параметр устарел) - видимо не работает больше!<br>
 
                         <hr>
-                        <button id="reloadHref" data-btn_green>location.href = location.href</button>откроет TOP<br>
+                        <button id="reloadHref" data-btn="green">location.href = location.href</button>откроет TOP<br>
                         УСТАРЕЛ?<code>location.href = location.href</code> – альтернатива, может не сработать в некоторых браузерах.<br>
 
                         <hr>
-                        <button id="reloadReplace" data-btn_green_outline>location.replace(location.href)</button>откроет TOP<br>
+                        <button id="reloadReplace" data-btn_outline="green">location.replace(location.href)</button>откроет TOP<br>
                         <code>location.replace(location.href)</code> – перезагрузка без добавления записи в историю.<br>
 
                         <hr>
-                        <button id="reloadHistory" data-btn_red_outline>history.go(0)</button>откроет ТЕКУЩЕЕ<br>
+                        <button id="reloadHistory" data-btn_outline="red">history.go(0)</button>откроет ТЕКУЩЕЕ<br>
                         <code>history.go(0)</code> – имитирует нажатие кнопки "Обновить".<br>
                         Совместимость со старыми браузерами
 
                         <hr>
-                        <button id="reloadForce" data-btn_red>СБРОС КЕША (с параметром _t)</button>откроет TOP<br>
+                        <button id="reloadForce" data-btn="red">СБРОС КЕША (с параметром _t)</button>откроет TOP<br>
                         добавляет параметр<code>?_t=timestamp</code>, всегда загружает СНОВА ПОЛНОСТЬЮ с сервера.<br>
 
                     </div>
@@ -6594,8 +6559,8 @@ cancelable: true – внутри обработчика можно вызват
                     <header>⚙️ Дополнительные методы</header>
                     <div class="article_main__cls">
 
-                        <button id="reloadMetaExample" data-btn_black_outline>meta ТЕГ на странице</button>
-                        <button id="reloadWithDelay" data-btn_black>Отложенная перезагрузка (3 сек)</button>
+                        <button id="reloadMetaExample" data-btn_outline="black">meta ТЕГ на странице</button>
+                        <button id="reloadWithDelay" data-btn="black">Отложенная перезагрузка (3 сек)</button>
 
                         <div id="reloadExtrasLog" style="background: #f8fafc; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.5rem; font-family: monospace; font-size: 0.85rem;">
                             Здесь будет информация.

@@ -559,11 +559,9 @@ fieldset
 
 /* ================================================================================================================== */
 /* -------------------- BUTTONS --------------------------------------------------------------------------------------*/
-/* FIXME: use over parametrisation! data-btn_style__color_="blue" +resolve Outline maybe as additional data-btn_style__outline */
 /* 0=ALL ----------------------------------------- */
 button
 {
-    /**/
     font-weight: 500;
     _transition: all 0.2s;
 }
@@ -572,191 +570,15 @@ button:active
     transform: scale(0.9);
 }
 
-/* 0=ALL DARK----------------------------------------- */
-button,
-[data-btn_blue],
-[data-btn_green],
-[data-btn_red],
-[data-btn_black]
-{
-    color: white;
-}
-button:hover,
-[data-btn_blue]:hover,
-[data-btn_green]:hover,
-[data-btn_red]:hover,
-[data-btn_yellow]:hover,
-[data-btn_black]:hover
-{
-    border-color: white;
-}
-
-[data-btn_blue_outline],
-[data-btn_green_outline],
-[data-btn_red_outline],
-[data-btn_yellow_outline],
-[data-btn_black_outline]
-{
-    background: transparent;
-}
-[data-btn_blue_outline]:hover,
-[data-btn_green_outline]:hover,
-[data-btn_red_outline]:hover,
-[data-btn_yellow_outline]:hover,
-[data-btn_black_outline]:hover
-{
-    border-color: white;
-    color: white;
-}
-
-/* 1=BLUE+DEF -------------------------------------- */
-button,
-[data-btn_blue]
-{
-    background: #00fb;
-}
-button:hover,
-[data-btn_blue]:hover
-{
-    background: #00f;
-}
-[data-btn_blue_outline]
-{
-    border-color: #00f;
-    color: #00f;
-}
-[data-btn_blue_outline]:hover
-{
-    background: #00f;
-}
-
-/* 2=GREEN ----------------------------------------- */
-[data-btn_green]
-{
-    background: #0c0b;
-}
-[data-btn_green]:hover
-{
-    background: #0c0;
-}
-[data-btn_green_outline]
-{
-    border-color: #0c0;
-    color: #0c0;
-}
-[data-btn_green_outline]:hover
-{
-    background: #0c0;
-}
-
-/* 3=RED----------------------------------------- */
-[data-btn_red]
-{
-    background: #f00b;
-}
-[data-btn_red]:hover
-{
-    background: #f00;
-}
-[data-btn_red_outline]
-{
-    border-color: #f00;
-    color: #f00;
-}
-[data-btn_red_outline]:hover
-{
-    background: #f00;
-}
-
-/* 4=BLACK ----------------------------------------- */
-[data-btn_black]
-{
-    background: #000b;
-}
-[data-btn_black]:hover
-{
-    background: #000;
-}
-[data-btn_black_outline]
-{
-    border-color: #000;
-    color: #000;
-}
-[data-btn_black_outline]:hover
-{
-    background: #000;
-}
-
-/* 0=ALL LIGHT ----------------------------------------- */
-[data-btn_white],
-[data-btn_yellow]
-{
-    color: black;
-}
-[data-btn_white]:hover,
-[data-btn_yellow]:hover
-{
-    border-color: black;
-}
-
-[data-btn_white_outline],
-[data-btn_yellow_outline]
-{
-    background: transparent;
-}
-[data-btn_white_outline]:hover,
-[data-btn_yellow_outline]:hover
-{
-    border-color: black;
-    color: black;
-}
-
-/* 1=WHITE ----------------------------------------- */
-[data-btn_white]
-{
-    background: #fffa;  /* A opacity for light colors!!! */
-}
-[data-btn_white]:hover
-{
-    background: white;
-}
-[data-btn_white_outline]
-{
-    border-color: white;
-    color: white;
-}
-[data-btn_white_outline]:hover
-{
-    background: white;
-}
-
-/* 2=YELLOW ----------------------------------------- */
-[data-btn_yellow]
-{
-    background: #ff0a;
-}
-[data-btn_yellow]:hover
-{
-    background: #ff0;
-}
-[data-btn_yellow_outline]
-{
-    border-color: #ff0;
-    color: #ff0;
-}
-[data-btn_yellow_outline]:hover
-{
-    background: #ff0;
-}
-
-/* ================================================================================================================== */
 /* -------------------- ПАРАМЕТРИЗОВАННЫЕ КНОПКИ -------------------- */
+button,
 [data-btn]
 {
     background: var(--color_light);
     color: var(--color_contrast);
     border-color: var(--color_contrast_light);
 }
+button:hover,
 [data-btn]:hover,
 [data-btn_outline]:hover /* полностью обычная кнопка! */
 {
@@ -776,6 +598,7 @@ button:hover,
 /* --------------------------------------------------------------- */
 /* dark/light themes */
 /* 1=DARK */
+button,
 [data-btn="black"], [data-btn_outline="black"],
 [data-btn="blue"], [data-btn_outline="blue"],
 [data-btn="red"], [data-btn_outline="red"],
@@ -795,6 +618,7 @@ button:hover,
 }
 
 /* --------------------------------------------------------------- */
+button,
 [data-btn="blue"], [data-btn_outline="blue"]
 {
     --color_base: #00f;
