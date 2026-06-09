@@ -3,8 +3,6 @@
 <!DOCTYPE html>
 <html lang="ru" data-auto__ping_lost>
 <head>
-    <script>uncache_loading__all_files_without_cache();</script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HTML/CSS справочник визуальный</title>
@@ -12,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Fira+Code&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../d1_front2_css/universal_root.css">
-    <script defer src="../d2_js1_vanilla/universal_root.js" data-comment="WorkingGood!"></script>
+    <script src="../d2_js1_vanilla/universal_root.js" data-comment="WorkingGood!"></script>
     <!--
     <script defer src="<?= filepath_with_timestamp('universal_root.js') ?>" data-comment="FIXME: NOT WORKING!!!"></script>
     не работает!!!
@@ -22,16 +20,19 @@
         //console.log("../d2_js1_vanilla/universal_root.js?v=<?= filemtime('../d2_js1_vanilla/universal_root.js') ?>");
     </script>
 
+    <script>uncache_loading__all_files_without_cache();</script>
+
 </head>
 <body>
 
     <nav class="div_a_nav__cls" style="font-size: xx-small;">
+        <span data-auto__replace_with__btn_hard_reset></span>
         <button id="collapseAllBtn" data-btn_outline="blue">Скрыть все</button>
         <button id="expandAllBtn" data-btn_outline="blue">Раскрыть все</button>
     </nav>
 
     <header>
-        <h1>HTML/CSS · справочник визуальный<span data-auto__replace_with__btn_hard_reset></span></h1>
+        <h1>HTML/CSS · справочник визуальный</h1>
         <div>Живые примеры основных тегов, нюансы отображения и типовые приёмы. <br>Группировка по задачам — открыл и сразу увидел, как работает.</div>
     </header>
 

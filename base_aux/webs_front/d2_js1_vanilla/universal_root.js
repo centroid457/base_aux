@@ -122,11 +122,11 @@ function onload__replace_with__btn_hard_reset() {
 
     // Создаём кнопку
     const btn = document.createElement('button');
-    btn.textContent = 'hardReset(unCache)';
+    btn.textContent = 'hardReset';
     btn.title = 'Перезагрузить страницу и принудительно обновить все ресурсы (CSS, JS)';
 
     // Добавляем атрибуты для стилизации (если используются ваши классы)
-    btn.setAttribute('data-btn_outline', 'yellow');
+    btn.setAttribute('data-btn_outline', 'red');
 
     // Обработчик клика
     btn.addEventListener('click', () => {
