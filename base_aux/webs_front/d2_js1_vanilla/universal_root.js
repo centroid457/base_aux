@@ -1224,7 +1224,7 @@ function generateColorPalette(containerId, divisions, showHexValue = false, outp
 }
 
 // Пример вызова (divisions = 5 → 6 значений по RGB)
-OnLoadRunner.add(() => generateColorPalette('palette__id', 5, false, "output_palette__id"));
+OnLoadRunner.add(() => generateColorPalette('palette__id', 3, false, "output_palette__id"));
 // Пример использования: generateColorPalette('paletteContainer', 85);
 
 // =====================================================================================================================
