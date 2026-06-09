@@ -1,11 +1,3 @@
-import asyncio
-import os
-from typing import Optional
-from datetime import datetime
-from enum import Enum
-from dataclasses import dataclass, field
-import uuid
-
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -13,71 +5,11 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
+from base_aux.qeues.m1_event_broadcaster import EventBroadcaster
 
 
 # =====================================================================================================================
-class ClientBroadcuster:
-    """
-    Управляет подключениями клиентов (подписчиков/слушателей) к основной очереди.
-    распределяет от основной очереди сообщения на всех клиентов.
-    """
-
-    main_queue: asyncio.Queue
-    task_broadcasting: asyncio.Task = None
-
-    def __init__(self, main_queue: asyncio.Queue | None = None):
-        if isinstance(main_queue, asyncio.Queue):
-            self.main_queue = main_queue
-        elif main_queue is None:
-            self.main_queue = asyncio.Queue()
-        else:
-            raise Exception(f"incorrect input type {main_queue!r}")
-
-        self.clients: dict[str, asyncio.Queue] = {}
-
-    async def start_task(self):
-        self.task_broadcasting = asyncio.create_task(self._broadcasting())
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _broadcasting(self):
-        """
-        GOAL: постоянное перенаправление сообщений из основной очереди на всех клиентов
-        """
-        while True:
-            try:
-                msg = await self.main_queue.get()
-
-                for q in self.clients.values():
-                    try:
-                        await q.put(msg)
-                    except asyncio.CancelledError:
-                        raise
-                    except Exception as exc:
-                        print(f"{exc!r}")
-            except asyncio.CancelledError:
-                return
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def register_client(self) -> tuple[str, asyncio.Queue]:
-        client_id = str(uuid.uuid4())
-        client_queue = asyncio.Queue()
-        self.clients[client_id] = client_queue
-        return client_id, client_queue
-
-    async def unregister_client(self, client_id: str):
-        self.clients.pop(client_id, None)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def broadcast(self, msg: dict):
-        """Отправить сообщение всем клиентам.
-        можно взять main_queue и напрямую посылать!
-        """
-        await self.main_queue.put(msg)
-
-    # -----------------------------------------------------------------------------------------------------------------
-
-
-client_broadcuster = ClientBroadcuster()
+event_broadcaster = EventBroadcaster()
 
 
 # =====================================================================================================================
@@ -104,7 +36,7 @@ class ManagerInstance:
         await new_item.connect()
 
         def history_log__broadcust(msg_style, msg_text):
-            asyncio.create_task(client_broadcuster.broadcast({
+            asyncio.create_task(event_broadcaster.broadcast({
                 "item_id": item_id,
                 "event": "history_log",
                 "load": {
@@ -116,7 +48,7 @@ class ManagerInstance:
         new_item.history.listener__add(history_log__broadcust)
 
         # 3=broadcust -----------------------
-        await client_broadcuster.broadcast({
+        await event_broadcaster.broadcast({
             "item_id": item_id,
             "event": "item_control",
             "load": {
@@ -133,7 +65,7 @@ class ManagerInstance:
             await item.disconnect()
 
             # 3=broadcust -----------------------
-            await client_broadcuster.broadcast({
+            await event_broadcaster.broadcast({
                 "item_id": idn,
                 "event": "item_control",
                 "load": {
@@ -151,7 +83,7 @@ class ManagerInstance:
         item.history.clear()
 
         # 3=broadcust -----------------------
-        await client_broadcuster.broadcast({
+        await event_broadcaster.broadcast({
             "item_id": idn,                 # FILTER
             "event": "item_control",        # EVENT
             "load": {                           # LOAD
@@ -601,7 +533,7 @@ HTML_TEMPLATE = """
 async def lifespan(app: FastAPI):
     # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
     print(f"FastApi.Startup: START")
-    await client_broadcuster.start_task()
+    await event_broadcaster.start_task()
     first_id = await object_manager.create_item()
     first_item = object_manager.get_item(first_id)
     if first_item:
@@ -682,7 +614,7 @@ async def ws__ping(websocket: WebSocket):
 async def ws__client(websocket: WebSocket):
 
     await websocket.accept()
-    client_id, client_queue = await client_broadcuster.register_client()
+    client_id, client_queue = await event_broadcaster.register_client()
 
     # --------------------------------------------
     # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
@@ -743,7 +675,7 @@ async def ws__client(websocket: WebSocket):
     finally:
         queue_to_ws__task.cancel()
         await queue_to_ws__task
-        await client_broadcuster.unregister_client(client_id)
+        await event_broadcaster.unregister_client(client_id)
 
 
 # =====================================================================================================================
