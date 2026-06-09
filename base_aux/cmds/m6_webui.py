@@ -16,27 +16,66 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 
 
 # =====================================================================================================================
-class ManagerClient:
-    """Управляет подключениями клиентов и рассылкой событий."""
-    def __init__(self):
-        self._queues: dict[str, asyncio.Queue] = {}
+class ClientBroadcuster:
+    """
+    Управляет подключениями клиентов (подписчиков/слушателей).
+    распределяет от основной очереди сообщения на всех клиентов.
+    """
 
+    main_queue: asyncio.Queue
+    task_broadcasting: asyncio.Task = None
+
+    def __init__(self, main_queue: asyncio.Queue | None = None):
+        if isinstance(main_queue, asyncio.Queue):
+            self.main_queue = main_queue
+        elif main_queue is None:
+            self.main_queue = asyncio.Queue()
+        else:
+            raise Exception(f"incorrect input type {main_queue!r}")
+
+        self.clients: dict[str, asyncio.Queue] = {}
+
+    async def start_task(self):
+        self.task_broadcasting = asyncio.create_task(self._broadcasting())
+
+    # -----------------------------------------------------------------------------------------------------------------
+    async def _broadcasting(self):
+        """
+        GOAL: постоянное перенаправление сообщений из основной очерези на всех клиентов
+        """
+        while True:
+            try:
+                msg = await self.main_queue.get()
+
+                for q in self.clients.values():
+                    try:
+                        await q.put(msg)
+                    except asyncio.CancelledError:
+                        raise
+                    except Exception as exc:
+                        print(f"{exc!r}")
+            except asyncio.CancelledError:
+                return
+
+    # -----------------------------------------------------------------------------------------------------------------
     async def register_client(self) -> tuple[str, asyncio.Queue]:
         client_id = str(uuid.uuid4())
         client_queue = asyncio.Queue()
-        self._queues[client_id] = client_queue
+        self.clients[client_id] = client_queue
         return client_id, client_queue
 
     async def unregister_client(self, client_id: str):
-        self._queues.pop(client_id, None)
+        self.clients.pop(client_id, None)
 
+    # -----------------------------------------------------------------------------------------------------------------
     async def broadcast(self, msg: dict):
         """Отправить сообщение всем клиентам."""
-        for q in self._queues.values():
-            await q.put(msg)
+        await self.main_queue.put(msg)
+
+    # -----------------------------------------------------------------------------------------------------------------
 
 
-client_manager = ManagerClient()
+client_broadcuster = ClientBroadcuster()
 
 
 # =====================================================================================================================
@@ -51,23 +90,11 @@ class ManagerInstance:
         return self.items.get(idn)
 
     # CMDS ----------------------------------------------
-    async def clear_history(self, idn: str) -> None:
-        item = self.items.get(idn)
-        if not item:
-            return
-
-        item.history.clear()
-        await client_manager.broadcast({
-            "item_id": idn,                 # FILTER
-            "event": "item_control",        # EVENT
-            "load": {                           # LOAD
-                "action": "clear_history",     # ACTION
-            }
-        })
-
     async def create_item(self, *args, **kwargs) -> str:
         new_item = self.ITEM_CLASS(*args, **kwargs)
         item_id = new_item.idn
+
+        # 2=WORK -----------------------
         print(f"create_item:{item_id=}")
         self.items[item_id] = new_item
 
@@ -75,34 +102,24 @@ class ManagerInstance:
 
         # Глобальный слушатель – отправляет все события терминала всем клиентам
         def global_listener(msg_style, msg_text):
-            # Преобразуем в единый формат: (item_id, event, load)
-            # msg_style может быть 'msg_stdout__cls', 'msg_stderr__cls', 'msg_stdin__cls', 'msg_system__cls' и т.д.
-            # Определяем action
-            action_map = {
-                'msg_stdout__cls': 'stdout',
-                'msg_stderr__cls': 'stderr',
-                'msg_stdin__cls': 'stdin',
-                'msg_system__cls': 'system',
-                'msg_debug__cls': 'debug',
-            }
-            action = action_map.get(msg_style, 'unknown')
-            asyncio.create_task(client_manager.broadcast({
+            asyncio.create_task(client_broadcuster.broadcast({
                 "item_id": item_id,
                 "event": "history_log",
                 "load": {
-                    "action": action,
+                    "action": msg_style,
                     "text": msg_text
                 }
             }))
 
         new_item.history.listener__add(global_listener)
+
         # Сохраняем слушателя, чтобы потом удалить при удалении терминала
         if not hasattr(new_item, '_global_listeners'):
             new_item._global_listeners = []
         new_item._global_listeners.append(global_listener)
 
-        # Оповещаем всех клиентов о создании нового терминала
-        await client_manager.broadcast({
+        # 3=broadcust -----------------------
+        await client_broadcuster.broadcast({
             "item_id": item_id,
             "event": "item_control",
             "load": {
@@ -112,21 +129,43 @@ class ManagerInstance:
         return item_id
 
     async def del_item(self, idn: str) -> None:
+        # 1=detect --------------------------
         item = self.items.pop(idn, None)
         if item:
+            # 2=WORK ----------------------------
             # Удаляем глобальных слушателей
             if hasattr(item, '_global_listeners'):
                 for listener in item._global_listeners:
                     item.history.listener__del(listener)
+
             await item.disconnect()
-            # Оповещаем всех клиентов об удалении
-            await client_manager.broadcast({
+
+            # 3=broadcust -----------------------
+            await client_broadcuster.broadcast({
                 "item_id": idn,
                 "event": "item_control",
                 "load": {
                     "action": "delete_item",
                 }
             })
+
+    async def clear_history(self, idn: str) -> None:
+        # 1=detect --------------------------
+        item = self.items.get(idn)
+        if not item:
+            return
+
+        # 2=WORK ----------------------------
+        item.history.clear()
+
+        # 3=broadcust -----------------------
+        await client_broadcuster.broadcast({
+            "item_id": idn,                 # FILTER
+            "event": "item_control",        # EVENT
+            "load": {                           # LOAD
+                "action": "clear_history",     # ACTION
+            }
+        })
 
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -570,6 +609,7 @@ HTML_TEMPLATE = """
 async def lifespan(app: FastAPI):
     # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
     print(f"FastApi.Startup: START")
+    await client_broadcuster.start_task()
     first_id = await object_manager.create_item()
     first_item = object_manager.get_item(first_id)
     if first_item:
@@ -648,13 +688,16 @@ async def ws__ping(websocket: WebSocket):
 # ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/client")
 async def ws__client(websocket: WebSocket):
-    await websocket.accept()
 
-    client_id, client_queue = await client_manager.register_client()
+    await websocket.accept()
+    client_id, client_queue = await client_broadcuster.register_client()
 
     # --------------------------------------------
     # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
     async def ws_sender():
+        """
+        GOAL: resend all msgs from clientQueue to clientWS
+        """
         try:
             while True:
                 msg = await client_queue.get()
@@ -708,7 +751,7 @@ async def ws__client(websocket: WebSocket):
     finally:
         send_task.cancel()
         await send_task
-        await client_manager.unregister_client(client_id)
+        await client_broadcuster.unregister_client(client_id)
 
 
 # =====================================================================================================================
