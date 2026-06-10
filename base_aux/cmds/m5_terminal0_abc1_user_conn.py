@@ -162,7 +162,7 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
     def _read_byte_with_timeout(
             self,
             timeout: float = 0.05,
-            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+            buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT,
     ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
         raise NotImplementedError()
 

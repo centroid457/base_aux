@@ -157,23 +157,25 @@ class EnumAdj_ProcessStateResult(NestEq_EnumAdj):
 
 
 # ======================================================================================================================
-# BUFFER ---------------------------------------------------------------------------------------------------------------
-class EnumAdj_BufferType(NestEq_EnumAdj):
+# IOE ------------------------------------------------------------------------------------------------------------------
+class EnumAdj_StdioeType(NestEq_EnumAdj):
     STDIN: int = 1
     STDOUT: int = 2
     STDERR: int = 3
-    DEBUG: int = 5
+
+    # NO DEBUG/SYSTEM HERE!!! it is
 
 
 # EVENT ----------------------------------------------------------------------------------------------------------------
 class EnumAdj_EventChannel(NestEq_EnumAdj):
     LOG_SYSTEM: int = 1     # EXECUTION PROCESS
-    LOG_STDIO: int = 2      # IO history
+    LOG_STDIOE: int = 2      # IO history
     LOG_USER: int = 3       # debug logs
     LOG_RESULT: int = 4     # any result separate here!
 
 
-class EnumAdj_EventStatus(NestEq_EnumAdj):
+class EnumAdj_EventLevel(NestEq_EnumAdj):
+    # MAYBE NOT NEEDED!!! overcomplicated???
     DEBUG: int = 0
     INFO: int = 1
     WARN: int = 2

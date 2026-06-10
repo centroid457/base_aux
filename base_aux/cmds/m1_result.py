@@ -2,7 +2,7 @@ from typing import *
 from datetime import datetime
 
 from dataclasses import dataclass, field
-from base_aux.base_enums.m2_enum1_adj import EnumAdj_BufferType, EnumAdj_FinishedStatus
+from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
 
 
@@ -117,7 +117,7 @@ class CmdResult:
     def append(
             self,
             data: TYPING__CMD_LINES_DRAFT,
-            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+            buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT,
     ) -> None | NoReturn:
         """
         GOAL
@@ -127,11 +127,11 @@ class CmdResult:
         """
         self.duration = (datetime.now() - self.timestamp).total_seconds()
 
-        if buffer_type == EnumAdj_BufferType.STDOUT:
+        if buffer_type == EnumAdj_StdioeType.STDOUT:
             source = self.STDOUT
-        elif buffer_type == EnumAdj_BufferType.STDERR:
+        elif buffer_type == EnumAdj_StdioeType.STDERR:
             source = self.STDERR
-        elif buffer_type == EnumAdj_BufferType.DEBUG:
+        elif buffer_type == EnumAdj_StdioeType.DEBUG:
             source = self.DEBUG
         else:
             msg = f"use only STDOUT/STDERR/DEBUG{buffer_type=}"
@@ -144,13 +144,13 @@ class CmdResult:
                 self.append(data=item, buffer_type=buffer_type)
 
     # def append_stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.STDOUT)
+    #     return self.append(data=data, buffer_type=EnumAdj_StdioeType.STDOUT)
     #
     # def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.STDERR)
+    #     return self.append(data=data, buffer_type=EnumAdj_StdioeType.STDERR)
     #
     # def append_debug(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-    #     return self.append(data=data, buffer_type=EnumAdj_BufferType.DEBUG)
+    #     return self.append(data=data, buffer_type=EnumAdj_StdioeType.DEBUG)
 
     # -----------------------------------------------------------------------------------------------------------------
     def print_state(self, short: bool | None = None) -> None:

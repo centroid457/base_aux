@@ -72,7 +72,7 @@ class CmdTerminal_OsSync(Mark_CmdTerminal_Os, BaseSync_CmdTerminal):
     def _read_byte_with_timeout(
             self,
             timeout: float = 0.05,
-            buffer_type: EnumAdj_BufferType = EnumAdj_BufferType.STDOUT,
+            buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT,
     ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
         buffer: IO | None = None
 
@@ -80,9 +80,9 @@ class CmdTerminal_OsSync(Mark_CmdTerminal_Os, BaseSync_CmdTerminal):
             raise Exc__IoConnection(f"{self._conn=}")
 
         # init BUFFER -------------------
-        if buffer_type == EnumAdj_BufferType.STDOUT:
+        if buffer_type == EnumAdj_StdioeType.STDOUT:
             buffer = self._conn.stdout
-        elif buffer_type == EnumAdj_BufferType.STDERR:
+        elif buffer_type == EnumAdj_StdioeType.STDERR:
             buffer = self._conn.stderr
         else:
             raise Exc__WrongUsage(f'{buffer_type=}')

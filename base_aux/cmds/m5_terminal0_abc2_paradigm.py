@@ -4,7 +4,7 @@ import time
 from abc import abstractmethod
 from typing import Never, IO
 
-from base_aux.base_enums.m2_enum1_adj import EnumAdj_BufferType, EnumAdj_FinishedStatus
+from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
@@ -164,7 +164,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
+    def _bg_reading_buffer(self, buffer_type: EnumAdj_StdioeType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
         - timeout_read_start – ожидание первого байта строки.
@@ -200,10 +200,10 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             return
 
         # init BUFFER -------------------
-        if buffer_type == EnumAdj_BufferType.STDOUT:
+        if buffer_type == EnumAdj_StdioeType.STDOUT:
             buffer = self._conn.stdout
             append_method = self.history.add_data__stdout
-        elif buffer_type == EnumAdj_BufferType.STDERR:
+        elif buffer_type == EnumAdj_StdioeType.STDERR:
             buffer = self._conn.stderr
             append_method = self.history.add_data__stderr
         else:
@@ -255,10 +255,10 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
                 break
 
     def _bg_reading_buffer__stdout(self) -> Never | None:
-        self._bg_reading_buffer(EnumAdj_BufferType.STDOUT)
+        self._bg_reading_buffer(EnumAdj_StdioeType.STDOUT)
 
     def _bg_reading_buffer__stderr(self) -> Never | None:
-        self._bg_reading_buffer(EnumAdj_BufferType.STDERR)
+        self._bg_reading_buffer(EnumAdj_StdioeType.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
     def _wait__finish_executing_cmd(
@@ -373,7 +373,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         if not self.history._history:
             self.history.add_data__stdin("")
 
-        self.history.add_data__debug("🔄connected")
+        # self.history.add_data__debug("🔄connected")
 
         self._stop_reading = False
         self._create_tasks()
@@ -387,7 +387,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         self._stop_reading = True
         await self._del_tasks()
         await self._del_conn()
-        self.history.add_data__debug("disconnected")
+        # self.history.add_data__debug("disconnected")
         print(f"{self.__class__.__name__}({self.idn=}).disconnected")
 
     async def reconnect(self) -> None:
@@ -395,7 +395,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         await self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _bg_reading_buffer(self, buffer_type: EnumAdj_BufferType) -> Never | None:
+    async def _bg_reading_buffer(self, buffer_type: EnumAdj_StdioeType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
         - timeout_read_start – ожидание первого байта строки.
@@ -410,10 +410,10 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             return
 
         # init BUFFER -------------------
-        if buffer_type == EnumAdj_BufferType.STDOUT:
+        if buffer_type == EnumAdj_StdioeType.STDOUT:
             buffer = self._conn.stdout
             append_method = self.history.add_data__stdout
-        elif buffer_type == EnumAdj_BufferType.STDERR:
+        elif buffer_type == EnumAdj_StdioeType.STDERR:
             buffer = self._conn.stderr
             append_method = self.history.add_data__stderr
         else:
@@ -467,10 +467,10 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
                 break
 
     async def _bg_reading_buffer__stdout(self):
-        await self._bg_reading_buffer(EnumAdj_BufferType.STDOUT)
+        await self._bg_reading_buffer(EnumAdj_StdioeType.STDOUT)
 
     async def _bg_reading_buffer__stderr(self):
-        await self._bg_reading_buffer(EnumAdj_BufferType.STDERR)
+        await self._bg_reading_buffer(EnumAdj_StdioeType.STDERR)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _wait__finish_executing_cmd(
