@@ -11,7 +11,7 @@ from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 
-from base_aux.cmds.m2_history import CmdHistory_Serial
+from base_aux.cmds.m2_history import CmdHistory_Sync
 
 
 # =====================================================================================================================
@@ -190,7 +190,7 @@ class SerialClient(Logger):
     _EMULATOR__START: bool = None  # DONT DELETE! it need when you reconnecting! cause of address replaced after disconnecting by exact str after PAIRED*
 
     # AUX -----------------------------------------------------
-    history: CmdHistory_Serial
+    history: CmdHistory_Sync
     _SERIAL: Serial
 
     ADDRESSES__SYSTEM: dict[str, Union[None, Self]] = {}
@@ -219,7 +219,7 @@ class SerialClient(Logger):
         if eol__send is not None:
             self.EOL__SEND = eol__send
 
-        self.history = CmdHistory_Serial()
+        self.history = CmdHistory_Sync()
         self.init_serial()
 
         # self.addresses_system__detect()   # DONT USE in init!!!
@@ -1316,7 +1316,7 @@ class SerialClient(Logger):
 
             retry_noanswer: int | None = None,
             _timeout: Optional[float] = None,
-    ) -> Union[CmdHistory_Serial, NoReturn]:
+    ) -> Union[CmdHistory_Sync, NoReturn]:
         """
         send data and return history
 
@@ -1326,7 +1326,7 @@ class SerialClient(Logger):
         DONT USE! IF WANT TO BE SURE!
         instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
         """
-        history = CmdHistory_Serial()
+        history = CmdHistory_Sync()
         if retry_noanswer is None:
             retry_noanswer = self.REWRITEIF_READNOANSWER
         remain__retry_noanswer = retry_noanswer or 0
@@ -1462,7 +1462,7 @@ class SerialClient(Logger):
         """
         return self.write_read__last_validate(*args, **kwargs, _as_regexp=True)
 
-    def dump_cmds(self, cmds: list[str] = None) -> Union[CmdHistory_Serial, NoReturn]:
+    def dump_cmds(self, cmds: list[str] = None) -> Union[CmdHistory_Sync, NoReturn]:
         """
         useful to get results for standard cmds list
         if you need to read all params from device!

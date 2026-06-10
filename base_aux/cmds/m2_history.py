@@ -37,7 +37,7 @@ class Abc_CmdHistory(ABC):
         so if you start using any bus and send cmd
             1. dont create CmdResult
             2. dont manipulate by CmdResult directly
-            3. manage all by CmdHistory_Serial object! over its methods
+            3. manage all by CmdHistory_Sync object! over its methods
 
     CONSTRAINTS
     -----------
@@ -326,7 +326,7 @@ class Abc_CmdHistory(ABC):
 
 
 # ======================================================================================================================
-class CmdHistory_Serial(Abc_CmdHistory):
+class CmdHistory_Sync(Abc_CmdHistory):
     def _add_data(
             self,
             data: TYPING__CMD_LINES_DRAFT,
