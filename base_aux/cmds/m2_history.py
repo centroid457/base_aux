@@ -380,6 +380,21 @@ class CmdHistory_Serial(Abc_CmdHistory):
 
 # ----------------------------------------------------------------------------------------------------------------------
 class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
+    async def eb__broadcast(self, msg_text, buffer_type) -> None:
+        if self._eb__obj is None:
+            return
+
+        data = dict(
+            item_id=self._eb__aux_data.get("item_id"),
+            channel="history_log",
+            load=dict(
+                action=buffer_type.name.lower(),
+                text=f"{msg_text}")
+            )
+
+        await self._eb__obj.broadcast(data)
+
+    # -----------------------------------------------------------------------------------------------------------------
     async def _add_data(
             self,
             data: TYPING__CMD_LINES_DRAFT,
@@ -395,38 +410,17 @@ class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
 
         # INPUT -------------
         if buffer_type == EnumAdj_StdioeType.STDIN:
-            print()
-            print(f"[{buffer_type.name}]--->{data}")
-
             self._add_result(CmdResult(data))
 
-            await self.event_broadcaster__broadcast(
-                dict(
-                    item_id=self._broadcast__aux_data.get("item_id"),
-                    channel="history_log",
-                    load=dict(
-                        action=buffer_type.name.lower(),
-                        text=f"{data}")
-                )
-            )
+            await self.eb__broadcast(msg_text=data, buffer_type=buffer_type)
             return
 
         # OUTPUT ------------
         if not self._history:
            await self.add_data__stdin("")
 
-        print(f"[{buffer_type.name}]{data}")
         self.last_result.append(data=data, buffer_type=buffer_type)
-
-        await self.event_broadcaster__broadcast(
-            dict(
-                item_id=self._broadcast__aux_data.get("item_id"),
-                channel="history_log",
-                load=dict(
-                    action=buffer_type.name.lower(),
-                    text=f"{data}")
-            )
-        )
+        await self.eb__broadcast(msg_text=data, buffer_type=buffer_type)
 
     async def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
         await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)

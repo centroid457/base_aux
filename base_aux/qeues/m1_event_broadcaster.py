@@ -55,38 +55,37 @@ class EventBroadcaster:
         self.clients.pop(client_id, None)
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def broadcast(self, msg: dict):
+    async def broadcast(self, data: dict):
         """Отправить сообщение всем клиентам.
         можно взять main_queue и напрямую посылать!
 
         ITS A QUICK METHOD! DONT DO ANYTHING!!! JUST PLACE INTO MAIN_QUEUE!!!!
         """
         try:
-            print(f"[EventBroadcaster].broadcast({msg})")
+            print(f"[EventBroadcaster].broadcast({data})")
         except:
             pass
-        await self.main_queue.put(msg)
+        await self.main_queue.put(data)
 
     # -----------------------------------------------------------------------------------------------------------------
 
 
 # =====================================================================================================================
 class Nest_EventBroadcasterImplemented:
-    _event_broadcaster: EventBroadcaster | None = None
-    _broadcast__aux_data: dict | None
-
-    def __init__(self, *args, **kwargs):
-        # DONT USE ANYTHING HERE!
-        super().__init__(*args, **kwargs)
+    _eb__obj: EventBroadcaster | None = None
+    _eb__aux_data: dict | None = None
 
     @abstractmethod
-    def event_broadcaster__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
-        self._event_broadcaster = eb
-        self._broadcast__aux_data = aux_data
+    def eb__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
+        self._eb__obj = eb
+        self._eb__aux_data = aux_data or {}
 
-    async def event_broadcaster__broadcast(self, msg: dict) -> None:
-        if self._event_broadcaster is not None:
-            await self._event_broadcaster.broadcast(msg)
+    @abstractmethod
+    async def eb__broadcast(self, **kwargs) -> None:
+        if self._eb__obj is None:
+            return
+
+        await self._eb__obj.broadcast(kwargs)
 
 
 # =====================================================================================================================
