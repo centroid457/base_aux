@@ -82,10 +82,16 @@ class Nest_EventBroadcasterImplemented:
 
     @abstractmethod
     async def eb__broadcast(self, **kwargs) -> None:
+        # 0=-------
         if self._eb__obj is None:
             return
 
-        await self._eb__obj.broadcast(kwargs)
+        # 1=MAKE DATA -------
+        # use data from _eb__aux_data
+        data = kwargs
+
+        # 2=SEND -------
+        await self._eb__obj.broadcast(data)
 
 
 # =====================================================================================================================
