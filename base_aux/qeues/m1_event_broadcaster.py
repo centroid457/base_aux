@@ -45,13 +45,13 @@ class EventBroadcaster:
                 return
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def register_client(self) -> tuple[str, asyncio.Queue]:
+    def register_client(self) -> tuple[str, asyncio.Queue]:
         client_id = str(uuid.uuid4())
         client_queue = asyncio.Queue()
         self.clients[client_id] = client_queue
         return client_id, client_queue
 
-    async def unregister_client(self, client_id: str):
+    def unregister_client(self, client_id: str):
         self.clients.pop(client_id, None)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -61,6 +61,10 @@ class EventBroadcaster:
 
         ITS A QUICK METHOD! DONT DO ANYTHING!!! JUST PLACE INTO MAIN_QUEUE!!!!
         """
+        try:
+            print(f"[EventBroadcaster].broadcast({msg})")
+        except:
+            pass
         await self.main_queue.put(msg)
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -79,7 +83,7 @@ class Nest_EventBroadcasterImplemented:
         self._event_broadcaster = eb
 
     async def event_broadcaster__broadcast(self, msg: dict) -> None:
-        if self._event_broadcaster:
+        if self._event_broadcaster is not None:
             await self._event_broadcaster.broadcast(msg)
 
 

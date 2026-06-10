@@ -605,7 +605,7 @@ async def ws__ping(websocket: WebSocket):
 async def ws__client(websocket: WebSocket):
 
     await websocket.accept()
-    client_id, client_queue = await event_broadcaster.register_client()
+    client_id, client_queue = event_broadcaster.register_client()
 
     # --------------------------------------------
     # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
@@ -666,7 +666,7 @@ async def ws__client(websocket: WebSocket):
     finally:
         queue_to_ws__task.cancel()
         await queue_to_ws__task
-        await event_broadcaster.unregister_client(client_id)
+        event_broadcaster.unregister_client(client_id)
 
 
 # =====================================================================================================================

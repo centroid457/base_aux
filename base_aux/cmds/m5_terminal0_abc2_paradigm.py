@@ -125,7 +125,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
             print(msg)
-            self.history.add_data__stderr(msg)
+            self.history.add_data__stderr(msg)  # fixme: USE SYSTEM level!
             return False
 
         self._stop_reading = False
@@ -347,6 +347,9 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     def event_broadcaster__setup(self, eb: EventBroadcaster) -> None:
         self._event_broadcaster = eb
 
+        if isinstance(self.history, Nest_EventBroadcasterImplemented):
+            self.history.event_broadcaster__setup(eb)
+
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self):
         await self.connect()
@@ -367,11 +370,11 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         except Exception as exc:
             msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
             print(msg)
-            self.history.add_data__stderr(msg)
+            await self.history.add_data__stderr(msg)
             return False
 
         if not self.history._history:
-            self.history.add_data__stdin("")
+            await self.history.add_data__stdin("")
 
         # self.history.add_data__debug("🔄connected")
 
@@ -446,7 +449,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
                         if bytes_accumulated:
                             new_line : str = bytes_accumulated.decode(self._encoding).rstrip()
                             if new_line:
-                                append_method(new_line)
+                                await append_method(new_line)
                                 self.history.set_retcode(self._conn.returncode)
 
                         bytes_accumulated = bytearray()
@@ -457,7 +460,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
                 if bytes_accumulated:
                     new_line: str  = bytes_accumulated.decode(self._encoding).rstrip()
                     if new_line:
-                        append_method(new_line)
+                        await append_method(new_line)
                         self.history.set_retcode(self._conn.returncode)
 
             except asyncio.CancelledError:
@@ -511,7 +514,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         if self._conn is None:
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
-        self.history.add_data__stdin(cmd)
+        await self.history.add_data__stdin(cmd)
         try:
             await self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
 
@@ -521,7 +524,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
                 finished_status = EnumAdj_FinishedStatus.TIMED_OUT
         except Exception as exc:
             print(f"{exc!r}")
-            self.history.add_data__stderr(f"{exc!r}")
+            await self.history.add_data__stderr(f"{exc!r}")
             finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
         self.history.set_finished(status=finished_status)

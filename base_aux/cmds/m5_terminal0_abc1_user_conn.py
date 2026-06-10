@@ -3,7 +3,7 @@ import os
 from abc import ABC, abstractmethod
 
 from base_aux.cmds.m1_result import *
-from base_aux.cmds.m2_history import CmdHistory
+from base_aux.cmds.m2_history import CmdHistory_Aio
 from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m3_timeout_def import TimeoutDef
@@ -39,7 +39,7 @@ class BaseUser_CmdTerminal(ABC):
     id_index: int = 0
     _id_index__last: int = 0
 
-    history: CmdHistory
+    history: CmdHistory_Aio
     timeout_def: TimeoutDef = TimeoutDef(2, 1, 0.1)
 
     def __init__(
@@ -69,7 +69,7 @@ class BaseUser_CmdTerminal(ABC):
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
-        self.history = CmdHistory()
+        self.history = CmdHistory_Aio()
 
     # -----------------------------------------------------------------------------------------------------------------
     def set_id(self, idn: str | None = None) -> None:

@@ -1,7 +1,11 @@
 from typing import *
+import asyncio
+from abc import ABC, abstractmethod
 
 from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m1_result import *
+
+from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
 # =====================================================================================================================
@@ -16,7 +20,7 @@ TYPING__CMD_HISTORY_DRAFT = list[TYPING__CMD_RESULT_DRAFT]
 
 
 # =====================================================================================================================
-class CmdHistory:
+class Abc_CmdHistory(ABC):
     """
     GOAL
     ----
@@ -33,7 +37,7 @@ class CmdHistory:
         so if you start using any bus and send cmd
             1. dont create CmdResult
             2. dont manipulate by CmdResult directly
-            3. manage all by CmdHistory object! over its methods
+            3. manage all by CmdHistory_Serial object! over its methods
 
     CONSTRAINTS
     -----------
@@ -43,7 +47,6 @@ class CmdHistory:
 
     def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
         self._history = []
-        self._listeners = []  # список слушателей (msg_style, msg_text)
 
         if not source:
             pass
@@ -53,19 +56,6 @@ class CmdHistory:
             for item in source:
                 self._add_result(item)
                 # self.set_finished()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def _listeners__notify(self, msg_text: str, buffer_type: EnumAdj_StdioeType) -> None:
-        if isinstance(buffer_type, EnumAdj_StdioeType):
-            msg_style = buffer_type.name.lower()
-        else:
-            raise Exception(f"{buffer_type=}")
-
-        for listener in self._listeners:
-            try:
-                listener(msg_style, msg_text)
-            except:
-                pass   # игнорируем ошибки в одном слушателе
 
     # -----------------------------------------------------------------------------------------------------------------
     def __eq__(self, other: Self | TYPING__CMD_HISTORY_DRAFT) -> bool:
@@ -197,53 +187,34 @@ class CmdHistory:
             self._add_result(item)
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     def _add_data(self, data: TYPING__CMD_LINES_DRAFT, buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT) -> None:
         """
         GOAL
         ----
         base adding data in result object! by buffer
         """
-        if buffer_type not in EnumAdj_StdioeType:
-            raise Exc__WrongUsage(f"{buffer_type=}")
 
-        # INPUT -------------
-        if buffer_type == EnumAdj_StdioeType.STDIN:
-            print()
-            print(f"[{buffer_type.name}]--->{data}")
-
-            self._add_result(CmdResult(data))
-            self._listeners__notify(msg_text=f"{data}", buffer_type=buffer_type)
-            return
-
-        # OUTPUT ------------
-        if not self._history:
-            self.add_data__stdin("")
-
-        print(f"[{buffer_type.name}]{data}")
-        self.last_result.append(data=data, buffer_type=buffer_type)
-        self._listeners__notify(msg_text=data, buffer_type=buffer_type)
-
+    @abstractmethod
     def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
-        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)
+        pass
 
+    @abstractmethod
     def add_data__stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDOUT)
+        pass
 
+    @abstractmethod
     def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDERR)
+        pass
 
+    @abstractmethod
     def add_data__stdioe(
             self,
             data_i: TYPING__CMD_LINE | None = None,
             data_o: TYPING__CMD_LINES_DRAFT | None = None,
             data_e: TYPING__CMD_LINES_DRAFT | None = None,
     ) -> None | NoReturn:
-        if data_i is not None:
-            self.add_data__stdin(data_i)
-        if data_o is not None:
-            self.add_data__stdout(data_o)
-        if data_e is not None:
-            self.add_data__stderr(data_e)
+        pass
 
     # =================================================================================================================
     @property
@@ -354,4 +325,106 @@ class CmdHistory:
         return result
 
 
-# =====================================================================================================================
+# ======================================================================================================================
+class CmdHistory_Serial(Abc_CmdHistory):
+    def _add_data(self, data: TYPING__CMD_LINES_DRAFT,
+                  buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT) -> None:
+        """
+        GOAL
+        ----
+        base adding data in result object! by buffer
+        """
+        if buffer_type not in EnumAdj_StdioeType:
+            raise Exc__WrongUsage(f"{buffer_type=}")
+
+        # INPUT -------------
+        if buffer_type == EnumAdj_StdioeType.STDIN:
+            print()
+            print(f"[{buffer_type.name}]--->{data}")
+
+            self._add_result(CmdResult(data))
+            return
+
+        # OUTPUT ------------
+        if not self._history:
+            self.add_data__stdin("")
+
+        print(f"[{buffer_type.name}]{data}")
+        self.last_result.append(data=data, buffer_type=buffer_type)
+
+    def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
+        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)
+
+    def add_data__stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDOUT)
+
+    def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        self._add_data(data, buffer_type=EnumAdj_StdioeType.STDERR)
+
+    def add_data__stdioe(
+            self,
+            data_i: TYPING__CMD_LINE | None = None,
+            data_o: TYPING__CMD_LINES_DRAFT | None = None,
+            data_e: TYPING__CMD_LINES_DRAFT | None = None,
+    ) -> None | NoReturn:
+        if data_i is not None:
+            self.add_data__stdin(data_i)
+        if data_o is not None:
+            self.add_data__stdout(data_o)
+        if data_e is not None:
+            self.add_data__stderr(data_e)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
+    async def _add_data(self, data: TYPING__CMD_LINES_DRAFT,
+                  buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT) -> None:
+        """
+        GOAL
+        ----
+        base adding data in result object! by buffer
+        """
+        if buffer_type not in EnumAdj_StdioeType:
+            raise Exc__WrongUsage(f"{buffer_type=}")
+
+        # INPUT -------------
+        if buffer_type == EnumAdj_StdioeType.STDIN:
+            print()
+            print(f"[{buffer_type.name}]--->{data}")
+
+            self._add_result(CmdResult(data))
+            await self.event_broadcaster__broadcast(dict(msg_text=f"{data}", buffer_type=buffer_type))
+            return
+
+        # OUTPUT ------------
+        if not self._history:
+           await self.add_data__stdin("")
+
+        print(f"[{buffer_type.name}]{data}")
+        self.last_result.append(data=data, buffer_type=buffer_type)
+        await self.event_broadcaster__broadcast(dict(msg_text=f"{data}", buffer_type=buffer_type))
+
+    async def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
+        await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)
+
+    async def add_data__stdout(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDOUT)
+
+    async def add_data__stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
+        await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDERR)
+
+    async def add_data__stdioe(
+            self,
+            data_i: TYPING__CMD_LINE | None = None,
+            data_o: TYPING__CMD_LINES_DRAFT | None = None,
+            data_e: TYPING__CMD_LINES_DRAFT | None = None,
+    ) -> None | NoReturn:
+        if data_i is not None:
+            await self.add_data__stdin(data_i)
+        if data_o is not None:
+            await self.add_data__stdout(data_o)
+        if data_e is not None:
+            await self.add_data__stderr(data_e)
+
+
+# ======================================================================================================================

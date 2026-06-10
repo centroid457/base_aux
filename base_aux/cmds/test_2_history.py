@@ -14,7 +14,7 @@ from base_aux.cmds.m2_history import *
 
 # =====================================================================================================================
 def test__finished():
-    victim: CmdHistory = CmdHistory()
+    victim: CmdHistory_Serial = CmdHistory_Serial()
     assert victim.check_finished() is False
 
     victim.add_data__stdin("")
@@ -33,7 +33,7 @@ def test__finished():
 
 
 def test__add_list_asdict_eq():
-    victim: CmdHistory = CmdHistory()
+    victim: CmdHistory_Serial = CmdHistory_Serial()
     assert victim == []
     assert victim._history == []
     assert victim._as_dict() == {}
@@ -80,7 +80,7 @@ def test__add_list_asdict_eq():
 
 
 def test__add_io__list_last():
-    victim: CmdHistory = CmdHistory()
+    victim: CmdHistory_Serial = CmdHistory_Serial()
     assert victim._history == []
     assert victim.last_input == ""
     assert victim.last_stdout_line == ""
@@ -102,10 +102,10 @@ def test__add_io__list_last():
 
 
 def test__add_history():
-    victim: CmdHistory = CmdHistory()
+    victim: CmdHistory_Serial = CmdHistory_Serial()
     assert victim._history == []
 
-    history = CmdHistory()
+    history = CmdHistory_Serial()
     history.add_data__stdioe("in1", "out1")
 
     victim._add_history(history)
@@ -113,7 +113,7 @@ def test__add_history():
 
 
 def test__first_output():
-    victim: CmdHistory = CmdHistory()
+    victim: CmdHistory_Serial = CmdHistory_Serial()
     assert victim._history == []
 
     victim.add_data__stdout("out0")
