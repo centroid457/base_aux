@@ -55,26 +55,9 @@ class CmdHistory:
                 # self.set_finished()
 
     # -----------------------------------------------------------------------------------------------------------------
-    def listener__add(self, listener: Callable) -> None:
-        """listener – вызываемый объект, принимающий (msg_style, msg_text)"""
-        self._listeners.append(listener)
-
-    def listener__del(self, listener) -> None:
-        if listener in self._listeners:
-            self._listeners.remove(listener)
-
-    # def listeners__clear(self) -> None:
-    #     self._listeners.clear()
-
     def _listeners__notify(self, msg_text: str, buffer_type: EnumAdj_BufferType) -> None:
-        if buffer_type == EnumAdj_BufferType.STDIN:
-            msg_style = f"stdin"
-        elif buffer_type == EnumAdj_BufferType.STDOUT:
-            msg_style = f"stdout"
-        elif buffer_type == EnumAdj_BufferType.STDERR:
-            msg_style = f"stderr"
-        elif buffer_type == EnumAdj_BufferType.DEBUG:
-            msg_style = f"debug"
+        if isinstance(buffer_type, EnumAdj_BufferType):
+            msg_style = buffer_type.name.lower()
         else:
             raise Exception(f"{buffer_type=}")
 

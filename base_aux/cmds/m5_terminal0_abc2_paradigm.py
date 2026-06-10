@@ -339,7 +339,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
+class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemented):
     pass
     _bg_tasks: list[asyncio.Task]
 

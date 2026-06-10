@@ -156,20 +156,37 @@ class EnumAdj_ProcessStateResult(NestEq_EnumAdj):
     FINISHED_SUCCESS = True
 
 
-# =====================================================================================================================
+# ======================================================================================================================
+# BUFFER ---------------------------------------------------------------------------------------------------------------
+class EnumAdj_BufferType(NestEq_EnumAdj):
+    STDIN: int = 1
+    STDOUT: int = 2
+    STDERR: int = 3
+    DEBUG: int = 5
+
+
+# EVENT ----------------------------------------------------------------------------------------------------------------
+class EnumAdj_EventChannel(NestEq_EnumAdj):
+    LOG_SYSTEM: int = 1     # EXECUTION PROCESS
+    LOG_STDIO: int = 2      # IO history
+    LOG_USER: int = 3       # debug logs
+    LOG_RESULT: int = 4     # any result separate here!
+
+
+class EnumAdj_EventStatus(NestEq_EnumAdj):
+    DEBUG: int = 0
+    INFO: int = 1
+    WARN: int = 2
+    ERR: int = 3
+
+
+# ======================================================================================================================
 class EnumAdj_StopResetHardSoft(NestEq_EnumAdj):
     SOFT: int = 1
     HARD: int = 2
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-class EnumAdj_BufferType(NestEq_EnumAdj):
-    STDIN: int = 1
-    STDOUT: int = 2
-    STDERR: int = 3
-    DEBUG: int = 9
-
-
+# ----------------------------------------------------------------------------------------------------------------------
 class EnumAdj_FinishedStatus(NestEq_EnumAdj):
     """
     SPECIALLY CREATED FOR
@@ -183,7 +200,7 @@ class EnumAdj_FinishedStatus(NestEq_EnumAdj):
     EXCEPTION: int = 11
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class EnumAdj_BoolCumulate(NestEq_EnumAdj):
     """
     GOAL
