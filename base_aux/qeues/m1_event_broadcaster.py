@@ -9,21 +9,21 @@ class EventBroadcaster:
     Управляет подключениями клиентов (подписчиков/слушателей) к основной очереди.
     распределяет от основной очереди сообщения на всех клиентов.
     """
-    main_queue: asyncio.Queue
-    task_broadcasting: asyncio.Task = None
+    eb_queue: asyncio.Queue
+    eb_task: asyncio.Task = None
 
-    def __init__(self, main_queue: asyncio.Queue | None = None):
-        if isinstance(main_queue, asyncio.Queue):
-            self.main_queue = main_queue
-        elif main_queue is None:
-            self.main_queue = asyncio.Queue()
+    def __init__(self, eb_queue: asyncio.Queue | None = None):
+        if isinstance(eb_queue, asyncio.Queue):
+            self.eb_queue = eb_queue
+        elif eb_queue is None:
+            self.eb_queue = asyncio.Queue()
         else:
-            raise Exception(f"incorrect input type {main_queue!r}")
+            raise Exception(f"incorrect input type {eb_queue!r}")
 
         self.clients: dict[str, asyncio.Queue] = {}
 
     async def start_task(self):
-        self.task_broadcasting = asyncio.create_task(self._broadcasting())
+        self.eb_task = asyncio.create_task(self._broadcasting())
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _broadcasting(self):
@@ -32,7 +32,7 @@ class EventBroadcaster:
         """
         while True:
             try:
-                msg = await self.main_queue.get()
+                msg = await self.eb_queue.get()
 
                 for q in self.clients.values():
                     try:
@@ -57,7 +57,7 @@ class EventBroadcaster:
     # -----------------------------------------------------------------------------------------------------------------
     async def broadcast(self, data: dict):
         """Отправить сообщение всем клиентам.
-        можно взять main_queue и напрямую посылать!
+        можно взять eb_queue и напрямую посылать!
 
         ITS A QUICK METHOD! DONT DO ANYTHING!!! JUST PLACE INTO MAIN_QUEUE!!!!
         """
@@ -65,7 +65,7 @@ class EventBroadcaster:
             print(f"[EventBroadcaster].broadcast({data})")
         except:
             pass
-        await self.main_queue.put(data)
+        await self.eb_queue.put(data)
 
     # -----------------------------------------------------------------------------------------------------------------
 

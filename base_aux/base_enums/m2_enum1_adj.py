@@ -171,7 +171,7 @@ class EnumAdj_EventChannel(NestEq_EnumAdj):
     LOG_SYSTEM: int = 1     # EXECUTION PROCESS
     LOG_STDIOE: int = 2      # IO history
     LOG_USER: int = 3       # debug logs
-    LOG_RESULT: int = 4     # any result separate here!
+    LOG_RESULT: int = 4     # any result separate here! fail/true/stop ...?
 
 
 class EnumAdj_EventLevel(NestEq_EnumAdj):
