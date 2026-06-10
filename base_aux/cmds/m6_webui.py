@@ -30,7 +30,7 @@ class ManagerInstance:
         item_id = new_item.idn
 
         if isinstance(new_item, Nest_EventBroadcasterImplemented):
-            new_item.event_broadcaster__setup(event_broadcaster)
+            new_item.event_broadcaster__setup(event_broadcaster, aux_data=dict(item_id=item_id))
 
         # 2=WORK -----------------------
         print(f"create_item:{item_id=}")
@@ -41,7 +41,7 @@ class ManagerInstance:
         # 3=broadcust -----------------------
         await event_broadcaster.broadcast({
             "item_id": item_id,
-            "event": "item_control",
+            "channel": "item_control",
             "load": {
                 "action": "create_item",
             }
@@ -58,7 +58,7 @@ class ManagerInstance:
             # 3=broadcust -----------------------
             await event_broadcaster.broadcast({
                 "item_id": idn,
-                "event": "item_control",
+                "channel": "item_control",
                 "load": {
                     "action": "delete_item",
                 }
@@ -76,7 +76,7 @@ class ManagerInstance:
         # 3=broadcust -----------------------
         await event_broadcaster.broadcast({
             "item_id": idn,                 # FILTER
-            "event": "item_control",        # EVENT
+            "channel": "item_control",        # EVENT
             "load": {                           # LOAD
                 "action": "clear_history",     # ACTION
             }
@@ -196,7 +196,7 @@ HTML_TEMPLATE = """
                 const msg = JSON.parse(e.data);
                 
                 const msg__itemid = msg.item_id;
-                const msg__event = msg.event;
+                const msg__event = msg.channel;
                 const msg__data = msg.load;
                 
                 const msg__action = msg__data?.action;
@@ -337,7 +337,7 @@ HTML_TEMPLATE = """
                 if (ws_client?.readyState !== WebSocket.OPEN) return;
 
                 ws_client.send(JSON.stringify({
-                    event: "item_control",
+                    channel: "item_control",
                     load: {
                         action: "create_item",
                     },
@@ -349,7 +349,7 @@ HTML_TEMPLATE = """
 
                 ws_client.send(JSON.stringify({
                     item_id: itemId,
-                    event: "item_control",
+                    channel: "item_control",
                     load: {
                         action: "delete_item",
                     },
@@ -441,7 +441,7 @@ HTML_TEMPLATE = """
                 if (io_line) {
                     ws_client.send(JSON.stringify({
                         item_id: this.itemId,
-                        event: "history_log",
+                        channel: "history_log",
                         load: {
                             action: "stdin",  // FIXME: or just stdin/msg_stdin__cls
                             text: io_line,
@@ -456,7 +456,7 @@ HTML_TEMPLATE = """
                 
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
-                    event: "item_control",
+                    channel: "item_control",
                     load: {
                         action: "reconnect_item",
                     },
@@ -468,7 +468,7 @@ HTML_TEMPLATE = """
 
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
-                    event: "item_control",
+                    channel: "item_control",
                     load: {
                         action: "clear_history",
                     },
@@ -589,7 +589,7 @@ async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
     # При подключении отправляем клиенту идентификатор сервера
-    await websocket.send_json({"event": "server_id", "id": server_id})
+    await websocket.send_json({"channel": "server_id", "id": server_id})
 
     try:
         # Держим соединение открытым, игнорируем входящие сообщения
@@ -628,7 +628,7 @@ async def ws__client(websocket: WebSocket):
         while True:
             msg = await websocket.receive_json()
 
-            msg__event = msg.get("event")
+            msg__event = msg.get("channel")
             msg__itemid = msg.get("item_id")
             msg__data = msg.get("load")
 

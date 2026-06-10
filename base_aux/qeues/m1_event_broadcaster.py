@@ -73,14 +73,16 @@ class EventBroadcaster:
 # =====================================================================================================================
 class Nest_EventBroadcasterImplemented:
     _event_broadcaster: EventBroadcaster | None = None
+    _broadcast__aux_data: dict | None
 
     def __init__(self, *args, **kwargs):
         # DONT USE ANYTHING HERE!
         super().__init__(*args, **kwargs)
 
     @abstractmethod
-    def event_broadcaster__setup(self, eb: EventBroadcaster) -> None:
+    def event_broadcaster__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
         self._event_broadcaster = eb
+        self._broadcast__aux_data = aux_data
 
     async def event_broadcaster__broadcast(self, msg: dict) -> None:
         if self._event_broadcaster is not None:
