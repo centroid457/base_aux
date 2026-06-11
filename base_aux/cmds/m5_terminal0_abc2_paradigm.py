@@ -104,6 +104,9 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
 
 # =====================================================================================================================
 class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
+    """
+    DEPRECATE!!! dont use!! use only AIO!!!
+    """
     _bg_tasks: list[threading.Thread]
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -511,6 +514,17 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
+
+
+        # TODO: ADD
+        #   LOCK on INPUT!!!
+        #   if BUSY what to do??? just wait ready!!!
+        #   clear BUFFERS before send
+        #   EVENT on finished CMD
+        #   HOW collect and return result??? history.last_result - OK!!!
+        #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!!
+
+
         if self._conn is None:
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 

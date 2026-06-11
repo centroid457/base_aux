@@ -10,6 +10,8 @@ from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseAio_CmdTerminal
 class CmdTerminal_OsAio(Mark_CmdTerminal_Os, BaseAio_CmdTerminal):
     _conn: asyncio.subprocess.Process | None
 
+    # TODO|: add event finished reading!!!
+
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
         self._conn = await asyncio.create_subprocess_exec(
