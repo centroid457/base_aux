@@ -1,6 +1,25 @@
+from typing import *
 import asyncio
 import uuid
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+import datetime
+import time
+
+
+# =====================================================================================================================
+class __EventMsg:     # todo: namedTuple?
+    theme: dict = dict(channel=[], )
+
+    def __init__(self, **kwargs):
+        self.TIMESTAMP: datetime.datetime.timestamp = datetime.datetime.now()
+        self._make_event(**kwargs)
+
+    def _make_event(self, **kwargs):
+        pass
+
+    @classmethod
+    def theme_register(cls, theme: dict) -> None:
+        cls.theme = theme
 
 
 # =====================================================================================================================
@@ -11,6 +30,7 @@ class EventBroadcaster:
     """
     eb_queue: asyncio.Queue
     eb_task: asyncio.Task = None
+    eb_history: list[dict]  # TODO: deque?
 
     def __init__(self, eb_queue: asyncio.Queue | None = None):
         if isinstance(eb_queue, asyncio.Queue):
@@ -20,6 +40,7 @@ class EventBroadcaster:
         else:
             raise Exception(f"incorrect input type {eb_queue!r}")
 
+        self.eb_history = []
         self.clients: dict[str, asyncio.Queue] = {}
 
     async def start_task(self):
@@ -32,11 +53,12 @@ class EventBroadcaster:
         """
         while True:
             try:
-                msg = await self.eb_queue.get()
+                event = await self.eb_queue.get()
+                self.eb_history.append(event)
 
                 for q in self.clients.values():
                     try:
-                        await q.put(msg)
+                        await q.put(event)
                     except asyncio.CancelledError:
                         raise
                     except Exception as exc:
