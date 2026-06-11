@@ -345,6 +345,16 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemented):
     pass
     _bg_tasks: list[asyncio.Task]
+    _lock_stdin: asyncio.Lock
+
+    def __init__(
+            self,
+            *args,
+            **kwargs,
+    ):
+        self._lock_stdin = asyncio.Lock()
+
+        super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     def eb__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
@@ -515,34 +525,32 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             eol: str | None = None,
     ) -> CmdResult:
 
-
         # TODO: ADD
-        #   LOCK on INPUT!!!
         #   if BUSY what to do??? just wait ready!!!
         #   clear BUFFERS before send
         #   EVENT on finished CMD
         #   HOW collect and return result??? history.last_result - OK!!!
         #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!!
 
-
         if self._conn is None:
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
-        await self.history.add_data__stdin(cmd)
-        try:
-            await self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
+        async with self._lock_stdin:
+            await self.history.add_data__stdin(cmd)
+            try:
+                await self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
 
-            if await self._wait__finish_executing_cmd(timeout_read_start, timeout_read_finish):
-                finished_status = EnumAdj_FinishedStatus.CORRECT
-            else:
-                finished_status = EnumAdj_FinishedStatus.TIMED_OUT
-        except Exception as exc:
-            print(f"{exc!r}")
-            await self.history.add_data__stderr(f"{exc!r}")
-            finished_status = EnumAdj_FinishedStatus.EXCEPTION
+                if await self._wait__finish_executing_cmd(timeout_read_start, timeout_read_finish):
+                    finished_status = EnumAdj_FinishedStatus.CORRECT
+                else:
+                    finished_status = EnumAdj_FinishedStatus.TIMED_OUT
+            except Exception as exc:
+                print(f"{exc!r}")
+                await self.history.add_data__stderr(f"{exc!r}")
+                finished_status = EnumAdj_FinishedStatus.EXCEPTION
 
-        self.history.set_finished(status=finished_status)
-        return self.history.last_result
+            self.history.set_finished(status=finished_status)
+            return self.history.last_result
 
     async def send_cmds__all_success(
             self,
