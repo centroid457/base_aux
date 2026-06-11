@@ -43,6 +43,7 @@ psutil      #BSD-3-Clause
 
 # COMMUNICATE --------------
 pyserial    #BSD3
+pyserial_asyncio    # serial_asyncio
 # aioserial #OSI Approved (MPL-2.0)    =pyserial-asyncio
 smbus2      #MIT/linuxOnly
 telebot     #GPL2

@@ -162,8 +162,7 @@ class EnumAdj_StdioeType(NestEq_EnumAdj):
     STDIN: int = 1
     STDOUT: int = 2
     STDERR: int = 3
-
-    # NO DEBUG/SYSTEM HERE!!! it is
+    DEBUG: int = 4      # ???? NO DEBUG/SYSTEM HERE!!! it is
 
 
 # EVENT ----------------------------------------------------------------------------------------------------------------

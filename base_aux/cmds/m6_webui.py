@@ -574,7 +574,7 @@ async def get_history(idn: str):
             "input": result.INPUT,
             "stdout": result.STDOUT,
             "stderr": result.STDERR,
-            # "debug": result.DEBUG,
+            "debug": result.DEBUG,
             "timestamp": result.timestamp.isoformat() if result.timestamp else None,
             "duration": result.duration,
             "finished_status": result.finished_status.value if result.finished_status else None,
