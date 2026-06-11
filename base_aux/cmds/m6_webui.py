@@ -100,7 +100,7 @@ HTML_TEMPLATE = """
     <script>uncache_loading__all_files_without_cache();</script>
     
     <meta charset="utf-8">
-    <title>WebTerminal</title>
+    <title>WebClient</title>
     
     <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css">
     <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
@@ -170,7 +170,7 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <header data-auto__ping_lost>
-        <h1 style="color: #fff">WebTerminal</h1>
+        <h1 style="color: #fff">WebClient</h1>
         <div>
             <button id="btn_resync__id">resync</button>
             <button id="btn_add_item__id">Новый объект</button>
@@ -543,7 +543,7 @@ async def lifespan(app: FastAPI):
 
 
 # =====================================================================================================================
-app = FastAPI(title="WebTerminal", lifespan=lifespan)
+app = FastAPI(title="WebClient", lifespan=lifespan)
 app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
 
 # Уникальный идентификатор сервера: можно использовать время запуска

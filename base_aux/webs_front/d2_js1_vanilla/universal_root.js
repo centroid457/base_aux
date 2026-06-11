@@ -124,18 +124,8 @@ function onload__replace_with__btn_hard_reset() {
     const btn = document.createElement('button');
     btn.textContent = 'hardReset';
     btn.title = 'Перезагрузить страницу и принудительно обновить все ресурсы (CSS, JS)';
-
-    // Добавляем атрибуты для стилизации (если используются ваши классы)
     btn.setAttribute('data-btn_outline', 'red');
-
-    // Обработчик клика
-    btn.addEventListener('click', () => {
-        // Добавляем случайный параметр к URL, чтобы браузер не использовал кеш
-        const url = new URL(window.location.href);
-        url.searchParams.set('_t', Date.now());
-        window.location.href = url.toString();
-    });
-
+    btn.addEventListener('click', () => page_reload_force());
     target.replaceWith(btn);
 }
 
@@ -154,8 +144,18 @@ OnLoadRunner.add(onload__bg_color);
 // =====================================================================================================================
 function page_reload_force(msg) {
     console.warn("[page_reload_force]🟡", msg);
-    location.reload();
-//    history.go(0);
+
+    //var1=не всегда работает!!! если изменить title то обновление будет только после F5!!!
+    //location.reload();
+
+    //var2=хз
+    //history.go(0);
+
+    //var3=Добавляем случайный параметр к URL, чтобы браузер гарантированно загрузил новую страницу
+    // все равно не работает как надо!
+    const url = new URL(window.location.href);
+    url.searchParams.set('_hardReset', Date.now());
+    window.location.href = url.toString();
 }
 
 
