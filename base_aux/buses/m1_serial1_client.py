@@ -30,14 +30,6 @@ class Exc_SerialAddress_NotExists(Exception):
     pass
 
 
-class Exc_SerialAddresses_NoVacant(Exception):
-    pass
-
-
-class Exc_SerialAddresses_NoAutodetected(Exception):
-    pass
-
-
 class Exc_SerialAddress_AlreadyOpened(Exception):
     """
     SerialException("could not open port 'COM7': PermissionError(13, 'Отказано в доступе.', None, 5)")
