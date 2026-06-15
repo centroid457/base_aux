@@ -14,19 +14,6 @@ TYPING__CMD_LINES_DRAFT = TYPING__CMD_LINE | TYPING__CMD_LINES
 
 # =====================================================================================================================
 @dataclass
-class CmdResult_BufferLine:
-    """
-    GOAL
-    ----
-    exact line for/from any buffer.
-    """
-    LINE_TIMESTAMP: datetime
-    BUFFER_LINE: TYPING__CMD_LINE = ""    # dont use collection on input!!! dont use None here!
-    BUFFER_TYPE: list[TYPING__CMD_LINE] = field(default_factory=list)
-
-
-# =====================================================================================================================
-@dataclass
 class CmdResult:
     """
     GOAL
