@@ -377,35 +377,41 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         if self._conn is not None:
             return True
 
-        print(f"{self.__class__.__name__}({self.idn=}).connect")
+        async with self._lock_stdin:
+            if self._conn is not None:
+                return True
 
-        try:
-            await self._create_conn()
-        except Exception as exc:
-            msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
-            print(msg)
-            await self.history.add_data__stderr(msg)
-            return False
+            print(f"{self.__class__.__name__}({self.idn=}).connect")
 
-        if not self.history._history:
-            await self.history.add_data__stdin("")
+            try:
+                await self._create_conn()
+            except Exception as exc:
+                msg = f"{self.__class__.__name__}({self.idn=}){exc!r}"
+                print(msg)
+                await self.history.add_data__stderr(msg)
+                return False
 
-        # self.history.add_data__debug("🔄connected")
+            if not self.history._history:
+                await self.history.add_data__stdin("")
 
-        self._stop_reading = False
-        self._create_tasks()
-        self._last_byte_time = asyncio.get_event_loop().time()
+            # self.history.add_data__debug("🔄connected")
 
-        await asyncio.sleep(0.3)
-        return True
+            self._stop_reading = False
+            self._create_tasks()
+            self._last_byte_time = asyncio.get_event_loop().time()
+
+            await asyncio.sleep(0.3)
+            return True
 
     # -----------------------------------------------------------------------------------------------------------------
     async def disconnect(self) -> None:
         self._stop_reading = True
-        await self._del_tasks()
-        await self._del_conn()
-        # self.history.add_data__debug("disconnected")
-        print(f"{self.__class__.__name__}({self.idn=}).disconnected")
+
+        async with self._lock_stdin:
+            await self._del_tasks()
+            await self._del_conn()
+            # self.history.add_data__debug("disconnected")
+            print(f"{self.__class__.__name__}({self.idn=}).disconnected")
 
     async def reconnect(self) -> None:
         await self.disconnect()
@@ -434,7 +440,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         if self._conn is None:
             return
 
-        # init BUFFER -------------------
+        # select BUFFER -------------------
         if buffer_type == EnumAdj_StdioeType.STDOUT:
             buffer = self._conn.stdout
             append_method = self.history.add_data__stdout
@@ -543,6 +549,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     ) -> CmdResult:
 
         # TODO: ADD
+        #   ref timeouts
         #   clear BUFFERS before send
         #   EVENT on finished CMD
         #   HOW collect and return result??? history.last_result - OK!!!
@@ -552,6 +559,9 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
         async with self._lock_stdin:
+            if self._conn is None:
+                raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
+
             await self.history.add_data__stdin(cmd)
             try:
                 await self._write_line(cmd=cmd, timeout=timeout_write, eol=eol)
