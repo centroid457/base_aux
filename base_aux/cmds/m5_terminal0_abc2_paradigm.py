@@ -1,3 +1,4 @@
+from typing import *
 import asyncio
 import threading
 import time
@@ -411,6 +412,14 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         await self.connect()
 
     # -----------------------------------------------------------------------------------------------------------------
+    def bytes_decode(self, source: bytes) -> str | None:
+        try:
+            result = source.decode(self._encoding).rstrip()
+        except Exception as exc:
+            result = None
+            self.history.add_data__stderr(f"[bytes_decode]{source=}/{exc!r}")
+        return result
+
     async def _bg_reading_buffer(self, buffer_type: EnumAdj_StdioeType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
@@ -440,6 +449,14 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
         # BUFFER -------------------
         while not self._stop_reading and self._conn is not None:
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+
+
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_def.READ_START
             try:
@@ -460,7 +477,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
                     if new_byte in (b'\r', b'\n'):
                         if bytes_accumulated:
-                            new_line : str = bytes_accumulated.decode(self._encoding).rstrip()
+                            new_line : str = self.bytes_decode(bytes_accumulated)
                             if new_line:
                                 await append_method(new_line)
                                 self.history.set_retcode(self._conn.returncode)
@@ -471,7 +488,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
                         bytes_accumulated.extend(new_byte)
 
                 if bytes_accumulated:
-                    new_line: str  = bytes_accumulated.decode(self._encoding).rstrip()
+                    new_line: str = bytes_accumulated.decode(self._encoding).rstrip()
                     if new_line:
                         await append_method(new_line)
                         self.history.set_retcode(self._conn.returncode)
@@ -526,7 +543,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     ) -> CmdResult:
 
         # TODO: ADD
-        #   if BUSY what to do??? just wait ready!!!
         #   clear BUFFERS before send
         #   EVENT on finished CMD
         #   HOW collect and return result??? history.last_result - OK!!!
