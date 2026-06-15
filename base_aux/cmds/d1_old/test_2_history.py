@@ -1,6 +1,4 @@
-import pytest
-
-from base_aux.cmds.m2_history import *
+from base_aux.cmds.d1_old.m2_history import *
 
 
 # =====================================================================================================================

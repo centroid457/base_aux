@@ -1,12 +1,11 @@
-from typing import *
 import os
 from abc import ABC, abstractmethod
 
-from base_aux.cmds.m1_result import *
-from base_aux.cmds.m2_history import CmdHistory_Aio
+from base_aux.cmds.d1_old.m1_result1_separated import *
+from base_aux.cmds.d1_old.m2_history import CmdHistory_Aio
 from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.base_values.m3_exceptions import *
-from base_aux.cmds.m3_timeout_def import TimeoutDef
+from base_aux.cmds.d1_old.m3_timeout_def import TimeoutDef
 
 
 # =====================================================================================================================

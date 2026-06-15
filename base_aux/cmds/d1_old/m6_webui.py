@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import uvicorn
 
-from base_aux.cmds.m5_terminal1_os2_aio import *
+from base_aux.cmds.d1_old.m5_terminal1_os2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 

@@ -1,7 +1,5 @@
-import pytest
-
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.cmds.m3_timeout_def import *
+from base_aux.cmds.d1_old.m3_timeout_def import *
 
 
 # =====================================================================================================================

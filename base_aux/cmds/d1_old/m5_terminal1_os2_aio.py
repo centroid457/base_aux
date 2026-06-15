@@ -1,9 +1,8 @@
-from typing import *
 import asyncio
 
-from base_aux.cmds.m5_terminal0_abc1_user_conn import *
-from base_aux.cmds.m5_terminal1_os0_mark import *
-from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseAio_CmdTerminal
+from base_aux.cmds.d1_old.m5_terminal0_abc1_user_conn import *
+from base_aux.cmds.d1_old.m5_terminal1_os0_mark import *
+from base_aux.cmds.d1_old.m5_terminal0_abc2_paradigm import BaseAio_CmdTerminal
 
 
 # =====================================================================================================================

@@ -8,7 +8,7 @@ start full pipeline from the beginning (without tests!) to the PYPI upload
 # =====================================================================================================================
 from PROJECT import PROJECT
 from base_aux.aux_modules.m1_pkgs import Packages
-from base_aux.cmds.m4_cmd_executor import CmdExecutor
+from base_aux.cmds.d1_old.m4_cmd_executor import CmdExecutor
 from base_aux.base_values.m3_exceptions import *
 
 
