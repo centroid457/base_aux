@@ -5,7 +5,7 @@ from typing import Dict, Optional, Set, Callable, Awaitable
 import serial.tools.list_ports
 from contextlib import asynccontextmanager
 
-from m3_serial_aio1__client import SerialClient_Aio
+from sand3_serial_aio1__client import SerialClient_Aio
 import contextlib
 
 # =====================================================================================================================
