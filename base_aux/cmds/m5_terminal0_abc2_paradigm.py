@@ -461,7 +461,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
             # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
 
-
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_def.READ_START
             try:
@@ -525,12 +524,12 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             # Если процесс завершился, сразу выходим
             if self._conn is not None and self._conn.returncode is not None:
                 return True
-            if self._last_byte_time > start_wait:
+            if self._last_byte_time != start_wait:
                 quiet_start = asyncio.get_event_loop().time()
                 while asyncio.get_event_loop().time() - quiet_start < timeout_read_finish:
                     if self._conn is not None and self._conn.returncode is not None:
                         return True
-                    if self._last_byte_time > quiet_start:
+                    if self._last_byte_time != quiet_start:
                         quiet_start = asyncio.get_event_loop().time()
                     await asyncio.sleep(0.05)
                 return True
@@ -548,11 +547,8 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     ) -> CmdResult:
 
         # TODO: ADD
-        #   ref timeouts
-        #   clear BUFFERS before send
-        #   EVENT on finished CMD
         #   HOW collect and return result??? history.last_result - OK!!!
-        #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!!
+        #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!! - NO! now it is ok!
 
         if self._conn is None:
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
