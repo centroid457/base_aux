@@ -222,7 +222,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             try:
                 while True:
                     try:
-                        new_byte = self._read_byte_with_timeout(timeout=timeout_active, buffer_type=buffer_type)
+                        new_byte = self._read_byte_with_timeout(buffer=buffer, timeout=timeout_active)
                     except Exc__IoTimeout:
                         break
                     except Exc__IoConnection:
@@ -484,7 +484,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             try:
                 while True:
                     try:
-                        new_byte = await self._read_byte_with_timeout(timeout=timeout_active, buffer_type=buffer_type)
+                        new_byte = await self._read_byte_with_timeout(buffer=buffer, timeout=timeout_active)
                     except Exc__IoTimeout:
                         break
                     except Exc__IoConnection:

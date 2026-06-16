@@ -54,31 +54,6 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
             self._conn = None
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _read_byte_with_timeout(
-            self,
-            timeout: float = 0.05,
-            *args, **kwargs,
-    ) -> bytes:
-        """Читает один байт из reader с таймаутом."""
-        if self._conn is None:
-            raise Exc__IoConnection(f"{self._conn=}")
-        reader = self._conn.stdout
-        if reader is None:
-            raise Exc__IoConnection("reader is None")
-
-        try:
-            new_byte = await asyncio.wait_for(reader.read(1), timeout=timeout)
-            return new_byte
-        except asyncio.CancelledError:
-            raise
-        except asyncio.TimeoutError as exc:
-            raise Exc__IoTimeout(f"{timeout=}/{exc!r}", noprint=True)
-        except (BrokenPipeError, ConnectionResetError) as exc:
-            raise Exc__IoConnection(f"{exc!r}")
-        except BaseException as exc:
-            raise Exc__UnDefined(f"{exc!r}")
-
-    # -----------------------------------------------------------------------------------------------------------------
     async def _write_line(
             self,
             cmd: str,

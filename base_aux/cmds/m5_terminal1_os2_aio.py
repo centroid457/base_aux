@@ -47,24 +47,19 @@ class CmdTerminal_OsAio(Base_CmdTerminal_Os, BaseAio_CmdTerminal):
     # -----------------------------------------------------------------------------------------------------------------
     async def _read_byte_with_timeout(
             self,
+            buffer: asyncio.StreamReader,
             timeout: float = 0.05,
-            buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT,
     ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage | asyncio.CancelledError:
-        buffer: asyncio.StreamReader | None = None
 
         if self._conn is None:
             raise Exc__IoConnection(f"{self._conn=}")
 
         # init BUFFER -------------------
-        if buffer_type == EnumAdj_StdioeType.STDOUT:
-            buffer = self._conn.stdout
-        elif buffer_type == EnumAdj_StdioeType.STDERR:
-            buffer = self._conn.stderr
-        else:
-            raise Exc__WrongUsage(f'{buffer_type=}')
+        if not isinstance(buffer, asyncio.StreamReader):
+            raise Exc__WrongUsage(f'{buffer=}')
 
         if buffer is None:
-            raise Exc__WrongUsage(f"{self._conn=}/{buffer_type=}/{buffer=}")
+            raise Exc__WrongUsage(f"{self._conn=}/{buffer=}")
 
         # READ -------------------
         try:
