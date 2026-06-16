@@ -4,15 +4,11 @@ from base_aux.cmds.m5_terminal0_abc1_user_conn import *
 from base_aux.cmds.m5_terminal2_serial0_mark import *
 from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseAio_CmdTerminal
 
+import serial_asyncio
+
 
 # =====================================================================================================================
 class CmdTerminal_SerialAio(Mark_CmdTerminal_Serial, BaseAio_CmdTerminal):
-
-
-
-
-
-
 
     _conn: asyncio.subprocess.Process | None
 

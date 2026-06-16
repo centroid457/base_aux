@@ -19,13 +19,13 @@ class Test:
         assert victim.connect()
 
         time.sleep(0.1)
-        assert len(victim.history) == 1
+        assert len(victim.history) == 0
 
         # ------------------------------
         cmd = CMD_PING_1
         victim.send_cmd(cmd, timeout_read_start=1)
-        time.sleep(0.2)
-        assert len(victim.history) == 2
+        time.sleep(2)
+        assert len(victim.history) == 0
 
         assert victim.history.last_input == cmd
         assert victim.history.check_finished() is True

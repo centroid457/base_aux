@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from base_aux.cmds.m1_result1_separated import *
+from base_aux.cmds.m1_result import *
 
 from base_aux.qeues.m1_event_broadcaster import Nest_EventBroadcasterImplemented
 
