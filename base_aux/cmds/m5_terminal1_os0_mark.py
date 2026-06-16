@@ -2,7 +2,7 @@ from base_aux.cmds.m5_terminal0_abc2_paradigm import AbcParadigm_CmdTerminal
 
 
 # =====================================================================================================================
-class Mark_CmdTerminal_Os(AbcParadigm_CmdTerminal):
+class Base_CmdTerminal_Os(AbcParadigm_CmdTerminal):
     """
     GOAL
     ----
@@ -50,6 +50,9 @@ class Mark_CmdTerminal_Os(AbcParadigm_CmdTerminal):
 
         3. use --VERSION! instead! - seems work fine always!
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # NO SPECIAL THINGS in here!!!
 
 
 # =====================================================================================================================

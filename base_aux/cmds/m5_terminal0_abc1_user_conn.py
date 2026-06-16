@@ -43,7 +43,6 @@ class BaseUser_CmdTerminal(ABC):
 
     def __init__(
             self,
-            *,
             idn: str | None = None,
             eol_send: str | None = None,
 

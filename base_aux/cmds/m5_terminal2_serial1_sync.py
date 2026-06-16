@@ -9,7 +9,7 @@ from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseSync_CmdTerminal
 
 
 # =====================================================================================================================
-class CmdTerminal_OsSync(Mark_CmdTerminal_Serial, BaseSync_CmdTerminal):
+class CmdTerminal_OsSync(Base_CmdTerminal_Serial, BaseSync_CmdTerminal):
    pass
 
 

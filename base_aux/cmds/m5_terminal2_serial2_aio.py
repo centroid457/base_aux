@@ -1,4 +1,5 @@
 import asyncio
+from types import SimpleNamespace
 
 from base_aux.cmds.m5_terminal0_abc1_user_conn import *
 from base_aux.cmds.m5_terminal2_serial0_mark import *
@@ -8,7 +9,7 @@ import serial_asyncio
 
 
 # =====================================================================================================================
-class CmdTerminal_SerialAio(Mark_CmdTerminal_Serial, BaseAio_CmdTerminal):
+class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
 
     _conn: asyncio.subprocess.Process | None
 
