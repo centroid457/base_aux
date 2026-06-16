@@ -158,6 +158,12 @@ def USAGE():
         ch2={"startup", "test", "teardown"},
     )
 
+    paths = PathTree(io={"stdin", "stdout"})
+    node = paths.io.stdin  # PathNode('io.stdin')
+    assert node == "io.stdin"
+    node2 = paths.io.stdout  # PathNode('io.stdout')
+    assert node2 == "io.stdout"
+
     node = tree.ch1.stdin
     assert node in tree.ch1  # True — событие в канале ch1
     assert tree.ch1.stdout in tree.ch1  # True
