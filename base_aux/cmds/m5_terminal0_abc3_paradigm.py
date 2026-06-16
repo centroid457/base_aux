@@ -542,12 +542,12 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             # Если процесс завершился, сразу выходим
             if self._conn is not None and self._conn.returncode is not None:
                 return True
-            if self._last_byte_time != start_wait:
+            if self._last_byte_time > start_wait:
                 quiet_start = asyncio.get_event_loop().time()
                 while asyncio.get_event_loop().time() - quiet_start < timeout_read_finish:
                     if self._conn is not None and self._conn.returncode is not None:
                         return True
-                    if self._last_byte_time != quiet_start:
+                    if self._last_byte_time > quiet_start:      # DONT USE [!=] !!! its make freezes
                         quiet_start = asyncio.get_event_loop().time()
                     await asyncio.sleep(0.05)
                 return True

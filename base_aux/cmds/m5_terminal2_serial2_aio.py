@@ -10,7 +10,6 @@ import serial_asyncio
 
 # =====================================================================================================================
 class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
-
     _conn: SimpleNamespace | None
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -91,32 +90,6 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
 
         self._conn.stdin.write(f"{cmd}{EOL}".encode(self._encoding))
         await self._conn.stdin.drain()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _wait__finish_executing_cmd(
-            self,
-            timeout_read_start: float | None = None,
-            timeout_read_finish: float | None = None,
-    ) -> bool:
-        """
-        Ожидание завершения вывода команды.
-        Аналог версии для ОС, но без проверки returncode (в serial его нет).
-        """
-        timeout_read_start = self.timeout_def.get_active__read_start(timeout_read_start)
-        timeout_read_finish = self.timeout_def.get_active__read_finish(timeout_read_finish)
-
-        start_wait = asyncio.get_event_loop().time()
-        while asyncio.get_event_loop().time() - start_wait < timeout_read_start:
-            # Как только получили хотя бы один байт – переходим к короткому таймауту
-            if self._last_byte_time != start_wait:
-                quiet_start = asyncio.get_event_loop().time()
-                while asyncio.get_event_loop().time() - quiet_start < timeout_read_finish:
-                    if self._last_byte_time != quiet_start:
-                        quiet_start = asyncio.get_event_loop().time()
-                    await asyncio.sleep(0.05)
-                return True
-            await asyncio.sleep(0.05)
-        return False
 
 
 # =====================================================================================================================
