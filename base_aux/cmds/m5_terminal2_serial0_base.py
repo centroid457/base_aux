@@ -1,4 +1,4 @@
-from base_aux.cmds.m5_terminal0_abc2_paradigm import AbcParadigm_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc3_paradigm import AbcParadigm_CmdTerminal
 
 
 # =====================================================================================================================
@@ -18,7 +18,6 @@ class Base_CmdTerminal_Serial(AbcParadigm_CmdTerminal):
 
             **kwargs,
     ):
-        # Параметры последовательного порта
         self._serial_port = port
         self._serial_baudrate = baudrate
         self._serial_bytesize = bytesize

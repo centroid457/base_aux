@@ -1,10 +1,9 @@
 import os
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from base_aux.cmds.m1_result import *
 from base_aux.cmds.m2_history import CmdHistory_Aio
 from base_aux.base_enums.m2_enum1_adj import *
-from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m3_timeout_def import TimeoutDef
 
 
@@ -50,7 +49,6 @@ class BaseUser_CmdTerminal(ABC):
             timeout_read_start: float | None = None,
             timeout_read_finish: float | None = None,
 
-            cwd: str | None = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
@@ -60,7 +58,6 @@ class BaseUser_CmdTerminal(ABC):
         if eol_send is not None:
             self.EOL_SEND = eol_send
 
-        self.cwd: str | None = cwd
         self.timeout_def.change(timeout_write, timeout_read_start, timeout_read_finish)
 
         # other bg --------------------
@@ -103,76 +100,6 @@ class BaseUser_CmdTerminal(ABC):
 
 
 # =====================================================================================================================
-class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
-    _conn: Any | None
-
-    def __init__(
-            self,
-            *args,
-            **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-
-        self._conn = None
-        self._last_byte_time: float = 0.0   # время последнего полученного байта
-        self._stop_reading: bool = False
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def _create_conn(self) -> None | NoReturn:
-        """
-        GOAL
-        ----
-        only create only one _conn! no validate/ no catching exc!!!
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _create_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
-        """
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def _del_conn(self) -> None:
-        """
-        GOAL
-        ----
-        only create only one _conn! no validate/ no catching exc!!!
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _del_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
-        """
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def _read_byte_with_timeout(
-            self,
-            timeout: float = 0.05,
-            buffer_type: EnumAdj_StdioeType = EnumAdj_StdioeType.STDOUT,
-    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def _write_line(
-            self,
-            cmd: str,
-            timeout: float | None = None,
-            eol: str | None = None,
-    ) -> None | NoReturn | Exc__IoTimeout:
-        raise NotImplementedError()
 
 
 # =====================================================================================================================

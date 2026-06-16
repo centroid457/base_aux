@@ -3,9 +3,9 @@ import threading
 import time
 import errno
 
-from base_aux.cmds.m5_terminal0_abc1_user_conn import *
-from base_aux.cmds.m5_terminal1_os0_mark import *
-from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseSync_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc1_user import *
+from base_aux.cmds.m5_terminal1_os0_base import *
+from base_aux.cmds.m5_terminal0_abc3_paradigm import BaseSync_CmdTerminal
 
 
 # =====================================================================================================================

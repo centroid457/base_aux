@@ -8,7 +8,7 @@ from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType, EnumAdj_Finishe
 from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
-from base_aux.cmds.m5_terminal0_abc1_user_conn import AbcConn_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc2_conn import AbcConn_CmdTerminal
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
@@ -415,6 +415,24 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     async def reconnect(self) -> None:
         await self.disconnect()
         await self.connect()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    async def _del_tasks(self) -> None:
+        self._stop_reading = True
+
+        # Отменяем задачи чтения
+        for task in self._bg_tasks:
+            task.cancel()
+        # Ждём их завершения с таймаутом, игнорируя ошибки
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*self._bg_tasks, return_exceptions=True),
+                timeout=2
+            )
+        except asyncio.TimeoutError:
+            # Если задачи не завершились, просто забудем о них
+            pass
+        self._bg_tasks.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
     def bytes_decode(self, source: bytes) -> str | None:

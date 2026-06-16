@@ -1,4 +1,4 @@
-from base_aux.cmds.m5_terminal0_abc2_paradigm import AbcParadigm_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc3_paradigm import AbcParadigm_CmdTerminal
 
 
 # =====================================================================================================================
@@ -50,9 +50,14 @@ class Base_CmdTerminal_Os(AbcParadigm_CmdTerminal):
 
         3. use --VERSION! instead! - seems work fine always!
     """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # NO SPECIAL THINGS in here!!!
+    def __init__(
+            self,
+            cwd: str | None = None,
+
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.cwd: str | None = cwd
 
 
 # =====================================================================================================================

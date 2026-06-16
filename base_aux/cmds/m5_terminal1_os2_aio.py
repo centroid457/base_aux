@@ -1,8 +1,8 @@
 import asyncio
 
-from base_aux.cmds.m5_terminal0_abc1_user_conn import *
-from base_aux.cmds.m5_terminal1_os0_mark import *
-from base_aux.cmds.m5_terminal0_abc2_paradigm import BaseAio_CmdTerminal
+from base_aux.cmds.m5_terminal0_abc1_user import *
+from base_aux.cmds.m5_terminal1_os0_base import *
+from base_aux.cmds.m5_terminal0_abc3_paradigm import BaseAio_CmdTerminal
 
 
 # =====================================================================================================================
@@ -43,23 +43,6 @@ class CmdTerminal_OsAio(Base_CmdTerminal_Os, BaseAio_CmdTerminal):
             except Exception:
                 pass
             self._conn = None
-
-    async def _del_tasks(self) -> None:
-        self._stop_reading = True
-
-        # Отменяем задачи чтения
-        for task in self._bg_tasks:
-            task.cancel()
-        # Ждём их завершения с таймаутом, игнорируя ошибки
-        try:
-            await asyncio.wait_for(
-                asyncio.gather(*self._bg_tasks, return_exceptions=True),
-                timeout=2
-            )
-        except asyncio.TimeoutError:
-            # Если задачи не завершились, просто забудем о них
-            pass
-        self._bg_tasks.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _read_byte_with_timeout(
