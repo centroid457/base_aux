@@ -7,8 +7,8 @@ from typing import Never, IO
 from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
 
-from base_aux.cmds.d1_old.m1_result1_separated import CmdResult
-from base_aux.cmds.d1_old.m5_terminal0_abc1_user_conn import AbcConn_CmdTerminal
+from base_aux.cmds.m1_result1_separated import CmdResult
+from base_aux.cmds.m5_terminal0_abc1_user_conn import AbcConn_CmdTerminal
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 

@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import uvicorn
 
-from base_aux.cmds.d1_old.m5_terminal1_os2_aio import *
+from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
@@ -574,7 +574,7 @@ async def get_history(idn: str):
             "input": result.INPUT,
             "stdout": result.STDOUT,
             "stderr": result.STDERR,
-            "debug": result.DEBUG,
+            # "debug": result.DEBUG,
             "timestamp": result.timestamp.isoformat() if result.timestamp else None,
             "duration": result.duration,
             "finished_status": result.finished_status.value if result.finished_status else None,

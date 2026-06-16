@@ -11,7 +11,7 @@ from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 
-from base_aux.cmds.d1_old.m2_history import CmdHistory_Sync
+from base_aux.cmds.m2_history import CmdHistory_Sync
 
 
 # =====================================================================================================================

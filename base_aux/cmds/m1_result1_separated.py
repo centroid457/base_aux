@@ -37,7 +37,7 @@ class CmdResult:
     STDERR: list[TYPING__CMD_LINE] = field(default_factory=list)
     # STDERR buffer and execution exceptions
 
-    DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating? NO!!! very need!
+    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating? NO!!! very need! - NO!!! del!!!
     # all additional comments here
 
     def __post_init__(self):
@@ -60,10 +60,10 @@ class CmdResult:
         elif isinstance(self.STDERR, (str, bytes)):
             self.STDERR = [self.STDERR, ]
 
-        if self.DEBUG is None:
-            self.DEBUG = []
-        elif isinstance(self.DEBUG, (str, bytes)):
-            self.DEBUG = [self.DEBUG, ]
+        # if self.DEBUG is None:
+        #     self.DEBUG = []
+        # elif isinstance(self.DEBUG, (str, bytes)):
+        #     self.DEBUG = [self.DEBUG, ]
 
     def __str__(self) -> str:
         result = f"{self.__class__.__name__}({self.INPUT=},{self.STDOUT=},{self.STDERR=})"
@@ -131,8 +131,8 @@ class CmdResult:
             source = self.STDOUT
         elif buffer_type == EnumAdj_StdioeType.STDERR:
             source = self.STDERR
-        elif buffer_type == EnumAdj_StdioeType.DEBUG:
-            source = self.DEBUG
+        # elif buffer_type == EnumAdj_StdioeType.DEBUG:
+        #     source = self.DEBUG
         else:
             msg = f"use only STDOUT/STDERR/{buffer_type=}"
             raise Exc__Incompatible(msg)

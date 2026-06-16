@@ -5,6 +5,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType, EnumAdj_FinishedStatus
 from base_aux.base_values.m3_exceptions import *
+from base_aux.aux_text.m9_path_tree import *
 
 
 # =====================================================================================================================
@@ -13,15 +14,9 @@ TYPING__CMD_LINE = str | bytes
 
 # =====================================================================================================================
 @dataclass
-class BufferLine:
-    """
-    GOAL
-    ----
-    exact line for/from any buffer.
-    just an ATOMIC LINE.
-    """
-    BUFFER_TYPE: EnumAdj_StdioeType
-    BUFFER_LINE: TYPING__CMD_LINE
+class EventData:
+    EVENT_PATH: PathNode
+    EVENT_DATA: Any = None
 
     def __post_init__(self):
         self.TIMESTAMP: datetime = datetime.now()
@@ -43,7 +38,7 @@ class CmdResult2_DataLines:
             - serial
             - i2c (linux)
     """
-    DATALINES: list[BufferLine]
+    DATALINES: list[EventData]
     duration: float = 0
 
     def __init__(self, inputline: TYPING__CMD_LINE = "") -> None:
@@ -72,7 +67,7 @@ class CmdResult2_DataLines:
             if buffer_type in [EnumAdj_StdioeType.STDOUT, EnumAdj_StdioeType.STDERR]:
                 self.duration = (datetime.now() - self.TIMESTAMP).total_seconds()
 
-            dataline = BufferLine(buffer_type, line)
+            dataline = EventData(buffer_type, line)
 
             self.DATALINES.append(dataline)
 
@@ -91,22 +86,22 @@ class CmdResult2_DataLines:
         return self.INPUTLINE.TIMESTAMP
 
     @property
-    def INPUTLINE(self) -> BufferLine:
+    def INPUTLINE(self) -> EventData:
         result = self.DATALINES[0]
         return result
 
     @property
-    def STDOUT(self) -> list[BufferLine]:
+    def STDOUT(self) -> list[EventData]:
         result = list(filter(lambda line: line.BUFFER_TYPE == EnumAdj_StdioeType.STDOUT, self.DATALINES))
         return result
 
     @property
-    def STDERR(self) -> list[BufferLine]:
+    def STDERR(self) -> list[EventData]:
         result = list(filter(lambda line: line.BUFFER_TYPE == EnumAdj_StdioeType.STDERR, self.DATALINES))
         return result
 
     @property
-    def DEBUG(self) -> list[BufferLine]:
+    def DEBUG(self) -> list[EventData]:
         result = list(filter(lambda line: line.BUFFER_TYPE == EnumAdj_StdioeType.DEBUG, self.DATALINES))
         return result
 
