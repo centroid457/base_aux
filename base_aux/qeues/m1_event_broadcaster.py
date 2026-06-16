@@ -7,22 +7,6 @@ import time
 
 
 # =====================================================================================================================
-class __EventMsg:     # todo: namedTuple?
-    theme: dict = dict(channel=[], )
-
-    def __init__(self, **kwargs):
-        self.TIMESTAMP: datetime.datetime.timestamp = datetime.datetime.now()
-        self._make_event(**kwargs)
-
-    def _make_event(self, **kwargs):
-        pass
-
-    @classmethod
-    def theme_register(cls, theme: dict) -> None:
-        cls.theme = theme
-
-
-# =====================================================================================================================
 class EventBroadcaster:
     """
     Управляет подключениями клиентов (подписчиков/слушателей) к основной очереди.
@@ -77,16 +61,13 @@ class EventBroadcaster:
         self.clients.pop(client_id, None)
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def broadcast(self, data: dict):
+    async def broadcast(self, data: dict) -> None:
         """Отправить сообщение всем клиентам.
         можно взять eb_queue и напрямую посылать!
 
         ITS A QUICK METHOD! DONT DO ANYTHING!!! JUST PLACE INTO MAIN_QUEUE!!!!
         """
-        try:
-            print(f"[EventBroadcaster].broadcast({data})")
-        except:
-            pass
+        print(f"[EventBroadcaster].broadcast({data})")
         await self.eb_queue.put(data)
 
     # -----------------------------------------------------------------------------------------------------------------
