@@ -1,3 +1,7 @@
+import asyncio
+from typing import *
+from abc import abstractmethod
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -17,13 +21,40 @@ class ManagerInstance:
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
 
+    _tasks: list[asyncio.Task]
+
     def __init__(self):
+        self._tasks = []
+
         self.items = {}
 
+    # -----------------------------------------------------------------------------------------------------------------
+    async def __aenter__(self):
+        await self.connect()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.disconnect()
+
+    # ---------------------------------------------------
+    @abstractmethod
+    def tasks_start(self) -> None:
+        raise NotImplementedError()
+
+    async def tasks_stop(self) -> None:
+        for task in self._tasks:
+            try:
+                task.cancel()
+            except:
+                pass
+
+        await asyncio.gather(*self._tasks, return_exceptions=True)
+
+    # -----------------------------------------------------------------------------------------------------------------
     def get_item(self, idn: str) -> CmdTerminal_OsAio | None:
         return self.items.get(idn)
 
-    # CMDS ----------------------------------------------
+    # CMDS -------------------------------------------------------------------------------------------------------------
     async def create_item(self, *args, **kwargs) -> str:
         # 1=detect --------------------------
         new_item = self.ITEM_CLASS(*args, **kwargs)
@@ -64,6 +95,11 @@ class ManagerInstance:
                 }
             })
 
+
+# ---------------------------------------------------------------------------------------------------------------------
+class ManagerInst_TermOs(ManagerInstance):
+
+    # SPECIAL methods --------------------------------------------
     async def clear_history(self, idn: str) -> None:
         # 1=detect --------------------------
         item = self.items.get(idn)
@@ -84,7 +120,7 @@ class ManagerInstance:
 
 
 # -----------------------------------------------------------------------------------------------------------------
-object_manager = ManagerInstance()
+manager_inst__termos = ManagerInst_TermOs()
 
 
 # TODO:
@@ -525,8 +561,8 @@ async def lifespan(app: FastAPI):
     # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
     print(f"FastApi.Startup: START")
     await event_broadcaster.start_task()
-    first_id = await object_manager.create_item()
-    first_item = object_manager.get_item(first_id)
+    first_id = await manager_inst__termos.create_item()
+    first_item = manager_inst__termos.get_item(first_id)
     if first_item:
         await first_item.connect()
     # ------------------------------------------------------------------
@@ -534,7 +570,7 @@ async def lifespan(app: FastAPI):
     yield  # <-- здесь сервер работает и обрабатывает запросы
 
     # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
-    for item_id, item in object_manager.items.items():
+    for item_id, item in manager_inst__termos.items.items():
         print(f"FastApi.Shutdown: {item_id=}")
         await item.disconnect()
 
@@ -558,13 +594,13 @@ async def html__root():
 
 @app.get("/item/list")
 async def list_items():
-    ids = list(object_manager.items)
+    ids = list(manager_inst__termos.items)
     return {"items": ids}
 
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/item/history/get/{idn}")
 async def get_history(idn: str):
-    item = object_manager.get_item(idn)
+    item = manager_inst__termos.get_item(idn)
     if not item:
         raise HTTPException(status_code=404, detail=f"[{idn=}]Item not found")
 
@@ -642,23 +678,23 @@ async def ws__client(websocket: WebSocket):
             # ----------------------------------------------
             if msg__event == "history_log":   # keep here
 
-                item = object_manager.get_item(msg__itemid)
+                item = manager_inst__termos.get_item(msg__itemid)
                 if item and msg__text:
                     asyncio.create_task(item.send_cmd(msg__text))
 
             elif msg__event == "item_control" and msg__data:
                 if msg__action == "clear_history":
-                    asyncio.create_task(object_manager.clear_history(msg__itemid))
+                    asyncio.create_task(manager_inst__termos.clear_history(msg__itemid))
 
                 elif msg__action == "reconnect_item":
-                    item = object_manager.get_item(msg__itemid)
+                    item = manager_inst__termos.get_item(msg__itemid)
                     asyncio.create_task(item.reconnect())
 
                 elif msg__action == "create_item":
-                    asyncio.create_task(object_manager.create_item())
+                    asyncio.create_task(manager_inst__termos.create_item())
 
                 elif msg__action == "delete_item":
-                    asyncio.create_task(object_manager.del_item(msg__itemid))
+                    asyncio.create_task(manager_inst__termos.del_item(msg__itemid))
 
         # --------------------------------------------
     except WebSocketDisconnect:
