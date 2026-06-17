@@ -15,6 +15,7 @@ from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroa
 # =====================================================================================================================
 class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     _bg_tasks: list
+    _event_connected = asyncio.Event
 
     def __init__(
             self,
@@ -353,6 +354,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             **kwargs,
     ):
         self._lock_stdin = asyncio.Lock()
+        self._event_connected = asyncio.Event()
 
         super().__init__(*args, **kwargs)
 
@@ -373,7 +375,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
     # -----------------------------------------------------------------------------------------------------------------
     async def connect(self) -> bool:
-        if self._conn is not None:
+        if self._conn is not None and self._event_connected.is_set():
             return True
 
         async with self._lock_stdin:
@@ -400,10 +402,12 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             self._last_byte_time = asyncio.get_event_loop().time()
 
             await asyncio.sleep(0.3)
+            self._event_connected.set()
             return True
 
     # -----------------------------------------------------------------------------------------------------------------
     async def disconnect(self) -> None:
+        self._event_connected.clear()
         self._stop_reading = True
 
         async with self._lock_stdin:
@@ -539,12 +543,16 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
         start_wait = asyncio.get_event_loop().time()
         while asyncio.get_event_loop().time() - start_wait < timeout_read_start:
+            if not self._event_connected.is_set():
+                return False
             # Если процесс завершился, сразу выходим
             if self._conn is not None and self._conn.returncode is not None:
                 return True
             if self._last_byte_time > start_wait:
                 quiet_start = asyncio.get_event_loop().time()
                 while asyncio.get_event_loop().time() - quiet_start < timeout_read_finish:
+                    if not self._event_connected.is_set():
+                        return False
                     if self._conn is not None and self._conn.returncode is not None:
                         return True
                     if self._last_byte_time > quiet_start:      # DONT USE [!=] !!! its make freezes
@@ -568,11 +576,11 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         #   HOW collect and return result??? history.last_result - OK!!!
         #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!! - NO! now it is ok!
 
-        if self._conn is None:
+        if not self._event_connected.is_set():
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
         async with self._lock_stdin:
-            if self._conn is None:
+            if not self._event_connected.is_set():
                 raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
             await self.history.add_data__stdin(cmd)

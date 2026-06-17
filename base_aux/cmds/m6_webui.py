@@ -29,12 +29,18 @@ class ManagerInstance:
         self.items = {}
 
     # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
     async def __aenter__(self):
+        # FIXME!
         await self.connect()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.disconnect()
+
+    @abstractmethod
+    async def monitor_instances(self) -> Never | NoReturn:
+        pass
 
     # ---------------------------------------------------
     @abstractmethod

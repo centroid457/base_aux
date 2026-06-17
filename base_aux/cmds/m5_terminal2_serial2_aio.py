@@ -43,6 +43,8 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
     # -----------------------------------------------------------------------------------------------------------------
     async def _del_conn(self) -> None:
         """Закрывает serial‑соединение."""
+        self._event_connected.clear()
+
         if self._conn is not None:
             writer = self._conn.stdin
             if writer is not None:
@@ -91,6 +93,9 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
             eol: str | None = None,
     ) -> None:
         """Отправляет строку в последовательный порт."""
+        if not self._event_connected.is_set():
+            return
+
         EOL = eol if eol is not None else self.EOL_SEND
 
         self._conn.stdin.write(f"{cmd}{EOL}".encode(self._encoding))
