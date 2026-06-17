@@ -61,7 +61,7 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
             self._conn = None
 
     def _del_tasks(self) -> None:
-        self._stop_reading = True
+        self._event_connected.clear()
         for reader_task in self._bg_tasks:
             reader_task.join(timeout=1)
 

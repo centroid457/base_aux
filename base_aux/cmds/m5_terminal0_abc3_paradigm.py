@@ -15,7 +15,6 @@ from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroa
 # =====================================================================================================================
 class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
     _bg_tasks: list
-    _event_connected = asyncio.Event
 
     def __init__(
             self,
@@ -120,7 +119,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
     # -----------------------------------------------------------------------------------------------------------------
     def connect(self) -> bool:
-        if self._conn is not None:
+        if self._event_connected.is_set():
             return True
 
         print(f"{self.__class__.__name__}({self.idn=}).connect")
@@ -132,10 +131,10 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             self.history.add_data__stderr(msg)  # fixme: USE SYSTEM level!
             return False
 
-        self._stop_reading = False
         self._create_tasks()
 
         time.sleep(0.3)
+        self._event_connected.set()
         return True
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -146,7 +145,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         close connection
         ready to exit
         """
-        self._stop_reading = True
+        self._event_connected.clear()
         self._del_tasks()
         self._del_conn()
         print(f"{self.__class__.__name__}({self.idn=}).disconnected")
@@ -184,20 +183,6 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         3. Исключения из потока нужно передавать в основной код через очередь или другие механизмы синхронизации – это усложняет логику.
         ВЫВОД=Правильный подход – использовать неблокирующий режим файлового дескриптора и цикл проверки времени, как было предложено ранее. Это даёт точный контроль над таймаутами, не создаёт лишних потоков и полностью повторяет логику асинхронного кода (по сути, мы реализуем тот же самый цикл событий вручную).
         """
-        # def ___reading_stdout(self):
-        #     while not self._stop_reading and self._conn is not None and self._conn.poll() is None:
-        #         try:
-        #             line = self._conn.stdout.readline()
-        #             line = line and line.rstrip()
-        #             if line:
-        #                 self.history.add_data__stdout(line)
-        #
-        #             self.history.set_retcode(self._conn.returncode)
-        #         except Exception as exc:
-        #             print(f"{exc!r}")
-        #             # time.sleep(0.1)
-        #             pass
-
         buffer: IO | None = None
 
         if self._conn is None:
@@ -217,7 +202,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             return
 
         # BUFFER -------------------
-        while not self._stop_reading and self._conn is not None:
+        while self._event_connected.is_set():
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_def.READ_START
             try:
@@ -354,7 +339,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             **kwargs,
     ):
         self._lock_stdin = asyncio.Lock()
-        self._event_connected = asyncio.Event()
 
         super().__init__(*args, **kwargs)
 
@@ -375,11 +359,11 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
     # -----------------------------------------------------------------------------------------------------------------
     async def connect(self) -> bool:
-        if self._conn is not None and self._event_connected.is_set():
+        if self._event_connected.is_set():
             return True
 
         async with self._lock_stdin:
-            if self._conn is not None:
+            if self._event_connected.is_set():
                 return True
 
             print(f"{self.__class__.__name__}({self.idn=}).connect")
@@ -397,7 +381,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
             # self.history.add_data__debug("🔄connected")
 
-            self._stop_reading = False
             self._create_tasks()
             self._last_byte_time = asyncio.get_event_loop().time()
 
@@ -408,7 +391,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     # -----------------------------------------------------------------------------------------------------------------
     async def disconnect(self) -> None:
         self._event_connected.clear()
-        self._stop_reading = True
 
         async with self._lock_stdin:
             await self._del_tasks()
@@ -422,7 +404,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _del_tasks(self) -> None:
-        self._stop_reading = True
+        self._event_connected.clear()
 
         # Отменяем задачи чтения
         for task in self._bg_tasks:
@@ -475,13 +457,8 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             return
 
         # BUFFER -------------------
-        while not self._stop_reading and self._conn is not None:
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
+        while self._event_connected.is_set():
+            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!????
 
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_def.READ_START
@@ -571,7 +548,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
-
         # TODO: ADD
         #   HOW collect and return result??? history.last_result - OK!!!
         #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!! - NO! now it is ok!

@@ -1,13 +1,16 @@
+import asyncio
 from abc import abstractmethod
-from typing import Any, NoReturn
+from typing import *
 
 from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType
 from base_aux.base_values.m3_exceptions import Exc__Io, Exc__UnDefined, Exc__WrongUsage, Exc__IoTimeout
 from base_aux.cmds.m5_terminal0_abc1_user import BaseUser_CmdTerminal
 
 
+# =====================================================================================================================
 class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
     _conn: Any | None
+    _event_connected = asyncio.Event
 
     def __init__(
             self,
@@ -18,7 +21,8 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
 
         self._conn = None
         self._last_byte_time: float = 0.0   # время последнего полученного байта
-        self._stop_reading: bool = False
+        self._event_connected = asyncio.Event()
+        self._event_connected.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -76,3 +80,6 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
             eol: str | None = None,
     ) -> None | NoReturn | Exc__IoTimeout:
         raise NotImplementedError()
+
+
+# =====================================================================================================================
