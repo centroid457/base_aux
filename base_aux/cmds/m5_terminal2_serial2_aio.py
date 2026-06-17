@@ -54,6 +54,36 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
             self._conn = None
 
     # -----------------------------------------------------------------------------------------------------------------
+    async def _read_byte_with_timeout(
+            self,
+            buffer: asyncio.StreamReader,
+            timeout: float = 0.05,
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage | asyncio.CancelledError:
+
+        if self._conn is None:
+            raise Exc__IoConnection(f"{self._conn=}")
+
+        # init BUFFER -------------------
+        if not isinstance(buffer, asyncio.StreamReader):
+            raise Exc__WrongUsage(f'{buffer=}')
+
+        if buffer is None:
+            raise Exc__WrongUsage(f"{self._conn=}/{buffer=}")
+
+        # READ -------------------
+        try:
+            new_byte = await asyncio.wait_for(buffer.read(1), timeout=timeout)
+            return new_byte
+        except asyncio.CancelledError:
+            raise
+        except asyncio.TimeoutError as exc:
+            raise Exc__IoTimeout(f"{timeout=}/{exc!r}", noprint=True)
+        except (BrokenPipeError, ConnectionResetError) as exc:
+            raise Exc__IoConnection(f"{exc!r}")
+        except BaseException as exc:
+            raise Exc__UnDefined(f"{exc!r}")
+
+    # -----------------------------------------------------------------------------------------------------------------
     async def _write_line(
             self,
             cmd: str,
@@ -68,12 +98,19 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
 
 
 # =====================================================================================================================
+async def explore__1():
+    async with CmdTerminal_SerialAio(port="COM3") as term:
+        await term.send_cmd("echo start!")
+        await term.send_cmd("echo finish!")
+        await asyncio.sleep(2)
+
+    await asyncio.sleep(0.5)
+
+
+# =====================================================================================================================
 if __name__ == "__main__":
     pass
-    # asyncio.run(explore__ping())
-    # asyncio.run(explore__cd())
-    # asyncio.run(explore__cd_reconnect())
-    # asyncio.run(explore__smth())
+    asyncio.run(explore__1())
 
 
 # =====================================================================================================================
