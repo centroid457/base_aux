@@ -10,6 +10,7 @@ import uvicorn
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
+from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_AbcAio
 
 
 # =====================================================================================================================
@@ -17,16 +18,13 @@ event_broadcaster = EventBroadcaster()
 
 
 # =====================================================================================================================
-class ManagerInstance:
+class ManagerInstance(Nest_TasksBg_AbcAio):
     ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
     items: dict[str, CmdTerminal_OsAio]
 
-    _tasks: list[asyncio.Task]
-
-    def __init__(self):
-        self._tasks = []
-
+    def __init__(self, *args, **kwargs):
         self.items = {}
+        super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -44,17 +42,8 @@ class ManagerInstance:
 
     # ---------------------------------------------------
     @abstractmethod
-    def tasks_start(self) -> None:
+    def _tasks_bg__create_start(self) -> None:
         raise NotImplementedError()
-
-    async def tasks_stop(self) -> None:
-        for task in self._tasks:
-            try:
-                task.cancel()
-            except:
-                pass
-
-        await asyncio.gather(*self._tasks, return_exceptions=True)
 
     # -----------------------------------------------------------------------------------------------------------------
     def get_item(self, idn: str) -> CmdTerminal_OsAio | None:
@@ -104,7 +93,6 @@ class ManagerInstance:
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ManagerInst_TermOs(ManagerInstance):
-
     # SPECIAL methods --------------------------------------------
     async def clear_history(self, idn: str) -> None:
         # 1=detect --------------------------
