@@ -9,8 +9,11 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
+from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_AbcAio
+
+import serial.tools.list_ports
 
 
 # =====================================================================================================================
@@ -19,34 +22,33 @@ event_broadcaster = EventBroadcaster()
 
 # =====================================================================================================================
 class ManagerInstance(Nest_TasksBg_AbcAio):
-    ITEM_CLASS: type[CmdTerminal_OsAio] = CmdTerminal_OsAio
-    items: dict[str, CmdTerminal_OsAio]
+    ITEM_CLASS: type[BaseAio_CmdTerminal]
+    items: dict[str, BaseAio_CmdTerminal]
 
     def __init__(self, *args, **kwargs):
         self.items = {}
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
     async def __aenter__(self):
-        # FIXME!
-        await self.connect()
+        try:
+            self._tasks_bg__create_start()
+        except:
+            pass
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.disconnect()
+        await self._tasks_bg__stop_delete()
+        for item in self.items:
+            await self.del_item(item)
 
+    # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
     async def monitor_instances(self) -> Never | NoReturn:
         pass
 
-    # ---------------------------------------------------
-    @abstractmethod
-    def _tasks_bg__create_start(self) -> None:
-        raise NotImplementedError()
-
     # -----------------------------------------------------------------------------------------------------------------
-    def get_item(self, idn: str) -> CmdTerminal_OsAio | None:
+    def get_item(self, idn: str) -> BaseAio_CmdTerminal | None:
         return self.items.get(idn)
 
     # CMDS -------------------------------------------------------------------------------------------------------------
@@ -91,8 +93,10 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
             })
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-class ManagerInst_TermOs(ManagerInstance):
+# ----------------------------------------------------------------------------------------------------------------------
+class ManagerInst_Term(ManagerInstance):
+    ITEM_CLASS = CmdTerminal_OsAio
+
     # SPECIAL methods --------------------------------------------
     async def clear_history(self, idn: str) -> None:
         # 1=detect --------------------------
@@ -113,8 +117,83 @@ class ManagerInst_TermOs(ManagerInstance):
         })
 
 
-# -----------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
+class ManagerInst_TermOs(ManagerInst_Term):
+    ITEM_CLASS = CmdTerminal_SerialAio
+    async def __aenter__(self):
+        await self.create_first_item()
+        return self
+
+    async def create_first_item(self) -> None:
+        item_idn = await self.create_item()
+        item_inst = self.get_item(item_idn)
+        await item_inst.connect()
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+class ManagerInst_TermSerial(ManagerInst_Term):
+    ITEM_CLASS = CmdTerminal_SerialAio
+
+    def _tasks_bg__create_start(self) -> None:
+        self._tasks_bg = [
+                asyncio.create_task(self.monitor_instances()),
+            ]
+
+    async def monitor_instances(
+            self,
+            poll_interval: float = 1.0,
+            stop_event: asyncio.Event | None = None,
+    ):
+        """
+        Непрерывно отслеживает подключение/отключение COM-портов.
+
+        :param create_item: async функция, вызываемая при появлении нового порта (принимает имя порта, например 'COM3')
+        :param del_item: async функция, вызываемая при исчезновении порта
+        :param poll_interval: интервал опроса (сек)
+        :param stop_event: событие для остановки мониторинга; если не передано, создаётся новое
+        """
+        if stop_event is None:
+            stop_event = asyncio.Event()
+
+        known_ports = set()
+        while not stop_event.is_set():
+            # 1=DEFINE ------------------
+            objs = serial.tools.list_ports.comports()
+            if not objs:
+                await asyncio.sleep(poll_interval)
+                continue
+
+            try:
+                current_ports = {p.device for p in objs}
+                print(current_ports)
+            except Exception:
+                # В случае ошибки (например, нет прав) пропускаем цикл
+                await asyncio.sleep(poll_interval)
+                continue
+
+            # 2=WORK ------------------
+            added = current_ports - known_ports
+            removed = known_ports - current_ports
+
+            for port in added:
+                try:
+                    await self.create_item(port=port)
+                except Exception as e:
+                    print(f"Error creating item for {port}: {e}")
+
+            for port in removed:
+                try:
+                    await self.del_item(port)
+                except Exception as e:
+                    print(f"Error deleting item for {port}: {e}")
+
+            known_ports = current_ports
+            await asyncio.sleep(poll_interval)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
 manager_inst__termos = ManagerInst_TermOs()
+# manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
@@ -555,21 +634,18 @@ async def lifespan(app: FastAPI):
     # --- Код, выполняемый ПРИ СТАРТЕ сервера (бывший startup_event) ---
     print(f"FastApi.Startup: START")
     await event_broadcaster.start_task()
-    first_id = await manager_inst__termos.create_item()
-    first_item = manager_inst__termos.get_item(first_id)
-    if first_item:
-        await first_item.connect()
-    # ------------------------------------------------------------------
 
-    yield  # <-- здесь сервер работает и обрабатывает запросы
+    async with manager_inst__termos:
 
-    # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
-    for item_id, item in manager_inst__termos.items.items():
-        print(f"FastApi.Shutdown: {item_id=}")
-        await item.disconnect()
+        yield  # <-- здесь сервер работает и обрабатывает запросы
 
-    print(f"FastApi.Shutdown: FINISHED")
-    # ---------------------------------------------------------------------
+        # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
+        # for item_id, item in manager_inst__termos.items.items():
+        #     print(f"FastApi.Shutdown: {item_id=}")
+        #     await item.disconnect()
+
+        print(f"FastApi.Shutdown: FINISHED")
+        # ---------------------------------------------------------------------
 
 
 # =====================================================================================================================

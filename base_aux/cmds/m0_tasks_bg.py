@@ -55,7 +55,7 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
     _tasks_bg: list[asyncio.Task]
 
     @abstractmethod
-    def _tasks_bg__create_start(self) -> None:
+    def _tasks_bg__create_start(self) -> None:  # KEEP SYNC!!! used in connect!
         raise NotImplementedError()
 
     async def _tasks_bg__stop_delete(self, timeout: float = 1) -> None:
