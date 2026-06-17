@@ -10,20 +10,17 @@ from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m5_terminal0_abc2_conn import AbcConn_CmdTerminal
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
+from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_AbcSync, Nest_TasksBg_AbcAio
 
 
 # =====================================================================================================================
 class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
-    _bg_tasks: list
-
     def __init__(
             self,
             *args,
             **kwargs,
     ):
         super().__init__(*args, **kwargs)
-
-        self._bg_tasks = []
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -103,12 +100,10 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
+class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal, Nest_TasksBg_AbcSync):
     """
     DEPRECATE!!! dont use!! use only AIO!!!
     """
-    _bg_tasks: list[threading.Thread]
-
     # -----------------------------------------------------------------------------------------------------------------
     def __enter__(self):
         self.connect()
@@ -132,7 +127,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             return False
 
         self._event_connected.set()     # ВКЛЮЧИТЬ ДО ЗАПУСКА ЗАДАЧ
-        self._create_tasks()
+        self._tasks_bg__create_start()
 
         time.sleep(0.3)
         return True
@@ -146,7 +141,7 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
         ready to exit
         """
         self._event_connected.clear()
-        self._del_tasks()
+        self._tasks_bg__stop_delete()
         self._del_conn()
         print(f"{self.__class__.__name__}({self.idn=}).disconnected")
 
@@ -328,9 +323,8 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemented):
+class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemented, Nest_TasksBg_AbcAio):
     pass
-    _bg_tasks: list[asyncio.Task]
     _lock_stdin: asyncio.Lock
 
     def __init__(
@@ -382,7 +376,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             # self.history.add_data__debug("🔄connected")
 
             self._event_connected.set()  # ВКЛЮЧИТЬ ДО ЗАПУСКА ЗАДАЧ
-            self._create_tasks()
+            self._tasks_bg__create_start()
             self._last_byte_time = asyncio.get_event_loop().time()
 
             await asyncio.sleep(0.3)
@@ -393,7 +387,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         self._event_connected.clear()
 
         async with self._lock_stdin:
-            await self._del_tasks()
+            await self._tasks_bg__stop_delete()
             await self._del_conn()
             # self.history.add_data__debug("disconnected")
             print(f"{self.__class__.__name__}({self.idn=}).disconnected")
@@ -401,24 +395,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     async def reconnect(self) -> None:
         await self.disconnect()
         await self.connect()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _del_tasks(self) -> None:
-        self._event_connected.clear()
-
-        # Отменяем задачи чтения
-        for task in self._bg_tasks:
-            task.cancel()
-        # Ждём их завершения с таймаутом, игнорируя ошибки
-        try:
-            await asyncio.wait_for(
-                asyncio.gather(*self._bg_tasks, return_exceptions=True),
-                timeout=2
-            )
-        except asyncio.TimeoutError:
-            # Если задачи не завершились, просто забудем о них
-            pass
-        self._bg_tasks.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
     def bytes_decode(self, source: bytes) -> str | None:

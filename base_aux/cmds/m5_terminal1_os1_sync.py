@@ -28,7 +28,7 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
             # timeout=1,    № is not accesible here in Popen!!!!
         )
 
-    def _create_tasks(self) -> None:
+    def _tasks_bg__create_start(self) -> None:
         # setup settings for buffers
         # Неблокирующий режим должен быть установлен один раз до входа в цикл. Например, в начале метода _reading_stream:
         for buffer in [self._conn.stdout, self._conn.stderr]:
@@ -36,13 +36,13 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
             fd = buffer.fileno()
             os.set_blocking(fd, False)
 
-        self._bg_tasks = [
+        self._tasks_bg = [
             threading.Thread(target=self._bg_reading_buffer__stdout, daemon=True),
             threading.Thread(target=self._bg_reading_buffer__stderr, daemon=True),
         ]
 
-        for reader_task in self._bg_tasks:
-            reader_task.start()
+        for task in self._tasks_bg:
+            task.start()
 
     # -----------------------------------------------------------------------------------------------------------------
     def _del_conn(self) -> None:
@@ -59,13 +59,6 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
             except:
                 pass
             self._conn = None
-
-    def _del_tasks(self) -> None:
-        self._event_connected.clear()
-        for reader_task in self._bg_tasks:
-            reader_task.join(timeout=1)
-
-        self._bg_tasks.clear()
 
     # -----------------------------------------------------------------------------------------------------------------
     def _read_byte_with_timeout(

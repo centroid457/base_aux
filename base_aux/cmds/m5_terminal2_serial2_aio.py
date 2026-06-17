@@ -1,4 +1,5 @@
 import asyncio
+from abc import abstractmethod
 from types import SimpleNamespace
 
 from base_aux.cmds.m5_terminal0_abc1_user import *
@@ -6,9 +7,6 @@ from base_aux.cmds.m5_terminal2_serial0_base import *
 from base_aux.cmds.m5_terminal0_abc3_paradigm import BaseAio_CmdTerminal
 
 import serial_asyncio
-
-
-# TODO: separate Nest_TasksBg
 
 
 # =====================================================================================================================
@@ -35,11 +33,11 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
             returncode=None,  # serial не возвращает код завершения
         )
 
-    def _create_tasks(self) -> None:
+    def _tasks_bg__create_start(self) -> None:
         """
         Запускает только чтение stdout (stderr для serial не нужен).
         """
-        self._bg_tasks = [
+        self._tasks_bg = [
             asyncio.create_task(self._bg_reading_buffer__stdout()),
         ]
         

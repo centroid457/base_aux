@@ -44,8 +44,8 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
         raise NotImplementedError()
 
     def _tasks_bg__stop_delete(self, timeout: float = 1) -> None:
-        for reader_task in self._tasks_bg:
-            reader_task.join(timeout=timeout)
+        for task in self._tasks_bg:
+            task.join(timeout=timeout)
 
         self._tasks_bg.clear()
 

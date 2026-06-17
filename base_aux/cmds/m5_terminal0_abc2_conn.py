@@ -2,13 +2,13 @@ import asyncio
 from abc import abstractmethod
 from typing import *
 
-from base_aux.base_enums.m2_enum1_adj import EnumAdj_StdioeType
 from base_aux.base_values.m3_exceptions import Exc__Io, Exc__UnDefined, Exc__WrongUsage, Exc__IoTimeout
+from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_Abc
 from base_aux.cmds.m5_terminal0_abc1_user import BaseUser_CmdTerminal
 
 
 # =====================================================================================================================
-class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
+class AbcConn_CmdTerminal(BaseUser_CmdTerminal, Nest_TasksBg_Abc):
     _conn: Any | None
     _event_connected = asyncio.Event
 
@@ -21,6 +21,7 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
 
         self._conn = None
         self._last_byte_time: float = 0.0   # время последнего полученного байта
+
         self._event_connected = asyncio.Event()
         self._event_connected.clear()
 
@@ -35,30 +36,11 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal):
         raise NotImplementedError()
 
     @abstractmethod
-    def _create_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
-        """
-        raise NotImplementedError()
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
     def _del_conn(self) -> None:
         """
         GOAL
         ----
         only create only one _conn! no validate/ no catching exc!!!
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _del_tasks(self) -> None:
-        """
-        GOAL
-        ----
-        only create and start tasks! no validate/ no catching exc!!!???
         """
         raise NotImplementedError()
 
