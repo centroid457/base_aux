@@ -151,26 +151,27 @@ class ManagerInst_TermSerial(ManagerInst_Term):
         if stop_event is None:
             stop_event = asyncio.Event()
 
-        known_ports = set()
         while not stop_event.is_set():
+            known_ports = set(self.items)
+
             # 1=DEFINE ------------------
             objs = serial.tools.list_ports.comports()
             if not objs:
-                print(f"current_ports={objs}")
+                print(f"detected_ports={objs}")
                 await asyncio.sleep(poll_interval)
                 continue
 
             try:
-                current_ports = {p.device for p in objs}
-                print(f"{current_ports=}")
+                detected_ports = {p.device for p in objs}
+                print(f"{detected_ports=}")
             except Exception:
                 # В случае ошибки (например, нет прав) пропускаем цикл
                 await asyncio.sleep(poll_interval)
                 continue
 
             # 2=WORK ------------------
-            added = current_ports - known_ports
-            removed = known_ports - current_ports
+            added = detected_ports - known_ports
+            removed = known_ports - detected_ports
 
             for port in added:
                 try:
@@ -184,7 +185,6 @@ class ManagerInst_TermSerial(ManagerInst_Term):
                 except Exception as e:
                     print(f"Error deleting item for {port}: {e}")
 
-            known_ports = current_ports
             await asyncio.sleep(poll_interval)
 
 
