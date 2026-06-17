@@ -131,10 +131,10 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
             self.history.add_data__stderr(msg)  # fixme: USE SYSTEM level!
             return False
 
+        self._event_connected.set()     # ВКЛЮЧИТЬ ДО ЗАПУСКА ЗАДАЧ
         self._create_tasks()
 
         time.sleep(0.3)
-        self._event_connected.set()
         return True
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -381,11 +381,11 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
             # self.history.add_data__debug("🔄connected")
 
+            self._event_connected.set()  # ВКЛЮЧИТЬ ДО ЗАПУСКА ЗАДАЧ
             self._create_tasks()
             self._last_byte_time = asyncio.get_event_loop().time()
 
             await asyncio.sleep(0.3)
-            self._event_connected.set()
             return True
 
     # -----------------------------------------------------------------------------------------------------------------

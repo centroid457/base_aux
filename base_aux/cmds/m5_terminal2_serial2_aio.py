@@ -8,6 +8,9 @@ from base_aux.cmds.m5_terminal0_abc3_paradigm import BaseAio_CmdTerminal
 import serial_asyncio
 
 
+# TODO: separate Nest_TasksBg
+
+
 # =====================================================================================================================
 class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
     _conn: SimpleNamespace | None
@@ -108,7 +111,7 @@ async def explore__1():
         print(await term.send_cmd("echo start!"))
         print(await term.send_cmd("echo finish!"))
 
-    await asyncio.sleep(0.5)
+    # await asyncio.sleep(0.5)
 
 
 # =====================================================================================================================
