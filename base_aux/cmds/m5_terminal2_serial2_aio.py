@@ -19,7 +19,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
         Открывает асинхронное serial‑соединение.
         """
         reader, writer = await serial_asyncio.open_serial_connection(
-            url=self._serial_port,
+            url=self.idn,
             baudrate=self._serial_baudrate,
             bytesize=self._serial_bytesize,
             parity=self._serial_parity,

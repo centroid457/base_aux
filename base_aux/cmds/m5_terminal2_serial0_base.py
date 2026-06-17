@@ -18,13 +18,13 @@ class Base_CmdTerminal_Serial(AbcParadigm_CmdTerminal):
 
             **kwargs,
     ):
-        self._serial_port = port
         self._serial_baudrate = baudrate
         self._serial_bytesize = bytesize
         self._serial_parity = parity
         self._serial_stopbits = stopbits
 
         super().__init__(**kwargs)
+        self.set_id(port)
 
 
 # =====================================================================================================================

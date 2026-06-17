@@ -145,9 +145,6 @@ class ManagerInst_TermSerial(ManagerInst_Term):
     ):
         """
         Непрерывно отслеживает подключение/отключение COM-портов.
-
-        :param create_item: async функция, вызываемая при появлении нового порта (принимает имя порта, например 'COM3')
-        :param del_item: async функция, вызываемая при исчезновении порта
         :param poll_interval: интервал опроса (сек)
         :param stop_event: событие для остановки мониторинга; если не передано, создаётся новое
         """
@@ -159,12 +156,13 @@ class ManagerInst_TermSerial(ManagerInst_Term):
             # 1=DEFINE ------------------
             objs = serial.tools.list_ports.comports()
             if not objs:
+                print(f"current_ports={objs}")
                 await asyncio.sleep(poll_interval)
                 continue
 
             try:
                 current_ports = {p.device for p in objs}
-                print(current_ports)
+                print(f"{current_ports=}")
             except Exception:
                 # В случае ошибки (например, нет прав) пропускаем цикл
                 await asyncio.sleep(poll_interval)
@@ -176,7 +174,7 @@ class ManagerInst_TermSerial(ManagerInst_Term):
 
             for port in added:
                 try:
-                    await self.create_item(port=port)
+                    await self.create_item(port=port, baudrate=115200)
                 except Exception as e:
                     print(f"Error creating item for {port}: {e}")
 
@@ -191,8 +189,8 @@ class ManagerInst_TermSerial(ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst__termos = ManagerInst_TermOs()
-# manager_inst__termos = ManagerInst_TermSerial()
+# manager_inst__termos = ManagerInst_TermOs()
+manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
