@@ -100,9 +100,8 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
 # =====================================================================================================================
 async def explore__1():
     async with CmdTerminal_SerialAio(port="COM3") as term:
-        await term.send_cmd("echo start!")
-        await term.send_cmd("echo finish!")
-        await asyncio.sleep(2)
+        print(await term.send_cmd("echo start!"))
+        print(await term.send_cmd("echo finish!"))
 
     await asyncio.sleep(0.5)
 
