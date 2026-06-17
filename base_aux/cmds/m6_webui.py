@@ -95,7 +95,6 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
 
 # ----------------------------------------------------------------------------------------------------------------------
 class ManagerInst_Term(ManagerInstance):
-    ITEM_CLASS = CmdTerminal_OsAio
 
     # SPECIAL methods --------------------------------------------
     async def clear_history(self, idn: str) -> None:
@@ -119,7 +118,7 @@ class ManagerInst_Term(ManagerInstance):
 
 # ----------------------------------------------------------------------------------------------------------------------
 class ManagerInst_TermOs(ManagerInst_Term):
-    ITEM_CLASS = CmdTerminal_SerialAio
+    ITEM_CLASS = CmdTerminal_OsAio
     async def __aenter__(self):
         await self.create_first_item()
         return self
