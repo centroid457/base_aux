@@ -583,7 +583,7 @@ HTML_TEMPLATE = """
                     const resp = await fetch(`/item/history/get/${this.itemId}`);
                     const history = await resp.json();
                     history.forEach(log_line => {
-                        if (log_line.input) this.addHistoryLine('msg_stdin__cls', `→ ${log_line.input}`);
+                        if (log_line.input) this.addHistoryLine('msg_stdin__cls', log_line.input);
                         log_line.stdout?.forEach(l => this.addHistoryLine('msg_stdout__cls', l));
                         log_line.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
                         log_line.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
