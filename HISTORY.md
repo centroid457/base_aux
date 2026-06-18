@@ -9,6 +9,14 @@
 ********************************************************************************
 ## NEWS
 
+0.3.20(2026.06.18 17.55.34)
+------------------------------
+- [ALL] many renames +refs  
+- [CMDS] big ref, add Terminals Os and Serial, webs  
+- [WEBS] fastApi, header, HtmlHoleReference  
+- [requirements] new ver  
+- [DOCKER] add  
+
 0.3.13(2026.01.15 17.23.59)
 ------------------------------
 - [.gitignore] VERSION = (0, 1, 0)#ask DeepSeek  

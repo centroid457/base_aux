@@ -34,9 +34,13 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 13))
+    VERSION = Version((0, 3, 20))
     NEWS: list[str] = [
-        "[.gitignore] VERSION = (0, 1, 0)#ask DeepSeek",
+        "[ALL] many renames +refs",
+        "[CMDS] big ref, add Terminals Os and Serial, webs",
+        "[WEBS] fastApi, header, HtmlHoleReference",
+        "[requirements] new ver",
+        "[DOCKER] add",
     ]
 
 
