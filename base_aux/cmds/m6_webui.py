@@ -268,8 +268,8 @@ HTML_TEMPLATE = """
     </style>
         
 </head>
-<body>
-    <header data-auto__ping_lost>
+<body data-auto__ping_lost>
+    <header>
         <h1 style="color: #fff">WebClient</h1>
         <div>
             <button id="btn_add_item__id">Новый объект</button>
