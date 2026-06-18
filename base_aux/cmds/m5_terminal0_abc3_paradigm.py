@@ -404,6 +404,18 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             self.history.add_data__stderr(f"[bytes_decode]{source=}/{exc!r}")
         return result
 
+    async def _process_received_line(
+            self,
+            raw: bytearray,
+            append_method: Callable[[str], Awaitable[None]],
+    ) -> None:
+        """Декодирует накопленные байты, добавляет строку в историю и фиксирует retcode."""
+        line: str = self.bytes_decode(raw)  # bytes_decode делает decode + rstrip
+        if line:
+            await append_method(line)
+            if self._conn is not None:
+                self.history.set_retcode(self._conn.returncode)
+
     async def _bg_reading_buffer(self, buffer_type: EnumAdj_StdioeType) -> Never | None:
         """
         Чтение потока по одному байту с двумя таймаутами.
@@ -413,12 +425,10 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         - По таймауту строка также завершается.
         - Добавление в историю через append_method.
         """
-        buffer: asyncio.StreamReader | None = None
-
         if self._conn is None:
             return
 
-        # select BUFFER -------------------
+        # выбор буфера и метода добавления -------------------
         if buffer_type == EnumAdj_StdioeType.STDOUT:
             buffer = self._conn.stdout
             append_method = self.history.add_data__stdout
@@ -431,45 +441,43 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
         if buffer is None:
             return
 
-        # BUFFER -------------------
+        # главный цикл жизни соединения -------------------
         while self._event_connected.is_set():
-            # ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
-
             bytes_accumulated = bytearray()
-            timeout_active = self.timeout_def.READ_START
+            first_byte = True
+
             try:
                 while True:
+                    # выбираем таймаут в зависимости от стадии
+                    timeout = (
+                        self.timeout_def.READ_START
+                        if first_byte
+                        else self.timeout_def.READ_FINISH
+                    )
                     try:
-                        new_byte = await self._read_byte_with_timeout(buffer=buffer, timeout=timeout_active)
+                        new_byte = await self._read_byte_with_timeout(
+                            buffer=buffer, timeout=timeout
+                        )
                     except Exc__IoTimeout:
+                        if bytes_accumulated:
+                            await self._process_received_line(bytes_accumulated, append_method)
                         break
                     except Exc__IoConnection:
-                        # Канал закрыт – выходим из цикла чтения
-                        return
+                        return  # канал закрыт, полностью выходим
 
+                    # байт успешно получен -----------------------
+                    first_byte = False
                     self._last_byte_time = asyncio.get_event_loop().time()
-                    timeout_active = self.timeout_def.READ_FINISH
 
-                    if new_byte == b'':  # EOF
-                        return
+                    if new_byte == b'':
+                        return  # EOF
 
                     if new_byte in (b'\r', b'\n'):
                         if bytes_accumulated:
-                            new_line : str = self.bytes_decode(bytes_accumulated)
-                            if new_line:
-                                await append_method(new_line)
-                                self.history.set_retcode(self._conn.returncode)
-
-                        bytes_accumulated = bytearray()
-                        continue
+                            await self._process_received_line(bytes_accumulated, append_method)
+                            bytes_accumulated.clear()
                     else:
                         bytes_accumulated.extend(new_byte)
-
-                if bytes_accumulated:
-                    new_line: str = bytes_accumulated.decode(self._encoding).rstrip()
-                    if new_line:
-                        await append_method(new_line)
-                        self.history.set_retcode(self._conn.returncode)
 
             except asyncio.CancelledError:
                 break
