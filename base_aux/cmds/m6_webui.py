@@ -341,8 +341,10 @@ HTML_TEMPLATE = """
             };
     
             // ---------------------------------------------------
-            ws_client.onopen = () => {
+            ws_client.onopen = async () => {
                 console.log("[WsClient]🟢connected");
+                // Полная перезагрузка UI с нуля
+                await itemsManager.reloadUI();
             };
     
             ws_client.onclose = () => {
@@ -357,8 +359,21 @@ HTML_TEMPLATE = """
         const itemsManager = {
             items_map: new Map(),
             
-            // Инициализация UI через REST (вызывается один раз при загрузке страницы)
+            // Инициализация UI при первой загрузке страницы
             async initUI() {
+                document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
+                await this.reloadUI();
+            },
+            
+            // Полная очистка и повторное построение UI на основе данных сервера
+            async reloadUI() {
+                // Удаляем все существующие элементы
+                for (const [id, ui] of this.items_map) {
+                    ui.destroy();
+                }
+                this.items_map.clear();
+                
+                // Загружаем актуальный список с сервера
                 const serverIds = await this.get_IdsServer();
                 for (const idn of serverIds) {
                     this.addItemElement(idn);
@@ -562,8 +577,8 @@ HTML_TEMPLATE = """
         // Запуск
         // --------------------------------------------------------------
         window.onload = async () => {
-            await itemsManager.initUI();    // первичная загрузка через REST
-            ws_client__connect();           // запуск коннетка сокета
+            await itemsManager.initUI();    // первичная загрузка, через REST, регистрирует кнопку и запускает reloadUI
+            ws_client__connect();           // запуск WebSocket (onopen сам вызовет reloadUI)
         };
     </script>
 </body>
