@@ -273,7 +273,6 @@ HTML_TEMPLATE = """
     <header data-auto__ping_lost>
         <h1 style="color: #fff">WebClient</h1>
         <div>
-            <button id="btn_resync__id">resync</button>
             <button id="btn_add_item__id">Новый объект</button>
             <span data-auto__replace_with__btn_hard_reset></span>
         </div>
@@ -318,11 +317,6 @@ HTML_TEMPLATE = """
                 } else if (msg__event === "item_control") {
                 
                     if (msg__action === "create_item") {
-                        const stored = itemsManager.get_IdsClient();
-                        if (!stored.includes(msg__itemid)) {
-                            stored.push(msg__itemid);
-                            itemsManager.set_IdsClient(stored);
-                        }
                         if (!itemsManager.items_map.has(msg__itemid)) {
                             itemsManager.addItemElement(msg__itemid);
                         }
@@ -333,9 +327,6 @@ HTML_TEMPLATE = """
                             ui.destroy();
                             itemsManager.items_map.delete(msg__itemid);
                         }
-                        const stored = itemsManager.get_IdsClient();
-                        const updated = stored.filter(id => id !== msg__itemid);
-                        itemsManager.set_IdsClient(updated);
                         
                     } else if (msg__action === "clear_history") {
                         const ui = itemsManager.items_map.get(msg__itemid);
@@ -350,9 +341,8 @@ HTML_TEMPLATE = """
             };
     
             // ---------------------------------------------------
-            ws_client.onopen = async () => {
+            ws_client.onopen = () => {
                 console.log("[WsClient]🟢connected");
-                await syncWithServer();   // синхронизация после восстановления
             };
     
             ws_client.onclose = () => {
@@ -362,35 +352,6 @@ HTML_TEMPLATE = """
         }
     
         // --------------------------------------------------------------
-        // Синхронизация после переподключения сокета
-        // --------------------------------------------------------------
-        async function syncWithServer() {
-            const serverIds = await itemsManager.get_IdsServer();
-            const localIds = Array.from(itemsManager.items_map.keys());
-        
-            // 1. Удаляем локальные терминалы, которых нет на сервере
-            for (const id of localIds) {
-                if (!serverIds.includes(id)) {
-                    const ui = itemsManager.items_map.get(id);
-                    if (ui) ui.destroy();
-                    itemsManager.items_map.delete(id);
-                }
-            }
-        
-            // 2. Добавляем терминалы, которые есть на сервере, но отсутствуют локально
-            for (const id of serverIds) {
-                if (!itemsManager.items_map.has(id)) {
-                    itemsManager.addItemElement(id);
-                }
-            }
-        
-            // 3. Обновляем localStorage
-            itemsManager.set_IdsClient(serverIds);
-        }
-        
-        document.getElementById('btn_resync__id').addEventListener('click', () => syncWithServer());
-
-        // --------------------------------------------------------------
         // Глобальный менеджер объектов
         // --------------------------------------------------------------
         const itemsManager = {
@@ -399,7 +360,6 @@ HTML_TEMPLATE = """
             // Инициализация UI через REST (вызывается один раз при загрузке страницы)
             async initUI() {
                 const serverIds = await this.get_IdsServer();
-                this.set_IdsClient(serverIds);
                 for (const idn of serverIds) {
                     this.addItemElement(idn);
                 }
@@ -422,15 +382,6 @@ HTML_TEMPLATE = """
                 } catch {
                     return [];
                 }
-            },
-    
-            get_IdsClient() {
-                const stored = localStorage.getItem('terminal_session_ids');
-                return stored ? JSON.parse(stored) : [];
-            },
-    
-            set_IdsClient(ids) {
-                localStorage.setItem('terminal_session_ids', JSON.stringify(ids));
             },
     
             // ---------------------------------------------------
