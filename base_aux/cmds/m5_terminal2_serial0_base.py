@@ -16,6 +16,8 @@ class Base_CmdTerminal_Serial(AbcParadigm_CmdTerminal):
             parity: str = 'N',
             stopbits: int = 1,
 
+            # eol_send      # use already existed! self.EOL_SEND
+
             **kwargs,
     ):
         self._serial_baudrate = baudrate

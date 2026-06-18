@@ -433,7 +433,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
 
         # BUFFER -------------------
         while self._event_connected.is_set():
-            # TODO: ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!????
+            # ПРОСТО ЧИТАТЬ БАЙТ И сохранять TS последнего байта! для всех буферов единый!!!
 
             bytes_accumulated = bytearray()
             timeout_active = self.timeout_def.READ_START
@@ -523,10 +523,6 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             timeout_read_finish: float | None = None,
             eol: str | None = None,
     ) -> CmdResult:
-        # TODO: ADD
-        #   HOW collect and return result??? history.last_result - OK!!!
-        #   _wait__finish_executing_cmd - use as parallel working buffers! - place active timeout in OBJECT!!! - NO! now it is ok!
-
         if not self._event_connected.is_set():
             raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
 
