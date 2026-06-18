@@ -1,6 +1,5 @@
 from typing import *
 import asyncio
-import threading
 import time
 from abc import abstractmethod
 
@@ -10,7 +9,7 @@ from base_aux.base_values.m3_exceptions import *
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m5_terminal0_abc2_conn import AbcConn_CmdTerminal
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
-from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_AbcSync, Nest_TasksBg_AbcAio
+from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcSync, Nest_TasksBg_AbcAio
 
 
 # =====================================================================================================================

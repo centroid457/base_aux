@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import *
 
 from base_aux.base_values.m3_exceptions import Exc__Io, Exc__UnDefined, Exc__WrongUsage, Exc__IoTimeout
-from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_Abc
+from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_Abc
 from base_aux.cmds.m5_terminal0_abc1_user import BaseUser_CmdTerminal
 
 

@@ -1,7 +1,3 @@
-import asyncio
-from typing import *
-from abc import abstractmethod
-
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,7 +7,7 @@ import uvicorn
 from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
-from base_aux.cmds.m0_tasks_bg import Nest_TasksBg_AbcAio
+from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcAio
 
 import serial.tools.list_ports
 
