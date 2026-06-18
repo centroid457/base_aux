@@ -377,7 +377,6 @@ HTML_TEMPLATE = """
                 for (const idn of serverIds) {
                     this.addItemElement(idn);
                 }
-                document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
             },
             
             addItemElement(itemId) {
