@@ -156,11 +156,6 @@ class ManagerInst_TermSerial(ManagerInst_Term):
 
             # 1=DEFINE ------------------
             objs = serial.tools.list_ports.comports()
-            if not objs:
-                print(f"detected_ports={objs}")
-                await asyncio.sleep(poll_interval)
-                continue
-
             try:
                 detected_ports = {p.device for p in objs}
                 print(f"{detected_ports=}")
