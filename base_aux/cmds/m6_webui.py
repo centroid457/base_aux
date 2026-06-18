@@ -183,8 +183,8 @@ class ManagerInst_TermSerial(ManagerInst_TermBase):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst__termos = ManagerInst_TermOs()
-# manager_inst__termos = ManagerInst_TermSerial()
+# manager_inst__termos = ManagerInst_TermOs()
+manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
@@ -197,13 +197,13 @@ HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
-    <script>uncache_loading__all_files_without_cache();</script>
-    
     <meta charset="utf-8">
     <title>WebClient</title>
     
     <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css">
     <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
+    
+    <script>uncache_loading__all_files_without_cache();</script>
     
     <style>
         /* ---------------------------------------------------------------------------------------------------------- */
