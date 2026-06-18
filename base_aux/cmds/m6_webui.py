@@ -94,8 +94,7 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class ManagerInst_Term(ManagerInstance):
-
+class ManagerInst_TermBase(ManagerInstance):
     # SPECIAL methods --------------------------------------------
     async def clear_history(self, idn: str) -> None:
         # 1=detect --------------------------
@@ -117,7 +116,7 @@ class ManagerInst_Term(ManagerInstance):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class ManagerInst_TermOs(ManagerInst_Term):
+class ManagerInst_TermOs(ManagerInst_TermBase):
     ITEM_CLASS = CmdTerminal_OsAio
     async def __aenter__(self):
         await self.create_first_item()
@@ -130,7 +129,7 @@ class ManagerInst_TermOs(ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class ManagerInst_TermSerial(ManagerInst_Term):
+class ManagerInst_TermSerial(ManagerInst_TermBase):
     ITEM_CLASS = CmdTerminal_SerialAio
 
     def _tasks_bg__create_start(self) -> None:
@@ -184,8 +183,8 @@ class ManagerInst_TermSerial(ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# manager_inst__termos = ManagerInst_TermOs()
-manager_inst__termos = ManagerInst_TermSerial()
+manager_inst__termos = ManagerInst_TermOs()
+# manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
