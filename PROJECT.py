@@ -17,6 +17,9 @@ class PROJECT(PROJECT_BASE):
     KEYWORDS: list[str] = [
     ]
 
+    CLASSIFIERS_TOPICS_ADD: list[str] = [
+        "Programming Language :: Python :: 3.12",
+    ]
     # README -----------------------------------------------
     # add DOUBLE SPACE at the end of all lines! for correct representation in MD-viewers
     DESCRIPTION_SHORT: str = "collect all my previous modules in one package"
@@ -34,13 +37,10 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 20))
+    VERSION = Version((0, 3, 22))
     NEWS: list[str] = [
-        "[ALL] many renames +refs",
-        "[CMDS] big ref, add Terminals Os and Serial, webs",
-        "[WEBS] fastApi, header, HtmlHoleReference",
-        "[requirements] new ver",
-        "[DOCKER] add",
+        "[zero] make correct version ",
+
     ]
 
 

@@ -36,10 +36,10 @@ setup(
     # "Framework :: ",
     "Topic :: Software Development :: Libraries :: Python Modules",
     # "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
+    # "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.11",
+    # "Programming Language :: Python :: 3.12",   # use CLASSIFIERS_TOPICS_ADD
     "Operating System :: OS Independent",
     # "Environment :: Console",
     "Intended Audience :: Developers",
