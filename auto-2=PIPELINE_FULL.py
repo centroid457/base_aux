@@ -39,14 +39,27 @@ if not Packages().check_prj_installed_latest(PROJECT):
 
     # 2=new build+publish --------------
     cmds_timeout = [
-        # build new ------------
-        ("python -m build --sdist -n", 60),
-        ("python -m build --wheel -n", 60),
+        # BUILD new ------------
+        ("python -m build --sdist -n", 60),     # Successfully built base_aux-0.3.22.tar.gz
+        ("python -m build --wheel -n", 60),     # Successfully built base_aux-0.3.22-py3-none-any.whl
 
-        # share ------------
+        # SHARE ------------
         # ("twine upload dist/* -r testpypi", 90),  # TESTPYPI
         # ("twine upload dist/* --verbose", 90),    # DONT USE --VERBOSE!!!!
-        ("twine upload dist/*", 90),
+        ("twine upload dist/*", 300),   # 90 makes not enough!!! IF ERROR - increase!
+
+        # RESPONSE ---------------------
+        # C:\__STARICHENKO_Element\PROJECTS\abc=base_aux>twine upload dist/*
+        # Uploading distributions to https://upload.pypi.org/legacy/
+        # Uploading base_aux-0.3.22-py3-none-any.whl
+        # 100% ---------------------------------------- 584.6/584.6 kB • 00:01 • 1.0 MB/s
+        # Uploading base_aux-0.3.22.tar.gz
+        # 100% ---------------------------------------- 426.8/426.8 kB • 00:00 • ?
+        #
+        # View at:
+        # https://pypi.org/project/base-aux/0.3.22/
+        #
+        # C:\__STARICHENKO_Element\PROJECTS\abc=base_aux>
     ]
     result_publish = cli.send(cmds_timeout)
 
