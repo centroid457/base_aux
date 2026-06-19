@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +11,7 @@ from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcAio
 
-import serial.tools.list_ports
+import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
 
 # =====================================================================================================================
@@ -149,19 +151,19 @@ class ManagerInst_TermSerial(ManagerInst_TermBase):
         while not stop_event.is_set():
             known_ports = set(self.items)
 
-            # 1=DEFINE ------------------
-            objs = serial.tools.list_ports.comports()
+            # 1=DETECT ------------------
             try:
-                detected_ports = {p.device for p in objs}
-                print(f"{detected_ports=}")
+                detected_port__objs = serial.tools.list_ports.comports()
+                detected_port__addrs = {p.device for p in detected_port__objs}
+                print(f"{detected_port__addrs=}")
             except Exception:
                 # В случае ошибки (например, нет прав) пропускаем цикл
                 await asyncio.sleep(poll_interval)
                 continue
 
             # 2=WORK ------------------
-            added = detected_ports - known_ports
-            removed = known_ports - detected_ports
+            added = detected_port__addrs - known_ports
+            removed = known_ports - detected_port__addrs
 
             for port in added:
                 try:
@@ -179,8 +181,8 @@ class ManagerInst_TermSerial(ManagerInst_TermBase):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst__termos = ManagerInst_TermOs()
-# manager_inst__termos = ManagerInst_TermSerial()
+# manager_inst__termos = ManagerInst_TermOs()
+manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
@@ -723,7 +725,7 @@ async def ws__client(websocket: WebSocket):
         pass
     finally:
         queue_to_ws__task.cancel()
-        await queue_to_ws__task
+        await asyncio.wait_for(queue_to_ws__task, 2)
         event_broadcaster.unregister_client(client_id)
 
 
