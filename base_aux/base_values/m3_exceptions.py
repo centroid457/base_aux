@@ -155,13 +155,25 @@ class Exc__Addressing(
 class Exc__NotExistsNotFoundNotCreated(
     Base_Exc,
 
-    # FileExistsError,    # ExistsAlready
     # FileNotFoundError,  # NotExists
 ):
     """
     GOAL
     ----
-    any exception intended Exists/NotExists any object
+    any exception intended NotExists any object
+    dont mess with ADDRESSING!
+    """
+    pass
+
+class Exc__AlreadyExistsFoundCreated(
+    Base_Exc,
+
+    # FileExistsError,    # ExistsAlready
+):
+    """
+    GOAL
+    ----
+    any exception intended Exists any object
     dont mess with ADDRESSING!
     """
     pass
