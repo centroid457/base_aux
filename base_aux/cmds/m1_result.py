@@ -37,8 +37,10 @@ class CmdResult:
     STDERR: list[TYPING__CMD_LINE] = field(default_factory=list)
     # STDERR buffer and execution exceptions
 
-    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)   # dont need! overcomplicating? NO!!! very need! - NO!!! del!!!
-    # all additional comments here
+    # DEBUG: list[TYPING__CMD_LINE] = field(default_factory=list)
+    # DONT MESS RESULT stdio with log lines!!! use log with levels Debug/Warn/INfo/... in LOG OBJECT!!!
+    # dont need! overcomplicating? NO!!! very need! - NO!!! del!!!
+    # all additional comments here - NO!!!
 
     def __post_init__(self):
         self.timestamp: datetime = datetime.now()
@@ -59,11 +61,6 @@ class CmdResult:
             self.STDERR = []
         elif isinstance(self.STDERR, (str, bytes)):
             self.STDERR = [self.STDERR, ]
-
-        # if self.DEBUG is None:
-        #     self.DEBUG = []
-        # elif isinstance(self.DEBUG, (str, bytes)):
-        #     self.DEBUG = [self.DEBUG, ]
 
     def __str__(self) -> str:
         result = f"{self.__class__.__name__}({self.INPUT=},{self.STDOUT=},{self.STDERR=})"
@@ -131,10 +128,8 @@ class CmdResult:
             source = self.STDOUT
         elif buffer_type == EnumAdj_StdioeType.STDERR:
             source = self.STDERR
-        # elif buffer_type == EnumAdj_StdioeType.DEBUG:
-        #     source = self.DEBUG
         else:
-            msg = f"use only STDOUT/STDERR/{buffer_type=}"
+            msg = f"use only STDOUT/STDERR {buffer_type=}"
             raise Exc__Incompatible(msg)
 
         if isinstance(data, (str, bytes)):
@@ -148,9 +143,6 @@ class CmdResult:
     #
     # def append_stderr(self, data: TYPING__CMD_LINES_DRAFT) -> None:
     #     return self.append(data=data, buffer_type=EnumAdj_StdioeType.STDERR)
-    #
-    # def append_debug(self, data: TYPING__CMD_LINES_DRAFT) -> None:
-    #     return self.append(data=data, buffer_type=EnumAdj_StdioeType.DEBUG)
 
     # -----------------------------------------------------------------------------------------------------------------
     def print_state(self, short: bool | None = None) -> None:
@@ -180,6 +172,21 @@ class CmdResult:
 
         if not short:
             print(f"="*50)
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @property
+    def last_stdout_line(self) -> TYPING__CMD_LINE:
+        try:
+            return self.STDOUT[-1]
+        except:
+            return ""
+
+    @property
+    def last_stderr_line(self) -> TYPING__CMD_LINE:
+        try:
+            return self.STDERR[-1]
+        except:
+            return ""
 
 
 # =====================================================================================================================
