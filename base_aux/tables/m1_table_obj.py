@@ -80,6 +80,17 @@ class TableObj:
         #     raise KeyError()
         return self.schema[item]
 
+    def iter_values__all(self) -> Iterator[Any]:
+        for name, values in self.schema.items():
+            yield from values
+
+    def iter_values__uniq(self) -> Iterator[Any]:
+        used = set()
+        for value in self.iter_values__all():
+            if value not in used:
+                used.discard(value)
+                yield value
+
     @property
     def __name__(self) -> str:
         """
