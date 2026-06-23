@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebClient</title>
+
+    <link rel="stylesheet" href="/base_aux/webs_front/d1_front2_css/universal_root.css">
+    <script src="/base_aux/webs_front/d2_js1_vanilla/universal_root.js"></script>
+
+    <script>uncache_loading__all_files_without_cache();</script>
+
+    <style>
+        /* ---------------------------------------------------------------------------------------------------------- */
+        body {
+            background: #111;
+            color: #ddd;
+        }
+
+        /* ------------------------------------ */
+        .item__cls
+        {
+            display: flex;
+            flex-direction: column;
+
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 6px;
+
+            overflow: auto;
+            _resize: vertical;
+        }
+        .item__cls header
+        {
+            background: #333;
+            padding: 2px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .item__cls main
+        {
+            background: #222;
+            padding: 12px;
+            height: 300px;
+            _min-height: 300px;
+            _max-height: 800px;
+            overflow-y: scroll;
+
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
+
+        .item__cls input
+        {
+            font-size: 14px;
+            color: #fff;
+            border: 1px solid #555;
+            font-family: monospace;
+        }
+
+        /* ------------------------------------ */
+        .span_item_id__cls {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* ---------------------------------------------------------------------------------------------------------- */
+    </style>
+
+</head>
+<body data-auto__ping_lost>
+    <header>
+        <h1 style="color: #fff">WebClient</h1>
+        <div>
+            <button id="btn_add_item__id">Новый объект</button>
+            <span data-auto__replace_with__btn_hard_reset></span>
+        </div>
+    </header>
+    <main id="items_container__id" data-gap1rem></main>
+    <footer>footer</footer>
+
+    <script src="/base_aux/cmds/m6_webui.js"></script>
+
+</body>
+</html>
