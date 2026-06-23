@@ -123,7 +123,7 @@ function onload__replace_with__btn_hard_reset() {
     // Создаём кнопку
     const btn = document.createElement('button');
     btn.textContent = 'hardReset';
-    btn.title = 'Перезагрузить страницу и принудительно обновить все ресурсы (CSS, JS)';
+    btn.title = '[Ctrl+F5]=принудительно обновить все ресурсы (CSS, JS)';
     btn.setAttribute('data-btn_outline', 'red');
     btn.addEventListener('click', () => page_reload_force());
     target.replaceWith(btn);
@@ -146,16 +146,16 @@ function page_reload_force(msg) {
     console.warn("[page_reload_force]🟡", msg);
 
     //var1=не всегда работает!!! если изменить title то обновление будет только после F5!!!
-    //location.reload();
+    location.reload();
 
     //var2=хз
     //history.go(0);
 
     //var3=Добавляем случайный параметр к URL, чтобы браузер гарантированно загрузил новую страницу
     // все равно не работает как надо!
-    const url = new URL(window.location.href);
-    url.searchParams.set('_hardReset', Date.now());
-    window.location.href = url.toString();
+//    const url = new URL(window.location.href);
+//    url.searchParams.set('_hardReset', Date.now());
+//    window.location.href = url.toString();
 }
 
 

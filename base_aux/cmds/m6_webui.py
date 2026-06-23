@@ -68,9 +68,7 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
         await event_broadcaster.broadcast({
             "item_id": item_id,
             "channel": "item_control",
-            "load": {
-                "action": "create_item",
-            }
+            "action": "create_item",
         })
         return item_id
 
@@ -85,9 +83,7 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
             await event_broadcaster.broadcast({
                 "item_id": idn,
                 "channel": "item_control",
-                "load": {
-                    "action": "delete_item",
-                }
+                "action": "delete_item",
             })
 
 
@@ -106,10 +102,8 @@ class ManagerInst_TermBase(ManagerInstance):
         # 3=broadcust -----------------------
         await event_broadcaster.broadcast({
             "item_id": idn,                 # FILTER
-            "channel": "item_control",        # EVENT
-            "load": {                           # LOAD
-                "action": "clear_history",     # ACTION
-            }
+            "channel": "item_control",
+            "action": "clear_history",
         })
 
 
@@ -181,8 +175,8 @@ class ManagerInst_TermSerial(ManagerInst_TermBase):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# manager_inst__termos = ManagerInst_TermOs()
-manager_inst__termos = ManagerInst_TermSerial()
+manager_inst__termos = ManagerInst_TermOs()
+# manager_inst__termos = ManagerInst_TermSerial()
 
 
 # TODO:
@@ -292,14 +286,13 @@ HTML_TEMPLATE = """
             ws_client.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
                 
-                const msg__itemid = msg.item_id;
-                const msg__event = msg.channel;
-                const msg__data = msg.load;
+                const msg__itemid = msg?.item_id;
+                const msg__channel = msg?.channel;
                 
-                const msg__action = msg__data?.action;
-                const msg__text = msg__data?.text;
+                const msg__action = msg?.action;
+                const msg__text = msg?.text;
                 
-                if (msg__event === "history_log") {
+                if (msg__channel === "history_log") {
                     const ui = itemsManager.items_map.get(msg__itemid);
                     if (ui) {
                         let style = '';
@@ -311,7 +304,7 @@ HTML_TEMPLATE = """
                         ui.addHistoryLine(style, msg__text);
                     }
                     
-                } else if (msg__event === "item_control") {
+                } else if (msg__channel === "item_control") {
                 
                     if (msg__action === "create_item") {
                         if (!itemsManager.items_map.has(msg__itemid)) {
@@ -332,7 +325,7 @@ HTML_TEMPLATE = """
                         }
                     }
                     
-                } else if (msg__event === "system") {
+                } else if (msg__channel === "system") {
                     console.log(msg__text);
                 }
             };
@@ -401,9 +394,7 @@ HTML_TEMPLATE = """
 
                 ws_client.send(JSON.stringify({
                     channel: "item_control",
-                    load: {
-                        action: "create_item",
-                    },
+                    action: "create_item",
                 }));
             },
     
@@ -413,9 +404,7 @@ HTML_TEMPLATE = """
                 ws_client.send(JSON.stringify({
                     item_id: itemId,
                     channel: "item_control",
-                    load: {
-                        action: "delete_item",
-                    },
+                    action: "delete_item",
                 }));
             }
         };
@@ -505,10 +494,8 @@ HTML_TEMPLATE = """
                     ws_client.send(JSON.stringify({
                         item_id: this.itemId,
                         channel: "history_log",
-                        load: {
-                            action: "stdin",  // FIXME: or just stdin/msg_stdin__cls
-                            text: io_line,
-                        }
+                        action: "stdin",  // FIXME: or just stdin/msg_stdin__cls
+                        text: io_line,
                     }));
                     this.element_InputBox.value = '';
                 }
@@ -520,9 +507,7 @@ HTML_TEMPLATE = """
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
                     channel: "item_control",
-                    load: {
-                        action: "reconnect_item",
-                    },
+                    action: "reconnect_item",
                 }));
             }
     
@@ -532,9 +517,7 @@ HTML_TEMPLATE = """
                 ws_client.send(JSON.stringify({
                     item_id: this.itemId,
                     channel: "item_control",
-                    load: {
-                        action: "clear_history",
-                    },
+                    action: "clear_history",
                 }));
             }
     
@@ -688,25 +671,20 @@ async def ws__client(websocket: WebSocket):
         while True:
             msg = await websocket.receive_json()
 
-            msg__event = msg.get("channel")
+            msg__channel = msg.get("channel")
             msg__itemid = msg.get("item_id")
-            msg__data = msg.get("load")
 
-            if msg__data:
-                msg__action = msg__data.get("action")
-                msg__text = msg__data.get("text")
-            else:
-                msg__action = None
-                msg__text = None
+            msg__action = msg.get("action")
+            msg__text = msg.get("text")
 
             # ----------------------------------------------
-            if msg__event == "history_log":   # keep here
+            if msg__channel == "history_log":   # keep here
 
                 item = manager_inst__termos.get_item(msg__itemid)
                 if item and msg__text:
                     asyncio.create_task(item.send_cmd(msg__text))
 
-            elif msg__event == "item_control" and msg__data:
+            elif msg__channel == "item_control":
                 if msg__action == "clear_history":
                     asyncio.create_task(manager_inst__termos.clear_history(msg__itemid))
 

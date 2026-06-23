@@ -377,16 +377,6 @@ class CmdHistory_Sync(Abc_CmdHistory):
 
 # ----------------------------------------------------------------------------------------------------------------------
 class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
-    def _eb__broadcast__make_load(self, msg_text, buffer_type) -> dict:
-        load = dict(
-            item_id=self._eb__aux_data.get("item_id"),
-            channel="history_log",
-            load=dict(
-                action=buffer_type.name.lower(),
-                text=f"{msg_text}")
-            )
-        return load
-
     # -----------------------------------------------------------------------------------------------------------------
     async def _add_data(
             self,
@@ -404,8 +394,7 @@ class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
         # INPUT -------------
         if buffer_type == EnumAdj_StdioeType.STDIN:
             self._add_result(CmdResult(data))
-
-            await self.eb__broadcast(msg_text=data, buffer_type=buffer_type)
+            await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), text=f"{data}")
             return
 
         # OUTPUT ------------
@@ -413,7 +402,7 @@ class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
            await self.add_data__stdin("")
 
         self.last_result.append(data=data, buffer_type=buffer_type)
-        await self.eb__broadcast(msg_text=data, buffer_type=buffer_type)
+        await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), text=f"{data}")
 
     async def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
         await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)

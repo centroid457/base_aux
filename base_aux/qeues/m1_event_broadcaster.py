@@ -87,14 +87,17 @@ class Nest_EventBroadcasterImplemented:
         self._eb__aux_data = aux_data or {}
         self._eb__setup_local()
 
-    async def eb__broadcast(self, *args, **kwargs) -> None:
+    async def eb__broadcast(self, channel: str | None = None, **kwargs) -> None:
         # 0=-------
         if self._eb__obj is None:
             return
 
         # 1=MAKE DATA -------
-        # use data from _eb__aux_data
-        load = self._eb__broadcast__make_load(*args, **kwargs)
+        load = dict(
+            channel=channel,
+            **self._eb__aux_data,
+            **kwargs,
+        )
 
         # 2=SEND -------
         await self._eb__obj.broadcast(load)
@@ -106,13 +109,5 @@ class Nest_EventBroadcasterImplemented:
         GOAL
         LOCAL additional method! in case oа GLOBAL is not enough!
         """
-
-    @abstractmethod
-    def _eb__broadcast__make_load(self, *args, **kwargs) -> dict:
-        """
-        GOAL
-        make exact load data by kwargs/aux_data for broadcasting
-        """
-
 
 # =====================================================================================================================
