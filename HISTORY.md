@@ -9,6 +9,10 @@
 ********************************************************************************
 ## NEWS
 
+0.3.24(2026.06.23 18.47.56)
+------------------------------
+- [Nest_EventBroadcasterImplemented] ref  
+
 0.3.23(2026.06.23 15.46.53)
 ------------------------------
 - [Nest_EventBroadcasterImplemented] separate _eb__setup_local/_eb__broadcast__make_load  
