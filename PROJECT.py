@@ -37,9 +37,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 22))
+    VERSION = Version((0, 3, 23))
     NEWS: list[str] = [
-        "[zero] make correct version ",
+        "[Nest_EventBroadcasterImplemented] separate _eb__setup_local/_eb__broadcast__make_load",
 
     ]
 
