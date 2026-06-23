@@ -497,7 +497,10 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             timeout_read_start: float | None = None,
             timeout_read_finish: float | None = None
     ) -> bool:
-        """Ожидание завершения вывода команды по таймаутам."""
+        """
+        GOAL
+        Ожидание завершения отработки отправленной команды по таймаутам.
+        """
         timeout_read_start = self.timeout_def.get_active__read_start(timeout_read_start)
         timeout_read_finish = self.timeout_def.get_active__read_finish(timeout_read_finish)
 
@@ -530,13 +533,13 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
             timeout_read_start: float | None = None,
             timeout_read_finish: float | None = None,
             eol: str | None = None,
-    ) -> CmdResult:
+    ) -> CmdResult | NoReturn:
         if not self._event_connected.is_set():
-            raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
+            await self.connect()
 
         async with self._lock_stdin:
             if not self._event_connected.is_set():
-                raise Exc__WrongUsage_YouForgotSmth(f"CONNECT()")
+                raise Exc__NotReady(f"not connected")
 
             await self.history.add_data__stdin(cmd)
             try:
