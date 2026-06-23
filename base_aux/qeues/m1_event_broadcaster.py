@@ -76,15 +76,15 @@ class EventBroadcaster:
 # =====================================================================================================================
 class Nest_EventBroadcasterImplemented:
     _eb__obj: EventBroadcaster | None = None
-    _eb__aux_data: dict | None = None
+    _eb__aux: dict | None = None
 
-    def _eb__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
+    def _eb__setup(self, eb: EventBroadcaster, eb_aux: dict = None) -> None:
         """
         GOAL
         GLOBAL method!
         """
         self._eb__obj = eb
-        self._eb__aux_data = aux_data or {}
+        self._eb__aux = eb_aux or {}
         self._eb__setup_local()
 
     async def eb__broadcast(self, channel: str | None = None, **kwargs) -> None:
@@ -95,7 +95,7 @@ class Nest_EventBroadcasterImplemented:
         # 1=MAKE DATA -------
         load = dict(
             channel=channel,
-            **self._eb__aux_data,
+            **self._eb__aux,
             **kwargs,
         )
 

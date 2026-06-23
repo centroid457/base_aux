@@ -346,7 +346,7 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     # -----------------------------------------------------------------------------------------------------------------
     def _eb__setup_local(self) -> None:
         if isinstance(self.history, Nest_EventBroadcasterImplemented):
-            self.history._eb__setup(self._eb__obj, self._eb__aux_data)
+            self.history._eb__setup(self._eb__obj, self._eb__aux)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self):
