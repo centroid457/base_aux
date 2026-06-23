@@ -377,19 +377,15 @@ class CmdHistory_Sync(Abc_CmdHistory):
 
 # ----------------------------------------------------------------------------------------------------------------------
 class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
-    async def eb__broadcast(self, msg_text, buffer_type) -> None:
-        if self._eb__obj is None:
-            return
-
-        data = dict(
+    def _eb__broadcast__make_load(self, msg_text, buffer_type) -> dict:
+        load = dict(
             item_id=self._eb__aux_data.get("item_id"),
             channel="history_log",
             load=dict(
                 action=buffer_type.name.lower(),
                 text=f"{msg_text}")
             )
-
-        await self._eb__obj.broadcast(data)
+        return load
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _add_data(

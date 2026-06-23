@@ -56,7 +56,7 @@ class ManagerInstance(Nest_TasksBg_AbcAio):
         item_id = new_item.idn
 
         if isinstance(new_item, Nest_EventBroadcasterImplemented):
-            new_item.eb__setup(event_broadcaster, aux_data=dict(item_id=item_id))
+            new_item._eb__setup(event_broadcaster, aux_data=dict(item_id=item_id))
 
         # 2=WORK -----------------------
         print(f"create_item:{item_id=}")

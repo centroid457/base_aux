@@ -344,11 +344,9 @@ class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemen
     _bg_tasks: list[asyncio.Task]
 
     # -----------------------------------------------------------------------------------------------------------------
-    def eb__setup(self, eb: EventBroadcaster, aux_data: dict = None) -> None:
-        self._event_broadcaster = eb
-
+    def _eb__setup_local(self) -> None:
         if isinstance(self.history, Nest_EventBroadcasterImplemented):
-            self.history.eb__setup(eb, aux_data)
+            self.history._eb__setup(self._eb__obj, self._eb__aux_data)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self):
