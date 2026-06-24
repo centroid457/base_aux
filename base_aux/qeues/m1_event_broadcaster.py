@@ -78,7 +78,9 @@ class Nest_EventBroadcasterImplemented:
     _eb__obj: EventBroadcaster | None = None
     _eb__aux: dict | None = None
 
-    def _eb__setup(self, eb: EventBroadcaster, eb_aux: dict = None) -> None:
+    # def __init__(self, *args, eb: EventBroadcaster, eb_aux: dict = None, **kwargs):
+
+    def _eb__setup(self, eb: EventBroadcaster | None = None, eb_aux: dict | None = None) -> None:
         """
         GOAL
         GLOBAL method!

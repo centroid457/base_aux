@@ -274,18 +274,18 @@ async def ws__client(websocket: WebSocket):
 
     # --------------------------------------------
     # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
-    async def queue_to_ws__translator():
+    async def queue_to_ws__translator(ws: WebSocket):
         """
         GOAL: resend all msgs from clientQueue to clientWS
         """
         try:
             while True:
                 msg = await client_queue.get()
-                await websocket.send_json(msg)
+                await ws.send_json(msg)
         except asyncio.CancelledError:
             pass
 
-    queue_to_ws__task = asyncio.create_task(queue_to_ws__translator())
+    queue_to_ws__task = asyncio.create_task(queue_to_ws__translator(websocket))
 
     # --------------------------------------------
     # WS-2=READER
