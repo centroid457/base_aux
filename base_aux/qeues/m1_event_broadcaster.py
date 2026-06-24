@@ -78,24 +78,10 @@ class Nest_EventBroadcasterImplemented:
     _eb__obj: EventBroadcaster | None = None
     _eb__aux: dict | None = None
 
-    def __init__(self, *args, eb: EventBroadcaster | None = None, eb_aux: dict | None = None, **kwargs):
+    def __init__(self, *args, eb: EventBroadcaster | None = None, eb__aux: dict | None = None, **kwargs):
         self._eb__obj = eb
-        self._eb__aux = eb_aux or {}
-
-        super().__init__(**kwargs)
-
-        # fixme!!! it works only as following form in testplanAio!
-        # fixme!!! it works only as following form in testplanAio!
-        # fixme!!! it works only as following form in testplanAio!
-        # fixme!!! it works only as following form in testplanAio!
-        # fixme!!! it works only as following form in testplanAio!
-        # fixme!!! it works only as following form in testplanAio!
-        # def __init__(self, eb: EventBroadcaster | None = None, eb_aux: dict | None = None, **kwargs):
-        #     self._eb__obj = eb
-        #     self._eb__aux = eb_aux or {}
-        #
-        #     super().__init__()
-        #
+        self._eb__aux = eb__aux or {}
+        super().__init__(*args, **kwargs)
 
     async def eb__broadcast(self, channel: str | None = None, **kwargs) -> None:
         # 0=-------

@@ -66,7 +66,7 @@ class BaseUser_CmdTerminal(Nest_EventBroadcasterImplemented):
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
         self._eb__aux["item_id"] = self.idn
-        self.history = CmdHistory_Aio(eb=self._eb__obj, eb_aux=self._eb__aux)
+        self.history = CmdHistory_Aio(eb=self._eb__obj, eb__aux=self._eb__aux)
 
     # -----------------------------------------------------------------------------------------------------------------
     def set_id(self, idn: str | None = None) -> None:
