@@ -9,7 +9,6 @@ from base_aux.base_values.m3_exceptions import *
 
 from base_aux.cmds.m1_result import CmdResult
 from base_aux.cmds.m5_terminal0_abc2_conn import AbcConn_CmdTerminal
-from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
 # =====================================================================================================================
@@ -21,9 +20,8 @@ class AbcParadigm_CmdTerminal(AbcConn_CmdTerminal):
             *args,
             **kwargs,
     ):
-        super().__init__(*args, **kwargs)
-
         self._bg_tasks = []
+        super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -339,14 +337,9 @@ class BaseSync_CmdTerminal(AbcParadigm_CmdTerminal):
 
 
 # =====================================================================================================================
-class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal, Nest_EventBroadcasterImplemented):
+class BaseAio_CmdTerminal(AbcParadigm_CmdTerminal):
     pass
     _bg_tasks: list[asyncio.Task]
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def _eb__setup_local(self) -> None:
-        if isinstance(self.history, Nest_EventBroadcasterImplemented):
-            self.history._eb__setup(self._eb__obj, self._eb__aux)
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self):

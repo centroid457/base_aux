@@ -55,11 +55,8 @@ class Base_ManagerInstance(Nest_TasksBg_AbcAio):
     # CMDS -------------------------------------------------------------------------------------------------------------
     async def create_item(self, *args, **kwargs) -> str:
         # 1=detect --------------------------
-        new_item = self.ITEM_CLASS(*args, **kwargs)
+        new_item = self.ITEM_CLASS(*args, eb=event_broadcaster, **kwargs)
         item_id = new_item.idn
-
-        if isinstance(new_item, Nest_EventBroadcasterImplemented):
-            new_item._eb__setup(eb=event_broadcaster, eb_aux=dict(item_id=item_id))
 
         # 2=WORK -----------------------
         print(f"create_item:{item_id=}")
@@ -239,7 +236,6 @@ async def get_history(idn: str):
             "input": result.INPUT,
             "stdout": result.STDOUT,
             "stderr": result.STDERR,
-            # "debug": result.DEBUG,
             "timestamp": result.timestamp.isoformat() if result.timestamp else None,
             "duration": result.duration,
             "finished_status": result.finished_status.value if result.finished_status else None,

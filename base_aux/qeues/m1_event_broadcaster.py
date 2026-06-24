@@ -78,16 +78,11 @@ class Nest_EventBroadcasterImplemented:
     _eb__obj: EventBroadcaster | None = None
     _eb__aux: dict | None = None
 
-    # def __init__(self, *args, eb: EventBroadcaster, eb_aux: dict = None, **kwargs):
-
-    def _eb__setup(self, eb: EventBroadcaster | None = None, eb_aux: dict | None = None) -> None:
-        """
-        GOAL
-        GLOBAL method!
-        """
+    def __init__(self, *args, eb: EventBroadcaster | None = None, eb_aux: dict | None = None, **kwargs):
         self._eb__obj = eb
         self._eb__aux = eb_aux or {}
-        self._eb__setup_local()
+
+        super().__init__(**kwargs)
 
     async def eb__broadcast(self, channel: str | None = None, **kwargs) -> None:
         # 0=-------
@@ -104,12 +99,5 @@ class Nest_EventBroadcasterImplemented:
         # 2=SEND -------
         await self._eb__obj.broadcast(load)
 
-    # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def _eb__setup_local(self) -> None:
-        """
-        GOAL
-        LOCAL additional method! in case oа GLOBAL is not enough!
-        """
 
 # =====================================================================================================================

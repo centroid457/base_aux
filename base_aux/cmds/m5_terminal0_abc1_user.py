@@ -5,6 +5,7 @@ from base_aux.cmds.m1_result import *
 from base_aux.cmds.m2_history import CmdHistory_Aio
 from base_aux.base_enums.m2_enum1_adj import *
 from base_aux.cmds.m3_timeout_def import TimeoutDef
+from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 
 
 # =====================================================================================================================
@@ -24,7 +25,7 @@ TYPING__CMDS_CONDITIONS = Union[TYPING__CMD_CONDITION, list[TYPING__CMD_CONDITIO
 
 
 # =====================================================================================================================
-class BaseUser_CmdTerminal(ABC):
+class BaseUser_CmdTerminal(Nest_EventBroadcasterImplemented):
     """
     GOAL
     ----
@@ -64,7 +65,8 @@ class BaseUser_CmdTerminal(ABC):
         self._encoding: str = "cp866" if os.name == "nt" else "utf8"
         self._shell_cmd: str = "cmd" if os.name == "nt" else "bash"
 
-        self.history = CmdHistory_Aio()
+        self._eb__aux["item_id"] = self.idn
+        self.history = CmdHistory_Aio(eb=self._eb__obj, eb_aux=self._eb__aux)
 
     # -----------------------------------------------------------------------------------------------------------------
     def set_id(self, idn: str | None = None) -> None:

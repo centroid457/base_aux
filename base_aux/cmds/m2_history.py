@@ -17,7 +17,7 @@ TYPING__CMD_HISTORY_DRAFT = list[TYPING__CMD_RESULT_DRAFT]
 
 
 # =====================================================================================================================
-class Abc_CmdHistory(ABC):
+class Abc_CmdHistory(Nest_EventBroadcasterImplemented):
     """
     GOAL
     ----
@@ -42,7 +42,9 @@ class Abc_CmdHistory(ABC):
     """
     _history: list[CmdResult]
 
-    def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None) -> None:
+    def __init__(self, source: Self | TYPING__CMD_HISTORY_DRAFT | None = None, **kwargs) -> None:
+        super().__init__(**kwargs)
+
         self._history = []
 
         if not source:
@@ -376,7 +378,7 @@ class CmdHistory_Sync(Abc_CmdHistory):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class CmdHistory_Aio(Abc_CmdHistory, Nest_EventBroadcasterImplemented):
+class CmdHistory_Aio(Abc_CmdHistory):
     # -----------------------------------------------------------------------------------------------------------------
     async def _add_data(
             self,
