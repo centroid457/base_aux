@@ -7,6 +7,30 @@ from base_aux.base_types.m0_static_types import *
 
 
 # =====================================================================================================================
+def make_json_serializable(source) -> TYPING.DICT_JSON_ANY:
+    """
+    GOAL
+    ----
+    make ready for JSON serialisation
+    Рекурсивно преобразует объект к типам, сериализуемым в JSON.
+    """
+    # TODO: work with NO-DICT source! list even int/float
+    if isinstance(source, dict):
+        return {make_json_serializable(k): make_json_serializable(v) for k, v in source.items()}
+    elif isinstance(source, (list, tuple, set, frozenset)):
+        # превращаем всё в list
+        return [make_json_serializable(item) for item in source]
+    elif isinstance(source, bytes):
+        # bytes не сериализуются – превращаем в строку (или base64)
+        return source.decode('utf-8', errors='replace')  # или repr(obj)
+    elif isinstance(source, (int, float, str, bool, type(None))):
+        return source
+    else:
+        # для всего остального пробуем str, но лучше настроить под конкретные классы
+        return str(source)
+
+
+# =====================================================================================================================
 # @final
 class Base_DictAux(NestInit_Source):
     """
@@ -168,33 +192,6 @@ class Base_DictAux(NestInit_Source):
                 self.SOURCE[root_key] = root_value.get(key)
 
         return self.SOURCE
-
-    # -----------------------------------------------------------------------------------------------------------------
-    def prepare_serialisation(self) -> TYPING.DICT_STR_ELEM:
-        """
-        NOTE
-        ----
-        work not in source! return copy with ready to direct serialisation keys/values
-
-        GOAL
-        ----
-        make ready for serialisation
-        1/ fix keys - str
-        2/ fix values - elementary
-        """
-        result = {}
-        # TODO: FINISH
-        result = {}
-        for key, value in self.SOURCE.items():
-            if isinstance(value, dict):
-                value = DictAuxCopy(value).prepare_serialisation()
-
-            if isinstance(value, (list)):
-                value = DictAuxCopy(value).prepare_serialisation()
-
-            result[key] = value
-
-        return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def __str__(self) -> str:
