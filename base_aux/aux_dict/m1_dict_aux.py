@@ -7,7 +7,7 @@ from base_aux.base_types.m0_static_types import *
 
 
 # =====================================================================================================================
-def make_json_serializable(source) -> TYPING.DICT_JSON_ANY:
+def json__ensure_serializable(source) -> TYPING.DICT_JSON_ANY:
     """
     GOAL
     ----
@@ -16,10 +16,10 @@ def make_json_serializable(source) -> TYPING.DICT_JSON_ANY:
     """
     # TODO: work with NO-DICT source! list even int/float
     if isinstance(source, dict):
-        return {make_json_serializable(k): make_json_serializable(v) for k, v in source.items()}
+        return {json__ensure_serializable(k): json__ensure_serializable(v) for k, v in source.items()}
     elif isinstance(source, (list, tuple, set, frozenset)):
         # превращаем всё в list
-        return [make_json_serializable(item) for item in source]
+        return [json__ensure_serializable(item) for item in source]
     elif isinstance(source, bytes):
         # bytes не сериализуются – превращаем в строку (или base64)
         return source.decode('utf-8', errors='replace')  # или repr(obj)

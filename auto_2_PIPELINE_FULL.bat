@@ -1,5 +1,6 @@
 REM call it MANUALLY line by line in CMD.exe!!!
 
+REM 0=DEL TEMP ==========================================================================
 rd dist\ /q /s
 rd build\ /q /s
 
