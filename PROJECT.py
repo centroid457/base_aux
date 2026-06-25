@@ -37,9 +37,9 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # -----------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 26))
+    VERSION = Version((0, 3, 27))
     NEWS: list[str] = [
-        "[Nest_EventBroadcasterImplemented] fix - all works",
+        "[Nest_EventBroadcasterImplemented] fix2",
     ]
 
 
