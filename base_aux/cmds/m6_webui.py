@@ -13,6 +13,8 @@ from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
 from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcAio
+from base_aux.aux_dict.m1_dict_aux import json__ensure_serializable
+from base_aux.base_types.m1_type_aux import TypeAux
 
 import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
@@ -169,8 +171,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# manager_inst__termos = ManagerInst_TermOs()
-manager_inst__termos = ManagerInst_TermSerial()
+manager_inst__termos = ManagerInst_TermOs()
+# manager_inst__termos = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
@@ -239,6 +241,115 @@ async def get_history(idn: str):
 
 
 # =====================================================================================================================
+# =====================================================================================================================
+class WsClient(Nest_TasksBg_AbcAio):
+    """
+    GOAL
+    used in FastApi
+    as organised IO transportation/execution
+        @app.websocket("/ws/client")
+        async def ws__client(websocket: WebSocket):
+    """
+    def __init__(
+            self,
+            ws_client: WebSocket,
+            queue_client: asyncio.Queue,
+
+            income_executor: Callable[[dict | Any], Awaitable[None]],
+            onexit: Callable | Awaitable | None = None,
+
+            *args,
+            **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+
+        self.ws_to_client = ws_client
+        self.queue_to_client = queue_client
+
+        self.income_executor: Callable[[dict | Any], Awaitable[None]] = income_executor
+        # self.outcome_executor = self._queue_to_ws__retranslator
+        self._tasks_bg__onexit_local: Callable | Awaitable | None = onexit
+
+        self._event_exit: asyncio.Event = asyncio.Event()
+
+    # --------------------------------------------
+    def _tasks_bg__create_start(self) -> None:
+        self._tasks_bg__extend(self.outcome_loop())
+        self._tasks_bg__extend(self.income_loop())
+
+    # --------------------------------------------
+    def __await__(self):
+        yield from self._event_exit.wait().__await__()
+
+    # --------------------------------------------
+    # WS-1=OUTCOME LOOP
+    async def outcome_loop(self):
+        """
+        GOAL: resend all msgs from clientQueue to clientWS
+
+        just a _queue_to_ws__retranslator
+        """
+        print(f"[self.ws_to_client.msg_outcome] start monitor")
+        try:
+            while True:
+                msg_outcome = await self.queue_to_client.get()
+                print(f"{msg_outcome=}")
+                try:
+                    await self.ws_to_client.send_json(json__ensure_serializable(msg_outcome))
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    print(f"[self.ws_to_client.msg_outcome]{exc!r}")
+                    # клиент отвалился – выходим из задачи
+                    break
+
+        except asyncio.CancelledError:
+            self._event_exit.set()
+            raise
+
+        except WebSocketDisconnect:
+            pass
+
+        except BaseException as exc:
+            Exc__UnExpectedExc(f"{exc!r}")
+
+        self._event_exit.set()
+
+    # --------------------------------------------
+    # WS-2=INCOME LOOP
+    async def income_loop(self) -> Never | NoReturn:
+        try:
+            while True:
+                data = await self.ws_to_client.receive_json()
+
+                try:
+                    if TypeAux(self.income_executor).check__coro_func():
+                        await self.income_executor(data)
+                    elif callable(self._tasks_bg__onexit_local):
+                        self.income_executor(data)
+                    else:
+                        msg= f"{self.income_executor!r}"
+                        raise Exc__WrongUsage(msg)
+                except asyncio.CancelledError:  # проброс дальше!
+                    raise
+                except Exception as exc:
+                    raise Exc__UnExpectedExc(f"{exc!r}")
+
+            # --------------------------------------------
+        except asyncio.CancelledError:
+            self._event_exit.set()
+            raise
+
+        except WebSocketDisconnect:
+            pass
+
+        except BaseException as exc:
+            Exc__UnExpectedExc(f"{exc!r}")
+
+        self._event_exit.set()
+
+
+# =====================================================================================================================
 @app.websocket("/ws/ping")
 async def ws__ping(websocket: WebSocket):
     await websocket.accept()
@@ -247,8 +358,9 @@ async def ws__ping(websocket: WebSocket):
     await websocket.send_json({"channel": "server_id", "id": server_id})
 
     try:
-        # Держим соединение открытым, игнорируем входящие сообщения
         while True:
+            # Держим соединение открытым, игнорируем входящие сообщения
+            # если убрать - будет сразу разрыв на окончании кода и соединение заново - бесконечное
             await websocket.receive_text()
 
     except WebSocketDisconnect:
@@ -262,61 +374,41 @@ async def ws__client(websocket: WebSocket):
     await websocket.accept()
     client_id, client_queue = event_broadcaster.register_client()
 
-    # --------------------------------------------
-    # WS-1=WRITER = задача перенаправления событий из очереди в WebSocket
-    async def queue_to_ws__translator(ws: WebSocket):
-        """
-        GOAL: resend all msgs from clientQueue to clientWS
-        """
-        try:
-            while True:
-                msg = await client_queue.get()
-                await ws.send_json(msg)
-        except asyncio.CancelledError:
-            pass
+    async def income_executor(data: dict | Any) -> None:
+        msg__channel = data.get("channel")
+        msg__itemid = data.get("item_id")
 
-    queue_to_ws__task = asyncio.create_task(queue_to_ws__translator(websocket))
+        msg__action = data.get("action")
+        msg__text = data.get("text")
 
-    # --------------------------------------------
-    # WS-2=READER
-    try:
-        while True:
-            msg = await websocket.receive_json()
+        # ----------------------------------------------
+        if msg__channel == "history_log":  # keep here
 
-            msg__channel = msg.get("channel")
-            msg__itemid = msg.get("item_id")
+            item = manager_inst__termos.get_item(msg__itemid)
+            if item and msg__text:
+                asyncio.create_task(item.send_cmd(msg__text))
 
-            msg__action = msg.get("action")
-            msg__text = msg.get("text")
+        elif msg__channel == "item_control":
+            if msg__action == "clear_history":
+                asyncio.create_task(manager_inst__termos.clear_history(msg__itemid))
 
-            # ----------------------------------------------
-            if msg__channel == "history_log":   # keep here
-
+            elif msg__action == "reconnect_item":
                 item = manager_inst__termos.get_item(msg__itemid)
-                if item and msg__text:
-                    asyncio.create_task(item.send_cmd(msg__text))
+                asyncio.create_task(item.reconnect())
 
-            elif msg__channel == "item_control":
-                if msg__action == "clear_history":
-                    asyncio.create_task(manager_inst__termos.clear_history(msg__itemid))
+            elif msg__action == "create_item":
+                asyncio.create_task(manager_inst__termos.create_item())
 
-                elif msg__action == "reconnect_item":
-                    item = manager_inst__termos.get_item(msg__itemid)
-                    asyncio.create_task(item.reconnect())
+            elif msg__action == "delete_item":
+                asyncio.create_task(manager_inst__termos.del_item(msg__itemid))
 
-                elif msg__action == "create_item":
-                    asyncio.create_task(manager_inst__termos.create_item())
-
-                elif msg__action == "delete_item":
-                    asyncio.create_task(manager_inst__termos.del_item(msg__itemid))
-
-        # --------------------------------------------
-    except WebSocketDisconnect:
-        pass
-    finally:
-        queue_to_ws__task.cancel()
-        await asyncio.wait_for(queue_to_ws__task, 2)
-        event_broadcaster.unregister_client(client_id)
+    async with WsClient(
+            ws_client = websocket,
+            queue_client = client_queue,
+            income_executor = income_executor,
+            onexit = lambda: event_broadcaster.unregister_client(client_id),
+    ) as wsc:
+        await wsc
 
 
 # =====================================================================================================================
