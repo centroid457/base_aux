@@ -2,7 +2,7 @@ import asyncio
 from abc import abstractmethod
 from typing import *
 
-from base_aux.base_values.m3_exceptions import Exc__Io, Exc__UnDefined, Exc__WrongUsage, Exc__IoTimeout
+from base_aux.base_values.m3_exceptions import Exc__Io, Exc__UnExpectedExc, Exc__WrongUsage, Exc__IoTimeout
 from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_Abc
 from base_aux.cmds.m5_terminal0_abc1_user import BaseUser_CmdTerminal
 
@@ -50,7 +50,7 @@ class AbcConn_CmdTerminal(BaseUser_CmdTerminal, Nest_TasksBg_Abc):
             self,
             buffer: Any,
             timeout: float = 0.05,
-    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnExpectedExc | Exc__WrongUsage:
         raise NotImplementedError()
 
     # -----------------------------------------------------------------------------------------------------------------

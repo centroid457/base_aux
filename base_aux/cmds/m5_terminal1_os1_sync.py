@@ -65,7 +65,7 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
             self,
             buffer: Any,
             timeout: float = 0.05,
-    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage:
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnExpectedExc | Exc__WrongUsage:
 
         if self._conn is None:
             raise Exc__IoConnection(f"{self._conn=}")
@@ -103,7 +103,7 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
                 # else:
                 #     raise
             except BaseException as exc:
-                raise Exc__UnDefined(f"{exc!r}")
+                raise Exc__UnExpectedExc(f"{exc!r}")
 
     # -----------------------------------------------------------------------------------------------------------------
     def _write_line(

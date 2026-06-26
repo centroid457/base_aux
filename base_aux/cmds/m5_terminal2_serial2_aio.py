@@ -59,7 +59,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
             self,
             buffer: asyncio.StreamReader,
             timeout: float = 0.05,
-    ) -> bytes | NoReturn | Exc__Io | Exc__UnDefined | Exc__WrongUsage | asyncio.CancelledError:
+    ) -> bytes | NoReturn | Exc__Io | Exc__UnExpectedExc | Exc__WrongUsage | asyncio.CancelledError:
 
         if self._conn is None:
             raise Exc__IoConnection(f"{self._conn=}")
@@ -82,7 +82,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
         except (BrokenPipeError, ConnectionResetError) as exc:
             raise Exc__IoConnection(f"{exc!r}")
         except BaseException as exc:
-            raise Exc__UnDefined(f"{exc!r}")
+            raise Exc__UnExpectedExc(f"{exc!r}")
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _write_line(
