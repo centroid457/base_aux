@@ -6,7 +6,6 @@ from base_aux.base_types.m1_type_aux import TypeAux
 from base_aux.base_values.m3_exceptions import *
 
 
-
 # =====================================================================================================================
 class Nest_TasksBg_Abc:
     _tasks_bg: list[threading.Thread | asyncio.Task]
@@ -47,6 +46,10 @@ class Nest_TasksBg_Abc:
         """
         raise NotImplementedError()
 
+    @abstractmethod
+    def _tasks_bg__onexit_local(self) -> None | NoReturn:
+        raise NotImplementedError()
+
 
 # =====================================================================================================================
 class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
@@ -76,9 +79,16 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
 
         self._tasks_bg.clear()
 
+    @abstractmethod
+    def _tasks_bg__onexit_local(self) -> None | NoReturn:
+        pass
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
     _tasks_bg: list[asyncio.Task]
+
+    _tasks_bg__onexit_local: Callable | Awaitable | None
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self) -> Self | NoReturn:
@@ -86,11 +96,31 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
         self._tasks_bg__create_start()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        # 1=MAIN exec
         try:
             await self._tasks_bg__stop_delete()
         except:
             pass
+
+        # 2=LOCAL exec
+        try:
+            if self._tasks_bg__onexit_local is not None:
+                if TypeAux(self._tasks_bg__onexit_local).check__coro():
+                    await self._tasks_bg__onexit_local
+                elif TypeAux(self._tasks_bg__onexit_local).check__coro_func():
+                    await self._tasks_bg__onexit_local()
+                elif callable(self._tasks_bg__onexit_local):
+                    self._tasks_bg__onexit_local()
+                else:
+                    msg= f"{self._tasks_bg__onexit_local!r}"
+                    raise Exc__WrongUsage(msg)
+        except:
+            pass
+
+    @abstractmethod
+    async def _tasks_bg__onexit_local(self) -> None | NoReturn:
+        pass
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -132,6 +162,8 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
             )
         except asyncio.TimeoutError:
             # Если задачи не завершились, просто забудем о них
+            pass
+        except:
             pass
 
         self._tasks_bg.clear()
