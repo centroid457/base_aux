@@ -1,8 +1,8 @@
 from base_aux.webs_back.d2_aiohttp.m1_aiohttp import *
-from base_aux.webs_back.d3_fastapi.d1_templates.m2_responces import *
+from base_aux.webs_back.d3_fastapi.d1_struct.m2_responces import *
 
 from .models import *
-from ..webs_back.d3_fastapi.d1_templates.m0_start2_py1_thread import ServerFastApi_Thread
+from base_aux.webs_back.d3_fastapi.d2_start.m0_start2_py1_thread import ServerFastApi_Thread
 
 
 # =====================================================================================================================

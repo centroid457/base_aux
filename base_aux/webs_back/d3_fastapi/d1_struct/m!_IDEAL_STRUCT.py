@@ -1,5 +1,6 @@
-# =====================================================================================================================
 import uvicorn
+import asyncio
+from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from fastapi import (
     FastAPI,
@@ -14,7 +15,28 @@ from base_aux.webs_back.d3_fastapi.d0_info.m0_info import *
 
 
 # =====================================================================================================================
-app = FastAPI(title="[FastApi] perfect structure", description="")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- STARTUP (бывший startup_event) -----------------------------------
+    print(f"FastApi.STARTUP:")
+    await asyncio.sleep(1)
+
+    # async with manager_inst__termos:
+
+    print(f"FastApi.MAIN:")
+    yield  # <-- здесь сервер работает и обрабатывает запросы
+
+    # --- SHUTDOWN (бывший shutdown_event) ---
+    # for item_id, item in manager_inst__termos.items.items():
+    #     print(f"FastApi.Shutdown: {item_id=}")
+    #     await item.disconnect()
+
+    print(f"FastApi.FINISHED")
+    # ---------------------------------------------------------------------
+
+
+# =====================================================================================================================
+app = FastAPI(title="[FastApi] perfect structure", description="", lifespan=lifespan)
 
 
 # =====================================================================================================================

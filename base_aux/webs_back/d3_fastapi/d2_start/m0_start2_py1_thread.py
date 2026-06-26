@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from base_aux.loggers.m2_logger import Logger
 from base_aux.webs_back.d0_url.m0_url import Url
-from base_aux.webs_back.d3_fastapi.d1_templates.m2_responces import create_app__FastApi_on_object
+from base_aux.webs_back.d3_fastapi.d1_struct.m2_responces import create_app__FastApi_on_object
 
 
 # =====================================================================================================================

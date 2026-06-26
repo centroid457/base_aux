@@ -1,17 +1,17 @@
-import pytest
-from fastapi import FastAPI
-
+import uvicorn
 from base_aux.webs_back.d3_fastapi.d1_struct.m1_minimal import app
-from base_aux.webs_back.d3_fastapi.d0_info.m0_info import *
-# from base_aux.base_types.m2_info import ObjectInfo
 
 
 # =====================================================================================================================
-def test__0():
-    print()
-    routes = FastApiAux(app).get_routes()
-    for route in routes:
-        print(route)
+if __name__ == "__main__":
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=80,
+
+        ws_ping_interval=20,  # каждые 20 секунд сервер шлёт ping
+        ws_ping_timeout=10  # если pong не пришёл за 10 сек – разрыв
+    )
 
 
 # =====================================================================================================================
