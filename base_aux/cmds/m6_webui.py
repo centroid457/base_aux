@@ -254,9 +254,7 @@ class WsClient(Nest_TasksBg_AbcAio):
             self,
             ws_client: WebSocket,
             queue_client: asyncio.Queue,
-
             income_executor: Callable[[dict | Any], Awaitable[None]],
-            onexit: Callable | Awaitable | None = None,
 
             *args,
             **kwargs
@@ -268,18 +266,11 @@ class WsClient(Nest_TasksBg_AbcAio):
 
         self.income_executor: Callable[[dict | Any], Awaitable[None]] = income_executor
         # self.outcome_executor = self._queue_to_ws__retranslator
-        self._tasks_bg__onexit_local: Callable | Awaitable | None = onexit
-
-        self._event_exit: asyncio.Event = asyncio.Event()
 
     # --------------------------------------------
     def _tasks_bg__create_start(self) -> None:
         self._tasks_bg__extend(self.outcome_loop())
         self._tasks_bg__extend(self.income_loop())
-
-    # --------------------------------------------
-    def __await__(self):
-        yield from self._event_exit.wait().__await__()
 
     # --------------------------------------------
     # WS-1=OUTCOME LOOP
@@ -403,10 +394,10 @@ async def ws__client(websocket: WebSocket):
                 asyncio.create_task(manager_inst__termos.del_item(msg__itemid))
 
     async with WsClient(
-            ws_client = websocket,
-            queue_client = client_queue,
-            income_executor = income_executor,
-            onexit = lambda: event_broadcaster.unregister_client(client_id),
+            ws_client=websocket,
+            queue_client=client_queue,
+            income_executor=income_executor,
+            _tasks_bg__onexit_local=lambda: event_broadcaster.unregister_client(client_id),
     ) as wsc:
         await wsc
 

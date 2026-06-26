@@ -8,14 +8,19 @@ from base_aux.base_values.m3_exceptions import *
 
 # =====================================================================================================================
 class Nest_TasksBg_Abc:
-    _tasks_bg: list[threading.Thread | asyncio.Task]
+    _tasks_bg: set[threading.Thread | asyncio.Task]
 
     def __init__(
             self,
             *args,
+            _tasks_bg__onexit_local: Callable | Awaitable | None = None,
             **kwargs,
     ):
-        self._tasks_bg = []
+        self._tasks_bg = set()
+        self._event_exit: asyncio.Event = asyncio.Event()
+
+        if _tasks_bg__onexit_local is not None:
+            self._tasks_bg__onexit_local = _tasks_bg__onexit_local
 
         super().__init__(*args, **kwargs)
 
@@ -48,12 +53,19 @@ class Nest_TasksBg_Abc:
 
     @abstractmethod
     def _tasks_bg__onexit_local(self) -> None | NoReturn:
+        """
+        GOAL
+        additional logic for global __aexit__
+
+        SPECIALLY CREATED FOR
+        WsClient
+        """
         raise NotImplementedError()
 
 
 # =====================================================================================================================
 class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
-    _tasks_bg: list[threading.Thread]
+    _tasks_bg: set[threading.Thread]
 
     @abstractmethod
     def _tasks_bg__extend(self, *ths: threading.Thread | Callable) -> None | NoReturn:
@@ -67,7 +79,7 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
                 msg = f"not thread-able={th!r}"
                 raise Exc__WrongUsage(msg)
 
-            self._tasks_bg.append(thread)
+            self._tasks_bg.add(thread)
 
     @abstractmethod
     def _tasks_bg__create_start(self) -> None:
@@ -86,14 +98,26 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
-    _tasks_bg: list[asyncio.Task]
-
+    _tasks_bg: set[asyncio.Task]
     _tasks_bg__onexit_local: Callable | Awaitable | None
+
+    # --------------------------------------------
+    def __await__(self):
+        yield from self._tasks_bg__wait().__await__()
+
+    async def _tasks_bg__wait(self, timeout: float | None = None) -> None:
+        await asyncio.wait_for(
+            asyncio.gather(*self._tasks_bg, return_exceptions=True),
+            timeout=timeout
+        )
 
     # -----------------------------------------------------------------------------------------------------------------
     async def __aenter__(self) -> Self | NoReturn:
-        # DONT USE TRY!!!
-        self._tasks_bg__create_start()
+        self._event_exit.clear()
+        try:    # DONT USE TRY!!!???
+            self._tasks_bg__create_start()
+        except:
+            raise
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
@@ -118,12 +142,13 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
         except:
             pass
 
+        self._event_exit.set()
+
     @abstractmethod
     async def _tasks_bg__onexit_local(self) -> None | NoReturn:
         pass
 
     # -----------------------------------------------------------------------------------------------------------------
-    @abstractmethod
     def _tasks_bg__extend(self, *aws: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> None | NoReturn:
         """
         GOAL
@@ -131,18 +156,20 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
         only create and start tasks! no validate/ no catching exc!!!???
         """
         for aw in aws:
-            task = None
-            if TypeAux(aw).check__task():
-                task = aw
-            elif TypeAux(aw).check__coro():
-                task = asyncio.create_task(aw)
-            elif TypeAux(aw).check__coro_func():
-                task = asyncio.create_task(aw())
-            else:
-                msg = f"not aw-able={task!r}"
-                raise Exc__WrongUsage(msg)
+            task = self._tasks_bg__ensure_task(aw)
+            self._tasks_bg.add(task)
 
-            self._tasks_bg.append(task)
+    def _tasks_bg__ensure_task(self, source: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> Awaitable | NoReturn:
+        if TypeAux(source).check__task():
+            task = source
+        elif TypeAux(source).check__coro():
+            task = asyncio.create_task(source)
+        elif TypeAux(source).check__coro_func():
+            task = asyncio.create_task(source())
+        else:
+            msg = f"not aw-able={source!r}"
+            raise Exc__WrongUsage(msg)
+        return task
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -156,10 +183,7 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
             except:
                 pass
         try:
-            await asyncio.wait_for(
-                asyncio.gather(*self._tasks_bg, return_exceptions=True),
-                timeout=timeout
-            )
+            await self._tasks_bg__wait(timeout)
         except asyncio.TimeoutError:
             # Если задачи не завершились, просто забудем о них
             pass
@@ -167,6 +191,33 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
             pass
 
         self._tasks_bg.clear()
+
+
+# =====================================================================================================================
+class TasksBg_PoolGlobal(Nest_TasksBg_AbcAio):
+    """
+    Глобальный (синглтон) реестр фоновых задач, не привязанный к конкретному владельцу.
+    Предоставляет spawn(coro) для запуска и wait_all() для ожидания/отмены.
+    """
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def _tasks_bg__ensure_task(self, source: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> Awaitable | NoReturn:
+        task = super()._tasks_bg__ensure_task(source)
+        task.add_done_callback(self._tasks_bg.discard)
+        task.add_done_callback(self._tasks_bg__log_exc)
+
+    @staticmethod
+    def _tasks_bg__log_exc(fut):
+        if fut.exception() and not isinstance(fut.exception(), asyncio.CancelledError):
+            print(f"BgTask failed={fut.exception()!r}")
+
+    def spawn(self, coro):
+        self._tasks_bg__extend(coro)
 
 
 # =====================================================================================================================
