@@ -14,7 +14,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
     _conn: SimpleNamespace | None
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _create_conn(self) -> None:
+    async def _create_conn(self) -> None | NoReturn:
         """
         Открывает асинхронное serial‑соединение.
         """
@@ -37,9 +37,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
         """
         Запускает только чтение stdout (stderr для serial не нужен).
         """
-        self._tasks_bg = [
-            asyncio.create_task(self._bg_reading_buffer__stdout()),
-        ]
+        self._tasks_bg__extend(self._bg_reading_buffer__stdout())
         
     # -----------------------------------------------------------------------------------------------------------------
     async def _del_conn(self) -> None:

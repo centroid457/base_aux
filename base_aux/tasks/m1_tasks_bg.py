@@ -1,6 +1,10 @@
+from typing import *
 import asyncio
 import threading
 from abc import abstractmethod
+from base_aux.base_types.m1_type_aux import TypeAux
+from base_aux.base_values.m3_exceptions import *
+
 
 
 # =====================================================================================================================
@@ -15,6 +19,15 @@ class Nest_TasksBg_Abc:
         self._tasks_bg = []
 
         super().__init__(*args, **kwargs)
+
+    @abstractmethod
+    def _tasks_bg__extend(self, *aws: Any) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
+        raise NotImplementedError()
 
     @abstractmethod
     def _tasks_bg__create_start(self) -> None:
@@ -40,6 +53,20 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
     _tasks_bg: list[threading.Thread]
 
     @abstractmethod
+    def _tasks_bg__extend(self, *ths: threading.Thread | Callable) -> None | NoReturn:
+        for th in ths:
+            thread = None
+            if TypeAux(th).check__thread():
+                thread = th
+            elif callable(th):
+                thread = threading.Thread(target=th, daemon=True)
+            else:
+                msg = f"not thread-able={th!r}"
+                raise Exc__WrongUsage(msg)
+
+            self._tasks_bg.append(thread)
+
+    @abstractmethod
     def _tasks_bg__create_start(self) -> None:
         raise NotImplementedError()
 
@@ -49,11 +76,45 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
 
         self._tasks_bg.clear()
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
     _tasks_bg: list[asyncio.Task]
 
+    # -----------------------------------------------------------------------------------------------------------------
+    async def __aenter__(self) -> Self | NoReturn:
+        # DONT USE TRY!!!
+        self._tasks_bg__create_start()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        try:
+            await self._tasks_bg__stop_delete()
+        except:
+            pass
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @abstractmethod
+    def _tasks_bg__extend(self, *aws: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
+        for aw in aws:
+            task = None
+            if TypeAux(aw).check__task():
+                task = aw
+            elif TypeAux(aw).check__coro():
+                task = asyncio.create_task(aw)
+            elif TypeAux(aw).check__coro_func():
+                task = asyncio.create_task(aw())
+            else:
+                msg = f"not aw-able={task!r}"
+                raise Exc__WrongUsage(msg)
+
+            self._tasks_bg.append(task)
+
+    # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
     def _tasks_bg__create_start(self) -> None:  # KEEP SYNC!!! used in connect!
         raise NotImplementedError()

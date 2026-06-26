@@ -31,15 +31,11 @@ class Base_ManagerInstance(Nest_TasksBg_AbcAio):
         super().__init__(*args, **kwargs)
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def __aenter__(self):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         try:
-            self._tasks_bg__create_start()
+            await self._tasks_bg__stop_delete()
         except:
             pass
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self._tasks_bg__stop_delete()
         for item in self.items:
             await self.del_item(item)
 
@@ -125,9 +121,7 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
     ITEM_CLASS = CmdTerminal_SerialAio
 
     def _tasks_bg__create_start(self) -> None:
-        self._tasks_bg = [
-                asyncio.create_task(self.monitor_instances()),
-            ]
+        self._tasks_bg__extend(self.monitor_instances())
 
     async def monitor_instances(
             self,
@@ -175,8 +169,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst__termos = ManagerInst_TermOs()
-# manager_inst__termos = ManagerInst_TermSerial()
+# manager_inst__termos = ManagerInst_TermOs()
+manager_inst__termos = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================

@@ -24,10 +24,10 @@ class CmdTerminal_OsAio(Base_CmdTerminal_Os, BaseAio_CmdTerminal):
         )
 
     def _tasks_bg__create_start(self) -> None:
-        self._tasks_bg = [
-            asyncio.create_task(self._bg_reading_buffer__stdout()),
-            asyncio.create_task(self._bg_reading_buffer__stderr()),
-        ]
+        self._tasks_bg__extend(
+            self._bg_reading_buffer__stdout(),
+            self._bg_reading_buffer__stderr(),
+        )
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _del_conn(self) -> None:

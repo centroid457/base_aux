@@ -1,6 +1,7 @@
 from base_aux.base_types.m0_static_types import TYPES
 from base_aux.base_nest_dunders.m1_init1_source import *
 import inspect
+import threading
 import asyncio
 
 
@@ -442,6 +443,12 @@ class TypeAux(NestInit_Source):
             return source
 
     # =================================================================================================================
+    def check__thread(self) -> bool:
+        """
+        func like link for 'asyncio.sleep'
+        """
+        return isinstance(self.SOURCE, threading.Thread)
+
     def check__coro_func(self) -> bool:
         """
         func like link for 'asyncio.sleep'
@@ -463,7 +470,7 @@ class TypeAux(NestInit_Source):
         """
         object like result for 'asyncio.sleep(1)' or task!!!
         """
-        # return asyncio.isfuture(self.SOURCE)  # ХЗ!!!
+        # return asyncio.isfuture(self.SOURCE)  # НЕТ ТАКОГО! ХЗ!!!
         return inspect.isawaitable(self.SOURCE)
 
 
