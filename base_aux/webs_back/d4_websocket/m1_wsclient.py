@@ -32,7 +32,7 @@ class WsClient(Nest_TasksBg_AbcAio):
     ):
         super().__init__(*args, **kwargs)
 
-        self.ws_to_client = ws_client
+        self.ws_client = ws_client
         self.queue_to_client = queue_client
 
         self.income_executor: TYPES__CALLBACK_AIO__DATA = income_executor
@@ -47,7 +47,7 @@ class WsClient(Nest_TasksBg_AbcAio):
 
     # ==================================================================================================================
     async def outcome_excecutor(self, data: dict) -> None:
-        await self.ws_to_client.send_json(json__ensure_serializable(data))
+        await self.ws_client.send_json(json__ensure_serializable(data))
 
     # ------------------------------------------------------------------------------------------------------------------
     # LOOPS
@@ -57,7 +57,7 @@ class WsClient(Nest_TasksBg_AbcAio):
 
         just a _queue_to_ws__retranslator
         """
-        print(f"[self.ws_to_client.msg_outcome] start monitor")
+        print(f"[self.ws_client.msg_outcome] start monitor")
         try:
             while not self._event_stop.is_set():
                 msg_outcome = await self.queue_to_client.get()
@@ -67,7 +67,7 @@ class WsClient(Nest_TasksBg_AbcAio):
                 except asyncio.CancelledError:
                     raise
                 except Exception as exc:
-                    print(f"[self.ws_to_client.msg_outcome]{exc!r}")
+                    print(f"[self.ws_client.msg_outcome]{exc!r}")
                     # клиент отвалился – выходим из задачи
                     break
 
@@ -84,7 +84,7 @@ class WsClient(Nest_TasksBg_AbcAio):
     async def _loop_income(self) -> Never | NoReturn:
         try:
             while not self._event_stop.is_set():
-                data = await self.ws_to_client.receive_json()
+                data = await self.ws_client.receive_json()
                 await AioAux(self.income_executor).callback_sync_aio__execute(data)
 
         except asyncio.CancelledError:
