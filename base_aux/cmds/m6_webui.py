@@ -1,23 +1,21 @@
+from typing import *
 import asyncio
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 import uvicorn
 
 import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-
-from base_aux.aux_paradigm.m2_aio import TYPES__CALLBACK_AIO__DATA
 from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import *
 from base_aux.tasks.m1_tasks_bg import *
-from base_aux.aux_dict.m1_dict_aux import json__ensure_serializable
 from base_aux.aux_paradigm.m2_aio import *
-from base_aux.base_nest_dunders.m1_init1_source import *
+from base_aux.webs_back.d4_websocket.m1_wsclient import WsClient
 
 
 # =====================================================================================================================
@@ -221,6 +219,7 @@ async def list_items():
     ids = list(manager_inst__termos.items)
     return {"items": ids}
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 @app.get("/item/history/get/{idn}")
 async def get_history(idn: str):
@@ -240,92 +239,6 @@ async def get_history(idn: str):
             "retcode": result.retcode
         })
     return history_data
-
-
-# =====================================================================================================================
-class WsClient(Nest_TasksBg_AbcAio):
-    """
-    GOAL
-    used in FastApi
-    as organised IO transportation/execution
-        @app.websocket("/ws/client")
-        async def ws__client(websocket: WebSocket):
-    """
-    def __init__(
-            self,
-            ws_client: WebSocket,
-            queue_client: asyncio.Queue,
-            income_executor: TYPES__CALLBACK_AIO__DATA,
-            onexit: TYPES__CALLBACK_AIO__DATA,
-
-            *args,
-            **kwargs
-    ):
-        super().__init__(*args, **kwargs)
-
-        self.ws_to_client = ws_client
-        self.queue_to_client = queue_client
-
-        self.income_executor: TYPES__CALLBACK_AIO__DATA = income_executor
-        # self.outcome_executor = self._queue_to_ws__retranslator
-        self._tasks_bg__callback_onexit: TYPES__CALLBACK_AIO__DATA = onexit
-
-    def _tasks_bg__create_start(self) -> None:
-        self._event_stop.clear()    # DONT FORGET!!!
-
-        self._tasks_bg__extend(self._loop_outcome())
-        self._tasks_bg__extend(self._loop_income())
-
-    # =================================================================================================================
-    async def outcome_excecutor(self, data: dict) -> None:
-        await self.ws_to_client.send_json(json__ensure_serializable(data))
-
-    # -----------------------------------------------------------------------------------------------------------------
-    # LOOPS
-    async def _loop_outcome(self) -> Never | NoReturn:
-        """
-        GOAL: resend all msgs from clientQueue to clientWS
-
-        just a _queue_to_ws__retranslator
-        """
-        print(f"[self.ws_to_client.msg_outcome] start monitor")
-        try:
-            while not self._event_stop.is_set():
-                msg_outcome = await self.queue_to_client.get()
-                print(f"{msg_outcome=}")
-                try:
-                    await self.outcome_excecutor(msg_outcome)
-                except asyncio.CancelledError:
-                    raise
-                except Exception as exc:
-                    print(f"[self.ws_to_client.msg_outcome]{exc!r}")
-                    # клиент отвалился – выходим из задачи
-                    break
-
-        except asyncio.CancelledError:
-            raise
-
-        except WebSocketDisconnect:
-            pass
-
-        except BaseException as exc:
-            Exc__UnExpectedExc(f"{exc!r}")
-
-    # -----------------------------------------------------------------------------------------------------------------
-    async def _loop_income(self) -> Never | NoReturn:
-        try:
-            while not self._event_stop.is_set():
-                data = await self.ws_to_client.receive_json()
-                await AioAux(self.income_executor).callback_sync_aio__execute(data)
-
-        except asyncio.CancelledError:
-            raise
-
-        except WebSocketDisconnect:
-            pass
-
-        except BaseException as exc:
-            Exc__UnExpectedExc(f"{exc!r}")
 
 
 # =====================================================================================================================
@@ -387,7 +300,7 @@ async def ws__client(websocket: WebSocket):
             ws_client=websocket,
             queue_client=client_queue,
             income_executor=income_executor,
-            onexit=lambda: event_broadcaster.unregister_client(client_id),
+            callback_onexit=lambda: event_broadcaster.unregister_client(client_id),
     ) as wsc:
         await wsc
 
