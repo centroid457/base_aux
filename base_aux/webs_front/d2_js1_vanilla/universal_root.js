@@ -326,99 +326,12 @@ function onload__count_elements(selector, options = {}) {
         counter_index += 1;
     });
 }
-
 OnLoadRunner.add(
     function() {
         onload__count_elements('.section__cls h2' );
     }
 );
 
-
-// ---------------------------------------------------------------------------------------------------------------------
-/** НЕ РАБОТАЕТ!!!
- * Добавляет нумерацию к заголовкам (h1-h6) внутри указанного контейнера.
- * @param {string|HTMLElement} container - CSS-селектор или DOM-элемент.
- * @param {Object} options - Настройки.
- * @param {boolean} [options.use_h1=false] - Нумеровать ли h1.
- * @param {string} [options.sep='.'] - Разделитель уровней.
- * @param {boolean} [options.keep_nesting=true] - Показывать полный путь (1.2.3) или только последний номер (3).
- */
-function numberHeadings(container, options = {}) {
-    const {
-        show_h1 = false,
-        sep = '.',
-        keep_nesting = true
-    } = options;
-
-    const root = typeof container === 'string'
-        ? document.querySelector(container)
-        : container;
-    if (!root) {
-        console.error(`Контейнер "${container}" не найден`);
-        return;
-    }
-
-    // Счётчики для уровней 1..6
-    const counters = [0, 0, 0, 0, 0, 0];
-    let lastLevel = 0;
-
-    const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-    for (const heading of headings) {
-        const level = parseInt(heading.tagName[1], 10);
-        const idx = level - 1;
-
-        // --- Обновление счётчиков ---
-        if (level > lastLevel) {
-            // Обнуляем промежуточные уровни
-            for (let i = lastLevel; i < level; i++) {
-                if (i !== idx) counters[i] = 0;
-            }
-            counters[idx]++;
-        } else {
-            counters[idx]++;
-            // Обнуляем все более глубокие уровни
-            for (let i = idx + 1; i < 6; i++) counters[i] = 0;
-        }
-        lastLevel = level;
-
-        // --- Формирование номера ---
-        let numberParts = [];
-        if (keep_nesting) {
-            for (let i = 0; i < level; i++) {
-                numberParts.push(counters[i] === 0 ? '' : counters[i]);
-            }
-        } else {
-            numberParts.push(counters[idx]);
-        }
-
-        let numberStr = numberParts.join(sep);
-        numberStr = numberStr.replace(new RegExp(`^${sep}+|${sep}+$`, 'g'), '');
-
-        const showThisNumber = (level === 1) ? show_h1 : true;
-        let prefix = '';
-        if (showThisNumber && numberStr !== '') {
-            prefix = numberStr + sep + ' ';
-        }
-
-        // Удаляем старый номер (если есть) – ищем в начале строки цифры, разделители и пробел
-        const oldNumberPattern = /^[\d\.]+\s+/;
-        let newHTML = heading.innerHTML;
-        if (oldNumberPattern.test(newHTML)) {
-            newHTML = newHTML.replace(oldNumberPattern, '');
-        }
-        // Вставляем новый префикс
-        heading.innerHTML = prefix + newHTML;
-    }
-}
-OnLoadRunner.add(
-    function() {
-        numberHeadings('body > main', {
-            show_h1: false,
-            sep: '.',
-            keep_nesting: true
-        });
-});
 
 // ---------------------------------------------------------------------------------------------------------------------
 function onload__generateNavRoot() {

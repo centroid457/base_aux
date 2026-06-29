@@ -3,8 +3,9 @@
 // --------------------------------------------------------------
 let ws_client = null;
 
+
 function ws_client__connect() {
-    console.log("[WsClient]🟡try connect");
+    console.log("[WsClient]⌛try connect");
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     ws_client = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
@@ -12,6 +13,7 @@ function ws_client__connect() {
     // ---------------------------------------------------
     ws_client.onmessage = (e) => {
         const msg = JSON.parse(e.data);
+        console.log(`[WsClient]✉${msg}`); // TODO: apply TOString!!!
 
         const msg__itemid = msg?.item_id;
         const msg__channel = msg?.channel;
@@ -53,7 +55,6 @@ function ws_client__connect() {
             }
 
         } else if (msg__channel === "system") {
-            console.log(msg__text);
         }
     };
 
