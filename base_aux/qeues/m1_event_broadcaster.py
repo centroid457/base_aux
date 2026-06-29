@@ -52,9 +52,18 @@ class EventBroadcaster:
                 return
 
     # -----------------------------------------------------------------------------------------------------------------
-    def register_client(self) -> tuple[str, asyncio.Queue]:
+    def register_client(self, client_queue: asyncio.Queue | None = None) -> tuple[str, asyncio.Queue]:
+        # 1=already exists -----------------
+        if client_queue in self.clients.values():
+            for key, value in self.clients.items():
+                if value is client_queue:
+                    return key, value
+
+        # 2=create new ---------------------
         client_id = str(uuid.uuid4())
-        client_queue = asyncio.Queue()
+        if client_queue is None:
+            client_queue = asyncio.Queue()
+
         self.clients[client_id] = client_queue
         return client_id, client_queue
 
