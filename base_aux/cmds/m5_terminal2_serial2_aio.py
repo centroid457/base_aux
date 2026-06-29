@@ -37,6 +37,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
         """
         Запускает только чтение stdout (stderr для serial не нужен).
         """
+        self._event_stop.clear()    # DONT FORGET!!!
         self._tasks_bg__extend(self._bg_reading_buffer__stdout())
         
     # -----------------------------------------------------------------------------------------------------------------

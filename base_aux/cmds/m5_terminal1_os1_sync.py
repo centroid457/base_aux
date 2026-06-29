@@ -31,6 +31,7 @@ class CmdTerminal_OsSync(Base_CmdTerminal_Os, BaseSync_CmdTerminal):
     def _tasks_bg__create_start(self) -> None:
         # setup settings for buffers
         # Неблокирующий режим должен быть установлен один раз до входа в цикл. Например, в начале метода _reading_stream:
+        self._event_stop.clear()    # DONT FORGET!!!
         for buffer in [self._conn.stdout, self._conn.stderr]:
             pass
             fd = buffer.fileno()

@@ -2,7 +2,6 @@ import asyncio
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import uvicorn
 
@@ -11,12 +10,14 @@ import serial.tools.list_ports  # need import exactly this full path! and use sa
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from base_aux.aux_paradigm.m2_aio import TYPES__CALLBACK_AIO__DATA
 from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import *
 from base_aux.tasks.m1_tasks_bg import *
 from base_aux.aux_dict.m1_dict_aux import json__ensure_serializable
-from base_aux.base_types.m1_type_aux import TypeAux
+from base_aux.aux_paradigm.m2_aio import *
+from base_aux.base_nest_dunders.m1_init1_source import *
 
 
 # =====================================================================================================================
@@ -123,6 +124,7 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
     ITEM_CLASS = CmdTerminal_SerialAio
 
     def _tasks_bg__create_start(self) -> None:
+        self._event_stop.clear()    # DONT FORGET!!!
         self._tasks_bg__extend(self.monitor_instances())
 
     async def monitor_instances(
@@ -241,7 +243,6 @@ async def get_history(idn: str):
 
 
 # =====================================================================================================================
-# =====================================================================================================================
 class WsClient(Nest_TasksBg_AbcAio):
     """
     GOAL
@@ -254,7 +255,8 @@ class WsClient(Nest_TasksBg_AbcAio):
             self,
             ws_client: WebSocket,
             queue_client: asyncio.Queue,
-            income_executor: Callable[[dict | Any], Awaitable[None]],
+            income_executor: TYPES__CALLBACK_AIO__DATA,
+            onexit: TYPES__CALLBACK_AIO__DATA,
 
             *args,
             **kwargs
@@ -264,29 +266,38 @@ class WsClient(Nest_TasksBg_AbcAio):
         self.ws_to_client = ws_client
         self.queue_to_client = queue_client
 
-        self.income_executor: Callable[[dict | Any], Awaitable[None]] = income_executor
+        self.income_executor: TYPES__CALLBACK_AIO__DATA = income_executor
         # self.outcome_executor = self._queue_to_ws__retranslator
+        self._tasks_bg__onexit_local: TYPES__CALLBACK_AIO__DATA = onexit
 
-    # --------------------------------------------
     def _tasks_bg__create_start(self) -> None:
-        self._tasks_bg__extend(self.outcome_loop())
-        self._tasks_bg__extend(self.income_loop())
+        self._event_stop.clear()    # DONT FORGET!!!
 
-    # --------------------------------------------
-    # WS-1=OUTCOME LOOP
-    async def outcome_loop(self):
+        self._tasks_bg__extend(self._loop_outcome())
+        self._tasks_bg__extend(self._loop_income())
+
+    # =================================================================================================================
+    async def outcome_excecutor(self, data: dict) -> None:
+        await self.ws_to_client.send_json(json__ensure_serializable(data))
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # LOOPS
+    async def _loop_outcome(self) -> Never | NoReturn:
         """
         GOAL: resend all msgs from clientQueue to clientWS
 
         just a _queue_to_ws__retranslator
         """
         print(f"[self.ws_to_client.msg_outcome] start monitor")
+        current_task = asyncio.current_task()
+        current_task.add_done_callback(lambda _: self._event_stop.set())
+
         try:
-            while True:
+            while not self._event_stop.is_set():
                 msg_outcome = await self.queue_to_client.get()
                 print(f"{msg_outcome=}")
                 try:
-                    await self.ws_to_client.send_json(json__ensure_serializable(msg_outcome))
+                    await self.outcome_excecutor(msg_outcome)
                 except asyncio.CancelledError:
                     raise
                 except Exception as exc:
@@ -295,7 +306,6 @@ class WsClient(Nest_TasksBg_AbcAio):
                     break
 
         except asyncio.CancelledError:
-            self._event_exit.set()
             raise
 
         except WebSocketDisconnect:
@@ -304,31 +314,17 @@ class WsClient(Nest_TasksBg_AbcAio):
         except BaseException as exc:
             Exc__UnExpectedExc(f"{exc!r}")
 
-        self._event_exit.set()
+    # -----------------------------------------------------------------------------------------------------------------
+    async def _loop_income(self) -> Never | NoReturn:
+        current_task = asyncio.current_task()
+        current_task.add_done_callback(lambda _: self._event_stop.set())
 
-    # --------------------------------------------
-    # WS-2=INCOME LOOP
-    async def income_loop(self) -> Never | NoReturn:
         try:
-            while True:
+            while not self._event_stop.is_set():
                 data = await self.ws_to_client.receive_json()
+                await AioAux(self.income_executor).callback_sync_aio__execute(data)
 
-                try:
-                    if TypeAux(self.income_executor).check__coro_func():
-                        await self.income_executor(data)
-                    elif callable(self._tasks_bg__onexit_local):
-                        self.income_executor(data)
-                    else:
-                        msg= f"{self.income_executor!r}"
-                        raise Exc__WrongUsage(msg)
-                except asyncio.CancelledError:  # проброс дальше!
-                    raise
-                except Exception as exc:
-                    raise Exc__UnExpectedExc(f"{exc!r}")
-
-            # --------------------------------------------
         except asyncio.CancelledError:
-            self._event_exit.set()
             raise
 
         except WebSocketDisconnect:
@@ -336,8 +332,6 @@ class WsClient(Nest_TasksBg_AbcAio):
 
         except BaseException as exc:
             Exc__UnExpectedExc(f"{exc!r}")
-
-        self._event_exit.set()
 
 
 # =====================================================================================================================
@@ -361,10 +355,7 @@ async def ws__ping(websocket: WebSocket):
 # ---------------------------------------------------------------------------------------------------------------------
 @app.websocket("/ws/client")
 async def ws__client(websocket: WebSocket):
-
-    await websocket.accept()
-    client_id, client_queue = event_broadcaster.register_client()
-
+    # 1=SETTINGS -----------------------
     async def income_executor(data: dict | Any) -> None:
         msg__channel = data.get("channel")
         msg__itemid = data.get("item_id")
@@ -393,11 +384,16 @@ async def ws__client(websocket: WebSocket):
             elif msg__action == "delete_item":
                 TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(msg__itemid))
 
+    # 2=PREPARE -----------------------
+    await websocket.accept()
+    client_id, client_queue = event_broadcaster.register_client()
+
+    # 3=WORK --------------------------
     async with WsClient(
             ws_client=websocket,
             queue_client=client_queue,
             income_executor=income_executor,
-            _tasks_bg__onexit_local=lambda: event_broadcaster.unregister_client(client_id),
+            onexit=lambda: event_broadcaster.unregister_client(client_id),
     ) as wsc:
         await wsc
 
