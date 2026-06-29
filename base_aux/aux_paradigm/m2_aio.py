@@ -16,7 +16,8 @@ TYPES__CALLBACK_AIO__DATA = Callable[[dict | Any], Awaitable[None]] | Callable[[
 class AioAux(NestInit_Source):
     SOURCE: (
             TYPES__CALLBACK_AIO |
-            Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]
+            Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable] |
+            None
     )
 
     async def callback_sync_aio__execute(
@@ -33,7 +34,9 @@ class AioAux(NestInit_Source):
         kwargs = kwargs or dict()
 
         try:
-            if TypeAux(self.SOURCE).check__coro_func():
+            if self.SOURCE is None:
+                return
+            elif TypeAux(self.SOURCE).check__coro_func():
                 result = await self.SOURCE(*args, **kwargs)
             elif TypeAux(self.SOURCE).check__coro():
                 result = await self.SOURCE

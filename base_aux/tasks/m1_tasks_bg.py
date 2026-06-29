@@ -15,17 +15,21 @@ class Nest_TasksBg_Abc:
     def __init__(
             self,
             *args,
-            _tasks_bg__onexit_local: Callable | Awaitable | None = None,
+            _tasks_bg__callback_onexit: Callable | Awaitable | None = None,
+            _tasks_bg__callback_taskdone: Callable | Awaitable | None = None,
             **kwargs,
     ):
         self._tasks_bg = set()
         self._event_stop: asyncio.Event = asyncio.Event()
 
-        if _tasks_bg__onexit_local is not None:
-            self._tasks_bg__onexit_local = _tasks_bg__onexit_local
+        if _tasks_bg__callback_onexit is not None:
+            self._tasks_bg__callback_onexit = _tasks_bg__callback_onexit
+        if _tasks_bg__callback_taskdone is not None:
+            self._tasks_bg__callback_taskdone = _tasks_bg__callback_taskdone
 
         super().__init__(*args, **kwargs)
 
+    # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
     def _tasks_bg__extend(self, *aws: Any) -> None | NoReturn:
         """
@@ -35,6 +39,7 @@ class Nest_TasksBg_Abc:
         """
         raise NotImplementedError()
 
+    # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
     def _tasks_bg__create_start(self) -> None:
         """
@@ -55,8 +60,9 @@ class Nest_TasksBg_Abc:
         """
         raise NotImplementedError()
 
+    # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
-    def _tasks_bg__onexit_local(self) -> None | NoReturn:
+    def _tasks_bg__callback_onexit(self) -> None | NoReturn:
         """
         GOAL
         additional logic for global __aexit__
@@ -65,6 +71,14 @@ class Nest_TasksBg_Abc:
         WsClient
         """
         raise NotImplementedError()
+
+    def _tasks_bg__callback_taskdone(self, task: asyncio.Task) -> None | NoReturn:
+        """
+        GOAL
+        ----
+        only create and start tasks! no validate/ no catching exc!!!???
+        """
+        self._event_stop.set()  # any task exited - system is broken!
 
 
 # =====================================================================================================================
@@ -92,14 +106,14 @@ class Nest_TasksBg_AbcSync(Nest_TasksBg_Abc):
         self._tasks_bg.clear()
 
     @abstractmethod
-    def _tasks_bg__onexit_local(self) -> None | NoReturn:
+    def _tasks_bg__callback_onexit(self) -> None | NoReturn:
         pass
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
     _tasks_bg: set[asyncio.Task]
-    _tasks_bg__onexit_local: Callable | Awaitable | None
+    _tasks_bg__callback_onexit: Callable | Awaitable | None
 
     # --------------------------------------------
     def __await__(self):
@@ -128,15 +142,14 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
 
         # 2=LOCAL exec
         try:
-            callback = self._tasks_bg__onexit_local
-            if callback is not None:
-                AioAux(callback).callback_sync_aio__execute()
+            if self._tasks_bg__callback_onexit is not None:
+                await AioAux(self._tasks_bg__callback_onexit).callback_sync_aio__execute()
         except:
             pass
 
     @abstractmethod
-    async def _tasks_bg__onexit_local(self) -> None | NoReturn:
-        pass
+    async def _tasks_bg__callback_onexit(self) -> None | NoReturn:
+        return
 
     # -----------------------------------------------------------------------------------------------------------------
     def _tasks_bg__extend(self, *aws: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> None | NoReturn:
@@ -148,6 +161,8 @@ class Nest_TasksBg_AbcAio(Nest_TasksBg_Abc):
         for aw in aws:
             task = AioAux(aw).ensure_task()
             self._tasks_bg.add(task)
+
+            task.add_done_callback(self._tasks_bg__callback_taskdone)
 
     # -----------------------------------------------------------------------------------------------------------------
     @abstractmethod
@@ -188,17 +203,13 @@ class TasksBg_PoolGlobal(Nest_TasksBg_AbcAio):
             cls._instance = super().__new__(cls)
         return cls._instance
 
+    def _tasks_bg__callback_taskdone(self, task: asyncio.Task) -> None | NoReturn:
+        self._tasks_bg.discard(task)
+        self._tasks_bg__log_exc(task)
+
     def _tasks_bg__create_start(self) -> None:  # KEEP SYNC!!! used in connect!
         self._event_stop.clear()    # DONT FORGET!!!
         pass # NO CREATIONS!
-
-    def _tasks_bg__extend(self, *aws: Awaitable | asyncio.Task | Coroutine | Callable[..., Awaitable]) -> None | NoReturn:
-        for aw in aws:
-            task = AioAux(aw).ensure_task()
-            self._tasks_bg.add(task)
-
-            task.add_done_callback(self._tasks_bg.discard)
-            task.add_done_callback(self._tasks_bg__log_exc)
 
     @staticmethod
     def _tasks_bg__log_exc(fut):

@@ -268,7 +268,7 @@ class WsClient(Nest_TasksBg_AbcAio):
 
         self.income_executor: TYPES__CALLBACK_AIO__DATA = income_executor
         # self.outcome_executor = self._queue_to_ws__retranslator
-        self._tasks_bg__onexit_local: TYPES__CALLBACK_AIO__DATA = onexit
+        self._tasks_bg__callback_onexit: TYPES__CALLBACK_AIO__DATA = onexit
 
     def _tasks_bg__create_start(self) -> None:
         self._event_stop.clear()    # DONT FORGET!!!
@@ -289,9 +289,6 @@ class WsClient(Nest_TasksBg_AbcAio):
         just a _queue_to_ws__retranslator
         """
         print(f"[self.ws_to_client.msg_outcome] start monitor")
-        current_task = asyncio.current_task()
-        current_task.add_done_callback(lambda _: self._event_stop.set())
-
         try:
             while not self._event_stop.is_set():
                 msg_outcome = await self.queue_to_client.get()
@@ -316,9 +313,6 @@ class WsClient(Nest_TasksBg_AbcAio):
 
     # -----------------------------------------------------------------------------------------------------------------
     async def _loop_income(self) -> Never | NoReturn:
-        current_task = asyncio.current_task()
-        current_task.add_done_callback(lambda _: self._event_stop.set())
-
         try:
             while not self._event_stop.is_set():
                 data = await self.ws_to_client.receive_json()
