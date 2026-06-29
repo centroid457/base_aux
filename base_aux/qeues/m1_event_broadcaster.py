@@ -28,10 +28,11 @@ class EventBroadcaster:
         self.clients: dict[str, asyncio.Queue] = {}
 
     async def start_task(self):
-        self.eb_task = asyncio.create_task(self._broadcasting())
+        if self.eb_task is None:
+            self.eb_task = asyncio.create_task(self._loop__broadcasting())
 
     # -----------------------------------------------------------------------------------------------------------------
-    async def _broadcasting(self):
+    async def _loop__broadcasting(self):
         """
         GOAL: постоянное перенаправление сообщений из основной очереди на всех клиентов
         """
@@ -67,6 +68,9 @@ class EventBroadcaster:
 
         ITS A QUICK METHOD! DONT DO ANYTHING!!! JUST PLACE INTO MAIN_QUEUE!!!!
         """
+        if not self.eb_task:
+            await self.start_task()
+
         print(f"[EventBroadcaster].broadcast({data})")
         await self.eb_queue.put(data)
 
