@@ -6,17 +6,17 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import uvicorn
 
+import serial.tools.list_ports  # need import exactly this full path! and use same full path!
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
 from base_aux.cmds.m5_terminal2_serial2_aio import *
-from base_aux.qeues.m1_event_broadcaster import EventBroadcaster, Nest_EventBroadcasterImplemented
-from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcAio
+from base_aux.qeues.m1_event_broadcaster import *
+from base_aux.tasks.m1_tasks_bg import *
 from base_aux.aux_dict.m1_dict_aux import json__ensure_serializable
 from base_aux.base_types.m1_type_aux import TypeAux
-
-import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
 
 # =====================================================================================================================
@@ -377,21 +377,21 @@ async def ws__client(websocket: WebSocket):
 
             item = manager_inst__termos.get_item(msg__itemid)
             if item and msg__text:
-                asyncio.create_task(item.send_cmd(msg__text))
+                TasksBg_PoolGlobal().spawn(item.send_cmd(msg__text))
 
         elif msg__channel == "item_control":
             if msg__action == "clear_history":
-                asyncio.create_task(manager_inst__termos.clear_history(msg__itemid))
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(msg__itemid))
 
             elif msg__action == "reconnect_item":
                 item = manager_inst__termos.get_item(msg__itemid)
-                asyncio.create_task(item.reconnect())
+                TasksBg_PoolGlobal().spawn(item.reconnect())
 
             elif msg__action == "create_item":
-                asyncio.create_task(manager_inst__termos.create_item())
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
 
             elif msg__action == "delete_item":
-                asyncio.create_task(manager_inst__termos.del_item(msg__itemid))
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(msg__itemid))
 
     async with WsClient(
             ws_client=websocket,
