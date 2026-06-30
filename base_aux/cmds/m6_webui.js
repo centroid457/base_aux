@@ -24,18 +24,18 @@ function ws_client__connect() {
         const msg__text = msg?.text;
 
         if (msg__channel === "history_log") {
-            itemsManager.history_append__exe(msg__itemid, msg__action, msg__text)
+            itemsManager.history_append(msg__itemid, msg__action, msg__text)
 
         } else if (msg__channel === "item_control") {
 
             if (msg__action === "create_item") {
-                itemsManager.item_create__exe(msg__itemid);
+                itemsManager.item_create(msg__itemid);
 
             } else if (msg__action === "delete_item") {
-                itemsManager.item_del__exe(msg__itemid);
+                itemsManager.item_del(msg__itemid);
 
             } else if (msg__action === "clear_history") {
-                itemsManager.history_clear__exe(msg__itemid);
+                itemsManager.history_clear(msg__itemid);
             }
 
         } else if (msg__channel === "system") {
@@ -64,26 +64,25 @@ const itemsManager = {
 
     // Инициализация UI при первой загрузке страницы
     async initUI() {
-        document.getElementById('btn_add_item__id').addEventListener('click', () => this.item_create__cmd());
+        document.getElementById('btn_add_item__id').addEventListener('click', () => this.send__item_create());
         await this.reloadUI();
     },
 
     // Полная очистка и повторное построение UI на основе данных сервера
     async reloadUI() {
-        // Удаляем все существующие элементы
         for (const [id, ui] of this.items_map) {
-            this.item_del__exe(id);
+            this.item_del(id);
         }
 
-        // Загружаем актуальный список с сервера
-        const serverIds = await this.items_load__exe();
+        const serverIds = await this.items_load();
         for (const idn of serverIds) {
-            this.item_create__exe(idn);
+            this.item_create(idn);
         }
     },
 
     // ---------------------------------------------------
-    async items_load__exe() {
+    async items_load() {
+        // актуальный список с сервера
         try {
             const resp = await fetch('/item/list');
             const data = await resp.json();
@@ -94,7 +93,7 @@ const itemsManager = {
     },
 
     // ---------------------------------------------------
-    async item_create__cmd() {
+    async send__item_create() {
         if (ws_client?.readyState !== WebSocket.OPEN) return;
 
         ws_client.send(JSON.stringify({
@@ -103,7 +102,7 @@ const itemsManager = {
         }));
     },
 
-    async item_create__exe(itemId) {
+    async item_create(itemId) {
         if (this.items_map.has(itemId)) return;
         const itemUI = new ItemUI(itemId);
         this.items_map.set(itemId, itemUI);
@@ -111,7 +110,7 @@ const itemsManager = {
     },
 
     // ---------------------------------------------------
-    async item_del__cmd(itemId) {
+    async send__item_del(itemId) {
         if (ws_client?.readyState !== WebSocket.OPEN) return;
 
         ws_client.send(JSON.stringify({
@@ -121,7 +120,7 @@ const itemsManager = {
         }));
     },
 
-    async item_del__exe(itemId) {
+    async item_del(itemId) {
         const ui = this.items_map.get(itemId);
         if (ui) {
             ui.destroy();
@@ -130,7 +129,7 @@ const itemsManager = {
     },
 
     // ---------------------------------------------------
-    async history_append__exe(itemId, style, text) {
+    async history_append(itemId, style, text) {
         const ui = this.items_map.get(itemId);
         if (ui) {
             if (style === 'stdout') style = 'msg_stdout__cls';
@@ -142,7 +141,7 @@ const itemsManager = {
         }
     },
 
-    async history_clear__exe(itemId) {
+    async history_clear(itemId) {
         const ui = this.items_map.get(itemId);
         if (ui) {
             ui.element_OutputBox.innerHTML = '';
@@ -199,7 +198,7 @@ class ItemUI {
         btnClose.setAttribute('data-btn_outline', "red");
         btnClose.textContent = 'X';
         btnClose.title = 'Close';
-        btnClose.onclick = () => itemsManager.item_del__cmd(this.itemId);
+        btnClose.onclick = () => itemsManager.send__item_del(this.itemId);
 
         header_div2.appendChild(btnClear);
         header_div2.appendChild(btnReconnect);
@@ -236,7 +235,7 @@ class ItemUI {
             ws_client.send(JSON.stringify({
                 item_id: this.itemId,
                 channel: "history_log",
-                action: "stdin",  // FIXME: or just stdin/msg_stdin__cls
+                action: "stdin",
                 text: io_line,
             }));
             this.element_InputBox.value = '';
