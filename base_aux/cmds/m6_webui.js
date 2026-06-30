@@ -13,9 +13,9 @@ function ws_client__connect() {
     // ---------------------------------------------------
     ws_client.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        msg_str = toString_MapObj(msg)
 
-        console.log("[WsClient]📩", msg_str); // TODO: apply TOString!!!
+        msg_str = toString_MapObj(msg)
+        console.log("[WsClient]📩", msg_str);
 
         const msg__itemid = msg?.item_id;
         const msg__channel = msg?.channel;
@@ -24,39 +24,22 @@ function ws_client__connect() {
         const msg__text = msg?.text;
 
         if (msg__channel === "history_log") {
-            const ui = itemsManager.items_map.get(msg__itemid);
-            if (ui) {
-                let style = '';
-                if (msg__action === 'stdout') style = 'msg_stdout__cls';
-                else if (msg__action === 'stderr') style = 'msg_stderr__cls';
-                else if (msg__action === 'stdin') style = 'msg_stdin__cls';
-                else style = 'msg_debug__cls';
-
-                ui.addHistoryLine(style, msg__text);
-            }
+            itemsManager.history_append__exe(msg__itemid, msg__action, msg__text)
 
         } else if (msg__channel === "item_control") {
 
             if (msg__action === "create_item") {
-                if (!itemsManager.items_map.has(msg__itemid)) {
-                    itemsManager.addItemElement(msg__itemid);
-                }
+                itemsManager.item_create__exe(msg__itemid);
 
             } else if (msg__action === "delete_item") {
-                const ui = itemsManager.items_map.get(msg__itemid);
-                if (ui) {
-                    ui.destroy();
-                    itemsManager.items_map.delete(msg__itemid);
-                }
+                itemsManager.item_del__exe(msg__itemid);
 
             } else if (msg__action === "clear_history") {
-                const ui = itemsManager.items_map.get(msg__itemid);
-                if (ui) {
-                    ui.element_OutputBox.innerHTML = '';
-                }
+                itemsManager.history_clear__exe(msg__itemid);
             }
 
         } else if (msg__channel === "system") {
+
         }
     };
 
@@ -81,7 +64,7 @@ const itemsManager = {
 
     // Инициализация UI при первой загрузке страницы
     async initUI() {
-        document.getElementById('btn_add_item__id').addEventListener('click', () => this.createNewItem());
+        document.getElementById('btn_add_item__id').addEventListener('click', () => this.item_create__cmd());
         await this.reloadUI();
     },
 
@@ -89,37 +72,29 @@ const itemsManager = {
     async reloadUI() {
         // Удаляем все существующие элементы
         for (const [id, ui] of this.items_map) {
-            ui.destroy();
+            this.item_del__exe(id);
         }
-        this.items_map.clear();
 
         // Загружаем актуальный список с сервера
-        const serverIds = await this.get_IdsServer();
+        const serverIds = await this.items_load__exe();
         for (const idn of serverIds) {
-            this.addItemElement(idn);
+            this.item_create__exe(idn);
         }
-    },
-
-    addItemElement(itemId) {
-        if (this.items_map.has(itemId)) return;
-        const itemUI = new ItemUI(itemId);
-        this.items_map.set(itemId, itemUI);
-        itemUI.init();
     },
 
     // ---------------------------------------------------
-    async get_IdsServer() {
+    async items_load__exe() {
         try {
             const resp = await fetch('/item/list');
             const data = await resp.json();
-            return data.items || [];
+            return data?.items || [];
         } catch {
             return [];
         }
     },
 
     // ---------------------------------------------------
-    async createNewItem() {
+    async item_create__cmd() {
         if (ws_client?.readyState !== WebSocket.OPEN) return;
 
         ws_client.send(JSON.stringify({
@@ -128,7 +103,15 @@ const itemsManager = {
         }));
     },
 
-    async delItem(itemId) {
+    async item_create__exe(itemId) {
+        if (this.items_map.has(itemId)) return;
+        const itemUI = new ItemUI(itemId);
+        this.items_map.set(itemId, itemUI);
+        itemUI.init();
+    },
+
+    // ---------------------------------------------------
+    async item_del__cmd(itemId) {
         if (ws_client?.readyState !== WebSocket.OPEN) return;
 
         ws_client.send(JSON.stringify({
@@ -136,7 +119,36 @@ const itemsManager = {
             channel: "item_control",
             action: "delete_item",
         }));
-    }
+    },
+
+    async item_del__exe(itemId) {
+        const ui = this.items_map.get(itemId);
+        if (ui) {
+            ui.destroy();
+            this.items_map.delete(itemId);
+        }
+    },
+
+    // ---------------------------------------------------
+    async history_append__exe(itemId, style, text) {
+        const ui = this.items_map.get(itemId);
+        if (ui) {
+            if (style === 'stdout') style = 'msg_stdout__cls';
+            else if (style === 'stderr') style = 'msg_stderr__cls';
+            else if (style === 'stdin') style = 'msg_stdin__cls';
+            else style = 'msg_debug__cls';
+
+            ui.addHistoryLine(style, text);
+        }
+    },
+
+    async history_clear__exe(itemId) {
+        const ui = this.items_map.get(itemId);
+        if (ui) {
+            ui.element_OutputBox.innerHTML = '';
+        }
+    },
+
 };
 
 // --------------------------------------------------------------
@@ -155,7 +167,7 @@ class ItemUI {
         this.loadHistory();
     }
 
-    render() {
+    async render() {
         const div_itembox = document.createElement('div');
         div_itembox.className = 'item__cls';
 
@@ -187,7 +199,7 @@ class ItemUI {
         btnClose.setAttribute('data-btn_outline', "red");
         btnClose.textContent = 'X';
         btnClose.title = 'Close';
-        btnClose.onclick = () => itemsManager.delItem(this.itemId);
+        btnClose.onclick = () => itemsManager.item_del__cmd(this.itemId);
 
         header_div2.appendChild(btnClear);
         header_div2.appendChild(btnReconnect);
