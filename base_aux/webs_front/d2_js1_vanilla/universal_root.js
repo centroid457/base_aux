@@ -491,16 +491,41 @@ try {
 // =====================================================================================================================
 // STRING
 // ---------------------------------------------------------------------------------------------------------------------
-function toString_Map(source) {
-    if (!(source instanceof Map)) {
-        return String(source);  // FIXME: return null???
+function toString_MapObj(source) {
+    let entries = [];
+    let name = "";
+
+    // 1=PRIMITIVES ----------
+    if (source === null || source === undefined) { return String(source); }
+    if (typeof source === 'string') return `"${source}"`;   // для строгих кавычек! иначе поля будет не видно! внутри могут быть двоеточие!
+    if (typeof source === 'symbol') return source.toString();
+    if (typeof source !== 'object') return String(source);  // числа, булевы
+
+    // 2=CONTAINERS ----------
+    if (Array.isArray(source)) {
+        const items = source.map(item => toString_MapObj(item));
+        return `[${items.join(', ')}]`;
     }
 
-    const entries = [];
-    for (const [k, v] of source) {
-        entries.push(`${k}:${v}`);
+    // 3=MAP/OBJ ----------
+    if (source instanceof Map) {
+        name = "Map";
+        entries = Array.from(source.entries());
+    } else if (typeof source === 'object' && source !== null) {
+        name = "Obj";
+        entries = Object.entries(source);
+    } else {
+        return String(source);  // just in case!!! FIXME: return null???
     }
-    return `Map(${entries.join('; ')})`;
+
+    const parts = entries.map(
+        ([k, v]) => {
+            const keyStr = typeof k === 'string' ? k : JSON.stringify(k);
+            const valStr = toString_MapObj(v);
+            return `${keyStr}:${valStr}`;
+        }
+    );
+    return `${name}(${parts.join('; ')})`;
 }
 
 
@@ -763,7 +788,7 @@ function _clone_element(original__el, def_property_name, variants, with_attrs=fa
         let label_str;
 
         if (label_value instanceof Map) {
-            label_str = toString_Map(label_value);
+            label_str = toString_MapObj(label_value);
         } else {
             label_str = String(label_value);
         }

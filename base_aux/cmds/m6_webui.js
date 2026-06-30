@@ -13,7 +13,9 @@ function ws_client__connect() {
     // ---------------------------------------------------
     ws_client.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        console.log(`[WsClient]✉${msg}`); // TODO: apply TOString!!!
+        msg_str = toString_MapObj(msg)
+
+        console.log("[WsClient]✉", msg_str); // TODO: apply TOString!!!
 
         const msg__itemid = msg?.item_id;
         const msg__channel = msg?.channel;
