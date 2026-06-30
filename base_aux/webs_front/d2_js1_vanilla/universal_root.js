@@ -1235,6 +1235,15 @@ OnLoadRunner.add(onload__apply_wheel_textsize);
 
 
 // =====================================================================================================================
+async function fetchJSON(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = response.json();
+    return data;
+}
+
+
+// =====================================================================================================================
 // универсальный WebSocket-клиент (полностью независим)
 class WebSocketClient {
     // Дефолтные значения
@@ -1276,6 +1285,20 @@ class WebSocketClient {
     }
 
     // -------------------------------------------------------------------------
+    // Внутренний метод вызова всех подписчиков
+    #emit(event, data) {
+        const cbs = this.#listeners[event];
+        if (!cbs) return;
+        for (const cb of cbs) {
+            try {
+                cb(data);
+            } catch (e) {
+                console.error(`[WsClient] error in '${event}' callback`, e);
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
     /** Открыть (или переоткрыть) соединение */
     connect() {
         // Сбрасываем таймер, если висел
@@ -1294,7 +1317,7 @@ class WebSocketClient {
         this.#socket = new WebSocket(this.#url);
 
         this.#socket.onopen = () => {
-            console.log('[WsClient] 🟢 connected');
+            console.log('[WsClient.onopen] 🟢 connected');
             this.#emit('open');
         };
 
@@ -1311,7 +1334,7 @@ class WebSocketClient {
         };
 
         this.#socket.onclose = () => {
-            console.log('[WsClient] 🔴 closed');
+            console.log('[WsClient.onclose] 🔴 closed');
             this.#emit('close');
             if (!this.#isManualClose) {
                 const delay = this.#reconnectDelay;
@@ -1322,6 +1345,7 @@ class WebSocketClient {
         };
 
         this.#socket.onerror = (err) => {
+            console.log('[WsClient.onerror] 🟡 error');
             this.#emit('error', err);
         };
     }
@@ -1349,7 +1373,27 @@ class WebSocketClient {
     }
 
     // -------------------------------------------------------------------------
-    /** Закрыть соединение (без автоматического переподключения) */
+    /** Подписаться на событие */
+    callback_add(event, callback) {
+        if (this.#listeners[event]) {
+            this.#listeners[event].push(callback);
+        }
+    }
+
+    callback_del(event, callback) {
+        const arr = this.#listeners[event];
+        if (arr) {
+            this.#listeners[event] = arr.filter(cb => cb !== callback);
+        }
+    }
+
+    event_clear(event) {
+        if (this.#listeners[event]) {
+            this.#listeners[event] = [];
+        }
+    }
+
+    // -------------------------------------------------------------------------
     stop() {
         this.#isManualClose = true;
         if (this.#reconnectTimerId) {
@@ -1359,32 +1403,6 @@ class WebSocketClient {
         this.#socket?.close();
     }
 
-    // -------------------------------------------------------------------------
-    /** Подписаться на событие */
-    callback_add(event, callback) {
-        if (this.#listeners[event]) {
-            this.#listeners[event].push(callback);
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    /** Отписаться от конкретного обработчика */
-    callback_del(event, callback) {
-        const arr = this.#listeners[event];
-        if (arr) {
-            this.#listeners[event] = arr.filter(cb => cb !== callback);
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    /** Удалить все обработчики события */
-    callback_clear(event) {
-        if (this.#listeners[event]) {
-            this.#listeners[event] = [];
-        }
-    }
-
-    // -------------------------------------------------------------------------
     /** Полное уничтожение экземпляра: остановка + очистка всех ресурсов */
     destroy() {
         this.stop();
@@ -1393,20 +1411,6 @@ class WebSocketClient {
         }
         this.#socket = null;
         this.#listeners = { open: [], close: [], message: [], error: [], reconnecting: [] };
-    }
-
-    // -------------------------------------------------------------------------
-    // Внутренний метод вызова всех подписчиков
-    #emit(event, data) {
-        const cbs = this.#listeners[event];
-        if (!cbs) return;
-        for (const cb of cbs) {
-            try {
-                cb(data);
-            } catch (e) {
-                console.error(`[WsClient] error in '${event}' callback`, e);
-            }
-        }
     }
 }
 

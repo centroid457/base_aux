@@ -13,7 +13,6 @@ const itemsManager = {
     // Инициализация UI при загрузке страницы
     async initUI() {
         document.getElementById('btn_add_item__id').addEventListener('click', () => this.send__item_create());
-        // reloadUI теперь будет вызываться отдельно (при открытии WS или сразу после старта)
     },
 
     // Полная очистка и перестройка UI по данным с сервера
@@ -48,14 +47,6 @@ const itemsManager = {
         });
     },
 
-    send__item_del(itemId) {
-        this.ws?.send_json({
-            item_id: itemId,
-            channel: "item_control",
-            action: "delete_item",
-        });
-    },
-
     item_create(itemId) {
         if (this.items_map.has(itemId)) return;
         const itemUI = new ItemUI(itemId, this.ws);   // передаём ws в UI
@@ -82,7 +73,6 @@ const itemsManager = {
 // UI отдельного объекта
 // =====================================================================================================================
 class ItemUI {
-    // Принимает идентификатор и ссылку на WebSocket‑клиент
     constructor(itemId, ws) {
         this.itemId = itemId;
         this.ws = ws;                       // теперь не зависит от глобальной переменной
@@ -93,9 +83,10 @@ class ItemUI {
 
     init() {
         this.render();
-        this.loadHistory();
+        this.history_load();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     async render() {
         const div_itembox = document.createElement('div');
         div_itembox.className = 'item__cls';
@@ -128,7 +119,7 @@ class ItemUI {
         btnClose.setAttribute('data-btn_outline', "red");
         btnClose.textContent = 'X';
         btnClose.title = 'Close';
-        btnClose.onclick = () => itemsManager.send__item_del(this.itemId);
+        btnClose.onclick = () => this.send__delete();
 
         header_div2.appendChild(btnClear);
         header_div2.appendChild(btnReconnect);
@@ -157,7 +148,7 @@ class ItemUI {
         input.addEventListener('change', () => this.send__input());
     }
 
-    // ---------- отправка команд через this.ws ----------
+    // -----------------------------------------------------------------------------------------------------------------
     send__input() {
         const line = this.element_InputBox.value.trim();
         if (!line) return;
@@ -189,13 +180,21 @@ class ItemUI {
         });
     }
 
+    send__delete() {
+        this.ws?.send_json({
+            item_id: this.itemId,
+            channel: "item_control",
+            action: "delete_item",
+        });
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     history_clear() {
         this.element_OutputBox.innerHTML = '';
     }
 
-    // ---------- загрузка истории с REST ----------
-    async loadHistory() {
-        this.element_OutputBox.innerHTML = '';
+    async history_load() {
+        this.history_clear();
         try {
             const resp = await fetch(`/item/history/get/${this.itemId}`);
             const history = await resp.json();
@@ -206,7 +205,7 @@ class ItemUI {
                 log_line.debug?.forEach(l  => this.history_add_line('debug', l));
             });
         } catch (err) {
-            this.history_add_line('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
+            this.history_add_line('stderr', `Ошибка history_load: ${err.message}`);
         }
     }
 
@@ -226,10 +225,12 @@ class ItemUI {
         this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     destroy() {
         this.element_ItemBox?.remove();
     }
 }
+
 
 // =====================================================================================================================
 // Запуск
@@ -242,7 +243,6 @@ window.onload = async () => {
     itemsManager.set_ws_client(ws);
 
     // 3. Настраиваем подписки на события
-    //    — диспетчер входящих сообщений
     ws.callback_add('message', (msg) => {
         const itemId   = msg?.item_id;
         const channel  = msg?.channel;
@@ -269,16 +269,9 @@ window.onload = async () => {
         await itemsManager.reloadUI();
     });
 
-    //    — для отладки можно подписаться на остальные события
-    ws.callback_add('close', () => console.log('WebSocket closed'));
-    ws.callback_add('error', (e) => console.error('WebSocket error', e));
-    ws.callback_add('reconnecting', ({ delay }) => console.log(`Reconnecting in ${delay}ms`));
-
     // 4. Инициализируем UI (кнопка «создать» и т.п.) и сразу загружаем данные
-    await itemsManager.initUI();        // только слушатели, без данных
-    await itemsManager.reloadUI();      // первая загрузка через REST
+    await itemsManager.initUI();
 
-    // 5. Запускаем WebSocket (теперь onopen снова вызовет reloadUI, но это безопасно)
     ws.connect();
 };
 
