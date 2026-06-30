@@ -1,65 +1,19 @@
-// --------------------------------------------------------------
-// WebSocket клиент (транспорт + диспетчеризация)
-// --------------------------------------------------------------
-const ws_client = {
-    socket: null,
-    callback_onmessage: null,   // будет назначена снаружи
-    callback_onopen: null,      // будет назначена снаружи
-
-    // Удобная отправка JSON
-    // Возвращает true, если сообщение реально ушло в сокет
-    send_json(data) {
-        if (this.socket?.readyState !== WebSocket.OPEN) {
-            console.warn('[WsClient] socket not open, message dropped', data);
-            return false;
-        }
-        this.socket.send(JSON.stringify(data));
-        return true;
-    },
-
-    // Запуск WebSocket соединения
-    connect() {
-        if (this.socket) {
-            this.socket.close();
-        }
-
-        console.log("[WsClient] ⌛ try connect");
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        this.socket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
-
-        // ---------- обработка входящих сообщений ----------
-        this.socket.onmessage = (event) => {
-            const msg_json = JSON.parse(event.data);
-            console.log("[WsClient] 📩", JSON.stringify(msg_json));
-            // передаём управление зарегистрированному диспетчеру
-            if (typeof this.callback_onmessage === 'function') {
-                this.callback_onmessage(msg_json);
-            }
-        };
-
-        this.socket.onopen = async () => {
-            console.log("[WsClient] 🟢 connected");
-            // Полная перезагрузка UI с нуля
-            await itemsManager.reloadUI();
-        };
-
-        this.socket.onclose = () => {
-            console.log("[WsClient] 🔴 closed, reconnecting in 3s...");
-            setTimeout(() => this.connect(), 3000);
-        };
-    }
-};
-
-// --------------------------------------------------------------
+// =====================================================================================================================
 // Глобальный менеджер объектов (только бизнес-логика)
-// --------------------------------------------------------------
+// =====================================================================================================================
 const itemsManager = {
     items_map: new Map(),
+    ws: null,                         // будет назначен снаружи
+
+    // Сохранить ссылку на WebSocket‑клиент
+    set_ws_client(wsClient) {
+        this.ws = wsClient;
+    },
 
     // Инициализация UI при загрузке страницы
     async initUI() {
         document.getElementById('btn_add_item__id').addEventListener('click', () => this.send__item_create());
-        await this.reloadUI();
+        // reloadUI теперь будет вызываться отдельно (при открытии WS или сразу после старта)
     },
 
     // Полная очистка и перестройка UI по данным с сервера
@@ -86,16 +40,16 @@ const itemsManager = {
         }
     },
 
-    // ---------- отправка команд (используем ws_client.send_json) ----------
+    // ---------- отправка команд (используем this.ws) ----------
     send__item_create() {
-        ws_client.send_json({
+        this.ws?.send_json({
             channel: "item_control",
             action: "create_item",
         });
     },
 
     send__item_del(itemId) {
-        ws_client.send_json({
+        this.ws?.send_json({
             item_id: itemId,
             channel: "item_control",
             action: "delete_item",
@@ -104,7 +58,7 @@ const itemsManager = {
 
     item_create(itemId) {
         if (this.items_map.has(itemId)) return;
-        const itemUI = new ItemUI(itemId);
+        const itemUI = new ItemUI(itemId, this.ws);   // передаём ws в UI
         this.items_map.set(itemId, itemUI);
         itemUI.init();
     },
@@ -124,37 +78,14 @@ const itemsManager = {
     },
 };
 
-// --------------------------------------------------------------
-// Диспетчер входящих WS-сообщений (назначается в ws_client)
-// --------------------------------------------------------------
-ws_client.callback_onmessage = (msg) => {
-    const itemId   = msg?.item_id;
-    const channel  = msg?.channel;
-    const action   = msg?.action;
-    const text     = msg?.text;
-
-    if (channel === "history_log") {
-        itemsManager.history_append(itemId, action, text);
-
-    } else if (channel === "item_control") {
-        if (action === "create_item") {
-            itemsManager.item_create(itemId);
-        } else if (action === "delete_item") {
-            itemsManager.item_del(itemId);
-        } else if (action === "clear_history") {
-            itemsManager.history_clear(itemId);
-        }
-    } else if (channel === "system") {
-        // системные сообщения (пока пусто)
-    }
-};
-
-// --------------------------------------------------------------
+// =====================================================================================================================
 // UI отдельного объекта
-// --------------------------------------------------------------
+// =====================================================================================================================
 class ItemUI {
-    constructor(itemId) {
+    // Принимает идентификатор и ссылку на WebSocket‑клиент
+    constructor(itemId, ws) {
         this.itemId = itemId;
+        this.ws = ws;                       // теперь не зависит от глобальной переменной
         this.element_ItemBox   = null;
         this.element_OutputBox = null;
         this.element_InputBox  = null;
@@ -226,12 +157,12 @@ class ItemUI {
         input.addEventListener('change', () => this.send__input());
     }
 
-    // ---------- отправка команд через ws_client ----------
+    // ---------- отправка команд через this.ws ----------
     send__input() {
         const line = this.element_InputBox.value.trim();
         if (!line) return;
 
-        const sent = ws_client.send_json({
+        const sent = this.ws?.send_json({
             item_id: this.itemId,
             channel: "history_log",
             action: "stdin",
@@ -243,7 +174,7 @@ class ItemUI {
     }
 
     send__reconnect() {
-        ws_client.send_json({
+        this.ws?.send_json({
             item_id: this.itemId,
             channel: "item_control",
             action: "reconnect_item",
@@ -251,7 +182,7 @@ class ItemUI {
     }
 
     send__history_clear() {
-        ws_client.send_json({
+        this.ws?.send_json({
             item_id: this.itemId,
             channel: "item_control",
             action: "clear_history",
@@ -300,10 +231,56 @@ class ItemUI {
     }
 }
 
-// --------------------------------------------------------------
+// =====================================================================================================================
 // Запуск
-// --------------------------------------------------------------
+// =====================================================================================================================
 window.onload = async () => {
-    await itemsManager.initUI();   // первичная загрузка через REST + регистрация кнопки
-    ws_client.connect();           // WebSocket (onopen сам вызовет reloadUI)
+    // 1. Создаём WebSocket‑клиент (пока не подключаемся)
+    const ws = new WebSocketClient('/ws/client', { autoConnect: false });
+
+    // 2. Пробрасываем его в менеджер
+    itemsManager.set_ws_client(ws);
+
+    // 3. Настраиваем подписки на события
+    //    — диспетчер входящих сообщений
+    ws.callback_add('message', (msg) => {
+        const itemId   = msg?.item_id;
+        const channel  = msg?.channel;
+        const action   = msg?.action;
+        const text     = msg?.text;
+
+        if (channel === "history_log") {
+            itemsManager.history_append(itemId, action, text);
+        } else if (channel === "item_control") {
+            if (action === "create_item") {
+                itemsManager.item_create(itemId);
+            } else if (action === "delete_item") {
+                itemsManager.item_del(itemId);
+            } else if (action === "clear_history") {
+                itemsManager.history_clear(itemId);
+            }
+        } else if (channel === "system") {
+            // системные сообщения (пока пусто)
+        }
+    });
+
+    //    — при успешном подключении перезагружаем UI
+    ws.callback_add('open', async () => {
+        await itemsManager.reloadUI();
+    });
+
+    //    — для отладки можно подписаться на остальные события
+    ws.callback_add('close', () => console.log('WebSocket closed'));
+    ws.callback_add('error', (e) => console.error('WebSocket error', e));
+    ws.callback_add('reconnecting', ({ delay }) => console.log(`Reconnecting in ${delay}ms`));
+
+    // 4. Инициализируем UI (кнопка «создать» и т.п.) и сразу загружаем данные
+    await itemsManager.initUI();        // только слушатели, без данных
+    await itemsManager.reloadUI();      // первая загрузка через REST
+
+    // 5. Запускаем WebSocket (теперь onopen снова вызовет reloadUI, но это безопасно)
+    ws.connect();
 };
+
+
+// =====================================================================================================================

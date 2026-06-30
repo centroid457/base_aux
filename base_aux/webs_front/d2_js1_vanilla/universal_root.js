@@ -1235,6 +1235,183 @@ OnLoadRunner.add(onload__apply_wheel_textsize);
 
 
 // =====================================================================================================================
+// универсальный WebSocket-клиент (полностью независим)
+class WebSocketClient {
+    // Дефолтные значения
+    static DEFAULT_RECONNECT_DELAY = 3000;  // мс
+
+    // Приватные поля
+    #url;
+    #socket = null;
+    #reconnectDelay;
+    #reconnectTimerId = null;          // таймер переподключения
+    #isManualClose = false;
+    #listeners = {
+        open: [],
+        close: [],
+        message: [],
+        error: [],
+        reconnecting: [],
+    };
+
+    /**
+     * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
+     * @param {object}  [options]
+     * @param {number}  [options.reconnectDelay=WebSocketClient.DEFAULT_RECONNECT_DELAY]
+     * @param {boolean} [options.autoConnect=true]
+     */
+    constructor(urlOrPath, options = {}) {
+        if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
+            this.#url = urlOrPath;
+        } else {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            this.#url = `${protocol}//${window.location.host}${urlOrPath}`;
+        }
+
+        this.#reconnectDelay = options.reconnectDelay ?? WebSocketClient.DEFAULT_RECONNECT_DELAY;
+
+        if (options.autoConnect !== false) {
+            this.connect();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    /** Открыть (или переоткрыть) соединение */
+    connect() {
+        // Сбрасываем таймер, если висел
+        if (this.#reconnectTimerId) {
+            clearTimeout(this.#reconnectTimerId);
+            this.#reconnectTimerId = null;
+        }
+
+        if (this.#socket) {
+            this.#isManualClose = true;
+            this.#socket.close();
+        }
+
+        console.log('[WsClient] ⌛ connecting to', this.#url);
+        this.#isManualClose = false;
+        this.#socket = new WebSocket(this.#url);
+
+        this.#socket.onopen = () => {
+            console.log('[WsClient] 🟢 connected');
+            this.#emit('open');
+        };
+
+        this.#socket.onmessage = (event) => {
+            let data;
+            try {
+                data = JSON.parse(event.data);
+            } catch (e) {
+                console.error('[WsClient] failed to parse message', e);
+                return;
+            }
+            console.log('[WsClient] 📩', data);
+            this.#emit('message', data);
+        };
+
+        this.#socket.onclose = () => {
+            console.log('[WsClient] 🔴 closed');
+            this.#emit('close');
+            if (!this.#isManualClose) {
+                const delay = this.#reconnectDelay;
+                console.log(`[WsClient] reconnecting in ${delay}ms...`);
+                this.#emit('reconnecting', { delay });
+                this.#reconnectTimerId = setTimeout(() => this.connect(), delay);
+            }
+        };
+
+        this.#socket.onerror = (err) => {
+            this.#emit('error', err);
+        };
+    }
+
+    // -------------------------------------------------------------------------
+    /** Состояние подключения */
+    is_connected() {
+        return this.#socket?.readyState === WebSocket.OPEN;
+    }
+
+    // -------------------------------------------------------------------------
+    /** Отправить JSON-данные. Возвращает true, если сообщение отправлено */
+    send_json(data) {
+        if (!this.is_connected()) {
+            console.warn('[WsClient] socket not open, message dropped', data);
+            return false;
+        }
+        try {
+            this.#socket.send(JSON.stringify(data));
+            return true;
+        } catch (e) {
+            console.error('[WsClient] send_json failed', e);
+            return false;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    /** Закрыть соединение (без автоматического переподключения) */
+    stop() {
+        this.#isManualClose = true;
+        if (this.#reconnectTimerId) {
+            clearTimeout(this.#reconnectTimerId);
+            this.#reconnectTimerId = null;
+        }
+        this.#socket?.close();
+    }
+
+    // -------------------------------------------------------------------------
+    /** Подписаться на событие */
+    callback_add(event, callback) {
+        if (this.#listeners[event]) {
+            this.#listeners[event].push(callback);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    /** Отписаться от конкретного обработчика */
+    callback_del(event, callback) {
+        const arr = this.#listeners[event];
+        if (arr) {
+            this.#listeners[event] = arr.filter(cb => cb !== callback);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    /** Удалить все обработчики события */
+    callback_clear(event) {
+        if (this.#listeners[event]) {
+            this.#listeners[event] = [];
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    /** Полное уничтожение экземпляра: остановка + очистка всех ресурсов */
+    destroy() {
+        this.stop();
+        for (const key of Object.keys(this.#listeners)) {
+            this.#listeners[key] = [];
+        }
+        this.#socket = null;
+        this.#listeners = { open: [], close: [], message: [], error: [], reconnecting: [] };
+    }
+
+    // -------------------------------------------------------------------------
+    // Внутренний метод вызова всех подписчиков
+    #emit(event, data) {
+        const cbs = this.#listeners[event];
+        if (!cbs) return;
+        for (const cb of cbs) {
+            try {
+                cb(data);
+            } catch (e) {
+                console.error(`[WsClient] error in '${event}' callback`, e);
+            }
+        }
+    }
+}
+
+
+// =====================================================================================================================
 // FINISH
 // ---------------------------------------------------------------------------------------------------------------------
 OnLoadRunner.run();
