@@ -1,75 +1,71 @@
 // --------------------------------------------------------------
-// WebSocket
+// WebSocket клиент (транспорт + диспетчеризация)
 // --------------------------------------------------------------
-let ws_client = null;
+const ws_client = {
+    socket: null,
+    messageHandler: null,   // будет назначена снаружи
 
-
-function ws_client__connect() {
-    console.log("[WsClient]⌛try connect");
-
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws_client = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
-
-    // ---------------------------------------------------
-    ws_client.onmessage = (e) => {
-        const msg = JSON.parse(e.data);
-
-        msg_str = toString_MapObj(msg)
-        console.log("[WsClient]📩", msg_str);
-
-        const msg__itemid = msg?.item_id;
-        const msg__channel = msg?.channel;
-
-        const msg__action = msg?.action;
-        const msg__text = msg?.text;
-
-        if (msg__channel === "history_log") {
-            itemsManager.history_append(msg__itemid, msg__action, msg__text)
-
-        } else if (msg__channel === "item_control") {
-
-            if (msg__action === "create_item") {
-                itemsManager.item_create(msg__itemid);
-
-            } else if (msg__action === "delete_item") {
-                itemsManager.item_del(msg__itemid);
-
-            } else if (msg__action === "clear_history") {
-                itemsManager.history_clear(msg__itemid);
-            }
-
-        } else if (msg__channel === "system") {
-
+    // Удобная отправка JSON
+    // Возвращает true, если сообщение реально ушло в сокет
+    send_json(data) {
+        if (this.socket?.readyState !== WebSocket.OPEN) {
+            console.warn('[WsClient] socket not open, message dropped', data);
+            return false;
         }
-    };
+        this.socket.send(JSON.stringify(data));
+        return true;
+    },
 
-    // ---------------------------------------------------
-    ws_client.onopen = async () => {
-        console.log("[WsClient]🟢connected");
-        // Полная перезагрузка UI с нуля
-        await itemsManager.reloadUI();
-    };
+    // Запуск WebSocket соединения
+    connect() {
+        if (this.socket) {
+            this.socket.close();
+        }
 
-    ws_client.onclose = () => {
-        console.log("[WsClient]🔴closed, reconnecting in 3s...");
-        setTimeout(ws_client__connect, 3000);
-    };
-}
+        console.log("[WsClient] ⌛ try connect");
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        this.socket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
+
+        // ---------- обработка входящих сообщений ----------
+        this.socket.onmessage = (e) => {
+            const msg = JSON.parse(e.data);
+            // логирование (утилита toString_MapObj заменена на простой вывод)
+            console.log("[WsClient] 📩", JSON.stringify(msg));
+
+            // передаём управление зарегистрированному диспетчеру
+            if (typeof this.messageHandler === 'function') {
+                this.messageHandler(msg);
+            }
+        };
+
+        this.socket.onopen = async () => {
+            console.log("[WsClient] 🟢 connected");
+            // Полная перезагрузка UI с нуля
+            await itemsManager.reloadUI();
+        };
+
+        this.socket.onclose = () => {
+            console.log("[WsClient] 🔴 closed, reconnecting in 3s...");
+            setTimeout(() => this.connect(), 3000);
+        };
+    }
+};
 
 // --------------------------------------------------------------
-// Глобальный менеджер объектов
+// Глобальный менеджер объектов (только бизнес-логика)
 // --------------------------------------------------------------
 const itemsManager = {
     items_map: new Map(),
 
-    // Инициализация UI при первой загрузке страницы
+    // Инициализация UI при загрузке страницы
     async initUI() {
         document.getElementById('btn_add_item__id').addEventListener('click', () => this.send__item_create());
         await this.reloadUI();
     },
 
-    // Полная очистка и повторное построение UI на основе данных сервера
+    // Полная очистка и перестройка UI по данным с сервера
     async reloadUI() {
+        // удаляем все существующие UI-элементы
         for (const [id, ui] of this.items_map) {
             this.item_del(id);
         }
@@ -80,9 +76,8 @@ const itemsManager = {
         }
     },
 
-    // ---------------------------------------------------
+    // Загрузка актуального списка объектов с сервера
     async items_load() {
-        // актуальный список с сервера
         try {
             const resp = await fetch('/item/list');
             const data = await resp.json();
@@ -92,35 +87,30 @@ const itemsManager = {
         }
     },
 
-    // ---------------------------------------------------
-    async send__item_create() {
-        if (ws_client?.readyState !== WebSocket.OPEN) return;
-
-        ws_client.send(JSON.stringify({
+    // ---------- отправка команд (используем ws_client.send_json) ----------
+    send__item_create() {
+        ws_client.send_json({
             channel: "item_control",
             action: "create_item",
-        }));
+        });
     },
 
-    async item_create(itemId) {
+    send__item_del(itemId) {
+        ws_client.send_json({
+            item_id: itemId,
+            channel: "item_control",
+            action: "delete_item",
+        });
+    },
+
+    item_create(itemId) {
         if (this.items_map.has(itemId)) return;
         const itemUI = new ItemUI(itemId);
         this.items_map.set(itemId, itemUI);
         itemUI.init();
     },
 
-    // ---------------------------------------------------
-    async send__item_del(itemId) {
-        if (ws_client?.readyState !== WebSocket.OPEN) return;
-
-        ws_client.send(JSON.stringify({
-            item_id: itemId,
-            channel: "item_control",
-            action: "delete_item",
-        }));
-    },
-
-    async item_del(itemId) {
+    item_del(itemId) {
         const ui = this.items_map.get(itemId);
         if (ui) {
             ui.destroy();
@@ -128,37 +118,50 @@ const itemsManager = {
         }
     },
 
-    // ---------------------------------------------------
-    async history_append(itemId, style, text) {
-        const ui = this.items_map.get(itemId);
-        if (ui) {
-            if (style === 'stdout') style = 'msg_stdout__cls';
-            else if (style === 'stderr') style = 'msg_stderr__cls';
-            else if (style === 'stdin') style = 'msg_stdin__cls';
-            else style = 'msg_debug__cls';
-
-            ui.addHistoryLine(style, text);
-        }
+    // ---------- обработчики входящих данных ----------
+    history_append(itemId, style, text) {
+        this.items_map.get(itemId)?.history_add_line(style, text);
     },
 
-    async history_clear(itemId) {
-        const ui = this.items_map.get(itemId);
-        if (ui) {
-            ui.element_OutputBox.innerHTML = '';
-        }
+    history_clear(itemId) {
+        this.items_map.get(itemId)?.history_clear();
     },
-
 };
 
 // --------------------------------------------------------------
-// объект
+// Диспетчер входящих WS-сообщений (назначается в ws_client)
+// --------------------------------------------------------------
+ws_client.messageHandler = (msg) => {
+    const itemId   = msg?.item_id;
+    const channel  = msg?.channel;
+    const action   = msg?.action;
+    const text     = msg?.text;
+
+    if (channel === "history_log") {
+        itemsManager.history_append(itemId, action, text);
+
+    } else if (channel === "item_control") {
+        if (action === "create_item") {
+            itemsManager.item_create(itemId);
+        } else if (action === "delete_item") {
+            itemsManager.item_del(itemId);
+        } else if (action === "clear_history") {
+            itemsManager.history_clear(itemId);
+        }
+    } else if (channel === "system") {
+        // системные сообщения (пока пусто)
+    }
+};
+
+// --------------------------------------------------------------
+// UI отдельного объекта
 // --------------------------------------------------------------
 class ItemUI {
     constructor(itemId) {
         this.itemId = itemId;
-        this.element_ItemBox = null;
+        this.element_ItemBox   = null;
         this.element_OutputBox = null;
-        this.element_InputBox = null;
+        this.element_InputBox  = null;
     }
 
     init() {
@@ -171,9 +174,9 @@ class ItemUI {
         div_itembox.className = 'item__cls';
 
         // Header
-        const header = document.createElement('header');
-        const header_div1 = document.createElement('div');
-        const header_div2 = document.createElement('div');
+        const header       = document.createElement('header');
+        const header_div1  = document.createElement('div');
+        const header_div2  = document.createElement('div');
         header.appendChild(header_div1);
         header.appendChild(header_div2);
 
@@ -186,13 +189,13 @@ class ItemUI {
         btnClear.setAttribute('data-btn_outline', "blue");
         btnClear.textContent = 'clear';
         btnClear.title = 'Clear History';
-        btnClear.onclick = () => this.sendDelHistory();
+        btnClear.onclick = () => this.send__history_clear();
 
         const btnReconnect = document.createElement('button');
         btnReconnect.setAttribute('data-btn_outline', "blue");
         btnReconnect.textContent = 'Reconnect';
         btnReconnect.title = 'Reconnect';
-        btnReconnect.onclick = () => this.sendReconnect();
+        btnReconnect.onclick = () => this.send__reconnect();
 
         const btnClose = document.createElement('button');
         btnClose.setAttribute('data-btn_outline', "red");
@@ -211,8 +214,8 @@ class ItemUI {
 
         // Input area
         const footer = document.createElement('footer');
-        const input = document.createElement('input');
-        input.type = 'text';
+        const input  = document.createElement('input');
+        input.type        = 'text';
         input.placeholder = 'Введите команду и нажмите Enter';
         this.element_InputBox = input;
         footer.appendChild(input);
@@ -223,71 +226,79 @@ class ItemUI {
         this.element_ItemBox = div_itembox;
         document.getElementById('items_container__id').appendChild(div_itembox);
 
-        input.addEventListener('change', () => this.sendInput());
+        // Отправка строки по Enter
+        input.addEventListener('change', () => this.send__input());
     }
 
-    // ---------------------------------------------------
-    sendInput() {
-        if (ws_client?.readyState !== WebSocket.OPEN) return;
+    // ---------- отправка команд через ws_client ----------
+    send__input() {
+        const line = this.element_InputBox.value.trim();
+        if (!line) return;
 
-        const io_line = this.element_InputBox.value.trim();
-        if (io_line) {
-            ws_client.send(JSON.stringify({
-                item_id: this.itemId,
-                channel: "history_log",
-                action: "stdin",
-                text: io_line,
-            }));
+        const sent = ws_client.send_json({
+            item_id: this.itemId,
+            channel: "history_log",
+            action: "stdin",
+            text: line,
+        });
+        if (sent) {
             this.element_InputBox.value = '';
         }
     }
 
-    sendReconnect() {
-        if (ws_client?.readyState !== WebSocket.OPEN) return;
-
-        ws_client.send(JSON.stringify({
+    send__reconnect() {
+        ws_client.send_json({
             item_id: this.itemId,
             channel: "item_control",
             action: "reconnect_item",
-        }));
+        });
     }
 
-    sendDelHistory() {
-        if (ws_client?.readyState !== WebSocket.OPEN) return;
-
-        ws_client.send(JSON.stringify({
+    send__history_clear() {
+        ws_client.send_json({
             item_id: this.itemId,
             channel: "item_control",
             action: "clear_history",
-        }));
+        });
     }
 
-    // ---------------------------------------------------
+    history_clear() {
+        this.element_OutputBox.innerHTML = '';
+    }
+
+    // ---------- загрузка истории с REST ----------
     async loadHistory() {
         this.element_OutputBox.innerHTML = '';
         try {
             const resp = await fetch(`/item/history/get/${this.itemId}`);
             const history = await resp.json();
             history.forEach(log_line => {
-                if (log_line.input) this.addHistoryLine('msg_stdin__cls', log_line.input);
-                log_line.stdout?.forEach(l => this.addHistoryLine('msg_stdout__cls', l));
-                log_line.stderr?.forEach(l => this.addHistoryLine('msg_stderr__cls', l));
-                log_line.debug?.forEach(l => this.addHistoryLine('msg_debug__cls', l));
+                if (log_line.input) this.history_add_line('stdin', log_line.input);
+                log_line.stdout?.forEach(l => this.history_add_line('stdout', l));
+                log_line.stderr?.forEach(l => this.history_add_line('stderr', l));
+                log_line.debug?.forEach(l  => this.history_add_line('debug', l));
             });
         } catch (err) {
-            this.addHistoryLine('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
+            this.history_add_line('msg_stderr__cls', `Ошибка loadHistory: ${err.message}`);
         }
     }
 
-    addHistoryLine(style_cls, text) {
+    history_add_line(style, text) {
+        let cssClass;
+        switch (style) {
+            case 'stdout': cssClass = 'msg_stdout__cls'; break;
+            case 'stderr': cssClass = 'msg_stderr__cls'; break;
+            case 'stdin':  cssClass = 'msg_stdin__cls'; break;
+            default:       cssClass = 'msg_debug__cls';
+        }
+
         const line = document.createElement('div');
-        line.className = style_cls;
+        line.className = cssClass;
         line.textContent = text;
         this.element_OutputBox.appendChild(line);
         this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
     }
 
-    // ---------------------------------------------------
     destroy() {
         this.element_ItemBox?.remove();
     }
@@ -297,6 +308,6 @@ class ItemUI {
 // Запуск
 // --------------------------------------------------------------
 window.onload = async () => {
-    await itemsManager.initUI();    // первичная загрузка, через REST, регистрирует кнопку и запускает reloadUI
-    ws_client__connect();           // запуск WebSocket (onopen сам вызовет reloadUI)
+    await itemsManager.initUI();   // первичная загрузка через REST + регистрация кнопки
+    ws_client.connect();           // WebSocket (onopen сам вызовет reloadUI)
 };
