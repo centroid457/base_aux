@@ -3,7 +3,8 @@
 // --------------------------------------------------------------
 const ws_client = {
     socket: null,
-    messageHandler: null,   // будет назначена снаружи
+    callback_onmessage: null,   // будет назначена снаружи
+    callback_onopen: null,      // будет назначена снаружи
 
     // Удобная отправка JSON
     // Возвращает true, если сообщение реально ушло в сокет
@@ -27,14 +28,12 @@ const ws_client = {
         this.socket = new WebSocket(`${protocol}//${window.location.host}/ws/client`);
 
         // ---------- обработка входящих сообщений ----------
-        this.socket.onmessage = (e) => {
-            const msg = JSON.parse(e.data);
-            // логирование (утилита toString_MapObj заменена на простой вывод)
-            console.log("[WsClient] 📩", JSON.stringify(msg));
-
+        this.socket.onmessage = (event) => {
+            const msg_json = JSON.parse(event.data);
+            console.log("[WsClient] 📩", JSON.stringify(msg_json));
             // передаём управление зарегистрированному диспетчеру
-            if (typeof this.messageHandler === 'function') {
-                this.messageHandler(msg);
+            if (typeof this.callback_onmessage === 'function') {
+                this.callback_onmessage(msg_json);
             }
         };
 
@@ -111,11 +110,8 @@ const itemsManager = {
     },
 
     item_del(itemId) {
-        const ui = this.items_map.get(itemId);
-        if (ui) {
-            ui.destroy();
-            this.items_map.delete(itemId);
-        }
+        this.items_map.get(itemId)?.destroy();
+        this.items_map.delete(itemId);
     },
 
     // ---------- обработчики входящих данных ----------
@@ -131,7 +127,7 @@ const itemsManager = {
 // --------------------------------------------------------------
 // Диспетчер входящих WS-сообщений (назначается в ws_client)
 // --------------------------------------------------------------
-ws_client.messageHandler = (msg) => {
+ws_client.callback_onmessage = (msg) => {
     const itemId   = msg?.item_id;
     const channel  = msg?.channel;
     const action   = msg?.action;

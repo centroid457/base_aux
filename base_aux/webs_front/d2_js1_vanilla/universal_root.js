@@ -492,6 +492,7 @@ try {
 // STRING
 // ---------------------------------------------------------------------------------------------------------------------
 function toString_MapObj(source) {
+    // fof expected JSON - use simple JSON.stringify(msg_json)!!!!
     let entries = [];
     let name = "";
 
