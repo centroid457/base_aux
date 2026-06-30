@@ -24,8 +24,8 @@ class WsClient(Nest_TasksBg_AbcAio):
             self,
             ws_client: WebSocket,
             queue_client: asyncio.Queue,
-            income_executor: TYPES__CALLBACK_AIO__DATA,
-            callback_onexit: TYPES__CALLBACK_AIO__DATA,
+            callback_onmessage: TYPES__CALLBACK_AIO__DATA,
+            callback_onclose: TYPES__CALLBACK_AIO__DATA,
 
             *args,
             **kwargs
@@ -35,9 +35,9 @@ class WsClient(Nest_TasksBg_AbcAio):
         self.ws_client = ws_client
         self.queue_to_client = queue_client
 
-        self.income_executor: TYPES__CALLBACK_AIO__DATA = income_executor
+        self.income_executor: TYPES__CALLBACK_AIO__DATA = callback_onmessage
         # self.outcome_executor = self._queue_to_ws__retranslator
-        self._tasks_bg__callback_onexit: TYPES__CALLBACK_AIO__DATA = callback_onexit
+        self._tasks_bg__callback_onexit: TYPES__CALLBACK_AIO__DATA = callback_onclose
 
     def _tasks_bg__create_start(self) -> None:
         self._event_stop.clear()    # DONT FORGET!!!

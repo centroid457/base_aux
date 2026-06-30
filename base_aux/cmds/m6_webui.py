@@ -299,8 +299,8 @@ async def ws__client(websocket: WebSocket):
     async with WsClient(
             ws_client=websocket,
             queue_client=client_queue,
-            income_executor=income_executor,
-            callback_onexit=lambda: event_broadcaster.unregister_client(client_id),
+            callback_onmessage=income_executor,
+            callback_onclose=lambda: event_broadcaster.unregister_client(client_id),
     ) as wsc:
         await wsc
 
