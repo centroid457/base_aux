@@ -6,6 +6,8 @@
  * Базовый UI одного элемента.
  */
 class BaseItemUI {
+    static ELEMENTS_SCHEMA = {};
+
     /**
      * @param {string}             itemId
      * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
@@ -17,7 +19,7 @@ class BaseItemUI {
         this.css = cssClasses;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
-        this.elements = { final: null, output: null, input: null };
+        this.elements = Object.assign({ final: null }, new.target.ELEMENTS_SCHEMA);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -134,6 +136,15 @@ class BaseItemUI {
     }
 }
 
+
+class ItemUiTerminal extends BaseItemUI {
+    static ELEMENTS_SCHEMA = {
+        output: null,
+        input: null,
+    };
+
+
+}
 // =============================================================================
 // Менеджер объектов
 // =============================================================================
@@ -145,7 +156,7 @@ class ItemManager {
      * @param {Object}          [config.cssClasses]       – переопределение CSS-классов
      * @param {typeof BaseItemUI} [config.ItemUIClass]   – класс UI элемента
      */
-    constructor({ ws, containerSelector, cssClasses = {}, ItemUIClass = BaseItemUI }) {
+    constructor({ ws, containerSelector, cssClasses = {}, ItemUIClass = ItemUiTerminal }) {
         this.ws = ws;
         this.container = document.querySelector(containerSelector);
         if (!this.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
