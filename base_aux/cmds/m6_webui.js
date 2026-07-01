@@ -20,14 +20,11 @@ class BaseItemUI {
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
         this.elements = Object.assign({ final: null }, new.target.ELEMENTS_SCHEMA);
+
+        this.buildDOM();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    async init() {
-        this.buildDOM();
-        await this._init_post();
-    }
-
     destroy() {
         this.elements.final?.remove();
     }
@@ -38,7 +35,7 @@ class BaseItemUI {
     }
 
     // NESTING =========================================================================================================
-    async _init_post() {
+    async init() {
     }
 
     buildDOM() {
@@ -78,7 +75,7 @@ class ItemUiTerminal extends BaseItemUI {
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    async _init_post() {
+    async init() {
         await this.history_load();
     }
 
@@ -178,20 +175,22 @@ class ItemUiTerminal extends BaseItemUI {
 // =============================================================================
 // Менеджер объектов
 // =============================================================================
-class ItemManager {
+class BaseItemManager {
     /**
      * @param {Object} config
      * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
      * @param {string}          config.containerSelector – CSS-селектор контейнера для элементов
      * @param {Object}          [config.cssClasses]       – переопределение CSS-классов
-     * @param {typeof BaseItemUI} [config.ItemUIClass]   – класс UI элемента
+     * @param {typeof BaseItemUI} [config.itemCls]   – класс UI элемента
      */
-    constructor({ ws, containerSelector, ItemUIClass = ItemUiTerminal }) {
+    constructor({ ws, containerSelector, itemCls = ItemUiTerminal }) {
         this.ws = ws;
-        this.container = document.querySelector(containerSelector);
-        if (!this.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
+        this.elements = {
+            container: document.querySelector(containerSelector),
+        };
+        if (!this.elements.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
 
-        this.ItemUIClass = ItemUIClass;
+        this.itemCls = itemCls;
         this.items = new Map();   // itemId → BaseItemUI
 
         this._setupListeners();
@@ -215,6 +214,7 @@ class ItemManager {
         });
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     /** Полная перезагрузка списка с сервера */
     async reloadAll() {
         for (const id of this.items.keys()) this.itemDelete(id);
@@ -223,19 +223,18 @@ class ItemManager {
             const data = await fetchJSON('/item/list');
             serverIds = data?.items || [];
         } catch { /* оставляем пустым */ }
+
         for (const id of serverIds) await this.itemCreate(id);
     }
 
-    /** Создать элемент (если ещё нет) */
     async itemCreate(itemId) {
         if (this.items.has(itemId)) return;
-        const ui = new this.ItemUIClass(itemId, this.ws);
+        const ui = new this.itemCls(itemId, this.ws);
+        await ui.init()
         this.items.set(itemId, ui);
-        await ui.init();
-        this.container.appendChild(ui.elements.final);
+        this.elements.container.appendChild(ui.elements.final);
     }
 
-    /** Удалить элемент */
     itemDelete(itemId) {
         const ui = this.items.get(itemId);
         if (ui) {
@@ -258,29 +257,21 @@ class ItemManager {
     }
 }
 
+class ItemManager extends BaseItemManager {
+
+
+
+}
+
 
 // =====================================================================================================================
 window.onload = async () => {
-
-    // 1. WebSocket-клиент (ваш универсальный класс, код приведён ниже)
     const ws = new WebSocketClient('/ws/client', { autoConnect: false });
 
-    // 3. Создаём менеджер с конфигурацией
     const manager = new ItemManager({
         ws,
         containerSelector: '#items_container__id',   // куда добавлять элементы
-//        cssClasses: {
-//            itemBox: 'item__cls',
-//            itemId:  'span_item_id__cls',
-//            stdout:  'msg_stdout__cls',
-//            stderr:  'msg_stderr__cls',
-//            stdin:   'msg_stdin__cls',
-//            debug:   'msg_debug__cls',
-//        }
-        // ItemUIClass – если нужен кастомный рендеринг
     });
-
-    // 4. Инициализируем кнопку добавления
     manager.initGlobalUI('#btn_add_item__id');
 
     // 5. Запускаем WebSocket (при подключении автоматически загрузит элементы)
