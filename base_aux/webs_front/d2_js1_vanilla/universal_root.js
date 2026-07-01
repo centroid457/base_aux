@@ -163,7 +163,7 @@ function onload__ws_ping() {
     // Настройки
     const ATTR_NAME__PING_MONITOR = 'data-auto__ping_lost';
     const VALUE__PING_LOST = '1';
-    const VALUE__PING_OK = '';
+    const VALUE__PING_OK = '';  // WARN: ATTR VALUE FOR ELEMENT!!! dont use BOOL!
     const TIMEOUT_RECONNECT = 3000;
 
     // Функция обновления всех целевых элементов
@@ -176,6 +176,7 @@ function onload__ws_ping() {
 
     // Переменные для WebSocket и переподключения
     let ping__enabled = null;
+    let ping__lost = false;
 
     let ws_ping = null;
     let timer__ping_reconnect = null;   // object used reconnection
@@ -208,6 +209,8 @@ function onload__ws_ping() {
         ws_ping = new WebSocket(ws_url);
 
         ws_ping.onopen = () => {
+            ping__lost = false;
+
             if (ping__enabled === null) {
                 ping__enabled = true;
                 console.log("[ws_ping.ping__enabled]🟢MONITORING is ON");
@@ -220,11 +223,12 @@ function onload__ws_ping() {
 
         ws_ping.onclose = () => {
             updateElements(false);  // связь потеряна > атрибут = "1"
-            if (ping__enabled) console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
+            if (ping__enabled && !ping__lost) console.warn(`[ws_ping.onclose]🔴closed (code:${event.code})`);
             // Запускаем переподключение, только если оно не было инициировано вручную (например, при выгрузке страницы)
             if (timer__ping_reconnect === null) {
                 timer__ping_reconnect = setTimeout(ws_ping__init, TIMEOUT_RECONNECT);
             }
+            ping__lost = true
         };
 
         ws_ping.onerror = () => {
@@ -1282,6 +1286,8 @@ class WebSocketClient {
         if (options.autoConnect !== false) {
             this.connect();
         }
+
+        this._was_open = false;
     }
 
     // -------------------------------------------------------------------------
@@ -1301,6 +1307,8 @@ class WebSocketClient {
     // -------------------------------------------------------------------------
     /** Открыть (или переоткрыть) соединение */
     connect() {
+        this._was_open = false;
+
         // Сбрасываем таймер, если висел
         if (this.#reconnectTimerId) {
             clearTimeout(this.#reconnectTimerId);
@@ -1317,6 +1325,7 @@ class WebSocketClient {
         this.#socket = new WebSocket(this.#url);
 
         this.#socket.onopen = () => {
+            this._was_open = true;
             console.log('[WsClient.onopen] 🟢 connected');
             this.#emit('open');
         };
@@ -1334,7 +1343,7 @@ class WebSocketClient {
         };
 
         this.#socket.onclose = () => {
-            console.log('[WsClient.onclose] 🔴 closed');
+        if (this._was_open) console.log('[WsClient.onclose] 🔴 closed');
             this.#emit('close');
             if (!this.#isManualClose) {
                 const delay = this.#reconnectDelay;
@@ -1345,7 +1354,7 @@ class WebSocketClient {
         };
 
         this.#socket.onerror = (err) => {
-            console.log('[WsClient.onerror] 🟡 error');
+            if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
             this.#emit('error', err);
         };
     }
