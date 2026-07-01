@@ -7,16 +7,16 @@
  */
 class BaseItemUI {
     static ELEMENTS_SCHEMA = {};
+    css_map = {};
 
     /**
      * @param {string}             itemId
      * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
-    constructor(itemId, ws, cssClasses) {
+    constructor(itemId, ws) {
         this.itemId = itemId;
         this.ws = ws;
-        this.css = cssClasses;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
         this.elements = Object.assign({ final: null }, new.target.ELEMENTS_SCHEMA);
@@ -39,15 +39,14 @@ class BaseItemUI {
     buildDOM() {
         // as example
         this.elements.final = document.createElement('div');
-        this.elements.final.className = this.css.itemBox;
+        //        this.elements.final.className = this.css_map.itemBox;
 
         // Header
         const header = document.createElement('header');
         const idSpan = document.createElement('span');
-        idSpan.className = this.css.itemId;
+        //        idSpan.className = this.css_map.itemId;
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
-        header.appendChild(this._create_buttons());
     }
 
 
@@ -69,6 +68,14 @@ class ItemUiTerminal extends BaseItemUI {
         output: null,
         input: null,
     };
+    css_map = {
+        itemBox: 'item__cls',
+        itemId:  'span_item_id__cls',
+        stdout:  'msg_stdout__cls',
+        stderr:  'msg_stderr__cls',
+        stdin:   'msg_stdin__cls',
+        debug:   'msg_debug__cls',
+    };
 
     // -----------------------------------------------------------------------------------------------------------------
     async _init_post() {
@@ -78,12 +85,12 @@ class ItemUiTerminal extends BaseItemUI {
     // -----------------------------------------------------------------------------------------------------------------
     buildDOM() {
         this.elements.final = document.createElement('div');
-        this.elements.final.className = this.css.itemBox;
+        this.elements.final.className = this.css_map.itemBox;
 
         // Header
         const header = document.createElement('header');
         const idSpan = document.createElement('span');
-        idSpan.className = this.css.itemId;
+        idSpan.className = this.css_map.itemId;
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
         header.appendChild(this._create_buttons());
@@ -159,15 +166,8 @@ class ItemUiTerminal extends BaseItemUI {
     }
 
     history_add_line(style, text) {
-        const clsMap = {
-            stdout: this.css.stdout,
-            stderr: this.css.stderr,
-            stdin:  this.css.stdin,
-            debug:  this.css.debug,
-        };
-        const cls = clsMap[style] || this.css.debug;
         const div = document.createElement('div');
-        div.className = cls;
+        div.className = this.css_map[style] || this.css_map.debug;
         div.textContent = text;
         this.elements.output.appendChild(div);
         this.elements.output.scrollTop = this.elements.output.scrollHeight;
@@ -187,19 +187,10 @@ class ItemManager {
      * @param {Object}          [config.cssClasses]       – переопределение CSS-классов
      * @param {typeof BaseItemUI} [config.ItemUIClass]   – класс UI элемента
      */
-    constructor({ ws, containerSelector, cssClasses = {}, ItemUIClass = ItemUiTerminal }) {
+    constructor({ ws, containerSelector, ItemUIClass = ItemUiTerminal }) {
         this.ws = ws;
         this.container = document.querySelector(containerSelector);
         if (!this.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
-
-        this.css = Object.assign({
-            itemBox: 'item__cls',
-            itemId:  'span_item_id__cls',
-            stdout:  'msg_stdout__cls',
-            stderr:  'msg_stderr__cls',
-            stdin:   'msg_stdin__cls',
-            debug:   'msg_debug__cls',
-        }, cssClasses);
 
         this.ItemUIClass = ItemUIClass;
         this.items = new Map();   // itemId → BaseItemUI
@@ -239,7 +230,7 @@ class ItemManager {
     /** Создать элемент (если ещё нет) */
     async itemCreate(itemId) {
         if (this.items.has(itemId)) return;
-        const ui = new this.ItemUIClass(itemId, this.ws, this.css);
+        const ui = new this.ItemUIClass(itemId, this.ws);
         this.items.set(itemId, ui);
         await ui.init();
         this.container.appendChild(ui.elements.final);
@@ -279,7 +270,14 @@ window.onload = async () => {
     const manager = new ItemManager({
         ws,
         containerSelector: '#items_container__id',   // куда добавлять элементы
-        // cssClasses – если нужно переопределить классы
+//        cssClasses: {
+//            itemBox: 'item__cls',
+//            itemId:  'span_item_id__cls',
+//            stdout:  'msg_stdout__cls',
+//            stderr:  'msg_stderr__cls',
+//            stdin:   'msg_stdin__cls',
+//            debug:   'msg_debug__cls',
+//        }
         // ItemUIClass – если нужен кастомный рендеринг
     });
 
