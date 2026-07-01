@@ -1399,7 +1399,7 @@ class WebSocketClient {
         }
     }
 
-    event_clear(event) {
+    event_del(event) {
         if (this.#listeners[event]) {
             this.#listeners[event] = [];
         }
@@ -1422,7 +1422,10 @@ class WebSocketClient {
             this.#listeners[key] = [];
         }
         this.#socket = null;
-        this.#listeners = { open: [], close: [], message: [], error: [], reconnecting: [] };
+
+        for (let e_listeners of this.#listeners) {
+            e_listeners.cleat();
+        }
     }
 }
 
