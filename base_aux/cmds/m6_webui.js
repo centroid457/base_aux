@@ -102,6 +102,7 @@ class ItemUiTerminal extends BaseItemUI {
 
         // Input area
         const footer = document.createElement('footer');
+
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'Введите команду и нажмите Enter';
