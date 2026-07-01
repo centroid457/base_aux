@@ -18,10 +18,17 @@ class BaseItemUI {
         this.css = cssClasses;
 
         /** @type {{ container: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
-        this.el = { container: null, output: null, input: null };
+        this.elements = { container: null, output: null, input: null };
     }
 
-    // -------- Фабрика DOM (можно переопределить) --------
+    // -----------------------------------------------------------------------------------------------------------------
+    async init(parentContainer) {
+        const dom = this.buildDOM();
+        parentContainer.appendChild(dom);
+        await this.history_load();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     buildDOM() {
         const div = document.createElement('div');
         div.className = this.css.itemBox;
@@ -32,32 +39,35 @@ class BaseItemUI {
         idSpan.className = this.css.itemId;
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
-        header.appendChild(this._buildButtons());
+        header.appendChild(this._create_buttons());
 
         // Output area
         const output = document.createElement('main');
         output.setAttribute('data-scrollbar__dark', '');
-        this.el.output = output;
+        this.elements.output = output;
 
         // Input area
         const footer = document.createElement('footer');
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'Введите команду и нажмите Enter';
-        this.el.input = input;
+        this.elements.input = input;
         footer.appendChild(input);
 
         div.appendChild(header);
         div.appendChild(output);
         div.appendChild(footer);
-        this.el.container = div;
+        this.elements.container = div;
 
-        input.addEventListener('change', () => this._onInput());
+        input.addEventListener('change', () => this._callback_input());
         return div;
     }
 
-    /** Кнопки управления */
-    _buildButtons() {
+    _callback_input() {
+        this.sendInput(this.elements.input.value.trim());
+    }
+
+    _create_buttons() {
         const wrap = document.createElement('div');
         const addBtn = (text, title, attr, handler) => {
             const btn = document.createElement('button');
@@ -73,55 +83,41 @@ class BaseItemUI {
         return wrap;
     }
 
-    // -------- Инициализация --------
-    async init(parentContainer) {
-        const dom = this.buildDOM();
-        parentContainer.appendChild(dom);
-        await this.loadHistory();
-    }
-
-    // -------- Отправка команд --------
+    // -----------------------------------------------------------------------------------------------------------------
     _send(channel, action, extra = {}) {
-        this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
     }
 
     sendInput(text) {
         if (!text) return;
-        const sent = this.ws.send_json({
-            item_id: this.itemId, channel: 'history_log', action: 'stdin', text,
-        });
-        if (sent) this.el.input.value = '';
+        const sent = this._send('history_log', 'stdin', { text });
+        if (sent) this.elements.input.value = '';
     }
-
     sendReconnect()    { this._send('item_control', 'reconnect_item'); }
     sendClearHistory() { this._send('item_control', 'clear_history'); }
     sendDelete()       { this._send('item_control', 'delete_item'); }
 
-    _onInput() {
-        this.sendInput(this.el.input.value.trim());
+    // -----------------------------------------------------------------------------------------------------------------
+    history_clear() {
+        if (this.elements.output) this.elements.output.innerHTML = '';
     }
 
-    // -------- История --------
-    clearHistory() {
-        if (this.el.output) this.el.output.innerHTML = '';
-    }
-
-    async loadHistory() {
-        this.clearHistory();
+    async history_load() {
+        this.history_clear();
         try {
             const history = await fetchJSON(`/item/history/get/${this.itemId}`);
             history.forEach(line => {
-                if (line.input)   this.addLine('stdin',  line.input);
-                line.stdout?.forEach(l => this.addLine('stdout', l));
-                line.stderr?.forEach(l => this.addLine('stderr', l));
-                line.debug?.forEach(l  => this.addLine('debug', l));
+                if (line.input)   this.history_add_line('stdin',  line.input);
+                line.stdout?.forEach(l => this.history_add_line('stdout', l));
+                line.stderr?.forEach(l => this.history_add_line('stderr', l));
+                line.debug?.forEach(l  => this.history_add_line('debug', l));
             });
         } catch (err) {
-            this.addLine('stderr', `Ошибка истории: ${err.message}`);
+            this.history_add_line('stderr', `Ошибка истории: ${err.message}`);
         }
     }
 
-    addLine(style, text) {
+    history_add_line(style, text) {
         const clsMap = {
             stdout: this.css.stdout,
             stderr: this.css.stderr,
@@ -132,13 +128,13 @@ class BaseItemUI {
         const div = document.createElement('div');
         div.className = cls;
         div.textContent = text;
-        this.el.output.appendChild(div);
-        this.el.output.scrollTop = this.el.output.scrollHeight;
+        this.elements.output.appendChild(div);
+        this.elements.output.scrollTop = this.elements.output.scrollHeight;
     }
 
     // -------- Удаление --------
     destroy() {
-        this.el.container?.remove();
+        this.elements.container?.remove();
     }
 }
 
@@ -178,11 +174,11 @@ class ItemManager {
             if (!msg) return;
             const { item_id, channel, action, text } = msg;
             if (channel === 'history_log') {
-                this.items.get(item_id)?.addLine(action, text);
+                this.items.get(item_id)?.history_add_line(action, text);
             } else if (channel === 'item_control') {
                 if (action === 'create_item')   this.itemCreate(item_id);
                 else if (action === 'delete_item') this.itemDelete(item_id);
-                else if (action === 'clear_history') this.items.get(item_id)?.clearHistory();
+                else if (action === 'clear_history') this.items.get(item_id)?.history_clear();
             }
         });
 
