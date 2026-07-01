@@ -4,7 +4,6 @@
 
 /**
  * Базовый UI одного элемента.
- * При необходимости проект может унаследоваться и переопределить buildDOM().
  */
 class BaseItemUI {
     /**
@@ -17,21 +16,20 @@ class BaseItemUI {
         this.ws = ws;
         this.css = cssClasses;
 
-        /** @type {{ container: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
-        this.elements = { container: null, output: null, input: null };
+        /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
+        this.elements = { final: null, output: null, input: null };
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    async init(parentContainer) {
-        const dom = this.buildDOM();
-        parentContainer.appendChild(dom);
+    async init() {
+        this.buildDOM();
         await this.history_load();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     buildDOM() {
-        const div = document.createElement('div');
-        div.className = this.css.itemBox;
+        this.elements.final = document.createElement('div');
+        this.elements.final.className = this.css.itemBox;
 
         // Header
         const header = document.createElement('header');
@@ -54,13 +52,11 @@ class BaseItemUI {
         this.elements.input = input;
         footer.appendChild(input);
 
-        div.appendChild(header);
-        div.appendChild(output);
-        div.appendChild(footer);
-        this.elements.container = div;
+        this.elements.final.appendChild(header);
+        this.elements.final.appendChild(output);
+        this.elements.final.appendChild(footer);
 
         input.addEventListener('change', () => this._callback_input());
-        return div;
     }
 
     _callback_input() {
@@ -134,7 +130,7 @@ class BaseItemUI {
 
     // -------- Удаление --------
     destroy() {
-        this.elements.container?.remove();
+        this.elements.final?.remove();
     }
 }
 
@@ -203,7 +199,8 @@ class ItemManager {
         if (this.items.has(itemId)) return;
         const ui = new this.ItemUIClass(itemId, this.ws, this.css);
         this.items.set(itemId, ui);
-        await ui.init(this.container);
+        await ui.init();
+        this.container.appendChild(ui.elements.final);
     }
 
     /** Удалить элемент */
