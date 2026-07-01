@@ -1251,53 +1251,14 @@ async function fetchJSON(url) {
 
 
 // =====================================================================================================================
-// универсальный WebSocket-клиент (полностью независим)
-class WebSocketClient {
-    // Дефолтные значения
-    static DEFAULT_RECONNECT_DELAY = 3000;  // мс
-
-    // Приватные поля
-    #url;
-    #socket = null;
-    #reconnectDelay;
-    #reconnectTimerId = null;          // таймер переподключения
-    #isManualClose = false;
-    #listeners = {
-        open: [],
-        close: [],
-        message: [],
-        error: [],
-        reconnecting: [],
+class EventManager {
+    listeners = {
     };
 
-    /**
-     * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
-     * @param {object}  [options]
-     * @param {number}  [options.reconnectDelay=WebSocketClient.DEFAULT_RECONNECT_DELAY]
-     * @param {boolean} [options.autoConnect=true]
-     */
-    constructor(urlOrPath, options = {}) {
-        if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
-            this.#url = urlOrPath;
-        } else {
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            this.#url = `${protocol}//${window.location.host}${urlOrPath}`;
-        }
-
-        this.#reconnectDelay = options.reconnectDelay ?? WebSocketClient.DEFAULT_RECONNECT_DELAY;
-
-        if (options.autoConnect !== false) {
-            this.connect();
-        }
-
-        this._was_open = false;
-    }
-
     // -------------------------------------------------------------------------
-    // Внутренний метод вызова всех подписчиков
-    #emit(event, data) {
-        const cbs = this.#listeners[event];
-        if (!cbs) return;
+    emit(event, data) {
+        const cbs = this.listeners[event];
+        if (!cbs) throw new Error(`call register new event ${event}`);
         for (const cb of cbs) {
             try {
                 cb(data);
@@ -1308,32 +1269,126 @@ class WebSocketClient {
     }
 
     // -------------------------------------------------------------------------
+    register_schema(schema) {
+        for (const [event, callbacks] of Object.entries(schema)) {
+            this.register_event(event);
+            for (const cb of callbacks) {
+                this.callback_add(event, cb);
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    register_event(event) {
+        if (!this.listeners[event]) {
+            this.listeners[event] = [];
+        } else {
+            console.warn("already registered event", event);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    callback_add(event, callback) {
+        if (this.listeners[event]) {
+            this.listeners[event].push(callback);
+        } else {
+            console.error("not registered event", event);
+        }
+    }
+
+    callback_del(event, callback) {
+        const arr = this.listeners[event];
+        if (arr) {
+            this.listeners[event] = arr.filter(cb => cb !== callback);
+        }
+    }
+
+    callbacks_clear(event) {
+        if (!event) {
+            for (let e_listeners of this.listeners) {
+                e_listeners.length = 0;
+            };
+            return;
+        };
+        if (this.listeners[event]) {
+            this.listeners[event] = [];
+        }
+    }
+}
+
+
+// =====================================================================================================================
+class WebSocketClient extends EventManager {
+    // Дефолтные значения
+    static DEFAULT_RECONNECT_DELAY = 3000;  // мс
+
+    // Приватные поля
+    url;
+    socket = null;
+    reconnectDelay;
+    reconnectTimerId = null;          // таймер переподключения
+    isManualClose = false;
+
+    /**
+     * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
+     * @param {object}  [options]
+     * @param {number}  [options.reconnectDelay=WebSocketClient.DEFAULT_RECONNECT_DELAY]
+     * @param {boolean} [options.autoConnect=true]
+     */
+    constructor(urlOrPath, options = {}) {
+        super();
+
+        if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
+            this.url = urlOrPath;
+        } else {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            this.url = `${protocol}//${window.location.host}${urlOrPath}`;
+        }
+
+        this.reconnectDelay = options.reconnectDelay ?? WebSocketClient.DEFAULT_RECONNECT_DELAY;
+
+        if (options.autoConnect !== false) {
+            this.connect();
+        }
+
+        this.register_schema({
+            open: [],
+            close: [],
+            message: [],
+            error: [],
+            reconnecting: [],
+        })
+
+        this._was_open = false;
+    }
+
+    // -------------------------------------------------------------------------
     /** Открыть (или переоткрыть) соединение */
     connect() {
         this._was_open = false;
 
         // Сбрасываем таймер, если висел
-        if (this.#reconnectTimerId) {
-            clearTimeout(this.#reconnectTimerId);
-            this.#reconnectTimerId = null;
+        if (this.reconnectTimerId) {
+            clearTimeout(this.reconnectTimerId);
+            this.reconnectTimerId = null;
         }
 
-        if (this.#socket) {
-            this.#isManualClose = true;
-            this.#socket.close();
+        if (this.socket) {
+            this.isManualClose = true;
+            this.socket.close();
         }
 
-        console.log('[WsClient] ⌛ connecting to', this.#url);
-        this.#isManualClose = false;
-        this.#socket = new WebSocket(this.#url);
+        console.log('[WsClient] ⌛ connecting to', this.url);
+        this.isManualClose = false;
+        this.socket = new WebSocket(this.url);
 
-        this.#socket.onopen = () => {
+        this.socket.onopen = () => {
             this._was_open = true;
             console.log('[WsClient.onopen] 🟢 connected');
-            this.#emit('open');
+            this.emit('open');
         };
 
-        this.#socket.onmessage = (event) => {
+        this.socket.onmessage = (event) => {
             let data;
             try {
                 data = JSON.parse(event.data);
@@ -1342,30 +1397,30 @@ class WebSocketClient {
                 return;
             }
             console.log('[WsClient] 📩', data);
-            this.#emit('message', data);
+            this.emit('message', data);
         };
 
-        this.#socket.onclose = () => {
+        this.socket.onclose = () => {
         if (this._was_open) console.log('[WsClient.onclose] 🔴 closed');
-            this.#emit('close');
-            if (!this.#isManualClose) {
-                const delay = this.#reconnectDelay;
+            this.emit('close');
+            if (!this.isManualClose) {
+                const delay = this.reconnectDelay;
                 console.log(`[WsClient] reconnecting in ${delay}ms...`);
-                this.#emit('reconnecting', { delay });
-                this.#reconnectTimerId = setTimeout(() => this.connect(), delay);
+                this.emit('reconnecting', { delay });
+                this.reconnectTimerId = setTimeout(() => this.connect(), delay);
             }
         };
 
-        this.#socket.onerror = (err) => {
+        this.socket.onerror = (err) => {
             if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
-            this.#emit('error', err);
+            this.emit('error', err);
         };
     }
 
     // -------------------------------------------------------------------------
     /** Состояние подключения */
     is_connected() {
-        return this.#socket?.readyState === WebSocket.OPEN;
+        return this.socket?.readyState === WebSocket.OPEN;
     }
 
     // -------------------------------------------------------------------------
@@ -1376,7 +1431,7 @@ class WebSocketClient {
             return false;
         }
         try {
-            this.#socket.send(JSON.stringify(data));
+            this.socket.send(JSON.stringify(data));
             return true;
         } catch (e) {
             console.error('[WsClient] send_json failed', e);
@@ -1385,47 +1440,20 @@ class WebSocketClient {
     }
 
     // -------------------------------------------------------------------------
-    /** Подписаться на событие */
-    callback_add(event, callback) {
-        if (this.#listeners[event]) {
-            this.#listeners[event].push(callback);
-        }
-    }
-
-    callback_del(event, callback) {
-        const arr = this.#listeners[event];
-        if (arr) {
-            this.#listeners[event] = arr.filter(cb => cb !== callback);
-        }
-    }
-
-    event_del(event) {
-        if (this.#listeners[event]) {
-            this.#listeners[event] = [];
-        }
-    }
-
-    // -------------------------------------------------------------------------
     stop() {
-        this.#isManualClose = true;
-        if (this.#reconnectTimerId) {
-            clearTimeout(this.#reconnectTimerId);
-            this.#reconnectTimerId = null;
+        this.isManualClose = true;
+        if (this.reconnectTimerId) {
+            clearTimeout(this.reconnectTimerId);
+            this.reconnectTimerId = null;
         }
-        this.#socket?.close();
+        this.socket?.close();
     }
 
     /** Полное уничтожение экземпляра: остановка + очистка всех ресурсов */
     destroy() {
         this.stop();
-        for (const key of Object.keys(this.#listeners)) {
-            this.#listeners[key] = [];
-        }
-        this.#socket = null;
-
-        for (let e_listeners of this.#listeners) {
-            e_listeners.cleat();
-        }
+        this.socket = null;
+        this.callbacks_clear();
     }
 }
 
