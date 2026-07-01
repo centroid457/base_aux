@@ -1,279 +1,258 @@
-// =====================================================================================================================
-// Глобальный менеджер объектов (только бизнес-логика)
-// =====================================================================================================================
-const itemsManager = {
-    items_map: new Map(),
-    ws: null,                         // будет назначен снаружи
+// =============================================================================
+// item-manager.js — переиспользуемый менеджер элементов
+// =============================================================================
 
-    // Сохранить ссылку на WebSocket‑клиент
-    set_ws_client(wsClient) {
-        this.ws = wsClient;
-    },
-
-    // Инициализация UI при загрузке страницы
-    async initUI() {
-        document.getElementById('btn_add_item__id').addEventListener('click', () => this.send__item_create());
-    },
-
-    // Полная очистка и перестройка UI по данным с сервера
-    async reloadUI() {
-        // удаляем все существующие UI-элементы
-        for (const [id, ui] of this.items_map) {
-            this.item_del(id);
-        }
-
-        const serverIds = await this.items_load();
-        for (const idn of serverIds) {
-            this.item_create(idn);
-        }
-    },
-
-    // Загрузка актуального списка объектов с сервера
-    async items_load() {
-        try {
-            const resp = await fetch('/item/list');
-            const data = await resp.json();
-            return data?.items || [];
-        } catch {
-            return [];
-        }
-    },
-
-    // ---------- отправка команд (используем this.ws) ----------
-    send__item_create() {
-        this.ws?.send_json({
-            channel: "item_control",
-            action: "create_item",
-        });
-    },
-
-    item_create(itemId) {
-        if (this.items_map.has(itemId)) return;
-        const itemUI = new ItemUI(itemId, this.ws);   // передаём ws в UI
-        this.items_map.set(itemId, itemUI);
-        itemUI.init();
-    },
-
-    item_del(itemId) {
-        this.items_map.get(itemId)?.destroy();
-        this.items_map.delete(itemId);
-    },
-
-    // ---------- обработчики входящих данных ----------
-    history_append(itemId, style, text) {
-        this.items_map.get(itemId)?.history_add_line(style, text);
-    },
-
-    history_clear(itemId) {
-        this.items_map.get(itemId)?.history_clear();
-    },
-};
-
-// =====================================================================================================================
-// UI отдельного объекта
-// =====================================================================================================================
-class ItemUI {
-    constructor(itemId, ws) {
+/**
+ * Базовый UI одного элемента.
+ * При необходимости проект может унаследоваться и переопределить buildDOM().
+ */
+class BaseItemUI {
+    /**
+     * @param {string}             itemId
+     * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
+     * @param {Object}             cssClasses – словарь CSS-классов
+     */
+    constructor(itemId, ws, cssClasses) {
         this.itemId = itemId;
-        this.ws = ws;                       // теперь не зависит от глобальной переменной
-        this.element_ItemBox   = null;
-        this.element_OutputBox = null;
-        this.element_InputBox  = null;
+        this.ws = ws;
+        this.css = cssClasses;
+
+        /** @type {{ container: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
+        this.el = { container: null, output: null, input: null };
     }
 
-    init() {
-        this.render();
-        this.history_load();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    async render() {
-        const div_itembox = document.createElement('div');
-        div_itembox.className = 'item__cls';
+    // -------- Фабрика DOM (можно переопределить) --------
+    buildDOM() {
+        const div = document.createElement('div');
+        div.className = this.css.itemBox;
 
         // Header
-        const header       = document.createElement('header');
-        const header_div1  = document.createElement('div');
-        const header_div2  = document.createElement('div');
-        header.appendChild(header_div1);
-        header.appendChild(header_div2);
-
-        const spanId = document.createElement('span');
-        spanId.className = 'span_item_id__cls';
-        spanId.textContent = this.itemId;
-        header_div1.appendChild(spanId);
-
-        const btnClear = document.createElement('button');
-        btnClear.setAttribute('data-btn_outline', "blue");
-        btnClear.textContent = 'clear';
-        btnClear.title = 'Clear History';
-        btnClear.onclick = () => this.send__history_clear();
-
-        const btnReconnect = document.createElement('button');
-        btnReconnect.setAttribute('data-btn_outline', "blue");
-        btnReconnect.textContent = 'Reconnect';
-        btnReconnect.title = 'Reconnect';
-        btnReconnect.onclick = () => this.send__reconnect();
-
-        const btnClose = document.createElement('button');
-        btnClose.setAttribute('data-btn_outline', "red");
-        btnClose.textContent = 'X';
-        btnClose.title = 'Close';
-        btnClose.onclick = () => this.send__delete();
-
-        header_div2.appendChild(btnClear);
-        header_div2.appendChild(btnReconnect);
-        header_div2.appendChild(btnClose);
+        const header = document.createElement('header');
+        const idSpan = document.createElement('span');
+        idSpan.className = this.css.itemId;
+        idSpan.textContent = this.itemId;
+        header.appendChild(idSpan);
+        header.appendChild(this._buildButtons());
 
         // Output area
         const output = document.createElement('main');
         output.setAttribute('data-scrollbar__dark', '');
-        this.element_OutputBox = output;
+        this.el.output = output;
 
         // Input area
         const footer = document.createElement('footer');
-        const input  = document.createElement('input');
-        input.type        = 'text';
+        const input = document.createElement('input');
+        input.type = 'text';
         input.placeholder = 'Введите команду и нажмите Enter';
-        this.element_InputBox = input;
+        this.el.input = input;
         footer.appendChild(input);
 
-        div_itembox.appendChild(header);
-        div_itembox.appendChild(output);
-        div_itembox.appendChild(footer);
-        this.element_ItemBox = div_itembox;
-        document.getElementById('items_container__id').appendChild(div_itembox);
+        div.appendChild(header);
+        div.appendChild(output);
+        div.appendChild(footer);
+        this.el.container = div;
 
-        // Отправка строки по Enter
-        input.addEventListener('change', () => this.send__input());
+        input.addEventListener('change', () => this._onInput());
+        return div;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    send__input() {
-        const line = this.element_InputBox.value.trim();
-        if (!line) return;
+    /** Кнопки управления */
+    _buildButtons() {
+        const wrap = document.createElement('div');
+        const addBtn = (text, title, attr, handler) => {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            btn.title = title;
+            btn.setAttribute('data-btn_outline', attr);
+            btn.onclick = handler;
+            wrap.appendChild(btn);
+        };
+        addBtn('clear', 'Clear History', 'blue', () => this.sendClearHistory());
+        addBtn('Reconnect', 'Reconnect', 'blue', () => this.sendReconnect());
+        addBtn('X', 'Close', 'red', () => this.sendDelete());
+        return wrap;
+    }
 
-        const sent = this.ws?.send_json({
-            item_id: this.itemId,
-            channel: "history_log",
-            action: "stdin",
-            text: line,
+    // -------- Инициализация --------
+    async init(parentContainer) {
+        const dom = this.buildDOM();
+        parentContainer.appendChild(dom);
+        await this.loadHistory();
+    }
+
+    // -------- Отправка команд --------
+    _send(channel, action, extra = {}) {
+        this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+    }
+
+    sendInput(text) {
+        if (!text) return;
+        const sent = this.ws.send_json({
+            item_id: this.itemId, channel: 'history_log', action: 'stdin', text,
         });
-        if (sent) {
-            this.element_InputBox.value = '';
-        }
+        if (sent) this.el.input.value = '';
     }
 
-    send__reconnect() {
-        this.ws?.send_json({
-            item_id: this.itemId,
-            channel: "item_control",
-            action: "reconnect_item",
-        });
+    sendReconnect()    { this._send('item_control', 'reconnect_item'); }
+    sendClearHistory() { this._send('item_control', 'clear_history'); }
+    sendDelete()       { this._send('item_control', 'delete_item'); }
+
+    _onInput() {
+        this.sendInput(this.el.input.value.trim());
     }
 
-    send__history_clear() {
-        this.ws?.send_json({
-            item_id: this.itemId,
-            channel: "item_control",
-            action: "clear_history",
-        });
+    // -------- История --------
+    clearHistory() {
+        if (this.el.output) this.el.output.innerHTML = '';
     }
 
-    send__delete() {
-        this.ws?.send_json({
-            item_id: this.itemId,
-            channel: "item_control",
-            action: "delete_item",
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    history_clear() {
-        this.element_OutputBox.innerHTML = '';
-    }
-
-    async history_load() {
-        this.history_clear();
+    async loadHistory() {
+        this.clearHistory();
         try {
-            const resp = await fetch(`/item/history/get/${this.itemId}`);
-            const history = await resp.json();
-            history.forEach(log_line => {
-                if (log_line.input) this.history_add_line('stdin', log_line.input);
-                log_line.stdout?.forEach(l => this.history_add_line('stdout', l));
-                log_line.stderr?.forEach(l => this.history_add_line('stderr', l));
-                log_line.debug?.forEach(l  => this.history_add_line('debug', l));
+            const history = await fetchJSON(`/item/history/get/${this.itemId}`);
+            history.forEach(line => {
+                if (line.input)   this.addLine('stdin',  line.input);
+                line.stdout?.forEach(l => this.addLine('stdout', l));
+                line.stderr?.forEach(l => this.addLine('stderr', l));
+                line.debug?.forEach(l  => this.addLine('debug', l));
             });
         } catch (err) {
-            this.history_add_line('stderr', `Ошибка history_load: ${err.message}`);
+            this.addLine('stderr', `Ошибка истории: ${err.message}`);
         }
     }
 
-    history_add_line(style, text) {
-        let cssClass;
-        switch (style) {
-            case 'stdout': cssClass = 'msg_stdout__cls'; break;
-            case 'stderr': cssClass = 'msg_stderr__cls'; break;
-            case 'stdin':  cssClass = 'msg_stdin__cls'; break;
-            default:       cssClass = 'msg_debug__cls';
-        }
-
-        const line = document.createElement('div');
-        line.className = cssClass;
-        line.textContent = text;
-        this.element_OutputBox.appendChild(line);
-        this.element_OutputBox.scrollTop = this.element_OutputBox.scrollHeight;
+    addLine(style, text) {
+        const clsMap = {
+            stdout: this.css.stdout,
+            stderr: this.css.stderr,
+            stdin:  this.css.stdin,
+            debug:  this.css.debug,
+        };
+        const cls = clsMap[style] || this.css.debug;
+        const div = document.createElement('div');
+        div.className = cls;
+        div.textContent = text;
+        this.el.output.appendChild(div);
+        this.el.output.scrollTop = this.el.output.scrollHeight;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------- Удаление --------
     destroy() {
-        this.element_ItemBox?.remove();
+        this.el.container?.remove();
+    }
+}
+
+// =============================================================================
+// Менеджер объектов
+// =============================================================================
+class ItemManager {
+    /**
+     * @param {Object} config
+     * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
+     * @param {string}          config.containerSelector – CSS-селектор контейнера для элементов
+     * @param {Object}          [config.cssClasses]       – переопределение CSS-классов
+     * @param {typeof BaseItemUI} [config.ItemUIClass]   – класс UI элемента
+     */
+    constructor({ ws, containerSelector, cssClasses = {}, ItemUIClass = BaseItemUI }) {
+        this.ws = ws;
+        this.container = document.querySelector(containerSelector);
+        if (!this.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
+
+        this.css = Object.assign({
+            itemBox: 'item__cls',
+            itemId:  'span_item_id__cls',
+            stdout:  'msg_stdout__cls',
+            stderr:  'msg_stderr__cls',
+            stdin:   'msg_stdin__cls',
+            debug:   'msg_debug__cls',
+        }, cssClasses);
+
+        this.ItemUIClass = ItemUIClass;
+        this.items = new Map();   // itemId → BaseItemUI
+
+        this._setupListeners();
+    }
+
+    _setupListeners() {
+        this.ws.callback_add('message', (msg) => {
+            if (!msg) return;
+            const { item_id, channel, action, text } = msg;
+            if (channel === 'history_log') {
+                this.items.get(item_id)?.addLine(action, text);
+            } else if (channel === 'item_control') {
+                if (action === 'create_item')   this.itemCreate(item_id);
+                else if (action === 'delete_item') this.itemDelete(item_id);
+                else if (action === 'clear_history') this.items.get(item_id)?.clearHistory();
+            }
+        });
+
+        this.ws.callback_add('open', async () => {
+            await this.reloadAll();
+        });
+    }
+
+    /** Полная перезагрузка списка с сервера */
+    async reloadAll() {
+        for (const id of this.items.keys()) this.itemDelete(id);
+        let serverIds = [];
+        try {
+            const data = await fetchJSON('/item/list');
+            serverIds = data?.items || [];
+        } catch { /* оставляем пустым */ }
+        for (const id of serverIds) await this.itemCreate(id);
+    }
+
+    /** Создать элемент (если ещё нет) */
+    async itemCreate(itemId) {
+        if (this.items.has(itemId)) return;
+        const ui = new this.ItemUIClass(itemId, this.ws, this.css);
+        this.items.set(itemId, ui);
+        await ui.init(this.container);
+    }
+
+    /** Удалить элемент */
+    itemDelete(itemId) {
+        const ui = this.items.get(itemId);
+        if (ui) {
+            ui.destroy();
+            this.items.delete(itemId);
+        }
+    }
+
+    /**
+     * Инициализация глобальной кнопки «создать» (может вызываться извне)
+     * @param {string} addButtonSelector – CSS-селектор кнопки
+     */
+    initGlobalUI(addButtonSelector) {
+        const btn = document.querySelector(addButtonSelector);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                this.ws.send_json({ channel: 'item_control', action: 'create_item' });
+            });
+        }
     }
 }
 
 
 // =====================================================================================================================
-// Запуск
-// =====================================================================================================================
 window.onload = async () => {
-    // 1. Создаём WebSocket‑клиент (пока не подключаемся)
+
+    // 1. WebSocket-клиент (ваш универсальный класс, код приведён ниже)
     const ws = new WebSocketClient('/ws/client', { autoConnect: false });
 
-    // 2. Пробрасываем его в менеджер
-    itemsManager.set_ws_client(ws);
-
-    // 3. Настраиваем подписки на события
-    ws.callback_add('message', (msg) => {
-        const itemId   = msg?.item_id;
-        const channel  = msg?.channel;
-        const action   = msg?.action;
-        const text     = msg?.text;
-
-        if (channel === "history_log") {
-            itemsManager.history_append(itemId, action, text);
-        } else if (channel === "item_control") {
-            if (action === "create_item") {
-                itemsManager.item_create(itemId);
-            } else if (action === "delete_item") {
-                itemsManager.item_del(itemId);
-            } else if (action === "clear_history") {
-                itemsManager.history_clear(itemId);
-            }
-        } else if (channel === "system") {
-            // системные сообщения (пока пусто)
-        }
+    // 3. Создаём менеджер с конфигурацией
+    const manager = new ItemManager({
+        ws,
+        containerSelector: '#items_container__id',   // куда добавлять элементы
+        // cssClasses – если нужно переопределить классы
+        // ItemUIClass – если нужен кастомный рендеринг
     });
 
-    //    — при успешном подключении перезагружаем UI
-    ws.callback_add('open', async () => {
-        await itemsManager.reloadUI();
-    });
+    // 4. Инициализируем кнопку добавления
+    manager.initGlobalUI('#btn_add_item__id');
 
-    // 4. Инициализируем UI (кнопка «создать» и т.п.) и сразу загружаем данные
-    await itemsManager.initUI();
-
+    // 5. Запускаем WebSocket (при подключении автоматически загрузит элементы)
     ws.connect();
 };
-
 
 // =====================================================================================================================
