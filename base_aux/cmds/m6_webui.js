@@ -25,6 +25,53 @@ class BaseItemUI {
     // -----------------------------------------------------------------------------------------------------------------
     async init() {
         this.buildDOM();
+        await this._init_post();
+    }
+
+    async _init_post() {
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------
+    destroy() {
+        this.elements.final?.remove();
+    }
+    // -----------------------------------------------------------------------------------------------------------------
+    buildDOM() {
+        // as example
+        this.elements.final = document.createElement('div');
+        this.elements.final.className = this.css.itemBox;
+
+        // Header
+        const header = document.createElement('header');
+        const idSpan = document.createElement('span');
+        idSpan.className = this.css.itemId;
+        idSpan.textContent = this.itemId;
+        header.appendChild(idSpan);
+        header.appendChild(this._create_buttons());
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    _send(channel, action, extra = {}) {
+        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+    }
+
+    sendExample()       { this._send('channel_example', 'action_example'); }
+
+    // USER METH -----------------------------------------------------------------------------------------------------------------
+    //
+}
+
+
+// -----------------------------------------------------------------------------------------------------------------
+class ItemUiTerminal extends BaseItemUI {
+    static ELEMENTS_SCHEMA = {
+        output: null,
+        input: null,
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
+    async _init_post() {
         await this.history_load();
     }
 
@@ -82,10 +129,6 @@ class BaseItemUI {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    _send(channel, action, extra = {}) {
-        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
-    }
-
     sendInput(text) {
         if (!text) return;
         const sent = this._send('history_log', 'stdin', { text });
@@ -95,7 +138,7 @@ class BaseItemUI {
     sendClearHistory() { this._send('item_control', 'clear_history'); }
     sendDelete()       { this._send('item_control', 'delete_item'); }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // USER METH -----------------------------------------------------------------------------------------------------------------
     history_clear() {
         if (this.elements.output) this.elements.output.innerHTML = '';
     }
@@ -130,19 +173,7 @@ class BaseItemUI {
         this.elements.output.scrollTop = this.elements.output.scrollHeight;
     }
 
-    // -------- Удаление --------
-    destroy() {
-        this.elements.final?.remove();
-    }
-}
-
-
-class ItemUiTerminal extends BaseItemUI {
-    static ELEMENTS_SCHEMA = {
-        output: null,
-        input: null,
-    };
-
+    // -----------------------------------------------------------------------------------------------------------------
 
 }
 // =============================================================================
