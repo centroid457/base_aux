@@ -21,7 +21,11 @@ class BaseItemUI {
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
         this.elements = Object.assign({ final: null }, new.target.ELEMENTS_SCHEMA);
 
-        this.buildDOM();
+    }
+
+    async init() {
+        this.buildDOM();    // WARN: DONT PLACE IN CONSTRUCTOR!!!!
+        this.init_post();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -35,7 +39,7 @@ class BaseItemUI {
     }
 
     // NESTING =========================================================================================================
-    async init() {
+    async init_post() {
     }
 
     buildDOM() {
@@ -75,7 +79,7 @@ class ItemUiTerminal extends BaseItemUI {
     };
 
     // -----------------------------------------------------------------------------------------------------------------
-    async init() {
+    async init_post() {
         await this.history_load();
     }
 
