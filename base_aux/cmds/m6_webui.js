@@ -28,14 +28,19 @@ class BaseItemUI {
         await this._init_post();
     }
 
-    async _init_post() {
-    }
-
-    // ------------------------------------------------------------------------------------------------------------------
     destroy() {
         this.elements.final?.remove();
     }
+
     // -----------------------------------------------------------------------------------------------------------------
+    _send(channel, action, extra = {}) {
+        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+    }
+
+    // NESTING =========================================================================================================
+    async _init_post() {
+    }
+
     buildDOM() {
         // as example
         this.elements.final = document.createElement('div');
@@ -49,20 +54,15 @@ class BaseItemUI {
         header.appendChild(idSpan);
     }
 
-
-    // -----------------------------------------------------------------------------------------------------------------
-    _send(channel, action, extra = {}) {
-        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
-    }
-
+    // SEND ------------------------------------------------------------------------------------------------------------
     sendExample()       { this._send('channel_example', 'action_example'); }
 
-    // USER METH -----------------------------------------------------------------------------------------------------------------
+    // METHS -----------------------------------------------------------------------------------------------------------
     //
 }
 
 
-// -----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 class ItemUiTerminal extends BaseItemUI {
     static ELEMENTS_SCHEMA = {
         output: null,
@@ -155,7 +155,7 @@ class ItemUiTerminal extends BaseItemUI {
         try {
             const history = await fetchJSON(`/item/history/get/${this.itemId}`);
             history.forEach(line => {
-                if (line.input)   this.history_add_line('stdin',  line.input);
+                if (line.input)           this.history_add_line('stdin', line.input);
                 line.stdout?.forEach(l => this.history_add_line('stdout', l));
                 line.stderr?.forEach(l => this.history_add_line('stderr', l));
                 line.debug?.forEach(l  => this.history_add_line('debug', l));
@@ -172,10 +172,8 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.output.appendChild(div);
         this.elements.output.scrollTop = this.elements.output.scrollHeight;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
 }
+
 // =============================================================================
 // Менеджер объектов
 // =============================================================================
