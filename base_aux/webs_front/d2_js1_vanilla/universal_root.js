@@ -1266,14 +1266,14 @@ class EventManager {
     }
 
     schema__register_names(schema) {    // APPLY: in server/emitter/event producer
-        for (const event in schema) {
+        for (const event in schema) {   // TODO: Object.keys(schema)
             this.register_event(event);
         }
     }
 
     schema__update_values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
         // update schema
-        for (let [event, callbacks] of Object.entries(schema)) {
+        for (const [event, callbacks] of Object.entries(schema)) {
             if (callbacks === null || callbacks === undefined) continue;
             if (typeof callbacks === 'function') callbacks = [ callbacks ];
             if (Array.isArray(callbacks)) {
@@ -1281,7 +1281,7 @@ class EventManager {
                     this.callback_add(event, cb);
                 }
             } else {
-                throw new Error(`type incorrect ${typeof cb}/${cb}`);
+                throw new Error(`type incorrect ${typeof callbacks}/${callbacks}`);
             }
         }
     }
@@ -1332,8 +1332,8 @@ class EventManager {
     callbacks_clear(event) {
         // clear - all events
         if (event === undefined) {
-            for (const event in this.event_schema) {
-                this.callbacks_clear(event)
+            for (const name in this.event_schema) {
+                this.event_schema[name] = [];
             };
             return;
         };
@@ -1366,6 +1366,7 @@ class WebSocketClient {
      */
     constructor({ urlOrPath, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
         // ----------------------------
+        if (!urlOrPath) throw new Error('urlOrPath is required');
         if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
             this.url = urlOrPath;
         } else {
@@ -1431,8 +1432,11 @@ class WebSocketClient {
         };
 
         this._socket.onclose = () => {
-        if (this._was_open) console.log('[WsClient.onclose] 🔴 closed');
-            this.event_manager.event_emit('ws.onclose');
+            if (this._was_open) {
+                console.log('[WsClient.onclose] 🔴 closed');
+                this.event_manager.event_emit('ws.onclose');
+            }
+
             if (!this.isManualClose) {
                 const delay = this.reconnectDelay;
                 console.log(`[WsClient] reconnecting in ${delay}ms...`);
@@ -1483,7 +1487,7 @@ class WebSocketClient {
     destroy() {
         this.stop();
         this._socket = null;
-        this.event_manager.callbacks_clear();
+        this.event_manager.callbacks_clear(); // FIXME: shared events
     }
 }
 
