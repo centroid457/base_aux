@@ -1255,30 +1255,27 @@ class EventManager {
     event_schema = {};
 
     constructor(schema = {}) {
-        this._register_schema(schema)
+        this.schema__register_update(schema)
     }
 
     // -------------------------------------------------------------------------
-    _register_schema(schema) {   // APPLY: only in constructor
-        // update schema - names+values
-        for (const [event, callbacks] of Object.entries(schema)) {
-            this.register_event(event);
-            for (const cb of callbacks) {
-                this.callback_add(event, cb);
-            }
-        }
+    schema__register_update(schema) {   // APPLY: only in constructor
+        // update schema full - names+values
+        this.schema__register_names(schema);
+        this.schema__update_values(schema);
     }
 
-    register_schema__names(schema) {    // APPLY: in server/emitter/event producer
+    schema__register_names(schema) {    // APPLY: in server/emitter/event producer
         for (const event in schema) {
             this.register_event(event);
         }
     }
 
-    register_schema__values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
+    schema__update_values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
         // update schema
         for (const [event, callbacks] of Object.entries(schema)) {
-            //this.register_event(event);
+            if (callbacks === null || callbacks === undefined) continue;
+            if (typeof callbacks function) callbacks = [ callbacks, ]
             for (const cb of callbacks) {
                 this.callback_add(event, cb);
             }
@@ -1368,12 +1365,12 @@ class WebSocketClient {
 
         // ----------------------------
         this.event_manager = event_manager;
-        this.event_manager.register_schema__names({
-            "ws.onopen": [],
-            "ws.onclose": [],
-            "ws.onmessage": [],
-            "ws.onerror": [],
-            "ws.onreconnecting": [],
+        this.event_manager.schema__register_names({
+            "ws.onopen": null,
+            "ws.onclose": null,
+            "ws.onmessage": null,
+            "ws.onerror": null,
+            "ws.onreconnecting": null,
         });
 
         // ----------------------------
