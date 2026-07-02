@@ -199,7 +199,7 @@ function onload__count_elements(selector, options = {}) {
 }
 OnLoadRunner.add(
     function() {
-        onload__count_elements('.section__cls h2' );
+        onload__count_elements('.section__cls h2');
     }
 );
 
@@ -1252,24 +1252,15 @@ async function fetchJSON(url) {
 
 // =====================================================================================================================
 class EventManager {
-    listeners = {
-    };
+    event_schema = {};
 
-    // -------------------------------------------------------------------------
-    emit(event, data) {
-        const cbs = this.listeners[event];
-        if (!cbs) throw new Error(`call register new event ${event}`);
-        for (const cb of cbs) {
-            try {
-                cb(data);
-            } catch (e) {
-                console.error(`[WsClient] error in '${event}' callback`, e);
-            }
-        }
+    constructor(schema = {}) {
+        this._register_schema(schema)
     }
 
     // -------------------------------------------------------------------------
-    register_schema(schema) {
+    _register_schema(schema) {   // APPLY: only in constructor
+        // update schema - names+values
         for (const [event, callbacks] of Object.entries(schema)) {
             this.register_event(event);
             for (const cb of callbacks) {
@@ -1278,10 +1269,39 @@ class EventManager {
         }
     }
 
+    register_schema__names(schema) {    // APPLY: in server/emitter/event producer
+        for (const event in schema) {
+            this.register_event(event);
+        }
+    }
+
+    register_schema__values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
+        // update schema
+        for (const [event, callbacks] of Object.entries(schema)) {
+            //this.register_event(event);
+            for (const cb of callbacks) {
+                this.callback_add(event, cb);
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    emit(event, data) {
+        const cbs = this.event_schema[event];
+        if (!cbs) throw new Error(`register_event ${event}`);
+        for (const cb of cbs) {
+            try {
+                cb(data);
+            } catch (exc) {
+                console.error(`[WsClient] error in '${event}' callback`, exc);
+            }
+        }
+    }
+
     // -------------------------------------------------------------------------
     register_event(event) {
-        if (!this.listeners[event]) {
-            this.listeners[event] = [];
+        if (!this.event_schema[event]) {
+            this.event_schema[event] = [];
         } else {
             console.warn("already registered event", event);
         }
@@ -1289,55 +1309,56 @@ class EventManager {
 
     // -------------------------------------------------------------------------
     callback_add(event, callback) {
-        if (this.listeners[event]) {
-            this.listeners[event].push(callback);
+        if (this.event_schema[event]) {
+            this.event_schema[event].push(callback);
         } else {
             console.error("not registered event", event);
         }
     }
 
     callback_del(event, callback) {
-        const arr = this.listeners[event];
+        const arr = this.event_schema[event];
         if (arr) {
-            this.listeners[event] = arr.filter(cb => cb !== callback);
+            this.event_schema[event] = arr.filter(cb => cb !== callback);
         }
     }
 
     callbacks_clear(event) {
+        // clear - all events
         if (!event) {
-            for (let e_listeners of this.listeners) {
+            for (let e_listeners of this.event_schema) {
                 e_listeners.length = 0;
             };
             return;
         };
-        if (this.listeners[event]) {
-            this.listeners[event] = [];
+
+        // clear - one event
+        if (this.event_schema[event]) {
+            this.event_schema[event] = [];
         }
     }
 }
 
 
 // =====================================================================================================================
-class WebSocketClient extends EventManager {
-    // Дефолтные значения
-    static DEFAULT_RECONNECT_DELAY = 3000;  // мс
-
-    // Приватные поля
+class WebSocketClient {
     url;
-    socket = null;
+    event_manager = null;
     reconnectDelay;
-    reconnectTimerId = null;          // таймер переподключения
     isManualClose = false;
+
+    // aux
+    socket = null;
+    _was_open = false;
+    reconnectTimerId = null;          // таймер переподключения
 
     /**
      * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
-     * @param {object}  [options]
-     * @param {number}  [options.reconnectDelay=WebSocketClient.DEFAULT_RECONNECT_DELAY]
-     * @param {boolean} [options.autoConnect=true]
+     * @param {number}  [reconnectDelay]
+     * @param {boolean} [autoConnect=true]
      */
-    constructor(urlOrPath, options = {}) {
-        super();
-
+    constructor({ urlOrPath, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
+        // ----------------------------
         if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
             this.url = urlOrPath;
         } else {
@@ -1345,21 +1366,24 @@ class WebSocketClient extends EventManager {
             this.url = `${protocol}//${window.location.host}${urlOrPath}`;
         }
 
-        this.reconnectDelay = options.reconnectDelay ?? WebSocketClient.DEFAULT_RECONNECT_DELAY;
+        // ----------------------------
+        this.event_manager = event_manager;
+        this.event_manager.register_schema__names({
+            "ws.onopen": [],
+            "ws.onclose": [],
+            "ws.onmessage": [],
+            "ws.onerror": [],
+            "ws.onreconnecting": [],
+        });
 
-        if (options.autoConnect !== false) {
+        // ----------------------------
+        this.reconnectDelay = reconnectDelay;
+
+        // ----------------------------
+        if (autoConnect == true) {
             this.connect();
         }
 
-        this.register_schema({
-            open: [],
-            close: [],
-            message: [],
-            error: [],
-            reconnecting: [],
-        })
-
-        this._was_open = false;
     }
 
     // -------------------------------------------------------------------------
@@ -1385,35 +1409,35 @@ class WebSocketClient extends EventManager {
         this.socket.onopen = () => {
             this._was_open = true;
             console.log('[WsClient.onopen] 🟢 connected');
-            this.emit('open');
+            this.event_manager.emit('ws.onopen');
         };
 
         this.socket.onmessage = (event) => {
             let data;
             try {
                 data = JSON.parse(event.data);
-            } catch (e) {
-                console.error('[WsClient] failed to parse message', e);
+            } catch (exc) {
+                console.error('[WsClient] failed to parse message', exc);
                 return;
             }
             console.log('[WsClient] 📩', data);
-            this.emit('message', data);
+            this.event_manager.emit('ws.onmessage', data);
         };
 
         this.socket.onclose = () => {
         if (this._was_open) console.log('[WsClient.onclose] 🔴 closed');
-            this.emit('close');
+            this.event_manager.emit('ws.onclose');
             if (!this.isManualClose) {
                 const delay = this.reconnectDelay;
                 console.log(`[WsClient] reconnecting in ${delay}ms...`);
-                this.emit('reconnecting', { delay });
+                this.event_manager.emit('ws.onreconnecting', { delay });
                 this.reconnectTimerId = setTimeout(() => this.connect(), delay);
             }
         };
 
         this.socket.onerror = (err) => {
             if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
-            this.emit('error', err);
+            this.event_manager.emit('ws.onerror', err);
         };
     }
 
@@ -1433,8 +1457,8 @@ class WebSocketClient extends EventManager {
         try {
             this.socket.send(JSON.stringify(data));
             return true;
-        } catch (e) {
-            console.error('[WsClient] send_json failed', e);
+        } catch (exc) {
+            console.error('[WsClient] send_json failed', exc);
             return false;
         }
     }
