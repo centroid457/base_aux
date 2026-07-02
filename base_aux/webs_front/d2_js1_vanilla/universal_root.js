@@ -1273,19 +1273,24 @@ class EventManager {
 
     schema__update_values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
         // update schema
-        for (const [event, callbacks] of Object.entries(schema)) {
+        for (let [event, callbacks] of Object.entries(schema)) {
             if (callbacks === null || callbacks === undefined) continue;
-            if (typeof callbacks function) callbacks = [ callbacks, ]
-            for (const cb of callbacks) {
-                this.callback_add(event, cb);
+            if (typeof callbacks === 'function') callbacks = [ callbacks ];
+            if (Array.isArray(callbacks)) {
+                for (const cb of callbacks) {
+                    this.callback_add(event, cb);
+                }
+            } else {
+                throw new Error(`type incorrect ${typeof cb}/${cb}`);
             }
         }
     }
 
     // -------------------------------------------------------------------------
-    emit(event, data) {
+    event_emit(event, data) {
+        if (!(event in this.event_schema)) throw new Error(`register_event ${event}`);
+
         const cbs = this.event_schema[event];
-        if (!cbs) throw new Error(`register_event ${event}`);
         for (const cb of cbs) {
             try {
                 cb(data);
@@ -1297,23 +1302,27 @@ class EventManager {
 
     // -------------------------------------------------------------------------
     register_event(event) {
-        if (!this.event_schema[event]) {
-            this.event_schema[event] = [];
-        } else {
+        if (event in this.event_schema) {
             console.warn("already registered event", event);
-        }
+            return;
+        };
+
+        this.event_schema[event] = [];
     }
 
     // -------------------------------------------------------------------------
     callback_add(event, callback) {
-        if (this.event_schema[event]) {
-            this.event_schema[event].push(callback);
-        } else {
+        if (!(event in this.event_schema)) {
             console.error("not registered event", event);
+            return;
         }
+
+        this.event_schema[event].push(callback);
     }
 
     callback_del(event, callback) {
+        if (!(event in this.event_schema)) return;
+
         const arr = this.event_schema[event];
         if (arr) {
             this.event_schema[event] = arr.filter(cb => cb !== callback);
@@ -1322,15 +1331,15 @@ class EventManager {
 
     callbacks_clear(event) {
         // clear - all events
-        if (!event) {
-            for (let e_listeners of this.event_schema) {
-                e_listeners.length = 0;
+        if (event === undefined) {
+            for (const event in this.event_schema) {
+                this.callbacks_clear(event)
             };
             return;
         };
 
         // clear - one event
-        if (this.event_schema[event]) {
+        if (event in this.event_schema) {
             this.event_schema[event] = [];
         }
     }
@@ -1345,13 +1354,14 @@ class WebSocketClient {
     isManualClose = false;
 
     // aux
-    socket = null;
+    _socket = null;
     _was_open = false;
-    reconnectTimerId = null;          // таймер переподключения
+    _reconnectTimerId = null;          // таймер переподключения
 
     /**
      * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
-     * @param {number}  [reconnectDelay]
+     * @param {EventManager} [eventManager]
+     * @param {number}  [reconnectDelay=300]
      * @param {boolean} [autoConnect=true]
      */
     constructor({ urlOrPath, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
@@ -1380,7 +1390,6 @@ class WebSocketClient {
         if (autoConnect == true) {
             this.connect();
         }
-
     }
 
     // -------------------------------------------------------------------------
@@ -1389,27 +1398,27 @@ class WebSocketClient {
         this._was_open = false;
 
         // Сбрасываем таймер, если висел
-        if (this.reconnectTimerId) {
-            clearTimeout(this.reconnectTimerId);
-            this.reconnectTimerId = null;
+        if (this._reconnectTimerId) {
+            clearTimeout(this._reconnectTimerId);
+            this._reconnectTimerId = null;
         }
 
-        if (this.socket) {
+        if (this._socket) {
             this.isManualClose = true;
-            this.socket.close();
+            this._socket.close();
         }
 
         console.log('[WsClient] ⌛ connecting to', this.url);
         this.isManualClose = false;
-        this.socket = new WebSocket(this.url);
+        this._socket = new WebSocket(this.url);
 
-        this.socket.onopen = () => {
+        this._socket.onopen = () => {
             this._was_open = true;
             console.log('[WsClient.onopen] 🟢 connected');
-            this.event_manager.emit('ws.onopen');
+            this.event_manager.event_emit('ws.onopen');
         };
 
-        this.socket.onmessage = (event) => {
+        this._socket.onmessage = (event) => {
             let data;
             try {
                 data = JSON.parse(event.data);
@@ -1418,41 +1427,41 @@ class WebSocketClient {
                 return;
             }
             console.log('[WsClient] 📩', data);
-            this.event_manager.emit('ws.onmessage', data);
+            this.event_manager.event_emit('ws.onmessage', data);
         };
 
-        this.socket.onclose = () => {
+        this._socket.onclose = () => {
         if (this._was_open) console.log('[WsClient.onclose] 🔴 closed');
-            this.event_manager.emit('ws.onclose');
+            this.event_manager.event_emit('ws.onclose');
             if (!this.isManualClose) {
                 const delay = this.reconnectDelay;
                 console.log(`[WsClient] reconnecting in ${delay}ms...`);
-                this.event_manager.emit('ws.onreconnecting', { delay });
-                this.reconnectTimerId = setTimeout(() => this.connect(), delay);
+                this.event_manager.event_emit('ws.onreconnecting', { delay });
+                this._reconnectTimerId = setTimeout(() => this.connect(), delay);
             }
         };
 
-        this.socket.onerror = (err) => {
+        this._socket.onerror = (err) => {
             if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
-            this.event_manager.emit('ws.onerror', err);
+            this.event_manager.event_emit('ws.onerror', err);
         };
     }
 
     // -------------------------------------------------------------------------
     /** Состояние подключения */
     is_connected() {
-        return this.socket?.readyState === WebSocket.OPEN;
+        return this._socket?.readyState === WebSocket.OPEN;
     }
 
     // -------------------------------------------------------------------------
     /** Отправить JSON-данные. Возвращает true, если сообщение отправлено */
     send_json(data) {
         if (!this.is_connected()) {
-            console.warn('[WsClient] socket not open, message dropped', data);
+            console.warn('[WsClient] _socket not open, message dropped', data);
             return false;
         }
         try {
-            this.socket.send(JSON.stringify(data));
+            this._socket.send(JSON.stringify(data));
             return true;
         } catch (exc) {
             console.error('[WsClient] send_json failed', exc);
@@ -1463,18 +1472,18 @@ class WebSocketClient {
     // -------------------------------------------------------------------------
     stop() {
         this.isManualClose = true;
-        if (this.reconnectTimerId) {
-            clearTimeout(this.reconnectTimerId);
-            this.reconnectTimerId = null;
+        if (this._reconnectTimerId) {
+            clearTimeout(this._reconnectTimerId);
+            this._reconnectTimerId = null;
         }
-        this.socket?.close();
+        this._socket?.close();
     }
 
     /** Полное уничтожение экземпляра: остановка + очистка всех ресурсов */
     destroy() {
         this.stop();
-        this.socket = null;
-        this.callbacks_clear();
+        this._socket = null;
+        this.event_manager.callbacks_clear();
     }
 }
 
