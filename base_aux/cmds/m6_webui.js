@@ -1,12 +1,11 @@
 // =============================================================================
-// item-manager.js — переиспользуемый менеджер элементов
-// =============================================================================
-
 /**
  * Базовый UI одного элемента.
  */
 class BaseItemUI {
-    static ELEMENTS_SCHEMA = {};
+    elements = {
+        final: null,
+    };
     css_map = {};
 
     /**
@@ -14,12 +13,13 @@ class BaseItemUI {
      * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
-    constructor(itemId, ws) {
+    constructor(itemId, ws, event_manager) {
         this.itemId = itemId;
         this.ws = ws;
+        this.event_manager = event_manager;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
-        this.elements = Object.assign({ final: null }, new.target.ELEMENTS_SCHEMA);
+        if (!this.elements.has("final")) this.elements["final"] = null;
 
     }
 
@@ -65,7 +65,9 @@ class BaseItemUI {
 
 // ---------------------------------------------------------------------------------------------------------------------
 class ItemUiTerminal extends BaseItemUI {
-    static ELEMENTS_SCHEMA = {
+    elements = {
+        final: null,
+
         output: null,
         input: null,
     };
@@ -181,102 +183,132 @@ class ItemUiTerminal extends BaseItemUI {
 // =============================================================================
 class BaseItemManager {
     /**
-     * @param {Object} config
      * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
      * @param {string}          config.containerSelector – CSS-селектор контейнера для элементов
-     * @param {Object}          [config.cssClasses]       – переопределение CSS-классов
-     * @param {typeof BaseItemUI} [config.itemCls]   – класс UI элемента
+     * @param {Object}          [config.cssClasses]      – переопределение CSS-классов
+     * @param {typeof BaseItemUI} [config.itemCls]      – класс UI элемента
      */
-    constructor({ ws, containerSelector, itemCls = ItemUiTerminal }) {
+    constructor({
+        ws,
+        event_manager,
+        itemCls = ItemUiTerminal,
+        containerSelector,
+        url_items,
+        config = {},
+    } = {}) {
+        // --------------
         this.ws = ws;
+        this.event_manager = event_manager;
+        this.itemCls = itemCls;
+        this.config = config;
+        this.url_items = url_items;
+
+        // --------------
         this.elements = {
             container: document.querySelector(containerSelector),
         };
         if (!this.elements.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
 
-        this.itemCls = itemCls;
+        // --------------
         this.items = new Map();   // itemId → BaseItemUI
 
-        this._setupListeners();
-    }
-
-    _setupListeners() {
-        this.ws.callback_add('message', (msg) => {
-            if (!msg) return;
-            const { item_id, channel, action, text } = msg;
-            if (channel === 'history_log') {
-                this.items.get(item_id)?.history_add_line(action, text);
-            } else if (channel === 'item_control') {
-                if (action === 'create_item')   this.itemCreate(item_id);
-                else if (action === 'delete_item') this.itemDelete(item_id);
-                else if (action === 'clear_history') this.items.get(item_id)?.history_clear();
-            }
-        });
-
-        this.ws.callback_add('open', async () => {
-            await this.reloadAll();
-        });
+        this.callbacks_setup();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    init() {}
+    callbacks_setup() {}
+
+    // -----------------------------------------------------------------------------------------------------------------
     /** Полная перезагрузка списка с сервера */
-    async reloadAll() {
-        for (const id of this.items.keys()) this.itemDelete(id);
+    async items_reload() {
+        this.items_delete()
+
         let serverIds = [];
         try {
-            const data = await fetchJSON('/item/list');
+            const data = await fetchJSON(this.url_items);
             serverIds = data?.items || [];
         } catch { /* оставляем пустым */ }
 
-        for (const id of serverIds) await this.itemCreate(id);
+        for (const id of serverIds) await this.item_create(id);
     }
 
-    async itemCreate(itemId) {
+    items_delete() {
+        for (const id of this.items.keys()) this.item_delete(id);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    async item_create(itemId) {
         if (this.items.has(itemId)) return;
-        const ui = new this.itemCls(itemId, this.ws);
+
+        const ui = new this.itemCls({itemId, ws: this.ws, event_manager});
         await ui.init()
         this.items.set(itemId, ui);
         this.elements.container.appendChild(ui.elements.final);
     }
 
-    itemDelete(itemId) {
+    item_delete(itemId) {
         const ui = this.items.get(itemId);
         if (ui) {
             ui.destroy();
             this.items.delete(itemId);
         }
     }
+}
 
-    /**
-     * Инициализация глобальной кнопки «создать» (может вызываться извне)
-     * @param {string} addButtonSelector – CSS-селектор кнопки
-     */
-    initGlobalUI(addButtonSelector) {
-        const btn = document.querySelector(addButtonSelector);
+
+// =====================================================================================================================
+class ItemManager extends BaseItemManager {
+
+    init() {
+        const btn = document.querySelector(this.config?.selectorBtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
                 this.ws.send_json({ channel: 'item_control', action: 'create_item' });
             });
         }
     }
-}
 
-class ItemManager extends BaseItemManager {
+    callbacks_setup() {
+        this.event_manager.schema__update_values({
+            "ws.onopen": async () => { await this.items_reload() },
+            "ws.onclose": null,
+            "ws.onmessage": (msg) => {
+                if (!msg) return;
 
-
-
+                const { item_id, channel, action, text } = msg;
+                if (channel === 'history_log') {
+                    this.items.get(item_id)?.history_add_line(action, text);
+                } else if (channel === 'item_control') {
+                    if (action === 'create_item')   this.item_create(item_id);
+                    else if (action === 'delete_item') this.item_delete(item_id);
+                    else if (action === 'clear_history') this.items.get(item_id)?.history_clear();
+                }
+            },
+            "ws.onerror": null,
+            "ws.onreconnecting": null,
+        });
+    }
 }
 
 
 // =====================================================================================================================
 window.onload = async () => {
-    const ws = new WebSocketClient('/ws/client', { autoConnect: false });
+    event_manager = new EventManager();
 
-    const manager = new ItemManager({
-        ws,
-        containerSelector: '#items_container__id',   // куда добавлять элементы
+    const ws = new WebSocketClient({
+        urlOrPath: '/ws/client',
+        autoConnect: false,
+        event_manager: event_manager,
     });
-    manager.initGlobalUI('#btn_add_item__id');
+
+    const items_manager = new ItemManager({
+        ws,
+        containerSelector: '#items_container__id',
+        url_items: '/item/list',
+        config: {selectorBtnAddNewItem: '#btn_add_item__id'},
+    });
+    items_manager.init();
 
     // 5. Запускаем WebSocket (при подключении автоматически загрузит элементы)
     ws.connect();
