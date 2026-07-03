@@ -13,14 +13,13 @@ class BaseItemUI {
      * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
-    constructor(itemId, ws, event_manager) {
+    constructor({itemId, ws, event_manager} = {}) {
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
-        if (!this.elements.has("final")) this.elements["final"] = null;
-
+        if (!("final" in this.elements)) this.elements["final"] = null;
     }
 
     async init() {
@@ -74,6 +73,7 @@ class ItemUiTerminal extends BaseItemUI {
     css_map = {
         itemBox: 'item__cls',
         itemId:  'span_item_id__cls',
+
         stdout:  'msg_stdout__cls',
         stderr:  'msg_stderr__cls',
         stdin:   'msg_stdin__cls',
@@ -123,19 +123,29 @@ class ItemUiTerminal extends BaseItemUI {
         this.sendInput(this.elements.input.value.trim());
     }
 
+    element__create_btn({text, title, onclick, attrs = {}} = {}) {
+        const btn = document.createElement('button');
+        btn.textContent = text;
+        btn.title = title;
+        for (const [name, val] of attrs) {
+            btn.setAttribute(name, val);
+        }
+        btn.onclick = onclick;
+    }
+
     _create_buttons() {
         const wrap = document.createElement('div');
-        const addBtn = (text, title, attr, handler) => {
-            const btn = document.createElement('button');
-            btn.textContent = text;
-            btn.title = title;
-            btn.setAttribute('data-btn_outline', attr);
-            btn.onclick = handler;
+
+        const btns_schema = [
+            {text: 'clear', title: 'Clear History', onclick: () => this.sendClearHistory(), attrs: {'data-btn_outline': 'blue'}},
+            {text: 'Reconnect', title: 'Reconnect', onclick: () => this.sendReconnect(), attrs: {'data-btn_outline': 'blue'}},
+            {text: 'X', title: 'Close', onclick: () => this.sendDelete(), attrs: {'data-btn_outline': 'red'}},
+        ]
+
+        btns_schema.forEach((schema) => {
+            let btn = this.element__create_btn(schema);
             wrap.appendChild(btn);
-        };
-        addBtn('clear', 'Clear History', 'blue', () => this.sendClearHistory());
-        addBtn('Reconnect', 'Reconnect', 'blue', () => this.sendReconnect());
-        addBtn('X', 'Close', 'red', () => this.sendDelete());
+        });
         return wrap;
     }
 
@@ -303,7 +313,9 @@ window.onload = async () => {
     });
 
     const items_manager = new ItemManager({
+        event_manager: event_manager,
         ws,
+
         containerSelector: '#items_container__id',
         url_items: '/item/list',
         config: {selectorBtnAddNewItem: '#btn_add_item__id'},
