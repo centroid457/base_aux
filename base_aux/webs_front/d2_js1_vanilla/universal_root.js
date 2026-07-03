@@ -1494,9 +1494,9 @@ class WebSocketClient {
 
 // =====================================================================================================================
 function explore_source(source) {
-    let source;
-//    source = {11:11, 22:22,};
-//    source = [11, 22];
+    //    let source;
+    //    source = {11:11, 22:22,};
+    //    source = [11, 22];
     source = new Map([ [11,11], [22,22] ]);
 
     function print_step(step) { console.log(`-----step=[${step}]-----`) };
@@ -1530,6 +1530,7 @@ function explore_source(source) {
         },
     };
 
+    //WORK ---------------------------------------------
     for (const [name, func] of Object.entries(steps)) {
         print_step(name);
         try {result = func(source)} catch (exc) {result = exc}
@@ -1538,6 +1539,7 @@ function explore_source(source) {
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
 function type_reference__ARRAY() {
     let source;
 
@@ -1545,7 +1547,7 @@ function type_reference__ARRAY() {
     source = new Array(5); // [пустые × 5]
 
     // Литерал (предпочтительно)
-    source = [11, 22, 'text', true];
+    source = [11, 22, 'name', true];
 
     // ------------------------------------------------------
     console.log(source);            //[11, 22, 'text', true]
@@ -1553,7 +1555,7 @@ function type_reference__ARRAY() {
 
     // ОБРАЩЕНИЕ К ЗНАЧЕНИЮ ---------------------------------
     //1=index
-    console.log(source[0]);  //11
+    console.log(source[0]);  //11 - единственная возможность доступа!
 
     //2=item
     console.log(source["11"]);  //undefined
@@ -1562,18 +1564,46 @@ function type_reference__ARRAY() {
     //3=get
     //console.log(source.get("11"));  //нет метода! Uncaught TypeError: source.get is not a function
     //console.log(source.get(11));    //нет метода! Uncaught TypeError: source.get is not a function
+
+    //4=dot
+    console.log(source.name);  //undefined
+
+    //5=add/del
+    source.nameNEW = "valueNEW";    //НЕСРАБОТАЕТ!
+    console.log(String(source));    //11,22,name,true - не добавляется!!!
+
+    source.push("valueNEW");
+    console.log(String(source));    //11,22,name,true,valueNEW
+
+    source.pop(11);                 //некорретно! - ВСЕГДА УДАЛЯЕТ ТОЛЬКО ПОСЛЕДНИЙ!!!
+    console.log(String(source));    //11,22,name,true
+    source.pop();                   //ЕДИНСТВЕННО КОРРЕКТНЫЙ!!!
+    console.log(String(source));    //11,22,name
+    source.pop(0);                  //тоже некорректно! - все равно удалит последний!
+    console.log(String(source));    //11,22
+    //source.lpop();                  //нет такого!!!
+    //console.log(String(source));    //11,22
 }
 
 
+function type_reference__SET() {
+
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
 function type_reference__OBJECT() {
     const keyFromVar = 'keyFromVar';
     const shortStyle = 'shortStyle_Value';
 
-    const source = {
+    let source;
+
+    source = {
         //ВСЕ КЛЮЧИ ПРЕОБРАЗУЮТСЯ В STR!
 
         // Литерал (предпочтительно)
-        name1: 'value1',
+        name: 'value',
         "name2": 'value2',
         //["arr1", 'arr11'],  // НЕЛЬЗЯ!!!
         //["arr1": 'arr11'],  // НЕЛЬЗЯ!!!
@@ -1607,6 +1637,17 @@ function type_reference__OBJECT() {
     //3=get
     //console.log(source.get("11"));  //нет метода! Uncaught TypeError: source.get is not a function
     //console.log(source.get(11));    //нет метода! Uncaught TypeError: source.get is not a function
+
+    //4=dot
+    console.log(source.name);  //value - РАБОТАЕТ!!
+
+    //5=add/del
+    source = {11:11};
+    source.nameNEW = "valueNEW";    //РАБОТАЕТ!
+    console.log(String(source));    //
+
+//    source.push("valueNEW");        //undefined.push
+//    source.delete(11);              //некорретно! - ВСЕГДА УДАЛЯЕТ ТОЛЬКО ПОСЛЕДНИЙ!!!
 }
 
 
@@ -1615,15 +1656,13 @@ function type_reference__MAP() {
 
     // 1=массив пар
     source = new Map([
-      ['name', 'Alice'],
-      ['age', 30],
+      ['name', 'value'],
+      [11, '11'],
       [true, 'boolean key'],   // ключ может быть любого типа
     ]);
 
     // 2=из обьекта
-    source = new Map(Object.entries({11:11,22:22}));
-
-    source.set('key', 'value');
+    source = new Map(Object.entries({11:11,22:22, name:"value"}));
 
     // ------------------------------------------------------
     console.log(source);
@@ -1634,12 +1673,18 @@ function type_reference__MAP() {
     console.log(source[0]);  //НЕЛЬЗЯ ТАК -> undefined - ТОЖЕ НЕЛЬЗЯ!
 
     //2=item
-    console.log(source["11"]);  //НЕЛЬЗЯ ТАК -> undefined
-    console.log(source[11]);    //НЕЛЬЗЯ ТАК -> undefined
+    console.log(source["11"]);  //undefined -> НЕЛЬЗЯ ТАК
+    console.log(source[11]);    //undefined -> НЕЛЬЗЯ ТАК
 
     //3=get
-    console.log(source.get("11"));  //11    единственно верно!
-    console.log(source.get(11));    //undefined - не преобразует!
+    console.log(source.get("11"));  //11    ЕДИНСТВЕННО ВЕРНО!
+    console.log(source.get(11));    //undefined -> НЕЛЬЗЯ ТАК - не преобразует!
+
+    //4=dot
+    console.log(source.name);  //undefined -> НЕЛЬЗЯ ТАК НЕКОРРЕКТНО!!!
+
+    //5=add/del
+    source.set('key', 'value');
 }
 
 
