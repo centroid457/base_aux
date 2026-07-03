@@ -1273,7 +1273,7 @@ class EventManager {
 
     schema__update_values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
         // update schema
-        for (const [event, callbacks] of Object.entries(schema)) {
+        for (let [event, callbacks] of Object.entries(schema)) {
             if (callbacks === null || callbacks === undefined) continue;
             if (typeof callbacks === 'function') callbacks = [ callbacks ];
             if (Array.isArray(callbacks)) {
@@ -1489,6 +1489,36 @@ class WebSocketClient {
         this._socket = null;
         this.event_manager.callbacks_clear(); // FIXME: shared events
     }
+}
+
+
+// =====================================================================================================================
+function explore_source(source) {
+    function print_step(step) { console.log(`-----step=[${step}]-----`) };
+
+    steps = {
+        string: (source) => { String(source) },
+    };
+
+    let step = "string";
+    print_step(step);
+    console.log(target); //
+
+    let step = "typeof";
+    print_step(step);
+    console.log(typeof target); //
+
+    let step = "FOR...IN";
+    print_step(step);
+    try {
+       for (const key in source) {
+            console.log(typeof target); //
+
+        }
+    } catch (exc) {
+        console.error('step failed', step, exc);
+    }
+
 }
 
 
