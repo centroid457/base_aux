@@ -1278,7 +1278,7 @@ class EventManager {
             if (typeof callbacks === 'function') callbacks = [ callbacks ];
             if (Array.isArray(callbacks)) {
                 for (const cb of callbacks) {
-                    // TODO: add check_IN
+                    if (callbacks.includes(cb)) continue;   // если уже есть – пропустить
                     this.callback_add(event, cb);
                 }
             } else {
