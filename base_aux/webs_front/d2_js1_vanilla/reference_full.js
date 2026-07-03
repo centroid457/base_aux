@@ -474,25 +474,59 @@ function type_reference__OBJECT() {
     console.log(a, second, rest); // 1, 2, { d:4, e:5 }
 
     // ============================================================
-    // 3. ПЕРЕБОР СВОЙСТВ
+    // 3. ИТЕРАЦИЯ
     // ============================================================
-    const sample = { x: 10, y: 20, z: 30 };
+    const sample = { x: 10, y: 20 };
+    sample.AttrNew = "valueNew";
 
-    // 3.1 for...in – перебирает все перечисляемые свойства, включая унаследованные
+    // 3.1 [НЕБЕЗОПАСНО!!!]for...in – перебирает все перечисляемые свойства, включая унаследованные
+    let result;
+    result = [];
+    for (const key in sample) {
+        result.push(key);
+    }
+    console.log(result);    //['x', 'y', 'AttrNew']
+
     for (const key in sample) {
         if (sample.hasOwnProperty(key)) { // чтобы отсечь прототип
             console.log(key, sample[key]);
         }
     }
 
-    // 3.2 Object.keys() – массив собственных перечисляемых ключей (строки)
-    console.log(Object.keys(sample));   // ['x','y','z']
+    // ============================================================
+    // 3.2 [БЕЗОПАСНО!!!]Object.keys/values/entries() – массив собственных(неунаследованных) перечисляемых ключей (строки)
+    console.log(Object.keys(sample));   // ['x','y']
+    console.log(Object.values(sample)); // [10,20]
+    console.log(Object.entries(sample)); // [['x',10], ['y',20]]
 
-    // 3.3 Object.values() – массив значений
-    console.log(Object.values(sample)); // [10,20,30]
+    // БЕЗОПАСНЫЙ ПЕРЕБОР СВОЙСТВ (for...in vs Object.keys)
+    /*В любом месте, где вы перебираете свойства объекта, используйте Object.keys(), Object.values() или Object.entries(),
+    если вам нужны только собственные свойства. for...in используйте только тогда,
+    когда вы намеренно хотите включить унаследованные свойства (что бывает редко,
+    и обычно требует явной проверки hasOwnProperty).*/
 
-    // 3.4 Object.entries() – массив пар [ключ, значение]
-    console.log(Object.entries(sample)); // [['x',10], ['y',20], ['z',30]]
+    const parent = { inherited: 'fromProto' };
+    const child = Object.create(parent);
+    child.own = 'myProp';
+
+    // НЕБЕЗОПАСНО – перебирает и унаследованные
+    for (const key in child) {
+        console.log(key); // 'own', затем 'inherited'
+    }
+
+    // БЕЗОПАСНО – только собственные свойства
+    for (const key of Object.keys(child)) {
+        console.log(key); // только 'own'
+    }
+
+    // Ещё безопаснее – проверка hasOwnProperty внутри for...in
+    for (const key in child) {
+        if (Object.hasOwn(child, key)) {
+            console.log(key); // только 'own'
+        }
+    }
+    // или старая форма: if (child.hasOwnProperty(key))
+    // ============================================================
 
     // 3.5 Object.getOwnPropertyNames() – все собственные ключи (включая неперечисляемые)
     const withHidden = {};

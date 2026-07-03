@@ -1266,7 +1266,7 @@ class EventManager {
     }
 
     schema__register_names(schema) {    // APPLY: in server/emitter/event producer
-        for (const event in schema) {
+        for (const event in Object.keys(schema)) {
             this.register_event(event);
         }
     }
@@ -1314,8 +1314,10 @@ class EventManager {
     // -------------------------------------------------------------------------
     callback_add(event, callback) {
         if (!(event in this.event_schema)) {
-            console.error("not registered event", event);
-            return;     //todo: raise?
+            let msg = "not registered event" + event
+            console.error(msg);
+            // return;     // raise?
+            throw new Error(msg);
         }
 
         this.event_schema[event].push(callback);
@@ -1333,7 +1335,7 @@ class EventManager {
     callbacks_clear(event) {
         // clear - all events
         if (event === undefined) {
-            for (const name in this.event_schema) {
+            for (const name in Object.keys(this.event_schema)) {
                 this.event_schema[name] = [];
             };
             return;
@@ -1389,7 +1391,7 @@ class WebSocketClient {
         this.reconnectDelay = reconnectDelay;
 
         // ----------------------------
-        if (autoConnect == true) {
+        if (autoConnect) {
             this.connect();
         }
     }
