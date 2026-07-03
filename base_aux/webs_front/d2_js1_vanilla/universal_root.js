@@ -1266,7 +1266,7 @@ class EventManager {
     }
 
     schema__register_names(schema) {    // APPLY: in server/emitter/event producer
-        for (const event in Object.keys(schema)) {
+        for (const event of Object.keys(schema)) {
             this.register_event(event);
         }
     }
@@ -1335,7 +1335,7 @@ class EventManager {
     callbacks_clear(event) {
         // clear - all events
         if (event === undefined) {
-            for (const name in Object.keys(this.event_schema)) {
+            for (const name of Object.keys(this.event_schema)) {
                 this.event_schema[name] = [];
             };
             return;

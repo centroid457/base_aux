@@ -510,12 +510,12 @@ function type_reference__OBJECT() {
     child.own = 'myProp';
 
     // НЕБЕЗОПАСНО – перебирает и унаследованные
-    for (const key in child) {
+    for (const key in child) {  // IN !!!!
         console.log(key); // 'own', затем 'inherited'
     }
 
     // БЕЗОПАСНО – только собственные свойства
-    for (const key of Object.keys(child)) {
+    for (const key of Object.keys(child)) {  // OF !!!!
         console.log(key); // только 'own'
     }
 
