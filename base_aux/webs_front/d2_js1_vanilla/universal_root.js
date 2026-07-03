@@ -1266,7 +1266,7 @@ class EventManager {
     }
 
     schema__register_names(schema) {    // APPLY: in server/emitter/event producer
-        for (const event in schema) {   // TODO: Object.keys(schema)
+        for (const event in schema) {
             this.register_event(event);
         }
     }
@@ -1278,6 +1278,7 @@ class EventManager {
             if (typeof callbacks === 'function') callbacks = [ callbacks ];
             if (Array.isArray(callbacks)) {
                 for (const cb of callbacks) {
+                    // TODO: add check_IN
                     this.callback_add(event, cb);
                 }
             } else {
@@ -1314,7 +1315,7 @@ class EventManager {
     callback_add(event, callback) {
         if (!(event in this.event_schema)) {
             console.error("not registered event", event);
-            return;
+            return;     //todo: raise?
         }
 
         this.event_schema[event].push(callback);

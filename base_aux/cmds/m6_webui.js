@@ -127,10 +127,11 @@ class ItemUiTerminal extends BaseItemUI {
         const btn = document.createElement('button');
         btn.textContent = text;
         btn.title = title;
-        for (const [name, val] of attrs) {
+        for (const [name, val] of Object.entries(attrs)) {
             btn.setAttribute(name, val);
         }
         btn.onclick = onclick;
+        return btn;
     }
 
     _create_buttons() {
@@ -251,7 +252,7 @@ class BaseItemManager {
     async item_create(itemId) {
         if (this.items.has(itemId)) return;
 
-        const ui = new this.itemCls({itemId, ws: this.ws, event_manager});
+        const ui = new this.itemCls({itemId, ws: this.ws, event_manager: this.event_manager});
         await ui.init()
         this.items.set(itemId, ui);
         this.elements.container.appendChild(ui.elements.final);
@@ -304,7 +305,7 @@ class ItemManager extends BaseItemManager {
 
 // =====================================================================================================================
 window.onload = async () => {
-    event_manager = new EventManager();
+    const event_manager = new EventManager();
 
     const ws = new WebSocketClient({
         urlOrPath: '/ws/client',
