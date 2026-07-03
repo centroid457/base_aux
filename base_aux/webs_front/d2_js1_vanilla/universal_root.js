@@ -1494,31 +1494,152 @@ class WebSocketClient {
 
 // =====================================================================================================================
 function explore_source(source) {
+    let source;
+//    source = {11:11, 22:22,};
+//    source = [11, 22];
+    source = new Map([ [11,11], [22,22] ]);
+
     function print_step(step) { console.log(`-----step=[${step}]-----`) };
 
     steps = {
-        string: (source) => { String(source) },
+        STRING: (source) => { return String(source) },
+        TYPEOF: (source) => { return typeof source },
+        GETITEM: (source) => { return source[11] },
+        FOR_i_IN: (source) => {
+            result = [];
+            for (const item in source) {
+                result.push(item);
+            }
+            return result;
+        },
+        FOR_i_OF: (source) => {
+            result = [];
+            for (const item of source) {
+                result.push(item);
+            }
+            return result;
+        },
+        FOR_i_OF_ENTRIES: (source) => {
+            result = [];
+            for (const item of Object.entries(source)) {
+                result.push(item);
+                //console.log([name,value] = item);
+                console.log(item);
+            }
+            return result;
+        },
     };
 
-    let step = "string";
-    print_step(step);
-    console.log(target); //
-
-    let step = "typeof";
-    print_step(step);
-    console.log(typeof target); //
-
-    let step = "FOR...IN";
-    print_step(step);
-    try {
-       for (const key in source) {
-            console.log(typeof target); //
-
-        }
-    } catch (exc) {
-        console.error('step failed', step, exc);
+    for (const [name, func] of Object.entries(steps)) {
+        print_step(name);
+        try {result = func(source)} catch (exc) {result = exc}
+        console.log(result);
     }
+}
 
+
+function type_reference__ARRAY() {
+    let source;
+
+    // Создание с фиксированной длиной (редко)
+    source = new Array(5); // [пустые × 5]
+
+    // Литерал (предпочтительно)
+    source = [11, 22, 'text', true];
+
+    // ------------------------------------------------------
+    console.log(source);            //[11, 22, 'text', true]
+    console.log(String(source));    //11,22,text,true
+
+    // ОБРАЩЕНИЕ К ЗНАЧЕНИЮ ---------------------------------
+    //1=index
+    console.log(source[0]);  //11
+
+    //2=item
+    console.log(source["11"]);  //undefined
+    console.log(source[11]);    //undefined
+
+    //3=get
+    //console.log(source.get("11"));  //нет метода! Uncaught TypeError: source.get is not a function
+    //console.log(source.get(11));    //нет метода! Uncaught TypeError: source.get is not a function
+}
+
+
+function type_reference__OBJECT() {
+    const keyFromVar = 'keyFromVar';
+    const shortStyle = 'shortStyle_Value';
+
+    const source = {
+        //ВСЕ КЛЮЧИ ПРЕОБРАЗУЮТСЯ В STR!
+
+        // Литерал (предпочтительно)
+        name1: 'value1',
+        "name2": 'value2',
+        //["arr1", 'arr11'],  // НЕЛЬЗЯ!!!
+        //["arr1": 'arr11'],  // НЕЛЬЗЯ!!!
+
+        "11": "intStr",
+        11: "intInt",    //ПЕРЕЗАПИШЕТ! предыдущий!
+
+        true: "bool",
+        'key.with: specials!': "value.with: specials!",
+
+        // dynamic keys
+        [keyFromVar]: "valueFromVar",
+
+        //shortStyle = Сокращённая запись свойств (ES6)
+        shortStyle,
+    };
+
+    // ------------------------------------------------------
+    console.log(source);
+    //{11: 'intInt', name1: 'value1', name2: 'value2', true: 'bool', key.with: specials!: 'value.with: specials!', keyFromVar: 'valueFromVar', …}
+    console.log(String(source));    //[object Object]
+
+    // ОБРАЩЕНИЕ К ЗНАЧЕНИЮ ---------------------------------
+    //1=index
+    console.log(source[0]);  //undefined - ИЩЕТ КЛЮЧ А НЕ ИНДЕКС!
+
+    //2=item
+    console.log(source["11"]);  //intInt
+    console.log(source[11]);    //intInt
+
+    //3=get
+    //console.log(source.get("11"));  //нет метода! Uncaught TypeError: source.get is not a function
+    //console.log(source.get(11));    //нет метода! Uncaught TypeError: source.get is not a function
+}
+
+
+function type_reference__MAP() {
+    let source;
+
+    // 1=массив пар
+    source = new Map([
+      ['name', 'Alice'],
+      ['age', 30],
+      [true, 'boolean key'],   // ключ может быть любого типа
+    ]);
+
+    // 2=из обьекта
+    source = new Map(Object.entries({11:11,22:22}));
+
+    source.set('key', 'value');
+
+    // ------------------------------------------------------
+    console.log(source);
+    console.log(String(source));    //[object Map]
+
+    // ОБРАЩЕНИЕ К ЗНАЧЕНИЮ ---------------------------------
+    //1=index
+    console.log(source[0]);  //НЕЛЬЗЯ ТАК -> undefined - ТОЖЕ НЕЛЬЗЯ!
+
+    //2=item
+    console.log(source["11"]);  //НЕЛЬЗЯ ТАК -> undefined
+    console.log(source[11]);    //НЕЛЬЗЯ ТАК -> undefined
+
+    //3=get
+    console.log(source.get("11"));  //11    единственно верно!
+    console.log(source.get(11));    //undefined - не преобразует!
 }
 
 
