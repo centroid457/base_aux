@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 import uvicorn
 
+from pydantic import BaseModel
+
 import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
 from base_aux.cmds.m5_terminal1_os2_aio import *
@@ -100,7 +102,7 @@ class Base_ManagerInst_Term(Base_ManagerInstance):
         await event_broadcaster.broadcast({
             "item_id": idn,                 # FILTER
             "channel": "item_control",
-            "action": "clear_history",
+            "action": "history_clear",
         })
 
 
@@ -215,35 +217,72 @@ async def html__root(request: Request):
 
 
 # =====================================================================================================================
-@app.get("/item/list")
-async def list_items():
-    ids = list(manager_inst__termos.items)
-    return {"items": ids}
+class CmdRpcRequest(BaseModel):
+    channel: str
+    action: str
+    item_id: Optional[str] = None
+    text: Optional[str] = None
+
+
+class CmdRpcResponse(BaseModel):
+    status: str = "OK"
+    data: Any = None
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.get("/item/history/get/{idn}")
-async def get_history(idn: str):
-    item = manager_inst__termos.get_item(idn)
-    if not item:
-        raise HTTPException(status_code=404, detail=f"[{idn=}]Item not found")
+@app.post("/post__rpc", response_model=CmdRpcResponse | None)
+async def post__rpc(cmd: CmdRpcRequest):
+    print(cmd)
+    if cmd.channel == "item_control":
+        if cmd.action == "send_stdin":
 
-    history_data: list[dict] = []
-    for result in item.history:
-        history_data.append({
-            "input": result.INPUT,
-            "stdout": result.STDOUT,
-            "stderr": result.STDERR,
-            "timestamp": result.timestamp.isoformat() if result.timestamp else None,
-            "duration": result.duration,
-            "finished_status": result.finished_status.value if result.finished_status else None,
-            "retcode": result.retcode
-        })
-    return history_data
+            item = manager_inst__termos.get_item(cmd.item_id)
+            if item and cmd.text:
+                TasksBg_PoolGlobal().spawn(item.send_cmd(cmd.text))
+
+        elif cmd.action == "reconnect_item":
+            item = manager_inst__termos.get_item(cmd.item_id)
+            TasksBg_PoolGlobal().spawn(item.reconnect())
+
+        elif cmd.action == "create_item":
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
+
+        elif cmd.action == "delete_item":
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
+
+        elif cmd.action == "history_clear":
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
+
+        elif cmd.action == "history_get":
+            item = manager_inst__termos.get_item(cmd.item_id)
+            if not item:
+                raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
+
+            history_data: list[dict] = []
+            for result in item.history:
+                history_data.append({
+                    "input": result.INPUT,
+                    "stdout": result.STDOUT,
+                    "stderr": result.STDERR,
+                    "timestamp": result.timestamp.isoformat() if result.timestamp else None,
+                    "duration": result.duration,
+                    "finished_status": result.finished_status.value if result.finished_status else None,
+                    "retcode": result.retcode
+                })
+            return CmdRpcResponse(data=history_data)
+
+        elif cmd.action == "items_list_get":
+            ids = list(manager_inst__termos.items)
+            return CmdRpcResponse(data=ids)
+
+        else:
+            raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
+    else:
+        raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
 
 
 # =====================================================================================================================
-@app.websocket("/ws/ping")
+@app.websocket("/ws__ping")
 async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
@@ -261,37 +300,8 @@ async def ws__ping(websocket: WebSocket):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.websocket("/ws/client")
-async def ws__client(websocket: WebSocket):
-    # 1=SETTINGS -----------------------
-    async def income_executor(data: dict | Any) -> None:
-        msg__channel = data.get("channel")
-        msg__itemid = data.get("item_id")
-
-        msg__action = data.get("action")
-        msg__text = data.get("text")
-
-        # ----------------------------------------------
-        if msg__channel == "history_log":  # keep here
-
-            item = manager_inst__termos.get_item(msg__itemid)
-            if item and msg__text:
-                TasksBg_PoolGlobal().spawn(item.send_cmd(msg__text))
-
-        elif msg__channel == "item_control":
-            if msg__action == "clear_history":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(msg__itemid))
-
-            elif msg__action == "reconnect_item":
-                item = manager_inst__termos.get_item(msg__itemid)
-                TasksBg_PoolGlobal().spawn(item.reconnect())
-
-            elif msg__action == "create_item":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
-
-            elif msg__action == "delete_item":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(msg__itemid))
-
+@app.websocket("/ws__broadcast")
+async def ws__broadcast(websocket: WebSocket):
     # 2=PREPARE -----------------------
     await websocket.accept()
     client_id, client_queue = event_broadcaster.register_client()
@@ -300,7 +310,6 @@ async def ws__client(websocket: WebSocket):
     async with WsClient(
             ws_client=websocket,
             queue_client=client_queue,
-            callback_onmessage=income_executor,
             callback_onclose=lambda: event_broadcaster.unregister_client(client_id),
     ) as wsc:
         await wsc

@@ -17,15 +17,15 @@ class WsClient(Nest_TasksBg_AbcAio):
     as organised IO transportation/execution
 
     SPECIALLY CREATED FOR
-        @app.websocket("/ws/client")
+        @app.websocket("/ws__broadcast")
         async def ws__client(websocket: WebSocket):
     """
     def __init__(
             self,
             ws_client: WebSocket,
             queue_client: asyncio.Queue,
-            callback_onmessage: TYPES__CALLBACK_AIO__DATA,
-            callback_onclose: TYPES__CALLBACK_AIO__DATA,
+            callback_onmessage: TYPES__CALLBACK_AIO__DATA = None,
+            callback_onclose: TYPES__CALLBACK_AIO__DATA = None,
 
             *args,
             **kwargs

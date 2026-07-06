@@ -1151,7 +1151,7 @@ function onload__ws_ping() {
 
         const ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
-        const ws_url = `${ws_protocol}//${host}/ws/ping`;
+        const ws_url = `${ws_protocol}//${host}/ws__ping`;
 
         // ОБЯЗАТЕЛЬНО СОЗДАЕМ КАЖДЫЙ РАЗ НОВЫЙ сокет!!!
         // После закрытия WebSocket его нельзя «переоткрыть» — только создать новый. Это особенность протокола.
@@ -1248,6 +1248,170 @@ async function fetchJSON(url) {
     const data = response.json();
     return data;
 }
+
+
+// ============================================================
+// HTTP-клиент с поддержкой всех методов и лучших практик
+// ============================================================
+/**
+ * Универсальная функция для выполнения HTTP-запросов
+ * @param {string} method - HTTP-метод (GET, POST, PUT, DELETE и т.д.)
+ * @param {string} url - полный URL или путь
+ * @param {object} options - дополнительные опции
+ * @param {*} options.body - тело запроса (будет сериализовано в JSON, если не FormData)
+ * @param {object} options.headers - кастомные заголовки
+ * @param {number} options.timeout - таймаут в мс (по умолчанию 0 – без таймаута)
+ * @param {AbortSignal} options.signal - для отмены запроса
+ * @param {boolean} options.log - логировать запрос и ответ
+ * @param {boolean} options.parseJson - парсить ответ как JSON (по умолчанию true)
+ * @param {string} options.responseType - 'json' | 'text' | 'blob' | 'arrayBuffer' (если parseJson false)
+ * @returns {Promise<any>}
+ */
+async function _fetchRequest(method, url, body={}, options = {}) {
+    const DEFAULT_HEADERS = {
+        'Content-Type': 'application/json',
+    };
+
+    const {
+        headers = {},
+        timeout = 0,
+        signal,
+        log: enableLog = false,
+        parseJson = true,
+        responseType = 'json',
+    } = options;
+
+    // Формируем заголовки
+    const requestHeaders = { ...DEFAULT_HEADERS, ...headers };
+    let requestBody = body;
+
+    // Если тело – объект, но не FormData и не URLSearchParams – сериализуем в JSON
+    if (body && typeof body === 'object' && !(body instanceof FormData) && !(body instanceof URLSearchParams)) {
+        requestBody = JSON.stringify(body);
+    } else if (body instanceof FormData) {
+        // Для FormData удаляем Content-Type, чтобы браузер сам выставил multipart/form-data с границей
+        delete requestHeaders['Content-Type'];
+    }
+
+    // Если timeout указан, создаём AbortController
+    let abortController;
+    let timeoutId;
+    if (timeout > 0) {
+        abortController = new AbortController();
+        timeoutId = setTimeout(() => abortController.abort(), timeout);
+        // Если уже есть signal, объединяем (используем AbortSignal.any)
+        if (signal) {
+            // Используем AbortSignal.any для объединения двух сигналов (ES2021+)
+            // Если среда не поддерживает, можно просто использовать один
+            if (typeof AbortSignal.any === 'function') {
+                const combinedSignal = AbortSignal.any([signal, abortController.signal]);
+                // Но мы не можем перезаписать signal, поэтому используем отдельный
+                // Проще: используем только наш или переданный. Оставим переданный приоритет.
+                // Поскольку мы создали свой контроллер только для таймаута, его сигнал не используется,
+                // если передан внешний signal – тогда таймаут не сработает.
+                // Можно реализовать сложнее, но для простоты: если передан signal, таймаут игнорируем.
+            }
+            // Упрощённо: если передан signal, таймаут не используем
+            if (signal) {
+                clearTimeout(timeoutId);
+                abortController = null;
+            }
+        }
+    }
+
+    const fetchOptions = {
+        method,
+        headers: requestHeaders,
+        body: requestBody,
+        signal: signal || (abortController ? abortController.signal : undefined),
+    };
+
+    if (enableLog) {
+        console.log(`📤 ${method} ${url}`, { headers: requestHeaders, body: requestBody });
+    }
+
+    try {
+        const response = await fetch(url, fetchOptions);
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            // Пытаемся извлечь сообщение об ошибке из тела ответа
+            let errorMessage = `HTTP ${response.status} ${response.statusText}`;
+            try {
+                const errorBody = await response.json();
+                if (errorBody.message || errorBody.detail) {
+                    errorMessage += ` – ${errorBody.message || errorBody.detail}`;
+                } else {
+                    errorMessage += ` – ${JSON.stringify(errorBody)}`;
+                }
+            } catch {
+                // Если не JSON, читаем текст
+                try {
+                    const text = await response.text();
+                    if (text) errorMessage += ` – ${text}`;
+                } catch (_) { /* ignore */ }
+            }
+            throw new Error(errorMessage);
+        }
+
+        // Парсим ответ
+        let data;
+        if (parseJson) {
+            data = await response.json();
+        } else {
+            switch (responseType) {
+                case 'text': data = await response.text(); break;
+                case 'blob': data = await response.blob(); break;
+                case 'arrayBuffer': data = await response.arrayBuffer(); break;
+                default: data = response;
+            }
+        }
+
+        if (enableLog) {
+            console.log(`📥 ${method} ${url} ответ`, data);
+        }
+        return data;
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            throw new Error(`Запрос ${method} ${url} был отменён`);
+        }
+        // Если таймаут сработал, ошибка будет AbortError
+        throw err;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+// -------- Обёртки для удобства --------
+function fetchJsonGet(url, options = {}) {
+    return _fetchRequest('GET', url, {}, options);
+}
+
+function fetchJsonPost(url, body = {}, options = {}) {
+    return _fetchRequest('POST', url, body, options);
+}
+
+function fetchJsonPut(url, body = {}, options = {}) {
+    return _fetchRequest('PUT', url, body, options);
+}
+
+function fetchJsonPatch(url, body = {}, options = {}) {
+    return _fetchRequest('PATCH', url, body, options);
+}
+
+function fetchJsonDelete(url, body = {}, options = {}) {    // seems body is not used here!!!
+    return _fetchRequest('DELETE', url, body, options);    // seems body is not used here!!!
+}
+
+// -------- Экспорт (для модулей) --------
+//export {
+//    _fetchRequest,
+//    fetchJsonGet,
+//    fetchJsonPost,
+//    fetchJsonPut,
+//    fetchJsonPatch,
+//    fetchJsonDelete,
+//};
 
 
 // =====================================================================================================================
@@ -1362,7 +1526,7 @@ class WebSocketClient {
     _reconnectTimerId = null;          // таймер переподключения
 
     /**
-     * @param {string}  urlOrPath – полный URL или путь (например "/ws/client")
+     * @param {string}  urlOrPath – полный URL или путь (например "/ws__broadcast")
      * @param {EventManager} [eventManager]
      * @param {number}  [reconnectDelay=300]
      * @param {boolean} [autoConnect=true]

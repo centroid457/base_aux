@@ -77,7 +77,7 @@ async def str__echo_path(path):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.websocket("/ws/ping")
+@app.websocket("/ws__ping")
 async def ws__ping(websocket: WebSocket):
     await websocket.accept()
     try:

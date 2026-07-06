@@ -34,7 +34,8 @@ class BaseItemUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     _send(channel, action, extra = {}) {
-        return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+        //return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
+        return fetchJsonPost( "/post__rpc", { item_id: this.itemId, channel, action, ...extra });
     }
 
     // NESTING =========================================================================================================
@@ -138,9 +139,21 @@ class ItemUiTerminal extends BaseItemUI {
         const wrap = document.createElement('div');
 
         const btns_schema = [
-            {text: 'clear', title: 'Clear History', onclick: () => this.sendClearHistory(), attrs: {'data-btn_outline': 'blue'}},
-            {text: 'Reconnect', title: 'Reconnect', onclick: () => this.sendReconnect(), attrs: {'data-btn_outline': 'blue'}},
-            {text: 'X', title: 'Close', onclick: () => this.sendDelete(), attrs: {'data-btn_outline': 'red'}},
+            {
+                text: 'clear',
+                title: 'Clear History',
+                onclick: () => this.sendHistoryClear(), attrs: {'data-btn_outline': 'blue'}
+            },
+            {
+                text: 'Reconnect',
+                title: 'Reconnect',
+                onclick: () => this.sendReconnect(), attrs: {'data-btn_outline': 'blue'}
+            },
+            {
+                text: 'X',
+                title: 'Close',
+                onclick: () => this.sendDelete(), attrs: {'data-btn_outline': 'red'}
+            },
         ]
 
         btns_schema.forEach((schema) => {
@@ -151,14 +164,22 @@ class ItemUiTerminal extends BaseItemUI {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    // SET -----
     sendInput(text) {
         if (!text) return;
-        const sent = this._send('history_log', 'stdin', { text });
+        const sent = this._send('item_control', 'send_stdin', { text });
         if (sent) this.elements.input.value = '';
     }
     sendReconnect()    { this._send('item_control', 'reconnect_item'); }
-    sendClearHistory() { this._send('item_control', 'clear_history'); }
     sendDelete()       { this._send('item_control', 'delete_item'); }
+
+    sendHistoryClear() { this._send('item_control', 'history_clear'); }
+
+    // GET -----
+    async sendHistoryGet() {
+        const resp = await this._send('item_control', 'history_get');
+        return resp?.data;
+    }
 
     // USER METH -----------------------------------------------------------------------------------------------------------------
     history_clear() {
@@ -168,7 +189,7 @@ class ItemUiTerminal extends BaseItemUI {
     async history_load() {
         this.history_clear();
         try {
-            const history = await fetchJSON(`/item/history/get/${this.itemId}`);
+            const history = await this.sendHistoryGet();
             history.forEach(line => {
                 if (line.input)           this.history_add_line('stdin', line.input);
                 line.stdout?.forEach(l => this.history_add_line('stdout', l));
@@ -203,8 +224,9 @@ class BaseItemManager {
         ws,
         event_manager,
         itemCls = ItemUiTerminal,
-        containerSelector,
-        url_items,
+
+        selectors = {},
+        urls = {},
         config = {},
     } = {}) {
         // --------------
@@ -212,13 +234,14 @@ class BaseItemManager {
         this.event_manager = event_manager;
         this.itemCls = itemCls;
         this.config = config;
-        this.url_items = url_items;
+        this.urls = urls;
+        this.selectors = selectors;
 
         // --------------
         this.elements = {
-            container: document.querySelector(containerSelector),
+            container: document.querySelector(this.selectors.containerSelector),
         };
-        if (!this.elements.container) throw new Error(`Контейнер "${containerSelector}" не найден`);
+        if (!this.elements.container) throw new Error(`Контейнер "${this.selectors.containerSelector}" не найден`);
 
         // --------------
         this.items = new Map();   // itemId → BaseItemUI
@@ -237,8 +260,8 @@ class BaseItemManager {
 
         let serverIds = [];
         try {
-            const data = await fetchJSON(this.url_items);
-            serverIds = data?.items || [];
+            const data = await this.sendItemsListGet();
+            serverIds = data || [];
         } catch { /* оставляем пустым */ }
 
         for (const id of serverIds) await this.item_create(id);
@@ -272,10 +295,10 @@ class BaseItemManager {
 class ItemManager extends BaseItemManager {
 
     init() {
-        const btn = document.querySelector(this.config?.selectorBtnAddNewItem);
+        const btn = document.querySelector(this.selectors?.selectorBtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
-                this.ws.send_json({ channel: 'item_control', action: 'create_item' });
+                fetchJsonPost('/post__rpc', { channel: 'item_control', action: 'create_item' });
             });
         }
     }
@@ -293,13 +316,19 @@ class ItemManager extends BaseItemManager {
                 } else if (channel === 'item_control') {
                     if (action === 'create_item')   this.item_create(item_id);
                     else if (action === 'delete_item') this.item_delete(item_id);
-                    else if (action === 'clear_history') this.items.get(item_id)?.history_clear();
+                    else if (action === 'history_clear') this.items.get(item_id)?.history_clear();
                 }
             },
             "ws.onerror": null,
             "ws.onreconnecting": null,
         });
     }
+
+    async sendItemsListGet() {
+        const resp = await fetchJsonPost('/post__rpc', { channel: 'item_control', action: 'items_list_get' });
+        return resp?.data;
+    }
+
 }
 
 
@@ -308,7 +337,7 @@ window.onload = async () => {
     const event_manager = new EventManager();
 
     const ws = new WebSocketClient({
-        urlOrPath: '/ws/client',
+        urlOrPath: '/ws__broadcast',
         autoConnect: false,
         event_manager: event_manager,
     });
@@ -317,9 +346,14 @@ window.onload = async () => {
         event_manager: event_manager,
         ws,
 
-        containerSelector: '#items_container__id',
-        url_items: '/item/list',
-        config: {selectorBtnAddNewItem: '#btn_add_item__id'},
+        selectors: {
+            containerSelector: '#items_container__id',
+            selectorBtnAddNewItem: '#btn_add_item__id'
+        },
+        urls: {
+
+        },
+        config: {},
     });
     items_manager.init();
 
