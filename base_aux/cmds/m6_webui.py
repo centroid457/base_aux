@@ -214,6 +214,7 @@ async def html__root(request: Request):
     )
 
 
+# =====================================================================================================================
 @app.get("/item/list")
 async def list_items():
     ids = list(manager_inst__termos.items)
