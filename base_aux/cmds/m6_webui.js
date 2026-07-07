@@ -18,16 +18,11 @@ class BaseItemUI {
         ws,
         event_manager,
 
-        selectors = {},
-        urls = {},
         config = {},
     } = {}) {
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
-
-        this.selectors = selectors;
-        this.urls = urls;
         this.config = config;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
@@ -228,7 +223,7 @@ class ItemUiTerminal extends BaseItemUI {
 class BaseItemManager {
     /**
      * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
-     * @param {string}          config.containerSelector – CSS-селектор контейнера для элементов
+     * @param {string}          config.selector_container – CSS-селектор контейнера для элементов
      * @param {Object}          [config.cssClasses]      – переопределение CSS-классов
      * @param {typeof BaseItemUI} [config.itemCls]      – класс UI элемента
      */
@@ -236,25 +231,19 @@ class BaseItemManager {
         ws,
         event_manager,
         itemCls = ItemUiTerminal,
-
-        selectors = {},
-        urls = {},
         config = {},
     } = {}) {
         // --------------
         this.ws = ws;
         this.event_manager = event_manager;
         this.itemCls = itemCls;
-
-        this.selectors = selectors;
-        this.urls = urls;
         this.config = config;
 
         // --------------
         this.elements = {
-            container: document.querySelector(this.selectors.containerSelector),
+            container: document.querySelector(this.config.selector_container),
         };
-        if (!this.elements.container) throw new Error(`Контейнер "${this.selectors.containerSelector}" не найден`);
+        if (!this.elements.container) throw new Error(`Контейнер "${this.config.selector_container}" не найден`);
 
         // --------------
         this.items = new Map();   // itemId → BaseItemUI
@@ -292,9 +281,6 @@ class BaseItemManager {
             itemId,
             ws: this.ws,
             event_manager: this.event_manager,
-
-            urls: this.urls,
-            selectors: this.selectors,
             config: this.config,
         });
         await ui.init()
@@ -316,7 +302,7 @@ class BaseItemManager {
 class ItemManager extends BaseItemManager {
 
     init() {
-        const btn = document.querySelector(this.selectors?.selectorBtnAddNewItem);
+        const btn = document.querySelector(this.config?.selector_BtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
                 rpc_cmd.item__create();
@@ -366,14 +352,10 @@ window.onload = async () => {
     const items_manager = new ItemManager({
         event_manager: event_manager,
         ws,
-
-        selectors: {
-            containerSelector: '#items_container__id',
-            selectorBtnAddNewItem: '#btn_add_item__id'
+        config: {
+            selector_container: '#items_container__id',
+            selector_BtnAddNewItem: '#btn_add_item__id'
         },
-        urls: {
-        },
-        config: {},
     });
     items_manager.init();
 
