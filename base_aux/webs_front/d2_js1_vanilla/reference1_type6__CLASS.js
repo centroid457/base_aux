@@ -47,10 +47,58 @@ alice.greet();                // Hello, I'm Alice, 30 years old.
 alice.celebrateBirthday();    // Happy birthday! Now 31.
 
 // =====================================================================================================================
+// ВСЕ атрибуты и методы
+class Person {
+    // 1.1 Поля экземпляра (instance fields) – ES2022
+    name = 'Anonymous';           // публичное поле
+    #age = 0;                     // приватное поле (ES2022)
+    static species = 'Homo sapiens'; // статическое поле
+
+    // 1.2 Конструктор
+    constructor(name, age) {
+        this.name = name;         // переопределяем поле
+        this.#age = age;          // приватное поле
+    }
+
+    // 1.3 Метод экземпляра
+    greet() {
+        return `Hello, I'm ${this.name}`;
+    }
+
+    // 1.4 Приватный метод
+    #validateAge() {
+        return this.#age >= 0;
+    }
+
+    // 1.5 Геттер
+    get age() {
+        return this.#age;
+    }
+
+    // 1.6 Сеттер
+    set age(value) {
+        if (value >= 0) this.#age = value;
+    }
+
+    // 1.7 Статический метод
+    static describe() {
+        return `Person is a ${this.species}`;
+    }
+}
+
 // СВОЙСТВА И МЕТОДЫ
 // ---------------------------------------------------------------------------------------------------------------------
 // -------- 1. СВОЙСТВА И МЕТОДЫ - СТАТИЧЕСКИЕ  --------
 console.log('\n=== 3. Статические свойства и методы ===');
+// Принадлежат самому классу, доступны через ClassName.поле. Общие для всех экземпляров
+
+class Configuration {
+    static API_URL = 'https://api.example.com';
+    static TIMEOUT = 5000;
+    static #secret = 'xyz'; // приватное статическое поле
+}
+console.log(Configuration.API_URL); // 'https://api.example.com'
+
 
 class MathHelper {
     static PI = 3.14159;
@@ -70,6 +118,7 @@ console.log(MathHelper.cube(3));         // 27
 // -------- 2. СВОЙСТВА И МЕТОДЫ - ПРИВАТНЫЕ (#) --------
 console.log('\n=== 4. Приватные поля и методы ===');
 // нельзя обращаться снаружи - только внутри методов
+// доступны только внутри класса. Не доступны снаружи и не наследуются
 
 class BankAccount {
     #balance = 0;           // приватное поле
@@ -158,12 +207,68 @@ const car = new Car('Tesla');
 console.log(car.info); // Tesla has 4 wheels.
 console.log(Car.wheels); // 4
 
+
+// =====================================================================================================================
+// ЗНАЧЕНИЯ
+class User {
+    // Поле со значением по умолчанию
+    role = 'guest';
+
+    // Динамическое поле (вычисляется при создании)
+    createdAt = new Date();
+
+    // Поле может зависеть от других полей
+    fullName = `${this.firstName} ${this.lastName}`; // но это опасно, если не заданы firstName/lastName
+
+    constructor(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        // fullName пересчитается в конструкторе, но лучше использовать геттер
+    }
+
+    // Лучше использовать геттер для вычисляемых свойств
+    get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
+}
+
+const u1 = new User('Alice', 'Smith');
+console.log(u1.role); // 'guest'
+console.log(u1.fullName); // 'Alice Smith'
+
 // =====================================================================================================================
 // НАСЛЕДОВАНИЕ
 // ---------------------------------------------------------------------------------------------------------------------
 // -------- 5. НАСЛЕДОВАНИЕ (extends) --------
 console.log('\n=== 5. Наследование ===');
 
+// ---------------------------------------------------------------------------------------------------------------------
+// SUPER - обязательно вызывать!
+// В конструкторе дочернего класса обязательно вызывать super() перед использованием this.
+// super() вызывает конструктор родителя, инициализируя унаследованные поля.
+// Если у родителя есть свои поля, они будут созданы при вызове super().
+
+class Base {
+    baseField = 'base';
+    constructor(init) {
+        if (init) this.baseField = init;
+    }
+}
+
+class Derived extends Base {
+    derivedField = 'derived';
+    constructor(init) {
+        super(init); // инициализируем родительскую часть
+        // теперь можно использовать this
+        this.derivedField = 'overridden';
+    }
+}
+
+const d = new Derived('custom');
+console.log(d.baseField); // 'custom'
+console.log(d.derivedField); // 'overridden'
+
+// ---------------------------------------------------------------------------------------------------------------------
 class Animal {
     constructor(name) {
         this.name = name;
@@ -239,7 +344,6 @@ Object.assign(Service.prototype, LoggerMixin);
 
 const service = new Service('API');
 service.log('Service started'); // [LOG] Service started
-
 
 // =====================================================================================================================
 // ПРОВЕРКИ
