@@ -196,6 +196,7 @@ console.log('typeof:', typeof testMap);                 // 'object'
 console.log('instanceof Map:', testMap instanceof Map); // true
 console.log('toString:', Object.prototype.toString.call(testMap)); // '[object Map]'
 
+// ---------------------------------------------------------------------------------------------------------------------
 // ============================================================
 // 10. ДЕМОНСТРАЦИЯ ВАШЕГО ОРИГИНАЛЬНОГО КОДА
 // (с операциями, которые работают и не работают)
