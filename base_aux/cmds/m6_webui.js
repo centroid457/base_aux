@@ -1,3 +1,14 @@
+// =====================================================================================================================
+const url_rpc = "/post__rpc";
+
+const rpc_cmd = {
+    items__list_get: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'items_list_get' }),
+
+    item__create: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'create_item' }),
+    item__send: async (item_id, channel, action, extra = {}) => fetchJsonPost( url_rpc, { item_id, channel, action, ...extra }),
+};
+
+
 // =============================================================================
 /**
  * Базовый UI одного элемента.
@@ -45,9 +56,9 @@ class BaseItemUI {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    _send(channel, action, extra = {}) {
-        //return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
-        return fetchJsonPost( this.urls.url_rpc, { item_id: this.itemId, channel, action, ...extra });
+    async _send(channel, action, extra = {}) {
+        const resp = await rpc_cmd.item__send(this.itemId, channel, action, extra);
+        return resp;
     }
 
     // NESTING =========================================================================================================
@@ -177,15 +188,15 @@ class ItemUiTerminal extends BaseItemUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     // SET -----
-    sendInput(text) {
+    async sendInput(text) {
         if (!text) return;
-        const sent = this._send('item_control', 'send_stdin', { text });
+        const sent = await this._send('item_control', 'send_stdin', { text });
         if (sent) this.elements.input.value = '';
     }
-    sendReconnect()    { this._send('item_control', 'reconnect_item'); }
-    sendDelete()       { this._send('item_control', 'delete_item'); }
+    async sendReconnect()    { await this._send('item_control', 'reconnect_item'); }
+    async sendDelete()       { await this._send('item_control', 'delete_item'); }
 
-    sendHistoryClear() { this._send('item_control', 'history_clear'); }
+    async sendHistoryClear() { await this._send('item_control', 'history_clear'); }
 
     // GET -----
     async sendHistoryGet() {
@@ -319,7 +330,7 @@ class ItemManager extends BaseItemManager {
         const btn = document.querySelector(this.selectors?.selectorBtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
-                fetchJsonPost(this.urls.url_rpc, { channel: 'item_control', action: 'create_item' });
+                rpc_cmd.item__create();
             });
         }
     }
@@ -346,7 +357,7 @@ class ItemManager extends BaseItemManager {
     }
 
     async sendItemsListGet() {
-        const resp = await fetchJsonPost(this.urls.url_rpc, { channel: 'item_control', action: 'items_list_get' });
+        const resp = await rpc_cmd.items__list_get();
         return resp?.data;
     }
 
@@ -372,7 +383,6 @@ window.onload = async () => {
             selectorBtnAddNewItem: '#btn_add_item__id'
         },
         urls: {
-            url_rpc:  "/post__rpc",
         },
         config: {},
     });
@@ -381,5 +391,7 @@ window.onload = async () => {
     // 5. Запускаем WebSocket (при подключении автоматически загрузит элементы)
     ws.connect();
 };
+
+
 
 // =====================================================================================================================
