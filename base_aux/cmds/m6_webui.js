@@ -17,12 +17,13 @@ class BaseItemUI {
         itemId,
         ws,
         event_manager,
-
+        rpc,
         config = {},
     } = {}) {
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
+        this.rpc = rpc;
         this.config = config;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
@@ -41,8 +42,7 @@ class BaseItemUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     async _send(channel, action, extra = {}) {
-        const resp = await rpc_cmd.item__send(this.itemId, channel, action, extra);
-        return resp;
+        return this.rpc._call(channel, action, this.itemId, extra);
     }
 
     // NESTING =========================================================================================================
@@ -221,7 +221,7 @@ class ItemUiTerminal extends BaseItemUI {
 // Менеджер объектов
 // =============================================================================
 class BaseItemManager {
-    schema__callbacks_ws = {};
+    SCHEMA__CALLBACKS_WS = {};
 
     /**
      * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
@@ -232,6 +232,7 @@ class BaseItemManager {
     constructor({
         ws,
         event_manager,
+        rpc,
         itemCls = ItemUiTerminal,
         config = {},
     } = {}) {
@@ -239,6 +240,7 @@ class BaseItemManager {
         this.ws = ws;
         this.event_manager = event_manager;
         this.itemCls = itemCls;
+        this.rpc = rpc;
         this.config = config;
 
         // --------------
@@ -258,7 +260,7 @@ class BaseItemManager {
     }
 
     callbacks_setup() {
-        this.event_manager.schema__update_values(this.schema__callbacks_ws);
+        this.event_manager.schema__update_values(this.SCHEMA__CALLBACKS_WS);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -271,7 +273,7 @@ class BaseItemManager {
 
         let serverIds = [];
         try {
-            const data = await this.sendItemsListGet();
+            const data = await this.rpc.getItemsList();
             serverIds = data || [];
         } catch { /* оставляем пустым */ }
 
@@ -290,6 +292,7 @@ class BaseItemManager {
             itemId,
             ws: this.ws,
             event_manager: this.event_manager,
+            rpc: this.rpc,
             config: this.config,
         });
         await ui.init()
@@ -309,7 +312,7 @@ class BaseItemManager {
 
 // =====================================================================================================================
 class ItemManager extends BaseItemManager {
-    schema__callbacks_ws = {
+    SCHEMA__CALLBACKS_WS = {
         ws_onopen: async () => { await this.items_reload() },
         ws_onclose: null,
         ws_onmessage: (msg) => {
@@ -332,22 +335,17 @@ class ItemManager extends BaseItemManager {
         const btn = document.querySelector(this.config?.selector_BtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
-                rpc_cmd.item__create();
+                this.rpc.createItem();
             });
         }
     }
-
-    async sendItemsListGet() {
-        const resp = await rpc_cmd.items__list_get();
-        return resp?.data;
-    }
-
 }
 
 
 // =====================================================================================================================
 window.onload = async () => {
     const event_manager = new EventManager();
+    const rpc = new RpcClient('/post__rpc');
 
     const ws = new WebSocketClient({
         urlOrPath: '/ws__broadcast',
@@ -358,6 +356,7 @@ window.onload = async () => {
     const items_manager = new ItemManager({
         event_manager: event_manager,
         ws,
+        rpc,
         config: {
             selector_container: '#items_container__id',
             selector_BtnAddNewItem: '#btn_add_item__id'
@@ -371,14 +370,58 @@ window.onload = async () => {
 
 
 // =====================================================================================================================
-const url_rpc = "/post__rpc";
+class RpcClient {
+    /**
+     * @param {string} baseUrl – URL RPC-эндпоинта (например "/post__rpc")
+     * @param {Function} [requestFn] – функция для запроса (по умолчанию fetchJsonPost)
+     */
+    constructor(baseUrl, requestFn = fetchJsonPost) {
+        this._baseUrl = baseUrl;
+        this._request = requestFn;
+    }
 
-const rpc_cmd = {
-    items__list_get: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'items_list_get' }),
+    // Универсальный низкоуровневый вызов
+    async _call(channel, action, itemId, extra = {}) {
+        const resp = await this._request(this._baseUrl, {
+            channel,
+            action,
+            item_id: itemId,
+            ...extra,
+        });
+        return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
+    }
 
-    item__create: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'create_item' }),
-    item__send: async (item_id, channel, action, extra = {}) => fetchJsonPost( url_rpc, { item_id, channel, action, ...extra }),
-};
+    // Высокоуровневые методы, соответствующие конкретным операциям
+    async createItem() {
+        return this._call('item_control', 'create_item');
+    }
+
+    async deleteItem(itemId) {
+        return this._call('item_control', 'delete_item', itemId);
+    }
+
+    async reconnectItem(itemId) {
+        return this._call('item_control', 'reconnect_item', itemId);
+    }
+
+    async clearHistory(itemId) {
+        return this._call('item_control', 'history_clear', itemId);
+    }
+
+    async sendStdin(itemId, text) {
+        return this._call('item_control', 'send_stdin', itemId, { text });
+    }
+
+    async getHistory(itemId) {
+        const resp = await this._call('item_control', 'history_get', itemId);
+        return resp?.data;
+    }
+
+    async getItemsList() {
+        const resp = await this._call('item_control', 'items_list_get');
+        return resp?.data;
+    }
+}
 
 
 // =====================================================================================================================
