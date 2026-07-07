@@ -1,14 +1,3 @@
-// =====================================================================================================================
-const url_rpc = "/post__rpc";
-
-const rpc_cmd = {
-    items__list_get: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'items_list_get' }),
-
-    item__create: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'create_item' }),
-    item__send: async (item_id, channel, action, extra = {}) => fetchJsonPost( url_rpc, { item_id, channel, action, ...extra }),
-};
-
-
 // =============================================================================
 /**
  * Базовый UI одного элемента.
@@ -392,6 +381,16 @@ window.onload = async () => {
     ws.connect();
 };
 
+
+// =====================================================================================================================
+const url_rpc = "/post__rpc";
+
+const rpc_cmd = {
+    items__list_get: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'items_list_get' }),
+
+    item__create: async () => fetchJsonPost(url_rpc, { channel: 'item_control', action: 'create_item' }),
+    item__send: async (item_id, channel, action, extra = {}) => fetchJsonPost( url_rpc, { item_id, channel, action, ...extra }),
+};
 
 
 // =====================================================================================================================

@@ -278,6 +278,9 @@ async def post__rpc(cmd: CmdRpcRequest):
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
+
+        return CmdRpcResponse()
+
     else:
         raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
 
