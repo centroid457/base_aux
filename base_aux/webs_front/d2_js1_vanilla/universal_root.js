@@ -1544,11 +1544,11 @@ class WebSocketClient {
         // ----------------------------
         this.event_manager = event_manager;
         this.event_manager.schema__register_names({
-            "ws.onopen": null,
-            "ws.onclose": null,
-            "ws.onmessage": null,
-            "ws.onerror": null,
-            "ws.onreconnecting": null,
+            ws_onopen: null,
+            ws_onclose: null,
+            ws_onmessage: null,
+            ws_onerror: null,
+            ws_onreconnect: null,
         });
 
         // ----------------------------
@@ -1583,7 +1583,7 @@ class WebSocketClient {
         this._socket.onopen = () => {
             this._was_open = true;
             console.log('[WsClient.onopen] 🟢 connected');
-            this.event_manager.event_emit('ws.onopen');
+            this.event_manager.event_emit('ws_onopen');
         };
 
         this._socket.onmessage = (event) => {
@@ -1595,26 +1595,26 @@ class WebSocketClient {
                 return;
             }
             console.log('[WsClient] 📩', data);
-            this.event_manager.event_emit('ws.onmessage', data);
+            this.event_manager.event_emit('ws_onmessage', data);
         };
 
         this._socket.onclose = () => {
             if (this._was_open) {
                 console.log('[WsClient.onclose] 🔴 closed');
-                this.event_manager.event_emit('ws.onclose');
+                this.event_manager.event_emit('ws_onclose');
             }
 
             if (!this.isManualClose) {
                 const delay = this.reconnectDelay;
                 console.log(`[WsClient] reconnecting in ${delay}ms...`);
-                this.event_manager.event_emit('ws.onreconnecting', { delay });
+                this.event_manager.event_emit('ws_onreconnect', { delay });
                 this._reconnectTimerId = setTimeout(() => this.connect(), delay);
             }
         };
 
         this._socket.onerror = (err) => {
             if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
-            this.event_manager.event_emit('ws.onerror', err);
+            this.event_manager.event_emit('ws_onerror', err);
         };
     }
 

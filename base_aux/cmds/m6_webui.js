@@ -221,6 +221,8 @@ class ItemUiTerminal extends BaseItemUI {
 // Менеджер объектов
 // =============================================================================
 class BaseItemManager {
+    schema__callbacks_ws = {};
+
     /**
      * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
      * @param {string}          config.selector_container – CSS-селектор контейнера для элементов
@@ -247,13 +249,20 @@ class BaseItemManager {
 
         // --------------
         this.items = new Map();   // itemId → BaseItemUI
-
-        this.callbacks_setup();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    init() {}
-    callbacks_setup() {}
+    init() {
+        this.callbacks_setup();
+        this.init_post();
+    }
+
+    callbacks_setup() {
+        this.event_manager.schema__update_values(this.schema__callbacks_ws);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    init_post() {}
 
     // -----------------------------------------------------------------------------------------------------------------
     /** Полная перезагрузка списка с сервера */
@@ -300,35 +309,32 @@ class BaseItemManager {
 
 // =====================================================================================================================
 class ItemManager extends BaseItemManager {
+    schema__callbacks_ws = {
+        ws_onopen: async () => { await this.items_reload() },
+        ws_onclose: null,
+        ws_onmessage: (msg) => {
+            if (!msg) return;
 
-    init() {
+            const { item_id, channel, action, text } = msg;
+            if (channel === 'history_log') {
+                this.items.get(item_id)?.history_add_line(action, text);
+            } else if (channel === 'item_control') {
+                if (action === 'create_item')   this.item_create(item_id);
+                else if (action === 'delete_item') this.item_delete(item_id);
+                else if (action === 'history_clear') this.items.get(item_id)?.history_clear();
+            }
+        },
+        ws_onerror: null,
+        ws_onreconnect: null,
+    }
+
+    init_post() {
         const btn = document.querySelector(this.config?.selector_BtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
                 rpc_cmd.item__create();
             });
         }
-    }
-
-    callbacks_setup() {
-        this.event_manager.schema__update_values({
-            "ws.onopen": async () => { await this.items_reload() },
-            "ws.onclose": null,
-            "ws.onmessage": (msg) => {
-                if (!msg) return;
-
-                const { item_id, channel, action, text } = msg;
-                if (channel === 'history_log') {
-                    this.items.get(item_id)?.history_add_line(action, text);
-                } else if (channel === 'item_control') {
-                    if (action === 'create_item')   this.item_create(item_id);
-                    else if (action === 'delete_item') this.item_delete(item_id);
-                    else if (action === 'history_clear') this.items.get(item_id)?.history_clear();
-                }
-            },
-            "ws.onerror": null,
-            "ws.onreconnecting": null,
-        });
     }
 
     async sendItemsListGet() {
