@@ -218,6 +218,7 @@ async def html__root(request: Request):
 
 # =====================================================================================================================
 class CmdRpcRequest(BaseModel):
+    # transport: str    # WARN: DONT: use it here!
     channel: str
     action: str
     item_id: Optional[str] = None

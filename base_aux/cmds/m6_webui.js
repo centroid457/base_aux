@@ -13,10 +13,22 @@ class BaseItemUI {
      * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
-    constructor({itemId, ws, event_manager} = {}) {
+    constructor({
+        itemId,
+        ws,
+        event_manager,
+
+        selectors = {},
+        urls = {},
+        config = {},
+    } = {}) {
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
+
+        this.selectors = selectors;
+        this.urls = urls;
+        this.config = config;
 
         /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
         if (!("final" in this.elements)) this.elements["final"] = null;
@@ -35,7 +47,7 @@ class BaseItemUI {
     // -----------------------------------------------------------------------------------------------------------------
     _send(channel, action, extra = {}) {
         //return this.ws.send_json({ item_id: this.itemId, channel, action, ...extra });
-        return fetchJsonPost( "/post__rpc", { item_id: this.itemId, channel, action, ...extra });
+        return fetchJsonPost( this.urls.url_rpc, { item_id: this.itemId, channel, action, ...extra });
     }
 
     // NESTING =========================================================================================================
@@ -233,9 +245,10 @@ class BaseItemManager {
         this.ws = ws;
         this.event_manager = event_manager;
         this.itemCls = itemCls;
-        this.config = config;
-        this.urls = urls;
+
         this.selectors = selectors;
+        this.urls = urls;
+        this.config = config;
 
         // --------------
         this.elements = {
@@ -275,7 +288,15 @@ class BaseItemManager {
     async item_create(itemId) {
         if (this.items.has(itemId)) return;
 
-        const ui = new this.itemCls({itemId, ws: this.ws, event_manager: this.event_manager});
+        const ui = new this.itemCls({
+            itemId,
+            ws: this.ws,
+            event_manager: this.event_manager,
+
+            urls: this.urls,
+            selectors: this.selectors,
+            config: this.config,
+        });
         await ui.init()
         this.items.set(itemId, ui);
         this.elements.container.appendChild(ui.elements.final);
@@ -298,7 +319,7 @@ class ItemManager extends BaseItemManager {
         const btn = document.querySelector(this.selectors?.selectorBtnAddNewItem);
         if (btn) {
             btn.addEventListener('click', () => {
-                fetchJsonPost('/post__rpc', { channel: 'item_control', action: 'create_item' });
+                fetchJsonPost(this.urls.url_rpc, { channel: 'item_control', action: 'create_item' });
             });
         }
     }
@@ -325,7 +346,7 @@ class ItemManager extends BaseItemManager {
     }
 
     async sendItemsListGet() {
-        const resp = await fetchJsonPost('/post__rpc', { channel: 'item_control', action: 'items_list_get' });
+        const resp = await fetchJsonPost(this.urls.url_rpc, { channel: 'item_control', action: 'items_list_get' });
         return resp?.data;
     }
 
@@ -351,7 +372,7 @@ window.onload = async () => {
             selectorBtnAddNewItem: '#btn_add_item__id'
         },
         urls: {
-
+            url_rpc:  "/post__rpc",
         },
         config: {},
     });
