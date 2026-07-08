@@ -358,12 +358,11 @@ window.onload = async () => {
 // =====================================================================================================================
 class RpcClient {
     /**
-     * @param {string} baseUrl – URL RPC-эндпоинта (например "/post__rpc")
+     * @param {string} url – URL RPC-эндпоинта (например "/post__rpc")
      * @param {Function} [requestFn] – функция для запроса (по умолчанию fetchJsonPost)
      */
-    constructor(baseUrl, requestFn = fetchJsonPost) {
-        this._baseUrl = baseUrl;
-        this._request = requestFn;
+    constructor(url) {
+        this.url = url;
     }
 
     _RESPONSE_SCHEMA = {    // just for info!
@@ -373,13 +372,15 @@ class RpcClient {
 
     // -----------------------------------------------------------------------------------------------------------------
     // LEVEL-1=LOWER
-    async _call(channel, action, item_id, extra = {}) {
-        const resp = await this._request(this._baseUrl, {
-            channel,
-            action,
-            item_id,
-            ...extra,
-        });
+    async _call({channel, action, item_id, ...rest} = {}) {
+        const resp = await fetchJsonPost(
+            this.url,
+            {
+                channel,
+                action,
+                item_id,
+                ...rest,
+            });
         return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
     }
 
@@ -387,38 +388,79 @@ class RpcClient {
     // LEVEL-2=UPPER
     // 1=UDP=no need ANY answer result ------
     async createItem() {
-        const response = await this._call('item_control', 'create_item');
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'create_item',
+            }
+        );
         return response?.status === "OK";
     }
 
     async deleteItem(item_id) {
-        const response = await this._call('item_control', 'delete_item', item_id);
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'delete_item',
+                item_id,
+            }
+        );
         return response?.status === "OK";
     }
 
     async reconnectItem(item_id) {
-        const response = await this._call('item_control', 'reconnect_item', item_id);
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'reconnect_item',
+                item_id,
+            }
+        );
         return response?.status === "OK";
     }
 
     async clearHistory(item_id) {
-        const response = await this._call('item_control', 'history_clear', item_id);
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'history_clear',
+                item_id,
+            }
+        );
         return response?.status === "OK";
     }
 
     // 2=NEED ANSWER!!! ----------------
     async sendStdin(item_id, text) {
-        const response = await this._call('item_control', 'send_stdin', item_id, { text });
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'send_stdin',
+                item_id,
+                text,
+            }
+        );
         return response?.status === "OK";
     }
 
     async getHistory(item_id) {
-        const response = await this._call('item_control', 'history_get', item_id);
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'history_get',
+                item_id,
+            }
+        );
         return response?.load;
     }
 
     async getItemsList() {
-        const response = await this._call('item_control', 'items_list_get');
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'items_list_get',
+            }
+        );
         return response?.load;
     }
 }
