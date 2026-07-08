@@ -1246,15 +1246,14 @@ OnLoadRunner.add(onload__ws_ping);
 async function fetchJSON(url) {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = response.json();
-    return data;
+    const result = response.json();
+    return result;
 }
 
 
-// ============================================================
+// ---------------------------------------------------------------------------------------------------------------------
 // HTTP-клиент с поддержкой всех методов и лучших практик
-// ============================================================
-/**
+/*
  * Универсальная функция для выполнения HTTP-запросов
  * @param {string} method - HTTP-метод (GET, POST, PUT, DELETE и т.д.)
  * @param {string} url - полный URL или путь
@@ -1264,8 +1263,7 @@ async function fetchJSON(url) {
  * @param {number} options.timeout - таймаут в мс (по умолчанию 0 – без таймаута)
  * @param {AbortSignal} options.signal - для отмены запроса
  * @param {boolean} options.log - логировать запрос и ответ
- * @param {boolean} options.parseJson - парсить ответ как JSON (по умолчанию true)
- * @param {string} options.responseType - 'json' | 'text' | 'blob' | 'arrayBuffer' (если parseJson false)
+ * @param {string} options.responseType - 'json' | 'text' | 'blob' | 'arrayBuffer'
  * @returns {Promise<any>}
  */
 async function _fetchRequest(method, url, body={}, options = {}) {
@@ -1278,8 +1276,7 @@ async function _fetchRequest(method, url, body={}, options = {}) {
         timeout = 0,
         signal,
         log: enableLog = false,
-        parseJson = true,
-        responseType = 'json',
+        responseType,
     } = options;
 
     // Формируем заголовки
@@ -1331,6 +1328,7 @@ async function _fetchRequest(method, url, body={}, options = {}) {
         console.log(`📤 ${method} ${url}`, { headers: requestHeaders, body: requestBody });
     }
 
+    // FETCH ---------------------------------------------
     try {
         const response = await fetch(url, fetchOptions);
         clearTimeout(timeoutId);
@@ -1355,23 +1353,24 @@ async function _fetchRequest(method, url, body={}, options = {}) {
             throw new Error(errorMessage);
         }
 
-        // Парсим ответ
-        let data;
-        if (parseJson) {
-            data = await response.json();
-        } else {
-            switch (responseType) {
-                case 'text': data = await response.text(); break;
-                case 'blob': data = await response.blob(); break;
-                case 'arrayBuffer': data = await response.arrayBuffer(); break;
-                default: data = response;
-            }
+        // PARSE ----------------------
+        let result;
+        switch (responseType) {
+            case 'json': result = await response.json(); break;
+            case 'text': result = await response.text(); break;
+            case 'blob': result = await response.blob(); break;
+            case 'arrayBuffer': result = await response.arrayBuffer(); break;
+            default: result = response;
         }
 
+        // LOG ----------------------
         if (enableLog) {
-            console.log(`📥 ${method} ${url} ответ`, data);
+            console.log(`📥 ${method}/${url}/`, result);
         }
-        return data;
+
+        // RETURN ----------------------
+        return result;
+
     } catch (err) {
         if (err.name === 'AbortError') {
             throw new Error(`Запрос ${method} ${url} был отменён`);
@@ -1383,25 +1382,26 @@ async function _fetchRequest(method, url, body={}, options = {}) {
     }
 }
 
-// -------- Обёртки для удобства --------
+// ---------------------------------------------------------------------------------------------------------------------
+// обертки
 function fetchJsonGet(url, options = {}) {
-    return _fetchRequest('GET', url, {}, options);
+    return _fetchRequest('GET', url, {}, {responseType: "json", ...options});
 }
 
 function fetchJsonPost(url, body = {}, options = {}) {
-    return _fetchRequest('POST', url, body, options);
+    return _fetchRequest('POST', url, body, {responseType: "json", ...options});
 }
 
 function fetchJsonPut(url, body = {}, options = {}) {
-    return _fetchRequest('PUT', url, body, options);
+    return _fetchRequest('PUT', url, body, {responseType: "json", ...options});
 }
 
 function fetchJsonPatch(url, body = {}, options = {}) {
-    return _fetchRequest('PATCH', url, body, options);
+    return _fetchRequest('PATCH', url, body, {responseType: "json", ...options});
 }
 
 function fetchJsonDelete(url, body = {}, options = {}) {    // seems body is not used here!!!
-    return _fetchRequest('DELETE', url, body, options);    // seems body is not used here!!!
+    return _fetchRequest('DELETE', url, body, {responseType: "json", ...options});    // seems body is not used here!!!
 }
 
 // -------- Экспорт (для модулей) --------
