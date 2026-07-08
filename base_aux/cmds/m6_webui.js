@@ -373,11 +373,11 @@ class RpcClient {
 
     // -----------------------------------------------------------------------------------------------------------------
     // LEVEL-1=LOWER
-    async _call(channel, action, itemId, extra = {}) {
+    async _call(channel, action, item_id, extra = {}) {
         const resp = await this._request(this._baseUrl, {
             channel,
             action,
-            item_id: itemId,
+            item_id,
             ...extra,
         });
         return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
@@ -391,29 +391,29 @@ class RpcClient {
         return response?.status === "OK";
     }
 
-    async deleteItem(itemId) {
-        const response = await this._call('item_control', 'delete_item', itemId);
+    async deleteItem(item_id) {
+        const response = await this._call('item_control', 'delete_item', item_id);
         return response?.status === "OK";
     }
 
-    async reconnectItem(itemId) {
-        const response = await this._call('item_control', 'reconnect_item', itemId);
+    async reconnectItem(item_id) {
+        const response = await this._call('item_control', 'reconnect_item', item_id);
         return response?.status === "OK";
     }
 
-    async clearHistory(itemId) {
-        const response = await this._call('item_control', 'history_clear', itemId);
+    async clearHistory(item_id) {
+        const response = await this._call('item_control', 'history_clear', item_id);
         return response?.status === "OK";
     }
 
     // 2=NEED ANSWER!!! ----------------
-    async sendStdin(itemId, text) {
-        const response = await this._call('item_control', 'send_stdin', itemId, { text });
+    async sendStdin(item_id, text) {
+        const response = await this._call('item_control', 'send_stdin', item_id, { text });
         return response?.status === "OK";
     }
 
-    async getHistory(itemId) {
-        const response = await this._call('item_control', 'history_get', itemId);
+    async getHistory(item_id) {
+        const response = await this._call('item_control', 'history_get', item_id);
         return response?.load;
     }
 

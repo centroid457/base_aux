@@ -1262,8 +1262,8 @@ async function fetchJSON(url) {
  * @param {object} options.headers - кастомные заголовки
  * @param {number} options.timeout - таймаут в мс (по умолчанию 0 – без таймаута)
  * @param {AbortSignal} options.signal - для отмены запроса
- * @param {boolean} options.log - логировать запрос и ответ
- * @param {string} options.responseType - 'json' | 'text' | 'blob' | 'arrayBuffer'
+ * @param {boolean} options.log - логгировать запрос и ответ
+ * @param {string} options.responseType - 'json' | 'text' | 'blob' | 'arrayBuffer' | 'original'
  * @returns {Promise<any>}
  */
 async function _fetchRequest(method, url, body={}, options = {}) {
@@ -1276,7 +1276,7 @@ async function _fetchRequest(method, url, body={}, options = {}) {
         timeout = 0,
         signal,
         log: enableLog = false,
-        responseType,
+        responseType = "original",
     } = options;
 
     // Формируем заголовки
@@ -1360,6 +1360,7 @@ async function _fetchRequest(method, url, body={}, options = {}) {
             case 'text': result = await response.text(); break;
             case 'blob': result = await response.blob(); break;
             case 'arrayBuffer': result = await response.arrayBuffer(); break;
+            case 'original': result = response; break;
             default: result = response;
         }
 
