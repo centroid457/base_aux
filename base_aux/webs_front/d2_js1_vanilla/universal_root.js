@@ -669,6 +669,7 @@ function _clone_element(original__el, def_property_name, variants, with_attrs=fa
 
         //2=WORK
         const dt__el = document.createElement('dt');
+        dt__el.setAttribute('data-mouse_select__all', ''); // добавляем атрибут
         if (typeof label_value !== 'string') {
             dt__el.style.fontStyle = 'italic';
             dt__el.style.textDecoration = 'underline';
@@ -678,8 +679,8 @@ function _clone_element(original__el, def_property_name, variants, with_attrs=fa
         dl__el.appendChild(dt__el);
 
         const dd = document.createElement('dd');
-        dd.setAttribute("data-border", "")
-        //dd.setAttribute("data-bg_a5", "")
+        dd.setAttribute("data-border", "");
+        //dd.setAttribute("data-bg_a5", "");
         dd.appendChild(cloned_el);
         dl__el.appendChild(dd);
     }

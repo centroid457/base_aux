@@ -207,6 +207,13 @@ body, html
 [data-mouse_select__all] { user-select: all; }
 [data-mouse_select__none] { user-select: none; }
 
+[data-mouse_select__all]
+{
+    border: 1px dashed #aaa5;
+    background: #bbb5;
+    cursor: pointer;
+}
+
 /* ---------------- SCROLLING ----------------------*/
 [data-overflow_auto]
 {
@@ -987,9 +994,6 @@ dd {
 
     white-space: normal;          /* разрешаем перенос текста */
     word-break: break-word;       /* длинные слова переносим */
-
-    user-select: all;    /* при клике выделяется весь текст элемента */
-    cursor: pointer;     /* показывает, что элемент можно выделить (необязательно) */
 }
 .dl_horizontal__cls dd {
     margin-left: 0;
