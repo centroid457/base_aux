@@ -227,7 +227,7 @@ class CmdRpcRequest(BaseModel):
 
 class CmdRpcResponse(BaseModel):
     status: str = "OK"
-    data: Any = None
+    load: Any | dict = None
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -270,11 +270,11 @@ async def post__rpc(cmd: CmdRpcRequest):
                     "finished_status": result.finished_status.value if result.finished_status else None,
                     "retcode": result.retcode
                 })
-            return CmdRpcResponse(data=history_data)
+            return CmdRpcResponse(load=history_data)
 
         elif cmd.action == "items_list_get":
             ids = list(manager_inst__termos.items)
-            return CmdRpcResponse(data=ids)
+            return CmdRpcResponse(load=ids)
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")

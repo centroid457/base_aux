@@ -40,11 +40,6 @@ class BaseItemUI {
         this.elements.final?.remove();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    async _send(channel, action, extra = {}) {
-        return this.rpc._call(channel, action, this.itemId, extra);
-    }
-
     // NESTING =========================================================================================================
     async init_post() {
     }
@@ -61,9 +56,6 @@ class BaseItemUI {
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
     }
-
-    // SEND ------------------------------------------------------------------------------------------------------------
-    sendExample()       { this._send('channel_example', 'action_example'); }
 
     // METHS -----------------------------------------------------------------------------------------------------------
     //
@@ -171,22 +163,16 @@ class ItemUiTerminal extends BaseItemUI {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // SET -----
+    // SEND -----
     async sendInput(text) {
         if (!text) return;
-        const sent = await this._send('item_control', 'send_stdin', { text });
+        const sent = await this.rpc.sendStdin(this.itemId, text);
         if (sent) this.elements.input.value = '';
     }
-    async sendReconnect()    { await this._send('item_control', 'reconnect_item'); }
-    async sendDelete()       { await this._send('item_control', 'delete_item'); }
-
-    async sendHistoryClear() { await this._send('item_control', 'history_clear'); }
-
-    // GET -----
-    async sendHistoryGet() {
-        const resp = await this._send('item_control', 'history_get');
-        return resp?.data;
-    }
+    async sendReconnect()    { await this.rpc.reconnectItem(this.itemId) }
+    async sendDelete()       { await this.rpc.deleteItem(this.itemId) }
+    async sendHistoryClear() { await this.rpc.clearHistory(this.itemId) }
+    async sendHistoryGet() { return await this.rpc.getHistory(this.itemId) }
 
     // USER METH -----------------------------------------------------------------------------------------------------------------
     history_clear() {
@@ -380,7 +366,13 @@ class RpcClient {
         this._request = requestFn;
     }
 
-    // Универсальный низкоуровневый вызов
+    _RESPONSE_SCHEMA = {    // just for info!
+        status: "OK",
+        load: {},
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // LEVEL-1=LOWER
     async _call(channel, action, itemId, extra = {}) {
         const resp = await this._request(this._baseUrl, {
             channel,
@@ -391,35 +383,43 @@ class RpcClient {
         return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
     }
 
-    // Высокоуровневые методы, соответствующие конкретным операциям
+    // -----------------------------------------------------------------------------------------------------------------
+    // LEVEL-2=UPPER
+    // 1=UDP=no need ANY answer result ------
     async createItem() {
-        return this._call('item_control', 'create_item');
+        const response = await this._call('item_control', 'create_item');
+        return response?.status === "OK";
     }
 
     async deleteItem(itemId) {
-        return this._call('item_control', 'delete_item', itemId);
+        const response = await this._call('item_control', 'delete_item', itemId);
+        return response?.status === "OK";
     }
 
     async reconnectItem(itemId) {
-        return this._call('item_control', 'reconnect_item', itemId);
+        const response = await this._call('item_control', 'reconnect_item', itemId);
+        return response?.status === "OK";
     }
 
     async clearHistory(itemId) {
-        return this._call('item_control', 'history_clear', itemId);
+        const response = await this._call('item_control', 'history_clear', itemId);
+        return response?.status === "OK";
     }
 
+    // 2=NEED ANSWER!!! ----------------
     async sendStdin(itemId, text) {
-        return this._call('item_control', 'send_stdin', itemId, { text });
+        const response = await this._call('item_control', 'send_stdin', itemId, { text });
+        return response?.status === "OK";
     }
 
     async getHistory(itemId) {
-        const resp = await this._call('item_control', 'history_get', itemId);
-        return resp?.data;
+        const response = await this._call('item_control', 'history_get', itemId);
+        return response?.load;
     }
 
     async getItemsList() {
-        const resp = await this._call('item_control', 'items_list_get');
-        return resp?.data;
+        const response = await this._call('item_control', 'items_list_get');
+        return response?.load;
     }
 }
 
