@@ -10,7 +10,7 @@ class BaseItemUI {
 
     /**
      * @param {string}             itemId
-     * @param {WebSocketClient}    ws         – экземпляр WebSocket-клиента
+     * @param {WsClient}    ws         – экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
     constructor({
@@ -210,7 +210,7 @@ class BaseItemManager {
     SCHEMA__CALLBACKS_WS = {};
 
     /**
-     * @param {WebSocketClient} config.ws                – экземпляр WebSocketClient
+     * @param {WsClient} config.ws                – экземпляр WsClient
      * @param {string}          config.selector_container – CSS-селектор контейнера для элементов
      * @param {Object}          [config.cssClasses]      – переопределение CSS-классов
      * @param {typeof BaseItemUI} [config.itemCls]      – класс UI элемента
@@ -332,9 +332,8 @@ class ItemManager extends BaseItemManager {
 window.onload = async () => {
     const event_manager = new EventManager();
     const rpc = new RpcClient('/post__rpc');
-
-    const ws = new WebSocketClient({
-        urlOrPath: '/ws__broadcast',
+    const ws = new WsClient({
+        url: '/ws__broadcast',
         autoConnect: false,
         event_manager: event_manager,
     });
@@ -365,7 +364,7 @@ class RpcClient {
         this.url = url;
     }
 
-    _RESPONSE_SCHEMA = {    // just for info!
+    __RESPONSE_SCHEMA = {    // just for info!
         status: "OK",
         load: {},
     }

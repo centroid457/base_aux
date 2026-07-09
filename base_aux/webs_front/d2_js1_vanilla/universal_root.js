@@ -1516,7 +1516,7 @@ class EventManager {
 
 
 // =====================================================================================================================
-class WebSocketClient {
+class WsClient {
     url;
     event_manager = null;
     reconnectDelay;
@@ -1528,19 +1528,19 @@ class WebSocketClient {
     _reconnectTimerId = null;          // таймер переподключения
 
     /**
-     * @param {string}  urlOrPath – полный URL или путь (например "/ws__broadcast")
+     * @param {string}  url – полный URL или путь (например "/ws__broadcast")
      * @param {EventManager} [eventManager]
      * @param {number}  [reconnectDelay=300]
      * @param {boolean} [autoConnect=true]
      */
-    constructor({ urlOrPath, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
+    constructor({ url, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
         // ----------------------------
-        if (!urlOrPath) throw new Error('urlOrPath is required');
-        if (urlOrPath.startsWith('ws://') || urlOrPath.startsWith('wss://')) {
-            this.url = urlOrPath;
+        if (!url) throw new Error('url is required');
+        if (url.startsWith('ws://') || url.startsWith('wss://')) {
+            this.url = url;
         } else {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            this.url = `${protocol}//${window.location.host}${urlOrPath}`;
+            this.url = `${protocol}//${window.location.host}${url}`;
         }
 
         // ----------------------------

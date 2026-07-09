@@ -217,7 +217,7 @@ async def html__root(request: Request):
 
 
 # =====================================================================================================================
-class CmdRpcRequest(BaseModel):
+class Model_RpcRequest(BaseModel):
     # transport: str    # WARN: DONT: use it here!
     channel: str
     action: str
@@ -225,14 +225,14 @@ class CmdRpcRequest(BaseModel):
     text: Optional[str] = None
 
 
-class CmdRpcResponse(BaseModel):
+class Model_RpcResponse(BaseModel):
     status: str = "OK"
     load: Any | dict = None
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.post("/post__rpc", response_model=CmdRpcResponse | None)
-async def post__rpc(cmd: CmdRpcRequest):
+@app.post("/post__rpc", response_model=Model_RpcResponse | None)
+async def post__rpc(cmd: Model_RpcRequest):
     print(cmd)
     if cmd.channel == "item_control":
         if cmd.action == "send_stdin":
@@ -270,16 +270,16 @@ async def post__rpc(cmd: CmdRpcRequest):
                     "finished_status": result.finished_status.value if result.finished_status else None,
                     "retcode": result.retcode
                 })
-            return CmdRpcResponse(load=history_data)
+            return Model_RpcResponse(load=history_data)
 
         elif cmd.action == "items_list_get":
             ids = list(manager_inst__termos.items)
-            return CmdRpcResponse(load=ids)
+            return Model_RpcResponse(load=ids)
 
         else:
             raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
 
-        return CmdRpcResponse()
+        return Model_RpcResponse()
 
     else:
         raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
