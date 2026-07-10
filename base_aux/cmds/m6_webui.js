@@ -335,11 +335,11 @@ window.onload = async () => {
     const ws = new WsClient({
         url: '/ws__broadcast',
         autoConnect: false,
-        event_manager: event_manager,
+        event_manager,
     });
 
     const items_manager = new ItemManager({
-        event_manager: event_manager,
+        event_manager,
         ws,
         rpc,
         config: {

@@ -1495,107 +1495,118 @@ class Event {
 
 // ---------------------------------------------------------------------------------------------------------------------
 class EventManager {
-    event_schema = {};
+  constructor(schema = {}) {
+    // Хранилище: Map<имя_события, Event>
+    this._events = new Map();
 
-    constructor(schema = {}) {
-        this.schema__register_update(schema)
+    this.schema__register_names(schema);
+    this.schema__update_values(schema);
+  }
+
+  _get_event_or_throw(eventName) {
+    const event = this._events.get(eventName);
+    if (!event) {
+      throw new Error(`[EventManager] Event not registered: "${eventName}". Use _register_event() first.`);
     }
+    return event;
+  }
 
-    // -------------------------------------------------------------------------
-    schema__register_update(schema) {   // APPLY: only in constructor
-        // update schema full - names+values
-        this.schema__register_names(schema);
-        this.schema__update_values(schema);
+  event_emit(eventName, data) {
+    this._get_event_or_throw(eventName).emit(data);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Регистрация событий (роль: регистратор / сервер)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Зарегистрировать новое событие.
+   * Если событие уже существует – предупреждение и игнор (можно бросить ошибку при желании).
+   */
+  _register_event(eventName) {
+    if (this._events.has(eventName)) {
+      console.warn(`[EventManager] Event already registered: "${eventName}"`);
+      return;
     }
+    this._events.set(eventName, new Event(eventName));
+  }
 
-    schema__register_names(schema) {    // APPLY: in server/emitter/event producer
-        for (const event of Object.keys(schema)) {
-            this.schema__register_event(event);
+  /**
+   * Массовая регистрация имён событий из объекта.
+   * Используется в конструкторе или для расширения схемы позже.
+   */
+  schema__register_names(schema) {
+    for (const eventName of Object.keys(schema)) {
+      this._register_event(eventName);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // заполнение колбеками из схемы
+  /**
+   * Применить колбэки из схемы.
+   * Ожидается объект: { eventName: { listenerName: fn, ... } }
+   * или { eventName: fn } → тогда имя слушателя = имя события (для одиночных).
+   */
+  schema__update_values(schema) {
+    for (const [eventName, callbacks] of Object.entries(schema)) {
+      if (callbacks === null || callbacks === undefined) continue;
+
+      const event = this._get_event_or_throw(eventName);
+
+      if (typeof callbacks === 'function') {
+        // одиночный колбэк – дадим ему имя по умолчанию (например, "default") - пусть будет! позволяет задать только один безимянный!
+        event.add('default', callbacks);
+      } else if (typeof callbacks === 'object' && !Array.isArray(callbacks)) {
+        // объект { listenerName: fn, ... }
+        for (const [listenerName, fn] of Object.entries(callbacks)) {
+          event.add(listenerName, fn);
         }
+      } else if (Array.isArray(callbacks)) {
+        // массив функций – каждая получит имя "listener_N"
+        callbacks.forEach((fn, idx) => {
+          event.add(`listener_${idx}`, fn);
+        });
+      } else {
+        throw new Error(`[EventManager] Incorrect callbacks format for event "${eventName}"`);
+      }
     }
+  }
 
-    schema__update_values(schema) {    // APPLY: in client/event consumer/executer no register event!!!
-        // update schema
-        for (let [event, callbacks] of Object.entries(schema)) {
-            if (callbacks === null || callbacks === undefined) continue;
-            if (typeof callbacks === 'function') callbacks = [ callbacks ];
-            if (Array.isArray(callbacks)) {
-                for (const cb of callbacks) {
-                    // if (callbacks.includes(cb)) continue;   // если уже есть – пропустить
-                    this.callback_add(event, cb);
-                }
-            } else {
-                throw new Error(`type incorrect ${typeof callbacks}/${callbacks}`);
-            }
-        }
+  // ---------------------------------------------------------------------------
+  // Работа с колбэками (роль: пользователь / клиент)
+  // ---------------------------------------------------------------------------
+
+  callback_add(eventName, listenerName, fn) {
+    this._get_event_or_throw(eventName).add(listenerName, fn);
+  }
+
+  callback_del(eventName, listenerName) {
+    this._events.get(eventName)?.remove(listenerName);
+  }
+
+  callbacks_clear(eventName) {
+    if (eventName === undefined) {
+      for (const event of this._events.values()) event.clear()
+    } else {
+      this._events.get(eventName)?.clear();
     }
+  }
 
-    // -------------------------------------------------------------------------
-    schema__register_event(event) {
-        if (event in this.event_schema) {
-            console.warn("already registered event", event);
-            return;
-        };
-
-        this.event_schema[event] = [];
+  event_remove(eventName) {
+    const event = this._events.get(eventName);
+    if (event) {
+      event.clear();
+      this._events.delete(eventName);
     }
-
-    // -------------------------------------------------------------------------
-    event_emit(event, data) {
-        if (!(event in this.event_schema)) throw new Error(`schema__register_event ${event}`);
-
-        const cbs = this.event_schema[event];
-        for (const cb of cbs) {
-            try {
-                cb(data);
-            } catch (exc) {
-                console.error(`[WsClient] error in '${event}' callback`, exc);
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    callback_add(event, callback) {
-        if (!(event in this.event_schema)) {
-            let msg = "not registered event" + event
-            console.error(msg);
-            // return;     // raise?
-            throw new Error(msg);
-        }
-
-        this.event_schema[event].push(callback);
-    }
-
-    callback_del(event, callback) {
-        if (!(event in this.event_schema)) return;
-
-        const arr = this.event_schema[event];
-        if (arr) {
-            this.event_schema[event] = arr.filter(cb => cb !== callback);
-        }
-    }
-
-    callbacks_clear(event) {
-        // clear - all events
-        if (event === undefined) {
-            for (const name of Object.keys(this.event_schema)) {
-                this.event_schema[name] = [];
-            };
-            return;
-        };
-
-        // clear - one event
-        if (event in this.event_schema) {
-            this.event_schema[event] = [];
-        }
-    }
+  }
 }
 
 
 // =====================================================================================================================
 class WsClient {
     url;
-    event_manager = null;
+    event_manager;
     reconnectDelay;
     isManualClose = false;
 
