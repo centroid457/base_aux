@@ -9,6 +9,13 @@ class Event {
     /** @type {Map<string, Function>} */
     this._listeners = new Map();
 // --------------------------------------------
+//параметры
+/**
+ * @param {string} eventName
+ * @param {string} listenerName
+ * @param {Function} fn
+ */
+callback_add(eventName, listenerName, fn) { ... }
 
 
 // =====================================================================================================================

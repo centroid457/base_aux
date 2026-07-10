@@ -1431,6 +1431,7 @@ class Event {
    */
   emit(data) {
     for (const [name, fn] of this._listeners) {
+        // NOTE=в случае с async fn - мы ничего не поймаем! но для системы событий этого не требуется! ошибки внутри - задача программиста коллбеков!
       try {
         fn(data);
       } catch (e) {
@@ -1511,6 +1512,11 @@ class EventManager {
     return event;
   }
 
+    has_event(eventName) {
+      return this._events.has(eventName);
+    }
+
+  // ---------------------------------------------------------------------------
   event_emit(eventName, data) {
     this._get_event_or_throw(eventName).emit(data);
   }
