@@ -1433,7 +1433,7 @@ class EventManager {
 
     schema__register_names(schema) {    // APPLY: in server/emitter/event producer
         for (const event of Object.keys(schema)) {
-            this.register_event(event);
+            this.schema__register_event(event);
         }
     }
 
@@ -1454,8 +1454,18 @@ class EventManager {
     }
 
     // -------------------------------------------------------------------------
+    schema__register_event(event) {
+        if (event in this.event_schema) {
+            console.warn("already registered event", event);
+            return;
+        };
+
+        this.event_schema[event] = [];
+    }
+
+    // -------------------------------------------------------------------------
     event_emit(event, data) {
-        if (!(event in this.event_schema)) throw new Error(`register_event ${event}`);
+        if (!(event in this.event_schema)) throw new Error(`schema__register_event ${event}`);
 
         const cbs = this.event_schema[event];
         for (const cb of cbs) {
@@ -1465,16 +1475,6 @@ class EventManager {
                 console.error(`[WsClient] error in '${event}' callback`, exc);
             }
         }
-    }
-
-    // -------------------------------------------------------------------------
-    register_event(event) {
-        if (event in this.event_schema) {
-            console.warn("already registered event", event);
-            return;
-        };
-
-        this.event_schema[event] = [];
     }
 
     // -------------------------------------------------------------------------
