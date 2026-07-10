@@ -46,7 +46,7 @@ class WsClient(Nest_TasksBg_AbcAio):
         self._tasks_bg__extend(self._loop_income())
 
     # ==================================================================================================================
-    async def outcome_excecutor(self, data: dict) -> None:
+    async def outcome_executor(self, data: dict) -> None:
         await self.ws_client.send_json(json__ensure_serializable(data))
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class WsClient(Nest_TasksBg_AbcAio):
                 msg_outcome = await self.queue_to_client.get()
                 print(f"{msg_outcome=}")
                 try:
-                    await self.outcome_excecutor(msg_outcome)
+                    await self.outcome_executor(msg_outcome)
                 except asyncio.CancelledError:
                     raise
                 except Exception as exc:
