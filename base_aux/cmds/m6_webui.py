@@ -226,7 +226,7 @@ class Model_RpcRequest(BaseModel):
 
 
 class Model_RpcResponse(BaseModel):
-    status: str = "OK"
+    ok: bool = True
     load: Any | dict = None
 
 
@@ -234,55 +234,64 @@ class Model_RpcResponse(BaseModel):
 @app.post("/post__rpc", response_model=Model_RpcResponse | None)
 async def post__rpc(cmd: Model_RpcRequest):
     print(cmd)
-    if cmd.channel == "item_control":
-        if cmd.action == "send_stdin":
 
-            item = manager_inst__termos.get_item(cmd.item_id)
-            if item and cmd.text:
-                TasksBg_PoolGlobal().spawn(item.send_cmd(cmd.text))
+    try:
+        if cmd.channel == "item_control":
+            # 1=NO NEED ANSWER --------------------------
+            if cmd.action == "reconnect_item":
+                item = manager_inst__termos.get_item(cmd.item_id)
+                TasksBg_PoolGlobal().spawn(item.reconnect())
+                return Model_RpcResponse()
 
-        elif cmd.action == "reconnect_item":
-            item = manager_inst__termos.get_item(cmd.item_id)
-            TasksBg_PoolGlobal().spawn(item.reconnect())
+            elif cmd.action == "create_item":
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
+                return Model_RpcResponse()
 
-        elif cmd.action == "create_item":
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
+            elif cmd.action == "delete_item":
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
+                return Model_RpcResponse()
 
-        elif cmd.action == "delete_item":
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
+            elif cmd.action == "history_clear":
+                TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
+                return Model_RpcResponse()
 
-        elif cmd.action == "history_clear":
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
+            # 2=NEED ANSWER-1=at least status ---------------------
+            if cmd.action == "send_stdin":
+                item = manager_inst__termos.get_item(cmd.item_id)
+                if item and cmd.text:
+                    result = await item.send_cmd(cmd.text)
+                return Model_RpcResponse()
 
-        elif cmd.action == "history_get":
-            item = manager_inst__termos.get_item(cmd.item_id)
-            if not item:
-                raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
+            # 3=NEED ANSWER-2=data ---------------------------------
+            if cmd.action == "items_list_get":
+                ids = list(manager_inst__termos.items)
+                return Model_RpcResponse(load=ids)
 
-            history_data: list[dict] = []
-            for result in item.history:
-                history_data.append({
-                    "input": result.INPUT,
-                    "stdout": result.STDOUT,
-                    "stderr": result.STDERR,
-                    "timestamp": result.timestamp.isoformat() if result.timestamp else None,
-                    "duration": result.duration,
-                    "finished_status": result.finished_status.value if result.finished_status else None,
-                    "retcode": result.retcode
-                })
-            return Model_RpcResponse(load=history_data)
+            elif cmd.action == "history_get":
+                item = manager_inst__termos.get_item(cmd.item_id)
+                if not item:
+                    raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
 
-        elif cmd.action == "items_list_get":
-            ids = list(manager_inst__termos.items)
-            return Model_RpcResponse(load=ids)
+                history_data: list[dict] = []
+                for result in item.history:
+                    history_data.append({
+                        "input": result.INPUT,
+                        "stdout": result.STDOUT,
+                        "stderr": result.STDERR,
+                        "timestamp": result.timestamp.isoformat() if result.timestamp else None,
+                        "duration": result.duration,
+                        "finished_status": result.finished_status.value if result.finished_status else None,
+                        "retcode": result.retcode
+                    })
+                return Model_RpcResponse(load=history_data)
 
+            else:
+                raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
         else:
-            raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
+            raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
 
-        return Model_RpcResponse()
-
-    else:
-        raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
+    except Exception as exc:
+        return Model_RpcResponse(ok=False, load=f"{exc}")
 
 
 # =====================================================================================================================

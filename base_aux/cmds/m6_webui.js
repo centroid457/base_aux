@@ -365,7 +365,7 @@ class RpcClient {
     }
 
     __RESPONSE_SCHEMA = {    // just for info!
-        status: "OK",
+        ok: 0,
         load: {},
     }
 
@@ -393,7 +393,7 @@ class RpcClient {
                 action: 'create_item',
             }
         );
-        return response?.status === "OK";
+        return response?.ok;
     }
 
     async deleteItem(item_id) {
@@ -404,7 +404,7 @@ class RpcClient {
                 item_id,
             }
         );
-        return response?.status === "OK";
+        return response?.ok;
     }
 
     async reconnectItem(item_id) {
@@ -415,7 +415,7 @@ class RpcClient {
                 item_id,
             }
         );
-        return response?.status === "OK";
+        return response?.ok;
     }
 
     async clearHistory(item_id) {
@@ -426,7 +426,7 @@ class RpcClient {
                 item_id,
             }
         );
-        return response?.status === "OK";
+        return response?.ok;
     }
 
     // 2=NEED ANSWER!!! ----------------
@@ -439,7 +439,7 @@ class RpcClient {
                 text,
             }
         );
-        return response?.status === "OK";
+        return response?.ok;
     }
 
     async getHistory(item_id) {
