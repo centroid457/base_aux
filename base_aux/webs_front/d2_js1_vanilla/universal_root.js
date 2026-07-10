@@ -1417,6 +1417,83 @@ function fetchJsonDelete(url, body = {}, options = {}) {    // seems body is not
 
 
 // =====================================================================================================================
+class Event {
+  constructor(name, listeners = {}) {
+    this.name = name;
+    /** @type {Map<string, Function>} */
+    this._listeners = new Map();
+    this.add_map(listeners);
+  }
+
+  /**
+   * Вызвать всех слушателей с переданными данными.
+   * Ошибка в одном слушателе не прерывает остальных.
+   */
+  emit(data) {
+    for (const [name, fn] of this._listeners) {
+      try {
+        fn(data);
+      } catch (e) {
+        console.error(`[Event:${this.name}] error in listener "${name}"`, e);
+      }
+    }
+  }
+
+  /**
+   * Проверить наличие слушателя по имени.
+   */
+  has(name) {
+    return this._listeners.has(name);
+  }
+
+  /**
+   * Массовое добавление слушателей из объекта или Map.
+   * @param {Object<string, Function>|Map<string, Function>} listeners
+   */
+  add_map(listeners = {}) {
+    if (listeners instanceof Map) {
+      for (const [name, fn] of listeners) {
+        this.add(name, fn);
+      }
+    } else if (typeof listeners === 'object' && listeners !== null) {
+      for (const [name, fn] of Object.entries(listeners)) {
+        this.add(name, fn);
+      }
+    } else {
+      throw new TypeError('listeners must be a plain object or a Map');
+    }
+  }
+
+  /**
+   * Добавить одного слушателя под уникальным именем.
+   * Бросает ошибку, если имя уже занято.
+   */
+  add(name, fn) {
+    if (typeof fn !== 'function') {
+      throw new TypeError(`[Event:${this.name}] Listener "${name}" must be a function`);
+    }
+    if (this._listeners.has(name)) {
+      throw new Error(`[Event:${this.name}] Listener already EXISTS: "${name}"`);
+    }
+    this._listeners.set(name, fn);
+  }
+
+  /**
+   * Удалить слушателя по имени.
+   */
+  remove(name) {
+    this._listeners.delete(name);
+  }
+
+  /**
+   * Удалить всех слушателей.
+   */
+  clear() {
+    this._listeners.clear();
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 class EventManager {
     event_schema = {};
 
