@@ -1422,7 +1422,7 @@ class Event {
     this.name = name;
     /** @type {Map<string, Function>} */
     this._listeners = new Map();
-    this.add_map(listeners);
+    this.add_map_obj(listeners);
   }
 
   /**
@@ -1450,7 +1450,7 @@ class Event {
    * Массовое добавление слушателей из объекта или Map.
    * @param {Object<string, Function>|Map<string, Function>} listeners
    */
-  add_map(listeners = {}) {
+  add_map_obj(listeners = {}) {
     if (listeners instanceof Map) {
       for (const [name, fn] of listeners) {
         this.add(name, fn);
@@ -1516,7 +1516,7 @@ class EventManager {
   }
 
   // ---------------------------------------------------------------------------
-  // Регистрация событий (роль: регистратор / сервер)
+  // Регистрация событий (роль: регистратор / сервер) исходный сервис
   // ---------------------------------------------------------------------------
 
   /**
@@ -1542,7 +1542,7 @@ class EventManager {
   }
 
   // ---------------------------------------------------------------------------
-  // заполнение колбеками из схемы
+  // заполнение колбеками из схемы - ПОТРЕБИТЕЛЬ
   /**
    * Применить колбэки из схемы.
    * Ожидается объект: { eventName: { listenerName: fn, ... } }
@@ -1555,8 +1555,8 @@ class EventManager {
       const event = this._get_event_or_throw(eventName);
 
       if (typeof callbacks === 'function') {
-        // одиночный колбэк – дадим ему имя по умолчанию (например, "default") - пусть будет! позволяет задать только один безимянный!
-        event.add('default', callbacks);
+        const fn = callbacks;
+        event.add(fn.name, fn);
       } else if (typeof callbacks === 'object' && !Array.isArray(callbacks)) {
         // объект { listenerName: fn, ... }
         for (const [listenerName, fn] of Object.entries(callbacks)) {
@@ -1564,8 +1564,8 @@ class EventManager {
         }
       } else if (Array.isArray(callbacks)) {
         // массив функций – каждая получит имя "listener_N"
-        callbacks.forEach((fn, idx) => {
-          event.add(`listener_${idx}`, fn);
+        callbacks.forEach((fn) => {
+          event.add(fn.name, fn);
         });
       } else {
         throw new Error(`[EventManager] Incorrect callbacks format for event "${eventName}"`);
