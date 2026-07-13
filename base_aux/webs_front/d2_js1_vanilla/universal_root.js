@@ -1243,7 +1243,8 @@ OnLoadRunner.add(onload__ws_ping);
 
 
 // =====================================================================================================================
-async function fetchJSON(url) {
+// простейший запрос GET json! только для информации
+async function __fetchJSONsimple(url) {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const result = response.json();

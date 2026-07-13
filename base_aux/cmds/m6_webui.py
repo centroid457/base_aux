@@ -300,7 +300,10 @@ async def ws__ping(websocket: WebSocket):
     await websocket.accept()
 
     # При подключении отправляем клиенту идентификатор сервера
-    await websocket.send_json({"channel": "server_id", "id": server_id})
+    await websocket.send_json({
+        "channel": "server_id",
+        "id": server_id,
+    })
 
     try:
         while True:
@@ -321,9 +324,10 @@ async def ws__broadcast(websocket: WebSocket):
 
     # 3=WORK --------------------------
     async with WsClient(
-            ws_client=websocket,
+            websocket=websocket,
             queue_client=client_queue,
             callback_onclose=lambda: event_broadcaster.unregister_client(client_id),
+            callback_onmessage=None,    # DONT: dont do any!
     ) as wsc:
         await wsc
 
