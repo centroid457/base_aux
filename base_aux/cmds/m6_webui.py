@@ -18,7 +18,7 @@ from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import *
 from base_aux.tasks.m1_tasks_bg import *
 from base_aux.aux_paradigm.m2_aio import *
-from base_aux.webs_back.d4_websocket.m1_ws_server import WsServer
+from base_aux.webs_back.d4_channels.m1_ws_server import WsServer
 from base_aux.aux_eq.m3_eq_valid3_derivatives import EqValid_AttrsByKwargs
 
 
@@ -175,8 +175,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst = ManagerInst_TermOs()
-# manager_inst = ManagerInst_TermSerial()
+# manager_inst = ManagerInst_TermOs()
+manager_inst = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
