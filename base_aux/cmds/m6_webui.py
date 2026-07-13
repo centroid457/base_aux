@@ -17,7 +17,8 @@ from base_aux.cmds.m5_terminal2_serial2_aio import *
 from base_aux.qeues.m1_event_broadcaster import *
 from base_aux.tasks.m1_tasks_bg import *
 from base_aux.aux_paradigm.m2_aio import *
-from base_aux.webs_back.d4_websocket.m1_wsclient import WsClient
+from base_aux.webs_back.d4_websocket.m1_ws_server import WsServer
+from base_aux.aux_eq.m3_eq_valid3_derivatives import EqValid_AttrsByKwargs
 
 
 # =====================================================================================================================
@@ -234,61 +235,68 @@ class Model_RpcResponse(BaseModel):
 @app.post("/post__rpc", response_model=Model_RpcResponse | None)
 async def post__rpc(cmd: Model_RpcRequest):
     print(cmd)
+    # TODO: raise HTTPException or return Model_RpcResponse(False) ?????
+    # raise HTTPException(status_code=400, detail=result_msg)
+    # raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
+
+    result_msg = None
 
     try:
-        if cmd.channel == "item_control":
-            # 1=NO NEED ANSWER --------------------------
-            if cmd.action == "reconnect_item":
-                item = manager_inst__termos.get_item(cmd.item_id)
-                TasksBg_PoolGlobal().spawn(item.reconnect())
-                return Model_RpcResponse()
+        # 1=NO NEED ANSWER --------------------------
+        if EqValid_AttrsByKwargs(channel="item_control", action="reconnect_item") == cmd:
+            item = manager_inst__termos.get_item(cmd.item_id)
+            TasksBg_PoolGlobal().spawn(item.reconnect())
+            return Model_RpcResponse()
 
-            elif cmd.action == "create_item":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
-                return Model_RpcResponse()
+        elif EqValid_AttrsByKwargs(channel="item_control", action="create_item") == cmd:
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
+            return Model_RpcResponse()
 
-            elif cmd.action == "delete_item":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
-                return Model_RpcResponse()
+        elif EqValid_AttrsByKwargs(channel="item_control", action="delete_item") == cmd:
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
+            return Model_RpcResponse()
 
-            elif cmd.action == "history_clear":
-                TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
-                return Model_RpcResponse()
+        elif EqValid_AttrsByKwargs(channel="item_control", action="history_clear") == cmd:
+            TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
+            return Model_RpcResponse()
 
-            # 2=NEED ANSWER-1=at least status ---------------------
-            if cmd.action == "send_stdin":
-                item = manager_inst__termos.get_item(cmd.item_id)
-                if item and cmd.text:
-                    result = await item.send_cmd(cmd.text)
-                return Model_RpcResponse()
+        # 2=NEED ANSWER-1=at least status ---------------------
+        if EqValid_AttrsByKwargs(channel="item_control", action="send_stdin") == cmd:
+            item = manager_inst__termos.get_item(cmd.item_id)
+            if not item:
+                result_msg = f"[{cmd.item_id=}]Item not found"
+                return Model_RpcResponse(ok=False, load=result_msg)
+            if cmd.text:
+                result = await item.send_cmd(cmd.text)
+            return Model_RpcResponse()
 
-            # 3=NEED ANSWER-2=data ---------------------------------
-            if cmd.action == "items_list_get":
-                ids = list(manager_inst__termos.items)
-                return Model_RpcResponse(load=ids)
+        # 3=NEED ANSWER-2=data ---------------------------------
+        if EqValid_AttrsByKwargs(channel="item_control", action="items_list_get") == cmd:
+            ids = list(manager_inst__termos.items)
+            return Model_RpcResponse(load=ids)
 
-            elif cmd.action == "history_get":
-                item = manager_inst__termos.get_item(cmd.item_id)
-                if not item:
-                    raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
+        elif EqValid_AttrsByKwargs(channel="item_control", action="history_get") == cmd:
+            item = manager_inst__termos.get_item(cmd.item_id)
+            if not item:
+                result_msg = f"[{cmd.item_id=}]Item not found"
+                return Model_RpcResponse(ok=False, load=result_msg)
 
-                history_data: list[dict] = []
-                for result in item.history:
-                    history_data.append({
-                        "input": result.INPUT,
-                        "stdout": result.STDOUT,
-                        "stderr": result.STDERR,
-                        "timestamp": result.timestamp.isoformat() if result.timestamp else None,
-                        "duration": result.duration,
-                        "finished_status": result.finished_status.value if result.finished_status else None,
-                        "retcode": result.retcode
-                    })
-                return Model_RpcResponse(load=history_data)
+            history_data: list[dict] = []
+            for result in item.history:
+                history_data.append({
+                    "input": result.INPUT,
+                    "stdout": result.STDOUT,
+                    "stderr": result.STDERR,
+                    "timestamp": result.timestamp.isoformat() if result.timestamp else None,
+                    "duration": result.duration,
+                    "finished_status": result.finished_status.value if result.finished_status else None,
+                    "retcode": result.retcode
+                })
+            return Model_RpcResponse(load=history_data)
 
-            else:
-                raise HTTPException(status_code=400, detail=f"Unknown action: {cmd.action}")
         else:
-            raise HTTPException(status_code=400, detail=f"Unsupported channel: {cmd.channel}")
+            result_msg = f"Unsupported request channel/action: {cmd}"
+            return Model_RpcResponse(ok=False, load=result_msg)
 
     except Exception as exc:
         return Model_RpcResponse(ok=False, load=f"{exc}")
@@ -323,7 +331,7 @@ async def ws__broadcast(websocket: WebSocket):
     client_id, client_queue = event_broadcaster.register_client()
 
     # 3=WORK --------------------------
-    async with WsClient(
+    async with WsServer(
             websocket=websocket,
             queue_client=client_queue,
             callback_onclose=lambda: event_broadcaster.unregister_client(client_id),

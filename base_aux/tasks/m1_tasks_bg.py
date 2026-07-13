@@ -69,7 +69,7 @@ class Nest_TasksBg_Abc:
         additional logic for global __aexit__
 
         SPECIALLY CREATED FOR
-        WsClient
+        WsServer
         """
         raise NotImplementedError()
 

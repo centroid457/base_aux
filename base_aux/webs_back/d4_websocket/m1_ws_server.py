@@ -10,7 +10,7 @@ from base_aux.tasks.m1_tasks_bg import Nest_TasksBg_AbcAio
 
 
 # ======================================================================================================================
-class WsClient(Nest_TasksBg_AbcAio):
+class WsServer(Nest_TasksBg_AbcAio):
     """
     GOAL
     used in FastApi
