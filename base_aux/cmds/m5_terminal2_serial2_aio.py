@@ -13,6 +13,31 @@ import serial_asyncio
 class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
     _conn: SimpleNamespace | None
 
+    def settings_change(
+            self,
+            baudrate=None,
+            bytesize=None,
+            parity=None,
+            stopbits=None,
+    ):
+        if baudrate is not None:
+            self._serial_baudrate = baudrate
+        if bytesize is not None:
+            self._serial_bytesize = bytesize
+        if parity is not None:
+            self._serial_parity = parity
+        if stopbits is not None:
+            self._serial_stopbits = stopbits
+
+    def settings_get(self):
+        result = dict(
+            baudrate=self._serial_baudrate,
+            bytesize= self._serial_bytesize,
+            parity= self._serial_parity,
+            stopbits= self._serial_stopbits,
+        )
+        return result
+
     # -----------------------------------------------------------------------------------------------------------------
     async def _create_conn(self) -> None | NoReturn:
         """

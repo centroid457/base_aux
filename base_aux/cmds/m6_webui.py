@@ -111,6 +111,7 @@ class Base_ManagerInst_Term(Base_ManagerInstance):
 # ----------------------------------------------------------------------------------------------------------------------
 class ManagerInst_TermOs(Base_ManagerInst_Term):
     ITEM_CLASS = CmdTerminal_OsAio
+
     async def __aenter__(self):
         await self.create_first_item()
         return self
@@ -175,8 +176,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# manager_inst = ManagerInst_TermOs()
-manager_inst = ManagerInst_TermSerial()
+manager_inst = ManagerInst_TermOs()
+# manager_inst = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
@@ -202,7 +203,6 @@ async def lifespan(app: FastAPI):
 # =====================================================================================================================
 app = FastAPI(title="WebClient", lifespan=lifespan)
 app.mount("/base_aux", StaticFiles(directory="../"), name="base_aux")
-
 templates = Jinja2Templates(directory=os.path.dirname(__file__))
 
 # Уникальный идентификатор сервера: можно использовать время запуска
@@ -290,32 +290,34 @@ class RpcServer_Terminal(Base_RpcServer):
             EqValid_AttrsByKwargs(channel="item_control", action="delete_item"): self._item__delete,
             EqValid_AttrsByKwargs(channel="item_control", action="history_clear"): self._item__history_clear,
             EqValid_AttrsByKwargs(channel="item_control", action="send_stdin"): self._item__send_stdin,
-            EqValid_AttrsByKwargs(channel="item_control", action="items_list_get"): self._items__list_get,
+            EqValid_AttrsByKwargs(channel="item_control", action="items_get"): self._items__list_get,
             EqValid_AttrsByKwargs(channel="item_control", action="history_get"): self._item__history_get,
+            EqValid_AttrsByKwargs(channel="item_control", action="settings_change"): self._item__settings_change,
+            EqValid_AttrsByKwargs(channel="item_control", action="settings_get"): self._item__settings_get,
         }
         return schema
 
     # -----------------------------------------------------------------------------------------------------------------
     # 1=NO NEED ANSWER --------------------------
-    async def _item__reconnect(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__reconnect(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         item = self.manager_inst.get_item(cmd.item_id)
         TasksBg_PoolGlobal().spawn(item.reconnect())
         return self._response_make()
 
-    async def _item__create(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__create(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         TasksBg_PoolGlobal().spawn(self.manager_inst.create_item())
         return self._response_make()
 
-    async def _item__delete(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__delete(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         TasksBg_PoolGlobal().spawn(self.manager_inst.del_item(cmd.item_id))
         return self._response_make()
 
-    async def _item__history_clear(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__history_clear(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         TasksBg_PoolGlobal().spawn(self.manager_inst.clear_history(cmd.item_id))
         return self._response_make()
 
     # 2=NEED ANSWER-1=at least status ---------------------
-    async def _item__send_stdin(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__send_stdin(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         item = self.manager_inst.get_item(cmd.item_id)
         if not item:
             return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
@@ -323,12 +325,31 @@ class RpcServer_Terminal(Base_RpcServer):
             await item.send_cmd(cmd.text)          # результат не возвращаем, как в исходном коде
         return self._response_make()
 
+    async def _item__settings_change(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
+        item = self.manager_inst.get_item(cmd.item_id)
+        if not item:
+            return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
+        if not cmd.settings:
+            return self._response_make(ok=False, load=f"BLANC[{cmd.settings=}]")
+
+        item.settings_change(**cmd.settings)
+        await item.reconnect()
+        return self._response_make()
+
     # 3=NEED ANSWER-2=data ---------------------------------
-    async def _items__list_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__settings_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
+        item = self.manager_inst.get_item(cmd.item_id)
+        if not item:
+            return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
+
+        result = await item.settings_get()
+        return self._response_make(load=result)
+
+    async def _items__list_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         ids = list(self.manager_inst.items)
         return self._response_make(load=ids)
 
-    async def _item__history_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+    async def _item__history_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         item = self.manager_inst.get_item(cmd.item_id)
         if not item:
             return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")

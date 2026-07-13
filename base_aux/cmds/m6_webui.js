@@ -26,7 +26,7 @@ class BaseItemUI {
         this.rpc = rpc;
         this.config = config;
 
-        /** @type {{ final: HTMLElement|null, output: HTMLElement|null, input: HTMLInputElement|null }} */
+        /** @type {{ final: HTMLElement|null, main: HTMLElement|null, input: HTMLInputElement|null }} */
         if (!("final" in this.elements)) this.elements["final"] = null;
     }
 
@@ -67,7 +67,7 @@ class ItemUiTerminal extends BaseItemUI {
     elements = {
         final: null,
 
-        output: null,
+        main: null,
         input: null,
     };
     css_map = {
@@ -90,33 +90,35 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.final = document.createElement('div');
         this.elements.final.className = this.css_map.itemBox;
 
-        // Header
+        // 1=Header
         const header = document.createElement('header');
+
         const idSpan = document.createElement('span');
         idSpan.className = this.css_map.itemId;
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
         header.appendChild(this._create_buttons());
 
-        // Output area
-        const output = document.createElement('main');
-        output.setAttribute('data-scrollbar__dark', '');
-        this.elements.output = output;
+        // 2=Output area
+        const main = document.createElement('main');
 
-        // Input area
+        main.setAttribute('data-scrollbar__dark', '');
+        this.elements.main = main;
+
+        // 3=Input area
         const footer = document.createElement('footer');
 
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'Введите команду и нажмите Enter';
         this.elements.input = input;
+        input.addEventListener('change', () => this._callback_input());
         footer.appendChild(input);
 
+        // 100=FINAL
         this.elements.final.appendChild(header);
-        this.elements.final.appendChild(output);
+        this.elements.final.appendChild(main);
         this.elements.final.appendChild(footer);
-
-        input.addEventListener('change', () => this._callback_input());
     }
 
     _callback_input() {
@@ -176,7 +178,7 @@ class ItemUiTerminal extends BaseItemUI {
 
     // USER METH -----------------------------------------------------------------------------------------------------------------
     history_clear() {
-        if (this.elements.output) this.elements.output.innerHTML = '';
+        if (this.elements.main) this.elements.main.innerHTML = '';
     }
 
     async history_load() {
@@ -198,8 +200,8 @@ class ItemUiTerminal extends BaseItemUI {
         const div = document.createElement('div');
         div.className = this.css_map[style] || this.css_map.debug;
         div.textContent = text;
-        this.elements.output.appendChild(div);
-        this.elements.output.scrollTop = this.elements.output.scrollHeight;
+        this.elements.main.appendChild(div);
+        this.elements.main.scrollTop = this.elements.main.scrollHeight;
     }
 }
 
@@ -429,7 +431,7 @@ class RpcClient {
         return response?.ok;
     }
 
-    // 2=NEED ANSWER!!! ----------------
+    // 2=NEED ANSWER-1=at least status ---------------------
     async sendStdin(item_id, text) {
         const response = await this._call(
             {
@@ -440,6 +442,30 @@ class RpcClient {
             }
         );
         return response?.ok;
+    }
+
+    async changeSettings(item_id, settings) {
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'settings_change',
+                item_id,
+                settings,
+            }
+        );
+        return response?.ok;
+    }
+
+    // 3=NEED ANSWER-2=data ---------------------------------
+    async getSettings(item_id) {
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'settings_get',
+                item_id,
+            }
+        );
+        return response?.load;  //{ baudrate: 115200, }
     }
 
     async getHistory(item_id) {
@@ -457,11 +483,12 @@ class RpcClient {
         const response = await this._call(
             {
                 channel: 'item_control',
-                action: 'items_list_get',
+                action: 'items_get',
             }
         );
         return response?.load;
     }
+
 }
 
 
