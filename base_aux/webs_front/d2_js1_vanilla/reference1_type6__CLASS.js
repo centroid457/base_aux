@@ -346,8 +346,34 @@ Object.assign(Service.prototype, LoggerMixin);
 const service = new Service('API');
 service.log('Service started'); // [LOG] Service started
 
+
 // =====================================================================================================================
-// ПРОВЕРКИ
+// ПРОВЕРКИ+СВОЙСТВА
+// ---------------------------------------------------------------------------------------------------------------------
+// 1=ИМЯ КЛАССА!
+class ConsoleLogger {
+    _console_logging(style="log", ...args) {
+        let result_msg = "[" + this.constructor.name + "]";
+        for (const msg of args) {
+            result_msg += toString_MapObj(msg);
+        }
+        if (style == "log") console.log(result_msg);
+        if (style == "error") console.error(result_msg);
+        if (style == "warn") console.warn(result_msg);
+    }
+
+    console_log( ...args) {
+        this._console_logging("log", ...args);
+    }
+
+    console_error( ...args) {
+        this._console_logging("error", ...args);
+    }
+
+    console_warn( ...args) {
+        this._console_logging("warn", ...args);
+    }
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 //Проверка наличия собственного поля (hasOwnProperty)
