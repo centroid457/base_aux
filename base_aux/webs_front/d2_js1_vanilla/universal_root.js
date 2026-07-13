@@ -1611,7 +1611,33 @@ class EventManager {
 
 
 // =====================================================================================================================
-class WsClient {
+class ConsoleLogger {
+    _console_logging(style="log", ...args) {
+        let result_msg = "[" + this.constructor.name + "]";
+        for (const msg of args) {
+            result_msg += toString_MapObj(msg);
+        }
+        if (style == "log") console.log(result_msg);
+        if (style == "error") console.error(result_msg);
+        if (style == "warn") console.warn(result_msg);
+    }
+
+    console_log( ...args) {
+        this._console_logging("log", ...args);
+    }
+
+    console_error( ...args) {
+        this._console_logging("error", ...args);
+    }
+
+    console_warn( ...args) {
+        this._console_logging("warn", ...args);
+    }
+}
+
+
+// =====================================================================================================================
+class WsClient extends ConsoleLogger {
     url;
     event_manager;
     reconnectDelay;
@@ -1629,6 +1655,8 @@ class WsClient {
      * @param {boolean} [autoConnect=true]
      */
     constructor({ url, event_manager = new EventManager(), reconnectDelay = 3000, autoConnect = true } = {}) {
+        super();
+
         // ----------------------------
         if (!url) throw new Error('url is required');
         if (url.startsWith('ws://') || url.startsWith('wss://')) {
@@ -1673,13 +1701,13 @@ class WsClient {
             this._socket.close();
         }
 
-        console.log('[WsClient] ⌛ connecting to', this.url);
+        this.console_log('⌛trt connecting to', this.url);
         this.isManualClose = false;
         this._socket = new WebSocket(this.url);
 
         this._socket.onopen = () => {
             this._was_open = true;
-            console.log('[WsClient.onopen] 🟢 connected');
+            this.console_log('.ONOPEN 🟢 connected');
             this.event_manager.event_emit('ws_onopen');
         };
 
@@ -1688,29 +1716,29 @@ class WsClient {
             try {
                 data = JSON.parse(event.data);
             } catch (exc) {
-                console.error('[WsClient] failed to parse message', exc);
+                this.console_error('failed to parse message', exc);
                 return;
             }
-            console.log('[WsClient] 📩', data);
+            this.console_log('.ONMESSAGE📩', data);
             this.event_manager.event_emit('ws_onmessage', data);
         };
 
         this._socket.onclose = () => {
             if (this._was_open) {
-                console.log('[WsClient.onclose] 🔴 closed');
+                this.console_log('.ONCLOSE🔴closed');
                 this.event_manager.event_emit('ws_onclose');
             }
 
             if (!this.isManualClose) {
                 const delay = this.reconnectDelay;
-                console.log(`[WsClient] reconnecting in ${delay}ms...`);
+                this.console_log(".ONRECONNECT in ms...", delay);
                 this.event_manager.event_emit('ws_onreconnect', { delay });
                 this._reconnectTimerId = setTimeout(() => this.connect(), delay);
             }
         };
 
         this._socket.onerror = (err) => {
-            if (this._was_open) console.log('[WsClient.onerror] 🟡 error');
+            if (this._was_open) this.console_log('.ONERROR🟡');
             this.event_manager.event_emit('ws_onerror', err);
         };
     }
@@ -1725,14 +1753,14 @@ class WsClient {
     /** Отправить JSON-данные. Возвращает true, если сообщение отправлено */
     send_json(data) {
         if (!this.is_connected()) {
-            console.warn('[WsClient] _socket not open, message dropped', data);
+            this.console_warn('_socket not open, message dropped', data);
             return false;
         }
         try {
             this._socket.send(JSON.stringify(data));
             return true;
         } catch (exc) {
-            console.error('[WsClient] send_json failed', exc);
+            this.console_error('send_json failed', exc);
             return false;
         }
     }
