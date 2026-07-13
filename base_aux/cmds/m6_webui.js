@@ -69,6 +69,7 @@ class ItemUiTerminal extends BaseItemUI {
 
         main: null,
         input: null,
+        baudrateSelect: null,
     };
     css_map = {
         itemBox: 'item__cls',
@@ -98,6 +99,28 @@ class ItemUiTerminal extends BaseItemUI {
         idSpan.textContent = this.itemId;
         header.appendChild(idSpan);
         header.appendChild(this._create_buttons());
+
+        // === ДОБАВЛЕНО: выпадающий список baudrate ===
+        const baudSelect = document.createElement('select');
+        baudSelect.setAttribute('aria-label', 'Baud rate');
+        const standardBaudrates = [9600, 19200, 38400, 57600, 115200];
+        standardBaudrates.forEach(rate => {
+            const opt = document.createElement('option');
+            opt.value = rate;
+            opt.textContent = rate;
+            baudSelect.appendChild(opt);
+        });
+        // Значение по умолчанию (пока не загружено с сервера)
+        baudSelect.value = 115200;
+        this._currentBaudrate = 115200;
+
+        // Обработчик изменения
+        baudSelect.addEventListener('change', () => this._onBaudrateChange());
+
+        this.elements.baudrateSelect = baudSelect;
+        header.appendChild(baudSelect);   // вставляем перед кнопками
+
+        // =============================================
 
         // 2=Output area
         const main = document.createElement('main');
@@ -174,7 +197,7 @@ class ItemUiTerminal extends BaseItemUI {
     async sendReconnect()    { await this.rpc.reconnectItem(this.itemId) }
     async sendDelete()       { await this.rpc.deleteItem(this.itemId) }
     async sendHistoryClear() { await this.rpc.clearHistory(this.itemId) }
-    async sendHistoryGet() { return await this.rpc.getHistory(this.itemId) }
+    async sendHistoryGet()   { return await this.rpc.getHistory(this.itemId) }
 
     // USER METH -----------------------------------------------------------------------------------------------------------------
     history_clear() {
@@ -203,6 +226,46 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.main.appendChild(div);
         this.elements.main.scrollTop = this.elements.main.scrollHeight;
     }
+
+    // -------------------------------------------------------
+    // === ДОБАВЛЕНО: загрузка настроек (baudrate) с сервера ===
+    async settings_load() {
+        try {
+            const settings = await this.rpc.getSettings(this.itemId);
+            if (settings && settings.baudrate) {
+                this._currentBaudrate = settings.baudrate;
+                this.elements.baudrateSelect.value = settings.baudrate;
+            } else {
+                // оставляем дефолтное значение
+            }
+        } catch (e) {
+            // при ошибке остаётся значение по умолчанию
+            console.warn(`Не удалось загрузить настройки для ${this.itemId}:`, e);
+        }
+    }
+
+    // === ДОБАВЛЕНО: обработчик изменения baudrate ===
+    async _onBaudrateChange() {
+        const newValue = parseInt(this.elements.baudrateSelect.value, 10);
+        const oldValue = this._currentBaudrate;
+
+        // Оптимистично запоминаем новое значение (вернём назад при ошибке)
+        this._currentBaudrate = newValue;
+
+        try {
+            const success = await this.rpc.changeSettings(this.itemId, { baudrate: newValue });
+            if (!success) {
+                throw new Error('Сервер вернул ошибку');
+            }
+            // Успех – значение уже сохранено в this._currentBaudrate
+        } catch (e) {
+            // Ошибка – откатываем select и внутреннее состояние
+            console.error(`Ошибка изменения baudrate для ${this.itemId}:`, e);
+            this._currentBaudrate = oldValue;
+            this.elements.baudrateSelect.value = oldValue;
+        }
+    }
+
 }
 
 // =============================================================================
