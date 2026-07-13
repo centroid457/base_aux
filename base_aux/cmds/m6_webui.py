@@ -239,8 +239,6 @@ async def post__rpc(cmd: Model_RpcRequest):
     # raise HTTPException(status_code=400, detail=result_msg)
     # raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
 
-    result_msg = None
-
     try:
         # 1=NO NEED ANSWER --------------------------
         if EqValid_AttrsByKwargs(channel="item_control", action="reconnect_item") == cmd:
