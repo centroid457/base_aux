@@ -101,6 +101,9 @@ class Base_EqValid(NestCall_Resolve):
         self.V_ARGS = v_args
         self.V_KWARGS = v_kwargs
 
+    def __hash__(self):
+        return hash(str(self))
+
     def __str__(self):
         v_args = self.V_ARGS
         v_kwargs = self.V_KWARGS
