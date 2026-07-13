@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from pydantic import BaseModel
+from functools import cached_property
 
 import serial.tools.list_ports  # need import exactly this full path! and use same full path!
 
@@ -174,8 +175,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst__termos = ManagerInst_TermOs()
-# manager_inst__termos = ManagerInst_TermSerial()
+manager_inst = ManagerInst_TermOs()
+# manager_inst = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
@@ -185,12 +186,12 @@ async def lifespan(app: FastAPI):
     print(f"FastApi.Startup: START")
     await event_broadcaster.start_task()
 
-    async with manager_inst__termos:
+    async with manager_inst:
 
         yield  # <-- здесь сервер работает и обрабатывает запросы
 
         # --- Код, выполняемый ПРИ ОСТАНОВКЕ сервера (бывший shutdown_event) ---
-        # for item_id, item in manager_inst__termos.items.items():
+        # for item_id, item in manager_inst.items.items():
         #     print(f"FastApi.Shutdown: {item_id=}")
         #     await item.disconnect()
 
@@ -232,72 +233,128 @@ class Model_RpcResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.post("/post__rpc", response_model=Model_RpcResponse | None)
-async def post__rpc(cmd: Model_RpcRequest):
-    print(cmd)
-    # TODO: raise HTTPException or return Model_RpcResponse(False) ?????
+TYPING__CMD_HANDLER = Callable[[Model_RpcRequest], Awaitable[Model_RpcResponse]]
+
+
+class Base_RpcServer:
+    RESPONSE_CLS: BaseModel = Model_RpcResponse
+
+    # TODO: raise HTTPException or return Model_RpcResponse(False) ????? - NO! keep direct!
     # raise HTTPException(status_code=400, detail=result_msg)
     # raise HTTPException(status_code=404, detail=f"[{cmd.item_id=}]Item not found")
 
-    try:
-        # 1=NO NEED ANSWER --------------------------
-        if EqValid_AttrsByKwargs(channel="item_control", action="reconnect_item") == cmd:
-            item = manager_inst__termos.get_item(cmd.item_id)
-            TasksBg_PoolGlobal().spawn(item.reconnect())
-            return Model_RpcResponse()
+    def __init__(
+            self,
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
 
-        elif EqValid_AttrsByKwargs(channel="item_control", action="create_item") == cmd:
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.create_item())
-            return Model_RpcResponse()
+    def _response_make(self, **kwargs) -> Model_RpcResponse:
+        return self.RESPONSE_CLS(**kwargs)
 
-        elif EqValid_AttrsByKwargs(channel="item_control", action="delete_item") == cmd:
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.del_item(cmd.item_id))
-            return Model_RpcResponse()
+    async def execute(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        for matcher, handler in self.SCHEMA.items():
+            if matcher == cmd:          # срабатывает EqValid_AttrsByKwargs.__eq__
+                try:
+                    return await handler(cmd)
+                except Exception as exc:
+                    return Model_RpcResponse(ok=False, load=str(exc))
+        # Неизвестная команда
+        return Model_RpcResponse(
+            ok=False,
+            load=f"Unsupported request channel/action: {cmd}"
+        )
 
-        elif EqValid_AttrsByKwargs(channel="item_control", action="history_clear") == cmd:
-            TasksBg_PoolGlobal().spawn(manager_inst__termos.clear_history(cmd.item_id))
-            return Model_RpcResponse()
+    @property
+    def SCHEMA(self) -> dict[EqValid_AttrsByKwargs, TYPING__CMD_HANDLER]:
+        raise NotImplementedError()
 
-        # 2=NEED ANSWER-1=at least status ---------------------
-        if EqValid_AttrsByKwargs(channel="item_control", action="send_stdin") == cmd:
-            item = manager_inst__termos.get_item(cmd.item_id)
-            if not item:
-                result_msg = f"[{cmd.item_id=}]Item not found"
-                return Model_RpcResponse(ok=False, load=result_msg)
-            if cmd.text:
-                result = await item.send_cmd(cmd.text)
-            return Model_RpcResponse()
 
-        # 3=NEED ANSWER-2=data ---------------------------------
-        if EqValid_AttrsByKwargs(channel="item_control", action="items_list_get") == cmd:
-            ids = list(manager_inst__termos.items)
-            return Model_RpcResponse(load=ids)
+# ---------------------------------------------------------------------------------------------------------------------
+class RpcServer_Terminal(Base_RpcServer):
+    RESPONSE_CLS = Model_RpcResponse
 
-        elif EqValid_AttrsByKwargs(channel="item_control", action="history_get") == cmd:
-            item = manager_inst__termos.get_item(cmd.item_id)
-            if not item:
-                result_msg = f"[{cmd.item_id=}]Item not found"
-                return Model_RpcResponse(ok=False, load=result_msg)
+    def __init__(
+            self,
+            manager_inst,
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.manager_inst = manager_inst
 
-            history_data: list[dict] = []
-            for result in item.history:
-                history_data.append({
-                    "input": result.INPUT,
-                    "stdout": result.STDOUT,
-                    "stderr": result.STDERR,
-                    "timestamp": result.timestamp.isoformat() if result.timestamp else None,
-                    "duration": result.duration,
-                    "finished_status": result.finished_status.value if result.finished_status else None,
-                    "retcode": result.retcode
-                })
-            return Model_RpcResponse(load=history_data)
+    @cached_property
+    def SCHEMA(self) -> dict[EqValid_AttrsByKwargs, TYPING__CMD_HANDLER]:
+        schema = {
+            EqValid_AttrsByKwargs(channel="item_control", action="reconnect_item"): self._item__reconnect,
+            EqValid_AttrsByKwargs(channel="item_control", action="create_item"): self._item__create,
+            EqValid_AttrsByKwargs(channel="item_control", action="delete_item"): self._item__delete,
+            EqValid_AttrsByKwargs(channel="item_control", action="history_clear"): self._item__history_clear,
+            EqValid_AttrsByKwargs(channel="item_control", action="send_stdin"): self._item__send_stdin,
+            EqValid_AttrsByKwargs(channel="item_control", action="items_list_get"): self._items__list_get,
+            EqValid_AttrsByKwargs(channel="item_control", action="history_get"): self._item__history_get,
+        }
+        return schema
 
-        else:
-            result_msg = f"Unsupported request channel/action: {cmd}"
-            return Model_RpcResponse(ok=False, load=result_msg)
+    # -----------------------------------------------------------------------------------------------------------------
+    # 1=NO NEED ANSWER --------------------------
+    async def _item__reconnect(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        item = self.manager_inst.get_item(cmd.item_id)
+        TasksBg_PoolGlobal().spawn(item.reconnect())
+        return self._response_make()
 
-    except Exception as exc:
-        return Model_RpcResponse(ok=False, load=f"{exc}")
+    async def _item__create(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        TasksBg_PoolGlobal().spawn(self.manager_inst.create_item())
+        return self._response_make()
+
+    async def _item__delete(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        TasksBg_PoolGlobal().spawn(self.manager_inst.del_item(cmd.item_id))
+        return self._response_make()
+
+    async def _item__history_clear(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        TasksBg_PoolGlobal().spawn(self.manager_inst.clear_history(cmd.item_id))
+        return self._response_make()
+
+    # 2=NEED ANSWER-1=at least status ---------------------
+    async def _item__send_stdin(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        item = self.manager_inst.get_item(cmd.item_id)
+        if not item:
+            return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
+        if cmd.text:
+            await item.send_cmd(cmd.text)          # результат не возвращаем, как в исходном коде
+        return self._response_make()
+
+    # 3=NEED ANSWER-2=data ---------------------------------
+    async def _items__list_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        ids = list(self.manager_inst.items)
+        return self._response_make(load=ids)
+
+    async def _item__history_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse:
+        item = self.manager_inst.get_item(cmd.item_id)
+        if not item:
+            return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
+        history_data = [
+            {
+                "input": r.INPUT,
+                "stdout": r.STDOUT,
+                "stderr": r.STDERR,
+                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                "duration": r.duration,
+                "finished_status": r.finished_status.value if r.finished_status else None,
+                "retcode": r.retcode,
+            }
+            for r in item.history
+        ]
+        return self._response_make(load=history_data)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+rpc_server = RpcServer_Terminal(manager_inst=manager_inst)
+
+
+@app.post("/channel__rpc", response_model=Model_RpcResponse)
+async def channel__rpc(cmd: Model_RpcRequest):
+    print(cmd)
+    return await rpc_server.execute(cmd)
 
 
 # =====================================================================================================================
@@ -322,8 +379,8 @@ async def ws__ping(websocket: WebSocket):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-@app.websocket("/ws__broadcast")
-async def ws__broadcast(websocket: WebSocket):
+@app.websocket("/channel__ws_broadcast")
+async def channel__ws_broadcast(websocket: WebSocket):
     # 2=PREPARE -----------------------
     await websocket.accept()
     client_id, client_queue = event_broadcaster.register_client()

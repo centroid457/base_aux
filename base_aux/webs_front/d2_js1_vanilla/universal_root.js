@@ -1623,7 +1623,7 @@ class WsClient {
     _reconnectTimerId = null;          // таймер переподключения
 
     /**
-     * @param {string}  url – полный URL или путь (например "/ws__broadcast")
+     * @param {string}  url – полный URL или путь (например "/channel__ws_broadcast")
      * @param {EventManager} [eventManager]
      * @param {number}  [reconnectDelay=300]
      * @param {boolean} [autoConnect=true]

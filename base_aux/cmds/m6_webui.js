@@ -331,9 +331,9 @@ class ItemManager extends BaseItemManager {
 // =====================================================================================================================
 window.onload = async () => {
     const event_manager = new EventManager();
-    const rpc = new RpcClient('/post__rpc');
+    const rpc = new RpcClient('/channel__rpc');
     const ws = new WsClient({
-        url: '/ws__broadcast',
+        url: '/channel__ws_broadcast',
         autoConnect: false,
         event_manager,
     });
@@ -357,7 +357,7 @@ window.onload = async () => {
 // =====================================================================================================================
 class RpcClient {
     /**
-     * @param {string} url – URL RPC-эндпоинта (например "/post__rpc")
+     * @param {string} url – URL RPC-эндпоинта (например "/channel__rpc")
      * @param {Function} [requestFn] – функция для запроса (по умолчанию fetchJsonPost)
      */
     constructor(url) {

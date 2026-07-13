@@ -17,7 +17,7 @@ class WsServer(Nest_TasksBg_AbcAio):
     as organised IO transportation/execution
 
     SPECIALLY CREATED FOR
-        @app.websocket("/ws__broadcast")
+        @app.websocket("/channel__ws_broadcast")
         async def ws__client(websocket: WebSocket):
     """
     def __init__(

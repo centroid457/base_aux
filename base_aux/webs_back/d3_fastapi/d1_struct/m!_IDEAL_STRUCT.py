@@ -21,13 +21,13 @@ async def lifespan(app: FastAPI):
     print(f"FastApi.STARTUP:")
     await asyncio.sleep(1)
 
-    # async with manager_inst__termos:
+    # async with manager_inst:
 
     print(f"FastApi.MAIN:")
     yield  # <-- здесь сервер работает и обрабатывает запросы
 
     # --- SHUTDOWN (бывший shutdown_event) ---
-    # for item_id, item in manager_inst__termos.items.items():
+    # for item_id, item in manager_inst.items.items():
     #     print(f"FastApi.Shutdown: {item_id=}")
     #     await item.disconnect()
 
