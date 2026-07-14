@@ -342,7 +342,7 @@ class RpcServer_Terminal(Base_RpcServer):
         if not item:
             return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
 
-        result = await item.config_get()
+        result = item.config_get()
         return self._response_make(load=result)
 
     async def _items__list_get(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:

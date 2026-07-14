@@ -229,15 +229,9 @@ class ItemUiTerminal extends BaseItemUI {
     }
 
     async config_load() {
-        try {
-            const config = await this.rpc.getConfig(this.itemId);
-            if (config?.baudrate) {
-                this._currentBaudrate = config.baudrate;
-                this.elements.baudrateSelect.value = config.baudrate;
-            }
-        } catch (e) {
-            this.console_warn(`Не удалось загрузить настройки для ${this.itemId}:`, e);
-        }
+        const config = await this.rpc.getConfig(this.itemId);
+        this._currentBaudrate = config?.baudrate;
+        if (config?.baudrate) this.elements.baudrateSelect.value = config?.baudrate;
     }
 
     // === ДОБАВЛЕНО: обработчик изменения baudrate ===
