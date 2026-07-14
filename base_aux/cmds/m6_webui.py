@@ -224,7 +224,7 @@ class Model_RpcRequest(BaseModel):
     channel: str
     action: str
     item_id: Optional[str] = None
-    text: Optional[str] = None
+    load: Optional[str | dict] = None
 
 
 class Model_RpcResponse(BaseModel):
@@ -321,18 +321,18 @@ class RpcServer_Terminal(Base_RpcServer):
         item = self.manager_inst.get_item(cmd.item_id)
         if not item:
             return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
-        if cmd.text:
-            await item.send_cmd(cmd.text)          # результат не возвращаем, как в исходном коде
+        if cmd.load:
+            await item.send_cmd(cmd.load)          # результат не возвращаем, как в исходном коде
         return self._response_make()
 
     async def _item__config_change(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         item = self.manager_inst.get_item(cmd.item_id)
         if not item:
             return self._response_make(ok=False, load=f"[{cmd.item_id=}]Item not found")
-        if not cmd.settings:
-            return self._response_make(ok=False, load=f"BLANC[{cmd.settings=}]")
+        if not cmd.load:
+            return self._response_make(ok=False, load=f"BLANC[{cmd.load=}]")
 
-        item.config_change(**cmd.settings)
+        item.config_change(**cmd.load)
         await item.reconnect()
         return self._response_make()
 

@@ -396,7 +396,7 @@ class CmdHistory_Aio(Abc_CmdHistory):
         # INPUT -------------
         if buffer_type == EnumAdj_StdioeType.STDIN:
             self._add_result(CmdResult(data))
-            await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), text=f"{data}")
+            await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), load=f"{data}")
             return
 
         # OUTPUT ------------
@@ -404,7 +404,7 @@ class CmdHistory_Aio(Abc_CmdHistory):
            await self.add_data__stdin("")
 
         self.last_result.append(data=data, buffer_type=buffer_type)
-        await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), text=f"{data}")
+        await self.eb__broadcast(channel="history_log", action=buffer_type.name.lower(), load=f"{data}")
 
     async def add_data__stdin(self, data: TYPING__CMD_LINE) -> None:
         await self._add_data(data, buffer_type=EnumAdj_StdioeType.STDIN)

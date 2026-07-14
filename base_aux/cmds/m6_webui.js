@@ -85,6 +85,7 @@ class ItemUiTerminal extends BaseItemUI {
     // -----------------------------------------------------------------------------------------------------------------
     async init_post() {
         await this.history_load();
+        await this.config_load();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -364,9 +365,9 @@ class ItemManager extends BaseItemManager {
         ws_onmessage: (msg) => {
             if (!msg) return;
 
-            const { item_id, channel, action, text } = msg;
+            const { item_id, channel, action, load } = msg;
             if (channel === 'history_log') {
-                this.items.get(item_id)?.history_add_line(action, text);
+                this.items.get(item_id)?.history_add_line(action, load);
             } else if (channel === 'item_control') {
                 if (action === 'create_item')   this.item_create(item_id);
                 else if (action === 'delete_item') this.item_delete(item_id);
@@ -431,14 +432,14 @@ class RpcClient {
 
     // -----------------------------------------------------------------------------------------------------------------
     // LEVEL-1=LOWER
-    async _call({channel, action, item_id, ...rest} = {}) {
+    async _call({channel, action, item_id, load={}} = {}) {
         const resp = await fetchJsonPost(
             this.url,
             {
                 channel,
                 action,
                 item_id,
-                ...rest,
+                load,
             });
         return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
     }
@@ -490,25 +491,25 @@ class RpcClient {
     }
 
     // 2=NEED ANSWER-1=at least status ---------------------
-    async sendStdin(item_id, text) {
+    async sendStdin(item_id, load) {
         const response = await this._call(
             {
                 channel: 'item_control',
                 action: 'send_stdin',
                 item_id,
-                text,
+                load,
             }
         );
         return response?.ok;
     }
 
-    async changeConfig(item_id, config={}) {
+    async changeConfig(item_id, load={}) {
         const response = await this._call(
             {
                 channel: 'item_control',
                 action: 'config_change',
                 item_id,
-                config,
+                load,
             }
         );
         return response?.ok;
