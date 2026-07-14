@@ -13,7 +13,7 @@ import serial_asyncio
 class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
     _conn: SimpleNamespace | None
 
-    def settings_change(
+    def config_change(
             self,
             baudrate=None,
             bytesize=None,
@@ -29,7 +29,7 @@ class CmdTerminal_SerialAio(Base_CmdTerminal_Serial, BaseAio_CmdTerminal):
         if stopbits is not None:
             self._serial_stopbits = stopbits
 
-    def settings_get(self):
+    def config_get(self):
         result = dict(
             baudrate=self._serial_baudrate,
             bytesize= self._serial_bytesize,

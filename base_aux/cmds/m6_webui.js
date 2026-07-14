@@ -2,7 +2,7 @@
 /**
  * Базовый UI одного элемента.
  */
-class BaseItemUI {
+class BaseItemUI extends ConsoleLogger {
     elements = {
         final: null,
     };
@@ -20,6 +20,7 @@ class BaseItemUI {
         rpc,
         config = {},
     } = {}) {
+        super();
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
@@ -91,37 +92,35 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.final = document.createElement('div');
         this.elements.final.className = this.css_map.itemBox;
 
+        // =============================================
         // 1=Header
         const header = document.createElement('header');
 
         const idSpan = document.createElement('span');
         idSpan.className = this.css_map.itemId;
         idSpan.textContent = this.itemId;
-        header.appendChild(idSpan);
-        header.appendChild(this._create_buttons());
 
         // === ДОБАВЛЕНО: выпадающий список baudrate ===
         const baudSelect = document.createElement('select');
-        baudSelect.setAttribute('aria-label', 'Baud rate');
-        const standardBaudrates = [9600, 19200, 38400, 57600, 115200];
+        const standardBaudrates = [undefined, 9600, 19200, 38400, 57600, 115200];
         standardBaudrates.forEach(rate => {
             const opt = document.createElement('option');
             opt.value = rate;
             opt.textContent = rate;
             baudSelect.appendChild(opt);
         });
-        // Значение по умолчанию (пока не загружено с сервера)
-        baudSelect.value = 115200;
-        this._currentBaudrate = 115200;
+        baudSelect.value = undefined;
+        this._currentBaudrate = undefined;
 
-        // Обработчик изменения
         baudSelect.addEventListener('change', () => this._onBaudrateChange());
 
         this.elements.baudrateSelect = baudSelect;
+
+        header.appendChild(idSpan);
         header.appendChild(baudSelect);   // вставляем перед кнопками
+        header.appendChild(this._create_buttons());
 
         // =============================================
-
         // 2=Output area
         const main = document.createElement('main');
 
@@ -138,6 +137,7 @@ class ItemUiTerminal extends BaseItemUI {
         input.addEventListener('change', () => this._callback_input());
         footer.appendChild(input);
 
+        // =============================================
         // 100=FINAL
         this.elements.final.appendChild(header);
         this.elements.final.appendChild(main);
@@ -227,40 +227,35 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.main.scrollTop = this.elements.main.scrollHeight;
     }
 
-    // -------------------------------------------------------
-    // === ДОБАВЛЕНО: загрузка настроек (baudrate) с сервера ===
-    async settings_load() {
+    async config_load() {
         try {
-            const settings = await this.rpc.getSettings(this.itemId);
-            if (settings && settings.baudrate) {
-                this._currentBaudrate = settings.baudrate;
-                this.elements.baudrateSelect.value = settings.baudrate;
-            } else {
-                // оставляем дефолтное значение
+            const config = await this.rpc.getConfig(this.itemId);
+            if (config?.baudrate) {
+                this._currentBaudrate = config.baudrate;
+                this.elements.baudrateSelect.value = config.baudrate;
             }
         } catch (e) {
-            // при ошибке остаётся значение по умолчанию
-            console.warn(`Не удалось загрузить настройки для ${this.itemId}:`, e);
+            this.console_warn(`Не удалось загрузить настройки для ${this.itemId}:`, e);
         }
     }
 
     // === ДОБАВЛЕНО: обработчик изменения baudrate ===
     async _onBaudrateChange() {
         const newValue = parseInt(this.elements.baudrateSelect.value, 10);
+        this.console_log("baudrateSelect newValue=", newValue);
+
         const oldValue = this._currentBaudrate;
 
-        // Оптимистично запоминаем новое значение (вернём назад при ошибке)
-        this._currentBaudrate = newValue;
-
         try {
-            const success = await this.rpc.changeSettings(this.itemId, { baudrate: newValue });
+            const success = await this.rpc.changeConfig(this.itemId, { baudrate: newValue });
+            this.console_log(success);
+
             if (!success) {
                 throw new Error('Сервер вернул ошибку');
             }
-            // Успех – значение уже сохранено в this._currentBaudrate
+            this._currentBaudrate = newValue;
         } catch (e) {
-            // Ошибка – откатываем select и внутреннее состояние
-            console.error(`Ошибка изменения baudrate для ${this.itemId}:`, e);
+            this.console_error(`Ошибка изменения baudrate для ${this.itemId}:`, e);
             this._currentBaudrate = oldValue;
             this.elements.baudrateSelect.value = oldValue;
         }
@@ -507,24 +502,24 @@ class RpcClient {
         return response?.ok;
     }
 
-    async changeSettings(item_id, settings) {
+    async changeConfig(item_id, config={}) {
         const response = await this._call(
             {
                 channel: 'item_control',
-                action: 'settings_change',
+                action: 'config_change',
                 item_id,
-                settings,
+                config,
             }
         );
         return response?.ok;
     }
 
     // 3=NEED ANSWER-2=data ---------------------------------
-    async getSettings(item_id) {
+    async getConfig(item_id) {
         const response = await this._call(
             {
                 channel: 'item_control',
-                action: 'settings_get',
+                action: 'config_get',
                 item_id,
             }
         );
