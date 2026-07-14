@@ -103,6 +103,7 @@ class ItemUiTerminal extends BaseItemUI {
 
         // === ДОБАВЛЕНО: выпадающий список baudrate ===
         const baudSelect = document.createElement('select');
+        baudSelect.style.width = '100';
         const standardBaudrates = [undefined, 9600, 19200, 38400, 57600, 115200];
         standardBaudrates.forEach(rate => {
             const opt = document.createElement('option');
@@ -118,7 +119,7 @@ class ItemUiTerminal extends BaseItemUI {
         this.elements.baudrateSelect = baudSelect;
 
         header.appendChild(idSpan);
-        header.appendChild(baudSelect);   // вставляем перед кнопками
+        header.appendChild(baudSelect);
         header.appendChild(this._create_buttons());
 
         // =============================================
