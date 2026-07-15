@@ -3,9 +3,6 @@
  * Базовый UI одного элемента.
  */
 class BaseItemUI extends ConsoleLogger {
-    elements = {
-        final: null,
-    };
     css_map = {};
 
     /**
@@ -26,9 +23,6 @@ class BaseItemUI extends ConsoleLogger {
         this.event_manager = event_manager;
         this.rpc = rpc;
         this.config = config;
-
-        /** @type {{ final: HTMLElement|null, main: HTMLElement|null, input: HTMLInputElement|null }} */
-        if (!("final" in this.elements)) this.elements["final"] = null;
     }
 
     async init() {
@@ -38,7 +32,7 @@ class BaseItemUI extends ConsoleLogger {
 
     // -----------------------------------------------------------------------------------------------------------------
     destroy() {
-        this.elements.final?.remove();
+        this.ELEMENTS_SCHEMA?.ROOT?.element?.remove();
     }
 
     // NESTING =========================================================================================================
@@ -46,16 +40,6 @@ class BaseItemUI extends ConsoleLogger {
     }
 
     buildDOM() {
-        // as example
-        this.elements.final = document.createElement('div');
-        //        this.elements.final.className = this.css_map.itemBox;
-
-        // Header
-        const header = document.createElement('header');
-        const idSpan = document.createElement('span');
-        //        idSpan.className = this.css_map.itemId;
-        idSpan.textContent = this.itemId;
-        header.appendChild(idSpan);
     }
 
     // METHS -----------------------------------------------------------------------------------------------------------
@@ -65,13 +49,6 @@ class BaseItemUI extends ConsoleLogger {
 
 // ---------------------------------------------------------------------------------------------------------------------
 class ItemUiTerminal extends BaseItemUI {
-    elements = {
-        final: null,
-
-        main: null,
-        input: null,
-        baudrateSelect: null,
-    };
     css_map = {
         itemBox: 'item__cls',
         itemId:  'span_item_id__cls',
@@ -84,90 +61,63 @@ class ItemUiTerminal extends BaseItemUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     async init_post() {
+        this._currentBaudrate = undefined;
         await this.history_load();
         await this.config_load();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     buildDOM() {
-        this.elements.final = document.createElement('div');
-        this.elements.final.className = this.css_map.itemBox;
+        return this._elements_make();
+    }
 
-        // =============================================
-        // 1=Header
-        const header = document.createElement('header');
+    // -----------------------------------------------------------------------------------------------------------------
+    _elements_make(schema={}) {
+        if (!schema) schema = this.ELEMENTS_SCHEMA;
 
-        const idSpan = document.createElement('span');
-        idSpan.className = this.css_map.itemId;
-        idSpan.textContent = this.itemId;
+        for (const [el_name, el_schema] of Object.entries(schema)) {
+            const {
+                tag_name,
+                container_name,
+                init,
+                attrs={},
+                events={},
+                style={},
+            } = el_schema;
+            const element = document.createElement(tag_name);
+            el_schema.element = element;
+            if (container_name) schema[container_name].element.appendChild(element);
 
-        // === ДОБАВЛЕНО: выпадающий список baudrate ===
-        const baudSelect = document.createElement('select');
-        baudSelect.style.width = '100';
-        const standardBaudrates = [undefined, 9600, 19200, 38400, 57600, 115200];
-        standardBaudrates.forEach(rate => {
+            for (const [s_name, s_val] of Object.entries(style)) {
+                element.style.setAttribute(s_name, s_val);
+            }
+            for (const [a_name, a_val] of Object.entries(attrs)) {
+                element.setAttribute(a_name, a_val);
+            }
+            for (const [e_name, e_val] of Object.entries(events)) {
+                element.addEventListener(e_name, e_val);
+            }
+
+            if (init) init();
+        }
+        return schema?.ROOT?.element;
+    }
+
+    _init__config_baudrate() {
+        const opts = [undefined, 9600, 19200, 38400, 57600, 115200];
+        opts.forEach(rate => {
             const opt = document.createElement('option');
             opt.value = rate;
             opt.textContent = rate;
-            baudSelect.appendChild(opt);
+            this.ELEMENTS_SCHEMA.config_baudrate.element.appendChild(opt);
         });
-        baudSelect.value = undefined;
-        this._currentBaudrate = undefined;
-
-        baudSelect.addEventListener('change', () => this._onBaudrateChange());
-
-        this.elements.baudrateSelect = baudSelect;
-
-        header.appendChild(idSpan);
-        header.appendChild(baudSelect);
-        header.appendChild(this._create_buttons());
-
-        // =============================================
-        // 2=Output area
-        const main = document.createElement('main');
-
-        main.setAttribute('data-scrollbar__dark', '');
-        this.elements.main = main;
-
-        // 3=Input area
-        const footer = document.createElement('footer');
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = 'Введите команду и нажмите Enter';
-        this.elements.input = input;
-        input.addEventListener('change', () => this._callback_input());
-        footer.appendChild(input);
-
-        // =============================================
-        // 100=FINAL
-        this.elements.final.appendChild(header);
-        this.elements.final.appendChild(main);
-        this.elements.final.appendChild(footer);
-    }
-
-    _callback_input() {
-        this.sendInput(this.elements.input.value.trim());
-    }
-
-    element__create_btn({text, title, onclick, attrs = {}} = {}) {
-        const btn = document.createElement('button');
-        btn.textContent = text;
-        btn.title = title;
-        for (const [name, val] of Object.entries(attrs)) {
-            btn.setAttribute(name, val);
-        }
-        btn.onclick = onclick;
-        return btn;
+        this.ELEMENTS_SCHEMA.config_baudrate.element.value = undefined;
     }
 
     // ======================================================
     ELEMENTS_SCHEMA = {
-        // FINAL ELEMENT
-        ELEMENT: undefined,
-
         // EXAMPLE STRUCT
-        LOCAL_NAME: {
+        __EXAMPLE__: {
             element: undefined,
             container_name: undefined,
 
@@ -175,71 +125,146 @@ class ItemUiTerminal extends BaseItemUI {
             attrs: {
                 textContent: 'clear',
                 title: 'Clear History',
-                onclick: () => this.sendHistoryClear(),
+                className: undefined,
             },
             events: {
-                change: () => this._callback_input(),
+                change: (x) => console.log(x),
+            },
+            style: {
+                width: '100',
+            },
+            init: undefined,
+        },
+
+        // ROOT STRUCT ===============================================================
+        ROOT: {
+            element: undefined,
+            container_name: undefined,
+
+            tag_name: 'div',
+            attrs: {
+                className: this.css_map.itemBox,
+            },
+        },
+        HEADER: {
+            container_name: "ROOT",
+            tag_name: 'div',
+            attrs: {
+            },
+        },
+        MAIN: {
+            container_name: "ROOT",
+            tag_name: 'div',
+            attrs: {
+                ['data-scrollbar__dark']: '',
+            },
+        },
+        FOOTER: {
+            container_name: "ROOT",
+            tag_name: 'div',
+            attrs: {
             },
         },
 
-        // EXAMPLE STRUCT
-
-    }
-
-    _elements_make() {
-        for (const [el_name, el_schema] of Object.entries(this.ELEMENTS_SCHEMA)) {
-            {tag_name, attrs, events, container_name} = el_schema;
-            const element = document.createElement(tag_name);
-
-            for (const [a_name, a_val] of Object.entries(attrs)) {
-                element.setAttribute(a_name, a_val);
-            }
-
-            for (const [ev_name, ev_val] of Object.entries(events)) {
-                element.addEventListener(ev_name, ev_val);
-            }
-
-            el_schema.element = element;
-
-            if (container_name) this.ELEMENTS_SCHEMA[container_name].element.appendChild(element);
-        }
-    }
-    // ======================================================
-    _create_buttons() {
-        const wrap = document.createElement('div');
-
-        const btns_schema = [
-            {
-                text: 'clear',
-                title: 'Clear History',
-                onclick: () => this.sendHistoryClear(),
-                attrs: {'data-btn_outline': 'blue'}
+        // 1=HEADER ===============================================================
+        header_id: {
+            container_name: "HEADER",
+            tag_name: 'span',
+            attrs: {
+                className: this.css_map.itemId,
+                textContent: this.itemId,
             },
-            {
-                text: 'ReCon',
+        },
+
+        config_baudrate: {
+            container_name: "HEADER",
+            tag_name: 'select',
+            attrs: {
+                className: this.css_map.itemId,
+                textContent: this.itemId,
+            },
+            events: {
+                change: this._onBaudrateChange,
+            },
+            style: {
+                width: '100',
+            },
+            init: this._init__config_baudrate,
+        },
+
+        // BTNS ----------------------
+        header_control: {
+            container_name: "HEADER",
+            tag_name: 'div',
+            attrs: {
+            },
+        },
+
+        btn_clear: {
+            container_name: "header_control",
+            tag_name: 'button',
+            attrs: {
+                textContent: 'clrHist',
+                title: 'ClearHistory',
+                ['data-btn_outline']: 'blue',
+            },
+            events: {
+                click: this.sendHistoryClear,
+            },
+        },
+        btn_recon: {
+            container_name: "header_control",
+            tag_name: 'button',
+            attrs: {
+                textContent: 'ReCon',
                 title: 'ReConnect',
-                onclick: () => this.sendReconnect(),
-                attrs: {'data-btn_outline': 'blue'}
+                ['data-btn_outline']: 'blue',
             },
-            {
-                text: 'DisCon',
+            events: {
+                click: this.sendReconnect,
+            },
+        },
+        btn_discon: {
+            container_name: "header_control",
+            tag_name: 'button',
+            attrs: {
+                textContent: 'DisCon',
                 title: 'DisConnect',
-                onclick: () => this.sendDisconnect(),
-                attrs: {'data-btn_outline': 'blue'}
+                ['data-btn_outline']: 'blue',
             },
-            {
-                text: 'X',
+            events: {
+                click: this.sendDisconnect,
+            },
+        },
+        btn_close: {
+            container_name: "header_control",
+            tag_name: 'button',
+            attrs: {
+                textContent: 'X',
                 title: 'Close',
-                onclick: () => this.sendDelete(),
-                attrs: {'data-btn_outline': 'red'}
+                ['data-btn_outline']: 'red',
             },
-        ]
+            events: {
+                click: this.sendDelete,
+            },
+        },
 
-        btns_schema.forEach((schema) => {
-            let btn = this.element__create_btn(schema);
-            wrap.appendChild(btn);
-        });
-        return wrap;
+        // 2=MAIN =================================================================
+
+        // 3=FOOTER ===============================================================
+        input: {
+            container_name: "FOOTER",
+            tag_name: 'input',
+            attrs: {
+                type: 'text',
+                placeholder: 'Введите команду и нажмите Enter',
+            },
+            events: {
+                change: this._callback_input,
+            },
+        },
+
+        // =========================================================================
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -247,7 +272,7 @@ class ItemUiTerminal extends BaseItemUI {
     async sendInput(text) {
         if (!text) return;
         const sent = await this.rpc.sendStdin(this.itemId, text);
-        if (sent) this.elements.input.value = '';
+        if (sent) this.ELEMENTS_SCHEMA.input.element.value = '';
     }
     async sendReconnect()    { await this.rpc.reconnectItem(this.itemId) }
     async sendDisconnect()    { await this.rpc.disconnectItem(this.itemId) }
@@ -256,8 +281,12 @@ class ItemUiTerminal extends BaseItemUI {
     async sendHistoryGet()   { return await this.rpc.getHistory(this.itemId) }
 
     // USER METH -----------------------------------------------------------------------------------------------------------------
+    _callback_input() {
+        this.sendInput(this.ELEMENTS_SCHEMA.input.element.value.trim());
+    }
+
     history_clear() {
-        if (this.elements.main) this.elements.main.innerHTML = '';
+        if (this.ELEMENTS_SCHEMA.MAIN.element) this.ELEMENTS_SCHEMA.MAIN.element.innerHTML = '';
     }
 
     async history_load() {
@@ -279,20 +308,20 @@ class ItemUiTerminal extends BaseItemUI {
         const div = document.createElement('div');
         div.className = this.css_map[style] || this.css_map.debug;
         div.textContent = text;
-        this.elements.main.appendChild(div);
-        this.elements.main.scrollTop = this.elements.main.scrollHeight;
+        this.ELEMENTS_SCHEMA.MAIN.element.appendChild(div);
+        this.ELEMENTS_SCHEMA.MAIN.element.scrollTop = this.ELEMENTS_SCHEMA.MAIN.element.scrollHeight;
     }
 
     async config_load() {
         const config = await this.rpc.getConfig(this.itemId);
         this._currentBaudrate = config?.baudrate;
-        if (config?.baudrate) this.elements.baudrateSelect.value = config?.baudrate;
+        if (config?.baudrate) this.elements.config_baudrate.value = config?.baudrate;
     }
 
     // === ДОБАВЛЕНО: обработчик изменения baudrate ===
     async _onBaudrateChange() {
-        const newValue = parseInt(this.elements.baudrateSelect.value, 10);
-        this.console_log("baudrateSelect newValue=", newValue);
+        const newValue = parseInt(this.elements.config_baudrate.value, 10);
+        this.console_log("config_baudrate newValue=", newValue);
 
         const oldValue = this._currentBaudrate;
 
@@ -307,7 +336,7 @@ class ItemUiTerminal extends BaseItemUI {
         } catch (e) {
             this.console_error(`Ошибка изменения baudrate для ${this.itemId}:`, e);
             this._currentBaudrate = oldValue;
-            this.elements.baudrateSelect.value = oldValue;
+            this.elements.config_baudrate.value = oldValue;
         }
     }
 
@@ -340,10 +369,8 @@ class BaseItemManager {
         this.config = config;
 
         // --------------
-        this.elements = {
-            container: document.querySelector(this.config.selector_container),
-        };
-        if (!this.elements.container) throw new Error(`Контейнер "${this.config.selector_container}" не найден`);
+        this.container = document.querySelector(this.config.selector_container);
+        if (!this.container) throw new Error(`Контейнер "${this.config.selector_container}" не найден`);
 
         // --------------
         this.items = new Map();   // itemId → BaseItemUI
@@ -393,7 +420,7 @@ class BaseItemManager {
         });
         await ui.init()
         this.items.set(itemId, ui);
-        this.elements.container.appendChild(ui.elements.final);
+        this.container.appendChild(ui.ELEMENTS_SCHEMA.ROOT.element);
     }
 
     item_delete(itemId) {
