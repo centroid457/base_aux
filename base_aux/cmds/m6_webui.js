@@ -161,6 +161,50 @@ class ItemUiTerminal extends BaseItemUI {
         return btn;
     }
 
+    // ======================================================
+    ELEMENTS_SCHEMA = {
+        // FINAL ELEMENT
+        ELEMENT: undefined,
+
+        // EXAMPLE STRUCT
+        LOCAL_NAME: {
+            element: undefined,
+            container_name: undefined,
+
+            tag_name: 'button',
+            attrs: {
+                textContent: 'clear',
+                title: 'Clear History',
+                onclick: () => this.sendHistoryClear(),
+            },
+            events: {
+                change: () => this._callback_input(),
+            },
+        },
+
+        // EXAMPLE STRUCT
+
+    }
+
+    _elements_make() {
+        for (const [el_name, el_schema] of Object.entries(this.ELEMENTS_SCHEMA)) {
+            {tag_name, attrs, events, container_name} = el_schema;
+            const element = document.createElement(tag_name);
+
+            for (const [a_name, a_val] of Object.entries(attrs)) {
+                element.setAttribute(a_name, a_val);
+            }
+
+            for (const [ev_name, ev_val] of Object.entries(events)) {
+                element.addEventListener(ev_name, ev_val);
+            }
+
+            el_schema.element = element;
+
+            if (container_name) this.ELEMENTS_SCHEMA[container_name].element.appendChild(element);
+        }
+    }
+    // ======================================================
     _create_buttons() {
         const wrap = document.createElement('div');
 
@@ -168,17 +212,26 @@ class ItemUiTerminal extends BaseItemUI {
             {
                 text: 'clear',
                 title: 'Clear History',
-                onclick: () => this.sendHistoryClear(), attrs: {'data-btn_outline': 'blue'}
+                onclick: () => this.sendHistoryClear(),
+                attrs: {'data-btn_outline': 'blue'}
             },
             {
-                text: 'Reconnect',
-                title: 'Reconnect',
-                onclick: () => this.sendReconnect(), attrs: {'data-btn_outline': 'blue'}
+                text: 'ReCon',
+                title: 'ReConnect',
+                onclick: () => this.sendReconnect(),
+                attrs: {'data-btn_outline': 'blue'}
+            },
+            {
+                text: 'DisCon',
+                title: 'DisConnect',
+                onclick: () => this.sendDisconnect(),
+                attrs: {'data-btn_outline': 'blue'}
             },
             {
                 text: 'X',
                 title: 'Close',
-                onclick: () => this.sendDelete(), attrs: {'data-btn_outline': 'red'}
+                onclick: () => this.sendDelete(),
+                attrs: {'data-btn_outline': 'red'}
             },
         ]
 
@@ -197,6 +250,7 @@ class ItemUiTerminal extends BaseItemUI {
         if (sent) this.elements.input.value = '';
     }
     async sendReconnect()    { await this.rpc.reconnectItem(this.itemId) }
+    async sendDisconnect()    { await this.rpc.disconnectItem(this.itemId) }
     async sendDelete()       { await this.rpc.deleteItem(this.itemId) }
     async sendHistoryClear() { await this.rpc.clearHistory(this.itemId) }
     async sendHistoryGet()   { return await this.rpc.getHistory(this.itemId) }
@@ -468,6 +522,17 @@ class RpcClient {
             {
                 channel: 'item_control',
                 action: 'reconnect_item',
+                item_id,
+            }
+        );
+        return response?.ok;
+    }
+
+    async disconnectItem(item_id) {
+        const response = await this._call(
+            {
+                channel: 'item_control',
+                action: 'disconnect_item',
                 item_id,
             }
         );

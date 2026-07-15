@@ -176,8 +176,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-manager_inst = ManagerInst_TermOs()
-# manager_inst = ManagerInst_TermSerial()
+# manager_inst = ManagerInst_TermOs()
+manager_inst = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
@@ -286,6 +286,7 @@ class RpcServer_Terminal(Base_RpcServer):
     def SCHEMA(self) -> dict[EqValid_AttrsByKwargs, TYPING__CMD_HANDLER]:
         schema = {
             EqValid_AttrsByKwargs(channel="item_control", action="reconnect_item"): self._item__reconnect,
+            EqValid_AttrsByKwargs(channel="item_control", action="disconnect_item"): self._item__disconnect,
             EqValid_AttrsByKwargs(channel="item_control", action="create_item"): self._item__create,
             EqValid_AttrsByKwargs(channel="item_control", action="delete_item"): self._item__delete,
             EqValid_AttrsByKwargs(channel="item_control", action="history_clear"): self._item__history_clear,
@@ -302,6 +303,11 @@ class RpcServer_Terminal(Base_RpcServer):
     async def _item__reconnect(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
         item = self.manager_inst.get_item(cmd.item_id)
         TasksBg_PoolGlobal().spawn(item.reconnect())
+        return self._response_make()
+
+    async def _item__disconnect(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
+        item = self.manager_inst.get_item(cmd.item_id)
+        TasksBg_PoolGlobal().spawn(item.disconnect())
         return self._response_make()
 
     async def _item__create(self, cmd: Model_RpcRequest) -> Model_RpcResponse | NoReturn:
