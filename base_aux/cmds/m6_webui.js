@@ -158,20 +158,20 @@ class ItemUiTerminal extends BaseItemUI {
         },
         HEADER: {
             container_name: "ROOT",
-            tag_name: 'div',
+            tag_name: "header",
             attrs: {
             },
         },
         MAIN: {
             container_name: "ROOT",
-            tag_name: 'div',
+            tag_name: 'main',
             attrs: {
                 ['data-scrollbar__dark']: '',
             },
         },
         FOOTER: {
             container_name: "ROOT",
-            tag_name: 'div',
+            tag_name: 'footer',
             attrs: {
             },
         },
