@@ -1,13 +1,13 @@
 // =============================================================================
 /**
- * Базовый UI одного элемента.
- */
+Базовый UI одного элемента.
+*/
 class BaseItemUI extends ConsoleLogger {
     css_map = {};
 
     /**
      * @param {string}             itemId
-     * @param {WsClient}    ws         – экземпляр WebSocket-клиента
+     * @param {WsClient}    ws     экземпляр WebSocket-клиента
      * @param {Object}             cssClasses – словарь CSS-классов
      */
     constructor({
@@ -71,38 +71,6 @@ class ItemUiTerminal extends BaseItemUI {
         return this._elements_make();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    _elements_make(schema={}) {
-        if (!schema) schema = this.ELEMENTS_SCHEMA;
-
-        for (const [el_name, el_schema] of Object.entries(schema)) {
-            const {
-                tag_name,
-                container_name,
-                init,
-                attrs={},
-                events={},
-                style={},
-            } = el_schema;
-            const element = document.createElement(tag_name);
-            el_schema.element = element;
-            if (container_name) schema[container_name].element.appendChild(element);
-
-            for (const [s_name, s_val] of Object.entries(style)) {
-                element.style.setAttribute(s_name, s_val);
-            }
-            for (const [a_name, a_val] of Object.entries(attrs)) {
-                element.setAttribute(a_name, a_val);
-            }
-            for (const [e_name, e_val] of Object.entries(events)) {
-                element.addEventListener(e_name, e_val);
-            }
-
-            if (init) init();
-        }
-        return schema?.ROOT?.element;
-    }
-
     _init__config_baudrate() {
         const opts = [undefined, 9600, 19200, 38400, 57600, 115200];
         opts.forEach(rate => {
@@ -114,6 +82,40 @@ class ItemUiTerminal extends BaseItemUI {
         this.ELEMENTS_SCHEMA.config_baudrate.element.value = undefined;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    _elements_make(schema = this.ELEMENTS_SCHEMA) {
+        for (const [el_name, el_schema] of Object.entries(schema)) {
+            const {
+                tag_name,
+                container_name,
+                init,
+                attrs={},
+                props={},
+                events={},
+                styles={},
+            } = el_schema;
+            const element = document.createElement(tag_name);
+            el_schema.element = element;
+            if (container_name) schema[container_name].element.appendChild(element);
+
+            for (const [a_name, a_val] of Object.entries(attrs)) {
+                element.setAttribute(a_name, a_val);
+            }
+            for (const [p_name, p_val] of Object.entries(props)) {
+                element[p_name] = p_val;
+            }
+            for (const [e_name, e_val] of Object.entries(events)) {
+                element.addEventListener(e_name, e_val);
+            }
+            for (const [s_name, s_val] of Object.entries(styles)) {
+                element.style[s_name] = s_val;
+            }
+
+            if (init) init();
+        }
+        return schema?.ROOT?.element;
+    }
+
     // ======================================================
     ELEMENTS_SCHEMA = {
         // EXAMPLE STRUCT
@@ -123,14 +125,22 @@ class ItemUiTerminal extends BaseItemUI {
 
             tag_name: 'button',
             attrs: {
-                textContent: 'clear',
+                // <p title="TITLE"></p>
+                // <input type="text" placeholder="Введите имя">
                 title: 'Clear History',
+            },
+            props: {
+                // const div = documet.createElement('div');
+                // div.className = "main_div__cls";
+                // div.textContent = "hello";n
+                textContent: undefined,
                 className: undefined,
             },
             events: {
+                // element.addEventListener(e_name, e_val);
                 change: (x) => console.log(x),
             },
-            style: {
+            styles: {
                 width: '100',
             },
             init: undefined,
@@ -142,7 +152,7 @@ class ItemUiTerminal extends BaseItemUI {
             container_name: undefined,
 
             tag_name: 'div',
-            attrs: {
+            props: {
                 className: this.css_map.itemBox,
             },
         },
@@ -170,26 +180,26 @@ class ItemUiTerminal extends BaseItemUI {
         header_id: {
             container_name: "HEADER",
             tag_name: 'span',
-            attrs: {
-                className: this.css_map.itemId,
+            props: {
                 textContent: this.itemId,
+                className: this.css_map.itemId,
             },
         },
 
         config_baudrate: {
             container_name: "HEADER",
             tag_name: 'select',
-            attrs: {
+            props: {
                 className: this.css_map.itemId,
                 textContent: this.itemId,
             },
             events: {
-                change: this._onBaudrateChange,
+                change: () => this._onBaudrateChange(),
             },
-            style: {
+            styles: {
                 width: '100',
             },
-            init: this._init__config_baudrate,
+            init: () => this._init__config_baudrate(),
         },
 
         // BTNS ----------------------
@@ -203,49 +213,57 @@ class ItemUiTerminal extends BaseItemUI {
         btn_clear: {
             container_name: "header_control",
             tag_name: 'button',
-            attrs: {
+            props: {
                 textContent: 'clrHist',
                 title: 'ClearHistory',
+            },
+            attrs: {
                 ['data-btn_outline']: 'blue',
             },
             events: {
-                click: this.sendHistoryClear,
+                click: () => this.sendHistoryClear(),
             },
         },
         btn_recon: {
             container_name: "header_control",
             tag_name: 'button',
-            attrs: {
+            props: {
                 textContent: 'ReCon',
                 title: 'ReConnect',
+            },
+            attrs: {
                 ['data-btn_outline']: 'blue',
             },
             events: {
-                click: this.sendReconnect,
+                click: () => this.sendReconnect(),
             },
         },
         btn_discon: {
             container_name: "header_control",
             tag_name: 'button',
-            attrs: {
+            props: {
                 textContent: 'DisCon',
                 title: 'DisConnect',
+            },
+            attrs: {
                 ['data-btn_outline']: 'blue',
             },
             events: {
-                click: this.sendDisconnect,
+                click: () => this.sendDisconnect(),
             },
         },
         btn_close: {
             container_name: "header_control",
             tag_name: 'button',
-            attrs: {
+            props: {
                 textContent: 'X',
                 title: 'Close',
+            },
+            attrs: {
                 ['data-btn_outline']: 'red',
             },
             events: {
-                click: this.sendDelete,
+                click: () => this.sendDelete(),
             },
         },
 
@@ -260,7 +278,7 @@ class ItemUiTerminal extends BaseItemUI {
                 placeholder: 'Введите команду и нажмите Enter',
             },
             events: {
-                change: this._callback_input,
+                change: () => this._callback_input(),
             },
         },
 
@@ -315,12 +333,12 @@ class ItemUiTerminal extends BaseItemUI {
     async config_load() {
         const config = await this.rpc.getConfig(this.itemId);
         this._currentBaudrate = config?.baudrate;
-        if (config?.baudrate) this.elements.config_baudrate.value = config?.baudrate;
+        if (config?.baudrate) this.ELEMENTS_SCHEMA.config_baudrate.element.value = config?.baudrate;
     }
 
     // === ДОБАВЛЕНО: обработчик изменения baudrate ===
     async _onBaudrateChange() {
-        const newValue = parseInt(this.elements.config_baudrate.value, 10);
+        const newValue = parseInt(this.ELEMENTS_SCHEMA.config_baudrate.element.value, 10);
         this.console_log("config_baudrate newValue=", newValue);
 
         const oldValue = this._currentBaudrate;
@@ -336,7 +354,7 @@ class ItemUiTerminal extends BaseItemUI {
         } catch (e) {
             this.console_error(`Ошибка изменения baudrate для ${this.itemId}:`, e);
             this._currentBaudrate = oldValue;
-            this.elements.config_baudrate.value = oldValue;
+            this.ELEMENTS_SCHEMA.config_baudrate.element.value = oldValue;
         }
     }
 

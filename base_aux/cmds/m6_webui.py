@@ -176,8 +176,8 @@ class ManagerInst_TermSerial(Base_ManagerInst_Term):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# manager_inst = ManagerInst_TermOs()
-manager_inst = ManagerInst_TermSerial()
+manager_inst = ManagerInst_TermOs()
+# manager_inst = ManagerInst_TermSerial()
 
 
 # =====================================================================================================================
