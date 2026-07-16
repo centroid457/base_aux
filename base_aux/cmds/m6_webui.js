@@ -1,4 +1,5 @@
-// =============================================================================
+// =====================================================================================================================
+// =====================================================================================================================
 /**
 Базовый UI одного элемента.
 */
@@ -18,6 +19,7 @@ class BaseItemUI extends ConsoleLogger {
         config = {},
     } = {}) {
         super();
+
         this.itemId = itemId;
         this.ws = ws;
         this.event_manager = event_manager;
@@ -30,56 +32,66 @@ class BaseItemUI extends ConsoleLogger {
         this.init_post();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    destroy() {
-        this.ELEMENTS_SCHEMA?.ROOT?.element?.remove();
-    }
+    // =================================================================================================================
+    ELEMENTS_SCHEMA = {
+        // EXAMPLE STRUCT -----------------------------------------------
+        __EXAMPLE__: {
+            element: undefined,
+            container_name: undefined,
 
-    // NESTING =========================================================================================================
-    async init_post() {
-    }
+            tag_name: 'button',
+            attrs: {
+                // <p title="TITLE"></p>
+                // <input type="text" placeholder="Введите имя">
+                title: 'Clear History',
+            },
+            props: {
+                // const div = documet.createElement('div');
+                // div.className = "main_div__cls";
+                // div.textContent = "hello";n
+                textContent: undefined,
+                className: undefined,
+            },
+            events: {
+                // element.addEventListener(e_name, e_val);
+                change: (x) => console.log(x),
+            },
+            styles: {
+                width: '100',
+            },
+            init: undefined,
+        },
 
-    buildDOM() {
-    }
+        // ROOT STRUCT -----------------------------------------------
+        ROOT: {
+            element: undefined,
+            container_name: undefined,
 
-    // METHS -----------------------------------------------------------------------------------------------------------
-    //
-}
-
-
-// ---------------------------------------------------------------------------------------------------------------------
-class ItemUiTerminal extends BaseItemUI {
-    css_map = {
-        itemBox: 'item__cls',
-        itemId:  'span_item_id__cls',
-
-        stdout:  'msg_stdout__cls',
-        stderr:  'msg_stderr__cls',
-        stdin:   'msg_stdin__cls',
-        debug:   'msg_debug__cls',
-    };
-
-    // -----------------------------------------------------------------------------------------------------------------
-    async init_post() {
-        this._currentBaudrate = undefined;
-        await this.history_load();
-        await this.config_load();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    buildDOM() {
-        return this._elements_make();
-    }
-
-    _init__config_baudrate() {
-        const opts = [undefined, 9600, 19200, 38400, 57600, 115200];
-        opts.forEach(rate => {
-            const opt = document.createElement('option');
-            opt.value = rate;
-            opt.textContent = rate;
-            this.ELEMENTS_SCHEMA.config_baudrate.element.appendChild(opt);
-        });
-        this.ELEMENTS_SCHEMA.config_baudrate.element.value = undefined;
+            tag_name: 'div',
+            props: {
+                className: this.css_map.itemBox,
+            },
+        },
+        HEADER: {
+            container_name: "ROOT",
+            tag_name: "header",
+            attrs: {
+            },
+        },
+        MAIN: {
+            container_name: "ROOT",
+            tag_name: 'main',
+            attrs: {
+                ['data-scrollbar__dark']: '',
+            },
+        },
+        FOOTER: {
+            container_name: "ROOT",
+            tag_name: 'footer',
+            attrs: {
+            },
+        },
+        // -------------------------------------------------------------
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -116,36 +128,46 @@ class ItemUiTerminal extends BaseItemUI {
         return schema?.ROOT?.element;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    buildDOM() {
+        return this._elements_make();
+    }
+
+    // =================================================================================================================
+    destroy() {
+        this.ELEMENTS_SCHEMA?.ROOT?.element?.remove();
+    }
+
+    // NESTING =========================================================================================================
+    async init_post() {
+    }
+
+    // METHS -----------------------------------------------------------------------------------------------------------
+    //
+}
+
+
+// =====================================================================================================================
+class ItemUiTerminal extends BaseItemUI {
+    css_map = {
+        itemBox: 'item__cls',
+        itemId:  'span_item_id__cls',
+
+        stdout:  'msg_stdout__cls',
+        stderr:  'msg_stderr__cls',
+        stdin:   'msg_stdin__cls',
+        debug:   'msg_debug__cls',
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
+    async init_post() {
+        this._currentBaudrate = undefined;
+        await this.history_load();
+        await this.config_load();
+    }
+
     // ======================================================
     ELEMENTS_SCHEMA = {
-        // EXAMPLE STRUCT
-        __EXAMPLE__: {
-            element: undefined,
-            container_name: undefined,
-
-            tag_name: 'button',
-            attrs: {
-                // <p title="TITLE"></p>
-                // <input type="text" placeholder="Введите имя">
-                title: 'Clear History',
-            },
-            props: {
-                // const div = documet.createElement('div');
-                // div.className = "main_div__cls";
-                // div.textContent = "hello";n
-                textContent: undefined,
-                className: undefined,
-            },
-            events: {
-                // element.addEventListener(e_name, e_val);
-                change: (x) => console.log(x),
-            },
-            styles: {
-                width: '100',
-            },
-            init: undefined,
-        },
-
         // ROOT STRUCT ===============================================================
         ROOT: {
             element: undefined,
@@ -278,29 +300,38 @@ class ItemUiTerminal extends BaseItemUI {
                 placeholder: 'Введите команду и нажмите Enter',
             },
             events: {
-                change: () => this._callback_input(),
+                change: () => this.callback_input(),
             },
         },
 
         // =========================================================================
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // SEND -----
-    async sendInput(text) {
-        if (!text) return;
-        const sent = await this.rpc.sendStdin(this.itemId, text);
-        if (sent) this.ELEMENTS_SCHEMA.input.element.value = '';
+    _init__config_baudrate() {
+        const opts = [undefined, 9600, 19200, 38400, 57600, 115200];
+        opts.forEach(rate => {
+            const opt = document.createElement('option');
+            opt.value = rate;
+            opt.textContent = rate;
+            this.ELEMENTS_SCHEMA.config_baudrate.element.appendChild(opt);
+        });
+        this.ELEMENTS_SCHEMA.config_baudrate.element.value = undefined;
     }
+
+    // =================================================================================================================
+    // SEND -----
+    async sendInput(text)    { if (!text) return; return await this.rpc.sendStdin(this.itemId, text); }
     async sendReconnect()    { await this.rpc.reconnectItem(this.itemId) }
-    async sendDisconnect()    { await this.rpc.disconnectItem(this.itemId) }
+    async sendDisconnect()   { await this.rpc.disconnectItem(this.itemId) }
     async sendDelete()       { await this.rpc.deleteItem(this.itemId) }
     async sendHistoryClear() { await this.rpc.clearHistory(this.itemId) }
     async sendHistoryGet()   { return await this.rpc.getHistory(this.itemId) }
 
-    // USER METH -----------------------------------------------------------------------------------------------------------------
-    _callback_input() {
-        this.sendInput(this.ELEMENTS_SCHEMA.input.element.value.trim());
+    // USER METH -------------------------------------------------------------------------------------------------------
+    callback_input() {
+        const text = this.ELEMENTS_SCHEMA.input.element.value.trim();
+        const sent = this.sendInput(text);
+        if (sent) this.ELEMENTS_SCHEMA.input.element.value = '';
     }
 
     history_clear() {
@@ -336,7 +367,6 @@ class ItemUiTerminal extends BaseItemUI {
         if (config?.baudrate) this.ELEMENTS_SCHEMA.config_baudrate.element.value = config?.baudrate;
     }
 
-    // === ДОБАВЛЕНО: обработчик изменения baudrate ===
     async _onBaudrateChange() {
         const newValue = parseInt(this.ELEMENTS_SCHEMA.config_baudrate.element.value, 10);
         this.console_log("config_baudrate newValue=", newValue);
@@ -360,7 +390,8 @@ class ItemUiTerminal extends BaseItemUI {
 
 }
 
-// =============================================================================
+// =====================================================================================================================
+// =====================================================================================================================
 // Менеджер объектов
 // =============================================================================
 class BaseItemManager {
@@ -484,31 +515,6 @@ class ItemManager extends BaseItemManager {
 
 
 // =====================================================================================================================
-window.onload = async () => {
-    const event_manager = new EventManager();
-    const rpc = new RpcClient('/channel__rpc');
-    const ws = new WsClient({
-        url: '/channel__ws_broadcast',
-        autoConnect: false,
-        event_manager,
-    });
-
-    const items_manager = new ItemManager({
-        event_manager,
-        ws,
-        rpc,
-        config: {
-            selector_container: '#items_container__id',
-            selector_BtnAddNewItem: '#btn_add_item__id'
-        },
-    });
-    items_manager.init();
-
-    // 5. Запускаем WebSocket (при подключении автоматически загрузит элементы)
-    ws.connect();
-};
-
-
 // =====================================================================================================================
 class RpcClient {
     /**
@@ -519,7 +525,7 @@ class RpcClient {
         this.url = url;
     }
 
-    __RESPONSE_SCHEMA = {    // just for info!
+    __RESPONSE_SCHEMA__ = {    // just for info!
         ok: 0,
         load: {},
     }
@@ -534,7 +540,8 @@ class RpcClient {
                 action,
                 item_id,
                 load,
-            });
+            }
+        );
         return resp;   // возвращаем полный ответ, чтобы клиент мог извлечь data
     }
 
@@ -654,6 +661,32 @@ class RpcClient {
     }
 
 }
+
+
+// =====================================================================================================================
+// =====================================================================================================================
+window.onload = async () => {
+    const event_manager = new EventManager();
+    const rpc = new RpcClient('/channel__rpc');
+    const ws = new WsClient({
+        url: '/channel__ws_broadcast',
+        autoConnect: false,
+        event_manager,
+    });
+
+    const items_manager = new ItemManager({
+        event_manager,
+        ws,
+        rpc,
+        config: {
+            selector_container: '#items_container__id',
+            selector_BtnAddNewItem: '#btn_add_item__id'
+        },
+    });
+    items_manager.init();
+    ws.connect();
+};
+
 
 
 // =====================================================================================================================
