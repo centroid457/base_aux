@@ -19,14 +19,11 @@ from base_aux.cmds.m2_history import CmdHistory_Sync
 # =====================================================================================================================
 class SerialClient2:
     # SETTINGS ------------------------------------------------
-    ADDRESS: str
+    __ADDRESS: str
 
     TIMEOUT__READ: float = 0.3  # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
     # need NONE NOT 0!!! if wait always!!
     BAUDRATE: int = 9600  # 115200
-
-    CMDS_DUMP: list[str] = []  # ["IDN", "ADR", "REV", "VIN", ]
-    RAISE_CONNECT: bool = True
 
     # rare INFRASTRUCTURE -------
     ENCODING: str = "utf8"
@@ -35,13 +32,24 @@ class SerialClient2:
 
     # AUX -----------------------------------------------------
     history: CmdHistory_Sync
-    _conn: Serial
+    _conn: Serial = None
+
+    @property
+    def ADDRESS(self) -> str:
+        return self.__ADDRESS
 
     # INIT ============================================================================================================
-    def __init__(self, address: str, baudrate: int = None, timeout__read: int = None, eol__send: bytes = None, **kwargs):
+    def __init__(
+            self,
+            address: str,
+            baudrate: int = None,
+            timeout__read: int = None,
+            eol__send: bytes = None,
+            **kwargs,
+    ):
         super().__init__(**kwargs)
 
-        self.ADDRESS = address
+        self.__ADDRESS = address
         if baudrate is not None:
             self.BAUDRATE = baudrate
         if timeout__read is not None:
@@ -50,308 +58,97 @@ class SerialClient2:
             self.EOL__SEND = eol__send
 
         self.history = CmdHistory_Sync()
-        self.init_serial()
 
-        # self.addresses_system__detect()   # DONT USE in init!!!
-        # self.addresses_shorted__detect()   # DONT USE in init!!!
-        # self.addresses_paired__detect()   # DONT USE in init!!!
+    # CONNECT ==========================================================================================================
+    def connect(self) -> bool:
+        try:
+            self._conn = Serial(
+                port=self.ADDRESS,
+                baudrate=self.BAUDRATE,
+                timeout=self.TIMEOUT__READ,
+            )
+            return True
+        except Exception as exc:
+            print(f"{exc!r}")
+
+            if "FileNotFoundError" in str(exc):
+                msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._conn}"
+            elif "Port must be configured before" in str(exc):
+                msg = f"[ERROR] PORT NOT CONFIGURED {self._conn}"
+            elif "PermissionError" in str(exc):
+                msg = f"[ERROR] PORT ALREADY OPENED {self._conn}"
+            else:
+                msg = f"[ERROR] PORT OTHER ERROR {self._conn}"
+
+            print(msg)
+            return False
+
+    def disconnect(self):
+        self._conn.close()
 
     def __del__(self):
         self.disconnect()
 
-    def init_serial(self):
-        """
-        GOAL
-        ----
-        init exact connection  object
-        """
-        self._SERIAL = Serial()
+    def check__connected(self) -> bool:
+        try:
+            return self._conn.is_open
+        except:
+            return False
 
-        # apply settings
-        # self._SERIAL.interCharTimeout = 0.8
-        self._SERIAL.baudrate = self.BAUDRATE
-        self._SERIAL.timeout = self.TIMEOUT__READ
-        # self._SERIAL.write_timeout = self._TIMEOUT__WRITE
+    # RW ===============================================================================================================
+
+    def validate__wr_schema(self, schema: dict[str, str]) -> bool:
+        pass
 
 
 
-
-
-
-
-
+# ======================================================================================================================
 class SerialManager:
     ADDRESSES__SYSTEM: dict[str, Union[None, Self]] = {}
     ADDRESSES__SHORTED: list[str] = []
     ADDRESSES__PAIRED: list[tuple[str, str]] = []
 
+    @staticmethod
+    def check__address_could_open(address: str) -> bool:
+        try:
+            conn = Serial(address)
+            conn.close()
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def check__address_exists(address: str) -> bool:
+        try:
+            conn = Serial(address)
+            conn.close()
+            return True
+        except Exception as exc:
+            print(f"{exc!r}")
+
+            if "FileNotFoundError" in str(exc):
+                return False
+            else:
+                return True
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 # =====================================================================================================================
-class SerialClient:
-    # CONNECT =========================================================================================================
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-
-    def check__connected(self) -> bool:
-        try:
-            return self._SERIAL.is_open
-        except:
-            return False
-
-    def disconnect(self, release: bool = None) -> None:
-        """
-        for release - its better to use direct cls._addresses__release()
-        """
-        if release or self.RELEASE_ON_DISCONNECT:
-            self._address__release()
-
-        try:
-            self._SERIAL.close()
-        except:
-            pass
-
-        try:
-            self._EMULATOR__INST.disconnect()
-        except:
-            pass
-
-    def connect__only_if_address_resolved(self) -> Union[None, bool, NoReturn]:
-        if self.address_check__resolved():
-            return self.connect()
-
-    def connect(
-            self,
-            address: TYPING__ADDRESS | None = None,
-            _raise: bool | None = None,
-            _touch_connection: bool | None = None
-            # no final connection! specially keep ability to connect without Emu on cls main perpose (search ports)!
-    ) -> Union[bool, NoReturn]:
-        msg = None
-        exc = None
-        need_open = True
-
-        # SETTINGS ---------------------------------
-        if _raise is None:
-            _raise = self.RAISE_CONNECT
-
-        if address is None:
-            address = self.ADDRESS
-
-        if address in Enum__AddressAutoAcceptVariant:
-            if address == Enum__AddressAutoAcceptVariant.NOT_FOUND: # not
-                return False
-
-            if not self.address__resolve(address):
-                exc = Exc_SerialAddress_NotApplyed()
-                need_open = False
-            else:
-                address = self.ADDRESS
-
-        # need_open ==========================================================
-        # CHANGE PORT OR USE SAME ---------------------------------
-        if need_open:
-            if self._SERIAL.port != address:
-                # close old
-                if self._SERIAL.is_open:
-                    self._SERIAL.close()
-
-                # set new
-                self._SERIAL.port = address
-                if self._SERIAL.is_open:
-                    self._SERIAL.port = None
-                    msg = f"[ERROR] Attempt to connect to already opened port IN OTHER OBJECT {self._SERIAL}"
-                    exc = Exc_SerialAddress_AlreadyOpened_InOtherObject(msg)
-
-                    need_open = False
-            else:
-                if self._SERIAL.is_open:
-                    need_open = False
-
-        # Try OPEN ===================================================================
-        if need_open:
-            try:
-                self._SERIAL.open()
-                # self.write_eol()
-                # self.buffers_clear()
-            except Exception as _exc:
-                if not _touch_connection:
-                    self.LOGGER.error(f"[{self._SERIAL.port}]{_exc!r}")
-
-                if "FileNotFoundError" in str(_exc):
-                    msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._SERIAL}"
-                    exc = Exc_SerialAddress_NotExists(repr(_exc))
-
-                    # self.detect_available_ports()
-
-                elif "Port must be configured before" in str(_exc):
-                    msg = f"[ERROR] PORT NOT CONFIGURED {self._SERIAL}"
-                    exc = Exc_SerialAddress_NotApplyed(repr(_exc))
-
-                elif "PermissionError" in str(_exc):
-                    msg = f"[ERROR] PORT ALREADY OPENED {self._SERIAL}"
-                    exc = Exc_SerialAddress_AlreadyOpened(repr(_exc))
-
-                else:
-                    msg = f"[ERROR] PORT OTHER ERROR {self._SERIAL}"
-                    exc = Exc_SerialAddress_OtherError(repr(_exc))
-
-        # FINISH -----------------------------------------------
-        # FAIL -----------------------------
-        if exc:
-            if not _touch_connection:
-                self.LOGGER.error(f"[{self._SERIAL.port}]{msg}")
-
-            if _raise:
-                raise exc
-            else:
-                return False
-
-        # OK -----------------------------
-        if not _touch_connection:
-            if not self.connect__validate():
-                self.disconnect()
-                return False
-
-            self._address__occupy(address)
-            self.emulator_start()
-            self.cmd_prefix__set()
-
-        return True
-
-    def connect__validate(self) -> bool:
-        """
-        DIFFERENCE
-        ----------
-        connect validation used always!
-        address validation used only in step of detecting address (after execution address would be set to exact string value)
-        """
-        return True
-
-    def emulator_start(self) -> None:
-        if not self._EMULATOR__START:
-            return
-
-        if self._EMULATOR__CLS:
-            self._EMULATOR__INST = self._EMULATOR__CLS(self.address_paired__get())
-
-        if self._EMULATOR__INST.connect():
-            self._EMULATOR__INST.start()
-            self._EMULATOR__INST.wait__cycle_active()
-            self._buffers_clear__read()
-
+class OLD__SerialClient:
     # ADDRESS =========================================================================================================
-    """
-    THIS IS USED for applying by SIMPLE WAY just exact address! 
-    """
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-
-    @property
-    def ADDRESS(self) -> TYPING__ADDRESS:
-        return self._ADDRESS
-
-    @ADDRESS.setter
-    def ADDRESS(self, value: TYPING__ADDRESS) -> None:
-        if value == self.ADDRESS:
-            return
-
-        self._address__release()
-        # self.disconnect()     # dont place here! incorrect logic!
-        self._ADDRESS = value
-        self._address__occupy(value)
-
-    @classmethod
-    @property
-    def ADDRESSES__FREE(cls) -> list[str]:
-        cls.addresses_system__detect()
-        result = []
-        for port_name, port_owner in cls.ADDRESSES__SYSTEM.items():
-            if port_owner is None:
-                result.append(port_name)
-        return result
-
-    # OCCUPATION ------------------------------------------------------------------------------------------------------
-    def _address__occupy(self, address: TYPING__ADDRESS | None = None) -> None:
-        """
-        USAGE
-        -----
-        usually when start module we have exact and only one set of UartDevices!
-        ones we connect exact device - it would occupy the port.
-        port must be occupied even if Serial is not open!
-        """
-        if address is None:
-            address = self.ADDRESS
-
-        if address in SerialClient.ADDRESSES__SYSTEM:
-            SerialClient.ADDRESSES__SYSTEM[address] = self
-
-        self.LOGGER.info(f"[{self._SERIAL.port}][OK] connected/locked/occupy {self._SERIAL}")
-
-    def _address__release(self) -> None:
-        """
-        USE ONLY when change address!
-        """
-        if self in SerialClient.ADDRESSES__SYSTEM.values():
-            for address, owner in SerialClient.ADDRESSES__SYSTEM.items():
-                if owner is self:
-                    SerialClient.ADDRESSES__SYSTEM[address] = None
-                    # self.disconnect()
-                    break
-
-    @classmethod
-    def _addresses__release(cls) -> None:
-        """
-        make all ports vacant for autodetect.
-        use direct Clear() if need reinit items.
-
-        CREATED SPECIALLY FOR
-        ---------------------
-        test issues (testing this module!)
-        when set of tests is finished for one connection schema - release all
-        """
-        for key in cls.ADDRESSES__SYSTEM:
-            cls.ADDRESSES__SYSTEM[key] = None
-
-    def address_forget(self) -> None:
-        """
-        GOAL
-        ----
-        get default address for derivatives or else just clear to None.
-
-        SPECIAL CREATED FOR
-        -------------------
-        testplans module - to drop all devices for manually refind devices
-
-        CONSTRAINTS
-        -----------
-        be sure to use Base class from Derivatives so method would work correctly (as designed)!
-        """
-        self.ADDRESS = None
-
-        # CAREFUL ---- here we will get curriculum import!
-        # from . import SerialClient_FirstFree, SerialClient_FirstFree_Shorted, SerialClient_FirstFree_Paired, SerialClient_FirstFree_AnswerValid
-        # if isinstance(self, SerialClient_FirstFree):
-        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE
-        # elif isinstance(self, SerialClient_FirstFree_Shorted):
-        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED
-        # elif isinstance(self, SerialClient_FirstFree_Paired):
-        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__PAIRED
-        # elif isinstance(self, SerialClient_FirstFree_AnswerValid):
-        #     self.ADDRESS = Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID
-
-    def address__resolve(self, address: TYPING__ADDRESS | None = None) -> bool:
+    def address__resolve(self, address = None) -> bool:
         """
         GOAL
         ----
@@ -379,26 +176,6 @@ class SerialClient:
                 address = self.address_get__first_free__valid()
             elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__PAIRED:
                 address = self.address_get__first_free__paired()
-
-        # APPLY -----------------------------------
-        result = isinstance(address, str)
-        if result:
-            self.ADDRESS = address
-        return result
-
-    def address_check__resolved(self, address: TYPING__ADDRESS | None = None) -> bool:
-        if address is None:
-            address = self.ADDRESS
-        return isinstance(address, str)
-
-    def address_check__occupied(self, address: TYPING__ADDRESS | None = None) -> bool:
-        if not self.address_check__resolved(address):
-            return False
-
-        if address is None:
-            address = self.ADDRESS
-        owner = self.ADDRESSES__SYSTEM.get(address)
-        return owner is not None
 
     # AUTODETECT ------------------------------------------------------------------------------------------------------
     pass  # dont move this all to CLASSMETHOD!!!
@@ -529,18 +306,6 @@ class SerialClient:
         return self.write_read__last_validate(load, load)
 
     # DETECT ----------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def address__check_exists(address: str) -> bool:
-        try:
-            inst = SerialClient()
-            inst.connect(address=address, _raise=True, _touch_connection=True)
-            inst.disconnect()
-        except Exc_SerialAddress_NotExists:
-            return False
-        except:
-            return False
-        return True
-
     @classmethod
     def addresses_system__detect(cls) -> dict[str, Union[None, Self]]:
         if SerialClient.ADDRESSES__SYSTEM:
@@ -707,7 +472,7 @@ class SerialClient:
                 read_lines = slave.read_lines(_timeout=2)
                 if read_lines:
                     if read_lines[-1] == load or list(read_lines)[-1] == load:
-                        result.append((master._SERIAL.port, slave._SERIAL.port))
+                        result.append((master._conn.port, slave._conn.port))
                         instances_free_remain.pop(index)
                         slave.disconnect()
                         break
@@ -722,7 +487,7 @@ class SerialClient:
 
     def addresses_paired__get_used(self) -> Optional[tuple[str, str]]:
         for pair in self.addresses_paired__detect():
-            if self._SERIAL.port in pair:
+            if self._conn.port in pair:
                 return pair
 
     def address_paired__get(self) -> str | None:
@@ -819,16 +584,16 @@ class SerialClient:
 
     # BUFFERS ---------------------------------------------------------------------------------------------------------
     def _buffers_clear__read(self, _timeout: Optional[float] = None) -> None:
-        self._SERIAL.timeout = _timeout or self.TIMEOUT__READ or None
+        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
         while True:
             try:
-                if not self._SERIAL.readline(1):
+                if not self._conn.readline(1):
                     break
             except:
                 pass
             time.sleep(0.1)
 
-        self._SERIAL.timeout = self.TIMEOUT__READ or None  # set back - final
+        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
 
     def _buffers_clear__write(self) -> None:
         """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
@@ -892,7 +657,7 @@ class SerialClient:
             if re.search(pattern, data, flags=re.IGNORECASE):
                 if _raise:
                     msg = f"[ERROR] match fail [{pattern=}/{data=}]"
-                    self.LOGGER.error(f"[{self._SERIAL.port}]{msg}")
+                    self.LOGGER.error(f"[{self._conn.port}]{msg}")
                     raise Exc_SerialRead_FailPattern(msg)
                 else:
                     return True
@@ -1000,18 +765,18 @@ class SerialClient:
         """
         # FIXME: return Object??? need keep exc for not finished readline!!!
         # var1: just read as usual - could cause error with not full bytes read in ONE CHAR!!!
-        # data = self._SERIAL.readline()
+        # data = self._conn.readline()
 
         # var2: char by char
         data = b""
         eol_received = False
 
-        self._SERIAL.timeout = _timeout or self.TIMEOUT__READ or None
+        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
         while True:
             new_char = None
             for i in range(2):
-                new_char = self._SERIAL.readline(1)
-                self._SERIAL.timeout = self.TIMEOUT__READ or None  # set back - no need repiatiting
+                new_char = self._conn.readline(1)
+                self._conn.timeout = self.TIMEOUT__READ or None  # set back - no need repiatiting
                 if new_char:
                     break
 
@@ -1033,7 +798,7 @@ class SerialClient:
 
             data += new_char
 
-        self._SERIAL.timeout = self.TIMEOUT__READ or None  # set back - final
+        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
 
         # RESULT ----------------------
         if data:
@@ -1047,7 +812,7 @@ class SerialClient:
         else:
             msg = f"[WARN]BLANK read_line={data}"
 
-        self.LOGGER.info(f"[{self._SERIAL.port}.{self._SERIAL.baudrate}]{msg}")
+        self.LOGGER.info(f"[{self._conn.port}.{self._conn.baudrate}]{msg}")
 
         data = self._bytes_edition__apply(data)
         data = self._data_eol__clear(data)
@@ -1107,16 +872,16 @@ class SerialClient:
         data = self._bytes_eol__ensure(data)
 
         try:
-            data_length = self._SERIAL.write(data)
+            data_length = self._conn.write(data)
             msg = f"[OK]write={data}/{data_length=}"
         except Exception as exc:
             msg = f"[FAIL]write={data}/{exc!r}"
-            self.LOGGER.warning(f"[{self._SERIAL.port}]{msg}")
+            self.LOGGER.warning(f"[{self._conn.port}]{msg}")
 
             if isinstance(exc, (PortNotOpenError, SerialException)):
                 self._COUNT_OPEN_EXCEPTIONS += 1
                 try:
-                    self._SERIAL.open()
+                    self._conn.open()
                     # self.connect()
                 except:
                     return False
@@ -1126,11 +891,11 @@ class SerialClient:
             return False
 
         if data_length > 0:
-            self.LOGGER.info(f"[{self._SERIAL.port}]{msg}")
+            self.LOGGER.info(f"[{self._conn.port}]{msg}")
             return True
         else:
             msg = f"[ERROR] write {data}"
-            self.LOGGER.error(f"[{self._SERIAL.port}]{msg}")
+            self.LOGGER.error(f"[{self._conn.port}]{msg}")
             return False
 
     def write_eol(self, eol: bytes = None) -> bool:
@@ -1142,7 +907,7 @@ class SerialClient:
         """
         eol = eol or self.EOL__SEND
         try:
-            return bool(self._SERIAL.write(eol))
+            return bool(self._conn.write(eol))
         except:
             return False
 
