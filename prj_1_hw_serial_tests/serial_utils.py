@@ -1,8 +1,9 @@
+from typing import *
+
 import serial
 import serial.tools.list_ports
 import time
 import threading
-from typing import Optional, List, Tuple
 import logging
 
 
@@ -21,7 +22,7 @@ def port_try_open(port: str) -> bool:
         return False
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class DeviceConsole:
     """Управление подключением к устройству через serial-консоль."""
 
@@ -29,51 +30,30 @@ class DeviceConsole:
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
-        self.ser = None
+
+        self._conn = None
         self.device_id = None
 
-    def connect(self):
+    # ------------------------------------------------------------------------------------------------------------------
+    def connect(self) -> None | NoReturn:
         """Открыть serial-порт."""
-        self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
+        self._conn = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
 
-    def login(self, username: str = "root", password: str = "1", login_timeout: int = 30):
-        """
-        Дождаться приглашения login, ввести логин и пароль,
-        затем дождаться приглашения командной строки.
-        Возвращает True, если успешно.
-        """
-        # Ждём появления приглашения "login:" или уже готовой консоли
-        start = time.time()
-        prompt_found = False
-        while time.time() - start < login_timeout:
-            data = self._read_all()
-            if "login:" in data:
-                prompt_found = True
-                self.ser.write((username + "\r").encode())
-                time.sleep(0.5)
-                # ждём Password:
-                data = self._read_until("Password:")
-                if "Password:" in data:
-                    self.ser.write((password + "\r").encode())
-                break
-            elif "root@" in data or "# " in data:
-                # уже залогинены
-                prompt_found = True
-                break
-            time.sleep(0.5)
-        if not prompt_found:
-            return False
-        # Ожидаем приглашение после пароля
-        self._wait_for_prompt(timeout=10)
-        return True
+    def close(self):
+        if self._conn and self._conn.is_open:
+            self._conn.close()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def check__buffer_is_blank(self) -> bool:
+        return self._conn.in_waiting
 
     def _read_all(self) -> str:
         """Прочитать всё доступное из буфера."""
-        if self.ser.in_waiting:
-            return self.ser.read(self.ser.in_waiting).decode(errors='ignore')
+        if self._conn.in_waiting:
+            return self._conn.read(self._conn.in_waiting).decode(errors='ignore')
         return ""
 
-    def _read_until(self, expected: str, timeout: int = 10) -> str:
+    def _read_until(self, expected: str, timeout: int = 2) -> str:
         """Читать, пока не встретится expected или таймаут."""
         start = time.time()
         buf = ""
@@ -85,23 +65,42 @@ class DeviceConsole:
             time.sleep(0.1)
         return buf
 
-    def _wait_for_prompt(self, timeout: int = 5):
+    def _wait_for_prompt(self, timeout: int = 2):
         """Ожидать появления стандартного приглашения #."""
         self._read_until("# ", timeout)
 
-    def exec_command(self, cmd: str, wait_prompt: bool = True, timeout: int = 10) -> str:
+    # ------------------------------------------------------------------------------------------------------------------
+    def exec_command(self, cmd: str, wait_prompt: bool = True, timeout: int = 2) -> str:
         """
         Выполнить команду и вернуть вывод.
         Если wait_prompt=True, ждёт появления приглашения после команды.
         """
-        self.ser.write((cmd + "\r").encode())
+        self._conn.write((cmd + "\r\n").encode())
         if wait_prompt:
             self._wait_for_prompt(timeout)
         return self._read_all()
 
-    def close(self):
-        if self.ser and self.ser.is_open:
-            self.ser.close()
+    # ------------------------------------------------------------------------------------------------------------------
+    def login(self, username: str = "root", password: str = "1", login_timeout: int = 2) -> bool:
+        """
+        Дождаться приглашения login, ввести логин и пароль,
+        затем дождаться приглашения командной строки.
+        Возвращает True, если успешно.
+        """
+        # Ждём появления приглашения "login:" или уже готовой консоли
+        data = self._read_all()
+        time.sleep(0.3)
+        if not self.check__buffer_is_blank():
+            return False
+        self._conn.write((username + "\r\n").encode())
+        data = self._read_until("Password:", 2)
+        if "Password:" in data:
+            self._conn.write((password + "\r\n").encode())
+        time.sleep(0.5)
+
+        # Ожидаем приглашение после пароля
+        self._wait_for_prompt(timeout=2)
+        return True
 
     def get_device_id(self) -> str:
         """Получить уникальный идентификатор устройства (серийный номер процессора)."""
@@ -136,7 +135,7 @@ def validate_port(port: str, baudrate: int = 115200, timeout: float = 1) -> Opti
     return None
 
 
-def find_device_port(baudrate: int = 115200, timeout_per_port: float = 1) -> tuple[DeviceConsole, str]:
+def find_device_port(baudrate: int = 115200, timeout_per_port: float = 1) -> tuple[DeviceConsole | None, str | None]:
     """
     Сканировать доступные serial-порты, найти устройство.
     Возвращает объект DeviceConsole и имя порта.
@@ -144,7 +143,7 @@ def find_device_port(baudrate: int = 115200, timeout_per_port: float = 1) -> tup
     """
     ports = [port.device for port in serial.tools.list_ports.comports()]
     if not ports:
-        return ports
+        return None, None
 
     results = {}
     threads = []
