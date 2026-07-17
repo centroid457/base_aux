@@ -8,6 +8,7 @@ from base_aux.loggers.m2_logger import Logger
 from serial import Serial, PortNotOpenError, SerialException
 from serial.tools import list_ports
 from base_aux.base_values.m5_value_valid3_unit import *
+from base_aux.base_values.m3_exceptions import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 
@@ -72,22 +73,6 @@ class Exc_SerialRead_FailDecoding(Exception):
     ---------
     1. [BESTandONLY] just use other device on other appropriate microchip!
     """
-
-
-class Exc_SerialPL2303IncorrectDriver(Exception):
-    """
-    REASON
-    ------
-    typical for windows
-
-    SOLVATION
-    ---------
-    1. [BEST] just use other device on other microchip
-    2. manually select other more OLD driver in driver/device manager
-        version 3.3.2.105/27.10.2008 - is good!
-        version 3.8.22.0/22.02.2023 - is not good!!!
-    """
-    MARKER: str = "PL2303HXA PHASED OUT SINCE 2012. PLEASE CONTACT YOUR SUPPLIER"
 
 
 # =====================================================================================================================
@@ -781,9 +766,9 @@ class SerialClient(Logger):
         for obj in list_ports.comports():
             # ObjectInfo(obj).print(hide_skipped=True, skip__build_in=True)
             result.append(obj.device)
-            if Exc_SerialPL2303IncorrectDriver.MARKER in str(obj):
-                msg = f'[WARN] incorrect driver [{Exc_SerialPL2303IncorrectDriver.MARKER}]'
-                raise Exc_SerialPL2303IncorrectDriver(msg)
+            if Exc__SerialPL2303IncorrectDriver.MARKER in str(obj):
+                msg = f'[WARN] incorrect driver [{Exc__SerialPL2303IncorrectDriver.MARKER}]'
+                raise Exc__SerialPL2303IncorrectDriver(msg)
         return result
 
     @staticmethod

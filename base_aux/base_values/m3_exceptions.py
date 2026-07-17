@@ -394,6 +394,23 @@ class Exc__NestingLevels(Base_Exc):
 
 
 # =====================================================================================================================
+class Exc__SerialPL2303IncorrectDriver(Base_Exc):
+    """
+    REASON
+    ------
+    typical for windows
+
+    SOLVATION
+    ---------
+    1. [BEST] just use other device on other microchip
+    2. manually select other more OLD driver in driver/device manager
+        version 3.3.2.105/27.10.2008 - is good!
+        version 3.8.22.0/22.02.2023 - is not good!!!
+    """
+    MARKER: str = "PL2303HXA PHASED OUT SINCE 2012. PLEASE CONTACT YOUR SUPPLIER"
+
+
+# =====================================================================================================================
 if __name__ == '__main__':
     # WITH RAISING =====================================
     # REASON --------------

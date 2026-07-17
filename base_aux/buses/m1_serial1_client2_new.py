@@ -101,13 +101,32 @@ class SerialClient2:
         pass
 
 
-
 # ======================================================================================================================
+# TODO: SINGLETON!!!
 class SerialManager:
-    ADDRESSES__SYSTEM: dict[str, Union[None, Self]] = {}
-    ADDRESSES__SHORTED: list[str] = []
-    ADDRESSES__PAIRED: list[tuple[str, str]] = []
+    _ADDRESSES__SYSTEM: list[str] | None = None
+    _ADDRESSES__SHORTED: list[str] | None = None
+    _ADDRESSES__PAIRED: list[tuple[str, str]] | None = None
 
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def ADDRESSES__SYSTEM(self) -> list[str]:
+        if self._ADDRESSES__SYSTEM is None:
+            self.detect__addresses_system()
+
+        return self._ADDRESSES__SYSTEM
+
+    def get__addresses_free(self) -> list[str]:
+        result = []
+        for addr in self.ADDRESSES__SYSTEM:
+            if self.check__address_could_open(addr):
+                result.append(addr)
+        return result
+
+    def count__addresses_system(self) -> int:
+        return len(self.ADDRESSES__SYSTEM)
+
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def check__address_could_open(address: str) -> bool:
         try:
@@ -131,191 +150,13 @@ class SerialManager:
             else:
                 return True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# =====================================================================================================================
-class OLD__SerialClient:
-    # ADDRESS =========================================================================================================
-    def address__resolve(self, address = None) -> bool:
-        """
-        GOAL
-        ----
-        resolve address passed as Enum__AddressAutoAcceptVariant
-        could be call separately! before connect!
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        separate address resolve and connect
-
-        NOTE
-        ----
-        :param address: if result if True - ALWAYS APPLY final value in instance!
-        """
-        if address is None:
-            address = self.ADDRESS
-
-        # RESOLVE ---------------------------------
-        if address in Enum__AddressAutoAcceptVariant:
-            if address == Enum__AddressAutoAcceptVariant.FIRST_FREE:
-                address = self.address_get__first_free()
-            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__SHORTED:
-                address = self.address_get__first_free__shorted()
-            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__ANSWER_VALID:
-                address = self.address_get__first_free__valid()
-            elif address == Enum__AddressAutoAcceptVariant.FIRST_FREE__PAIRED:
-                address = self.address_get__first_free__paired()
-
-    # AUTODETECT ------------------------------------------------------------------------------------------------------
-    pass  # dont move this all to CLASSMETHOD!!!
-
-    def address_get__first_free(self) -> str | None:
-        result = None
-        for address in self.ADDRESSES__FREE:
-            if self.connect(address=address, _raise=False, _touch_connection=True):
-                result = address
-
-            self.disconnect()
-            if result:
-                break
-
-        msg = f"[{result=}]_address_apply__first_free"
-        if result:
-            self.LOGGER.info(msg)
-        else:
-            self.LOGGER.warning(msg)
-
-        return result
-
-    def address_get__first_free__shorted(self) -> str | None:
-        """
-        dont overwrite! dont mess with address__autodetect_logic!
-        used to find exact device in all comport by some special logic like IDN/NAME value
-        """
-        result = None
-        for address in self.addresses_shorted__detect():
-            if self.address_check__occupied(address):
-                continue
-
-            if self.connect(address=address, _raise=False, _touch_connection=True):
-                result = address
-
-            self.disconnect()
-            if result:
-                break
-
-        msg = f"[{result=}]_address_apply__first_free__shorted"
-        if result:
-            self.LOGGER.info(msg)
-        else:
-            self.LOGGER.warning(msg)
-
-        return result
-
-    def address_get__first_free__valid(self) -> str | None:
-        """
-        dont overwrite! dont mess with address__autodetect_logic!
-        used to find exact device in all comport by some special logic like IDN/NAME value
-        """
-        result = None
-        for address in self.ADDRESSES__FREE:
-            if self.connect(address=address, _raise=False, _touch_connection=True):
-                try:
-                    if self.address__validate():
-                        result = address
-                except Exception as exc:
-                    print(f"finding address {exc!r}")
-                    pass
-
-                self.disconnect()
-                if result:
-                    break
-
-        msg = f"[{result=}]_address_apply__first_free__answer_valid"
-        if result:
-            self.LOGGER.info(msg)
-        else:
-            self.LOGGER.warning(msg)
-
-        return result
-
-    def address_get__first_free__paired(self) -> str | None:
-        """
-        connect only for first address!
-        need for occupy addresses by several servers before starting main process!!!
-        in case of any address we could occupy by two servers whole pair!
-
-        secondary address you should get by special methods for pair or by address_validating
-
-        cls.pairs = {
-            0: (COM1, COM2),
-            1: (COM3, COM4),
-        }
-
-        cls.pairs = {
-            "ATC": (COM1, COM2),    # change name
-            1: (COM3, COM4),
-        }
-        """
-        result = None
-        for address, _ in self.addresses_paired__detect():
-            if self.connect(address=address, _raise=False, _touch_connection=True):
-                result = address
-
-            self.disconnect()
-            if result:
-                break
-
-        # FINISH -------------
-        msg = f"[{result=}]address_get__first_free__paired"
-        if result:
-            self.LOGGER.info(msg)
-        else:
-            self.LOGGER.warning(msg)
-
-        return result
-
-    # VALIDATION ------------------------------------------------------------------------------------------------------
-    def address__validate(self) -> bool | None | NoReturn:
-        """
-        overwrite for you case!
-        used to find exact device in all comport by some special logic like IDN/NAME value.
-
-        IDEA:
-        1. this func will exec on every accessible address
-        2. if this func return True - address would be accepted!
-        3. raiseExc/NoReturn - equivalent as False!
-        """
-
-    def _address__validate_shorted(self) -> bool | None:
-        """
-        this is the internal method! for autodetect shorted address
-        """
-        load = "FIND__SHORTED"
-        return self.write_read__last_validate(load, load)
-
     # DETECT ----------------------------------------------------------------------------------------------------------
     @classmethod
-    def addresses_system__detect(cls) -> dict[str, Union[None, Self]]:
-        if SerialClient.ADDRESSES__SYSTEM:
-            return SerialClient.ADDRESSES__SYSTEM
-
+    def detect__addresses_system(cls) -> list[str]:
         # WORK -------------------------------------------------------
-        result = cls._addresses_system__detect_1__standard_method()
-        for port in cls._addresses_system__detect_2__direct_access():
-            if port not in result:
-                result.append(port)
+        result = []
+        result.extend(cls._detect__addresses_system_1__standard_method())
+        result.extend(cls._detect__addresses_system_2__direct_access())
 
         # result -------------------------------------------------------
         if result:
@@ -323,12 +164,11 @@ class OLD__SerialClient:
         else:
             print("[WARN] detected no serial ports")
 
-        SerialClient.ADDRESSES__SYSTEM.clear()
-        SerialClient.ADDRESSES__SYSTEM.update(**dict.fromkeys(result, None))
-        return SerialClient.ADDRESSES__SYSTEM
+        cls._ADDRESSES__SYSTEM.clear()
+        return cls._ADDRESSES__SYSTEM
 
     @staticmethod
-    def _addresses_system__detect_1__standard_method() -> Union[list[str], NoReturn]:
+    def _detect__addresses_system_1__standard_method() -> list[str] | NoReturn:
         """
         WINDOWS - USB
             ==========OBJECTINFO.PRINT==========================================================================
@@ -393,13 +233,13 @@ class OLD__SerialClient:
         for obj in list_ports.comports():
             # ObjectInfo(obj).print(hide_skipped=True, skip__build_in=True)
             result.append(obj.device)
-            if Exc_SerialPL2303IncorrectDriver.MARKER in str(obj):
-                msg = f'[WARN] incorrect driver [{Exc_SerialPL2303IncorrectDriver.MARKER}]'
-                raise Exc_SerialPL2303IncorrectDriver(msg)
+            if Exc__SerialPL2303IncorrectDriver.MARKER in str(obj):
+                msg = f'[WARN] incorrect driver [{Exc__SerialPL2303IncorrectDriver.MARKER}]'
+                raise Exc__SerialPL2303IncorrectDriver(msg)
         return result
 
-    @staticmethod
-    def _addresses_system__detect_2__direct_access() -> Union[list[str], NoReturn]:
+    @classmethod
+    def _detect__addresses_system_2__direct_access(cls) -> list[str] | NoReturn:
         """Определяет список портов (НЕОТКРЫТЫХ+ОТКРЫТЫХ!!!) - способом 2 (слепым тестом подключения и анализом исключений)
         Всегда срабатывает!
         """
@@ -415,49 +255,68 @@ class OLD__SerialClient:
 
         result: list[str] = []
         for name in attempt_list:
-            if SerialClient.address__check_exists(address=name):
+            if cls.check__address_exists(address=name):
                 result.append(name)
 
         return result
 
-    @classmethod
-    def addresses_shorted__detect(cls) -> list[str]:
-        if SerialClient.ADDRESSES__SHORTED:
-            return SerialClient.ADDRESSES__SHORTED
+    # ------------------------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =====================================================================================================================
+class OLD__SerialClient:
+    # -------------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def ___addresses_shorted__detect(cls) -> list[str]:
         # WORK ----------------------------------------------
         result = []
-        for address in cls.addresses_system__detect():
-            obj = SerialClient()
-            if obj.connect(address=address, _raise=False, _touch_connection=True):
+        for address in cls.detect__addresses_system():
+            obj = SerialClient2()
+            if obj.connect(address=address, _raise=False):
                 if obj._address__validate_shorted():
                     result.append(address)
                 obj.disconnect()
 
-        SerialClient.ADDRESSES__SHORTED = result
-        print(f"{SerialClient.ADDRESSES__SHORTED=}")
+        SerialClient2.ADDRESSES__SHORTED = result
+        print(f"{SerialClient2.ADDRESSES__SHORTED=}")
         return result
 
     @classmethod
-    def addresses_paired__detect(cls) -> list[tuple[str, str]]:
+    def ___addresses_paired__detect(cls) -> list[tuple[str, str]]:
         # FIXME: IT SEEMS NOT WORKING!!!
-        if cls.addresses_system__count() < 2:
+        if cls.count__addresses_system() < 2:
             return []
-
-        if SerialClient.ADDRESSES__PAIRED:
-            return SerialClient.ADDRESSES__PAIRED
 
         # WORK ----------------------------------------------
         load = "EXPECT_ANSWER__PAIRED"
         result = []
         instances_free_remain = []
 
-        system_ports = cls.addresses_system__detect()
+        system_ports = cls.detect__addresses_system()
 
         # CONNECT ALL -----
         for address in system_ports:
-            instance = SerialClient()
-            if instance.connect(address=address, _raise=False, _touch_connection=True):
+            instance = SerialClient2()
+            if instance.connect(address=address, _raise=False):
                 instances_free_remain.append(instance)
 
         while len(instances_free_remain) > 1:
@@ -481,46 +340,138 @@ class OLD__SerialClient:
         for remain in instances_free_remain:
             remain.disconnect()
 
-        SerialClient.ADDRESSES__PAIRED = result
-        print(f"{SerialClient.ADDRESSES__PAIRED=}")
+        SerialClient2.ADDRESSES__PAIRED = result
+        print(f"{SerialClient2.ADDRESSES__PAIRED=}")
         return result
-
-    def addresses_paired__get_used(self) -> Optional[tuple[str, str]]:
-        for pair in self.addresses_paired__detect():
-            if self._conn.port in pair:
-                return pair
-
-    def address_paired__get(self) -> str | None:
-        if not SerialClient.ADDRESSES__PAIRED:
-            SerialClient.addresses_paired__detect()
-
-        if not self.address_check__resolved():
-            return
-
-        for pair in SerialClient.ADDRESSES__PAIRED:
-            if self.ADDRESS in pair:
-                addr1, addr2 = pair
-                if self.ADDRESS == addr1:
-                    return addr2
-                else:
-                    return addr1
 
     # COUNTS -----------------------------------------
     @classmethod
-    def addresses_system__count(cls) -> int:
-        return len(cls.addresses_system__detect())
-
-    @classmethod
-    def addresses_shorted__count(cls) -> int:
+    def ___addresses_shorted__count(cls) -> int:
         return len(cls.addresses_shorted__detect())
 
     @classmethod
-    def addresses_paired__count(cls) -> int:
+    def ___addresses_paired__count(cls) -> int:
         return len(cls.addresses_paired__detect())
 
     @classmethod
-    def addresses_free__count(cls) -> int:
+    def ___addresses_free__count(cls) -> int:
         return len(cls.ADDRESSES__FREE)
+    # AUTODETECT ------------------------------------------------------------------------------------------------------
+    pass  # dont move this all to CLASSMETHOD!!!
+
+    def address_get__first_free(self) -> str | None:
+        result = None
+        for address in self.ADDRESSES__FREE:
+            if self.connect(address=address, _raise=False):
+                result = address
+
+            self.disconnect()
+            if result:
+                break
+
+        msg = f"[{result=}]_address_apply__first_free"
+        if result:
+            self.LOGGER.info(msg)
+        else:
+            self.LOGGER.warning(msg)
+
+        return result
+
+    def address_get__first_free__shorted(self) -> str | None:
+        """
+        dont overwrite! dont mess with address__autodetect_logic!
+        used to find exact device in all comport by some special logic like IDN/NAME value
+        """
+        result = None
+        for address in self.addresses_shorted__detect():
+            if self.address_check__occupied(address):
+                continue
+
+            if self.connect(address=address, _raise=False):
+                result = address
+
+            self.disconnect()
+            if result:
+                break
+
+        msg = f"[{result=}]_address_apply__first_free__shorted"
+        if result:
+            self.LOGGER.info(msg)
+        else:
+            self.LOGGER.warning(msg)
+
+        return result
+
+    def address_get__first_free__valid(self) -> str | None:
+        """
+        dont overwrite! dont mess with address__autodetect_logic!
+        used to find exact device in all comport by some special logic like IDN/NAME value
+        """
+        result = None
+        for address in self.ADDRESSES__FREE:
+            if self.connect(address=address, _raise=False):
+                try:
+                    if self.address__validate():
+                        result = address
+                except Exception as exc:
+                    print(f"finding address {exc!r}")
+                    pass
+
+                self.disconnect()
+                if result:
+                    break
+
+        msg = f"[{result=}]_address_apply__first_free__answer_valid"
+        if result:
+            self.LOGGER.info(msg)
+        else:
+            self.LOGGER.warning(msg)
+
+        return result
+
+    def address_get__first_free__paired(self) -> str | None:
+        """
+        connect only for first address!
+        need for occupy addresses by several servers before starting main process!!!
+        in case of any address we could occupy by two servers whole pair!
+
+        secondary address you should get by special methods for pair or by address_validating
+
+        cls.pairs = {
+            0: (COM1, COM2),
+            1: (COM3, COM4),
+        }
+
+        cls.pairs = {
+            "ATC": (COM1, COM2),    # change name
+            1: (COM3, COM4),
+        }
+        """
+        result = None
+        for address, _ in self.addresses_paired__detect():
+            if self.connect(address=address, _raise=False):
+                result = address
+
+            self.disconnect()
+            if result:
+                break
+
+        # FINISH -------------
+        msg = f"[{result=}]address_get__first_free__paired"
+        if result:
+            self.LOGGER.info(msg)
+        else:
+            self.LOGGER.warning(msg)
+
+        return result
+
+    # VALIDATION ------------------------------------------------------------------------------------------------------
+    def _address__validate_shorted(self) -> bool | None:
+        """
+        this is the internal method! for autodetect shorted address
+        """
+        load = "FIND__SHORTED"
+        return self.write_read__last_validate(load, load)
 
     # =================================================================================================================
     @classmethod
@@ -553,7 +504,7 @@ class OLD__SerialClient:
             obj.REWRITEIF_NOVALID = 0
 
             lambda_list = LambdaListThread([
-                Lambda(obj.connect, address, _touch_connection=True),
+                Lambda(obj.connect, address),
                 *[Lambda(obj.write_read__last, cmd) for cmd in cmds],
                 obj._address__release,
                 obj.disconnect,
@@ -637,32 +588,6 @@ class OLD__SerialClient:
             for key, value in kwargs.items():
                 result += f" {key}={value}"
         return result
-
-    # SUCCESS ---------------------------------------------------------------------------------------------------------
-    def answer_is_success(self, data: AnyStr) -> bool:
-        data = self._data_ensure__string(data)
-        return self.ANSWER_SUCCESS.upper() == data.upper()
-
-    def answer_is_fail(self, data: AnyStr, _raise: Optional[bool] = None) -> Union[bool, NoReturn]:
-        if _raise is None:
-            _raise = self.RAISE_READ_FAIL_PATTERN
-
-        data = self._data_ensure__string(data)
-        if isinstance(self.ANSWER_FAIL_PATTERN, str):
-            patterns = [self.ANSWER_FAIL_PATTERN, ]
-        else:
-            patterns = self.ANSWER_FAIL_PATTERN
-
-        for pattern in patterns:
-            if re.search(pattern, data, flags=re.IGNORECASE):
-                if _raise:
-                    msg = f"[ERROR] match fail [{pattern=}/{data=}]"
-                    self.LOGGER.error(f"[{self._conn.port}]{msg}")
-                    raise Exc_SerialRead_FailPattern(msg)
-                else:
-                    return True
-
-        return False
 
     # BYTES -----------------------------------------------------------------------------------------------------------
     @classmethod
@@ -1066,15 +991,6 @@ class OLD__SerialClient:
         """
         return self.write_read__last_validate(*args, **kwargs, _as_regexp=True)
 
-    def dump_cmds(self, cmds: list[str] = None) -> Union[CmdHistory_Sync, NoReturn]:
-        """
-        useful to get results for standard cmds list
-        if you need to read all params from device!
-        """
-        cmds = cmds or self.CMDS_DUMP
-        history = self.write_read(cmds)
-        history.print_io()
-        return history
 
     # =================================================================================================================
     def test__shorted(self):
@@ -1166,7 +1082,7 @@ class OLD__SerialClient:
 
 # =====================================================================================================================
 def _explore():
-    class Dev(SerialClient):
+    class Dev(SerialClient2):
         pass
         BAUDRATE = 115200
         EOL__SEND = b"\n"
