@@ -8429,6 +8429,116 @@ cancelable: true – внутри обработчика можно вызват
             </div>
         </section>
 
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="headId">
+            <h2>HEAD-теги</h2>
+            <div class="section_main__cls">
+                <article class="article__cls">
+                    <header>📋 Обязательные и рекомендуемые элементы</header>
+                    <div class="article_main__cls">
+                        <p>
+                            Тег <code>&lt;head&gt;</code> содержит мета-информацию о документе, которая не отображается напрямую,
+                            но важна для браузеров, поисковых систем и социальных сетей. Вот ключевые элементы, которые чаще всего используются внутри.
+                        </p>
+                        <table class="simple-table">
+                            <thead>
+                                <tr>
+                                    <th>Тег</th>
+                                    <th>Атрибуты</th>
+                                    <th>Назначение</th>
+                                    <th>Пример</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>&lt;title&gt;</code></td>
+                                    <td>–</td>
+                                    <td>Заголовок страницы (отображается во вкладке браузера, в результатах поиска, закладках)</td>
+                                    <td><code>&lt;title&gt;Главная страница&lt;/title&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;meta charset="..."&gt;</code></td>
+                                    <td><code>charset</code></td>
+                                    <td>Кодировка документа (обычно UTF-8)</td>
+                                    <td><code>&lt;meta charset="utf-8"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;meta name="viewport" ...&gt;</code></td>
+                                    <td><code>name="viewport"</code>, <code>content</code></td>
+                                    <td>Управление масштабом и шириной на мобильных устройствах</td>
+                                    <td><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;meta name="description" ...&gt;</code></td>
+                                    <td><code>name="description"</code>, <code>content</code></td>
+                                    <td>Краткое описание страницы (используется в сниппетах поисковых систем)</td>
+                                    <td><code>&lt;meta name="description" content="Описание страницы"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;meta name="keywords" ...&gt;</code></td>
+                                    <td><code>name="keywords"</code>, <code>content</code></td>
+                                    <td>Ключевые слова (устарело для SEO, но иногда используется)</td>
+                                    <td><code>&lt;meta name="keywords" content="html, css, справочник"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;meta property="og:..."&gt;</code></td>
+                                    <td><code>property</code>, <code>content</code></td>
+                                    <td>Open Graph мета-теги для социальных сетей (заголовок, картинка, описание)</td>
+                                    <td><code>&lt;meta property="og:title" content="Заголовок для соцсетей"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;link&gt;</code></td>
+                                    <td><code>rel</code>, <code>href</code>, <code>type</code>, <code>media</code>, <code>integrity</code>, <code>crossorigin</code></td>
+                                    <td>Подключение внешних ресурсов (CSS, иконки, шрифты, преконнекты)</td>
+                                    <td><code>&lt;link rel="stylesheet" href="style.css"&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;script&gt;</code></td>
+                                    <td><code>src</code>, <code>defer</code>, <code>async</code>, <code>type</code>, <code>integrity</code></td>
+                                    <td>Подключение или встраивание JavaScript</td>
+                                    <td><code>&lt;script src="script.js" defer&gt;&lt;/script&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;style&gt;</code></td>
+                                    <td><code>media</code>, <code>scoped</code> (устарел)</td>
+                                    <td>Внутренние CSS-стили (рекомендуется для критического CSS)</td>
+                                    <td><code>&lt;style&gt; body { background: #fff; } &lt;/style&gt;</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;base&gt;</code></td>
+                                    <td><code>href</code>, <code>target</code></td>
+                                    <td>Базовый URL для всех относительных ссылок на странице</td>
+                                    <td><code>&lt;base href="https://example.com/"&gt;</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><small>Этот список не является исчерпывающим, но покрывает 99% повседневных задач.</small></p>
+                    </div>
+                    <footer>💡 <strong>Практический совет:</strong> размещайте <code>&lt;link&gt;</code> для CSS и <code>&lt;script defer&gt;</code> для JS в <code>&lt;head&gt;</code>, чтобы обеспечить быструю загрузку и не блокировать отрисовку.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🔧 Дополнительные мета-теги для современных приложений</header>
+                    <div class="article_main__cls">
+                        <p>Для PWA, цветовых тем, автозаполнения и других сценариев могут пригодиться следующие теги:</p>
+                        <ul>
+                            <li><code>&lt;meta name="theme-color" content="#ffffff"&gt;</code> – цвет панели браузера в мобильных ОС</li>
+                            <li><code>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</code> – режим полноэкранного приложения на iOS</li>
+                            <li><code>&lt;link rel="icon" href="favicon.ico"&gt;</code> – иконка сайта (favicon)</li>
+                            <li><code>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</code> – предварительное соединение с внешним доменом</li>
+                            <li><code>&lt;link rel="dns-prefetch" href="//example.com"&gt;</code> – предварительный DNS-запрос</li>
+                            <li><code>&lt;meta name="robots" content="index, follow"&gt;</code> – управление индексацией поисковыми системами</li>
+                            <li><code>&lt;meta http-equiv="refresh" content="5;url=https://example.com"&gt;</code> – автоматический редирект</li>
+                        </ul>
+                        <p><small>Эти теги помогают улучшить пользовательский опыт, SEO и производительность.</small></p>
+                    </div>
+                    <footer>📌 Используйте только те мета-теги, которые действительно нужны вашему проекту – избыточность не помогает.</footer>
+                </article>
+
+            </div>
+        </section>
+
         <!-- ====================================================================================================== -->
     </main>
 
