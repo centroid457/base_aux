@@ -3906,8 +3906,141 @@
         </section>
 
         <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsGeneralId">
+            <h2 data-icon__circle_yellow>EVENTS-0=События DOM – полный обзор</h2>
+            <div class="section_main__cls grid_auto__cls">
+
+                <article class="article__cls">
+                    <header>📋 Основные события и их использование</header>
+                    <div class="article_main__cls">
+                        <table class="simple-table">
+                            <thead>
+                                <tr>
+                                    <th>Событие</th>
+                                    <th>Тип</th>
+                                    <th>Описание</th>
+                                    <th>Пример применения</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>click</code></td><td>Мышь</td><td>Одиночный клик (левая кнопка)</td><td>Обработка нажатий на кнопки, ссылки</td></tr>
+                                <tr><td><code>dblclick</code></td><td>Мышь</td><td>Двойной клик</td><td>Редактирование текста, открытие файлов</td></tr>
+                                <tr><td><code>mousedown / mouseup</code></td><td>Мышь</td><td>Нажатие / отпускание любой кнопки мыши</td><td>Сложные drag&drop, игры</td></tr>
+                                <tr><td><code>mouseover / mouseout</code></td><td>Мышь</td><td>Наведение / уход с элемента (всплывает)</td><td>Всплывающие подсказки, меню</td></tr>
+                                <tr><td><code>mouseenter / mouseleave</code></td><td>Мышь</td><td>Наведение / уход с элемента (без всплытия)</td><td>То же, но без конфликтов с дочерними</td></tr>
+                                <tr><td><code>mousemove</code></td><td>Мышь</td><td>Движение мыши над элементом</td><td>Отслеживание позиции, рисование</td></tr>
+                                <tr><td><code>contextmenu</code></td><td>Мышь</td><td>Вызов контекстного меню (правая кнопка)</td><td>Кастомное меню, запрет стандартного</td></tr>
+                                <tr><td><code>keydown / keyup</code></td><td>Клавиатура</td><td>Нажатие / отпускание клавиши</td><td>Горячие клавиши, игры, формы</td></tr>
+                                <tr><td><code>focus / blur</code></td><td>Фокус</td><td>Получение / потеря фокуса элементом</td><td>Валидация форм, стилизация</td></tr>
+                                <tr><td><code>focusin / focusout</code></td><td>Фокус</td><td>Всплывающие версии focus/blur</td><td>Делегирование фокуса</td></tr>
+                                <tr><td><code>load</code></td><td>Загрузка</td><td>Полная загрузка ресурса (страница, изображение, скрипт)</td><td>Инициализация после загрузки, подгрузка контента</td></tr>
+                                <tr><td><code>error</code></td><td>Загрузка</td><td>Ошибка загрузки ресурса</td><td>Замена изображений, логирование</td></tr>
+                                <tr><td><code>DOMContentLoaded</code></td><td>Загрузка</td><td>Документ загружен, но не все ресурсы (картинки, стили) готовы</td><td>Ранняя инициализация скриптов</td></tr>
+                                <tr><td><code>beforeunload</code></td><td>Загрузка</td><td>Перед выгрузкой страницы (переход, закрытие)</td><td>Предупреждение о несохранённых данных</td></tr>
+                                <tr><td><code>submit / reset</code></td><td>Форма</td><td>Отправка / сброс формы</td><td>Валидация, отправка через AJAX</td></tr>
+                                <tr><td><code>input / change</code></td><td>Форма</td><td>Изменение значения поля (input – сразу, change – после потери фокуса)</td><td>Обновление интерфейса в реальном времени</td></tr>
+                                <tr><td><code>scroll</code></td><td>Окно/элемент</td><td>Прокрутка элемента или окна</td><td>Бесконечный скролл, параллакс</td></tr>
+                                <tr><td><code>wheel</code></td><td>Мышь</td><td>Вращение колёсика мыши</td><td>Зум, кастомная прокрутка</td></tr>
+                                <tr><td><code>resize</code></td><td>Окно</td><td>Изменение размера окна</td><td>Адаптивные интерфейсы</td></tr>
+                                <tr><td><code>copy / cut / paste</code></td><td>Буфер обмена</td><td>Копирование/вырезание/вставка</td><td>Модификация данных при копировании</td></tr>
+                                <tr><td><code>touchstart / touchmove / touchend</code></td><td>Касание</td><td>Сенсорные события на мобильных</td><td>Свайпы, жесты</td></tr>
+                                <tr><td><code>dragstart / dragend / drop</code></td><td>Drag&Drop</td><td>Начало/конец перетаскивания, сброс</td><td>Перемещение элементов</td></tr>
+                            </tbody>
+                        </table>
+                        <p><small>Это основные события; многие могут иметь всплывающие или невсплывающие версии (смотрите документацию).</small></p>
+                    </div>
+                    <footer>💡 Используйте <code>addEventListener</code> для подключения нескольких обработчиков и контроля фаз (capture/bubble).</footer>
+                </article>
+
+            </div>
+        </section>
+
+
+        <!-- ====================================================================================================== -->
+        <section class="section__cls" id="eventsLoadId">
+            <h2 data-icon__circle_green>EVENTS-1=source load/error</h2>
+            <div class="section_main__cls" data-grid_autofit_min250>
+
+                <article class="article__cls">
+                    <header>🧪 Пример: обработка ошибок загрузки источника</header>
+                    <div class="article_main__cls">
+                        <p><small>События <code>load</code> и <code>error</code> позволяют обрабатывать успешную загрузку или ошибку (подстановка заглушки).</small></p>
+
+                        <div>
+                            <img id="testImage" src="https://example.com/nonexistent.jpg" alt="Тестовое изображение" style="max-width: 200px; border:1px solid #ccc;">
+                            <div id="imgStatus">[]Статус: загрузка...</div>
+                        </div>
+
+                        <hr>
+                        ВАРИНАТ ЧЕРЕЗ СОБЫТИЯ JS
+                        <pre><code>
+                            iframe id="myFrame" src="https://example.com/content"
+
+    // Получаем элемент iframe
+    const iframeElement = document.getElementById('myFrame');
+
+    // Добавляем обработчик события load
+    iframeElement.onload = function() {
+    // Здесь можно дополнительно проверить источник (origin)
+    // чтобы убедиться, что загрузка прошла успешно с вашего домена
+
+    // Если всё в порядке — ничего не делаем, пользователь видит iframe
+    // Если возникла ошибка (например, CORS или недоступный ресурс),
+    // заменяем содержимое на наше сообщение
+    iframeElement.innerHTML = '<p>Контент недоступен или ресурс недоступен</p>';
+    };
+
+    // Обработчик ошибки (на случай, если загрузка вообще не началась или выброшена исключение)
+    iframeElement.onerror = function() {
+    iframeElement.innerHTML = '<p>Проверьте соединение или попробуйте позже</p>';
+    };
+
+                        </code></pre>
+
+                        <script>
+                            (function() {
+                                const img = document.getElementById('testImage');
+                                const status = document.getElementById('imgStatus');
+                                img.addEventListener('load', () => {
+                                    status.textContent = '✅ Загружено успешно';
+                                });
+                                img.addEventListener('error', () => {
+                                    status.textContent = '❌ Ошибка загрузки (404 или другая)';
+                                    img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="100"%3E%3Crect fill="%23ddd" width="200" height="100"/%3E%3Ctext x="50" y="50" font-family="Arial" font-size="16" fill="%23999"%3EИзображение не найдено%3C/text%3E%3C/svg%3E';
+                                });
+                            })();
+                        </script>
+                    </div>
+                    <footer>📌 <code>onerror</code> часто используют для подмены сломанных картинок, а <code>onload</code> – для инициализации после загрузки.</footer>
+                </article>
+
+                <article class="article__cls">
+                    <header>🖼️ События загрузки (load, error)</header>
+                    <div class="article_main__cls">
+                        <div>
+                            <img id="testImg" src="https://picsum.photos/id/1/200/150" alt="тестовое изображение" style="max-width: 100%; border-radius: 0.5rem;">
+                            <div id="imgLog" data-height_200 data-overflow_auto></div>
+                        </div>
+                        <script>
+                            const img = document.getElementById('testImg');
+                            const imgLogDiv = document.getElementById('imgLog');
+                            img.addEventListener('load', () => imgLogDiv.innerHTML = '✅ Изображение загружено');
+                            img.addEventListener('error', () => imgLogDiv.innerHTML = '❌ Ошибка загрузки изображения');
+                        </script>
+                        <p>
+                            <code>load</code> срабатывает после успешной загрузки,для изображений, скриптов, фреймов; для окна – вся страница<br>
+                            <code>error</code> – при ошибке загрузки ресурса (изображение, скрипт) (404, 500 и т.д.).<br>
+                        </p>
+                    </div>
+                    <footer>⚡ Эти события полезны для подстановки заглушек при неудачной загрузке.</footer>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ====================================================================================================== -->
         <section class="section__cls" id="eventsMouseId">
-            <h2 data-icon__circle_green>EVENTS-1=🖱️ MOUSE</h2>
+            <h2 data-icon__circle_green>EVENTS-2=MOUSE</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <article class="article__cls">
@@ -4104,7 +4237,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="eventsInputKbdId">
-            <h2 data-icon__circle_green>EVENTS-2=INPUT/KBD</h2>
+            <h2 data-icon__circle_green>EVENTS-3=INPUT/KBD</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <article class="article__cls">
@@ -4286,7 +4419,7 @@
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="eventsOtherId">
-            <h2 data-icon__circle_green>EVENTS-3=GLOBAL+LOAD+GEN manually</h2>
+            <h2 data-icon__circle_green>EVENTS-4=GLOBAL+LOAD+GEN manually</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <article class="article__cls">
@@ -4518,33 +4651,12 @@ cancelable: true – внутри обработчика можно вызват
                     <footer>📌 <code>beforeunload</code> используйте осторожно, только когда действительно нужно предупредить пользователя.</footer>
                 </article>
 
-                <article class="article__cls">
-                    <header>🖼️ События загрузки изображений (load, error)</header>
-                    <div class="article_main__cls">
-                        <div>
-                            <img id="testImg" src="https://picsum.photos/id/1/200/150" alt="тестовое изображение" style="max-width: 100%; border-radius: 0.5rem;">
-                            <div id="imgLog" data-height_200 data-overflow_auto></div>
-                        </div>
-                        <script>
-                            const img = document.getElementById('testImg');
-                            const imgLogDiv = document.getElementById('imgLog');
-                            img.addEventListener('load', () => imgLogDiv.innerHTML = '✅ Изображение загружено');
-                            img.addEventListener('error', () => imgLogDiv.innerHTML = '❌ Ошибка загрузки изображения');
-                        </script>
-                        <p>
-                            <code>load</code> срабатывает после успешной загрузки,для изображений, скриптов, фреймов; для окна – вся страница<br>
-                            <code>error</code> – при ошибке загрузки ресурса (изображение, скрипт) (404, 500 и т.д.).<br>
-                        </p>
-                    </div>
-                    <footer>⚡ Эти события полезны для подстановки заглушек при неудачной загрузке.</footer>
-                </article>
-
             </div>
         </section>
 
         <!-- ====================================================================================================== -->
         <section class="section__cls" id="eventsBufferId">
-            <h2 data-icon__circle_green>EVENTS-4=BUFFER</h2>
+            <h2 data-icon__circle_green>EVENTS-5=BUFFER</h2>
             <div class="section_main__cls" data-grid_autofit_min250>
 
                 <article class="article__cls">
