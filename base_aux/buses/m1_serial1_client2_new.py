@@ -59,6 +59,14 @@ class SerialClient2:
 
         self.history = CmdHistory_Sync()
 
+    # ------------------------------------------------------------------
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.disconnect()
+
     # CONNECT ==========================================================================================================
     def connect(self) -> bool:
         try:
@@ -83,10 +91,22 @@ class SerialClient2:
             print(msg)
             return False
 
-    def disconnect(self):
-        self._conn.close()
+    # -----------------------------------------------------------------
+    def reconnect(self) -> bool:
+        try:
+            self.disconnect()
+        except:
+            pass
 
-    def __del__(self):
+        return self.connect()
+
+    def disconnect(self) -> None:
+        try:
+            self._conn.close()
+        except:
+            pass
+
+    def __del__(self) -> None:
         self.disconnect()
 
     def check__connected(self) -> bool:
@@ -96,9 +116,239 @@ class SerialClient2:
             return False
 
     # RW ===============================================================================================================
+    # CONVERTERS -------------------------------------------------------------------------------------------------------
+    # BYTES ------------------------------------------------------------------------------------------------------------
+    @classmethod
+    def _data_bytes__eol_ensure(cls, data: bytes) -> bytes | NoReturn:
+        data = cls._data_any__eol_clear(data) + cls.EOL__SEND
+        return data
 
+    @classmethod
+    def _data_any__eol_clear(cls, data: AnyStr) -> Union[AnyStr, NoReturn]:
+        result: bytes = cls._data_ensure__bytes(data)
+        while True:
+            data_new = result.strip()
+            data_new = data_new.strip(cls.EOL__UNI_SET)
+            if not result or result == data_new:
+                break
+            result = data_new
+
+        if isinstance(data, str):
+            return cls._data_ensure__string(result)
+
+        return result
+
+    # BYTES/STR --------------------------------------------------------------------------------------------------------
+    @classmethod
+    def _data_ensure__bytes(cls, data: AnyStr) -> bytes:
+        if isinstance(data, bytes):
+            return data
+        else:
+            return bytes(data, encoding=cls.ENCODING)
+
+    @classmethod
+    def _data_ensure__string(cls, data: AnyStr) -> str | NoReturn:
+        """
+        EXCEPTION ORIGINAL VARIANT
+        --------------------------
+            cls = <class 'test__serial_server.Victim'>, data = b'\\x85RR__NAME_CMD_OR_PARAM
+
+                @classmethod
+                def _data_ensure__string(cls, data: AnyStr) -> Union[str, NoReturn]:
+                    if isinstance(data, bytes):
+            >           return data.decode(encoding=cls.ENCODING)
+            E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0x85 in position 0: invalid start byte
+
+            buses\serial_client.py:722: UnicodeDecodeError
+        """
+        # TODO: move to separated module!
+        try:
+            if isinstance(data, bytes):
+                result = data.decode(encoding=cls.ENCODING)
+            else:
+                result = str(data)
+        except Exception as exc:
+            print(f"{exc!r}")
+            msg = f"[FAIL] decoding {data=}"
+            raise Exc_SerialRead_FailDecoding(msg)
+
+        # check printable ascii ------------------
+        for char in result:
+            if isinstance(char, bytes):
+                char = chr(char)
+            if char not in string.printable:
+                msg = f"[FAIL] decoding [{char=}]"
+                raise Exc_SerialRead_FailDecoding(msg)
+
+        # ----------------------------------------
+        return result
+
+    # BUFFERS ----------------------------------------------------------------------------------------------------------
+    def _buffers_clear_1__write(self) -> None:
+        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+
+        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
+        """
+        try:
+            self._write__eol()
+            self._conn.reset_input_buffer()
+        except:
+            pass
+
+    def _buffers_clear_2__read(self, _timeout: Optional[float] = None) -> None:
+        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
+        while True:
+            try:
+                if not self._conn.readline(1):
+                    break
+            except:
+                pass
+            time.sleep(0.1)
+
+        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
+        self._conn.reset_output_buffer()
+
+    def buffers_clear(self) -> None:
+        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+
+        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
+        """
+        self._buffers_clear_1__write()
+        self._buffers_clear_2__read()
+
+    # R ---------------------------------------------------------------------------------------------------------------
+    # TODO: use wrapper for connect/disconnect!??? - NO!
+    def read_lines(self, _timeout: Optional[float] = None) -> list[TYPE__RW_ANSWER_SINGLE] | NoReturn:
+        result: list[str] = []
+        while True:
+            line = self.read_line(_timeout)
+            _timeout = self.TIMEOUT__READ or None
+            if line is None or str(line) == "":
+                break
+            else:
+                result.append(line)
+
+        return result
+
+    def read_line(self, _timeout: Optional[float] = None) -> Union[str, ValueUnit, NoReturn]:
+        """
+        read line from bus buffer,
+
+        CAREFUL
+        -------
+        DONT USE! IF WANT TO BE SURE!
+        instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
+
+        TODO: here possible rewrite by getting from history!!!
+        """
+        # FIXME: return Object??? need keep exc for not finished readline!!!
+        # var1: just read as usual - could cause error with not full bytes read in ONE CHAR!!!
+        # data = self._conn.readline()
+
+        # var2: char by char
+        data = b""
+        eol_received = False
+
+        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
+        while True:
+            new_char = None
+            for i in range(2):
+                new_char = self._conn.readline(1)
+                self._conn.timeout = self.TIMEOUT__READ or None  # set back - no need repiatiting
+                if new_char:
+                    break
+
+            if not new_char:
+                # print(f"detected finish line")
+                break
+            if new_char == b'\x7f':  # BACKSPACE
+                # LINE EDITION --------------
+                data = data[:-1]
+                continue
+
+            if new_char in self.EOL__UNI_SET:
+                # LINE FINISHED --------------
+                eol_received = True
+                if data:
+                    break
+                else:
+                    continue
+
+            data += new_char
+
+        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
+
+        # RESULT ----------------------
+        if data:
+            if not eol_received:
+                msg = f"[ERROR]NotFullLine read_line={data}->CLEAR!!!"
+                exc = Exc_SerialRead_NotFullLine(msg)
+                data = b""
+            else:
+                msg = f"[OK]read_line={data}"
+
+        else:
+            msg = f"[WARN]BLANK read_line={data}"
+
+        self.LOGGER.info(f"[{self._conn.port}.{self._conn.baudrate}]{msg}")
+
+        data = self._bytes_edition__apply(data)
+        data = self._data_any__eol_clear(data)
+        data = self._data_ensure__string(data)
+        self.history.add_data__stdout(data)
+        self.answer_is_fail(data)
+
+        # NOTE: dont delete! need to direct cmp
+        try:
+            # pass
+            data = ValueUnit_NoMulty(data)
+        except:
+            pass
+
+        return data
+    # W=SPECIAL --------------------------- ----------------------------------------------------------------------------
+    def _write__eol(self, eol: bytes = None) -> bool:
+        """
+        write without any conditions (no prefixes! no suffixes)!
+        GOAL
+        ----
+        finish any writen cmd and clear buffer
+        """
+        eol = eol or self.EOL__SEND
+        try:
+            return bool(self._conn.write(eol))
+        except:
+            return False
+
+    def send__break(self, duration: float = 0.25) -> None:
+        """Send a BREAK condition."""
+        if self.check__connected():
+            self._conn.send_break(duration)
+
+    def send__ctrl_c(self) -> None:
+        """Send the Ctrl+C character (0x03)."""
+        self.write_bytes(b'\x03')
+
+    def send__ctrl(self, char: Union[str, int]) -> None:
+        """
+        Send a control character: e.g. send_ctrl('C') -> 0x03,
+        send_ctrl(0x1A) -> 0x1A.
+        """
+        if isinstance(char, str) and len(char) == 1:
+            # ASCII control: uppercase letter
+            code = ord(char.upper()) - ord('A') + 1
+        else:
+            code = int(char) & 0x1F
+        self.write_bytes(bytes([code]))
+
+    # ------------------------------------------------------------------------------------------------------------------
     def validate__wr_schema(self, schema: dict[str, str]) -> bool:
         pass
+
+
+
+
+
 
 
 # ======================================================================================================================
@@ -533,230 +783,7 @@ class OLD__SerialClient:
     pass
     pass
 
-    # BUFFERS ---------------------------------------------------------------------------------------------------------
-    def _buffers_clear__read(self, _timeout: Optional[float] = None) -> None:
-        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
-        while True:
-            try:
-                if not self._conn.readline(1):
-                    break
-            except:
-                pass
-            time.sleep(0.1)
-
-        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
-
-    def _buffers_clear__write(self) -> None:
-        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
-
-        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
-        """
-        try:
-            self.write_eol()
-        except:
-            pass
-
-    def buffers_clear(self) -> None:
-        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
-
-        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
-        """
-        self._buffers_clear__write()
-        self._buffers_clear__read()
-
-    # CMD -------------------------------------------------------------------------------------------------------------
-    def _create_cmd_line(self, cmd: str, prefix: Optional[str] = None, args: list[Any] = None,
-                         kwargs: dict[Any, Any] = None) -> str:
-        result = ""
-
-        cmd = self._data_ensure__string(cmd)
-        cmd = self._data_eol__clear(cmd)
-
-        if prefix is None:
-            prefix = self.PREFIX or ""
-
-        if prefix and not cmd.startswith(prefix):
-            result += f"{prefix}"
-
-        result += f"{cmd}"
-
-        if args:
-            for arg in args:
-                result += f" {arg}"
-
-        if kwargs:
-            for key, value in kwargs.items():
-                result += f" {key}={value}"
-        return result
-
-    # BYTES -----------------------------------------------------------------------------------------------------------
-    @classmethod
-    def _bytes_eol__ensure(cls, data: bytes) -> Union[bytes, NoReturn]:
-        data = cls._data_eol__clear(data) + cls.EOL__SEND
-        return data
-
-    @classmethod
-    def _data_eol__clear(cls, data: AnyStr) -> Union[AnyStr, NoReturn]:
-        result: bytes = cls._data_ensure__bytes(data)
-        while True:
-            data_new = result.strip()
-            data_new = data_new.strip(cls.EOL__UNI_SET)
-            if not result or result == data_new:
-                break
-            result = data_new
-
-        if isinstance(data, str):
-            return cls._data_ensure__string(result)
-
-        return result
-
-    @classmethod
-    def _bytes_edition__apply(cls, data: bytes) -> bytes:
-        """not used so far!!!
-        need to handle editions used by hand in manual typing from terminal!
-        """
-        # TODO: finish or leave blank! its not so necessary!!! and seems a little bit hard to apply
-        return data
-
-    # BYTES/STR -------------------------------------------------------------------------------------------------------
-    @classmethod
-    def _data_ensure__bytes(cls, data: AnyStr) -> bytes:
-        if isinstance(data, bytes):
-            return data
-        else:
-            return bytes(data, encoding=cls.ENCODING)
-
-    @classmethod
-    def _data_ensure__string(cls, data: AnyStr) -> Union[str, NoReturn]:
-        """
-        EXCEPTION ORIGINAL VARIANT
-        --------------------------
-            cls = <class 'test__serial_server.Victim'>, data = b'\\x85RR__NAME_CMD_OR_PARAM
-
-                @classmethod
-                def _data_ensure__string(cls, data: AnyStr) -> Union[str, NoReturn]:
-                    if isinstance(data, bytes):
-            >           return data.decode(encoding=cls.ENCODING)
-            E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0x85 in position 0: invalid start byte
-
-            buses\serial_client.py:722: UnicodeDecodeError
-        """
-        # TODO: move to sepaarted module!
-        try:
-            if isinstance(data, bytes):
-                result = data.decode(encoding=cls.ENCODING)
-            else:
-                result = str(data)
-        except Exception as exc:
-            print(f"{exc!r}")
-            msg = f"[FAIL] decoding {data=}"
-            raise Exc_SerialRead_FailDecoding(msg)
-
-        # check printable ascii ------------------
-        for char in result:
-            if isinstance(char, bytes):
-                char = chr(char)
-            if char not in string.printable:
-                msg = f"[FAIL] decoding [{char=}]"
-                raise Exc_SerialRead_FailDecoding(msg)
-        # ----------------------------------------
-
-        return result
-
-    # R ---------------------------------------------------------------------------------------------------------------
-    # TODO: use wrapper for connect/disconnect!??? - NO!
-    def read_lines(self, _timeout: Optional[float] = None) -> list[TYPE__RW_ANSWER_SINGLE] | NoReturn:
-        result: list[str] = []
-        while True:
-            line = self.read_line(_timeout)
-            _timeout = self.TIMEOUT__READ or None
-            if line is None or str(line) == "":
-                break
-            else:
-                result.append(line)
-
-        return result
-
-    def read_line(self, _timeout: Optional[float] = None) -> Union[str, ValueUnit, NoReturn]:
-        """
-        read line from bus buffer,
-
-        CAREFUL
-        -------
-        DONT USE! IF WANT TO BE SURE!
-        instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
-
-        TODO: here possible rewrite by getting from history!!!
-        """
-        # FIXME: return Object??? need keep exc for not finished readline!!!
-        # var1: just read as usual - could cause error with not full bytes read in ONE CHAR!!!
-        # data = self._conn.readline()
-
-        # var2: char by char
-        data = b""
-        eol_received = False
-
-        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
-        while True:
-            new_char = None
-            for i in range(2):
-                new_char = self._conn.readline(1)
-                self._conn.timeout = self.TIMEOUT__READ or None  # set back - no need repiatiting
-                if new_char:
-                    break
-
-            if not new_char:
-                # print(f"detected finish line")
-                break
-            if new_char == b'\x7f':  # BACKSPACE
-                # LINE EDITION --------------
-                data = data[:-1]
-                continue
-
-            if new_char in self.EOL__UNI_SET:
-                # LINE FINISHED --------------
-                eol_received = True
-                if data:
-                    break
-                else:
-                    continue
-
-            data += new_char
-
-        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
-
-        # RESULT ----------------------
-        if data:
-            if not eol_received:
-                msg = f"[ERROR]NotFullLine read_line={data}->CLEAR!!!"
-                exc = Exc_SerialRead_NotFullLine(msg)
-                data = b""
-            else:
-                msg = f"[OK]read_line={data}"
-
-        else:
-            msg = f"[WARN]BLANK read_line={data}"
-
-        self.LOGGER.info(f"[{self._conn.port}.{self._conn.baudrate}]{msg}")
-
-        data = self._bytes_edition__apply(data)
-        data = self._data_eol__clear(data)
-        data = self._data_ensure__string(data)
-        self.history.add_data__stdout(data)
-        self.answer_is_fail(data)
-
-        # NOTE: dont delete! need to direct cmp
-        try:
-            # pass
-            data = ValueUnit_NoMulty(data)
-        except:
-            pass
-
-        return data
-
     # W ---------------------------------------------------------------------------------------------------------------
-    _COUNT_OPEN_EXCEPTIONS: int = 0  # this is just for testing/log meanings
-
     def _write(
             self,
             data: Union[AnyStr, list[AnyStr]],
@@ -794,7 +821,7 @@ class OLD__SerialClient:
         self.history.add_data__stdin(self._data_ensure__string(data))
 
         data = self._data_ensure__bytes(data)
-        data = self._bytes_eol__ensure(data)
+        data = self._data_bytes__eol_ensure(data)
 
         try:
             data_length = self._conn.write(data)
@@ -823,18 +850,7 @@ class OLD__SerialClient:
             self.LOGGER.error(f"[{self._conn.port}]{msg}")
             return False
 
-    def write_eol(self, eol: bytes = None) -> bool:
-        """
-        write without any conditions (no prefixes! no suffixes)!
-        GOAL
-        ----
-        finish any writen cmd and clear buffer
-        """
-        eol = eol or self.EOL__SEND
-        try:
-            return bool(self._conn.write(eol))
-        except:
-            return False
+
 
     def write_read(
             self,
@@ -920,78 +936,6 @@ class OLD__SerialClient:
             _timeout=_timeout,
         ).last_stdout_line
 
-    def write_read__last_validate(
-            self,
-            input: Union[str, list[str]] | None,    # fixme: rename!
-            expect: Union[Any, list[Any]],
-            prefix: Optional[str] = None,
-            args: Optional[list] = None,
-            kwargs: Optional[dict] = None,
-
-            retry_novalid: int | None = None,
-            _timeout: Optional[float] = None,
-            _as_regexp: Optional[bool] = None,
-    ) -> bool:
-        """
-        CREATED SPECIALLY FOR
-        ---------------------
-        1. address__validate
-
-        SOLVE PROBLEMS
-        --------------
-        communicate with wrong working devices!
-
-        :param expect: can be Any! even Valid/ValueUbit/ValueVariants as validation object!
-        """
-        if retry_novalid is None:
-            retry_novalid = self.REWRITEIF_NOVALID or 0
-
-        if isinstance(expect, (tuple, list, set, dict)):
-            expect_list = expect
-        else:
-            expect_list = [expect, ]
-
-        while retry_novalid >= 0:
-            if input:
-                output_last = self.write_read__last(
-                    data=input,
-                    prefix=prefix,
-                    args=args,
-                    kwargs=kwargs,
-                    retry_noanswer=0,  # use only retry_noanswer=0! so it would not multiplyed iterations
-                    _timeout=_timeout,
-                )
-            else:
-                outputs = self.read_lines(_timeout=_timeout)
-                if outputs:
-                    output_last = outputs[-1]
-                else:
-                    output_last = ""
-
-            for expect_var in expect_list:
-                if _as_regexp:
-                    if re.fullmatch(expect_var, str(output_last), flags=re.IGNORECASE):
-                        return True
-                else:
-                    if (
-                            str(output_last).lower() == str(expect_var).lower()
-                            or
-                            EqAux(output_last).check_doubleside__bool(expect_var)
-                    ):
-                        return True
-
-            retry_novalid -= 1
-            print(f"{retry_novalid=}")
-
-        return False
-
-    def write_read__last_validate_regexp(self, *args, **kwargs) -> bool:
-        """
-        created specially for address__validate
-        """
-        return self.write_read__last_validate(*args, **kwargs, _as_regexp=True)
-
-
     # =================================================================================================================
     def test__shorted(self):
         if not self.connect():
@@ -1006,78 +950,6 @@ class OLD__SerialClient:
             load = f"step{index}"
             print(load)
             assert self.write_read__last(load) == load
-
-    # =================================================================================================================
-    def __getattr__(self, item: str) -> Callable[..., Union[str, NoReturn]]:
-        """if no exists attr/meth
-
-        USAGE COMMANDS MAP
-        ==================
-
-        1. SHOW (optional) COMMANDS EXPLICITLY by annotations without values!
-        -----------------------------------------------------------------
-            class MySerialDevice(SerialClient):
-                IDN: Callable[[Any], TYPE__RW_ANSWER]
-                ADDR: Callable[[Any], TYPE__RW_ANSWER]
-                DUMP: Callable[[Any], TYPE__RW_ANSWER]
-
-        2. USE in code
-        --------------
-            dev = MySerialDevice()
-            dev.connect()
-            dev.IDN()       --> dev.write_read__last("IDN")
-            dev.VIN()       # dev.write_read__last("VIN")
-            dev.VIN(12)     # dev.write_read__last("VIN 12")
-            dev.VIN("12")   # dev.write_read__last("VIN 12")
-            dev.VIN("12 13")  # dev.write_read__last("VIN 12 13")
-            dev.VIN(12, 13)   # dev.write_read__last("VIN 12 13")
-            dev.VIN(CH1=12, CH2=13) # dev.write_read__last("VIN CH1=12 CH2=13")
-            dev.VIN(12, CH2=13)     # dev.write_read__last("VIN 12 CH2=13") by args/kwargs
-
-            # ALL VARIANTS
-            dev.VIN(11, CH2=13)
-            dev.VIN__11(22, CH2=13)
-            dev.send__VIN(11, CH2=13)
-            dev.send__VIN__11(22, CH2=13)
-
-            # KWARGS for WriteRead method
-            dev.TEST("HELLO", CH2=13, __timeout=5) --> dev.write_read__last("TEST CH2=13", _timeout=5) # note underscore
-
-        """
-        item_args = []  # args in getattr name
-
-        # 1=apply _GETATTR_STARTSWITH__SEND
-        if self._GETATTR_STARTSWITH__SEND and item.startswith(self._GETATTR_STARTSWITH__SEND):
-            item = item.replace(self._GETATTR_STARTSWITH__SEND, "")
-
-        # 2=apply args in getattrs name
-        if "__" in item:
-            item_splited = item.split(self._GETATTR_SPLITTER__ARGS)
-            item = item_splited[0]
-            item_args = item_splited[1:]
-
-        # 3=separate cmd/meth kwargs
-        # cand to it in here!
-
-        # 4=apply direct cmd
-        result = lambda *_args, **_kwargs: self.write_read__last(
-            data=self._create_cmd_line(
-                cmd=item,
-                args=[*item_args, *_args],
-                kwargs={k: v for k, v in _kwargs.items() if not k.startswith("_")}
-            ),
-            **{k[1:]: v for k, v in _kwargs.items() if k.startswith("_")}
-        )
-        return result
-
-    # =================================================================================================================
-    # USER COMMANDS
-    # -----------------------------------------------------------------------------------------------------------------
-    def reset(self, sleep_after: float = 1) -> None:
-        if self.connect__only_if_address_resolved():
-            self.write_read(self.CMD__RESET)
-            self._buffers_clear__read(sleep_after)
-        pass
 
 
 # =====================================================================================================================
