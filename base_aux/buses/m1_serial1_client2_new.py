@@ -39,7 +39,7 @@ class SerialClient2:
     EOL__UNI_SET: bytes = b"\r\n"
 
     # AUX -----------------------------------------------------
-    history: CmdHistory_Sync
+    history: list[dict[str, AnyStr]]
     _conn: Serial = None
 
     @property
@@ -65,7 +65,7 @@ class SerialClient2:
         if eol__send is not None:
             self.EOL__SEND = eol__send
 
-        self.history = CmdHistory_Sync()
+        self.history = []
 
     # ------------------------------------------------------------------
     def __enter__(self):
@@ -126,12 +126,14 @@ class SerialClient2:
     # RW CONVERTERS ====================================================================================================
     # BYTES ------------------------------------------------------------------------------------------------------------
     @classmethod
-    def _data_bytes__eol_ensure(cls, data: bytes) -> bytes | NoReturn:
+    def _data_bytes__eol_ensure(cls, data: bytes, eol: bytes | None = None) -> bytes | NoReturn:
         """
         GOAL
         prepare line for write
         """
-        data = cls._data_any__eol_clear(data) + cls.EOL__SEND
+        if eol is None:
+            eol = cls.EOL__SEND
+        data = cls._data_any__eol_clear(data) + eol
         return data
 
     @classmethod
@@ -282,6 +284,9 @@ class SerialClient2:
             else:
                 break
 
+        if data:
+            self.history.append({"read": data})
+
         return data
 
     def read_stings__all(self, timeout_start: float | None = None, timeout_stop: float | None = None) -> str | list[str]:
@@ -301,21 +306,11 @@ class SerialClient2:
         else:
             return data_lines
 
-
-
-
-
-
-
-
-
-
-
-
     # W ================================================================================================================
     def _write(
             self,
-            data: Union[AnyStr],
+            data: AnyStr | None = None,
+            eol: bytes | None = None,
     ) -> bool:
         """
         just send data into bus!
@@ -325,37 +320,26 @@ class SerialClient2:
 
         args/kwargs - used only for single line!!!
         """
-        # SINGLE ---------------------
-        self.history.add_data__stdin(self._data_ensure__string(data))
+        self._buffers_clear_2__read()
 
         data = self._data_ensure__bytes(data)
-        data = self._data_bytes__eol_ensure(data)
+        data = self._data_bytes__eol_ensure(data, eol)
 
+        if not data:
+            return False
+
+        data_length = 0
         try:
             data_length = self._conn.write(data)
             msg = f"[OK]write={data}/{data_length=}"
         except Exception as exc:
             msg = f"[FAIL]write={data}/{exc!r}"
-            self.LOGGER.warning(f"[{self._conn.port}]{msg}")
-
-            if isinstance(exc, (PortNotOpenError, SerialException)):
-                self._COUNT_OPEN_EXCEPTIONS += 1
-                try:
-                    self._conn.open()
-                    # self.connect()
-                except:
-                    return False
-                    # raise exc
-                # raise exc   # here need reconnection!
-
-            return False
 
         if data_length > 0:
-            self.LOGGER.info(f"[{self._conn.port}]{msg}")
+            self.history.append({"write": data})
             return True
         else:
             msg = f"[ERROR] write {data}"
-            self.LOGGER.error(f"[{self._conn.port}]{msg}")
             return False
 
     # W=SPECIAL -------------------------------------------------------------------------------------------------------
@@ -366,22 +350,17 @@ class SerialClient2:
         ----
         finish any writen cmd and clear buffer
         """
-        eol = eol or self.EOL__SEND
-        try:
-            return bool(self._conn.write(eol))
-        except:
-            return False
+        return self._write(eol=eol)
 
     def send__break(self, duration: float = 0.25) -> None:
         """Send a BREAK condition."""
-        if self.check__connected():
-            self._conn.send_break(duration)
+        self._conn.send_break(duration)
 
-    def send__ctrl_c(self) -> None:
+    def send__ctrl_c(self) -> bool:
         """Send the Ctrl+C character (0x03)."""
-        self.write_bytes(b'\x03')
+        return self._write(b'\x03', eol=b"")
 
-    def send__ctrl(self, char: Union[str, int]) -> None:
+    def send__ctrl(self, char: Union[str, int]) -> bool:
         """
         Send a control character: e.g. send_ctrl('C') -> 0x03,
         send_ctrl(0x1A) -> 0x1A.
@@ -391,20 +370,28 @@ class SerialClient2:
             code = ord(char.upper()) - ord('A') + 1
         else:
             code = int(char) & 0x1F
-        self.write_bytes(bytes([code]))
+        return self._write(bytes([code]), eol=b"")
+
+    # WR ===============================================================================================================
+    def write_read(
+            self,
+            data: AnyStr | None = None,
+            eol: bytes | None = None,
+    ) -> str | list[str]:
+        self._write(data, eol)
+        return self.read_stings__all()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def validate__wr_schema(self, schema: dict[str, str]) -> bool:
-        pass
-
-
-
-
-
+    def validate__wr_schema(self, schema: dict[AnyStr, str | Base_EqValid | list [str | Base_EqValid]]) -> bool:
+        for (request, response_expected) in schema.items():
+            response_actual = self.write_read(request)
+            if response_actual != response_expected:
+                return False
+        return True
 
 
 # ======================================================================================================================
-# TODO: SINGLETON!!!
+# TODO: make SINGLETON!!!
 class SerialManager:
     _ADDRESSES__SYSTEM: list[str] | None = None
     _ADDRESSES__SHORTED: list[str] | None = None
@@ -568,22 +555,6 @@ class SerialManager:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # =====================================================================================================================
 class OLD__SerialClient:
     # -------------------------------------------------------------------------------------------------------------------
@@ -645,171 +616,6 @@ class OLD__SerialClient:
         SerialClient2.ADDRESSES__PAIRED = result
         print(f"{SerialClient2.ADDRESSES__PAIRED=}")
         return result
-
-    # VALIDATION ------------------------------------------------------------------------------------------------------
-    def _address__validate_shorted(self) -> bool | None:
-        """
-        this is the internal method! for autodetect shorted address
-        """
-        load = "FIND__SHORTED"
-        return self.write_read__last_validate(load, load)
-
-    # =================================================================================================================
-    @classmethod
-    def addresses_dump__answers(cls, *cmds: str | Any) -> dict[str, dict[str, str]]:
-        """
-        GOAL
-        ----
-        get several answers from all ports
-        for further decisions
-
-        SPECIALLY CREATED FOR
-        ---------------------
-        quick detecting devices on testplans
-
-        NOTE
-        ----
-        basically used common requests
-        """
-        cmds = [*map(str, cmds)]
-
-        # THREADS ---------
-        threads = {}
-        for address in cls.ADDRESSES__FREE:
-
-            obj = cls()
-            obj.baudrate = cls.BAUDRATE
-            obj.timeout = cls.TIMEOUT__READ
-            obj.REWRITEIF_READNOANSWER = 0
-            obj.REWRITEIF_READFAILDECODE = 1
-            obj.REWRITEIF_NOVALID = 0
-
-            lambda_list = LambdaListThread([
-                Lambda(obj.connect, address),
-                *[Lambda(obj.write_read__last, cmd) for cmd in cmds],
-                obj._address__release,
-                obj.disconnect,
-                ],
-            )
-            threads.update({address: lambda_list})
-            lambda_list.start()
-
-        # RESULTS ---------
-        result = {}
-        for port, thread in threads.items():
-            thread.wait()
-            result.update({port: {}})
-            for obj in thread.LAMBDAS:
-                if obj.ARGS and obj.ARGS[0] in cmds:
-                    result[port].update({obj.ARGS[0]: obj.RESULT})
-
-        return result
-
-    # RW ==============================================================================================================
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-
-    def write_read(
-            self,
-            data: Union[AnyStr, list[AnyStr]],
-            prefix: Optional[str] = None,
-            args: Optional[list] = None,
-            kwargs: Optional[dict] = None,
-
-            retry_noanswer: int | None = None,
-            _timeout: Optional[float] = None,
-    ) -> Union[CmdHistory_Sync, NoReturn]:
-        """
-        send data and return history
-
-        CAREFUL
-        -------
-        in this case you can get incorrect but printable chars!!!
-        DONT USE! IF WANT TO BE SURE!
-        instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
-        """
-        history = CmdHistory_Sync()
-
-        # LIST -------------------------
-        if isinstance(data, (list, tuple,)):
-            for data_i in data:
-                history_i = self.write_read(data_i, prefix=prefix, args=args, kwargs=kwargs,
-                                            retry_noanswer=retry_noanswer)
-                history._add_history(history_i)
-        else:
-            # SINGLE LAST -----------------------
-            data_o = []
-            remain__retry_decode = self.REWRITEIF_READFAILDECODE or 0
-            while remain__retry_decode >= 0 and remain__retry_noanswer >= 0:
-                # if self._COUNT_OPEN_EXCEPTIONS > 0:
-                #     return
-
-                if self._write(data=data, prefix=prefix, args=args, kwargs=kwargs):
-                    try:
-                        data_o = self.read_lines(_timeout=_timeout)
-                        if data_o:  # here are validated string data!   # NEED ALWAYS GET ANYTHING IN RESPONSE
-                            break
-                        else:
-                            remain__retry_noanswer -= 1
-
-                    except Exc_SerialRead_FailDecoding:
-                        remain__retry_decode -= 1
-
-                    self.buffers_clear()
-            history.add_data__stdioe(self._data_ensure__string(data), data_o)
-
-        # RESULT ----------------------------
-        return history
-
-    def write_read__last(
-            self,
-            data: Union[AnyStr, list[AnyStr]],
-            prefix: Optional[str] = None,
-            args: Optional[list] = None,
-            kwargs: Optional[dict] = None,
-
-            retry_noanswer: int | None = None,
-            _timeout: Optional[float] = None,
-    ) -> Union[str, NoReturn]:
-        """
-        it is created specially for single cmd usage! but decided leave multy cmd usage as feature.
-        return always last_output
-
-        CAREFUL
-        -------
-        in this case you can get incorrect but printable chars!!!
-        DONT USE! IF WANT TO BE SURE!
-        instead use write_read__last_validate!!! it would rewrite data if not valid answer (even with incorrect but good decoding)!!!
-        """
-        return self.write_read(
-            data=data,
-            prefix=prefix,
-            args=args,
-            kwargs=kwargs,
-            retry_noanswer=retry_noanswer,
-            _timeout=_timeout,
-        ).last_stdout_line
-
-    # =================================================================================================================
-    def test__shorted(self):
-        if not self.connect():
-            msg = f"[ERROR] not found PORT shorted by Rx+Tx"
-            print(msg)
-            raise Exception(msg)
-
-        # START WORKING ------------------
-        index = 0
-        while True:
-            index += 1
-            load = f"step{index}"
-            print(load)
-            assert self.write_read__last(load) == load
-
 
 # =====================================================================================================================
 def _explore():
