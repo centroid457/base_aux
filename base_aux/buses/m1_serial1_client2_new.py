@@ -128,7 +128,10 @@ class SerialClient2:
 
     # RW CONVERTERS ====================================================================================================
     # BYTES/STR --------------------------------------------------------------------------------------------------------
-    def _to_bytes(self, data: AnyStr) -> bytes:
+    def _to_bytes(self, data: AnyStr | None) -> bytes:
+        if data is None:
+            data = b""
+
         if isinstance(data, bytes):
             return data
 
@@ -235,57 +238,63 @@ class SerialClient2:
         self._buffers_clear_2__read()
 
     # R ================================================================================================================
-    def _wait_data(self, timeout: float) -> bool | NoReturn:
+    def read(
+            self,
+            timeout_start: Optional[float] = None,
+            timeout_continue: Optional[float] = None,
+            timeout_full: Optional[float] = None,
+    ) -> bytes:
         """
-        GOAL
-        wait data in read buffer with timeout
+        Прочитать все доступные данные из порта.
+        Сначала ждём появления данных в течение timeout_start.
+        Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
+        Возвращает прочитанные байты.
         """
-        time_start = time.time()
-        step = min(timeout/10, 1)
-        step = max(step, 0.1)
-        while True:
-            if self._conn.in_waiting:
-                return True
-            if time.time() > time_start + timeout:
-                return False
-            time.sleep(step)
+        if not self.check__connected():
+            print("Port not connected")
+            return b""
 
-    def _read_bytes__all(self, timeout_start: float | None = None, timeout_stop: float | None = None) -> bytes:
-        data: bytes = b""
+        t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
+        t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
+
+        # Сохраняем текущий таймаут, чтобы потом восстановить
+        old_timeout = self._conn.timeout
+
+        time_start = time.time()
+        data = b""
         while True:
-            if self._wait_data(timeout_start if data == b"" else timeout_stop):
-                read_i = self._conn.read(self._conn.in_waiting)
-                data += read_i
-            else:
+            # Ждём появления данных или таймаут
+            self._conn.timeout = t_start if data == b"" else t_cont
+            chunk = self._conn.read(self._conn.in_waiting or 1)
+            if not chunk:
+                break
+            data += chunk
+            if timeout_full and time_start + timeout_full > time.time():
+                # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
                 break
 
-        if data:
-            self.history.append({"read": data})
+        # Восстанавливаем таймаут
+        self._conn.timeout = old_timeout
 
+        self.history.append({"read": data})
+        print(f"Read {len(data)} bytes: {data!r}")
         return data
 
-    def read_stings__all(self, timeout_start: float | None = None, timeout_stop: float | None = None) -> str | list[str]:
+    def read_lines(self, **kwargs) -> Union[str, List[str]]:
         """
-        GOAL
-
-        RETURN
-            str - if one line read
-            list[str] - if several lines read
+        Прочитать данные и разбить на строки.
+        Если получена одна строка – возвращает str, иначе список строк.
         """
-        data_bytes = self._read_bytes__all(timeout_start, timeout_stop)
-
-        data_str = self._to_str(data_bytes)
-        data_lines = self._split_lines(data_str)
-        if len(data_lines) == 1:
-            return data_lines[0]
-        else:
-            return data_lines
+        raw = self.read(**kwargs)
+        lines = self._split_lines(raw)
+        return lines[0] if len(lines) == 1 else lines
 
     # W ================================================================================================================
-    def _write(
+    def write(
             self,
             data: AnyStr | None = None,
             eol: bytes | None = None,
+            clear_input_first: bool = True,
     ) -> bool:
         """
         just send data into bus!
@@ -295,26 +304,31 @@ class SerialClient2:
 
         args/kwargs - used only for single line!!!
         """
-        self._buffers_clear_2__read()
-
-        data = self._to_bytes(data)
-        data = self._eol_ensure(data, eol)
-
-        if not data:
+        if not self.check__connected():
+            print("Port not connected")
             return False
 
-        data_length = 0
-        try:
-            data_length = self._conn.write(data)
-            msg = f"[OK]write={data}/{data_length=}"
-        except Exception as exc:
-            msg = f"[FAIL]write={data}/{exc!r}"
+        if clear_input_first:
+            self._buffers_clear_2__read()
 
-        if data_length > 0:
-            self.history.append({"write": data})
-            return True
+        raw = self._to_bytes(data)
+        raw = self._eol_ensure(raw, eol)
+
+        if not raw:
+            return False
+
+        written = 0
+        try:
+            written = self._conn.write(raw)
+            msg = f"[OK]write={raw}/{written=}"
+        except Exception as exc:
+            msg = f"[FAIL]write={raw}/{exc!r}"
+
+        if written > 0:
+            self.history.append({"write": raw})
+            return written == len(raw)
         else:
-            msg = f"[ERROR] write {data}"
+            msg = f"[ERROR] write {raw}"
             return False
 
     # W=SPECIAL -------------------------------------------------------------------------------------------------------
@@ -325,7 +339,7 @@ class SerialClient2:
         ----
         finish any writen cmd and clear buffer
         """
-        return self._write(eol=eol)
+        return self.write(eol=eol)
 
     def send__break(self, duration: float = 0.25) -> None:
         """Send a BREAK condition."""
@@ -333,7 +347,7 @@ class SerialClient2:
 
     def send__ctrl_c(self) -> bool:
         """Send the Ctrl+C character (0x03)."""
-        return self._write(b'\x03', eol=b"")
+        return self.write(b'\x03', eol=b"")
 
     def send__ctrl(self, char: Union[str, int]) -> bool:
         """
@@ -341,20 +355,22 @@ class SerialClient2:
         send_ctrl(0x1A) -> 0x1A.
         """
         if isinstance(char, str) and len(char) == 1:
-            # ASCII control: uppercase letter
-            code = ord(char.upper()) - ord('A') + 1
+            code = (ord(char.upper()) - ord('A') + 1) & 0x1F
         else:
             code = int(char) & 0x1F
-        return self._write(bytes([code]), eol=b"")
+        return self.write(bytes([code]), eol=b"")
 
     # WR ===============================================================================================================
     def write_read(
-            self,
-            data: AnyStr | None = None,
-            eol: bytes | None = None,
-    ) -> str | list[str]:
-        self._write(data, eol)
-        return self.read_stings__all()
+        self,
+        data: AnyStr | None = None,
+        eol: Optional[bytes] = None,
+        clear_input_first: bool = True,
+        **read_kwargs
+    ) -> Union[str, List[str]]:
+        """Записать команду и сразу прочитать ответ (строки)."""
+        self.write(data, eol, clear_input_first)
+        return self.read_lines(**read_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
     def validate__wr_schema(self, schema: dict[AnyStr, str | Base_EqValid | list [str | Base_EqValid]]) -> bool:
@@ -567,7 +583,7 @@ class OLD__SerialClient:
         while len(instances_free_remain) > 1:
             # take one port --------
             master = instances_free_remain.pop(0)
-            _write_success = master._write(load)
+            _write_success = master.write(load)
             master.disconnect()
             time.sleep(0.5)
 
