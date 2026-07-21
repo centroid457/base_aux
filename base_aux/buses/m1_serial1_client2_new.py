@@ -59,6 +59,13 @@ class SerialClient2:
         cls._instances[address] = instance
         return instance
 
+    def __str__(self):
+        "Serial<id=0x27f984c8640, open=False>(port='COM16', baudrate=9600"
+        return f"{self.__class__.__name__}({self.ADDRESS},open={self.check__connected()})"
+
+    def __repr__(self):
+        return str(self)
+
     # INIT =============================================================================================================
     def __init__(
             self,
@@ -110,28 +117,32 @@ class SerialClient2:
     def connect(self) -> bool:
         if self.check__connected():
             return True
-
         try:
             self._conn = Serial(
                 port=self.ADDRESS,
                 baudrate=self.baudrate,
                 timeout=self.timeout_read_initial,
-                write_timeout=None,            # блокирующая запись
+                write_timeout=None,
             )
             return True
-        except Exception as exc:
-            print(f"{exc!r}")
-
-            if "FileNotFoundError" in str(exc):
-                msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._conn}"
-            elif "Port must be configured before" in str(exc):
-                msg = f"[ERROR] PORT NOT CONFIGURED {self._conn}"
-            elif "PermissionError" in str(exc):
-                msg = f"[ERROR] PORT ALREADY OPENED {self._conn}"
+        except SerialException as e:
+            cause = e.__cause__ or e.__context__
+            if cause and isinstance(cause, FileNotFoundError):
+                print(f"Port {self.ADDRESS} does not exist")
+            elif cause and isinstance(cause, PermissionError):
+                print(f"Permission denied for {self.ADDRESS} (maybe open)")
             else:
-                msg = f"[ERROR] PORT OTHER ERROR {self._conn}"
-
-            print(msg)
+                # fallback на текст
+                msg = str(e).lower()
+                if "file not found" in msg or "no such file" in msg:
+                    print(f"Port {self.ADDRESS} does not exist")
+                elif "permission denied" in msg or "access denied" in msg:
+                    print(f"Permission denied for {self.ADDRESS}")
+                else:
+                    print(f"Serial error on {self.ADDRESS}: {e}")
+            return False
+        except Exception as e:
+            print(f"Unexpected error: {e}")
             return False
 
     # -----------------------------------------------------------------
@@ -308,8 +319,9 @@ class SerialClient2:
         # Восстанавливаем таймаут
         self._conn.timeout = old_timeout
 
-        self.history.append({"read": data})
-        print(f"Read {len(data)} bytes: {data!r}")
+        msg = {"read": data}
+        self.history.append(msg)
+        print(f"{self}{msg}")
         return data
 
     def read_lines(self, **kwargs) -> Union[str, List[str]]:
@@ -357,7 +369,9 @@ class SerialClient2:
             msg = f"[FAIL]write={raw}/{exc!r}"
 
         if written > 0:
-            self.history.append({"write": raw})
+            msg = {"write": raw}
+            self.history.append(msg)
+            print(f"{self}{msg}")
             return written == len(raw)
         else:
             msg = f"[ERROR] write {raw}"
@@ -438,7 +452,8 @@ class SerialClient2:
 
 # ======================================================================================================================
 class SerialManager:
-    _ADDRESSES__SYSTEM: list[str] = []
+    _ADDRESSES__CACHED: list[str] = []
+    SCHEMA_SHORTED = [("echoTest", "echoTest"), ]
 
     # ------------------------------------------------------------------------------------------------------------------
     _instance = None
@@ -453,18 +468,17 @@ class SerialManager:
         if self._initialized:
             return
         self._initialized = True
-        self._cached_ports: Optional[List[str]] = None
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def ADDRESSES__SYSTEM(self) -> list[str]:
-        if self._ADDRESSES__SYSTEM is None:
+    def ADDRESSES__CASHED(self) -> list[str]:
+        if self._ADDRESSES__CACHED is None:
             self.detect__addresses_system()
 
-        return self._ADDRESSES__SYSTEM
+        return self._ADDRESSES__CACHED
 
     def count__addresses_system(self) -> int:
-        return len(self.ADDRESSES__SYSTEM)
+        return len(self.ADDRESSES__CASHED)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -479,16 +493,19 @@ class SerialManager:
     @staticmethod
     def check__address_exists(address: str) -> bool:
         try:
-            conn = Serial(address)
-            conn.close()
-        except FileNotFoundError as exc:
-            print(f"{exc!r}")
+            s = Serial(address)
+            s.close()
+            return True
+        except SerialException as e:
+            msg = str(e).lower()
+            # Признаки того, что порта нет
+            if "file not found" in msg or "no such file" in msg or "не удается найти" in msg:
+                return False
+            # Если порт занят, нет прав, или другая ошибка – считаем, что порт существует
+            return True
+        except Exception:
+            # Любая другая неожиданная ошибка – считаем, что порта нет (безопаснее)
             return False
-        except Exception as exc:
-            print(f"{exc!r}")
-            pass    # any other exc is OK!
-
-        return True
 
     # ------------------------------------------------------------------------------------------------------------------
     def gen__not_occupied(
@@ -497,7 +514,7 @@ class SerialManager:
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for addr in self.ADDRESSES__SYSTEM:
+        for addr in self._ADDRESSES__CACHED:
             obj = SerialClient2(addr, **init_kwargs)
             if not obj.check__occupied():
                 result.append(obj)
@@ -522,11 +539,11 @@ class SerialManager:
     ) -> list[SerialClient2]:
         result = []
         for obj in self.gen__not_occupied(**init_kwargs):
-            if obj.validate__wr_schema(schema):
-                result.append(obj)
-                if len(result) == count:
-                    break
-
+            with obj:
+                if obj.validate__wr_schema(schema):
+                    result.append(obj)
+                    if len(result) == count:
+                        break
         return result
 
     def gen__not_occupied__validated_first(
@@ -544,32 +561,32 @@ class SerialManager:
             count: int | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
-        return self.gen__not_occupied__validated(schema=[("echoTest", "echoTest"), ], count=count, **init_kwargs)
-
+        return self.gen__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
 
     def gen__not_occupied__shorted_first(
             self,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.gen__not_occupied__validated(schema=[("echoTest", "echoTest"), ], count=1, **init_kwargs)
+        data = self.gen__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
         if data:
             return data[0]
 
     # DETECT ----------------------------------------------------------------------------------------------------------
-    @classmethod
-    def detect__addresses_system(cls) -> list[str]:
+    def detect__addresses_system(self) -> list[str]:
         # WORK -------------------------------------------------------
-        cls._ADDRESSES__SYSTEM.clear()
-        cls._ADDRESSES__SYSTEM.extend(cls._detect__addresses_system_1__standard_method())
-        cls._ADDRESSES__SYSTEM.extend(cls._detect__addresses_system_2__direct_access())
+        self._ADDRESSES__CACHED.clear()
+        self._ADDRESSES__CACHED.extend(self._detect__addresses_system_1__standard_method())
+        for name in self._detect__addresses_system_2__direct_access():
+            if name not in self._ADDRESSES__CACHED:
+                self._ADDRESSES__CACHED.append(name)
 
         # result -------------------------------------------------------
-        if cls._ADDRESSES__SYSTEM:
-            print(f"[OK] detected serial ports {cls._ADDRESSES__SYSTEM}")
+        if self.ADDRESSES__CASHED:
+            print(f"[OK] {self.ADDRESSES__CASHED=}")
         else:
             print("[WARN] detected no serial ports")
 
-        return cls._ADDRESSES__SYSTEM
+        return self._ADDRESSES__CACHED
 
     @staticmethod
     def _detect__addresses_system_1__standard_method() -> list[str] | NoReturn:
@@ -669,7 +686,8 @@ class SerialManager:
 def _explore__shorted():
     victim = SerialManager().detect__addresses_system()
     print(victim)
-
+    victim = SerialManager().gen__not_occupied__shorted()
+    print(victim)
 
 
 def _explore_Atc():
