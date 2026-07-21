@@ -30,8 +30,8 @@ class SerialClient2:
     __ADDRESS: str
 
     # need NONE NOT 0!!! if wait always!!
-    TIMEOUT_READ_INITIAL = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
-    TIMEOUT_READ_CONTINUE = 0.05 # пауза между чтениями после появления данных
+    TIMEOUT_READ_INITIAL: float = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
+    TIMEOUT_READ_CONTINUE: float = 0.05 # пауза между чтениями после появления данных
     BAUDRATE: int = 9600  # 115200
 
     # rare INFRASTRUCTURE -------
@@ -87,20 +87,19 @@ class SerialClient2:
                 write_timeout=None,            # блокирующая запись
             )
             return True
+        except FileNotFoundError as exc:
+            print(f"Port {self.ADDRESS} does not exist{self._conn}/{exc!r}")
+        except PermissionError as exc:
+            print(f"Permission denied for port {self.ADDRESS} (maybe already open){self._conn}/{exc!r}")
+        except SerialException as exc:
+            print(f"Serial error on {self.ADDRESS}: {self._conn}/{exc!r}")
         except Exception as exc:
-            print(f"{exc!r}")
-
-            if "FileNotFoundError" in str(exc):
-                msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._conn}"
-            elif "Port must be configured before" in str(exc):
+            print(f"[ERROR] PORT OTHER ERROR: {self._conn}/{exc!r}")
+            if "Port must be configured before" in str(exc):
                 msg = f"[ERROR] PORT NOT CONFIGURED {self._conn}"
-            elif "PermissionError" in str(exc):
-                msg = f"[ERROR] PORT ALREADY OPENED {self._conn}"
-            else:
-                msg = f"[ERROR] PORT OTHER ERROR {self._conn}"
+                print(msg)
 
-            print(msg)
-            return False
+        return False
 
     # -----------------------------------------------------------------
     def reconnect(self) -> bool:
@@ -135,7 +134,7 @@ class SerialClient2:
         if isinstance(data, bytes):
             return data
 
-        return bytes(data, encoding=self.encoding)
+        return data.encode(self.encoding)
 
     def _to_str(self, data: AnyStr) -> str | NoReturn:
         """
@@ -202,29 +201,29 @@ class SerialClient2:
         return result
 
     # BUFFERS ----------------------------------------------------------------------------------------------------------
-    def _buffers_clear_1__write(self) -> None:
-        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
-
-        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
-        """
-        try:
-            self._write__eol()
-            self._conn.reset_input_buffer()
-        except:
-            pass
-
-    def _buffers_clear_2__read(self, _timeout: Optional[float] = None) -> None:
-        self._conn.timeout = _timeout or self.TIMEOUT_READ_INITIAL or None
-        while True:
-            try:
-                if not self._conn.readall():
-                    break
-            except:
-                pass
-            time.sleep(0.1)
-
-        self._conn.timeout = self.TIMEOUT_READ_INITIAL or None  # set back - final
-        self._conn.reset_output_buffer()
+    # def _buffers_clear_1__write(self) -> None:
+    #     """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+    #
+    #     here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
+    #     """
+    #     try:
+    #         # self._write__eol()    # danger!
+    #         self._conn.reset_input_buffer()
+    #     except:
+    #         pass
+    #
+    # def _buffers_clear_2__read(self, _timeout: Optional[float] = None) -> None:
+    #     # self._conn.timeout = _timeout or self.TIMEOUT_READ_INITIAL or None
+    #     # while True:
+    #     #     try:
+    #     #         if not self._conn.readall():
+    #     #             break
+    #     #     except:
+    #     #         pass
+    #     #     time.sleep(0.1)
+    #     #
+    #     # self._conn.timeout = self.TIMEOUT_READ_INITIAL or None  # set back - final
+    #     self._conn.reset_output_buffer()
 
     def buffers_clear(self) -> None:
         """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
@@ -234,11 +233,11 @@ class SerialClient2:
         if not self.check__connected():
             return
 
-        self._buffers_clear_1__write()
-        self._buffers_clear_2__read()
+        self._conn.reset_input_buffer()
+        self._conn.reset_output_buffer()
 
     # R ================================================================================================================
-    def read(
+    def read_bytes(
             self,
             timeout_start: Optional[float] = None,
             timeout_continue: Optional[float] = None,
@@ -269,7 +268,7 @@ class SerialClient2:
             if not chunk:
                 break
             data += chunk
-            if timeout_full and time_start + timeout_full > time.time():
+            if timeout_full and time_start + timeout_full < time.time():
                 # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
                 break
 
@@ -285,12 +284,12 @@ class SerialClient2:
         Прочитать данные и разбить на строки.
         Если получена одна строка – возвращает str, иначе список строк.
         """
-        raw = self.read(**kwargs)
+        raw = self.read_bytes(**kwargs)
         lines = self._split_lines(raw)
         return lines[0] if len(lines) == 1 else lines
 
     # W ================================================================================================================
-    def write(
+    def write_bytes(
             self,
             data: AnyStr | None = None,
             eol: bytes | None = None,
@@ -309,7 +308,7 @@ class SerialClient2:
             return False
 
         if clear_input_first:
-            self._buffers_clear_2__read()
+            self._conn.reset_input_buffer()
 
         raw = self._to_bytes(data)
         raw = self._eol_ensure(raw, eol)
@@ -339,7 +338,7 @@ class SerialClient2:
         ----
         finish any writen cmd and clear buffer
         """
-        return self.write(eol=eol)
+        return self.write_bytes(eol=eol)
 
     def send__break(self, duration: float = 0.25) -> None:
         """Send a BREAK condition."""
@@ -347,7 +346,7 @@ class SerialClient2:
 
     def send__ctrl_c(self) -> bool:
         """Send the Ctrl+C character (0x03)."""
-        return self.write(b'\x03', eol=b"")
+        return self.write_bytes(b'\x03', eol=b"")
 
     def send__ctrl(self, char: Union[str, int]) -> bool:
         """
@@ -358,35 +357,72 @@ class SerialClient2:
             code = (ord(char.upper()) - ord('A') + 1) & 0x1F
         else:
             code = int(char) & 0x1F
-        return self.write(bytes([code]), eol=b"")
+        return self.write_bytes(bytes([code]), eol=b"")
 
     # WR ===============================================================================================================
-    def write_read(
+    def write_read_bytes(
         self,
-        data: AnyStr | None = None,
+        data: bytes | None = None,
         eol: Optional[bytes] = None,
         clear_input_first: bool = True,
         **read_kwargs
-    ) -> Union[str, List[str]]:
+    ) -> bytes:
         """Записать команду и сразу прочитать ответ (строки)."""
-        self.write(data, eol, clear_input_first)
+        self.write_bytes(data, eol, clear_input_first)
+        return self.read_bytes(**read_kwargs)
+
+    def write_read_lines(
+            self,
+            data: AnyStr | None = None,
+            eol: Optional[bytes] = None,
+            clear_input_first: bool = True,
+            **read_kwargs
+    ) -> str | list[str]:
+        """Записать (с автоматическим преобразованием) и прочитать строки."""
+        self.write_bytes(data, eol, clear_input_first)
         return self.read_lines(**read_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def validate__wr_schema(self, schema: dict[AnyStr, str | Base_EqValid | list [str | Base_EqValid]]) -> bool:
+    def get__wr_responses(self, lines: list[AnyStr]) -> dict[AnyStr, list[str]]:
+        result = {}
+        for line in lines:
+            try:
+                responce = self.write_read_lines(line)
+            except Exception as exc:
+                responce = f"{exc!r}"
+
+            result[line] = responce
+
+        return result
+
+    def validate__wr_schema(self, schema: dict[AnyStr, str | Base_EqValid | list[str | Base_EqValid]]) -> bool:
         for (request, response_expected) in schema.items():
-            response_actual = self.write_read(request)
+            response_actual = self.write_read_lines(request)
             if response_actual != response_expected:
                 return False
         return True
 
 
 # ======================================================================================================================
-# TODO: make SINGLETON!!!
 class SerialManager:
     _ADDRESSES__SYSTEM: list[str] | None = None
     _ADDRESSES__SHORTED: list[str] | None = None
     _ADDRESSES__PAIRED: list[tuple[str, str]] | None = None
+
+    # ------------------------------------------------------------------------------------------------------------------
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self):
+        if self._initialized:
+            return
+        self._initialized = True
+        self._cached_ports: Optional[List[str]] = None
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -421,14 +457,24 @@ class SerialManager:
         try:
             conn = Serial(address)
             conn.close()
-            return True
+        except FileNotFoundError as exc:
+            print(f"{exc!r}")
+            return False
         except Exception as exc:
             print(f"{exc!r}")
+            pass    # any other exc is OK!
 
-            if "FileNotFoundError" in str(exc):
-                return False
-            else:
-                return True
+        return True
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def gen__first_free(self) -> SerialClient2 | None:
+        pass
+
+    def gen__first_shorted(self) -> SerialClient2 | None:
+        pass
+
+    def gen__first_validated(self) -> SerialClient2| None:
+        pass
 
     # DETECT ----------------------------------------------------------------------------------------------------------
     @classmethod
@@ -540,70 +586,6 @@ class SerialManager:
 
         return result
 
-    # ------------------------------------------------------------------------------------------------------------------
-
-
-# =====================================================================================================================
-class OLD__SerialClient:
-    # -------------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def ___addresses_shorted__detect(cls) -> list[str]:
-        # WORK ----------------------------------------------
-        result = []
-        for address in cls.detect__addresses_system():
-            obj = SerialClient2()
-            if obj.connect(address=address, _raise=False):
-                if obj._address__validate_shorted():
-                    result.append(address)
-                obj.disconnect()
-
-        SerialClient2.ADDRESSES__SHORTED = result
-        print(f"{SerialClient2.ADDRESSES__SHORTED=}")
-        return result
-
-    @classmethod
-    def ___addresses_paired__detect(cls) -> list[tuple[str, str]]:
-        # FIXME: IT SEEMS NOT WORKING!!!
-        if cls.count__addresses_system() < 2:
-            return []
-
-        # WORK ----------------------------------------------
-        load = "EXPECT_ANSWER__PAIRED"
-        result = []
-        instances_free_remain = []
-
-        system_ports = cls.detect__addresses_system()
-
-        # CONNECT ALL -----
-        for address in system_ports:
-            instance = SerialClient2()
-            if instance.connect(address=address, _raise=False):
-                instances_free_remain.append(instance)
-
-        while len(instances_free_remain) > 1:
-            # take one port --------
-            master = instances_free_remain.pop(0)
-            _write_success = master.write(load)
-            master.disconnect()
-            time.sleep(0.5)
-
-            # try found pair ------
-            for index, slave in enumerate(instances_free_remain):
-                read_lines = slave.read_lines(_timeout=2)
-                if read_lines:
-                    if read_lines[-1] == load or list(read_lines)[-1] == load:
-                        result.append((master._conn.port, slave._conn.port))
-                        instances_free_remain.pop(index)
-                        slave.disconnect()
-                        break
-
-        # disconnect all remain ---------
-        for remain in instances_free_remain:
-            remain.disconnect()
-
-        SerialClient2.ADDRESSES__PAIRED = result
-        print(f"{SerialClient2.ADDRESSES__PAIRED=}")
-        return result
 
 # =====================================================================================================================
 def _explore():
@@ -612,7 +594,7 @@ def _explore():
         BAUDRATE = 115200
         EOL__SEND = b"\n"
 
-    result = Dev.addresses_dump__answers("*:get name", "*:get addr")
+    result = Dev().get__wr_responses(["*:get name", "*:get addr"])
 
     print(f"="*100)
     print(f"="*100)
