@@ -15,7 +15,11 @@ from base_aux.base_lambdas.m3_lambda4_list import *
 from base_aux.cmds.m2_history import CmdHistory_Sync
 
 
-# =====================================================================================================================
+# ======================================================================================================================
+TYPING__WR_SCHEMA_VALIDATE = list[tuple[AnyStr, str | Base_EqValid | list[str | Base_EqValid]]]
+
+
+# ======================================================================================================================
 class SerialClient2:
     """
     CONSTRAINTS
@@ -27,7 +31,8 @@ class SerialClient2:
     3/
     """
     # SETTINGS ------------------------------------------------
-    __ADDRESS: str
+    __address: str
+    __occupied: bool = False
 
     # need NONE NOT 0!!! if wait always!!
     TIMEOUT_READ_INITIAL: float = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
@@ -41,9 +46,20 @@ class SerialClient2:
 
     @property
     def ADDRESS(self) -> str:
-        return self.__ADDRESS
+        return self.__address
 
-    # INIT ============================================================================================================
+    _instances: dict[str, Self] = {}
+
+    def __new__(cls, address: str, **kwargs):
+        # Если экземпляр уже есть – возвращаем его (игнорируем kwargs, либо проверяем)
+        if address in cls._instances:
+            return cls._instances[address]
+        # Иначе создаём новый
+        instance = super().__new__(cls)
+        cls._instances[address] = instance
+        return instance
+
+    # INIT =============================================================================================================
     def __init__(
             self,
             address: str,
@@ -54,17 +70,33 @@ class SerialClient2:
             encoding: str = None,
             **kwargs,
     ):
+        # freely create new instance with new settings if not validated
+        if not self.check__occupied():
+            self.baudrate = baudrate or self.BAUDRATE
+            self.encoding = encoding or self.ENCODING
+            self.timeout_read_initial = timeout_read_initial or self.TIMEOUT_READ_INITIAL
+            self.timeout_read_continue = timeout_read_continue or self.TIMEOUT_READ_CONTINUE
+            self.eol__send = eol__send or self.EOL__SEND
+
+        # Важно: __init__ будет вызываться каждый раз при get_instance,
+        # даже если экземпляр уже есть! Поэтому нужно защитить повторную инициализацию.
+        if hasattr(self, "_initialized") and self._initialized:
+            return
+        self._initialized = True
+
         super().__init__(**kwargs)
 
-        self.__ADDRESS = address
-        self.baudrate = baudrate or self.BAUDRATE
-        self.encoding = encoding or self.ENCODING
-        self.timeout_read_initial = timeout_read_initial or self.TIMEOUT_READ_INITIAL
-        self.timeout_read_continue = timeout_read_continue or self.TIMEOUT_READ_CONTINUE
-        self.eol__send = eol__send or self.EOL__SEND
+        self.__address = address
 
         self.history: list[dict[str, AnyStr]] = []
         self._conn: Optional[Serial] = None
+
+    # ------------------------------------------------------------------
+    def occupy(self, state: bool = True) -> None:
+        self.__occupied = state is True
+
+    def check__occupied(self) -> bool:
+        return self.__occupied is True
 
     # ------------------------------------------------------------------
     def __enter__(self) -> Self:
@@ -87,19 +119,20 @@ class SerialClient2:
                 write_timeout=None,            # блокирующая запись
             )
             return True
-        except FileNotFoundError as exc:
-            print(f"Port {self.ADDRESS} does not exist{self._conn}/{exc!r}")
-        except PermissionError as exc:
-            print(f"Permission denied for port {self.ADDRESS} (maybe already open){self._conn}/{exc!r}")
-        except SerialException as exc:
-            print(f"Serial error on {self.ADDRESS}: {self._conn}/{exc!r}")
         except Exception as exc:
-            print(f"[ERROR] PORT OTHER ERROR: {self._conn}/{exc!r}")
-            if "Port must be configured before" in str(exc):
-                msg = f"[ERROR] PORT NOT CONFIGURED {self._conn}"
-                print(msg)
+            print(f"{exc!r}")
 
-        return False
+            if "FileNotFoundError" in str(exc):
+                msg = f"[ERROR] PORT NOT EXISTS IN SYSTEM {self._conn}"
+            elif "Port must be configured before" in str(exc):
+                msg = f"[ERROR] PORT NOT CONFIGURED {self._conn}"
+            elif "PermissionError" in str(exc):
+                msg = f"[ERROR] PORT ALREADY OPENED {self._conn}"
+            else:
+                msg = f"[ERROR] PORT OTHER ERROR {self._conn}"
+
+            print(msg)
+            return False
 
     # -----------------------------------------------------------------
     def reconnect(self) -> bool:
@@ -148,7 +181,7 @@ class SerialClient2:
             >           return data.decode(encoding=cls.encoding)
             E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0x85 in position 0: invalid start byte
 
-            buses\serial_client.py:722: UnicodeDecodeError
+            buses\\serial_client.py:722: UnicodeDecodeError
         """
         try:
             if isinstance(data, bytes):
@@ -395,8 +428,8 @@ class SerialClient2:
 
         return result
 
-    def validate__wr_schema(self, schema: dict[AnyStr, str | Base_EqValid | list[str | Base_EqValid]]) -> bool:
-        for (request, response_expected) in schema.items():
+    def validate__wr_schema(self, schema: TYPING__WR_SCHEMA_VALIDATE) -> bool:
+        for (request, response_expected) in schema:
             response_actual = self.write_read_lines(request)
             if response_actual != response_expected:
                 return False
@@ -405,9 +438,7 @@ class SerialClient2:
 
 # ======================================================================================================================
 class SerialManager:
-    _ADDRESSES__SYSTEM: list[str] | None = None
-    _ADDRESSES__SHORTED: list[str] | None = None
-    _ADDRESSES__PAIRED: list[tuple[str, str]] | None = None
+    _ADDRESSES__SYSTEM: list[str] = []
 
     # ------------------------------------------------------------------------------------------------------------------
     _instance = None
@@ -431,13 +462,6 @@ class SerialManager:
             self.detect__addresses_system()
 
         return self._ADDRESSES__SYSTEM
-
-    def get__addresses_free(self) -> list[str]:
-        result = []
-        for addr in self.ADDRESSES__SYSTEM:
-            if self.check__address_could_open(addr):
-                result.append(addr)
-        return result
 
     def count__addresses_system(self) -> int:
         return len(self.ADDRESSES__SYSTEM)
@@ -467,30 +491,84 @@ class SerialManager:
         return True
 
     # ------------------------------------------------------------------------------------------------------------------
-    def gen__first_free(self) -> SerialClient2 | None:
-        pass
+    def gen__not_occupied(
+            self,
+            count: int | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for addr in self.ADDRESSES__SYSTEM:
+            obj = SerialClient2(addr, **init_kwargs)
+            if not obj.check__occupied():
+                result.append(obj)
+                if len(result) == count:
+                    break
+        return result
 
-    def gen__first_shorted(self) -> SerialClient2 | None:
-        pass
+    def gen__not_occupied__first(
+            self,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.gen__not_occupied(count=1, **init_kwargs)
+        if data:
+            return data[0]
 
-    def gen__first_validated(self) -> SerialClient2| None:
-        pass
+    # ------------------------------------------------------------------------------------------------------------------
+    def gen__not_occupied__validated(
+            self,
+            schema: TYPING__WR_SCHEMA_VALIDATE,
+            count: int | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for obj in self.gen__not_occupied(**init_kwargs):
+            if obj.validate__wr_schema(schema):
+                result.append(obj)
+                if len(result) == count:
+                    break
+
+        return result
+
+    def gen__not_occupied__validated_first(
+            self,
+            schema: TYPING__WR_SCHEMA_VALIDATE,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.gen__not_occupied__validated(schema=schema, count=1, **init_kwargs)
+        if data:
+            return data[0]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def gen__not_occupied__shorted(
+            self,
+            count: int | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        return self.gen__not_occupied__validated(schema=[("echoTest", "echoTest"), ], count=count, **init_kwargs)
+
+
+    def gen__not_occupied__shorted_first(
+            self,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.gen__not_occupied__validated(schema=[("echoTest", "echoTest"), ], count=1, **init_kwargs)
+        if data:
+            return data[0]
 
     # DETECT ----------------------------------------------------------------------------------------------------------
     @classmethod
     def detect__addresses_system(cls) -> list[str]:
         # WORK -------------------------------------------------------
-        result = []
-        result.extend(cls._detect__addresses_system_1__standard_method())
-        result.extend(cls._detect__addresses_system_2__direct_access())
+        cls._ADDRESSES__SYSTEM.clear()
+        cls._ADDRESSES__SYSTEM.extend(cls._detect__addresses_system_1__standard_method())
+        cls._ADDRESSES__SYSTEM.extend(cls._detect__addresses_system_2__direct_access())
 
         # result -------------------------------------------------------
-        if result:
-            print(f"[OK] detected serial ports {result}")
+        if cls._ADDRESSES__SYSTEM:
+            print(f"[OK] detected serial ports {cls._ADDRESSES__SYSTEM}")
         else:
             print("[WARN] detected no serial ports")
 
-        cls._ADDRESSES__SYSTEM.clear()
         return cls._ADDRESSES__SYSTEM
 
     @staticmethod
@@ -588,7 +666,13 @@ class SerialManager:
 
 
 # =====================================================================================================================
-def _explore():
+def _explore__shorted():
+    victim = SerialManager().detect__addresses_system()
+    print(victim)
+
+
+
+def _explore_Atc():
     class Dev(SerialClient2):
         pass
         BAUDRATE = 115200
@@ -613,7 +697,7 @@ COM3 {'*:get name': 'ATC', '*:get addr': 3''/str(3)}
 
 # =====================================================================================================================
 if __name__ == "__main__":
-    _explore()
+    _explore__shorted()
     pass
 
 
