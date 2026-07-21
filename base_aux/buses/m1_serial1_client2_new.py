@@ -13,6 +13,7 @@ from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.aux_eq.m2_eq_aux import EqAux
 from base_aux.base_lambdas.m3_lambda4_list import *
 from base_aux.cmds.m2_history import CmdHistory_Sync
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # ======================================================================================================================
@@ -689,14 +690,18 @@ def _explore__shorted():
     victim = SerialManager().gen__not_occupied__shorted()
     print(victim)
 
+    schema_validate_ate = [("*HELP", EqValid_EQ_StrIc("UNKN")), ]
+    victim = SerialManager().gen__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
+    print(victim)
+
 
 def _explore_Atc():
-    class Dev(SerialClient2):
+    class Ate(SerialClient2):
         pass
         BAUDRATE = 115200
         EOL__SEND = b"\n"
 
-    result = Dev().get__wr_responses(["*:get name", "*:get addr"])
+    result = Ate().get__wr_responses()
 
     print(f"="*100)
     print(f"="*100)
