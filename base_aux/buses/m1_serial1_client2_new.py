@@ -29,18 +29,15 @@ class SerialClient2:
     # SETTINGS ------------------------------------------------
     __ADDRESS: str
 
-    TIMEOUT__READ: float = 0.3  # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
     # need NONE NOT 0!!! if wait always!!
+    TIMEOUT_READ_INITIAL = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
+    TIMEOUT_READ_CONTINUE = 0.05 # пауза между чтениями после появления данных
     BAUDRATE: int = 9600  # 115200
 
     # rare INFRASTRUCTURE -------
     ENCODING: str = "utf8"
     EOL__SEND: bytes = b"\r\n"  # "\r"=ENTER in PUTTY  but "\r\n"=is better in read Putty!
-    EOL__UNI_SET: bytes = b"\r\n"
-
-    # AUX -----------------------------------------------------
-    history: list[dict[str, AnyStr]]
-    _conn: Serial = None
+    EOL__UNI: bytes = b"\r\n"
 
     @property
     def ADDRESS(self) -> str:
@@ -51,24 +48,26 @@ class SerialClient2:
             self,
             address: str,
             baudrate: int = None,
-            timeout__read: int = None,
+            timeout_read_initial: Optional[float] = None,
+            timeout_read_continue: Optional[float] = None,
             eol__send: bytes = None,
+            encoding: str = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
 
         self.__ADDRESS = address
-        if baudrate is not None:
-            self.BAUDRATE = baudrate
-        if timeout__read is not None:
-            self.TIMEOUT__READ = timeout__read
-        if eol__send is not None:
-            self.EOL__SEND = eol__send
+        self.baudrate = baudrate or self.BAUDRATE
+        self.encoding = encoding or self.ENCODING
+        self.timeout_read_initial = timeout_read_initial or self.TIMEOUT_READ_INITIAL
+        self.timeout_read_continue = timeout_read_continue or self.TIMEOUT_READ_CONTINUE
+        self.eol__send = eol__send or self.EOL__SEND
 
-        self.history = []
+        self.history: list[dict[str, AnyStr]] = []
+        self._conn: Optional[Serial] = None
 
     # ------------------------------------------------------------------
-    def __enter__(self):
+    def __enter__(self) -> Self:
         self.connect()
         return self
 
@@ -77,11 +76,15 @@ class SerialClient2:
 
     # CONNECT ==========================================================================================================
     def connect(self) -> bool:
+        if self.check__connected():
+            return True
+
         try:
             self._conn = Serial(
                 port=self.ADDRESS,
-                baudrate=self.BAUDRATE,
-                timeout=self.TIMEOUT__READ,
+                baudrate=self.baudrate,
+                timeout=self.timeout_read_initial,
+                write_timeout=None,            # блокирующая запись
             )
             return True
         except Exception as exc:
@@ -124,74 +127,14 @@ class SerialClient2:
             return False
 
     # RW CONVERTERS ====================================================================================================
-    # BYTES ------------------------------------------------------------------------------------------------------------
-    @classmethod
-    def _data_bytes__eol_ensure(cls, data: bytes, eol: bytes | None = None) -> bytes | NoReturn:
-        """
-        GOAL
-        prepare line for write
-        """
-        if eol is None:
-            eol = cls.EOL__SEND
-        data = cls._data_any__eol_clear(data) + eol
-        return data
-
-    @classmethod
-    def _data_any__eol_clear(cls, data: AnyStr) -> AnyStr | NoReturn:
-        """
-        GOAL
-        prepare line for write
-        """
-        result: bytes = cls._data_ensure__bytes(data)
-        while True:
-            data_new = result.strip()
-            data_new = data_new.strip(cls.EOL__UNI_SET)
-            if not result or result == data_new:
-                break
-            result = data_new
-
-        if isinstance(data, str):
-            return cls._data_ensure__string(result)
-
-        return result
-
-    @classmethod
-    def _data_bytes__break_lines(cls, data: bytes) -> list[bytes]:
-        """
-        GOAL
-        separate lines for read
-        """
-        # data = b"11\n222\r333\r\n\n\n\n444"
-        data = data.replace(b"\r", b"\n")
-        data = data.split(b"\n")
-        data = [*filter(lambda x: x != b"", data)]
-        if data == []:
-            data = [b"", ]
-        return data
-
-    @classmethod
-    def _data_str__break_lines(cls, data: str) -> list[str]:
-        """
-        GOAL
-        separate lines for read
-        """
-        data_str = cls._data_ensure__string(data)
-        data_list = re.split(r'[\r\n]+', data_str)
-        result = [*filter(lambda x: x != b"", data_list)]
-        if result == []:
-            result = [b"", ]
-        return result
-
     # BYTES/STR --------------------------------------------------------------------------------------------------------
-    @classmethod
-    def _data_ensure__bytes(cls, data: AnyStr) -> bytes:
+    def _to_bytes(self, data: AnyStr) -> bytes:
         if isinstance(data, bytes):
             return data
-        else:
-            return bytes(data, encoding=cls.ENCODING)
 
-    @classmethod
-    def _data_ensure__string(cls, data: AnyStr) -> str | NoReturn:
+        return bytes(data, encoding=self.encoding)
+
+    def _to_str(self, data: AnyStr) -> str | NoReturn:
         """
         EXCEPTION ORIGINAL VARIANT
         --------------------------
@@ -200,30 +143,59 @@ class SerialClient2:
                 @classmethod
                 def _data_ensure__string(cls, data: AnyStr) -> Union[str, NoReturn]:
                     if isinstance(data, bytes):
-            >           return data.decode(encoding=cls.ENCODING)
+            >           return data.decode(encoding=cls.encoding)
             E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0x85 in position 0: invalid start byte
 
             buses\serial_client.py:722: UnicodeDecodeError
         """
         try:
             if isinstance(data, bytes):
-                result = data.decode(encoding=cls.ENCODING)
+                return data.decode(self.encoding, errors="replace")
             else:
                 result = str(data)
         except Exception as exc:
             print(f"[FAIL] decoding{exc!r}")
             raise exc
 
-        # check printable ascii ------------------
-        for char in result:
-            if isinstance(char, bytes):
-                pass
-                char = chr(char)
-            if char not in string.printable:
-                msg = f"[FAIL] decoding [{char=}]"
-                print(msg)
+        return result
 
-        # ----------------------------------------
+    # BYTES ------------------------------------------------------------------------------------------------------------
+    def _eol_ensure(self, data: bytes, eol: bytes | None = None) -> bytes | NoReturn:
+        """
+        GOAL
+        prepare line for write
+        """
+        if eol is None:
+            eol = self.eol__send
+        if eol == b"":
+            return data
+        data = self._eol_strip(data) + eol
+        return data
+
+    def _eol_strip(self, data: bytes) -> AnyStr | NoReturn:
+        """
+        GOAL
+        prepare line for write
+        """
+        result: bytes = data
+        while True:
+            data_new = data.strip()
+            data_new = data_new.strip(self.EOL__UNI)
+            if not result or result == data_new:
+                break
+            result = data_new
+
+        return result
+
+    def _split_lines(self, data: bytes) -> list[str]:
+        """
+        GOAL
+        separate lines for read
+        """
+        data_str = self._to_str(data)
+        data_list = re.split(r'[\r\n]+', data_str)
+        result = [*filter(lambda x: x != "", data_list)]
+        result = result or ["", ]
         return result
 
     # BUFFERS ----------------------------------------------------------------------------------------------------------
@@ -239,7 +211,7 @@ class SerialClient2:
             pass
 
     def _buffers_clear_2__read(self, _timeout: Optional[float] = None) -> None:
-        self._conn.timeout = _timeout or self.TIMEOUT__READ or None
+        self._conn.timeout = _timeout or self.TIMEOUT_READ_INITIAL or None
         while True:
             try:
                 if not self._conn.readall():
@@ -248,7 +220,7 @@ class SerialClient2:
                 pass
             time.sleep(0.1)
 
-        self._conn.timeout = self.TIMEOUT__READ or None  # set back - final
+        self._conn.timeout = self.TIMEOUT_READ_INITIAL or None  # set back - final
         self._conn.reset_output_buffer()
 
     def buffers_clear(self) -> None:
@@ -256,6 +228,9 @@ class SerialClient2:
 
         here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
         """
+        if not self.check__connected():
+            return
+
         self._buffers_clear_1__write()
         self._buffers_clear_2__read()
 
@@ -299,8 +274,8 @@ class SerialClient2:
         """
         data_bytes = self._read_bytes__all(timeout_start, timeout_stop)
 
-        data_str = self._data_ensure__string(data_bytes)
-        data_lines = self._data_str__break_lines(data_str)
+        data_str = self._to_str(data_bytes)
+        data_lines = self._split_lines(data_str)
         if len(data_lines) == 1:
             return data_lines[0]
         else:
@@ -322,8 +297,8 @@ class SerialClient2:
         """
         self._buffers_clear_2__read()
 
-        data = self._data_ensure__bytes(data)
-        data = self._data_bytes__eol_ensure(data, eol)
+        data = self._to_bytes(data)
+        data = self._eol_ensure(data, eol)
 
         if not data:
             return False
@@ -550,9 +525,6 @@ class SerialManager:
         return result
 
     # ------------------------------------------------------------------------------------------------------------------
-
-
-
 
 
 # =====================================================================================================================
