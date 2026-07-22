@@ -12,8 +12,8 @@ from base_aux.buses.serial2_new.m1_serial_client import SerialClient2, TYPING__W
 
 # ======================================================================================================================
 class SerialManager:
-    _ADDRESSES__CACHED: list[str] = []
-    SCHEMA_SHORTED = [("echoTest", "echoTest"), ]
+    __addresses_cached: list[str] = None
+    SCHEMA_SHORTED: TYPING__WR_SCHEMA_VALIDATE = [("echoTest", "echoTest"), ]
 
     # ------------------------------------------------------------------------------------------------------------------
     _instance = None
@@ -31,14 +31,14 @@ class SerialManager:
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def ADDRESSES__CASHED(self) -> list[str]:
-        if self._ADDRESSES__CACHED is None:
+    def ADDRESSES_CASHED(self) -> list[str]:
+        if self.__addresses_cached is None:
             self.detect__addresses_system()
 
-        return self._ADDRESSES__CACHED
+        return self.__addresses_cached
 
     def count__addresses_system(self) -> int:
-        return len(self.ADDRESSES__CASHED)
+        return len(self.ADDRESSES_CASHED)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -52,6 +52,7 @@ class SerialManager:
 
     @staticmethod
     def check__address_exists(address: str) -> bool:
+        # FIXME: separate with os depandant
         try:
             s = Serial(address)
             s.close()
@@ -67,38 +68,66 @@ class SerialManager:
             # Любая другая неожиданная ошибка – считаем, что порта нет (безопаснее)
             return False
 
-    # ------------------------------------------------------------------------------------------------------------------
-    def gen__not_occupied(
+    # GEN ==============================================================================================================
+    def _iter__objects(self, **init_kwargs) -> Iterable[SerialClient2]:
+        """
+        GOAL
+        BASE for fither GENs
+        """
+        for addr in self.ADDRESSES_CASHED:
+            yield SerialClient2(addr, _raise_if_occupied=False, **init_kwargs)
+
+    def make__existed(
             self,
             count: int | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for addr in self._ADDRESSES__CACHED:
-            obj = SerialClient2(addr, **init_kwargs)
+        for obj in self._iter__objects(**init_kwargs):
+            result.append(obj)
+            if len(result) == count:
+                break
+        return result
+
+    def make__existed__first(
+            self,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.make__existed(count=1, **init_kwargs)
+        if data:
+            return data[0]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def make__not_occupied(
+            self,
+            count: int | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for obj in self._iter__objects(**init_kwargs):
             if not obj.check__occupied():
                 result.append(obj)
                 if len(result) == count:
                     break
         return result
 
-    def gen__not_occupied__first(
+    def make__not_occupied__first(
             self,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.gen__not_occupied(count=1, **init_kwargs)
+        data = self.make__not_occupied(count=1, **init_kwargs)
         if data:
             return data[0]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def gen__not_occupied__validated(
+    def make__not_occupied__validated(
             self,
             schema: TYPING__WR_SCHEMA_VALIDATE,
             count: int | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for obj in self.gen__not_occupied(**init_kwargs):
+        for obj in self.make__not_occupied(**init_kwargs):
             with obj:
                 if obj.validate__wr_schema(schema):
                     result.append(obj)
@@ -106,47 +135,50 @@ class SerialManager:
                         break
         return result
 
-    def gen__not_occupied__validated_first(
+    def make__not_occupied__validated_first(
             self,
             schema: TYPING__WR_SCHEMA_VALIDATE,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.gen__not_occupied__validated(schema=schema, count=1, **init_kwargs)
+        data = self.make__not_occupied__validated(schema=schema, count=1, **init_kwargs)
         if data:
             return data[0]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def gen__not_occupied__shorted(
+    def make__not_occupied__shorted(
             self,
             count: int | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
-        return self.gen__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
+        return self.make__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
 
-    def gen__not_occupied__shorted_first(
+    def make__not_occupied__shorted_first(
             self,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.gen__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
+        data = self.make__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
         if data:
             return data[0]
 
-    # DETECT ----------------------------------------------------------------------------------------------------------
+    # DETECT ===========================================================================================================
     def detect__addresses_system(self) -> list[str]:
         # WORK -------------------------------------------------------
-        self._ADDRESSES__CACHED.clear()
-        self._ADDRESSES__CACHED.extend(self._detect__addresses_system_1__standard_method())
+        if self.__addresses_cached is None:
+            self.__addresses_cached = []
+
+        self.__addresses_cached.clear()
+        self.__addresses_cached.extend(self._detect__addresses_system_1__standard_method())
         for name in self._detect__addresses_system_2__direct_access():
-            if name not in self._ADDRESSES__CACHED:
-                self._ADDRESSES__CACHED.append(name)
+            if name not in self.__addresses_cached:
+                self.__addresses_cached.append(name)
 
         # result -------------------------------------------------------
-        if self.ADDRESSES__CASHED:
-            print(f"[OK] {self.ADDRESSES__CASHED=}")
+        if self.ADDRESSES_CASHED:
+            print(f"[OK] {self.ADDRESSES_CASHED=}")
         else:
             print("[WARN] detected no serial ports")
 
-        return self._ADDRESSES__CACHED
+        return self.__addresses_cached
 
     @staticmethod
     def _detect__addresses_system_1__standard_method() -> list[str] | NoReturn:
@@ -244,14 +276,14 @@ class SerialManager:
 
 # ======================================================================================================================
 def _explore__shorted():
-    victim = SerialManager().detect__addresses_system()
+    victim = SerialManager().ADDRESSES_CASHED
     print(victim)
-    victim = SerialManager().gen__not_occupied__shorted()
+    victim = SerialManager().make__not_occupied__shorted()
     print(victim)
 
     return
     schema_validate_ate = [("*HELP", EqValid_EQ_StrIc("UNKN")), ]
-    victim = SerialManager().gen__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
+    victim = SerialManager().make__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
     print(victim)
 
 

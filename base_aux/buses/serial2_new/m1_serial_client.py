@@ -64,15 +64,18 @@ class SerialClient2:
 
             # OTHERS ---------------------
             history_enable: bool = False,
+            _raise_if_occupied: bool = True,
+
             **kwargs,
     ):
         # freely create new instance with new settings if not occupied
-        self.apply_settings(
+        self.init_settings(
             baudrate=baudrate,
             timeout_read_initial=timeout_read_initial,
             timeout_read_continue=timeout_read_continue,
             eol__send=eol__send,
             encoding=encoding,
+            _raise_if_occupied=_raise_if_occupied,
         )
 
         # защитить повторную инициализацию.
@@ -89,17 +92,21 @@ class SerialClient2:
         self._lock_wr: Lock = Lock()
 
     # ------------------------------------------------------------------
-    def apply_settings(
+    def init_settings(
             self,
             baudrate: int = None,
             timeout_read_initial: Optional[float] = None,
             timeout_read_continue: Optional[float] = None,
             eol__send: bytes = None,
             encoding: str = None,
+
+            _raise_if_occupied: bool = True,
     ) -> None | NoReturn:
         if self.check__occupied():
             msg = f"[ERROR] cant change settings for already occupied {self}"
-            raise Exception(msg)
+            if _raise_if_occupied:
+                raise Exception(msg)
+            return
 
         self.baudrate = baudrate or self.BAUDRATE
         self.encoding = encoding or self.ENCODING
