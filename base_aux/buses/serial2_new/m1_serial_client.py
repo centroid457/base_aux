@@ -306,6 +306,9 @@ class SerialClient2:
         self._conn.reset_input_buffer()
         self._conn.reset_output_buffer()
 
+    def check__buffer_is_blank(self) -> bool:
+        return bool(self._conn.in_waiting)
+
     # R ================================================================================================================
     def read_bytes(
             self,
@@ -351,7 +354,7 @@ class SerialClient2:
         print(f"{self}{msg}")
         return data
 
-    def read_lines(self, **kwargs) -> Union[str, List[str]]:
+    def read_lines(self, **kwargs) -> Union[str, list[str]]:
         """
         Прочитать данные и разбить на строки.
         Если получена одна строка – возвращает str, иначе список строк.
@@ -359,6 +362,10 @@ class SerialClient2:
         raw = self.read_bytes(**kwargs)
         lines = self._split_lines(raw)
         return lines[0] if len(lines) == 1 else lines
+
+    def read_until(self, **kwargs):
+        # TODO: ADD!!!
+        pass
 
     # W ================================================================================================================
     def write_bytes(

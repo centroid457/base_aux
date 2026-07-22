@@ -12,20 +12,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# =====================================================================================================================
-def port_try_open(port: str) -> bool:
-    try:
-        conn = serial.Serial(port, timeout=1)
-        conn.close()
-        return True
-    except:
-        return False
-
-
 # ======================================================================================================================
 class DeviceConsole:
-    """Управление подключением к устройству через serial-консоль."""
-
+    """Управление подключением к устройству через serial-консоль"""
     def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1):
         self.port = port
         self.baudrate = baudrate
@@ -35,24 +24,6 @@ class DeviceConsole:
         self.device_id = None
 
     # ------------------------------------------------------------------------------------------------------------------
-    def connect(self) -> None | NoReturn:
-        """Открыть serial-порт."""
-        self._conn = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
-
-    def close(self):
-        if self._conn and self._conn.is_open:
-            self._conn.close()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def check__buffer_is_blank(self) -> bool:
-        return self._conn.in_waiting
-
-    def _read_all(self) -> str:
-        """Прочитать всё доступное из буфера."""
-        if self._conn.in_waiting:
-            return self._conn.read(self._conn.in_waiting).decode(errors='ignore')
-        return ""
-
     def _read_until(self, expected: str, timeout: int = 2) -> str:
         """Читать, пока не встретится expected или таймаут."""
         start = time.time()
@@ -88,7 +59,7 @@ class DeviceConsole:
         Возвращает True, если успешно.
         """
         # Ждём появления приглашения "login:" или уже готовой консоли
-        data = self._read_all()
+        self.buffer_clear()
         time.sleep(0.3)
         if not self.check__buffer_is_blank():
             return False
