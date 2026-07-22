@@ -16,6 +16,7 @@ class SerialManager:
     __addresses_cached: list[str] = None
     _lock_detect: Lock = Lock()
     SCHEMA_SHORTED: TYPING__WR_SCHEMA_VALIDATE = [("echoTest", "echoTest"), ]
+    CLS_GEN: type[SerialClient2] = SerialClient2
 
     # ------------------------------------------------------------------------------------------------------------------
     _instance = None
@@ -26,11 +27,11 @@ class SerialManager:
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, cls_gen: type[SerialClient2] = SerialClient2):
+    def __init__(self, cls_gen: type[SerialClient2] | None = None):
         if self._initialized:
             return
         self._initialized = True
-        self.cls_gen = SerialClient2
+        self.cls_gen = cls_gen or self.CLS_GEN
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -72,21 +73,24 @@ class SerialManager:
             return False
 
     # GEN ==============================================================================================================
-    def _iter__objects(self, **init_kwargs) -> Iterable[SerialClient2]:
+    def _iter__objects(self, can_open: bool | None = None, **init_kwargs) -> Iterable[SerialClient2]:
         """
         GOAL
         BASE for fither GENs
         """
         for addr in self.ADDRESSES_CASHED:
+            if can_open and not self.check__address_could_open(addr):
+                continue
             yield self.cls_gen(addr, _raise_if_occupied=False, **init_kwargs)
 
     def make__existed(
             self,
             count: int | None = None,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for obj in self._iter__objects(**init_kwargs):
+        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
             result.append(obj)
             if len(result) == count:
                 break
@@ -94,9 +98,10 @@ class SerialManager:
 
     def make__existed__first(
             self,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.make__existed(count=1, **init_kwargs)
+        data = self.make__existed(can_open=can_open, count=1, **init_kwargs)
         if data:
             return data[0]
 
@@ -104,10 +109,11 @@ class SerialManager:
     def make__not_occupied(
             self,
             count: int | None = None,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for obj in self._iter__objects(**init_kwargs):
+        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
             if not obj.check__occupied():
                 result.append(obj)
                 if len(result) == count:
@@ -116,9 +122,10 @@ class SerialManager:
 
     def make__not_occupied__first(
             self,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.make__not_occupied(count=1, **init_kwargs)
+        data = self.make__not_occupied(can_open=can_open, count=1, **init_kwargs)
         if data:
             return data[0]
 
@@ -127,10 +134,11 @@ class SerialManager:
             self,
             schema: TYPING__WR_SCHEMA_VALIDATE,
             count: int | None = None,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
         result = []
-        for obj in self.make__not_occupied(**init_kwargs):
+        for obj in self.make__not_occupied(can_open=can_open, **init_kwargs):
             with obj:
                 if obj.validate__wr_schema(schema):
                     result.append(obj)
@@ -141,9 +149,10 @@ class SerialManager:
     def make__not_occupied__validated_first(
             self,
             schema: TYPING__WR_SCHEMA_VALIDATE,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.make__not_occupied__validated(schema=schema, count=1, **init_kwargs)
+        data = self.make__not_occupied__validated(can_open=can_open, schema=schema, count=1, **init_kwargs)
         if data:
             return data[0]
 
@@ -151,15 +160,17 @@ class SerialManager:
     def make__not_occupied__shorted(
             self,
             count: int | None = None,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> list[SerialClient2]:
-        return self.make__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
+        return self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
 
     def make__not_occupied__shorted_first(
             self,
+            can_open: bool | None = None,
             **init_kwargs,
     ) -> SerialClient2 | None:
-        data = self.make__not_occupied__validated(schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
+        data = self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
         if data:
             return data[0]
 
