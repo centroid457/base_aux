@@ -3,16 +3,18 @@ from serial_utils import *
 
 
 # =====================================================================================================================
-class Test_DevDetection:
-    def test_1__exist_ports(self, PORTS_EXISTED):
-        assert PORTS_EXISTED != [], "Не обнаружено ни одного последовательного порта."
+class Test__HarvestDetection:
+    def test_1__exist_ports(self):
+        result = manager.ADDRESSES_CASHED
+        print(f"\nPORTS_EXISTED[{result}]")
+        assert result != [], "Не обнаружено ни одного последовательного порта."
 
-    def test_2__exist_opening(self, PORTS_EXISTED):
+    def test_2__exist_can_open(self):
         exist_opening__ok = []
         exist_opening__fail = []
 
-        for port in PORTS_EXISTED:
-            if port_try_open(port):
+        for port in manager.ADDRESSES_CASHED:
+            if manager.check__address_could_open(port):
                 exist_opening__ok.append(port)
             else:
                 exist_opening__fail.append(port)
@@ -26,9 +28,10 @@ class Test_DevDetection:
         Тест проверяет, что устройство успешно обнаружено,
         и выводит его уникальный идентификатор.
         """
+
         assert device is not None, "Устройство не подключено."
-        assert device.device_id, "Не удалось получить идентификатор устройства."
-        print(f"\n=== Устройство идентифицировано: {device.device_id} ===")
+        assert device.device_name, "Не удалось получить идентификатор устройства."
+        print(f"\n=== Устройство идентифицировано: {device.device_name} ===")
 
 
 # =====================================================================================================================

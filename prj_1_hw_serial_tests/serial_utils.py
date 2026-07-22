@@ -5,6 +5,7 @@ import threading
 import logging
 
 from base_aux.buses.d1_serial2_new.m1_serial_client import *
+from base_aux.buses.d1_serial2_new.m2_manager import *
 
 
 # =====================================================================================================================
@@ -18,9 +19,8 @@ class DeviceConsole_Harvest(SerialClient2):
     BAUDRATE = 115200
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
         self.device_name: str | None = None
+        super().__init__(**kwargs)
 
     def validate__harvest(self) -> bool:
         """
@@ -73,6 +73,15 @@ class DeviceConsole_Harvest(SerialClient2):
         data = self.write_read_lines(data="hostname")
         self.device_name = data[1]
         return self.device_name
+
+
+# =====================================================================================================================
+class SerialManager_Harvest(SerialManager):
+    CLS_GEN = DeviceConsole_Harvest
+
+
+# =====================================================================================================================
+manager = SerialManager_Harvest()
 
 
 # =====================================================================================================================
