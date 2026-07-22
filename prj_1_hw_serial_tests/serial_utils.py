@@ -13,32 +13,14 @@ logger = logging.getLogger(__name__)
 
 
 # ======================================================================================================================
-class DeviceConsole(Serial):
+class DeviceConsole(SerialClient2):
     """Управление подключением к устройству через serial-консоль"""
-    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1):
-        super().__init__(port, baudrate, timeout)
-        self.port = port
-        self.baudrate = baudrate
-        self.timeout = timeout
+    BAUDRATE = 115200
 
-        self._conn = None
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
         self.device_id = None
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def _wait_for_prompt(self, timeout: int = 2):
-        """Ожидать появления стандартного приглашения #."""
-        self._read_until("# ", timeout)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def exec_command(self, cmd: str, wait_prompt: bool = True, timeout: int = 2) -> str:
-        """
-        Выполнить команду и вернуть вывод.
-        Если wait_prompt=True, ждёт появления приглашения после команды.
-        """
-        self._conn.write((cmd + "\r\n").encode())
-        if wait_prompt:
-            self._wait_for_prompt(timeout)
-        return self._read_all()
 
     # ------------------------------------------------------------------------------------------------------------------
     def login(self, username: str = "root", password: str = "1", login_timeout: int = 2) -> bool:

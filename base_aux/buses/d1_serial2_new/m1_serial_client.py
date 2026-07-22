@@ -24,7 +24,7 @@ class SerialClient2:
     __occupied: str | None | Any = None
 
     # need NONE NOT 0!!! if wait always!!
-    TIMEOUT_READ_INITIAL: float = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
+    TIMEOUT_READ_INITIAL: float = 0.5   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
     TIMEOUT_READ_CONTINUE: float = 0.05 # пауза между чтениями после появления данных
     BAUDRATE: int = 9600  # 115200
 
