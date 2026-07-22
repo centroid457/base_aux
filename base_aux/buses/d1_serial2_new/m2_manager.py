@@ -26,10 +26,11 @@ class SerialManager:
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self):
+    def __init__(self, cls_gen: type[SerialClient2] = SerialClient2):
         if self._initialized:
             return
         self._initialized = True
+        self.cls_gen = SerialClient2
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -77,7 +78,7 @@ class SerialManager:
         BASE for fither GENs
         """
         for addr in self.ADDRESSES_CASHED:
-            yield SerialClient2(addr, _raise_if_occupied=False, **init_kwargs)
+            yield self.cls_gen(addr, _raise_if_occupied=False, **init_kwargs)
 
     def make__existed(
             self,
