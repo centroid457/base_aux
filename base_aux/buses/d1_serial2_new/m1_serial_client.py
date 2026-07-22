@@ -89,7 +89,10 @@ class SerialClient2:
         self.history_enable = history_enable
         self.history: list[dict[str, AnyStr]] = []
         self._conn: Optional[Serial] = None
+
         self._lock_wr: Lock = Lock()
+        self._lock_w: Lock = Lock()
+        self._lock_r: Lock = Lock()
 
     # ------------------------------------------------------------------
     def init_settings(
@@ -312,6 +315,8 @@ class SerialClient2:
     # R ================================================================================================================
     def read_bytes(
             self,
+            until_expected: AnyStr | Base_EqValid | None = None,
+
             timeout_start: Optional[float] = None,
             timeout_continue: Optional[float] = None,
             timeout_full: Optional[float] = None,
@@ -322,37 +327,52 @@ class SerialClient2:
         Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
         Возвращает прочитанные байты.
         """
-        if not self.check__connected():
-            print("Port not connected")
-            return b""
+        with self._lock_r:
+            if not self.check__connected():
+                print("Port not connected")
+                return b""
 
-        t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
-        t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
+            if until_expected is not None:
+                if isinstance(until_expected, str):
+                    until_expected = self._to_bytes(until_expected)
+                if not isinstance(until_expected, (Base_EqValid, bytes)):
+                    msg = f"not expected type {until_expected=}"
+                    raise Exception(msg)
 
-        # Сохраняем текущий таймаут, чтобы потом восстановить
-        old_timeout = self._conn.timeout
+            t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
+            t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
 
-        time_start = time.time()
-        data = b""
-        while True:
-            # Ждём появления данных или таймаут
-            self._conn.timeout = t_start if data == b"" else t_cont
-            chunk = self._conn.read(self._conn.in_waiting or 1)
-            if not chunk:
-                break
-            data += chunk
-            if timeout_full and time_start + timeout_full < time.time():
-                # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
-                break
+            # Сохраняем текущий таймаут, чтобы потом восстановить
+            old_timeout = self._conn.timeout
 
-        # Восстанавливаем таймаут
-        self._conn.timeout = old_timeout
+            time_start = time.time()
+            data = b""
+            while True:
+                # Ждём появления данных или таймаут
+                self._conn.timeout = t_start if data == b"" else t_cont
+                if until_expected is None:
+                    chunk = self._conn.read(self._conn.in_waiting or 1)
+                else:
+                    chunk = self._conn.read(1)
+                if not chunk:
+                    break
+                data += chunk
+                if until_expected is not None:
+                    if data in until_expected:
+                        break
 
-        msg = {"read": data}
-        if self.history_enable:
-            self.history.append(msg)
-        print(f"{self}{msg}")
-        return data
+                if timeout_full and time_start + timeout_full < time.time():
+                    # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
+                    break
+
+            # Восстанавливаем таймаут
+            self._conn.timeout = old_timeout
+
+            msg = {"read": data}
+            if self.history_enable:
+                self.history.append(msg)
+            print(f"{self}{msg}")
+            return data
 
     def read_lines(self, **kwargs) -> Union[str, list[str]]:
         """
@@ -362,10 +382,6 @@ class SerialClient2:
         raw = self.read_bytes(**kwargs)
         lines = self._split_lines(raw)
         return lines[0] if len(lines) == 1 else lines
-
-    def read_until(self, **kwargs):
-        # TODO: ADD!!!
-        pass
 
     # W ================================================================================================================
     def write_bytes(
@@ -382,35 +398,36 @@ class SerialClient2:
 
         args/kwargs - used only for single line!!!
         """
-        if not self.check__connected():
-            print("Port not connected")
-            return False
+        with self._lock_w:
+            if not self.check__connected():
+                print("Port not connected")
+                return False
 
-        if clear_input_first:
-            self._conn.reset_input_buffer()
+            if clear_input_first:
+                self._conn.reset_input_buffer()
 
-        raw = self._to_bytes(data)
-        raw = self._eol_ensure(raw, eol)
+            raw = self._to_bytes(data)
+            raw = self._eol_ensure(raw, eol)
 
-        if not raw:
-            return False
+            if not raw:
+                return False
 
-        written = 0
-        try:
-            written = self._conn.write(raw)
-            msg = f"[OK]write={raw}/{written=}"
-        except Exception as exc:
-            msg = f"[FAIL]write={raw}/{exc!r}"
+            written = 0
+            try:
+                written = self._conn.write(raw)
+                msg = f"[OK]write={raw}/{written=}"
+            except Exception as exc:
+                msg = f"[FAIL]write={raw}/{exc!r}"
 
-        if written > 0:
-            msg = {"write": raw}
-            if self.history_enable:
-                self.history.append(msg)
-            print(f"{self}{msg}")
-            return written == len(raw)
-        else:
-            msg = f"[ERROR] write {raw}"
-            return False
+            if written > 0:
+                msg = {"write": raw}
+                if self.history_enable:
+                    self.history.append(msg)
+                print(f"{self}{msg}")
+                return written == len(raw)
+            else:
+                msg = f"[ERROR] write {raw}"
+                return False
 
     # W=SPECIAL --------------------------------------------------------------------------------------------------------
     def _write__eol(self, eol: bytes = None) -> bool:

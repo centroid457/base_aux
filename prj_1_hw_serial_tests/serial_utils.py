@@ -1,10 +1,10 @@
 from typing import *
 
-import serial
-import serial.tools.list_ports
 import time
 import threading
 import logging
+
+from base_aux.buses.d1_serial2_new.m1_serial_client import *
 
 
 # =====================================================================================================================
@@ -13,9 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 # ======================================================================================================================
-class DeviceConsole:
+class DeviceConsole(Serial):
     """Управление подключением к устройству через serial-консоль"""
     def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1):
+        super().__init__(port, baudrate, timeout)
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
@@ -24,18 +25,6 @@ class DeviceConsole:
         self.device_id = None
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_until(self, expected: str, timeout: int = 2) -> str:
-        """Читать, пока не встретится expected или таймаут."""
-        start = time.time()
-        buf = ""
-        while time.time() - start < timeout:
-            chunk = self._read_all()
-            buf += chunk
-            if expected in buf:
-                break
-            time.sleep(0.1)
-        return buf
-
     def _wait_for_prompt(self, timeout: int = 2):
         """Ожидать появления стандартного приглашения #."""
         self._read_until("# ", timeout)
@@ -104,41 +93,6 @@ def validate_port(port: str, baudrate: int = 115200, timeout: float = 1) -> Opti
     except Exception as e:
         logger.debug(f"Port {port} error: {e}")
     return None
-
-
-def find_device_port(baudrate: int = 115200, timeout_per_port: float = 1) -> tuple[DeviceConsole | None, str | None]:
-    """
-    Сканировать доступные serial-порты, найти устройство.
-    Возвращает объект DeviceConsole и имя порта.
-    Если найдено больше одного – вызывает исключение.
-    """
-    ports = [port.device for port in serial.tools.list_ports.comports()]
-    if not ports:
-        return None, None
-
-    results = {}
-    threads = []
-
-    def worker(port):
-        console = validate_port(port, baudrate, timeout_per_port)
-        if console:
-            results[port] = console
-
-    for p in ports:
-        t = threading.Thread(target=worker, args=(p,))
-        threads.append(t)
-        t.start()
-
-    for t in threads:
-        t.join()
-
-    if len(results) == 1:
-        port, console = list(results.items())[0]
-        return console, port
-    elif len(results) == 0:
-        raise RuntimeError("Устройство не найдено ни на одном порту.")
-    else:
-        raise RuntimeError(f"Найдено несколько устройств на портах: {list(results.keys())}")
 
 
 # =====================================================================================================================
