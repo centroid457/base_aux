@@ -1,6 +1,7 @@
 # REASON: try to create clear separated classes!
 from serial import Serial, SerialException
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from threading import Lock
 
 
 # ======================================================================================================================
@@ -85,6 +86,7 @@ class SerialClient2:
         self.history_enable = history_enable
         self.history: list[dict[str, AnyStr]] = []
         self._conn: Optional[Serial] = None
+        self._lock_wr: Lock = Lock()
 
     # ------------------------------------------------------------------
     def apply_settings(
@@ -117,7 +119,7 @@ class SerialClient2:
 
     # ==================================================================================================================
     def __str__(self):
-        return f"{self.__class__.__name__}({self.ADDRESS},occupied={self.__occupied})"
+        return f"{self.__class__.__name__}({self.ADDRESS}.{self.baudrate},occupied={self.__occupied})"
 
     def __repr__(self):
         return str(self)
@@ -434,8 +436,9 @@ class SerialClient2:
         **read_kwargs
     ) -> bytes:
         """Записать команду и сразу прочитать ответ (строки)."""
-        self.write_bytes(data, eol, clear_input_first)
-        return self.read_bytes(**read_kwargs)
+        with self._lock_wr:
+            self.write_bytes(data, eol, clear_input_first)
+            return self.read_bytes(**read_kwargs)
 
     def write_read_lines(
             self,
@@ -445,8 +448,9 @@ class SerialClient2:
             **read_kwargs
     ) -> str | list[str]:
         """Записать (с автоматическим преобразованием) и прочитать строки."""
-        self.write_bytes(data, eol, clear_input_first)
-        return self.read_lines(**read_kwargs)
+        with self._lock_wr:
+            self.write_bytes(data, eol, clear_input_first)
+            return self.read_lines(**read_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
     def get__wr_responses(self, lines: list[AnyStr]) -> dict[AnyStr, list[str]]:
@@ -458,13 +462,14 @@ class SerialClient2:
                 responce = f"{exc!r}"
 
             result[line] = responce
-
         return result
 
     def validate__wr_schema(self, schema: TYPING__WR_SCHEMA_VALIDATE) -> bool:
         for (request, response_expected) in schema:
             response_actual = self.write_read_lines(request)
             if response_actual != response_expected:
+                msg = f"{request!r}:{response_actual=}/{response_expected=}"
+                print(msg)
                 return False
         return True
 
