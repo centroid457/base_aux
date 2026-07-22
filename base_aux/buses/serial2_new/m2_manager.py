@@ -4,6 +4,7 @@ import glob
 import sys
 from serial import Serial, SerialException
 from serial.tools import list_ports
+from threading import Lock
 
 from base_aux.aux_eq.m3_eq_valid3_derivatives import EqValid_EQ_StrIc
 from base_aux.base_values.m3_exceptions import Exc__SerialPL2303IncorrectDriver
@@ -13,6 +14,7 @@ from base_aux.buses.serial2_new.m1_serial_client import SerialClient2, TYPING__W
 # ======================================================================================================================
 class SerialManager:
     __addresses_cached: list[str] = None
+    _lock_detect: Lock = Lock()
     SCHEMA_SHORTED: TYPING__WR_SCHEMA_VALIDATE = [("echoTest", "echoTest"), ]
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -35,7 +37,7 @@ class SerialManager:
         if self.__addresses_cached is None:
             self.detect__addresses_system()
 
-        return self.__addresses_cached
+        return list(self.__addresses_cached)
 
     def count__addresses_system(self) -> int:
         return len(self.ADDRESSES_CASHED)
@@ -162,23 +164,25 @@ class SerialManager:
 
     # DETECT ===========================================================================================================
     def detect__addresses_system(self) -> list[str]:
-        # WORK -------------------------------------------------------
-        if self.__addresses_cached is None:
-            self.__addresses_cached = []
+        with self._lock_detect:
 
-        self.__addresses_cached.clear()
-        self.__addresses_cached.extend(self._detect__addresses_system_1__standard_method())
-        for name in self._detect__addresses_system_2__direct_access():
-            if name not in self.__addresses_cached:
-                self.__addresses_cached.append(name)
+            # WORK -------------------------------------------------------
+            if self.__addresses_cached is None:
+                self.__addresses_cached = []
 
-        # result -------------------------------------------------------
-        if self.ADDRESSES_CASHED:
-            print(f"[OK] {self.ADDRESSES_CASHED=}")
-        else:
-            print("[WARN] detected no serial ports")
+            self.__addresses_cached.clear()
+            self.__addresses_cached.extend(self._detect__addresses_system_1__standard_method())
+            for name in self._detect__addresses_system_2__direct_access():
+                if name not in self.__addresses_cached:
+                    self.__addresses_cached.append(name)
 
-        return self.__addresses_cached
+            # result -------------------------------------------------------
+            if self.ADDRESSES_CASHED:
+                print(f"[OK] {self.ADDRESSES_CASHED=}")
+            else:
+                print("[WARN] detected no serial ports")
+
+            return self.__addresses_cached
 
     @staticmethod
     def _detect__addresses_system_1__standard_method() -> list[str] | NoReturn:
