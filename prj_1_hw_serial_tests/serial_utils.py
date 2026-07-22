@@ -13,68 +13,66 @@ logger = logging.getLogger(__name__)
 
 
 # ======================================================================================================================
-class DeviceConsole(SerialClient2):
+class DeviceConsole_Harvest(SerialClient2):
     """Управление подключением к устройству через serial-консоль"""
     BAUDRATE = 115200
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.device_id = None
+        self.device_name: str | None = None
 
-    # ------------------------------------------------------------------------------------------------------------------
-    def login(self, username: str = "root", password: str = "1", login_timeout: int = 2) -> bool:
+    def validate__harvest(self) -> bool:
         """
-        Дождаться приглашения login, ввести логин и пароль,
-        затем дождаться приглашения командной строки.
-        Возвращает True, если успешно.
+        ============LOGIN
+        harvest05 login:
+        ---- Sent utf8 encoded message: "root\r\n" ----
+        root
+        Password:
+        ---- Sent utf8 encoded message: "1\r\n" ----
+
+        Linux harvest05 4.14.111 #193 SMP Thu Jun 10 18:20:47 CST 2021 armv7l
+
+        The programs included with the Debian GNU/Linux system are free software;
+        the exact distribution terms for each program are described in the
+        individual files in /usr/share/doc/*/copyright.
+
+        Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+        permitted by applicable law.
+        Last login: Wed Jul 22 18:37:34 MSK 2026 on ttyS0
+        root@harvest05:
+
+        ===============secondary LOGGED_IN
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "root\r\n" ----
+        root
+        -bash: root: command not found
+        root@harvest05:~#
+        root@harvest05:~#
         """
-        # Ждём появления приглашения "login:" или уже готовой консоли
-        self.buffer_clear()
-        time.sleep(0.3)
-        if not self.check__buffer_is_blank():
-            return False
-        self._conn.write((username + "\r\n").encode())
-        data = self._read_until("Password:", 2)
-        if "Password:" in data:
-            self._conn.write((password + "\r\n").encode())
-        time.sleep(0.5)
+        return self.exec__login() and self.exec__check_login_harvest()
 
-        # Ожидаем приглашение после пароля
-        self._wait_for_prompt(timeout=2)
-        return True
+    def exec__login(self) -> bool:
+        data = self.write_read_bytes(data="root", timeout_continue=0.5)
+        if b"command not found" in data:
+            # already logged in!
+            return True
 
-    def get_device_id(self) -> str:
-        """Получить уникальный идентификатор устройства (серийный номер процессора)."""
-        if self.device_id is None:
-            output = self.exec_command("cat /proc/cpuinfo | grep Serial | awk '{print $NF}'")
-            # Если не получилось, попробовать альтернативы
-            if not output or len(output) < 5:
-                output = self.exec_command("cat /proc/device-tree/serial-number")
-            self.device_id = output.strip()
-        return self.device_id
+        elif b"Password:" in data:
+            data = self.write_read_bytes(data="1", timeout_continue=3)
+            if b"root@harvest" in data:
+                return True
 
+        return False
 
-# =====================================================================================================================
-# Функции поиска порта устройства
-def validate_port(port: str, baudrate: int = 115200, timeout: float = 1) -> Optional[DeviceConsole]:
-    """Попытаться подключиться к порту, залогиниться и проверить идентификатор."""
-    console = DeviceConsole(port, baudrate, timeout)
-    try:
-        console.connect()
-        if console.login():
-            # дополнительная проверка: выполнить команду hostname
-            hostname = console.exec_command("hostname").strip()
-            # можно проверить, что hostname соответствует ожидаемому (например, содержит "harvest")
-            # но лучше полагаться на серийный номер
-            if hostname:
-                console.device_id = console.get_device_id()
-                if console.device_id:
-                    return console
-        console.close()
-    except Exception as e:
-        logger.debug(f"Port {port} error: {e}")
-    return None
+    def exec__check_login_harvest(self) -> bool:
+        data = self.write_read_bytes(data="hostname")
+        return b"root@harvest" in data
+
+    def exec__take_harvest_name(self) -> str:
+        data = self.write_read_lines(data="hostname")
+        self.device_name = data[1]
+        return self.device_name
 
 
 # =====================================================================================================================
