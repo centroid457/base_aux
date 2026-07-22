@@ -319,7 +319,9 @@ class SerialClient2:
 
             timeout_start: Optional[float] = None,
             timeout_continue: Optional[float] = None,
-            timeout_full: Optional[float] = None,
+
+            timeout_full_max: Optional[float] = None,
+            timeout_full_min: Optional[float] = None,
     ) -> bytes:
         """
         Прочитать все доступные данные из порта.
@@ -354,14 +356,20 @@ class SerialClient2:
                     chunk = self._conn.read(self._conn.in_waiting or 1)
                 else:
                     chunk = self._conn.read(1)
+
                 if not chunk:
-                    break
+                    if not timeout_full_min:
+                        break
+                    elif time.time() - time_start > timeout_full_min:
+                        break
+
                 data += chunk
                 if until_expected is not None:
                     if data in until_expected:
                         break
 
-                if timeout_full and time_start + timeout_full < time.time():
+                # MAX THRESH
+                if timeout_full_max and time.time() - time_start > timeout_full_max:
                     # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
                     break
 
@@ -461,7 +469,7 @@ class SerialClient2:
     # WR ===============================================================================================================
     def write_read_bytes(
         self,
-        data: bytes | None = None,
+        data: AnyStr | None = None,
         eol: Optional[bytes] = None,
         clear_input_first: bool = True,
         **read_kwargs
