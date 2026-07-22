@@ -20,7 +20,7 @@ class SerialClient2:
     """
     # SETTINGS ------------------------------------------------
     __address: str
-    __occupied: bool = False
+    __occupied: str | None | Any = None
 
     # need NONE NOT 0!!! if wait always!!
     TIMEOUT_READ_INITIAL: float = 0.3   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
@@ -36,6 +36,7 @@ class SerialClient2:
     def ADDRESS(self) -> str:
         return self.__address
 
+    # MULTITON =========================================================================================================
     _instances: dict[str, Self] = {}
 
     def __new__(cls, address: str, **kwargs):
@@ -47,34 +48,33 @@ class SerialClient2:
         cls._instances[address] = instance
         return instance
 
-    def __str__(self):
-        "Serial<id=0x27f984c8640, open=False>(port='COM16', baudrate=9600"
-        return f"{self.__class__.__name__}({self.ADDRESS},open={self.check__connected()})"
-
-    def __repr__(self):
-        return str(self)
-
     # INIT =============================================================================================================
     def __init__(
             self,
+            # MULTITON KEY ID ------------
             address: str,
+
+            # PORT SETTINGS --------------
             baudrate: int = None,
             timeout_read_initial: Optional[float] = None,
             timeout_read_continue: Optional[float] = None,
             eol__send: bytes = None,
             encoding: str = None,
+
+            # OTHERS ---------------------
+            history_enable: bool = False,
             **kwargs,
     ):
-        # freely create new instance with new settings if not validated
-        if not self.check__occupied():
-            self.baudrate = baudrate or self.BAUDRATE
-            self.encoding = encoding or self.ENCODING
-            self.timeout_read_initial = timeout_read_initial or self.TIMEOUT_READ_INITIAL
-            self.timeout_read_continue = timeout_read_continue or self.TIMEOUT_READ_CONTINUE
-            self.eol__send = eol__send or self.EOL__SEND
+        # freely create new instance with new settings if not occupied
+        self.apply_settings(
+            baudrate=baudrate,
+            timeout_read_initial=timeout_read_initial,
+            timeout_read_continue=timeout_read_continue,
+            eol__send=eol__send,
+            encoding=encoding,
+        )
 
-        # Важно: __init__ будет вызываться каждый раз при get_instance,
-        # даже если экземпляр уже есть! Поэтому нужно защитить повторную инициализацию.
+        # защитить повторную инициализацию.
         if hasattr(self, "_initialized") and self._initialized:
             return
         self._initialized = True
@@ -82,18 +82,47 @@ class SerialClient2:
         super().__init__(**kwargs)
 
         self.__address = address
-
+        self.history_enable = history_enable
         self.history: list[dict[str, AnyStr]] = []
         self._conn: Optional[Serial] = None
 
     # ------------------------------------------------------------------
-    def occupy(self, state: bool = True) -> None:
-        self.__occupied = state is True
+    def apply_settings(
+            self,
+            baudrate: int = None,
+            timeout_read_initial: Optional[float] = None,
+            timeout_read_continue: Optional[float] = None,
+            eol__send: bytes = None,
+            encoding: str = None,
+    ) -> None | NoReturn:
+        if self.check__occupied():
+            msg = f"[ERROR] cant change settings for already occupied {self}"
+            raise Exception(msg)
+
+        self.baudrate = baudrate or self.BAUDRATE
+        self.encoding = encoding or self.ENCODING
+        self.timeout_read_initial = timeout_read_initial or self.TIMEOUT_READ_INITIAL
+        self.timeout_read_continue = timeout_read_continue or self.TIMEOUT_READ_CONTINUE
+        self.eol__send = eol__send or self.EOL__SEND
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def occupy(self, name: str | None | Any = True) -> None:
+        if self.__occupied and name is not None:
+            msg = f"[ERROR] attempt to occupy already {self.__occupied=}"
+            raise Exception(msg)
+        self.__occupied = name
 
     def check__occupied(self) -> bool:
-        return self.__occupied is True
+        return self.__occupied is not None
 
-    # ------------------------------------------------------------------
+    # ==================================================================================================================
+    def __str__(self):
+        return f"{self.__class__.__name__}({self.ADDRESS},occupied={self.__occupied})"
+
+    def __repr__(self):
+        return str(self)
+
+    # ==================================================================================================================
     def __enter__(self) -> Self:
         self.connect()
         return self
@@ -308,7 +337,8 @@ class SerialClient2:
         self._conn.timeout = old_timeout
 
         msg = {"read": data}
-        self.history.append(msg)
+        if self.history_enable:
+            self.history.append(msg)
         print(f"{self}{msg}")
         return data
 
@@ -358,7 +388,8 @@ class SerialClient2:
 
         if written > 0:
             msg = {"write": raw}
-            self.history.append(msg)
+            if self.history_enable:
+                self.history.append(msg)
             print(f"{self}{msg}")
             return written == len(raw)
         else:

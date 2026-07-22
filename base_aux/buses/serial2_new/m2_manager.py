@@ -249,6 +249,7 @@ def _explore__shorted():
     victim = SerialManager().gen__not_occupied__shorted()
     print(victim)
 
+    return
     schema_validate_ate = [("*HELP", EqValid_EQ_StrIc("UNKN")), ]
     victim = SerialManager().gen__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
     print(victim)
