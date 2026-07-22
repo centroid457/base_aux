@@ -81,7 +81,7 @@ class SerialManager:
         for addr in self.ADDRESSES_CASHED:
             if can_open and not self.check__address_could_open(addr):
                 continue
-            yield self.cls_gen(addr, _raise_if_occupied=False, **init_kwargs)
+            yield self.cls_gen(address=addr, _raise_if_occupied=False, **init_kwargs)
 
     def make__existed(
             self,

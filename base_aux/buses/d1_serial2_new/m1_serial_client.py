@@ -1,7 +1,10 @@
 # REASON: try to create clear separated classes!
 from serial import Serial, SerialException
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from threading import Lock
+import re
+
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from base_aux.base_values.m3_exceptions import *
 
 
 # ======================================================================================================================
@@ -209,6 +212,33 @@ class SerialClient2:
 
         return data.encode(self.encoding)
 
+    @staticmethod
+    def _strip_ansi(text: str) -> str:
+        """
+        GOAL
+        Удалить CSI‑последовательности: \x1b[...m, \x1b[...h, \x1b[...l и т.д.
+
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'write': b'root\r\n'}
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'read': b'root\r\n\x1b[?2004l\r-bash: root: command not found\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '}
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'write': b'hostname\r\n'}
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'read': b'hostname\r\n\x1b[?2004l\rharvest05\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '}
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'write': b'hostname\r\n'}
+        DeviceConsole_Harvest(COM16.115200,occupied=None){'read': b'hostname\r\n\x1b[?2004l\rharvest05\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '}
+
+        [HARVEST_FOUND]DeviceConsole_Harvest(COM16.115200,occupied=None)/dev_id='harvest05'
+        """
+        ansi_escape = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
+        return ansi_escape.sub('', text)
+
+    def _decoder__bytes_to_str(self, data: bytes) -> str:
+        if not isinstance(data, bytes):
+            msg = f"{data=}"
+            raise TypeError(msg)
+
+        result = data.decode(self.encoding, errors="replace")
+        result = self._strip_ansi(result)
+        return result
+
     def _to_str(self, data: AnyStr) -> str | NoReturn:
         """
         EXCEPTION ORIGINAL VARIANT
@@ -225,7 +255,7 @@ class SerialClient2:
         """
         try:
             if isinstance(data, bytes):
-                return data.decode(self.encoding, errors="replace")
+                return self._decoder__bytes_to_str(data)
             else:
                 result = str(data)
         except Exception as exc:
