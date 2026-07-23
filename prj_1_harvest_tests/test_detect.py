@@ -71,7 +71,6 @@ class Test_02__PreInstall:
         if need DELETE
             sudo apt remove picocom
         """
-
         result = self._check_success__stdline(harvest, f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
         return result
 
@@ -90,8 +89,8 @@ class Test_02__PreInstall:
         if self.__has_internet is None:
             self.__has_internet = self._check_success__stdline(
                 harvest,
-                "ping -c 1 -W 2 8.8.8.8",
-                timeout_continue=1.5
+                "ping -c 1 -W 1 8.8.8.8",
+                timeout_continue=2,
             )
         return self.__has_internet
 
