@@ -16,7 +16,6 @@ class SerialManager:
     __addresses_cached: list[str] = None
     _lock_detect: Lock = Lock()
     SCHEMA_SHORTED: TYPING__WR_SCHEMA_VALIDATE = [("echoTest", "echoTest"), ]
-    CLS_GEN: type[SerialClient2] = SerialClient2
 
     # ------------------------------------------------------------------------------------------------------------------
     _instance = None
@@ -27,11 +26,10 @@ class SerialManager:
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, cls_gen: type[SerialClient2] | None = None):
+    def __init__(self):
         if self._initialized:
             return
         self._initialized = True
-        self.cls_gen = cls_gen or self.CLS_GEN
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
@@ -81,7 +79,7 @@ class SerialManager:
         for addr in self.ADDRESSES_CASHED:
             if can_open and not self.check__address_could_open(addr):
                 continue
-            yield self.cls_gen(address=addr, _raise_if_occupied=False, **init_kwargs)
+            yield SerialClient2(address=addr, _raise_if_occupied=False, **init_kwargs)
 
     def make__existed(
             self,

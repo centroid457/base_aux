@@ -13,16 +13,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# ======================================================================================================================
-class DeviceConsole_Harvest(SerialClient2):
-    """Управление подключением к устройству через serial-консоль"""
-    BAUDRATE = 115200
-
-    def __init__(self, **kwargs):
-        self.device_name: str | None = None
-        super().__init__(**kwargs)
-
-    def validate__harvest(self) -> bool:
+# =====================================================================================================================
+class SerialManager_Harvest(SerialManager):
+    def harvest__validate(self, conn: SerialClient2) -> bool:
         """
         ============LOGIN
         harvest05 login:
@@ -50,34 +43,29 @@ class DeviceConsole_Harvest(SerialClient2):
         root@harvest05:~#
         root@harvest05:~#
         """
-        return self.exec__login() and self.exec__check_login_harvest()
+        return self.harvest__try_login(conn) and self.harvest__check_login(conn)
 
-    def exec__login(self) -> bool:
-        data = self.write_read_bytes(data="root", timeout_continue=0.5)
+    def harvest__try_login(self, conn: SerialClient2) -> bool:
+        data = conn.write_read_bytes(data="root", timeout_continue=0.5)
         if b"command not found" in data:
             # already logged in!
             return True
 
         elif b"Password:" in data:
-            data = self.write_read_bytes(data="1", timeout_continue=3)
+            data = conn.write_read_bytes(data="1", timeout_continue=3)
             if b"root@harvest" in data:
                 return True
 
         return False
 
-    def exec__check_login_harvest(self) -> bool:
-        data = self.write_read_bytes(data="hostname")
+    def harvest__check_login(self, conn: SerialClient2) -> bool:
+        data = conn.write_read_bytes(data="hostname")
         return b"root@harvest" in data
 
-    def exec__take_harvest_name(self) -> str:
-        data = self.write_read_lines(data="hostname")
-        self.device_name = data[1]
-        return self.device_name
-
-
-# =====================================================================================================================
-class SerialManager_Harvest(SerialManager):
-    CLS_GEN = DeviceConsole_Harvest
+    def harvest__take_name(self, conn: SerialClient2) -> str:
+        data = conn.write_read_lines(data="hostname")
+        conn.device_name = data[1]
+        return conn.device_name
 
 
 # =====================================================================================================================
