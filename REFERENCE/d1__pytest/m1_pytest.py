@@ -535,16 +535,23 @@ def test__skip_inside():
 # ---------------------------------------------------------------------------
 @pytest.mark.skip(reason="Класс ещё не реализован")
 class Test__SkippedClass1_Static:
-    def test_one(self):
+    def test__one(self):
         assert False  # никогда не выполнится
 
 
 class Test__SkippedClass2_Dynamic1_SetupCls:
     @classmethod
     def setup_class(cls):
-        # Здесь можно проверять внешние условия
-        if os.name != "posix":
+        # 1=ASSERT - все остальные тесты будут запущены с ошибкой в setupclass!
+        if False:
+            assert False
+        # 2=SKIP -
+        if False:
+            pytest.skip("все тесты будут отображены как остановленные с этим текстом")
+
+        if False and os.name != "posix":
             pytest.skip("Тесты класса только для Linux")
+
         cls.shared = "setup done"
 
     def test__linux_only1(self):

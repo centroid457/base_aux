@@ -62,10 +62,11 @@ class SerialManager_Harvest(SerialManager):
         data = conn.write_read_bytes(data="hostname")
         return b"root@harvest" in data
 
-    def harvest__take_name(self, conn: SerialClient2) -> str:
+    def harvest__get_name_and_occupy(self, conn: SerialClient2) -> str:
         data = conn.write_read_lines(data="hostname")
-        conn.device_name = data[1]
-        return conn.device_name
+        device_name = data[1]
+        conn.occupy(device_name)
+        return device_name
 
 
 # =====================================================================================================================

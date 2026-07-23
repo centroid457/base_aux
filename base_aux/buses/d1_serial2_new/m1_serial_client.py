@@ -121,6 +121,10 @@ class SerialClient2:
         self.eol__send = eol__send or self.EOL__SEND
 
     # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def occupied_name(self) -> str | None | Any:
+        return self.__occupied
+
     def occupy(self, name: str | None | Any = True) -> None:
         if self.__occupied and name is not None:
             msg = f"[ERROR] attempt to occupy already {self.__occupied=}"
