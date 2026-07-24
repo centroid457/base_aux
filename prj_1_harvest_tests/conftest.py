@@ -1,5 +1,5 @@
 import pytest
-from serial_utils import manager, SerialClient2
+from utils import manager, SerialClient2
 
 
 # =====================================================================================================================
