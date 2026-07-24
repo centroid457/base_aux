@@ -217,7 +217,7 @@ class SerialClient2:
         return data.encode(self.encoding)
 
     @staticmethod
-    def _strip_ansi(text: str) -> str:
+    def _replace__ansi(text: str) -> str:
         """
         GOAL
         Удалить CSI‑последовательности: \x1b[...m, \x1b[...h, \x1b[...l и т.д.
@@ -234,13 +234,54 @@ class SerialClient2:
         ansi_escape = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
         return ansi_escape.sub('', text)
 
+    @staticmethod
+    def _replace__control_chars(text: str) -> str:
+        """
+        GOAL
+        удалить нечитаемые символы кроме табуляции!
+
+        настоящий терминал
+        ---- Sent utf8 encoded message: "timeout 1 bluetoothctl -- scan on\r\n" ----
+        timeout 1 bluetoothctl -- scan on
+        Discovery started
+        [CHG] Controller A6:20:96:B6:A9:5E Discovering: yes
+        [NEW] Device 54:F2:9F:0E:1E:D1 404
+        [NEW] Device 68:4E:05:DA:46:2C 403
+        [NEW] Device 68:4E:05:DA:37:2E 405
+        [NEW] Device C8:69:CD:28:12:BA C8-69-CD-28-12-BA
+        [NEW] Device CE:4A:2C:2D:67:47 UltraSonic
+        [NEW] Device FC:82:20:D6:82:CF COROS NOMAD BD4407
+        [NEW] Device E5:C6:EB:4E:F3:05 UltraSonic
+        [NEW] Device 6D:A4:60:4E:E9:1E 6D-A4-60-4E-E9-1E
+        [NEW] Device E3:77:12:64:59:DE UltraSonic
+        [NEW] Device CE:60:07:4B:72:02 UltraSonic
+        [NEW] Device 5E:E1:FC:FA:3E:99 5E-E1-FC-FA-3E-99
+        [NEW] Device EB:1C:93:49:2D:D2 UltraSonic
+        [NEW] Device E9:B6:5B:44:1D:AC MTBO-NB
+        [NEW] Device 8C:26:AA:E8:88:13 8C-26-AA-E8-88-13
+        [NEW] Device C7:22:DB:64:DC:AE MTBO-01-2G
+        root@harvest05:~#
+        root@harvest05:~#
+        =============
+        реальное получение
+        FAILED [100%]SerialClient2(COM16.115200,occupied=harvest05){'write': b'timeout 1.0 bluetoothctl -- scan on\r\n'}
+        SerialClient2(COM16.115200,occupied=harvest05){
+        'read':
+            b'timeout 1.0 bluetoothctl -- scan on\r\n\x1b[?2004l\rDiscovery started\r\n[\x01\x1b[0;93m\x02CHG\x01\x1b[0m\x02] Controller A6:20:96:B6:A9:5E Discovering: yes\r\n[\x01\x1b[0;93m\x02CHG\x01\x1b[0m\x02] Device 71:F2:78:BD:FB:52 RSSI: -98\r\n[\x01\x1b[0;93m\x02CHG\x01\x1b[0m\x02] Device 71:F0:BA:41:D3:2C RSSI: -90\r\n[\x01\x1b[0;93m\x02CHG\x01\x1b[0m\x02] Device 71:F0:BA:41:D3:2C TxPower: 12\r\n[\x01\x1b[0;92m\x02NEW\x01\x1b[0m\x02] Device 68:4E:05:DA:37:2E 405\r\n[\x01\x1b[0;93m\x02CHG\x01\x1b[0m\x02]
+        """
+        # Удаляем все ASCII control characters (0x00–0x1F),
+        # оставляя только "печатные" символы.
+        controls_escape = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F]+')
+        return controls_escape.sub('', text)
+
     def _decoder__bytes_to_str(self, data: bytes) -> str:
         if not isinstance(data, bytes):
             msg = f"{data=}"
             raise TypeError(msg)
 
         result = data.decode(self.encoding, errors="replace")
-        result = self._strip_ansi(result)
+        result = self._replace__ansi(result)
+        result = self._replace__control_chars(result)
         return result
 
     def _to_str(self, data: AnyStr) -> str | NoReturn:
