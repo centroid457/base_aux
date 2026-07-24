@@ -48,7 +48,7 @@ def present__gnss(harvest):
     root@harvest05:~#
     root@harvest05:~#
     """
-    return harvest.cmd__check_success("ls /dev/ttyUSB0")
+    return harvest.cmd__check_executed_success("ls /dev/ttyUSB0")
 
 
 @pytest.fixture(scope="session")
@@ -80,25 +80,25 @@ def present__wifi(harvest):
     root@harvest05:~#
     root@harvest05:~#
     """
-    return harvest.cmd__check_success("ip link show wlan0")
+    return harvest.cmd__check_executed_success("ip link show wlan0")
 
 
 @pytest.fixture(scope="session")
 def present__bt(harvest):
     """Проверяет, виден ли Bluetooth интерфейс."""
-    return harvest.cmd__check_success("hciconfig hci0")
+    return harvest.cmd__check_executed_success("hciconfig hci0")
 
 
 @pytest.fixture(scope="session")
 def present__gsm(harvest):
     """Проверяет, виден ли интерфейс GSM (usb0)."""
-    return harvest.cmd__check_success("ip link show usb0")
+    return harvest.cmd__check_executed_success("ip link show usb0")
 
 
 @pytest.fixture(scope="session")
 def present__rfid_script(harvest):
     """Проверяет наличие RFID-скрипта."""
-    return harvest.cmd__check_success("ls /root/e710.py")
+    return harvest.cmd__check_executed_success("ls /root/e710.py")
 
 
 # =====================================================================================================================

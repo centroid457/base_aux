@@ -72,7 +72,7 @@ class HarvestDevice:
         return device_name
 
     # ------------------------------------------------------------------------------------------------------------------
-    def cmd__send_with_timeout(self, cmd: str, timeout: float = 1.0) -> bool:
+    def cmd_timeout__write_bytes(self, cmd: str, timeout: float = 1.0) -> bool:
         """
         запуск команды в среде linux с таймаутом в самой система
 
@@ -86,10 +86,17 @@ class HarvestDevice:
         root@harvest05:~#
         root@harvest05:~#
         """
-        # return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")
+        # return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")  # OLD-incorrect!
         return self.conn.write_bytes(f"timeout {timeout} {cmd}")
 
-    def cmd__check_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+    def cmd_timeout__write_read_bytes(self, cmd: str, timeout: float = 1.0, **r_kwargs) -> bytes:
+        return self.conn.write_read_bytes(f"timeout {timeout} {cmd}", **r_kwargs)
+
+    def cmd_timeout__write_read_lines(self, cmd: str, timeout: float = 1.0, **r_kwargs) -> str | list[str]:
+        return self.conn.write_read_lines(f"timeout {timeout} {cmd}", **r_kwargs)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def cmd__check_executed_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -125,7 +132,7 @@ class HarvestDevice:
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd__check_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
+        result = self.cmd__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
@@ -140,7 +147,7 @@ class HarvestDevice:
 
         root@harvest05:~#
         """
-        return self.cmd__check_success(
+        return self.cmd__check_executed_success(
                 "ping -c 1 -W 1 8.8.8.8",
                 timeout_continue=2,
             )

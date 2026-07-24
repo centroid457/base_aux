@@ -7,11 +7,11 @@ from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 manager = SerialManager()
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_01__Detection:
     def test_1__exist_ports(self):
         result = manager.ADDRESSES_CASHED
@@ -40,14 +40,16 @@ class Test_01__Detection:
         assert harvest, "Устройство Harvest не обнаружено."
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_02__PreInstall:
-    def pkg__check_installed_or_install(self, harvest, internet_access, pkg_name: str):
-        if not harvest.cmd__check_success(f"which {pkg_name}"):
-            assert internet_access, f"Нет интернета для установки пакетов {pkg_name}"
-            assert harvest.apt_install(pkg_name)
+    # ------------------------------------------------------------------------------------------------------------------
+    def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None):
+        name_install = name_install or name_check
+        if not harvest.cmd__check_executed_success(f"which {name_check}"):
+            assert internet_access, f"Нет интернета для установки пакетов {name_check}"
+            assert harvest.apt_install(name_install)
 
-    # ---------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     def test_pre_0__internet(self, internet_access):
         assert internet_access
 
@@ -100,7 +102,7 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not harvest.cmd__check_success(f'python3 -c "import serial"'):
+        if not harvest.cmd__check_executed_success(f'python3 -c "import serial"'):
             assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-serial")
 
@@ -109,13 +111,13 @@ class Test_02__PreInstall:
         self.pkg__check_installed_or_install(harvest, internet_access, "iw")
 
     def test_pre_5__wifi_2__bluez(self, harvest, internet_access):
-        self.pkg__check_installed_or_install(harvest, internet_access, "bluez")
+        self.pkg__check_installed_or_install(harvest, internet_access, "bluetoothctl", "bluez")
 
     def test_pre_5__wifi_3__usbutils(self, harvest, internet_access):
-        self.pkg__check_installed_or_install(harvest, internet_access, "usbutils")
+        self.pkg__check_installed_or_install(harvest, internet_access, "lsusb", "usbutils")
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_1__GNSS:
     MNEA_VALIDATE: dict[str, Base_EqValid | None] = {
         "$GPGSV": EqValid_Regexp(),
@@ -125,7 +127,6 @@ class Test_1__GNSS:
         "$GNGGA": None,
 
         "$GNRMC": None,
-
         "$GNGLL": None,
     }
 
@@ -193,7 +194,7 @@ class Test_1__GNSS:
         """
         gnss_data: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
 
-        harvest.cmd__send_with_timeout("cat /dev/ttyUSB0")
+        harvest.cmd_timeout__write_bytes("cat /dev/ttyUSB0")
         output = harvest.conn.read_lines(timeout_continue=1)
 
         for msg_type, data in gnss_data.items():
@@ -209,7 +210,7 @@ class Test_1__GNSS:
         pass
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_21__WiFi:
     def test_wf_1__interface_exists(self, harvest, present__wifi):
         assert present__wifi, "Wi-Fi интерфейс wlan0 не обнаружен"
@@ -228,19 +229,14 @@ class Test_21__WiFi:
         if not present__wifi:
             pytest.skip("Wi-Fi отсутствует")
 
-        # получаем строку с signal
-        harvest.conn.write_bytes("iw dev wlan0 link | grep signal")
-        lines = harvest.conn.read_lines(timeout_continue=1)
         # ожидаемый формат: "signal: -XX dBm"
-        for line in lines:
-            if "signal:" in line:
-                try:
-                    value_str = line.split("signal:")[1].strip().split()[0]
-                    rssi = int(value_str)
-                    assert rssi > -85, f"Слишком слабый сигнал Wi-Fi: {rssi} dBm"
-                    return
-                except Exception:
-                    pass
+        lines = harvest.conn.write_read_lines("iw dev wlan0 link | grep signal", timeout_continue=1)
+        signal_line = [line for line in lines if 'signal:' in line]
+        if not signal_line:
+            pytest.fail("Не найдена строка signal")
+        rssi_str = signal_line[0].split("signal:")[1].split()[0]
+        rssi = int(rssi_str)
+        assert rssi > -85
         pytest.fail(f"Не удалось извлечь уровень сигнала Wi-Fi/{lines=}")
 
 
@@ -252,31 +248,92 @@ class Test_22__Bluetooth:
         assert present__bt, "Bluetooth интерфейс hci0 не обнаружен"
 
     def test_bt_2__scan_devices(self, harvest, present__bt):
-        """Получение данных: сканирование устройств."""
+        """
+        ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
+        bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
+        [7] 3968
+        Discovery started
+        [CHG] Controller A6:20:96:B6:A9:5E Discovering: yes
+        [NEW] Device 68:4E:05:DA:46:2C 403
+        [NEW] Device 68:4E:05:DA:37:2E 405
+        [NEW] Device E3:77:12:64:59:DE UltraSonic
+        [NEW] Device C8:69:CD:28:12:BA C8-69-CD-28-12-BA
+        [NEW] Device 47:CD:B2:66:05:A7 47-CD-B2-66-05-A7
+        [NEW] Device FC:82:20:D6:82:CF COROS NOMAD BD4407
+        [NEW] Device EB:1C:93:49:2D:D2 UltraSonic
+        [NEW] Device 78:84:C0:B5:89:AA 78-84-C0-B5-89-AA
+        [NEW] Device 54:F2:9F:0E:1E:D1 404
+        [NEW] Device 43:05:75:66:62:C5 43-05-75-66-62-C5
+        [NEW] Device CE:4A:2C:2D:67:47 UltraSonic
+        [NEW] Device E5:C6:EB:4E:F3:05 UltraSonic
+        [NEW] Device F6:D4:61:D3:B7:55 UltraSonic
+        [NEW] Device CE:60:07:4B:72:02 UltraSonic
+        [NEW] Device E9:B6:5B:44:1D:AC MTBO-NB
+        [NEW] Device C7:22:DB:64:DC:AE MTBO-01-2G
+        [NEW] Device 8C:26:AA:E8:88:13 8C-26-AA-E8-88-13
+        [2]   Done                    bluetoothctl -- scan on
+        [3]   Done                    bluetoothctl -- scan on
+        [4]   Done                    bluetoothctl -- scan on
+        [5]   Done                    bluetoothctl -- scan on
+        [6]   Done                    bluetoothctl -- scan on
+        Failed to stop discovery: org.bluez.Error.Failed
+        root@harvest05:~#
+        root@harvest05:~# [NEW] Device F8:5E:A0:93:C9:A1 d5420
+        [CHG] Device EB:1C:93:49:2D:D2 RSSI: -75
+        [CHG] Device 78:84:C0:B5:89:AA RSSI: -80
+        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -81
+        [CHG] Device CE:60:07:4B:72:02 RSSI: -69
+        [CHG] Device C7:22:DB:64:DC:AE RSSI: -103
+        [NEW] Device 66:4E:D7:D9:93:3C 66-4E-D7-D9-93-3C
+        [CHG] Device F8:5E:A0:93:C9:A1 RSSI: -75
+        [CHG] Device FC:82:20:D6:82:CF RSSI: -84
+        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -71
+        [CHG] Device E3:77:12:64:59:DE RSSI: -72
+        [CHG] Device C7:22:DB:64:DC:AE RSSI: -94
+        ---- Sent utf8 encoded message: "pkill bluetoothctl\r\n" ----
+        pkill bluetoothctl
+        root@harvest05:~#
+        root@harvest05:~#
+        """
         if not present__bt:
             pytest.skip("Bluetooth отсутствует")
 
         # запускаем короткое сканирование (bluetoothctl или hcitool)
-        # используем bluetoothctl, так как он обычно есть
-        harvest.conn.write_bytes("bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off")
-        output = harvest.conn.read_lines(timeout_continue=3)
+        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2)
+
         # Ищем строки с "Device" (новый BLE/BR) в выводе
-        devices_found = [line for line in output if "Device" in line]
-        assert len(devices_found) > 0, "Не обнаружено ни одного Bluetooth-устройства"
+        result = False
+        for line in output:
+            print(f"{line=}")
+            for expected in ["] Device", ]:
+                if expected in line:
+                    result = True
+                    break
+
+        assert result, "Не обнаружено ни одного Bluetooth-устройства"
 
     def test_bt_3__scan_devices_count(self, harvest, present__bt):
         """Валидация: должно быть хотя бы 2 устройства (если окружение не пустое)."""
         if not present__bt:
             pytest.skip("Bluetooth отсутствует")
 
-        harvest.conn.write_bytes("bluetoothctl -- scan on & sleep 3; bluetoothctl -- scan off")
-        output = harvest.conn.read_lines(timeout_continue=4)
-        devices = [line for line in output if "Device" in line and "RSSI" in line]  # bluetoothctl обычно выводит RSSI
-        # Если окружение заведомо насыщенное, порог можно поднять
-        assert len(devices) >= 2, f"Найдено только {len(devices)} устройств, ожидалось >= 2"
+        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2)
+
+        # Считаем уникальные адреса
+        addrs = set()
+        for line in output:
+            if "] Device" in line:
+                # формат: [NEW] Device XX:XX:XX:XX:XX:XX ...
+                parts = line.split()
+                if len(parts) >= 3:
+                    dev_id = parts[2]
+                    addrs.add(dev_id)
+                    print(f"{dev_id=}")
+
+        assert len(addrs) >= 2, f"Найдено только {len(addrs)} Bluetooth-устройств, ожидалось >= 2"
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_3__GSM:
     """Тесты GSM-модема (интерфейс usb0)"""
 
@@ -328,7 +385,7 @@ class Test_3__GSM:
         pytest.fail("Не удалось извлечь уровень сигнала GSM")
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Test_4__RFID:
     """Тесты RFID-считывателя (скрипт e710.py)"""
     def test_rfid_1__script_exists(self, harvest, present__rfid_script):
@@ -358,4 +415,4 @@ class Test_4__RFID:
         assert has_data, "RFID-скрипт не вернул ни данных, ни таймаутов"
 
 
-# =====================================================================================================================
+# ======================================================================================================================
