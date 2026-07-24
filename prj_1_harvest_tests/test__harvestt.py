@@ -41,8 +41,11 @@ class Test_01__Detection:
 
 # =====================================================================================================================
 class Test_02__PreInstall:
+    def test_0__internet(self, has_internet):
+        assert has_internet
+
     # ---------------------------------------------------------------------------------------
-    def test_1__picocom(self, harvest):
+    def test_1__picocom(self, harvest, has_internet):
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -67,16 +70,16 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not harvest._check_success__stdline(f"which picocom"):
-            assert harvest.check__has_internet(), "нет интернета для установки пакетов"
-            assert harvest.install_module("picocom")
+        if not harvest._cmd__check_success(f"which picocom"):
+            assert has_internet, "нет интернета для установки пакетов"
+            assert harvest.apt_install("picocom")
 
-    def test_2__python(self, harvest):
-        if not harvest._check_success__stdline(f"which python3"):
-            assert harvest.check__has_internet(), "нет интернета для установки пакетов"
-            assert harvest.install_module("python3")
+    def test_2__python(self, harvest, has_internet):
+        if not harvest._cmd__check_success(f"which python3"):
+            assert has_internet, "нет интернета для установки пакетов"
+            assert harvest.apt_install("python3")
 
-    def test_3__python_serial(self, harvest):
+    def test_3__python_serial(self, harvest, has_internet):
         """
         ---- Sent utf8 encoded message: "python3 -c \"import serial\" || echo ERROR_MSG\r\n" ----
         python3 -c "import serial" || echo ERROR_MSG
@@ -92,17 +95,13 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not harvest._check_success__stdline(f'python3 -c "import serial"'):
-            assert harvest.check__has_internet(), "нет интернета для установки пакетов"
-            assert harvest.install_module("python3-serial")
+        if not harvest._cmd__check_success(f'python3 -c "import serial"'):
+            assert has_internet, "нет интернета для установки пакетов"
+            assert harvest.apt_install("python3-serial")
 
 
 # =====================================================================================================================
 class Test_1__GNSS:
-    @classmethod
-    def setup_class(cls):
-        assert True
-
     def test__gnss_exists(self, harvest):
         """
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB0\r\n" ----
@@ -116,9 +115,8 @@ class Test_1__GNSS:
         root@harvest05:~#
         root@harvest05:~#
         """
-        assert harvest._check_success__stdline("ls /dev/ttyUSB0"), "Порт GNSS не найден"
+        assert harvest._cmd__check_success("ls /dev/ttyUSB0"), "Порт GNSS не найден"
 
-    @pytest.mark.skip("not finished")
     def test__nmea_output(self, harvest):
         # Настраиваем порт и читаем несколько строк
         harvest.conn.write_bytes("stty -F /dev/ttyUSB0 9600 raw -echo")

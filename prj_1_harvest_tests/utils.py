@@ -46,9 +46,9 @@ class HarvestDevice:
         root@harvest05:~#
         root@harvest05:~#
         """
-        return self.try_login() and self.check_loggedin()
+        return self.login_try() and self.login_check()
 
-    def try_login(self) -> bool:
+    def login_try(self) -> bool:
         data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
         if b"command not found" in data:
             # already logged in!
@@ -61,18 +61,18 @@ class HarvestDevice:
 
         return False
 
-    def check_loggedin(self) -> bool:
+    def login_check(self) -> bool:
         data = self.conn.write_read_bytes(data="hostname")
         return b"root@harvest" in data
 
-    def get_name_and_occupy(self) -> str:
+    def get_hostname_and_occupy(self) -> str:
         data = self.conn.write_read_lines(data="hostname")
         device_name = data[1]
         self.conn.occupy(device_name)
         return device_name
 
     # ---------------------------------------------------------------------------------------
-    def _check_success__stdline(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+    def _cmd__check_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -102,12 +102,12 @@ class HarvestDevice:
         print(f"{out=}")
         return ERROR_MSG not in out[1:]
 
-    def install_module(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
+    def apt_install(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
         """
         if need DELETE
             sudo apt remove picocom
         """
-        result = self._check_success__stdline(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
+        result = self._cmd__check_success(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
@@ -122,7 +122,7 @@ class HarvestDevice:
 
         root@harvest05:~#
         """
-        return self._check_success__stdline(
+        return self._cmd__check_success(
                 "ping -c 1 -W 1 8.8.8.8",
                 timeout_continue=2,
             )

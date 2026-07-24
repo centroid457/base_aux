@@ -9,12 +9,12 @@ from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 # =====================================================================================================================
 @pytest.fixture(scope="session")
 def harvest() -> HarvestDevice:
-    """Находит первое устройство Harvest и возвращает авторизованный клиент."""
+    """Находит устройство Harvest и возвращает авторизованный клиент."""
     found: list[HarvestDevice] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         with conn:
             if HarvestDevice(conn).validate_conn():
-                dev_id = HarvestDevice(conn).get_name_and_occupy()
+                dev_id = HarvestDevice(conn).get_hostname_and_occupy()
                 print(f"\n[HARVEST_FOUND]{conn}/{dev_id=}")
                 found.append(HarvestDevice(conn))
 
@@ -25,6 +25,12 @@ def harvest() -> HarvestDevice:
 
     with found[0].conn:
         yield found[0]
+
+
+# =====================================================================================================================
+@pytest.fixture(scope="session")
+def has_internet(harvest) -> bool:
+    return harvest.check__has_internet()
 
 
 # =====================================================================================================================
