@@ -75,8 +75,19 @@ class HarvestDevice:
     def cmd__send_with_timeout(self, cmd: str, timeout: float = 1.0) -> bool:
         """
         запуск команды в среде linux с таймаутом в самой система
+
+        2=VARIANT
+        --------------------
+        ---- Sent utf8 encoded message: "timeout 2 ping ya.ru\r\n" ----
+        timeout 2 ping ya.ru
+        PING ya.ru (77.88.44.242) 56(84) bytes of data.
+        64 bytes from ya.ru (77.88.44.242): icmp_seq=1 ttl=57 time=41.1 ms
+        64 bytes from ya.ru (77.88.44.242): icmp_seq=2 ttl=57 time=38.0 ms
+        root@harvest05:~#
+        root@harvest05:~#
         """
-        return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")
+        # return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")
+        return self.conn.write_bytes(f"timeout {timeout} {cmd}")
 
     def cmd__check_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
         """
@@ -109,12 +120,12 @@ class HarvestDevice:
         return ERROR_MSG not in out[1:]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def apt_install(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
+    def apt_install(self, module: str, timeout_continue: float = 5, **wr_kwargs) -> bool:
         """
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd__check_success(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
+        result = self.cmd__check_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
