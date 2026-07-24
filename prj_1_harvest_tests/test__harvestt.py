@@ -4,6 +4,7 @@ from utils import HarvestDevice
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
@@ -41,11 +42,11 @@ class Test_01__Detection:
 
 # =====================================================================================================================
 class Test_02__PreInstall:
-    def test_0__internet(self, has_internet):
-        assert has_internet
+    def test_0__internet(self, internet_access):
+        assert internet_access
 
     # ---------------------------------------------------------------------------------------
-    def test_1__picocom(self, harvest, has_internet):
+    def test_1__picocom(self, harvest, internet_access):
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -71,15 +72,15 @@ class Test_02__PreInstall:
         root@harvest05:~#
         """
         if not harvest.cmd__check_success(f"which picocom"):
-            assert has_internet, "нет интернета для установки пакетов"
+            assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("picocom")
 
-    def test_2__python(self, harvest, has_internet):
+    def test_2__python(self, harvest, internet_access):
         if not harvest.cmd__check_success(f"which python3"):
-            assert has_internet, "нет интернета для установки пакетов"
+            assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3")
 
-    def test_3__python_serial(self, harvest, has_internet):
+    def test_3__python_serial(self, harvest, internet_access):
         """
         ---- Sent utf8 encoded message: "python3 -c \"import serial\" || echo ERROR_MSG\r\n" ----
         python3 -c "import serial" || echo ERROR_MSG
@@ -96,12 +97,24 @@ class Test_02__PreInstall:
         root@harvest05:~#
         """
         if not harvest.cmd__check_success(f'python3 -c "import serial"'):
-            assert has_internet, "нет интернета для установки пакетов"
+            assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-serial")
 
 
 # =====================================================================================================================
 class Test_1__GNSS:
+    MNEA_VALIDATE: dict[str, Base_EqValid | None] = {
+        "$GPGSV": EqValid_Regexp(),
+        "$GLGSV": None,
+
+        "$GNGSA": None,
+        "$GNGGA": None,
+
+        "$GNRMC": None,
+
+        "$GNGLL": None,
+    }
+
     def test_1__gnss_exists(self, harvest):
         """
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB0\r\n" ----
@@ -121,8 +134,8 @@ class Test_1__GNSS:
         """
         1=BLOCK STAY LONG TIMУ on table
         ==================================
-        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0 & sleep 0.01; kill %1\r\n" ----
-        cat /dev/ttyUSB0 & sleep 0.01; kill %1
+        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0 & sleep 1.0; kill %1\r\n" ----
+        cat /dev/ttyUSB0 & sleep 1.0; kill %1
         [1] 2008
 
         $GPGSV,4,1,13,01,16,181,11,03,65,133,,04,66,243,31,06,35,306,*77
@@ -176,21 +189,17 @@ class Test_1__GNSS:
         [1]+  Terminated              cat /dev/ttyUSB0
         root@harvest05:~#
         """
+        gnss_data: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
+
         harvest.cmd__send_with_timeout("cat /dev/ttyUSB0")
-        out = harvest.conn.read_bytes(timeout_continue=1)
-        msg_variants = [
-            b"$GPGSV",
-            b"$GLGSV",
+        output = harvest.conn.read_lines(timeout_continue=1)
 
-            b"$GNGSA",
-            b"$GNGGA",
+        for msg_type, data in gnss_data.items():
+            gnss_data[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
 
-            b"$GNRMC",
-
-            b"$GNGLL",
-        ]
-        for msg_type in msg_variants:
-            assert msg_type in out, f"NMEA-предложения типа {msg_type=} не получены"
+        for msg_type, data in gnss_data.items():
+            assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
+            print(f"NMEA-предложения {msg_type=} получены {data=}")
 
     @pytest.mark.skip("Not realised yet")
     def test_2__nmea_output_correct(self, harvest):

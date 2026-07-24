@@ -29,7 +29,7 @@ def harvest() -> HarvestDevice:
 
 # =====================================================================================================================
 @pytest.fixture(scope="session")
-def has_internet(harvest) -> bool:
+def internet_access(harvest) -> bool:
     return harvest.check__has_internet()
 
 
