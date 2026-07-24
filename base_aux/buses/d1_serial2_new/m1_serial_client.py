@@ -454,7 +454,12 @@ class SerialClient2:
             msg = {"read": data}
             if self.history_enable:
                 self.history.append(msg)
-            print(f"{self}{msg}")
+
+            try:
+                printable_data = self._to_str(data)
+            except Exception as exc:
+                printable_data = f"{exc!r}"
+            print(f"{self}\bbytes={data}\bprintable={printable_data}")
             return data
 
     def read_lines(self, **kwargs) -> Union[str, list[str]]:
