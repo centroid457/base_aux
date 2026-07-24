@@ -71,8 +71,14 @@ class HarvestDevice:
         self.conn.occupy(device_name)
         return device_name
 
-    # ---------------------------------------------------------------------------------------
-    def _cmd__check_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+    # ------------------------------------------------------------------------------------------------------------------
+    def cmd__send_with_timeout(self, cmd: str, timeout: float = 1.0) -> bool:
+        """
+        запуск команды в среде linux с таймаутом в самой система
+        """
+        return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")
+
+    def cmd__check_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -102,12 +108,13 @@ class HarvestDevice:
         print(f"{out=}")
         return ERROR_MSG not in out[1:]
 
+    # ------------------------------------------------------------------------------------------------------------------
     def apt_install(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
         """
         if need DELETE
             sudo apt remove picocom
         """
-        result = self._cmd__check_success(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
+        result = self.cmd__check_success(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
@@ -122,12 +129,12 @@ class HarvestDevice:
 
         root@harvest05:~#
         """
-        return self._cmd__check_success(
+        return self.cmd__check_success(
                 "ping -c 1 -W 1 8.8.8.8",
                 timeout_continue=2,
             )
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
 
 # ======================================================================================================================
