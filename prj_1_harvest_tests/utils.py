@@ -4,18 +4,21 @@ import time
 import threading
 import logging
 
-from base_aux.buses.d1_serial2_new.m1_serial_client import *
-from base_aux.buses.d1_serial2_new.m2_manager import *
+from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# =====================================================================================================================
-class SerialManager_Harvest(SerialManager):
-    def harvest__validate(self, conn: SerialClient2) -> bool:
+# ======================================================================================================================
+class HarvestDevice:
+    def __init__(self, conn: SerialClient2):
+        self.conn = conn
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def validate(self) -> bool:
         """
         ============LOGIN
         harvest05 login:
@@ -43,34 +46,88 @@ class SerialManager_Harvest(SerialManager):
         root@harvest05:~#
         root@harvest05:~#
         """
-        return self.harvest__try_login(conn) and self.harvest__check_login(conn)
+        return self.try_login() and self.check_login()
 
-    def harvest__try_login(self, conn: SerialClient2) -> bool:
-        data = conn.write_read_bytes(data="root", timeout_continue=0.5)
+    def try_login(self) -> bool:
+        data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
         if b"command not found" in data:
             # already logged in!
             return True
 
         elif b"Password:" in data:
-            data = conn.write_read_bytes(data="1", timeout_continue=3)
+            data = self.conn.write_read_bytes(data="1", timeout_continue=3)
             if b"root@harvest" in data:
                 return True
 
         return False
 
-    def harvest__check_login(self, conn: SerialClient2) -> bool:
-        data = conn.write_read_bytes(data="hostname")
+    def check_login(self) -> bool:
+        data = self.conn.write_read_bytes(data="hostname")
         return b"root@harvest" in data
 
-    def harvest__get_name_and_occupy(self, conn: SerialClient2) -> str:
-        data = conn.write_read_lines(data="hostname")
+    def get_name_and_occupy(self) -> str:
+        data = self.conn.write_read_lines(data="hostname")
         device_name = data[1]
-        conn.occupy(device_name)
+        self.conn.occupy(device_name)
         return device_name
 
+    # ---------------------------------------------------------------------------------------
+    def cmd__check_success__stdline(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+        """
+        Проверяет, доступна ли команда в системе linux
 
-# =====================================================================================================================
-manager = SerialManager_Harvest()
+        ---- Sent utf8 encoded message: "which picocom\r\n" ----
+        which picocom
+        /usr/bin/picocom
+        root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "which picocom22\r\n" ----
+        which picocom22
+        root@harvest05:~#
+        root@harvest05:~#
+
+        ---- Sent utf8 encoded message: "which picocom 2>/dev/null || echo NOT_FOUND\r\n" ----
+        which picocom 2>/dev/null || echo NOT_FOUND
+        /usr/bin/picocom
+        root@harvest05:~#
+        root@harvest05:~# [17686.556981] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        ---- Sent utf8 encoded message: "which picocom1111 2>/dev/null || echo NOT_FOUND\r\n" ----
+        which picocom1111 2>/dev/null || echo NOT_FOUND
+        NOT_FOUND
+        root@harvest05:~#
+        root@harvest05:~#
+        """
+        ERROR_MSG = "ERROR_MSG"
+        out = self.conn.write_read_lines(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", timeout_continue=timeout_continue, **wr_kwargs)
+        print(f"{out=}")
+        return ERROR_MSG not in out[1:]
+
+    def cmd__install_module(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
+        """
+        if need DELETE
+            sudo apt remove picocom
+        """
+        result = self.cmd__check_success__stdline(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
+        return result
+
+    def cmd__check__has_internet(self) -> bool:
+        """
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "ping -c 1 -W 2 8.8.8.8\r\n" ----
+        ping -c 1 -W 2 8.8.8.8
+        PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+
+        --- 8.8.8.8 ping statistics ---
+        1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+        root@harvest05:~#
+        """
+        return self.cmd__check_success__stdline(
+                "ping -c 1 -W 1 8.8.8.8",
+                timeout_continue=2,
+            )
+
+    # -----------------------------------------------------------------------------------------------------------------
 
 
-# =====================================================================================================================
+# ======================================================================================================================

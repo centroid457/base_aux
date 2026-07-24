@@ -1,5 +1,13 @@
 import pytest
-from utils import *
+
+from utils import HarvestDevice
+
+from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
+from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
+
+
+# =====================================================================================================================
+manager = SerialManager()
 
 
 # =====================================================================================================================
@@ -33,67 +41,6 @@ class Test_01__Detection:
 
 # =====================================================================================================================
 class Test_02__PreInstall:
-    __has_internet: bool | None = None
-
-    # ---------------------------------------------------------------------------------------
-    def _check_success__stdline(self, harvest, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
-        """
-        Проверяет, доступна ли команда в системе linux
-
-        ---- Sent utf8 encoded message: "which picocom\r\n" ----
-        which picocom
-        /usr/bin/picocom
-        root@harvest05:~#
-        root@harvest05:~#
-        ---- Sent utf8 encoded message: "which picocom22\r\n" ----
-        which picocom22
-        root@harvest05:~#
-        root@harvest05:~#
-
-        ---- Sent utf8 encoded message: "which picocom 2>/dev/null || echo NOT_FOUND\r\n" ----
-        which picocom 2>/dev/null || echo NOT_FOUND
-        /usr/bin/picocom
-        root@harvest05:~#
-        root@harvest05:~# [17686.556981] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
-        ---- Sent utf8 encoded message: "which picocom1111 2>/dev/null || echo NOT_FOUND\r\n" ----
-        which picocom1111 2>/dev/null || echo NOT_FOUND
-        NOT_FOUND
-        root@harvest05:~#
-        root@harvest05:~#
-        """
-        ERROR_MSG = "ERROR_MSG"
-        out = harvest.write_read_lines(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", timeout_continue=timeout_continue, **wr_kwargs)
-        print(f"{out=}")
-        return ERROR_MSG not in out[1:]
-
-    def _install_module(self, harvest, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
-        """
-        if need DELETE
-            sudo apt remove picocom
-        """
-        result = self._check_success__stdline(harvest, f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
-        return result
-
-    def _check__has_internet(self, harvest) -> bool:
-        """
-        root@harvest05:~#
-        ---- Sent utf8 encoded message: "ping -c 1 -W 2 8.8.8.8\r\n" ----
-        ping -c 1 -W 2 8.8.8.8
-        PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-
-        --- 8.8.8.8 ping statistics ---
-        1 packets transmitted, 0 received, 100% packet loss, time 0ms
-
-        root@harvest05:~#
-        """
-        if self.__has_internet is None:
-            self.__has_internet = self._check_success__stdline(
-                harvest,
-                "ping -c 1 -W 1 8.8.8.8",
-                timeout_continue=2,
-            )
-        return self.__has_internet
-
     # ---------------------------------------------------------------------------------------
     def test_1__picocom(self, harvest):
         """
@@ -120,14 +67,14 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not self._check_success__stdline(harvest, f"which picocom"):
-            assert self._check__has_internet(harvest), "нет интернета для установки пакетов"
-            assert self._install_module(harvest, "picocom")
+        if not harvest.cmd__check_success__stdline(f"which picocom"):
+            assert harvest.cmd__check__has_internet(), "нет интернета для установки пакетов"
+            assert harvest.cmd__install_module("picocom")
 
     def test_2__python(self, harvest):
-        if not self._check_success__stdline(harvest, f"which python3"):
-            assert self._check__has_internet(harvest), "нет интернета для установки пакетов"
-            assert self._install_module(harvest, "python3")
+        if not harvest.cmd__check_success__stdline(f"which python3"):
+            assert harvest.cmd__check__has_internet(), "нет интернета для установки пакетов"
+            assert harvest.cmd__install_module("python3")
 
     def test_3__python_serial(self, harvest):
         """
@@ -145,9 +92,9 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not self._check_success__stdline(harvest, f'python3 -c "import serial"'):
-            assert self._check__has_internet(harvest), "нет интернета для установки пакетов"
-            assert self._install_module(harvest, "python3-serial")
+        if not harvest.cmd__check_success__stdline(f'python3 -c "import serial"'):
+            assert harvest.cmd__check__has_internet(), "нет интернета для установки пакетов"
+            assert harvest.cmd__install_module("python3-serial")
 
 
 # =====================================================================================================================
@@ -156,7 +103,7 @@ class Test_1__GNSS:
     def setup_class(cls):
         assert True
 
-    def test__device_exists(self, harvest):
+    def test__gnss_exists(self, harvest):
         """
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB0\r\n" ----
         ls /dev/ttyUSB0
@@ -169,14 +116,14 @@ class Test_1__GNSS:
         root@harvest05:~#
         root@harvest05:~#
         """
-        out = harvest.write_read_lines("ls /dev/ttyUSB0")
-        assert "/dev/ttyUSB0" == out[1], "Порт GNSS не найден"
+        assert harvest.cmd__check_success__stdline("ls /dev/ttyUSB0"), "Порт GNSS не найден"
 
+    @pytest.mark.skip("not finished")
     def test__nmea_output(self, harvest):
         # Настраиваем порт и читаем несколько строк
-        harvest.write_bytes("stty -F /dev/ttyUSB0 9600 raw -echo")
-        harvest.write_bytes("timeout 5 cat /dev/ttyUSB0")
-        out = harvest.read_lines(timeout_start=0.5, timeout_continue=5)
+        harvest.conn.write_bytes("stty -F /dev/ttyUSB0 9600 raw -echo")
+        harvest.conn.write_bytes("timeout 5 cat /dev/ttyUSB0")
+        out = harvest.conn.read_lines(timeout_start=0.5, timeout_continue=5)
         assert "$GNGGA" in out or "$GNRMC" in out, "NMEA-предложения не получены"
 
 
