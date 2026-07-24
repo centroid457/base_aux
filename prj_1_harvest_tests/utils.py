@@ -18,7 +18,7 @@ class HarvestDevice:
         self.conn = conn
 
     # ------------------------------------------------------------------------------------------------------------------
-    def validate(self) -> bool:
+    def validate_conn(self) -> bool:
         """
         ============LOGIN
         harvest05 login:
@@ -46,7 +46,7 @@ class HarvestDevice:
         root@harvest05:~#
         root@harvest05:~#
         """
-        return self.try_login() and self.check_login()
+        return self.try_login() and self.check_loggedin()
 
     def try_login(self) -> bool:
         data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
@@ -61,7 +61,7 @@ class HarvestDevice:
 
         return False
 
-    def check_login(self) -> bool:
+    def check_loggedin(self) -> bool:
         data = self.conn.write_read_bytes(data="hostname")
         return b"root@harvest" in data
 
@@ -72,7 +72,7 @@ class HarvestDevice:
         return device_name
 
     # ---------------------------------------------------------------------------------------
-    def cmd__check_success__stdline(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+    def _check_success__stdline(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -102,15 +102,15 @@ class HarvestDevice:
         print(f"{out=}")
         return ERROR_MSG not in out[1:]
 
-    def cmd__install_module(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
+    def install_module(self, module: str, timeout_full_max: float = 30, **wr_kwargs) -> bool:
         """
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd__check_success__stdline(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
+        result = self._check_success__stdline(f"apt install -y {module}", timeout_full_max=timeout_full_max, **wr_kwargs)
         return result
 
-    def cmd__check__has_internet(self) -> bool:
+    def check__has_internet(self) -> bool:
         """
         root@harvest05:~#
         ---- Sent utf8 encoded message: "ping -c 1 -W 2 8.8.8.8\r\n" ----
@@ -122,7 +122,7 @@ class HarvestDevice:
 
         root@harvest05:~#
         """
-        return self.cmd__check_success__stdline(
+        return self._check_success__stdline(
                 "ping -c 1 -W 1 8.8.8.8",
                 timeout_continue=2,
             )

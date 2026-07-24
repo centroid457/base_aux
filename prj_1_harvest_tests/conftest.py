@@ -13,7 +13,7 @@ def harvest() -> HarvestDevice:
     found: list[HarvestDevice] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         with conn:
-            if HarvestDevice(conn).validate():
+            if HarvestDevice(conn).validate_conn():
                 dev_id = HarvestDevice(conn).get_name_and_occupy()
                 print(f"\n[HARVEST_FOUND]{conn}/{dev_id=}")
                 found.append(HarvestDevice(conn))
