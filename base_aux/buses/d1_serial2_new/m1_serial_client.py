@@ -217,7 +217,7 @@ class SerialClient2:
         return data.encode(self.encoding)
 
     @staticmethod
-    def _replace__ansi(text: str) -> str:
+    def _replace_chars__ansi(text: str) -> str:
         """
         GOAL
         Удалить CSI‑последовательности: \x1b[...m, \x1b[...h, \x1b[...l и т.д.
@@ -235,13 +235,14 @@ class SerialClient2:
         return ansi_escape.sub('', text)
 
     @staticmethod
-    def _replace__control_chars(text: str) -> str:
+    def _replace_chars__service(text: str) -> str:
         """
         GOAL
         удалить нечитаемые символы кроме табуляции!
         SOH и STX? 01 и 02
 Эти символы используются в паре с ANSI-кодами для выделения начала и конца escape-последовательностей или для специальной разметки. Многие интерактивные утилиты (особенно основанные на readline) вставляют их в вывод при перенаправлении в pipe, чтобы терминал правильно интерпретировал границы управляющих кодов. При захвате вывода их нужно удалять – что мы и делаем.
 
+        Apply only on text!
 
         настоящий терминал
         ---- Sent utf8 encoded message: "timeout 1 bluetoothctl -- scan on\r\n" ----
@@ -283,8 +284,8 @@ class SerialClient2:
             raise TypeError(msg)
 
         result = data.decode(self.encoding, errors="replace")
-        result = self._replace__ansi(result)
-        result = self._replace__control_chars(result)
+        result = self._replace_chars__ansi(result)
+        result = self._replace_chars__service(result)
         return result
 
     def _to_str(self, data: AnyStr) -> str | NoReturn:

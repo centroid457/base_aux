@@ -184,5 +184,63 @@ class HarvestDevice:
         cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
         return self.cmd__check_executed_success(cmd)
 
+    # PARSERS ----------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def parse__gnss_info__UBX(raw: bytes) -> dict[str, str | list[str]]:
+        """
+        Парсит ответ UBX MON-VER (класс 0x0A, ID 0x04) и возвращает словарь:
+        {
+            'sw_version': str,    # версия расширенного ПО
+            'hw_version': str,    # аппаратная версия (строка)
+            'extensions': [       # дополнительные поля
+                "ROM BASE 3.01 (107888)",
+                "FWVER=SPG 3.01",
+                "PROTVER=18.00",
+                "MOD=NEO-M8N-0",
+                "FIS=0xEF4015 (100111)",
+                "GPS;GLO;GAL;BDS",
+                "SBAS;IMES;QZSS"
+            ]
+        }
+        При ошибке выбрасывает ValueError.
+
+        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+
+        LR-STRIPPED:	output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000'
+        LR-STRIPPED:	raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        """
+        # Проверка синхронизации и типа сообщения
+        if raw[:2] != b'\xb5\x62':
+            raise ValueError("Невалидный UBX заголовок")
+        cls, msg_id = raw[2], raw[3]
+        if cls != 0x0A or msg_id != 0x04:
+            raise ValueError(f"Ожидался MON-VER, получено 0x{cls:02X} 0x{msg_id:02X}")
+
+        length = int.from_bytes(raw[4:6], 'little')
+        payload = raw[6:6 + length]
+
+        sw_version = payload[:30].split(b'\x00')[0].decode()
+        hw_version = payload[30:40].split(b'\x00')[0].decode()
+
+        extensions = []
+        pos = 40
+        while pos < len(payload):
+            end = payload.find(b'\x00', pos)
+            if end == -1:
+                ext_str = payload[pos:].decode(errors='replace')
+                if ext_str:
+                    extensions.append(ext_str)
+                break
+            ext_str = payload[pos:end].decode(errors='replace')
+            if ext_str:
+                extensions.append(ext_str)
+            pos = end + 1
+
+        return {
+            'sw_version': sw_version,
+            'hw_version': hw_version,
+            'extensions': extensions,
+        }
+
 
 # ======================================================================================================================

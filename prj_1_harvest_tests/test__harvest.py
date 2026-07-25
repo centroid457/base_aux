@@ -18,44 +18,84 @@ s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
 time.sleep(0.3)
 s.reset_input_buffer()  # если не сделать то будут сыпаться NMEA $GPGSV / ...
 # Дадим модулю время, чтобы он мог выдать идентификационные NMEA-строки (u-blox часто шлёт $GPTXT)
-data = s.read(2048)
-print('ORIGINAL:' + data.decode(errors='ignore'))
+data0_first = s.read(2048)
+# print('ORIGINAL:' + data0_first.decode(errors='ignore'))
 
 while True:
     # 1=UBX_TXT -------------------------------
-    txt_match = re.findall(rb'\$GPTXT,.*', data)
-    if txt_match:
-        print('UBX_TXT:' + txt_match[0].decode(errors='ignore'))
+    data1_ubx_txt = re.findall(rb'\$GPTXT,.*', data0_first)
+    if data1_ubx_txt:
+        print('UBX_TXT:' + data1_ubx_txt[0].decode(errors='ignore'))
         break
         
     # 2=UBX_RESPONSE---------------------------
     # u-blox UBX MON-VER
+    # Очищаем буфер перед UBX, чтобы не было старых NMEA
+    s.reset_input_buffer()
     s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')
     time.sleep(0.5)
-    ubx_resp = s.read(256)
-    if b'\xb5\x62\x0a\x04' in ubx_resp:
-        print('UBX_RESPONSE:' + ubx_resp.hex())
+    data2_ubx_resp = s.read(256)
+    if b'\xb5\x62\x0a\x04' in data2_ubx_resp:
+        # print(data2_ubx_resp)
+        # print(data2_ubx_resp.hex())
+        
+        # raw=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        # hex=b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+        
+        print(f'UBX_RESPONSE:[{data2_ubx_resp.hex()}]')
         break
         
     # 3=MTK_RESPONSE---------------------------
     # MediaTek PMTK запрос версии
+    s.reset_input_buffer()
     s.write(b'$PMTK605*31\r\n')
     time.sleep(0.3)
-    mtk_resp = s.read(256)
-    if b'$PMTK' in mtk_resp:
-        print('MTK_RESPONSE:' + mtk_resp.decode(errors='ignore'))
+    data3_mtk_resp = s.read(256)
+    if b'$PMTK' in data3_mtk_resp:
+        print('MTK_RESPONSE:' + data3_mtk_resp.decode(errors='ignore'))
         break
     
     # 4=NO_IDENT---------------------------
     # Если ничего не получено – печатаем начало сырых данных
-    if not (txt_match or ubx_resp or mtk_resp):
-        print('NO_IDENT:' + data[:200].hex())
+    if not (data1_ubx_txt or data2_ubx_resp or data3_mtk_resp):
+        print('NO_IDENT:' + data0_first[:200].hex())
         break
     
     break
     
 s.close()
+time.sleep(0.1)
 """
+
+
+def _rules__raws_hex__understanding():
+    data_raw: bytes = b'\x00EXT CORE 3.01 (107900)'
+    print("data_raw=", data_raw)
+    # data_raw= b'\x00EXT CORE 3.01 (107900)'
+
+    data_hex_from_raw: str = data_raw.hex()
+    print("data_hex_from_raw=", data_hex_from_raw)
+    # data_hex_from_raw= 0045585420434f524520332e3031202831303739303029
+
+    data_raw_from_hex: bytes = bytes.fromhex(data_hex_from_raw)
+    print("data_raw_from_hex=", data_raw_from_hex)
+    # data_raw_from_hex= b'\x00EXT CORE 3.01 (107900)'
+
+
+    # 2=если мы в начале имеем байтстроку самого hex --------------------
+    output_hex_bytes = b'312c3331302c32342c30372c37392c3039362c2c30382c31352c3039392c32342a37380d0a2447504753562c342c322c31332c30392c34342c3132372c32342c31312c30332c3234392c2c31342c31332c3139302c2c31362c31332c3033372c2a37340d0a2447504753562c342c332c31332c31382c30352c3335382c2c32302c30392c3239362c32322c32312c35302c3236382c32312c32372c31382c3036342c2a37460d0a2447504753562c342c342c31332c33302c35352c3234322c2a34430d0a24474c4753562c312c312c30302a36350d0a24474e474c4c2c2c2c2c2c3135323833332e30302c562c4e2a35410d0ab5620a04fa0045585420434f52'
+    print(output_hex_bytes)
+    # b'312c3331302c32342c30372c37392c3039362c2c30382c31352c3039392c32342a37380d0a2447504753562c342c322c31332c30392c34342c3132372c32342c31312c30332c3234392c2c31342c31332c3139302c2c31362c31332c3033372c2a37340d0a2447504753562c342c332c31332c31382c30352c3335382c2c32302c30392c3239362c32322c32312c35302c3236382c32312c32372c31382c3036342c2a37460d0a2447504753562c342c342c31332c33302c35352c3234322c2a34430d0a24474c4753562c312c312c30302a36350d0a24474e474c4c2c2c2c2c2c3135323833332e30302c562c4e2a35410d0ab5620a04fa0045585420434f52'
+
+    # КОРРЕКТНАЯ СТРОКА
+    # output_hex_str = str(output_hex_bytes)[1:]    # НЕКОРРЕКТНО! кавычки остаются!
+    output_hex_str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
+    print(output_hex_str)
+    # 312c3331302c32342c30372c37392c3039362c2c30382c31352c3039392c32342a37380d0a2447504753562c342c322c31332c30392c34342c3132372c32342c31312c30332c3234392c2c31342c31332c3139302c2c31362c31332c3033372c2a37340d0a2447504753562c342c332c31332c31382c30352c3335382c2c32302c30392c3239362c32322c32312c35302c3236382c32312c32372c31382c3036342c2a37460d0a2447504753562c342c342c31332c33302c35352c3234322c2a34430d0a24474c4753562c312c312c30302a36350d0a24474e474c4c2c2c2c2c2c3135323833332e30302c562c4e2a35410d0ab5620a04fa0045585420434f52
+
+    output_raw = bytes.fromhex(output_hex_str)  # преобразуем в бинарные данные
+    print(output_raw)
+    # b'1,310,24,07,79,096,,08,15,099,24*78\r\n$GPGSV,4,2,13,09,44,127,24,11,03,249,,14,13,190,,16,13,037,*74\r\n$GPGSV,4,3,13,18,05,358,,20,09,296,22,21,50,268,21,27,18,064,*7F\r\n$GPGSV,4,4,13,30,55,242,*4C\r\n$GLGSV,1,1,00*65\r\n$GNGLL,,,,,152833.00,V,N*5A\r\n\xb5b\n\x04\xfa\x00EXT COR'
 
 
 # ======================================================================================================================
@@ -208,22 +248,40 @@ class Test_1__GNSS:
 
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
     def test_gnss_2__device_responds_info(self, harvest):
+        """
+
+        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+        root@harvest05:~#
+        """
         assert harvest.push_text_file(SCRIPTS.gnss_info, "/tmp/gnss_info.py"), "скрипт не отправился"
-        output = harvest.conn.write_read_lines('python3 /tmp/gnss_info.py', timeout_continue=5)
-        assert output, "данные не получены вообще"
+        output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info.py', timeout_continue=6)
+        assert output, "данные от устройства не получены вообще"
 
-        got_info = False
-        for line in output:
-            if 'NO_IDENT' in line:
-                print(f"GNSS_RAW: {line}")
-                continue
-            for expected in ['UBX_RESPONSE', 'MTK_RESPONSE', 'UBX_TXT']:
-                if expected in line:
-                    got_info = True
-                    print(f"GNSS_INFO: {line}")
-                    break
+        if b'UBX_RESPONSE' in output:
+            # Извлекаем HEX-строку --------------------
+            print(f"FULL: {output}")
 
-        assert got_info, "Не удалось получить идентификационные данные GNSS (модель/версия)"
+            output: bytes = output.split(b'UBX_RESPONSE:[')[1]
+            print(f"L-STRIPPED: {output}")
+
+            output_hex_bytes: bytes = re.split(rb'][\r\n]', output, maxsplit=1)[0]
+            print(f"LR-STRIPPED:\t{output_hex_bytes=}")
+
+            output_hex_str: str = output_hex_bytes.decode('ascii')   # получаем чистую HEX-строку
+            print(f"LR-STRIPPED:\t{output_hex_str=}")
+
+            # Декодируем HEX-строку в настоящие байты
+            try:
+                raw_data: bytes = bytes.fromhex(output_hex_str)
+                print(f"LR-STRIPPED:\t{raw_data=}")
+            except ValueError:
+                assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
+
+            result = harvest.parse__gnss_info__UBX(raw_data)
+            print(json.dumps(result, indent=2))
+            assert result, "Не удалось получить идентификационные данные GNSS (модель/версия) типа UBX_RESPONSE"
+        else:
+            assert False, "данные GNSS типа UBX_RESPONSE не получены!"
 
     @pytest.mark.dependency(depends=["gnss_responds", ])
     def test_gnss_3__work1__data_correct(self, harvest):
