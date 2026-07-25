@@ -687,8 +687,6 @@ def test__another_check(request):
 # упал или был пропущен. Альтернатива глобальным переменным и ручным skip.
 # Установка: pip install pytest-dependency
 
-import pytest
-
 # ---------------------------------------------------------------------------
 # 19.1 Базовая зависимость: depends=["имя тестовой функции"]
 # ---------------------------------------------------------------------------
@@ -720,6 +718,23 @@ def test_database_setup():
 @pytest.mark.dependency(depends=["auth", "db_ready"])
 def test_full_flow():
     assert True
+
+# ЦЕПНАЯ ЗАВИСИМОСТЬ
+class Test_4__RFID:
+    @pytest.mark.dependency(name="present__rfid_script")
+    def test_rfid_0__script_send_present(self):
+        """Физическое наличие скрипта."""
+        assert True, "не получилось отправить скрипт"
+        assert True, "Скрипт /root/e710.py не найден"
+
+    @pytest.mark.dependency(depends=["present__rfid_script", ], name="present__rfid")
+    def test_rfid_1__device_present(self, harvest):
+        raise NotImplementedError()
+
+    @pytest.mark.dependency(depends=["present__rfid", ])
+    def test_rfid_2__device_responds(self, harvest):
+        raise NotImplementedError()
+
 
 # ---------------------------------------------------------------------------
 # 19.3 Зависимости между классами и модулями

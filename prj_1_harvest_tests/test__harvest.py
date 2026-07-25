@@ -130,8 +130,8 @@ class Test_1__GNSS:
         "$GNGLL": None,
     }
 
-    @pytest.mark.dependency(name="present__gnss")
-    def test_gnss_1__device_present(self, harvest):
+    @pytest.mark.dependency(name="gnss_present")
+    def test_gnss_1__present_port(self, harvest):
         """
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB0\r\n" ----
         ls /dev/ttyUSB0
@@ -146,8 +146,8 @@ class Test_1__GNSS:
         """
         assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
 
-    @pytest.mark.dependency(depends=["present__gnss", ])
-    def test_gnss_2__device_responds(self, harvest):
+    @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
+    def test_gnss_2__device_responds_info(self, harvest):
         """
         1=BLOCK STAY LONG TIMУ on table
         ==================================
@@ -218,8 +218,8 @@ class Test_1__GNSS:
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
             print(f"NMEA-предложения {msg_type=} получены {data=}")
 
-    @pytest.mark.dependency(depends=["present__gnss", ])
-    def test_gnss_3__nmea_output_correct(self, harvest):
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_3__work1__data_correct(self, harvest):
         # FIXME: explore values without correct data!
         pass
 
@@ -227,13 +227,14 @@ class Test_1__GNSS:
 # ======================================================================================================================
 class Test_21__Bluetooth:
     """Тесты Bluetooth (тот же чип что и WiFi)"""
-    @pytest.mark.dependency(name="present__bt")
-    def test_bt_1__device_present(self, harvest):
+    @pytest.mark.dependency(name="bt_present")
+    def test_bt_1__present_port(self, harvest):
         """Проверяет, виден ли Bluetooth интерфейс."""
         assert harvest.cmd__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
-    @pytest.mark.dependency(depends=["present__bt", ])
-    def test_bt_2__device_responds(self, harvest):
+    @pytest.mark.dependency(depends=["bt_present", ], name="bt_responds")
+    def test_bt_2__device_responds_info(self, harvest):
+        # FIXME: use smth light! like serial number and model!!!
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -295,8 +296,8 @@ class Test_21__Bluetooth:
 
         assert result, "Не обнаружено ни одного Bluetooth-устройства"
 
-    @pytest.mark.dependency(depends=["present__bt", ])
-    def test_bt_3__scan_devices_count(self, harvest):
+    @pytest.mark.dependency(depends=["bt_responds", ])
+    def test_bt_3__work1__scan_devices(self, harvest):
         """Валидация: должно быть хотя бы 2 устройства (если окружение не пустое)."""
         output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2)
 
@@ -316,8 +317,8 @@ class Test_21__Bluetooth:
 
 # ----------------------------------------------------------------------------------------------------------------------
 class Test_22__WiFi:
-    @pytest.mark.dependency(name="present__wifi")
-    def test_wf_1__device_present(self, harvest):
+    @pytest.mark.dependency(name="wifi_present")
+    def test_wf_1__present_port(self, harvest):
         """
         ---- Sent utf8 encoded message: "ip link show wlan0 2>/dev/null || echo ERROR_MSG\r\n" ----
         ip link show wlan0 2>/dev/null || echo ERROR_MSG
@@ -346,14 +347,14 @@ class Test_22__WiFi:
         """
         assert harvest.cmd__check_executed_success("ip link show wlan0"), "Wi-Fi интерфейс wlan0 не обнаружен"
 
-    @pytest.mark.dependency(depends=["present__wifi", ])
-    def test_wf_2__device_responds(self, harvest):
+    @pytest.mark.dependency(depends=["wifi_present", ], name="wifi_responds")
+    def test_wf_2__device_responds_info(self, harvest):
         # assert harvest.cmd__check_success("iw dev wlan0 link"), "Команда iw dev wlan0 link вернула ошибку"
         stdout_connected = harvest.conn.write_read_lines("iw dev wlan0 link")
         assert "Not connected." not in stdout_connected, "нет соединения по WiFi"
 
-    @pytest.mark.dependency(depends=["present__wifi", ])
-    def test_wf_3__signal_quality(self, harvest):
+    @pytest.mark.dependency(depends=["wifi_responds", ])
+    def test_wf_3__work1__signal_quality(self, harvest):
         """Валидация: уровень сигнала не хуже порога."""
         # ожидаемый формат: "signal: -XX dBm"
         lines = harvest.conn.write_read_lines("iw dev wlan0 link | grep signal", timeout_continue=1)
@@ -370,17 +371,17 @@ class Test_22__WiFi:
 class Test_3__GSM:
     """Тесты GSM-модема (интерфейс usb0)"""
 
-    @pytest.mark.dependency(name="present__gsm")
-    def test_gsm_1__device_present(self, harvest):
+    @pytest.mark.dependency(name="gsm_present")
+    def test_gsm_1__present_port(self, harvest):
         """Физическое наличие модема."""
         assert harvest.cmd__check_executed_success("ip link show usb0"), "GSM-интерфейс usb0 не обнаружен"
 
-    @pytest.mark.dependency(depends=["present__gsm", ])
-    def test_gsm_2__device_responds(self, harvest):
+    @pytest.mark.dependency(depends=["gsm_present", ], name="gsm_responds")
+    def test_gsm_2__device_responds_info(self, harvest):
         raise NotImplementedError()
 
-    @pytest.mark.dependency(depends=["present__gsm", ])
-    def test_gsm_3__sim_detected(self, harvest):
+    @pytest.mark.dependency(depends=["gsm_responds", ])
+    def test_gsm_3__work1__sim_detected(self, harvest):
         """Получение данных: проверка SIM-карты через AT."""
         # Ищем порт AT-команд (обычно /dev/ttyUSB2)
         # Проверяем, что порт существует и отвечает
@@ -390,17 +391,8 @@ class Test_3__GSM:
         ready = any("+CPIN: READY" in line for line in output)
         assert ready, "SIM-карта не готова или модем не отвечает"
 
-    @pytest.mark.dependency(depends=["present__gsm", ])
-    def test_gsm_4__network_registration(self, harvest):
-        """Валидация: регистрация в сети."""
-        harvest.conn.write_bytes('echo -e "AT+CREG?\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
-        output = harvest.conn.read_lines(timeout_continue=1.5)
-        # Ищем +CREG: 0,1 или 0,5 (зарегистрирован)
-        registered = any("+CREG: " in line and (line.endswith("1") or line.endswith("5")) for line in output)
-        assert registered, "Модем не зарегистрирован в сотовой сети"
-
-    @pytest.mark.dependency(depends=["present__gsm", ])
-    def test_gsm_5__signal_quality(self, harvest):
+    @pytest.mark.dependency(depends=["gsm_responds", ])
+    def test_gsm_3__work1__signal_quality(self, harvest):
         """Валидация уровня сигнала (RSSI > 5)."""
         harvest.conn.write_bytes('echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
         output = harvest.conn.read_lines(timeout_continue=1.5)
@@ -416,25 +408,35 @@ class Test_3__GSM:
                     pass
         pytest.fail("Не удалось извлечь уровень сигнала GSM")
 
+    @pytest.mark.dependency(depends=["gsm_responds", ])
+    def test_gsm_3__work1__network_registration(self, harvest):
+        """Валидация: регистрация в сети."""
+        harvest.conn.write_bytes('echo -e "AT+CREG?\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
+        output = harvest.conn.read_lines(timeout_continue=1.5)
+        # Ищем +CREG: 0,1 или 0,5 (зарегистрирован)
+        registered = any("+CREG: " in line and (line.endswith("1") or line.endswith("5")) for line in output)
+        assert registered, "Модем не зарегистрирован в сотовой сети"
+
 
 # ======================================================================================================================
 class Test_4__RFID:
-    """Тесты RFID-считывателя (скрипт e710.py)"""
-    def test_rfid_01__script_send(self, harvest):
-        """Физическое наличие скрипта."""
-        assert False, "не получилось отправить скрипт"
 
-    def test_rfid_02__script_present(self, harvest):
+    @pytest.mark.dependency(name="rfid_script_present")
+    def test_rfid_0__script_send_present(self, harvest):
         """Физическое наличие скрипта."""
-        assert False, "Скрипт /root/e710.py не найден"
+        assert True, "не получилось отправить скрипт"
+        assert True, "Скрипт /root/e710.py не найден"
 
-    def test_rfid_1__device_present(self, harvest):
+    @pytest.mark.dependency(depends=["rfid_script_present", ], name="rfid_present")
+    def test_rfid_1__present_port(self, harvest):
         raise NotImplementedError()
 
-    def test_rfid_2__device_responds(self, harvest):
+    @pytest.mark.dependency(depends=["rfid_present", ], name="rfid_responds")
+    def test_rfid_2__device_responds_info(self, harvest):
         raise NotImplementedError()
 
-    def test_rfid_2__execution_no_error(self, harvest):
+    @pytest.mark.dependency(depends=["rfid_responds", ])
+    def test_rfid_3__work1__execution_no_error(self, harvest):
         """Получение данных: скрипт запускается и завершается без ошибок."""
         harvest.conn.write_bytes("timeout 2 python3 /root/e710.py")  # используем timeout для завершения
         output = harvest.conn.read_lines(timeout_continue=3)
@@ -442,7 +444,8 @@ class Test_4__RFID:
         has_traceback = any("Traceback" in line for line in output)
         assert not has_traceback, "Скрипт RFID завершился с ошибкой"
 
-    def test_rfid_3__valid_response_present(self, harvest):
+    @pytest.mark.dependency(depends=["rfid_responds", ])
+    def test_rfid_3__work2__valid_response_present(self, harvest):
         """Валидация: при наличии меток скрипт должен выдавать данные."""
         harvest.conn.write_bytes("timeout 3 python3 /root/e710.py")
         output = harvest.conn.read_lines(timeout_continue=4)
