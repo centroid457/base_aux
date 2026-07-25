@@ -1,14 +1,10 @@
 # =============================================================================
-#                 PYTEST: КОНСОЛЬНЫЙ ЗАПУСК — СПРАВОЧНИК
-#            от простого запуска до продвинутых сценариев
+# !. BEST 
 # =============================================================================
-
-# Все примеры команд можно выполнять в терминале (bash/zsh/cmd/PowerShell).
-# Строки, начинающиеся с # — комментарии, их можно не удалять,
-# они поясняют, что делает команда.
+pytest -v --html=report.html
 
 # =============================================================================
-# 1. САМЫЙ ПРОСТОЙ ЗАПУСК
+# 1. ВЫБОР ТЕСТОВ
 # =============================================================================
 
 # Запустить все тесты в текущей директории и поддиректориях
@@ -26,6 +22,116 @@ pytest test_a.py test_b.py tests/
 
 # Подробный вывод (показывает имена тестов)
 pytest -v
+
+```
+C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\prj_1_harvest_tests>pytest -v
+=============================================== test session starts ================================================
+platform win32 -- Python 3.12.7, pytest-9.0.2, pluggy-1.5.0 -- C:\Python3127x64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\__STARICHENKO_Element\PROJECTS\abc=base_aux
+configfile: .pytest.ini
+plugins: anyio-4.6.2.post1, dash-4.4.0, asyncio-1.3.0, cov-6.2.1, dependency-0.6.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 27 items
+
+test__harvest.py::Test_01__Detection::test_1__exist_ports PASSED                                              [  3%]
+test__harvest.py::Test_01__Detection::test_2__exist_can_open PASSED                                           [  7%]
+test__harvest.py::Test_01__Detection::test_3__harvest_detection PASSED                                        [ 11%]
+test__harvest.py::Test_02__PreInstall::test_pre_0__internet PASSED                                            [ 14%]
+test__harvest.py::Test_02__PreInstall::test_pre_1__coreutils_timeout PASSED                                   [ 18%]
+test__harvest.py::Test_02__PreInstall::test_pre_2__picocom PASSED                                             [ 22%]
+test__harvest.py::Test_02__PreInstall::test_pre_3__python PASSED                                              [ 25%]
+test__harvest.py::Test_02__PreInstall::test_pre_4__python_serial PASSED                                       [ 29%]
+test__harvest.py::Test_02__PreInstall::test_pre_5__wifi_1__iw PASSED                                          [ 33%]
+test__harvest.py::Test_02__PreInstall::test_pre_5__wifi_2__bluez PASSED                                       [ 37%]
+test__harvest.py::Test_02__PreInstall::test_pre_5__wifi_3__usbutils PASSED                                    [ 40%]
+test__harvest.py::Test_1__GNSS::test_gnss_1__gnss_exists PASSED                                               [ 44%]
+test__harvest.py::Test_1__GNSS::test_gnss_2__nmea_output_exists PASSED                                        [ 48%]
+test__harvest.py::Test_1__GNSS::test_gnss_3__nmea_output_correct SKIPPED (Not realised yet)                   [ 51%]
+test__harvest.py::Test_21__WiFi::test_wf_1__interface_exists PASSED                                           [ 55%]
+test__harvest.py::Test_21__WiFi::test_wf_2__link_connected FAILED                                             [ 59%]
+test__harvest.py::Test_21__WiFi::test_wf_3__signal_quality FAILED                                             [ 62%]
+test__harvest.py::Test_22__Bluetooth::test_bt_1__interface_exists PASSED                                      [ 66%]
+test__harvest.py::Test_22__Bluetooth::test_bt_2__scan_devices PASSED                                          [ 70%]
+test__harvest.py::Test_22__Bluetooth::test_bt_3__scan_devices_count PASSED                                    [ 74%]
+test__harvest.py::Test_3__GSM::test_gsm_1__interface_exists PASSED                                            [ 77%]
+test__harvest.py::Test_3__GSM::test_gsm_2__sim_detected FAILED                                                [ 81%]
+test__harvest.py::Test_3__GSM::test_gsm_3__network_registration FAILED                                        [ 85%]
+test__harvest.py::Test_3__GSM::test_gsm_4__signal_quality FAILED                                              [ 88%]
+test__harvest.py::Test_4__RFID::test_rfid_1__script_exists PASSED                                             [ 92%]
+test__harvest.py::Test_4__RFID::test_rfid_2__execution_no_error PASSED                                        [ 96%]
+test__harvest.py::Test_4__RFID::test_rfid_3__valid_response_present PASSED                                    [100%]
+
+===================================================== FAILURES =====================================================
+_____________________________________ Test_21__WiFi.test_wf_2__link_connected ______________________________________
+
+self = <prj_1_harvest_tests.test__harvest.Test_21__WiFi object at 0x0000023C176A8D40>
+harvest = <prj_1_harvest_tests.utils.HarvestDevice object at 0x0000023C176A9190>, present__wifi = True
+
+    def test_wf_2__link_connected(self, harvest, present__wifi):
+        """Получение данных о текущем подключении."""
+        if not present__wifi:
+            pytest.skip("Wi-Fi отсутствует")
+
+        # assert harvest.cmd__check_success("iw dev wlan0 link"), "Команда iw dev wlan0 link вернула ошибку"
+        stdout_connected = harvest.conn.write_read_lines("iw dev wlan0 link")
+>       assert "Not connected." not in stdout_connected, "нет соединения по WiFi"
+E       AssertionError: нет соединения по WiFi
+E       assert 'Not connected.' not in ['iw dev wlan0 link', 'Not connected.', 'root@harvest05:~# ', 'root@harvest05:~# ']
+
+test__harvest.py:225: AssertionError
+----------------------------------------------- Captured stdout call -----------------------------------------------
+SerialClient2(COM16.115200,occupied=harvest05){'write': b'iw dev wlan0 link\r\n'}
+SerialClient2(COM16.115200,occupied=harvest05bytes=b'iw dev wlan0 link\r\n\x1b[?2004l\rNot connected.\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=iw dev wlan0 link
+Not connected.
+root@harvest05:~#
+root@harvest05:~#
+______________________________________ Test_3__GSM.test_gsm_4__signal_quality ______________________________________
+
+self = <prj_1_harvest_tests.test__harvest.Test_3__GSM object at 0x0000023C1766F5F0>
+harvest = <prj_1_harvest_tests.utils.HarvestDevice object at 0x0000023C176A9190>, present__gsm = True
+
+    def test_gsm_4__signal_quality(self, harvest, present__gsm):
+        """Валидация уровня сигнала (RSSI > 5)."""
+        if not present__gsm:
+            pytest.skip("GSM отсутствует")
+
+        harvest.conn.write_bytes('echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
+        output = harvest.conn.read_lines(timeout_continue=1.5)
+        for line in output:
+            if "+CSQ:" in line:
+                try:
+                    # формат +CSQ: <rssi>,<ber>
+                    parts = line.replace("+CSQ:", "").strip().split(",")
+                    rssi = int(parts[0])
+                    assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi} (из 31)"
+                    return
+                except Exception:
+                    pass
+>       pytest.fail("Не удалось извлечь уровень сигнала GSM")
+E       Failed: Не удалось извлечь уровень сигнала GSM
+
+test__harvest.py:385: Failed
+----------------------------------------------- Captured stdout call -----------------------------------------------
+SerialClient2(COM16.115200,occupied=harvest05){'write': b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n'}
+SerialClient2(COM16.115200,occupied=harvest05bytes=b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n\x1b[?2004l\r[1] 1187\r\nAT+CSQ\r\r\n\r\n[1]+  Done                    echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2\r\n-bash: kill: %1: no such job\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=echo -e "AT+CSQ\r\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1
+[1] 1187
+AT+CSQ
+
+[1]+  Done                    echo -e "AT+CSQ\r\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2
+-bash: kill: %1: no such job
+root@harvest05:~#
+root@harvest05:~#
+============================================= short test summary info ==============================================
+FAILED test__harvest.py::Test_21__WiFi::test_wf_2__link_connected - AssertionError: нет соединения по WiFi
+FAILED test__harvest.py::Test_21__WiFi::test_wf_3__signal_quality - Failed: Не найдена строка signal
+FAILED test__harvest.py::Test_3__GSM::test_gsm_2__sim_detected - AssertionError: SIM-карта не готова или модем не отвечает
+FAILED test__harvest.py::Test_3__GSM::test_gsm_3__network_registration - AssertionError: Модем не зарегистрирован в сотовой сети
+FAILED test__harvest.py::Test_3__GSM::test_gsm_4__signal_quality - Failed: Не удалось извлечь уровень сигнала GSM
+===================================== 5 failed, 21 passed, 1 skipped in 50.49s =====================================
+
+C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\prj_1_harvest_tests>
+```
 
 # Сокращённый вывод (минимальная информация)
 pytest -q
@@ -84,7 +190,7 @@ pytest --markers
 # Прервать выполнение при первом же упавшем тесте
 pytest -x
 
-# Прервать после двух падений
+# Прервать после двух падений - два любых теста упали! не перезапускает!
 pytest --maxfail=2
 
 # =============================================================================
