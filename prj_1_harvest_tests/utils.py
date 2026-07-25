@@ -154,26 +154,35 @@ class HarvestDevice:
             )
 
     # ------------------------------------------------------------------------------------------------------------------
-    def push_text_file(self, text: str, filename: str = "script.py", dirpath: str | None = "/tmp") -> bool:
+    def push_text_file(self, text: str, filepath: str = "/tmp/script.py") -> bool:
         """
         GOAL
         transfer file scripts into device,
         original purpose is for *.py, but may any!
+
+        dirpath - MAINLY USE "/tmp"!!! if want to place into current - pass NONE!!!
         """
-        filepath = f'{dirpath.rstrip("/")}/{filename.strip("/")}'
+        # 1=MKDIR --------------------
+        splited = filepath.rsplit('/', 1)
+        if "/" in filepath:
+            if splited[0] == "":
+                dirpath = "/"
+            else:
+                dirpath = splited[0]
+        else:
+            dirpath = ""
 
-        text_b64 = base64.b64encode(text.encode()).decode()
-        # printf не добавляет '\n', в отличие от echo; одинарные кавычки защищают от пробелов.
         # mkdir -p создаст путь, если его нет.
-
-        for cmd in [
-            f"mkdir -p {dirpath}",
-            f"printf '%s' '{text_b64}' | base64 -d > {filepath}",
-        ]:
+        if dirpath not in ["", "/", None]:
+            cmd = f"mkdir -p {dirpath}"
             if not self.cmd__check_executed_success(cmd):
                 return False
 
-        return True
+        # 2=PUSH --------------------
+        text_b64 = base64.b64encode(text.encode()).decode()
+        # printf не добавляет '\n', в отличие от echo; одинарные кавычки защищают от пробелов.
+        cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
+        return self.cmd__check_executed_success(cmd)
 
 
 # ======================================================================================================================

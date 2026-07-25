@@ -1,5 +1,4 @@
 import pytest
-
 from .utils import HarvestDevice
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
@@ -12,9 +11,64 @@ manager = SerialManager()
 
 
 # ======================================================================================================================
-class Test_00__Explore:
+class SCRIPTS:
+    gnss_info = r"""
+import serial, time, re
+s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
+time.sleep(0.3)
+s.reset_input_buffer()  # если не сделать то будут сыпаться NMEA $GPGSV / ...
+# Дадим модулю время, чтобы он мог выдать идентификационные NMEA-строки (u-blox часто шлёт $GPTXT)
+data = s.read(2048)
+print('ORIGINAL:' + data.decode(errors='ignore'))
+
+while True:
+    # 1=UBX_TXT -------------------------------
+    txt_match = re.findall(rb'\$GPTXT,.*', data)
+    if txt_match:
+        print('UBX_TXT:' + txt_match[0].decode(errors='ignore'))
+        break
+        
+    # 2=UBX_RESPONSE---------------------------
+    # u-blox UBX MON-VER
+    s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')
+    time.sleep(0.5)
+    ubx_resp = s.read(256)
+    if b'\xb5\x62\x0a\x04' in ubx_resp:
+        print('UBX_RESPONSE:' + ubx_resp.hex())
+        break
+        
+    # 3=MTK_RESPONSE---------------------------
+    # MediaTek PMTK запрос версии
+    s.write(b'$PMTK605*31\r\n')
+    time.sleep(0.3)
+    mtk_resp = s.read(256)
+    if b'$PMTK' in mtk_resp:
+        print('MTK_RESPONSE:' + mtk_resp.decode(errors='ignore'))
+        break
+    
+    # 4=NO_IDENT---------------------------
+    # Если ничего не получено – печатаем начало сырых данных
+    if not (txt_match or ubx_resp or mtk_resp):
+        print('NO_IDENT:' + data[:200].hex())
+        break
+    
+    break
+    
+s.close()
+"""
+
+
+# ======================================================================================================================
+@pytest.mark.skipif(False, reason="used for exploring executions/methods")
+class Test_000__Explore:
     def test_1__push_file(self, harvest):
         assert harvest.push_text_file("print(123)")
+
+    def test_2__gnss(self, harvest):
+        script_explore = SCRIPTS.gnss_info
+
+        assert harvest.push_text_file(script_explore, "/tmp/script_explore.py")
+        assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
 
 
 # ======================================================================================================================
@@ -154,7 +208,22 @@ class Test_1__GNSS:
 
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
     def test_gnss_2__device_responds_info(self, harvest):
-        assert False, "нет данных от устройства"
+        assert harvest.push_text_file(SCRIPTS.gnss_info, "/tmp/gnss_info.py"), "скрипт не отправился"
+        output = harvest.conn.write_read_lines('python3 /tmp/gnss_info.py', timeout_continue=5)
+        assert output, "данные не получены вообще"
+
+        got_info = False
+        for line in output:
+            if 'NO_IDENT' in line:
+                print(f"GNSS_RAW: {line}")
+                continue
+            for expected in ['UBX_RESPONSE', 'MTK_RESPONSE', 'UBX_TXT']:
+                if expected in line:
+                    got_info = True
+                    print(f"GNSS_INFO: {line}")
+                    break
+
+        assert got_info, "Не удалось получить идентификационные данные GNSS (модель/версия)"
 
     @pytest.mark.dependency(depends=["gnss_responds", ])
     def test_gnss_3__work1__data_correct(self, harvest):

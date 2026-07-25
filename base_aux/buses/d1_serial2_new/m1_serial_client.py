@@ -462,7 +462,7 @@ class SerialClient2:
                 printable_data = self._to_str(data)
             except Exception as exc:
                 printable_data = f"{exc!r}"
-            print(f"{self}\bbytes={data}\bprintable={printable_data}")
+            print(f"{self}READ(\n\tbytes={data}\n\tprintable={printable_data})")
             return data
 
     def read_lines(self, **kwargs) -> Union[str, list[str]]:
