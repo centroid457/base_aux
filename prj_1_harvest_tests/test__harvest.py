@@ -12,13 +12,19 @@ manager = SerialManager()
 
 
 # ======================================================================================================================
+class Test_00__Explore:
+    def test_1__push_file(self, harvest):
+        assert harvest.push_text_file("print(123)")
+
+
+# ======================================================================================================================
 class Test_01__Detection:
-    def test_1__exist_ports(self):
+    def test_serial_1__exist_ports(self):
         result = manager.ADDRESSES_CASHED
         print(f"\nPORTS_EXISTED[{result}]")
         assert result != [], "Не обнаружено ни одного последовательного порта."
 
-    def test_2__exist_can_open(self):
+    def test_serial_2__exist_can_open(self):
         exist_opening__ok = []
         exist_opening__fail = []
 
@@ -32,7 +38,7 @@ class Test_01__Detection:
         print(f"{exist_opening__fail=}")
         assert exist_opening__ok != [], "Ни один порт не удалось открыть."
 
-    def test_3__harvest_detection(self, harvest):
+    def test_serial_3__harvest_detection(self, harvest):
         """
         Тест проверяет, что устройство успешно обнаружено,
         и выводит его уникальный идентификатор.

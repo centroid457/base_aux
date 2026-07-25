@@ -3,6 +3,7 @@ from typing import *
 import time
 import threading
 import logging
+import base64
 
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 
@@ -153,6 +154,26 @@ class HarvestDevice:
             )
 
     # ------------------------------------------------------------------------------------------------------------------
+    def push_text_file(self, text: str, filename: str = "script.py", dirpath: str | None = "/tmp") -> bool:
+        """
+        GOAL
+        transfer file scripts into device,
+        original purpose is for *.py, but may any!
+        """
+        filepath = f'{dirpath.rstrip("/")}/{filename.strip("/")}'
+
+        text_b64 = base64.b64encode(text.encode()).decode()
+        # printf не добавляет '\n', в отличие от echo; одинарные кавычки защищают от пробелов.
+        # mkdir -p создаст путь, если его нет.
+
+        for cmd in [
+            f"mkdir -p {dirpath}",
+            f"printf '%s' '{text_b64}' | base64 -d > {filepath}",
+        ]:
+            if not self.cmd__check_executed_success(cmd):
+                return False
+
+        return True
 
 
 # ======================================================================================================================
