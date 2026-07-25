@@ -18,6 +18,7 @@
 # VERSION = (0, 1, 4)   # separate DEVOPS, add testcontainers
 # VERSION = (0, 1, 5)   # add plagins pytest-cov/dependency
 # VERSION = (0, 1, 6)   # separate SERVERS block
+# VERSION = (0, 1, 7)   # separate VALIDATION, add pytest-html/dirty-equals
 
 # ==========================
 # base ---------------------
@@ -33,8 +34,13 @@ pytest              #MIT
 pytest-cov          #MIT
 pytest-asyncio      #Apache2.0
 pytest-dependency   #MIT
+pytest-html         #MPL2.0
 
 testcontainers      #Apache2.0 #docker
+
+# VALIDATION ---------------
+dirty-equals        #MIT
+pydantic            #MIT
 
 # DEVOPS -------------------
 gitpython   #BSD3
@@ -63,7 +69,6 @@ numpy       #BSD
 PyQt5       #GPL3
 
 PyYAML      #MIT
-pydantic    #MIT
 
 bs4         #MIT
 
