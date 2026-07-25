@@ -148,6 +148,10 @@ class Test_1__GNSS:
 
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
     def test_gnss_2__device_responds_info(self, harvest):
+        assert False, "нет данных от устройства"
+
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_3__work1__data_correct(self, harvest):
         """
         1=BLOCK STAY LONG TIMУ on table
         ==================================
@@ -208,8 +212,7 @@ class Test_1__GNSS:
         """
         gnss_data: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
 
-        harvest.cmd_timeout__write_bytes("cat /dev/ttyUSB0")
-        output = harvest.conn.read_lines(timeout_continue=1)
+        output = harvest.cmd_timeout__write_read_lines("cat /dev/ttyUSB0", timeout=1, timeout_continue=1)
 
         for msg_type, data in gnss_data.items():
             gnss_data[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
@@ -217,11 +220,6 @@ class Test_1__GNSS:
         for msg_type, data in gnss_data.items():
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
             print(f"NMEA-предложения {msg_type=} получены {data=}")
-
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_3__work1__data_correct(self, harvest):
-        # FIXME: explore values without correct data!
-        pass
 
 
 # ======================================================================================================================
