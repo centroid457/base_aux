@@ -1,6 +1,7 @@
 import pytest
 import os
 import time
+import re
 from datetime import datetime
 
 from .utils import HarvestDevice
@@ -45,10 +46,19 @@ def internet_access(harvest) -> bool:
 
 
 # =====================================================================================================================
-@pytest.hookimpl(trylast=True)   # попытка запуска после хука pytest-html - не помогло!!!!
-def pytest_sessionfinish(session, exitstatus):
-    html_path = session.config.getoption('--html', default=None)
-    pass
+# HTML REPORT
+def patch_html_title(filepath, new_title):
+    """Заменяет содержимое тега <h1 id="title"> в HTML-отчёте."""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        html = f.read()
+    new_html = re.sub(
+        r'<h1 id="title">.*?</h1>',
+        f'<h1 id="title">{new_title}</h1>',
+        html
+    )
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(new_html)
+    print(f"Заголовок отчёта изменён на '{new_title}'")
 
 
 @pytest.hookimpl(trylast=True)
@@ -83,6 +93,11 @@ def pytest_unconfigure(config):
     try:
         os.rename(html_path, new_path)
         print(f"Отчёт переименован в: {new_path}")
+        # Меняем заголовок
+        title = f"{DEVICE_ID} – {date_str}"
+        if safe_mark:
+            title += f" (markers: {safe_mark})"
+        patch_html_title(new_path, new_name)
     except OSError as exc:
         print(f"Ошибка переименования отчёта: {exc!r}")
 
