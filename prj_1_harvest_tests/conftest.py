@@ -11,16 +11,9 @@ from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 
 
 # =====================================================================================================================
-# Глобальная переменная для хранения идентификатора устройства
-DEVICE_ID: str | None = None
-
-
-# =====================================================================================================================
 @pytest.fixture(scope="session")
-def harvest() -> HarvestDevice:
+def harvest(request) -> HarvestDevice:
     """Находит устройство Harvest и возвращает авторизованный клиент."""
-    global DEVICE_ID
-
     found: list[HarvestDevice] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         with conn:
@@ -35,7 +28,7 @@ def harvest() -> HarvestDevice:
         pytest.exit("Устройств Harvest более чем 1!")
 
     with found[0].conn:
-        DEVICE_ID = dev_id   # сохраняем для использования в хуке
+        request.config.stash["device_id"] = dev_id
         yield found[0]
 
 
@@ -77,6 +70,8 @@ def pytest_unconfigure(config):
         print(f"HTML-отчёт не появился: {html_path}")
         return
 
+    # Получаем DEVICE_ID из stash – больше никакой глобальной переменной
+    DEVICE_ID = config.stash.get("device_id", None)
     if DEVICE_ID is None:
         print("DEVICE_ID не определён")
 
