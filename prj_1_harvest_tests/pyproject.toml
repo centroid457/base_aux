@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-addopts = "-v"
+addopts = "-v -s"
 markers = [
     "DET: detection",
     "PRE: preinstallation",
