@@ -327,7 +327,11 @@ pytest --junitxml=test_results.xml
 pytest --collect-only -q > all_tests.txt
 
 # Генерация HTML-отчёта (требуется плагин: pip install pytest-html)
-pytest --html=report.html
+# в процессе обязательно создается папка assets!!! и в ней стили CSS для этих отчетов!!!'
+pytest --html=reports/report.html
+# в папку!!! текущей директории! если нет создается без проблем!!!!
+pytest -v --capture=fd --html=reports/report_results.html -m DET
+
 
 # =============================================================================
 # 2.4 ТРЕЙСБЭК
