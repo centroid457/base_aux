@@ -15,29 +15,32 @@ class SCRIPTS:
     gnss_info__ubx = r"""
 import serial, time
 
-s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
+SOURCE_ADR: str = '/dev/ttyUSB0'
+START_UBX: bytes = b'\xb5\x62'
+
+s = serial.Serial(SOURCE_ADR, 9600, timeout=0.8)
 time.sleep(0.3)
-s.reset_input_buffer()            # очищаем старые NMEA
+s.reset_input_buffer()            # clear previous NMEA
 s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')   # UBX MON-VER
 
-sync = b'\xb5\x62'
 buf = b''
 while True:
     byte = s.read(1)
     if not byte:
         break                      # таймаут – выходим
     buf += byte
-    if buf[-2:] == sync:
+    if buf[-2:] == START_UBX:
         # дождались синхробайтов – читаем остаток заголовка
         header_rest = s.read(4)
         if len(header_rest) < 4:
-            break
-        length = int.from_bytes(header_rest[2:4], 'little')
-        # payload + контрольная сумма (2 байта)
-        payload_checksum = s.read(length + 2)
-        if len(payload_checksum) < length + 2:
-            break
-        full_msg = sync + header_rest + payload_checksum
+            break   # timeout
+        expected_load_length = int.from_bytes(header_rest[2:4], 'little')
+        # payload + checksum(2 байта)
+        load_with_checksum = s.read(expected_load_length + 2)
+        if len(load_with_checksum) < expected_load_length + 2:
+            break   # timeout
+        full_msg: bytes = START_UBX + header_rest + load_with_checksum
+        # send data in hex view
         print('UBX_RESPONSE:[' + full_msg.hex() + ']')
         break
 s.close()
@@ -142,6 +145,7 @@ class Test_000__Explore:
 
 
 # ======================================================================================================================
+@pytest.mark.DET
 class Test_01__Detection:
     def test_serial_1__exist_ports(self):
         result = manager.ADDRESSES_CASHED
@@ -171,6 +175,7 @@ class Test_01__Detection:
 
 
 # ======================================================================================================================
+@pytest.mark.PRE
 class Test_02__PreInstall:
     # ------------------------------------------------------------------------------------------------------------------
     def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None):
@@ -248,6 +253,7 @@ class Test_02__PreInstall:
 
 
 # ======================================================================================================================
+@pytest.mark.GNSS
 class Test_1__GNSS:
     MNEA_VALIDATE: dict[str, Base_EqValid | None] = {
         "$GPGSV": EqValid_Regexp(),
@@ -398,6 +404,7 @@ class Test_1__GNSS:
 
 
 # ======================================================================================================================
+@pytest.mark.BT
 class Test_21__Bluetooth:
     """Тесты Bluetooth (тот же чип что и WiFi)"""
     @pytest.mark.dependency(name="bt_present")
@@ -489,6 +496,7 @@ class Test_21__Bluetooth:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+@pytest.mark.WIFI
 class Test_22__WiFi:
     @pytest.mark.dependency(name="wifi_present")
     def test_wf_1__present_port(self, harvest):
@@ -541,6 +549,7 @@ class Test_22__WiFi:
 
 
 # ======================================================================================================================
+@pytest.mark.GSM
 class Test_3__GSM:
     """Тесты GSM-модема (интерфейс usb0)"""
 
@@ -592,6 +601,7 @@ class Test_3__GSM:
 
 
 # ======================================================================================================================
+@pytest.mark.RFID
 class Test_4__RFID:
 
     @pytest.mark.dependency(name="rfid_script_present")

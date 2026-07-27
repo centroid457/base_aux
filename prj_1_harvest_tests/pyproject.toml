@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+addopts = "-v"
+markers = [
+    "DET: detection",
+    "PRE: preinstallation",
+    "GNSS: gnss",
+    "BT: bluetooth",
+    "WIFI: wifi",
+    "GSM: gsm",
+    "RFID: rfid",
+]
