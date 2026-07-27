@@ -35,6 +35,7 @@ pytest-cov          #MIT
 pytest-asyncio      #Apache2.0
 pytest-dependency   #MIT
 pytest-html         #MPL2.0
+pytest-rerunfailures
 
 testcontainers      #Apache2.0 #docker
 
