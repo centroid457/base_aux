@@ -46,10 +46,15 @@ class SerialManager:
     @staticmethod
     def check__address_could_open(address: str) -> bool:
         try:
-            conn = Serial(address)
-            conn.close()
-            return True
-        except:
+            obj = SerialClient2(address, _raise_if_occupied=False)
+            print(1, obj)
+            result = obj.connect()
+            print(2, obj)
+            obj.disconnect()
+            print(3, obj)
+            return result
+        except Exception as exc:
+            print(f"Не удалось открыть {address}: {exc!r}")
             return False
 
     @staticmethod

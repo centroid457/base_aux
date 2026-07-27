@@ -136,7 +136,12 @@ class SerialClient2:
 
     # ==================================================================================================================
     def __str__(self):
-        return f"{self.__class__.__name__}({self.ADDRESS}.{self.baudrate},occupied={self.__occupied})"
+        try:
+            isopen = self._conn.is_open
+        except:
+            isopen = None
+
+        return f"{self.__class__.__name__}({self.ADDRESS}.{self.baudrate},occupied={self.__occupied},{isopen=})"
 
     def __repr__(self):
         return str(self)

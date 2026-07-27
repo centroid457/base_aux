@@ -143,7 +143,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(False, reason="used for exploring executions/methods")
+@pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__push_file(self, harvest):
         assert harvest.push_text_file("print(123)")
