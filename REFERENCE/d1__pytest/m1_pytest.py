@@ -5,6 +5,13 @@
 import pytest
 
 
+
+
+
+
+
+
+
 # ======================================================================================================================
 # 1. САМЫЙ ПРОСТОЙ ТЕСТ
 # ----------------------------------------------------------------------------------------------------------------------
@@ -24,7 +31,7 @@ def test__failing():
 
 
 # ======================================================================================================================
-# 2. УТВЕРЖДЕНИЯ (assert) И ИНТРОСПЕКЦИЯ
+# 2.1 УТВЕРЖДЕНИЯ (assert) И ИНТРОСПЕКЦИЯ
 # ----------------------------------------------------------------------------------------------------------------------
 # pytest переписывает байт-код assert, показывая значения переменных.
 def test__assert_with_message():
@@ -41,9 +48,289 @@ def test__collection_types():
     # Сравнение списков – видна разница.
     assert lst == [1, 2, 4]  # упадёт, показывая где отличие
 
+# ======================================================================================================================
+# 2.2 ТЕСТИРОВАНИЕ ИСКЛЮЧЕНИЙ (pytest.raises)
+# =============================================================================
+def divide(a, b):
+    if b == 0:
+        raise ValueError("Деление на ноль недопустимо")
+    return a / b
+
+def test_divide_by_zero():
+    with pytest.raises(ValueError, match="Деление на ноль"):
+        divide(10, 0)
+
+def test_divide_ok():
+    assert divide(10, 2) == 5
+
+# Можно проверять конкретный текст исключения через match (регулярное выражение).
+# Если исключение не возникнет – тест упадёт.
+
+
+
+
+
+
+
+
+
 
 # ======================================================================================================================
-# 3. ФИКСТУРЫ
+# 17. ТЕСТЫ В КЛАССАХ: организация, setup/teardown, фикстуры
+# ----------------------------------------------------------------------------------------------------------------------
+class Test__ResourceLevel1_Class:
+    """Класс с setup_class/teardown_class (scope='class')."""
+    # ----------------------------------------------------------
+    # Эти методы вызываются один раз для всего класса
+    @classmethod
+    def setup_class(cls):
+        print("\n\t[setup_class] Подключение к общему ресурсу")
+        """
+        напрямую передать фикстуру в метод setup_class нельзя, 
+        потому что это @classmethod, а pytest внедряет фикстуры только в обычные методы тестовых классов 
+        (и в методы с self). 
+        Аргументы, кроме cls, в setup_class не принимаются.
+        """
+        cls.shared_resource = ["resource"]
+
+    @classmethod
+    def teardown_class(cls):
+        print("\t[teardown_class] Освобождение ресурса")
+        cls.shared_resource = None
+
+    # ----------------------------------------------------------
+    def test__shared_resource_exists(self):
+        assert self.shared_resource == ["resource"]
+        self.shared_resource.append("modified")
+        assert len(self.shared_resource) == 2
+
+    def test__append_to_shared_resource(self):
+        assert len(self.shared_resource) == 2
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+class Test__ResourceLevel2_Method:
+    # Методы setup/teardown выполняются для каждого теста (аналогично фикстурам function scope)
+    # ----------------------------------------------------------
+    def setup_method(self, method):
+        print(f"\n\t[setup] {method.__name__}")
+        self.user_data = {"name": "guest", "authenticated": False}
+
+    def teardown_method(self, method):
+        print(f"\t[teardown] {method.__name__}")
+        self.user_data.clear()
+
+    # ----------------------------------------------------------
+    def test__initial_state(self):
+        """Пользователь не аутентифицирован по умолчанию."""
+        assert self.user_data["authenticated"] is False
+
+    # Можно использовать фикстуры: они вставляются после self
+    def test__login_with_fixture(self, simple_data):
+        """simple_data определена в этом же модуле (см. раздел 3)."""
+        self.user_data["name"] = simple_data["name"]
+        self.user_data["authenticated"] = True
+        assert self.user_data["name"] == "Alice"
+        assert self.user_data["authenticated"] is True
+
+
+# ======================================================================================================================
+# ВАЖНО: использование @pytest.mark.usefixtures для автоматического внедрения
+# фикстур в класс без явного указания в аргументах каждого метода.
+# ----------------------------------------------------------------------------------------------------------------------
+@pytest.fixture
+def resource_autouse():
+    print("\n\t[Фикстура resource_autouse] открываем ресурс")
+    res = {"state": True}
+    yield res  # тест выполняется здесь
+    print("\n\t[Фикстура resource_autouse] закрываем ресурс")
+    res["state"] = False
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+class Test__Inject0_DirectPass_IntoMethods:
+    def test__correct(self, resource_autouse):
+        assert "state" in resource_autouse
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# использовать обычный метод setup_method для запроса фикстур.
+class Test__Inject1_ManualFixture:
+    def setup_method(self, method, resource_autouse):
+        self.resource = resource_autouse
+
+    def test__check_resource(self):
+        assert self.resource["state"] is True
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@pytest.mark.usefixtures("resource_autouse")
+class Test__Inject2_AutoFixture:
+    """Фикстура 'resource_autouse' будет доступна во всех тестах как self.resource."""
+
+    # Чтобы фикстура стала атрибутом self, нужно объявить её в методе
+    # или использовать хитрый приём – объявить фикстуру и сохранить её в self.
+    # Просто @usefixtures не делает фикстуру атрибутом, но можно запросить её.
+    # Покажем правильный паттерн: ручной запрос через request fixture.
+
+    # ----------------------------------------------------------
+    @pytest.fixture(autouse=True)
+    def _inject_resource(self, resource_autouse):
+        """Фикстура, которая внедрит 'resource_autouse' в self."""
+        self.resource = resource_autouse
+
+    # ----------------------------------------------------------
+    def test__check_resource(self):
+        assert self.resource["state"] is True
+        self.resource["state"] = False
+
+    def test__resource_can_be_used(self):
+        assert "state" in self.resource
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================================================
+# 3. ПЕРЕХВАТ ВЫВОДА: stdout, stderr, логи (capsys, caplog)
+# =============================================================================
+def noisy_function():
+    print("Важное сообщение в stdout")
+    import logging
+    logging.warning("Предупреждение в логах")
+
+def test_capture_stdout_and_logs(capsys, caplog):
+    noisy_function()
+    captured = capsys.readouterr()
+    assert "Важное сообщение" in captured.out
+
+    # Проверка логов (caplog перехватывает логи уровня WARNING и выше по умолчанию)
+    assert "Предупреждение" in caplog.text
+    assert caplog.records[0].levelname == "WARNING"
+
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================================================
+# 5. ПАРАМЕТРИЗАЦИЯ: ОДИН ТЕСТ – МНОГО ВХОДНЫХ ДАННЫХ
+# =============================================================================
+@pytest.mark.parametrize("a, b, expected", [
+    (1, 2, 3),
+    (10, 20, 30),
+    (-1, 1, 0),
+    pytest.param(100, 200, 300, id="big_numbers"),
+])
+def test_addition(a, b, expected):
+    assert a + b == expected
+
+# Параметризация может сочетаться с фикстурами:
+@pytest.fixture
+def multiplier():
+    return 10
+
+@pytest.mark.parametrize("value, expected", [
+    (1, 10),
+    (2, 20),
+    (5, 50),
+])
+def test_multiply_by_fixture(value, expected, multiplier):
+    assert value * multiplier == expected
+
+# -----------------------------------------------------------------------------
+# Частая ошибка: имя фикстуры совпадает с именем параметра в parametrize.
+# Тогда pytest не сможет понять, что передавать, и тест упадёт с ошибкой.
+# -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================================================
+# 6. МАРКЕРЫ: skip, skipif, xfail, пользовательские
+# =============================================================================
+@pytest.mark.skip(reason="Этот тест пока не реализован")
+def test_not_ready():
+    assert False
+
+import sys
+@pytest.mark.skipif(sys.version_info < (3, 10), reason="Требуется Python 3.10+")
+def test_only_recent_python():
+    # match/case доступен с 3.10
+    code = """
+match 42:
+    case 42:
+        print('ok')
+"""
+    exec(code)  # упрощённо, просто для демонстрации
+
+@pytest.mark.xfail(reason="Известная ошибка, исправим позже")
+def test_known_bug():
+    assert 1 == 2  # тест помечается как ожидаемо падающий (xfail)
+
+# -----------------------------------------------------------------------------
+# ВАЖНО: если xfail-тест внезапно начинает проходить, он будет помечен как XPASS
+# (неожиданный успех). Это сигнал, что ошибка исправлена и маркер можно убрать.
+# -----------------------------------------------------------------------------
+
+# =============================================================================
+# Пользовательский маркер (НУЖНО зарегистрировать в CONF!!!)
+"""
+если не зарегистрировать - будут WARNINGS!!! в выводе 
+=========================================================== warnings summary ===========================================================
+test__harvest.py:148
+  C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\prj_1_harvest_tests\test__harvest.py:148: PytestUnknownMarkWarning: Unknown pytest.mark.DET - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.DET
+
+test__harvest.py:178
+  C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\prj_1_harvest_tests\test__harvest.py:178: PytestUnknownMarkWarning: Unknown pytest.mark.PRE - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.PRE
+"""
+@pytest.mark.slow
+def test_slow_operation():
+    import time
+    time.sleep(0.1)  # имитация долгой операции
+    assert True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================================================
+# 4. ФИКСТУРЫ
 # ----------------------------------------------------------------------------------------------------------------------
 # БАЗОВЫЕ
 # ----------------------------------------------------------------------------------------------------------------------
@@ -128,104 +415,6 @@ def test_db_write(module_db):
 # они будут общими для всего модуля. Следите за изоляцией тестов!
 # -----------------------------------------------------------------------------
 
-# ======================================================================================================================
-# 5. ПАРАМЕТРИЗАЦИЯ: ОДИН ТЕСТ – МНОГО ВХОДНЫХ ДАННЫХ
-# =============================================================================
-@pytest.mark.parametrize("a, b, expected", [
-    (1, 2, 3),
-    (10, 20, 30),
-    (-1, 1, 0),
-    pytest.param(100, 200, 300, id="big_numbers"),
-])
-def test_addition(a, b, expected):
-    assert a + b == expected
-
-# Параметризация может сочетаться с фикстурами:
-@pytest.fixture
-def multiplier():
-    return 10
-
-@pytest.mark.parametrize("value, expected", [
-    (1, 10),
-    (2, 20),
-    (5, 50),
-])
-def test_multiply_by_fixture(value, expected, multiplier):
-    assert value * multiplier == expected
-
-# -----------------------------------------------------------------------------
-# Частая ошибка: имя фикстуры совпадает с именем параметра в parametrize.
-# Тогда pytest не сможет понять, что передавать, и тест упадёт с ошибкой.
-# -----------------------------------------------------------------------------
-
-# ======================================================================================================================
-# 6. МАРКЕРЫ: skip, skipif, xfail, пользовательские
-# =============================================================================
-@pytest.mark.skip(reason="Этот тест пока не реализован")
-def test_not_ready():
-    assert False
-
-import sys
-@pytest.mark.skipif(sys.version_info < (3, 10), reason="Требуется Python 3.10+")
-def test_only_recent_python():
-    # match/case доступен с 3.10
-    code = """
-match 42:
-    case 42:
-        print('ok')
-"""
-    exec(code)  # упрощённо, просто для демонстрации
-
-@pytest.mark.xfail(reason="Известная ошибка, исправим позже")
-def test_known_bug():
-    assert 1 == 2  # тест помечается как ожидаемо падающий (xfail)
-
-# Пользовательский маркер (нужно зарегистрировать в pytest.ini)
-@pytest.mark.slow
-def test_slow_operation():
-    import time
-    time.sleep(0.1)  # имитация долгой операции
-    assert True
-
-# -----------------------------------------------------------------------------
-# ВАЖНО: если xfail-тест внезапно начинает проходить, он будет помечен как XPASS
-# (неожиданный успех). Это сигнал, что ошибка исправлена и маркер можно убрать.
-# -----------------------------------------------------------------------------
-
-# ======================================================================================================================
-# 7. ТЕСТИРОВАНИЕ ИСКЛЮЧЕНИЙ (pytest.raises)
-# =============================================================================
-def divide(a, b):
-    if b == 0:
-        raise ValueError("Деление на ноль недопустимо")
-    return a / b
-
-def test_divide_by_zero():
-    with pytest.raises(ValueError, match="Деление на ноль"):
-        divide(10, 0)
-
-def test_divide_ok():
-    assert divide(10, 2) == 5
-
-# Можно проверять конкретный текст исключения через match (регулярное выражение).
-# Если исключение не возникнет – тест упадёт.
-
-# ======================================================================================================================
-# 8. ПЕРЕХВАТ ВЫВОДА: stdout, stderr, логи (capsys, caplog)
-# =============================================================================
-def noisy_function():
-    print("Важное сообщение в stdout")
-    import logging
-    logging.warning("Предупреждение в логах")
-
-def test_capture_stdout_and_logs(capsys, caplog):
-    noisy_function()
-    captured = capsys.readouterr()
-    assert "Важное сообщение" in captured.out
-
-    # Проверка логов (caplog перехватывает логи уровня WARNING и выше по умолчанию)
-    assert "Предупреждение" in caplog.text
-    assert caplog.records[0].levelname == "WARNING"
 
 # ======================================================================================================================
 # 9. ВРЕМЕННЫЕ ФАЙЛЫ И КАТАЛОГИ (tmp_path, tmpdir)
@@ -341,17 +530,6 @@ def test_db_connection(db_backend):
 # Это позволяет регистрировать маркеры, задавать пути поиска тестов и т.д.
 
 # =============================================================================
-# 14. ПОЛЕЗНЫЕ КОМАНДНЫЕ АРГУМЕНТЫ
-# =============================================================================
-# Запуск одного теста: pytest test_example.py::test_passing
-# Запуск по маркеру:    pytest -m slow
-# Остановка после первого падения: pytest -x
-# Показ print() даже в проходящих тестах: pytest -s
-# Запуск упавших тестов из прошлого прогона: pytest --lf
-# Запуск с подробным трейсом: pytest --tb=long
-# Генерация отчёта: pytest --junitxml=report.xml
-
-# =============================================================================
 # 15. ЧАСТЫЕ ОШИБКИ И КАК ИХ ИЗБЕЖАТЬ
 # =============================================================================
 
@@ -390,127 +568,22 @@ def test_db_connection(db_backend):
 # 8) Слишком много assert в одном тесте – останавливается на первом упавшем,
 #    последующие не выполняются. Лучше разбивать на несколько тестов.
 
-# =============================================================================
-# 16. ЗАКЛЮЧЕНИЕ
-# =============================================================================
-# Этот файл – одновременно справочник и набор тестов.
-# Вы можете запустить его: pytest -v test_reference.py
-# Изучайте, модифицируйте, расширяйте свои знания!
-#
-# Удачи в тестировании с pytest!
 
 
-# ======================================================================================================================
-# 17. ТЕСТЫ В КЛАССАХ: организация, setup/teardown, фикстуры
-# ----------------------------------------------------------------------------------------------------------------------
-class Test__ResourceLevel1_Class:
-    """Класс с setup_class/teardown_class (scope='class')."""
-    # ----------------------------------------------------------
-    # Эти методы вызываются один раз для всего класса
-    @classmethod
-    def setup_class(cls):
-        print("\n\t[setup_class] Подключение к общему ресурсу")
-        """
-        напрямую передать фикстуру в метод setup_class нельзя, 
-        потому что это @classmethod, а pytest внедряет фикстуры только в обычные методы тестовых классов 
-        (и в методы с self). 
-        Аргументы, кроме cls, в setup_class не принимаются.
-        """
-        cls.shared_resource = ["resource"]
-
-    @classmethod
-    def teardown_class(cls):
-        print("\t[teardown_class] Освобождение ресурса")
-        cls.shared_resource = None
-
-    # ----------------------------------------------------------
-    def test__shared_resource_exists(self):
-        assert self.shared_resource == ["resource"]
-        self.shared_resource.append("modified")
-        assert len(self.shared_resource) == 2
-
-    def test__append_to_shared_resource(self):
-        assert len(self.shared_resource) == 2
 
 
-# ----------------------------------------------------------------------------------------------------------------------
-class Test__ResourceLevel2_Method:
-    # Методы setup/teardown выполняются для каждого теста (аналогично фикстурам function scope)
-    # ----------------------------------------------------------
-    def setup_method(self, method):
-        print(f"\n\t[setup] {method.__name__}")
-        self.user_data = {"name": "guest", "authenticated": False}
-
-    def teardown_method(self, method):
-        print(f"\t[teardown] {method.__name__}")
-        self.user_data.clear()
-
-    # ----------------------------------------------------------
-    def test__initial_state(self):
-        """Пользователь не аутентифицирован по умолчанию."""
-        assert self.user_data["authenticated"] is False
-
-    # Можно использовать фикстуры: они вставляются после self
-    def test__login_with_fixture(self, simple_data):
-        """simple_data определена в этом же модуле (см. раздел 3)."""
-        self.user_data["name"] = simple_data["name"]
-        self.user_data["authenticated"] = True
-        assert self.user_data["name"] == "Alice"
-        assert self.user_data["authenticated"] is True
 
 
-# ======================================================================================================================
-# ВАЖНО: использование @pytest.mark.usefixtures для автоматического внедрения
-# фикстур в класс без явного указания в аргументах каждого метода.
-# ----------------------------------------------------------------------------------------------------------------------
-@pytest.fixture
-def resource_autouse():
-    print("\n\t[Фикстура resource_autouse] открываем ресурс")
-    res = {"state": True}
-    yield res  # тест выполняется здесь
-    print("\n\t[Фикстура resource_autouse] закрываем ресурс")
-    res["state"] = False
 
 
-# ----------------------------------------------------------------------------------------------------------------------
-class Test__Inject0_DirectPass_IntoMethods:
-    def test__correct(self, resource_autouse):
-        assert "state" in resource_autouse
 
 
-# ----------------------------------------------------------------------------------------------------------------------
-# использовать обычный метод setup_method для запроса фикстур.
-class Test__Inject1_ManualFixture:
-    def setup_method(self, method, resource_autouse):
-        self.resource = resource_autouse
-
-    def test__check_resource(self):
-        assert self.resource["state"] is True
 
 
-# ----------------------------------------------------------------------------------------------------------------------
-@pytest.mark.usefixtures("resource_autouse")
-class Test__Inject2_AutoFixture:
-    """Фикстура 'resource_autouse' будет доступна во всех тестах как self.resource."""
 
-    # Чтобы фикстура стала атрибутом self, нужно объявить её в методе
-    # или использовать хитрый приём – объявить фикстуру и сохранить её в self.
-    # Просто @usefixtures не делает фикстуру атрибутом, но можно запросить её.
-    # Покажем правильный паттерн: ручной запрос через request fixture.
 
-    # ----------------------------------------------------------
-    @pytest.fixture(autouse=True)
-    def _inject_resource(self, resource_autouse):
-        """Фикстура, которая внедрит 'resource_autouse' в self."""
-        self.resource = resource_autouse
 
-    # ----------------------------------------------------------
-    def test__check_resource(self):
-        assert self.resource["state"] is True
-        self.resource["state"] = False
 
-    def test__resource_can_be_used(self):
-        assert "state" in self.resource
 
 
 # ======================================================================================================================
