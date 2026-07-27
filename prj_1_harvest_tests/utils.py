@@ -219,22 +219,12 @@ class HarvestDevice:
         length = int.from_bytes(raw[4:6], 'little')
         payload = raw[6:6 + length]
 
-        sw_version = payload[:30].split(b'\x00')[0].decode()
-        hw_version = payload[30:40].split(b'\x00')[0].decode()
+        sw_version: str = payload[:30].split(b'\x00')[0].decode('ascii')
+        hw_version: str = payload[30:40].split(b'\x00')[0].decode('ascii')
+        extensions_hex: str = payload[40:].decode('ascii')
 
-        extensions = []
-        pos = 40
-        while pos < len(payload):
-            end = payload.find(b'\x00', pos)
-            if end == -1:
-                ext_str = payload[pos:].decode(errors='replace')
-                if ext_str:
-                    extensions.append(ext_str)
-                break
-            ext_str = payload[pos:end].decode(errors='replace')
-            if ext_str:
-                extensions.append(ext_str)
-            pos = end + 1
+        # extensions – всё после 40-го байта, разделённые нулями
+        extensions = [ext for ext in extensions_hex.split('\x00') if ext]
 
         return {
             'sw_version': sw_version,

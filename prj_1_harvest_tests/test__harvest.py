@@ -389,15 +389,15 @@ class Test_1__GNSS:
                 match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
                 assert match, "Не найден корректный UBX_RESPONSE в выводе"
                 output_hex_bytes = match.group(1)
-                print(f"LR-STRIPPED:\t{output_hex_bytes=}")
+                print(f"\t{output_hex_bytes=}")
 
                 output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
-                print(f"LR-STRIPPED:\t{output_hex_str=}")
+                print(f"\t{output_hex_str=}")
 
                 # Декодируем HEX-строку в настоящие байты
                 try:
                     raw_data: bytes = bytes.fromhex(output_hex_str)
-                    print(f"LR-STRIPPED:\t{raw_data=}")
+                    print(f"\t{raw_data=}")
                 except ValueError:
                     assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
 
