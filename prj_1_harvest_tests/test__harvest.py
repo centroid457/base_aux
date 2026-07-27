@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from .utils import HarvestDevice
 
@@ -17,6 +19,7 @@ import serial, time
 
 SOURCE_ADR: str = '/dev/ttyUSB0'
 START_UBX: bytes = b'\xb5\x62'
+MAX_BUFFER: int = 1000
 
 s = serial.Serial(SOURCE_ADR, 9600, timeout=0.8)
 time.sleep(0.3)
@@ -27,22 +30,30 @@ buf = b''
 while True:
     byte = s.read(1)
     if not byte:
-        break                      # таймаут – выходим
+        break   # timeout
+        
     buf += byte
+    
     if buf[-2:] == START_UBX:
         # дождались синхробайтов – читаем остаток заголовка
         header_rest = s.read(4)
         if len(header_rest) < 4:
             break   # timeout
+            
         expected_load_length = int.from_bytes(header_rest[2:4], 'little')
         # payload + checksum(2 байта)
         load_with_checksum = s.read(expected_load_length + 2)
         if len(load_with_checksum) < expected_load_length + 2:
             break   # timeout
+            
         full_msg: bytes = START_UBX + header_rest + load_with_checksum
         # send data in hex view
         print('UBX_RESPONSE:[' + full_msg.hex() + ']')
         break
+    
+    if len(buf) >= MAX_BUFFER:
+        break
+    
 s.close()
     """
 #     gnss_info__ubx = r"""
@@ -283,58 +294,9 @@ class Test_1__GNSS:
         assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
 
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
-    def test_gnss_2__device_responds_info(self, harvest):
+    def test_gnss_2__device_responds__weak(self, harvest):
         """
-
-        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
-        root@harvest05:~#
-        """
-        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
-
-        for attempt in range(3):
-            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
-
-            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
-
-            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=6)
-            assert output, "данные от устройства не получены вообще"
-
-            if b'UBX_RESPONSE:[' in output:
-                # Извлекаем HEX-строку --------------------
-                print(f"FULL: {output}")
-
-                output: bytes = output.split(b'UBX_RESPONSE:[')[1]
-                print(f"L-STRIPPED: {output}")
-
-                output_hex_bytes: bytes = re.split(rb'][\r\n]', output, maxsplit=1)[0]
-                print(f"LR-STRIPPED:\t{output_hex_bytes=}")
-
-                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
-                print(f"LR-STRIPPED:\t{output_hex_str=}")
-
-                # Декодируем HEX-строку в настоящие байты
-                try:
-                    raw_data: bytes = bytes.fromhex(output_hex_str)
-                    print(f"LR-STRIPPED:\t{raw_data=}")
-                except ValueError:
-                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
-
-                result = harvest.parse__gnss_info__UBX(raw_data)
-                print(json.dumps(result, indent=2))
-
-                if result:
-                    return True
-            else:
-                time.sleep(1)
-
-        # FINAL --------------------------
-        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
-
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_3__work1__data_correct(self, harvest):
-        """
-        1=BLOCK STAY LONG TIMУ on table
+        1=BLOCK STAY LONG TIME on table
         ==================================
         ---- Sent utf8 encoded message: "cat /dev/ttyUSB0 & sleep 1.0; kill %1\r\n" ----
         cat /dev/ttyUSB0 & sleep 1.0; kill %1
@@ -401,6 +363,72 @@ class Test_1__GNSS:
         for msg_type, data in gnss_data.items():
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
             print(f"NMEA-предложения {msg_type=} получены {data=}")
+
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_3__device_info(self, harvest):
+        """
+
+        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+        root@harvest05:~#
+        """
+        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
+
+        for attempt in range(3):
+            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
+
+            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
+            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
+
+            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
+            assert output, "данные от устройства не получены вообще"
+
+            if b'UBX_RESPONSE:[' in output:
+                # Извлекаем HEX-строку --------------------
+                print(f"FULL: {output}")
+
+                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
+                assert match, "Не найден корректный UBX_RESPONSE в выводе"
+                output_hex_bytes = match.group(1)
+                print(f"LR-STRIPPED:\t{output_hex_bytes=}")
+
+                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
+                print(f"LR-STRIPPED:\t{output_hex_str=}")
+
+                # Декодируем HEX-строку в настоящие байты
+                try:
+                    raw_data: bytes = bytes.fromhex(output_hex_str)
+                    print(f"LR-STRIPPED:\t{raw_data=}")
+                except ValueError:
+                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
+
+                result = harvest.parse__gnss_info__UBX(raw_data)
+                print(json.dumps(result, indent=2))
+
+                if result:
+                    return True
+            else:
+                time.sleep(1)
+
+        # FINAL --------------------------
+        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
+
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_4__work1__weak(self, harvest):
+        """
+        GOAL
+        test exact data
+
+        """
+        pytest.skip("not realised")
+
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_4__work2__deep(self, harvest):
+        """
+        GOAL
+        test exact data
+
+        """
+        pytest.skip("not realised")
 
 
 # ======================================================================================================================
