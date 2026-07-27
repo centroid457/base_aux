@@ -36,6 +36,7 @@ pytest-asyncio      #Apache2.0
 pytest-dependency   #MIT
 pytest-html         #MPL2.0
 pytest-rerunfailures
+pytest-clarity
 
 testcontainers      #Apache2.0 #docker
 
