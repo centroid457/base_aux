@@ -40,6 +40,7 @@ pytest-rerunfailures
 pytest-clarity
 pytest-timeout
 pytest-ordering
+pytest-xdist
 
 testcontainers      #Apache2.0 #docker
 
