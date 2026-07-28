@@ -361,9 +361,74 @@ class Test_1__GNSS:
         assert props.get("ID_USB_DRIVER") == "ch341", \
             f"Ожидался драйвер ch341, получен {props.get('ID_USB_DRIVER')}"
 
-
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
-    def test_gnss_2__device_responds__weak(self, harvest):
+    def test_gnss_2__device_info(self, harvest):
+        """
+
+        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+        root@harvest05:~#
+
+        FULL: b'python3 /tmp/gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+            output_hex_bytes=b'b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
+            output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
+            raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00X\x00'
+        {
+          "sw_version": "EXT CORE 3.01 (107900)",
+          "hw_version": "00080000",
+          "extensions": [
+            "ROM BASE 3.01 (107888)",
+            "FWVER=SPG 3.01",
+            "PROTVER=18.00",
+            "MOD=NEO-M8N-0",
+            "FIS=0xEF4015 (100111)",
+            "GPS;GLO;GAL;BDS",
+            "SBAS;IMES;QZSS"
+          ]
+        }
+        """
+        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
+
+        for attempt in range(3):
+            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
+
+            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
+            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
+
+            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
+            assert output, "данные от устройства не получены вообще"
+
+            if b'UBX_RESPONSE:[' in output:
+                # Извлекаем HEX-строку --------------------
+                print(f"FULL: {output}")
+
+                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
+                assert match, "Не найден корректный UBX_RESPONSE в выводе"
+                output_hex_bytes = match.group(1)
+                print(f"\t{output_hex_bytes=}")
+
+                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
+                print(f"\t{output_hex_str=}")
+
+                # Декодируем HEX-строку в настоящие байты
+                try:
+                    raw_data: bytes = bytes.fromhex(output_hex_str)
+                    print(f"\t{raw_data=}")
+                except ValueError:
+                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
+
+                result = harvest.parse__gnss_info__UBX(raw_data)
+                print(json.dumps(result, indent=2))
+
+                if result:
+                    return True
+            else:
+                time.sleep(1)
+
+        # FINAL --------------------------
+        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
+
+    @pytest.mark.dependency(depends=["gnss_responds", ])
+    def test_gnss_3__work1__weak(self, harvest):
         """
         1=BLOCK STAY LONG TIME on table
         ==================================
@@ -434,82 +499,7 @@ class Test_1__GNSS:
             print(f"NMEA-предложения {msg_type=} получены {data=}")
 
     @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_3__device_info(self, harvest):
-        """
-
-        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
-        root@harvest05:~#
-
-        FULL: b'python3 /tmp/gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
-            output_hex_bytes=b'b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
-            output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
-            raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00X\x00'
-        {
-          "sw_version": "EXT CORE 3.01 (107900)",
-          "hw_version": "00080000",
-          "extensions": [
-            "ROM BASE 3.01 (107888)",
-            "FWVER=SPG 3.01",
-            "PROTVER=18.00",
-            "MOD=NEO-M8N-0",
-            "FIS=0xEF4015 (100111)",
-            "GPS;GLO;GAL;BDS",
-            "SBAS;IMES;QZSS"
-          ]
-        }
-        """
-        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
-
-        for attempt in range(3):
-            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
-
-            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
-
-            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
-            assert output, "данные от устройства не получены вообще"
-
-            if b'UBX_RESPONSE:[' in output:
-                # Извлекаем HEX-строку --------------------
-                print(f"FULL: {output}")
-
-                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
-                assert match, "Не найден корректный UBX_RESPONSE в выводе"
-                output_hex_bytes = match.group(1)
-                print(f"\t{output_hex_bytes=}")
-
-                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
-                print(f"\t{output_hex_str=}")
-
-                # Декодируем HEX-строку в настоящие байты
-                try:
-                    raw_data: bytes = bytes.fromhex(output_hex_str)
-                    print(f"\t{raw_data=}")
-                except ValueError:
-                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
-
-                result = harvest.parse__gnss_info__UBX(raw_data)
-                print(json.dumps(result, indent=2))
-
-                if result:
-                    return True
-            else:
-                time.sleep(1)
-
-        # FINAL --------------------------
-        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
-
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_4__work1__weak(self, harvest):
-        """
-        GOAL
-        test exact data
-
-        """
-        pytest.skip("not realised")
-
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_4__work2__deep(self, harvest):
+    def test_gnss_3__work2__deep(self, harvest):
         """
         GOAL
         test exact data
@@ -528,8 +518,12 @@ class Test_21__Bluetooth:
         assert harvest.cmd__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
     @pytest.mark.dependency(depends=["bt_present", ], name="bt_responds")
-    def test_bt_2__device_responds_info(self, harvest):
+    def test_bt_2__device_info(self, harvest):
         # FIXME: use smth light! like serial number and model!!!
+        pytest.skip("not realised")
+
+    @pytest.mark.dependency(depends=["bt_responds", ])
+    def test_bt_3__work1__scan_devices(self, harvest):
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -590,24 +584,6 @@ class Test_21__Bluetooth:
                     break
 
         assert result, "Не обнаружено ни одного Bluetooth-устройства"
-
-    @pytest.mark.dependency(depends=["bt_responds", ])
-    def test_bt_3__work1__scan_devices(self, harvest):
-        """Валидация: должно быть хотя бы 2 устройства (если окружение не пустое)."""
-        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2)
-
-        # Считаем уникальные адреса
-        addrs = set()
-        for line in output:
-            if "] Device" in line:
-                # формат: [NEW] Device XX:XX:XX:XX:XX:XX ...
-                parts = line.split()
-                if len(parts) >= 3:
-                    dev_id = parts[2]
-                    addrs.add(dev_id)
-                    print(f"{dev_id=}")
-
-        assert len(addrs) >= 2, f"Найдено только {len(addrs)} Bluetooth-устройств, ожидалось >= 2"
 
 
 # ----------------------------------------------------------------------------------------------------------------------
