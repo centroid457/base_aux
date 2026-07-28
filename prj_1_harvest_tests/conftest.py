@@ -2,6 +2,7 @@ import pytest
 import os
 import time
 import re
+import json
 from datetime import datetime
 
 from .utils import HarvestDevice
@@ -32,6 +33,14 @@ def harvest(request) -> HarvestDevice:
         yield found[0]
 
 
+@pytest.fixture(scope="session")
+def harvest_info(harvest, request):
+    info = harvest.get_system_info()
+    request.config.stash["device_info"] = info
+    print(json.dumps(info, indent=2, ensure_ascii=False))
+    return info
+
+
 # =====================================================================================================================
 @pytest.fixture(scope="session")
 def internet_access(harvest) -> bool:
@@ -40,7 +49,7 @@ def internet_access(harvest) -> bool:
 
 # =====================================================================================================================
 # HTML REPORT
-def patch_html_title(filepath, new_title):
+def patch_html__title(filepath, new_title, **kwargs):
     """Заменяет содержимое тега <h1 id="title"> в HTML-отчёте."""
     with open(filepath, 'r', encoding='utf-8') as f:
         html = f.read()
@@ -56,7 +65,12 @@ def patch_html_title(filepath, new_title):
 
 @pytest.hookimpl(trylast=True)
 def pytest_unconfigure(config):
-    """Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время."""
+    """
+    GOAL
+    finalise all processes
+    """
+    # 1=HTML ----------------------------------------------------------------------------
+    # Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время
     html_path = config.getoption('--html', default=None)
     if not html_path:
         print("HTML-отчёт не задан – переименование не требуется.")
@@ -92,7 +106,7 @@ def pytest_unconfigure(config):
         title = f"{DEVICE_ID} – {date_str}"
         if safe_mark:
             title += f" (markers: {safe_mark})"
-        patch_html_title(new_path, new_name)
+        patch_html__title(filepath=new_path, new_title=new_name)
     except OSError as exc:
         print(f"Ошибка переименования отчёта: {exc!r}")
 
