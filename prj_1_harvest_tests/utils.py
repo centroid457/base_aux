@@ -104,8 +104,26 @@ class HarvestDevice:
     def cmd_timeout__write_read_bytes(self, cmd: str, timeout: float | None = None, **r_kwargs) -> bytes:
         return self.conn.write_read_bytes(self._cmd_with_timeout(cmd, timeout), **r_kwargs)
 
-    def cmd_timeout__write_read_lines(self, cmd: str, timeout: float | None = None, **r_kwargs) -> str | list[str]:
-        return self.conn.write_read_lines(self._cmd_with_timeout(cmd, timeout), **r_kwargs)
+    def cmd_timeout__write_read_lines(
+            self,
+            cmd: str,
+            timeout: float | None = None,
+
+            payload_only: bool | None = None,
+            return_str: bool | None = None,
+            **r_kwargs,
+    ) -> str | list[str]:
+        cmd_ = self._cmd_with_timeout(cmd, timeout)
+        output = self.conn.write_read_lines(cmd_, **r_kwargs)
+        if not payload_only:
+            return output
+
+        result = output[1:]
+        while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
+            result = result[:-1]
+        if return_str:
+            result = '\n'.join(result)
+        return result
 
     # ------------------------------------------------------------------------------------------------------------------
     # Вспомогательный приватный метод для выполнения команды и получения строки
@@ -120,24 +138,13 @@ class HarvestDevice:
         Выполняет команду на устройстве и возвращает stdout в виде строки.
         При ошибке возвращает пустую строку.
         """
-        try:
-            # Используем обёртку cmd_timeout__write_read_bytes, но она возвращает bytes,
-            # а нам нужна только полезная часть, отсекая эхо команды и приглашение.
-            # Можно написать специальную обработку, но проще выполнить через read_lines
-            # и склеить всё, кроме первой и последней строк (эхо + приглашение).
-            raw = self.cmd_timeout__write_read_lines(cmd, timeout=timeout, timeout_continue=timeout_continue, **r_kwargs)
-            if isinstance(raw, list):
-                # Обычно формат: [эхо команды, ... вывод ..., последнее приглашение]
-                # Отсекаем первую строку (эхо) и последнюю (если она содержит '#')
-                lines = raw[1:] if len(raw) > 1 else []
-
-                while lines and (re.match(r".+@.+:.*#\s*", lines[-1]) or lines[-1].strip() == ''):
-                    lines = lines[:-1]
-                return '\n'.join(lines)
-            else:
-                return raw
-        except Exception:
-            return ''
+        return self.cmd_timeout__write_read_lines(
+            cmd,
+            timeout=timeout,
+            timeout_continue=timeout_continue,
+            payload_only=True,
+            return_str=True ,
+            **r_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
     def cmd__check_executed_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:

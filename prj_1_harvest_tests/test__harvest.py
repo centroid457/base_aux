@@ -520,7 +520,52 @@ class Test_21__Bluetooth:
     @pytest.mark.dependency(depends=["bt_present", ], name="bt_responds")
     def test_bt_2__device_info(self, harvest):
         # FIXME: use smth light! like serial number and model!!!
-        pytest.skip("not realised")
+        """
+        Полный дамп всей доступной информации о Bluetooth-модуле.
+        Выполняется несколько команд, их вывод объединяется.
+        """
+        # Список команд для сбора информации
+        commands = [
+            "hciconfig hci0 -a",           # полная информация об интерфейсе
+            "hciconfig hci0 version",      # версия прошивки/стека
+            "hciconfig hci0 features",     # поддерживаемые функции
+            "btmgmt info",                 # настройки контроллера (поддерживаемые/текущие)
+            "bluetoothctl show",            # детали контроллера (UUID, режимы)
+            "bluetoothctl list",            # список контроллеров
+            "rfkill list bluetooth",        # состояние блокировок
+        ]
+
+        full_output: list[str] = []
+        for cmd in commands:
+            lines = harvest.cmd_timeout__write_read_lines(
+                cmd, timeout_continue=1.5
+            )
+            # добавляем заголовок и сам вывод
+            full_output.append(f"--- {cmd} ---")
+            if isinstance(lines, str):
+                full_output.append(lines)
+            else:
+                full_output.extend(lines)
+            full_output.append("")  # пустая строка-разделитель
+
+        # Выводим в лог pytest (будет видно в отчёте)
+        print("\n".join(full_output))
+
+        # Минимальная валидация: в hciconfig version должен быть Manufacturer
+        version_output = harvest.conn.write_read_lines(
+            "hciconfig hci0 version", timeout_continue=1.5
+        )
+        assert any(
+            "Manufacturer" in line for line in version_output
+        ), "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
+
+        # Проверяем, что rfkill не показывает Hard blocked
+        rfkill_output = harvest.conn.write_read_lines(
+            "rfkill list bluetooth", timeout_continue=1.5
+        )
+        assert not any(
+            "Hard blocked: yes" in line for line in rfkill_output
+        ), "Bluetooth аппаратно заблокирован (Hard blocked)"
 
     @pytest.mark.dependency(depends=["bt_responds", ])
     def test_bt_3__work1__scan_devices(self, harvest):
@@ -572,18 +617,26 @@ class Test_21__Bluetooth:
         root@harvest05:~#
         """
         # запускаем короткое сканирование (bluetoothctl или hcitool)
-        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2)
+        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2, payload_only=True)
+
+        # Убеждаемся, что discovery стартовал
+        assert any("Discovery started" in line for line in output), "Bluetooth discovery не запустился"
 
         # Ищем строки с "Device" (новый BLE/BR) в выводе
-        result = False
+        devices = []
         for line in output:
-            print(f"{line=}")
-            for expected in ["] Device", ]:
-                if expected in line:
-                    result = True
-                    break
+            # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
+            # if "Device" not in line:
+            #     continue
+            parts = line.split()
+            if len(parts) >= 3:
+                addr = parts[2]
+                name = " ".join(parts[3:]) if len(parts) > 3 else "(unnamed)"
+                dev_line = f"{addr} {name}"
+                devices.append(dev_line)
+                print(f"\t{dev_line}")
 
-        assert result, "Не обнаружено ни одного Bluetooth-устройства"
+        assert devices, "Не обнаружено ни одного Bluetooth-устройства"
 
 
 # ----------------------------------------------------------------------------------------------------------------------
