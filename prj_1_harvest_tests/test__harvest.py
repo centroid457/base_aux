@@ -287,7 +287,7 @@ class Test_1__GNSS:
     }
 
     @pytest.mark.dependency(name="gnss_present")
-    def test_gnss_1__present_port(self, harvest):
+    def test_gnss_1__present(self, harvest):
         """
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB0\r\n" ----
         ls /dev/ttyUSB0
@@ -300,135 +300,10 @@ class Test_1__GNSS:
         root@harvest05:~#
         root@harvest05:~#
         """
-        # 1=CONNECTED --------------
         assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
 
-        # 2=PID/VID ----------------
-        """
-{
-  "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
-  "DEVNAME": "/dev/ttyUSB0",
-  "MAJOR": "188",
-  "MINOR": "0",
-  "SUBSYSTEM": "tty",
-  "USEC_INITIALIZED": "12701625",
-  "ID_BUS": "usb",
-  "ID_MODEL": "USB_Serial",
-  "ID_MODEL_ENC": "USB\\x20Serial",
-  "ID_MODEL_ID": "7523",
-  "ID_SERIAL": "1a86_USB_Serial",
-  "ID_VENDOR": "1a86",
-  "ID_VENDOR_ENC": "1a86",
-  "ID_VENDOR_ID": "1a86",
-  "ID_REVISION": "0264",
-  "ID_TYPE": "generic",
-  "ID_USB_MODEL": "USB_Serial",
-  "ID_USB_MODEL_ENC": "USB\\x20Serial",
-  "ID_USB_MODEL_ID": "7523",
-  "ID_USB_SERIAL": "1a86_USB_Serial",
-  "ID_USB_VENDOR": "1a86",
-  "ID_USB_VENDOR_ENC": "1a86",
-  "ID_USB_VENDOR_ID": "1a86",
-  "ID_USB_REVISION": "0264",
-  "ID_USB_TYPE": "generic",
-  "ID_USB_INTERFACES": ":ff0102:",
-  "ID_USB_INTERFACE_NUM": "00",
-  "ID_USB_DRIVER": "ch341",
-  "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
-  "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
-  "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
-  "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
-  "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
-  "ID_MM_CANDIDATE": "1",
-  "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
-  "TAGS": ":systemd:",
-  "CURRENT_TAGS": ":systemd:"
-}
-        """
-        expected_vid = "1a86"
-        expected_pid = "7523"
-
-        props = harvest.get_info__usb("/dev/ttyUSB0")
-
-        # Проверяем
-        assert props.get("ID_VENDOR_ID", "").lower() == expected_vid, \
-            f"VID не совпадает: ожидался {expected_vid}, получен {props.get('ID_VENDOR_ID')}"
-
-        assert props.get("ID_MODEL_ID", "").lower() == expected_pid, \
-            f"PID не совпадает: ожидался {expected_pid}, получен {props.get('ID_MODEL_ID')}"
-
-        # Драйвер
-        assert props.get("ID_USB_DRIVER") == "ch341", \
-            f"Ожидался драйвер ch341, получен {props.get('ID_USB_DRIVER')}"
-
-    @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
-    def test_gnss_2__device_info(self, harvest):
-        """
-
-        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
-        root@harvest05:~#
-
-        FULL: b'python3 /tmp/gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
-            output_hex_bytes=b'b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
-            output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
-            raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00X\x00'
-        {
-          "sw_version": "EXT CORE 3.01 (107900)",
-          "hw_version": "00080000",
-          "extensions": [
-            "ROM BASE 3.01 (107888)",
-            "FWVER=SPG 3.01",
-            "PROTVER=18.00",
-            "MOD=NEO-M8N-0",
-            "FIS=0xEF4015 (100111)",
-            "GPS;GLO;GAL;BDS",
-            "SBAS;IMES;QZSS"
-          ]
-        }
-        """
-        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
-
-        for attempt in range(3):
-            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
-
-            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
-
-            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
-            assert output, "данные от устройства не получены вообще"
-
-            if b'UBX_RESPONSE:[' in output:
-                # Извлекаем HEX-строку --------------------
-                print(f"FULL: {output}")
-
-                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
-                assert match, "Не найден корректный UBX_RESPONSE в выводе"
-                output_hex_bytes = match.group(1)
-                print(f"\t{output_hex_bytes=}")
-
-                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
-                print(f"\t{output_hex_str=}")
-
-                # Декодируем HEX-строку в настоящие байты
-                try:
-                    raw_data: bytes = bytes.fromhex(output_hex_str)
-                    print(f"\t{raw_data=}")
-                except ValueError:
-                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
-
-                result = harvest.parse__gnss_info__UBX(raw_data)
-                print(json.dumps(result, indent=2))
-
-                if result:
-                    return True
-            else:
-                time.sleep(1)
-
-        # FINAL --------------------------
-        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
-
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_3__work1__weak(self, harvest):
+    @pytest.mark.dependency(depends=["gnss_present", ])
+    def test_gnss_2__work__nmea_flow(self, harvest):
         """
         1=BLOCK STAY LONG TIME on table
         ==================================
@@ -498,14 +373,117 @@ class Test_1__GNSS:
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
             print(f"NMEA-предложения {msg_type=} получены {data=}")
 
-    @pytest.mark.dependency(depends=["gnss_responds", ])
-    def test_gnss_3__work2__deep(self, harvest):
-        """
-        GOAL
-        test exact data
+        @pytest.mark.dependency(depends=["gnss_present", ])
+        def test_gnss_3__deep1__pids(self, harvest):
+            """
+    {
+      "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
+      "DEVNAME": "/dev/ttyUSB0",
+      "MAJOR": "188",
+      "MINOR": "0",
+      "SUBSYSTEM": "tty",
+      "USEC_INITIALIZED": "12701625",
+      "ID_BUS": "usb",
+      "ID_MODEL": "USB_Serial",
+      "ID_MODEL_ENC": "USB\\x20Serial",
+      "ID_MODEL_ID": "7523",
+      "ID_SERIAL": "1a86_USB_Serial",
+      "ID_VENDOR": "1a86",
+      "ID_VENDOR_ENC": "1a86",
+      "ID_VENDOR_ID": "1a86",
+      "ID_REVISION": "0264",
+      "ID_TYPE": "generic",
+      "ID_USB_MODEL": "USB_Serial",
+      "ID_USB_MODEL_ENC": "USB\\x20Serial",
+      "ID_USB_MODEL_ID": "7523",
+      "ID_USB_SERIAL": "1a86_USB_Serial",
+      "ID_USB_VENDOR": "1a86",
+      "ID_USB_VENDOR_ENC": "1a86",
+      "ID_USB_VENDOR_ID": "1a86",
+      "ID_USB_REVISION": "0264",
+      "ID_USB_TYPE": "generic",
+      "ID_USB_INTERFACES": ":ff0102:",
+      "ID_USB_INTERFACE_NUM": "00",
+      "ID_USB_DRIVER": "ch341",
+      "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
+      "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
+      "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
+      "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
+      "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
+      "ID_MM_CANDIDATE": "1",
+      "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+      "TAGS": ":systemd:",
+      "CURRENT_TAGS": ":systemd:"
+    }
+            """
+            props = harvest.get_info__usb("/dev/ttyUSB0")
+            assert props, "данные устройства не получены"
 
+    @pytest.mark.dependency(depends=["gnss_present", ])
+    def test_gnss_3__deep2__ubx(self, harvest):
         """
-        pytest.skip("not realised")
+
+        UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+        root@harvest05:~#
+
+        FULL: b'python3 /tmp/gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+            output_hex_bytes=b'b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
+            output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
+            raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00X\x00'
+        {
+          "sw_version": "EXT CORE 3.01 (107900)",
+          "hw_version": "00080000",
+          "extensions": [
+            "ROM BASE 3.01 (107888)",
+            "FWVER=SPG 3.01",
+            "PROTVER=18.00",
+            "MOD=NEO-M8N-0",
+            "FIS=0xEF4015 (100111)",
+            "GPS;GLO;GAL;BDS",
+            "SBAS;IMES;QZSS"
+          ]
+        }
+        """
+        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
+
+        for attempt in range(3):
+            print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
+
+            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
+            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
+
+            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
+            assert output, "данные от устройства не получены вообще"
+
+            if b'UBX_RESPONSE:[' in output:
+                # Извлекаем HEX-строку --------------------
+                print(f"FULL: {output}")
+
+                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
+                assert match, "Не найден корректный UBX_RESPONSE в выводе"
+                output_hex_bytes = match.group(1)
+                print(f"\t{output_hex_bytes=}")
+
+                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
+                print(f"\t{output_hex_str=}")
+
+                # Декодируем HEX-строку в настоящие байты
+                try:
+                    raw_data: bytes = bytes.fromhex(output_hex_str)
+                    print(f"\t{raw_data=}")
+                except ValueError:
+                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
+
+                result = harvest.parse__gnss_info__UBX(raw_data)
+                print(json.dumps(result, indent=2))
+
+                if result:
+                    return True
+            else:
+                time.sleep(1)
+
+        # FINAL --------------------------
+        assert False, "После нескольких попыток UBX_RESPONSE так и не был получен"
 
 
 # ======================================================================================================================
@@ -513,61 +491,12 @@ class Test_1__GNSS:
 class Test_21__Bluetooth:
     """Тесты Bluetooth (тот же чип что и WiFi)"""
     @pytest.mark.dependency(name="bt_present")
-    def test_bt_1__present_port(self, harvest):
+    def test_bt_1__present(self, harvest):
         """Проверяет, виден ли Bluetooth интерфейс."""
         assert harvest.cmd__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
-    @pytest.mark.dependency(depends=["bt_present", ], name="bt_responds")
-    def test_bt_2__device_info(self, harvest):
-        """
-        Полный дамп всей доступной информации о Bluetooth-модуле.
-        Выполняется несколько команд, их вывод объединяется.
-        """
-        # Список команд для сбора информации
-        commands = [
-            "hciconfig hci0 -a",           # полная информация об интерфейсе
-            "hciconfig hci0 version",      # версия прошивки/стека
-            "hciconfig hci0 features",     # поддерживаемые функции
-            "btmgmt info",                 # настройки контроллера (поддерживаемые/текущие)
-            "bluetoothctl show",            # детали контроллера (UUID, режимы)
-            "bluetoothctl list",            # список контроллеров
-            "rfkill list bluetooth",        # состояние блокировок
-        ]
-
-        full_output: list[str] = []
-        for cmd in commands:
-            lines = harvest.cmd_timeout__write_read_lines(
-                cmd, timeout_continue=1.5
-            )
-            # добавляем заголовок и сам вывод
-            full_output.append(f"--- {cmd} ---")
-            if isinstance(lines, str):
-                full_output.append(lines)
-            else:
-                full_output.extend(lines)
-            full_output.append("")  # пустая строка-разделитель
-
-        # Выводим в лог pytest (будет видно в отчёте)
-        print("\n".join(full_output))
-
-        # Минимальная валидация: в hciconfig version должен быть Manufacturer
-        version_output = harvest.conn.write_read_lines(
-            "hciconfig hci0 version", timeout_continue=1.5
-        )
-        assert any(
-            "Manufacturer" in line for line in version_output
-        ), "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
-
-        # Проверяем, что rfkill не показывает Hard blocked
-        rfkill_output = harvest.conn.write_read_lines(
-            "rfkill list bluetooth", timeout_continue=1.5
-        )
-        assert not any(
-            "Hard blocked: yes" in line for line in rfkill_output
-        ), "Bluetooth аппаратно заблокирован (Hard blocked)"
-
-    @pytest.mark.dependency(depends=["bt_responds", ])
-    def test_bt_3__work1__scan_devices(self, harvest):
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_2__work__scan_devices(self, harvest):
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -637,8 +566,57 @@ class Test_21__Bluetooth:
 
         assert devices, "Не обнаружено ни одного Bluetooth-устройства"
 
-    @pytest.mark.dependency(depends=["bt_responds", ])
-    def test_bt_3__work2__quality(self, harvest):
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_3__deep__(self, harvest):
+        """
+        Полный дамп всей доступной информации о Bluetooth-модуле.
+        Выполняется несколько команд, их вывод объединяется.
+        """
+        # Список команд для сбора информации
+        commands = [
+            "hciconfig hci0 -a",           # полная информация об интерфейсе
+            "hciconfig hci0 version",      # версия прошивки/стека
+            "hciconfig hci0 features",     # поддерживаемые функции
+            "btmgmt info",                 # настройки контроллера (поддерживаемые/текущие)
+            "bluetoothctl show",            # детали контроллера (UUID, режимы)
+            "bluetoothctl list",            # список контроллеров
+            "rfkill list bluetooth",        # состояние блокировок
+        ]
+
+        full_output: list[str] = []
+        for cmd in commands:
+            lines = harvest.cmd_timeout__write_read_lines(
+                cmd, timeout_continue=1.5
+            )
+            # добавляем заголовок и сам вывод
+            full_output.append(f"--- {cmd} ---")
+            if isinstance(lines, str):
+                full_output.append(lines)
+            else:
+                full_output.extend(lines)
+            full_output.append("")  # пустая строка-разделитель
+
+        # Выводим в лог pytest (будет видно в отчёте)
+        print("\n".join(full_output))
+
+        # Минимальная валидация: в hciconfig version должен быть Manufacturer
+        version_output = harvest.conn.write_read_lines(
+            "hciconfig hci0 version", timeout_continue=1.5
+        )
+        assert any(
+            "Manufacturer" in line for line in version_output
+        ), "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
+
+        # Проверяем, что rfkill не показывает Hard blocked
+        rfkill_output = harvest.conn.write_read_lines(
+            "rfkill list bluetooth", timeout_continue=1.5
+        )
+        assert not any(
+            "Hard blocked: yes" in line for line in rfkill_output
+        ), "Bluetooth аппаратно заблокирован (Hard blocked)"
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__(self, harvest):
         pytest.skip("not realised")
         # TODO: check errors
         """
@@ -677,7 +655,7 @@ class Test_22__WiFi:
     MIN_SCAN_NETWORKS = 3    # минимальное количество видимых сетей (если меньше – возможно антенна)
 
     @pytest.mark.dependency(name="wifi_present")
-    def test_wf_1__present_port(self, harvest):
+    def test_wf_1__present(self, harvest):
         """
         Проверяет наличие Wi-Fi интерфейса wlan0 и его тип.
 
@@ -717,54 +695,7 @@ class Test_22__WiFi:
         assert "type managed" in output.lower() or "type ap" in output.lower(), \
             f"wlan0 не является беспроводным интерфейсом: {output}"
 
-    @pytest.mark.dependency(depends=["wifi_present"], name="wifi_responds")
-    def test_wf_2__device_info(self, harvest):
-        """
-        Собирает максимальную информацию об адаптере:
-        - версия прошивки/драйвера
-        - MAC-адрес
-        - поддерживаемые стандарты (из iw phy)
-        - статистика ошибок (из ip -s link)
-        """
-        info = {}
-
-        # 1. Версия драйвера и прошивки (ethtool)
-        ethtool_output = harvest.cmd_timeout__write_read__payload_str(
-            "ethtool -i wlan0 2>/dev/null"
-        )
-        for line in ethtool_output.split('\n'):
-            if ':' in line:
-                k, v = line.split(':', 1)
-                info[k.strip()] = v.strip()
-        print(f"Driver info: {info}")
-
-        # Проверка, что драйвер загружен и прошивка указана
-        assert info.get('driver', ''), "Не удалось определить драйвер Wi-Fi (ethtool -i)"
-        assert info.get('firmware-version', ''), "Не удалось получить версию прошивки Wi-Fi"
-
-        # 2. Информация о беспроводном интерфейсе (iw dev wlan0 info)
-        iw_info = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
-        print(f"iw info:\n{iw_info}")
-
-        # 3. MAC-адрес и состояние
-        ip_output = harvest.cmd_timeout__write_read__payload_str("ip link show wlan0")
-        mac_match = re.search(r'link/ether ([\da-fA-F:]+)', ip_output)
-        if mac_match:
-            info['mac'] = mac_match.group(1)
-        assert 'mac' in info, "Не удалось извлечь MAC-адрес wlan0"
-
-        # 4. Поддерживаемые частоты и режимы (iw phy)
-        phy_output = harvest.cmd_timeout__write_read__payload_str("iw phy phy0 info 2>/dev/null")
-        print(f"iw phy summary (первые 500 символов): {phy_output[:500]}...")
-
-        # 5. Счетчики ошибок интерфейса (для последующего анализа трендов)
-        stats_raw = harvest.cmd_timeout__write_read__payload_str("ip -s link show wlan0")
-        print(f"Interface statistics:\n{stats_raw}")
-
-        # Сохраняем всё в отчёт (можно вернуть словарь, но pytest сохранит вывод в лог)
-        # Для простоты – пусть информация просто печатается, она попадёт в HTML-отчёт.
-
-    @pytest.mark.dependency(depends=["wifi_responds"], name="wifi_connected")
+    @pytest.mark.dependency(depends=["wifi_present"])
     def test_wf_3__connection_quality(self, harvest):
         """
         Проверяет текущее подключение к точке доступа:
@@ -815,9 +746,8 @@ class Test_22__WiFi:
         # Выводим скорости для информации
         print(f"Скорость TX: {tx_bitrate}, RX: {rx_bitrate}")
 
-    # --- Этап 3: Сканирование радиоэфира и косвенная проверка антенны ---
-    @pytest.mark.dependency(depends=["wifi_responds"])
-    def test_wf_4__scan_environment(self, harvest):
+    @pytest.mark.dependency(depends=["wifi_present"])
+    def test_wf_2__work__scan_environment(self, harvest):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
@@ -863,6 +793,53 @@ class Test_22__WiFi:
         else:
             print(f"Самая сильная сеть: {max(strong_signals):.1f} dBm")
 
+    @pytest.mark.dependency(depends=["wifi_present"])
+    def test_wf_3__deep__(self, harvest):
+        """
+        Собирает максимальную информацию об адаптере:
+        - версия прошивки/драйвера
+        - MAC-адрес
+        - поддерживаемые стандарты (из iw phy)
+        - статистика ошибок (из ip -s link)
+        """
+        info = {}
+
+        # 1. Версия драйвера и прошивки (ethtool)
+        ethtool_output = harvest.cmd_timeout__write_read__payload_str(
+            "ethtool -i wlan0 2>/dev/null"
+        )
+        for line in ethtool_output.split('\n'):
+            if ':' in line:
+                k, v = line.split(':', 1)
+                info[k.strip()] = v.strip()
+        print(f"Driver info: {info}")
+
+        # Проверка, что драйвер загружен и прошивка указана
+        assert info.get('driver', ''), "Не удалось определить драйвер Wi-Fi (ethtool -i)"
+        assert info.get('firmware-version', ''), "Не удалось получить версию прошивки Wi-Fi"
+
+        # 2. Информация о беспроводном интерфейсе (iw dev wlan0 info)
+        iw_info = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
+        print(f"iw info:\n{iw_info}")
+
+        # 3. MAC-адрес и состояние
+        ip_output = harvest.cmd_timeout__write_read__payload_str("ip link show wlan0")
+        mac_match = re.search(r'link/ether ([\da-fA-F:]+)', ip_output)
+        if mac_match:
+            info['mac'] = mac_match.group(1)
+        assert 'mac' in info, "Не удалось извлечь MAC-адрес wlan0"
+
+        # 4. Поддерживаемые частоты и режимы (iw phy)
+        phy_output = harvest.cmd_timeout__write_read__payload_str("iw phy phy0 info 2>/dev/null")
+        print(f"iw phy summary (первые 500 символов): {phy_output[:500]}...")
+
+        # 5. Счетчики ошибок интерфейса (для последующего анализа трендов)
+        stats_raw = harvest.cmd_timeout__write_read__payload_str("ip -s link show wlan0")
+        print(f"Interface statistics:\n{stats_raw}")
+
+        # Сохраняем всё в отчёт (можно вернуть словарь, но pytest сохранит вывод в лог)
+        # Для простоты – пусть информация просто печатается, она попадёт в HTML-отчёт.
+
 
 # ======================================================================================================================
 @pytest.mark.GSM
@@ -870,7 +847,7 @@ class Test_3__GSM:
     """Тесты GSM-модема (интерфейс usb0)"""
 
     @pytest.mark.dependency(name="gsm_present")
-    def test_gsm_1__present_port(self, harvest):
+    def test_gsm_1__present(self, harvest):
         """Физическое наличие модема."""
         assert harvest.cmd__check_executed_success("ip link show usb0"), "GSM-интерфейс usb0 не обнаружен"
 
@@ -927,7 +904,7 @@ class Test_4__RFID:
         assert True, "Скрипт /root/e710.py не найден"
 
     @pytest.mark.dependency(depends=["rfid_script_present", ], name="rfid_present")
-    def test_rfid_1__present_port(self, harvest):
+    def test_rfid_1__present(self, harvest):
         raise NotImplementedError()
 
     @pytest.mark.dependency(depends=["rfid_present", ], name="rfid_responds")
