@@ -519,7 +519,6 @@ class Test_21__Bluetooth:
 
     @pytest.mark.dependency(depends=["bt_present", ], name="bt_responds")
     def test_bt_2__device_info(self, harvest):
-        # FIXME: use smth light! like serial number and model!!!
         """
         Полный дамп всей доступной информации о Bluetooth-модуле.
         Выполняется несколько команд, их вывод объединяется.
@@ -638,13 +637,50 @@ class Test_21__Bluetooth:
 
         assert devices, "Не обнаружено ни одного Bluetooth-устройства"
 
+    @pytest.mark.dependency(depends=["bt_responds", ])
+    def test_bt_3__work2__quality(self, harvest):
+        pytest.skip("not realised")
+        # TODO: check errors
+        """
+2004hroot@harvest05:~# "
+	printable=hciconfig hci0 -a
+
+hci0:	Type: Primary  Bus: UART
+	BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+	UP RUNNING 
+	RX bytes:936753 acl:29093 sco:0 events:3626 errors:0
+	TX bytes:5144 acl:117 sco:0 commands:216 errors:0
+	Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+	Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
+	Link policy: RSWITCH SNIFF 
+	Link mode: PERIPHERAL ACCEPT 
+	Name: 'harvest05'
+	Class: 0x000000
+	Service Classes: Unspecified
+	Device Class: Miscellaneous, 
+	HCI Version: 4.0 (0x6)  Revision: 0x6a
+	LMP Version: 4.0 (0x6)  Subversion: 0x2209
+	Manufacturer: Broadcom Corporation (15)
+
+root@harvest05:~#      
+        """
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.WIFI
 class Test_22__WiFi:
+    # Пороговые значения для оценки качества (можно вынести в конфиг)
+    RSSI_MIN_OK = -75        # dBm – ниже этого уже внимание
+    RSSI_MIN_CRITICAL = -85  # dBm – ниже этого ошибка
+    BEACON_LOSS_MAX = 5      # за время сессии (если накопилось больше – проблема)
+    TX_RETRIES_MAX_RATIO = 0.15  # 15% повторных передач от общего числа – подозрительно
+    MIN_SCAN_NETWORKS = 3    # минимальное количество видимых сетей (если меньше – возможно антенна)
+
     @pytest.mark.dependency(name="wifi_present")
     def test_wf_1__present_port(self, harvest):
         """
+        Проверяет наличие Wi-Fi интерфейса wlan0 и его тип.
+
         ---- Sent utf8 encoded message: "ip link show wlan0 2>/dev/null || echo ERROR_MSG\r\n" ----
         ip link show wlan0 2>/dev/null || echo ERROR_MSG
         2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
@@ -670,26 +706,162 @@ class Test_22__WiFi:
         root@harvest05:~#
         root@harvest05:~#
         """
-        assert harvest.cmd__check_executed_success("ip link show wlan0"), "Wi-Fi интерфейс wlan0 не обнаружен"
+        # Проверка существования
+        assert harvest.cmd__check_executed_success(
+            "ip link show wlan0"
+        ), "Wi-Fi интерфейс wlan0 не обнаружен"
 
-    @pytest.mark.dependency(depends=["wifi_present", ], name="wifi_responds")
-    def test_wf_2__device_responds_info(self, harvest):
-        # assert harvest.cmd__check_success("iw dev wlan0 link"), "Команда iw dev wlan0 link вернула ошибку"
-        stdout_connected = harvest.conn.write_read_lines("iw dev wlan0 link")
-        assert "Not connected." not in stdout_connected, "нет соединения по WiFi"
+        # Дополнительная проверка, что это именно беспроводной интерфейс
+        output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
+        assert "wlan0" in output, "iw dev не видит wlan0"
+        assert "type managed" in output.lower() or "type ap" in output.lower(), \
+            f"wlan0 не является беспроводным интерфейсом: {output}"
 
-    @pytest.mark.dependency(depends=["wifi_responds", ])
-    def test_wf_3__work1__signal_quality(self, harvest):
-        """Валидация: уровень сигнала не хуже порога."""
-        # ожидаемый формат: "signal: -XX dBm"
-        lines = harvest.conn.write_read_lines("iw dev wlan0 link | grep signal", timeout_continue=1)
-        signal_line = [line for line in lines if 'signal:' in line]
-        if not signal_line:
-            pytest.fail("Не найдена строка signal")
-        rssi_str = signal_line[0].split("signal:")[1].split()[0]
-        rssi = int(rssi_str)
-        assert rssi > -85
-        pytest.fail(f"Не удалось извлечь уровень сигнала Wi-Fi/{lines=}")
+    @pytest.mark.dependency(depends=["wifi_present"], name="wifi_responds")
+    def test_wf_2__device_info(self, harvest):
+        """
+        Собирает максимальную информацию об адаптере:
+        - версия прошивки/драйвера
+        - MAC-адрес
+        - поддерживаемые стандарты (из iw phy)
+        - статистика ошибок (из ip -s link)
+        """
+        info = {}
+
+        # 1. Версия драйвера и прошивки (ethtool)
+        ethtool_output = harvest.cmd_timeout__write_read__payload_str(
+            "ethtool -i wlan0 2>/dev/null"
+        )
+        for line in ethtool_output.split('\n'):
+            if ':' in line:
+                k, v = line.split(':', 1)
+                info[k.strip()] = v.strip()
+        print(f"Driver info: {info}")
+
+        # Проверка, что драйвер загружен и прошивка указана
+        assert info.get('driver', ''), "Не удалось определить драйвер Wi-Fi (ethtool -i)"
+        assert info.get('firmware-version', ''), "Не удалось получить версию прошивки Wi-Fi"
+
+        # 2. Информация о беспроводном интерфейсе (iw dev wlan0 info)
+        iw_info = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
+        print(f"iw info:\n{iw_info}")
+
+        # 3. MAC-адрес и состояние
+        ip_output = harvest.cmd_timeout__write_read__payload_str("ip link show wlan0")
+        mac_match = re.search(r'link/ether ([\da-fA-F:]+)', ip_output)
+        if mac_match:
+            info['mac'] = mac_match.group(1)
+        assert 'mac' in info, "Не удалось извлечь MAC-адрес wlan0"
+
+        # 4. Поддерживаемые частоты и режимы (iw phy)
+        phy_output = harvest.cmd_timeout__write_read__payload_str("iw phy phy0 info 2>/dev/null")
+        print(f"iw phy summary (первые 500 символов): {phy_output[:500]}...")
+
+        # 5. Счетчики ошибок интерфейса (для последующего анализа трендов)
+        stats_raw = harvest.cmd_timeout__write_read__payload_str("ip -s link show wlan0")
+        print(f"Interface statistics:\n{stats_raw}")
+
+        # Сохраняем всё в отчёт (можно вернуть словарь, но pytest сохранит вывод в лог)
+        # Для простоты – пусть информация просто печатается, она попадёт в HTML-отчёт.
+
+    @pytest.mark.dependency(depends=["wifi_responds"], name="wifi_connected")
+    def test_wf_3__connection_quality(self, harvest):
+        """
+        Проверяет текущее подключение к точке доступа:
+        - уровень сигнала (RSSI)
+        - частота/канал
+        - скорости TX/RX битрейт
+        - количество повторных передач и ошибок
+        - beacon loss
+        """
+        # Убедимся, что есть соединение
+        link_output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 link")
+        assert "Not connected." not in link_output, "Нет активного Wi-Fi соединения"
+
+        # Извлекаем основные параметры через station dump (более информативно)
+        station_output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 station dump")
+        print(f"Station dump:\n{station_output}")
+
+        # Парсим station dump в словарь
+        station_data = {}
+        for line in station_output.split('\n'):
+            if ':' in line:
+                k, v = line.split(':', 1)
+                station_data[k.strip()] = v.strip()
+
+        # Проверки
+        rssi_str = station_data.get('signal', '-100')  # dBm
+        rssi = int(rssi_str.split()[0]) if rssi_str else -100
+
+        tx_bitrate = station_data.get('tx bitrate', 'unknown')
+        rx_bitrate = station_data.get('rx bitrate', 'unknown')
+        beacon_loss = int(station_data.get('beacon loss', '0'))
+        tx_retries = int(station_data.get('tx retries', '0'))
+        tx_packets = int(station_data.get('tx packets', '1'))  # чтобы делить
+        retry_ratio = tx_retries / tx_packets if tx_packets else 0
+
+        # assert'ы с пояснениями
+        assert rssi >= self.RSSI_MIN_CRITICAL, \
+            f"Критически низкий уровень сигнала Wi-Fi: {rssi} dBm (порог {self.RSSI_MIN_CRITICAL})"
+        if rssi < self.RSSI_MIN_OK:
+            print(f"ВНИМАНИЕ: пониженный уровень сигнала {rssi} dBm (желательно > {self.RSSI_MIN_OK})")
+
+        assert beacon_loss <= self.BEACON_LOSS_MAX, \
+            f"Слишком много потерянных beacon-ов: {beacon_loss} (допустимо {self.BEACON_LOSS_MAX})"
+
+        if retry_ratio > self.TX_RETRIES_MAX_RATIO:
+            print(f"ВНИМАНИЕ: высокая доля повторных передач {retry_ratio:.2%} (>{self.TX_RETRIES_MAX_RATIO:.0%})")
+
+        # Выводим скорости для информации
+        print(f"Скорость TX: {tx_bitrate}, RX: {rx_bitrate}")
+
+    # --- Этап 3: Сканирование радиоэфира и косвенная проверка антенны ---
+    @pytest.mark.dependency(depends=["wifi_responds"])
+    def test_wf_4__scan_environment(self, harvest):
+        """
+        Выполняет сканирование и оценивает количество видимых сетей,
+        уровни сигнала от ближайших точек доступа.
+        Это необходимо для диагностики проблем с антенной:
+        если не видно почти ничего, или все уровни аномально низкие,
+        вероятен обрыв антенного тракта.
+        """
+        # Сканирование может занять пару секунд, используем timeout
+        scan_output = harvest.cmd_timeout__write_read__payload_str(
+            "iw dev wlan0 scan | grep -E 'SSID|signal|freq' | head -60",
+            timeout=10,  # даём побольше времени
+            timeout_continue=2
+        )
+        print(f"Wi-Fi scan (сети):\n{scan_output}")
+
+        # Собираем BSSID и уровни сигнала
+        networks = []
+        current_ssid = None
+        for line in scan_output.split('\n'):
+            if line.startswith('SSID:'):
+                current_ssid = line.split(':', 1)[1].strip()
+            elif line.startswith('signal:') and current_ssid is not None:
+                try:
+                    signal_val = float(line.split(':')[1].strip().split()[0])
+                    networks.append((current_ssid, signal_val))
+                    current_ssid = None
+                except (IndexError, ValueError):
+                    pass
+
+        print(f"Обнаружено сетей: {len(networks)}")
+        for ssid, sig in networks:
+            print(f"  {ssid:30} {sig:5.1f} dBm")
+
+        assert len(networks) >= self.MIN_SCAN_NETWORKS, \
+            f"Обнаружено мало сетей ({len(networks)}), минимально ожидается {self.MIN_SCAN_NETWORKS}. " \
+            f"Возможна проблема с антенной или окружением."
+
+        # Проверка уровня хотя бы одной сети – не должно быть всё ниже -85 dBm
+        strong_signals = [sig for _, sig in networks if sig > self.RSSI_MIN_CRITICAL]
+        if not strong_signals:
+            print(f"ВНИМАНИЕ: все обнаруженные сети слабее {self.RSSI_MIN_CRITICAL} dBm – "
+                  f"подозрение на неисправность антенны или очень плохое покрытие.")
+        else:
+            print(f"Самая сильная сеть: {max(strong_signals):.1f} dBm")
 
 
 # ======================================================================================================================
