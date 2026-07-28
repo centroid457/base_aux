@@ -1,6 +1,6 @@
 import re
-
 import pytest
+
 from .utils import HarvestDevice
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
@@ -154,6 +154,10 @@ class Test_000__Explore:
         assert harvest.push_text_file(script_explore, "/tmp/script_explore.py")
         assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
 
+    def test_3__gnss_dev(self, harvest):
+        pass
+
+
 
 # ======================================================================================================================
 @pytest.mark.DET
@@ -184,7 +188,7 @@ class Test_01__Detection:
         """
         assert harvest, "Устройство Harvest не обнаружено."
 
-    @pytest.mark.skipif(True, "bad work!!!")
+    @pytest.mark.skipif(True, reason="bad work!!!")
     def test_serial_4__harvest_info(self, harvest_info):
         print(json.dumps(harvest_info, indent=2, ensure_ascii=False))
         assert harvest_info, "Устройство Harvest не обнаружено."
@@ -296,7 +300,67 @@ class Test_1__GNSS:
         root@harvest05:~#
         root@harvest05:~#
         """
+        # 1=CONNECTED --------------
         assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
+
+        # 2=PID/VID ----------------
+        """
+{
+  "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
+  "DEVNAME": "/dev/ttyUSB0",
+  "MAJOR": "188",
+  "MINOR": "0",
+  "SUBSYSTEM": "tty",
+  "USEC_INITIALIZED": "12701625",
+  "ID_BUS": "usb",
+  "ID_MODEL": "USB_Serial",
+  "ID_MODEL_ENC": "USB\\x20Serial",
+  "ID_MODEL_ID": "7523",
+  "ID_SERIAL": "1a86_USB_Serial",
+  "ID_VENDOR": "1a86",
+  "ID_VENDOR_ENC": "1a86",
+  "ID_VENDOR_ID": "1a86",
+  "ID_REVISION": "0264",
+  "ID_TYPE": "generic",
+  "ID_USB_MODEL": "USB_Serial",
+  "ID_USB_MODEL_ENC": "USB\\x20Serial",
+  "ID_USB_MODEL_ID": "7523",
+  "ID_USB_SERIAL": "1a86_USB_Serial",
+  "ID_USB_VENDOR": "1a86",
+  "ID_USB_VENDOR_ENC": "1a86",
+  "ID_USB_VENDOR_ID": "1a86",
+  "ID_USB_REVISION": "0264",
+  "ID_USB_TYPE": "generic",
+  "ID_USB_INTERFACES": ":ff0102:",
+  "ID_USB_INTERFACE_NUM": "00",
+  "ID_USB_DRIVER": "ch341",
+  "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
+  "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
+  "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
+  "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
+  "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
+  "ID_MM_CANDIDATE": "1",
+  "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+  "TAGS": ":systemd:",
+  "CURRENT_TAGS": ":systemd:"
+}
+        """
+        expected_vid = "1a86"
+        expected_pid = "7523"
+
+        props = harvest.get_info__usb("/dev/ttyUSB0")
+
+        # Проверяем
+        assert props.get("ID_VENDOR_ID", "").lower() == expected_vid, \
+            f"VID не совпадает: ожидался {expected_vid}, получен {props.get('ID_VENDOR_ID')}"
+
+        assert props.get("ID_MODEL_ID", "").lower() == expected_pid, \
+            f"PID не совпадает: ожидался {expected_pid}, получен {props.get('ID_MODEL_ID')}"
+
+        # Драйвер
+        assert props.get("ID_USB_DRIVER") == "ch341", \
+            f"Ожидался драйвер ch341, получен {props.get('ID_USB_DRIVER')}"
+
 
     @pytest.mark.dependency(depends=["gnss_present", ], name="gnss_responds")
     def test_gnss_2__device_responds__weak(self, harvest):

@@ -35,7 +35,7 @@ def harvest(request) -> HarvestDevice:
 
 @pytest.fixture(scope="session")
 def harvest_info(harvest, request):
-    info = harvest.get_system_info()
+    info = harvest.get_info__system()
     request.config.stash["device_info"] = info
     print(json.dumps(info, indent=2, ensure_ascii=False))
     return info
@@ -74,6 +74,7 @@ def pytest_unconfigure(config):
     html_path = config.getoption('--html', default=None)
     if not html_path:
         print("HTML-отчёт не задан – переименование не требуется.")
+        return
 
     # Даём время на завершение записи файла
     for _ in range(10):

@@ -3,6 +3,7 @@ from typing import *
 import time
 import re
 import threading
+import json
 import logging
 import base64
 
@@ -226,12 +227,12 @@ class HarvestDevice:
         cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
         return self.cmd__check_executed_success(cmd)
 
-    # PARSERS ----------------------------------------------------------------------------------------------------------
-    def get_system_info(self) -> dict:
-        info = {}
+    # INFO =============================================================================================================
+    def get_info__system(self) -> dict[str, Any]:
+        result = {}
 
         # ----- Идентификация и версия ОС -----
-        info['hostname'] = self.cmd_timeout__write_read__payload_str("hostname").strip()
+        result['hostname'] = self.cmd_timeout__write_read__payload_str("hostname").strip()
 
         raw_os = self.cmd_timeout__write_read__payload_str("cat /etc/os-release 2>/dev/null")
         os_dict = {}
@@ -239,10 +240,10 @@ class HarvestDevice:
             if '=' in line:
                 k, v = line.split('=', 1)
                 os_dict[k.strip()] = v.strip().strip('"')
-        info['os'] = os_dict
+        result['os'] = os_dict
 
-        info['kernel'] = self.cmd_timeout__write_read__payload_str("uname -r").strip()
-        info['architecture'] = self.cmd_timeout__write_read__payload_str("uname -m").strip()
+        result['kernel'] = self.cmd_timeout__write_read__payload_str("uname -r").strip()
+        result['architecture'] = self.cmd_timeout__write_read__payload_str("uname -m").strip()
 
         # ----- Модель платы -----
         # Попытка через device-tree, иначе через dmesg
@@ -254,7 +255,7 @@ class HarvestDevice:
                 "dmesg | grep 'Machine model' | head -1 | cut -d: -f2-"
             ).strip()
             model = dmesg_model if dmesg_model else "N/A"
-        info['board_model'] = model
+        result['board_model'] = model
 
         # ----- CPU -----
         cpu_lines = self.cmd_timeout__write_read__payload_str("cat /proc/cpuinfo 2>/dev/null")
@@ -267,7 +268,7 @@ class HarvestDevice:
                 model_name = line.split(":")[1].strip()
             if line.startswith("Hardware") and not model_name:
                 model_name = line.split(":")[1].strip()
-        info['cpu'] = {
+        result['cpu'] = {
             'model': model_name or 'ARM',
             'cores': cores
         }
@@ -279,26 +280,26 @@ class HarvestDevice:
             total = mem_parts[1]
             used = mem_parts[2]
             free = mem_parts[3]
-            info['memory'] = {'total_mb': int(total), 'used_mb': int(used), 'free_mb': int(free)}
+            result['memory'] = {'total_mb': int(total), 'used_mb': int(used), 'free_mb': int(free)}
         else:
             mem = {}
             for line in mem_lines.split('\n'):
                 parts = line.split()
                 if len(parts) >= 2:
                     mem[parts[0].rstrip(':')] = parts[1]
-            info['memory'] = mem
+            result['memory'] = mem
 
         # ----- Накопители -----
         disk_lines = self.cmd_timeout__write_read__payload_str("df -h / 2>/dev/null || echo 'N/A'")
         if disk_lines and disk_lines != 'N/A':
             parts = disk_lines.split('\n')[1].split()
-            info['disk'] = {'total': parts[1], 'used': parts[2], 'available': parts[3], 'use%': parts[4]}
+            result['disk'] = {'total': parts[1], 'used': parts[2], 'available': parts[3], 'use%': parts[4]}
         else:
-            info['disk'] = 'N/A'
+            result['disk'] = 'N/A'
 
         # ----- Uptime -----
         uptime_raw = self.cmd_timeout__write_read__payload_str("cat /proc/uptime")
-        info['uptime'] = uptime_raw.split()[0] if uptime_raw else 'N/A'
+        result['uptime'] = uptime_raw.split()[0] if uptime_raw else 'N/A'
 
         # ----- Сетевые интерфейсы -----
         net = {}
@@ -314,7 +315,7 @@ class HarvestDevice:
                 'mac': mac if mac else 'N/A',
                 'ip': ip_addr.split()[1].split('/')[0] if 'inet' in ip_addr else 'N/A'
             }
-        info['network'] = net
+        result['network'] = net
 
         # ----- USB‑устройства (исправляем таймаут и убираем лишний stderr) -----
         # Используем timeout_continue=2 для гарантированного чтения вывода
@@ -323,28 +324,51 @@ class HarvestDevice:
             timeout=None,  # команда сама содержит timeout
             timeout_continue=2.0  # ждём до 2 секунд после эхо
         )
-        info['usb_devices'] = [line.strip() for line in usb_raw.split('\n') if line.strip() and 'lsusb' not in line]
+        result['usb_devices'] = [line.strip() for line in usb_raw.split('\n') if line.strip() and 'lsusb' not in line]
 
         # ----- I2C‑шины -----
         i2c_list = self.cmd_timeout__write_read__payload_str("i2cdetect -l 2>/dev/null").split('\n')
-        info['i2c_buses'] = {}
+        result['i2c_buses'] = {}
         for bus_line in i2c_list:
             if 'i2c-' in bus_line:
                 bus_num = bus_line.split()[0].split('-')[1]
-                scan = self.cmd_timeout__write_read__payload_str(f"i2cdetect -y {bus_num} 2>/dev/null",
-                                                                 timeout_continue=1.5)
+                scan = self.cmd_timeout__write_read__payload_str(
+                    f"i2cdetect -y {bus_num} 2>/dev/null",
+                    timeout_continue=1.5,
+                    timeout=2,
+                )
                 # Оставляем только строки с данными
-                info['i2c_buses'][f'i2c-{bus_num}'] = [x.strip() for x in scan.split('\n')[1:] if x.strip()]
+                result['i2c_buses'][f'i2c-{bus_num}'] = [x.strip() for x in scan.split('\n')[1:] if x.strip()]
 
         # ----- Версия U‑Boot (ищем через grep) -----
         uboot_raw = self.cmd_timeout__write_read__payload_str(
             "dmesg | grep -i 'u-boot\|uboot' | head -1"
         ).strip()
-        info['uboot'] = uboot_raw if uboot_raw else 'N/A'
+        result['uboot'] = uboot_raw if uboot_raw else 'N/A'
 
-        return info
+        return result
 
-    # PARSERS ----------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_info__usb(self, address: str) -> dict[str, Any]:
+        # Отключаем пейджер, чтобы получить полный вывод без интерактива
+        output = self.cmd_timeout__write_read_lines(
+            f"SYSTEMD_PAGER=cat udevadm info -q property -n {address}",
+            timeout_continue=2.0,
+            # timeout=3,
+        )
+
+        result = {}
+        for line in output:
+            if "SYSTEMD_PAGER=" in line:
+                continue
+            if '=' in line:
+                key, val = line.split('=', 1)
+                result[key.strip()] = val.strip()
+
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return result
+
+    # PARSERS ==========================================================================================================
     @staticmethod
     def parse__gnss_info__UBX(raw: bytes) -> dict[str, str | list[str]]:
         """
