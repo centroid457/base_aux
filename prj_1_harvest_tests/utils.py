@@ -205,10 +205,105 @@ class HarvestDevice:
         return device_name
 
     # WR ===============================================================================================================
-    def _cmd_with_timeout(self, cmd: str, timeout: float | None = None) -> str:
+    def _cmd_cover_timeout(self, cmd: str, timeout: float | None = None) -> str:
+        """
+        work with SYSTEMD_PAGER
+
+---- Sent utf8 encoded message: "SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null\r\n" ----
+SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null
+DEVPATH=/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0
+DEVNAME=/dev/ttyUSB0
+MAJOR=188
+MINOR=0
+SUBSYSTEM=tty
+USEC_INITIALIZED=13287546
+ID_BUS=usb
+ID_MODEL=USB_Serial
+ID_MODEL_ENC=USB\x20Serial
+ID_MODEL_ID=7523
+ID_SERIAL=1a86_USB_Serial
+ID_VENDOR=1a86
+ID_VENDOR_ENC=1a86
+ID_VENDOR_ID=1a86
+ID_REVISION=0264
+ID_TYPE=generic
+ID_USB_MODEL=USB_Serial
+ID_USB_MODEL_ENC=USB\x20Serial
+ID_USB_MODEL_ID=7523
+ID_USB_SERIAL=1a86_USB_Serial
+ID_USB_VENDOR=1a86
+ID_USB_VENDOR_ENC=1a86
+ID_USB_VENDOR_ID=1a86
+ID_USB_REVISION=0264
+ID_USB_TYPE=generic
+ID_USB_INTERFACES=:ff0102:
+ID_USB_INTERFACE_NUM=00
+ID_USB_DRIVER=ch341
+ID_USB_CLASS_FROM_DATABASE=Vendor Specific Class
+ID_VENDOR_FROM_DATABASE=QinHeng Electronics
+ID_MODEL_FROM_DATABASE=CH340 serial converter
+ID_PATH=platform-1c1d400.usb-usb-0:1:1.0
+ID_PATH_TAG=platform-1c1d400_usb-usb-0_1_1_0
+ID_MM_CANDIDATE=1
+DEVLINKS=/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
+TAGS=:systemd:
+CURRENT_TAGS=:systemd:
+root@harvest05:~#
+root@harvest05:~#
+
+---- Sent utf8 encoded message: "timeout 4 SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null\r\n" ----
+timeout 4 SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null
+root@harvest05:~#
+root@harvest05:~#
+
+---- Sent utf8 encoded message: "timeout 4 sh -c 'SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null'\r\n" ----
+timeout 4 sh -c 'SYSTEMD_PAGER=cat udevadm info -q property -n /dev/ttyUSB0  2>/dev/null'
+DEVPATH=/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0
+DEVNAME=/dev/ttyUSB0
+MAJOR=188
+MINOR=0
+SUBSYSTEM=tty
+USEC_INITIALIZED=13287546
+ID_BUS=usb
+ID_MODEL=USB_Serial
+ID_MODEL_ENC=USB\x20Serial
+ID_MODEL_ID=7523
+ID_SERIAL=1a86_USB_Serial
+ID_VENDOR=1a86
+ID_VENDOR_ENC=1a86
+ID_VENDOR_ID=1a86
+ID_REVISION=0264
+ID_TYPE=generic
+ID_USB_MODEL=USB_Serial
+ID_USB_MODEL_ENC=USB\x20Serial
+ID_USB_MODEL_ID=7523
+ID_USB_SERIAL=1a86_USB_Serial
+ID_USB_VENDOR=1a86
+ID_USB_VENDOR_ENC=1a86
+ID_USB_VENDOR_ID=1a86
+ID_USB_REVISION=0264
+ID_USB_TYPE=generic
+ID_USB_INTERFACES=:ff0102:
+ID_USB_INTERFACE_NUM=00
+ID_USB_DRIVER=ch341
+ID_USB_CLASS_FROM_DATABASE=Vendor Specific Class
+ID_VENDOR_FROM_DATABASE=QinHeng Electronics
+ID_MODEL_FROM_DATABASE=CH340 serial converter
+ID_PATH=platform-1c1d400.usb-usb-0:1:1.0
+ID_PATH_TAG=platform-1c1d400_usb-usb-0_1_1_0
+ID_MM_CANDIDATE=1
+DEVLINKS=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0 /dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0
+TAGS=:systemd:
+CURRENT_TAGS=:systemd:
+root@harvest05:~#
+root@harvest05:~#
+        """
         result = ""
         if timeout:
             result += f"timeout {timeout} "
+
+        if cmd.startswith("SYSTEMD_PAGER"):
+            cmd = f"sh -c '{cmd}'"
 
         result += cmd
         return result
@@ -228,10 +323,10 @@ class HarvestDevice:
         root@harvest05:~#
         """
         # return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")  # OLD-incorrect!
-        return self.conn.write_bytes(self._cmd_with_timeout(cmd, timeout))
+        return self.conn.write_bytes(self._cmd_cover_timeout(cmd, timeout))
 
     def cmd_timeout__write_read_bytes(self, cmd: str, timeout: float | None = None, **wr_kwargs) -> bytes:
-        cmd = self._cmd_with_timeout(cmd, timeout)
+        cmd = self._cmd_cover_timeout(cmd, timeout)
         return self.conn.write_read_bytes(cmd, **wr_kwargs)
 
     def cmd_timeout__write_read_lines(
@@ -243,7 +338,7 @@ class HarvestDevice:
             return_str: bool | None = None,
             **r_kwargs,
     ) -> str | list[str]:
-        cmd_ = self._cmd_with_timeout(cmd, timeout)
+        cmd_ = self._cmd_cover_timeout(cmd, timeout)
         output = self.conn.write_read_lines(cmd_, **r_kwargs)
         if not payload_only:
             return output
@@ -618,7 +713,7 @@ class HarvestDevice:
         output = self.cmd_timeout__write_read__payload_str(
             f"SYSTEMD_PAGER=cat udevadm info -q property -n {address}",
             timeout_continue=2.0,
-            timeout=None,
+            timeout=3,
         ).split("\n")
 
         result = {}
@@ -630,6 +725,142 @@ class HarvestDevice:
                 result[key.strip()] = val.strip()
 
         print(json.dumps(result, indent=2, ensure_ascii=False))
+        return result
+
+    def get_info__usb_all(self) -> dict[str, dict[str, str]]:
+        """
+        Собирает udev-свойства для всех физических USB-устройств в /dev/.
+        Фильтрует: только устройства с ID_BUS=usb (не консоли ttyS*, не виртуальные).
+
+        Returns:
+            {
+                "/dev/ttyUSB0": {"ID_VENDOR": "1a86", "ID_MODEL": "USB_Serial", ...},
+                "/dev/video0":  {"ID_VENDOR": "...", "ID_MODEL": "...", ...},
+                "/dev/i2c-1":   {"ID_VENDOR": "...", "ID_MODEL": "...", ...},
+            }
+        """
+        result: dict[str, dict[str, str]] = {}
+
+        # Получаем список ВСЕХ устройств в /dev/
+        dev_list_raw = self.cmd_timeout__write_read__payload_str(
+            "ls /dev/",
+            timeout=3,
+            timeout_continue=1.0
+        )
+        """
+        ---- Sent utf8 encoded message: "ls /dev/\r\n" ----
+        ls /dev/
+        adsp1            kmem              nbd13               stdout  tty36  tty8
+        audio            kmsg              nbd14               tty     tty37  tty9
+        audio1           kvm               nbd15               tty0    tty38  ttyS0
+        audio2           log               nbd2                tty1    tty39  ttyS1
+        audio3           loop-control      nbd3                tty10   tty4   ttyS2
+        autofs           loop0             nbd4                tty11   tty40  ttyS3
+        block            loop1             nbd5                tty12   tty41  ttyS4
+        btrfs-control    loop2             nbd6                tty13   tty42  ttyS5
+        bus              loop3             nbd7                tty14   tty43  ttyS6
+        cec0             loop4             nbd8                tty15   tty44  ttyS7
+        char             loop5             nbd9                tty16   tty45  ttyUSB0
+        console          loop6             net                 tty17   tty46  urandom
+        cpu_dma_latency  loop7             network_latency     tty18   tty47  v4l
+        cuse             mapper            network_throughput  tty19   tty48  vcs
+        disk             mem               null                tty2    tty49  vcs1
+        dri              memory_bandwidth  ppp                 tty20   tty5   vcs2
+        dsp              mixer             psaux               tty21   tty50  vcs3
+        dsp1             mixer1            ptmx                tty22   tty51  vcs4
+        dsp2             mixer2            pts                 tty23   tty52  vcs5
+        dsp3             mixer3            random              tty24   tty53  vcs6
+        fb0              mmcblk0           rfkill              tty25   tty54  vcsa
+        fd               mmcblk0boot0      rtc                 tty26   tty55  vcsa1
+        full             mmcblk0boot1      rtc0                tty27   tty56  vcsa2
+        fuse             mmcblk0p1         rtc1                tty28   tty57  vcsa3
+        gpiochip0        mmcblk0p2         sequencer           tty29   tty58  vcsa4
+        gpiochip1        mmcblk0p3         sequencer2          tty3    tty59  vcsa5
+        i2c-0            mqueue            serial              tty30   tty6   vcsa6
+        i2c-1            nbd0              shm                 tty31   tty60  vhci
+        i2c-2            nbd1              snd                 tty32   tty61  video0
+        i2c-3            nbd10             spidev0.0           tty33   tty62  watchdog
+        initctl          nbd11             stderr              tty34   tty63  watchdog0
+        input            nbd12             stdin               tty35   tty7   zero
+        root@harvest05:~# 
+        """
+
+        # Фильтруем — оставляем только потенциально интересные устройства
+        # Исключаем: ttyS* (консоли), tty0-63 (виртуальные консоли),
+        #            loop*, ram*, null, zero, random, urandom, stdin/stdout/stderr
+        SKIP_PREFIXES = [
+            "ttyS", "tty",  # консоли UART + виртуальные консоли
+            "loop", "ram",
+            "null", "zero", "full", "random", "urandom",
+            "stdin", "stdout", "stderr",
+            "console", "ptmx", "pts",
+            "nbd", "mmcblk",  # блочные устройства
+            "watchdog", "cpu_dma_latency",
+            "network_latency", "network_throughput",
+            "memory_bandwidth",
+            "kmsg", "kmem", "mem", "kvm",
+            "fuse", "cuse",
+            "rtc", "rtc0", "rtc1",
+            "initctl", "autofs", "btrfs-control",
+            "gpiochip",
+            "mqueue", "shm",
+            "fd", "mapper",
+            "vcs", "vcsa",  # виртуальные консоли
+            "vhci",
+            "psaux",
+            "rfkill",
+            "ppp",
+            "dri", "fb0",
+            "bus",
+        ]
+
+        potential_devices: list[str] = []
+        for dev_name in dev_list_raw.split():
+            dev_name = dev_name.strip()
+            if not dev_name:
+                continue
+
+            # Пропускаем заведомо не-USB устройства
+            if any(dev_name.startswith(prefix) for prefix in SKIP_PREFIXES):
+                continue
+
+            # Пропускаем числовые окончания виртуальных консолей (tty0..tty63)
+            if dev_name.startswith("tty") and not dev_name.startswith("ttyUSB"):
+                # Может быть ttyACM, ttyAMA — проверяем по udev
+                pass  # оставляем для проверки через udev
+
+            potential_devices.append(f"/dev/{dev_name}")
+
+        # Для каждого потенциального устройства пробуем получить udev-свойства
+        for dev_path in potential_devices:
+            try:
+                props = self.get_info__usb(dev_path)
+
+                # Проверяем, что это физическое USB-устройство
+                id_bus = props.get("ID_BUS", "")
+
+                # Пропускаем, если это не USB (консоли ttyS*, виртуальные)
+                if id_bus != "usb":
+                    # Но сохраняем, если есть хоть какие-то полезные ID_*
+                    has_useful_ids = any(
+                        k.startswith("ID_") and v
+                        for k, v in props.items()
+                    )
+                    if not has_useful_ids:
+                        continue
+                    # Если есть ID_PATH или DEVPATH с "usb" — оставляем
+                    if "usb" not in props.get("DEVPATH", "").lower():
+                        if "usb" not in props.get("ID_PATH", "").lower():
+                            continue
+
+                if props:  # сохраняем только если есть данные
+                    result[dev_path] = props
+
+            except Exception as exc:
+                # Устройство может не поддерживать udev — пропускаем
+                logger.debug(f"Пропущено {dev_path}: {exc}")
+                continue
+
         return result
 
     # PARSERS ==========================================================================================================
