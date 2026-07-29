@@ -74,7 +74,7 @@ class HarvestDevice:
         self.conn.occupy(device_name)
         return device_name
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # WR ===============================================================================================================
     def _cmd_with_timeout(self, cmd: str, timeout: float | None = None) -> str:
         result = ""
         if timeout:
@@ -98,11 +98,11 @@ class HarvestDevice:
         root@harvest05:~#
         """
         # return self.conn.write_bytes(f"{cmd} & sleep {timeout}; kill %1")  # OLD-incorrect!
-
         return self.conn.write_bytes(self._cmd_with_timeout(cmd, timeout))
 
-    def cmd_timeout__write_read_bytes(self, cmd: str, timeout: float | None = None, **r_kwargs) -> bytes:
-        return self.conn.write_read_bytes(self._cmd_with_timeout(cmd, timeout), **r_kwargs)
+    def cmd_timeout__write_read_bytes(self, cmd: str, timeout: float | None = None, **wr_kwargs) -> bytes:
+        cmd = self._cmd_with_timeout(cmd, timeout)
+        return self.conn.write_read_bytes(cmd, **wr_kwargs)
 
     def cmd_timeout__write_read_lines(
             self,
@@ -130,7 +130,7 @@ class HarvestDevice:
     def cmd_timeout__write_read__payload_str(
             self,
             cmd: str,
-            timeout: float | None = None,
+            timeout: float | None = 5,
             timeout_continue: float = 1.0,
             **r_kwargs,
     ) -> str:
@@ -147,7 +147,7 @@ class HarvestDevice:
             **r_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def cmd__check_executed_success(self, cmd: str, timeout_continue: float = 1.5, **wr_kwargs) -> bool:
+    def cmd_timeout__check_executed_success(self, cmd: str, **wr_kwargs) -> bool:
         """
         Проверяет, доступна ли команда в системе linux
 
@@ -173,12 +173,94 @@ class HarvestDevice:
         root@harvest05:~#
         """
         ERROR_MSG = "ERROR_MSG"
-        out = self.conn.write_read_lines(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", timeout_continue=timeout_continue, **wr_kwargs)
-        print(f"{out=}")
+        out = self.cmd_timeout__write_read__payload_str(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", **wr_kwargs)
         return ERROR_MSG not in out[1:]
 
+    # FILES ============================================================================================================
+    def text_file__push(self, filepath: str = "/tmp/script.py", text: str = "") -> bool:
+        """
+        GOAL
+        transfer file scripts into device,
+        """
+        # 1=MKDIR --------------------
+        splited = filepath.rsplit('/', 1)
+        if "/" in filepath:
+            if splited[0] == "":
+                dirpath = "/"
+            else:
+                dirpath = splited[0]
+        else:
+            dirpath = ""
+
+        # mkdir -p создаст путь, если его нет.
+        if dirpath not in ["", "/", None]:
+            cmd = f"mkdir -p {dirpath}"
+            if not self.cmd_timeout__check_executed_success(cmd):
+                return False
+
+        # 2=PUSH --------------------
+        text_b64 = base64.b64encode(text.encode()).decode()
+        # printf не добавляет '\n', в отличие от echo; одинарные кавычки защищают от пробелов.
+        cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
+        return self.cmd_timeout__check_executed_success(cmd)
+
+    def text_file__check_exist(self, filepath: str) -> bool:
+        """
+        GOAL
+        Проверяет наличие скрипта at_client.py на устройстве
+        НЕ ПРОВЕРЯЕТ КОРРЕКТНОСТЬ!
+        """
+        return self.cmd_timeout__check_executed_success(f"test -f {filepath}")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
+        # Остановить ModemManager при необходимости
+        mm_active = self.cmd_timeout__check_executed_success("systemctl is-active ModemManager")
+        if mm_active:
+            self.cmd_timeout__check_executed_success("systemctl stop ModemManager")
+            time.sleep(0.3)
+        try:
+            # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
+            # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
+            full_cmd = (
+                f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
+                f"timeout {timeout} cat {port}'"
+            )
+            output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
+            return output.replace(cmd + "\r\n", "").strip()
+        except:
+            pass
+
+    def send__at_command__raw(
+            self,
+            cmd: str,
+            bridge: str = "/tmp/at_client.py",
+            port: str = "/dev/ttyUSB2",
+            baudrate: int = 115200,
+            timeout: float = 2.0,
+            **read_kwargs
+    ) -> str:
+        """
+        Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
+        """
+        if not self.text_file__check_exist(bridge):
+            raise FileNotFoundError(f"{bridge}")
+
+        try:
+            command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
+            output = self.cmd_timeout__write_read__payload_str(
+                command_line,
+                timeout=timeout,
+                timeout_continue=timeout * 1.5,
+                **read_kwargs
+            )
+            # Убираем возможное эхо команды
+            return output.replace(cmd + "\r\n", "").strip()
+        except:
+            pass
+
     # CMDS =============================================================================================================
-    def change_level__kernel_terminal_logs(self) -> bool:
+    def prepare__stop__kernel_terminal_logs(self) -> bool:
         """
         GOAL
         deactivate logging kernel errors into terminal
@@ -195,10 +277,23 @@ class HarvestDevice:
         [ 5708.553030] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
         [ 6121.554739] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
         """
-        result = self.cmd__check_executed_success(f'dmesg -n 3"')
-        if not result:
-            print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
-        return  result
+        print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
+        return self.cmd_timeout__check_executed_success(f'dmesg -n 3')
+
+    def prepare__stop__services(self) -> bool:
+        """
+        GOAL
+        stop all services which could interfere with tests
+
+        systemctl stop только останавливает текущий запущенный процесс, но не меняет флаги автозагрузки (enable/disable).
+После перезагрузки systemd снова запустит сервис
+        """
+        result: bool = True
+        # Останавливаем ModemManager, если он может мешать порту - обычно занимает порты с устройствами ttyUSB*!!!
+        # mm_active = self.cmd_timeout__check_executed_success("systemctl is-active ModemManager")
+        for service in ["ModemManager", ]:
+            result &= self.cmd_timeout__check_executed_success(f"systemctl stop {service}")
+        return result
 
     # ------------------------------------------------------------------------------------------------------------------
     def apt_install(self, module: str, timeout_continue: float = 5, **wr_kwargs) -> bool:
@@ -206,7 +301,7 @@ class HarvestDevice:
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
+        result = self.cmd_timeout__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
@@ -221,50 +316,19 @@ class HarvestDevice:
 
         root@harvest05:~#
         """
-        return self.cmd__check_executed_success(
+        return self.cmd_timeout__check_executed_success(
                 "ping -c 1 -W 1 8.8.8.8",
                 timeout_continue=2,
             )
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def push_text_file(self, text: str, filepath: str = "/tmp/script.py") -> bool:
-        """
-        GOAL
-        transfer file scripts into device,
-        original purpose is for *.py, but may any!
-
-        dirpath - MAINLY USE "/tmp"!!! if want to place into current - pass NONE!!!
-        """
-        # 1=MKDIR --------------------
-        splited = filepath.rsplit('/', 1)
-        if "/" in filepath:
-            if splited[0] == "":
-                dirpath = "/"
-            else:
-                dirpath = splited[0]
-        else:
-            dirpath = ""
-
-        # mkdir -p создаст путь, если его нет.
-        if dirpath not in ["", "/", None]:
-            cmd = f"mkdir -p {dirpath}"
-            if not self.cmd__check_executed_success(cmd):
-                return False
-
-        # 2=PUSH --------------------
-        text_b64 = base64.b64encode(text.encode()).decode()
-        # printf не добавляет '\n', в отличие от echo; одинарные кавычки защищают от пробелов.
-        cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
-        return self.cmd__check_executed_success(cmd)
 
     # INFO =============================================================================================================
     def get_info__system(self) -> dict[str, Any]:
         result = {}
 
         # ----- Идентификация и версия ОС -----
-        result['hostname'] = self.cmd_timeout__write_read__payload_str("hostname").strip()
+        result['hostname'] = self.cmd_timeout__write_read__payload_str("hostname", timeout=1).strip()
 
-        raw_os = self.cmd_timeout__write_read__payload_str("cat /etc/os-release 2>/dev/null")
+        raw_os = self.cmd_timeout__write_read__payload_str("cat /etc/os-release 2>/dev/null", timeout=3)
         os_dict = {}
         for line in raw_os.split('\n'):
             if '=' in line:
@@ -272,23 +336,25 @@ class HarvestDevice:
                 os_dict[k.strip()] = v.strip().strip('"')
         result['os'] = os_dict
 
-        result['kernel'] = self.cmd_timeout__write_read__payload_str("uname -r").strip()
-        result['architecture'] = self.cmd_timeout__write_read__payload_str("uname -m").strip()
+        result['kernel'] = self.cmd_timeout__write_read__payload_str("uname -r", timeout=1).strip()
+        result['architecture'] = self.cmd_timeout__write_read__payload_str("uname -m", timeout=1).strip()
 
         # ----- Модель платы -----
         # Попытка через device-tree, иначе через dmesg
         model = self.cmd_timeout__write_read__payload_str(
             "cat /proc/device-tree/model 2>/dev/null || cat /sys/firmware/devicetree/base/model 2>/dev/null"
+            , timeout=5
         ).strip()
         if not model:
             dmesg_model = self.cmd_timeout__write_read__payload_str(
-                "dmesg | grep 'Machine model' | head -1 | cut -d: -f2-"
+                "dmesg | grep 'Machine model' | head -1 | cut -d: -f2-",
+                timeout=3
             ).strip()
             model = dmesg_model if dmesg_model else "N/A"
         result['board_model'] = model
 
         # ----- CPU -----
-        cpu_lines = self.cmd_timeout__write_read__payload_str("cat /proc/cpuinfo 2>/dev/null")
+        cpu_lines = self.cmd_timeout__write_read__payload_str("cat /proc/cpuinfo 2>/dev/null", timeout=3)
         cores = 0
         model_name = ""
         for line in cpu_lines.split('\n'):
@@ -304,7 +370,7 @@ class HarvestDevice:
         }
 
         # ----- Память -----
-        mem_lines = self.cmd_timeout__write_read__payload_str("free -m 2>/dev/null || cat /proc/meminfo")
+        mem_lines = self.cmd_timeout__write_read__payload_str("free -m 2>/dev/null || cat /proc/meminfo", timeout=3)
         if 'Mem:' in mem_lines:
             mem_parts = mem_lines.split('\n')[1].split()
             total = mem_parts[1]
@@ -320,7 +386,7 @@ class HarvestDevice:
             result['memory'] = mem
 
         # ----- Накопители -----
-        disk_lines = self.cmd_timeout__write_read__payload_str("df -h / 2>/dev/null || echo 'N/A'")
+        disk_lines = self.cmd_timeout__write_read__payload_str("df -h / 2>/dev/null || echo NA", timeout=3)
         if disk_lines and disk_lines != 'N/A':
             parts = disk_lines.split('\n')[1].split()
             result['disk'] = {'total': parts[1], 'used': parts[2], 'available': parts[3], 'use%': parts[4]}
@@ -328,17 +394,17 @@ class HarvestDevice:
             result['disk'] = 'N/A'
 
         # ----- Uptime -----
-        uptime_raw = self.cmd_timeout__write_read__payload_str("cat /proc/uptime")
+        uptime_raw = self.cmd_timeout__write_read__payload_str("cat /proc/uptime", timeout=1)
         result['uptime'] = uptime_raw.split()[0] if uptime_raw else 'N/A'
 
         # ----- Сетевые интерфейсы -----
         net = {}
-        iface_list = self.cmd_timeout__write_read__payload_str("ls /sys/class/net/").split()
+        iface_list = self.cmd_timeout__write_read__payload_str("ls /sys/class/net/", timeout=3).split()
         for iface in iface_list:
             iface = iface.strip()
             if not iface or iface == 'lo':
                 continue
-            mac = self.cmd_timeout__write_read__payload_str(f"cat /sys/class/net/{iface}/address 2>/dev/null").strip()
+            mac = self.cmd_timeout__write_read__payload_str(f"cat /sys/class/net/{iface}/address 2>/dev/null", timeout=3).strip()
             ip_addr = self.cmd_timeout__write_read__payload_str(
                 f"ip -4 addr show {iface} 2>/dev/null | grep inet | head -1")
             net[iface] = {
@@ -350,14 +416,14 @@ class HarvestDevice:
         # ----- USB‑устройства (исправляем таймаут и убираем лишний stderr) -----
         # Используем timeout_continue=2 для гарантированного чтения вывода
         usb_raw = self.cmd_timeout__write_read__payload_str(
-            "timeout 2 lsusb",
-            timeout=None,  # команда сама содержит timeout
+            "lsusb",
+            timeout = 3,
             timeout_continue=2.0  # ждём до 2 секунд после эхо
         )
         result['usb_devices'] = [line.strip() for line in usb_raw.split('\n') if line.strip() and 'lsusb' not in line]
 
         # ----- I2C‑шины -----
-        i2c_list = self.cmd_timeout__write_read__payload_str("i2cdetect -l 2>/dev/null").split('\n')
+        i2c_list = self.cmd_timeout__write_read__payload_str("i2cdetect -l 2>/dev/null", timeout=2).split('\n')
         result['i2c_buses'] = {}
         for bus_line in i2c_list:
             if 'i2c-' in bus_line:
@@ -372,7 +438,8 @@ class HarvestDevice:
 
         # ----- Версия U‑Boot (ищем через grep) -----
         uboot_raw = self.cmd_timeout__write_read__payload_str(
-            "dmesg | grep -i 'u-boot\|uboot' | head -1"
+            "dmesg | grep -i 'u-boot\|uboot' | head -1",
+            timeout=2
         ).strip()
         result['uboot'] = uboot_raw if uboot_raw else 'N/A'
 
@@ -381,11 +448,11 @@ class HarvestDevice:
     # ------------------------------------------------------------------------------------------------------------------
     def get_info__usb(self, address: str) -> dict[str, Any]:
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
-        output = self.cmd_timeout__write_read_lines(
+        output = self.cmd_timeout__write_read__payload_str(
             f"SYSTEMD_PAGER=cat udevadm info -q property -n {address}",
             timeout_continue=2.0,
-            # timeout=3,
-        )
+            timeout=None,
+        ).split("\n")
 
         result = {}
         for line in output:

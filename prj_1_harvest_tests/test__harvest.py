@@ -14,7 +14,7 @@ manager = SerialManager()
 
 # ======================================================================================================================
 class SCRIPTS:
-    gnss_info__ubx = r"""
+    get__gnss_info__ubx = r"""
 import serial, time
 
 SOURCE_ADR: str = '/dev/ttyUSB0'
@@ -56,60 +56,89 @@ while True:
     
 s.close()
     """
-#     gnss_info__ubx = r"""
-# import serial, time, re
-# s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
-# time.sleep(0.3)
-# s.reset_input_buffer()  # если не сделать то будут сыпаться NMEA $GPGSV / ...
-# # Дадим модулю время, чтобы он мог выдать идентификационные NMEA-строки (u-blox часто шлёт $GPTXT)
-# data0_first = s.read(2048)
-# # print('ORIGINAL:' + data0_first.decode(errors='ignore'))
-#
-# while True:
-#     # 1=UBX_TXT -------------------------------
-#     data1_ubx_txt = re.findall(rb'\$GPTXT,.*', data0_first)
-#     if data1_ubx_txt:
-#         print('UBX_TXT:' + data1_ubx_txt[0].decode(errors='ignore'))
-#         break
-#
-#     # 2=UBX_RESPONSE---------------------------
-#     # u-blox UBX MON-VER
-#     # Очищаем буфер перед UBX, чтобы не было старых NMEA
-#     s.reset_input_buffer()
-#     s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')
-#     time.sleep(0.5)
-#     data2_ubx_resp = s.read(256)
-#     if b'\xb5\x62\x0a\x04' in data2_ubx_resp:
-#         # print(data2_ubx_resp)
-#         # print(data2_ubx_resp.hex())
-#
-#         # raw=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-#         # hex=b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
-#
-#         print(f'UBX_RESPONSE:[{data2_ubx_resp.hex()}]')
-#         break
-#
-#     # 3=MTK_RESPONSE---------------------------
-#     # MediaTek PMTK запрос версии
-#     s.reset_input_buffer()
-#     s.write(b'$PMTK605*31\r\n')
-#     time.sleep(0.3)
-#     data3_mtk_resp = s.read(256)
-#     if b'$PMTK' in data3_mtk_resp:
-#         print('MTK_RESPONSE:' + data3_mtk_resp.decode(errors='ignore'))
-#         break
-#
-#     # 4=NO_IDENT---------------------------
-#     # Если ничего не получено – печатаем начало сырых данных
-#     if not (data1_ubx_txt or data2_ubx_resp or data3_mtk_resp):
-#         print('NO_IDENT:' + data0_first[:200].hex())
-#         break
-#
-#     break
-#
-# s.close()
-# time.sleep(0.1)
-# """
+    #     get__gnss_info__ubx = r"""
+    # import serial, time, re
+    # s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
+    # time.sleep(0.3)
+    # s.reset_input_buffer()  # если не сделать то будут сыпаться NMEA $GPGSV / ...
+    # # Дадим модулю время, чтобы он мог выдать идентификационные NMEA-строки (u-blox часто шлёт $GPTXT)
+    # data0_first = s.read(2048)
+    # # print('ORIGINAL:' + data0_first.decode(errors='ignore'))
+    #
+    # while True:
+    #     # 1=UBX_TXT -------------------------------
+    #     data1_ubx_txt = re.findall(rb'\$GPTXT,.*', data0_first)
+    #     if data1_ubx_txt:
+    #         print('UBX_TXT:' + data1_ubx_txt[0].decode(errors='ignore'))
+    #         break
+    #
+    #     # 2=UBX_RESPONSE---------------------------
+    #     # u-blox UBX MON-VER
+    #     # Очищаем буфер перед UBX, чтобы не было старых NMEA
+    #     s.reset_input_buffer()
+    #     s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')
+    #     time.sleep(0.5)
+    #     data2_ubx_resp = s.read(256)
+    #     if b'\xb5\x62\x0a\x04' in data2_ubx_resp:
+    #         # print(data2_ubx_resp)
+    #         # print(data2_ubx_resp.hex())
+    #
+    #         # raw=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    #         # hex=b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
+    #
+    #         print(f'UBX_RESPONSE:[{data2_ubx_resp.hex()}]')
+    #         break
+    #
+    #     # 3=MTK_RESPONSE---------------------------
+    #     # MediaTek PMTK запрос версии
+    #     s.reset_input_buffer()
+    #     s.write(b'$PMTK605*31\r\n')
+    #     time.sleep(0.3)
+    #     data3_mtk_resp = s.read(256)
+    #     if b'$PMTK' in data3_mtk_resp:
+    #         print('MTK_RESPONSE:' + data3_mtk_resp.decode(errors='ignore'))
+    #         break
+    #
+    #     # 4=NO_IDENT---------------------------
+    #     # Если ничего не получено – печатаем начало сырых данных
+    #     if not (data1_ubx_txt or data2_ubx_resp or data3_mtk_resp):
+    #         print('NO_IDENT:' + data0_first[:200].hex())
+    #         break
+    #
+    #     break
+    #
+    # s.close()
+    # time.sleep(0.1)
+    # """
+
+    at_client = r"""
+import sys, time, serial
+
+if len(sys.argv) < 2:
+    print("Usage: python3 at_client.py <AT command> [port] [baudrate]")
+    sys.exit(1)
+
+cmd = sys.argv[1]
+port = sys.argv[2] if len(sys.argv) > 2 else "/dev/ttyUSB2"
+baudrate = int(sys.argv[3]) if len(sys.argv) > 3 else 115200
+
+try:
+    s = serial.Serial(port, baudrate, timeout=0.2)
+except Exception as exc:
+    print(f"AT_ERROR:{exc!r}")
+    exit()
+
+try:
+    s.reset_input_buffer()
+    s.write((cmd + "\r\n").encode())
+    time.sleep(0.3)  # даём модему время ответить
+    result: str = s.read(4096).decode(errors='replace')
+    print(result)
+except Exception as exc:
+    print(f"AT_ERROR:{exc!r}")
+    
+s.close()
+    """
 
 
 def _rules__raws_hex__understanding():
@@ -146,12 +175,12 @@ def _rules__raws_hex__understanding():
 @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__push_file(self, harvest):
-        assert harvest.push_text_file("print(123)")
+        assert harvest.text_file__push(text="print(123)")
 
     def test_2__gnss(self, harvest):
-        script_explore = SCRIPTS.gnss_info__ubx
+        script_explore = SCRIPTS.get__gnss_info__ubx
 
-        assert harvest.push_text_file(script_explore, "/tmp/script_explore.py")
+        assert harvest.text_file__push(text=script_explore, filepath="/tmp/script_explore.py")
         assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
 
     def test_3__gnss_dev(self, harvest):
@@ -199,7 +228,7 @@ class Test_02__PreInstall:
     # ------------------------------------------------------------------------------------------------------------------
     def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None):
         name_install = name_install or name_check
-        if not harvest.cmd__check_executed_success(f"which {name_check}"):
+        if not harvest.cmd_timeout__check_executed_success(f"which {name_check}"):
             assert internet_access, f"Нет интернета для установки пакетов {name_check}"
             assert harvest.apt_install(name_install)
 
@@ -256,7 +285,7 @@ class Test_02__PreInstall:
         root@harvest05:~#
         root@harvest05:~#
         """
-        if not harvest.cmd__check_executed_success(f'python3 -c "import serial"'):
+        if not harvest.cmd_timeout__check_executed_success(f'python3 -c "import serial"'):
             assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-serial")
 
@@ -299,7 +328,7 @@ class Test_1__GNSS:
         root@harvest05:~#
         root@harvest05:~#
         """
-        assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
+        assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
 
     @pytest.mark.dependency(depends=["gnss_present", ])
     def test_gnss_2__quick__nmea_flow(self, harvest):
@@ -425,7 +454,7 @@ class Test_1__GNSS:
         UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
         root@harvest05:~#
 
-        FULL: b'python3 /tmp/gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+        FULL: b'python3 /tmp/get__gnss_info__ubx.py\r\n\r\n/dev/ttyUSB0:          682\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# python3 /tmp/get__gnss_info__ubx.py\r\n\x1b[?2004l\rUBX_RESPONSE:[b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800]\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
             output_hex_bytes=b'b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
             output_hex_str='b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a5353000000000000000000000000000000005800'
             raw_data=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00X\x00'
@@ -443,15 +472,15 @@ class Test_1__GNSS:
           ]
         }
         """
-        assert harvest.push_text_file(SCRIPTS.gnss_info__ubx, "/tmp/gnss_info__ubx.py"), "скрипт не отправился"
+        assert harvest.text_file__push(filepath= "/tmp/get__gnss_info__ubx.py", text=SCRIPTS.get__gnss_info__ubx), "скрипт не отправился"
 
         for attempt in range(3):
             print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
 
             # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes('pkill -9 -f gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
+            harvest.conn.write_read_bytes('pkill -9 -f get__gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
 
-            output = harvest.conn.write_read_bytes('python3 /tmp/gnss_info__ubx.py', timeout_continue=5)
+            output = harvest.conn.write_read_bytes('python3 /tmp/get__gnss_info__ubx.py', timeout_continue=5)
             assert output, "данные от устройства не получены вообще"
 
             if b'UBX_RESPONSE:[' in output:
@@ -492,7 +521,7 @@ class Test_21__Bluetooth:
     @pytest.mark.dependency(name="bt_present")
     def test_bt_1__present(self, harvest):
         """Проверяет, виден ли Bluetooth интерфейс."""
-        assert harvest.cmd__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
+        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_2__quick__scan_devices(self, harvest):
@@ -684,7 +713,7 @@ class Test_22__WiFi:
         root@harvest05:~#
         """
         # Проверка существования
-        assert harvest.cmd__check_executed_success(
+        assert harvest.cmd_timeout__check_executed_success(
             "ip link show wlan0"
         ), "Wi-Fi интерфейс wlan0 не обнаружен"
 
@@ -848,10 +877,10 @@ class Test_3__GSM:
     @pytest.mark.dependency(name="gsm_present")
     def test_gsm_1__present(self, harvest):
         """Физическое наличие модема."""
-        assert harvest.cmd__check_executed_success("ip link show usb0"), "GSM-интерфейс usb0 не обнаружен"
+        assert harvest.cmd_timeout__check_executed_success("ip link show usb0"), "GSM-интерфейс usb0 не обнаружен"
 
     @pytest.mark.dependency(depends=["gsm_present", ], name="gsm_responds")
-    def test_gsm_2__device_responds_info(self, harvest):
+    def test_gsm_2__quick__info(self, harvest):
         raise NotImplementedError()
 
     @pytest.mark.dependency(depends=["gsm_responds", ])

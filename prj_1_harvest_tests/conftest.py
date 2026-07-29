@@ -30,7 +30,8 @@ def harvest(request) -> HarvestDevice:
 
     device = found[0]
     with device.conn:
-        device.change_level__kernel_terminal_logs()
+        device.prepare__stop__kernel_terminal_logs()
+        device.prepare__stop__services()
         request.config.stash["device_id"] = dev_id
         yield device
 
