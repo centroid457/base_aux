@@ -46,12 +46,10 @@ def _rules__raws_hex__understanding():
 @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__push_file(self, harvest):
-        assert harvest.text_file__push(text="print(123)")
+        assert harvest.file_name__push(text="print(123)")
 
     def test_2__gnss(self, harvest):
-        script_explore = SCRIPTS.get__gnss_info__ubx
-
-        assert harvest.text_file__push(text=script_explore, filepath="/tmp/script_explore.py")
+        assert harvest.file_name__push("get__gnss_info__ubx")
         assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
 
     def test_3__gnss_dev(self, harvest):
@@ -272,54 +270,54 @@ class Test_1__GNSS:
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
             print(f"NMEA-предложения {msg_type=} получены {data=}")
 
-        @pytest.mark.dependency(depends=["gnss_present", ])
-        def test_gnss_3__deep1__pids(self, harvest):
-            """
-    {
-      "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
-      "DEVNAME": "/dev/ttyUSB0",
-      "MAJOR": "188",
-      "MINOR": "0",
-      "SUBSYSTEM": "tty",
-      "USEC_INITIALIZED": "12701625",
-      "ID_BUS": "usb",
-      "ID_MODEL": "USB_Serial",
-      "ID_MODEL_ENC": "USB\\x20Serial",
-      "ID_MODEL_ID": "7523",
-      "ID_SERIAL": "1a86_USB_Serial",
-      "ID_VENDOR": "1a86",
-      "ID_VENDOR_ENC": "1a86",
-      "ID_VENDOR_ID": "1a86",
-      "ID_REVISION": "0264",
-      "ID_TYPE": "generic",
-      "ID_USB_MODEL": "USB_Serial",
-      "ID_USB_MODEL_ENC": "USB\\x20Serial",
-      "ID_USB_MODEL_ID": "7523",
-      "ID_USB_SERIAL": "1a86_USB_Serial",
-      "ID_USB_VENDOR": "1a86",
-      "ID_USB_VENDOR_ENC": "1a86",
-      "ID_USB_VENDOR_ID": "1a86",
-      "ID_USB_REVISION": "0264",
-      "ID_USB_TYPE": "generic",
-      "ID_USB_INTERFACES": ":ff0102:",
-      "ID_USB_INTERFACE_NUM": "00",
-      "ID_USB_DRIVER": "ch341",
-      "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
-      "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
-      "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
-      "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
-      "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
-      "ID_MM_CANDIDATE": "1",
-      "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
-      "TAGS": ":systemd:",
-      "CURRENT_TAGS": ":systemd:"
-    }
-            """
-            props = harvest.get_info__usb("/dev/ttyUSB0")
-            assert props, "данные устройства не получены"
+    @pytest.mark.dependency(depends=["gnss_present", ])
+    def test_gnss_3__deep1__pids(self, harvest):
+        """
+        {
+          "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
+          "DEVNAME": "/dev/ttyUSB0",
+          "MAJOR": "188",
+          "MINOR": "0",
+          "SUBSYSTEM": "tty",
+          "USEC_INITIALIZED": "12701625",
+          "ID_BUS": "usb",
+          "ID_MODEL": "USB_Serial",
+          "ID_MODEL_ENC": "USB\\x20Serial",
+          "ID_MODEL_ID": "7523",
+          "ID_SERIAL": "1a86_USB_Serial",
+          "ID_VENDOR": "1a86",
+          "ID_VENDOR_ENC": "1a86",
+          "ID_VENDOR_ID": "1a86",
+          "ID_REVISION": "0264",
+          "ID_TYPE": "generic",
+          "ID_USB_MODEL": "USB_Serial",
+          "ID_USB_MODEL_ENC": "USB\\x20Serial",
+          "ID_USB_MODEL_ID": "7523",
+          "ID_USB_SERIAL": "1a86_USB_Serial",
+          "ID_USB_VENDOR": "1a86",
+          "ID_USB_VENDOR_ENC": "1a86",
+          "ID_USB_VENDOR_ID": "1a86",
+          "ID_USB_REVISION": "0264",
+          "ID_USB_TYPE": "generic",
+          "ID_USB_INTERFACES": ":ff0102:",
+          "ID_USB_INTERFACE_NUM": "00",
+          "ID_USB_DRIVER": "ch341",
+          "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
+          "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
+          "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
+          "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
+          "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
+          "ID_MM_CANDIDATE": "1",
+          "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+          "TAGS": ":systemd:",
+          "CURRENT_TAGS": ":systemd:"
+        }
+        """
+        props = harvest.get_info__usb("/dev/ttyUSB0")
+        assert props, "данные устройства не получены"
 
     @pytest.mark.dependency(depends=["gnss_present", ])
-    def test_gnss_3__deep1__ubx(self, harvest):
+    def test_gnss_3__deep2__ubx(self, harvest):
         """
 
         UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
@@ -343,7 +341,7 @@ class Test_1__GNSS:
           ]
         }
         """
-        assert harvest.text_file__push(filepath= "/tmp/get__gnss_info__ubx.py", text=SCRIPTS.get__gnss_info__ubx), "скрипт не отправился"
+        assert harvest.file_name__push("/tmp/get__gnss_info__ubx.py"), "скрипт не отправился"
 
         for attempt in range(3):
             print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")

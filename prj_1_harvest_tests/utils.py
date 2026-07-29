@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 # ======================================================================================================================
-class SCRIPTS:
-    get__gnss_info__ubx = r"""
+SCRIPTS: dict[str, str] = {     # PATH/TEXT
+    "/temp/get__gnss_info__ubx.py": r"""
 import serial, time
 
 SOURCE_ADR: str = '/dev/ttyUSB0'
@@ -58,7 +58,7 @@ while True:
         break
 
 s.close()
-    """
+    """,
     #     get__gnss_info__ubx = r"""
     # import serial, time, re
     # s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
@@ -114,11 +114,11 @@ s.close()
     # time.sleep(0.1)
     # """
 
-    at_client = r"""
+    "/temp/at_client.py": r"""
 import sys, time, serial
 
 if len(sys.argv) < 2:
-    print("Usage: python3 at_client.py <AT command> [port] [baudrate]")
+    print("Usage: python3 /temmp/at_client.py <AT command> [port] [baudrate]")
     sys.exit(1)
 
 cmd = sys.argv[1]
@@ -141,7 +141,8 @@ except Exception as exc:
     print(f"AT_ERROR:{exc!r}")
 
 s.close()
-    """
+    """,
+}
 
 
 # ======================================================================================================================
@@ -306,7 +307,11 @@ class HarvestDevice:
         return ERROR_MSG not in out[1:]
 
     # FILES ============================================================================================================
-    def text_file__push(self, filepath: str = "/tmp/script.py", text: str = "") -> bool:
+    def file_name__push(self, name: str) -> bool:
+        text = SCRIPTS[name]
+        return self._file_text__push(filepath=name, text=text)
+
+    def _file_text__push(self, filepath: str = "/tmp/script.py", text: str = "") -> bool:
         """
         GOAL
         transfer file scripts into device,
@@ -333,10 +338,10 @@ class HarvestDevice:
         cmd = f"printf '%s' '{text_b64}' | base64 -d > {filepath}"
         return self.cmd_timeout__check_executed_success(cmd)
 
-    def text_file__check_exist(self, filepath: str) -> bool:
+    def file__check_exist(self, filepath: str) -> bool:
         """
         GOAL
-        Проверяет наличие скрипта at_client.py на устройстве
+        Проверяет наличие скрипта на устройстве
         НЕ ПРОВЕРЯЕТ КОРРЕКТНОСТЬ!
         """
         return self.cmd_timeout__check_executed_success(f"test -f {filepath}")
@@ -367,7 +372,7 @@ class HarvestDevice:
         """
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
         """
-        if not self.text_file__check_exist(bridge):
+        if not self.file__check_exist(bridge):
             raise FileNotFoundError(f"{bridge}")
 
         try:
