@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 # ======================================================================================================================
 SCRIPTS: dict[str, str] = {     # PATH/TEXT
-    "/temp/get__gnss_info__ubx.py": r"""
+    "/tmp/get__gnss_info__ubx.py": r"""
 import serial, time
 
 SOURCE_ADR: str = '/dev/ttyUSB0'
@@ -114,11 +114,11 @@ s.close()
     # time.sleep(0.1)
     # """
 
-    "/temp/at_client.py": r"""
+    "/tmp/at_client.py": r"""
 import sys, time, serial
 
 if len(sys.argv) < 2:
-    print("Usage: python3 /temmp/at_client.py <AT command> [port] [baudrate]")
+    print("Usage: python3 /tmmp/at_client.py <AT command> [port] [baudrate]")
     sys.exit(1)
 
 cmd = sys.argv[1]
@@ -348,17 +348,16 @@ class HarvestDevice:
 
     # ------------------------------------------------------------------------------------------------------------------
     def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
-        try:
-            # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
-            # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
-            full_cmd = (
-                f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
-                f"timeout {timeout} cat {port}'"
-            )
-            output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
-            return output.replace(cmd + "\r\n", "").strip()
-        except:
-            pass
+        # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
+        # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
+        full_cmd = (
+            f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
+            f"timeout {timeout} cat {port}'"
+        )
+        output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
+        # Убираем возможное эхо команды
+        output = output.replace(cmd + "\n", "")
+        return output
 
     def send__at_command__raw(
             self,
@@ -368,25 +367,23 @@ class HarvestDevice:
             baudrate: int = 115200,
             timeout: float = 2.0,
             **read_kwargs
-    ) -> str:
+    ) -> str | NoReturn:
         """
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
         """
         if not self.file__check_exist(bridge):
             raise FileNotFoundError(f"{bridge}")
 
-        try:
-            command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
-            output = self.cmd_timeout__write_read__payload_str(
-                command_line,
-                timeout=timeout,
-                timeout_continue=timeout * 1.5,
-                **read_kwargs
-            )
-            # Убираем возможное эхо команды
-            return output.replace(cmd + "\r\n", "").strip()
-        except:
-            pass
+        command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
+        output = self.cmd_timeout__write_read__payload_str(
+            command_line,
+            timeout=timeout,
+            timeout_continue=timeout * 1.5,
+            **read_kwargs
+        )
+        # Убираем возможное эхо команды
+        output = output.replace(cmd + "\n", "")
+        return output
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:
