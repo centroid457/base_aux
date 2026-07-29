@@ -158,7 +158,6 @@ class Test_000__Explore:
         pass
 
 
-
 # ======================================================================================================================
 @pytest.mark.DET
 class Test_01__Detection:
@@ -303,7 +302,7 @@ class Test_1__GNSS:
         assert harvest.cmd__check_executed_success("ls /dev/ttyUSB0"), "GNSS не найден"
 
     @pytest.mark.dependency(depends=["gnss_present", ])
-    def test_gnss_2__work__nmea_flow(self, harvest):
+    def test_gnss_2__quick__nmea_flow(self, harvest):
         """
         1=BLOCK STAY LONG TIME on table
         ==================================
@@ -420,7 +419,7 @@ class Test_1__GNSS:
             assert props, "данные устройства не получены"
 
     @pytest.mark.dependency(depends=["gnss_present", ])
-    def test_gnss_3__deep2__ubx(self, harvest):
+    def test_gnss_3__deep1__ubx(self, harvest):
         """
 
         UBX_RESPONSE:b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
@@ -496,7 +495,7 @@ class Test_21__Bluetooth:
         assert harvest.cmd__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
     @pytest.mark.dependency(depends=["bt_present", ])
-    def test_bt_2__work__scan_devices(self, harvest):
+    def test_bt_2__quick__scan_devices(self, harvest):
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -696,7 +695,7 @@ class Test_22__WiFi:
             f"wlan0 не является беспроводным интерфейсом: {output}"
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3__connection_quality(self, harvest):
+    def test_wf_3_deep__connection_quality(self, harvest):
         """
         Проверяет текущее подключение к точке доступа:
         - уровень сигнала (RSSI)
@@ -747,7 +746,7 @@ class Test_22__WiFi:
         print(f"Скорость TX: {tx_bitrate}, RX: {rx_bitrate}")
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_2__work__scan_environment(self, harvest):
+    def test_wf_3__deep__scan_environment(self, harvest):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
@@ -856,7 +855,7 @@ class Test_3__GSM:
         raise NotImplementedError()
 
     @pytest.mark.dependency(depends=["gsm_responds", ])
-    def test_gsm_3__work1__sim_detected(self, harvest):
+    def test_gsm_3__deep__sim_detected(self, harvest):
         """Получение данных: проверка SIM-карты через AT."""
         # Ищем порт AT-команд (обычно /dev/ttyUSB2)
         # Проверяем, что порт существует и отвечает
@@ -867,7 +866,7 @@ class Test_3__GSM:
         assert ready, "SIM-карта не готова или модем не отвечает"
 
     @pytest.mark.dependency(depends=["gsm_responds", ])
-    def test_gsm_3__work1__signal_quality(self, harvest):
+    def test_gsm_3__deep__signal_quality(self, harvest):
         """Валидация уровня сигнала (RSSI > 5)."""
         harvest.conn.write_bytes('echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
         output = harvest.conn.read_lines(timeout_continue=1.5)
@@ -884,7 +883,7 @@ class Test_3__GSM:
         pytest.fail("Не удалось извлечь уровень сигнала GSM")
 
     @pytest.mark.dependency(depends=["gsm_responds", ])
-    def test_gsm_3__work1__network_registration(self, harvest):
+    def test_gsm_3__deep__network_registration(self, harvest):
         """Валидация: регистрация в сети."""
         harvest.conn.write_bytes('echo -e "AT+CREG?\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
         output = harvest.conn.read_lines(timeout_continue=1.5)
@@ -908,11 +907,11 @@ class Test_4__RFID:
         raise NotImplementedError()
 
     @pytest.mark.dependency(depends=["rfid_present", ], name="rfid_responds")
-    def test_rfid_2__device_responds_info(self, harvest):
+    def test_rfid_2__quick__info(self, harvest):
         raise NotImplementedError()
 
     @pytest.mark.dependency(depends=["rfid_responds", ])
-    def test_rfid_3__work1__execution_no_error(self, harvest):
+    def test_rfid_3__deep__execution_no_error(self, harvest):
         """Получение данных: скрипт запускается и завершается без ошибок."""
         harvest.conn.write_bytes("timeout 2 python3 /root/e710.py")  # используем timeout для завершения
         output = harvest.conn.read_lines(timeout_continue=3)
@@ -921,7 +920,7 @@ class Test_4__RFID:
         assert not has_traceback, "Скрипт RFID завершился с ошибкой"
 
     @pytest.mark.dependency(depends=["rfid_responds", ])
-    def test_rfid_3__work2__valid_response_present(self, harvest):
+    def test_rfid_3__deep__valid_response_present(self, harvest):
         """Валидация: при наличии меток скрипт должен выдавать данные."""
         harvest.conn.write_bytes("timeout 3 python3 /root/e710.py")
         output = harvest.conn.read_lines(timeout_continue=4)
