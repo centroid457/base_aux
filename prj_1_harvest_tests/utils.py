@@ -343,11 +343,6 @@ class HarvestDevice:
 
     # ------------------------------------------------------------------------------------------------------------------
     def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
-        # Остановить ModemManager при необходимости
-        mm_active = self.cmd_timeout__check_executed_success("systemctl is-active ModemManager")
-        if mm_active:
-            self.cmd_timeout__check_executed_success("systemctl stop ModemManager")
-            time.sleep(0.3)
         try:
             # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
             # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
