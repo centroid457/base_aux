@@ -272,47 +272,6 @@ class Test_1__GNSS:
 
     @pytest.mark.dependency(depends=["gnss_present", ])
     def test_gnss_3__deep1__pids(self, harvest):
-        """
-        {
-          "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
-          "DEVNAME": "/dev/ttyUSB0",
-          "MAJOR": "188",
-          "MINOR": "0",
-          "SUBSYSTEM": "tty",
-          "USEC_INITIALIZED": "12701625",
-          "ID_BUS": "usb",
-          "ID_MODEL": "USB_Serial",
-          "ID_MODEL_ENC": "USB\\x20Serial",
-          "ID_MODEL_ID": "7523",
-          "ID_SERIAL": "1a86_USB_Serial",
-          "ID_VENDOR": "1a86",
-          "ID_VENDOR_ENC": "1a86",
-          "ID_VENDOR_ID": "1a86",
-          "ID_REVISION": "0264",
-          "ID_TYPE": "generic",
-          "ID_USB_MODEL": "USB_Serial",
-          "ID_USB_MODEL_ENC": "USB\\x20Serial",
-          "ID_USB_MODEL_ID": "7523",
-          "ID_USB_SERIAL": "1a86_USB_Serial",
-          "ID_USB_VENDOR": "1a86",
-          "ID_USB_VENDOR_ENC": "1a86",
-          "ID_USB_VENDOR_ID": "1a86",
-          "ID_USB_REVISION": "0264",
-          "ID_USB_TYPE": "generic",
-          "ID_USB_INTERFACES": ":ff0102:",
-          "ID_USB_INTERFACE_NUM": "00",
-          "ID_USB_DRIVER": "ch341",
-          "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
-          "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
-          "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
-          "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
-          "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
-          "ID_MM_CANDIDATE": "1",
-          "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
-          "TAGS": ":systemd:",
-          "CURRENT_TAGS": ":systemd:"
-        }
-        """
         props = harvest.get_info__usb("/dev/ttyUSB0")
         assert props, "данные устройства не получены"
 
