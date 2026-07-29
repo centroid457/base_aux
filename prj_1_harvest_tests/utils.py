@@ -177,6 +177,29 @@ class HarvestDevice:
         print(f"{out=}")
         return ERROR_MSG not in out[1:]
 
+    # CMDS =============================================================================================================
+    def change_level__kernel_terminal_logs(self) -> bool:
+        """
+        GOAL
+        deactivate logging kernel errors into terminal
+        leave only errors (KERN_ERR and above) no warns!
+
+        root@harvest05:~#
+        root@harvest05:~# [ 2817.555181] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 3230.554402] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 3643.553379] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 4056.552119] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 4469.553782] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 4882.553558] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 5295.554909] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 5708.553030] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        [ 6121.554739] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+        """
+        result = self.cmd__check_executed_success(f'dmesg -n 3"')
+        if not result:
+            print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
+        return  result
+
     # ------------------------------------------------------------------------------------------------------------------
     def apt_install(self, module: str, timeout_continue: float = 5, **wr_kwargs) -> bool:
         """

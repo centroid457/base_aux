@@ -28,9 +28,11 @@ def harvest(request) -> HarvestDevice:
     if len(found) > 1:
         pytest.exit("Устройств Harvest более чем 1!")
 
-    with found[0].conn:
+    device = found[0]
+    with device.conn:
+        device.change_level__kernel_terminal_logs()
         request.config.stash["device_id"] = dev_id
-        yield found[0]
+        yield device
 
 
 @pytest.fixture(scope="session")
