@@ -43,7 +43,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(True, reason="used for exploring executions/methods")
+# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__push_file(self, harvest):
         assert harvest.file_name__push(text="print(123)")
@@ -52,8 +52,8 @@ class Test_000__Explore:
         assert harvest.file_name__push("get__gnss_info__ubx")
         assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
 
-    def test_3__gnss_dev(self, harvest):
-        pass
+    def test_3__devices_all__usb(self, harvest):
+        harvest.get_info__usb_all()
 
 
 # ======================================================================================================================

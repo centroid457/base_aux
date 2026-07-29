@@ -8,6 +8,7 @@ import logging
 import base64
 
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # ======================================================================================================================
@@ -669,6 +670,10 @@ root@harvest05:~#
     # ------------------------------------------------------------------------------------------------------------------
     def get_info__usb(self, address: str) -> dict[str, Any]:
         """
+        available
+            full path   - /dev/ttyUSB0
+            devName     - ttyUSB0
+
         {
           "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
           "DEVNAME": "/dev/ttyUSB0",
@@ -711,9 +716,9 @@ root@harvest05:~#
         """
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
         output = self.cmd_timeout__write_read__payload_str(
-            f"SYSTEMD_PAGER=cat udevadm info -q property -n {address}",
+            f"SYSTEMD_PAGER=cat udevadm info -q property -n {address} 2>/dev/null",
             timeout_continue=2.0,
-            timeout=3,
+            timeout=4,
         ).split("\n")
 
         result = {}
@@ -783,35 +788,311 @@ root@harvest05:~#
         initctl          nbd11             stderr              tty34   tty63  watchdog0
         input            nbd12             stdin               tty35   tty7   zero
         root@harvest05:~# 
+        
+        WHAT USED
+            ttyUSB* — USB-UART адаптеры
+            ttyACM* — USB-модемы (если есть)
+            video* — веб-камеры
+            i2c-* — шины I2C (часто через USB-хаб)
+            snd/* — звуковые устройства
+            input/* — устройства ввода
+            spidev* — SPI устройства
+            
+            
+        
+        some other devices no USB 
+{
+  "/dev/adsp1": {
+    "DEVPATH": "/devices/platform/snd_aloop.0/sound/card1/adsp1",
+    "DEVNAME": "/dev/adsp1",
+    "MAJOR": "14",
+    "MINOR": "28",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "10866555",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/audio": {
+    "DEVPATH": "/devices/platform/snd_dummy.0/sound/card0/audio",
+    "DEVNAME": "/dev/audio",
+    "MAJOR": "14",
+    "MINOR": "4",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "10846646",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/audio1": {
+    "DEVPATH": "/devices/platform/snd_aloop.0/sound/card1/audio1",
+    "DEVNAME": "/dev/audio1",
+    "MAJOR": "14",
+    "MINOR": "20",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "10867924",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/audio2": {
+    "DEVPATH": "/devices/platform/soc/1c22c00.codec/sound/card2/audio2",
+    "DEVNAME": "/dev/audio2",
+    "MAJOR": "14",
+    "MINOR": "36",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "11653994",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/audio3": {
+    "DEVPATH": "/devices/platform/soc/soc:sound/sound/card3/audio3",
+    "DEVNAME": "/dev/audio3",
+    "MAJOR": "14",
+    "MINOR": "52",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "12165930",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/cec0": {
+    "DEVPATH": "/devices/platform/soc/1ee0000.hdmi/cec0",
+    "DEVNAME": "/dev/cec0",
+    "MAJOR": "250",
+    "MINOR": "0",
+    "SUBSYSTEM": "cec"
+  },
+  "/dev/ttyUSB0": {
+    "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
+    "DEVNAME": "/dev/ttyUSB0",
+    "MAJOR": "188",
+    "MINOR": "0",
+    "SUBSYSTEM": "tty",
+    "USEC_INITIALIZED": "13287546",
+    "ID_BUS": "usb",
+    "ID_MODEL": "USB_Serial",
+    "ID_MODEL_ENC": "USB\\x20Serial",
+    "ID_MODEL_ID": "7523",
+    "ID_SERIAL": "1a86_USB_Serial",
+    "ID_VENDOR": "1a86",
+    "ID_VENDOR_ENC": "1a86",
+    "ID_VENDOR_ID": "1a86",
+    "ID_REVISION": "0264",
+    "ID_TYPE": "generic",
+    "ID_USB_MODEL": "USB_Serial",
+    "ID_USB_MODEL_ENC": "USB\\x20Serial",
+    "ID_USB_MODEL_ID": "7523",
+    "ID_USB_SERIAL": "1a86_USB_Serial",
+    "ID_USB_VENDOR": "1a86",
+    "ID_USB_VENDOR_ENC": "1a86",
+    "ID_USB_VENDOR_ID": "1a86",
+    "ID_USB_REVISION": "0264",
+    "ID_USB_TYPE": "generic",
+    "ID_USB_INTERFACES": ":ff0102:",
+    "ID_USB_INTERFACE_NUM": "00",
+    "ID_USB_DRIVER": "ch341",
+    "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
+    "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
+    "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
+    "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
+    "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
+    "ID_MM_CANDIDATE": "1",
+    "DEVLINKS": "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0 /dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0",
+    "TAGS": ":systemd:",
+    "CURRENT_TAGS": ":systemd:"
+  },
+  "/dev/vcs": {
+    "DEVPATH": "/devices/virtual/vc/vcs",
+    "DEVNAME": "/dev/vcs",
+    "MAJOR": "7",
+    "MINOR": "0",
+    "SUBSYSTEM": "vc"
+  },
+  "/dev/dsp": {
+    "DEVPATH": "/devices/platform/snd_dummy.0/sound/card0/dsp",
+    "DEVNAME": "/dev/dsp",
+    "MAJOR": "14",
+    "MINOR": "3",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "10843084",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/dsp1": {
+    "DEVPATH": "/devices/platform/snd_aloop.0/sound/card1/dsp1",
+    "DEVNAME": "/dev/dsp1",
+    "MAJOR": "14",
+    "MINOR": "19",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "10877809",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/dsp2": {
+    "DEVPATH": "/devices/platform/soc/1c22c00.codec/sound/card2/dsp2",
+    "DEVNAME": "/dev/dsp2",
+    "MAJOR": "14",
+    "MINOR": "35",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "11801536",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/dsp3": {
+    "DEVPATH": "/devices/platform/soc/soc:sound/sound/card3/dsp3",
+    "DEVNAME": "/dev/dsp3",
+    "MAJOR": "14",
+    "MINOR": "51",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "12189275",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/vcsa": {
+    "DEVPATH": "/devices/virtual/vc/vcsa",
+    "DEVNAME": "/dev/vcsa",
+    "MAJOR": "7",
+    "MINOR": "128",
+    "SUBSYSTEM": "vc"
+  },
+  "/dev/gpiochip0": {
+    "DEVPATH": "/devices/platform/soc/1c20800.pinctrl/gpiochip0",
+    "DEVNAME": "/dev/gpiochip0",
+    "OF_NAME": "pinctrl",
+    "OF_FULLNAME": "/soc/pinctrl@01c20800",
+    "OF_COMPATIBLE_0": "allwinner,sun8i-h3-pinctrl",
+    "OF_COMPATIBLE_N": "1",
+    "MAJOR": "254",
+    "MINOR": "0",
+    "SUBSYSTEM": "gpio"
+  },
+  "/dev/sequencer": {
+    "DEVPATH": "/devices/virtual/sound/sequencer",
+    "DEVNAME": "/dev/sequencer",
+    "MAJOR": "14",
+    "MINOR": "1",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "12604561",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/gpiochip1": {
+    "DEVPATH": "/devices/platform/soc/1f02c00.pinctrl/gpiochip1",
+    "DEVNAME": "/dev/gpiochip1",
+    "OF_NAME": "pinctrl",
+    "OF_FULLNAME": "/soc/pinctrl@01f02c00",
+    "OF_COMPATIBLE_0": "allwinner,sun8i-h3-r-pinctrl",
+    "OF_COMPATIBLE_N": "1",
+    "MAJOR": "254",
+    "MINOR": "1",
+    "SUBSYSTEM": "gpio"
+  },
+  "/dev/sequencer2": {
+    "DEVPATH": "/devices/virtual/sound/sequencer2",
+    "DEVNAME": "/dev/sequencer2",
+    "MAJOR": "14",
+    "MINOR": "8",
+    "SUBSYSTEM": "sound",
+    "USEC_INITIALIZED": "12701333",
+    "TAGS": ":uaccess:",
+    "CURRENT_TAGS": ":uaccess:"
+  },
+  "/dev/i2c-0": {
+    "DEVPATH": "/devices/platform/soc/1c2ac00.i2c/i2c-0/i2c-dev/i2c-0",
+    "DEVNAME": "/dev/i2c-0",
+    "MAJOR": "89",
+    "MINOR": "0",
+    "SUBSYSTEM": "i2c-dev"
+  },
+  "/dev/i2c-1": {
+    "DEVPATH": "/devices/platform/soc/1c2b000.i2c/i2c-1/i2c-dev/i2c-1",
+    "DEVNAME": "/dev/i2c-1",
+    "MAJOR": "89",
+    "MINOR": "1",
+    "SUBSYSTEM": "i2c-dev"
+  },
+  "/dev/i2c-2": {
+    "DEVPATH": "/devices/platform/soc/1c2b400.i2c/i2c-2/i2c-dev/i2c-2",
+    "DEVNAME": "/dev/i2c-2",
+    "MAJOR": "89",
+    "MINOR": "2",
+    "SUBSYSTEM": "i2c-dev"
+  },
+  "/dev/video0": {
+    "DEVPATH": "/devices/platform/soc/1cb0000.camera/video4linux/video0",
+    "DEVNAME": "/dev/video0",
+    "MAJOR": "81",
+    "MINOR": "0",
+    "SUBSYSTEM": "video4linux",
+    "USEC_INITIALIZED": "12019167",
+    "ID_V4L_VERSION": "2",
+    "ID_V4L_PRODUCT": "sun6i-csi",
+    "ID_V4L_CAPABILITIES": ":capture:",
+    "ID_PATH": "platform-1cb0000.camera",
+    "ID_PATH_TAG": "platform-1cb0000_camera",
+    "ID_FOR_SEAT": "video4linux-platform-1cb0000_camera",
+    "DEVLINKS": "/dev/v4l/by-path/platform-1cb0000.camera-video-index0",
+    "TAGS": ":uaccess:seat:",
+    "CURRENT_TAGS": ":uaccess:seat:"
+  },
+  "/dev/i2c-3": {
+    "DEVPATH": "/devices/platform/soc/1ee0000.hdmi/i2c-3/i2c-dev/i2c-3",
+    "DEVNAME": "/dev/i2c-3",
+    "MAJOR": "89",
+    "MINOR": "3",
+    "SUBSYSTEM": "i2c-dev"
+  },
+  "/dev/spidev0.0": {
+    "DEVPATH": "/devices/platform/soc/1c68000.spi/spi_master/spi0/spi0.0/spidev/spidev0.0",
+    "DEVNAME": "/dev/spidev0.0",
+    "MAJOR": "153",
+    "MINOR": "0",
+    "SUBSYSTEM": "spidev"
+  }
+}
         """
 
         # Фильтруем — оставляем только потенциально интересные устройства
         # Исключаем: ttyS* (консоли), tty0-63 (виртуальные консоли),
         #            loop*, ram*, null, zero, random, urandom, stdin/stdout/stderr
-        SKIP_PREFIXES = [
-            "ttyS", "tty",  # консоли UART + виртуальные консоли
-            "loop", "ram",
-            "null", "zero", "full", "random", "urandom",
-            "stdin", "stdout", "stderr",
-            "console", "ptmx", "pts",
-            "nbd", "mmcblk",  # блочные устройства
-            "watchdog", "cpu_dma_latency",
-            "network_latency", "network_throughput",
-            "memory_bandwidth",
-            "kmsg", "kmem", "mem", "kvm",
-            "fuse", "cuse",
-            "rtc", "rtc0", "rtc1",
-            "initctl", "autofs", "btrfs-control",
-            "gpiochip",
-            "mqueue", "shm",
-            "fd", "mapper",
-            "vcs", "vcsa",  # виртуальные консоли
-            "vhci",
-            "psaux",
-            "rfkill",
-            "ppp",
-            "dri", "fb0",
-            "bus",
+        SKIP = [
+            EqValid_RegexpAnyTrue(
+                r"ttyS\d",  # tty console
+                r"tty\d*",         # virtual tty
+                r"mmcblk.*", r"nbd.*", r"loop.*",   # блочные устройства
+                r"vcs\d+", "vcsa\d+",  # виртуальные консоли
+                r"watchdog\d*",
+                r"rtc\d*",
+                r"mixer\d*",
+            ),
+
+            EqValid_EQ(
+                "stdin", "stdout", "stderr",
+                "null", "zero", "full",
+                "bus",
+                "console",
+                "random", "urandom",
+                "mem", "kmsg",
+                "vhci",
+                "rfkill",
+                "ptmx", "pts",
+
+                "dri", "fb0",
+                "ppp",
+
+                "ram",
+                "net",
+                "v4l",
+
+                "watchdog", "cpu_dma_latency",
+                "network_latency", "network_throughput",
+                "memory_bandwidth",
+                "kmsg", "kmem", "mem", "kvm",
+                "fuse", "cuse",
+                "rtc0", "rtc1",
+                "initctl", "autofs", "btrfs-control",
+                "gpiochip",
+                "mqueue", "shm",
+                "fd", "mapper",
+                "psaux",
+            ),
         ]
 
         potential_devices: list[str] = []
@@ -821,13 +1102,8 @@ root@harvest05:~#
                 continue
 
             # Пропускаем заведомо не-USB устройства
-            if any(dev_name.startswith(prefix) for prefix in SKIP_PREFIXES):
+            if any(dev_name == skip_item for skip_item in SKIP):
                 continue
-
-            # Пропускаем числовые окончания виртуальных консолей (tty0..tty63)
-            if dev_name.startswith("tty") and not dev_name.startswith("ttyUSB"):
-                # Может быть ttyACM, ttyAMA — проверяем по udev
-                pass  # оставляем для проверки через udev
 
             potential_devices.append(f"/dev/{dev_name}")
 
@@ -861,6 +1137,7 @@ root@harvest05:~#
                 logger.debug(f"Пропущено {dev_path}: {exc}")
                 continue
 
+        print(json.dumps(result, indent=2, ensure_ascii=True))
         return result
 
     # PARSERS ==========================================================================================================
