@@ -365,7 +365,7 @@ root@harvest05:~#
     def cmd_timeout__write_read__payload_str(
             self,
             cmd: str,
-            timeout: float | None = 5,
+            timeout: float | None = None,
             timeout_continue: float = 1.0,
             **r_kwargs,
     ) -> str:
@@ -410,6 +410,80 @@ root@harvest05:~#
         ERROR_MSG = "ERROR_MSG"
         out = self.cmd_timeout__write_read__payload_str(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", **wr_kwargs)
         return ERROR_MSG not in out[1:]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def cmd_parsed__ls(
+            self,
+            path: str | None = None,
+            filters: Base_EqValid | list | None = None,
+            **wr_kwargs,
+    ) -> list[str]:
+        """
+
+        ---- Sent utf8 encoded message: "ls /dev/\r\n" ----
+        ls /dev/
+        adsp1            kmem              nbd13               stdout  tty36  tty8
+        audio            kmsg              nbd14               tty     tty37  tty9
+        audio1           kvm               nbd15               tty0    tty38  ttyS0
+        audio2           log               nbd2                tty1    tty39  ttyS1
+        audio3           loop-control      nbd3                tty10   tty4   ttyS2
+        autofs           loop0             nbd4                tty11   tty40  ttyS3
+        block            loop1             nbd5                tty12   tty41  ttyS4
+        btrfs-control    loop2             nbd6                tty13   tty42  ttyS5
+        bus              loop3             nbd7                tty14   tty43  ttyS6
+        cec0             loop4             nbd8                tty15   tty44  ttyS7
+        char             loop5             nbd9                tty16   tty45  ttyUSB0
+        console          loop6             net                 tty17   tty46  urandom
+        cpu_dma_latency  loop7             network_latency     tty18   tty47  v4l
+        cuse             mapper            network_throughput  tty19   tty48  vcs
+        disk             mem               null                tty2    tty49  vcs1
+        dri              memory_bandwidth  ppp                 tty20   tty5   vcs2
+        dsp              mixer             psaux               tty21   tty50  vcs3
+        dsp1             mixer1            ptmx                tty22   tty51  vcs4
+        dsp2             mixer2            pts                 tty23   tty52  vcs5
+        dsp3             mixer3            random              tty24   tty53  vcs6
+        fb0              mmcblk0           rfkill              tty25   tty54  vcsa
+        fd               mmcblk0boot0      rtc                 tty26   tty55  vcsa1
+        full             mmcblk0boot1      rtc0                tty27   tty56  vcsa2
+        fuse             mmcblk0p1         rtc1                tty28   tty57  vcsa3
+        gpiochip0        mmcblk0p2         sequencer           tty29   tty58  vcsa4
+        gpiochip1        mmcblk0p3         sequencer2          tty3    tty59  vcsa5
+        i2c-0            mqueue            serial              tty30   tty6   vcsa6
+        i2c-1            nbd0              shm                 tty31   tty60  vhci
+        i2c-2            nbd1              snd                 tty32   tty61  video0
+        i2c-3            nbd10             spidev0.0           tty33   tty62  watchdog
+        initctl          nbd11             stderr              tty34   tty63  watchdog0
+        input            nbd12             stdin               tty35   tty7   zero
+        root@harvest05:~#
+        """
+        result = []
+
+        # PATH
+        path = path or ""
+        if path and not path.endswith("/"):
+            path += "/"
+
+        # PAYLOAD
+        output = self.cmd_timeout__write_read__payload_str(
+            f"ls {path}",
+            timeout=3,
+            timeout_continue=1.0,
+            **wr_kwargs,
+        )
+
+        # SPLIT
+        parsed = output.split()
+
+        # FILTER
+        for item in parsed:
+            item = item.strip()
+            if not item:
+                continue
+            if filters and item not in filters:
+                continue
+
+            result.append(f"{path}{item}")
+        return result
 
     # FILES ============================================================================================================
     def file_name__push(self, name: str) -> bool:
@@ -730,7 +804,7 @@ root@harvest05:~#
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
         output = self.cmd_timeout__write_read__payload_str(
             f"SYSTEMD_PAGER=cat udevadm info -q property -n {address} 2>/dev/null",
-            timeout_continue=2.0,
+            timeout_continue=0.5,
             timeout=4,
         ).split("\n")
 
@@ -745,7 +819,7 @@ root@harvest05:~#
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return result
 
-    def get_info__usb_all(self) -> dict[str, dict[str, str]]:
+    def get_info__usb_all(self, filters: list | Base_EqValid | None = None) -> dict[str, dict[str, str]]:
         """
         Собирает udev-свойства для всех физических USB-устройств в /dev/.
         Фильтрует: только устройства с ID_BUS=usb (не консоли ttyS*, не виртуальные).
@@ -760,48 +834,8 @@ root@harvest05:~#
         result: dict[str, dict[str, str]] = {}
 
         # Получаем список ВСЕХ устройств в /dev/
-        dev_list_raw = self.cmd_timeout__write_read__payload_str(
-            "ls /dev/",
-            timeout=3,
-            timeout_continue=1.0
-        )
-        """
-        ---- Sent utf8 encoded message: "ls /dev/\r\n" ----
-        ls /dev/
-        adsp1            kmem              nbd13               stdout  tty36  tty8
-        audio            kmsg              nbd14               tty     tty37  tty9
-        audio1           kvm               nbd15               tty0    tty38  ttyS0
-        audio2           log               nbd2                tty1    tty39  ttyS1
-        audio3           loop-control      nbd3                tty10   tty4   ttyS2
-        autofs           loop0             nbd4                tty11   tty40  ttyS3
-        block            loop1             nbd5                tty12   tty41  ttyS4
-        btrfs-control    loop2             nbd6                tty13   tty42  ttyS5
-        bus              loop3             nbd7                tty14   tty43  ttyS6
-        cec0             loop4             nbd8                tty15   tty44  ttyS7
-        char             loop5             nbd9                tty16   tty45  ttyUSB0
-        console          loop6             net                 tty17   tty46  urandom
-        cpu_dma_latency  loop7             network_latency     tty18   tty47  v4l
-        cuse             mapper            network_throughput  tty19   tty48  vcs
-        disk             mem               null                tty2    tty49  vcs1
-        dri              memory_bandwidth  ppp                 tty20   tty5   vcs2
-        dsp              mixer             psaux               tty21   tty50  vcs3
-        dsp1             mixer1            ptmx                tty22   tty51  vcs4
-        dsp2             mixer2            pts                 tty23   tty52  vcs5
-        dsp3             mixer3            random              tty24   tty53  vcs6
-        fb0              mmcblk0           rfkill              tty25   tty54  vcsa
-        fd               mmcblk0boot0      rtc                 tty26   tty55  vcsa1
-        full             mmcblk0boot1      rtc0                tty27   tty56  vcsa2
-        fuse             mmcblk0p1         rtc1                tty28   tty57  vcsa3
-        gpiochip0        mmcblk0p2         sequencer           tty29   tty58  vcsa4
-        gpiochip1        mmcblk0p3         sequencer2          tty3    tty59  vcsa5
-        i2c-0            mqueue            serial              tty30   tty6   vcsa6
-        i2c-1            nbd0              shm                 tty31   tty60  vhci
-        i2c-2            nbd1              snd                 tty32   tty61  video0
-        i2c-3            nbd10             spidev0.0           tty33   tty62  watchdog
-        initctl          nbd11             stderr              tty34   tty63  watchdog0
-        input            nbd12             stdin               tty35   tty7   zero
-        root@harvest05:~# 
-        
+        dev_list = self.cmd_parsed__ls("/dev/", filters)
+        """        
         WHAT USED
             ttyUSB* — USB-UART адаптеры
             ttyACM* — USB-модемы (если есть)
@@ -1061,64 +1095,56 @@ root@harvest05:~#
   }
 }
         """
-
         # Фильтруем — оставляем только потенциально интересные устройства
         # Исключаем: ttyS* (консоли), tty0-63 (виртуальные консоли),
-        #            loop*, ram*, null, zero, random, urandom, stdin/stdout/stderr
-        SKIP = [
-            EqValid_RegexpAnyTrue(
-                r"ttyS\d",  # tty console
-                r"tty\d*",         # virtual tty
-                r"mmcblk.*", r"nbd.*", r"loop.*",   # блочные устройства
-                r"vcs\d+", "vcsa\d+",  # виртуальные консоли
-                r"watchdog\d*",
-                r"rtc\d*",
-                r"mixer\d*",
-            ),
+        if filters:
+            SKIP = []
+        else:
+            SKIP = [
+                EqValid_RegexpAnyTrue(
+                    r"ttyS\d",  # tty console
+                    r"tty\d*",         # virtual tty
+                    r"mmcblk.*", r"nbd.*", r"loop.*",   # блочные устройства
+                    r"vcs\d+", "vcsa\d+",  # виртуальные консоли
+                    r"watchdog\d*",
+                    r"rtc\d*",
+                    r"mixer\d*",
+                ),
 
-            EqValid_EQ(
-                "stdin", "stdout", "stderr",
-                "null", "zero", "full",
-                "bus",
-                "console",
-                "random", "urandom",
-                "mem", "kmsg",
-                "vhci",
-                "rfkill",
-                "ptmx", "pts",
+                EqValid_EQ(
+                    "stdin", "stdout", "stderr",
+                    "null", "zero", "full",
+                    "bus",
+                    "console",
+                    "random", "urandom",
+                    "mem", "kmsg",
+                    "vhci",
+                    "rfkill",
+                    "ptmx", "pts",
 
-                "dri", "fb0",
-                "ppp",
+                    "dri", "fb0",
+                    "ppp",
 
-                "ram",
-                "net",
-                "v4l",
+                    "ram",
+                    "net",
+                    "v4l",
 
-                "watchdog", "cpu_dma_latency",
-                "network_latency", "network_throughput",
-                "memory_bandwidth",
-                "kmsg", "kmem", "mem", "kvm",
-                "fuse", "cuse",
-                "rtc0", "rtc1",
-                "initctl", "autofs", "btrfs-control",
-                "gpiochip",
-                "mqueue", "shm",
-                "fd", "mapper",
-                "psaux",
-            ),
-        ]
+                    "watchdog", "cpu_dma_latency",
+                    "network_latency", "network_throughput",
+                    "memory_bandwidth",
+                    "kmsg", "kmem", "mem", "kvm",
+                    "fuse", "cuse",
+                    "rtc0", "rtc1",
+                    "initctl", "autofs", "btrfs-control",
+                    "gpiochip",
+                    "mqueue", "shm",
+                    "fd", "mapper",
+                    "psaux",
+                ),
+            ]
 
-        potential_devices: list[str] = []
-        for dev_name in dev_list_raw.split():
-            dev_name = dev_name.strip()
-            if not dev_name:
-                continue
-
-            # Пропускаем заведомо не-USB устройства
-            if any(dev_name == skip_item for skip_item in SKIP):
-                continue
-
-            potential_devices.append(f"/dev/{dev_name}")
+        # Пропускаем заведомо не-USB устройства
+        potential_devices: list[str] = [*filter(lambda x: x not in SKIP, dev_list)]
 
         # Для каждого потенциального устройства пробуем получить udev-свойства
         for dev_path in potential_devices:

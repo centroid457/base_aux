@@ -46,7 +46,7 @@ def _rules__raws_hex__understanding():
 @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_3__devices_all__usb(self, harvest):
-        harvest.get_info__usb_all()
+        harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
 
 
 # ======================================================================================================================
