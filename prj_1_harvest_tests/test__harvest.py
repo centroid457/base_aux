@@ -734,6 +734,12 @@ class Test_4__GSM:
     def test_gsm_2__quick(self, harvest: HarvestDevice):
         """
         Быстрая проверка: наличие IP-адреса и доступность 8.8.8.8 через этот интерфейс.
+
+        ---- Sent utf8 encoded message: "ip link show usb0\r\n" ----
+        ip link show usb0
+        3: usb0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+            link/ether 46:d1:74:50:fa:0f brd ff:ff:ff:ff:ff:ff
+        root@harvest05:~#
         """
         out = harvest.cmd_timeout__write_read__payload_str(
             f"ip link show {self.INTERFACE_NAME}",
@@ -773,6 +779,13 @@ class Test_4__GSM:
         """
         Информация: является ли usb0 маршрутом по умолчанию.
         Не падает, если нет – просто сообщает в лог.
+
+        ---- Sent utf8 encoded message: "ip route show\r\n" ----
+        ip route show
+        default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
+        169.254.0.0/16 dev usb0 scope link metric 1000
+        192.168.0.0/24 dev usb0 proto kernel scope link src 192.168.0.100 metric 100
+        root@harvest05:~#
         """
         default_route = harvest.cmd_timeout__write_read__payload_str(
             "ip route show default", timeout=2
@@ -806,7 +819,7 @@ class Test_4__GSM:
 
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 1 {gw}",
-            timeout=3
+            timeout=2
         )
         assert ping_ok, f"Шлюз {gw} не отвечает через {self.INTERFACE_NAME}"
 
@@ -815,7 +828,7 @@ class Test_4__GSM:
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 8.8.8.8",
-            timeout=5
+            timeout=2
         )
         assert ping_ok, f"[8.8.8.8] недоступен через {self.INTERFACE_NAME}"
 
@@ -824,7 +837,7 @@ class Test_4__GSM:
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 ya.ru",
-            timeout=5
+            timeout=2
         )
         assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
 
