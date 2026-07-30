@@ -43,7 +43,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
+@pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__push_file(self, harvest):
         assert harvest.file_name__push(text="print(123)")
@@ -701,16 +701,112 @@ class Test_22__WiFi:
 @pytest.mark.GSM
 class Test_3__GSM:
     """Тесты GSM-модема (интерфейс usb0)"""
+    INTERFACE_NAME: str = "usb0"
 
+    # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsm_present")
     def test_gsm_1__present(self, harvest):
-        """Физическое наличие модема."""
-        assert harvest.cmd_timeout__check_executed_success("ip link show usb0"), "GSM-интерфейс usb0 не обнаружен"
+        """
+        ---- Sent utf8 encoded message: "ip link show\r\n" ----
+        ip link show
+        1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+            link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
+            link/ether c6:94:13:d4:50:d5 brd ff:ff:ff:ff:ff:ff
+        3: usb0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+            link/ether 46:d1:74:50:fa:0f brd ff:ff:ff:ff:ff:ff
+        root@harvest05:~#
+        """
+        assert harvest.cmd_timeout__check_executed_success(f"ip link show {self.INTERFACE_NAME}"), f"GSM-интерфейс {self.INTERFACE_NAME} не обнаружен"
 
-    @pytest.mark.dependency(depends=["gsm_present", ], name="gsm_responds")
-    def test_gsm_2__quick__info(self, harvest):
-        raise NotImplementedError()
+    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsm_present"], name="gsm_responds")
+    def test_gsm_2__quick(self, harvest: HarvestDevice):
+        """
+        Быстрая проверка: наличие IP-адреса и доступность 8.8.8.8 через этот интерфейс.
+        """
+        out = harvest.cmd_timeout__write_read__payload_str(
+            f"ip link show {self.INTERFACE_NAME}",
+            timeout=2
+        )
+        assert ",UP," in out, "GSM-интерфейс {self.INTERFACE_NAME} не поднят"
 
+        # 1. Проверяем IP
+        """
+        ---- Sent utf8 encoded message: "ip -4 addr show usb0\r\n" ----
+        ip -4 addr show usb0
+        3: usb0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN group default qlen 1000
+            inet 192.168.0.100/24 brd 192.168.0.255 scope global dynamic noprefixroute usb0
+               valid_lft 59186sec preferred_lft 59186sec
+        root@harvest05:~#
+        
+        ---- Sent utf8 encoded message: "ip -4 addr show wlan0\r\n" ----
+        ip -4 addr show wlan0
+        root@harvest05:~# 
+        root@harvest05:~# 
+        """
+        ip_ok = harvest.cmd_timeout__write_read__payload_str(
+            f"ip -4 addr show {self.INTERFACE_NAME} | grep inet",
+            timeout=2
+        )
+        assert ip_ok, f"Нет IPv4 адреса на {self.INTERFACE_NAME}"
+
+        ping_ok = harvest.cmd_timeout__check_executed_success(
+            f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 8.8.8.8",
+            timeout=3
+        )
+        assert ping_ok, f"Пинг 8.8.8.8 через {self.INTERFACE_NAME} не прошёл (проверьте SIM/покрытие)"
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsm_responds"])
+    def test_gsm_3__info__default_route(self, harvest: HarvestDevice):
+        """
+        Информация: является ли usb0 маршрутом по умолчанию.
+        Не падает, если нет – просто сообщает в лог.
+        """
+        default_route = harvest.cmd_timeout__write_read__payload_str(
+            "ip route show default", timeout=2
+        )
+        if "usb0" in default_route:
+            print("GSM (usb0) является основным шлюзом (default route)")
+        else:
+            print("GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)")
+
+    @pytest.mark.dependency(depends=["gsm_responds"])
+    def test_gsm_3__deep__ping_gw(self, harvest: HarvestDevice):
+        """Пинг шлюза (из default via ... dev usb0).
+
+        ---- Sent utf8 encoded message: "ip route show default | grep usb0\r\n" ----
+        ip route show default | grep usb0
+        default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
+        root@harvest05:~#
+        """
+        gw_out = harvest.cmd_timeout__write_read__payload_str(
+            "ip route show default | grep usb0",
+            timeout=2
+        ).strip()
+        assert gw_out, "нет данных"
+
+        gw = gw_out.split()[2]
+        assert gw, "Не удалось извлечь IP шлюза для usb0"
+        print(f"[{gw=}]")
+
+        ping_ok = harvest.cmd_timeout__check_executed_success(
+            f"ping -I {self.INTERFACE_NAME} -c 1 -W 1 {gw}",
+            timeout=3
+        )
+        assert ping_ok, f"Шлюз {gw} не отвечает через {self.INTERFACE_NAME}"
+
+    @pytest.mark.dependency(depends=["gsm_responds"])
+    def test_gsm_3__deep__ping_dns(self, harvest: HarvestDevice):
+        """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
+        ping_ok = harvest.cmd_timeout__check_executed_success(
+            f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 ya.ru",
+            timeout=5
+        )
+        assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
+
+    # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsm_responds", ])
     def test_gsm_3__deep__sim_detected(self, harvest):
         """Получение данных: проверка SIM-карты через AT."""
