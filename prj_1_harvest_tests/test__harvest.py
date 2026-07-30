@@ -344,11 +344,21 @@ class Test_1__GNSS:
 
 # ======================================================================================================================
 @pytest.mark.BT
-class Test_21__Bluetooth:
+class Test_2__Bluetooth:
     """Тесты Bluetooth (тот же чип что и WiFi)"""
     @pytest.mark.dependency(name="bt_present")
     def test_bt_1__present(self, harvest):
-        """Проверяет, виден ли Bluetooth интерфейс."""
+        """
+        ---- Sent utf8 encoded message: "hciconfig\r\n" ----
+        hciconfig
+        hci0:   Type: Primary  Bus: UART
+                BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+                UP RUNNING
+                RX bytes:71478 acl:1555 sco:0 events:879 errors:0
+                TX bytes:2897 acl:33 sco:0 commands:102 errors:0
+
+        root@harvest05:~#
+        """
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
     @pytest.mark.dependency(depends=["bt_present", ])
@@ -502,7 +512,7 @@ root@harvest05:~#
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.WIFI
-class Test_22__WiFi:
+class Test_3__WiFi:
     # Пороговые значения для оценки качества (можно вынести в конфиг)
     RSSI_MIN_OK = -75        # dBm – ниже этого уже внимание
     RSSI_MIN_CRITICAL = -85  # dBm – ниже этого ошибка
@@ -699,8 +709,8 @@ class Test_22__WiFi:
 
 # ======================================================================================================================
 @pytest.mark.GSM
-class Test_3__GSM:
-    """Тесты GSM-модема (интерфейс usb0)"""
+class Test_4__GSM:
+    """Тесты GSM-модема"""
     INTERFACE_NAME: str = "usb0"
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -720,7 +730,7 @@ class Test_3__GSM:
         assert harvest.cmd_timeout__check_executed_success(f"ip link show {self.INTERFACE_NAME}"), f"GSM-интерфейс {self.INTERFACE_NAME} не обнаружен"
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["gsm_present"], name="gsm_responds")
+    @pytest.mark.dependency(depends=["gsm_present"])
     def test_gsm_2__quick(self, harvest: HarvestDevice):
         """
         Быстрая проверка: наличие IP-адреса и доступность 8.8.8.8 через этот интерфейс.
@@ -758,8 +768,8 @@ class Test_3__GSM:
         assert ping_ok, f"Пинг 8.8.8.8 через {self.INTERFACE_NAME} не прошёл (проверьте SIM/покрытие)"
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["gsm_responds"])
-    def test_gsm_3__info__default_route(self, harvest: HarvestDevice):
+    @pytest.mark.dependency(depends=["gsm_present"])
+    def test_gsm_3__deep__default_route(self, harvest: HarvestDevice):
         """
         Информация: является ли usb0 маршрутом по умолчанию.
         Не падает, если нет – просто сообщает в лог.
@@ -767,13 +777,16 @@ class Test_3__GSM:
         default_route = harvest.cmd_timeout__write_read__payload_str(
             "ip route show default", timeout=2
         )
-        if "usb0" in default_route:
+        result = "usb0" in default_route
+        if result:
             print("GSM (usb0) является основным шлюзом (default route)")
         else:
             print("GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)")
 
-    @pytest.mark.dependency(depends=["gsm_responds"])
-    def test_gsm_3__deep__ping_gw(self, harvest: HarvestDevice):
+        assert result, "GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)"
+
+    @pytest.mark.dependency(depends=["gsm_present"])
+    def test_gsm_3__deep__ping1_gw(self, harvest: HarvestDevice):
         """Пинг шлюза (из default via ... dev usb0).
 
         ---- Sent utf8 encoded message: "ip route show default | grep usb0\r\n" ----
@@ -797,8 +810,17 @@ class Test_3__GSM:
         )
         assert ping_ok, f"Шлюз {gw} не отвечает через {self.INTERFACE_NAME}"
 
-    @pytest.mark.dependency(depends=["gsm_responds"])
-    def test_gsm_3__deep__ping_dns(self, harvest: HarvestDevice):
+    @pytest.mark.dependency(depends=["gsm_present"])
+    def test_gsm_3__deep__ping2_8888(self, harvest: HarvestDevice):
+        """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
+        ping_ok = harvest.cmd_timeout__check_executed_success(
+            f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 8.8.8.8",
+            timeout=5
+        )
+        assert ping_ok, f"[8.8.8.8] недоступен через {self.INTERFACE_NAME}"
+
+    @pytest.mark.dependency(depends=["gsm_present"])
+    def test_gsm_3__deep__ping3_dns(self, harvest: HarvestDevice):
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 ya.ru",
@@ -807,7 +829,7 @@ class Test_3__GSM:
         assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["gsm_responds", ])
+    @pytest.mark.dependency(depends=["gsm_present", ])
     def test_gsm_3__deep__sim_detected(self, harvest):
         """Получение данных: проверка SIM-карты через AT."""
         # Ищем порт AT-команд (обычно /dev/ttyUSB2)
@@ -818,7 +840,7 @@ class Test_3__GSM:
         ready = any("+CPIN: READY" in line for line in output)
         assert ready, "SIM-карта не готова или модем не отвечает"
 
-    @pytest.mark.dependency(depends=["gsm_responds", ])
+    @pytest.mark.dependency(depends=["gsm_present", ])
     def test_gsm_3__deep__signal_quality(self, harvest):
         """Валидация уровня сигнала (RSSI > 5)."""
         harvest.conn.write_bytes('echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
@@ -835,7 +857,7 @@ class Test_3__GSM:
                     pass
         pytest.fail("Не удалось извлечь уровень сигнала GSM")
 
-    @pytest.mark.dependency(depends=["gsm_responds", ])
+    @pytest.mark.dependency(depends=["gsm_present", ])
     def test_gsm_3__deep__network_registration(self, harvest):
         """Валидация: регистрация в сети."""
         harvest.conn.write_bytes('echo -e "AT+CREG?\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
@@ -847,7 +869,7 @@ class Test_3__GSM:
 
 # ======================================================================================================================
 @pytest.mark.RFID
-class Test_4__RFID:
+class Test_5__RFID:
 
     @pytest.mark.dependency(name="rfid_script_present")
     def test_rfid_0__script_send_present(self, harvest):
