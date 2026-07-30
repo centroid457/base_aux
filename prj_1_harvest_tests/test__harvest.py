@@ -707,7 +707,7 @@ class Test_3__WiFi:
 
 # ======================================================================================================================
 @pytest.mark.GSM
-class Test_4__GSM:
+class Test_41__GSM:
     """Тесты GSM-модема"""
     INTERFACE_NAME: str = "usb0"
 
@@ -838,6 +838,32 @@ class Test_4__GSM:
             timeout=2
         )
         assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
+
+
+# ======================================================================================================================
+@pytest.mark.GSM
+class Test_42__GSM_AT:
+    """Тесты GSM-модема"""
+    AT_CANDIDATES = ["/dev/ttyUSB2", "/dev/ttyUSB1", "/dev/ttyACM0"]  # порядок поиска
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_gsm_1__detect(self, harvest: HarvestDevice) -> str | None:
+        """Возвращает первый порт, ответивший OK на AT, или None."""
+        # Убедимся, что скрипт at_client.py есть
+        if not harvest.file__check_exist("/tmp/at_client.py"):
+            if not harvest.file_name__push("/tmp/at_client.py"):
+                return None
+        for port in self.AT_CANDIDATES:
+            # Проверяем, существует ли порт
+            if not harvest.cmd_timeout__check_executed_success(f"test -c {port}"):
+                continue
+            try:
+                out = harvest.send__at_command__raw("AT", port=port, timeout=1.5)
+                if "OK" in out:
+                    return port
+            except FileNotFoundError:
+                continue
+        return None
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsm_present", ])
