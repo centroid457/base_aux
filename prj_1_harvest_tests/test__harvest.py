@@ -845,16 +845,49 @@ class Test_41__GSM:
 class Test_42__GSMAT:
     """Тесты GSM-модема через AT команды"""
     at_port: str | None = None
-    AT_CANDIDATES = ["/dev/ttyUSB2", "/dev/ttyUSB1", "/dev/ttyACM0"]  # порядок поиска
+    AT_CANDIDATES = [
+        "/dev/ttyUSB2",
+        # "/dev/ttyUSB1",
+        # "/dev/ttyACM0",
+    ]  # порядок поиска
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")
     def test_gsmat_1__detect(self, harvest):
-        """Возвращает первый порт, ответивший OK на AT, или None."""
+        """Возвращает первый порт, ответивший OK на AT, или None.
+
+        ---- Sent utf8 encoded message: "ls /dev/ttyUSB2 || echo ERROR_MS\r\n" ----
+        ls /dev/ttyUSB2 || echo ERROR_MS
+        /dev/ttyUSB2
+        root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "ls /dev/ttyUSB2\r\n" ----
+        ls /dev/ttyUSB2
+        /dev/ttyUSB2
+        root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "ls /dev/ttyUSB222\r\n" ----
+        ls /dev/ttyUSB222
+        ls: cannot access '/dev/ttyUSB222': No such file or directory
+        root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "ls /dev/ttyUSB2222 || echo ERROR_MS\r\n" ----
+        ls /dev/ttyUSB2222 || echo ERROR_MS
+        ls: cannot access '/dev/ttyUSB2222': No such file or directory
+        ERROR_MS
+        root@harvest05:~#
+        root@harvest05:~#
+        """
         for port in self.AT_CANDIDATES:
-            # Проверяем, существует ли порт
-            if not harvest.cmd_timeout__check_executed_success(f"test -c {port}"):
+            # 0=Проверяем, существует ли порт
+            print()
+            print()
+            print()
+            print()
+            if not harvest.cmd_timeout__check_executed_success(f"ls {port}"):
                 continue
+
+            # 1=Сначала пробуем python-скрипт (обновлённый)
             try:
                 out = harvest.send__at_command__raw("AT", port=port, timeout=1.5)
                 if "OK" in out:
@@ -862,6 +895,13 @@ class Test_42__GSMAT:
                     break
             except FileNotFoundError:
                 continue
+
+            # 2=Если не вышло – пробуем echo/cat=simple
+            out_simple = harvest.send__at_command__simple("AT", port=port, timeout=2)
+            if "OK" in out_simple:
+                self.at_port = port
+                break
+
         assert self.at_port, f"порт устройства для отправки AT команд не найден! {self.AT_CANDIDATES=}"
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -883,19 +923,22 @@ class Test_42__GSMAT:
                 return
         pytest.fail(f"Не удалось извлечь CSQ из ответа: {out}")
 
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_3__network_registration(self, harvest):
+        """AT+CREG? – статус 1 или 5."""
+        out = harvest.send__at_command__raw("AT+CREG?", port=self.at_port, timeout=2)
+        registered = any(
+            "+CREG:" in line and (line.strip().endswith(",1") or line.strip().endswith(",5"))
+            for line in out.splitlines()
+        )
+        assert registered, f"Модем не зарегистрирован в сети: {out}"
 
-
-
-
-
-    @pytest.mark.dependency(depends=["gsmat_present", ])
-    def test_gsm_3__deep__network_registration(self, harvest):
-        """Валидация: регистрация в сети."""
-        harvest.conn.write_bytes('echo -e "AT+CREG?\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1')
-        output = harvest.conn.read_lines(timeout_continue=1.5)
-        # Ищем +CREG: 0,1 или 0,5 (зарегистрирован)
-        registered = any("+CREG: " in line and (line.endswith("1") or line.endswith("5")) for line in output)
-        assert registered, "Модем не зарегистрирован в сотовой сети"
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_3__operator(self, harvest):
+        """AT+COPS? – имя оператора."""
+        out = harvest.send__at_command__raw("AT+COPS?", port=self.at_port, timeout=2)
+        assert "COPS" in out, f"Не удалось получить оператора: {out}"
+        print(f"GSM operator info: {out}")
 
 
 # ======================================================================================================================

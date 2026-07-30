@@ -116,33 +116,42 @@ s.close()
     # """
 
     "/tmp/at_client.py": r"""
-import sys, time, serial
+import sys, time, serial, os
 
 if len(sys.argv) < 2:
-    print("Usage: python3 /tmmp/at_client.py <AT command> [port] [baudrate]")
+    print("Usage: python3 /tmp/at_client.py <AT command> [port] [baudrate]")
     sys.exit(1)
 
 cmd = sys.argv[1]
 port = sys.argv[2] if len(sys.argv) > 2 else "/dev/ttyUSB2"
-baudrate = int(sys.argv[3]) if len(sys.argv) > 3 else 115200
+baudrates = [115200, 9600, 57600, 38400, 19200]
+if len(sys.argv) > 3:
+    baudrates = [int(sys.argv[3])]
 
-try:
-    s = serial.Serial(port, baudrate, timeout=0.2)
-except Exception as exc:
-    print(f"AT_ERROR:{exc!r}")
-    exit()
+# Попытка освободить порт, если занят
+os.system(f"fuser -k {port} 2>/dev/null")
 
-try:
-    s.reset_input_buffer()
-    s.write((cmd + "\r\n").encode())
-    time.sleep(0.3)  # даём модему время ответить
-    result: str = s.read(4096).decode(errors='replace')
-    print(result)
-except Exception as exc:
-    print(f"AT_ERROR:{exc!r}")
+last_err = None
+for baud in baudrates:
+    try:
+        s = serial.Serial(port, baud, timeout=0.3,
+                          rtscts=False, dsrdtr=False, exclusive=True)
+        s.reset_input_buffer()
+        s.write((cmd + "\r\n").encode())
+        time.sleep(0.4)  # ждём ответ
+        result = s.read(4096).decode(errors='replace')
+        print(result)
+        s.close()
+        sys.exit(0)
+    except Exception as exc:
+        last_err = exc
+        try: s.close()
+        except: pass
+        continue
 
-s.close()
-    """,
+print(f"AT_ERROR:{last_err!r}")
+sys.exit(1)
+    """
 }
 
 
@@ -468,14 +477,21 @@ root@harvest05:~#
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
         """
         command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
-        output = self.cmd_timeout__write_read__payload_str(
-            command_line,
-            timeout=timeout,
-            timeout_continue=timeout * 1.5,
-            **read_kwargs
-        )
-        # Убираем возможное эхо команды
-        output = output.replace(cmd + "\n", "")
+        output = ""
+        for _ in range(2):
+            output = self.cmd_timeout__write_read__payload_str(
+                command_line,
+                timeout=timeout,
+                timeout_continue=timeout * 1.5,
+                **read_kwargs
+            )
+            # Убираем возможное эхо команды
+            output = output.replace(cmd + "\n", "")
+
+            if "No such file or directory" in output:
+                if not self.file_name__push(bridge):
+                    break
+
         return output
 
     # CMDS =============================================================================================================
