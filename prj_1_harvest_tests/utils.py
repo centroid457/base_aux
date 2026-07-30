@@ -467,9 +467,6 @@ root@harvest05:~#
         """
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
         """
-        if not self.file__check_exist(bridge):
-            raise FileNotFoundError(f"{bridge}")
-
         command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
         output = self.cmd_timeout__write_read__payload_str(
             command_line,

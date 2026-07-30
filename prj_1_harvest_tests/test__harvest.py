@@ -45,13 +45,6 @@ def _rules__raws_hex__understanding():
 # ======================================================================================================================
 @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
-    def test_1__push_file(self, harvest):
-        assert harvest.file_name__push(text="print(123)")
-
-    def test_2__gnss(self, harvest):
-        assert harvest.file_name__push("get__gnss_info__ubx")
-        assert harvest.conn.write_read_lines('python3 /tmp/script_explore.py', timeout_continue=5)
-
     def test_3__devices_all__usb(self, harvest):
         harvest.get_info__usb_all()
 
@@ -95,7 +88,7 @@ class Test_01__Detection:
 @pytest.mark.PRE
 class Test_02__PreInstall:
     # ------------------------------------------------------------------------------------------------------------------
-    def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None):
+    def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None) -> None | NoReturn:
         name_install = name_install or name_check
         if not harvest.cmd_timeout__check_executed_success(f"which {name_check}"):
             assert internet_access, f"Нет интернета для установки пакетов {name_check}"
@@ -159,14 +152,21 @@ class Test_02__PreInstall:
             assert harvest.apt_install("python3-serial")
 
     # @pytest.mark.skip("just for now")
-    def test_pre_5__wifi_1__iw(self, harvest, internet_access):
+    def test_pre_5__wifi1__iw(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "iw")
 
-    def test_pre_5__wifi_2__bluez(self, harvest, internet_access):
+    def test_pre_5__wifi2__bluez(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "bluetoothctl", "bluez")
 
-    def test_pre_5__wifi_3__usbutils(self, harvest, internet_access):
+    def test_pre_5__wifi3__usbutils(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "lsusb", "usbutils")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_pre_6__push1__ubx(self, harvest):
+        assert harvest.file_name__push("/tmp/get__gnss_info__ubx.py"), "скрипт не отправился"
+
+    def test_pre_6__push2__at_client(self, harvest):
+        assert harvest.file_name__push("/tmp/at_client.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -300,8 +300,6 @@ class Test_1__GNSS:
           ]
         }
         """
-        assert harvest.file_name__push("/tmp/get__gnss_info__ubx.py"), "скрипт не отправился"
-
         for attempt in range(3):
             print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
 
