@@ -847,7 +847,7 @@ class Test_42__GSM_AT:
     AT_CANDIDATES = ["/dev/ttyUSB2", "/dev/ttyUSB1", "/dev/ttyACM0"]  # порядок поиска
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_gsm_1__detect(self, harvest: HarvestDevice) -> str | None:
+    def test_gsm_at_1__detect(self, harvest: HarvestDevice):
         """Возвращает первый порт, ответивший OK на AT, или None."""
         # Убедимся, что скрипт at_client.py есть
         if not harvest.file__check_exist("/tmp/at_client.py"):
