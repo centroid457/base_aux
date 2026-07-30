@@ -755,9 +755,9 @@ root@harvest05:~#
         return result
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_info__usb(self, address: str) -> dict[str, Any]:
+    def get_info__usb(self, port: str) -> dict[str, Any]:
         """
-        available
+        available both variants:
             full path   - /dev/ttyUSB0
             devName     - ttyUSB0
 
@@ -803,7 +803,7 @@ root@harvest05:~#
         """
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
         output = self.cmd_timeout__write_read__payload_str(
-            f"SYSTEMD_PAGER=cat udevadm info -q property -n {address} 2>/dev/null",
+            f"SYSTEMD_PAGER=cat udevadm info -q property -n {port} 2>/dev/null",
             timeout_continue=0.5,
             timeout=4,
         ).split("\n")
