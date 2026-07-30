@@ -484,27 +484,27 @@ class Test_2__Bluetooth:
         pytest.skip("not realised")
         # TODO: check errors
         """
-2004hroot@harvest05:~# "
-	printable=hciconfig hci0 -a
-
-hci0:	Type: Primary  Bus: UART
-	BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
-	UP RUNNING 
-	RX bytes:936753 acl:29093 sco:0 events:3626 errors:0
-	TX bytes:5144 acl:117 sco:0 commands:216 errors:0
-	Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
-	Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
-	Link policy: RSWITCH SNIFF 
-	Link mode: PERIPHERAL ACCEPT 
-	Name: 'harvest05'
-	Class: 0x000000
-	Service Classes: Unspecified
-	Device Class: Miscellaneous, 
-	HCI Version: 4.0 (0x6)  Revision: 0x6a
-	LMP Version: 4.0 (0x6)  Subversion: 0x2209
-	Manufacturer: Broadcom Corporation (15)
-
-root@harvest05:~#      
+        2004hroot@harvest05:~# "
+            printable=hciconfig hci0 -a
+        
+        hci0:	Type: Primary  Bus: UART
+            BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+            UP RUNNING 
+            RX bytes:936753 acl:29093 sco:0 events:3626 errors:0
+            TX bytes:5144 acl:117 sco:0 commands:216 errors:0
+            Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+            Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
+            Link policy: RSWITCH SNIFF 
+            Link mode: PERIPHERAL ACCEPT 
+            Name: 'harvest05'
+            Class: 0x000000
+            Service Classes: Unspecified
+            Device Class: Miscellaneous, 
+            HCI Version: 4.0 (0x6)  Revision: 0x6a
+            LMP Version: 4.0 (0x6)  Subversion: 0x2209
+            Manufacturer: Broadcom Corporation (15)
+        
+        root@harvest05:~#      
         """
 
 
@@ -843,18 +843,56 @@ class Test_41__GSM:
 # ======================================================================================================================
 @pytest.mark.GSM
 class Test_42__GSMAT:
-    """Тесты GSM-модема через AT команды"""
+    """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
+
     at_port: str | None = None
     AT_CANDIDATES = [
+        "/dev/ttyUSB5",  # основной AT-порт после modprobe option + new_id
+        "/dev/ttyUSB4",
+        "/dev/ttyUSB3",
         "/dev/ttyUSB2",
-        # "/dev/ttyUSB1",
-        # "/dev/ttyACM0",
+        "/dev/ttyUSB1",
     ]  # порядок поиска
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")
     def test_gsmat_1__detect(self, harvest):
         """Возвращает первый порт, ответивший OK на AT, или None.
+
+        Для SIMcom 7682 требуется предварительная инициализация драйвера option.
+
+        ищем само устройство - чип 7682
+        ---- Sent utf8 encoded message: "lsusb\r\n" ----
+lsusb
+Bus 008 Device 002: ID 1a86:7523 QinHeng Electronics CH340 serial converter
+Bus 008 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 007 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 002: ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 006 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 009 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+root@harvest05:~#
+root@harvest05:~#
+
+---- Sent utf8 encoded message: "lsusb | grep -i qualcomm || echo ERR\r\n" ----
+lsusb | grep -i qualcomm || echo ERR
+Bus 004 Device 011: ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module
+root@harvest05:~#
+
+---- Sent utf8 encoded message: "dmesg | grep -i '1e0e\\|9011\\|option\\|qmi\\|wwan\\|ttyUSB'\r\n" ----
+dmesg | grep -i '1e0e\|9011\|option\|qmi\|wwan\|ttyUSB'
+[    1.967031] usbcore: registered new interface driver qmi_wwan
+[    2.253212] usbcore: registered new interface driver option
+[    3.700857] usb 4-1: New USB device found, idVendor=1e0e, idProduct=9011
+[    5.504550] cgroup: cgroup2: unknown option "memory_recursiveprot"
+[    6.557039] systemd[1]: /etc/systemd/system/rc-local.service:11: Support for option SysVStartPriority= has been removed and it is ignored
+[   11.818187] usb 8-1: ch341-uart converter now attached to ttyUSB0
+root@harvest05:~#
+
 
         ---- Sent utf8 encoded message: "ls /dev/ttyUSB2 || echo ERROR_MS\r\n" ----
         ls /dev/ttyUSB2 || echo ERROR_MS
@@ -878,6 +916,17 @@ class Test_42__GSMAT:
         root@harvest05:~#
         root@harvest05:~#
         """
+        assert harvest.cmd_timeout__check_executed_success("lsusb | grep -i qualcomm"), "устройствоне обнружено [9011 Qualcomm]"
+
+        # Пробуем активировать драйвер (безопасно, даже если уже загружен)
+        assert harvest.cmd_timeout__check_executed_success("modprobe option"), "драйвер не установлен ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module"
+
+        # можно запускать сколько угодно! ошибки не будет!
+        assert harvest.cmd_timeout__check_executed_success(
+            'echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null'
+        ), "активация шины связи для AT команд не состоялось"
+        time.sleep(1)  # даём время на создание портов
+
         for port in self.AT_CANDIDATES:
             # 0=Проверяем, существует ли порт
             print()

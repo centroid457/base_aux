@@ -198,7 +198,7 @@ class HarvestDevice:
             return True
 
         elif b"Password:" in data:
-            data = self.conn.write_read_bytes(data="1", timeout_continue=3)
+            data = self.conn.write_read_bytes(data="1", timeout_continue=6)
             if b"root@harvest" in data:
                 return True
 
