@@ -152,7 +152,7 @@ for baud in baudrates:
         print(f"AT_ERROR:{exc!r}")
         try: 
             s.close()
-        exception:
+        except:
             pass
         continue
 
