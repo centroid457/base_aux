@@ -43,7 +43,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
+@pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_3__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
@@ -266,16 +266,16 @@ class Test_1__GNSS:
         [1]+  Terminated              cat /dev/ttyUSB0
         root@harvest05:~#
         """
-        gnss_data: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
+        gnss_collected: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
 
-        output = harvest.cmd_timeout__write_read_lines("cat /dev/ttyUSB0", timeout=1, timeout_continue=1)
+        output = harvest.cmd_timeout__write_read_lines("cat /dev/ttyUSB0", timeout=1, timeout_continue=1, return_str=False)
 
-        for msg_type, data in gnss_data.items():
-            gnss_data[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
+        for msg_type, data in gnss_collected.items():
+            gnss_collected[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
 
-        for msg_type, data in gnss_data.items():
+        for msg_type, data in gnss_collected.items():
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"
-            print(f"NMEA-предложения {msg_type=} получены {data=}")
+            print(f"NMEA-{msg_type} получены {data=}")
 
     @pytest.mark.dependency(depends=["gnss_present", ])
     def test_gnss_3__deep1__pids(self, harvest):
@@ -367,7 +367,7 @@ class Test_2__Bluetooth:
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
 
     @pytest.mark.dependency(depends=["bt_present", ])
-    def test_bt_2__quick__scan_devices(self, harvest):
+    def test_bt_2__quick__scan(self, harvest):
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -415,30 +415,15 @@ class Test_2__Bluetooth:
         root@harvest05:~#
         root@harvest05:~#
         """
-        # запускаем короткое сканирование (bluetoothctl или hcitool)
-        output = harvest.cmd_timeout__write_read_lines("bluetoothctl -- scan on", timeout=1, timeout_continue=2, payload_only=True)
+        output = harvest.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=1, timeout_continue=1)
+        assert "Discovery started" in output, "Bluetooth поиск не запустился"
 
-        # Убеждаемся, что discovery стартовал
-        assert any("Discovery started" in line for line in output), "Bluetooth discovery не запустился"
-
-        # Ищем строки с "Device" (новый BLE/BR) в выводе
-        devices = []
-        for line in output:
-            # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
-            # if "Device" not in line:
-            #     continue
-            parts = line.split()
-            if len(parts) >= 3:
-                addr = parts[2]
-                name = " ".join(parts[3:]) if len(parts) > 3 else "(unnamed)"
-                dev_line = f"{addr} {name}"
-                devices.append(dev_line)
-                print(f"\t{dev_line}")
-
-        assert devices, "Не обнаружено ни одного Bluetooth-устройства"
+        # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
+        bt_scaned = re.findall(r'\s*Device\s\S+\s(.+)\s*\n*', output)
+        assert bt_scaned, f"Не обнаружено ни одного Bluetooth-устройства {bt_scaned=}"
 
     @pytest.mark.dependency(depends=["bt_present", ])
-    def test_bt_3__deep__(self, harvest):
+    def test_bt_3__deep__info(self, harvest):
         """
         Полный дамп всей доступной информации о Bluetooth-модуле.
         Выполняется несколько команд, их вывод объединяется.
@@ -456,8 +441,10 @@ class Test_2__Bluetooth:
 
         full_output: list[str] = []
         for cmd in commands:
-            lines = harvest.cmd_timeout__write_read_lines(
-                cmd, timeout_continue=1.5
+            lines = harvest.cmd_timeout__write_read__payload(
+                cmd,
+                timeout_continue=1.5,
+                return_str=False,
             )
             # добавляем заголовок и сам вывод
             full_output.append(f"--- {cmd} ---")
@@ -471,20 +458,19 @@ class Test_2__Bluetooth:
         print("\n".join(full_output))
 
         # Минимальная валидация: в hciconfig version должен быть Manufacturer
-        version_output = harvest.conn.write_read_lines(
-            "hciconfig hci0 version", timeout_continue=1.5
+        version_output = harvest.cmd_timeout__write_read__payload(
+            "hciconfig hci0 version",
+            timeout_continue=1.5,
         )
-        assert any(
-            "Manufacturer" in line for line in version_output
-        ), "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
+        assert "Manufacturer" in version_output, \
+            "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
 
         # Проверяем, что rfkill не показывает Hard blocked
-        rfkill_output = harvest.conn.write_read_lines(
-            "rfkill list bluetooth", timeout_continue=1.5
+        rfkill_output = harvest.cmd_timeout__write_read__payload(
+            "rfkill list bluetooth",
+            timeout_continue=1.5,
         )
-        assert not any(
-            "Hard blocked: yes" in line for line in rfkill_output
-        ), "Bluetooth аппаратно заблокирован (Hard blocked)"
+        assert "Hard blocked: yes" not in rfkill_output, "Bluetooth аппаратно заблокирован (Hard blocked)"
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_4__deep__(self, harvest):
@@ -561,7 +547,7 @@ class Test_3__WiFi:
         ), "Wi-Fi интерфейс wlan0 не обнаружен"
 
         # Дополнительная проверка, что это именно беспроводной интерфейс
-        output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
+        output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
         assert "wlan0" in output, "iw dev не видит wlan0"
         assert "type managed" in output.lower() or "type ap" in output.lower(), \
             f"wlan0 не является беспроводным интерфейсом: {output}"
@@ -577,11 +563,11 @@ class Test_3__WiFi:
         - beacon loss
         """
         # Убедимся, что есть соединение
-        link_output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 link")
+        link_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 link")
         assert "Not connected." not in link_output, "Нет активного Wi-Fi соединения"
 
         # Извлекаем основные параметры через station dump (более информативно)
-        station_output = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 station dump")
+        station_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 station dump")
         print(f"Station dump:\n{station_output}")
 
         # Парсим station dump в словарь
@@ -618,54 +604,122 @@ class Test_3__WiFi:
         print(f"Скорость TX: {tx_bitrate}, RX: {rx_bitrate}")
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3__deep__scan_environment(self, harvest):
+    def test_wf_3__deep__scan(self, harvest):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
         Это необходимо для диагностики проблем с антенной:
         если не видно почти ничего, или все уровни аномально низкие,
         вероятен обрыв антенного тракта.
+
+        ---- Sent utf8 encoded message: "iw dev wlan0 scan | grep -E 'on wlan0|SSID|signal|freq'\r\n" ----
+        iw dev wlan0 scan | grep -E 'on wlan0|SSID|signal|freq'
+        BSS 80:af:ca:f0:9d:8d(on wlan0) -- associated
+                freq: 2417
+                signal: -55.00 dBm
+                SSID: Vest
+        BSS 78:45:58:3a:38:db(on wlan0)
+                freq: 2437
+                signal: -77.00 dBm
+                SSID: Element-T
+                         * SSID List
+        BSS 7e:45:58:3a:38:db(on wlan0)
+                freq: 2437
+                signal: -77.00 dBm
+                SSID: Element_Guest
+                         * SSID List
+        BSS 82:45:58:3a:38:db(on wlan0)
+                freq: 2437
+                signal: -77.00 dBm
+                SSID: Element-t_2Gz
+                         * SSID List
+        BSS 9c:9d:7e:75:00:5b(on wlan0)
+                freq: 2437
+                signal: -63.00 dBm
+                SSID: Element-T_lab
+                         * SSID List
+                         * center freq segment 1: 8
+                         * center freq segment 2: 0
+        BSS cc:2d:e0:c2:7d:42(on wlan0)
+                freq: 2452
+                signal: -68.00 dBm
+                SSID: MikroTik-C27D42
+        BSS 50:ff:20:f5:08:cf(on wlan0)
+                freq: 2452
+                signal: -82.00 dBm
+                SSID: Prometei-PG
+        BSS c4:9a:31:fb:d2:2b(on wlan0)
+                freq: 2462
+                signal: -93.00 dBm
+                SSID: SSR_WORK
+                         * SSID List
+                         * center freq segment 1: 11
+                         * center freq segment 2: 0
+        BSS c4:0a:cb:5c:d6:93(on wlan0)
+                freq: 2412
+                signal: -70.00 dBm
+                SSID: Advanta_Messages
+        BSS c4:0a:cb:5c:d6:94(on wlan0)
+                freq: 2412
+                signal: -74.00 dBm
+                SSID: Advanta_Work
+        BSS c4:0a:cb:5c:d6:95(on wlan0)
+                freq: 2412
+                signal: -71.00 dBm
+                SSID: Advanta
+        BSS d2:a4:6f:e6:fa:d2(on wlan0)
+                freq: 2427
+                signal: -74.00 dBm
+                SSID: DIRECT-bQ-Pantum BM5100 Series
+        BSS 86:45:58:3a:38:db(on wlan0)
+                freq: 2437
+                signal: -82.00 dBm
+                SSID:
+                         * SSID List
+        BSS c6:2b:31:fb:d2:2f(on wlan0)
+                freq: 2462
+                signal: -92.00 dBm
+                SSID:
+                         * SSID List
+                         * center freq segment 1: 11
+                         * center freq segment 2: 0
+        BSS c6:2b:31:fb:d2:20(on wlan0)
+                freq: 2462
+                signal: -91.00 dBm
+                SSID: IKS_WORK
+                         * SSID List
+                         * center freq segment 1: 11
+                         * center freq segment 2: 0
+        root@harvest05:~#
+        root@harvest05:~#
         """
-        # Сканирование может занять пару секунд, используем timeout
-        scan_output = harvest.cmd_timeout__write_read__payload_str(
-            "iw dev wlan0 scan | grep -E 'SSID|signal|freq' | head -60",
-            timeout=10,  # даём побольше времени
+        scan_output = harvest.cmd_timeout__write_read__payload(
+            "iw dev wlan0 scan | grep SSID",
+            timeout=10,
             timeout_continue=2
         )
-        print(f"Wi-Fi scan (сети):\n{scan_output}")
+        ssids = re.findall(r'\s*SSID:\s(.+)\s*\n*', scan_output)
+        print(f"Wi-Fi scan {ssids=}")
+        assert ssids, "сети не обнаружены"
 
-        # Собираем BSSID и уровни сигнала
-        networks = []
-        current_ssid = None
-        for line in scan_output.split('\n'):
-            if line.startswith('SSID:'):
-                current_ssid = line.split(':', 1)[1].strip()
-            elif line.startswith('signal:') and current_ssid is not None:
-                try:
-                    signal_val = float(line.split(':')[1].strip().split()[0])
-                    networks.append((current_ssid, signal_val))
-                    current_ssid = None
-                except (IndexError, ValueError):
-                    pass
+        assert len(ssids) >= self.MIN_SCAN_NETWORKS, \
+            f"Обнаружено мало сетей ({len(ssids)}), минимально ожидается {self.MIN_SCAN_NETWORKS}."
 
-        print(f"Обнаружено сетей: {len(networks)}")
-        for ssid, sig in networks:
-            print(f"  {ssid:30} {sig:5.1f} dBm")
-
-        assert len(networks) >= self.MIN_SCAN_NETWORKS, \
-            f"Обнаружено мало сетей ({len(networks)}), минимально ожидается {self.MIN_SCAN_NETWORKS}. " \
-            f"Возможна проблема с антенной или окружением."
-
-        # Проверка уровня хотя бы одной сети – не должно быть всё ниже -85 dBm
-        strong_signals = [sig for _, sig in networks if sig > self.RSSI_MIN_CRITICAL]
-        if not strong_signals:
-            print(f"ВНИМАНИЕ: все обнаруженные сети слабее {self.RSSI_MIN_CRITICAL} dBm – "
-                  f"подозрение на неисправность антенны или очень плохое покрытие.")
-        else:
-            print(f"Самая сильная сеть: {max(strong_signals):.1f} dBm")
+        # Собираем BSSID и уровни сигнала -----------------------------
+        scan_output = harvest.cmd_timeout__write_read__payload(
+            "iw dev wlan0 scan | grep signal",
+            timeout=10,
+            timeout_continue=2
+        )
+        signal_bds = re.findall(r'\s*signal:\s(.+)\sdBm\s*\n*', scan_output)
+        signal_bds = [*map(float, signal_bds)]
+        print(f"Wi-Fi quality {signal_bds=}")
+        max_db = max(*signal_bds)
+        print(f"Wi-Fi quality {max_db=}")
+        assert max_db > self.RSSI_MIN_OK, "уровень сигнала слишком мал! проверьте антенну!"
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3__deep__(self, harvest):
+    def test_wf_3__deep__info(self, harvest):
         """
         Собирает максимальную информацию об адаптере:
         - версия прошивки/драйвера
@@ -676,7 +730,7 @@ class Test_3__WiFi:
         info = {}
 
         # 1. Версия драйвера и прошивки (ethtool)
-        ethtool_output = harvest.cmd_timeout__write_read__payload_str(
+        ethtool_output = harvest.cmd_timeout__write_read__payload(
             "ethtool -i wlan0 2>/dev/null"
         )
         for line in ethtool_output.split('\n'):
@@ -690,22 +744,22 @@ class Test_3__WiFi:
         assert info.get('firmware-version', ''), "Не удалось получить версию прошивки Wi-Fi"
 
         # 2. Информация о беспроводном интерфейсе (iw dev wlan0 info)
-        iw_info = harvest.cmd_timeout__write_read__payload_str("iw dev wlan0 info")
+        iw_info = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
         print(f"iw info:\n{iw_info}")
 
         # 3. MAC-адрес и состояние
-        ip_output = harvest.cmd_timeout__write_read__payload_str("ip link show wlan0")
+        ip_output = harvest.cmd_timeout__write_read__payload("ip link show wlan0")
         mac_match = re.search(r'link/ether ([\da-fA-F:]+)', ip_output)
         if mac_match:
             info['mac'] = mac_match.group(1)
         assert 'mac' in info, "Не удалось извлечь MAC-адрес wlan0"
 
         # 4. Поддерживаемые частоты и режимы (iw phy)
-        phy_output = harvest.cmd_timeout__write_read__payload_str("iw phy phy0 info 2>/dev/null")
+        phy_output = harvest.cmd_timeout__write_read__payload("iw phy phy0 info 2>/dev/null")
         print(f"iw phy summary (первые 500 символов): {phy_output[:500]}...")
 
         # 5. Счетчики ошибок интерфейса (для последующего анализа трендов)
-        stats_raw = harvest.cmd_timeout__write_read__payload_str("ip -s link show wlan0")
+        stats_raw = harvest.cmd_timeout__write_read__payload("ip -s link show wlan0")
         print(f"Interface statistics:\n{stats_raw}")
 
         # Сохраняем всё в отчёт (можно вернуть словарь, но pytest сохранит вывод в лог)
@@ -746,7 +800,7 @@ class Test_41__GSM:
             link/ether 46:d1:74:50:fa:0f brd ff:ff:ff:ff:ff:ff
         root@harvest05:~#
         """
-        out = harvest.cmd_timeout__write_read__payload_str(
+        out = harvest.cmd_timeout__write_read__payload(
             f"ip link show {self.INTERFACE_NAME}",
             timeout=2
         )
@@ -766,7 +820,7 @@ class Test_41__GSM:
         root@harvest05:~# 
         root@harvest05:~# 
         """
-        ip_ok = harvest.cmd_timeout__write_read__payload_str(
+        ip_ok = harvest.cmd_timeout__write_read__payload(
             f"ip -4 addr show {self.INTERFACE_NAME} | grep inet",
             timeout=2
         )
@@ -792,7 +846,7 @@ class Test_41__GSM:
         192.168.0.0/24 dev usb0 proto kernel scope link src 192.168.0.100 metric 100
         root@harvest05:~#
         """
-        default_route = harvest.cmd_timeout__write_read__payload_str(
+        default_route = harvest.cmd_timeout__write_read__payload(
             "ip route show default", timeout=2
         )
         result = "usb0" in default_route
@@ -812,7 +866,7 @@ class Test_41__GSM:
         default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
         root@harvest05:~#
         """
-        gw_out = harvest.cmd_timeout__write_read__payload_str(
+        gw_out = harvest.cmd_timeout__write_read__payload(
             "ip route show default | grep usb0",
             timeout=2
         ).strip()
@@ -1277,7 +1331,7 @@ root@harvest05:~#
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
         Порт должен быть инициализирован в test_gsmat_1__detect.
         """
-        at_output = harvest.cmd_timeout__write_read__payload_str(
+        at_output = harvest.cmd_timeout__write_read__payload(
             f"cat {gsm_at_port} & sleep 0.1; "
             f"printf '{cmd}\\r\\n' > {gsm_at_port}; "
             f"sleep 0.4; "
