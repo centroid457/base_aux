@@ -1330,6 +1330,22 @@ root@harvest05:~#
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
         Порт должен быть инициализирован в test_gsmat_1__detect.
+
+        SerialClient2(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
+        SerialClient2(COM16.115200,occupied=o,isopen=True)READ(
+            bytes=b'timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf \'AT+COPS?\\r\\n\' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n\x1b[?2004l\r[6] 5353\r\n[5]   Exit 124                timeout 2 cat /dev/ttyUSB2\r\n\r\r\n+COPS: 0,2,"25020",7\r\r\n\r\r\nOK\r\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+            printable=timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\r\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null
+        [6] 5353
+        [5]   Exit 124                timeout 2 cat /dev/ttyUSB2
+
+
+
+
+        root@harvest05:~#
+        root@harvest05:~# )
+        [AT] AT+COPS? -> at_output='+COPS: 0,2,"25020",7\nOK'
+        GSM operator: +COPS: 0,2,"25020",7
+        OK
         """
         at_output = harvest.cmd_timeout__write_read__payload(
             f"cat {gsm_at_port} & sleep 0.1; "
@@ -1339,9 +1355,24 @@ root@harvest05:~#
             timeout=timeout,
             timeout_continue=timeout * 0.8,
         )
-        # Убираем эхо команды (на случай, если ATE0 не сработал)
-        at_output = at_output.replace(cmd, "").strip()
-        print(f"[{at_output=}]")
+        # Убираем эхо команды, PID процессов, приглашения терминала
+        lines = at_output.split('\n')
+        cleaned = []
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            # Пропускаем строки с PID и приглашения shell
+            if re.match(r'^\[\d+\]', line):
+                continue
+            if re.match(r'.+@.+:.+#', line):
+                continue
+            if line == cmd:
+                continue
+            cleaned.append(line)
+
+        at_output = '\n'.join(cleaned)
+        print(f"[AT] {cmd} -> {at_output=}")
         return at_output
 
     # ------------------------------------------------------------------------------------------------------------------
