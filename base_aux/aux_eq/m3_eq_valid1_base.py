@@ -215,17 +215,3 @@ class Base_EqValid(NestCall_Resolve):
 
 
 # =====================================================================================================================
-class Base_ValidEnumValue(Base_EqValid):
-    """
-    GOAL
-    ----
-    use it as SelfComplete validator object (OTHER_DRAFT in )
-    """
-    # redefine!
-    OTHER_DRAFT: Any | Callable
-
-    def resolve(self, *other_args, **other_kwargs) -> bool:
-        return super().resolve(self.OTHER_DRAFT, *other_args, **other_kwargs)
-
-
-# =====================================================================================================================
