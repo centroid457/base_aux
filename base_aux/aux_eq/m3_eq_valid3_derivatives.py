@@ -5,6 +5,20 @@ from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================
+# TODO: add
+# --------------------------------------------
+class EqValid_Dict(Base_EqValid): ...
+class EqValid_DictPartial(Base_EqValid): ...
+# --------------------------------------------
+class EqValid_Json(Base_EqValid): ...
+class EqValid_JsonPartial(Base_EqValid): ...
+# --------------------------------------------
+class EqValid_JsonKwargs(Base_EqValid): ...
+class EqValid_JsonPartialKwargs(Base_EqValid): ...
+# --------------------------------------------
+
+
+# =====================================================================================================================
 @final
 class EqValid_IsinstanceSameinstance(Base_EqValid):
     IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
