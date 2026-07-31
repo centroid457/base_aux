@@ -43,7 +43,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(True, reason="used for exploring executions/methods")
+# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_3__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
@@ -911,6 +911,17 @@ root@harvest05:~#
 
 
         ДАННЫЕ ВСЕ УСТРОЙСТВ
+        ОТЛИЧИЯ ГРУППЫ
+        Ключ	/dev/ttyUSB1	/dev/ttyUSB2	/dev/ttyUSB3
+        DEVPATH	.../usb4/4-1/4-1:1.2/ttyUSB1...	.../usb4/4-1/4-1:1.4/ttyUSB2...	.../usb4/4-1/4-1:1.5/ttyUSB3...
+        DEVNAME	/dev/ttyUSB1	/dev/ttyUSB2	/dev/ttyUSB3
+        MINOR	1	2	3
+        USEC_INITIALIZED	6102352040	6102359538	6102362425
+        ID_USB_INTERFACE_NUM	02	04	05
+        ID_PATH	...-usb-0:1:1.2	...-usb-0:1:1.4	...-usb-0:1:1.5
+        ID_PATH_TAG	...-usb-0_1_1_2	...-usb-0_1_1_4	...-usb-0_1_1_5
+        DEVLINKS	...-if02-port0 / ...1.2-port0	...-if04-port0 / ...1.4-port0	...-if05-port0 / ...1.5-port0
+
         {
           "/dev/ttyUSB0": {
             "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
@@ -951,54 +962,13 @@ root@harvest05:~#
             "TAGS": ":systemd:",
             "CURRENT_TAGS": ":systemd:"
           },
-          "/dev/ttyUSB2": {
-            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.1/ttyUSB2/tty/ttyUSB2",
-            "DEVNAME": "/dev/ttyUSB2",
+         "/dev/ttyUSB1": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.2/ttyUSB1/tty/ttyUSB1",
+            "DEVNAME": "/dev/ttyUSB1",
             "MAJOR": "188",
-            "MINOR": "2",
+            "MINOR": "1",
             "SUBSYSTEM": "tty",
-            "USEC_INITIALIZED": "832864735",
-            "ID_BUS": "usb",
-            "ID_MODEL": "A76XX_Series_LTE_Module",
-            "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
-            "ID_MODEL_ID": "9011",
-            "ID_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
-            "ID_SERIAL_SHORT": "200806006809080000",
-            "ID_VENDOR": "SIMCom_Wireless_Solution",
-            "ID_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
-            "ID_VENDOR_ID": "1e0e",
-            "ID_REVISION": "0100",
-            "ID_TYPE": "generic",
-            "ID_USB_MODEL": "A76XX_Series_LTE_Module",
-            "ID_USB_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
-            "ID_USB_MODEL_ID": "9011",
-            "ID_USB_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
-            "ID_USB_SERIAL_SHORT": "200806006809080000",
-            "ID_USB_VENDOR": "SIMCom_Wireless_Solution",
-            "ID_USB_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
-            "ID_USB_VENDOR_ID": "1e0e",
-            "ID_USB_REVISION": "0100",
-            "ID_USB_TYPE": "generic",
-            "ID_USB_INTERFACES": ":e00103:0a0000:ff0000:",
-            "ID_USB_INTERFACE_NUM": "01",
-            "ID_USB_DRIVER": "option",
-            "ID_USB_CLASS_FROM_DATABASE": "Miscellaneous Device",
-            "ID_USB_PROTOCOL_FROM_DATABASE": "Interface Association",
-            "ID_VENDOR_FROM_DATABASE": "Qualcomm / Option",
-            "ID_PATH": "platform-1c1c000.usb-usb-0:1:1.1",
-            "ID_PATH_TAG": "platform-1c1c000_usb-usb-0_1_1_1",
-            "ID_MM_CANDIDATE": "1",
-            "DEVLINKS": "/dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.1-port0 /dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if01-port0",
-            "TAGS": ":systemd:",
-            "CURRENT_TAGS": ":systemd:"
-          },
-          "/dev/ttyUSB3": {
-            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.2/ttyUSB3/tty/ttyUSB3",
-            "DEVNAME": "/dev/ttyUSB3",
-            "MAJOR": "188",
-            "MINOR": "3",
-            "SUBSYSTEM": "tty",
-            "USEC_INITIALIZED": "832871111",
+            "USEC_INITIALIZED": "6102352040",
             "ID_BUS": "usb",
             "ID_MODEL": "A76XX_Series_LTE_Module",
             "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
@@ -1033,13 +1003,14 @@ root@harvest05:~#
             "TAGS": ":systemd:",
             "CURRENT_TAGS": ":systemd:"
           },
-          "/dev/ttyUSB4": {
-            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.4/ttyUSB4/tty/ttyUSB4",
-            "DEVNAME": "/dev/ttyUSB4",
+          !!!!!НАШ КАНДИТАТ!!!
+          "/dev/ttyUSB2": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.4/ttyUSB2/tty/ttyUSB2",
+            "DEVNAME": "/dev/ttyUSB2",
             "MAJOR": "188",
-            "MINOR": "4",
+            "MINOR": "2",
             "SUBSYSTEM": "tty",
-            "USEC_INITIALIZED": "832889578",
+            "USEC_INITIALIZED": "6102359538",
             "ID_BUS": "usb",
             "ID_MODEL": "A76XX_Series_LTE_Module",
             "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
@@ -1074,14 +1045,13 @@ root@harvest05:~#
             "TAGS": ":systemd:",
             "CURRENT_TAGS": ":systemd:"
           },
-          # !!!НАШ КАНДИДАТ!!!
-          "/dev/ttyUSB5": {
-            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.5/ttyUSB5/tty/ttyUSB5",
-            "DEVNAME": "/dev/ttyUSB5",
+          "/dev/ttyUSB3": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.5/ttyUSB3/tty/ttyUSB3",
+            "DEVNAME": "/dev/ttyUSB3",
             "MAJOR": "188",
-            "MINOR": "5",
+            "MINOR": "3",
             "SUBSYSTEM": "tty",
-            "USEC_INITIALIZED": "832940929",
+            "USEC_INITIALIZED": "6102362425",
             "ID_BUS": "usb",
             "ID_MODEL": "A76XX_Series_LTE_Module",
             "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
@@ -1112,18 +1082,210 @@ root@harvest05:~#
             "ID_PATH": "platform-1c1c000.usb-usb-0:1:1.5",
             "ID_PATH_TAG": "platform-1c1c000_usb-usb-0_1_1_5",
             "ID_MM_CANDIDATE": "1",
-            "DEVLINKS": "/dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.5-port0 /dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if05-port0",
+            "DEVLINKS": "/dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if05-port0 /dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.5-port0",
+            "TAGS": ":systemd:",
+            "CURRENT_TAGS": ":systemd:"
+          }
+
+        ПРЕЗАПУСК!!!
+        ВЫВОДЫ
+        Устройство	Ключ	Первичная группа	Новая группа
+        /dev/ttyUSB0	USEC_INITIALIZED	11866470	12067303
+        /dev/ttyUSB1	USEC_INITIALIZED	6102352040	544886628
+        /dev/ttyUSB2	USEC_INITIALIZED	6102359538	544877723
+        /dev/ttyUSB3	USEC_INITIALIZED	6102362425	544889337
+        Вывод: Все идентификаторы устройств (ID_MODEL, ID_VENDOR, ID_SERIAL, DEVLINKS и т.д.) полностью совпадают.
+        Это подтверждает, что после перезагрузки определились те же самые физические устройства,
+        просто процесс инициализации занял другое время (USEC_INITIALIZED).
+        Никаких перестановок или изменений в составе оборудования не произошло.
+        {
+          "/dev/ttyUSB0": {
+            "DEVPATH": "/devices/platform/soc/1c1d400.usb/usb8/8-1/8-1:1.0/ttyUSB0/tty/ttyUSB0",
+            "DEVNAME": "/dev/ttyUSB0",
+            "MAJOR": "188",
+            "MINOR": "0",
+            "SUBSYSTEM": "tty",
+            "USEC_INITIALIZED": "12067303",
+            "ID_BUS": "usb",
+            "ID_MODEL": "USB_Serial",
+            "ID_MODEL_ENC": "USB\\x20Serial",
+            "ID_MODEL_ID": "7523",
+            "ID_SERIAL": "1a86_USB_Serial",
+            "ID_VENDOR": "1a86",
+            "ID_VENDOR_ENC": "1a86",
+            "ID_VENDOR_ID": "1a86",
+            "ID_REVISION": "0264",
+            "ID_TYPE": "generic",
+            "ID_USB_MODEL": "USB_Serial",
+            "ID_USB_MODEL_ENC": "USB\\x20Serial",
+            "ID_USB_MODEL_ID": "7523",
+            "ID_USB_SERIAL": "1a86_USB_Serial",
+            "ID_USB_VENDOR": "1a86",
+            "ID_USB_VENDOR_ENC": "1a86",
+            "ID_USB_VENDOR_ID": "1a86",
+            "ID_USB_REVISION": "0264",
+            "ID_USB_TYPE": "generic",
+            "ID_USB_INTERFACES": ":ff0102:",
+            "ID_USB_INTERFACE_NUM": "00",
+            "ID_USB_DRIVER": "ch341",
+            "ID_USB_CLASS_FROM_DATABASE": "Vendor Specific Class",
+            "ID_VENDOR_FROM_DATABASE": "QinHeng Electronics",
+            "ID_MODEL_FROM_DATABASE": "CH340 serial converter",
+            "ID_PATH": "platform-1c1d400.usb-usb-0:1:1.0",
+            "ID_PATH_TAG": "platform-1c1d400_usb-usb-0_1_1_0",
+            "ID_MM_CANDIDATE": "1",
+            "DEVLINKS": "/dev/serial/by-path/platform-1c1d400.usb-usb-0:1:1.0-port0 /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+            "TAGS": ":systemd:",
+            "CURRENT_TAGS": ":systemd:"
+          },
+          "/dev/ttyUSB1": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.2/ttyUSB1/tty/ttyUSB1",
+            "DEVNAME": "/dev/ttyUSB1",
+            "MAJOR": "188",
+            "MINOR": "1",
+            "SUBSYSTEM": "tty",
+            "USEC_INITIALIZED": "544886628",
+            "ID_BUS": "usb",
+            "ID_MODEL": "A76XX_Series_LTE_Module",
+            "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_MODEL_ID": "9011",
+            "ID_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_SERIAL_SHORT": "200806006809080000",
+            "ID_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_VENDOR_ID": "1e0e",
+            "ID_REVISION": "0100",
+            "ID_TYPE": "generic",
+            "ID_USB_MODEL": "A76XX_Series_LTE_Module",
+            "ID_USB_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_USB_MODEL_ID": "9011",
+            "ID_USB_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_USB_SERIAL_SHORT": "200806006809080000",
+            "ID_USB_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_USB_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_USB_VENDOR_ID": "1e0e",
+            "ID_USB_REVISION": "0100",
+            "ID_USB_TYPE": "generic",
+            "ID_USB_INTERFACES": ":e00103:0a0000:ff0000:",
+            "ID_USB_INTERFACE_NUM": "02",
+            "ID_USB_DRIVER": "option",
+            "ID_USB_CLASS_FROM_DATABASE": "Miscellaneous Device",
+            "ID_USB_PROTOCOL_FROM_DATABASE": "Interface Association",
+            "ID_VENDOR_FROM_DATABASE": "Qualcomm / Option",
+            "ID_PATH": "platform-1c1c000.usb-usb-0:1:1.2",
+            "ID_PATH_TAG": "platform-1c1c000_usb-usb-0_1_1_2",
+            "ID_MM_CANDIDATE": "1",
+            "DEVLINKS": "/dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.2-port0 /dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if02-port0",
+            "TAGS": ":systemd:",
+            "CURRENT_TAGS": ":systemd:"
+          },
+          "/dev/ttyUSB2": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.4/ttyUSB2/tty/ttyUSB2",
+            "DEVNAME": "/dev/ttyUSB2",
+            "MAJOR": "188",
+            "MINOR": "2",
+            "SUBSYSTEM": "tty",
+            "USEC_INITIALIZED": "544877723",
+            "ID_BUS": "usb",
+            "ID_MODEL": "A76XX_Series_LTE_Module",
+            "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_MODEL_ID": "9011",
+            "ID_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_SERIAL_SHORT": "200806006809080000",
+            "ID_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_VENDOR_ID": "1e0e",
+            "ID_REVISION": "0100",
+            "ID_TYPE": "generic",
+            "ID_USB_MODEL": "A76XX_Series_LTE_Module",
+            "ID_USB_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_USB_MODEL_ID": "9011",
+            "ID_USB_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_USB_SERIAL_SHORT": "200806006809080000",
+            "ID_USB_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_USB_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_USB_VENDOR_ID": "1e0e",
+            "ID_USB_REVISION": "0100",
+            "ID_USB_TYPE": "generic",
+            "ID_USB_INTERFACES": ":e00103:0a0000:ff0000:",
+            "ID_USB_INTERFACE_NUM": "04",
+            "ID_USB_DRIVER": "option",
+            "ID_USB_CLASS_FROM_DATABASE": "Miscellaneous Device",
+            "ID_USB_PROTOCOL_FROM_DATABASE": "Interface Association",
+            "ID_VENDOR_FROM_DATABASE": "Qualcomm / Option",
+            "ID_PATH": "platform-1c1c000.usb-usb-0:1:1.4",
+            "ID_PATH_TAG": "platform-1c1c000_usb-usb-0_1_1_4",
+            "ID_MM_CANDIDATE": "1",
+            "DEVLINKS": "/dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if04-port0 /dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.4-port0",
+            "TAGS": ":systemd:",
+            "CURRENT_TAGS": ":systemd:"
+          },
+          "/dev/ttyUSB3": {
+            "DEVPATH": "/devices/platform/soc/1c1c000.usb/usb4/4-1/4-1:1.5/ttyUSB3/tty/ttyUSB3",
+            "DEVNAME": "/dev/ttyUSB3",
+            "MAJOR": "188",
+            "MINOR": "3",
+            "SUBSYSTEM": "tty",
+            "USEC_INITIALIZED": "544889337",
+            "ID_BUS": "usb",
+            "ID_MODEL": "A76XX_Series_LTE_Module",
+            "ID_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_MODEL_ID": "9011",
+            "ID_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_SERIAL_SHORT": "200806006809080000",
+            "ID_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_VENDOR_ID": "1e0e",
+            "ID_REVISION": "0100",
+            "ID_TYPE": "generic",
+            "ID_USB_MODEL": "A76XX_Series_LTE_Module",
+            "ID_USB_MODEL_ENC": "A76XX\\x20Series\\x20LTE\\x20Module",
+            "ID_USB_MODEL_ID": "9011",
+            "ID_USB_SERIAL": "SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000",
+            "ID_USB_SERIAL_SHORT": "200806006809080000",
+            "ID_USB_VENDOR": "SIMCom_Wireless_Solution",
+            "ID_USB_VENDOR_ENC": "SIMCom\\x20Wireless\\x20Solution",
+            "ID_USB_VENDOR_ID": "1e0e",
+            "ID_USB_REVISION": "0100",
+            "ID_USB_TYPE": "generic",
+            "ID_USB_INTERFACES": ":e00103:0a0000:ff0000:",
+            "ID_USB_INTERFACE_NUM": "05",
+            "ID_USB_DRIVER": "option",
+            "ID_USB_CLASS_FROM_DATABASE": "Miscellaneous Device",
+            "ID_USB_PROTOCOL_FROM_DATABASE": "Interface Association",
+            "ID_VENDOR_FROM_DATABASE": "Qualcomm / Option",
+            "ID_PATH": "platform-1c1c000.usb-usb-0:1:1.5",
+            "ID_PATH_TAG": "platform-1c1c000_usb-usb-0_1_1_5",
+            "ID_MM_CANDIDATE": "1",
+            "DEVLINKS": "/dev/serial/by-id/usb-SIMCom_Wireless_Solution_A76XX_Series_LTE_Module_200806006809080000-if05-port0 /dev/serial/by-path/platform-1c1c000.usb-usb-0:1:1.5-port0",
             "TAGS": ":systemd:",
             "CURRENT_TAGS": ":systemd:"
           }
         }
+        }
         """
+        # 1=------------------------------------------------------------
         assert harvest.cmd_timeout__check_executed_success("lsusb | grep -i qualcomm"), "устройствоне обнружено [9011 Qualcomm]"
 
-        # Пробуем активировать драйвер (безопасно, даже если уже загружен)
+        # ------------------------------------------------------------
+        # 2=Пробуем активировать драйвер (безопасно, даже если уже загружен)
         assert harvest.cmd_timeout__check_executed_success("modprobe option"), "драйвер не установлен ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module"
 
+        # 3=------------------------------------------------------------
         # можно запускать сколько угодно! ошибки не будет!
+        """
+        сама команда дает результат того куда что подключено - НО если DMSG включен!!! 
+        
+        ---- Sent utf8 encoded message: "echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null\r\n" ----
+echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null
+[ 6102.041184] option 4-1:1.2: GSM modem (1-port) converter detected
+[ 6102.048043] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB1
+[ 6102.057099] option 4-1:1.4: GSM modem (1-port) converter detected
+[ 6102.064194] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB2
+[ 6102.073013] option 4-1:1.5: GSM modem (1-port) converter detected
+[ 6102.079925] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB3
+root@harvest05:~# 
+        """
         assert harvest.cmd_timeout__check_executed_success(
             'echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null'
         ), "активация шины связи для AT команд не состоялось"
@@ -1135,29 +1297,112 @@ root@harvest05:~#
         for port in port_candidates:
             props = harvest.get_info__usb(port)
 
-
-
-
-
-
-
-            # 1=Сначала пробуем python-скрипт (обновлённый)
-            try:
-                out = harvest.send__at_command__raw("AT", port=port, timeout=1.5)
-                if "OK" in out:
-                    self.at_port = port
-                    break
-            except FileNotFoundError:
+            # 4=Проверяем props ---------------
+            if any([
+                not props,
+                props.get("ID_VENDOR_ID") != "1e0e",
+                props.get("ID_MODEL_ID") != "9011",
+                "A76XX" not in props.get("ID_MODEL", ""),
+                props.get("ID_USB_DRIVER") != "option",
+            ]):
+                print(f"[SKIPPED] {port=}")
                 continue
 
-            # 2=Если не вышло – пробуем echo/cat=simple
-            out_simple = harvest.send__at_command__simple("AT", port=port, timeout=2)
-            if "OK" in out_simple:
-                self.at_port = port
+            # 5=Проверяем AT-ответ
+            out = harvest.cmd_timeout__write_read__payload_str(
+                f"stty -F {port} 115200 raw -echo 2>/dev/null; "
+                f"cat {port} & sleep 0.1; "
+                f"printf 'AT\\r\\n' > {port}; "
+                f"sleep 0.3; "
+                f"kill %1 2>/dev/null",
+                timeout=3,
+            )
+            if "OK" not in out:
+                continue
+
+            self.at_port = port
+
+            # 6=Настраиваем порт на постоянку (raw mode + отключаем эхо)
+            assert harvest.cmd_timeout__check_executed_success(
+                f"stty -F {port} 115200 raw -echo -echoe -echok -echoctl 2>/dev/null; "
+                f"cat {port} & sleep 0.1; "
+                f"printf 'ATE0\\r\\n' > {port}; "
+                f"sleep 0.2; "
+                f"kill %1 2>/dev/null",
+                timeout=3,
+            ), f"не удалось натсроить порт"
+
+            if self.at_port:
                 break
 
-        assert self.at_port, f"порт устройства для отправки AT команд не найден! {self.AT_CANDIDATES=}"
+        assert self.at_port, f"порт устройства для отправки AT команд не найден! {port_candidates=}"
 
+        print(f"[DETECTED] {self.at_port=}")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _send_at(self, harvest, cmd: str, timeout: float = 2) -> str:
+        """
+        Отправить AT-команду на уже настроенный порт (stty raw + echo off).
+        Порт должен быть инициализирован в test_gsmat_1__detect.
+        """
+        out = harvest.cmd_timeout__write_read__payload_str(
+            f"cat {self.at_port} & sleep 0.1; "
+            f"printf '{cmd}\\r\\n' > {self.at_port}; "
+            f"sleep 0.4; "
+            f"kill %1 2>/dev/null",
+            timeout=timeout,
+            timeout_continue=timeout * 0.8,
+        )
+        # Убираем эхо команды (на случай, если ATE0 не сработал)
+        result = out.replace(cmd, "").strip()
+        return result
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_3__quick__check(self, harvest):
+        """Базовая проверка: AT -> OK."""
+        out = self._send_at(harvest, "AT")
+        assert "OK" in out, f"Модем не отвечает на AT: {out}"
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_4__deep__sim_ready(self, harvest):
+        """AT+CPIN? -> READY."""
+        out = self._send_at(harvest, "AT+CPIN?")
+        assert "+CPIN: READY" in out, f"SIM не готова: {out}"
+
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_4__deep__signal_quality(self, harvest):
+        """AT+CSQ, RSSI >= 5 (из 31)."""
+        out = self._send_at(harvest, "AT+CSQ")
+        for line in out.splitlines():
+            if "+CSQ:" in line:
+                parts = line.split(":")[1].strip().split(",")
+                rssi = int(parts[0])
+                assert rssi >= 5, f"Низкий уровень сигнала: {rssi}/31"
+                return
+        pytest.fail(f"CSQ не найден: {out}")
+
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_4__deep__network_registration(self, harvest):
+        """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг)."""
+        out = self._send_at(harvest, "AT+CREG?")
+        registered = any(
+            "+CREG:" in l and (",1" in l or ",5" in l)
+            for l in out.splitlines()
+        )
+        assert registered, f"Не зарегистрирован: {out}"
+
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_4__deep__operator(self, harvest):
+        """AT+COPS? – имя оператора."""
+        out = self._send_at(harvest, "AT+COPS?")
+        assert "COPS" in out, f"Оператор не получен: {out}"
+        print(f"GSM operator: {out}")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_3__sim_ready(self, harvest):

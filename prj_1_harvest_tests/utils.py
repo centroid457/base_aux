@@ -349,13 +349,12 @@ root@harvest05:~#
             **r_kwargs,
     ) -> str | list[str]:
         cmd_ = self._cmd_cover_timeout(cmd, timeout)
-        output = self.conn.write_read_lines(cmd_, **r_kwargs)
-        if not payload_only:
-            return output
+        result = self.conn.write_read_lines(cmd_, **r_kwargs)
+        if payload_only:
+            result = result[1:]
+            while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
+                result = result[:-1]
 
-        result = output[1:]
-        while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
-            result = result[:-1]
         if return_str:
             result = '\n'.join(result)
         return result
