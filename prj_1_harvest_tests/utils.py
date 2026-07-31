@@ -345,28 +345,41 @@ root@harvest05:~#
             timeout: float | None = None,
 
             payload_only: bool | None = None,
-            return_str: bool | None = None,
-            **r_kwargs,
+            **wr_kwargs,
     ) -> str | list[str]:
-        cmd_ = self._cmd_cover_timeout(cmd, timeout)
-        result = self.conn.write_read_lines(cmd_, **r_kwargs)
+        cmd = self._cmd_cover_timeout(cmd, timeout)
+        result = self.conn.write_read_lines(cmd, **wr_kwargs)
         if payload_only:
+            result = self._stdout__parce_payload(cmd=cmd, data=result)
+        return result
+
+    def _stdout__parce_payload(self, cmd: str, data: str | list[str]) -> str | list[str]:
+        return_str = False
+        if isinstance(data, str):
+            return_str = True
+            result = data.splitlines()
+        else:
+            result = data
+
+        if result[0].strip() == cmd.strip():
             result = result[1:]
-            while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
-                result = result[:-1]
+
+        while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
+            result = result[:-1]
 
         if return_str:
-            result = '\n'.join(result)
-        return result
+            return "\n".join(result)
+        else:
+            return result
 
     # ------------------------------------------------------------------------------------------------------------------
     # Вспомогательный приватный метод для выполнения команды и получения строки
-    def cmd_timeout__write_read__payload_str(
+    def cmd_timeout__write_read__payload(
             self,
             cmd: str,
             timeout: float | None = None,
             timeout_continue: float = 1.0,
-            **r_kwargs,
+            **wr_kwargs,
     ) -> str:
         """
         Выполняет команду на устройстве и возвращает stdout в виде строки.
@@ -377,8 +390,7 @@ root@harvest05:~#
             timeout=timeout,
             timeout_continue=timeout_continue,
             payload_only=True,
-            return_str=True ,
-            **r_kwargs)
+            **wr_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
     def cmd_timeout__check_executed_success(self, cmd: str, **wr_kwargs) -> bool:
@@ -407,7 +419,7 @@ root@harvest05:~#
         root@harvest05:~#
         """
         ERROR_MSG = "ERROR_MSG"
-        out = self.cmd_timeout__write_read__payload_str(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", **wr_kwargs)
+        out = self.cmd_timeout__write_read__payload(f"{cmd} 2>/dev/null || echo {ERROR_MSG}", **wr_kwargs)
         return ERROR_MSG not in out[1:]
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -463,7 +475,7 @@ root@harvest05:~#
             path += "/"
 
         # PAYLOAD
-        output = self.cmd_timeout__write_read__payload_str(
+        output = self.cmd_timeout__write_read__payload(
             f"ls {path}",
             timeout=3,
             timeout_continue=1.0,
@@ -570,6 +582,7 @@ root@harvest05:~#
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
             timeout: float = 2.0,
+            timeout_continue: float | None = None,
             **read_kwargs
     ) -> str | NoReturn:
         """
@@ -586,14 +599,16 @@ root@harvest05:~#
         command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
         at_output = ""
         for _ in range(2):
-            at_output = self.cmd_timeout__write_read__payload_str(
+
+            at_output = self.cmd_timeout__write_read__payload(
                 command_line,
                 timeout=timeout,
-                timeout_continue=timeout * 1.5,
+                timeout_continue=timeout_continue,
                 **read_kwargs
             )
             # Убираем возможное эхо команды
-            at_output = at_output.replace(cmd + "\n", "")
+            if at_output.startswith(cmd + "\n"):
+                at_output = at_output.replace(cmd + "\n", "", 1)
 
             if "No such file or directory" in at_output:
                 if not self.file_name__push(bridge):
@@ -669,9 +684,9 @@ root@harvest05:~#
         result = {}
 
         # ----- Идентификация и версия ОС -----
-        result['hostname'] = self.cmd_timeout__write_read__payload_str("hostname", timeout=1).strip()
+        result['hostname'] = self.cmd_timeout__write_read__payload("hostname", timeout=1).strip()
 
-        raw_os = self.cmd_timeout__write_read__payload_str("cat /etc/os-release 2>/dev/null", timeout=3)
+        raw_os = self.cmd_timeout__write_read__payload("cat /etc/os-release 2>/dev/null", timeout=3)
         os_dict = {}
         for line in raw_os.split('\n'):
             if '=' in line:
@@ -679,17 +694,17 @@ root@harvest05:~#
                 os_dict[k.strip()] = v.strip().strip('"')
         result['os'] = os_dict
 
-        result['kernel'] = self.cmd_timeout__write_read__payload_str("uname -r", timeout=1).strip()
-        result['architecture'] = self.cmd_timeout__write_read__payload_str("uname -m", timeout=1).strip()
+        result['kernel'] = self.cmd_timeout__write_read__payload("uname -r", timeout=1).strip()
+        result['architecture'] = self.cmd_timeout__write_read__payload("uname -m", timeout=1).strip()
 
         # ----- Модель платы -----
         # Попытка через device-tree, иначе через dmesg
-        model = self.cmd_timeout__write_read__payload_str(
+        model = self.cmd_timeout__write_read__payload(
             "cat /proc/device-tree/model 2>/dev/null || cat /sys/firmware/devicetree/base/model 2>/dev/null"
             , timeout=5
         ).strip()
         if not model:
-            dmesg_model = self.cmd_timeout__write_read__payload_str(
+            dmesg_model = self.cmd_timeout__write_read__payload(
                 "dmesg | grep 'Machine model' | head -1 | cut -d: -f2-",
                 timeout=3
             ).strip()
@@ -697,7 +712,7 @@ root@harvest05:~#
         result['board_model'] = model
 
         # ----- CPU -----
-        cpu_lines = self.cmd_timeout__write_read__payload_str("cat /proc/cpuinfo 2>/dev/null", timeout=3)
+        cpu_lines = self.cmd_timeout__write_read__payload("cat /proc/cpuinfo 2>/dev/null", timeout=3)
         cores = 0
         model_name = ""
         for line in cpu_lines.split('\n'):
@@ -713,7 +728,7 @@ root@harvest05:~#
         }
 
         # ----- Память -----
-        mem_lines = self.cmd_timeout__write_read__payload_str("free -m 2>/dev/null || cat /proc/meminfo", timeout=3)
+        mem_lines = self.cmd_timeout__write_read__payload("free -m 2>/dev/null || cat /proc/meminfo", timeout=3)
         if 'Mem:' in mem_lines:
             mem_parts = mem_lines.split('\n')[1].split()
             total = mem_parts[1]
@@ -729,7 +744,7 @@ root@harvest05:~#
             result['memory'] = mem
 
         # ----- Накопители -----
-        disk_lines = self.cmd_timeout__write_read__payload_str("df -h / 2>/dev/null || echo NA", timeout=3)
+        disk_lines = self.cmd_timeout__write_read__payload("df -h / 2>/dev/null || echo NA", timeout=3)
         if disk_lines and disk_lines != 'N/A':
             parts = disk_lines.split('\n')[1].split()
             result['disk'] = {'total': parts[1], 'used': parts[2], 'available': parts[3], 'use%': parts[4]}
@@ -737,18 +752,18 @@ root@harvest05:~#
             result['disk'] = 'N/A'
 
         # ----- Uptime -----
-        uptime_raw = self.cmd_timeout__write_read__payload_str("cat /proc/uptime", timeout=1)
+        uptime_raw = self.cmd_timeout__write_read__payload("cat /proc/uptime", timeout=1)
         result['uptime'] = uptime_raw.split()[0] if uptime_raw else 'N/A'
 
         # ----- Сетевые интерфейсы -----
         net = {}
-        iface_list = self.cmd_timeout__write_read__payload_str("ls /sys/class/net/", timeout=3).split()
+        iface_list = self.cmd_timeout__write_read__payload("ls /sys/class/net/", timeout=3).split()
         for iface in iface_list:
             iface = iface.strip()
             if not iface or iface == 'lo':
                 continue
-            mac = self.cmd_timeout__write_read__payload_str(f"cat /sys/class/net/{iface}/address 2>/dev/null", timeout=3).strip()
-            ip_addr = self.cmd_timeout__write_read__payload_str(
+            mac = self.cmd_timeout__write_read__payload(f"cat /sys/class/net/{iface}/address 2>/dev/null", timeout=3).strip()
+            ip_addr = self.cmd_timeout__write_read__payload(
                 f"ip -4 addr show {iface} 2>/dev/null | grep inet | head -1")
             net[iface] = {
                 'mac': mac if mac else 'N/A',
@@ -758,7 +773,7 @@ root@harvest05:~#
 
         # ----- USB‑устройства (исправляем таймаут и убираем лишний stderr) -----
         # Используем timeout_continue=2 для гарантированного чтения вывода
-        usb_raw = self.cmd_timeout__write_read__payload_str(
+        usb_raw = self.cmd_timeout__write_read__payload(
             "lsusb",
             timeout = 3,
             timeout_continue=2.0  # ждём до 2 секунд после эхо
@@ -766,12 +781,12 @@ root@harvest05:~#
         result['usb_devices'] = [line.strip() for line in usb_raw.split('\n') if line.strip() and 'lsusb' not in line]
 
         # ----- I2C‑шины -----
-        i2c_list = self.cmd_timeout__write_read__payload_str("i2cdetect -l 2>/dev/null", timeout=2).split('\n')
+        i2c_list = self.cmd_timeout__write_read__payload("i2cdetect -l 2>/dev/null", timeout=2).split('\n')
         result['i2c_buses'] = {}
         for bus_line in i2c_list:
             if 'i2c-' in bus_line:
                 bus_num = bus_line.split()[0].split('-')[1]
-                scan = self.cmd_timeout__write_read__payload_str(
+                scan = self.cmd_timeout__write_read__payload(
                     f"i2cdetect -y {bus_num} 2>/dev/null",
                     timeout_continue=1.5,
                     timeout=2,
@@ -780,7 +795,7 @@ root@harvest05:~#
                 result['i2c_buses'][f'i2c-{bus_num}'] = [x.strip() for x in scan.split('\n')[1:] if x.strip()]
 
         # ----- Версия U‑Boot (ищем через grep) -----
-        uboot_raw = self.cmd_timeout__write_read__payload_str(
+        uboot_raw = self.cmd_timeout__write_read__payload(
             "dmesg | grep -i 'u-boot\|uboot' | head -1",
             timeout=2
         ).strip()
@@ -836,7 +851,7 @@ root@harvest05:~#
         }
         """
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
-        output = self.cmd_timeout__write_read__payload_str(
+        output = self.cmd_timeout__write_read__payload(
             f"SYSTEMD_PAGER=cat udevadm info -q property -n {port} 2>/dev/null",
             timeout_continue=0.5,
             timeout=4,

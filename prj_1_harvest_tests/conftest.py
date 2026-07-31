@@ -96,7 +96,7 @@ root@harvest05:~#
             continue
 
         # 5=Проверяем AT-ответ
-        out = harvest.cmd_timeout__write_read__payload_str(
+        out = harvest.cmd_timeout__write_read__payload(
             f"stty -F {port} 115200 raw -echo 2>/dev/null; "
             f"cat {port} & sleep 0.1; "
             f"printf 'AT\\r\\n' > {port}; "
