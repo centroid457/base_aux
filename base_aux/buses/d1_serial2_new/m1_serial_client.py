@@ -1,4 +1,6 @@
 # REASON: try to create clear separated classes!
+import datetime
+
 from serial import Serial, SerialException
 from threading import Lock
 import re
@@ -447,6 +449,14 @@ class SerialClient2:
                     elif time.time() - time_start > timeout_full_min:
                         break
 
+                if chunk and chunk[-1] in self.EOL__UNI:
+                    if data and data[-1] not in self.EOL__UNI:
+                        last_line = data.splitlines()[-1]
+                        try:
+                            print(f"[{datetime.datetime.now()}]readline=", last_line)
+                        except Exception as exc:
+                            print(f"{exc!r}")
+
                 data += chunk
                 if until_expected is not None:
                     if data in until_expected:
@@ -504,6 +514,7 @@ class SerialClient2:
                 return False
 
             if clear_input_first:
+                time.sleep(0.15)
                 self._conn.reset_input_buffer()
 
             raw = self._to_bytes(data)

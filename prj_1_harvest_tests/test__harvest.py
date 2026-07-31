@@ -103,7 +103,7 @@ class Test_02__PreInstall:
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_pre_0__internet(self, internet_access):
-        assert internet_access
+        assert internet_access, "НЕТ ИНТЕРНЕТА"
 
     def test_pre_1__coreutils_timeout(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "timeout")
@@ -553,7 +553,7 @@ class Test_3__WiFi:
             f"wlan0 не является беспроводным интерфейсом: {output}"
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3_deep__connection_quality(self, harvest):
+    def test_wf_3_deep__connected(self, harvest):
         """
         Проверяет текущее подключение к точке доступа:
         - уровень сигнала (RSSI)
@@ -564,7 +564,7 @@ class Test_3__WiFi:
         """
         # Убедимся, что есть соединение
         link_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 link")
-        assert "Not connected." not in link_output, "Нет активного Wi-Fi соединения"
+        assert "Not connected." not in link_output, "Нет Wi-Fi соединения с сетью! НО МОЖЕТ ЭТО И НЕ НУЖНО??)))"
 
         # Извлекаем основные параметры через station dump (более информативно)
         station_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 station dump")
@@ -1401,6 +1401,7 @@ root@harvest05:~#
                 return
         pytest.fail(f"CSQ не найден: {out}")
 
+    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг)."""
@@ -1411,6 +1412,7 @@ root@harvest05:~#
         )
         assert registered, f"Не зарегистрирован: {out}"
 
+    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора."""
@@ -1427,15 +1429,16 @@ root@harvest05:~#
         """AT+CPIN? -> READY.
         [at_output='+CPIN: READY\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2)
+        out = harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2, timeout_continue=2)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_3__signal_quality(self, harvest, gsm_at_port):
         """AT+CSQ, RSSI >= 5.
         [at_output='+CSQ: 23,99\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CSQ", port=gsm_at_port, timeout=2)
+        out = harvest.send__at_command__raw("AT+CSQ", port=gsm_at_port, timeout=2, timeout_continue=2)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -1444,25 +1447,27 @@ root@harvest05:~#
                 return
         pytest.fail(f"Не удалось извлечь CSQ из ответа: {out}")
 
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_3__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 или 5.
         [at_output='+CREG: 0,1\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CREG?", port=gsm_at_port, timeout=2)
+        out = harvest.send__at_command__raw("AT+CREG?", port=gsm_at_port, timeout=2, timeout_continue=2)
         registered = any(
             "+CREG:" in line and (line.strip().endswith(",1") or line.strip().endswith(",5"))
             for line in out.splitlines()
         )
         assert registered, f"Модем не зарегистрирован в сети: {out}"
 
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_3__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора.
 
         [at_output='+COPS: 0,2,"25020",7\nOK']
         """
-        out = harvest.send__at_command__raw("AT+COPS?", port=gsm_at_port, timeout=2)
+        out = harvest.send__at_command__raw("AT+COPS?", port=gsm_at_port, timeout=2, timeout_continue=2)
         assert "COPS" in out, f"Не удалось получить оператора: {out}"
         print(f"GSM operator info: {out}")
 

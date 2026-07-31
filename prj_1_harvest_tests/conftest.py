@@ -48,6 +48,7 @@ def harvest_info(harvest, request):
 # =====================================================================================================================
 @pytest.fixture(scope="session")
 def gsm_at_port(harvest):
+    # return "/dev/ttyUSB2"
     result: str | None = None
     # 1=------------------------------------------------------------
     assert harvest.cmd_timeout__check_executed_success(
@@ -123,6 +124,10 @@ root@harvest05:~#
             break
 
     assert result, f"порт устройства для отправки AT команд не найден! {port_candidates=}"
+
+    # # убиваем ВСЕ процессы, которые могли остаться на порту
+    # harvest.conn.write_bytes(f"fuser -k {result} 2>/dev/null")
+    # time.sleep(0.5)
 
     print(f"[DETECTED] {result=}")
     return result
