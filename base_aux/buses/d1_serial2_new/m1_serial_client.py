@@ -401,7 +401,7 @@ class SerialClient2:
     # R ================================================================================================================
     def read_bytes(
             self,
-            until_expected: AnyStr | Base_EqValid | None = None,
+            stop_on: AnyStr | Base_EqValid | None = None,
 
             timeout_start: Optional[float] = None,
             timeout_continue: Optional[float] = None,
@@ -420,11 +420,11 @@ class SerialClient2:
                 print("Port not connected")
                 return b""
 
-            if until_expected is not None:
-                if isinstance(until_expected, str):
-                    until_expected = self._to_bytes(until_expected)
-                if not isinstance(until_expected, (Base_EqValid, bytes)):
-                    msg = f"not expected type {until_expected=}"
+            if stop_on is not None:
+                if isinstance(stop_on, str):
+                    stop_on = self._to_bytes(stop_on)
+                if not isinstance(stop_on, (Base_EqValid, bytes)):
+                    msg = f"not expected type {stop_on=}"
                     raise Exception(msg)
 
             t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
@@ -438,7 +438,7 @@ class SerialClient2:
             while True:
                 # Ждём появления данных или таймаут
                 self._conn.timeout = t_start if data == b"" else t_cont
-                if until_expected is None:
+                if stop_on is None:
                     chunk = self._conn.read(self._conn.in_waiting or 1)
                 else:
                     chunk = self._conn.read(1)
@@ -458,8 +458,8 @@ class SerialClient2:
                             print(f"{exc!r}")
 
                 data += chunk
-                if until_expected is not None:
-                    if data in until_expected:
+                if stop_on is not None:
+                    if data in stop_on:
                         break
 
                 # MAX THRESH
@@ -514,7 +514,7 @@ class SerialClient2:
                 return False
 
             if clear_input_first:
-                time.sleep(0.15)
+                time.sleep(0.1)     # на всякий случай!!! 0.1 может не хватать!
                 self._conn.reset_input_buffer()
 
             raw = self._to_bytes(data)

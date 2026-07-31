@@ -383,6 +383,7 @@ root@harvest05:~#
     def cmd_timeout__write_read__payload(
             self,
             cmd: str,
+            timeout_continue: float = 2.0,  # ОБЯЗАТЕЛЬНО!!!
             **wr_kwargs,
     ) -> str:
         """
@@ -392,6 +393,7 @@ root@harvest05:~#
         return self.cmd_timeout__write_read_lines(
             cmd,
             payload_only=True,
+            timeout_continue=timeout_continue,
             **wr_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -584,7 +586,7 @@ root@harvest05:~#
             bridge: str = "/tmp/at_client.py",
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
-            until_expected=b"OK",
+            stop_on=b"OK",
 
             timeout: float = 2.0,
             timeout_continue: float | None = None,
@@ -607,7 +609,7 @@ root@harvest05:~#
 
             at_output = self.cmd_timeout__write_read__payload(
                 command_line,
-                until_expected=until_expected,
+                stop_on=stop_on,
                 timeout=timeout,
                 timeout_continue=timeout_continue,
                 **read_kwargs
