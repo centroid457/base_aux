@@ -471,14 +471,17 @@ class SerialClient2:
             print(f"{self}READ(\n\tbytes={data}\n\tprintable={printable_data})")
             return data
 
-    def read_lines(self, **kwargs) -> Union[str, list[str]]:
+    def read_lines(self, return_str: bool | None = True, **r_kwargs) -> Union[str, list[str]]:
         """
         Прочитать данные и разбить на строки.
         Если получена одна строка – возвращает str, иначе список строк.
         """
-        raw = self.read_bytes(**kwargs)
+        raw = self.read_bytes(**r_kwargs)
         lines = self._split_lines(raw)
-        return lines[0] if len(lines) == 1 else lines
+        if return_str:
+            return "\n".join(lines)
+        else:
+            return lines
 
     # W ================================================================================================================
     def write_bytes(
@@ -573,12 +576,12 @@ class SerialClient2:
             data: AnyStr | None = None,
             eol: Optional[bytes] = None,
             clear_input_first: bool = True,
-            **read_kwargs
+            **r_kwargs
     ) -> str | list[str]:
         """Записать (с автоматическим преобразованием) и прочитать строки."""
         with self._lock_wr:
-            self.write_bytes(data, eol, clear_input_first)
-            return self.read_lines(**read_kwargs)
+            self.write_bytes(data=data, eol=eol, clear_input_first=clear_input_first)
+            return self.read_lines(**r_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
     def get__wr_responses(self, lines: list[AnyStr]) -> dict[AnyStr, list[str]]:
