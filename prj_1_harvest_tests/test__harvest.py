@@ -48,6 +48,13 @@ class Test_000__Explore:
     def test_3__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
 
+    def test_gsmat_3__at(self, harvest, gsm_at_port):
+        """AT+CPIN? -> READY.
+        [at_output='+CPIN: READY\nOK']
+        """
+        harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2)
+        # harvest.send__at_command__simple("AT+CPIN?", port=gsm_at_port, timeout=2)
+
 
 # ======================================================================================================================
 @pytest.mark.DET
@@ -845,11 +852,9 @@ class Test_41__GSM:
 class Test_42__GSMAT:
     """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
 
-    at_port: str | None = None
-
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")
-    def test_gsmat_1__detect(self, harvest):
+    def test_gsmat_1__detect(self, gsm_at_port):
         """Возвращает первый порт, ответивший OK на AT, или None.
 
         Для SIMcom 7682 требуется предварительная инициализация драйвера option.
@@ -1264,117 +1269,45 @@ root@harvest05:~#
         }
         }
         """
-        # 1=------------------------------------------------------------
-        assert harvest.cmd_timeout__check_executed_success("lsusb | grep -i qualcomm"), "устройствоне обнружено [9011 Qualcomm]"
-
-        # ------------------------------------------------------------
-        # 2=Пробуем активировать драйвер (безопасно, даже если уже загружен)
-        assert harvest.cmd_timeout__check_executed_success("modprobe option"), "драйвер не установлен ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module"
-
-        # 3=------------------------------------------------------------
-        # можно запускать сколько угодно! ошибки не будет!
-        """
-        сама команда дает результат того куда что подключено - НО если DMSG включен!!! 
-        
-        ---- Sent utf8 encoded message: "echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null\r\n" ----
-echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null
-[ 6102.041184] option 4-1:1.2: GSM modem (1-port) converter detected
-[ 6102.048043] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB1
-[ 6102.057099] option 4-1:1.4: GSM modem (1-port) converter detected
-[ 6102.064194] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB2
-[ 6102.073013] option 4-1:1.5: GSM modem (1-port) converter detected
-[ 6102.079925] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB3
-root@harvest05:~# 
-        """
-        assert harvest.cmd_timeout__check_executed_success(
-            'echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null'
-        ), "активация шины связи для AT команд не состоялось"
-        time.sleep(1)  # даём время на создание портов
-
-        port_candidates = harvest.cmd_parsed__ls(path="/dev/", filters=EqValid_Regexp(r"ttyUSB\d+"))
-        assert port_candidates, f"не обнаружены варианты портов для перебора {port_candidates=}"
-
-        for port in port_candidates:
-            props = harvest.get_info__usb(port)
-
-            # 4=Проверяем props ---------------
-            if any([
-                not props,
-                props.get("ID_VENDOR_ID") != "1e0e",
-                props.get("ID_MODEL_ID") != "9011",
-                "A76XX" not in props.get("ID_MODEL", ""),
-                props.get("ID_USB_DRIVER") != "option",
-            ]):
-                print(f"[SKIPPED] {port=}")
-                continue
-
-            # 5=Проверяем AT-ответ
-            out = harvest.cmd_timeout__write_read__payload_str(
-                f"stty -F {port} 115200 raw -echo 2>/dev/null; "
-                f"cat {port} & sleep 0.1; "
-                f"printf 'AT\\r\\n' > {port}; "
-                f"sleep 0.3; "
-                f"kill %1 2>/dev/null",
-                timeout=3,
-            )
-            if "OK" not in out:
-                continue
-
-            self.at_port = port
-
-            # 6=Настраиваем порт на постоянку (raw mode + отключаем эхо)
-            assert harvest.cmd_timeout__check_executed_success(
-                f"stty -F {port} 115200 raw -echo -echoe -echok -echoctl 2>/dev/null; "
-                f"cat {port} & sleep 0.1; "
-                f"printf 'ATE0\\r\\n' > {port}; "
-                f"sleep 0.2; "
-                f"kill %1 2>/dev/null",
-                timeout=3,
-            ), f"не удалось натсроить порт"
-
-            if self.at_port:
-                break
-
-        assert self.at_port, f"порт устройства для отправки AT команд не найден! {port_candidates=}"
-
-        print(f"[DETECTED] {self.at_port=}")
+        assert gsm_at_port, "порт не обнаружен!"
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _send_at(self, harvest, cmd: str, timeout: float = 2) -> str:
+    def _send_at(self, harvest, gsm_at_port, cmd: str, timeout: float = 2, ) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
         Порт должен быть инициализирован в test_gsmat_1__detect.
         """
-        out = harvest.cmd_timeout__write_read__payload_str(
-            f"cat {self.at_port} & sleep 0.1; "
-            f"printf '{cmd}\\r\\n' > {self.at_port}; "
+        at_output = harvest.cmd_timeout__write_read__payload_str(
+            f"cat {gsm_at_port} & sleep 0.1; "
+            f"printf '{cmd}\\r\\n' > {gsm_at_port}; "
             f"sleep 0.4; "
             f"kill %1 2>/dev/null",
             timeout=timeout,
             timeout_continue=timeout * 0.8,
         )
         # Убираем эхо команды (на случай, если ATE0 не сработал)
-        result = out.replace(cmd, "").strip()
-        return result
+        at_output = at_output.replace(cmd, "").strip()
+        print(f"[{at_output=}]")
+        return at_output
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__quick__check(self, harvest):
+    def test_gsmat_3__quick__check(self, harvest, gsm_at_port):
         """Базовая проверка: AT -> OK."""
-        out = self._send_at(harvest, "AT")
+        out = self._send_at(harvest, gsm_at_port, "AT")
         assert "OK" in out, f"Модем не отвечает на AT: {out}"
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__deep__sim_ready(self, harvest):
+    def test_gsmat_4__deep__sim_ready(self, harvest, gsm_at_port):
         """AT+CPIN? -> READY."""
-        out = self._send_at(harvest, "AT+CPIN?")
+        out = self._send_at(harvest, gsm_at_port, "AT+CPIN?")
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__deep__signal_quality(self, harvest):
+    def test_gsmat_4__deep__signal_quality(self, harvest, gsm_at_port):
         """AT+CSQ, RSSI >= 5 (из 31)."""
-        out = self._send_at(harvest, "AT+CSQ")
+        out = self._send_at(harvest, gsm_at_port, "AT+CSQ")
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -1384,9 +1317,9 @@ root@harvest05:~#
         pytest.fail(f"CSQ не найден: {out}")
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__deep__network_registration(self, harvest):
+    def test_gsmat_4__deep__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг)."""
-        out = self._send_at(harvest, "AT+CREG?")
+        out = self._send_at(harvest, gsm_at_port, "AT+CREG?")
         registered = any(
             "+CREG:" in l and (",1" in l or ",5" in l)
             for l in out.splitlines()
@@ -1394,9 +1327,9 @@ root@harvest05:~#
         assert registered, f"Не зарегистрирован: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__deep__operator(self, harvest):
+    def test_gsmat_4__deep__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора."""
-        out = self._send_at(harvest, "AT+COPS?")
+        out = self._send_at(harvest, gsm_at_port, "AT+COPS?")
         assert "COPS" in out, f"Оператор не получен: {out}"
         print(f"GSM operator: {out}")
 
@@ -1405,15 +1338,19 @@ root@harvest05:~#
     # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__sim_ready(self, harvest):
-        """AT+CPIN? -> READY."""
-        out = harvest.send__at_command__raw("AT+CPIN?", port=self.at_port, timeout=2)
+    def test_gsmat_3__sim_ready(self, harvest, gsm_at_port):
+        """AT+CPIN? -> READY.
+        [at_output='+CPIN: READY\nOK']
+        """
+        out = harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__signal_quality(self, harvest):
-        """AT+CSQ, RSSI >= 5."""
-        out = harvest.send__at_command__raw("AT+CSQ", port=self.at_port, timeout=2)
+    def test_gsmat_3__signal_quality(self, harvest, gsm_at_port):
+        """AT+CSQ, RSSI >= 5.
+        [at_output='+CSQ: 23,99\nOK']
+        """
+        out = harvest.send__at_command__raw("AT+CSQ", port=gsm_at_port, timeout=2)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -1423,9 +1360,11 @@ root@harvest05:~#
         pytest.fail(f"Не удалось извлечь CSQ из ответа: {out}")
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__network_registration(self, harvest):
-        """AT+CREG? – статус 1 или 5."""
-        out = harvest.send__at_command__raw("AT+CREG?", port=self.at_port, timeout=2)
+    def test_gsmat_3__network_registration(self, harvest, gsm_at_port):
+        """AT+CREG? – статус 1 или 5.
+        [at_output='+CREG: 0,1\nOK']
+        """
+        out = harvest.send__at_command__raw("AT+CREG?", port=gsm_at_port, timeout=2)
         registered = any(
             "+CREG:" in line and (line.strip().endswith(",1") or line.strip().endswith(",5"))
             for line in out.splitlines()
@@ -1433,9 +1372,12 @@ root@harvest05:~#
         assert registered, f"Модем не зарегистрирован в сети: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__operator(self, harvest):
-        """AT+COPS? – имя оператора."""
-        out = harvest.send__at_command__raw("AT+COPS?", port=self.at_port, timeout=2)
+    def test_gsmat_3__operator(self, harvest, gsm_at_port):
+        """AT+COPS? – имя оператора.
+
+        [at_output='+COPS: 0,2,"25020",7\nOK']
+        """
+        out = harvest.send__at_command__raw("AT+COPS?", port=gsm_at_port, timeout=2)
         assert "COPS" in out, f"Не удалось получить оператора: {out}"
         print(f"GSM operator info: {out}")
 

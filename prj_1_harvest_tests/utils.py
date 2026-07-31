@@ -525,17 +525,43 @@ root@harvest05:~#
         return self.cmd_timeout__check_executed_success(f"test -f {filepath}")
 
     # ------------------------------------------------------------------------------------------------------------------
-    def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
-        # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
-        # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
-        full_cmd = (
-            f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
-            f"timeout {timeout} cat {port}'"
-        )
-        output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
-        # Убираем возможное эхо команды
-        output = output.replace(cmd + "\n", "")
-        return output
+    # def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
+    # НЕ РАБОТАЕТ!!!
+    #
+    #     full_cmd = (
+    #         f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
+    #         f"timeout {timeout} cat {port}'"
+    #     )
+    #     at_output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
+    #     # Убираем возможное эхо команды
+    #     at_output = at_output.replace(cmd + "\n", "")
+    #     print(f"[{at_output=}]")
+    #     return at_output
+    #
+    # def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
+    #     """
+    #     Отправляет AT-команду через прямой ввод-вывод в порт.
+    #     Работает после того, как порт настроен (raw mode + echo off).
+    #     """
+    #     # Отправить команду, прочитать ответ с таймаутом через утилиту timeout
+    #     # - ВАЖНО: bash -c нужен, чтобы пайп обрабатывался целиком
+    #     full_cmd = (
+    #         f"timeout {timeout} bash -c '"
+    #         f"printf \"{cmd}\\r\\n\" > {port}; "
+    #         f"timeout {timeout} cat {port}'"
+    #     )
+    #     at_output = self.cmd_timeout__write_read__payload_str(
+    #         full_cmd,
+    #         timeout=None,
+    #         timeout_continue=timeout * 1.5
+    #     )
+    #     # Убираем пустые строки и возможное эхо (если echo не выключено)
+    #     lines = [line.strip() for line in at_output.split('\n') if line.strip()]
+    #     # Отфильтровываем саму команду, если echo ещё активно
+    #     lines = [line for line in lines if line != cmd]
+    #     at_output = '\n'.join(lines)
+    #     print(f"[SIMPLE_AT] {at_output=}")
+    #     return at_output
 
     def send__at_command__raw(
             self,
@@ -548,24 +574,33 @@ root@harvest05:~#
     ) -> str | NoReturn:
         """
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
+
+        SerialClient2(COM16.115200,occupied=harvest05,isopen=True){'write': b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n"}
+        SerialClient2(COM16.115200,occupied=harvest05,isopen=True)READ(
+            bytes=b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n\x1b[?2004l\r\r\r\n+CSQ: 23,99\r\r\n\r\r\nOK\r\r\n\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# "
+            printable=timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200
+        root@harvest05:~#
+        root@harvest05:~# )
+        [at_output='+CSQ: 23,99\nOK']
         """
         command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
-        output = ""
+        at_output = ""
         for _ in range(2):
-            output = self.cmd_timeout__write_read__payload_str(
+            at_output = self.cmd_timeout__write_read__payload_str(
                 command_line,
                 timeout=timeout,
                 timeout_continue=timeout * 1.5,
                 **read_kwargs
             )
             # Убираем возможное эхо команды
-            output = output.replace(cmd + "\n", "")
+            at_output = at_output.replace(cmd + "\n", "")
 
-            if "No such file or directory" in output:
+            if "No such file or directory" in at_output:
                 if not self.file_name__push(bridge):
                     break
 
-        return output
+        print(f"[{at_output=}]")
+        return at_output
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:

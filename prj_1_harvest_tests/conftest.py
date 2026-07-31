@@ -9,6 +9,7 @@ from .utils import HarvestDevice
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
+from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
 # =====================================================================================================================
@@ -42,6 +43,89 @@ def harvest_info(harvest, request):
     request.config.stash["device_info"] = info
     print(json.dumps(info, indent=2, ensure_ascii=False))
     return info
+
+
+# =====================================================================================================================
+@pytest.fixture(scope="session")
+def gsm_at_port(harvest):
+    result: str | None = None
+    # 1=------------------------------------------------------------
+    assert harvest.cmd_timeout__check_executed_success(
+        "lsusb | grep -i qualcomm"), "устройствоне обнружено [9011 Qualcomm]"
+
+    # ------------------------------------------------------------
+    # 2=Пробуем активировать драйвер (безопасно, даже если уже загружен)
+    assert harvest.cmd_timeout__check_executed_success(
+        "modprobe option"), "драйвер не установлен ID 1e0e:9011 Qualcomm / Option A76XX Series LTE Module"
+
+    # 3=------------------------------------------------------------
+    # можно запускать сколько угодно! ошибки не будет!
+    """
+    сама команда дает результат того куда что подключено - НО если DMSG включен!!! 
+
+    ---- Sent utf8 encoded message: "echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null\r\n" ----
+echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null
+[ 6102.041184] option 4-1:1.2: GSM modem (1-port) converter detected
+[ 6102.048043] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB1
+[ 6102.057099] option 4-1:1.4: GSM modem (1-port) converter detected
+[ 6102.064194] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB2
+[ 6102.073013] option 4-1:1.5: GSM modem (1-port) converter detected
+[ 6102.079925] usb 4-1: GSM modem (1-port) converter now attached to ttyUSB3
+root@harvest05:~# 
+    """
+    assert harvest.cmd_timeout__check_executed_success(
+        'echo "1e0e 9011" > /sys/bus/usb-serial/drivers/option1/new_id 2>/dev/null'
+    ), "активация шины связи для AT команд не состоялось"
+    time.sleep(1)  # даём время на создание портов
+
+    port_candidates = harvest.cmd_parsed__ls(path="/dev/", filters=EqValid_Regexp(r"ttyUSB\d+"))
+    assert port_candidates, f"не обнаружены варианты портов для перебора {port_candidates=}"
+
+    for port in port_candidates:
+        props = harvest.get_info__usb(port)
+
+        # 4=Проверяем props ---------------
+        if any([
+            not props,
+            props.get("ID_VENDOR_ID") != "1e0e",
+            props.get("ID_MODEL_ID") != "9011",
+            "A76XX" not in props.get("ID_MODEL", ""),
+            props.get("ID_USB_DRIVER") != "option",
+        ]):
+            print(f"[SKIPPED] {port=}")
+            continue
+
+        # 5=Проверяем AT-ответ
+        out = harvest.cmd_timeout__write_read__payload_str(
+            f"stty -F {port} 115200 raw -echo 2>/dev/null; "
+            f"cat {port} & sleep 0.1; "
+            f"printf 'AT\\r\\n' > {port}; "
+            f"sleep 0.3; "
+            f"kill %1 2>/dev/null",
+            timeout=3,
+        )
+        if "OK" not in out:
+            continue
+
+        result = port
+
+        # 6=Настраиваем порт на постоянку (raw mode + отключаем эхо)
+        assert harvest.cmd_timeout__check_executed_success(
+            f"stty -F {port} 115200 raw -echo -echoe -echok -echoctl 2>/dev/null; "
+            f"cat {port} & sleep 0.1; "
+            f"printf 'ATE0\\r\\n' > {port}; "
+            f"sleep 0.2; "
+            f"kill %1 2>/dev/null",
+            timeout=3,
+        ), f"не удалось натсроить порт"
+
+        if result:
+            break
+
+    assert result, f"порт устройства для отправки AT команд не найден! {port_candidates=}"
+
+    print(f"[DETECTED] {result=}")
+    return result
 
 
 # =====================================================================================================================
