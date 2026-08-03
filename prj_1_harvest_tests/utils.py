@@ -164,10 +164,11 @@ sys.exit(1)
 
 # ======================================================================================================================
 class HarvestDevice:
-    PATTERN_EOF = re.compile(r".+@.+:.*#\s*")
+    COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
 
     def __init__(self, conn: SerialClient2):
         self.conn = conn
+        self.hostname = None
 
     # ------------------------------------------------------------------------------------------------------------------
     def validate_conn(self) -> bool:
@@ -219,12 +220,12 @@ class HarvestDevice:
 
     def login_check(self) -> bool:
         data = self.cmd_timeout__write_read_lines(cmd="hostname")
-        result = bool(self.PATTERN_EOF.search(data))
+        result = bool(self.COMPILE_EOF__STR.search(data))
         return result
 
     def get_hostname_and_occupy(self) -> str:
-        data = self.cmd_timeout__write_read__payload(cmd="hostname")
-        device_name = data
+        device_name = self.cmd_timeout__write_read__payload(cmd="hostname")
+        self.hostname = device_name
         self.conn.occupy(device_name)
         return device_name
 
@@ -361,7 +362,13 @@ root@harvest05:~#
             **wr_kwargs,
     ) -> str | list[str]:
         cmd = self._cmd_cover_timeout(cmd, timeout)
-        result = self.conn.write_read_lines(cmd, **wr_kwargs)
+
+        if self.hostname:
+            pattern = rb".*root@" + self.hostname.encode() + rb":~#.*"
+        else:
+            pattern = rb".*root@.+:.+#.*"
+
+        result = self.conn.write_read_lines(cmd, stop_line=EqValid_Regexp(pattern), **wr_kwargs)
         if payload_only:
             result = self._stdout__parce_payload(cmd=cmd, data=result)
 
@@ -382,7 +389,7 @@ root@harvest05:~#
         if result[0].strip() == cmd.strip():
             result = result[1:]
 
-        while result and (self.PATTERN_EOF.match(result[-1]) or result[-1].strip() == ''):
+        while result and (self.COMPILE_EOF__STR.match(result[-1]) or result[-1].strip() == ''):
             result = result[:-1]
 
         if return_str:
@@ -653,7 +660,7 @@ root@harvest05:~#
             bridge: str = "/tmp/at_client.py",
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
-            stop_line=b"OK",
+            # stop_line=b"OK",
 
             timeout: float = 2.0,
             timeout_continue: float | None = None,
@@ -676,7 +683,7 @@ root@harvest05:~#
 
             at_output = self.cmd_timeout__write_read__payload(
                 command_line,
-                stop_line=stop_line,
+                # stop_line=stop_line,
                 timeout=timeout,
                 timeout_continue=timeout_continue,
                 **read_kwargs
