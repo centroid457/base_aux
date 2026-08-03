@@ -580,6 +580,37 @@ root@harvest05:~#
     #     print(f"[SIMPLE_AT] {at_output=}")
     #     return at_output
 
+    def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0) -> str:
+        """
+        Отправить AT-команду на уже настроенный порт (stty raw + echo off).
+
+        SerialClient2(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
+        SerialClient2(COM16.115200,occupied=o,isopen=True)READ(
+            bytes=b'timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf \'AT+COPS?\\r\\n\' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n\x1b[?2004l\r[6] 5353\r\n[5]   Exit 124                timeout 2 cat /dev/ttyUSB2\r\n\r\r\n+COPS: 0,2,"25020",7\r\r\n\r\r\nOK\r\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+            printable=timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\r\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null
+        [6] 5353
+        [5]   Exit 124                timeout 2 cat /dev/ttyUSB2
+
+        root@harvest05:~#
+        root@harvest05:~# )
+        [AT] AT+COPS? -> at_output='+COPS: 0,2,"25020",7\nOK'
+        GSM operator: +COPS: 0,2,"25020",7
+        OK
+        """
+        at_output = self.cmd_timeout__write_read__payload(
+            f"cat {port} & sleep 0.1; "
+            f"printf '{cmd}\\r\\n' > {port}; "
+            f"sleep 0.4",
+            timeout=timeout,
+            timeout_continue=timeout * 0.8,
+        )
+        # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
+        at_output = at_output.splitlines()[2:]
+        at_output = "\n".join(at_output)
+
+        print(f"[AT] {cmd} ---> {at_output=}")
+        return at_output
+
     def send__at_command__raw(
             self,
             cmd: str,

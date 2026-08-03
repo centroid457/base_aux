@@ -572,7 +572,7 @@ class Test_3__WiFi:
 
         # Парсим station dump в словарь
         station_data = {}
-        for line in station_output.split('\n'):
+        for line in station_output.splitlines():
             if ':' in line:
                 k, v = line.split(':', 1)
                 station_data[k.strip()] = v.strip()
@@ -733,7 +733,7 @@ class Test_3__WiFi:
         ethtool_output = harvest.cmd_timeout__write_read__payload(
             "ethtool -i wlan0 2>/dev/null"
         )
-        for line in ethtool_output.split('\n'):
+        for line in ethtool_output.splitlines():
             if ':' in line:
                 k, v = line.split(':', 1)
                 info[k.strip()] = v.strip()
@@ -912,74 +912,25 @@ class Test_42__GSMAT:
         assert gsm_at_port, "порт не обнаружен!"
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _send_at(self, harvest, gsm_at_port, cmd: str, timeout: float = 2, ) -> str:
-        """
-        Отправить AT-команду на уже настроенный порт (stty raw + echo off).
-        Порт должен быть инициализирован в test_gsmat_1__detect.
-
-        SerialClient2(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
-        SerialClient2(COM16.115200,occupied=o,isopen=True)READ(
-            bytes=b'timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf \'AT+COPS?\\r\\n\' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n\x1b[?2004l\r[6] 5353\r\n[5]   Exit 124                timeout 2 cat /dev/ttyUSB2\r\n\r\r\n+COPS: 0,2,"25020",7\r\r\n\r\r\nOK\r\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
-            printable=timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\r\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null
-        [6] 5353
-        [5]   Exit 124                timeout 2 cat /dev/ttyUSB2
-
-
-
-
-        root@harvest05:~#
-        root@harvest05:~# )
-        [AT] AT+COPS? -> at_output='+COPS: 0,2,"25020",7\nOK'
-        GSM operator: +COPS: 0,2,"25020",7
-        OK
-        """
-        at_output = harvest.cmd_timeout__write_read__payload(
-            f"cat {gsm_at_port} & sleep 0.1; "
-            f"printf '{cmd}\\r\\n' > {gsm_at_port}; "
-            f"sleep 0.4; "
-            f"kill %1 2>/dev/null",
-            timeout=timeout,
-            timeout_continue=timeout * 0.8,
-        )
-        # Убираем эхо команды, PID процессов, приглашения терминала
-        lines = at_output.split('\n')
-        cleaned = []
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            # Пропускаем строки с PID и приглашения shell
-            if re.match(r'^\[\d+\]', line):
-                continue
-            if re.match(r'.+@.+:.+#', line):
-                continue
-            if line == cmd:
-                continue
-            cleaned.append(line)
-
-        at_output = '\n'.join(cleaned)
-        print(f"[AT] {cmd} -> {at_output=}")
-        return at_output
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_3__quick__check(self, harvest, gsm_at_port):
         """Базовая проверка: AT -> OK."""
-        out = self._send_at(harvest, gsm_at_port, "AT")
+        out = harvest.send__at_command__simple(cmd="AT", port=gsm_at_port)
         assert "OK" in out, f"Модем не отвечает на AT: {out}"
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__sim_ready(self, harvest, gsm_at_port):
         """AT+CPIN? -> READY."""
-        out = self._send_at(harvest, gsm_at_port, "AT+CPIN?")
+        out = harvest.send__at_command__simple(cmd="AT+CPIN?", port=gsm_at_port)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__signal_quality(self, harvest, gsm_at_port):
         """AT+CSQ, RSSI >= 5 (из 31)."""
-        out = self._send_at(harvest, gsm_at_port, "AT+CSQ")
+        out = harvest.send__at_command__simple(cmd="AT+CSQ", port=gsm_at_port)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -988,26 +939,23 @@ class Test_42__GSMAT:
                 return
         pytest.fail(f"CSQ не найден: {out}")
 
-    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг)."""
-        out = self._send_at(harvest, gsm_at_port, "AT+CREG?")
+        out = harvest.send__at_command__simple(cmd="AT+CREG?", port=gsm_at_port)
         registered = any(
             "+CREG:" in l and (",1" in l or ",5" in l)
             for l in out.splitlines()
         )
         assert registered, f"Не зарегистрирован: {out}"
 
-    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора."""
-        out = self._send_at(harvest, gsm_at_port, "AT+COPS?")
+        out = harvest.send__at_command__simple(cmd="AT+COPS?", port=gsm_at_port)
         assert "COPS" in out, f"Оператор не получен: {out}"
         print(f"GSM operator: {out}")
 
-    # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
