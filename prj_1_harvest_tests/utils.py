@@ -363,12 +363,15 @@ root@harvest05:~#
     ) -> str | list[str]:
         cmd = self._cmd_cover_timeout(cmd, timeout)
 
-        if self.hostname:
-            pattern = rb".*root@" + self.hostname.encode() + rb":~#.*"
-        else:
-            pattern = rb".*root@.+:.+#.*"
+        if wr_kwargs.get("stop_line") is None:
+            if self.hostname:
+                pattern = rb".*root@" + self.hostname.encode() + rb":~#.*"
+            else:
+                pattern = rb".*root@.+:.+#.*"
+            stop_line = EqValid_Regexp(pattern)
+            wr_kwargs["stop_line"] = stop_line
 
-        result = self.conn.write_read_lines(cmd, stop_line=EqValid_Regexp(pattern), **wr_kwargs)
+        result = self.conn.write_read_lines(cmd, **wr_kwargs)
         if payload_only:
             result = self._stdout__parce_payload(cmd=cmd, data=result)
 
@@ -634,7 +637,8 @@ root@harvest05:~#
         cmd_full = (
             f"cat {port} & sleep 0.1; "
             f"printf '{cmd}\\r\\n' > {port}; "
-            f"sleep 0.4"
+            f"sleep 0.4; "
+            f"kill %1 2>/dev/null"
         )
         at_output = self.cmd_timeout__write_read__payload(
             cmd=cmd_full,
@@ -660,7 +664,7 @@ root@harvest05:~#
             bridge: str = "/tmp/at_client.py",
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
-            # stop_line=b"OK",
+            stop_line=b"OK",
 
             timeout: float = 2.0,
             timeout_continue: float | None = None,
@@ -683,7 +687,7 @@ root@harvest05:~#
 
             at_output = self.cmd_timeout__write_read__payload(
                 command_line,
-                # stop_line=stop_line,
+                stop_line=stop_line,
                 timeout=timeout,
                 timeout_continue=timeout_continue,
                 **read_kwargs
