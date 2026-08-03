@@ -2574,10 +2574,6 @@ def test__HOW_TO_PYTEST_DIRECT_ACCESS_TO_ALL_DEBUG_DATA(request, p1, p2, p3, p4,
 # @pytest.mark.parametrize(argnames="p1,p2", argvalues=[(1,1)])
 def test__pytest_research__param(request, p1, p2):   # starichenko
     """research only"""
-    print(1)
-    print(2)
-    print(3)
-
     print(f"ТЕСТКЕЙС ПЕРЕМЕННЫЕ ЛИСТ ВСЕ=[{request.fixturenames}]")     # ['request', 'p1', 'p2']
     print(f"ТЕСТКЕЙС ПЕРЕМЕННЫЕ ЛИСТ ВСЕ=[{request.node.fixturenames}]")    # ['request', 'p1', 'p2']
 

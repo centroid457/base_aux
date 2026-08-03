@@ -196,7 +196,11 @@ class HarvestDevice:
         root@harvest05:~#
         root@harvest05:~#
         """
-        return self.login_try() and self.login_check()
+        return (
+                self.login_try()
+                and
+                self.login_check()
+        )
 
     def login_try(self) -> bool:
         data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
@@ -212,12 +216,13 @@ class HarvestDevice:
         return False
 
     def login_check(self) -> bool:
-        data = self.conn.write_read_bytes(data="hostname")
-        return b"root@harvest" in data
+        data = self.cmd_timeout__write_read_lines(cmd="hostname")
+        result = bool(re.search(r".+@.+:.*#\s*", data))
+        return result
 
     def get_hostname_and_occupy(self) -> str:
-        data = self.conn.write_read_lines(data="hostname")
-        device_name = data[1]
+        data = self.cmd_timeout__write_read__payload(cmd="hostname")
+        device_name = data
         self.conn.occupy(device_name)
         return device_name
 
@@ -357,6 +362,11 @@ root@harvest05:~#
         result = self.conn.write_read_lines(cmd, **wr_kwargs)
         if payload_only:
             result = self._stdout__parce_payload(cmd=cmd, data=result)
+
+        print(f"[{self.conn.ADDRESS}.WRITEREAD]")
+        print(f"\twrite=[", cmd, "]", sep="")
+        print("\tread=[", result, "]", sep="")
+
         return result
 
     def _stdout__parce_payload(self, cmd: str, data: str | list[str]) -> str | list[str]:
@@ -617,7 +627,7 @@ root@harvest05:~#
             bridge: str = "/tmp/at_client.py",
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
-            stop_on=b"OK",
+            stop_line=b"OK",
 
             timeout: float = 2.0,
             timeout_continue: float | None = None,
@@ -640,7 +650,7 @@ root@harvest05:~#
 
             at_output = self.cmd_timeout__write_read__payload(
                 command_line,
-                stop_on=stop_on,
+                stop_line=stop_line,
                 timeout=timeout,
                 timeout_continue=timeout_continue,
                 **read_kwargs
