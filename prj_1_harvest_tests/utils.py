@@ -459,6 +459,7 @@ root@harvest05:~#
         return result
 
     def _stdout__parce_payload(self, cmd: str, data: str | list[str]) -> str | list[str]:
+        # 0=split -----------------------
         return_str = False
         if isinstance(data, str):
             return_str = True
@@ -466,19 +467,31 @@ root@harvest05:~#
         else:
             result = data
 
+        # 1=CMD ECHO --------------------
         if result[0].strip() == cmd.strip():
             result = result[1:]
 
+        # 2=EOF -------------------------
         while result and (self.COMPILE_EOF__STR.match(result[-1]) or result[-1].strip() == ''):
             result = result[:-1]
 
+        # 3=SERVICE LOGS ----------------
+        # AT": "[1]   Terminated              timeout 2.0 cat /dev/ttyUSB2\nOK"
+        # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
+        # Удаляем служебные строки bash о статусе фоновых процессов
+        result_clear_service = [
+            line for line in result
+            if not re.match(r'\s*\[\d+\]\s+(?:Exit|Terminated|Done)?\s*\d*\s*', line)
+        ]
+        result = result_clear_service
+
+        # 4=EXIT ------------------------
         if return_str:
             return "\n".join(result)
         else:
             return result
 
     # ------------------------------------------------------------------------------------------------------------------
-    # Вспомогательный приватный метод для выполнения команды и получения строки
     def cmd_timeout__write_read__payload(
             self,
             cmd: str,
@@ -724,16 +737,6 @@ root@harvest05:~#
             timeout=timeout,
             timeout_continue=timeout * 0.8,
         )
-        # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
-        at_output = at_output.splitlines()
-        while True:
-            if re.match(r'\s*\[\d+\]\s+(?:(Exit)|(Terminated))?\s*\d+\s*', at_output[0]):
-                at_output = at_output[1:]
-                continue
-            break
-
-        at_output = "\n".join(at_output)
-
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
@@ -784,9 +787,10 @@ root@harvest05:~#
 
     def at_cmd__dump(self, port: str, method_simple: bool = True, timeout: float = 2.0) -> dict[str, str]:
         """
-        Опрашивает AT-команды из AT_CMD__DUMP и возвращает словарь {команда: ответ_строка}.
+        Опрашивает AT-команды из AT_CMD__DUMP
 
         {
+          "AT": "OK",
           "ATI": "Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK",
           "AT+CGMI": "INCORPORATED\nOK",
           "AT+CGMM": "A7682E-R\nOK",
@@ -795,16 +799,13 @@ root@harvest05:~#
           "AT+CIMI": "250470002905372\nOK",
           "AT+GSN": "865286077380516\nOK",
           "AT+CPIN?": "+CPIN: READY\nOK",
-          # "AT+CPINR=\"SIM PIN\"": "ERROR",
-          # "AT+CPINR=\"SIM PUK\"": "ERROR",
           "AT+CCID": "ERROR",
           "AT+COPS?": "+COPS: 0,2,\"25020\",7\nOK",
-          # "AT+COPS=3,2; +COPS?": "+COPS: 0,2,\"25020\",7\nOK",
           "AT+CREG?": "+CREG: 0,1\nOK",
           "AT+CGREG?": "+CGREG: 0,1\nOK",
           "AT+CEREG?": "+CEREG: 0,1\nOK",
-          "AT+CSQ": "+CSQ: 20,99\nOK",
-          "AT+CESQ": "+CESQ: 39,99,255,255,30,40\nOK",
+          "AT+CSQ": "+CSQ: 22,99\nOK",
+          "AT+CESQ": "+CESQ: 43,99,255,255,7,38\nOK",
           "AT*CNTI=0": "ERROR",
           "AT+WS46?": "+WS46:30\nOK",
           "AT+CGDCONT?": "+CGDCONT: 1,\"IP\",\"simsim.MNC047.MCC250.GPRS\",\"10.0.188.251\",0,0,,,,\nOK",
@@ -812,17 +813,43 @@ root@harvest05:~#
           "AT+CGPADDR": "+CGPADDR: 1,10.0.188.251\nOK",
           "AT+CGACT?": "+CGACT: 1,1\nOK",
           "AT+CGATT?": "+CGATT: 1\nOK",
-          # "AT+CGDATA=\"PPP\"": "ERROR",
           "AT+CIMS?": "ERROR",
           "AT+CIREG?": "+CME ERROR: Operation not supported",
           "AT+CFUN?": "+CFUN: 1\nOK",
           "AT+CSCLK?": "+CSCLK: 0\nOK",
           "AT+CPMUTEMP?": "ERROR",
-          "AT+CBC": "+CBC: 3.840V\nOK",
+          "AT+CBC": "+CBC: 3.830V\nOK",
           "AT+CCED?": "ERROR",
           "AT*CELLINFO?": "ERROR",
           "AT+CEER": "+CEER: \"0 Unknown\"\nOK"
         }
+
+        Параметр	Значение
+        Модель	SIMCom A7682E-R
+        Прошивка	A7682M6_V1.11.1 / A011B02A7682M6_DS_FOTA
+        IMEI1	865286077380516
+        IMEI2	865286076965218 (две SIM)
+        IMSI	250470002905372
+        Оператор	25020 (Tele2 Russia)
+        RAT	7 (LTE)
+        WS46	30 (LTE + GSM)
+        RSSI	20/31 (хороший)
+        CESQ	RSRP=30, RSRQ=40 (отличный LTE)
+        Регистрация	CREG/CGREG/CEREG = 0,1 (домашняя)
+        PDP IP	10.0.188.251
+        DNS	100.77.8.8, 100.77.4.4
+        Питание	3.840V
+        CFUN	1 (полный)
+        CSCLK	0 (сон выключен)
+
+        ERROR (ожидаемо для этого модуля):
+        AT+CPINR — не поддерживает доп. информацию по PIN/PUK
+        AT+CCID — видимо не реализован (можно попробовать AT+ICCID)
+        AT*CNTI=0 — vendor-specific, не поддерживается
+        AT+CGDATA="PPP" — режим не активен
+        AT+CIMS?, AT+CIREG? — IMS не поддерживается
+        AT+CPMUTEMP? — нет датчика температуры
+        AT+CCED?, AT*CELLINFO? — нет расширенной инфы по сотам
         """
         results = {}
         method_send = self.at_cmd__simple if method_simple else self.at_cmd__raw
@@ -831,7 +858,7 @@ root@harvest05:~#
                 resp = method_send(cmd, port=port, timeout=timeout)
                 results[cmd] = resp.strip()
             except Exception as exc:
-                results[cmd] = f"ERROR:{exc!r}"
+                results[cmd] = f"PYERROR:{exc!r}"   # нет таких!
         return results
 
     # CMDS =============================================================================================================
