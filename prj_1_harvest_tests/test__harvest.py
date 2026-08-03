@@ -52,7 +52,7 @@ class Test_000__Explore:
         """AT+CPIN? -> READY.
         [at_output='+CPIN: READY\nOK']
         """
-        harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2)
+        harvest.at_cmd__raw("AT+CPIN?", port=gsm_at_port, timeout=2)
         # harvest.send__at_command__simple("AT+CPIN?", port=gsm_at_port, timeout=2)
 
 
@@ -913,24 +913,31 @@ class Test_42__GSMAT:
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__quick__check(self, harvest, gsm_at_port):
+    def test_gsmat_2__quick__check(self, harvest, gsm_at_port):
         """Базовая проверка: AT -> OK."""
-        out = harvest.send__at_command__simple(cmd="AT", port=gsm_at_port)
+        out = harvest.at_cmd__simple(cmd="AT", port=gsm_at_port)
         assert "OK" in out, f"Модем не отвечает на AT: {out}"
 
     # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_3__deep__dump(self, harvest, gsm_at_port):
+        dump = harvest.at_cmd__dump(port=gsm_at_port)
+        print(json.dumps(dump, indent=2, ensure_ascii=False))
+        # Минимальные проверки, что модем живой
+        # assert "OK" in dump.get("AT", ""), "Модем не отвечает на AT"
+        # assert "+CPIN: READY" in dump.get("AT+CPIN?", ""), "SIM не готова"
+
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__sim_ready(self, harvest, gsm_at_port):
         """AT+CPIN? -> READY."""
-        out = harvest.send__at_command__simple(cmd="AT+CPIN?", port=gsm_at_port)
+        out = harvest.at_cmd__simple(cmd="AT+CPIN?", port=gsm_at_port)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__signal_quality(self, harvest, gsm_at_port):
         """AT+CSQ, RSSI >= 5 (из 31)."""
-        out = harvest.send__at_command__simple(cmd="AT+CSQ", port=gsm_at_port)
+        out = harvest.at_cmd__simple(cmd="AT+CSQ", port=gsm_at_port)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -942,7 +949,7 @@ class Test_42__GSMAT:
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг)."""
-        out = harvest.send__at_command__simple(cmd="AT+CREG?", port=gsm_at_port)
+        out = harvest.at_cmd__simple(cmd="AT+CREG?", port=gsm_at_port)
         registered = any(
             "+CREG:" in l and (",1" in l or ",5" in l)
             for l in out.splitlines()
@@ -952,28 +959,26 @@ class Test_42__GSMAT:
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_4__deep__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора."""
-        out = harvest.send__at_command__simple(cmd="AT+COPS?", port=gsm_at_port)
+        out = harvest.at_cmd__simple(cmd="AT+COPS?", port=gsm_at_port)
         assert "COPS" in out, f"Оператор не получен: {out}"
         print(f"GSM operator: {out}")
 
     # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__sim_ready(self, harvest, gsm_at_port):
+    def test_gsmat_5__sim_ready(self, harvest, gsm_at_port):
         """AT+CPIN? -> READY.
         [at_output='+CPIN: READY\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CPIN?", port=gsm_at_port, timeout=2, timeout_continue=2)
+        out = harvest.at_cmd__raw("AT+CPIN?", port=gsm_at_port, timeout=2, timeout_continue=2)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
     # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__signal_quality(self, harvest, gsm_at_port):
+    def test_gsmat_5__signal_quality(self, harvest, gsm_at_port):
         """AT+CSQ, RSSI >= 5.
         [at_output='+CSQ: 23,99\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CSQ", port=gsm_at_port, timeout=2, timeout_continue=2)
+        out = harvest.at_cmd__raw("AT+CSQ", port=gsm_at_port, timeout=2, timeout_continue=2)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -984,11 +989,11 @@ class Test_42__GSMAT:
 
     # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__network_registration(self, harvest, gsm_at_port):
+    def test_gsmat_5__network_registration(self, harvest, gsm_at_port):
         """AT+CREG? – статус 1 или 5.
         [at_output='+CREG: 0,1\nOK']
         """
-        out = harvest.send__at_command__raw("AT+CREG?", port=gsm_at_port, timeout=2, timeout_continue=2)
+        out = harvest.at_cmd__raw("AT+CREG?", port=gsm_at_port, timeout=2, timeout_continue=2)
         registered = any(
             "+CREG:" in line and (line.strip().endswith(",1") or line.strip().endswith(",5"))
             for line in out.splitlines()
@@ -997,12 +1002,12 @@ class Test_42__GSMAT:
 
     # @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__operator(self, harvest, gsm_at_port):
+    def test_gsmat_5__operator(self, harvest, gsm_at_port):
         """AT+COPS? – имя оператора.
 
         [at_output='+COPS: 0,2,"25020",7\nOK']
         """
-        out = harvest.send__at_command__raw("AT+COPS?", port=gsm_at_port, timeout=2, timeout_continue=2)
+        out = harvest.at_cmd__raw("AT+COPS?", port=gsm_at_port, timeout=2, timeout_continue=2)
         assert "COPS" in out, f"Не удалось получить оператора: {out}"
         print(f"GSM operator info: {out}")
 

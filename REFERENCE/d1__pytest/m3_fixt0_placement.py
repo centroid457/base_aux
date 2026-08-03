@@ -38,7 +38,7 @@ class Test_Example:
     @pytest.mark.dependency(depends=["gsm_responds"])
     def test_gsm_4__at__sim_ready(self, harvest):
         """AT+CPIN? -> READY."""
-        out = harvest.send__at_command__raw("AT+CPIN?", port=self.at_port, timeout=2)
+        out = harvest.at_cmd__raw("AT+CPIN?", port=self.at_port, timeout=2)
         assert "+CPIN: READY" in out, f"SIM не готова: {out}"
 
 

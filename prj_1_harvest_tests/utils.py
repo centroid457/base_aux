@@ -165,6 +165,79 @@ sys.exit(1)
 # ======================================================================================================================
 class HarvestDevice:
     COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
+    AT_CMD__DUMP: list[str] = [
+        # =========================================================================
+        # ИДЕНТИФИКАЦИЯ И ВЕРСИИ
+        "ATI",  # Общая информация о производителе/модели
+        "AT+CGMI",  # Запрос производителя (Manufacturer ID)
+        "AT+CGMM",  # Запрос модели (Model ID)
+        "AT+CGMR",  # Запрос ревизии прошивки (Revision)
+        "AT+CGSN",  # Запрос IMEI (Serial Number)
+        "AT+CIMI",  # Запрос IMSI (International Mobile Subscriber ID)
+        "AT+GSN",  # Аналог CGSN — IMEI
+
+        # =========================================================================
+        # СОСТОЯНИЕ SIM-КАРТЫ И PIN
+        "AT+CPIN?",  # Статус SIM: READY, SIM PIN, SIM PUK, SIM PIN2...
+        # "AT+CPINR=\"SIM PIN\"",  # Остаток попыток ввода PIN
+        # "AT+CPINR=\"SIM PUK\"",  # Остаток попыток ввода PUK
+        "AT+CCID",  # ICCID (серийный номер SIM-карты)
+
+        # =========================================================================
+        # СЕТЬ И РЕГИСТРАЦИЯ
+        "AT+COPS?",  # Текущий оператор (режим, формат, MCC/MNC)
+        # "AT+COPS=3,2; +COPS?",  # Принудительно числовой формат + получить оператора
+        "AT+CREG?",  # Статус регистрации в сети (0=нет, 1=домашняя, 5=роуминг)
+        "AT+CGREG?",  # Статус GPRS/PS регистрации
+        "AT+CEREG?",  # Статус EPS (LTE) регистрации
+
+        # =========================================================================
+        # УРОВЕНЬ СИГНАЛА И КАЧЕСТВО
+        "AT+CSQ",  # RSSI (0-31) и BER (качество канала)
+        "AT+CESQ",  # Расширенный запрос качества (RSSI, RSCP, ECN0, RSRP, RSRQ)
+
+        # =========================================================================
+        # ТЕКУЩАЯ СОТА И ЧАСТОТА
+        "AT*CNTI=0",  # Информация о текущей соте (MCC, MNC, LAC, CellID, band, ARFCN)
+
+        # =========================================================================
+        # ТЕХНОЛОГИЯ РАДИОДОСТУПА (RAT)
+        "AT+WS46?",  # Выбор технологии: 12=LTE, 2=3G, 0=2G/GERAN
+        # "AT+COPS=3,2; +COPS?",  # (повтор для получения RAT в числовом виде)
+
+        # =========================================================================
+        # PDP / APN / ДАННЫЕ
+        "AT+CGDCONT?",  # Список APN-профилей (apn, type, ip...)
+        "AT+CGCONTRDP",  # Параметры активного PDP-контекста (IP, шлюз, DNS1, DNS2)
+        "AT+CGPADDR",  # Список назначенных PDP-адресов (IP)
+        "AT+CGACT?",  # Статус активации PDP-контекстов (0/1)
+        "AT+CGATT?",  # Статус GPRS-присоединения (attached/detached)
+        # "AT+CGDATA=\"PPP\"",  # Состояние data-вызова (idle/active)
+
+        # =========================================================================
+        # IMS (VoLTE / VoWiFi)
+        "AT+CIMS?",  # Статус IMS-регистрации (0=не зарегистрирован, 1=зарегистрирован)
+        "AT+CIREG?",  # IMS регистрация (более детально)
+
+        # =========================================================================
+        # РЕЖИМЫ ЭНЕРГОСБЕРЕЖЕНИЯ И ФУНКЦИОНАЛЬНОСТЬ
+        "AT+CFUN?",  # Уровень функциональности (0=min, 1=full, 4=flight mode)
+        "AT+CSCLK?",  # Режим сна (1=разрешён sleep mode)
+
+        # =========================================================================
+        # ТЕМПЕРАТУРА И ПИТАНИЕ
+        "AT+CPMUTEMP?",  # Температура модуля (если поддерживается)
+        "AT+CBC",  # Заряд батареи/питание (charge level, voltage)
+
+        # =========================================================================
+        # СОСЕДНИЕ СОТЫ (опционально, зависит от модуля)
+        "AT+CCED?",  # Соседние соты (GSM/GPRS)
+        "AT*CELLINFO?",  # Расширенная информация о сотах (vendor-specific)
+
+        # =========================================================================
+        # ОШИБКИ И СБРОСЫ (диагностика)
+        "AT+CEER",  # Extended Error Report — причина последнего сбоя/разъединения
+    ]
 
     def __init__(self, conn: SerialClient2):
         self.conn = conn
@@ -563,7 +636,9 @@ root@harvest05:~#
         """
         return self.cmd_timeout__check_executed_success(f"test -f {filepath}")
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # AT ===============================================================================================================
+    pass
+
     # def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
     # НЕ РАБОТАЕТ!!!
     #
@@ -602,7 +677,7 @@ root@harvest05:~#
     #     print(f"[SIMPLE_AT] {at_output=}")
     #     return at_output
 
-    def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0) -> str:
+    def at_cmd__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
 
@@ -648,7 +723,7 @@ root@harvest05:~#
         # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
         at_output = at_output.splitlines()
         while True:
-            if re.match(r'\s*\[\d+\]\s+(?:Exit)?\s*\d+\s*', at_output[0]):
+            if re.match(r'\s*\[\d+\]\s+(?:(Exit)|(Terminated))?\s*\d+\s*', at_output[0]):
                 at_output = at_output[1:]
                 continue
             break
@@ -658,7 +733,7 @@ root@harvest05:~#
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
-    def send__at_command__raw(
+    def at_cmd__raw(
             self,
             cmd: str,
             bridge: str = "/tmp/at_client.py",
@@ -702,6 +777,58 @@ root@harvest05:~#
 
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
+
+    def at_cmd__dump(self, port: str, method_simple: bool = True, timeout: float = 2.0) -> dict[str, str]:
+        """
+        Опрашивает AT-команды из AT_CMD__DUMP и возвращает словарь {команда: ответ_строка}.
+
+        {
+          "ATI": "Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK",
+          "AT+CGMI": "INCORPORATED\nOK",
+          "AT+CGMM": "A7682E-R\nOK",
+          "AT+CGMR": "+CGMR: A011B02A7682M6_DS_FOTA\nOK",
+          "AT+CGSN": "865286077380516\nOK",
+          "AT+CIMI": "250470002905372\nOK",
+          "AT+GSN": "865286077380516\nOK",
+          "AT+CPIN?": "+CPIN: READY\nOK",
+          # "AT+CPINR=\"SIM PIN\"": "ERROR",
+          # "AT+CPINR=\"SIM PUK\"": "ERROR",
+          "AT+CCID": "ERROR",
+          "AT+COPS?": "+COPS: 0,2,\"25020\",7\nOK",
+          # "AT+COPS=3,2; +COPS?": "+COPS: 0,2,\"25020\",7\nOK",
+          "AT+CREG?": "+CREG: 0,1\nOK",
+          "AT+CGREG?": "+CGREG: 0,1\nOK",
+          "AT+CEREG?": "+CEREG: 0,1\nOK",
+          "AT+CSQ": "+CSQ: 20,99\nOK",
+          "AT+CESQ": "+CESQ: 39,99,255,255,30,40\nOK",
+          "AT*CNTI=0": "ERROR",
+          "AT+WS46?": "+WS46:30\nOK",
+          "AT+CGDCONT?": "+CGDCONT: 1,\"IP\",\"simsim.MNC047.MCC250.GPRS\",\"10.0.188.251\",0,0,,,,\nOK",
+          "AT+CGCONTRDP": "+CGCONTRDP: 1,5,\"simsim.MNC047.MCC250.GPRS\",\"10.0.188.251\",\"\",\"100.77.8.8\",\"100.77.4.4\",\"\",\"\",0,01400\nOK",
+          "AT+CGPADDR": "+CGPADDR: 1,10.0.188.251\nOK",
+          "AT+CGACT?": "+CGACT: 1,1\nOK",
+          "AT+CGATT?": "+CGATT: 1\nOK",
+          # "AT+CGDATA=\"PPP\"": "ERROR",
+          "AT+CIMS?": "ERROR",
+          "AT+CIREG?": "+CME ERROR: Operation not supported",
+          "AT+CFUN?": "+CFUN: 1\nOK",
+          "AT+CSCLK?": "+CSCLK: 0\nOK",
+          "AT+CPMUTEMP?": "ERROR",
+          "AT+CBC": "+CBC: 3.840V\nOK",
+          "AT+CCED?": "ERROR",
+          "AT*CELLINFO?": "ERROR",
+          "AT+CEER": "+CEER: \"0 Unknown\"\nOK"
+        }
+        """
+        results = {}
+        method_send = self.at_cmd__simple if method_simple else self.at_cmd__raw
+        for cmd in self.AT_CMD__DUMP:
+            try:
+                resp = method_send(cmd, port=port, timeout=timeout)
+                results[cmd] = resp.strip()
+            except Exception as exc:
+                results[cmd] = f"ERROR:{exc!r}"
+        return results
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:
