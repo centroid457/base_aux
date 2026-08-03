@@ -398,6 +398,29 @@ class SerialClient2:
     def check__buffer_is_blank(self) -> bool:
         return bool(self._conn.in_waiting)
 
+    # ==================================================================================================================
+    def _print_line(self, line: bytes = b"", process: str | None = None, success: bool = True, extra: str | Any | None = None) -> None:
+        """
+        GOAL
+        just log any line for debug
+        """
+        process = process or ""
+
+        if success:
+            status = "OK"
+        else:
+            status = "FAIl"
+
+        if extra:
+            extra = f"[{extra=}]"
+        else:
+            extra = ""
+
+        try:
+            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{process}[{status}]=", line, extra)
+        except Exception as exc:
+            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{process}[{status}]={exc!r}", extra)
+
     # R ================================================================================================================
     def read_bytes(
             self,
@@ -461,13 +484,14 @@ class SerialClient2:
 
                     # 2=EOL - получен
                     if _new_line:
-                        self._print_line(_new_line)
+                        self._print_line(line=_new_line, process="readline")
                         result += b"\n"
                         result += _new_line
 
                         # 1.2=STOP ON ---------
                         if stop_line is not None:
                             if _new_line == stop_line:
+                                self._print_line(process="stopreading")
                                 break
 
                         _new_line = b""
@@ -486,31 +510,6 @@ class SerialClient2:
                 self.history.append(msg)
 
             return result
-
-    def _print_line(self, line: bytes, read: bool = True, success: bool = True, extra: str | Any | None = None) -> None:
-        """
-        GOAL
-        just log any line for debug
-        """
-        if read:
-            direction = "readline"
-        else:
-            direction = "writeline"
-
-        if success:
-            status = "OK"
-        else:
-            status = "FAIl"
-
-        if extra:
-            extra = f"[{extra=}]"
-        else:
-            extra = ""
-
-        try:
-            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{direction}[{status}]=", line, extra)
-        except Exception as exc:
-            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{direction}[{status}]={exc!r}", extra)
 
     def read_lines(self, return_str: bool | None = True, **r_kwargs) -> Union[str, list[str]]:
         """
@@ -546,6 +545,8 @@ class SerialClient2:
 
             if clear_input_first:
                 time.sleep(0.1)     # на всякий случай!!! 0.1 может не хватать!
+                line = self._to_bytes(f"in_waiting={self._conn.in_waiting}")
+                self._print_line(process="reset_input_buffer", line=line)
                 self._conn.reset_input_buffer()
 
             raw = self._to_bytes(data)
@@ -557,9 +558,9 @@ class SerialClient2:
             written = 0
             try:
                 written = self._conn.write(raw)
-                self._print_line(read=False, line=raw)
+                self._print_line(process="write", line=raw)
             except Exception as exc:
-                self._print_line(read=False, line=raw, success=False, extra=f"{exc!r}")
+                self._print_line(process="write", line=raw, success=False, extra=f"{exc!r}")
 
             if written > 0:
                 msg = {"write": raw}
