@@ -401,7 +401,7 @@ class SerialClient2:
     # R ================================================================================================================
     def read_bytes(
             self,
-            stop_on: AnyStr | Base_EqValid | None = None,
+            stop_line: AnyStr | Base_EqValid | None = None,
 
             timeout_start: Optional[float] = None,
             timeout_continue: Optional[float] = None,
@@ -420,11 +420,11 @@ class SerialClient2:
                 print("Port not connected")
                 return b""
 
-            if stop_on is not None:
-                if isinstance(stop_on, str):
-                    stop_on = self._to_bytes(stop_on)
-                if not isinstance(stop_on, (Base_EqValid, bytes)):
-                    msg = f"not expected type {stop_on=}"
+            if stop_line is not None:
+                if isinstance(stop_line, str):
+                    stop_line = self._to_bytes(stop_line)
+                if not isinstance(stop_line, (Base_EqValid, bytes)):
+                    msg = f"not expected type {stop_line=}"
                     raise Exception(msg)
 
             t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
@@ -434,52 +434,83 @@ class SerialClient2:
             old_timeout = self._conn.timeout
 
             time_start = time.time()
-            data = b""
+            result: bytes = b""
+            _new_line: bytes = b""
+
             while True:
                 # Ждём появления данных или таймаут
-                self._conn.timeout = t_start if data == b"" else t_cont
-                if stop_on is None:
-                    chunk = self._conn.read(self._conn.in_waiting or 1)
-                else:
-                    chunk = self._conn.read(1)
+                self._conn.timeout = t_start if result == b"" else t_cont
+                _new_byte = self._conn.read(1)
 
-                if not chunk:
+                # 1=БАЙТА НЕТ ---------
+                if not _new_byte:
                     if not timeout_full_min:
                         break
                     elif time.time() - time_start > timeout_full_min:
                         break
+                    else:
+                        pass
 
-                if chunk and chunk[-1] in self.EOL__UNI:
-                    if data and data[-1] not in self.EOL__UNI:
-                        last_line = data.splitlines()[-1]
-                        try:
-                            print(f"[{datetime.datetime.now()}]readline=", last_line)
-                        except Exception as exc:
-                            print(f"{exc!r}")
+                # 2=БАЙТ ЕСТЬ ---------
+                if _new_byte:
+                    # 1=EOL - нет
+                    if _new_byte not in self.EOL__UNI:
+                        # 1.1=COLLECT ---------
+                        _new_line += _new_byte
+                        continue
 
-                data += chunk
-                if stop_on is not None:
-                    if data in stop_on:
-                        break
+                    # 2=EOL - получен
+                    if _new_line:
+                        self._print_line(_new_line)
+                        result += b"\n"
+                        result += _new_line
 
-                # MAX THRESH
+                        # 1.2=STOP ON ---------
+                        if stop_line is not None:
+                            if _new_line == stop_line:
+                                break
+
+                        _new_line = b""
+
+                # 3=MAX THRESH -----------
                 if timeout_full_max and time.time() - time_start > timeout_full_max:
-                    # if chunk in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
+                    # if _new_byte in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
                     break
 
+            # 5=EXIT ------------------
             # Восстанавливаем таймаут
             self._conn.timeout = old_timeout
 
-            msg = {"read": data}
+            msg = {"read": result}
             if self.history_enable:
                 self.history.append(msg)
 
-            try:
-                printable_data = self._to_str(data)
-            except Exception as exc:
-                printable_data = f"{exc!r}"
-            print(f"{self}READ(\n\tbytes={data}\n\tprintable={printable_data})")
-            return data
+            return result
+
+    def _print_line(self, line: bytes, read: bool = True, success: bool = True, extra: str | Any | None = None) -> None:
+        """
+        GOAL
+        just log any line for debug
+        """
+        if read:
+            direction = "readline"
+        else:
+            direction = "writeline"
+
+        if success:
+            status = "OK"
+        else:
+            status = "FAIl"
+
+        if extra:
+            extra = f"[{extra=}]"
+        else:
+            extra = ""
+
+        try:
+            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{direction}[{status}]=", line, extra)
+        except Exception as exc:
+            print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{direction}[{status}]={exc!r}", extra)
 
     def read_lines(self, return_str: bool | None = True, **r_kwargs) -> Union[str, list[str]]:
         """
@@ -526,18 +557,17 @@ class SerialClient2:
             written = 0
             try:
                 written = self._conn.write(raw)
-                msg = f"[OK]write={raw}/{written=}"
+                self._print_line(read=False, line=raw)
             except Exception as exc:
-                msg = f"[FAIL]write={raw}/{exc!r}"
+                self._print_line(read=False, line=raw, success=False, extra=f"{exc!r}")
 
             if written > 0:
                 msg = {"write": raw}
                 if self.history_enable:
                     self.history.append(msg)
-                print(f"{self}{msg}")
+
                 return written == len(raw)
             else:
-                msg = f"[ERROR] write {raw}"
                 return False
 
     # W=SPECIAL --------------------------------------------------------------------------------------------------------
