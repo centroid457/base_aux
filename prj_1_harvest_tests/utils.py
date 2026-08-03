@@ -164,6 +164,8 @@ sys.exit(1)
 
 # ======================================================================================================================
 class HarvestDevice:
+    PATTERN_EOF = re.compile(r".+@.+:.*#\s*")
+
     def __init__(self, conn: SerialClient2):
         self.conn = conn
 
@@ -217,7 +219,7 @@ class HarvestDevice:
 
     def login_check(self) -> bool:
         data = self.cmd_timeout__write_read_lines(cmd="hostname")
-        result = bool(re.search(r".+@.+:.*#\s*", data))
+        result = bool(self.PATTERN_EOF.search(data))
         return result
 
     def get_hostname_and_occupy(self) -> str:
@@ -380,7 +382,7 @@ root@harvest05:~#
         if result[0].strip() == cmd.strip():
             result = result[1:]
 
-        while result and (re.match(r".+@.+:.*#\s*", result[-1]) or result[-1].strip() == ''):
+        while result and (self.PATTERN_EOF.match(result[-1]) or result[-1].strip() == ''):
             result = result[:-1]
 
         if return_str:
@@ -606,19 +608,43 @@ root@harvest05:~#
         [AT] AT+COPS? -> at_output='+COPS: 0,2,"25020",7\nOK'
         GSM operator: +COPS: 0,2,"25020",7
         OK
+
+        НЕЛЬЗЯ ПРОСТО ДВА ПЕРВЫХ УДАЛЯТЬ!!!
+        [15:19:47.271369]COM16.writeline[OK]= b"timeout 2.0 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT\\r\\n' > /dev/ttyUSB2; sleep 0.4\r\n"
+        [15:19:47.306637]COM16.readline[OK]= b"timeout 2.0 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT\\r\\n' > /dev/ttyUSB2; sleep 0.4"
+        [15:19:47.310637]COM16.readline[OK]= b'\x1b[?2004l'
+        [15:19:47.313637]COM16.readline[OK]= b'[1] 3964'
+        [15:19:47.410022]COM16.readline[OK]= b'OK'
+        [15:19:47.836296]COM16.readline[OK]= b'\x1b[?2004hroot@harvest05:~# '
+        [15:19:47.841624]COM16.readline[OK]= b'\x1b[?2004l'
+        [COM16.WRITEREAD]
+            write=[timeout 2.0 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT\r\n' > /dev/ttyUSB2; sleep 0.4]
+            read=[[1] 3964
+        OK]
+        [AT] AT ---> at_output=''
+        FAILED
         """
-        at_output = self.cmd_timeout__write_read__payload(
+        cmd_full = (
             f"cat {port} & sleep 0.1; "
             f"printf '{cmd}\\r\\n' > {port}; "
-            f"sleep 0.4",
+            f"sleep 0.4"
+        )
+        at_output = self.cmd_timeout__write_read__payload(
+            cmd=cmd_full,
             timeout=timeout,
             timeout_continue=timeout * 0.8,
         )
         # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
-        at_output = at_output.splitlines()[2:]
+        at_output = at_output.splitlines()
+        while True:
+            if re.match(r'\s*\[\d+\]\s+(?:Exit)?\s*\d+\s*', at_output[0]):
+                at_output = at_output[1:]
+                continue
+            break
+
         at_output = "\n".join(at_output)
 
-        print(f"[AT] {cmd} ---> {at_output=}")
+        print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
     def send__at_command__raw(
@@ -663,7 +689,7 @@ root@harvest05:~#
                 if not self.file_name__push(bridge):
                     break
 
-        print(f"[{at_output=}]")
+        print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
     # CMDS =============================================================================================================
