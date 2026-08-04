@@ -18,6 +18,7 @@ def harvest(request) -> HarvestDevice:
     """Находит устройство Harvest и возвращает авторизованный клиент."""
     found: list[HarvestDevice] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
+        print(f"try {conn=}")
         with conn:
             if HarvestDevice(conn).validate_conn():
                 dev_id = HarvestDevice(conn).get_hostname_and_occupy()

@@ -1,5 +1,6 @@
 # REASON: try to create clear separated classes!
 import datetime
+import time
 
 from serial import Serial, SerialException
 from threading import Lock
@@ -30,7 +31,7 @@ class SerialClient2:
 
     # need NONE NOT 0!!! if wait always!!
     TIMEOUT_READ_INITIAL: float = 0.5   # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
-    TIMEOUT_READ_CONTINUE: float = 0.05 # пауза между чтениями после появления данных
+    TIMEOUT_READ_CONTINUE: float = 0.1 # пауза между чтениями после появления данных
     BAUDRATE: int = 9600  # 115200
 
     # rare INFRASTRUCTURE -------
@@ -461,6 +462,8 @@ class SerialClient2:
             _new_line: bytes = b""
 
             while True:
+                # self._print_line(process="readSTART")
+
                 # Ждём появления данных или таймаут
                 self._conn.timeout = t_start if result == b"" else t_cont
                 _new_byte = self._conn.read(1)
@@ -484,14 +487,14 @@ class SerialClient2:
 
                     # 2=EOL - получен
                     if _new_line:
-                        self._print_line(line=_new_line, process="readline")
+                        self._print_line(process="readEOL", line=_new_line)
                         result += b"\n"
                         result += _new_line
 
                         # 1.2=STOP ON ---------
                         if stop_line is not None:
                             if _new_line == stop_line:
-                                self._print_line(process="stopreading")
+                                self._print_line(process="stop_line", extra=stop_line)
                                 break
 
                         _new_line = b""
@@ -500,6 +503,12 @@ class SerialClient2:
                 if timeout_full_max and time.time() - time_start > timeout_full_max:
                     # if _new_byte in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
                     break
+
+            # 4=finalize not ended EOL line like password: or terminal prompt
+            if _new_line:
+                self._print_line(process="readNoEOL", line=_new_line)
+                result += _new_line
+                _new_line = b""
 
             # 5=EXIT ------------------
             # Восстанавливаем таймаут
@@ -546,7 +555,7 @@ class SerialClient2:
             if clear_input_first:
                 time.sleep(0.1)     # на всякий случай!!! 0.1 может не хватать!
                 line = self._to_bytes(f"in_waiting={self._conn.in_waiting}")
-                self._print_line(process="reset_input_buffer", line=line)
+                self._print_line(process="reset_input", line=line)
                 self._conn.reset_input_buffer()
 
             raw = self._to_bytes(data)
@@ -611,6 +620,7 @@ class SerialClient2:
         """Записать команду и сразу прочитать ответ (строки)."""
         with self._lock_wr:
             self.write_bytes(data, eol, clear_input_first)
+            time.sleep(0.2)
             return self.read_bytes(**read_kwargs)
 
     def write_read_lines(

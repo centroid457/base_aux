@@ -283,13 +283,31 @@ class HarvestDevice:
         )
 
     def login_try(self) -> bool:
+        """
+        harvest05 login:
+        ---- Sent utf8 encoded message: "root\r\n" ----
+        root
+        Password:
+        ---- Sent utf8 encoded message: "1\r\n" ----
+
+        Linux harvest05 4.14.111 #193 SMP Thu Jun 10 18:20:47 CST 2021 armv7l
+
+        The programs included with the Debian GNU/Linux system are free software;
+        the exact distribution terms for each program are described in the
+        individual files in /usr/share/doc/*/copyright.
+
+        Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+        permitted by applicable law.
+        Last login: Tue Aug  4 14:39:52 MSK 2026 on ttyS0
+        root@harvest05:~#
+        """
         data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
         if b"command not found" in data:
             # already logged in!
             return True
 
         elif b"Password:" in data:
-            data = self.conn.write_read_bytes(data="1", timeout_continue=6)
+            data = self.conn.write_read_bytes(data="1", timeout_start=6, timeout_continue=1.9)
             if b"root@harvest" in data:
                 return True
 
@@ -753,6 +771,7 @@ root@harvest05:~#
             **read_kwargs
     ) -> str | NoReturn:
         """
+        !USE SIMPLE! - works quicker!
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
 
         SerialClient2(COM16.115200,occupied=harvest05,isopen=True){'write': b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n"}
