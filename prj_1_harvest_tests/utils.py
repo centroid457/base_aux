@@ -209,9 +209,9 @@ print("FINISH", "="*50)
     # ------------------------------------------------------------------------------------------------------------------
     "/tmp/rfid_scan.py": """
 # ===================================================================
-# /tmp/rfid_scan.py - ИСПРАВЛЕННАЯ ВЕРСИЯ
+# /tmp/rfid_scan.py - ВЕРСИЯ С ПРЯМЫМ ИЗВЛЕЧЕНИЕМ EPC
 # ===================================================================
-import serial, time, sys
+import serial, time, sys, re
 
 PORT = '/dev/ttyS2'
 BAUD = 115200
@@ -288,6 +288,40 @@ def parse_epc(data):
                     break
     
     return epc_list
+    
+def parse_epc_advanced(data):
+    # Улучшенный парсер EPC
+    epc_list = []
+    hex_data = data.hex().upper()
+    
+    # Ищем EPC по характерным признакам:
+    # 1. Начинаются с 3000, 300E, 3400
+    # 2. Имеют длину 20-28 символов
+    patterns = [
+        r'(3000[0-9A-F]{16,24})',  # 3000 + 16-24 hex символов
+        r'(300E[0-9A-F]{16,24})',  # 300E + 16-24 hex символов
+        r'(3400[0-9A-F]{16,24})',  # 3400 + 16-24 hex символов
+    ]
+    
+    for pattern in patterns:
+        matches = re.findall(pattern, hex_data)
+        for match in matches:
+            # Оставляем только полные EPC (обычно 24-28 символов)
+            if len(match) >= 24:
+                # Обрезаем до стандартной длины если нужно
+                if len(match) > 28:
+                    match = match[:28]
+                if match not in epc_list:
+                    epc_list.append(match)
+    
+    # Если не нашли - пробуем найти любые длинные hex-строки
+    if not epc_list:
+        long_hex = re.findall(r'([0-9A-F]{24,28})', hex_data)
+        for candidate in long_hex:
+            if candidate.startswith(('30', '34')) and candidate not in epc_list:
+                epc_list.append(candidate)
+    
+    return epc_list
 
 # === MAIN ===
 if __name__ == "__main__":
@@ -296,7 +330,7 @@ if __name__ == "__main__":
     # Отладка: покажем сырые данные
     print(f"RawData({len(data)}bytes): {data.hex().upper()}", file=sys.stderr)
     
-    tags = parse_epc(data)
+    tags = parse_epc_advanced(data)
     
     for epc in tags:
         print(epc)
