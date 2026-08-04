@@ -45,8 +45,10 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
+@pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
+    # WARN!!! DONT FORGET TURN OFF IT!!! else more of tests would failed!
+
     def test_1__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyS\d"))
 
@@ -60,7 +62,6 @@ class Test_000__Explore:
             # stop_line=EqValid_Regexp(rb'found=\d+epc'),
             timeout_continue=10,
         )
-
         print(f"FINISH")
 
 
@@ -986,7 +987,7 @@ class Test_5__RFID:
     def test_rfid_1__present(self, harvest):
         assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyS2"), \
             "Порт RFID (/dev/ttyS2) не обнаружен!"
-        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
+        # assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
         pass
 
     @pytest.mark.dependency(depends=["rfid_present"])

@@ -944,6 +944,10 @@ root@harvest05:~#
         else:
             result = data
 
+        # === ЗАЩИТА ОТ ПУСТОГО ОТВЕТА ===
+        if not result:
+            return "" if return_str else []
+
         # 1=CMD ECHO --------------------
         if result[0].strip() == cmd.strip():
             result = result[1:]
