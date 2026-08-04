@@ -206,9 +206,59 @@ if ser and ser.is_open:
 print("FINISH", "="*50)
     """,
 
+    # ------------------------------------------------------------------------------------------------------------------
+    "/tmp/rfid_scan.py": """
+import serial, time, sys
+
+# 1=CREATE
+ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
+ser.reset_input_buffer()
+
+# 2=WRITE
+cmd = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
+ser.write(cmd)
+
+# 3=READ ALL
+response = b""
+start = time.time()
+while time.time() - start < 1.0:
+    chunk = ser.read(ser.in_waiting)
+    if chunk:
+        response += chunk
+    else:
+        time.sleep(0.05)
+ser.close()
+
+# 4=PARCE EPC
+epc_list = []
+i = 0
+while i < len(response):
+    if response[i] == 0xA0:
+        if i + 1 < len(response):
+            length = response[i+1]
+            if i + length + 1 <= len(response):
+                packet = response[i:i+length+1]
+                if len(packet) >= 6 and packet[2] == 0x01 and packet[3] == 0x81:
+                    for offset in range(6, len(packet) - 12):
+                        chunk = packet[offset:offset+12]
+                        # Ищем реальные EPC (не служебные)
+                        if any(chunk) and chunk[0] not in [0x00, 0x20, 0x30, 0x34, 0xE2]:
+                            epc = chunk.hex().upper()
+                            if len(epc) == 24 and epc not in epc_list:
+                                epc_list.append(epc)
+                                break
+                i += length + 1
+                continue
+    i += 1
+
+for epc in epc_list:
+    print(epc)
+print(f"found={len(epc_list)}epc")
+    """,
 
 
-    "/tmp/explore.py": """
+
+    "/tmp/explore__rfid_full_tries.py": """
 # /tmp/rfid_full_diag.py
 import serial
 import time
@@ -1868,210 +1918,3 @@ root@harvest05:~#
 
 
 # ======================================================================================================================
-class RFIDDevice:
-    """
-    Класс для работы с RFID-ридером через bash-команды на устройстве.
-    Полностью в стиле HarvestDevice!
-    """
-
-    # Команда для чтения меток (сырые байты)
-    CMD_READ_TAGS = b'\xA0\x0A\x01\x81\x01\x00\x08\x00\x00\x00\x00\xCB'
-    CMD_READ_TAGS_HEX = 'A00A018101000800000000CB'
-
-    def __init__(self, harvest: HarvestDevice):
-        self.harvest = harvest
-        self.device_path = None  # будет найден автоматически
-
-    def find_device(self) -> str | None:
-        """
-        Найти RFID-ридер в системе.
-        Возвращает путь к устройству (например, /dev/ttyUSB1) или None.
-        """
-        # 1. Смотрим все ttyUSB* устройства
-        output = self.harvest.cmd_timeout__write_read__payload(
-            "ls /dev/ttyUSB* 2>/dev/null || echo EMPTY",
-            timeout=2
-        )
-
-        if "EMPTY" in output or not output.strip():
-            return None
-
-        devices = output.strip().split()
-
-        # 2. Для каждого устройства пробуем отправить команду и получить ответ
-        for dev in devices:
-            # Отправляем команду чтения
-            cmd = f"echo -n -e '\\xA0\\x0A\\x01\\x81\\x01\\x00\\x08\\x00\\x00\\x00\\x00\\xCB' > {dev} 2>/dev/null"
-            self.harvest.cmd_timeout__write_read__payload(cmd, timeout=1)
-
-            # Читаем ответ (таймаут 1 секунда)
-            response = self.harvest.cmd_timeout__write_read__payload(
-                f"timeout 1 cat {dev} 2>/dev/null || echo NO_DATA",
-                timeout_continue=0.5
-            )
-
-            # Проверяем, что ответ начинается с A0 (заголовок ридера)
-            if "NO_DATA" not in response and response.strip():
-                # Парсим ответ: ищем байт A0 в hex-представлении
-                # Но для простоты: если есть хоть какие-то данные - считаем, что нашли
-                hex_response = response.strip()
-                if hex_response:
-                    self.device_path = dev
-                    print(f"[RFID] Найден на {dev}, ответ: {hex_response[:50]}...")
-                    return dev
-
-        return None
-
-    def read_tags(self, timeout: float = 1.0) -> str:
-        """
-        Прочитать метки и вернуть сырой hex-ответ.
-        """
-        if not self.device_path:
-            self.find_device()
-            if not self.device_path:
-                return "DEVICE_NOT_FOUND"
-
-        # Отправляем команду
-        cmd = f"echo -n -e '\\xA0\\x0A\\x01\\x81\\x01\\x00\\x08\\x00\\x00\\x00\\x00\\xCB' > {self.device_path} 2>/dev/null"
-        self.harvest.cmd_timeout__write_read__payload(cmd, timeout=1)
-
-        # Читаем ответ
-        response = self.harvest.cmd_timeout__write_read__payload(
-            f"timeout {timeout} cat {self.device_path} 2>/dev/null || echo NO_DATA",
-            timeout_continue=0.5
-        )
-
-        if "NO_DATA" in response or not response.strip():
-            return "NO_RESPONSE"
-
-        return response.strip()
-
-    def parse_tags(self, hex_response: str) -> list[str]:
-        """
-        Распарсить hex-строку в EPC меток.
-        Простой парсинг: ищем байт A0 и извлекаем EPC.
-        """
-        if not hex_response or hex_response in ["NO_RESPONSE", "DEVICE_NOT_FOUND"]:
-            return []
-
-        tags = []
-        # Убираем пробелы и переводим в верхний регистр
-        hex_clean = hex_response.replace(" ", "").replace("\n", "").replace("\r", "").upper()
-
-        # Ищем паттерн: A0 ?? 01 ?? (дальше 12 байт = 24 hex символа)
-        # Упрощённо: ищем A0 и берём следующие 24 символа (12 байт EPC)
-        import re
-        pattern = r'A0[0-9A-F]{2}01[0-9A-F]{2}([0-9A-F]{24})'
-        matches = re.findall(pattern, hex_clean)
-
-        if matches:
-            return matches
-        else:
-            # Если паттерн не сработал, пробуем найти просто последовательность из 24 hex-символов после A0
-            # Это упрощённо, но для начала сойдёт
-            for i in range(len(hex_clean) - 24):
-                if hex_clean[i:i + 2] == "A0":
-                    # Ищем после A0 ещё 2 байта (команда), потом 2 байта (статус/длина), потом 24 символа EPC
-                    potential_epc = hex_clean[i + 6:i + 30]  # пропускаем A0 + 2 байта + 2 байта
-                    if len(potential_epc) == 24:
-                        tags.append(potential_epc)
-                        break
-
-        return tags
-
-
-# ======================================================================================================================
-# ======================================================================================================================
-class RFIDDevice:
-    """Класс для работы с RFID-ридером."""
-
-    # Команда для чтения меток
-    CMD_READ = b'\xA0\x0A\x01\x81\x01\x00\x08\x00\x00\x00\x00\xCB'
-
-    def __init__(self, harvest: HarvestDevice):
-        self.harvest = harvest
-        self.device_path = None
-
-    def find_device(self) -> str | None:
-        """
-        Найти RFID-ридер среди всех ttyUSB* портов.
-        Исключаем GNSS (CH340) и GSM (Qualcomm).
-        """
-        # Получаем список всех портов
-        output = self.harvest.cmd_timeout__write_read__payload(
-            "ls /dev/ttyUSB* 2>/dev/null || echo EMPTY",
-            timeout=2
-        )
-
-        if "EMPTY" in output or not output.strip():
-            return None
-
-        ports = output.strip().split()
-        print(f"[RFID] Найдено портов: {ports}")
-
-        for port in ports:
-            # Проверяем, что это за устройство
-            props = self.harvest.get_info__usb(port)
-            model = props.get('ID_MODEL_FROM_DATABASE', '')
-            vendor = props.get('ID_VENDOR_FROM_DATABASE', '')
-            driver = props.get('ID_USB_DRIVER', '')
-
-            print(f"[RFID] Проверяем {port}: {vendor} / {model} / driver={driver}")
-
-            # Пропускаем GNSS (CH340)
-            if "CH340" in model or "QinHeng" in vendor:
-                print(f"  -> Это GNSS, пропускаем")
-                continue
-
-            # Пропускаем GSM (Qualcomm/Option)
-            if "Qualcomm" in vendor or "Option" in vendor:
-                print(f"  -> Это GSM, пропускаем")
-                continue
-
-            # Пробуем отправить команду и получить ответ
-            print(f"  -> Пробуем отправить команду на {port}")
-
-            # Отправляем команду
-            send_cmd = f"echo -n -e '\\xA0\\x0A\\x01\\x81\\x01\\x00\\x08\\x00\\x00\\x00\\x00\\xCB' > {port} 2>/dev/null"
-            self.harvest.cmd_timeout__write_read__payload(send_cmd, timeout=1)
-
-            # Читаем ответ
-            response = self.harvest.cmd_timeout__write_read__payload(
-                f"timeout 0.5 cat {port} 2>/dev/null || echo NO_DATA",
-                timeout_continue=0.3
-            )
-
-            # Проверяем, есть ли ответ
-            if "NO_DATA" not in response and response.strip():
-                # Проверяем, есть ли в ответе заголовок A0 (RFID)
-                if "A0" in response.upper():
-                    self.device_path = port
-                    print(f"[RFID] НАЙДЕН на {port}!")
-                    print(f"[RFID] Ответ: {response[:100]}...")
-                    return port
-                else:
-                    print(f"  -> Ответ есть, но без A0: {response[:50]}...")
-
-        return None
-
-    def read_tags(self, timeout: float = 0.5) -> str:
-        """Прочитать метки."""
-        if not self.device_path:
-            self.find_device()
-            if not self.device_path:
-                return "DEVICE_NOT_FOUND"
-
-        # Отправляем команду
-        send_cmd = f"echo -n -e '\\xA0\\x0A\\x01\\x81\\x01\\x00\\x08\\x00\\x00\\x00\\x00\\xCB' > {self.device_path} 2>/dev/null"
-        self.harvest.cmd_timeout__write_read__payload(send_cmd, timeout=1)
-
-        # Читаем ответ
-        response = self.harvest.cmd_timeout__write_read__payload(
-            f"timeout {timeout} cat {self.device_path} 2>/dev/null || echo NO_DATA",
-            timeout_continue=0.3
-        )
-
-        if "NO_DATA" in response or not response.strip():
-            return "NO_RESPONSE"
-
-        return response.strip()

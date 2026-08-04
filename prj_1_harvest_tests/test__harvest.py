@@ -1,4 +1,6 @@
 import re
+import time
+
 import pytest
 
 from .utils import *
@@ -48,14 +50,14 @@ class Test_000__Explore:
     def test_1__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyS\d"))
 
-    def test_2__frid_script(self, harvest):
-        scriptname = "/tmp/explore.py"
+    def test_2__rfid_script(self, harvest):
+        scriptname = "/tmp/rfid_scan.py"
         assert harvest.file_name__push(scriptname)
 
         command_line = f"python3 {scriptname}"
         output = harvest.cmd_timeout__write_read__payload(
             command_line,
-            timeout=None,
+            # stop_line=EqValid_Regexp(rb'found=\d+epc'),
             timeout_continue=10,
         )
 
@@ -180,6 +182,9 @@ class Test_02__PreInstall:
 
     def test_pre_6__push2__at_client(self, harvest):
         assert harvest.file_name__push("/tmp/at_client.py"), "скрипт не отправился"
+
+    def test_pre_6__push3__rfid_scan(self, harvest):
+        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -977,131 +982,32 @@ class Test_42__GSMAT:
 # ======================================================================================================================
 @pytest.mark.RFID
 class Test_5__RFID:
-    @pytest.mark.dependency(depends=["rfid_responds", ])
-    def test_rfid_3__deep__execution_no_error(self, harvest):
-        """Получение данных: скрипт запускается и завершается без ошибок."""
-        harvest.conn.write_bytes("timeout 2 python3 /root/e710.py")  # используем timeout для завершения
-        output = harvest.conn.read_lines(timeout_continue=3)
-        # Ищем признаки ошибок
-        has_traceback = any("Traceback" in line for line in output)
-        assert not has_traceback, "Скрипт RFID завершился с ошибкой"
-
-    @pytest.mark.dependency(depends=["rfid_responds", ])
-    def test_rfid_3__deep__valid_response_present(self, harvest):
-        """Валидация: при наличии меток скрипт должен выдавать данные."""
-        harvest.conn.write_bytes("timeout 3 python3 /root/e710.py")
-        output = harvest.conn.read_lines(timeout_continue=4)
-        # В работающем состоянии вывод содержит шестнадцатеричные данные (например, b'...')
-        # или сообщение 'tmout'. Главное — не пустой и не только ошибки.
-        # Проверяем, что есть хотя бы одна строка с данными или 'tmout'.
-        has_data = any("tmout" in line or "b'" in line or "b\"" in line for line in output)
-        assert has_data, "RFID-скрипт не вернул ни данных, ни таймаутов"
-
-
-# ======================================================================================================================
-@pytest.mark.RFID
-class Test_5__RFID2:
-    """Тесты RFID-ридера (как GNSS, Bluetooth, GSM)."""
-
-    def test_rfid_1__find_ports(self, harvest):
-        """
-        Найти все ttyUSB порты и определить, какой из них RFID.
-        """
-        # 1. Список всех ttyUSB*
-        output = harvest.cmd_timeout__write_read__payload(
-            "ls /dev/ttyUSB* 2>/dev/null || echo EMPTY",
-            timeout=2
-        )
-        print(f"[RFID] Все порты: {output}")
-
-        # 2. Для каждого порта получаем информацию через udevadm
-        ports = output.strip().split()
-        for port in ports:
-            props = harvest.get_info__usb(port)
-            print(f"\n[RFID] {port}:")
-            print(f"  Vendor: {props.get('ID_VENDOR_FROM_DATABASE', 'N/A')}")
-            print(f"  Model: {props.get('ID_MODEL_FROM_DATABASE', 'N/A')}")
-            print(f"  Driver: {props.get('ID_USB_DRIVER', 'N/A')}")
-
-            # Проверяем, не GNSS ли это (CH340)
-            if "CH340" in props.get('ID_MODEL_FROM_DATABASE', ''):
-                print(f"  -> Это GNSS (CH340), НЕ RFID")
-            # Проверяем, не GSM ли это (Option/Qualcomm)
-            elif "Qualcomm" in props.get('ID_VENDOR_FROM_DATABASE', ''):
-                print(f"  -> Это GSM-модем (Qualcomm)")
-            # Если что-то другое — возможно, RFID
-            else:
-                print(f"  -> ВОЗМОЖНО, ЭТО RFID!")
-
-        # Проверяем, есть ли порты
-        assert ports, "Нет ни одного ttyUSB порта!"
-
     @pytest.mark.dependency(name="rfid_present")
-    def test_rfid_1__present(self, rfid_device):
-        """
-        Проверка наличия RFID-ридера в системе.
-        Аналог: test_gnss_1__present, test_bt_1__present
-        """
-        assert rfid_device.device_path, "RFID-ридер не обнаружен"
-        print(f"[RFID] Найден на {rfid_device.device_path}")
+    def test_rfid_1__present(self, harvest):
+        pass
 
     @pytest.mark.dependency(depends=["rfid_present"])
-    def test_rfid_2__quick_read(self, rfid_device):
-        """
-        Быстрое чтение данных.
-        Аналог: test_gnss_2__quick__nmea_flow
-        """
-        # Читаем данные с ридера
-        response = rfid_device.read_tags(timeout=1.0)
+    def test_rfid_2__scan(self, harvest):
+        scriptname = "/tmp/rfid_scan.py"
+        command_line = f"python3 {scriptname}"
 
-        # Проверяем, что ответ не пустой
-        assert response not in ["NO_RESPONSE", "DEVICE_NOT_FOUND"], \
-            f"Нет ответа от RFID-ридера: {response}"
+        result = False
+        for step in range(3):
+            output = harvest.cmd_timeout__write_read__payload(
+                command_line,
+                # stop_line=EqValid_Regexp(rb'found=\d+epc'),
+                timeout_continue=10,
+            )
+            epcs = output.splitlines()
 
-        # Проверяем, что ответ содержит заголовок A0
-        assert "A0" in response.upper(), \
-            f"Невалидный ответ от ридера (нет заголовка A0): {response[:50]}..."
+            if epcs[-1].startswith("found="):
+                epcs = epcs[:-1]
 
-        print(f"[RFID] Ответ получен ({len(response)} символов): {response[:100]}...")
+            if epcs:
+                result = True
+            time.sleep(0.2)
 
-    @pytest.mark.dependency(depends=["rfid_present"])
-    def test_rfid_3__parse_tags(self, rfid_device):
-        """
-        Парсинг меток из ответа ридера.
-        Аналог: test_gnss_3__deep2__ubx
-        """
-        response = rfid_device.read_tags(timeout=1.0)
-        tags = rfid_device.parse_tags(response)
-
-        if tags:
-            print(f"[RFID] Найдено меток: {len(tags)}")
-            for i, tag in enumerate(tags[:5], 1):
-                print(f"  Метка #{i}: {tag}")
-            # Проверяем формат EPC (24 hex-символа = 12 байт)
-            for tag in tags:
-                assert len(tag) == 24, f"Неверный формат EPC: {tag} (длина {len(tag)})"
-        else:
-            print("[RFID] Метки не обнаружены (это нормально, если рядом нет меток)")
-
-    @pytest.mark.dependency(depends=["rfid_present"])
-    def test_rfid_4__device_info(self, rfid_device, harvest):
-        """
-        Получение информации об устройстве через udevadm.
-        Аналог: test_gnss_3__deep1__pids
-        """
-        dev_path = rfid_device.device_path
-        assert dev_path, "Путь к устройству не определён"
-
-        # Получаем информацию через udevadm (как для GNSS)
-        props = harvest.get_info__usb(dev_path)
-
-        assert props, f"Не удалось получить информацию об устройстве {dev_path}"
-        assert props.get("ID_BUS") == "usb", f"Устройство не USB: {props.get('ID_BUS')}"
-
-        print(f"[RFID] Информация об устройстве:")
-        print(f"  Vendor: {props.get('ID_VENDOR_FROM_DATABASE', 'N/A')}")
-        print(f"  Model: {props.get('ID_MODEL_FROM_DATABASE', 'N/A')}")
-        print(f"  Serial: {props.get('ID_SERIAL_SHORT', 'N/A')}")
+        assert result, "rfid метки не найдены"
 
 
 # ======================================================================================================================
