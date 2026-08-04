@@ -984,31 +984,15 @@ class Test_42__GSMAT:
 class Test_5__RFID:
     @pytest.mark.dependency(name="rfid_present")
     def test_rfid_1__present(self, harvest):
+        assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyS2"), \
+            "Порт RFID (/dev/ttyS2) не обнаружен!"
         assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
         pass
 
     @pytest.mark.dependency(depends=["rfid_present"])
     def test_rfid_2__scan(self, harvest):
-        scriptname = "/tmp/rfid_scan.py"
-        command_line = f"python3 {scriptname}"
-
-        result = False
-        for step in range(3):
-            output = harvest.cmd_timeout__write_read__payload(
-                command_line,
-                # stop_line=EqValid_Regexp(rb'found=\d+epc'),
-                timeout_continue=10,
-            )
-            epcs = output.splitlines()
-
-            if epcs[-1].startswith("found="):
-                epcs = epcs[:-1]
-
-            if epcs:
-                result = True
-            time.sleep(0.2)
-
-        assert result, "rfid метки не найдены"
+        epcs = harvest.rfid_scan(3)
+        assert epcs, "rfid метки не найдены"
 
 
 # ======================================================================================================================

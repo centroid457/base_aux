@@ -1999,5 +1999,34 @@ root@harvest05:~#
             'extensions': extensions,
         }
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def rfid_scan(self, steps: int | None = None) -> set[str]:
+        """
+        Запускает непрерывное чтение RFID-меток в течение заданного времени.
+        Возвращает список найденных уникальных EPC.
+        """
+        result = set()
+
+        scriptname = "/tmp/rfid_scan.py"
+        command_line = f"python3 {scriptname}"
+
+        steps = steps or 1
+        for step in range(steps):
+            output = self.cmd_timeout__write_read__payload(
+                command_line,
+                # stop_line=EqValid_Regexp(rb'found=\d+epc'),
+                timeout_continue=10,
+            )
+            s_result = output.splitlines()
+
+            if s_result[-1].startswith("found="):
+                s_result = s_result[:-1]
+
+            result.update(*s_result)
+
+            if step != steps-1:
+                time.sleep(0.2)
+
+        return result
 
 # ======================================================================================================================
