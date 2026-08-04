@@ -164,78 +164,327 @@ sys.exit(1)
 
     # ------------------------------------------------------------------------------------------------------------------
     "/tmp/rfid_e710.py": """
-from array import array
-import time
 import serial
-from serial.tools import list_ports
-import codecs
 import time
-#import RPi.GPIO as GPIO
+
+print("START", "="*50)
+    
+try:
+    ser = serial.Serial(
+        port='/dev/ttyS2',
+        baudrate = 115200,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        timeout=1
+    )
+    dataread = "a00a018101000800000000cb"
+    values = bytearray([160, 10, 1, 129, 1, 0, 8, 0, 0, 0, 0, 203])    
+    for step in range(3):
+        print()
+        print(f'{step=}')
+        print("WRITE=", values)
+        x = ser.write(values)
+        result = b""
+        while True:
+            time.sleep(0.2)
+            read_byte = ser.read(1)
+            if read_byte:
+                result += read_byte
+            else:
+                print(f"READ_{i}=", result)
+                break
+                
+        time.sleep(0.75)
+         
+except Exception as exc:
+    print(f"EXC={exc!r}")
+
+if ser and ser.is_open:
+    ser.close()
+
+print("FINISH", "="*50)
+    """,
+
+
+
+    "/tmp/explore.py": """
+# /tmp/rfid_full_diag.py
+import serial
+import time
 import sys
 
-devs = list(list_ports.comports())
-print(f"SYSTEM/{devs=}")
+def read_all_data(ser, timeout=1.0):
+    # Прочитать все данные из порта.
+    response = b""
+    start = time.time()
+    while time.time() - start < timeout:
+        chunk = ser.read(1024)
+        if chunk:
+            response += chunk
+        else:
+            time.sleep(0.05)
+    return response
 
-if False:
-    # Use the BOARD pin numbering scheme
-    PIN_NUM = 203
-    GPIO.setmode(GPIO.BOARD)
+def parse_epc_from_response(response):
+    # Извлечь все EPC из ответа
+    epc_list = []
+    i = 0
+    while i < len(response):
+        if response[i] == 0xA0:
+            if i + 1 < len(response):
+                length = response[i+1]
+                if i + length + 1 <= len(response):
+                    packet = response[i:i+length+1]
+                    if len(packet) >= 6 and packet[2] == 0x01 and packet[3] == 0x81:
+                        # Ищем EPC в данных
+                        for offset in range(6, len(packet) - 12):
+                            chunk = packet[offset:offset+12]
+                            # EPC: 12 байт, не все нули, не служебные (0x20, 0x30, 0x34, 0xE2)
+                            if any(chunk) and chunk[0] not in [0x20, 0x30, 0x34, 0xE2]:
+                                epc = chunk.hex().upper()
+                                if len(epc) == 24:
+                                    epc_list.append(epc)
+                                    break
+                    i += length + 1
+                    continue
+        i += 1
+    return epc_list
 
-    # Set pin 7 as an output
-    GPIO.setup(PIN_NUM, GPIO.OUT)
-
-    try:
-        while True:
-            # Turn LED on
-            GPIO.output(PIN_NUM, True)
-            time.sleep(1)
-
-            # Turn LED off
-            GPIO.output(PIN_NUM, False)
-            time.sleep(1)
-    except KeyboardInterrupt:
-        # Clean up GPIO settings on exit
-        GPIO.cleanup()
-
-ser = None
-print("="*50)
-
-for dev in devs:
-    print("-"*50)
-    print(f"\t{dev=}")
-    print(f"\t{dev.device=}")
+def print_packet_analysis(packet, label=""):
+    # Детальный анализ одного пакета
+    if not packet or packet[0] != 0xA0:
+        return
     
-    try:
-        ser = serial.Serial(
-            port=dev.device,
-            baudrate = 115200,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1
-        )
-        #команда читать метки
-        dataread = "a00a018101000800000000cb"
-        values = bytearray([160, 10, 1, 129, 1, 0, 8, 0, 0, 0, 0, 203])    
-        for step in range(3):
-            print(f'{step=}')
-            print("WRITE=", values)
-            x = ser.write(values)
-            time.sleep(0.4)
-            read = ser.read(84)
-            print(f"READ=", read)
-            time.sleep(0.75)
-             
-    except Exception as exc:
-        print(f"{exc!r}")
+    print(f"{label}")
+    print(f"  HEX: {packet.hex()}")
+    print(f"  LEN: {len(packet)} bytes")
     
-    if ser and ser.is_open:
+    if len(packet) >= 6:
+        print(f"  Header: {packet[0]:02X}")
+        print(f"  Length: {packet[1]} bytes")
+        print(f"  CMD: {packet[2]:02X}")
+        print(f"  Status: {packet[3]:02X}")
+        if len(packet) > 4:
+            print(f"  Data len: {packet[4]:02X}{packet[5]:02X}")
+            if len(packet) > 6:
+                print(f"  Data: {packet[6:].hex()}")
+                
+                # Ищем EPC в данных
+                for offset in range(6, len(packet) - 12):
+                    chunk = packet[offset:offset+12]
+                    if any(chunk) and chunk[0] not in [0x20, 0x30, 0x34, 0xE2]:
+                        epc = chunk.hex().upper()
+                        if len(epc) == 24:
+                            print(f"  ★ EPC at offset {offset}: {epc}")
+
+print("="*60)
+print("RFID E710 FULL DIAGNOSTIC")
+print("="*60)
+
+# ===================================================================
+# 1. ИНФОРМАЦИЯ О РИДЕРЕ (версия прошивки, параметры)
+# ===================================================================
+print("="*60)
+print("1. READER INFO (firmware, version)")
+print("="*60)
+
+info_commands = {
+    "VERSION": bytes([0xA0, 0x05, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
+    "READER_INFO": bytes([0xA0, 0x06, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
+    "GET_CONFIG": bytes([0xA0, 0x07, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00]),
+    "GET_FW_VERSION": bytes([0xA0, 0x08, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+}
+
+for name, cmd in info_commands.items():
+    print(f"--- {name} ---")
+    try:
+        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
+        ser.reset_input_buffer()
+        ser.write(cmd)
+        time.sleep(0.3)
+        response = read_all_data(ser, timeout=0.5)
         ser.close()
+        
+        if response:
+            print(f"Response ({len(response)} bytes): {response.hex()}")
+            # Парсим пакеты
+            i = 0
+            while i < len(response):
+                if response[i] == 0xA0 and i + 1 < len(response):
+                    length = response[i+1]
+                    if i + length + 1 <= len(response):
+                        packet = response[i:i+length+1]
+                        print_packet_analysis(packet, f"  Packet at {i}")
+                        i += length + 1
+                        continue
+                i += 1
+        else:
+            print("  No response")
+    except Exception as e:
+        print(f"  Error: {e}")
 
-print("="*50)
-print("Serial exit")    
-    """
+# ===================================================================
+# 2. ИНВЕНТАРИЗАЦИЯ (поиск ВСЕХ меток)
+# ===================================================================
+print("="*60)
+print("2. INVENTORY (find ALL tags)")
+print("="*60)
 
+inventory_commands = {
+    "INV_6": bytes([0xA0, 0x06, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
+    "INV_7": bytes([0xA0, 0x07, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00]),
+    "INV_8": bytes([0xA0, 0x08, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+    "INV_9": bytes([0xA0, 0x09, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+    "INV_10": bytes([0xA0, 0x0A, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+}
+
+all_epc = []
+for name, cmd in inventory_commands.items():
+    print(f"--- {name} ---")
+    try:
+        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
+        ser.reset_input_buffer()
+        ser.write(cmd)
+        time.sleep(0.5)  # Даём время на инвентаризацию
+        response = read_all_data(ser, timeout=1.0)
+        ser.close()
+        
+        if response:
+            print(f"Response ({len(response)} bytes): {response.hex()[:100]}...")
+            epc_list = parse_epc_from_response(response)
+            if epc_list:
+                print(f"  ★ Found {len(epc_list)} EPC(s):")
+                for epc in epc_list:
+                    print(f"    - {epc}")
+                    if epc not in all_epc:
+                        all_epc.append(epc)
+            else:
+                # Показываем структуру пакетов
+                i = 0
+                while i < len(response):
+                    if response[i] == 0xA0 and i + 1 < len(response):
+                        length = response[i+1]
+                        if i + length + 1 <= len(response):
+                            packet = response[i:i+length+1]
+                            print_packet_analysis(packet, f"  Packet at {i}")
+                            i += length + 1
+                            continue
+                    i += 1
+        else:
+            print("  No response")
+    except Exception as e:
+        print(f"  Error: {e}")
+
+# ===================================================================
+# 3. РЕЖИМ ЧТЕНИЯ (текущая команда)
+# ===================================================================
+print("="*60)
+print("3. READ BANK (your current command)")
+print("="*60)
+
+read_cmd = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
+
+for attempt in range(3):
+    print(f"--- Read attempt {attempt+1} ---")
+    try:
+        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
+        ser.reset_input_buffer()
+        ser.write(read_cmd)
+        time.sleep(0.3)
+        response = read_all_data(ser, timeout=1.0)
+        ser.close()
+        
+        if response:
+            print(f"Response ({len(response)} bytes)")
+            epc_list = parse_epc_from_response(response)
+            if epc_list:
+                print(f"  ★ Found {len(epc_list)} EPC(s):")
+                for epc in epc_list:
+                    print(f"    - {epc}")
+                    if epc not in all_epc:
+                        all_epc.append(epc)
+            else:
+                print("  No EPC found in response")
+                # Показываем первый пакет
+                i = 0
+                while i < len(response):
+                    if response[i] == 0xA0 and i + 1 < len(response):
+                        length = response[i+1]
+                        if i + length + 1 <= len(response):
+                            packet = response[i:i+length+1]
+                            print_packet_analysis(packet, f"  Packet at {i}")
+                            i += length + 1
+                            continue
+                    i += 1
+        else:
+            print("  No response")
+        time.sleep(0.5)
+    except Exception as e:
+        print(f"  Error: {e}")
+
+# ===================================================================
+# 4. РЕЖИМ НЕПРЕРЫВНОГО ЧТЕНИЯ
+# ===================================================================
+print("="*60)
+print("4. CONTINUOUS READ (3 attempts)")
+print("="*60)
+
+for i in range(3):
+    print(f"--- Read {i+1} ---")
+    try:
+        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
+        ser.reset_input_buffer()
+        ser.write(read_cmd)
+        time.sleep(0.3)
+        response = read_all_data(ser, timeout=0.8)
+        ser.close()
+        
+        epc_list = parse_epc_from_response(response)
+        if epc_list:
+            print(f"  Found: {', '.join(epc_list)}")
+            for epc in epc_list:
+                if epc not in all_epc:
+                    all_epc.append(epc)
+        else:
+            print("  No tags")
+        time.sleep(0.5)
+    except Exception as e:
+        print(f"  Error: {e}")
+
+# ===================================================================
+# 5. ИТОГОВЫЙ ОТЧЕТ
+# ===================================================================
+print("="*60)
+print("5. SUMMARY")
+print("="*60)
+
+if all_epc:
+    print(f"★ Total unique EPCs found: {len(all_epc)}")
+    for idx, epc in enumerate(all_epc, 1):
+        print(f"  Tag {idx}: {epc}")
+else:
+    print("No tags found!")
+
+# Проверяем, сколько меток физически на антенне
+print("="*60)
+print("RECOMMENDATIONS")
+print("="*60)
+
+if len(all_epc) == 0:
+    print("1. No tags detected - check antenna connection")
+    print("2. Make sure tags are UHF RFID EPC Class 1 Gen 2")
+    print("3. Try placing tags closer to antenna")
+elif len(all_epc) == 1:
+    print("1. Only one tag detected - good for testing")
+    print("2. Try adding more tags to test multi-tag reading")
+elif len(all_epc) >= 2:
+    print(f"★ {len(all_epc)} tags detected - system working correctly!")
+    print("1. Multi-tag reading works")
+    print("2. You can now implement tag inventory in your application")
+    
+print("="*60)
+    """,
 }
 
 

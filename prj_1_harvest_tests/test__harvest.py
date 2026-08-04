@@ -46,17 +46,17 @@ def _rules__raws_hex__understanding():
 # @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     def test_1__devices_all__usb(self, harvest):
-        harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
+        harvest.get_info__usb_all(EqValid_Regexp(r"ttyS\d"))
 
     def test_2__frid_script(self, harvest):
-        scriptname = "/tmp/rfid_e710.py"
+        scriptname = "/tmp/explore.py"
         assert harvest.file_name__push(scriptname)
 
         command_line = f"python3 {scriptname}"
         output = harvest.cmd_timeout__write_read__payload(
             command_line,
             timeout=None,
-            timeout_continue=5,
+            timeout_continue=10,
         )
 
         print(f"FINISH")
