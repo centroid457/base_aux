@@ -5,7 +5,7 @@ import re
 import json
 from datetime import datetime
 
-from .utils import HarvestDevice
+from .utils import *
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
@@ -625,6 +625,22 @@ def pytest_unconfigure(config):
         patch_html__title(filepath=new_path, new_title=new_name)
     except OSError as exc:
         print(f"Ошибка переименования отчёта: {exc!r}")
+
+
+# ======================================================================================================================
+@pytest.fixture(scope="session")
+def rfid_device(harvest) -> RFIDDevice:
+    """
+    Находит RFID-ридер и возвращает объект для работы с ним.
+    """
+    rfid = RFIDDevice(harvest)
+
+    # Пробуем найти устройство
+    if not rfid.find_device():
+        pytest.skip("RFID-ридер не обнаружен")
+
+    print(f"[RFID] Устройство найдено: {rfid.device_path}")
+    return rfid
 
 
 # ======================================================================================================================

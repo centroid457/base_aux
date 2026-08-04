@@ -43,17 +43,23 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(True, reason="used for exploring executions/methods")
+# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
-    def test_3__devices_all__usb(self, harvest):
+    def test_1__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyUSB\d"))
 
-    def test_gsmat_3__at(self, harvest, gsm_at__port):
-        """AT+CPIN? -> READY.
-        [at_output='+CPIN: READY\nOK']
-        """
-        harvest.at_cmd__raw("AT+CPIN?", port=gsm_at__port, timeout=2)
-        # harvest.send__at_command__simple("AT+CPIN?", port=gsm_at_port, timeout=2)
+    def test_2__frid_script(self, harvest):
+        scriptname = "/tmp/rfid_e710.py"
+        assert harvest.file_name__push(scriptname)
+
+        command_line = f"python3 {scriptname}"
+        output = harvest.cmd_timeout__write_read__payload(
+            command_line,
+            timeout=None,
+            timeout_continue=5,
+        )
+
+        print(f"FINISH")
 
 
 # ======================================================================================================================
@@ -971,21 +977,6 @@ class Test_42__GSMAT:
 # ======================================================================================================================
 @pytest.mark.RFID
 class Test_5__RFID:
-
-    @pytest.mark.dependency(name="rfid_script_present")
-    def test_rfid_0__script_send_present(self, harvest):
-        """Физическое наличие скрипта."""
-        assert True, "не получилось отправить скрипт"
-        assert True, "Скрипт /root/e710.py не найден"
-
-    @pytest.mark.dependency(depends=["rfid_script_present", ], name="rfid_present")
-    def test_rfid_1__present(self, harvest):
-        raise NotImplementedError()
-
-    @pytest.mark.dependency(depends=["rfid_present", ], name="rfid_responds")
-    def test_rfid_2__quick__info(self, harvest):
-        raise NotImplementedError()
-
     @pytest.mark.dependency(depends=["rfid_responds", ])
     def test_rfid_3__deep__execution_no_error(self, harvest):
         """Получение данных: скрипт запускается и завершается без ошибок."""
@@ -1005,6 +996,112 @@ class Test_5__RFID:
         # Проверяем, что есть хотя бы одна строка с данными или 'tmout'.
         has_data = any("tmout" in line or "b'" in line or "b\"" in line for line in output)
         assert has_data, "RFID-скрипт не вернул ни данных, ни таймаутов"
+
+
+# ======================================================================================================================
+@pytest.mark.RFID
+class Test_5__RFID2:
+    """Тесты RFID-ридера (как GNSS, Bluetooth, GSM)."""
+
+    def test_rfid_1__find_ports(self, harvest):
+        """
+        Найти все ttyUSB порты и определить, какой из них RFID.
+        """
+        # 1. Список всех ttyUSB*
+        output = harvest.cmd_timeout__write_read__payload(
+            "ls /dev/ttyUSB* 2>/dev/null || echo EMPTY",
+            timeout=2
+        )
+        print(f"[RFID] Все порты: {output}")
+
+        # 2. Для каждого порта получаем информацию через udevadm
+        ports = output.strip().split()
+        for port in ports:
+            props = harvest.get_info__usb(port)
+            print(f"\n[RFID] {port}:")
+            print(f"  Vendor: {props.get('ID_VENDOR_FROM_DATABASE', 'N/A')}")
+            print(f"  Model: {props.get('ID_MODEL_FROM_DATABASE', 'N/A')}")
+            print(f"  Driver: {props.get('ID_USB_DRIVER', 'N/A')}")
+
+            # Проверяем, не GNSS ли это (CH340)
+            if "CH340" in props.get('ID_MODEL_FROM_DATABASE', ''):
+                print(f"  -> Это GNSS (CH340), НЕ RFID")
+            # Проверяем, не GSM ли это (Option/Qualcomm)
+            elif "Qualcomm" in props.get('ID_VENDOR_FROM_DATABASE', ''):
+                print(f"  -> Это GSM-модем (Qualcomm)")
+            # Если что-то другое — возможно, RFID
+            else:
+                print(f"  -> ВОЗМОЖНО, ЭТО RFID!")
+
+        # Проверяем, есть ли порты
+        assert ports, "Нет ни одного ttyUSB порта!"
+
+    @pytest.mark.dependency(name="rfid_present")
+    def test_rfid_1__present(self, rfid_device):
+        """
+        Проверка наличия RFID-ридера в системе.
+        Аналог: test_gnss_1__present, test_bt_1__present
+        """
+        assert rfid_device.device_path, "RFID-ридер не обнаружен"
+        print(f"[RFID] Найден на {rfid_device.device_path}")
+
+    @pytest.mark.dependency(depends=["rfid_present"])
+    def test_rfid_2__quick_read(self, rfid_device):
+        """
+        Быстрое чтение данных.
+        Аналог: test_gnss_2__quick__nmea_flow
+        """
+        # Читаем данные с ридера
+        response = rfid_device.read_tags(timeout=1.0)
+
+        # Проверяем, что ответ не пустой
+        assert response not in ["NO_RESPONSE", "DEVICE_NOT_FOUND"], \
+            f"Нет ответа от RFID-ридера: {response}"
+
+        # Проверяем, что ответ содержит заголовок A0
+        assert "A0" in response.upper(), \
+            f"Невалидный ответ от ридера (нет заголовка A0): {response[:50]}..."
+
+        print(f"[RFID] Ответ получен ({len(response)} символов): {response[:100]}...")
+
+    @pytest.mark.dependency(depends=["rfid_present"])
+    def test_rfid_3__parse_tags(self, rfid_device):
+        """
+        Парсинг меток из ответа ридера.
+        Аналог: test_gnss_3__deep2__ubx
+        """
+        response = rfid_device.read_tags(timeout=1.0)
+        tags = rfid_device.parse_tags(response)
+
+        if tags:
+            print(f"[RFID] Найдено меток: {len(tags)}")
+            for i, tag in enumerate(tags[:5], 1):
+                print(f"  Метка #{i}: {tag}")
+            # Проверяем формат EPC (24 hex-символа = 12 байт)
+            for tag in tags:
+                assert len(tag) == 24, f"Неверный формат EPC: {tag} (длина {len(tag)})"
+        else:
+            print("[RFID] Метки не обнаружены (это нормально, если рядом нет меток)")
+
+    @pytest.mark.dependency(depends=["rfid_present"])
+    def test_rfid_4__device_info(self, rfid_device, harvest):
+        """
+        Получение информации об устройстве через udevadm.
+        Аналог: test_gnss_3__deep1__pids
+        """
+        dev_path = rfid_device.device_path
+        assert dev_path, "Путь к устройству не определён"
+
+        # Получаем информацию через udevadm (как для GNSS)
+        props = harvest.get_info__usb(dev_path)
+
+        assert props, f"Не удалось получить информацию об устройстве {dev_path}"
+        assert props.get("ID_BUS") == "usb", f"Устройство не USB: {props.get('ID_BUS')}"
+
+        print(f"[RFID] Информация об устройстве:")
+        print(f"  Vendor: {props.get('ID_VENDOR_FROM_DATABASE', 'N/A')}")
+        print(f"  Model: {props.get('ID_MODEL_FROM_DATABASE', 'N/A')}")
+        print(f"  Serial: {props.get('ID_SERIAL_SHORT', 'N/A')}")
 
 
 # ======================================================================================================================
