@@ -984,6 +984,7 @@ class Test_42__GSMAT:
 class Test_5__RFID:
     @pytest.mark.dependency(name="rfid_present")
     def test_rfid_1__present(self, harvest):
+        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
         pass
 
     @pytest.mark.dependency(depends=["rfid_present"])

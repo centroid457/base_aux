@@ -208,52 +208,89 @@ print("FINISH", "="*50)
 
     # ------------------------------------------------------------------------------------------------------------------
     "/tmp/rfid_scan.py": """
+# ===================================================================
+# /tmp/rfid_scan.py - компактный сканер RFID
+# ===================================================================
 import serial, time, sys
 
-# 1=CREATE
-ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
-ser.reset_input_buffer()
+# Конфиг
+PORT = '/dev/ttyS2'
+BAUD = 115200
+TIMEOUT = 0.5
 
-# 2=WRITE
-cmd = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
-ser.write(cmd)
+# Команда чтения
+CMD = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
 
-# 3=READ ALL
-response = b""
-start = time.time()
-while time.time() - start < 1.0:
-    chunk = ser.read(ser.in_waiting)
-    if chunk:
-        response += chunk
-    else:
-        time.sleep(0.05)
-ser.close()
+# Служебные EPC (фильтруем)
+SERVICE_EPC = {
+    "010000000000000000000051",
+    "010000000000000000000680",
+    "401400000000000019000001",
+    "404200000000000019000003",
+}
 
-# 4=PARCE EPC
-epc_list = []
-i = 0
-while i < len(response):
-    if response[i] == 0xA0:
-        if i + 1 < len(response):
-            length = response[i+1]
-            if i + length + 1 <= len(response):
-                packet = response[i:i+length+1]
-                if len(packet) >= 6 and packet[2] == 0x01 and packet[3] == 0x81:
-                    for offset in range(6, len(packet) - 12):
-                        chunk = packet[offset:offset+12]
-                        # Ищем реальные EPC (не служебные)
-                        if any(chunk) and chunk[0] not in [0x00, 0x20, 0x30, 0x34, 0xE2]:
-                            epc = chunk.hex().upper()
-                            if len(epc) == 24 and epc not in epc_list:
-                                epc_list.append(epc)
-                                break
-                i += length + 1
-                continue
-    i += 1
+def read_response():
+    # Отправить команду и прочитать ответ
+    ser = serial.Serial(PORT, BAUD, timeout=TIMEOUT)
+    ser.reset_input_buffer()
+    ser.write(CMD)
+    
+    response = b""
+    start = time.time()
+    while time.time() - start < 1.0:
+        chunk = ser.read(ser.in_waiting or 1)
+        if chunk:
+            response += chunk
+        else:
+            time.sleep(0.05)
+    ser.close()
+    return response
 
-for epc in epc_list:
-    print(epc)
-print(f"found={len(epc_list)}epc")
+def parse_epc(data):
+    # Извлечь EPC из ответа
+    epc_list = []
+    i = 0
+    while i < len(data):
+        if data[i] != 0xA0:
+            i += 1
+            continue
+        if i + 1 >= len(data):
+            break
+            
+        length = data[i+1]
+        if i + length + 1 > len(data):
+            i += 1
+            continue
+            
+        packet = data[i:i+length+1]
+        i += length + 1
+        
+        # Проверяем, что это ответ на чтение
+        if len(packet) < 6 or packet[2] != 0x01 or packet[3] != 0x81:
+            continue
+        
+        # Ищем EPC в данных пакета
+        for offset in range(6, len(packet) - 12):
+            chunk = packet[offset:offset+12]
+            # Проверяем: не нулевой, не служебный
+            if any(chunk) and chunk[0] not in (0x00, 0x20, 0x30, 0x34, 0xE2):
+                epc = chunk.hex().upper()
+                if epc not in epc_list and epc not in SERVICE_EPC:
+                    epc_list.append(epc)
+                break  # нашли EPC в этом пакете, выходим
+    
+    return epc_list
+
+# === MAIN ===
+if __name__ == "__main__":
+    data = read_response()
+    tags = parse_epc(data)
+    
+    for epc in tags:
+        print(epc)
+    
+    print(f"found={len(tags)}epc")
+    sys.exit(0 if tags else 1)
     """,
 
 
