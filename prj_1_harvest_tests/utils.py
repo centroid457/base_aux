@@ -209,28 +209,17 @@ print("FINISH", "="*50)
     # ------------------------------------------------------------------------------------------------------------------
     "/tmp/rfid_scan.py": """
 # ===================================================================
-# /tmp/rfid_scan.py - компактный сканер RFID
+# /tmp/rfid_scan.py - ИСПРАВЛЕННАЯ ВЕРСИЯ
 # ===================================================================
 import serial, time, sys
 
-# Конфиг
 PORT = '/dev/ttyS2'
 BAUD = 115200
 TIMEOUT = 0.5
 
-# Команда чтения
 CMD = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
 
-# Служебные EPC (фильтруем)
-SERVICE_EPC = {
-    "010000000000000000000051",
-    "010000000000000000000680",
-    "401400000000000019000001",
-    "404200000000000019000003",
-}
-
 def read_response():
-    # Отправить команду и прочитать ответ
     ser = serial.Serial(PORT, BAUD, timeout=TIMEOUT)
     ser.reset_input_buffer()
     ser.write(CMD)
@@ -247,43 +236,66 @@ def read_response():
     return response
 
 def parse_epc(data):
-    # Извлечь EPC из ответа
     epc_list = []
     i = 0
+    
     while i < len(data):
+        # Ищем начало пакета 0xA0
         if data[i] != 0xA0:
             i += 1
             continue
+        
         if i + 1 >= len(data):
             break
-            
+        
         length = data[i+1]
         if i + length + 1 > len(data):
             i += 1
             continue
-            
+        
         packet = data[i:i+length+1]
         i += length + 1
         
-        # Проверяем, что это ответ на чтение
+        # Проверяем тип пакета (0x01 0x81 - инвентаризация)
         if len(packet) < 6 or packet[2] != 0x01 or packet[3] != 0x81:
             continue
         
-        # Ищем EPC в данных пакета
-        for offset in range(6, len(packet) - 12):
-            chunk = packet[offset:offset+12]
-            # Проверяем: не нулевой, не служебный
-            if any(chunk) and chunk[0] not in (0x00, 0x20, 0x30, 0x34, 0xE2):
-                epc = chunk.hex().upper()
-                if epc not in epc_list and epc not in SERVICE_EPC:
-                    epc_list.append(epc)
-                break  # нашли EPC в этом пакете, выходим
+        # Ищем EPC данные
+        # Обычно EPC начинается после заголовка (примерно с 7-го байта)
+        # Ищем последовательности, которые начинаются с 0x30 или 0x34 (характерно для EPC)
+        for j in range(5, len(packet)):
+            # Пропускаем одиночные байты и ищем начало EPC
+            if packet[j] in (0x30, 0x34):  # Характерное начало EPC
+                # Проверяем, что дальше идут данные
+                remaining = len(packet) - j
+                if remaining >= 14:  # Минимум 14 байт для полного EPC
+                    # Извлекаем до 20 байт (40 hex символов)
+                    epc_bytes = packet[j:j+min(20, remaining)]
+                    
+                    # Фильтруем - оставляем только hex-символы
+                    hex_str = ''
+                    for b in epc_bytes:
+                        hex_str += f'{b:02X}'
+                    
+                    # Проверяем, что строка похожа на EPC (начинается с 30/34 и достаточной длины)
+                    if len(hex_str) >= 20:  # Минимум 10 байт = 20 символов
+                        # Обрезаем до разумной длины (20-28 символов)
+                        for cut_len in [28, 26, 24, 22, 20]:
+                            candidate = hex_str[:cut_len]
+                            if candidate.startswith(('30', '34')) and candidate not in epc_list:
+                                epc_list.append(candidate)
+                                break
+                    break
     
     return epc_list
 
 # === MAIN ===
 if __name__ == "__main__":
     data = read_response()
+    
+    # Отладка: покажем сырые данные
+    print(f"RawData({len(data)}bytes): {data.hex().upper()}", file=sys.stderr)
+    
     tags = parse_epc(data)
     
     for epc in tags:
