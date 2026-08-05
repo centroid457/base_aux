@@ -987,7 +987,7 @@ class Test_5__RFID:
     def test_rfid_1__present(self, harvest):
         assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyS2"), \
             "Порт RFID (/dev/ttyS2) не обнаружен!"
-        # assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
+        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
         pass
 
     @pytest.mark.dependency(depends=["rfid_present"])

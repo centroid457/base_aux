@@ -217,6 +217,7 @@ PORT = '/dev/ttyS2'
 BAUD = 115200
 TIMEOUT = 0.5
 
+# READ BANK
 CMD = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
 
 def read_response():
@@ -328,7 +329,7 @@ if __name__ == "__main__":
     data = read_response()
     
     # Отладка: покажем сырые данные
-    print(f"RawData({len(data)}bytes): {data.hex().upper()}", file=sys.stderr)
+    print(f"RawData({len(data)}bytes):[{data.hex().upper()}]", file=sys.stderr)
     
     tags = parse_epc_advanced(data)
     
