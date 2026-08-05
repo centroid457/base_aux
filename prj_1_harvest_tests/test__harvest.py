@@ -70,12 +70,13 @@ class Test_000__Explore:
         bt_scaned = harvest.bt__scan()
         print(f"{bt_scaned=}")
 
-        bt_get_known_devices = harvest.bt_get_known_devices()
-        print(f"{bt_get_known_devices=}")
+        info = harvest.bt__get_dev_info("D4:81:ED:BB:AA:6B")
+        print(json.dumps(info, indent=2))
 
-        for mac in [list(bt_get_known_devices)[0], "E5:C6:EB:4E:F3:05", "F6:D4:61:D3:B7:55"]:
-            result = harvest.bt_get_device_info(mac)
-            print(result)
+
+        # for mac in [list(bt_get_known_devices)[0], "E5:C6:EB:4E:F3:05", "F6:D4:61:D3:B7:55"]:
+        #     result = harvest.bt__get_dev_info(mac)
+        #     print(result)
 
 
 # ======================================================================================================================
@@ -179,6 +180,10 @@ class Test_02__PreInstall:
         if not harvest.cmd_timeout__check_executed_success(f'python3 -c "import serial"'):
             assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-serial")
+    def test_pre_4__python_bleak(self, harvest, internet_access):
+        if not harvest.cmd_timeout__check_executed_success(f'python3 -c "import bleak"'):
+            assert internet_access, "нет интернета для установки пакетов"
+            assert harvest.apt_install("python3-bleak")
 
     # @pytest.mark.skip("just for now")
     def test_pre_5__wifi1__iw(self, harvest, internet_access):

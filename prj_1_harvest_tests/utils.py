@@ -296,8 +296,6 @@ if __name__ == "__main__":
     sys.exit(0 if tags else 1)
     """,
 
-
-
     "/tmp/explore__rfid_full_tries.py": """
 # /tmp/rfid_full_diag.py
 import serial
@@ -574,6 +572,85 @@ elif len(all_epc) >= 2:
     print("2. You can now implement tag inventory in your application")
     
 print("="*60)
+    """,
+
+    # ------------------------------------------------------------------------------------------------------------------
+    "/tmp/bt_ultrasonic.py": r"""
+#!/usr/bin/env python3
+# Скрипт для чтения данных с ультразвуковых BLE датчиков.
+import sys
+import time
+import asyncio
+from bleak import BleakScanner, BleakClient
+
+UART_TX_UUID = "dec01433-ceb1-cec0-dec0-ff0123456789"
+DEVICE_NAME = "UltraSonic"
+TIMEOUT = 15
+PACKETS_MIN = 3
+
+async def main():
+    target_mac = sys.argv[1] if len(sys.argv) > 1 else None
+
+    print("SCAN_START", flush=True)
+
+    # 1. Поиск устройства
+    device = None
+    if target_mac:
+        device = await BleakScanner.find_device_by_address(target_mac, timeout=5.0)
+        if device:
+            print(f"DEVICE_FOUND_BY_MAC:{device.address}", flush=True)
+
+    if not device:
+        device = await BleakScanner.find_device_by_name(DEVICE_NAME, timeout=10.0)
+        if device:
+            print(f"DEVICE_FOUND:{device.address}", flush=True)
+
+    if not device:
+        print("ERROR:Device not found")
+        return
+
+    # 2. Подключение и сбор данных
+    packets = []
+    start_time = time.time()
+
+    def on_data(sender, data):
+        try:
+            msg = data.decode('utf-8', errors='replace').strip()
+            if msg:
+                packets.append(msg)
+                print(f"PACKET:{msg}", flush=True)
+        except Exception:
+            pass
+
+    try:
+        print("CONNECTING...", flush=True)
+        async with BleakClient(device.address, timeout=15.0) as client:
+            print(f"CONNECTED:{client.is_connected}", flush=True)
+
+            if not client.is_connected:
+                print("ERROR:Connection failed")
+                return
+
+            await client.start_notify(UART_TX_UUID, on_data)
+            print("WAITING_DATA...", flush=True)
+
+            while len(packets) < PACKETS_MIN and (time.time() - start_time) < TIMEOUT:
+                await asyncio.sleep(0.1)
+
+            await client.stop_notify(UART_TX_UUID)
+            print("DISCONNECTED", flush=True)
+
+    except Exception as e:
+        print(f"ERROR:{e}", flush=True)
+        return
+
+    print(f"PACKETS_COUNT:{len(packets)}", flush=True)
+    if packets:
+        print(f"LAST_PACKET:{packets[-1]}", flush=True)
+    print("DONE", flush=True)
+
+if __name__ == "__main__":
+    asyncio.run(main())
     """,
 }
 
@@ -2046,37 +2123,12 @@ root@harvest05:~#
             raise Exception("Bluetooth поиск не запустился")
 
         # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
-        bt_scaned = re.findall(r'\s*Device\s(\S+)\s(.+)\s*\n*', output)
         result = dict()
-        for mac, name in bt_scaned:
-            result[mac] = name
-        return bt_scaned
+        for mac, name in re.findall(r'Device\s+([0-9A-F:]{17})\s+(.+)', output):
+            result[mac] = name.strip()
+        return result
 
-    # BT Eltrasonic ------------------------------------------------
-    def bt_get_known_devices(self) -> dict[str, str]:
-        """
-        Возвращает словарь известных Bluetooth-устройств: {MAC: имя}.
-        [COM16.WRITEREAD]
-            write=[timeout 5 bluetoothctl devices]
-            read=[Device D4:81:ED:BB:AA:6B UltraSonic]
-        {'D4:81:ED:BB:AA:6B': 'UltraSonic'}
-        """
-        output = self.cmd_timeout__write_read__payload(
-            "bluetoothctl devices",
-            timeout=5,
-            timeout_continue=2,
-        )
-
-        devices = {}
-        # Формат: "Device XX:XX:XX:XX:XX:XX Name"
-        for line in output.split('\n'):
-            match = re.match(r'Device\s+([0-9A-F:]{17})\s+(.+)', line.strip())
-            if match:
-                devices[match.group(1)] = match.group(2)
-
-        return devices
-
-    def bt_get_device_info(self, mac: str) -> str:
+    def bt__get_dev_info(self, mac: str) -> dict[str, Any]:
         """
         Получает информацию о конкретном устройстве.
         Важно: mac передается как отдельный аргумент, без кавычек в шелле.
@@ -2098,15 +2150,192 @@ root@harvest05:~#
             ManufacturerData Key: 0x0059
             ManufacturerData Value:
           54 47 ff ff ff ff 0b 44 01                       TG.....D.       ]
+
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl info FC:82:20:D6:82:CF]
+            read=[Device FC:82:20:D6:82:CF (public)
+            Name: COROS NOMAD BD4407
+            Alias: COROS NOMAD BD4407
+            Appearance: 0x00c0
+            Paired: no
+            Bonded: no
+            Trusted: no
+            Blocked: no
+            Connected: no
+            LegacyPairing: no
+            UUID: Battery Service           (0000180f-0000-1000-8000-00805f9b34fb)
+            UUID: Device Information        (0000180a-0000-1000-8000-00805f9b34fb)
+            UUID: Tencent Holdings Limited. (0000fee7-0000-1000-8000-00805f9b34fb)
+            ServiceData Key: 00003802-0000-1000-8000-00805f9b34fb
+            ServiceData Value:
+          fc 82 20 d6 82 cf                                .. ...          ]
+
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl info FC:82:20:D6:82:11]
+            read=[Device FC:82:20:D6:82:11 not available]
+
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl info FC:82:20:D6:8]   # bad MAC
+            read=[Device FC:82:20:D6:8 not available]
+
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl info D4:81:ED:BB:AA:6B]
+            read=[Device D4:81:ED:BB:AA:6B (random)
+            Name: UltraSonic
+            Alias: UltraSonic
+            Paired: no
+            Bonded: no
+            Trusted: no
+            Blocked: no
+            Connected: yes
+            LegacyPairing: no
+            UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)
+            UUID: Generic Attribute Profile (00001801-0000-1000-8000-00805f9b34fb)
+            UUID: Vendor specific           (dec01400-ceb1-cec0-dec0-ff0123456789)
+            ManufacturerData Key: 0x0059
+            ManufacturerData Value:
+          54 47 ff ff ff ff 0b 44 01                       TG.....D.       ]
+        {
+          "mac": "D4:81:ED:BB:AA:6B",
+          "random": true,
+          "name": "UltraSonic",
+          "alias": "UltraSonic",
+          "paired": false,
+          "bonded": false,
+          "trusted": false,
+          "blocked": false,
+          "connected": true,
+          "legacy_pairing": false,
+          "uuids": {
+            "Generic Access Profile": "00001800-0000-1000-8000-00805f9b34fb",
+            "Generic Attribute Profile": "00001801-0000-1000-8000-00805f9b34fb",
+            "Vendor specific": "dec01400-ceb1-cec0-dec0-ff0123456789"
+          },
+          "manufacturer_key": "0x0059",
+          "manufacturer_value": "54 47 ff ff ff ff 0b 44 01 TG.....D."
+        }
         """
-        # Используем printf вместо echo для точного контроля
         cmd = f"bluetoothctl info {mac}"
         output = self.cmd_timeout__write_read__payload(
             cmd,
             timeout=5,
             timeout_continue=3,
         )
-        return output
+
+        result: dict[str, bool | str | Any | None] = {
+            "mac": mac,
+            "random": None,     # random/public
+            "name": None,
+            "alias": None,
+            "paired": None,
+            "bonded": None,
+            "trusted": None,
+            "blocked": None,
+            "connected": None,
+            "legacy_pairing": None,
+            "uuids": {},
+            "manufacturer_key": None,
+            "manufacturer_value": None,
+        }
+
+        # Флаг для сбора ManufacturerData Value (многострочное поле)
+        collecting_manufacturer_value = False
+        manufacturer_value_parts = []
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 1. Первая строка: Device XX:XX:XX:XX:XX:XX (random/public) --------------
+            if line.startswith("Device "):
+                # "Device D4:81:ED:BB:AA:6B (random)"
+                # "Device D4:81:ED:BB:AA:6B not available"
+                if "not available" in line:
+                    return {"mac": mac, "error": "not available"}
+
+                result["random"] = "(random)" in line
+
+            # 2. Простые поля: Name:...
+            elif line.startswith("Name:"):
+                result["name"] = line.split(":", 1)[1].strip()
+
+            elif line.startswith("Alias:"):
+                result["alias"] = line.split(":", 1)[1].strip()
+
+            elif line.startswith("Paired:"):
+                result["paired"] = "yes" in line.lower()
+
+            elif line.startswith("Bonded:"):
+                result["bonded"] = "yes" in line.lower()
+
+            elif line.startswith("Trusted:"):
+                result["trusted"] = "yes" in line.lower()
+
+            elif line.startswith("Blocked:"):
+                result["blocked"] = "yes" in line.lower()
+
+            elif line.startswith("Connected:"):
+                result["connected"] = "yes" in line.lower()
+
+            elif line.startswith("LegacyPairing:"):
+                result["legacy_pairing"] = "yes" in line.lower()
+
+            # 3. UUID: Name    (hex-uuid)
+            elif line.startswith("UUID:"):
+                # "UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)"
+                match = re.match(r'UUID:\s+(.+?)\s+\(([0-9a-fA-F-]+)\)', line)
+                if match:
+                    result["uuids"][match.group(1).strip()] = match.group(2).strip()
+
+            # 4. ManufacturerData Key:
+            elif line.startswith("ManufacturerData Key:"):
+                result["manufacturer_key"] = line.split(":", 1)[1].strip()
+
+            # 5. ManufacturerData Value: (заголовок)
+            elif line.startswith("ManufacturerData Value:"):
+                collecting_manufacturer_value = True
+                manufacturer_value_parts = []
+
+            # 6. Строки ManufacturerData Value (после заголовка)
+            elif collecting_manufacturer_value and line:
+                # "  54 47 ff ff ff ff 0b 44 01                       TG.....D.       "
+                # Берем только HEX-часть (первые несколько слов)
+                hex_part = ' '.join(line.split()[:20])  # HEX-байты идут первыми
+                manufacturer_value_parts.append(hex_part)
+
+            # 7. Конец ManufacturerData Value (пустая строка или начало нового поля)
+            elif collecting_manufacturer_value and not line:
+                collecting_manufacturer_value = False
+                result["manufacturer_value"] = ' '.join(manufacturer_value_parts)
+
+        # На случай, если ManufacturerData Value был в конце вывода
+        if collecting_manufacturer_value and manufacturer_value_parts:
+            result["manufacturer_value"] = ' '.join(manufacturer_value_parts)
+
+        return result
+
+    # BT Ultrasonic ------------------------------------------------
+    def bt_get_known_devices(self) -> dict[str, str]:
+        """
+        Возвращает словарь известных Bluetooth-устройств: {MAC: имя}.
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl devices]      # NOT CORRECT!!!
+            read=[Device D4:81:ED:BB:AA:6B UltraSonic]
+        {'D4:81:ED:BB:AA:6B': 'UltraSonic'}
+        """
+        output = self.cmd_timeout__write_read__payload(
+            "bluetoothctl devices",
+            timeout=5,
+            timeout_continue=2,
+        )
+
+        devices = {}
+        # Формат: "Device XX:XX:XX:XX:XX:XX Name"
+        for line in output.split('\n'):
+            match = re.match(r'Device\s+([0-9A-F:]{17})\s+(.+)', line.strip())
+            if match:
+                devices[match.group(1)] = match.group(2)
+
+        return devices
 
     def bt_check_var_lib(self) -> dict[str, Any]:
         """
@@ -2184,6 +2413,106 @@ root@harvest05:~#
                 return mac
 
         return None
+
+    # ==================================================================================================================
+    # BLUETOOTH
+    # ==================================================================================================================
+    def bt_find_ultrasonic(self) -> str | None:
+        """
+        Ищет UltraSonic с Nordic UART (ManufacturerData 0x0059).
+        Сначала кеш, потом сканирование.
+        """
+        # 1. Кеш
+        devices = self.bt__scan()
+        for mac, name in devices.items():
+            if "ultrasonic" not in name.lower():
+                continue
+            info = self.bt_get_info(mac)
+            if "0x0059" in info:
+                print(f"[BT] Найден в кеше: {mac}")
+                return mac
+
+        # 2. Сканирование
+        print("[BT] Сканирование...")
+        output = self.cmd_timeout__write_read__payload(
+            "timeout 10 bluetoothctl -- scan on 2>&1",
+            timeout=3,
+            timeout_continue=10,
+        )
+        self.conn.write_bytes("pkill bluetoothctl")
+
+        for mac in re.findall(r'\[NEW\]\s+Device\s+([0-9A-F:]{17})\s+UltraSonic', output, re.I):
+            info = self.bt_get_info(mac)
+            if "0x0059" in info:
+                print(f"[BT] Найден при сканировании: {mac}")
+                return mac
+
+        # 3. Запасной вариант — любой UltraSonic
+        for mac, name in devices.items():
+            if "ultrasonic" in name.lower():
+                print(f"[BT] Взят без проверки: {mac}")
+                return mac
+
+        return None
+
+    def bt_check_deps(self) -> bool:
+        """Проверка bleak."""
+        if self.cmd_timeout__check_executed_success('python3 -c "import bleak" 2>/dev/null'):
+            return True
+        # Пробуем установить
+        return self.cmd_timeout__check_executed_success(
+            "pip3 install bleak 2>/dev/null || apt-get install -y python3-bleak 2>/dev/null",
+            timeout_continue=30,
+        )
+
+    def bt_collect_packets(self, mac: str | None = None, packets_min: int = 3, timeout: float = 20.0) -> dict:
+        """
+        Собирает пакеты с датчика.
+        Returns: {"mac": str, "packets": list, "count": int, "success": bool}
+        """
+        cmd = "python3 /tmp/bt_ultrasonic.py"
+        if mac:
+            cmd += f" {mac}"
+
+        output = self.cmd_timeout__write_read__payload(cmd, timeout=timeout, timeout_continue=timeout)
+
+        result = {"mac": None, "packets": [], "count": 0, "success": False}
+
+        for line in output.split('\n'):
+            line = line.strip()
+            if line.startswith("DEVICE_FOUND"):
+                result["mac"] = line.split(":", 1)[1].strip()
+            elif line.startswith("PACKET:"):
+                result["packets"].append(line.split(":", 1)[1].strip())
+            elif line.startswith("PACKETS_COUNT:"):
+                result["count"] = int(line.split(":", 1)[1].strip())
+
+        result["success"] = result["mac"] is not None and result["count"] >= packets_min
+        return result
+
+    @staticmethod
+    def bt_validate_packet(packet: str) -> dict:
+        """Валидация структуры пакета."""
+        import json
+
+        result = {"valid": False, "fields": {}, "missing": []}
+        expected = ["UTC", "Distance up", "Distance side", "Temperature", "Battery", "Percentage"]
+
+        # Ищем первый JSON
+        for candidate in re.findall(r'\{[^}]+\}', packet):
+            try:
+                data = json.loads(candidate)
+                for field in expected:
+                    if field in data:
+                        result["fields"][field] = data[field]
+                    else:
+                        result["missing"].append(field)
+                result["valid"] = len(result["fields"]) >= 4
+                break
+            except json.JSONDecodeError:
+                continue
+
+        return result
 
 
 # ======================================================================================================================
