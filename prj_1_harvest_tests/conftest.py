@@ -551,7 +551,7 @@ root@harvest05:~#
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
 def gsm_at__dump(harvest, gsm_at__port):
-    dump = harvest.at_cmd__dump(port=gsm_at__port)
+    dump = harvest.at_cmd__dump(port=gsm_at__port, method_simple=True)
     print(json.dumps(dump, indent=2, ensure_ascii=False))
     return dump
 

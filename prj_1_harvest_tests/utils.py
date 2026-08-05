@@ -662,6 +662,18 @@ class HarvestDevice:
         # =========================================================================
         "AT",  # ответ эхо - проверка функционирования модема на канал
 
+        # =========================================================================
+        # попытка определить номер телефона
+        "AT+CNUM",                # Основной запрос номера - НЕДОСТУПЕН НА M2M SIM!!!
+        # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
+        # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
+        # "AT+CIMI",                # IMSI (для идентификации)
+        # "AT+CRSM=176,28589,0,0,12",  # Чтение EF_MSISDN с SIM (прямой доступ)
+        #
+        # "+CNUM",  #
+        # "+CNUM?",  #
+        # "AT+CNUM?",  #
+        # "AT+CNUM",  #
 
         # =========================================================================
         # ИДЕНТИФИКАЦИЯ И ВЕРСИИ
@@ -678,7 +690,8 @@ class HarvestDevice:
         "AT+CPIN?",  # Статус SIM: READY, SIM PIN, SIM PUK, SIM PIN2...
         # "AT+CPINR=\"SIM PIN\"",  # Остаток попыток ввода PIN
         # "AT+CPINR=\"SIM PUK\"",  # Остаток попыток ввода PUK
-        "AT+CCID",  # ICCID (серийный номер SIM-карты)
+        "AT+CCID",      # ICCID (серийный номер SIM-карты)
+        "AT+ICCID",  # ICCID (серийный номер SIM-карты)
 
         # =========================================================================
         # СЕТЬ И РЕГИСТРАЦИЯ
@@ -1209,7 +1222,7 @@ root@harvest05:~#
     #     print(f"[SIMPLE_AT] {at_output=}")
     #     return at_output
 
-    def at_cmd__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0) -> str:
+    def at_cmd__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0, timeout_continue=None) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
 
@@ -1250,7 +1263,7 @@ root@harvest05:~#
         at_output = self.cmd_timeout__write_read__payload(
             cmd=cmd_full,
             timeout=timeout,
-            timeout_continue=timeout * 0.8,
+            timeout_continue=timeout_continue or timeout * 0.8,
         )
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
@@ -1307,6 +1320,7 @@ root@harvest05:~#
 
         {
           "AT": "OK",
+          "AT+CNUM": "OK",
           "ATI": "Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK",
           "AT+CGMI": "INCORPORATED\nOK",
           "AT+CGMM": "A7682E-R\nOK",
@@ -1316,17 +1330,18 @@ root@harvest05:~#
           "AT+GSN": "865286077380516\nOK",
           "AT+CPIN?": "+CPIN: READY\nOK",
           "AT+CCID": "ERROR",
+          "AT+ICCID": "ERROR",
           "AT+COPS?": "+COPS: 0,2,\"25020\",7\nOK",
           "AT+CREG?": "+CREG: 0,1\nOK",
           "AT+CGREG?": "+CGREG: 0,1\nOK",
           "AT+CEREG?": "+CEREG: 0,1\nOK",
-          "AT+CSQ": "+CSQ: 22,99\nOK",
-          "AT+CESQ": "+CESQ: 43,99,255,255,7,38\nOK",
+          "AT+CSQ": "+CSQ: 25,99\nOK",
+          "AT+CESQ": "+CESQ: 49,99,255,255,24,55\nOK",
           "AT*CNTI=0": "ERROR",
           "AT+WS46?": "+WS46:30\nOK",
-          "AT+CGDCONT?": "+CGDCONT: 1,\"IP\",\"simsim.MNC047.MCC250.GPRS\",\"10.0.188.251\",0,0,,,,\nOK",
-          "AT+CGCONTRDP": "+CGCONTRDP: 1,5,\"simsim.MNC047.MCC250.GPRS\",\"10.0.188.251\",\"\",\"100.77.8.8\",\"100.77.4.4\",\"\",\"\",0,01400\nOK",
-          "AT+CGPADDR": "+CGPADDR: 1,10.0.188.251\nOK",
+          "AT+CGDCONT?": "+CGDCONT: 1,\"IP\",\"simsim.MNC047.MCC250.GPRS\",\"10.0.206.58\",0,0,,,,\nOK",
+          "AT+CGCONTRDP": "+CGCONTRDP: 1,5,\"simsim.MNC047.MCC250.GPRS\",\"10.0.206.58\",\"\",\"100.77.8.8\",\"100.77.4.4\",\"\",\"\",0,01400\nOK",
+          "AT+CGPADDR": "+CGPADDR: 1,10.0.206.58\nOK",
           "AT+CGACT?": "+CGACT: 1,1\nOK",
           "AT+CGATT?": "+CGATT: 1\nOK",
           "AT+CIMS?": "ERROR",
