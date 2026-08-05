@@ -1980,10 +1980,12 @@ root@harvest05:~#
             )
             s_result = output.splitlines()
 
+            if s_result[0].startswith("RawData"):
+                s_result = s_result[1:]
             if s_result[-1].startswith("found="):
                 s_result = s_result[:-1]
 
-            result.update(*s_result)
+            result.update(s_result)
 
             if step != steps-1:
                 time.sleep(0.2)

@@ -992,7 +992,42 @@ class Test_5__RFID:
 
     @pytest.mark.dependency(depends=["rfid_present"])
     def test_rfid_2__scan(self, harvest):
-        epcs = harvest.rfid_scan(3)
+        """
+        ТКАНЬ ФАРАДЕЯ
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(6bytes):[A004018122B8]
+        found=0epc]
+        
+        Байт	Значение (HEX)	Назначение	Комментарий
+        1	A0	Header (Заголовок)	Фиксированный заголовок пакета. Он был и в вашей команде.
+        2	04	Length (Длина)	Длина пакета данных. 0x04 = 4 байта. Это байты 3, 4, 5 и 6.
+        3	01	Command (Команда)	Эхо вашей команды. 0x01 — это команда инвентаризации.
+        4	81	Status (Статус)	Самая важная часть! 0x81 — это стандартный код "Operation Succeeded" (Операция успешна). Ошибки были бы другими кодами.
+        5-6	22 B8	Checksum (Контрольная сумма)	Это контрольная сумма (обычно CRC-16) для байтов 3 и 4 (01 81).
+
+
+        1EPC
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(43bytes):[A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7]
+        3000E2806894000050035FD77070
+        found=1epc]
+
+        2EPC
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(86bytes):[A02901810002203000E2806894000040138945853E812981293000E2806894000040138945853E10040146A02901810002203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F6]
+        3000E2806894000040138945853E
+        3000E2806894000050035FD77070
+        found=2epc]
+        """
+        epcs = None
+        for step in range(3):
+            epcs = harvest.rfid_scan(3)
+            print(f"{step=} detected {epcs=}")
+            if epcs:
+                break
         assert epcs, "rfid метки не найдены"
 
 
