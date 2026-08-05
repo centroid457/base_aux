@@ -654,6 +654,189 @@ if __name__ == "__main__":
     """,
 }
 
+SCRIPTS["/tmp/gsm_ussd_tinkoff.py"] = r"""import serial
+import time
+
+PORT = "/dev/ttyUSB2"
+BAUD = 115200
+
+def send_ussd(ser, ussd, wait=10.0):
+    print(f"{ser.in_waiting=}")
+    ser.reset_input_buffer()
+    cmd = 'AT+CUSD=1,"%s",15' % ussd
+    ser.write((cmd + "\r\n").encode())
+    print("  SENT: %s" % cmd)
+    result = b""
+    deadline = time.time() + 12.0
+    while time.time() < deadline:
+        chunk = ser.read(1024)
+        if chunk:
+            result += chunk
+            if b"+CUSD:" in result or b"ERROR" in result or b"OK" in result:
+                break
+        else:
+            time.sleep(0.2)
+    print("bytes=", result)
+    return result.decode(errors="replace").strip()
+
+ser = serial.Serial(PORT, BAUD, timeout=1.0)
+print("PORT: %s" % PORT)
+
+# USSD для Tinkoff Mobile
+ussd_list = [
+    ("Balance *101#", "*101#"),
+    ("My number *111*0887#", "*111*0887#"),
+    ("Services *111#", "*111#"),
+    ("Balance *100#", "*100#"),
+]
+
+for name, ussd in ussd_list:
+    print("-" * 50)
+    print("USSD: %s (%s)" % (name, ussd))
+    resp = send_ussd(ser, ussd)
+    for line in resp.split("\r\n"):
+        line = line.strip()
+        print(f"{line=}")
+    time.sleep(1.0)
+
+ser.close()
+print("DONE")
+"""
+
+SCRIPTS["/tmp/gsm_ussd_tinkoff2.py"] = r"""import serial
+import time
+
+PORT = "/dev/ttyUSB2"
+BAUD = 115200
+
+def send_at(ser, cmd, wait=1.0):
+    print(f"{ser.in_waiting=}")
+    ser.reset_input_buffer()
+    ser.write((cmd + "\r\n").encode())
+    time.sleep(wait)
+    result = b""
+    deadline = time.time() + 3.0
+    while time.time() < deadline:
+        chunk = ser.read(1024)
+        if chunk:
+            result += chunk
+            if b"OK" in result or b"ERROR" in result or b"+CUSD:" in result:
+                break
+        else:
+            time.sleep(0.1)
+    return result.decode(errors="replace").strip()
+
+ser = serial.Serial(PORT, BAUD, timeout=1.0)
+print("PORT: %s" % PORT)
+
+# 1. Запрос баланса
+print("-" * 50)
+print("USSD: Balance *101#")
+resp = send_at(ser, 'AT+CUSD=1,"*101#",15', wait=12.0)
+for line in resp.split("\r\n"):
+    line = line.strip()
+    if line and "SENT:" not in line:
+        print("  %s" % line)
+
+# 2. Ответ на меню (обычно "1" для баланса)
+print("-" * 50)
+print("USSD: Send '1' to menu")
+resp = send_at(ser, 'AT+CUSD=1,"1",15', wait=10.0)
+for line in resp.split("\r\n"):
+    line = line.strip()
+    if line and "SENT:" not in line:
+        print("  %s" % line)
+
+# 3. Проверка ожидающих USSD
+print("-" * 50)
+print("AT: Check pending USSD")
+resp = send_at(ser, "AT+CUSD?", wait=3.0)
+for line in resp.split("\r\n"):
+    line = line.strip()
+    if line:
+        print("  %s" % line)
+
+ser.close()
+print("DONE")
+"""
+SCRIPTS["/tmp/gsm_ussd_final.py"] = r"""import serial
+import time
+
+PORT = "/dev/ttyUSB2"
+BAUD = 115200
+
+def send_at(ser, cmd, wait=1.0):
+    ser.write((cmd + "\r\n").encode())
+    time.sleep(wait)
+    result = b""
+    deadline = time.time() + 3.0
+    while time.time() < deadline:
+        chunk = ser.read(1024)
+        if chunk:
+            result += chunk
+        else:
+            time.sleep(0.1)
+    return result.decode(errors="replace").strip()
+
+def ussd_session(ser, ussd, wait=8.0):
+    ser.reset_input_buffer()
+    cmd = 'AT+CUSD=1,"%s",15' % ussd
+    print("  SEND: %s" % cmd)
+    ser.write((cmd + "\r\n").encode())
+
+    result = b""
+    deadline = time.time() + wait
+    while time.time() < deadline:
+        chunk = ser.read(1024)
+        if chunk:
+            result += chunk
+            text = result.decode(errors="replace")
+            if "+CUSD:" in text and ("OK" in text or "ERROR" in text):
+                break
+        else:
+            time.sleep(0.2)
+
+    return result.decode(errors="replace").strip()
+
+ser = serial.Serial(PORT, BAUD, timeout=0.5)
+print("PORT: %s" % PORT)
+
+print("AT: %s" % send_at(ser, "AT"))
+print("")
+
+print("=" * 50)
+print("USSD: *105# (Tele2 balance)")
+resp = ussd_session(ser, "*105#", wait=10.0)
+for line in resp.split("\r\n"):
+    line = line.strip()
+    if line:
+        print("  %s" % line)
+
+time.sleep(1)
+print("")
+print("=" * 50)
+print("Check session status:")
+resp = send_at(ser, "AT+CUSD?", wait=2.0)
+for line in resp.split("\r\n"):
+    line = line.strip()
+    if line:
+        print("  %s" % line)
+
+if "+CUSD: 1" in resp or "+CUSD: 5" in resp:
+    print("")
+    print("=" * 50)
+    print("Closing session...")
+    resp = send_at(ser, 'AT+CUSD=2', wait=3.0)
+    for line in resp.split("\r\n"):
+        line = line.strip()
+        if line:
+            print("  %s" % line)
+
+ser.close()
+print("")
+print("DONE")
+"""
+
 
 # ======================================================================================================================
 class HarvestDevice:
@@ -1318,6 +1501,22 @@ root@harvest05:~#
         """
         Опрашивает AT-команды из AT_CMD__DUMP
 
+        ----------------------------
+        M2M SIM
+        я запустил симку на телефоне
+        вызовы
+        *201#
+        *105#
+        дают ответ Неполадки подключения или неверный код MMI
+        при попытке позвонить комуто - идет переадресация вызова и завершение вызова сразу
+
+        Действие	Результат	Причина
+        *201#, *105#	"Неверный код MMI"	USSD-сервис отключен на уровне HLR оператора
+        Звонок	Переадресация → сброс	Голос заблокирован, включена безусловная переадресация (CFU) на "заглушку"
+        SMS	Не отправляются/не доходят	SMS-центр не настроен или услуга отключена
+
+        ----------------------------
+        HARVEST=M2M
         {
           "AT": "OK",
           "AT+CNUM": "OK",
@@ -1350,6 +1549,43 @@ root@harvest05:~#
           "AT+CSCLK?": "+CSCLK: 0\nOK",
           "AT+CPMUTEMP?": "ERROR",
           "AT+CBC": "+CBC: 3.830V\nOK",
+          "AT+CCED?": "ERROR",
+          "AT*CELLINFO?": "ERROR",
+          "AT+CEER": "+CEER: \"0 Unknown\"\nOK"
+        }
+        SIM Tinkoff!!!
+        {
+          "AT": "OK",
+          "AT+CNUM": "OK",
+          "ATI": "Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK",
+          "AT+CGMI": "INCORPORATED\nOK",
+          "AT+CGMM": "A7682E-R\nOK",
+          "AT+CGMR": "+CGMR: A011B02A7682M6_DS_FOTA\nOK",
+          "AT+CGSN": "865286077380516\nOK",
+          "AT+CIMI": "250621002917518\nOK",
+          "AT+GSN": "865286077380516\nOK",
+          "AT+CPIN?": "+CPIN: READY\nOK",
+          "AT+CCID": "ERROR",
+          "AT+ICCID": "ERROR",
+          "AT+COPS?": "+COPS: 0,2,\"25020\",7\nOK",
+          "AT+CREG?": "+CREG: 0,1\nOK",
+          "AT+CGREG?": "+CGREG: 0,1\nOK",
+          "AT+CEREG?": "+CEREG: 0,1\nOK",
+          "AT+CSQ": "+CSQ: 19,99\nOK",
+          "AT+CESQ": "+CESQ: 36,99,255,255,24,40\nOK",
+          "AT*CNTI=0": "ERROR",
+          "AT+WS46?": "+WS46:30\nOK",
+          "AT+CGDCONT?": "+CGDCONT: 1,\"IP\",\"tt.MNC062.MCC250.GPRS\",\"10.74.253.15\",0,0,,,,\nOK",
+          "AT+CGCONTRDP": "+CGCONTRDP: 1,5,\"tt.MNC062.MCC250.GPRS\",\"10.74.253.15\",\"\",\"10.219.250.1\",\"10.219.250.2\",\"\",\"\",0,0\nOK",
+          "AT+CGPADDR": "+CGPADDR: 1,10.74.253.15\nOK",
+          "AT+CGACT?": "+CGACT: 1,1\nOK",
+          "AT+CGATT?": "+CGATT: 1\nOK",
+          "AT+CIMS?": "ERROR",
+          "AT+CIREG?": "+CME ERROR: Operation not supported",
+          "AT+CFUN?": "+CFUN: 1\nOK",
+          "AT+CSCLK?": "+CSCLK: 0\nOK",
+          "AT+CPMUTEMP?": "ERROR",
+          "AT+CBC": "+CBC: 3.810V\nOK",
           "AT+CCED?": "ERROR",
           "AT*CELLINFO?": "ERROR",
           "AT+CEER": "+CEER: \"0 Unknown\"\nOK"
