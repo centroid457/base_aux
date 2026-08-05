@@ -1992,4 +1992,198 @@ root@harvest05:~#
 
         return result
 
+    # BT Eltrasonic ====================================================================================================
+    def bt__scan(self) -> dict[str, str] | NoReturn:   # {mac: name}
+        """
+        ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
+        bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
+        [7] 3968
+        Discovery started
+        [CHG] Controller A6:20:96:B6:A9:5E Discovering: yes
+        [NEW] Device 68:4E:05:DA:46:2C 403
+        [NEW] Device 68:4E:05:DA:37:2E 405
+        [NEW] Device E3:77:12:64:59:DE UltraSonic
+        [NEW] Device C8:69:CD:28:12:BA C8-69-CD-28-12-BA
+        [NEW] Device 47:CD:B2:66:05:A7 47-CD-B2-66-05-A7
+        [NEW] Device FC:82:20:D6:82:CF COROS NOMAD BD4407
+        [NEW] Device EB:1C:93:49:2D:D2 UltraSonic
+        [NEW] Device 78:84:C0:B5:89:AA 78-84-C0-B5-89-AA
+        [NEW] Device 54:F2:9F:0E:1E:D1 404
+        [NEW] Device 43:05:75:66:62:C5 43-05-75-66-62-C5
+        [NEW] Device CE:4A:2C:2D:67:47 UltraSonic
+        [NEW] Device E5:C6:EB:4E:F3:05 UltraSonic
+        [NEW] Device F6:D4:61:D3:B7:55 UltraSonic
+        [NEW] Device CE:60:07:4B:72:02 UltraSonic
+        [NEW] Device E9:B6:5B:44:1D:AC MTBO-NB
+        [NEW] Device C7:22:DB:64:DC:AE MTBO-01-2G
+        [NEW] Device 8C:26:AA:E8:88:13 8C-26-AA-E8-88-13
+        [2]   Done                    bluetoothctl -- scan on
+        [3]   Done                    bluetoothctl -- scan on
+        [4]   Done                    bluetoothctl -- scan on
+        [5]   Done                    bluetoothctl -- scan on
+        [6]   Done                    bluetoothctl -- scan on
+        Failed to stop discovery: org.bluez.Error.Failed
+        root@harvest05:~#
+        root@harvest05:~# [NEW] Device F8:5E:A0:93:C9:A1 d5420
+        [CHG] Device EB:1C:93:49:2D:D2 RSSI: -75
+        [CHG] Device 78:84:C0:B5:89:AA RSSI: -80
+        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -81
+        [CHG] Device CE:60:07:4B:72:02 RSSI: -69
+        [CHG] Device C7:22:DB:64:DC:AE RSSI: -103
+        [NEW] Device 66:4E:D7:D9:93:3C 66-4E-D7-D9-93-3C
+        [CHG] Device F8:5E:A0:93:C9:A1 RSSI: -75
+        [CHG] Device FC:82:20:D6:82:CF RSSI: -84
+        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -71
+        [CHG] Device E3:77:12:64:59:DE RSSI: -72
+        [CHG] Device C7:22:DB:64:DC:AE RSSI: -94
+        ---- Sent utf8 encoded message: "pkill bluetoothctl\r\n" ----
+        pkill bluetoothctl
+        root@harvest05:~#
+        root@harvest05:~#
+        """
+        output = self.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=1, timeout_continue=1)
+        if "Discovery started" not in output:
+            raise Exception("Bluetooth поиск не запустился")
+
+        # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
+        bt_scaned = re.findall(r'\s*Device\s(\S+)\s(.+)\s*\n*', output)
+        result = dict()
+        for mac, name in bt_scaned:
+            result[mac] = name
+        return bt_scaned
+
+    # BT Eltrasonic ------------------------------------------------
+    def bt_get_known_devices(self) -> dict[str, str]:
+        """
+        Возвращает словарь известных Bluetooth-устройств: {MAC: имя}.
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl devices]
+            read=[Device D4:81:ED:BB:AA:6B UltraSonic]
+        {'D4:81:ED:BB:AA:6B': 'UltraSonic'}
+        """
+        output = self.cmd_timeout__write_read__payload(
+            "bluetoothctl devices",
+            timeout=5,
+            timeout_continue=2,
+        )
+
+        devices = {}
+        # Формат: "Device XX:XX:XX:XX:XX:XX Name"
+        for line in output.split('\n'):
+            match = re.match(r'Device\s+([0-9A-F:]{17})\s+(.+)', line.strip())
+            if match:
+                devices[match.group(1)] = match.group(2)
+
+        return devices
+
+    def bt_get_device_info(self, mac: str) -> str:
+        """
+        Получает информацию о конкретном устройстве.
+        Важно: mac передается как отдельный аргумент, без кавычек в шелле.
+
+        [COM16.WRITEREAD]
+            write=[timeout 5 bluetoothctl info D4:81:ED:BB:AA:6B]
+            read=[Device D4:81:ED:BB:AA:6B (random)
+            Name: UltraSonic
+            Alias: UltraSonic
+            Paired: no
+            Bonded: no
+            Trusted: no
+            Blocked: no
+            Connected: yes
+            LegacyPairing: no
+            UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)
+            UUID: Generic Attribute Profile (00001801-0000-1000-8000-00805f9b34fb)
+            UUID: Vendor specific           (dec01400-ceb1-cec0-dec0-ff0123456789)
+            ManufacturerData Key: 0x0059
+            ManufacturerData Value:
+          54 47 ff ff ff ff 0b 44 01                       TG.....D.       ]
+        """
+        # Используем printf вместо echo для точного контроля
+        cmd = f"bluetoothctl info {mac}"
+        output = self.cmd_timeout__write_read__payload(
+            cmd,
+            timeout=5,
+            timeout_continue=3,
+        )
+        return output
+
+    def bt_check_var_lib(self) -> dict[str, Any]:
+        """
+        Проверяет /var/lib/bluetooth на наличие сохраненных сопряжений.
+        """
+        result = {
+            "adapter_dirs": [],
+            "device_dirs": [],
+            "info_files": [],
+        }
+
+        # Находим директорию адаптера
+        list_output = self.cmd_timeout__write_read__payload(
+            "ls /var/lib/bluetooth/ 2>/dev/null",
+            timeout=3,
+            timeout_continue=1,
+        )
+
+        for adapter in list_output.split():
+            adapter = adapter.strip()
+            if not adapter or adapter == "cache":
+                continue
+
+            adapter_path = f"/var/lib/bluetooth/{adapter}"
+            result["adapter_dirs"].append(adapter)
+
+            # Находим директории устройств
+            devices_output = self.cmd_timeout__write_read__payload(
+                f"ls {adapter_path}/ 2>/dev/null",
+                timeout=3,
+                timeout_continue=1,
+            )
+
+            for device in devices_output.split():
+                device = device.strip()
+                if not device or device == "cache":
+                    continue
+
+                device_path = f"{adapter_path}/{device}"
+                result["device_dirs"].append(device_path)
+
+                # Проверяем наличие info-файла
+                info_check = self.cmd_timeout__write_read__payload(
+                    f"test -f {device_path}/info && echo 'EXISTS' || echo 'NO'",
+                    timeout=3,
+                    timeout_continue=1,
+                )
+
+                if "EXISTS" in info_check:
+                    info_content = self.cmd_timeout__write_read__payload(
+                        f"cat {device_path}/info 2>/dev/null",
+                        timeout=3,
+                        timeout_continue=1,
+                    )
+                    result["info_files"].append({
+                        "path": f"{device_path}/info",
+                        "content": info_content,
+                    })
+
+        return result
+
+    def bt_ultrasonic__get_mac_from_cache(self) -> str | None:
+        """
+        Пытается найти MAC-адрес UltraSonic в кеше BlueZ.
+        Это быстрее, чем новое сканирование.
+
+        Returns:
+            MAC-адрес или None, если не найден.
+        """
+        known = self.bt_get_known_devices()
+
+        for mac, name in known.items():
+            if "ultrasonic" in name.lower():
+                print(f"[CACHE] Найден UltraSonic: {mac} ({name})")
+                return mac
+
+        return None
+
+
 # ======================================================================================================================

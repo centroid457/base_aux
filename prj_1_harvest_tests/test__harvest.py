@@ -45,13 +45,15 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(True, reason="used for exploring executions/methods")
+# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     # WARN!!! DONT FORGET TURN OFF IT!!! else more of tests would failed!
 
+    @pytest.mark.skip
     def test_1__devices_all__usb(self, harvest):
         harvest.get_info__usb_all(EqValid_Regexp(r"ttyS\d"))
 
+    @pytest.mark.skip
     def test_2__rfid_script(self, harvest):
         scriptname = "/tmp/rfid_scan.py"
         assert harvest.file_name__push(scriptname)
@@ -63,6 +65,17 @@ class Test_000__Explore:
             timeout_continue=10,
         )
         print(f"FINISH")
+
+    def test_3__btus(self, harvest):
+        bt_scaned = harvest.bt__scan()
+        print(f"{bt_scaned=}")
+
+        bt_get_known_devices = harvest.bt_get_known_devices()
+        print(f"{bt_get_known_devices=}")
+
+        for mac in [list(bt_get_known_devices)[0], "E5:C6:EB:4E:F3:05", "F6:D4:61:D3:B7:55"]:
+            result = harvest.bt_get_device_info(mac)
+            print(result)
 
 
 # ======================================================================================================================
@@ -361,7 +374,7 @@ class Test_1__GNSS:
 
 # ======================================================================================================================
 @pytest.mark.BT
-class Test_2__Bluetooth:
+class Test_21__BT:
     """Тесты Bluetooth (тот же чип что и WiFi)"""
     @pytest.mark.dependency(name="bt_present")
     def test_bt_1__present(self, harvest):
@@ -380,59 +393,9 @@ class Test_2__Bluetooth:
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_2__quick__scan(self, harvest):
-        """
-        ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
-        bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
-        [7] 3968
-        Discovery started
-        [CHG] Controller A6:20:96:B6:A9:5E Discovering: yes
-        [NEW] Device 68:4E:05:DA:46:2C 403
-        [NEW] Device 68:4E:05:DA:37:2E 405
-        [NEW] Device E3:77:12:64:59:DE UltraSonic
-        [NEW] Device C8:69:CD:28:12:BA C8-69-CD-28-12-BA
-        [NEW] Device 47:CD:B2:66:05:A7 47-CD-B2-66-05-A7
-        [NEW] Device FC:82:20:D6:82:CF COROS NOMAD BD4407
-        [NEW] Device EB:1C:93:49:2D:D2 UltraSonic
-        [NEW] Device 78:84:C0:B5:89:AA 78-84-C0-B5-89-AA
-        [NEW] Device 54:F2:9F:0E:1E:D1 404
-        [NEW] Device 43:05:75:66:62:C5 43-05-75-66-62-C5
-        [NEW] Device CE:4A:2C:2D:67:47 UltraSonic
-        [NEW] Device E5:C6:EB:4E:F3:05 UltraSonic
-        [NEW] Device F6:D4:61:D3:B7:55 UltraSonic
-        [NEW] Device CE:60:07:4B:72:02 UltraSonic
-        [NEW] Device E9:B6:5B:44:1D:AC MTBO-NB
-        [NEW] Device C7:22:DB:64:DC:AE MTBO-01-2G
-        [NEW] Device 8C:26:AA:E8:88:13 8C-26-AA-E8-88-13
-        [2]   Done                    bluetoothctl -- scan on
-        [3]   Done                    bluetoothctl -- scan on
-        [4]   Done                    bluetoothctl -- scan on
-        [5]   Done                    bluetoothctl -- scan on
-        [6]   Done                    bluetoothctl -- scan on
-        Failed to stop discovery: org.bluez.Error.Failed
-        root@harvest05:~#
-        root@harvest05:~# [NEW] Device F8:5E:A0:93:C9:A1 d5420
-        [CHG] Device EB:1C:93:49:2D:D2 RSSI: -75
-        [CHG] Device 78:84:C0:B5:89:AA RSSI: -80
-        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -81
-        [CHG] Device CE:60:07:4B:72:02 RSSI: -69
-        [CHG] Device C7:22:DB:64:DC:AE RSSI: -103
-        [NEW] Device 66:4E:D7:D9:93:3C 66-4E-D7-D9-93-3C
-        [CHG] Device F8:5E:A0:93:C9:A1 RSSI: -75
-        [CHG] Device FC:82:20:D6:82:CF RSSI: -84
-        [CHG] Device CE:4A:2C:2D:67:47 RSSI: -71
-        [CHG] Device E3:77:12:64:59:DE RSSI: -72
-        [CHG] Device C7:22:DB:64:DC:AE RSSI: -94
-        ---- Sent utf8 encoded message: "pkill bluetoothctl\r\n" ----
-        pkill bluetoothctl
-        root@harvest05:~#
-        root@harvest05:~#
-        """
-        output = harvest.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=1, timeout_continue=1)
-        assert "Discovery started" in output, "Bluetooth поиск не запустился"
-
-        # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
-        bt_scaned = re.findall(r'\s*Device\s\S+\s(.+)\s*\n*', output)
+        bt_scaned = harvest.bt__scan()
         assert bt_scaned, f"Не обнаружено ни одного Bluetooth-устройства {bt_scaned=}"
+
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_3__deep__info(self, harvest):
@@ -514,6 +477,21 @@ class Test_2__Bluetooth:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+@pytest.mark.BT
+class Test_22__BTUS_Ultrasonic:
+    """Тесты УЗ датчика"""
+    @pytest.mark.dependency(name="btus_present")
+    def test_btus_1__present(self, harvest):
+        """
+        """
+        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
+
+        assert False
+        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "УЗ датчики не сопряжены"
+        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "УЗ датчик не доступен"
+
+
+# ======================================================================================================================
 @pytest.mark.WIFI
 class Test_3__WiFi:
     # Пороговые значения для оценки качества (можно вынести в конфиг)
@@ -913,7 +891,7 @@ class Test_41__GSM:
         assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
 
 
-# ======================================================================================================================
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.GSM
 class Test_42__GSMAT:
     """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
