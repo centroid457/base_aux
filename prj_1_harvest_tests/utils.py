@@ -31,15 +31,15 @@ time.sleep(0.3)
 s.reset_input_buffer()            # clear previous NMEA
 s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')   # UBX MON-VER
 
-buf = b''
+result = b''
 while True:
-    byte = s.read(1)
-    if not byte:
+    chunk = s.read(1)
+    if not chunk:
         break   # timeout
 
-    buf += byte
+    result += chunk
 
-    if buf[-2:] == START_UBX:
+    if result[-2:] == START_UBX:
         # дождались синхробайтов – читаем остаток заголовка
         header_rest = s.read(4)
         if len(header_rest) < 4:
@@ -56,7 +56,7 @@ while True:
         print('UBX_RESPONSE:[' + full_msg.hex() + ']')
         break
 
-    if len(buf) >= MAX_BUFFER:
+    if len(result) >= MAX_BUFFER:
         break
 
 s.close()
@@ -160,50 +160,6 @@ for baud in baudrates:
 
 print(f"AT_ERROR:{last_err!r}")
 sys.exit(1)
-    """,
-
-    # ------------------------------------------------------------------------------------------------------------------
-    "/tmp/rfid_e710.py": """
-import serial
-import time
-
-print("START", "="*50)
-    
-try:
-    ser = serial.Serial(
-        port='/dev/ttyS2',
-        baudrate = 115200,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS,
-        timeout=1
-    )
-    dataread = "a00a018101000800000000cb"
-    values = bytearray([160, 10, 1, 129, 1, 0, 8, 0, 0, 0, 0, 203])    
-    for step in range(3):
-        print()
-        print(f'{step=}')
-        print("WRITE=", values)
-        x = ser.write(values)
-        result = b""
-        while True:
-            time.sleep(0.2)
-            read_byte = ser.read(1)
-            if read_byte:
-                result += read_byte
-            else:
-                print(f"READ_{i}=", result)
-                break
-                
-        time.sleep(0.75)
-         
-except Exception as exc:
-    print(f"EXC={exc!r}")
-
-if ser and ser.is_open:
-    ser.close()
-
-print("FINISH", "="*50)
     """,
 
     # ------------------------------------------------------------------------------------------------------------------
