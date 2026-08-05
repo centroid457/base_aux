@@ -180,6 +180,7 @@ class Test_02__PreInstall:
         if not harvest.cmd_timeout__check_executed_success(f'python3 -c "import serial"'):
             assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-serial")
+
     def test_pre_4__python_bleak(self, harvest, internet_access):
         if not harvest.cmd_timeout__check_executed_success(f'python3 -c "import bleak"'):
             assert internet_access, "нет интернета для установки пакетов"
@@ -204,6 +205,9 @@ class Test_02__PreInstall:
 
     def test_pre_6__push3__rfid_scan(self, harvest):
         assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
+
+    def test_pre_6__push4__btus(self, harvest):
+        assert harvest.file_name__push("/tmp/bt_ultrasonic.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -486,14 +490,47 @@ class Test_21__BT:
 class Test_22__BTUS_Ultrasonic:
     """Тесты УЗ датчика"""
     @pytest.mark.dependency(name="btus_present")
-    def test_btus_1__present(self, harvest):
-        """
-        """
+    def test_btus_1__present(self, harvest, ultrasonic_mac__any):
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
+        assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
+        assert harvest.file_name__push("/tmp/bt_ultrasonic.py"), "скрипт не отправился"
 
-        assert False
-        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "УЗ датчики не сопряжены"
-        assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "УЗ датчик не доступен"
+    @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_2__collect(self, harvest, ultrasonic_mac__any):
+        """Сбор и валидация пакетов."""
+        result = harvest.btus__read_data(mac=ultrasonic_mac__any, packets_min=3, timeout=25)
+
+        print(f"MAC: {result['mac']}, пакетов: {result['count']}")
+        assert result["success"], f"Не собрано данных: {result}"
+
+        valid = sum(1 for p in result["packets"] if harvest.btus__validate_data(p)["valid"])
+        print(f"Валидных пакетов: {valid}/{len(result['packets'])}")
+        assert valid >= 1, "Нет валидных пакетов"
+
+    @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_2__sanity(self, harvest, ultrasonic_mac__any):
+        """Проверка осмысленности данных."""
+        result = harvest.btus__read_data(mac=ultrasonic_mac__any, packets_min=1, timeout=20)
+        assert result["success"]
+
+        last = result["packets"][-1]
+        v = harvest.btus__validate_data(last)
+        assert v["valid"], f"Пакет невалиден: {v}"
+
+        issues = []
+        for field, value in v["fields"].items():
+            fv = float(value)
+            if "Distance" in field and not (0 <= fv <= 10):
+                issues.append(f"{field}={fv} (0-10)")
+            elif field == "Temperature" and not (-40 <= fv <= 85):
+                issues.append(f"Temp={fv} (-40..+85)")
+            elif field == "Percentage" and not (0 <= fv <= 100):
+                issues.append(f"Pct={fv} (0-100)")
+            elif field == "Battery" and fv <= 0:
+                issues.append(f"Bat={fv} (>0)")
+
+        assert not issues, f"Проблемы: {issues}"
+        print("OK")
 
 
 # ======================================================================================================================

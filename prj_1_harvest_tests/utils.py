@@ -2069,8 +2069,8 @@ root@harvest05:~#
 
         return result
 
-    # BT Eltrasonic ====================================================================================================
-    def bt__scan(self) -> dict[str, str] | NoReturn:   # {mac: name}
+    # BT ===============================================================================================================
+    def bt__scan(self, timeout: float = 1) -> dict[str, str] | NoReturn:   # {mac: name}
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -2118,7 +2118,7 @@ root@harvest05:~#
         root@harvest05:~#
         root@harvest05:~#
         """
-        output = self.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=1, timeout_continue=1)
+        output = self.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=timeout, timeout_continue=1)
         if "Discovery started" not in output:
             raise Exception("Bluetooth поиск не запустился")
 
@@ -2313,159 +2313,7 @@ root@harvest05:~#
 
         return result
 
-    # BT Ultrasonic ------------------------------------------------
-    def bt_get_known_devices(self) -> dict[str, str]:
-        """
-        Возвращает словарь известных Bluetooth-устройств: {MAC: имя}.
-        [COM16.WRITEREAD]
-            write=[timeout 5 bluetoothctl devices]      # NOT CORRECT!!!
-            read=[Device D4:81:ED:BB:AA:6B UltraSonic]
-        {'D4:81:ED:BB:AA:6B': 'UltraSonic'}
-        """
-        output = self.cmd_timeout__write_read__payload(
-            "bluetoothctl devices",
-            timeout=5,
-            timeout_continue=2,
-        )
-
-        devices = {}
-        # Формат: "Device XX:XX:XX:XX:XX:XX Name"
-        for line in output.split('\n'):
-            match = re.match(r'Device\s+([0-9A-F:]{17})\s+(.+)', line.strip())
-            if match:
-                devices[match.group(1)] = match.group(2)
-
-        return devices
-
-    def bt_check_var_lib(self) -> dict[str, Any]:
-        """
-        Проверяет /var/lib/bluetooth на наличие сохраненных сопряжений.
-        """
-        result = {
-            "adapter_dirs": [],
-            "device_dirs": [],
-            "info_files": [],
-        }
-
-        # Находим директорию адаптера
-        list_output = self.cmd_timeout__write_read__payload(
-            "ls /var/lib/bluetooth/ 2>/dev/null",
-            timeout=3,
-            timeout_continue=1,
-        )
-
-        for adapter in list_output.split():
-            adapter = adapter.strip()
-            if not adapter or adapter == "cache":
-                continue
-
-            adapter_path = f"/var/lib/bluetooth/{adapter}"
-            result["adapter_dirs"].append(adapter)
-
-            # Находим директории устройств
-            devices_output = self.cmd_timeout__write_read__payload(
-                f"ls {adapter_path}/ 2>/dev/null",
-                timeout=3,
-                timeout_continue=1,
-            )
-
-            for device in devices_output.split():
-                device = device.strip()
-                if not device or device == "cache":
-                    continue
-
-                device_path = f"{adapter_path}/{device}"
-                result["device_dirs"].append(device_path)
-
-                # Проверяем наличие info-файла
-                info_check = self.cmd_timeout__write_read__payload(
-                    f"test -f {device_path}/info && echo 'EXISTS' || echo 'NO'",
-                    timeout=3,
-                    timeout_continue=1,
-                )
-
-                if "EXISTS" in info_check:
-                    info_content = self.cmd_timeout__write_read__payload(
-                        f"cat {device_path}/info 2>/dev/null",
-                        timeout=3,
-                        timeout_continue=1,
-                    )
-                    result["info_files"].append({
-                        "path": f"{device_path}/info",
-                        "content": info_content,
-                    })
-
-        return result
-
-    def bt_ultrasonic__get_mac_from_cache(self) -> str | None:
-        """
-        Пытается найти MAC-адрес UltraSonic в кеше BlueZ.
-        Это быстрее, чем новое сканирование.
-
-        Returns:
-            MAC-адрес или None, если не найден.
-        """
-        known = self.bt_get_known_devices()
-
-        for mac, name in known.items():
-            if "ultrasonic" in name.lower():
-                print(f"[CACHE] Найден UltraSonic: {mac} ({name})")
-                return mac
-
-        return None
-
-    # ==================================================================================================================
-    # BLUETOOTH
-    # ==================================================================================================================
-    def bt_find_ultrasonic(self) -> str | None:
-        """
-        Ищет UltraSonic с Nordic UART (ManufacturerData 0x0059).
-        Сначала кеш, потом сканирование.
-        """
-        # 1. Кеш
-        devices = self.bt__scan()
-        for mac, name in devices.items():
-            if "ultrasonic" not in name.lower():
-                continue
-            info = self.bt_get_info(mac)
-            if "0x0059" in info:
-                print(f"[BT] Найден в кеше: {mac}")
-                return mac
-
-        # 2. Сканирование
-        print("[BT] Сканирование...")
-        output = self.cmd_timeout__write_read__payload(
-            "timeout 10 bluetoothctl -- scan on 2>&1",
-            timeout=3,
-            timeout_continue=10,
-        )
-        self.conn.write_bytes("pkill bluetoothctl")
-
-        for mac in re.findall(r'\[NEW\]\s+Device\s+([0-9A-F:]{17})\s+UltraSonic', output, re.I):
-            info = self.bt_get_info(mac)
-            if "0x0059" in info:
-                print(f"[BT] Найден при сканировании: {mac}")
-                return mac
-
-        # 3. Запасной вариант — любой UltraSonic
-        for mac, name in devices.items():
-            if "ultrasonic" in name.lower():
-                print(f"[BT] Взят без проверки: {mac}")
-                return mac
-
-        return None
-
-    def bt_check_deps(self) -> bool:
-        """Проверка bleak."""
-        if self.cmd_timeout__check_executed_success('python3 -c "import bleak" 2>/dev/null'):
-            return True
-        # Пробуем установить
-        return self.cmd_timeout__check_executed_success(
-            "pip3 install bleak 2>/dev/null || apt-get install -y python3-bleak 2>/dev/null",
-            timeout_continue=30,
-        )
-
-    def bt_collect_packets(self, mac: str | None = None, packets_min: int = 3, timeout: float = 20.0) -> dict:
+    def btus__read_data(self, mac: str | None = None, packets_min: int = 3, timeout: float = 20.0) -> dict:
         """
         Собирает пакеты с датчика.
         Returns: {"mac": str, "packets": list, "count": int, "success": bool}
@@ -2491,7 +2339,7 @@ root@harvest05:~#
         return result
 
     @staticmethod
-    def bt_validate_packet(packet: str) -> dict:
+    def btus__validate_data(packet: str) -> dict:
         """Валидация структуры пакета."""
         import json
 
