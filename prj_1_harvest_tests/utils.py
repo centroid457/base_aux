@@ -1846,52 +1846,47 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
         return result
 
-    def btus__read_data(self, mac: str | None = None, packets_min: int = 3, timeout: float = 20.0) -> dict:
+    # ==================================================================================================================
+    def btus_read(self, max_pkgs: int | None = None, timeout: float = 25.0) -> dict:
         """
-        Собирает пакеты с датчика.
-        Returns: {"mac": str, "packets": list, "count": int, "success": bool}
+        Собирает данные с UltraSonic датчика.
+
+        Returns:
+            {
+                "mac": str | None,
+                "packets": list[str],
+                "count": int,
+                "status": "OK" | "FEW_PACKETS" | "ERROR",
+                "error": str | None,
+            }
         """
-        cmd = "python3 scr__bt_ultrasonic.py"
-        if mac:
-            cmd += f" {mac}"
+        result = {
+            "mac": None,
+            "packets": [],
+            "count": 0,
+            "status": "ERROR",
+            "error": None,
+        }
 
-        output = self.cmd_timeout__write_read__payload(cmd, timeout=timeout, timeout_continue=timeout)
+        output = self.cmd_timeout__write_read__payload(
+            f"python3 bt__us.py {max_pkgs} {timeout}",
+            timeout=timeout + 5,
+            timeout_continue=timeout + 5,
+        )
 
-        result = {"mac": None, "packets": [], "count": 0, "success": False}
-
-        for line in output.split('\n'):
+        for line in output.split("\n"):
             line = line.strip()
-            if line.startswith("DEVICE_FOUND"):
-                result["mac"] = line.split(":", 1)[1].strip()
+
+            if line.startswith("DEVICE_FOUND:"):
+                result["mac"] = line.split(":", 1)[1]
             elif line.startswith("PACKET:"):
-                result["packets"].append(line.split(":", 1)[1].strip())
+                result["packets"].append(line.split(":", 1)[1])
             elif line.startswith("PACKETS_COUNT:"):
-                result["count"] = int(line.split(":", 1)[1].strip())
-
-        result["success"] = result["mac"] is not None and result["count"] >= packets_min
-        return result
-
-    @staticmethod
-    def btus__validate_data(packet: str) -> dict:
-        """Валидация структуры пакета."""
-        import json
-
-        result = {"valid": False, "fields": {}, "missing": []}
-        expected = ["UTC", "Distance up", "Distance side", "Temperature", "Battery", "Percentage"]
-
-        # Ищем первый JSON
-        for candidate in re.findall(r'\{[^}]+\}', packet):
-            try:
-                data = json.loads(candidate)
-                for field in expected:
-                    if field in data:
-                        result["fields"][field] = data[field]
-                    else:
-                        result["missing"].append(field)
-                result["valid"] = len(result["fields"]) >= 4
-                break
-            except json.JSONDecodeError:
-                continue
+                result["count"] = int(line.split(":", 1)[1])
+            elif line.startswith("STATUS:"):
+                result["status"] = line.split(":", 1)[1]
+            elif line.startswith("ERROR:"):
+                result["error"] = line.split(":", 1)[1]
 
         return result
 

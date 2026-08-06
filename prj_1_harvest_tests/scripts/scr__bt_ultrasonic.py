@@ -10,6 +10,7 @@ DEVICE_NAME = "UltraSonic"
 TIMEOUT = 15
 PACKETS_MIN = 3
 
+
 async def main():
     target_mac = sys.argv[1] if len(sys.argv) > 1 else None
 
