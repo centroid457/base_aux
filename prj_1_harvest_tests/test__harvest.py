@@ -55,7 +55,7 @@ class Test_000__Explore:
 
     @pytest.mark.skip
     def test_2__rfid_script(self, harvest):
-        scriptname = "/tmp/rfid_scan.py"
+        scriptname = "scr__rfid_scan.py"
         assert harvest.file_name__push(scriptname)
 
         command_line = f"python3 {scriptname}"
@@ -66,6 +66,7 @@ class Test_000__Explore:
         )
         print(f"FINISH")
 
+    @pytest.mark.skip
     def test_3__btus(self, harvest):
         bt_scaned = harvest.bt__scan()
         print(f"{bt_scaned=}")
@@ -198,16 +199,16 @@ class Test_02__PreInstall:
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_pre_6__push1__ubx(self, harvest):
-        assert harvest.file_name__push("/tmp/get__gnss_info__ubx.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__gnss_info_ubx.py"), "скрипт не отправился"
 
     def test_pre_6__push2__at_client(self, harvest):
-        assert harvest.file_name__push("/tmp/at_client.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__gsm_at_client.py"), "скрипт не отправился"
 
     def test_pre_6__push3__rfid_scan(self, harvest):
-        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__rfid_scan.py"), "скрипт не отправился"
 
     def test_pre_6__push4__btus(self, harvest):
-        assert harvest.file_name__push("/tmp/bt_ultrasonic.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__bt_ultrasonic.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -344,10 +345,16 @@ class Test_1__GNSS:
         for attempt in range(3):
             print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
 
-            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes('pkill -9 -f get__gnss_info__ubx.py; fuser -k /dev/ttyUSB0; sleep 0.5')
+            script = "scr__gnss_info_ubx.py"
+            if "/" in script:
+                script_name_only = script.rsplit("/", 1)[1]
+            else:
+                script_name_only = script
 
-            output = harvest.conn.write_read_bytes('python3 /tmp/get__gnss_info__ubx.py', timeout_continue=5)
+            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
+            harvest.conn.write_read_bytes(f'pkill -9 -f {script_name_only}; fuser -k /dev/ttyUSB0; sleep 0.5')
+
+            output = harvest.conn.write_read_bytes(f'python3 {script}', timeout_continue=5)
             assert output, "данные от устройства не получены вообще"
 
             if b'UBX_RESPONSE:[' in output:
@@ -493,7 +500,7 @@ class Test_22__BTUS_Ultrasonic:
     def test_btus_1__present(self, harvest, ultrasonic_mac__any):
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
-        assert harvest.file_name__push("/tmp/bt_ultrasonic.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__bt_ultrasonic.py"), "скрипт не отправился"
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_2__collect(self, harvest, ultrasonic_mac__any):
@@ -1007,7 +1014,7 @@ class Test_5__RFID:
     def test_rfid_1__present(self, harvest):
         assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyS2"), \
             "Порт RFID (/dev/ttyS2) не обнаружен!"
-        assert harvest.file_name__push("/tmp/rfid_scan.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__rfid_scan.py"), "скрипт не отправился"
         pass
 
     @pytest.mark.dependency(depends=["rfid_present"])

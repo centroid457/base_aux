@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # ======================================================================================================================
 SCRIPTS: dict[str, str] = {     # PATH/TEXT
     # ------------------------------------------------------------------------------------------------------------------
-    "/tmp/get__gnss_info__ubx.py": r"""
+    "scr__gnss_info_ubx.py": r"""
 import serial, time
 
 SOURCE_ADR: str = '/dev/ttyUSB0'
@@ -61,67 +61,13 @@ while True:
 
 s.close()
     """,
-    #     get__gnss_info__ubx = r"""
-    # import serial, time, re
-    # s = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.8)
-    # time.sleep(0.3)
-    # s.reset_input_buffer()  # если не сделать то будут сыпаться NMEA $GPGSV / ...
-    # # Дадим модулю время, чтобы он мог выдать идентификационные NMEA-строки (u-blox часто шлёт $GPTXT)
-    # data0_first = s.read(2048)
-    # # print('ORIGINAL:' + data0_first.decode(errors='ignore'))
-    #
-    # while True:
-    #     # 1=UBX_TXT -------------------------------
-    #     data1_ubx_txt = re.findall(rb'\$GPTXT,.*', data0_first)
-    #     if data1_ubx_txt:
-    #         print('UBX_TXT:' + data1_ubx_txt[0].decode(errors='ignore'))
-    #         break
-    #
-    #     # 2=UBX_RESPONSE---------------------------
-    #     # u-blox UBX MON-VER
-    #     # Очищаем буфер перед UBX, чтобы не было старых NMEA
-    #     s.reset_input_buffer()
-    #     s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')
-    #     time.sleep(0.5)
-    #     data2_ubx_resp = s.read(256)
-    #     if b'\xb5\x62\x0a\x04' in data2_ubx_resp:
-    #         # print(data2_ubx_resp)
-    #         # print(data2_ubx_resp.hex())
-    #
-    #         # raw=b'\xb5b\n\x04\xfa\x00EXT CORE 3.01 (107900)\x00\x00\x00\x00\x00\x00\x00\x0000080000\x00\x00ROM BASE 3.01 (107888)\x00\x00\x00\x00\x00\x00\x00\x00FWVER=SPG 3.01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00PROTVER=18.00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00MOD=NEO-M8N-0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00FIS=0xEF4015 (100111)\x00\x00\x00\x00\x00\x00\x00\x00\x00GPS;GLO;GAL;BDS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00SBAS;IMES;QZSS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    #         # hex=b5620a04fa0045585420434f524520332e3031202831303739303029000000000000000030303038303030300000524f4d204241534520332e3031202831303738383829000000000000000046575645523d53504720332e30310000000000000000000000000000000050524f545645523d31382e303000000000000000000000000000000000004d4f443d4e454f2d4d384e2d3000000000000000000000000000000000004649533d30784546343031352028313030313131290000000000000000004750533b474c4f3b47414c3b424453000000000000000000000000000000534241533b494d45533b515a535300000000000000000000000000000000
-    #
-    #         print(f'UBX_RESPONSE:[{data2_ubx_resp.hex()}]')
-    #         break
-    #
-    #     # 3=MTK_RESPONSE---------------------------
-    #     # MediaTek PMTK запрос версии
-    #     s.reset_input_buffer()
-    #     s.write(b'$PMTK605*31\r\n')
-    #     time.sleep(0.3)
-    #     data3_mtk_resp = s.read(256)
-    #     if b'$PMTK' in data3_mtk_resp:
-    #         print('MTK_RESPONSE:' + data3_mtk_resp.decode(errors='ignore'))
-    #         break
-    #
-    #     # 4=NO_IDENT---------------------------
-    #     # Если ничего не получено – печатаем начало сырых данных
-    #     if not (data1_ubx_txt or data2_ubx_resp or data3_mtk_resp):
-    #         print('NO_IDENT:' + data0_first[:200].hex())
-    #         break
-    #
-    #     break
-    #
-    # s.close()
-    # time.sleep(0.1)
-    # """
 
     # ------------------------------------------------------------------------------------------------------------------
-    "/tmp/at_client.py": r"""
+    "scr__gsm_at_client.py": r"""
 import sys, time, serial, os
 
 if len(sys.argv) < 2:
-    print("Usage: python3 /tmp/at_client.py <AT command> [port] [baudrate]")
+    print("Usage: python3 scr__gsm_at_client.py <AT command> [port] [baudrate]")
     sys.exit(1)
 
 cmd = sys.argv[1]
@@ -163,9 +109,9 @@ sys.exit(1)
     """,
 
     # ------------------------------------------------------------------------------------------------------------------
-    "/tmp/rfid_scan.py": """
+    "scr__rfid_scan.py": r"""
 # ===================================================================
-# /tmp/rfid_scan.py - ВЕРСИЯ С ПРЯМЫМ ИЗВЛЕЧЕНИЕМ EPC
+# scr__rfid_scan.py - ВЕРСИЯ С ПРЯМЫМ ИЗВЛЕЧЕНИЕМ EPC
 # ===================================================================
 import serial, time, sys, re
 
@@ -296,7 +242,7 @@ if __name__ == "__main__":
     sys.exit(0 if tags else 1)
     """,
 
-    "/tmp/explore__rfid_full_tries.py": """
+    "/tmp/explore__rfid_full_tries.py": r"""
 # /tmp/rfid_full_diag.py
 import serial
 import time
@@ -575,7 +521,7 @@ print("="*60)
     """,
 
     # ------------------------------------------------------------------------------------------------------------------
-    "/tmp/bt_ultrasonic.py": r"""
+    "scr__bt_ultrasonic.py": r"""
 #!/usr/bin/env python3
 # Скрипт для чтения данных с ультразвуковых BLE датчиков.
 import sys
@@ -652,190 +598,9 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
     """,
+
+    # ------------------------------------------------------------------------------------------------------------------
 }
-
-SCRIPTS["/tmp/gsm_ussd_tinkoff.py"] = r"""import serial
-import time
-
-PORT = "/dev/ttyUSB2"
-BAUD = 115200
-
-def send_ussd(ser, ussd, wait=10.0):
-    print(f"{ser.in_waiting=}")
-    ser.reset_input_buffer()
-    cmd = 'AT+CUSD=1,"%s",15' % ussd
-    ser.write((cmd + "\r\n").encode())
-    print("  SENT: %s" % cmd)
-    result = b""
-    deadline = time.time() + 12.0
-    while time.time() < deadline:
-        chunk = ser.read(1024)
-        if chunk:
-            result += chunk
-            if b"+CUSD:" in result or b"ERROR" in result or b"OK" in result:
-                break
-        else:
-            time.sleep(0.2)
-    print("bytes=", result)
-    return result.decode(errors="replace").strip()
-
-ser = serial.Serial(PORT, BAUD, timeout=1.0)
-print("PORT: %s" % PORT)
-
-# USSD для Tinkoff Mobile
-ussd_list = [
-    ("Balance *101#", "*101#"),
-    ("My number *111*0887#", "*111*0887#"),
-    ("Services *111#", "*111#"),
-    ("Balance *100#", "*100#"),
-]
-
-for name, ussd in ussd_list:
-    print("-" * 50)
-    print("USSD: %s (%s)" % (name, ussd))
-    resp = send_ussd(ser, ussd)
-    for line in resp.split("\r\n"):
-        line = line.strip()
-        print(f"{line=}")
-    time.sleep(1.0)
-
-ser.close()
-print("DONE")
-"""
-
-SCRIPTS["/tmp/gsm_ussd_tinkoff2.py"] = r"""import serial
-import time
-
-PORT = "/dev/ttyUSB2"
-BAUD = 115200
-
-def send_at(ser, cmd, wait=1.0):
-    print(f"{ser.in_waiting=}")
-    ser.reset_input_buffer()
-    ser.write((cmd + "\r\n").encode())
-    time.sleep(wait)
-    result = b""
-    deadline = time.time() + 3.0
-    while time.time() < deadline:
-        chunk = ser.read(1024)
-        if chunk:
-            result += chunk
-            if b"OK" in result or b"ERROR" in result or b"+CUSD:" in result:
-                break
-        else:
-            time.sleep(0.1)
-    return result.decode(errors="replace").strip()
-
-ser = serial.Serial(PORT, BAUD, timeout=1.0)
-print("PORT: %s" % PORT)
-
-# 1. Запрос баланса
-print("-" * 50)
-print("USSD: Balance *101#")
-resp = send_at(ser, 'AT+CUSD=1,"*101#",15', wait=12.0)
-for line in resp.split("\r\n"):
-    line = line.strip()
-    if line and "SENT:" not in line:
-        print("  %s" % line)
-
-# 2. Ответ на меню (обычно "1" для баланса)
-print("-" * 50)
-print("USSD: Send '1' to menu")
-resp = send_at(ser, 'AT+CUSD=1,"1",15', wait=10.0)
-for line in resp.split("\r\n"):
-    line = line.strip()
-    if line and "SENT:" not in line:
-        print("  %s" % line)
-
-# 3. Проверка ожидающих USSD
-print("-" * 50)
-print("AT: Check pending USSD")
-resp = send_at(ser, "AT+CUSD?", wait=3.0)
-for line in resp.split("\r\n"):
-    line = line.strip()
-    if line:
-        print("  %s" % line)
-
-ser.close()
-print("DONE")
-"""
-SCRIPTS["/tmp/gsm_ussd_final.py"] = r"""import serial
-import time
-
-PORT = "/dev/ttyUSB2"
-BAUD = 115200
-
-def send_at(ser, cmd, wait=1.0):
-    ser.write((cmd + "\r\n").encode())
-    time.sleep(wait)
-    result = b""
-    deadline = time.time() + 3.0
-    while time.time() < deadline:
-        chunk = ser.read(1024)
-        if chunk:
-            result += chunk
-        else:
-            time.sleep(0.1)
-    return result.decode(errors="replace").strip()
-
-def ussd_session(ser, ussd, wait=8.0):
-    ser.reset_input_buffer()
-    cmd = 'AT+CUSD=1,"%s",15' % ussd
-    print("  SEND: %s" % cmd)
-    ser.write((cmd + "\r\n").encode())
-
-    result = b""
-    deadline = time.time() + wait
-    while time.time() < deadline:
-        chunk = ser.read(1024)
-        if chunk:
-            result += chunk
-            text = result.decode(errors="replace")
-            if "+CUSD:" in text and ("OK" in text or "ERROR" in text):
-                break
-        else:
-            time.sleep(0.2)
-
-    return result.decode(errors="replace").strip()
-
-ser = serial.Serial(PORT, BAUD, timeout=0.5)
-print("PORT: %s" % PORT)
-
-print("AT: %s" % send_at(ser, "AT"))
-print("")
-
-print("=" * 50)
-print("USSD: *105# (Tele2 balance)")
-resp = ussd_session(ser, "*105#", wait=10.0)
-for line in resp.split("\r\n"):
-    line = line.strip()
-    if line:
-        print("  %s" % line)
-
-time.sleep(1)
-print("")
-print("=" * 50)
-print("Check session status:")
-resp = send_at(ser, "AT+CUSD?", wait=2.0)
-for line in resp.split("\r\n"):
-    line = line.strip()
-    if line:
-        print("  %s" % line)
-
-if "+CUSD: 1" in resp or "+CUSD: 5" in resp:
-    print("")
-    print("=" * 50)
-    print("Closing session...")
-    resp = send_at(ser, 'AT+CUSD=2', wait=3.0)
-    for line in resp.split("\r\n"):
-        line = line.strip()
-        if line:
-            print("  %s" % line)
-
-ser.close()
-print("")
-print("DONE")
-"""
 
 
 # ======================================================================================================================
@@ -1454,7 +1219,7 @@ root@harvest05:~#
     def at_cmd__raw(
             self,
             cmd: str,
-            bridge: str = "/tmp/at_client.py",
+            bridge: str = "scr__gsm_at_client.py",
             port: str = "/dev/ttyUSB2",
             baudrate: int = 115200,
             stop_line=b"OK",
@@ -2296,7 +2061,7 @@ root@harvest05:~#
         """
         result = set()
 
-        scriptname = "/tmp/rfid_scan.py"
+        scriptname = "scr__rfid_scan.py"
         command_line = f"python3 {scriptname}"
 
         steps = steps or 1
@@ -2569,7 +2334,7 @@ root@harvest05:~#
         Собирает пакеты с датчика.
         Returns: {"mac": str, "packets": list, "count": int, "success": bool}
         """
-        cmd = "python3 /tmp/bt_ultrasonic.py"
+        cmd = "python3 scr__bt_ultrasonic.py"
         if mac:
             cmd += f" {mac}"
 
