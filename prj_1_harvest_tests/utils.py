@@ -169,7 +169,7 @@ class HarvestDevice:
         Last login: Tue Aug  4 14:39:52 MSK 2026 on ttyS0
         root@harvest05:~#
         """
-        data = self.conn.write_read_bytes(data="root", timeout_continue=0.5)
+        data = self.conn.write_read_bytes(data="root", timeout_start=3, timeout_continue=0.9)
         if b"command not found" in data:
             # already logged in!
             return True
