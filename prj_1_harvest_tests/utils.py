@@ -1580,7 +1580,7 @@ root@harvest05:~#
 
         return result
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     def get_info__usb(self, port: str) -> dict[str, Any]:
         """
         available both variants:
@@ -2005,7 +2005,40 @@ root@harvest05:~#
         print(json.dumps(result, indent=2, ensure_ascii=True))
         return result
 
-    # PARSERS ==========================================================================================================
+    # ==================================================================================================================
+    def gnss_get_info_ubx(self) -> dict[str, Any]:
+        script = "scr__gnss_info_ubx.py"
+        if "/" in script:
+            script_name_only = script.rsplit("/", 1)[1]
+        else:
+            script_name_only = script
+
+        # Убиваем предыдущие экземпляры скрипта и освобождаем порт
+        self.cmd_timeout__write_read__payload(f'pkill -9 -f {script_name_only}; fuser -k /dev/ttyUSB0; sleep 0.5')
+
+        output = self.cmd_timeout__write_read__payload(f'python3 {script}', timeout_continue=5)
+        assert output, "данные от устройства не получены вообще"
+
+        if 'UBX_RESPONSE:[' in output:
+            # Извлекаем HEX-строку --------------------
+            print(f"FULL: {output}")
+
+            match = re.search(r'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
+            assert match, "Не найден корректный UBX_RESPONSE в выводе"
+            output_hex_str = match.group(1)
+            print(f"\t{output_hex_str=}")
+
+            # Декодируем HEX-строку в настоящие байты
+            try:
+                raw_data: bytes = bytes.fromhex(output_hex_str)
+                print(f"\t{raw_data=}")
+            except ValueError:
+                assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
+
+            result = self.parse__gnss_info__UBX(raw_data)
+            print(json.dumps(result, indent=2))
+            return result
+
     @staticmethod
     def parse__gnss_info__UBX(raw: bytes) -> dict[str, str | list[str]]:
         """
@@ -2053,7 +2086,7 @@ root@harvest05:~#
             'extensions': extensions,
         }
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     def rfid_scan(self, steps: int | None = None) -> set[str]:
         """
         Запускает непрерывное чтение RFID-меток в течение заданного времени.
@@ -2085,7 +2118,7 @@ root@harvest05:~#
 
         return result
 
-    # BT ===============================================================================================================
+    # ==================================================================================================================
     def bt__scan(self, timeout: float = 1) -> dict[str, str] | NoReturn:   # {mac: name}
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----

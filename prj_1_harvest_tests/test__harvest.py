@@ -45,7 +45,7 @@ def _rules__raws_hex__understanding():
 
 
 # ======================================================================================================================
-# @pytest.mark.skipif(True, reason="used for exploring executions/methods")
+@pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     # WARN!!! DONT FORGET TURN OFF IT!!! else more of tests would failed!
 
@@ -344,43 +344,9 @@ class Test_1__GNSS:
         """
         for attempt in range(3):
             print(f"Попытка {attempt=}: UBX_RESPONSE поиск...")
-
-            script = "scr__gnss_info_ubx.py"
-            if "/" in script:
-                script_name_only = script.rsplit("/", 1)[1]
-            else:
-                script_name_only = script
-
-            # Убиваем предыдущие экземпляры скрипта и освобождаем порт
-            harvest.conn.write_read_bytes(f'pkill -9 -f {script_name_only}; fuser -k /dev/ttyUSB0; sleep 0.5')
-
-            output = harvest.conn.write_read_bytes(f'python3 {script}', timeout_continue=5)
-            assert output, "данные от устройства не получены вообще"
-
-            if b'UBX_RESPONSE:[' in output:
-                # Извлекаем HEX-строку --------------------
-                print(f"FULL: {output}")
-
-                match = re.search(rb'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
-                assert match, "Не найден корректный UBX_RESPONSE в выводе"
-                output_hex_bytes = match.group(1)
-                print(f"\t{output_hex_bytes=}")
-
-                output_hex_str: str = output_hex_bytes.decode('ascii')  # получаем чистую HEX-строку
-                print(f"\t{output_hex_str=}")
-
-                # Декодируем HEX-строку в настоящие байты
-                try:
-                    raw_data: bytes = bytes.fromhex(output_hex_str)
-                    print(f"\t{raw_data=}")
-                except ValueError:
-                    assert False, f"Невалидная HEX-строка: {output_hex_str!r}"
-
-                result = harvest.parse__gnss_info__UBX(raw_data)
-                print(json.dumps(result, indent=2))
-
-                if result:
-                    return True
+            result = harvest.gnss_get_info_ubx()
+            if result:
+                return True
             else:
                 time.sleep(1)
 
