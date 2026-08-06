@@ -378,62 +378,11 @@ class Test_21__BT:
         bt_scaned = harvest.bt__scan()
         assert bt_scaned, f"Не обнаружено ни одного Bluetooth-устройства {bt_scaned=}"
 
-
     @pytest.mark.dependency(depends=["bt_present", ])
-    def test_bt_3__deep__info(self, harvest):
+    def test_bt_4__deep__c1_hciconfig_a(self, harvest):
         """
-        Полный дамп всей доступной информации о Bluetooth-модуле.
-        Выполняется несколько команд, их вывод объединяется.
-        """
-        # Список команд для сбора информации
-        commands = [
-            "hciconfig hci0 -a",           # полная информация об интерфейсе
-            "hciconfig hci0 version",      # версия прошивки/стека
-            "hciconfig hci0 features",     # поддерживаемые функции
-            "btmgmt info",                 # настройки контроллера (поддерживаемые/текущие)
-            "bluetoothctl show",            # детали контроллера (UUID, режимы)
-            "bluetoothctl list",            # список контроллеров
-            "rfkill list bluetooth",        # состояние блокировок
-        ]
+        "hciconfig hci0 -a",           # полная информация об интерфейсе
 
-        full_output: list[str] = []
-        for cmd in commands:
-            lines = harvest.cmd_timeout__write_read__payload(
-                cmd,
-                timeout_continue=1.5,
-                return_str=False,
-            )
-            # добавляем заголовок и сам вывод
-            full_output.append(f"--- {cmd} ---")
-            if isinstance(lines, str):
-                full_output.append(lines)
-            else:
-                full_output.extend(lines)
-            full_output.append("")  # пустая строка-разделитель
-
-        # Выводим в лог pytest (будет видно в отчёте)
-        print("\n".join(full_output))
-
-        # Минимальная валидация: в hciconfig version должен быть Manufacturer
-        version_output = harvest.cmd_timeout__write_read__payload(
-            "hciconfig hci0 version",
-            timeout_continue=1.5,
-        )
-        assert "Manufacturer" in version_output, \
-            "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
-
-        # Проверяем, что rfkill не показывает Hard blocked
-        rfkill_output = harvest.cmd_timeout__write_read__payload(
-            "rfkill list bluetooth",
-            timeout_continue=1.5,
-        )
-        assert "Hard blocked: yes" not in rfkill_output, "Bluetooth аппаратно заблокирован (Hard blocked)"
-
-    @pytest.mark.dependency(depends=["bt_present", ])
-    def test_bt_4__deep__(self, harvest):
-        pytest.skip("not realised")
-        # TODO: check errors
-        """
         2004hroot@harvest05:~# "
             printable=hciconfig hci0 -a
         
@@ -456,6 +405,154 @@ class Test_21__BT:
         
         root@harvest05:~#      
         """
+        cmd = "hciconfig hci0 -a"
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+        assert f"UP RUNNING" in output, "не поднят!"
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c2_hciconfig_version(self, harvest):
+        """
+        [COM16.WRITEREAD]
+	write=[hciconfig hci0 version]
+	read=[hci0:	Type: Primary  Bus: UART
+	BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+	HCI Version: 4.0 (0x6)  Revision: 0x6a
+	LMP Version: 4.0 (0x6)  Subversion: 0x2209
+	Manufacturer: Broadcom Corporation (15)]
+        """
+        cmd = "hciconfig hci0 version"      # версия прошивки/стека
+
+        # Минимальная валидация: в hciconfig version должен быть Manufacturer
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+        assert "Manufacturer" in output, \
+            "Не удалось получить производителя Bluetooth (возможно, модуль не инициализирован)"
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c3_rfkill_list_bt(self, harvest):
+        """
+        [COM16.WRITEREAD]
+	write=[rfkill list bluetooth]
+        read=[0: sunxi-bt: Bluetooth
+        Soft blocked: no
+        Hard blocked: no
+    2: hci0: Bluetooth
+        Soft blocked: no
+        Hard blocked: no]
+        """
+        cmd = "rfkill list bluetooth"       # состояние блокировок
+        # Проверяем, что rfkill не показывает Hard blocked
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+        assert "Soft blocked: no" in output, "Bluetooth заблокирован (Soft blocked)"
+        assert "Hard blocked: no" in output, "Bluetooth заблокирован (Hard blocked)"
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c4(self, harvest):
+        """
+        [COM16.WRITEREAD]
+            write=[btmgmt info]
+            read=[Index list with 1 item
+        hci0:	Primary controller
+            addr A6:20:96:B6:A9:5E version 6 manufacturer 15 class 0x000000
+            supported settings: powered connectable fast-connectable discoverable bondable link-security ssp br/edr hs le advertising secure-conn debug-keys privacy static-addr
+            current settings: powered ssp br/edr le secure-conn
+            name harvest05
+            short name ]
+        """
+        cmd = "btmgmt info"         # настройки контроллера (поддерживаемые/текущие)
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c5(self, harvest):
+        """
+[COM16.WRITEREAD]
+	write=[bluetoothctl list]
+	read=[Controller A6:20:96:B6:A9:5E harvest05 [default]]
+        """
+        cmd = "bluetoothctl list"   # список контроллеров
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c6(self, harvest):
+        """
+        [COM16.WRITEREAD]
+            write=[bluetoothctl show]
+            read=[Controller A6:20:96:B6:A9:5E (public)
+            Name: harvest05
+            Alias: harvest05
+            Class: 0x00000000
+            Powered: yes
+            Discoverable: no
+            DiscoverableTimeout: 0x00001388
+            Pairable: no
+            UUID: Generic Attribute Profile (00001801-0000-1000-8000-00805f9b34fb)
+            UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)
+            UUID: PnP Information           (00001200-0000-1000-8000-00805f9b34fb)
+            UUID: A/V Remote Control Target (0000110c-0000-1000-8000-00805f9b34fb)
+            UUID: A/V Remote Control        (0000110e-0000-1000-8000-00805f9b34fb)
+            UUID: Device Information        (0000180a-0000-1000-8000-00805f9b34fb)
+            Modalias: usb:v1D6Bp0246d0542
+            Discovering: no
+            Roles: central
+            Roles: peripheral
+        Advertising Features:
+            ActiveInstances: 0x00 (0)
+            SupportedInstances: 0x05 (5)
+            SupportedIncludes: tx-power
+            SupportedIncludes: appearance
+            SupportedIncludes: local-name]
+        """
+        cmd = "bluetoothctl show"   # детали контроллера (UUID, режимы)
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
+
+    @pytest.mark.dependency(depends=["bt_present", ])
+    def test_bt_4__deep__c7(self, harvest):
+        """
+        [COM16.WRITEREAD]
+        write=[hciconfig hci0 features]
+        read=[hci0:	Type: Primary  Bus: UART
+        BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+        Features page 0: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+            <3-slot packets> <5-slot packets> <encryption> <slot offset>
+            <timing accuracy> <role switch> <sniff mode> <RSSI>
+            <channel quality> <SCO link> <HV2 packets> <HV3 packets>
+            <u-law log> <A-law log> <CVSD> <paging scheme> <power control>
+            <transparent SCO> <broadcast encrypt> <EDR ACL 2 Mbps>
+            <EDR ACL 3 Mbps> <enhanced iscan> <interlaced iscan>
+            <interlaced pscan> <inquiry with RSSI> <extended SCO>
+            <EV4 packets> <EV5 packets> <AFH cap. perip.>
+            <AFH cls. perip.> <LE support> <3-slot EDR ACL>
+            <5-slot EDR ACL> <sniff subrating> <pause encryption>
+            <AFH cap. central> <AFH cls. central> <EDR eSCO 2 Mbps>
+            <EDR eSCO 3 Mbps> <3-slot EDR eSCO> <extended inquiry>
+            <LE and BR/EDR> <simple pairing> <encapsulated PDU>
+            <err. data report> <non-flush flag> <LSTO> <inquiry TX power>
+            <EPC> <extended features>
+        Features page 1: 0x03 0x00 0x00 0x00 0x00 0x00 0x00 0x00]
+
+        """
+        cmd = "hciconfig hci0 features"     # поддерживаемые функции
+        output = harvest.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1.5,
+        )
 
 
 # ----------------------------------------------------------------------------------------------------------------------
