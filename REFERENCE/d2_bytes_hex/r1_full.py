@@ -30,6 +30,14 @@ for index, data in enumerate([
     bytes.fromhex('48656C'),
     bytes.fromhex('123456'),
     # bytes.fromhex('zz'),    # ValueError: non-hexadecimal number found in fromhex() arg at position 0
+    bytes.fromhex(      # МНОЖЕСТВЕННЫЕ СТРОКИ РАЗБИТЫЕ УДОБНО
+        "A0290181000120"
+        "3000E2806894000050035FD77070"  # ← EPC (первое чтение)
+        "430A430A"                       # ← extra
+        "3000E2806894000050035FD77070"  # ← EPC (второе чтение, дубликат)
+        "100401F7"                       # ← extra + хвост
+    )
+
 ]):
     print(index, data)
 
