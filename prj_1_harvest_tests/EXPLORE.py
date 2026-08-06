@@ -1,143 +1,159 @@
-# ===================================================================
-# scr__rfid_scan.py - ВЕРСИЯ С ПРЯМЫМ ИЗВЛЕЧЕНИЕМ EPC
-# ===================================================================
-import serial, time, sys, re
 from typing import *
+import re
 
 
-PORT = '/dev/ttyS2'
-BAUD = 115200
-TIMEOUT = 0.5
+# ======================================================================================================================
+def parse_rfid__split_pkgs(data_raw: bytes) -> list[bytes]:
+    # print(bytes.fromhex("A004018122B8"))  # b'\xa0\x04\x01\x81"\xb8'
+    print()
+    print(data_raw)
 
-# READ BANK
-CMD = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
+    result = []
+    index_start = -1
 
+    # data_hex = data_raw.hex().upper()
 
-def read__data() -> bytes | NoReturn:
-    ser = serial.Serial(PORT, BAUD, timeout=TIMEOUT)
-    ser.reset_input_buffer()
-    ser.write(CMD)
-
-    response = b""
-    start = time.time()
-    while time.time() - start < 1.0:
-        chunk = ser.read(ser.in_waiting or 1)
-        if chunk:
-            response += chunk
-        else:
-            time.sleep(0.05)
-    ser.close()
-    return response
-
-
-def parse__pkgs(data: bytes) -> list[str]:
-    data_hex: str = data.hex().upper()
-
-    pkgs = []
-    # for
-
-
-def _parse__epc(data):
-    epc_list = []
-    i = 0
-
-    while i < len(data):
+    while True:
         # Ищем начало пакета 0xA0
-        if data[i] != 0xA0:
-            i += 1
-            continue
-
-        if i + 1 >= len(data):
+        index_start: int = data_raw.find(0xA0, index_start + 1)
+        print(f"{index_start=}")
+        if index_start == -1:
             break
 
-        length = data[i + 1]
-        if i + length + 1 > len(data):
-            i += 1
-            continue
+        pkg_length: int = data_raw[index_start + 1]
+        pkg: bytes = data_raw[index_start: index_start + 2 + pkg_length]
+        result.append(pkg)
 
-        packet = data[i:i + length + 1]
-        i += length + 1
-
-        # Проверяем тип пакета (0x01 0x81 - инвентаризация)
-        if len(packet) < 6 or packet[2] != 0x01 or packet[3] != 0x81:
-            continue
-
-        # Ищем EPC данные
-        # Обычно EPC начинается после заголовка (примерно с 7-го байта)
-        # Ищем последовательности, которые начинаются с 0x30 или 0x34 (характерно для EPC)
-        for j in range(5, len(packet)):
-            # Пропускаем одиночные байты и ищем начало EPC
-            if packet[j] in (0x30, 0x34):  # Характерное начало EPC
-                # Проверяем, что дальше идут данные
-                remaining = len(packet) - j
-                if remaining >= 14:  # Минимум 14 байт для полного EPC
-                    # Извлекаем до 20 байт (40 hex символов)
-                    epc_bytes = packet[j:j + min(20, remaining)]
-
-                    # Фильтруем - оставляем только hex-символы
-                    hex_str = ''
-                    for b in epc_bytes:
-                        hex_str += f'{b:02X}'
-
-                    # Проверяем, что строка похожа на EPC (начинается с 30/34 и достаточной длины)
-                    if len(hex_str) >= 20:  # Минимум 10 байт = 20 символов
-                        # Обрезаем до разумной длины (20-28 символов)
-                        for cut_len in [28, 26, 24, 22, 20]:
-                            candidate = hex_str[:cut_len]
-                            if candidate.startswith(('30', '34')) and candidate not in epc_list:
-                                epc_list.append(candidate)
-                                break
-                    break
-
-    return epc_list
+    return result
 
 
-def parse_epc_advanced(data: bytes):
-    # Улучшенный парсер EPC
-    epc_list = []
-    hex_data = data.hex().upper()
-
-    # Ищем EPC по характерным признакам:
-    # 1. Начинаются с 3000, 300E, 3400
-    # 2. Имеют длину 20-28 символов
-    patterns = [
-        r'(3000[0-9A-F]{16,24})',  # 3000 + 16-24 hex символов
-        r'(300E[0-9A-F]{16,24})',  # 300E + 16-24 hex символов
-        r'(3400[0-9A-F]{16,24})',  # 3400 + 16-24 hex символов
-    ]
-
-    for pattern in patterns:
-        matches = re.findall(pattern, hex_data)
-        for match in matches:
-            # Оставляем только полные EPC (обычно 24-28 символов)
-            if len(match) >= 24:
-                # Обрезаем до стандартной длины если нужно
-                if len(match) > 28:
-                    match = match[:28]
-                if match not in epc_list:
-                    epc_list.append(match)
-
-    # Если не нашли - пробуем найти любые длинные hex-строки
-    if not epc_list:
-        long_hex = re.findall(r'([0-9A-F]{24,28})', hex_data)
-        for candidate in long_hex:
-            if candidate.startswith(('30', '34')) and candidate not in epc_list:
-                epc_list.append(candidate)
-
-    return epc_list
+# ----------------------------------------------------------------------------------------------------------------------
+def test__split_pkg():
+    assert parse_rfid__split_pkgs(bytes.fromhex("A004018122B8")) == [bytes.fromhex("A004018122B8"), ]
+    assert (
+            parse_rfid__split_pkgs(bytes.fromhex("A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7"))
+            ==
+            [bytes.fromhex("A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7"), ]
+    )
+    assert (
+            parse_rfid__split_pkgs(bytes.fromhex("A02901810002203000E2806894000040138945853E812981293000E2806894000040138945853E10040146A02901810002203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F6"))
+            ==
+            [
+                bytes.fromhex("A02901810002203000E2806894000040138945853E812981293000E2806894000040138945853E10040146"),
+                bytes.fromhex("A02901810002203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F6"),
+            ]
+    )
 
 
-# === MAIN ===
-if __name__ == "__main__":
-    data = read__data()
+# ======================================================================================================================
+def parse_rfid__pkg_epc(pkg_raw: bytes) -> bytes | NoReturn:
+    """
+    Извлечь EPC из пакета RFID ридера.
 
-    # Отладка: покажем сырые данные
-    print(f"RawData({len(data)}bytes):[{data.hex().upper()}]", file=sys.stderr)
+    Структура пакета:
+    [A0][LEN][01][81][STATUS][COUNT][FLAGS][...DATA...]
 
-    tags = parse_epc_advanced(data)
+    В DATA лежат записи по 16 байт:
+    [EPC(12 байт)][EXTRA(4 байта)] [EPC(12 байт)][EXTRA(4 байта)] ...
 
-    for epc in tags:
-        print(epc)
+    EPC ВСЕГДА:
+    - 12 байт (SGTIN-96)
+    - Начинается с 0x30 или 0x34
+    """
+    # если ничего не нашлось! сразу выходим
+    if len(pkg_raw) < 7:
+        return b""
 
-    print(f"found={len(tags)}epc")
-    sys.exit(0 if tags else 1)
+    # Пропускаем заголовок (7 байт): A0 LEN 01 81 STATUS COUNT FLAGS и CRC
+    data = pkg_raw[7:-2]
+
+    # Ищем первый байт 0x30 или 0x34 (начало EPC)
+    for i in range(len(data)):
+        if data[i] in (0x30, 0x34):
+            # EPC = 12 байт начиная с этой позиции
+            epc = data[i:i + 14]
+            return epc
+
+    return b''  # Не нашли
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+def test__pkg_payload():
+    assert parse_rfid__pkg_epc(bytes.fromhex("A004018122B8")) == bytes.fromhex("")
+    assert parse_rfid__pkg_epc(bytes.fromhex("A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7")) == bytes.fromhex("3000E2806894000050035FD77070")
+
+
+# ======================================================================================================================
+def parse_rfid(data_raw: bytes) -> set[str]:
+    """
+    Парсит сырой ответ RFID-модуля и возвращает множество EPC-номеров меток.
+    """
+    result = set()
+    pkgs = parse_rfid__split_pkgs(data_raw)
+
+    for pkg in pkgs:
+        epc = parse_rfid__pkg_epc(pkg)
+        if epc:
+            result.add(epc.hex().upper())
+
+    return result
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+def test_3():
+    # Данные из лога - 4 метки
+    data1 = bytes.fromhex(
+        "A02901810004203000E28068942000502BBD609C95D842D8423000E28068942000502BBD609C951004015A"
+        "A02901810004203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F4"
+        "A02901810004203400E77702010000000000000000468446843400E77702010000000000000000100401BE"
+        "A02901810004203000E2806894000040138945853E812981293000E2806894000040138945853E10040144"
+    )
+
+    result1 = parse_rfid(data1)
+    print(f"Test1: {result1}")
+    assert result1 == {
+        "3000E28068942000502BBD609C95",
+        "3000E2806894000050035FD77070",
+        "3000E2806894000040138945853E",
+        "3400E77702010000000000000000",
+    }, f"FAIL: {result1}"
+
+    # Данные из лога - 7 меток
+    data2 = bytes.fromhex(
+        "A02901810007203400E77702010000000000000000468446843400E77702010000000000000000101801A7"
+        "A02901810007203400010000000000000000000051B9A9B9A9340001000000000000000000005110180195"
+        "A02901810007203400010000000000000000000680C853C8533400010000000000000000000680101801B9"
+        "A02901810007203000E2806894000040138945853E812981293000E2806894000040138945853E1018012D"
+        "A02901810007203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070101801DD"
+        "A02901810007203000E28068942000502BBD609C95D842D8423000E28068942000502BBD609C9510180143"
+        "A02901810007203400E0046A7A14CACEF3E6F761C8DEE0DEE03400E0046A7A14CACEF3E6F761C8101801A7"
+    )
+
+    result2 = parse_rfid(data2)
+    print(f"Test2: {result2}")
+    assert result2 == {
+        "3000E2806894000040138945853E",
+        "3000E2806894000050035FD77070",
+        "3000E28068942000502BBD609C95",
+        "3400E77702010000000000000000",
+        "3400010000000000000000000680",
+        "3400010000000000000000000051",
+        "3400E0046A7A14CACEF3E6F761C8",
+    }, f"FAIL: {result2}"
+
+    # Пустой ответ
+    data3 = bytes.fromhex("A004018122B8")
+    result3 = parse_rfid(data3)
+    print(f"Test3: {result3}")
+    assert result3 == set(), f"FAIL: {result3}"
+
+    # Одна метка
+    data4 = bytes.fromhex("A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7")
+    result4 = parse_rfid(data4)
+    print(f"Test4: {result4}")
+    assert result4 == {"3000E2806894000050035FD77070"}, f"FAIL: {result4}"
+
+    print("ALL TESTS PASSED")
+
+
+# ======================================================================================================================

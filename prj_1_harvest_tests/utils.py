@@ -6,6 +6,7 @@ import threading
 import json
 import logging
 import base64
+import pathlib
 
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
@@ -14,593 +15,6 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 # ======================================================================================================================
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-# ======================================================================================================================
-SCRIPTS: dict[str, str] = {     # PATH/TEXT
-    # ------------------------------------------------------------------------------------------------------------------
-    "scr__gnss_info_ubx.py": r"""
-import serial, time
-
-SOURCE_ADR: str = '/dev/ttyUSB0'
-START_UBX: bytes = b'\xb5\x62'
-MAX_BUFFER: int = 1000
-
-s = serial.Serial(SOURCE_ADR, 9600, timeout=0.8)
-time.sleep(0.3)
-s.reset_input_buffer()            # clear previous NMEA
-s.write(b'\xb5\x62\x0a\x04\x00\x00\x0e\x34')   # UBX MON-VER
-
-result = b''
-while True:
-    chunk = s.read(1)
-    if not chunk:
-        break   # timeout
-
-    result += chunk
-
-    if result[-2:] == START_UBX:
-        # дождались синхробайтов – читаем остаток заголовка
-        header_rest = s.read(4)
-        if len(header_rest) < 4:
-            break   # timeout
-
-        expected_load_length = int.from_bytes(header_rest[2:4], 'little')
-        # payload + checksum(2 байта)
-        load_with_checksum = s.read(expected_load_length + 2)
-        if len(load_with_checksum) < expected_load_length + 2:
-            break   # timeout
-
-        full_msg: bytes = START_UBX + header_rest + load_with_checksum
-        # send data in hex view
-        print('UBX_RESPONSE:[' + full_msg.hex() + ']')
-        break
-
-    if len(result) >= MAX_BUFFER:
-        break
-
-s.close()
-    """,
-
-    # ------------------------------------------------------------------------------------------------------------------
-    "scr__gsm_at_client.py": r"""
-import sys, time, serial, os
-
-if len(sys.argv) < 2:
-    print("Usage: python3 scr__gsm_at_client.py <AT command> [port] [baudrate]")
-    sys.exit(1)
-
-cmd = sys.argv[1]
-port = sys.argv[2] if len(sys.argv) > 2 else "/dev/ttyUSB2"
-baudrates = [115200, 9600, 57600, 38400, 19200]
-if len(sys.argv) > 3:
-    baudrates = [int(sys.argv[3]), ]
-
-# Попытка освободить порт, если занят
-os.system(f"fuser -k {port} 2>/dev/null")
-time.sleep(0.4)
-
-last_err = None
-for baud in baudrates:
-    try:
-        s = serial.Serial(
-            port, 
-            baud, 
-            timeout=0.3,
-            rtscts=False, dsrdtr=False, exclusive=True)
-        s.reset_input_buffer()
-        s.write((cmd + "\r\n").encode())
-        time.sleep(0.5)
-        result = s.read(4096).decode(errors='replace')
-        print(result)
-        s.close()
-        sys.exit(0)
-    except Exception as exc:
-        last_err = exc
-        print(f"AT_ERROR:{exc!r}")
-        try: 
-            s.close()
-        except:
-            pass
-        continue
-
-print(f"AT_ERROR:{last_err!r}")
-sys.exit(1)
-    """,
-
-    # ------------------------------------------------------------------------------------------------------------------
-    "scr__rfid_scan.py": r"""
-# ===================================================================
-# scr__rfid_scan.py - ВЕРСИЯ С ПРЯМЫМ ИЗВЛЕЧЕНИЕМ EPC
-# ===================================================================
-import serial, time, sys, re
-
-PORT = '/dev/ttyS2'
-BAUD = 115200
-TIMEOUT = 0.5
-
-# READ BANK
-CMD = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
-
-def read_response():
-    ser = serial.Serial(PORT, BAUD, timeout=TIMEOUT)
-    ser.reset_input_buffer()
-    ser.write(CMD)
-    
-    response = b""
-    start = time.time()
-    while time.time() - start < 1.0:
-        chunk = ser.read(ser.in_waiting or 1)
-        if chunk:
-            response += chunk
-        else:
-            time.sleep(0.05)
-    ser.close()
-    return response
-
-def parse_epc(data):
-    epc_list = []
-    i = 0
-    
-    while i < len(data):
-        # Ищем начало пакета 0xA0
-        if data[i] != 0xA0:
-            i += 1
-            continue
-        
-        if i + 1 >= len(data):
-            break
-        
-        length = data[i+1]
-        if i + length + 1 > len(data):
-            i += 1
-            continue
-        
-        packet = data[i:i+length+1]
-        i += length + 1
-        
-        # Проверяем тип пакета (0x01 0x81 - инвентаризация)
-        if len(packet) < 6 or packet[2] != 0x01 or packet[3] != 0x81:
-            continue
-        
-        # Ищем EPC данные
-        # Обычно EPC начинается после заголовка (примерно с 7-го байта)
-        # Ищем последовательности, которые начинаются с 0x30 или 0x34 (характерно для EPC)
-        for j in range(5, len(packet)):
-            # Пропускаем одиночные байты и ищем начало EPC
-            if packet[j] in (0x30, 0x34):  # Характерное начало EPC
-                # Проверяем, что дальше идут данные
-                remaining = len(packet) - j
-                if remaining >= 14:  # Минимум 14 байт для полного EPC
-                    # Извлекаем до 20 байт (40 hex символов)
-                    epc_bytes = packet[j:j+min(20, remaining)]
-                    
-                    # Фильтруем - оставляем только hex-символы
-                    hex_str = ''
-                    for b in epc_bytes:
-                        hex_str += f'{b:02X}'
-                    
-                    # Проверяем, что строка похожа на EPC (начинается с 30/34 и достаточной длины)
-                    if len(hex_str) >= 20:  # Минимум 10 байт = 20 символов
-                        # Обрезаем до разумной длины (20-28 символов)
-                        for cut_len in [28, 26, 24, 22, 20]:
-                            candidate = hex_str[:cut_len]
-                            if candidate.startswith(('30', '34')) and candidate not in epc_list:
-                                epc_list.append(candidate)
-                                break
-                    break
-    
-    return epc_list
-    
-def parse_epc_advanced(data):
-    # Улучшенный парсер EPC
-    epc_list = []
-    hex_data = data.hex().upper()
-    
-    # Ищем EPC по характерным признакам:
-    # 1. Начинаются с 3000, 300E, 3400
-    # 2. Имеют длину 20-28 символов
-    patterns = [
-        r'(3000[0-9A-F]{16,24})',  # 3000 + 16-24 hex символов
-        r'(300E[0-9A-F]{16,24})',  # 300E + 16-24 hex символов
-        r'(3400[0-9A-F]{16,24})',  # 3400 + 16-24 hex символов
-    ]
-    
-    for pattern in patterns:
-        matches = re.findall(pattern, hex_data)
-        for match in matches:
-            # Оставляем только полные EPC (обычно 24-28 символов)
-            if len(match) >= 24:
-                # Обрезаем до стандартной длины если нужно
-                if len(match) > 28:
-                    match = match[:28]
-                if match not in epc_list:
-                    epc_list.append(match)
-    
-    # Если не нашли - пробуем найти любые длинные hex-строки
-    if not epc_list:
-        long_hex = re.findall(r'([0-9A-F]{24,28})', hex_data)
-        for candidate in long_hex:
-            if candidate.startswith(('30', '34')) and candidate not in epc_list:
-                epc_list.append(candidate)
-    
-    return epc_list
-
-# === MAIN ===
-if __name__ == "__main__":
-    data = read_response()
-    
-    # Отладка: покажем сырые данные
-    print(f"RawData({len(data)}bytes):[{data.hex().upper()}]", file=sys.stderr)
-    
-    tags = parse_epc_advanced(data)
-    
-    for epc in tags:
-        print(epc)
-    
-    print(f"found={len(tags)}epc")
-    sys.exit(0 if tags else 1)
-    """,
-
-    "/tmp/explore__rfid_full_tries.py": r"""
-# /tmp/rfid_full_diag.py
-import serial
-import time
-import sys
-
-def read_all_data(ser, timeout=1.0):
-    # Прочитать все данные из порта.
-    response = b""
-    start = time.time()
-    while time.time() - start < timeout:
-        chunk = ser.read(1024)
-        if chunk:
-            response += chunk
-        else:
-            time.sleep(0.05)
-    return response
-
-def parse_epc_from_response(response):
-    # Извлечь все EPC из ответа
-    epc_list = []
-    i = 0
-    while i < len(response):
-        if response[i] == 0xA0:
-            if i + 1 < len(response):
-                length = response[i+1]
-                if i + length + 1 <= len(response):
-                    packet = response[i:i+length+1]
-                    if len(packet) >= 6 and packet[2] == 0x01 and packet[3] == 0x81:
-                        # Ищем EPC в данных
-                        for offset in range(6, len(packet) - 12):
-                            chunk = packet[offset:offset+12]
-                            # EPC: 12 байт, не все нули, не служебные (0x20, 0x30, 0x34, 0xE2)
-                            if any(chunk) and chunk[0] not in [0x20, 0x30, 0x34, 0xE2]:
-                                epc = chunk.hex().upper()
-                                if len(epc) == 24:
-                                    epc_list.append(epc)
-                                    break
-                    i += length + 1
-                    continue
-        i += 1
-    return epc_list
-
-def print_packet_analysis(packet, label=""):
-    # Детальный анализ одного пакета
-    if not packet or packet[0] != 0xA0:
-        return
-    
-    print(f"{label}")
-    print(f"  HEX: {packet.hex()}")
-    print(f"  LEN: {len(packet)} bytes")
-    
-    if len(packet) >= 6:
-        print(f"  Header: {packet[0]:02X}")
-        print(f"  Length: {packet[1]} bytes")
-        print(f"  CMD: {packet[2]:02X}")
-        print(f"  Status: {packet[3]:02X}")
-        if len(packet) > 4:
-            print(f"  Data len: {packet[4]:02X}{packet[5]:02X}")
-            if len(packet) > 6:
-                print(f"  Data: {packet[6:].hex()}")
-                
-                # Ищем EPC в данных
-                for offset in range(6, len(packet) - 12):
-                    chunk = packet[offset:offset+12]
-                    if any(chunk) and chunk[0] not in [0x20, 0x30, 0x34, 0xE2]:
-                        epc = chunk.hex().upper()
-                        if len(epc) == 24:
-                            print(f"  ★ EPC at offset {offset}: {epc}")
-
-print("="*60)
-print("RFID E710 FULL DIAGNOSTIC")
-print("="*60)
-
-# ===================================================================
-# 1. ИНФОРМАЦИЯ О РИДЕРЕ (версия прошивки, параметры)
-# ===================================================================
-print("="*60)
-print("1. READER INFO (firmware, version)")
-print("="*60)
-
-info_commands = {
-    "VERSION": bytes([0xA0, 0x05, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
-    "READER_INFO": bytes([0xA0, 0x06, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
-    "GET_CONFIG": bytes([0xA0, 0x07, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00]),
-    "GET_FW_VERSION": bytes([0xA0, 0x08, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-}
-
-for name, cmd in info_commands.items():
-    print(f"--- {name} ---")
-    try:
-        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
-        ser.reset_input_buffer()
-        ser.write(cmd)
-        time.sleep(0.3)
-        response = read_all_data(ser, timeout=0.5)
-        ser.close()
-        
-        if response:
-            print(f"Response ({len(response)} bytes): {response.hex()}")
-            # Парсим пакеты
-            i = 0
-            while i < len(response):
-                if response[i] == 0xA0 and i + 1 < len(response):
-                    length = response[i+1]
-                    if i + length + 1 <= len(response):
-                        packet = response[i:i+length+1]
-                        print_packet_analysis(packet, f"  Packet at {i}")
-                        i += length + 1
-                        continue
-                i += 1
-        else:
-            print("  No response")
-    except Exception as e:
-        print(f"  Error: {e}")
-
-# ===================================================================
-# 2. ИНВЕНТАРИЗАЦИЯ (поиск ВСЕХ меток)
-# ===================================================================
-print("="*60)
-print("2. INVENTORY (find ALL tags)")
-print("="*60)
-
-inventory_commands = {
-    "INV_6": bytes([0xA0, 0x06, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00]),
-    "INV_7": bytes([0xA0, 0x07, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00]),
-    "INV_8": bytes([0xA0, 0x08, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-    "INV_9": bytes([0xA0, 0x09, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-    "INV_10": bytes([0xA0, 0x0A, 0x01, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-}
-
-all_epc = []
-for name, cmd in inventory_commands.items():
-    print(f"--- {name} ---")
-    try:
-        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
-        ser.reset_input_buffer()
-        ser.write(cmd)
-        time.sleep(0.5)  # Даём время на инвентаризацию
-        response = read_all_data(ser, timeout=1.0)
-        ser.close()
-        
-        if response:
-            print(f"Response ({len(response)} bytes): {response.hex()[:100]}...")
-            epc_list = parse_epc_from_response(response)
-            if epc_list:
-                print(f"  ★ Found {len(epc_list)} EPC(s):")
-                for epc in epc_list:
-                    print(f"    - {epc}")
-                    if epc not in all_epc:
-                        all_epc.append(epc)
-            else:
-                # Показываем структуру пакетов
-                i = 0
-                while i < len(response):
-                    if response[i] == 0xA0 and i + 1 < len(response):
-                        length = response[i+1]
-                        if i + length + 1 <= len(response):
-                            packet = response[i:i+length+1]
-                            print_packet_analysis(packet, f"  Packet at {i}")
-                            i += length + 1
-                            continue
-                    i += 1
-        else:
-            print("  No response")
-    except Exception as e:
-        print(f"  Error: {e}")
-
-# ===================================================================
-# 3. РЕЖИМ ЧТЕНИЯ (текущая команда)
-# ===================================================================
-print("="*60)
-print("3. READ BANK (your current command)")
-print("="*60)
-
-read_cmd = bytes([0xA0, 0x0A, 0x01, 0x81, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xCB])
-
-for attempt in range(3):
-    print(f"--- Read attempt {attempt+1} ---")
-    try:
-        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
-        ser.reset_input_buffer()
-        ser.write(read_cmd)
-        time.sleep(0.3)
-        response = read_all_data(ser, timeout=1.0)
-        ser.close()
-        
-        if response:
-            print(f"Response ({len(response)} bytes)")
-            epc_list = parse_epc_from_response(response)
-            if epc_list:
-                print(f"  ★ Found {len(epc_list)} EPC(s):")
-                for epc in epc_list:
-                    print(f"    - {epc}")
-                    if epc not in all_epc:
-                        all_epc.append(epc)
-            else:
-                print("  No EPC found in response")
-                # Показываем первый пакет
-                i = 0
-                while i < len(response):
-                    if response[i] == 0xA0 and i + 1 < len(response):
-                        length = response[i+1]
-                        if i + length + 1 <= len(response):
-                            packet = response[i:i+length+1]
-                            print_packet_analysis(packet, f"  Packet at {i}")
-                            i += length + 1
-                            continue
-                    i += 1
-        else:
-            print("  No response")
-        time.sleep(0.5)
-    except Exception as e:
-        print(f"  Error: {e}")
-
-# ===================================================================
-# 4. РЕЖИМ НЕПРЕРЫВНОГО ЧТЕНИЯ
-# ===================================================================
-print("="*60)
-print("4. CONTINUOUS READ (3 attempts)")
-print("="*60)
-
-for i in range(3):
-    print(f"--- Read {i+1} ---")
-    try:
-        ser = serial.Serial('/dev/ttyS2', 115200, timeout=0.5)
-        ser.reset_input_buffer()
-        ser.write(read_cmd)
-        time.sleep(0.3)
-        response = read_all_data(ser, timeout=0.8)
-        ser.close()
-        
-        epc_list = parse_epc_from_response(response)
-        if epc_list:
-            print(f"  Found: {', '.join(epc_list)}")
-            for epc in epc_list:
-                if epc not in all_epc:
-                    all_epc.append(epc)
-        else:
-            print("  No tags")
-        time.sleep(0.5)
-    except Exception as e:
-        print(f"  Error: {e}")
-
-# ===================================================================
-# 5. ИТОГОВЫЙ ОТЧЕТ
-# ===================================================================
-print("="*60)
-print("5. SUMMARY")
-print("="*60)
-
-if all_epc:
-    print(f"★ Total unique EPCs found: {len(all_epc)}")
-    for idx, epc in enumerate(all_epc, 1):
-        print(f"  Tag {idx}: {epc}")
-else:
-    print("No tags found!")
-
-# Проверяем, сколько меток физически на антенне
-print("="*60)
-print("RECOMMENDATIONS")
-print("="*60)
-
-if len(all_epc) == 0:
-    print("1. No tags detected - check antenna connection")
-    print("2. Make sure tags are UHF RFID EPC Class 1 Gen 2")
-    print("3. Try placing tags closer to antenna")
-elif len(all_epc) == 1:
-    print("1. Only one tag detected - good for testing")
-    print("2. Try adding more tags to test multi-tag reading")
-elif len(all_epc) >= 2:
-    print(f"★ {len(all_epc)} tags detected - system working correctly!")
-    print("1. Multi-tag reading works")
-    print("2. You can now implement tag inventory in your application")
-    
-print("="*60)
-    """,
-
-    # ------------------------------------------------------------------------------------------------------------------
-    "scr__bt_ultrasonic.py": r"""
-#!/usr/bin/env python3
-# Скрипт для чтения данных с ультразвуковых BLE датчиков.
-import sys
-import time
-import asyncio
-from bleak import BleakScanner, BleakClient
-
-UART_TX_UUID = "dec01433-ceb1-cec0-dec0-ff0123456789"
-DEVICE_NAME = "UltraSonic"
-TIMEOUT = 15
-PACKETS_MIN = 3
-
-async def main():
-    target_mac = sys.argv[1] if len(sys.argv) > 1 else None
-
-    print("SCAN_START", flush=True)
-
-    # 1. Поиск устройства
-    device = None
-    if target_mac:
-        device = await BleakScanner.find_device_by_address(target_mac, timeout=5.0)
-        if device:
-            print(f"DEVICE_FOUND_BY_MAC:{device.address}", flush=True)
-
-    if not device:
-        device = await BleakScanner.find_device_by_name(DEVICE_NAME, timeout=10.0)
-        if device:
-            print(f"DEVICE_FOUND:{device.address}", flush=True)
-
-    if not device:
-        print("ERROR:Device not found")
-        return
-
-    # 2. Подключение и сбор данных
-    packets = []
-    start_time = time.time()
-
-    def on_data(sender, data):
-        try:
-            msg = data.decode('utf-8', errors='replace').strip()
-            if msg:
-                packets.append(msg)
-                print(f"PACKET:{msg}", flush=True)
-        except Exception:
-            pass
-
-    try:
-        print("CONNECTING...", flush=True)
-        async with BleakClient(device.address, timeout=15.0) as client:
-            print(f"CONNECTED:{client.is_connected}", flush=True)
-
-            if not client.is_connected:
-                print("ERROR:Connection failed")
-                return
-
-            await client.start_notify(UART_TX_UUID, on_data)
-            print("WAITING_DATA...", flush=True)
-
-            while len(packets) < PACKETS_MIN and (time.time() - start_time) < TIMEOUT:
-                await asyncio.sleep(0.1)
-
-            await client.stop_notify(UART_TX_UUID)
-            print("DISCONNECTED", flush=True)
-
-    except Exception as e:
-        print(f"ERROR:{e}", flush=True)
-        return
-
-    print(f"PACKETS_COUNT:{len(packets)}", flush=True)
-    if packets:
-        print(f"LAST_PACKET:{packets[-1]}", flush=True)
-    print("DONE", flush=True)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-    """,
-
-    # ------------------------------------------------------------------------------------------------------------------
-}
 
 
 # ======================================================================================================================
@@ -1091,10 +505,14 @@ root@harvest05:~#
 
     # FILES ============================================================================================================
     def file_name__push(self, name: str) -> bool:
-        text = SCRIPTS[name]
+        DIRNAME = "scripts"
+        dirpath = pathlib.Path(__file__).parent.joinpath(DIRNAME)
+        filepath = dirpath.joinpath(name)
+
+        text = filepath.read_text(encoding="utf8")
         return self._file_text__push(filepath=name, text=text)
 
-    def _file_text__push(self, filepath: str = "/tmp/script.py", text: str = "") -> bool:
+    def _file_text__push(self, filepath: str = f"script.py", text: str = "") -> bool:
         """
         GOAL
         transfer file scripts into device,
@@ -2089,33 +1507,99 @@ root@harvest05:~#
     # ==================================================================================================================
     def rfid_scan(self, steps: int | None = None) -> set[str]:
         """
-        Запускает непрерывное чтение RFID-меток в течение заданного времени.
-        Возвращает список найденных уникальных EPC.
+        Ридер получает команду инвентаризации (01).
+        Он начинает сканировать. Если меток нет, он сразу формирует и отправляет короткий ответ A0 04 01 81 [CRC].
+        Если метки есть, он не тратит время на отправку отдельной квитанции. Он сразу формирует один расширенный пакет, в заголовке которого дублируется статус операции, и следом идут данные о найденных метках.
+
+        ----------------------------------------------------
+        ТКАНЬ ФАРАДЕЯ
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(6bytes):[A004018122B8]
+        found=0epc]
+
+        Байт	Значение (HEX)	Назначение	Комментарий
+        1	A0	Header (Заголовок)	Фиксированный заголовок пакета.
+        2	04	Length (Длина)	Длина пакета данных. 0x04 = 4 байта. -ВСЕ ЧТО ПОСЛЕ ЭТОГО БАЙТА!!! тоесть с CRC!!!
+        3	01	Command (Команда)	Эхо команды. 0x01 — это команда инвентаризации.
+        4	81	Status (Статус)	Самая важная часть! 0x81 — это стандартный код "Operation Succeeded" (Операция успешна). Ошибки были бы другими кодами.
+        5-6	22 B8	Checksum (Контрольная сумма)	Это контрольная сумма (обычно CRC-16) для байтов 3 и 4 (01 81).
+        ----------------------------------------------------
+        1EPC
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(43bytes):[A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7]
+        3000E2806894000050035FD77070
+        found=1epc]
+
+A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F7 =86символов=43байта=1заголовок+1длина+41тело
+
+        Байт(ы)	HEX-значение	Длина	Назначение	Значение / Расшифровка
+        1	A0	1	Заголовок (Header)	Фиксированный маркер начала пакета.
+        2	29	1	Длина пакета (Length)	0x29 = 41 байт. Это всё, что после этого байта.
+        3	01	1	Код команды (Command)	Эхо вашего запроса 0x01 (команда инвентаризации).
+        4	81	1	Статус (Status)	0x81 — операция выполнена успешно.
+        5-6	00 01	2	Количество меток	0x0001 = 1 — ридер обнаружил ровно одну метку.
+        7	20	1	Длина данных метки	0x20 = 32 байта отведено на данные одной метки.(RSSI + EPC).
+        8-39	30 00 E2 ... 10 04	32	Данные метки	Содержат RSSI, EPC и, возможно, другие поля.
+        40-41	01 F7	2	Контрольная сумма (CRC)	CRC-16 для проверки целостности пакета.
+
+        ПАКЕТ
+        ┌──────┬──────┬──────┬──────┬──────────┬──────┬─────────────────────────────────┬──────┐
+        │ A0   │ 29   │ 01   │ 81   │ 00 01    │ 20   │ [32 байта данных метки]          │ 01F7 │
+        ├──────┼──────┼──────┼──────┼──────────┼──────┼─────────────────────────────────┼──────┤
+        │Head  │ Len  │ Cmd  │ OK   │ 1 метка  │ len  │ RSSI=0x00                        │ CRC  │
+        │      │ =41  │ INV  │      │          │ =32  │ EPC=3000E2806894000050035FD77070 │      │
+        └──────┴──────┴──────┴──────┴──────────┴──────┴─────────────────────────────────┴──────┘
+
+        ДАННЫЕ МЕТКИ
+        ┌──────────┬──────────┬──────────────┬──────────────────────────┐
+        │ Заголовок│ Фильтр   │ Идентификатор │ Серийный номер           │
+        │  8 бит   │  3 бита  │ компании      │ объекта                  │
+        │          │          │ 20-40 бит     │                          │
+        ├──────────┼──────────┼──────────────┼──────────────────────────┤
+        │   30     │    0     │ 0E2806894    │ 000050035FD77070         │
+        └──────────┴──────────┴──────────────┴──────────────────────────┘
+        ----------------------------------------------------
+        2EPC
+        [COM16.WRITEREAD]
+            write=[python3 /tmp/rfid_scan.py]
+            read=[RawData(86bytes):[A02901810002203000E2806894000040138945853E812981293000E2806894000040138945853E10040146A02901810002203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F6]
+        3000E2806894000040138945853E
+        3000E2806894000050035FD77070
+        found=2epc]
+        ----------------------------------------------------
+        4epc
+        	read=[RawData(172bytes):[A02901810004203000E28068942000502BBD609C95D842D8423000E28068942000502BBD609C951004015AA02901810004203000E2806894000050035FD77070430A430A3000E2806894000050035FD77070100401F4A02901810004203400E77702010000000000000000468446843400E77702010000000000000000100401BEA02901810004203000E2806894000040138945853E812981293000E2806894000040138945853E10040144]
+        3000E28068942000502BBD609C95
+        3000E2806894000050035FD77070
+        3000E2806894000040138945853E
+        3400E77702010000000000000000
+        found=4epc]
         """
         result = set()
-
         scriptname = "scr__rfid_scan.py"
         command_line = f"python3 {scriptname}"
 
         steps = steps or 1
         for step in range(steps):
+            # Убиваем возможные зависшие процессы на порту
+            self.conn.write_read_bytes(f"fuser -k /dev/ttyS2 2>/dev/null", timeout_continue=0.5)
+            time.sleep(0.3)
+
             output = self.cmd_timeout__write_read__payload(
                 command_line,
-                # stop_line=EqValid_Regexp(rb'found=\d+epc'),
                 timeout_continue=10,
             )
             s_result = output.splitlines()
 
-            if s_result[0].startswith("RawData"):
-                s_result = s_result[1:]
-            if s_result[-1].startswith("found="):
-                s_result = s_result[:-1]
-
-            result.update(s_result)
+            # Фильтруем: только строки вида "HEX,ЧИСЛО"
+            for line in s_result:
+                if re.match(r'^[0-9A-F]{24}', line.strip()):
+                    result.add(line.strip())
 
             if step != steps-1:
-                time.sleep(0.2)
-
+                time.sleep(0.3)
         return result
 
     # ==================================================================================================================
