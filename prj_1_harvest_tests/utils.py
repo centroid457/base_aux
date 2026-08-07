@@ -1852,7 +1852,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         Собирает данные с UltraSonic датчика.
         """
         output = self.cmd_timeout__write_read__payload(
-            f"python3 bt__us.py {max_pkgs} {timeout}",
+            f"python3 scr__btus_read.py {max_pkgs} {timeout}",
             timeout=timeout + 5,
             timeout_continue=timeout + 5,
         )

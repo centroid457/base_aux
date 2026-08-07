@@ -178,7 +178,7 @@ class Test_02__PreInstall:
         assert harvest.file_name__push("scr__rfid_scan.py"), "скрипт не отправился"
 
     def test_pre_6__push4__btus(self, harvest):
-        assert harvest.file_name__push("bt__us.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -534,9 +534,9 @@ class Test_22__BTUS:
         # TODO: use mac from DB
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
-        assert harvest.file_name__push("bt__us.py"), "скрипт не отправился"
+        assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_2__msg_get(self, harvest):
         packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
