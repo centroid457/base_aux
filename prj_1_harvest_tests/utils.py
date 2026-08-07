@@ -1904,6 +1904,109 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             # return None not in parced.values()
             return parced == eq_default
 
+    # ==================================================================================================================
+    def sql_settings__get_all(self) -> dict[str, str]:
+        """
+        ПОЛЯ ---------------------------------
+        CREATE TABLE Service_settings (
+            identsettings INTEGER    PRIMARY KEY ASC AUTOINCREMENT
+                                     NOT NULL
+                                     UNIQUE,
+            keyname       TEXT (64)  UNIQUE
+                                     NOT NULL,
+            valuename     TEXT (512) NOT NULL,
+            flagactual    INTEGER    DEFAULT (0),
+            levelacs      INTEGER    DEFAULT (0)
+        );
+
+        ДАМП ---------------------------------
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "sqlite3 /srv/publish/Harvester.db \"SELECT * FROM Service_settings\"\r\n" ----
+        sqlite3 /srv/publish/Harvester.db "SELECT * FROM Service_settings"
+        16|ipComp|127.0.0.1|1|1
+        17|timeDelete|300|1|1
+        18|minTimeRead|20|1|1
+        19|periodDetect|1|1|1
+        20|numberTryRead|25|1|1
+        21|numberTryWrite|1|1|1
+        22|regNum|5|1|1
+        23|blockNum|5|1|1
+        24|minSpeed|0.5|1|1
+        25|portName|/dev/ttyUSB0|1|1
+        26|readerSerial|/dev/ttyS2|1|1
+        27|urlTimeSend|http://45.90.218.212/api/v1/harvester/telemetry|1|0
+        28|urlIncidentessend|http://45.90.218.212/api/v1/harvester/incident|1|0
+        29|urlOnlineSend|http://45.90.218.212/api/v1/harvester/online|1|0
+        30|urlWorkSend|http://45.90.218.212/api/v1/harvester/discharge|1|0
+        31|jwtToken|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ1cm96aGFpLWNsb3VkIiwic3ViIjoiNSIsInR5cGUiOiJoYXJ2ZXN0ZXIifQ.JNdx5Yhy-fJJ3E4SMQfppF4LbGHzyD1UNgPtmKPBXHY|1|1
+        32|macUz1|D4:81:ED:BB:AA:6B|1|1
+        33|timeSend|300000|1|0
+        35|macUz2|CF:9F:FA:E6:14:3F|1|1
+        36|timeGNSS|10000|1|0
+        37|timeblue|15000|1|0
+        38|timeblueTwo|16000|1|0
+        39|timeSendSleep|1800000|1|0
+        40|uzTwo|0|1|0
+        41|maxHeight|250|1|1
+        42|stepMTBO|5|1|0
+        43|urlBunker|http://45.90.218.212/api/v1/harvester/discharge/bunker|1|0
+        44|incline|0.2|1|0
+        45|sendTelemetry|180000|1|0
+        46|timeAfterSleepMinutes|20|1|0
+        47|maxSputnicHeight|400|1|0
+        48|minSputnicHeight|50|1|0
+        root@harvest05:~#
+        root@harvest05:~#
+
+        {
+          "ipComp": "127.0.0.1",
+          "timeDelete": "300",
+          "minTimeRead": "20",
+          "periodDetect": "1",
+          "numberTryRead": "25",
+          "numberTryWrite": "1",
+          "regNum": "5",
+          "blockNum": "5",
+          "minSpeed": "0.5",
+          "portName": "/dev/ttyUSB0",
+          "readerSerial": "/dev/ttyS2",
+          "urlTimeSend": "http://45.90.218.212/api/v1/harvester/telemetry",
+          "urlIncidentessend": "http://45.90.218.212/api/v1/harvester/incident",
+          "urlOnlineSend": "http://45.90.218.212/api/v1/harvester/online",
+          "urlWorkSend": "http://45.90.218.212/api/v1/harvester/discharge",
+          "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ1cm96aGFpLWNsb3VkIiwic3ViIjoiNSIsInR5cGUiOiJoYXJ2ZXN0ZXIifQ.JNdx5Yhy-fJJ3E4SMQfppF4LbGHzyD1UNgPtmKPBXHY",
+          "macUz1": "D4:81:ED:BB:AA:6B",
+          "timeSend": "300000",
+          "macUz2": "CF:9F:FA:E6:14:3F",
+          "timeGNSS": "10000",
+          "timeblue": "15000",
+          "timeblueTwo": "16000",
+          "timeSendSleep": "1800000",
+          "uzTwo": "0",
+          "maxHeight": "250",
+          "stepMTBO": "5",
+          "urlBunker": "http://45.90.218.212/api/v1/harvester/discharge/bunker",
+          "incline": "0.2",
+          "sendTelemetry": "180000",
+          "timeAfterSleepMinutes": "20",
+          "maxSputnicHeight": "400",
+          "minSputnicHeight": "50"
+        }
+        """
+        result = {}
+        cmd = f'sqlite3 /srv/publish/Harvester.db "SELECT * FROM Service_settings"'
+        output = self.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1,
+            return_str=False,
+        )
+        for line in output:
+            identsettings, keyname, valuename, flagactual, levelacs = line.split("|")
+            result[keyname] = valuename
+
+        print(json.dumps(result, indent=2))
+        return result
+
 
 # ======================================================================================================================
 # def test__():

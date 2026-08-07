@@ -572,6 +572,12 @@ def ultrasonic_mac__any(harvest) -> str | None:
             return mac
 
 
+@pytest.fixture(scope="module")
+def sql_settings(harvest) -> dict[str, str]:
+    """Находит MAC-адрес UltraSonic датчика."""
+    return harvest.sql_settings__get_all()
+
+
 # ======================================================================================================================
 # HTML REPORT
 def patch_html__title(filepath, new_title, **kwargs):

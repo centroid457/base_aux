@@ -53,12 +53,12 @@ class Test_000__Explore:
 # ======================================================================================================================
 @pytest.mark.DET
 class Test_01__Detection:
-    def test_serial_1__exist_ports(self):
+    def test_det_1__exist_ports(self):
         result = manager.ADDRESSES_CASHED
         print(f"\nPORTS_EXISTED[{result}]")
         assert result != [], "Не обнаружено ни одного последовательного порта."
 
-    def test_serial_2__exist_can_open(self):
+    def test_det_2__exist_can_open(self):
         exist_opening__ok = []
         exist_opening__fail = []
 
@@ -72,7 +72,7 @@ class Test_01__Detection:
         print(f"{exist_opening__fail=}")
         assert exist_opening__ok != [], "Ни один порт не удалось открыть."
 
-    def test_serial_3__harvest_detection(self, harvest):
+    def test_det_3__dev_detection(self, harvest):
         """
         Тест проверяет, что устройство успешно обнаружено,
         и выводит его уникальный идентификатор.
@@ -80,9 +80,12 @@ class Test_01__Detection:
         assert harvest, "Устройство Harvest не обнаружено."
 
     @pytest.mark.skipif(True, reason="bad work!!!")
-    def test_serial_4__harvest_info(self, harvest_info):
+    def test_det_4__dev_info(self, harvest_info):
         print(json.dumps(harvest_info, indent=2, ensure_ascii=False))
         assert harvest_info, "Устройство Harvest не обнаружено."
+
+    def test_det_5__sql_settings(self, sql_settings):
+        assert sql_settings, "настройки устройства из SQL не получены"
 
 
 # ======================================================================================================================
@@ -129,6 +132,9 @@ class Test_02__PreInstall:
         """
         self.pkg__check_installed_or_install(harvest, internet_access, "picocom")
 
+    def test_pre_2__sqlite3(self, harvest, internet_access):
+        self.pkg__check_installed_or_install(harvest, internet_access, "sqlite3")
+
     def test_pre_3__python(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "python3")
 
@@ -157,7 +163,6 @@ class Test_02__PreInstall:
             assert internet_access, "нет интернета для установки пакетов"
             assert harvest.apt_install("python3-bleak")
 
-    # @pytest.mark.skip("just for now")
     def test_pre_5__wifi1__iw(self, harvest, internet_access):
         self.pkg__check_installed_or_install(harvest, internet_access, "iw")
 
@@ -530,7 +535,7 @@ class Test_21__BT:
 class Test_22__BTUS:
     """Тесты УЗ датчика передача данных"""
     @pytest.mark.dependency(name="btus_present")
-    def test_btus_1__present(self, harvest, ultrasonic_mac__any):
+    def test_btus_1__present(self, harvest, ultrasonic_mac__any, sql_settings):
         # TODO: use mac from DB
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
@@ -538,17 +543,34 @@ class Test_22__BTUS:
 
     # @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__msg_get(self, harvest):
+    def test_btus_2__msg_get__from_any(self, harvest):
         packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
-    @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__msg_validate(self, harvest):
-        packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
+    def _msg_validate__us(self, harvest, sql_settings, index) -> bool | NoReturn:
+        assert sql_settings
+
+        us_mac = None
+        if index == 1:
+            us_mac = sql_settings["macUz1"]
+        elif index == 2:
+            if sql_settings["uzTwo"] == "0":
+                pytest.skip(f"US setup only for one!")
+            us_mac = sql_settings["macUz2"]
+
+        packets = harvest.btus__read(mac=us_mac, max_pkgs=1, timeout=30.0)
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
         for packet in packets:
             assert harvest.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
+
+    @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_3__msg_validate__us1(self, harvest, sql_settings):
+        assert self._msg_validate__us(harvest, sql_settings, index=1)
+
+    @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_3__msg_validate__us2(self, harvest, sql_settings):
+        assert self._msg_validate__us(harvest, sql_settings, index=2)
 
 
 # ======================================================================================================================
