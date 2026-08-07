@@ -1847,7 +1847,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         return result
 
     # ==================================================================================================================
-    def btus_read(self, mac: str | None = None, max_pkgs: int | None = None, timeout: float = 25.0) -> list[bytes] | None:
+    def btus__read(self, mac: str | None = None, max_pkgs: int | None = None, timeout: float = 25.0) -> list[bytes]:
         """
         Собирает данные с UltraSonic датчика.
         """
@@ -1856,11 +1856,59 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             timeout=timeout + 5,
             timeout_continue=timeout + 5,
         )
-        result_hex = re.findall(r"PACKET_HEX:\[([0-9A-F]+)\]", output)
+        result_hex: list[str] = re.findall(r"PACKET_HEX:\[([0-9A-F]+)\]", output)
         print(f"{result_hex=}")
-        result_bytes = [bytes.fromhex(line_hex) for line_hex in result_hex]
+        result_bytes: list[bytes] = [*map(bytes.fromhex, result_hex)]
         print(f"{result_bytes=}")
         return result_bytes
+
+    @staticmethod
+    def btus__validate_pkg(data_bytes: bytes, eq: dict[str, Base_EqValid | Any] | None = None) -> bool:
+        """
+        b'"UTC":2945843\n"Distance up":000\n"Distance side":000\n"Temperature":023\n"Battery":098\n"Percentage":022'
+        """
+        data_text = data_bytes.decode(errors="replace")
+
+        eq_default = {
+            "UTC": EqValid_GT_NumParsedSingle(0),
+            "Distance up": EqValid_LGTE_NumParsedSingle(ge=0, lt=10),
+            "Distance side": EqValid_LGTE_NumParsedSingle(ge=0, lt=10),
+            "Temperature": EqValid_LGTE_NumParsedSingle(gt=0, lt=40),
+            "Battery": EqValid_LGTE_NumParsedSingle(gt=0, lt=100),
+            "Percentage": EqValid_LGTE_NumParsedSingle(gt=0, lt=100),
+        }
+
+        parced = {
+            "UTC": None,
+            "Distance up": None,
+            "Distance side": None,
+            "Temperature": None,
+            "Battery": None,
+            "Percentage": None,
+        }
+
+        for key in parced:
+            pattern = rf'"{key}":(\d+)\s*'
+            value = re.search(pattern, data_text)
+            if value:
+                value = value[1]
+                print(f"{value=}")
+                value = int(value)
+                parced[key] = value
+
+        print(json.dumps(parced, indent=2))
+
+        if eq is not None:
+            return parced == eq
+        else:
+            # return None not in parced.values()
+            return parced == eq_default
+
+
+# ======================================================================================================================
+# def test__():
+#     data = b'"UTC":2945843\n"Distance up":000\n"Distance side":000\n"Temperature":023\n"Battery":098\n"Percentage":022'
+#     assert HarvestDevice.btus__validate_pkg(data)
 
 
 # ======================================================================================================================

@@ -531,57 +531,24 @@ class Test_22__BTUS:
     """Тесты УЗ датчика передача данных"""
     @pytest.mark.dependency(name="btus_present")
     def test_btus_1__present(self, harvest, ultrasonic_mac__any):
+        # TODO: use mac from DB
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
         assert harvest.file_name__push("bt__us.py"), "скрипт не отправился"
 
-    @pytest.mark.dependency(depends=["btus_present"])
-    def test_collect_packets(self, harvest):
-        packets = harvest.btus_read(max_pkgs=1, timeout=30.0)
-        assert packets, f"не получено пакетов от УЗ {packets=}"
-
     @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_data_sanity(self, harvest):
-        """
-        Проверяет осмысленность данных:
-        - Distance: 0.0 .. 10.0 метров
-        - Temperature: -40 .. +85 °C
-        - Battery: > 0
-        - Percentage: 0 .. 100
-        """
-        result = harvest.btus_read(timeout=20.0)
-        assert result["mac"], "Датчик не найден"
-        assert result["packets"], "Нет пакетов"
+    def test_btus_2__msg_get(self, harvest):
+        packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
+        assert packets, f"не получено пакетов от УЗ {packets=}"
 
-        # Анализируем последний пакет
-        data = json.loads(result["packets"][-1])
+    @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_2__msg_validate(self, harvest):
+        packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
+        assert packets, f"не получено пакетов от УЗ {packets=}"
 
-        checks = {
-            "Distance up": (0.0, 10.0, "м"),
-            "Distance side": (0.0, 10.0, "м"),
-            "Temperature": (-40.0, 85.0, "°C"),
-        }
-
-        issues = []
-        for field, (lo, hi, unit) in checks.items():
-            if field in data:
-                val = float(data[field])
-                if not (lo <= val <= hi):
-                    issues.append(f"{field}={val} ({lo}-{hi}{unit})")
-
-        if "Battery" in data:
-            if float(data["Battery"]) <= 0:
-                issues.append(f"Battery={data['Battery']} (ожидалось >0)")
-
-        if "Percentage" in data:
-            pct = float(data["Percentage"])
-            if not (0 <= pct <= 100):
-                issues.append(f"Percentage={pct} (ожидалось 0-100)")
-
-        assert not issues, f"Проблемы с данными: {issues}"
-        print("Все проверки данных пройдены")
-
+        for packet in packets:
+            assert harvest.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
 
 
 # ======================================================================================================================

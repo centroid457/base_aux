@@ -19,16 +19,6 @@ DEVICE_NAME = "UltraSonic"
 PACKETS_MAX = int(sys.argv[1]) if len(sys.argv) > 1 else 3
 TIMEOUT = float(sys.argv[2]) if len(sys.argv) > 2 else 20.0
 
-# Паттерны полей (датчик шлет каждое поле отдельным уведомлением)
-_FIELD_PATTERNS = {
-    "UTC": r'"UTC":\s*"?(\d+)"?',
-    "Distance up": r'"Distance up":\s*"?([\d.]+)"?',
-    "Distance side": r'"Distance side":\s*"?([\d.]+)"?',
-    "Temperature": r'"Temperature":\s*"?([\d.]+)"?',
-    "Battery": r'"Battery":\s*"?([\d.]+)"?',
-    "Percentage": r'"Percentage":\s*"?([\d.]+)"?',
-}
-
 
 # ======================================================================================================================
 async def bt_device__find(name: str) -> BLEDevice | None:
